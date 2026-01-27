@@ -8,6 +8,8 @@ import {
 	Scripts,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
+import { AppSidebar } from "@/features/app-sidebar";
+import { SidebarInset, SidebarProvider } from "@/shared/components/ui/sidebar";
 import appCss from "@/styles/global.css?url";
 
 interface RouterContext {
@@ -33,6 +35,19 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 				rel: "stylesheet",
 				href: appCss,
 			},
+			{
+				rel: "preconnect",
+				href: "https://fonts.googleapis.com",
+			},
+			{
+				rel: "preconnect",
+				href: "https://fonts.gstatic.com",
+				crossOrigin: "anonymous",
+			},
+			{
+				rel: "stylesheet",
+				href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
+			},
 		],
 	}),
 	shellComponent: RootDocument,
@@ -40,12 +55,15 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 
 function RootDocument({ children }: { children: React.ReactNode }) {
 	return (
-		<html lang="pt-BR">
+		<html lang="pt-BR" className="dark">
 			<head>
 				<HeadContent />
 			</head>
 			<body>
-				{children}
+				<SidebarProvider className="container mx-auto min-w-screen h-screen">
+					<AppSidebar />
+					<SidebarInset>{children}</SidebarInset>
+				</SidebarProvider>
 				<TanStackDevtools
 					plugins={[
 						{

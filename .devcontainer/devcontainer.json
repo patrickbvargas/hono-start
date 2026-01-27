@@ -1,0 +1,21 @@
+{
+  "name": "Hono Start",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "postCreateCommand": "pnpm install",
+  "forwardPorts": [3000],
+  "hostRequirements": {
+    "cpus": 4
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "formulahendry.auto-rename-tag",
+        "aaron-bond.better-comments",
+        "naumovs.color-highlight",
+        "bradlc.vscode-tailwindcss",
+        "Codeium.codeium"
+      ]
+    }
+  }
+}
