@@ -33,6 +33,9 @@
 			"recommended": true,
 			"style": {
 				"useImportType": "error"
+			},
+			"suspicious": {
+				"noUnknownAtRules": "off"
 			}
 		}
 	},

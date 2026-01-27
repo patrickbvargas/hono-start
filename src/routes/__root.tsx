@@ -60,7 +60,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 				<HeadContent />
 			</head>
 			<body>
-				<SidebarProvider className="container mx-auto min-w-screen h-screen">
+				<SidebarProvider className="container max-w-7xl mx-auto h-screen">
 					<AppSidebar />
 					<SidebarInset>{children}</SidebarInset>
 				</SidebarProvider>
