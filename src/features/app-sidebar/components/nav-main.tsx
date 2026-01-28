@@ -51,7 +51,7 @@ export function NavMain({ items }: NavMainProps) {
 												asChild
 												isActive={isActive(subItem.url)}
 											>
-												<Link to={subItem.url as any}>
+												<Link to={subItem.url}>
 													<span>{subItem.title}</span>
 												</Link>
 											</SidebarMenuSubButton>

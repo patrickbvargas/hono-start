@@ -1,3 +1,4 @@
+import type { ToPathOption } from "@tanstack/react-router";
 import {
 	BriefcaseIcon,
 	DollarSignIcon,
@@ -12,7 +13,7 @@ import {
 
 export interface RouteItem {
 	title: string;
-	url: `/${string}` | "#";
+	url: ToPathOption;
 	icon?: LucideIcon;
 	isActive?: boolean;
 }
