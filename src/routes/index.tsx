@@ -1,473 +1,52 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { createColumnHelper } from "@tanstack/react-table";
-import * as React from "react";
-import { DataTable } from "@/shared/components/data-table";
+import { createFileRoute, Link, useRouterState } from "@tanstack/react-router";
+import { Pagination } from "@/shared/components/pagination";
 import {
 	Wrapper,
 	WrapperBody,
+	WrapperFooter,
 	WrapperHeader,
 } from "@/shared/components/wrapper";
+import { useSort } from "@/shared/hooks/use-sort";
+import { paginationSchema } from "@/shared/schemas/pagination";
 
-export const Route = createFileRoute("/")({ component: App });
-
-type Person = {
-	firstName: string;
-	lastName: string;
-	age: number;
-	visits: number;
-	status: string;
-	progress: number;
-};
-
-const defaultData: Person[] = [
-	{
-		firstName: "tanner",
-		lastName: "linsley",
-		age: 24,
-		visits: 100,
-		status: "In Relationship",
-		progress: 50,
+export const Route = createFileRoute("/")({
+	validateSearch: (prev) => paginationSchema.parse(prev),
+	loaderDeps: ({ search }) => ({ search }),
+	loader: async ({ deps: { search } }) => {
+		await new Promise((resolve) => setTimeout(resolve, 2000));
+		console.log(`fetched data with search: ${JSON.stringify(search)}`);
+		return { search };
 	},
-	{
-		firstName: "tandy",
-		lastName: "miller",
-		age: 40,
-		visits: 40,
-		status: "Single",
-		progress: 80,
-	},
-	{
-		firstName: "joe",
-		lastName: "dirte",
-		age: 45,
-		visits: 20,
-		status: "Complicated",
-		progress: 10,
-	},
-	{
-		firstName: "alice",
-		lastName: "johnson",
-		age: 28,
-		visits: 55,
-		status: "Single",
-		progress: 90,
-	},
-	{
-		firstName: "bob",
-		lastName: "smith",
-		age: 32,
-		visits: 12,
-		status: "In Relationship",
-		progress: 30,
-	},
-	{
-		firstName: "charlie",
-		lastName: "brown",
-		age: 19,
-		visits: 88,
-		status: "Single",
-		progress: 65,
-	},
-	{
-		firstName: "david",
-		lastName: "wilson",
-		age: 50,
-		visits: 5,
-		status: "Complicated",
-		progress: 5,
-	},
-	{
-		firstName: "eva",
-		lastName: "davis",
-		age: 22,
-		visits: 150,
-		status: "In Relationship",
-		progress: 100,
-	},
-	{
-		firstName: "frank",
-		lastName: "miller",
-		age: 35,
-		visits: 42,
-		status: "Single",
-		progress: 45,
-	},
-	{
-		firstName: "grace",
-		lastName: "lee",
-		age: 29,
-		visits: 73,
-		status: "In Relationship",
-		progress: 82,
-	},
-	{
-		firstName: "hannah",
-		lastName: "white",
-		age: 27,
-		visits: 10,
-		status: "Single",
-		progress: 15,
-	},
-	{
-		firstName: "isaac",
-		lastName: "clark",
-		age: 41,
-		visits: 66,
-		status: "Complicated",
-		progress: 50,
-	},
-	{
-		firstName: "jack",
-		lastName: "hall",
-		age: 33,
-		visits: 25,
-		status: "In Relationship",
-		progress: 40,
-	},
-	{
-		firstName: "katie",
-		lastName: "young",
-		age: 24,
-		visits: 91,
-		status: "Single",
-		progress: 77,
-	},
-	{
-		firstName: "leo",
-		lastName: "king",
-		age: 38,
-		visits: 14,
-		status: "Complicated",
-		progress: 22,
-	},
-	{
-		firstName: "mia",
-		lastName: "wright",
-		age: 31,
-		visits: 48,
-		status: "In Relationship",
-		progress: 58,
-	},
-	{
-		firstName: "nathan",
-		lastName: "lopez",
-		age: 26,
-		visits: 110,
-		status: "Single",
-		progress: 95,
-	},
-	{
-		firstName: "olivia",
-		lastName: "hill",
-		age: 44,
-		visits: 3,
-		status: "Complicated",
-		progress: 12,
-	},
-	{
-		firstName: "paul",
-		lastName: "scott",
-		age: 30,
-		visits: 60,
-		status: "In Relationship",
-		progress: 70,
-	},
-	{
-		firstName: "quinn",
-		lastName: "green",
-		age: 21,
-		visits: 120,
-		status: "Single",
-		progress: 85,
-	},
-	{
-		firstName: "riley",
-		lastName: "adams",
-		age: 37,
-		visits: 33,
-		status: "Complicated",
-		progress: 48,
-	},
-	{
-		firstName: "sophia",
-		lastName: "baker",
-		age: 25,
-		visits: 95,
-		status: "In Relationship",
-		progress: 92,
-	},
-	{
-		firstName: "thomas",
-		lastName: "nelson",
-		age: 48,
-		visits: 18,
-		status: "Single",
-		progress: 35,
-	},
-	{
-		firstName: "ursula",
-		lastName: "carter",
-		age: 34,
-		visits: 52,
-		status: "Complicated",
-		progress: 60,
-	},
-	{
-		firstName: "victor",
-		lastName: "perez",
-		age: 29,
-		visits: 80,
-		status: "In Relationship",
-		progress: 75,
-	},
-	{
-		firstName: "wendy",
-		lastName: "roberts",
-		age: 42,
-		visits: 22,
-		status: "Single",
-		progress: 42,
-	},
-	{
-		firstName: "xander",
-		lastName: "turner",
-		age: 23,
-		visits: 105,
-		status: "Complicated",
-		progress: 55,
-	},
-	{
-		firstName: "yara",
-		lastName: "phillips",
-		age: 36,
-		visits: 45,
-		status: "In Relationship",
-		progress: 68,
-	},
-	{
-		firstName: "zane",
-		lastName: "campbell",
-		age: 39,
-		visits: 15,
-		status: "Single",
-		progress: 28,
-	},
-	{
-		firstName: "amanda",
-		lastName: "stewart",
-		age: 31,
-		visits: 67,
-		status: "Complicated",
-		progress: 72,
-	},
-	{
-		firstName: "brian",
-		lastName: "morris",
-		age: 46,
-		visits: 8,
-		status: "In Relationship",
-		progress: 18,
-	},
-	{
-		firstName: "clara",
-		lastName: "rogers",
-		age: 20,
-		visits: 130,
-		status: "Single",
-		progress: 98,
-	},
-	{
-		firstName: "derek",
-		lastName: "reed",
-		age: 43,
-		visits: 37,
-		status: "Complicated",
-		progress: 52,
-	},
-	{
-		firstName: "elena",
-		lastName: "cook",
-		age: 27,
-		visits: 84,
-		status: "In Relationship",
-		progress: 88,
-	},
-	{
-		firstName: "felix",
-		lastName: "morgan",
-		age: 34,
-		visits: 50,
-		status: "Single",
-		progress: 62,
-	},
-	{
-		firstName: "gina",
-		lastName: "bell",
-		age: 49,
-		visits: 11,
-		status: "Complicated",
-		progress: 20,
-	},
-	{
-		firstName: "henry",
-		lastName: "murphy",
-		age: 32,
-		visits: 59,
-		status: "In Relationship",
-		progress: 74,
-	},
-	{
-		firstName: "iris",
-		lastName: "bailey",
-		age: 28,
-		visits: 92,
-		status: "Single",
-		progress: 81,
-	},
-	{
-		firstName: "jason",
-		lastName: "rivera",
-		age: 45,
-		visits: 27,
-		status: "Complicated",
-		progress: 44,
-	},
-	{
-		firstName: "kara",
-		lastName: "cooper",
-		age: 26,
-		visits: 115,
-		status: "In Relationship",
-		progress: 96,
-	},
-	{
-		firstName: "liam",
-		lastName: "richardson",
-		age: 30,
-		visits: 41,
-		status: "Single",
-		progress: 57,
-	},
-	{
-		firstName: "mona",
-		lastName: "cox",
-		age: 52,
-		visits: 4,
-		status: "Complicated",
-		progress: 8,
-	},
-	{
-		firstName: "noah",
-		lastName: "howard",
-		age: 24,
-		visits: 102,
-		status: "In Relationship",
-		progress: 91,
-	},
-	{
-		firstName: "olga",
-		lastName: "ward",
-		age: 38,
-		visits: 31,
-		status: "Single",
-		progress: 49,
-	},
-	{
-		firstName: "peter",
-		lastName: "torres",
-		age: 35,
-		visits: 64,
-		status: "Complicated",
-		progress: 66,
-	},
-	{
-		firstName: "ruby",
-		lastName: "peterson",
-		age: 22,
-		visits: 140,
-		status: "In Relationship",
-		progress: 99,
-	},
-	{
-		firstName: "sam",
-		lastName: "gray",
-		age: 41,
-		visits: 19,
-		status: "Single",
-		progress: 32,
-	},
-	{
-		firstName: "tara",
-		lastName: "ramirez",
-		age: 33,
-		visits: 55,
-		status: "Complicated",
-		progress: 61,
-	},
-	{
-		firstName: "uma",
-		lastName: "james",
-		age: 29,
-		visits: 78,
-		status: "In Relationship",
-		progress: 79,
-	},
-	{
-		firstName: "vince",
-		lastName: "watson",
-		age: 47,
-		visits: 13,
-		status: "Single",
-		progress: 25,
-	},
-	{
-		firstName: "willow",
-		lastName: "brooks",
-		age: 25,
-		visits: 98,
-		status: "Complicated",
-		progress: 83,
-	},
-	{
-		firstName: "zach",
-		lastName: "kelly",
-		age: 31,
-		visits: 46,
-		status: "In Relationship",
-		progress: 64,
-	},
-	{
-		firstName: "ariana",
-		lastName: "sanders",
-		age: 27,
-		visits: 89,
-		status: "Single",
-		progress: 87,
-	},
-];
+	component: App,
+});
 
 function App() {
-	const columns = React.useMemo(() => {
-		const c = createColumnHelper<Person>();
-
-		return [
-			c.accessor("firstName", {}),
-			c.accessor("lastName", {}),
-			c.accessor("age", {}),
-			c.accessor("visits", {}),
-			c.accessor("status", {}),
-			c.accessor("progress", {}),
-		];
-	}, []);
+	const search = Route.useLoaderData();
+	const { isLoading } = useRouterState();
+	const { getSortSearch } = useSort();
 
 	return (
 		<Wrapper title="Dashboard">
 			<WrapperHeader className="bg-neutral-900 rounded-md p-2">
-				Header
+				{isLoading ? "Loading..." : "Dashboard"}
+				<div className="p-2 flex gap-2 [&>a]:p-2 [&>a]:border">
+					<Link to="/" search={getSortSearch("name")}>
+						Name
+					</Link>
+					<Link to="/" search={getSortSearch("age")}>
+						Age
+					</Link>
+					<Link to="/" search={getSortSearch("count")}>
+						Count
+					</Link>
+				</div>
 			</WrapperHeader>
 			<WrapperBody>
-				<DataTable columns={columns} data={defaultData} pageSize={50} />
+				<pre>{JSON.stringify(search, null, 2)}</pre>
 			</WrapperBody>
+			<WrapperFooter>
+				<Pagination totalRecords={1000} />
+			</WrapperFooter>
 		</Wrapper>
 	);
 }

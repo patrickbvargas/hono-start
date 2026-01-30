@@ -65,6 +65,7 @@ function PaginationLink({
 			aria-current={isActive ? "page" : undefined}
 			data-slot="pagination-link"
 			data-active={isActive}
+			preload="intent"
 			className={cn(
 				buttonVariants({
 					variant: isActive ? "outline" : "ghost",
