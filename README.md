@@ -308,3 +308,54 @@ Files prefixed with `demo` can be safely deleted. They are there to provide a st
 # Learn More
 
 You can learn more about all of the offerings from TanStack in the [TanStack documentation](https://tanstack.com).
+
+# Pattern Folder Structure
+
+/features/{feature-name}
+├── api/
+│   ├── get-{feature}.ts
+│   ├── create-{feature}.ts
+│   ├── update-{feature}.ts
+│   └── delete-{feature}.ts
+├── components/
+│   ├── {component-name}/
+│   │   ├── index.tsx
+│   │   └── {parts}.tsx
+│   └── index.ts
+├── hooks/
+│   └── use-{feature}-logic.ts
+└── schemas/
+    ├── model.ts
+    ├── search.ts
+    ├── filter.ts
+    ├── sort.ts
+    └── form.ts
+
+---
+
+Example: employees
+
+/features/employees
+├── api/
+│   ├── get-employees.ts
+│   ├── create-employee.ts
+│   ├── update-employee.ts
+│   └── delete-employee.ts
+├── components/
+│   ├── table/
+│   │   └── index.tsx
+│   ├── form/
+│   │   ├── fields.tsx
+│   │   └── index.tsx
+│   └── delete/
+│       ├── confirm.tsx
+│       └── index.tsx
+├── hooks/
+│   └── use-employees-logic.ts
+└── schemas/
+    ├── model.ts
+    ├── search.ts
+    ├── filter.ts
+    ├── sort.ts
+    └── form.ts
+
