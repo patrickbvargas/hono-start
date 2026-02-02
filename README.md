@@ -311,51 +311,34 @@ You can learn more about all of the offerings from TanStack in the [TanStack doc
 
 # Pattern Folder Structure
 
-/features/{feature-name}
+/features/{feature-name}/
 ├── api/
-│   ├── get-{feature}.ts
-│   ├── create-{feature}.ts
-│   ├── update-{feature}.ts
-│   └── delete-{feature}.ts
-├── components/
-│   ├── {component-name}/
-│   │   ├── index.tsx
-│   │   └── {parts}.tsx
+│   ├── query.ts              # getUsers()
+│   ├── mutation.ts           # createUser()
 │   └── index.ts
 ├── hooks/
-│   └── use-{feature}-logic.ts
-└── schemas/
-    ├── model.ts
-    ├── search.ts
-    ├── filter.ts
-    ├── sort.ts
-    └── form.ts
-
----
-
-Example: employees
-
-/features/employees
-├── api/
-│   ├── get-employees.ts
-│   ├── create-employee.ts
-│   ├── update-employee.ts
-│   └── delete-employee.ts
+│   ├── query.ts              # useUsers()
+│   ├── mutation.ts           # useCreateUser()
+│   └── index.ts
 ├── components/
-│   ├── table/
-│   │   └── index.tsx
-│   ├── form/
-│   │   ├── fields.tsx
-│   │   └── index.tsx
-│   └── delete/
-│       ├── confirm.tsx
-│       └── index.tsx
-├── hooks/
-│   └── use-employees-logic.ts
-└── schemas/
-    ├── model.ts
-    ├── search.ts
-    ├── filter.ts
-    ├── sort.ts
-    └── form.ts
-
+│   ├── {component-name}/     # UserList
+│   │   ├── index.tsx
+│   │   ├── {subcomponent-name}.tsx
+│   └── index.ts
+├── lib/
+│   ├── utils.ts              # formatUserName()
+├── schemas
+│   ├── model.ts              # userSchema
+│   ├── form.ts
+│   ├── search.ts
+│   ├── filter.ts
+│   └── index.ts
+├── store/
+│   ├── store.ts              # userStore
+├── constants/
+│   └── index.ts              # USER_DEFAULT_NAME
+├── __tests__/
+│   ├── components.test.tsx
+│   ├── hooks.test.ts
+│   └── api.test.ts
+└── index.ts
