@@ -1,19 +1,10 @@
 import type { z } from "zod";
 import { createSortSchema } from "@/shared/schemas/sort";
-import type { NonEmptyKeys } from "@/shared/types/utils";
+import { EMPLOYEE_ALLOWED_SORT_COLUMNS } from "../constants";
 import type { Employee } from "./model";
 
-export const EMPLOYEE_SORT_COLUMNS: NonEmptyKeys<Employee> = [
-	"fullName",
-	"oabNumber",
-	"remunerationPercent",
-	"role",
-	"type",
-	"status",
-];
-
 export const employeeSortSchema = createSortSchema<Employee>({
-	columns: EMPLOYEE_SORT_COLUMNS,
+	columns: EMPLOYEE_ALLOWED_SORT_COLUMNS,
 	defaultColumn: "fullName",
 });
 
