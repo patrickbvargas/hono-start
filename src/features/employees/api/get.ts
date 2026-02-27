@@ -153,12 +153,12 @@ export const getEmployees = createServerFn({ method: "GET" })
 
 		// 2. Ordenação
 		filteredData.sort((a, b) => {
-			const field = data.sortBy as keyof Employee;
+			const field = data.column as keyof Employee;
 			const valA = a[field]!;
 			const valB = b[field]!;
 
-			if (valA < valB) return data.sortOrder === "asc" ? -1 : 1;
-			if (valA > valB) return data.sortOrder === "asc" ? 1 : -1;
+			if (valA < valB) return data.direction === "asc" ? -1 : 1;
+			if (valA > valB) return data.direction === "asc" ? 1 : -1;
 			return 0;
 		});
 

@@ -4,9 +4,9 @@ import { employeeFilterSchema } from "./filter";
 import { employeeSortSchema } from "./sort";
 
 export const employeeSearchSchema = z.object({
+	...paginationSchema.shape,
 	...employeeSortSchema.shape,
 	...employeeFilterSchema.shape,
-	...paginationSchema.shape,
 });
 
 export type EmployeeSearch = z.infer<typeof employeeSearchSchema>;

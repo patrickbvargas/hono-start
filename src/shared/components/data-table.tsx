@@ -91,11 +91,11 @@ interface DataTableHeaderProps<TData> {
 }
 
 const DataTableHeader = <TData,>({ header }: DataTableHeaderProps<TData>) => {
-	const { sortBy, sortOrder, getSortSearch } = useSort();
+	const { column, direction, getSortSearch } = useSort();
 
 	const canSort = header.column.getCanSort();
 	const columnId = header.column.id;
-	const isActive = sortBy === columnId;
+	const isActive = column === columnId;
 
 	const content = flexRender(
 		header.column.columnDef.header,
@@ -118,7 +118,7 @@ const DataTableHeader = <TData,>({ header }: DataTableHeaderProps<TData>) => {
 					isActive
 						? "opacity-100 text-primary"
 						: "opacity-0 group-hover:opacity-50 text-muted-foreground",
-					isActive && sortOrder === "desc" && "rotate-180",
+					isActive && direction === "desc" && "rotate-180",
 				)}
 			/>
 		</Link>

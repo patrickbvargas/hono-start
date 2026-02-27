@@ -3,14 +3,14 @@ import type { NonEmptyKeys } from "../types/utils";
 
 const DEFAULT_ORDER = "asc";
 
-const sortOrderSchema = z
+const sortDirectionSchema = z
 	.enum(["asc", "desc"])
 	.catch(DEFAULT_ORDER)
 	.default(DEFAULT_ORDER);
 
 export const sortSchema = z.object({
-	sortBy: z.string().nullable().catch(null).default(null),
-	sortOrder: sortOrderSchema,
+	column: z.string().nullable().catch(null).default(null),
+	direction: sortDirectionSchema,
 });
 
 export const createSortSchema = <T>(config: {
@@ -18,13 +18,13 @@ export const createSortSchema = <T>(config: {
 	defaultColumn: keyof T & string;
 }) => {
 	return z.object({
-		sortBy: z
+		column: z
 			.enum(config.columns)
 			.catch(config.defaultColumn)
 			.default(config.defaultColumn),
-		sortOrder: sortOrderSchema,
+		direction: sortDirectionSchema,
 	});
 };
 
 export type Sort = z.infer<typeof sortSchema>;
-export type SortOrder = z.infer<typeof sortOrderSchema>;
+export type SortDirection = z.infer<typeof sortDirectionSchema>;
