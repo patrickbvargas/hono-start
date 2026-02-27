@@ -1,7 +1,7 @@
 import * as z from "zod";
+import { entityIdSchema } from "@/shared/schemas/entity";
 
-export const employeeSchema = z.object({
-	id: z.string(),
+export const employeeSchema = entityIdSchema.safeExtend({
 	fullName: z.string(),
 	oabNumber: z.string().nullable(),
 	remunerationPercent: z.number(),

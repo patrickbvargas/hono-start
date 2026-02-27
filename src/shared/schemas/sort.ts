@@ -1,5 +1,5 @@
 import * as z from "zod";
-import type { NonEmptySortKeys } from "../types/utils";
+import type { NonEmptyKeys } from "../types/utils";
 
 const DEFAULT_ORDER = "asc";
 
@@ -8,15 +8,13 @@ const sortOrderSchema = z
 	.catch(DEFAULT_ORDER)
 	.default(DEFAULT_ORDER);
 
-export type SortOrder = z.infer<typeof sortOrderSchema>;
-
 export const sortSchema = z.object({
 	sortBy: z.string().nullable().catch(null).default(null),
 	sortOrder: sortOrderSchema,
 });
 
 export const createSortSchema = <T>(config: {
-	columns: NonEmptySortKeys<T> & string[];
+	columns: NonEmptyKeys<T> & string[];
 	defaultColumn: keyof T & string;
 }) => {
 	return z.object({
@@ -29,3 +27,4 @@ export const createSortSchema = <T>(config: {
 };
 
 export type Sort = z.infer<typeof sortSchema>;
+export type SortOrder = z.infer<typeof sortOrderSchema>;
