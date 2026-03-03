@@ -154,7 +154,9 @@ export const getEmployees = createServerFn({ method: "GET" })
 		// 2. Ordenação
 		filteredData.sort((a, b) => {
 			const field = data.column as keyof Employee;
+			// biome-ignore lint: provisório
 			const valA = a[field]!;
+			// biome-ignore lint: provisório
 			const valB = b[field]!;
 
 			if (valA < valB) return data.direction === "asc" ? -1 : 1;

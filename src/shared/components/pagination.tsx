@@ -8,7 +8,7 @@ import {
 	PaginationLink,
 	PaginationNext,
 	PaginationPrevious,
-	Pagination as PaginationRoot,
+	PaginationRoot,
 } from "./ui/pagination";
 
 const DEFAULT_SIBLING_COUNT = 1;

@@ -22,11 +22,11 @@ export const Wrapper = ({
 			{...props}
 		>
 			<div className="h-12 flex items-center justify-between">
-				<div className="flex items-center gap-1">
+				<div className="flex items-center gap-0.5">
 					<SidebarTrigger />
 					<Separator
 						orientation="vertical"
-						className="mx-2 data-[orientation=vertical]:h-4"
+						className="mx-2 my-auto data-[orientation=vertical]:h-4"
 					/>
 					{title && <WrapperTitle title={title} />}
 				</div>
