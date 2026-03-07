@@ -34,6 +34,11 @@
 			"style": {
 				"useImportType": "error"
 			},
+			"a11y": "off",
+			"correctness": {
+				"noChildrenProp": "off",
+				"noNestedComponentDefinitions": "off"
+			},
 			"suspicious": {
 				"noUnknownAtRules": "off"
 			}

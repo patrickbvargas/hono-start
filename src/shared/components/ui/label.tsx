@@ -2,7 +2,6 @@ import { cn } from "@/shared/lib/utils";
 
 function Label({ className, ...props }: React.ComponentProps<"label">) {
 	return (
-		// biome-ignore lint: This is a reusable wrapper component
 		<label
 			data-slot="label"
 			className={cn(
