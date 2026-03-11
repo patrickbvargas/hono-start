@@ -10,12 +10,15 @@ import {
 	FormInput,
 	FormInputOTP,
 	FormMultiselect,
+	FormNumber,
 	FormRadioGroup,
+	FormResetButton,
+	FormSubmitButton,
 	FormSwitch,
 	FormTextArea,
 } from "../components/form";
 
-export const { fieldContext, formContext, useFieldContext } =
+export const { fieldContext, formContext, useFormContext, useFieldContext } =
 	createFormHookContexts();
 
 export const { useAppForm } = createFormHook({
@@ -24,6 +27,7 @@ export const { useAppForm } = createFormHook({
 	fieldComponents: {
 		Input: FormInput,
 		InputOTP: FormInputOTP,
+		Number: FormNumber,
 		Textarea: FormTextArea,
 		Checkbox: FormCheckbox,
 		CheckboxGroup: FormCheckboxGroup,
@@ -33,5 +37,8 @@ export const { useAppForm } = createFormHook({
 		Switch: FormSwitch,
 		DatePicker: FormDatePicker,
 	},
-	formComponents: {},
+	formComponents: {
+		Submit: FormSubmitButton,
+		Reset: FormResetButton,
+	},
 });

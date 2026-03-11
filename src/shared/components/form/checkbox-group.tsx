@@ -14,7 +14,7 @@ import {
 
 interface FormCheckboxGroupProps
 	extends FieldCommonProps,
-		React.ComponentProps<typeof Checkbox> {
+		React.ComponentPropsWithoutRef<typeof Checkbox> {
 	options: FieldOption[];
 	orientation?: "horizontal" | "vertical";
 	classNames?: FieldClassNames & {

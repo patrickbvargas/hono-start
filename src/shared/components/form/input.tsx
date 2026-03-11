@@ -5,7 +5,7 @@ import { FormDescription, FormError, FormField, FormLabel } from "./utils";
 
 interface FormInputProps
 	extends FieldCommonProps,
-		React.ComponentProps<typeof Input> {}
+		React.ComponentPropsWithoutRef<typeof Input> {}
 
 export const FormInput = ({
 	label,
@@ -32,7 +32,7 @@ export const FormInput = ({
 				name={field.name}
 				value={field.state.value}
 				onBlur={field.handleBlur}
-				onChange={(e) => field.handleChange(e.target.value)}
+				onChange={(e) => field.handleChange(e.target.value.trim())}
 				aria-invalid={isInvalid}
 				disabled={isDisabled}
 				required={isRequired}

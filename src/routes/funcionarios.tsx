@@ -1,21 +1,17 @@
-import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import {
+	EmployeeForm,
 	EmployeeTable,
 	employeeSearchSchema,
 	getEmployeesOptions,
 } from "@/features/employees";
-import { createEmployeeOptions } from "@/features/employees/api/create";
-import { deleteEmployeeOptions } from "@/features/employees/api/delete";
-import { updateEmployeeOptions } from "@/features/employees/api/update";
 import { Pagination } from "@/shared/components/pagination";
-import { Button } from "@/shared/components/ui/button";
 import {
 	Wrapper,
 	WrapperBody,
 	WrapperFooter,
-	WrapperHeader,
 } from "@/shared/components/wrapper";
 import { ROUTES } from "@/shared/config/routes";
 
@@ -31,13 +27,13 @@ export const Route = createFileRoute("/funcionarios")({
 function RouteComponent() {
 	const search = Route.useSearch();
 	const employees = useSuspenseQuery(getEmployeesOptions(search));
-	const _mutationCreate = useMutation(createEmployeeOptions());
-	const _mutationUpdate = useMutation(updateEmployeeOptions());
-	const _mutationDelete = useMutation(deleteEmployeeOptions());
+	// const _mutationCreate = useMutation(createEmployeeOptions());
+	// const _mutationUpdate = useMutation(updateEmployeeOptions());
+	// const _mutationDelete = useMutation(deleteEmployeeOptions());
 
 	return (
 		<Wrapper title={ROUTES.employee.title}>
-			<WrapperHeader className="flex gap-3">
+			{/* <WrapperHeader className="flex gap-3">
 				<Button size="sm" onClick={() => _mutationCreate.mutate({ data: {} })}>
 					Create
 				</Button>
@@ -55,10 +51,10 @@ function RouteComponent() {
 				>
 					Delete
 				</Button>
-			</WrapperHeader>
+			</WrapperHeader> */}
 			<WrapperBody>
-				<pre>{JSON.stringify(search)}</pre>
 				<EmployeeTable employees={employees.data.items} />
+				<EmployeeForm />
 			</WrapperBody>
 			<WrapperFooter>
 				<Pagination totalRecords={employees.data.total} />

@@ -5,7 +5,7 @@ import { FormError, FormField, FormLabel } from "./utils";
 
 interface FormSwitchProps
 	extends Omit<FieldCommonProps, "description">,
-		React.ComponentProps<typeof Switch> {}
+		React.ComponentPropsWithoutRef<typeof Switch> {}
 
 export const FormSwitch = ({
 	label,

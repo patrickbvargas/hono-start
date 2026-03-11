@@ -1,3 +1,4 @@
+import * as React from "react";
 import { useFieldContext } from "@/shared/hooks/use-app-form";
 import {
 	Combobox,
@@ -6,18 +7,20 @@ import {
 	ComboboxInput,
 	ComboboxItem,
 	ComboboxList,
-	useComboboxAnchor,
 } from "../ui/combobox";
 import type { FieldClassNames, FieldCommonProps, FieldOption } from "./types";
 import { FormDescription, FormError, FormField, FormLabel } from "./utils";
 
 interface FormAutocompleteProps
 	extends FieldCommonProps,
-		React.ComponentProps<typeof Combobox> {
+		Omit<
+			React.ComponentPropsWithoutRef<typeof Combobox<FieldOption>>,
+			"multiple"
+		> {
 	options: FieldOption[];
 	placeholder?: string;
-	searchPlaceholder?: string;
 	emptyMessage?: string;
+	isClearable?: boolean;
 	classNames?: FieldClassNames & {
 		empty?: string;
 		list?: string;
@@ -31,16 +34,32 @@ export const FormAutocomplete = ({
 	isRequired,
 	isDisabled,
 	options,
+	isClearable = true,
 	placeholder = "Selecionar item...",
-	searchPlaceholder = "Buscar...",
 	emptyMessage = "Nenhum item encontrado",
 	classNames,
 	...props
 }: FormAutocompleteProps) => {
-	const anchor = useComboboxAnchor();
 	const field = useFieldContext<string>();
 
 	const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+
+	const selectedOption = React.useMemo(
+		() => options.find((opt) => opt.value === field.state.value) ?? null,
+		[options, field.state.value],
+	);
+
+	const handleValueChange = React.useCallback(
+		(option: FieldOption | null) => {
+			if (!option) {
+				field.clearValues();
+				return;
+			}
+
+			field.handleChange(option.value);
+		},
+		[field],
+	);
 
 	return (
 		<FormField data-invalid={isInvalid} className={classNames?.wrapper}>
@@ -53,19 +72,20 @@ export const FormAutocomplete = ({
 			<Combobox
 				id={field.name}
 				name={field.name}
-				value={field.state.value}
-				onValueChange={(e) => {
-					console.log(e);
-					field.handleChange(String(e));
-				}}
+				value={selectedOption}
+				onValueChange={handleValueChange}
 				aria-invalid={isInvalid}
 				disabled={isDisabled}
 				items={options}
-				itemToStringValue={(option) => (option as FieldOption).value}
+				itemToStringValue={(option) => option.label}
 				{...props}
 			>
-				<ComboboxInput placeholder={placeholder} aria-invalid={isInvalid} />
-				<ComboboxContent anchor={anchor}>
+				<ComboboxInput
+					placeholder={placeholder}
+					aria-invalid={isInvalid}
+					showClear={isClearable}
+				/>
+				<ComboboxContent>
 					<ComboboxEmpty className={classNames?.empty}>
 						{emptyMessage}
 					</ComboboxEmpty>
@@ -73,7 +93,7 @@ export const FormAutocomplete = ({
 						{(option) => (
 							<ComboboxItem
 								key={option.value}
-								value={option.value}
+								value={option}
 								className={classNames?.item}
 								disabled={option.isDisabled}
 							>

@@ -1,22 +1,21 @@
-import type { DateValue } from "@internationalized/date";
 import { useFieldContext } from "@/shared/hooks/use-app-form";
-import { DatePicker } from "../ui/date-picker";
+import { InputNumber } from "../ui/input-number";
 import type { FieldCommonProps } from "./types";
 import { FormDescription, FormError, FormField, FormLabel } from "./utils";
 
-interface FormDatePickerProps
+interface FormNumberProps
 	extends FieldCommonProps,
-		React.ComponentPropsWithoutRef<typeof DatePicker> {}
+		React.ComponentPropsWithoutRef<typeof InputNumber> {}
 
-export const FormDatePicker = ({
+export const FormNumber = ({
 	label,
 	description,
 	isRequired,
 	isDisabled,
 	classNames,
 	...props
-}: FormDatePickerProps) => {
-	const field = useFieldContext<DateValue | null>();
+}: FormNumberProps) => {
+	const field = useFieldContext<number>();
 
 	const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 
@@ -28,7 +27,7 @@ export const FormDatePicker = ({
 				isRequired={isRequired}
 				className={classNames?.label}
 			/>
-			<DatePicker
+			<InputNumber
 				id={field.name}
 				name={field.name}
 				value={field.state.value}

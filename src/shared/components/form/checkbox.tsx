@@ -5,7 +5,7 @@ import { FormError, FormField, FormLabel } from "./utils";
 
 interface FormCheckboxProps
 	extends Omit<FieldCommonProps, "description">,
-		React.ComponentProps<typeof Checkbox> {}
+		React.ComponentPropsWithoutRef<typeof Checkbox> {}
 
 export const FormCheckbox = ({
 	label,

@@ -16,7 +16,7 @@ import { FormDescription, FormError, FormField, FormLabel } from "./utils";
 
 interface FormMultiselectProps
 	extends FieldCommonProps,
-		React.ComponentProps<typeof Combobox> {
+		React.ComponentPropsWithoutRef<typeof Combobox> {
 	options: FieldOption[];
 	placeholder?: string;
 	searchPlaceholder?: string;
