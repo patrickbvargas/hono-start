@@ -12,7 +12,7 @@ import {
 	useComboboxAnchor,
 } from "../ui/combobox";
 import type { FieldClassNames, FieldCommonProps, FieldOption } from "./types";
-import { FormDescription, FormError, FormField, FormLabel } from "./utils";
+import { FormFieldWrapper } from "./utils/wrapper";
 
 interface FormMultiselectProps
 	extends FieldCommonProps,
@@ -45,13 +45,15 @@ export const FormMultiselect = ({
 	const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 
 	return (
-		<FormField data-invalid={isInvalid} className={classNames?.wrapper}>
-			<FormLabel
-				label={label}
-				htmlFor={field.name}
-				isRequired={isRequired}
-				className={classNames?.label}
-			/>
+		<FormFieldWrapper
+			id={field.name}
+			label={label}
+			description={description}
+			isRequired={isRequired}
+			errors={field.state.meta.errors}
+			data-invalid={isInvalid}
+			className={classNames?.wrapper}
+		>
 			<Combobox
 				id={field.name}
 				name={field.name}
@@ -100,14 +102,6 @@ export const FormMultiselect = ({
 					</ComboboxList>
 				</ComboboxContent>
 			</Combobox>
-			<FormDescription
-				description={description}
-				className={classNames?.description}
-			/>
-			<FormError
-				errors={field.state.meta.errors}
-				className={classNames?.error}
-			/>
-		</FormField>
+		</FormFieldWrapper>
 	);
 };

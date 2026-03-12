@@ -1,5 +1,5 @@
 import { useFormContext } from "@/shared/hooks/use-app-form";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 
 export const FormResetButton = ({
 	children,

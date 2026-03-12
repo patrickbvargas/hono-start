@@ -1,7 +1,7 @@
 import { useFieldContext } from "@/shared/hooks/use-app-form";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "../ui/input-otp";
 import type { FieldCommonProps } from "./types";
-import { FormDescription, FormError, FormField, FormLabel } from "./utils";
+import { FormFieldWrapper } from "./utils/wrapper";
 
 interface FormInputOTPProps extends FieldCommonProps {
 	maxLength?: number;
@@ -21,13 +21,15 @@ export const FormInputOTP = ({
 	const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 
 	return (
-		<FormField data-invalid={isInvalid} className={classNames?.wrapper}>
-			<FormLabel
-				label={label}
-				htmlFor={field.name}
-				isRequired={isRequired}
-				className={classNames?.label}
-			/>
+		<FormFieldWrapper
+			id={field.name}
+			label={label}
+			description={description}
+			isRequired={isRequired}
+			errors={field.state.meta.errors}
+			data-invalid={isInvalid}
+			className={classNames?.wrapper}
+		>
 			<InputOTP
 				id={field.name}
 				name={field.name}
@@ -46,14 +48,6 @@ export const FormInputOTP = ({
 					))}
 				</InputOTPGroup>
 			</InputOTP>
-			<FormDescription
-				description={description}
-				className={classNames?.description}
-			/>
-			<FormError
-				errors={field.state.meta.errors}
-				className={classNames?.error}
-			/>
-		</FormField>
+		</FormFieldWrapper>
 	);
 };

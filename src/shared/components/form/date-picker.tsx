@@ -2,7 +2,7 @@ import type { DateValue } from "@internationalized/date";
 import { useFieldContext } from "@/shared/hooks/use-app-form";
 import { DatePicker } from "../ui/date-picker";
 import type { FieldCommonProps } from "./types";
-import { FormDescription, FormError, FormField, FormLabel } from "./utils";
+import { FormFieldWrapper } from "./utils/wrapper";
 
 interface FormDatePickerProps
 	extends FieldCommonProps,
@@ -21,13 +21,15 @@ export const FormDatePicker = ({
 	const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 
 	return (
-		<FormField data-invalid={isInvalid} className={classNames?.wrapper}>
-			<FormLabel
-				label={label}
-				htmlFor={field.name}
-				isRequired={isRequired}
-				className={classNames?.label}
-			/>
+		<FormFieldWrapper
+			id={field.name}
+			label={label}
+			description={description}
+			isRequired={isRequired}
+			errors={field.state.meta.errors}
+			data-invalid={isInvalid}
+			className={classNames?.wrapper}
+		>
 			<DatePicker
 				id={field.name}
 				name={field.name}
@@ -40,14 +42,6 @@ export const FormDatePicker = ({
 				aria-invalid={isInvalid}
 				{...props}
 			/>
-			<FormDescription
-				description={description}
-				className={classNames?.description}
-			/>
-			<FormError
-				errors={field.state.meta.errors}
-				className={classNames?.error}
-			/>
-		</FormField>
+		</FormFieldWrapper>
 	);
 };

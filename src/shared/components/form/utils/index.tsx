@@ -5,3 +5,6 @@ export * from "./fieldset";
 export * from "./group";
 export * from "./label";
 export * from "./legend";
+export * from "./reset-button";
+export * from "./submit-button";
+export * from "./wrapper";

@@ -1,7 +1,7 @@
 import { useFieldContext } from "@/shared/hooks/use-app-form";
 import { InputNumber } from "../ui/input-number";
 import type { FieldCommonProps } from "./types";
-import { FormDescription, FormError, FormField, FormLabel } from "./utils";
+import { FormFieldWrapper } from "./utils/wrapper";
 
 interface FormNumberProps
 	extends FieldCommonProps,
@@ -20,13 +20,15 @@ export const FormNumber = ({
 	const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 
 	return (
-		<FormField data-invalid={isInvalid} className={classNames?.wrapper}>
-			<FormLabel
-				label={label}
-				htmlFor={field.name}
-				isRequired={isRequired}
-				className={classNames?.label}
-			/>
+		<FormFieldWrapper
+			id={field.name}
+			label={label}
+			description={description}
+			isRequired={isRequired}
+			errors={field.state.meta.errors}
+			data-invalid={isInvalid}
+			className={classNames?.wrapper}
+		>
 			<InputNumber
 				id={field.name}
 				name={field.name}
@@ -39,14 +41,6 @@ export const FormNumber = ({
 				aria-invalid={isInvalid}
 				{...props}
 			/>
-			<FormDescription
-				description={description}
-				className={classNames?.description}
-			/>
-			<FormError
-				errors={field.state.meta.errors}
-				className={classNames?.error}
-			/>
-		</FormField>
+		</FormFieldWrapper>
 	);
 };

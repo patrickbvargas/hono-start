@@ -1,8 +1,6 @@
 import { CalendarDate, parseDate } from "@internationalized/date";
-import { useStore } from "@tanstack/react-form-start";
 import z from "zod";
 import type { FieldOption } from "@/shared/components/form/types";
-import { Button } from "@/shared/components/ui/button";
 import { useAppForm } from "@/shared/hooks/use-app-form";
 
 const formSchema = z.object({
@@ -55,95 +53,108 @@ export const DemoForm = () => {
 		},
 	});
 
-	const values = useStore(form.store, (state) => state.values);
-	const errors = useStore(form.store, (state) => state.errors);
-
 	return (
-		<div>
-			<pre>{JSON.stringify(values, null, 2)}</pre>
-			<pre className="text-destructive">{JSON.stringify(errors)}</pre>
-			<div className="grid grid-cols-2 gap-3">
-				<form.AppField
-					name="datePicker"
-					children={(field) => (
-						<field.DatePicker
-							label="DatePicker"
-							description="DatePicker description"
-						/>
-					)}
-				/>
-				<form.AppField
-					name="input"
-					children={(field) => (
-						<field.Input label="Input" description="Input description" />
-					)}
-				/>
-				<form.AppField
-					name="inputOTP"
-					children={(field) => (
-						<field.InputOTP
-							label="InputOTP"
-							description="InputOTP description"
-							maxLength={3}
-						/>
-					)}
-				/>
-				<form.AppField
-					name="textarea"
-					children={(field) => (
-						<field.Input label="Textarea" description="Textarea description" />
-					)}
-				/>
-				<form.AppField
-					name="autocomplete"
-					children={(field) => (
-						<field.Autocomplete
-							label="Autocomplete"
-							description="Autocomplete description"
-							options={defaultOptions}
-						/>
-					)}
-				/>
-				<form.AppField
-					name="checkbox"
-					children={(field) => <field.Checkbox label="Checkbox" />}
-				/>
-				<form.AppField
-					name="switch"
-					children={(field) => <field.Switch label="Switch" />}
-				/>
-				<form.AppField
-					name="checkboxGroup"
-					children={(field) => (
-						<field.CheckboxGroup
-							label="CheckboxGroup"
-							description="CheckboxGroup description"
-							options={defaultOptions}
-						/>
-					)}
-				/>
-				<form.AppField
-					name="multiselect"
-					children={(field) => (
-						<field.Multiselect
-							label="Multiselect"
-							description="Multiselect description"
-							options={defaultOptions}
-						/>
-					)}
-				/>
-				<form.AppField
-					name="radioGroup"
-					children={(field) => (
-						<field.RadioGroup
-							label="RadioGroup"
-							description="RadioGroup description"
-							options={defaultOptions}
-						/>
-					)}
-				/>
-				<Button onClick={() => form.handleSubmit()}>Submit</Button>
-			</div>
-		</div>
+		<form
+			onSubmit={(e) => e.preventDefault()}
+			className="grid grid-cols-2 gap-3"
+		>
+			<form.AppField
+				name="datePicker"
+				children={(field) => (
+					<field.DatePicker
+						label="DatePicker"
+						description="DatePicker description"
+						isRequired
+					/>
+				)}
+			/>
+			<form.AppField
+				name="input"
+				children={(field) => (
+					<field.Input
+						label="Input"
+						description="Input description"
+						isRequired
+					/>
+				)}
+			/>
+			<form.AppField
+				name="inputOTP"
+				children={(field) => (
+					<field.InputOTP
+						label="InputOTP"
+						description="InputOTP description"
+						maxLength={6}
+						isRequired
+					/>
+				)}
+			/>
+			<form.AppField
+				name="textarea"
+				children={(field) => (
+					<field.Textarea
+						label="Textarea"
+						description="Textarea description"
+						isRequired
+					/>
+				)}
+			/>
+			<form.AppField
+				name="autocomplete"
+				children={(field) => (
+					<field.Autocomplete
+						label="Autocomplete"
+						description="Autocomplete description"
+						options={defaultOptions}
+						isRequired
+					/>
+				)}
+			/>
+			<form.AppField
+				name="checkbox"
+				children={(field) => <field.Checkbox label="Checkbox" isRequired />}
+			/>
+			<form.AppField
+				name="switch"
+				children={(field) => <field.Switch label="Switch" isRequired />}
+			/>
+			<form.AppField
+				name="checkboxGroup"
+				children={(field) => (
+					<field.CheckboxGroup
+						label="CheckboxGroup"
+						description="CheckboxGroup description"
+						options={defaultOptions}
+						isRequired
+					/>
+				)}
+			/>
+			<form.AppField
+				name="multiselect"
+				children={(field) => (
+					<field.Multiselect
+						label="Multiselect"
+						description="Multiselect description"
+						options={defaultOptions}
+						isRequired
+					/>
+				)}
+			/>
+			<form.AppField
+				name="radioGroup"
+				children={(field) => (
+					<field.RadioGroup
+						label="RadioGroup"
+						description="RadioGroup description"
+						options={defaultOptions}
+						isRequired
+					/>
+				)}
+			/>
+			<form.AppForm>
+				<form.Reset />
+				<form.Submit />
+			</form.AppForm>
+		</form>
 	);
 };

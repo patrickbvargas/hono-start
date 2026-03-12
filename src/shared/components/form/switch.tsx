@@ -1,7 +1,8 @@
 import { useFieldContext } from "@/shared/hooks/use-app-form";
+import { cn } from "@/shared/lib/utils";
 import { Switch } from "../ui/switch";
 import type { FieldCommonProps } from "./types";
-import { FormError, FormField, FormLabel } from "./utils";
+import { FormFieldWrapper } from "./utils/wrapper";
 
 interface FormSwitchProps
 	extends Omit<FieldCommonProps, "description">,
@@ -19,7 +20,15 @@ export const FormSwitch = ({
 	const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 
 	return (
-		<FormField data-invalid={isInvalid} orientation="horizontal">
+		<FormFieldWrapper
+			id={field.name}
+			label={label}
+			isRequired={isRequired}
+			errors={field.state.meta.errors}
+			data-invalid={isInvalid}
+			className={cn(classNames?.wrapper, "flex-row-reverse")}
+			orientation="horizontal"
+		>
 			<Switch
 				id={field.name}
 				name={field.name}
@@ -30,16 +39,6 @@ export const FormSwitch = ({
 				disabled={isDisabled}
 				{...props}
 			/>
-			<FormLabel
-				label={label}
-				htmlFor={field.name}
-				isRequired={isRequired}
-				className={classNames?.label}
-			/>
-			<FormError
-				errors={field.state.meta.errors}
-				className={classNames?.error}
-			/>
-		</FormField>
+		</FormFieldWrapper>
 	);
 };
