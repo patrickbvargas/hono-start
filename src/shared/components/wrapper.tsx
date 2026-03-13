@@ -18,10 +18,10 @@ export const Wrapper = ({
 	return (
 		<div
 			data-slot="wrapper"
-			className={cn("flex flex-col gap-3 p-4 pt-1.5 h-full", className)}
+			className={cn("flex flex-col gap-3 h-full", className)}
 			{...props}
 		>
-			<div className="h-12 flex items-center justify-between">
+			<div className="h-12 flex items-center justify-between px-4 pt-1.5">
 				<div className="flex items-center gap-0.5">
 					<SidebarTrigger />
 					<Separator
@@ -59,7 +59,9 @@ export const WrapperBody = ({
 			className={cn("h-full w-full overflow-hidden", className)}
 			{...props}
 		>
-			<div className={cn("flex flex-col gap-3", className)}>{children}</div>
+			<div className={cn("flex flex-col px-4 gap-3", className)}>
+				{children}
+			</div>
 		</ScrollArea>
 	);
 };
@@ -71,7 +73,7 @@ export const WrapperFooter = ({
 	return (
 		<div
 			data-slot="wrapper-footer"
-			className={cn("flex justify-end items-center gap-3", className)}
+			className={cn("flex justify-end items-center gap-3 px-4 pb-4", className)}
 			{...props}
 		/>
 	);

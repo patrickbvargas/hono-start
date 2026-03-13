@@ -63,6 +63,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 				<HeadContent />
 			</head>
 			<body>
+				{/* TODO: implement the final isLoading */}
 				{isLoading && (
 					<div className="fixed inset-0 z-9999 flex items-center justify-center backdrop-blur-[1px] cursor-wait">
 						<div className="flex flex-col items-center gap-2">
