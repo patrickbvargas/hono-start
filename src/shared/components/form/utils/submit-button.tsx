@@ -10,12 +10,7 @@ export const FormSubmitButton = ({
 	return (
 		<form.Subscribe selector={(state) => state.isSubmitting}>
 			{(isSubmitting) => (
-				<Button
-					type="submit"
-					onClick={form.handleSubmit}
-					disabled={isSubmitting}
-					{...props}
-				>
+				<Button type="submit" disabled={isSubmitting} {...props}>
 					{children || "Salvar"}
 				</Button>
 			)}

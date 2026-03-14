@@ -39,10 +39,15 @@ export const Wrapper = ({
 
 export const WrapperHeader = ({
 	children,
+	className,
 	...props
 }: React.HTMLAttributes<HTMLDivElement>) => {
 	return (
-		<div data-slot="wrapper-header" {...props}>
+		<div
+			data-slot="wrapper-header"
+			className={cn("flex items-center justify-between px-4", className)}
+			{...props}
+		>
 			{children}
 		</div>
 	);

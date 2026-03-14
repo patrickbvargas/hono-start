@@ -11,5 +11,11 @@ export function useEmployeeForm() {
 		},
 	});
 
-	return form;
+	return {
+		form,
+		Form: form.Form,
+		Field: form.AppField,
+		Submit: form.Submit,
+		Reset: form.Reset,
+	};
 }

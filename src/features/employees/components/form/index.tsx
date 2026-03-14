@@ -1,111 +1,81 @@
 import { FieldGroup } from "@/shared/components/ui/field";
-import { Separator } from "@/shared/components/ui/separator";
+import {
+	Wrapper,
+	WrapperBody,
+	WrapperFooter,
+} from "@/shared/components/wrapper";
+import { ROUTES } from "@/shared/config/routes";
 import { useEmployeeForm } from "../../hooks/form";
 import { useEmployeeOptions } from "../../hooks/options";
 
 export const EmployeeForm = () => {
-	const form = useEmployeeForm();
+	const { form, Form, Field, Submit } = useEmployeeForm();
 	const { roles, types } = useEmployeeOptions();
 
 	return (
-		// <Dialog open>
-		// <DialogTrigger>Open</DialogTrigger>
-		<div>
-			<div>
-				<p>Novo Funcionário</p>
-			</div>
-			<div>
-				<FieldGroup className="grid grid-cols-2">
-					<form.AppField
-						name="fullName"
-						children={(field) => (
-							<field.Input
-								label="Nome"
-								isRequired
-								classNames={{
-									wrapper: "col-span-full",
-								}}
-							/>
-						)}
-					/>
-					<form.AppField
-						name="email"
-						children={(field) => (
-							<field.Input
-								label="Email"
-								isRequired
-								classNames={{
-									wrapper: "col-span-full",
-								}}
-							/>
-						)}
-					/>
-					<form.AppField
-						name="type"
-						children={(field) => (
-							<field.Autocomplete
-								label="Função"
-								options={types}
-								isRequired
-								classNames={{
-									wrapper: "col-span-full",
-								}}
-							/>
-						)}
-					/>
-					<form.AppField
-						name="oabNumber"
-						children={(field) => (
-							<field.Input label="OAB" placeholder="RS000000" maxLength={8} />
-						)}
-					/>
-					<form.AppField name="role">
-						{(field) => (
-							<field.Autocomplete label="Perfil" options={roles} isRequired />
-						)}
-					</form.AppField>
-				</FieldGroup>
-				<Separator />
-				<FieldGroup className="grid grid-cols-2">
-					<form.AppField
-						name="remunerationPercent"
-						children={(field) => (
-							<field.Number
-								label="% Remuneração"
-								minValue={0}
-								maxValue={1}
-								step={0.05}
-								isRequired
-								formatOptions={{
-									style: "percent",
-								}}
-							/>
-						)}
-					/>
-					<form.AppField
-						name="referrerPercent"
-						children={(field) => (
-							<field.Number
-								label="% Indicação"
-								minValue={0}
-								maxValue={1}
-								step={0.05}
-								isRequired
-								formatOptions={{
-									style: "percent",
-								}}
-							/>
-						)}
-					/>
-				</FieldGroup>
-			</div>
-			<div>
-				<form.AppForm>
-					<form.Reset />
-					<form.Submit />
-				</form.AppForm>
-			</div>
-		</div>
-		// </Dialog>
+		<Form form={form}>
+			<Wrapper title={ROUTES.employee.title}>
+				<WrapperBody>
+					<FieldGroup className="grid grid-cols-2">
+						<Field name="fullName">
+							{(field) => <field.Input label="Nome" isRequired />}
+						</Field>
+						<Field name="email">
+							{(field) => <field.Input label="Email" isRequired />}
+						</Field>
+					</FieldGroup>
+					<FieldGroup className="grid grid-cols-3">
+						<Field name="type">
+							{(field) => (
+								<field.Autocomplete label="Função" options={types} isRequired />
+							)}
+						</Field>
+						<Field name="oabNumber">
+							{(field) => (
+								<field.Input label="OAB" placeholder="RS000000" maxLength={8} />
+							)}
+						</Field>
+						<Field name="role">
+							{(field) => (
+								<field.Autocomplete label="Perfil" options={roles} isRequired />
+							)}
+						</Field>
+					</FieldGroup>
+					<FieldGroup className="grid grid-cols-2 w-1/2">
+						<Field name="remunerationPercent">
+							{(field) => (
+								<field.Number
+									label="% Remuneração"
+									minValue={0}
+									maxValue={1}
+									step={0.05}
+									isRequired
+									formatOptions={{
+										style: "percent",
+									}}
+								/>
+							)}
+						</Field>
+						<Field name="referrerPercent">
+							{(field) => (
+								<field.Number
+									label="% Indicação"
+									minValue={0}
+									maxValue={1}
+									step={0.05}
+									isRequired
+									formatOptions={{
+										style: "percent",
+									}}
+								/>
+							)}
+						</Field>
+					</FieldGroup>
+				</WrapperBody>
+				<WrapperFooter className="justify-start">
+					<Submit />
+				</WrapperFooter>
+			</Wrapper>
+		</Form>
 	);
 };

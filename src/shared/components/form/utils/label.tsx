@@ -1,13 +1,11 @@
 import { FieldLabel } from "../../ui/field";
 
 interface FormLabelProps extends React.ComponentProps<typeof FieldLabel> {
-	label?: string;
+	label: string;
 	isRequired?: boolean;
 }
 
 export const FormLabel = ({ label, isRequired, ...props }: FormLabelProps) => {
-	if (!label) return null;
-
 	return (
 		<FieldLabel {...props}>
 			{label}

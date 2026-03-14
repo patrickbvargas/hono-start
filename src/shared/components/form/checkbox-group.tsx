@@ -3,13 +3,10 @@ import { cn } from "@/shared/lib/utils";
 import { Checkbox } from "../ui/checkbox";
 import type { FieldClassNames, FieldCommonProps, FieldOption } from "./types";
 import {
-	FormDescription,
-	FormError,
 	FormField,
-	FormFieldSet,
+	FormFieldWrapperGroup,
 	FormGroup,
 	FormLabel,
-	FormLegend,
 } from "./utils";
 
 interface FormCheckboxGroupProps
@@ -38,62 +35,54 @@ export const FormCheckboxGroup = ({
 	const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 
 	return (
-		<FormGroup className={classNames?.wrapper}>
-			<FormFieldSet>
-				<FormLegend
-					variant="label"
-					label={label}
-					isRequired={isRequired}
-					className={classNames?.label}
-				/>
-				<FormDescription
-					description={description}
-					className={classNames?.description}
-				/>
-				<FormGroup
-					data-slot="checkbox-group"
-					className={cn(
-						"flex flex-col gap-2",
-						orientation === "horizontal" && "flex-row",
-						classNames?.list,
-					)}
-				>
-					{options.map((option) => (
-						<FormField
-							key={option.value}
-							orientation="horizontal"
-							data-invalid={isInvalid}
-							className={classNames?.item}
-						>
-							<Checkbox
-								id={`checkbox-opt-${option.value}`}
-								name={field.name}
-								checked={field.state.value.includes(option.value)}
-								onBlur={field.handleBlur}
-								onCheckedChange={(checked) => {
-									if (checked) {
-										field.pushValue(option.value);
-									} else {
-										const index = field.state.value.indexOf(option.value);
-										if (index > -1) field.removeValue(index);
-									}
-								}}
-								aria-invalid={isInvalid}
-								disabled={option.disabled || isDisabled}
-								{...props}
-							/>
-							<FormLabel
-								label={option.label}
-								htmlFor={`checkbox-opt-${option.value}`}
-							/>
-						</FormField>
-					))}
-				</FormGroup>
-			</FormFieldSet>
-			<FormError
-				errors={field.state.meta.errors}
-				className={classNames?.error}
-			/>
-		</FormGroup>
+		<FormFieldWrapperGroup
+			id={field.name}
+			label={label}
+			description={description}
+			isRequired={isRequired}
+			errors={field.state.meta.errors}
+			data-invalid={isInvalid}
+			className={classNames?.wrapper}
+		>
+			<FormGroup
+				data-slot="checkbox-group"
+				className={cn(
+					"flex flex-col gap-2",
+					orientation === "horizontal" && "flex-row",
+					classNames?.list,
+				)}
+			>
+				{options.map((option) => (
+					<FormField
+						key={option.value}
+						orientation="horizontal"
+						data-invalid={isInvalid}
+						className={classNames?.item}
+					>
+						<Checkbox
+							id={`checkbox-opt-${option.value}`}
+							name={field.name}
+							checked={field.state.value.includes(option.value)}
+							onBlur={field.handleBlur}
+							onCheckedChange={(checked) => {
+								if (checked) {
+									field.pushValue(option.value);
+								} else {
+									const index = field.state.value.indexOf(option.value);
+									if (index > -1) field.removeValue(index);
+								}
+							}}
+							aria-invalid={isInvalid}
+							disabled={option.disabled || isDisabled}
+							{...props}
+						/>
+						<FormLabel
+							label={option.label}
+							htmlFor={`checkbox-opt-${option.value}`}
+						/>
+					</FormField>
+				))}
+			</FormGroup>
+		</FormFieldWrapperGroup>
 	);
 };

@@ -13,6 +13,7 @@ import {
 	FormNumber,
 	FormRadioGroup,
 	FormResetButton,
+	FormRoot,
 	FormSubmitButton,
 	FormSwitch,
 	FormTextArea,
@@ -38,6 +39,7 @@ export const { useAppForm } = createFormHook({
 		DatePicker: FormDatePicker,
 	},
 	formComponents: {
+		Form: FormRoot,
 		Submit: FormSubmitButton,
 		Reset: FormResetButton,
 	},

@@ -1,7 +1,7 @@
 import { FieldLegend } from "../../ui/field";
 
 interface FormLegendProps extends React.ComponentProps<typeof FieldLegend> {
-	label?: string;
+	label: string;
 	isRequired?: boolean;
 }
 
@@ -10,8 +10,6 @@ export const FormLegend = ({
 	isRequired,
 	...props
 }: FormLegendProps) => {
-	if (!label) return null;
-
 	return (
 		<FieldLegend {...props}>
 			{label}

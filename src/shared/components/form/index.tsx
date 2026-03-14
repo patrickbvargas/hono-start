@@ -9,5 +9,6 @@ export * from "./number";
 export * from "./radio-group";
 export * from "./switch";
 export * from "./textarea";
+export * from "./utils/form";
 export * from "./utils/reset-button";
 export * from "./utils/submit-button";
