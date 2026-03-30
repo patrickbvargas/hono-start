@@ -5,7 +5,7 @@ import {
 	SidebarMenuItem,
 } from "@/shared/components/ui/sidebar";
 
-export function NavHeader() {
+export const NavHeader = () => {
 	return (
 		<SidebarMenu>
 			<SidebarMenuItem>
@@ -24,4 +24,4 @@ export function NavHeader() {
 			</SidebarMenuItem>
 		</SidebarMenu>
 	);
-}
+};

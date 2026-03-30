@@ -1,10 +1,20 @@
 import { mutationOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
+import type { MutationReturnType } from "@/shared/types/api";
 import { employeeDeleteSchema } from "../schemas/form";
 
-export const deleteEmployee = createServerFn({ method: "GET" })
+const deleteEmployee = createServerFn({ method: "POST" })
 	.inputValidator(employeeDeleteSchema)
-	.handler(async () => true);
+	.handler(async ({ data }): Promise<MutationReturnType> => {
+		try {
+			// TODO: implement actual database delete
+			console.log("[deleteEmployee]", data);
+			return { success: true };
+		} catch (error) {
+			console.error("[deleteEmployee]", error);
+			throw new Error("Erro ao excluir funcionário");
+		}
+	});
 
 export const deleteEmployeeOptions = () =>
 	mutationOptions({

@@ -1,5 +1,5 @@
 import { CalendarDate, parseDate } from "@internationalized/date";
-import z from "zod";
+import * as z from "zod";
 import type { FieldOption } from "@/shared/components/form/types";
 import { useAppForm } from "@/shared/hooks/use-app-form";
 

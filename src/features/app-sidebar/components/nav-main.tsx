@@ -20,7 +20,7 @@ interface NavMainProps {
 	items: RouteSection[];
 }
 
-export function NavMain({ items }: NavMainProps) {
+export const NavMain = ({ items }: NavMainProps) => {
 	const location = useLocation();
 
 	const isActive = (url: string) => location.pathname.startsWith(url);
@@ -63,4 +63,4 @@ export function NavMain({ items }: NavMainProps) {
 			</SidebarMenu>
 		</SidebarGroup>
 	);
-}
+};

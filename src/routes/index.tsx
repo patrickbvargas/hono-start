@@ -4,6 +4,8 @@ import { createFileRoute } from "@tanstack/react-router";
 // import { DataTable } from "@/shared/components/data-table";
 import { DemoForm } from "@/shared/components/form/demo";
 import { Pagination } from "@/shared/components/pagination";
+import { RouteError } from "@/shared/components/route-error";
+import { RouteLoading } from "@/shared/components/route-loading";
 import {
 	Wrapper,
 	WrapperBody,
@@ -89,6 +91,8 @@ import {
 export const Route = createFileRoute("/")({
 	loaderDeps: ({ search }) => ({ search }),
 	loader: async ({ deps: { search } }) => ({ search }),
+	pendingComponent: () => <RouteLoading />,
+	errorComponent: ({ error }) => <RouteError error={error} />,
 	component: App,
 });
 

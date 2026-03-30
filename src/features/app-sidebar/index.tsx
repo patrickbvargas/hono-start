@@ -34,7 +34,9 @@ const items: RouteSection[] = [
 	},
 ] as const;
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export const AppSidebar = ({
+	...props
+}: React.ComponentProps<typeof Sidebar>) => {
 	return (
 		<Sidebar variant="inset" {...props}>
 			<SidebarHeader>
@@ -48,4 +50,4 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			</SidebarFooter>
 		</Sidebar>
 	);
-}
+};

@@ -25,7 +25,7 @@ import {
 	useSidebar,
 } from "@/shared/components/ui/sidebar";
 
-export function NavUser() {
+export const NavUser = () => {
 	const { isMobile } = useSidebar();
 	// const { theme, setTheme } = useTheme();
 
@@ -112,4 +112,4 @@ export function NavUser() {
 			</SidebarMenuItem>
 		</SidebarMenu>
 	);
-}
+};

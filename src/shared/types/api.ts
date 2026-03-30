@@ -13,3 +13,5 @@ export type QueryPaginatedReturnType<T> = {
 	items: T[];
 	total: number;
 };
+
+export type MutationReturnType = { success: true };

@@ -5,7 +5,7 @@ interface FormRootProps extends React.ComponentProps<"form"> {
 	form: AnyFormApi;
 }
 
-export function FormRoot({ form, children, ...props }: FormRootProps) {
+export const FormRoot = ({ form, children, ...props }: FormRootProps) => {
 	return (
 		<formContext.Provider value={form}>
 			<form
@@ -21,4 +21,4 @@ export function FormRoot({ form, children, ...props }: FormRootProps) {
 			</form>
 		</formContext.Provider>
 	);
-}
+};

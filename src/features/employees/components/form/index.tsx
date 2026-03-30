@@ -9,7 +9,7 @@ import { useEmployeeForm } from "../../hooks/form";
 import { useEmployeeOptions } from "../../hooks/options";
 
 export const EmployeeForm = () => {
-	const { form, Form, Field, Submit } = useEmployeeForm();
+	const { form, Form, Field, Submit } = useEmployeeForm({ mode: "create" });
 	const { roles, types } = useEmployeeOptions();
 
 	return (
