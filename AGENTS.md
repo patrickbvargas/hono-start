@@ -20,7 +20,7 @@
 | Database | Drizzle ORM + PostgreSQL (`pg`) |
 | Linting / Formatting | Biome |
 | Testing | Vitest + Testing Library |
-| UI primitives | shadcn (base-nova style) + Base UI (`@base-ui/react`) + React Aria Components |
+| UI primitives | HeroUI v3 |
 | Package manager | pnpm |
 | Language | TypeScript 5 (strict mode) |
 
@@ -60,7 +60,7 @@ src/
 │   └── funcionarios.tsx       # "/funcionarios" route
 ├── shared/                    # Cross-feature reusable code
 │   ├── components/
-│   │   ├── ui/                # shadcn primitives (do NOT edit manually)
+│   │   ├── ui/                # ui primitives (do NOT edit manually)
 │   │   ├── form/              # Form field components (Input, Autocomplete, etc.)
 │   │   ├── data-table.tsx     # Generic data table
 │   │   ├── pagination.tsx     # Generic pagination
@@ -306,14 +306,6 @@ export const employeeSchema = entityIdSchema.safeExtend({
 });
 ```
 
-Use `.extend()` when extending for form mutations (create → update adds `id`):
-
-```ts
-export const employeeUpdateSchema = entityIdSchema.extend(
-	employeeCreateSchema.shape,
-);
-```
-
 ### 7.3 Schema patterns by purpose
 
 | File | Purpose | Pattern |
@@ -391,8 +383,8 @@ function RouteComponent() { ... }
 - `validateSearch` — Zod validation for URL search params.
 - `loaderDeps` — ensures search changes trigger re-fetches.
 - `loader` — pre-populates the query cache on the server.
-- `pendingComponent` — shown while the loader runs (skeleton or spinner).
-- `errorComponent` — shown when the loader or component throws.
+- `pendingComponent` — shown while the loader runs (skeleton or spinner) (optional if the root route handles loading states).
+- `errorComponent` — shown when the loader or component throws (optional if the root route handles errors).
 - `component` — the route's main UI.
 
 ### 8.3 Route context
@@ -457,42 +449,7 @@ export const getEmployeesOptions = (search: EmployeeSearch) =>
 - Use `staleTime: "static"` for reference data that rarely changes (e.g., dropdown options).
 - Use `staleTime: 5 * 60 * 1000` (5 min) for list data (adjust as needed).
 
-### 9.3 Mutation options factories
-
-Mutation options factories **receive `queryClient`** so they can invalidate related caches on success:
-
-```ts
-export const createEmployeeOptions = (queryClient: QueryClient) =>
-	mutationOptions({
-		mutationFn: createEmployee,
-		onSuccess: () => {
-			queryClient.invalidateQueries({
-				queryKey: [EMPLOYEE_DATA_CACHE_KEY],
-			});
-			toast.success("Funcionário criado com sucesso");
-		},
-		onError: (error) => {
-			console.error(error);
-			toast.error("Ocorreu um erro ao criar o funcionário");
-		},
-	});
-```
-
-**Rules:**
-
-- Always accept `queryClient: QueryClient` as the first parameter.
-- `onSuccess` **must** invalidate the feature's cache key to keep lists in sync.
-- Use `toast` (sonner) for user-facing success/error feedback — **never use `alert()`**.
-- Keep `onError` as a safety net — log + show toast.
-
-**Usage in components:**
-
-```ts
-const queryClient = useQueryClient();
-const mutation = useMutation(createEmployeeOptions(queryClient));
-```
-
-### 9.4 Cache key constants
+### 9.3 Cache key constants
 
 Centralize all cache keys in `constants/index.ts`:
 
@@ -502,9 +459,9 @@ export const EMPLOYEE_DATA_CACHE_KEY = "employee" as const;
 
 Sub-keys for related queries append strings: `[EMPLOYEE_DATA_CACHE_KEY, "types"]`.
 
-### 9.5 Cache invalidation strategy
+### 9.4 Cache invalidation strategy
 
-When a mutation succeeds, invalidate at the feature cache key level to refresh all related queries:
+Cache invalidation is **not** done inside mutation options factories. It is handled in the feature form hook (or component) after `mutateAsync` resolves. Invalidate at the feature cache key level to refresh all related queries:
 
 ```ts
 // Invalidates: ["employee", ...anything]
@@ -522,7 +479,7 @@ queryClient.invalidateQueries({
 });
 ```
 
-### 9.6 Data fetching in components
+### 9.5 Data fetching in components
 
 - **Lists**: use `useSuspenseQuery()` in the route component (data is pre-populated in loader).
 - **Reference data / options**: use `useSuspenseQueries()` to batch multiple option fetches (see `useEmployeeOptions` hook).
@@ -572,7 +529,7 @@ toast.error("Ocorreu um erro ao criar o funcionário");
 
 ### 10.3 Route error boundaries
 
-Every data route defines an `errorComponent` that catches loader and render errors:
+Every data route defines an `errorComponent` that catches loader and render errors (optional if the root route handles errors):
 
 ```ts
 errorComponent: ({ error }) => <RouteError error={error} />,
@@ -590,7 +547,7 @@ When a `useSuspenseQuery()` rejects inside a component tree, the nearest error b
 
 ### 11.1 Route-level loading
 
-Every data route should define `pendingComponent`:
+Every data route should define `pendingComponent` (optional if the root route handles loading states):
 
 ```ts
 pendingComponent: () => <RouteLoading />,
@@ -638,9 +595,7 @@ export function useEmployeeForm({
 }: UseEmployeeFormOptions) {
 	const queryClient = useQueryClient();
 	const mutation = useMutation(
-		mode === "create"
-			? createEmployeeOptions(queryClient)
-			: updateEmployeeOptions(queryClient),
+		mode === "create" ? createEmployeeOptions() : updateEmployeeOptions(),
 	);
 
 	const form = useAppForm({
@@ -651,6 +606,7 @@ export function useEmployeeForm({
 		},
 		onSubmit: async ({ value }) => {
 			await mutation.mutateAsync({ data: value });
+			queryClient.invalidateQueries({ queryKey: [FEATURE_DATA_CACHE_KEY] });
 			onSuccess?.();
 		},
 	});
@@ -671,6 +627,7 @@ export function useEmployeeForm({
 - Accept `mode` to switch between create/edit validation and mutation.
 - Accept optional `initialData` for pre-populating edit forms.
 - Accept `onSuccess` callback for navigation/dialog closing after mutation.
+- Cache invalidation is done inside `onSubmit` via `queryClient.invalidateQueries()` — **not** inside the mutation options factory.
 - Return `mutation` alongside form so the component can check `mutation.isPending`, `mutation.isError`, etc.
 
 ### 12.3 Form component usage
@@ -962,7 +919,7 @@ When creating a new domain feature (e.g., `clients`):
 
 4. **API** (`api/`):
    - `get.ts` — `createServerFn` (private) + `queryOptions` factories (exported).
-   - `create.ts`, `update.ts`, `delete.ts` — `createServerFn` (private) + `mutationOptions` factories (exported, accepting `queryClient`).
+   - `create.ts`, `update.ts`, `delete.ts` — `createServerFn` (private) + `mutationOptions` factories (exported).
    - Server functions use POST for writes, GET for reads.
    - Handlers wrap DB calls in `try/catch`.
 
@@ -1037,8 +994,8 @@ When creating a new domain feature (e.g., `clients`):
 ✅ Explicit return type annotations on server function handlers
 ✅ Query keys start with feature cache key constant
 ✅ Server functions are NOT exported — only options factories are
-✅ Mutation options factories accept queryClient as first parameter
-✅ Mutations invalidate cache on success via queryClient
+✅ Mutation options factories are pure — no queryClient parameter, no cache operations
+✅ Cache invalidation done in the feature form hook's onSubmit after mutateAsync
 ✅ Toast (sonner) for user-facing success/error feedback
 ✅ Server function handlers wrap DB calls in try/catch
 ✅ Every data route defines pendingComponent and errorComponent

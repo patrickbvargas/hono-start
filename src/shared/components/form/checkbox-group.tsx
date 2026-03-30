@@ -73,7 +73,7 @@ export const FormCheckboxGroup = ({
 								}
 							}}
 							aria-invalid={isInvalid}
-							disabled={option.disabled || isDisabled}
+							disabled={option.isDisabled || isDisabled}
 							{...props}
 						/>
 						<FormLabel

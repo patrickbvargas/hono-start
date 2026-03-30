@@ -8,7 +8,7 @@ export interface FieldClassNames {
 export interface FieldOption {
 	value: string;
 	label: string;
-	disabled?: boolean;
+	isDisabled?: boolean;
 }
 
 export interface FieldCommonProps {

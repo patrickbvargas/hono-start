@@ -10,4 +10,5 @@ export const optionSchema = z
 		label: option.description,
 	}));
 
+export type OptionInput = z.input<typeof optionSchema>;
 export type Option = z.infer<typeof optionSchema>;

@@ -21,7 +21,7 @@ export const employeeCreateSchema = z.object({
 	role: z.coerce.number<number>().min(1, "Cargo é obrigatório"),
 });
 
-export const employeeUpdateSchema = entityIdSchema.extend(
+export const employeeUpdateSchema = entityIdSchema.safeExtend(
 	employeeCreateSchema.shape,
 );
 
