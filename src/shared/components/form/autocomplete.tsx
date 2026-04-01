@@ -1,26 +1,19 @@
-import * as React from "react";
-import { useFieldContext } from "@/shared/hooks/use-app-form";
 import {
-	Combobox,
-	ComboboxContent,
-	ComboboxEmpty,
-	ComboboxInput,
-	ComboboxItem,
-	ComboboxList,
-} from "../ui/combobox";
+	Autocomplete,
+	type AutocompleteRootProps,
+	EmptyState,
+	ListBox,
+	SearchField,
+} from "@heroui/react";
+import { useFieldContext } from "@/shared/hooks/use-app-form";
+import { Field } from "../hui/field";
 import type { FieldClassNames, FieldCommonProps, FieldOption } from "./types";
-import { FormFieldWrapper } from "./utils/wrapper";
 
-interface FormAutocompleteProps
-	extends FieldCommonProps,
-		Omit<
-			React.ComponentPropsWithoutRef<typeof Combobox<FieldOption>>,
-			"multiple"
-		> {
+interface FormAutocompleteProps extends FieldCommonProps {
 	options: FieldOption[];
 	placeholder?: string;
 	emptyMessage?: string;
-	isClearable?: boolean;
+	// isClearable?: boolean;
 	classNames?: FieldClassNames & {
 		empty?: string;
 		list?: string;
@@ -34,7 +27,7 @@ export const FormAutocomplete = ({
 	isRequired,
 	isDisabled,
 	options,
-	isClearable = true,
+	// isClearable = true,
 	placeholder = "Selecionar item...",
 	emptyMessage = "Nenhum item encontrado",
 	classNames,
@@ -44,67 +37,66 @@ export const FormAutocomplete = ({
 
 	const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 
-	const selectedOption = React.useMemo(
-		() => options.find((opt) => opt.value === field.state.value) ?? null,
-		[options, field.state.value],
-	);
-
-	const handleValueChange = React.useCallback(
-		(option: FieldOption | null) => {
-			if (!option) {
-				field.clearValues();
-				return;
-			}
-
-			field.handleChange(option.value);
-		},
-		[field],
-	);
-
 	return (
-		<FormFieldWrapper
-			id={field.name}
-			label={label}
-			description={description}
+		<Autocomplete
+			isInvalid={isInvalid}
 			isRequired={isRequired}
-			errors={field.state.meta.errors}
-			data-invalid={isInvalid}
+			isDisabled={isDisabled}
+			selectionMode="single"
+			value={field.state.value}
+			onChange={(v) => field.handleChange(String(v))}
 			className={classNames?.wrapper}
+			{...props}
 		>
-			<Combobox
-				id={field.name}
-				name={field.name}
-				value={selectedOption}
-				onValueChange={handleValueChange}
-				aria-invalid={isInvalid}
-				disabled={isDisabled}
-				items={options}
-				itemToStringValue={(option) => option.label}
-				{...props}
-			>
-				<ComboboxInput
-					placeholder={placeholder}
-					aria-invalid={isInvalid}
-					showClear={isClearable}
-				/>
-				<ComboboxContent>
-					<ComboboxEmpty className={classNames?.empty}>
-						{emptyMessage}
-					</ComboboxEmpty>
-					<ComboboxList className={classNames?.list}>
-						{(option) => (
-							<ComboboxItem
+			<Field.Label
+				label={label}
+				htmlFor={field.name}
+				className={classNames?.label}
+			/>
+			<Autocomplete.Trigger>
+				<Autocomplete.Value />
+				<Autocomplete.ClearButton />
+				<Autocomplete.Indicator />
+			</Autocomplete.Trigger>
+			<Autocomplete.Popover>
+				<Autocomplete.Filter>
+					<SearchField autoFocus name="search" variant="secondary">
+						<SearchField.Group>
+							<SearchField.SearchIcon />
+							<SearchField.Input placeholder={placeholder} />
+							<SearchField.ClearButton />
+						</SearchField.Group>
+					</SearchField>
+					<ListBox
+						renderEmptyState={() => (
+							<EmptyState className={classNames?.empty}>
+								{emptyMessage}
+							</EmptyState>
+						)}
+					>
+						{options.map((option) => (
+							<ListBox.Item
 								key={option.value}
-								value={option}
+								id={option.value}
+								textValue={option.value}
+								isDisabled={option.isDisabled}
 								className={classNames?.item}
-								disabled={option.isDisabled}
 							>
 								{option.label}
-							</ComboboxItem>
-						)}
-					</ComboboxList>
-				</ComboboxContent>
-			</Combobox>
-		</FormFieldWrapper>
+								<ListBox.ItemIndicator />
+							</ListBox.Item>
+						))}
+					</ListBox>
+				</Autocomplete.Filter>
+			</Autocomplete.Popover>
+			<Field.Description
+				description={description}
+				className={classNames?.description}
+			/>
+			<Field.Error
+				errors={field.state.meta.errors}
+				className={classNames?.error}
+			/>
+		</Autocomplete>
 	);
 };

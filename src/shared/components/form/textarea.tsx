@@ -1,11 +1,9 @@
+import { TextArea, type TextAreaProps, TextField } from "@heroui/react";
 import { useFieldContext } from "@/shared/hooks/use-app-form";
-import { Textarea } from "../ui/textarea";
+import { Field } from "../hui/field";
 import type { FieldCommonProps } from "./types";
-import { FormFieldWrapper } from "./utils/wrapper";
 
-interface FormTextareaProps
-	extends FieldCommonProps,
-		React.ComponentPropsWithoutRef<typeof Textarea> {}
+interface FormTextAreaProps extends FieldCommonProps, TextAreaProps {}
 
 export const FormTextArea = ({
 	label,
@@ -14,32 +12,39 @@ export const FormTextArea = ({
 	isDisabled,
 	classNames,
 	...props
-}: FormTextareaProps) => {
+}: FormTextAreaProps) => {
 	const field = useFieldContext<string>();
 
 	const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 
 	return (
-		<FormFieldWrapper
-			id={field.name}
-			label={label}
-			description={description}
+		<TextField
+			isInvalid={isInvalid}
 			isRequired={isRequired}
-			errors={field.state.meta.errors}
-			data-invalid={isInvalid}
+			isDisabled={isDisabled}
+			onChange={field.handleChange}
 			className={classNames?.wrapper}
 		>
-			<Textarea
+			<Field.Label
+				label={label}
+				htmlFor={field.name}
+				className={classNames?.label}
+			/>
+			<TextArea
 				id={field.name}
 				name={field.name}
 				value={field.state.value}
 				onBlur={field.handleBlur}
-				onChange={(e) => field.handleChange(e.target.value)}
-				aria-invalid={isInvalid}
-				disabled={isDisabled}
-				required={isRequired}
 				{...props}
 			/>
-		</FormFieldWrapper>
+			<Field.Description
+				description={description}
+				className={classNames?.description}
+			/>
+			<Field.Error
+				errors={field.state.meta.errors}
+				className={classNames?.error}
+			/>
+		</TextField>
 	);
 };
