@@ -1,17 +1,19 @@
+import { InputOTP, type InputOTPProps } from "@heroui/react";
+import * as React from "react";
 import { useFieldContext } from "@/shared/hooks/use-app-form";
-import { InputOTP, InputOTPGroup, InputOTPSlot } from "../ui/input-otp";
+import { Field } from "../hui/field";
 import type { FieldCommonProps } from "./types";
-import { FormFieldWrapper } from "./utils/wrapper";
 
-interface FormInputOTPProps extends FieldCommonProps {
-	maxLength?: number;
+interface FormInputOTPProps
+	extends Omit<InputOTPProps, "children">,
+		FieldCommonProps {
+	isRequired?: boolean;
 }
 
 export const FormInputOTP = ({
 	label,
 	description,
 	isRequired,
-	isDisabled,
 	maxLength = 6,
 	classNames,
 	...props
@@ -20,34 +22,46 @@ export const FormInputOTP = ({
 
 	const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 
+	const slots = React.useMemo(
+		() => Array.from({ length: maxLength }, (_, i) => `otp-${i}`),
+		[maxLength],
+	);
+
 	return (
-		<FormFieldWrapper
-			id={field.name}
-			label={label}
-			description={description}
-			isRequired={isRequired}
-			errors={field.state.meta.errors}
-			data-invalid={isInvalid}
-			className={classNames?.wrapper}
-		>
+		<div className="flex flex-col gap-2">
+			<Field.Label
+				label={label}
+				htmlFor={field.name}
+				isRequired={isRequired}
+				className={classNames?.label}
+			/>
 			<InputOTP
-				id={field.name}
 				name={field.name}
+				maxLength={maxLength}
+				isInvalid={isInvalid}
 				value={field.state.value}
 				onBlur={field.handleBlur}
 				onChange={field.handleChange}
-				maxLength={maxLength}
-				disabled={isDisabled}
-				required={isRequired}
+				className={classNames?.wrapper}
 				{...props}
 			>
-				<InputOTPGroup>
-					{Array.from({ length: maxLength }, (_, index) => (
-						// biome-ignore lint/suspicious/noArrayIndexKey: without index, this is not a list
-						<InputOTPSlot key={index} index={index} aria-invalid={isInvalid} />
+				<InputOTP.Group>
+					{slots.map((key, index) => (
+						<InputOTP.Slot key={key} index={index} />
 					))}
-				</InputOTPGroup>
+				</InputOTP.Group>
 			</InputOTP>
-		</FormFieldWrapper>
+			{!isInvalid ? (
+				<Field.Description
+					description={description}
+					className={classNames?.description}
+				/>
+			) : (
+				<Field.Error
+					errors={field.state.meta.errors}
+					className={classNames?.error}
+				/>
+			)}
+		</div>
 	);
 };

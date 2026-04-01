@@ -1,21 +1,17 @@
-import { useFieldContext } from "@/shared/hooks/use-app-form";
-import { cn } from "@/shared/lib/utils";
-import { Checkbox } from "../ui/checkbox";
-import type { FieldClassNames, FieldCommonProps, FieldOption } from "./types";
 import {
-	FormField,
-	FormFieldWrapperGroup,
-	FormGroup,
-	FormLabel,
-} from "./utils";
+	Checkbox,
+	CheckboxGroup,
+	type CheckboxGroupProps,
+	cn,
+	Label,
+} from "@heroui/react";
+import { useFieldContext } from "@/shared/hooks/use-app-form";
+import { Field } from "../hui/field";
+import type { FieldClassNames, FieldCommonProps, FieldOption } from "./types";
 
-interface FormCheckboxGroupProps
-	extends FieldCommonProps,
-		React.ComponentPropsWithoutRef<typeof Checkbox> {
+interface FormCheckboxGroupProps extends CheckboxGroupProps, FieldCommonProps {
 	options: FieldOption[];
-	orientation?: "horizontal" | "vertical";
 	classNames?: FieldClassNames & {
-		list?: string;
 		item?: string;
 	};
 }
@@ -23,66 +19,55 @@ interface FormCheckboxGroupProps
 export const FormCheckboxGroup = ({
 	label,
 	description,
-	isRequired,
-	isDisabled,
 	options = [],
-	orientation = "vertical",
+	validationBehavior = "aria",
 	classNames,
 	...props
 }: FormCheckboxGroupProps) => {
-	const field = useFieldContext<string[]>();
+	const field = useFieldContext<string[] | undefined>();
 
 	const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 
 	return (
-		<FormFieldWrapperGroup
-			id={field.name}
-			label={label}
-			description={description}
-			isRequired={isRequired}
-			errors={field.state.meta.errors}
-			data-invalid={isInvalid}
+		<CheckboxGroup
+			name={field.name}
+			isInvalid={isInvalid}
+			value={field.state.value}
+			onBlur={field.handleBlur}
+			onChange={field.handleChange}
+			validationBehavior={validationBehavior}
 			className={classNames?.wrapper}
+			{...props}
 		>
-			<FormGroup
-				data-slot="checkbox-group"
-				className={cn(
-					"flex flex-col gap-2",
-					orientation === "horizontal" && "flex-row",
-					classNames?.list,
-				)}
-			>
-				{options.map((option) => (
-					<FormField
-						key={option.value}
-						orientation="horizontal"
-						data-invalid={isInvalid}
-						className={classNames?.item}
-					>
-						<Checkbox
-							id={`checkbox-opt-${option.value}`}
-							name={field.name}
-							checked={field.state.value.includes(option.value)}
-							onBlur={field.handleBlur}
-							onCheckedChange={(checked) => {
-								if (checked) {
-									field.pushValue(option.value);
-								} else {
-									const index = field.state.value.indexOf(option.value);
-									if (index > -1) field.removeValue(index);
-								}
-							}}
-							aria-invalid={isInvalid}
-							disabled={option.isDisabled || isDisabled}
-							{...props}
-						/>
-						<FormLabel
-							label={option.label}
-							htmlFor={`checkbox-opt-${option.value}`}
-						/>
-					</FormField>
-				))}
-			</FormGroup>
-		</FormFieldWrapperGroup>
+			<Field.Label
+				label={label}
+				htmlFor={field.name}
+				className={classNames?.label}
+			/>
+			<Field.Description
+				description={description}
+				className={classNames?.description}
+			/>
+			{options.map((option) => (
+				<Checkbox
+					key={option.value}
+					id={option.value}
+					value={option.value}
+					isDisabled={option.isDisabled}
+					className={classNames?.item}
+				>
+					<Checkbox.Control>
+						<Checkbox.Indicator />
+					</Checkbox.Control>
+					<Checkbox.Content>
+						<Label>{option.label}</Label>
+					</Checkbox.Content>
+				</Checkbox>
+			))}
+			<Field.Error
+				errors={field.state.meta.errors}
+				className={cn("mt-2", classNames?.error)}
+			/>
+		</CheckboxGroup>
 	);
 };

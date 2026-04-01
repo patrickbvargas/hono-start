@@ -1,17 +1,14 @@
+import { NumberField, type NumberFieldProps } from "@heroui/react";
 import { useFieldContext } from "@/shared/hooks/use-app-form";
-import { InputNumber } from "../ui/input-number";
+import { Field } from "../hui/field";
 import type { FieldCommonProps } from "./types";
-import { FormFieldWrapper } from "./utils/wrapper";
 
-interface FormNumberProps
-	extends FieldCommonProps,
-		React.ComponentPropsWithoutRef<typeof InputNumber> {}
+interface FormNumberProps extends NumberFieldProps, FieldCommonProps {}
 
 export const FormNumber = ({
 	label,
 	description,
-	isRequired,
-	isDisabled,
+	validationBehavior = "aria",
 	classNames,
 	...props
 }: FormNumberProps) => {
@@ -20,27 +17,34 @@ export const FormNumber = ({
 	const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 
 	return (
-		<FormFieldWrapper
-			id={field.name}
-			label={label}
-			description={description}
-			isRequired={isRequired}
-			errors={field.state.meta.errors}
-			data-invalid={isInvalid}
+		<NumberField
+			name={field.name}
+			isInvalid={isInvalid}
+			value={field.state.value}
+			onBlur={field.handleBlur}
+			onChange={field.handleChange}
+			validationBehavior={validationBehavior}
 			className={classNames?.wrapper}
+			{...props}
 		>
-			<InputNumber
-				id={field.name}
-				name={field.name}
-				value={field.state.value}
-				onBlur={field.handleBlur}
-				onChange={field.handleChange}
-				isDisabled={isDisabled}
-				isRequired={isRequired}
-				isInvalid={isInvalid}
-				aria-invalid={isInvalid}
-				{...props}
+			<Field.Label
+				label={label}
+				htmlFor={field.name}
+				className={classNames?.label}
 			/>
-		</FormFieldWrapper>
+			<NumberField.Group>
+				<NumberField.DecrementButton />
+				<NumberField.Input />
+				<NumberField.IncrementButton />
+			</NumberField.Group>
+			<Field.Description
+				description={description}
+				className={classNames?.description}
+			/>
+			<Field.Error
+				errors={field.state.meta.errors}
+				className={classNames?.error}
+			/>
+		</NumberField>
 	);
 };

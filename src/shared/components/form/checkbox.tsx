@@ -1,17 +1,14 @@
+import { Checkbox, type CheckboxProps } from "@heroui/react";
 import { useFieldContext } from "@/shared/hooks/use-app-form";
-import { cn } from "@/shared/lib/utils";
-import { Checkbox } from "../ui/checkbox";
+import { Field } from "../hui/field";
 import type { FieldCommonProps } from "./types";
-import { FormFieldWrapper } from "./utils/wrapper";
 
-interface FormCheckboxProps
-	extends Omit<FieldCommonProps, "description">,
-		React.ComponentPropsWithoutRef<typeof Checkbox> {}
+interface FormCheckboxProps extends CheckboxProps, FieldCommonProps {}
 
 export const FormCheckbox = ({
 	label,
+	description,
 	isRequired,
-	isDisabled,
 	classNames,
 	...props
 }: FormCheckboxProps) => {
@@ -20,25 +17,34 @@ export const FormCheckbox = ({
 	const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 
 	return (
-		<FormFieldWrapper
-			id={field.name}
-			label={label}
-			isRequired={isRequired}
-			errors={field.state.meta.errors}
-			data-invalid={isInvalid}
-			className={cn(classNames?.wrapper, "flex-row-reverse")}
-			orientation="horizontal"
+		<Checkbox
+			name={field.name}
+			isInvalid={isInvalid}
+			isSelected={field.state.value}
+			onBlur={field.handleBlur}
+			onChange={field.handleChange}
+			className={classNames?.wrapper}
+			{...props}
 		>
-			<Checkbox
-				id={field.name}
-				name={field.name}
-				checked={field.state.value}
-				onBlur={field.handleBlur}
-				onCheckedChange={field.handleChange}
-				aria-invalid={isInvalid}
-				disabled={isDisabled}
-				{...props}
-			/>
-		</FormFieldWrapper>
+			<Checkbox.Control>
+				<Checkbox.Indicator />
+			</Checkbox.Control>
+			<Checkbox.Content>
+				<Field.Label
+					label={label}
+					htmlFor={field.name}
+					isRequired={isRequired}
+					className={classNames?.label}
+				/>
+				<Field.Description
+					description={description}
+					className={classNames?.description}
+				/>
+				<Field.Error
+					errors={field.state.meta.errors}
+					className={classNames?.error}
+				/>
+			</Checkbox.Content>
+		</Checkbox>
 	);
 };

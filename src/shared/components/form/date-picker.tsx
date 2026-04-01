@@ -1,18 +1,22 @@
+import {
+	Calendar,
+	DateField,
+	DatePicker,
+	type DatePickerProps,
+} from "@heroui/react";
 import type { DateValue } from "@internationalized/date";
 import { useFieldContext } from "@/shared/hooks/use-app-form";
-import { DatePicker } from "../ui/date-picker";
+import { Field } from "../hui/field";
 import type { FieldCommonProps } from "./types";
-import { FormFieldWrapper } from "./utils/wrapper";
 
 interface FormDatePickerProps
-	extends FieldCommonProps,
-		React.ComponentPropsWithoutRef<typeof DatePicker> {}
+	extends DatePickerProps<DateValue>,
+		FieldCommonProps {}
 
 export const FormDatePicker = ({
 	label,
 	description,
-	isRequired,
-	isDisabled,
+	validationBehavior = "aria",
 	classNames,
 	...props
 }: FormDatePickerProps) => {
@@ -21,27 +25,68 @@ export const FormDatePicker = ({
 	const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 
 	return (
-		<FormFieldWrapper
-			id={field.name}
-			label={label}
-			description={description}
-			isRequired={isRequired}
-			errors={field.state.meta.errors}
-			data-invalid={isInvalid}
+		<DatePicker
+			name={field.name}
+			isInvalid={isInvalid}
+			value={field.state.value}
+			onBlur={field.handleBlur}
+			onChange={field.handleChange}
+			validationBehavior={validationBehavior}
 			className={classNames?.wrapper}
+			{...props}
 		>
-			<DatePicker
-				id={field.name}
-				name={field.name}
-				value={field.state.value}
-				onBlur={field.handleBlur}
-				onChange={field.handleChange}
-				isDisabled={isDisabled}
-				isRequired={isRequired}
-				isInvalid={isInvalid}
-				aria-invalid={isInvalid}
-				{...props}
+			<Field.Label
+				label={label}
+				htmlFor={field.name}
+				className={classNames?.label}
 			/>
-		</FormFieldWrapper>
+
+			<DateField.Group fullWidth>
+				<DateField.Input>
+					{(segment) => <DateField.Segment segment={segment} />}
+				</DateField.Input>
+				<DateField.Suffix>
+					<DatePicker.Trigger>
+						<DatePicker.TriggerIndicator />
+					</DatePicker.Trigger>
+				</DateField.Suffix>
+			</DateField.Group>
+			<DatePicker.Popover>
+				<Calendar aria-label="Calendar Date">
+					<Calendar.Header>
+						<Calendar.YearPickerTrigger>
+							<Calendar.YearPickerTriggerHeading />
+							<Calendar.YearPickerTriggerIndicator />
+						</Calendar.YearPickerTrigger>
+						<Calendar.NavButton slot="previous" />
+						<Calendar.NavButton slot="next" />
+					</Calendar.Header>
+					<Calendar.Grid>
+						<Calendar.GridHeader>
+							{(day) => <Calendar.HeaderCell>{day}</Calendar.HeaderCell>}
+						</Calendar.GridHeader>
+						<Calendar.GridBody>
+							{(date) => <Calendar.Cell date={date} />}
+						</Calendar.GridBody>
+					</Calendar.Grid>
+					<Calendar.YearPickerGrid>
+						<Calendar.YearPickerGridBody>
+							{({ year }) => <Calendar.YearPickerCell year={year} />}
+						</Calendar.YearPickerGridBody>
+					</Calendar.YearPickerGrid>
+				</Calendar>
+			</DatePicker.Popover>
+			{!isInvalid ? (
+				<Field.Description
+					description={description}
+					className={classNames?.description}
+				/>
+			) : (
+				<Field.Error
+					errors={field.state.meta.errors}
+					className={classNames?.error}
+				/>
+			)}
+		</DatePicker>
 	);
 };

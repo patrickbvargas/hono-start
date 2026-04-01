@@ -7,6 +7,7 @@ const formSchema = z.object({
 	input: z.string().min(1, "Input is required"),
 	inputOTP: z.string().min(1, "InputOTP is required"),
 	textarea: z.string().min(1, "Textarea is required"),
+	number: z.number().min(1, "Number is required"),
 	autocomplete: z.coerce.number<number>().min(1, "Autocomplete is required"),
 	checkbox: z.boolean().refine((value) => value, "Checkbox is required"),
 	switch: z.boolean().refine((value) => value, "Switch is required"),
@@ -19,9 +20,13 @@ const formSchema = z.object({
 		.array()
 		.min(1, "Multiselect is required"),
 	radioGroup: z.coerce.number<number>().min(1, "RadioGroup is required"),
-	datePicker: z.instanceof(CalendarDate, {
-		error: "DatePicker é obrigatório",
-	}),
+	datePicker: z
+		.instanceof(CalendarDate, {
+			error: "DatePicker é obrigatório",
+		})
+		.refine((value) => value.compare(parseDate("2025-01-01")) > 0, {
+			message: "DatePicker deve ser posterior à 2025-01-01",
+		}),
 });
 type Form = z.infer<typeof formSchema>;
 
@@ -35,6 +40,7 @@ const formDefaultValues: Form = {
 	multiselect: [],
 	autocomplete: 0,
 	radioGroup: 0,
+	number: 0,
 	datePicker: parseDate("2023-01-01"),
 };
 
@@ -54,10 +60,7 @@ export const DemoForm = () => {
 	});
 
 	return (
-		<form
-			onSubmit={(e) => e.preventDefault()}
-			className="grid grid-cols-2 gap-3"
-		>
+		<form.Form form={form} className="grid grid-cols-2 gap-3">
 			<form.AppField
 				name="datePicker"
 				children={(field) => (
@@ -95,6 +98,16 @@ export const DemoForm = () => {
 					<field.Textarea
 						label="Textarea"
 						description="Textarea description"
+						isRequired
+					/>
+				)}
+			/>
+			<form.AppField
+				name="number"
+				children={(field) => (
+					<field.Number
+						label="Number"
+						description="Number description"
 						isRequired
 					/>
 				)}
@@ -155,6 +168,6 @@ export const DemoForm = () => {
 				<form.Reset />
 				<form.Submit />
 			</form.AppForm>
-		</form>
+		</form.Form>
 	);
 };

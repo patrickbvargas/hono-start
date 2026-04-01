@@ -14,7 +14,5 @@ export interface FieldOption {
 export interface FieldCommonProps {
 	label?: string;
 	description?: string;
-	isRequired?: boolean;
-	isDisabled?: boolean;
 	classNames?: FieldClassNames;
 }
