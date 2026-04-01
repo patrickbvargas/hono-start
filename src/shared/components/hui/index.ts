@@ -16,6 +16,7 @@ export * from "./number-field";
 export * from "./radio-group";
 export * from "./search-field";
 export * from "./switch";
+export * from "./table";
 export * from "./tag-group";
 export * from "./text-area";
 export * from "./text-field";

@@ -8,16 +8,9 @@ import {
 	useReactTable,
 } from "@tanstack/react-table";
 import { ChevronUpIcon } from "lucide-react";
+import { Table } from "@/shared/components/hui";
 import { useSort } from "@/shared/hooks/use-sort";
 import { cn } from "@/shared/lib/utils";
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
-} from "./ui/table";
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[] | TableOptions<TData>["columns"];
@@ -39,60 +32,53 @@ export const DataTable = <TData, TValue>({
 
 	return (
 		<Table>
-			<TableHeader>
-				<TableRow>
-					{table.getFlatHeaders().map((header) => (
-						<TableHead
-							key={header.id}
-							colSpan={header.colSpan}
-							className={header.column.columnDef.meta?.headerClassName}
-						>
-							{!header.isPlaceholder && <DataTableHeader header={header} />}
-						</TableHead>
-					))}
-				</TableRow>
-			</TableHeader>
-			<TableBody>
-				{table.getRowModel().rows?.length ? (
-					table.getRowModel().rows.map((row, index) => (
-						<TableRow
-							key={row.id}
-							onClick={() => onRowAction?.(index)}
-							className="cursor-pointer"
-							data-state={row.getIsSelected() && "selected"}
-						>
-							{row.getVisibleCells().map((cell) => (
-								<TableCell
-									key={cell.id}
-									className={cell.column.columnDef.meta?.cellClassName}
-								>
-									{flexRender(cell.column.columnDef.cell, cell.getContext())}
-								</TableCell>
-							))}
-						</TableRow>
-					))
-				) : (
-					<TableRow>
-						<TableCell
-							colSpan={columns.length}
-							className="h-24 text-center text-muted-foreground"
-						>
-							Nenhum registro encontrado.
-						</TableCell>
-					</TableRow>
-				)}
-			</TableBody>
+			<Table.ScrollContainer>
+				<Table.Content aria-label="TanStack Table">
+					<Table.Header>
+						{table.getFlatHeaders().map((header) => (
+							<Table.Column
+								id={header.id}
+								key={header.id}
+								className={cn(
+									"py-3",
+									header.column.columnDef.meta?.headerClassName,
+								)}
+							>
+								<SortableColumnHeader header={header} />
+							</Table.Column>
+						))}
+					</Table.Header>
+					<Table.Body>
+						{table.getRowModel().rows.map((row, index) => (
+							<Table.Row
+								key={row.id}
+								id={row.id}
+								onPress={() => onRowAction?.(index)}
+							>
+								{row.getVisibleCells().map((cell) => (
+									<Table.Cell key={cell.id}>
+										{flexRender(cell.column.columnDef.cell, cell.getContext())}
+									</Table.Cell>
+								))}
+							</Table.Row>
+						))}
+					</Table.Body>
+				</Table.Content>
+			</Table.ScrollContainer>
 		</Table>
 	);
 };
 
-interface DataTableHeaderProps<TData> {
+interface SortableColumnHeaderProps<TData> {
 	header: Header<TData, unknown>;
 }
 
-const DataTableHeader = <TData,>({ header }: DataTableHeaderProps<TData>) => {
+const SortableColumnHeader = <TData,>({
+	header,
+}: SortableColumnHeaderProps<TData>) => {
 	const { column, direction, getSortSearch } = useSort();
 
+	const isPlaceholder = header.isPlaceholder;
 	const canSort = header.column.getCanSort();
 	const columnId = header.column.id;
 	const isActive = column === columnId;
@@ -102,14 +88,15 @@ const DataTableHeader = <TData,>({ header }: DataTableHeaderProps<TData>) => {
 		header.getContext(),
 	);
 
-	if (!canSort) return <div className="flex items-center py-3">{content}</div>;
+	if (isPlaceholder) return null;
+	if (!canSort) return content;
 
 	return (
 		<Link
 			to="."
 			preload="intent"
 			search={getSortSearch(columnId)}
-			className="group flex items-center gap-2 py-3 cursor-pointer select-none"
+			className="group border border-red-500 flex items-center gap-2 cursor-pointer select-none"
 		>
 			{content}
 			<ChevronUpIcon
@@ -124,11 +111,3 @@ const DataTableHeader = <TData,>({ header }: DataTableHeaderProps<TData>) => {
 		</Link>
 	);
 };
-
-declare module "@tanstack/react-table" {
-	// biome-ignore lint/correctness/noUnusedVariables: TData e TValue são necessários para o merge da interface
-	interface ColumnMeta<TData, TValue> {
-		headerClassName?: string;
-		cellClassName?: string;
-	}
-}
