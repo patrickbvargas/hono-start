@@ -1,4 +1,3 @@
-import { Link } from "@tanstack/react-router";
 import {
 	type ColumnDef,
 	flexRender,
@@ -8,7 +7,7 @@ import {
 	useReactTable,
 } from "@tanstack/react-table";
 import { ChevronUpIcon } from "lucide-react";
-import { Table } from "@/shared/components/hui";
+import { Link, Table } from "@/shared/components/hui";
 import { useSort } from "@/shared/hooks/use-sort";
 import { cn } from "@/shared/lib/utils";
 
@@ -96,18 +95,20 @@ const SortableColumnHeader = <TData,>({
 			to="."
 			preload="intent"
 			search={getSortSearch(columnId)}
-			className="group border border-red-500 flex items-center gap-2 cursor-pointer select-none"
+			className="group text-inherit text-xs no-underline flex items-center gap-2 cursor-pointer select-none"
 		>
 			{content}
-			<ChevronUpIcon
-				className={cn(
-					"size-4 transition-all duration-200",
-					isActive
-						? "opacity-100 text-primary"
-						: "opacity-0 group-hover:opacity-50 text-muted-foreground",
-					isActive && direction === "desc" && "rotate-180",
-				)}
-			/>
+			<Link.Icon>
+				<ChevronUpIcon
+					className={cn(
+						"size-4 transition-all duration-200",
+						isActive
+							? "opacity-100 text-primary"
+							: "opacity-0 group-hover:opacity-50 text-muted-foreground",
+						isActive && direction === "desc" && "rotate-180",
+					)}
+				/>
+			</Link.Icon>
 		</Link>
 	);
 };

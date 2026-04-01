@@ -11,6 +11,7 @@ export * from "./form";
 export * from "./input";
 export * from "./input-otp";
 export * from "./label";
+export * from "./link";
 export * from "./list-box";
 export * from "./number-field";
 export * from "./radio-group";
