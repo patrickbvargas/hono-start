@@ -1,8 +1,7 @@
-import { InputOTP, type InputOTPProps } from "@heroui/react";
 import * as React from "react";
+import { Field, InputOTP, type InputOTPProps } from "@/shared/components/hui";
 import { useFieldContext } from "@/shared/hooks/use-app-form";
-import { Field } from "../hui/field";
-import type { FieldCommonProps } from "./types";
+import type { FieldCommonProps } from "@/shared/types/field";
 
 interface FormInputOTPProps
 	extends Omit<InputOTPProps, "children">,

@@ -1,7 +1,10 @@
-import { NumberField, type NumberFieldProps } from "@heroui/react";
+import {
+	Field,
+	NumberField,
+	type NumberFieldProps,
+} from "@/shared/components/hui";
 import { useFieldContext } from "@/shared/hooks/use-app-form";
-import { Field } from "../hui/field";
-import type { FieldCommonProps } from "./types";
+import type { FieldCommonProps } from "@/shared/types/field";
 
 interface FormNumberProps extends NumberFieldProps, FieldCommonProps {}
 

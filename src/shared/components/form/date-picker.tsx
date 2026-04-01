@@ -1,13 +1,13 @@
+import type { DateValue } from "@internationalized/date";
 import {
 	Calendar,
 	DateField,
 	DatePicker,
 	type DatePickerProps,
-} from "@heroui/react";
-import type { DateValue } from "@internationalized/date";
+	Field,
+} from "@/shared/components/hui";
 import { useFieldContext } from "@/shared/hooks/use-app-form";
-import { Field } from "../hui/field";
-import type { FieldCommonProps } from "./types";
+import type { FieldCommonProps } from "@/shared/types/field";
 
 interface FormDatePickerProps
 	extends DatePickerProps<DateValue>,

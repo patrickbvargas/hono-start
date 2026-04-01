@@ -1,7 +1,7 @@
 import { CalendarDate, parseDate } from "@internationalized/date";
 import * as z from "zod";
-import type { FieldOption } from "@/shared/components/form/types";
 import { useAppForm } from "@/shared/hooks/use-app-form";
+import type { FieldOption } from "@/shared/types/field";
 
 const formSchema = z.object({
 	input: z.string().min(1, "Input is required"),

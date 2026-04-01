@@ -1,7 +1,6 @@
-import { Checkbox, type CheckboxProps } from "@heroui/react";
+import { Checkbox, type CheckboxProps, Field } from "@/shared/components/hui";
 import { useFieldContext } from "@/shared/hooks/use-app-form";
-import { Field } from "../hui/field";
-import type { FieldCommonProps } from "./types";
+import type { FieldCommonProps } from "@/shared/types/field";
 
 interface FormCheckboxProps extends CheckboxProps, FieldCommonProps {}
 

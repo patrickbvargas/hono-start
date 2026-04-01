@@ -1,7 +1,11 @@
-import { TextArea, TextField, type TextFieldProps } from "@heroui/react";
+import {
+	Field,
+	TextArea,
+	TextField,
+	type TextFieldProps,
+} from "@/shared/components/hui";
 import { useFieldContext } from "@/shared/hooks/use-app-form";
-import { Field } from "../hui/field";
-import type { FieldCommonProps } from "./types";
+import type { FieldCommonProps } from "@/shared/types/field";
 
 interface FormTextAreaProps extends TextFieldProps, FieldCommonProps {}
 

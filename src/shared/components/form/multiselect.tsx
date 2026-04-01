@@ -1,18 +1,22 @@
+import * as React from "react";
 import {
 	Autocomplete,
 	type AutocompleteProps,
 	EmptyState,
+	Field,
 	type Key,
 	ListBox,
 	SearchField,
 	Tag,
 	TagGroup,
-	useFilter,
-} from "@heroui/react";
-import * as React from "react";
+} from "@/shared/components/hui";
 import { useFieldContext } from "@/shared/hooks/use-app-form";
-import { Field } from "../hui/field";
-import type { FieldClassNames, FieldCommonProps, FieldOption } from "./types";
+import { useFilter } from "@/shared/hooks/use-filter";
+import type {
+	FieldClassNames,
+	FieldCommonProps,
+	FieldOption,
+} from "@/shared/types/field";
 
 interface FormMultiselectProps
 	extends AutocompleteProps<FieldOption, "multiple">,

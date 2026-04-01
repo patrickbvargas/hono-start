@@ -1,13 +1,20 @@
-import { Input, TextField, type TextFieldProps } from "@heroui/react";
+import {
+	Field,
+	Input,
+	TextField,
+	type TextFieldProps,
+} from "@/shared/components/hui";
 import { useFieldContext } from "@/shared/hooks/use-app-form";
-import { Field } from "../hui/field";
-import type { FieldCommonProps } from "./types";
+import type { FieldCommonProps } from "@/shared/types/field";
 
-interface FormInputProps extends TextFieldProps, FieldCommonProps {}
+interface FormInputProps extends TextFieldProps, FieldCommonProps {
+	placeholder?: string;
+}
 
 export const FormInput = ({
 	label,
 	description,
+	placeholder,
 	validationBehavior = "aria",
 	classNames,
 	...props
@@ -32,7 +39,7 @@ export const FormInput = ({
 				htmlFor={field.name}
 				className={classNames?.label}
 			/>
-			<Input id={field.name} />
+			<Input id={field.name} placeholder={placeholder} />
 			<Field.Description
 				description={description}
 				className={classNames?.description}

@@ -2,13 +2,17 @@ import {
 	ComboBox,
 	type ComboBoxProps,
 	EmptyState,
+	Field,
 	Input,
 	type Key,
 	ListBox,
-} from "@heroui/react";
+} from "@/shared/components/hui";
 import { useFieldContext } from "@/shared/hooks/use-app-form";
-import { Field } from "../hui/field";
-import type { FieldClassNames, FieldCommonProps, FieldOption } from "./types";
+import type {
+	FieldClassNames,
+	FieldCommonProps,
+	FieldOption,
+} from "@/shared/types/field";
 
 interface FormAutocompleteProps
 	extends ComboBoxProps<FieldOption>,

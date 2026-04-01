@@ -4,7 +4,7 @@ import { createEmployeeOptions } from "../api/create";
 import { updateEmployeeOptions } from "../api/update";
 import type { EmployeeCreate, EmployeeUpdate } from "../schemas/form";
 import { employeeCreateSchema, employeeUpdateSchema } from "../schemas/form";
-import { getDefaultFormCreateValues } from "../utils/default";
+import { defaultFormCreateValues } from "../utils/default";
 
 interface UseEmployeeFormOptions {
 	mode: "create" | "edit";
@@ -22,7 +22,7 @@ export function useEmployeeForm({
 	const updateMutation = useMutation(updateEmployeeOptions());
 
 	const form = useAppForm({
-		defaultValues: initialData ?? getDefaultFormCreateValues(),
+		defaultValues: initialData ?? defaultFormCreateValues(),
 		validators: {
 			onSubmit: mode === "create" ? employeeCreateSchema : employeeUpdateSchema,
 		},

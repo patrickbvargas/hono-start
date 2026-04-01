@@ -1,5 +1,5 @@
-import { Form, type FormProps } from "@heroui/react";
 import type { AnyFormApi } from "@tanstack/react-form-start";
+import { Form, type FormProps } from "@/shared/components/hui";
 import { formContext } from "@/shared/hooks/use-app-form";
 
 interface FormRootProps extends FormProps {

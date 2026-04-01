@@ -1,7 +1,6 @@
-import { Switch, type SwitchProps } from "@heroui/react";
+import { Field, Switch, type SwitchProps } from "@/shared/components/hui";
 import { useFieldContext } from "@/shared/hooks/use-app-form";
-import { Field } from "../hui/field";
-import type { FieldCommonProps } from "./types";
+import type { FieldCommonProps } from "@/shared/types/field";
 
 interface FormSwitchProps extends SwitchProps, FieldCommonProps {
 	isRequired?: boolean;

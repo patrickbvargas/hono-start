@@ -1,4 +1,4 @@
-import { Button } from "@heroui/react";
+import { Button } from "@/shared/components/hui";
 import { useFormContext } from "@/shared/hooks/use-app-form";
 
 export const FormResetButton = ({

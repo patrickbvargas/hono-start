@@ -1,6 +1,7 @@
-import type { EmployeeCreate } from "../schemas/form";
+import type { EmployeeCreate, EmployeeUpdate } from "../schemas/form";
+import type { Employee } from "../schemas/model";
 
-export const getDefaultFormCreateValues = (): EmployeeCreate => {
+export const defaultFormCreateValues = (): EmployeeCreate => {
 	return {
 		fullName: "",
 		email: "",
@@ -9,5 +10,21 @@ export const getDefaultFormCreateValues = (): EmployeeCreate => {
 		referrerPercent: 0.05,
 		type: 0,
 		role: 0,
+	};
+};
+
+// TODO: refatorar
+export const defaultFormUpdateValues = (
+	initialValue: Employee,
+): EmployeeUpdate => {
+	return {
+		fullName: initialValue.fullName,
+		oabNumber: initialValue.oabNumber || "",
+		remunerationPercent: initialValue.remunerationPercent,
+		role: 999,
+		email: "",
+		id: initialValue.id,
+		referrerPercent: 999,
+		type: 999,
 	};
 };
