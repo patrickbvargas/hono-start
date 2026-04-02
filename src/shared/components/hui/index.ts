@@ -14,6 +14,7 @@ export * from "./label";
 export * from "./link";
 export * from "./list-box";
 export * from "./number-field";
+export * from "./pagination";
 export * from "./radio-group";
 export * from "./search-field";
 export * from "./switch";

@@ -26,12 +26,14 @@ interface DataTableProps<TData, TValue> extends TableProps {
 		body?: string;
 	};
 	onRowAction?: (index: number) => void;
+	footerContent?: React.ReactNode;
 }
 
 export const DataTable = <TData, TValue>({
 	columns,
 	data,
 	onRowAction,
+	footerContent,
 	className,
 	classNames,
 	...props
@@ -48,7 +50,7 @@ export const DataTable = <TData, TValue>({
 				<Table.ResizableContainer>
 					<Table.Content
 						aria-label="TanStack Table"
-						className={cn("min-h-40", classNames?.content)}
+						className={classNames?.content}
 					>
 						<Table.Header className={classNames?.header}>
 							{table.getFlatHeaders().map((header) => (
@@ -70,7 +72,7 @@ export const DataTable = <TData, TValue>({
 						</Table.Header>
 						<Table.Body
 							renderEmptyState={() => (
-								<EmptyState className="size-full flex flex-col items-center justify-center gap-4 text-center">
+								<EmptyState className="w-full min-h-40 flex flex-col items-center justify-center gap-4 text-center">
 									<InboxIcon size={18} className="text-muted" />
 									<span className="text-sm text-muted">
 										Nenhum resultado encontrado
@@ -99,6 +101,7 @@ export const DataTable = <TData, TValue>({
 					</Table.Content>
 				</Table.ResizableContainer>
 			</Table.ScrollContainer>
+			{footerContent && <Table.Footer>{footerContent}</Table.Footer>}
 		</Table>
 	);
 };

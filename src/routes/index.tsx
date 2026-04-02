@@ -3,7 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 // import * as React from "react";
 // import { DataTable } from "@/shared/components/data-table";
 import { DemoForm } from "@/shared/components/form/demo";
-import { Pagination } from "@/shared/components/pagination";
+import { Pagination } from "@/shared/components/hui";
 import { RouteError } from "@/shared/components/route-error";
 import { RouteLoading } from "@/shared/components/route-loading";
 import {

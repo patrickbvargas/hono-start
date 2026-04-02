@@ -7,12 +7,7 @@ import {
 	employeeSearchSchema,
 	getEmployeesOptions,
 } from "@/features/employees";
-import { Pagination } from "@/shared/components/pagination";
-import {
-	Wrapper,
-	WrapperBody,
-	WrapperFooter,
-} from "@/shared/components/wrapper";
+import { Wrapper, WrapperBody } from "@/shared/components/wrapper";
 import { ROUTES } from "@/shared/config/routes";
 
 export const Route = createFileRoute("/funcionarios")({
@@ -54,12 +49,9 @@ function RouteComponent() {
 				</Button>
 			</WrapperHeader> */}
 			<WrapperBody>
-				<EmployeeTable employees={employees.data.items} />
+				<EmployeeTable data={employees.data} />
 				<EmployeeForm />
 			</WrapperBody>
-			<WrapperFooter>
-				<Pagination totalRecords={employees.data.total} />
-			</WrapperFooter>
 		</Wrapper>
 	);
 }

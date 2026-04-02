@@ -1,14 +1,18 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import * as React from "react";
 import { DataTable } from "@/shared/components/data-table";
+import { Pagination } from "@/shared/components/hui";
+import type { QueryPaginatedReturnType } from "@/shared/types/api";
 import { EMPLOYEE_ALLOWED_SORT_COLUMNS } from "../../constants";
 import type { Employee } from "../../schemas/model";
 
 export interface EmployeeTableProps {
-	employees: Employee[];
+	data: QueryPaginatedReturnType<Employee>;
 }
 
-export const EmployeeTable = ({ employees }: EmployeeTableProps) => {
+export const EmployeeTable = ({
+	data: { items, total },
+}: EmployeeTableProps) => {
 	const columns = React.useMemo(() => {
 		const c = createColumnHelper<Employee>();
 
@@ -63,5 +67,11 @@ export const EmployeeTable = ({ employees }: EmployeeTableProps) => {
 		];
 	}, []);
 
-	return <DataTable columns={columns} data={employees} />;
+	return (
+		<DataTable
+			columns={columns}
+			data={items}
+			footerContent={<Pagination totalRecords={total} size="sm" />}
+		/>
+	);
 };

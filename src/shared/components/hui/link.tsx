@@ -1,3 +1,5 @@
+export type { LinkProps } from "@heroui/react";
+
 import { Link as HLink } from "@heroui/react";
 import { createLink } from "@tanstack/react-router";
 
