@@ -6,15 +6,25 @@ import {
 	type TableOptions,
 	useReactTable,
 } from "@tanstack/react-table";
-import { ChevronUpIcon } from "lucide-react";
-import { Link, Table } from "@/shared/components/hui";
+import { ChevronUpIcon, InboxIcon } from "lucide-react";
+import {
+	EmptyState,
+	Link,
+	Table,
+	type TableProps,
+} from "@/shared/components/hui";
 import { useSort } from "@/shared/hooks/use-sort";
 import { cn } from "@/shared/lib/utils";
 
-interface DataTableProps<TData, TValue> {
+interface DataTableProps<TData, TValue> extends TableProps {
 	columns: ColumnDef<TData, TValue>[] | TableOptions<TData>["columns"];
 	data: TData[];
-	className?: string;
+	classNames?: {
+		table?: string;
+		content?: string;
+		header?: string;
+		body?: string;
+	};
 	onRowAction?: (index: number) => void;
 }
 
@@ -22,6 +32,9 @@ export const DataTable = <TData, TValue>({
 	columns,
 	data,
 	onRowAction,
+	className,
+	classNames,
+	...props
 }: DataTableProps<TData, TValue>) => {
 	const table = useReactTable({
 		data,
@@ -30,39 +43,61 @@ export const DataTable = <TData, TValue>({
 	});
 
 	return (
-		<Table>
+		<Table className={cn(className, classNames?.table)} {...props}>
 			<Table.ScrollContainer>
-				<Table.Content aria-label="TanStack Table">
-					<Table.Header>
-						{table.getFlatHeaders().map((header) => (
-							<Table.Column
-								id={header.id}
-								key={header.id}
-								className={cn(
-									"py-3",
-									header.column.columnDef.meta?.headerClassName,
-								)}
-							>
-								<SortableColumnHeader header={header} />
-							</Table.Column>
-						))}
-					</Table.Header>
-					<Table.Body>
-						{table.getRowModel().rows.map((row, index) => (
-							<Table.Row
-								key={row.id}
-								id={row.id}
-								onPress={() => onRowAction?.(index)}
-							>
-								{row.getVisibleCells().map((cell) => (
-									<Table.Cell key={cell.id}>
-										{flexRender(cell.column.columnDef.cell, cell.getContext())}
-									</Table.Cell>
-								))}
-							</Table.Row>
-						))}
-					</Table.Body>
-				</Table.Content>
+				<Table.ResizableContainer>
+					<Table.Content
+						aria-label="TanStack Table"
+						className={cn("min-h-40", classNames?.content)}
+					>
+						<Table.Header className={classNames?.header}>
+							{table.getFlatHeaders().map((header) => (
+								<Table.Column
+									id={header.id}
+									key={header.id}
+									allowsSorting={header.column.getCanSort()}
+									isRowHeader={header.column.getIndex() === 0}
+									minWidth={header.column.columnDef.meta?.minColumnWidth}
+									className={cn(
+										"p-0",
+										header.column.columnDef.meta?.headerClassName,
+									)}
+								>
+									<SortableColumnHeader header={header} />
+									<Table.ColumnResizer />
+								</Table.Column>
+							))}
+						</Table.Header>
+						<Table.Body
+							renderEmptyState={() => (
+								<EmptyState className="size-full flex flex-col items-center justify-center gap-4 text-center">
+									<InboxIcon size={18} className="text-muted" />
+									<span className="text-sm text-muted">
+										Nenhum resultado encontrado
+									</span>
+								</EmptyState>
+							)}
+							className={classNames?.body}
+						>
+							{table.getRowModel().rows.map((row, index) => (
+								<Table.Row
+									key={row.id}
+									id={row.id}
+									onPress={() => onRowAction?.(index)}
+								>
+									{row.getVisibleCells().map((cell) => (
+										<Table.Cell key={cell.id}>
+											{flexRender(
+												cell.column.columnDef.cell,
+												cell.getContext(),
+											)}
+										</Table.Cell>
+									))}
+								</Table.Row>
+							))}
+						</Table.Body>
+					</Table.Content>
+				</Table.ResizableContainer>
 			</Table.ScrollContainer>
 		</Table>
 	);
@@ -77,37 +112,36 @@ const SortableColumnHeader = <TData,>({
 }: SortableColumnHeaderProps<TData>) => {
 	const { column, direction, getSortSearch } = useSort();
 
-	const isPlaceholder = header.isPlaceholder;
-	const canSort = header.column.getCanSort();
-	const columnId = header.column.id;
-	const isActive = column === columnId;
+	if (header.isPlaceholder) return null;
 
-	const content = flexRender(
-		header.column.columnDef.header,
-		header.getContext(),
-	);
+	const {
+		column: { id, columnDef, getCanSort },
+		getContext,
+	} = header;
 
-	if (isPlaceholder) return null;
-	if (!canSort) return content;
+	const content = flexRender(columnDef.header, getContext());
+
+	if (!getCanSort())
+		return <span className="block px-3 py-2.5">{content}</span>;
+
+	const isActive = column === id;
 
 	return (
 		<Link
 			to="."
 			preload="intent"
-			search={getSortSearch(columnId)}
-			className="group text-inherit text-xs no-underline flex items-center gap-2 cursor-pointer select-none"
+			search={getSortSearch(id)}
+			className="group px-3 py-2.5 size-full text-inherit text-xs no-underline gap-1 rounded-lg focus:ring-offset-0 focus:ring-inset"
 		>
 			{content}
-			<Link.Icon>
-				<ChevronUpIcon
-					className={cn(
-						"size-4 transition-all duration-200",
-						isActive
-							? "opacity-100 text-primary"
-							: "opacity-0 group-hover:opacity-50 text-muted-foreground",
-						isActive && direction === "desc" && "rotate-180",
-					)}
-				/>
+			<Link.Icon
+				className={cn(
+					"size-4 transition-all duration-200 invisible",
+					isActive && "visible opacity-100",
+					isActive && direction === "desc" && "rotate-180",
+				)}
+			>
+				<ChevronUpIcon />
 			</Link.Icon>
 		</Link>
 	);

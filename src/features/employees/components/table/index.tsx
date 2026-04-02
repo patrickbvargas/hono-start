@@ -16,6 +16,9 @@ export const EmployeeTable = ({ employees }: EmployeeTableProps) => {
 			c.accessor("fullName", {
 				header: "Nome",
 				enableSorting: EMPLOYEE_ALLOWED_SORT_COLUMNS.includes("fullName"),
+				meta: {
+					minColumnWidth: 300,
+				},
 			}),
 			c.accessor("oabNumber", {
 				header: "OAB",
