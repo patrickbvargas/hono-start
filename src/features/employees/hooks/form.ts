@@ -53,8 +53,8 @@ export function useEmployeeForm({
 		form,
 		mutation: mode === "create" ? createMutation : updateMutation,
 		Form: form.Form,
-		Field: form.AppField,
-		Submit: form.Submit,
-		Reset: form.Reset,
+		FormField: form.AppField,
+		FormSubmit: form.Submit,
+		FormReset: form.Reset,
 	};
 }

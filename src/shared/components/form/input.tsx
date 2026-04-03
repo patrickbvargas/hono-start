@@ -3,7 +3,7 @@ import {
 	Input,
 	TextField,
 	type TextFieldProps,
-} from "@/shared/components/hui";
+} from "@/shared/components/ui";
 import { useFieldContext } from "@/shared/hooks/use-app-form";
 import type { FieldCommonProps } from "@/shared/types/field";
 

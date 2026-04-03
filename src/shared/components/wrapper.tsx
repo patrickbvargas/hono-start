@@ -1,7 +1,4 @@
 import { cn } from "@/shared/lib/utils";
-import { ScrollArea } from "./ui/scroll-area";
-import { Separator } from "./ui/separator";
-import { SidebarTrigger } from "./ui/sidebar";
 
 interface WrapperProps extends React.HTMLAttributes<HTMLDivElement> {
 	title?: string;
@@ -22,14 +19,7 @@ export const Wrapper = ({
 			{...props}
 		>
 			<div className="h-12 flex items-center justify-between px-4 pt-1.5">
-				<div className="flex items-center gap-0.5">
-					<SidebarTrigger />
-					<Separator
-						orientation="vertical"
-						className="mx-2 my-auto data-[orientation=vertical]:h-4"
-					/>
-					{title && <WrapperTitle title={title} />}
-				</div>
+				{title && <WrapperTitle title={title} />}
 				{actions}
 			</div>
 			{children}
@@ -57,17 +47,18 @@ export const WrapperBody = ({
 	children,
 	className,
 	...props
-}: React.ComponentProps<typeof ScrollArea>) => {
+}: React.HTMLAttributes<HTMLDivElement>) => {
 	return (
-		<ScrollArea
+		<div
 			data-slot="wrapper-content"
-			className={cn("h-full w-full overflow-hidden", className)}
+			className={cn(
+				"h-full w-full overflow-hidden flex flex-col px-4 gap-3",
+				className,
+			)}
 			{...props}
 		>
-			<div className={cn("flex flex-col px-4 gap-3", className)}>
-				{children}
-			</div>
-		</ScrollArea>
+			{children}
+		</div>
 	);
 };
 

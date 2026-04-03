@@ -1,4 +1,4 @@
-import { Checkbox, type CheckboxProps, Field } from "@/shared/components/hui";
+import { Checkbox, type CheckboxProps, Field } from "@/shared/components/ui";
 import { useFieldContext } from "@/shared/hooks/use-app-form";
 import type { FieldCommonProps } from "@/shared/types/field";
 

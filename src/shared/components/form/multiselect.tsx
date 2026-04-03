@@ -9,7 +9,7 @@ import {
 	SearchField,
 	Tag,
 	TagGroup,
-} from "@/shared/components/hui";
+} from "@/shared/components/ui";
 import { useFieldContext } from "@/shared/hooks/use-app-form";
 import { useFilter } from "@/shared/hooks/use-filter";
 import type {

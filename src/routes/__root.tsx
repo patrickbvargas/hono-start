@@ -9,8 +9,6 @@ import {
 	useRouterState,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
-import { AppSidebar } from "@/features/app-sidebar";
-import { SidebarInset, SidebarProvider } from "@/shared/components/ui/sidebar";
 import appCss from "@/styles/global.css?url";
 
 interface RouterContext {
@@ -75,10 +73,8 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 					</div>
 				)}
 
-				<SidebarProvider className="container max-w-7xl mx-auto h-screen">
-					<AppSidebar />
-					<SidebarInset>{children}</SidebarInset>
-				</SidebarProvider>
+				{children}
+
 				<TanStackDevtools
 					plugins={[
 						{

@@ -4,7 +4,7 @@ import {
 	type CheckboxGroupProps,
 	Field,
 	Label,
-} from "@/shared/components/hui";
+} from "@/shared/components/ui";
 import { useFieldContext } from "@/shared/hooks/use-app-form";
 import { cn } from "@/shared/lib/utils";
 import type {

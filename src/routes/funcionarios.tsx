@@ -2,8 +2,6 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import {
-	EmployeeForm,
-	EmployeeTable,
 	employeeSearchSchema,
 	getEmployeesOptions,
 } from "@/features/employees";
@@ -20,38 +18,12 @@ export const Route = createFileRoute("/funcionarios")({
 });
 
 function RouteComponent() {
-	// return <EmployeeForm />;
 	const search = Route.useSearch();
 	const employees = useSuspenseQuery(getEmployeesOptions(search));
-	// const _mutationCreate = useMutation(createEmployeeOptions());
-	// const _mutationUpdate = useMutation(updateEmployeeOptions());
-	// const _mutationDelete = useMutation(deleteEmployeeOptions());
 
 	return (
 		<Wrapper title={ROUTES.employee.title}>
-			{/* <WrapperHeader className="flex gap-3">
-				<Button size="sm" onClick={() => _mutationCreate.mutate({ data: {} })}>
-					Create
-				</Button>
-				<Button
-					size="sm"
-					variant="secondary"
-					onClick={() => _mutationUpdate.mutate({ data: {} })}
-				>
-					Update
-				</Button>
-				<Button
-					size="sm"
-					variant="destructive"
-					onClick={() => _mutationDelete.mutate({ data: { id: "1" } })}
-				>
-					Delete
-				</Button>
-			</WrapperHeader> */}
-			<WrapperBody>
-				<EmployeeTable data={employees.data} />
-				<EmployeeForm />
-			</WrapperBody>
+			<WrapperBody>{JSON.stringify(employees, null, 2)}</WrapperBody>
 		</Wrapper>
 	);
 }

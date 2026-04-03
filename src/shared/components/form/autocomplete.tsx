@@ -6,7 +6,7 @@ import {
 	Input,
 	type Key,
 	ListBox,
-} from "@/shared/components/hui";
+} from "@/shared/components/ui";
 import { useFieldContext } from "@/shared/hooks/use-app-form";
 import type {
 	FieldClassNames,

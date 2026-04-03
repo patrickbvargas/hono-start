@@ -1,4 +1,4 @@
-import { Button } from "@/shared/components/hui";
+import { Button } from "@/shared/components/ui";
 import { useFormContext } from "@/shared/hooks/use-app-form";
 
 export const FormResetButton = ({

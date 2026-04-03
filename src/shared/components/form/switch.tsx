@@ -1,4 +1,4 @@
-import { Field, Switch, type SwitchProps } from "@/shared/components/hui";
+import { Field, Switch, type SwitchProps } from "@/shared/components/ui";
 import { useFieldContext } from "@/shared/hooks/use-app-form";
 import type { FieldCommonProps } from "@/shared/types/field";
 

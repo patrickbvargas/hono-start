@@ -1,3 +1,4 @@
+import { EmptyState, Table, type TableProps } from "@heroui/react";
 import {
 	type ColumnDef,
 	flexRender,
@@ -7,14 +8,9 @@ import {
 	useReactTable,
 } from "@tanstack/react-table";
 import { ChevronUpIcon, InboxIcon } from "lucide-react";
-import {
-	EmptyState,
-	Link,
-	Table,
-	type TableProps,
-} from "@/shared/components/hui";
 import { useSort } from "@/shared/hooks/use-sort";
 import { cn } from "@/shared/lib/utils";
+import { Link } from "./link";
 
 interface DataTableProps<TData, TValue> extends TableProps {
 	columns: ColumnDef<TData, TValue>[] | TableOptions<TData>["columns"];

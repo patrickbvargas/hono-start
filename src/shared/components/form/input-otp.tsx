@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Field, InputOTP, type InputOTPProps } from "@/shared/components/hui";
+import { Field, InputOTP, type InputOTPProps } from "@/shared/components/ui";
 import { useFieldContext } from "@/shared/hooks/use-app-form";
 import type { FieldCommonProps } from "@/shared/types/field";
 
