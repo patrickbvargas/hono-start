@@ -1,0 +1,228 @@
+schema: spec-driven
+
+context: |
+  # Hono — Legal Fee Management System
+
+  Internal web app for a Brazilian law firm specializing in Social Security Law (Direito Previdenciário).
+  Automates legal fee management and lawyer remuneration calculations, replacing manual spreadsheets.
+  Multi-tenant: supports multiple firm branches (filiais) via firmId isolation on all business entities.
+
+  ## Tech Stack
+
+  - Framework: TanStack Start 1.x (full-stack React with SSR via createServerFn)
+  - Bundler: Vite 7.x
+  - UI: React 19 (no RSC — uses createServerFn exclusively)
+  - Styling: Tailwind CSS v4 (via @tailwindcss/vite plugin)
+  - Routing: TanStack Router 1.x (file-based, src/routes/)
+  - Data Fetching: TanStack Query 5.x (React Query v5)
+  - Forms: TanStack Form 1.x (@tanstack/react-form-start)
+  - Tables: TanStack Table 8.x
+  - Validation: Zod 4.x
+  - Database: PostgreSQL 15+ hosted on Supabase, accessed via Drizzle ORM 0.45+
+  - Auth: BetterAuth (email/OAB login, sessions, roles)
+  - UI Primitives: HeroUI 3.x (default theme, re-exported from @/shared/components/ui/)
+  - Icons: Lucide React
+  - File Storage: Supabase Storage (attachments)
+  - Linting/Formatting: Biome 2.x
+  - Testing: Vitest 3.x + Testing Library 16.x
+  - Package Manager: pnpm
+  - Language: TypeScript 5.x (strict mode)
+
+  ## Project Architecture
+
+  src/
+    db/              — Drizzle client, migrations (never edit), schemas (barrel re-export)
+    features/<name>/ — Feature slices: api/, components/, constants/, hooks/, schemas/, utils/, index.ts
+    routes/          — TanStack file-based routes (__root.tsx + one file per route)
+    shared/          — Cross-feature: components/ui/ (HeroUI re-exports), components/form/, config/, hooks/, lib/, schemas/, types/
+    styles/          — global.css (Tailwind entry + CSS variables)
+    router.tsx       — Router factory
+
+  Key rule: Features and routes NEVER import directly from @heroui/*. All UI primitives
+  re-exported from @/shared/components/ui/, hooks from @/shared/hooks/.
+
+  ## Data Flow
+
+  Route (loader) → createServerFn → Drizzle → PostgreSQL
+  TanStack Query cache → React component (useSuspenseQuery)
+  TanStack Form → createServerFn (mutation) → queryClient.invalidateQueries
+
+  ## Domain
+
+  - Employee (Colaborador): Lawyer or admin assistant at the firm
+  - Client (Cliente): Person (PF/CPF) or company (PJ/CNPJ)
+  - Contract (Contrato): A legal case linked to a client, with assigned lawyers and revenue plans
+  - Revenue (Receita): Payment plan on a contract (types: Administrativo, Judicial, Sucumbência)
+  - Fee (Honorário): Individual installment payment from the client
+  - Remuneration (Remuneração): Employee payment auto-calculated from a fee
+  - Attachment (Anexo): PDF/JPG/PNG file on a client, employee, or contract (max 10MB)
+  - Firm (Escritório): A law firm branch (tenant)
+  - OAB: Brazilian Bar Association number (format: XX000000)
+
+  ## Roles
+
+  - admin: Full system access, all data, all operations
+  - user: Lawyer or assistant — own contracts/fees/remunerations + full client access
+
+  ## Contract Employee Assignments
+
+  - Responsible (Responsável): Full case responsibility, receives individual %
+  - Recommending (Indicante): Referred the client, receives referrer %
+  - Recommended (Indicado): Handles referred case, receives individual % minus referrer %
+  - Additional (Adicional): Fixed 10%, auto-assigned on Social Security contracts only
+  - Admin Assistant (Assistente Administrativo): Support staff, receives individual %
+
+  ## Remuneration Formulas
+
+  - responsible: fee.amount × employee.remunerationPercent
+  - recommending: fee.amount × employee.referrerPercent
+  - recommended: fee.amount × (employee.remunerationPercent - referrer.referrerPercent)
+  - additional: fee.amount × 0.10
+  - admin_assistant: fee.amount × employee.remunerationPercent
+  All percentages stored as decimals (0.30 = 30%).
+
+  ## Fee Lifecycle
+
+  - Fee created (generateRemuneration: true) → remunerations created for all contract employees
+  - Fee created (generateRemuneration: false) → no remunerations
+  - Fee updated (generateRemuneration: true) → remunerations recalculated
+  - Fee updated (generateRemuneration: false) → remunerations unchanged
+  - On fee creation: increment revenue.installmentsPaid; if all revenues fully paid → contract status = Completed
+
+  ## Data Integrity
+
+  - Soft deletes only (deletedAt timestamp, no hard deletes)
+  - Cannot delete client with active contracts
+  - Cannot delete contract with active revenues
+  - Cannot delete revenue with active fees
+  - Cannot delete fee with active remunerations
+  - Cannot remove employee from contract if they have active remunerations
+  - Referrer % must be ≤ recommended lawyer's individual %
+  - downPayment ≤ totalValue
+  - At least 1 revenue per contract, at least 1 employee per contract
+  - Contract status: Active → Completed (auto) or Cancelled (manual); respects allowStatusChange lock
+  - Audit log on every create/update/soft-delete/restore
+
+  ## Lookup Tables (system-fixed, seeded, never UI-editable)
+
+  - employee_types: 1=Advogado, 2=Assistente Administrativo
+  - employee_roles: 1=Administrador, 2=Usuário
+  - client_types: 1=Pessoa Física, 2=Pessoa Jurídica
+  - contract_legal_areas: 1=Previdenciário, 2=Cível, 3=Família, 4=Trabalhista, 5=Outros
+  - contract_statuses: 1=Ativo, 2=Concluído, 3=Cancelado
+  - contract_employee_types: 1=Responsável, 2=Indicante, 3=Indicado, 4=Adicional, 5=Assistente Administrativo
+  - revenue_types: 1=Administrativo, 2=Judicial, 3=Sucumbência
+
+  ## Entity Relationships
+
+  firms 1→N employees, clients, contracts
+  clients 1→N contracts
+  contracts 1→N contractEmployees, revenues
+  employees 1→N contractEmployees
+  revenues 1→N fees
+  fees 1→N remunerations
+  contractEmployees 1→N remunerations
+
+  ## Common DB Patterns (every business entity)
+
+  firmId (tenant isolation), createdAt, updatedAt, deletedAt (soft delete),
+  createdBy, updatedBy, deletedBy
+
+  ## API Pattern
+
+  All endpoints are createServerFn server functions (not REST/tRPC).
+  Return types: QueryOneReturnType<T>, QueryManyReturnType<T>, QueryPaginatedReturnType<T>, MutationReturnType, FileDownload.
+
+  ## Rate Limiting
+
+  - Auth: 5 req/min per identifier
+  - General: 100 req/min
+  - Export: 10 req/hour
+  - Bulk operations: 20 req/hour
+
+  ## UI/UX Conventions
+
+  - All UI text in Portuguese (pt-BR)
+  - Codebase in English
+  - Entity details: always in Drawer (never a page)
+  - Create/edit forms: always in Modal (never a page)
+  - Data tables: sortable columns, URL-driven sort/filter/pagination
+  - Loading: skeleton loaders; buttons show spinner + disabled during submission
+  - Empty states: helpful Portuguese message
+  - Currency: R$ 1.234,56; Date: DD/MM/YYYY; Inter font
+  - Desktop-first, collapsible sidebar, basic tablet/mobile support
+
+  ## Screens
+
+  /login, /reset-password (public)
+  /dashboard, /clients, /contracts, /fees, /remunerations (authenticated)
+  /settings/users, /settings/audit (admin only)
+
+  ## Validation Rules
+
+  - OAB: /^[A-Z]{2}\d{6}$/ (optional, lawyers only)
+  - CPF: exactly 11 digits; CNPJ: exactly 14 digits
+  - Passwords: min 8 characters
+  - Percentages: 0.0–1.0
+  - File uploads: max 10MB, PDF/JPG/PNG only
+  - All Zod error messages in Portuguese
+
+  ## Error Codes
+
+  AUTH_001 (invalid credentials), AUTH_002 (session expired), AUTH_003 (unauthorized)
+  VAL_001 (validation error), VAL_002 (duplicate entry)
+  BUS_001 (insufficient permissions), BUS_002 (invalid operation)
+  BUS_003 (referrer % > recommended %), BUS_004 (employee has active remunerations)
+  SYS_001 (database error), SYS_002 (internal error)
+
+  ## Performance Targets
+
+  - List queries: <500ms
+  - Single entity fetch: <200ms
+  - Mutations: <300ms
+  - Pagination default: 20 items/page
+  - TanStack Query: staleTime 5min, gcTime 10min, refetchOnWindowFocus false
+
+  ## Security
+
+  - Session: 24h default, 7 days with "remember me"
+  - Server-side role verification on every protected server function
+  - All queries scoped by firmId (tenant isolation)
+  - Input validation via Zod before DB access
+  - Parameterized queries (Drizzle ORM)
+  - CSRF protection via BetterAuth
+  - Soft deletes for legal data retention
+
+rules:
+  proposal:
+    - Always reference the PRD.md as the source of truth for product requirements
+    - Include a "Non-goals" section to clarify scope boundaries
+    - Specify which user roles (admin/user) are affected
+    - Mention any business rules from the domain (remuneration formulas, fee lifecycle, deletion protection) that are relevant
+    - Keep proposals focused on one feature or change area at a time
+    - Use Portuguese labels when referencing UI-visible terms (e.g., Colaborador, Honorário)
+    - Flag any multi-tenant (firmId) implications
+
+  tasks:
+    - Break tasks into chunks of max 2 hours of work
+    - Follow the feature-slice architecture (api/, components/, schemas/, hooks/, utils/)
+    - Each task should specify which files/directories it touches
+    - Always include a task for Zod validation schemas (Portuguese error messages)
+    - Always include a task for audit log integration on any CRUD operation
+    - Include a task for permission checks (admin vs user role) when applicable
+    - Specify if the task requires a Drizzle migration
+    - Server functions must use createServerFn pattern
+    - UI components must import from @/shared/components/ui/ (never directly from @heroui/*)
+    - Include testing tasks for critical business logic (remuneration calculations, fee lifecycle, cascade deletes)
+
+  spec:
+    - Reference lookup table IDs by name and number (e.g., "Previdenciário (1)")
+    - Include data model details relevant to the feature (columns, constraints, relationships)
+    - Specify role-based access requirements (admin-only vs authenticated vs scoped)
+    - Document validation rules with exact constraints (field lengths, ranges, formats)
+    - Include the relevant Zod schema definitions with Portuguese error messages
+    - Specify API server functions with input/output types following project conventions
+    - Document side effects (e.g., fee creation triggers remuneration generation)
+    - Include soft-delete cascade behavior when relevant
+    - Specify URL-driven state for any list/table views (sort, filter, pagination in search params)
+    - All UI copy must be in Portuguese (pt-BR)
