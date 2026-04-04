@@ -2,7 +2,7 @@
 
 ## Product Requirements Document
 
-> **Version:** 2.0 — 2026
+> **Version:** 1.0 — 2026
 
 ---
 
@@ -76,7 +76,7 @@ The system supports multiple firm branches (filiais). All business data is isola
 | Remuneration | Remuneração | A payment owed to an employee, calculated automatically from a fee |
 | Attachment | Anexo | A file (PDF, JPG, PNG) attached to a client, employee, or contract |
 | Firm | Escritório | A law firm branch (tenant) in the system |
-| OAB | OAB | Brazilian Bar Association registration number (format: two-letter state code + six digits, e.g., RS123456) |
+| OAB | OAB | Brazilian Bar Association registration number (e.g., RS123456) |
 | Responsible | Responsável | The lawyer with full responsibility for a contract |
 | Recommending | Indicante | The lawyer who referred the client or case |
 | Recommended | Indicado | The lawyer assigned to handle a referred case |
@@ -126,9 +126,8 @@ The system supports multiple firm branches (filiais). All business data is isola
 - Login via **email** or **OAB number** combined with a password.
 - Password reset via email link.
 - "Remember me" option extends the session to 7 days (default session: 24 hours).
-- Login is rate-limited to **5 attempts per minute per identifier** (email or OAB number).
+- After 5 failed login attempts within one minute for the same identifier, further attempts are temporarily blocked.
 - All pages except Login and Password Reset require an authenticated session.
-- The server verifies the user's role on every protected action.
 
 ---
 
@@ -156,7 +155,7 @@ When a fee is recorded with remuneration generation enabled, the system automati
 
 ### 5.6 Dashboard & Analytics
 
-A summary dashboard showing revenue totals, remuneration totals, monthly comparisons, and recent activity. Charts for revenue by legal area and revenue type are planned for a future phase. Regular users see only their own data; administrators see firm-wide data.
+A summary dashboard showing revenue totals, remuneration totals, monthly comparisons, and recent activity. Charts for revenue by legal area and revenue type. Regular users see only their own data; administrators see firm-wide data.
 
 ### 5.7 Report Export
 
@@ -172,7 +171,7 @@ Administrators can create, edit, soft-delete, and restore employee accounts. Eac
 
 ### 5.10 Audit Log (Admin)
 
-An immutable log of all data changes across the system. Each entry records who made the change, when, what entity was affected, and a field-by-field diff of old vs. new values. Filterable by date, user, action, and entity type.
+An immutable log of all data changes across the system. Each entry records who made the change, when, what entity was affected, and what changed. Filterable by date, user, action, and entity type.
 
 ---
 
@@ -223,23 +222,23 @@ An immutable log of all data changes across the system. Each entry records who m
 
 | ID | Requirement |
 |---|---|
-| FR-AUTH-01 | The system must accept login via email or OAB number combined with a password. |
-| FR-AUTH-02 | OAB numbers must follow the format: two uppercase letters followed by six digits (e.g., SP123456). |
+| FR-AUTH-01 | The system must allow login via email or OAB number combined with a password. |
+| FR-AUTH-02 | The system must validate OAB numbers against the accepted format: two letters followed by six digits (e.g., SP123456). |
 | FR-AUTH-03 | The system must enforce a minimum password length of 8 characters. |
 | FR-AUTH-04 | The "Remember me" option must extend the session duration to 7 days; the default session lasts 24 hours. |
-| FR-AUTH-05 | After 5 failed login attempts within one minute for the same identifier, subsequent attempts must be temporarily blocked. |
+| FR-AUTH-05 | After 5 failed login attempts within one minute for the same identifier, the system must temporarily block further attempts. |
 | FR-AUTH-06 | The system must support password reset via an email link. |
-| FR-AUTH-07 | All pages except Login and Password Reset must require an authenticated session. |
+| FR-AUTH-07 | The system must prevent access to any page except Login and Password Reset without an authenticated session. |
 
 ### 7.2 Clients
 
 | ID | Requirement |
 |---|---|
 | FR-CLI-01 | The system must support two client types: Individual (Pessoa Física) and Company (Pessoa Jurídica). |
-| FR-CLI-02 | Individual clients must have a valid CPF (11 digits); company clients must have a valid CNPJ (14 digits). |
-| FR-CLI-03 | Document numbers (CPF/CNPJ) must be unique across all clients in the firm. |
+| FR-CLI-02 | The system must validate that individual clients have a valid CPF and company clients have a valid CNPJ. |
+| FR-CLI-03 | The system must prevent two clients in the same firm from sharing the same CPF or CNPJ. |
 | FR-CLI-04 | The client creation form must adapt its fields and labels based on the selected client type. |
-| FR-CLI-05 | The client list must be searchable by name, document number, and filterable by type and active/inactive status. |
+| FR-CLI-05 | The system must allow users to search and filter the client list by name, document number, type, and active/inactive status. |
 | FR-CLI-06 | The client detail view must show related contracts and attachments. |
 
 ### 7.3 Contracts
@@ -247,63 +246,62 @@ An immutable log of all data changes across the system. Each entry records who m
 | ID | Requirement |
 |---|---|
 | FR-CON-01 | Every contract must be linked to exactly one client. |
-| FR-CON-02 | Every contract must have a unique process number (Número do Processo). |
+| FR-CON-02 | The system must prevent two contracts from sharing the same process number within a firm. |
 | FR-CON-03 | Every contract must have at least one assigned employee. |
 | FR-CON-04 | Every contract must have at least one revenue plan at creation time. |
 | FR-CON-05 | A contract may have up to three revenue plans, one per revenue type (Administrative, Judicial, Succumbency). Duplicate types are not allowed. |
-| FR-CON-06 | The fee percentage must be stored and calculated as a decimal (e.g., 0.30 = 30%). |
-| FR-CON-07 | Contract statuses are: Active, Completed, and Cancelled. |
-| FR-CON-08 | A contract's status must automatically change to Completed when all its revenues have been fully paid. |
-| FR-CON-09 | Administrators may manually cancel a contract, unless status changes have been locked. |
-| FR-CON-10 | Administrators may lock a contract to prevent any status changes. |
-| FR-CON-11 | Regular users can only view contracts they are assigned to. |
+| FR-CON-06 | Contract statuses are: Active, Completed, and Cancelled. |
+| FR-CON-07 | A contract's status must automatically change to Completed when all its revenues have been fully paid. |
+| FR-CON-08 | Administrators may manually cancel a contract, unless status changes have been locked. |
+| FR-CON-09 | Administrators may lock a contract to prevent any status changes. |
+| FR-CON-10 | The system must prevent regular users from viewing contracts they are not assigned to. |
 
 ### 7.4 Team Assignment
 
 | ID | Requirement |
 |---|---|
 | FR-TEAM-01 | Each employee on a contract must have exactly one assignment type: Responsible, Recommending, Recommended, Additional, or Admin Assistant. |
-| FR-TEAM-02 | An employee may only appear once per contract. |
+| FR-TEAM-02 | The system must prevent the same employee from being assigned to the same contract more than once. |
 | FR-TEAM-03 | The "Additional" assignment is only valid on Social Security (Previdenciário) contracts and is automatically assigned by the system. |
-| FR-TEAM-04 | Removing an employee from a contract must be blocked if that employee has any active remuneration records on that contract. |
+| FR-TEAM-04 | The system must prevent removing an employee from a contract if that employee has active remuneration records on that contract. |
 
 ### 7.5 Revenues
 
 | ID | Requirement |
 |---|---|
-| FR-REV-01 | Each revenue must specify: type, total value, optional down payment, payment start date, and total number of installments. |
-| FR-REV-02 | The down payment must not exceed the total value. |
-| FR-REV-03 | The system must track the number of installments paid and update it automatically when fees are recorded. |
-| FR-REV-04 | A revenue type may only appear once per contract. |
+| FR-REV-01 | When creating a revenue plan, the system must capture its type, total value, optional down payment, payment start date, and total number of installments. |
+| FR-REV-02 | The system must prevent the down payment from exceeding the total revenue value. |
+| FR-REV-03 | The system must automatically track the number of installments paid and update it when fees are recorded. |
+| FR-REV-04 | The system must prevent the same revenue type from appearing more than once on a contract. |
 
 ### 7.6 Fees
 
 | ID | Requirement |
 |---|---|
-| FR-FEE-01 | Each fee must be linked to a revenue and must specify: payment date, amount, and installment number. |
-| FR-FEE-02 | Fee amounts must be positive. |
-| FR-FEE-03 | Installment numbers must be unique within a revenue. |
+| FR-FEE-01 | The system must allow users to record a fee payment against a specific revenue, capturing the payment date, amount, and installment number. |
+| FR-FEE-02 | The system must prevent fee amounts from being zero or negative. |
+| FR-FEE-03 | The system must prevent duplicate installment numbers within the same revenue. |
 | FR-FEE-04 | Each fee has a "Generate Remuneration" toggle (default: enabled). When enabled, remuneration records are automatically created for all employees assigned to the contract. |
 | FR-FEE-05 | The system must support bulk creation of multiple fees at once. |
-| FR-FEE-06 | Regular users can only see fees from contracts they are assigned to. |
+| FR-FEE-06 | The system must prevent regular users from viewing fees from contracts they are not assigned to. |
 
 ### 7.7 Remunerations
 
 | ID | Requirement |
 |---|---|
-| FR-REM-01 | Remunerations are generated automatically from fees — they are never created manually by users. |
-| FR-REM-02 | Each remuneration records: the source fee, the assigned employee, the percentage applied, the calculated amount, and the payment date. |
-| FR-REM-03 | Administrators may manually edit a remuneration's percentage and amount. |
-| FR-REM-04 | Regular users can only view their own remunerations. |
+| FR-REM-01 | Remunerations must be generated automatically from fees — they are never created manually by users. |
+| FR-REM-02 | Each remuneration must be traceable to the fee that originated it and must display the employee it belongs to, the percentage applied, and the resulting amount. |
+| FR-REM-03 | Administrators may manually edit a remuneration's percentage and calculated amount. |
+| FR-REM-04 | The system must prevent regular users from viewing remunerations that belong to other employees. |
 | FR-REM-05 | The remuneration list must display a summary total. |
 
 ### 7.8 Attachments
 
 | ID | Requirement |
 |---|---|
-| FR-ATT-01 | Files may be attached to clients, employees, or contracts. |
-| FR-ATT-02 | Accepted file types: PDF, JPG, and PNG. |
-| FR-ATT-03 | Maximum file size: 10 MB. |
+| FR-ATT-01 | The system must allow files to be attached to clients, employees, or contracts. |
+| FR-ATT-02 | The system must only accept files in PDF, JPG, or PNG format. |
+| FR-ATT-03 | The system must prevent uploads larger than 10 MB. |
 | FR-ATT-04 | All authenticated users may upload and view attachments. |
 | FR-ATT-05 | Only administrators may delete attachments. |
 
@@ -312,24 +310,24 @@ An immutable log of all data changes across the system. Each entry records who m
 | ID | Requirement |
 |---|---|
 | FR-DASH-01 | The dashboard must show: total revenue value, total remuneration value, monthly comparisons, and recent activity. |
-| FR-DASH-02 | Regular users see only data related to their own contracts. Administrators see firm-wide data. |
-| FR-DASH-03 | Revenue charts by legal area and by type are planned for a future phase. |
+| FR-DASH-02 | Regular users must see only data related to their own contracts. Administrators must see firm-wide data. |
+| FR-DASH-03 | The dashboard must include revenue charts broken down by legal area and by revenue type. |
 
 ### 7.10 Export
 
 | ID | Requirement |
 |---|---|
-| FR-EXP-01 | Users must be able to export remunerations, revenues, or fees. |
-| FR-EXP-02 | Supported formats: PDF and Excel. |
+| FR-EXP-01 | The system must allow users to export remunerations, revenues, or fees. |
+| FR-EXP-02 | Supported export formats: PDF and Excel. |
 | FR-EXP-03 | Exports must be filterable by date range. |
-| FR-EXP-04 | Exports are scoped by role: regular users export only their own data; administrators export firm-wide data. |
+| FR-EXP-04 | Exports must be scoped by role: regular users export only their own data; administrators export firm-wide data. |
 
 ### 7.11 Audit Log
 
 | ID | Requirement |
 |---|---|
 | FR-AUD-01 | Every create, update, soft-delete, and restore action on any business entity must be logged. |
-| FR-AUD-02 | Each log entry must record: timestamp, user, action, affected entity, and a field-level diff of changes (old value → new value). |
+| FR-AUD-02 | Each log entry must record when it occurred, who performed the action, what action was taken, which entity was affected, and what changed. |
 | FR-AUD-03 | Audit log entries are immutable — they cannot be edited or deleted. |
 | FR-AUD-04 | The audit log is accessible only to administrators. |
 | FR-AUD-05 | The audit log must be filterable by date range, user, action type, and entity type. |
@@ -338,19 +336,17 @@ An immutable log of all data changes across the system. Each entry records who m
 
 | ID | Requirement |
 |---|---|
-| FR-DATA-01 | All deletions must be soft deletes (records are marked as inactive, never permanently removed). |
+| FR-DATA-01 | All deletions must be soft deletes — records are marked as inactive and never permanently removed. |
 | FR-DATA-02 | Administrators may restore soft-deleted records. |
-| FR-DATA-03 | All data must be isolated per firm — a user in one firm must never access data from another firm. |
+| FR-DATA-03 | The system must ensure that all data is fully isolated per firm — a user in one firm must never be able to access data belonging to another firm. |
 
 ### 7.13 Performance & Usability
 
 | ID | Requirement |
 |---|---|
-| FR-PERF-01 | Paginated list queries must respond in under 500 ms. |
-| FR-PERF-02 | Single entity lookups must respond in under 200 ms. |
-| FR-PERF-03 | Write operations must respond in under 300 ms. |
-| FR-PERF-04 | All lists must be paginated (default: 20 items per page). |
-| FR-PERF-05 | Sorting, pagination, and filters must be driven by URL parameters so that views are shareable and bookmarkable. |
+| FR-PERF-01 | The system must feel responsive under normal usage — all common interactions (loading lists, viewing details, saving data) must complete without noticeable delay. |
+| FR-PERF-02 | All lists must be paginated to keep the interface fast and manageable. |
+| FR-PERF-03 | Sorting, filtering, and pagination state must be reflected in the URL so that views are shareable and bookmarkable. |
 
 ---
 
@@ -390,8 +386,6 @@ When a fee is recorded with remuneration generation enabled, the system creates 
 | Additional | Fee amount × 10% |
 | Admin Assistant | Fee amount × employee's individual percentage |
 
-> All percentages are stored as decimals (e.g., 30% = 0.30).
-
 ### 8.4 Fee Lifecycle & Side Effects
 
 | Event | System Behavior |
@@ -423,7 +417,7 @@ When a Recommending + Recommended pair is assigned to a contract, the referrer's
 ### 8.7 Contract Status Flow
 
 - **Active** → **Completed**: Happens automatically when all revenues are fully paid.
-- **Active** → **Cancelled**: Manual action (must respect the status lock flag).
+- **Active** → **Cancelled**: Manual action by an administrator (must respect the status lock).
 - The administrator may lock a contract to prevent any status transitions.
 
 ### 8.8 Data Formatting Standards
@@ -436,7 +430,7 @@ When a Recommending + Recommended pair is assigned to a contract, the referrer's
 | CNPJ | 00.000.000/0000-00 | 12.345.678/0001-95 |
 | OAB | XX 000.000 | RS 123.456 |
 | Phone | (00) 00000-0000 | (11) 98765-4321 |
-| Percentage | Displayed as %, stored as decimal | 30% (stored as 0.30) |
+| Percentage | Displayed as a whole number with % symbol | 30% |
 
 ---
 
@@ -527,8 +521,8 @@ When a Recommending + Recommended pair is assigned to a contract, the referrer's
 
 | Scenario | Expected Behavior |
 |---|---|
-| User enters an OAB number in lowercase | The system should normalize or reject with a clear format error |
-| User exceeds 5 login attempts in one minute | Further attempts are blocked temporarily; a message informs the user to wait |
+| User enters an OAB number in lowercase | The system normalizes it or rejects it with a clear format error |
+| User exceeds 5 login attempts in one minute | Further attempts are temporarily blocked; the user is informed to wait |
 | Session expires while user is filling a form | On next action, user is redirected to login; unsaved data is lost (expected) |
 
 ### 10.2 Client Data
@@ -575,8 +569,8 @@ When a Recommending + Recommended pair is assigned to a contract, the referrer's
 
 | Scenario | Expected Behavior |
 |---|---|
-| User from Firm A attempts to access a record from Firm B | Access denied — all queries are scoped to the user's firm |
-| User attempts to reference an entity from another firm in a form | Entity does not appear in search/dropdown results |
+| User from Firm A attempts to access a record from Firm B | Access denied — all data is scoped to the user's firm |
+| User attempts to reference an entity from another firm in a form | Entity does not appear in search or dropdown results |
 
 ### 10.7 Audit & Compliance
 
@@ -674,21 +668,10 @@ These are system-defined reference values. They are not editable through the app
 
 | Concern | How It Is Addressed |
 |---|---|
-| Input validation | All user inputs are validated before processing |
-| Injection attacks | All database queries use parameterized statements |
-| Cross-site scripting (XSS) | User-generated content is escaped before rendering |
-| Cross-site request forgery (CSRF) | Built-in CSRF protection on all state-changing requests |
-| Audit trail | All business data mutations are logged with user attribution |
-| Data isolation | All queries are scoped to the authenticated user's firm |
-| Role enforcement | The server verifies the user's role on every protected action |
-| Soft deletes | Data is never permanently removed — supports legal retention requirements |
-| Sensitive data access | Financial data (fees, remunerations) is restricted by role |
-| Rate limiting | Authentication: 5 req/min per identifier; General: 100 req/min; Exports: 10 req/hour; Bulk operations: 20 req/hour |
-
----
-
-## Appendix D: Future Enhancements
-
-- Revenue charts on the Dashboard (by legal area and by revenue type)
-- End-to-end test coverage for main user workflows
-- Advanced reporting and analytics capabilities
+| Input validation | All user inputs are validated before being accepted by the system |
+| Audit trail | All business data changes are logged with full user attribution and are immutable |
+| Data isolation | All data is strictly scoped to the authenticated user's firm |
+| Role enforcement | Access to every protected action is governed by the user's assigned role |
+| Data retention | Data is never permanently removed — soft deletes support legal retention requirements |
+| Sensitive data access | Financial data (fees, remunerations) is restricted based on role and contract assignment |
+| Authentication security | Login attempts are rate-limited to prevent brute-force access |

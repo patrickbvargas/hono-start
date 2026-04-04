@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { DemoForm } from "@/shared/components/form/demo";
+import { Pagination } from "@/shared/components/pagination";
 import { RouteError } from "@/shared/components/route-error";
 import { RouteLoading } from "@/shared/components/route-loading";
-import { Pagination } from "@/shared/components/ui";
 import {
 	Wrapper,
 	WrapperBody,
