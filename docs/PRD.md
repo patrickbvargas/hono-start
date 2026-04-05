@@ -10,14 +10,15 @@
 
 1. [Overview](#1-overview)
 2. [Goals & Success Metrics](#2-goals--success-metrics)
-3. [Domain Glossary](#3-domain-glossary)
-4. [User Roles & Permissions](#4-user-roles--permissions)
-5. [Features](#5-features)
-6. [User Stories](#6-user-stories)
-7. [Functional Requirements](#7-functional-requirements)
-8. [Business Rules](#8-business-rules)
-9. [User Flows](#9-user-flows)
-10. [Edge Cases](#10-edge-cases)
+3. [Non-goals](#3-non-goals)
+4. [Domain Glossary](#4-domain-glossary)
+5. [User Roles & Permissions](#5-user-roles--permissions)
+6. [Features](#6-features)
+7. [User Stories](#7-user-stories)
+8. [Functional Requirements](#8-functional-requirements)
+9. [Business Rules](#9-business-rules)
+10. [User Flows](#10-user-flows)
+11. [Edge Cases](#11-edge-cases)
 
 ---
 
@@ -64,7 +65,18 @@ The system supports multiple firm branches (filiais). All business data is isola
 
 ---
 
-## 3. Domain Glossary
+## 3. Non-goals
+
+The following are explicitly out of scope for this system:
+
+- **Client portal** — clients have no access to the system; it is strictly internal.
+- **Notifications** — the system does not send email or push notifications for any business event.
+- **External integrations** — no integration with accounting systems, court systems, or any third-party platform.
+- **Case management** — the system manages fees and remunerations only; deadlines, hearings, and procedural documents are out of scope.
+
+---
+
+## 4. Domain Glossary
 
 | Term (English) | Term (Portuguese) | Definition |
 |---|---|---|
@@ -85,7 +97,7 @@ The system supports multiple firm branches (filiais). All business data is isola
 
 ---
 
-## 4. User Roles & Permissions
+## 5. User Roles & Permissions
 
 ### 4.1 Roles
 
@@ -131,27 +143,82 @@ The system supports multiple firm branches (filiais). All business data is isola
 
 ---
 
-## 5. Features
+## 6. Features
 
 ### 5.1 Client Management
 
 Create, view, edit, and soft-delete clients. Clients are either individuals (Pessoa Física, identified by CPF) or companies (Pessoa Jurídica, identified by CNPJ). The form adapts dynamically based on client type. Each client's detail view shows related contracts and file attachments.
 
+#### Attributes
+
+| Field | Required | Notes |
+|---|---|---|
+| Type | Yes | Individual or Company — fixed at creation |
+| Full name | Yes | "Nome" for individuals; "Razão Social" for companies |
+| Document | Yes | CPF (11 digits) for individuals; CNPJ (14 digits) for companies — unique per firm |
+| Email | No | |
+| Phone | No | Mobile phone |
+
 ### 5.2 Contract Management
 
 Create and manage legal contracts linked to a client. Each contract has a unique process number, a legal area, a fee percentage, and a team of assigned employees with defined roles. Contracts include one or more revenue plans (up to three, one per revenue type). Administrators can lock status changes on individual contracts.
+
+#### Attributes
+
+| Field | Required | Notes |
+|---|---|---|
+| Client | Yes | Reference to an existing client |
+| Process number | Yes | Unique identifier per firm (Número do Processo - text without mask) |
+| Legal area | Yes | Social Security, Civil, Family, Labor, or Other |
+| Fee percentage | Yes | Overall legal fee percentage for this contract |
+| Status | Yes | Active (default), Completed, or Cancelled |
+| Allow status change | Yes | Flag controlled by administrators; defaults to true |
+| Team | Yes | At least one employee with an assignment type |
+| Revenues | Yes | At least one revenue plan at creation |
+| Notes | No | Free-text observations |
 
 ### 5.3 Revenue Tracking
 
 Define payment plans on contracts. Each revenue specifies a total value, optional down payment, payment start date, and number of installments. The system tracks how many installments have been paid.
 
+#### Attributes
+
+| Field | Required | Notes |
+|---|---|---|
+| Contract | Yes | Reference to the parent contract |
+| Type | Yes | Administrative, Judicial, or Succumbency — unique per contract |
+| Total value | Yes | Total amount to be received |
+| Down payment | No | Must not exceed total value; defaults to zero |
+| Payment start date | Yes | |
+| Total installments | Yes | Number of expected installment payments |
+
 ### 5.4 Fee Recording
 
 Record individual fee payments (installments) against a revenue. Fees can optionally trigger automatic remuneration generation. Bulk fee creation is supported for efficiency.
 
+#### Attributes
+
+| Field | Required | Notes |
+|---|---|---|
+| Revenue | Yes | Reference to the parent revenue |
+| Payment date | Yes | |
+| Amount | Yes | Must be positive |
+| Installment number | Yes | Must be unique within the same revenue |
+| Generate remuneration | Yes | Defaults to true; controls whether remuneration records are created |
+
 ### 5.5 Automated Remuneration Calculation
 
 When a fee is recorded with remuneration generation enabled, the system automatically calculates and creates remuneration records for every employee assigned to that contract, using their configured percentages and assignment type. Administrators can manually adjust remuneration records.
+
+#### Attributes
+
+| Field | Required | Notes |
+|---|---|---|
+| Fee | Yes | Reference to the originating fee |
+| Contract employee | Yes | Reference to the employee assignment on the contract |
+| Percentage | Yes | Decimal percentage applied in the calculation |
+| Amount | Yes | Calculated result |
+| Payment date | Yes | Copied from the originating fee |
 
 ### 5.6 Dashboard & Analytics
 
@@ -165,9 +232,31 @@ Export remunerations, revenues, or fees as PDF or Excel files, filtered by date 
 
 Upload and manage file attachments (PDF, JPG, PNG; max 10 MB) on clients, employees, and contracts. Administrators can delete attachments; all authenticated users can upload and view.
 
+#### Attributes
+
+| Field | Required | Notes |
+|---|---|---|
+| Entity type | Yes | Client, employee, or contract |
+| Entity | Yes | Reference to the parent entity |
+| File | Yes | PDF, JPG, or PNG; max 10 MB |
+
 ### 5.9 User Management (Admin)
 
 Administrators can create, edit, soft-delete, and restore employee accounts. Each employee has a name, email, optional OAB number, role, type (lawyer or assistant), individual remuneration percentage, and referral percentage.
+
+#### Attributes
+
+| Field | Required | Notes |
+|---|---|---|
+| Full name | Yes | |
+| Email | Yes | Unique across the system |
+| Password | Yes | Minimum 8 characters |
+| Type | Yes | Lawyer or Admin Assistant |
+| Role | Yes | Administrator or User |
+| OAB number | No | Lawyers only — format: two uppercase letters followed by 6 digits (e.g. RS123456) |
+| Remuneration percentage | Yes | Individual percentage used in remuneration calculations |
+| Referral percentage | Yes | Percentage applied when the employee acts as a referrer |
+| Avatar | No | Profile photo |
 
 ### 5.10 Audit Log (Admin)
 
@@ -175,7 +264,7 @@ An immutable log of all data changes across the system. Each entry records who m
 
 ---
 
-## 6. User Stories
+## 7. User Stories
 
 ### Authentication
 
@@ -216,9 +305,9 @@ An immutable log of all data changes across the system. Each entry records who m
 
 ---
 
-## 7. Functional Requirements
+## 8. Functional Requirements
 
-### 7.1 Authentication
+### 8.1 Authentication
 
 | ID | Requirement |
 |---|---|
@@ -230,7 +319,7 @@ An immutable log of all data changes across the system. Each entry records who m
 | FR-AUTH-06 | The system must support password reset via an email link. |
 | FR-AUTH-07 | The system must prevent access to any page except Login and Password Reset without an authenticated session. |
 
-### 7.2 Clients
+### 8.2 Clients
 
 | ID | Requirement |
 |---|---|
@@ -241,7 +330,7 @@ An immutable log of all data changes across the system. Each entry records who m
 | FR-CLI-05 | The system must allow users to search and filter the client list by name, document number, type, and active/inactive status. |
 | FR-CLI-06 | The client detail view must show related contracts and attachments. |
 
-### 7.3 Contracts
+### 8.3 Contracts
 
 | ID | Requirement |
 |---|---|
@@ -256,7 +345,7 @@ An immutable log of all data changes across the system. Each entry records who m
 | FR-CON-09 | Administrators may lock a contract to prevent any status changes. |
 | FR-CON-10 | The system must prevent regular users from viewing contracts they are not assigned to. |
 
-### 7.4 Team Assignment
+### 8.4 Team Assignment
 
 | ID | Requirement |
 |---|---|
@@ -265,7 +354,7 @@ An immutable log of all data changes across the system. Each entry records who m
 | FR-TEAM-03 | The "Additional" assignment is only valid on Social Security (Previdenciário) contracts and is automatically assigned by the system. |
 | FR-TEAM-04 | The system must prevent removing an employee from a contract if that employee has active remuneration records on that contract. |
 
-### 7.5 Revenues
+### 8.5 Revenues
 
 | ID | Requirement |
 |---|---|
@@ -274,7 +363,7 @@ An immutable log of all data changes across the system. Each entry records who m
 | FR-REV-03 | The system must automatically track the number of installments paid and update it when fees are recorded. |
 | FR-REV-04 | The system must prevent the same revenue type from appearing more than once on a contract. |
 
-### 7.6 Fees
+### 8.6 Fees
 
 | ID | Requirement |
 |---|---|
@@ -285,7 +374,7 @@ An immutable log of all data changes across the system. Each entry records who m
 | FR-FEE-05 | The system must support bulk creation of multiple fees at once. |
 | FR-FEE-06 | The system must prevent regular users from viewing fees from contracts they are not assigned to. |
 
-### 7.7 Remunerations
+### 8.7 Remunerations
 
 | ID | Requirement |
 |---|---|
@@ -295,7 +384,7 @@ An immutable log of all data changes across the system. Each entry records who m
 | FR-REM-04 | The system must prevent regular users from viewing remunerations that belong to other employees. |
 | FR-REM-05 | The remuneration list must display a summary total. |
 
-### 7.8 Attachments
+### 8.8 Attachments
 
 | ID | Requirement |
 |---|---|
@@ -305,7 +394,7 @@ An immutable log of all data changes across the system. Each entry records who m
 | FR-ATT-04 | All authenticated users may upload and view attachments. |
 | FR-ATT-05 | Only administrators may delete attachments. |
 
-### 7.9 Dashboard
+### 8.9 Dashboard
 
 | ID | Requirement |
 |---|---|
@@ -313,7 +402,7 @@ An immutable log of all data changes across the system. Each entry records who m
 | FR-DASH-02 | Regular users must see only data related to their own contracts. Administrators must see firm-wide data. |
 | FR-DASH-03 | The dashboard must include revenue charts broken down by legal area and by revenue type. |
 
-### 7.10 Export
+### 8.10 Export
 
 | ID | Requirement |
 |---|---|
@@ -322,7 +411,7 @@ An immutable log of all data changes across the system. Each entry records who m
 | FR-EXP-03 | Exports must be filterable by date range. |
 | FR-EXP-04 | Exports must be scoped by role: regular users export only their own data; administrators export firm-wide data. |
 
-### 7.11 Audit Log
+### 8.11 Audit Log
 
 | ID | Requirement |
 |---|---|
@@ -350,7 +439,7 @@ An immutable log of all data changes across the system. Each entry records who m
 
 ---
 
-## 8. Business Rules
+## 9. Business Rules
 
 ### 8.1 Employee Assignment Types on Contracts
 
@@ -364,7 +453,7 @@ Each employee assigned to a contract has a specific role that determines how the
 | **Additional** | Lawyer (auto-assigned) | Fixed 10% of the fee — only on Social Security contracts |
 | **Admin Assistant** | Administrative staff | Receives their full individual percentage of the fee |
 
-### 8.2 Valid Team Compositions
+### 9.2 Valid Team Compositions
 
 | Scenario | Team Composition |
 |---|---|
@@ -374,7 +463,7 @@ Each employee assigned to a contract has a specific role that determines how the
 | Social Security Bonus | 1 Responsible + 1 Additional |
 | Complex | 1 Recommending + 1 Recommended + 1 Admin Assistant + 1 Additional |
 
-### 8.3 Remuneration Calculation
+### 9.3 Remuneration Calculation
 
 When a fee is recorded with remuneration generation enabled, the system creates one remuneration record for each employee assigned to that contract:
 
@@ -386,7 +475,7 @@ When a fee is recorded with remuneration generation enabled, the system creates 
 | Additional | Fee amount × 10% |
 | Admin Assistant | Fee amount × employee's individual percentage |
 
-### 8.4 Fee Lifecycle & Side Effects
+### 9.4 Fee Lifecycle & Side Effects
 
 | Event | System Behavior |
 |---|---|
@@ -398,7 +487,7 @@ When a fee is recorded with remuneration generation enabled, the system creates 
 | Fee restored | All linked remunerations are also restored |
 | All installments for all revenues on a contract are paid | Contract status automatically changes to Completed |
 
-### 8.5 Deletion Protection Rules
+### 9.5 Deletion Protection Rules
 
 Entities with active dependents cannot be deleted:
 
@@ -410,17 +499,17 @@ Entities with active dependents cannot be deleted:
 | Fee | Has active remunerations |
 | Employee (from contract) | Has active remunerations on that contract |
 
-### 8.6 Referral Percentage Constraint
+### 9.6 Referral Percentage Constraint
 
 When a Recommending + Recommended pair is assigned to a contract, the referrer's referral percentage must not exceed the recommended lawyer's individual percentage. If it does, the assignment must be rejected with a clear error message.
 
-### 8.7 Contract Status Flow
+### 9.7 Contract Status Flow
 
 - **Active** → **Completed**: Happens automatically when all revenues are fully paid.
 - **Active** → **Cancelled**: Manual action by an administrator (must respect the status lock).
 - The administrator may lock a contract to prevent any status transitions.
 
-### 8.8 Data Formatting Standards
+### 9.8 Data Formatting Standards
 
 | Data Type | Display Format | Example |
 |---|---|---|
@@ -434,9 +523,9 @@ When a Recommending + Recommended pair is assigned to a contract, the referrer's
 
 ---
 
-## 9. User Flows
+## 10. User Flows
 
-### 9.1 Login
+### 10.1 Login
 
 1. User opens the application and sees the login screen.
 2. User enters their email or OAB number and password.
@@ -446,7 +535,7 @@ When a Recommending + Recommended pair is assigned to a contract, the referrer's
 6. On failure: a Portuguese error message is displayed (e.g., "Credenciais inválidas").
 7. After 5 failed attempts in one minute, further attempts are temporarily blocked.
 
-### 9.2 Register a New Client
+### 10.2 Register a New Client
 
 1. User navigates to the Clients list.
 2. Clicks "Novo Cliente" (New Client).
@@ -456,7 +545,7 @@ When a Recommending + Recommended pair is assigned to a contract, the referrer's
 6. On success: toast confirmation, modal closes, client list refreshes.
 7. On failure: inline validation errors displayed in Portuguese.
 
-### 9.3 Create a Contract
+### 10.3 Create a Contract
 
 1. User navigates to the Contracts list.
 2. Clicks "Novo Contrato" (New Contract).
@@ -472,7 +561,7 @@ When a Recommending + Recommended pair is assigned to a contract, the referrer's
 5. On success: toast confirmation, modal closes, contract list refreshes.
 6. If the legal area is Social Security, the system automatically assigns the Additional employee.
 
-### 9.4 Record a Fee and Generate Remunerations
+### 10.4 Record a Fee and Generate Remunerations
 
 1. User navigates to the Fees list.
 2. Clicks "Novo Honorário" (New Fee).
@@ -487,7 +576,7 @@ When a Recommending + Recommended pair is assigned to a contract, the referrer's
    d. Checks if all installments across all revenues are paid; if so, marks the contract as Completed.
 8. Toast confirmation displayed.
 
-### 9.5 View and Export Remunerations
+### 10.5 View and Export Remunerations
 
 1. User navigates to the Remunerations list.
 2. Regular users see only their own remunerations. Administrators see all.
@@ -496,7 +585,7 @@ When a Recommending + Recommended pair is assigned to a contract, the referrer's
 5. User clicks "Exportar" (Export), selects format (PDF or Excel) and date range.
 6. The system generates and downloads the file.
 
-### 9.6 Soft-Delete and Restore
+### 10.6 Soft-Delete and Restore
 
 1. Administrator selects an entity (e.g., a client) and clicks "Excluir" (Delete).
 2. A confirmation dialog appears: "Tem certeza que deseja excluir?"
@@ -504,7 +593,7 @@ When a Recommending + Recommended pair is assigned to a contract, the referrer's
 4. If allowed, the entity is soft-deleted (marked as inactive).
 5. The administrator can later find the deleted entity via a status filter and click "Restaurar" (Restore).
 
-### 9.7 Upload an Attachment
+### 10.7 Upload an Attachment
 
 1. User opens a client, employee, or contract detail view.
 2. Scrolls to the Attachments section.
@@ -515,9 +604,9 @@ When a Recommending + Recommended pair is assigned to a contract, the referrer's
 
 ---
 
-## 10. Edge Cases
+## 11. Edge Cases
 
-### 10.1 Authentication
+### 11.1 Authentication
 
 | Scenario | Expected Behavior |
 |---|---|
@@ -525,7 +614,7 @@ When a Recommending + Recommended pair is assigned to a contract, the referrer's
 | User exceeds 5 login attempts in one minute | Further attempts are temporarily blocked; the user is informed to wait |
 | Session expires while user is filling a form | On next action, user is redirected to login; unsaved data is lost (expected) |
 
-### 10.2 Client Data
+### 11.2 Client Data
 
 | Scenario | Expected Behavior |
 |---|---|
@@ -533,7 +622,7 @@ When a Recommending + Recommended pair is assigned to a contract, the referrer's
 | Deleting a client who has active contracts | Deletion is blocked with an explanatory message |
 | Client type changed from Individual to Company after creation | Not supported — client type is fixed at creation |
 
-### 10.3 Contract & Team
+### 11.3 Contract & Team
 
 | Scenario | Expected Behavior |
 |---|---|
@@ -545,7 +634,7 @@ When a Recommending + Recommended pair is assigned to a contract, the referrer's
 | All installments for all revenues are paid | Contract status automatically transitions to Completed |
 | Administrator locked a contract's status, then all fees are paid | Status change to Completed is blocked by the lock — administrator must unlock first |
 
-### 10.4 Fees & Remunerations
+### 11.4 Fees & Remunerations
 
 | Scenario | Expected Behavior |
 |---|---|
@@ -558,21 +647,21 @@ When a Recommending + Recommended pair is assigned to a contract, the referrer's
 | Installment number duplicated within the same revenue | Rejected — installment numbers must be unique per revenue |
 | Installments paid exceeds total installments | The system prevents this from occurring |
 
-### 10.5 Attachments
+### 11.5 Attachments
 
 | Scenario | Expected Behavior |
 |---|---|
 | File exceeds 10 MB | Rejected with "Arquivo deve ter no máximo 10MB" |
 | Unsupported file type (e.g., .docx) | Rejected with "Formato inválido. Use PDF, JPG ou PNG" |
 
-### 10.6 Multi-Tenancy
+### 11.6 Multi-Tenancy
 
 | Scenario | Expected Behavior |
 |---|---|
 | User from Firm A attempts to access a record from Firm B | Access denied — all data is scoped to the user's firm |
 | User attempts to reference an entity from another firm in a form | Entity does not appear in search or dropdown results |
 
-### 10.7 Audit & Compliance
+### 11.7 Audit & Compliance
 
 | Scenario | Expected Behavior |
 |---|---|

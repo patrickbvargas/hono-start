@@ -3,88 +3,28 @@ schema: spec-driven
 context: |
   # Hono — Legal Fee Management System
 
-  Internal web app for a Brazilian law firm specializing in Social Security Law (Direito Previdenciário).
+  Internal web app for a Brazilian law firm specializing in Social Security Law.
   Automates legal fee management and lawyer remuneration calculations, replacing manual spreadsheets.
-  Multi-tenant: supports multiple firm branches (filiais) via firmId isolation on all business entities.
-
-  Source of truth for product behavior and business rules: PRD.md
-
-  ## Tech Stack
-
-  TypeScript (strict), TanStack Start + Router + Query + Form + Table, Drizzle ORM + PostgreSQL (Supabase),
-  BetterAuth, HeroUI v3, Zod 4, Tailwind CSS v4, Vitest 3 + Testing Library, Biome 2, pnpm.
-
-  ## Project Structure
-
-  src/
-  ├── db/                        # Database client & Drizzle schemas
-  │   ├── index.ts               # drizzle() instance
-  │   ├── migrations/            # Generated migrations (never edit manually)
-  │   └── schemas/               # Drizzle table definitions (barrel re-export)
-  ├── features/                  # Feature slices (one per domain entity)
-  │   └── <feature>/
-  │       ├── api/               # createServerFn handlers + queryOptions/mutationOptions
-  │       ├── components/        # Feature-scoped React components
-  │       ├── constants/         # Cache keys, allowed column lists
-  │       ├── hooks/             # Feature-scoped React hooks
-  │       ├── schemas/           # Zod schemas: model, form, search, sort, filter
-  │       ├── utils/             # Pure helper functions
-  │       └── index.ts           # Public barrel — only import from here
-  ├── routes/                    # TanStack file-based routes
-  │   ├── __root.tsx             # Root layout (sidebar, loading, devtools)
-  │   └── *.tsx                  # One file per route
-  ├── shared/                    # Cross-feature reusable code
-  │   ├── components/
-  │   │   ├── ui/                # HeroUI re-exports only — never import @heroui/* directly in features
-  │   │   └── form/              # Reusable form field components
-  │   ├── config/                # Routes map, app-wide config
-  │   ├── hooks/                 # useAppForm, usePagination, useSort + HeroUI hook re-exports
-  │   ├── lib/                   # cn(), error helpers, env, formatters
-  │   ├── schemas/               # entity, option, pagination, sort schemas
-  │   └── types/                 # Shared TS utility types, API return types
-  ├── styles/global.css          # Tailwind entry + CSS variables
-  └── router.tsx                 # Router factory
-
-  ## Architecture Rules
-
-  - Feature-sliced: all domain code lives in src/features/<n>/{api,components,hooks,schemas,utils}
-  - Never import @heroui/* directly in features — always re-export from shared/components/ui
-  - All server-side data access via createServerFn only (no RSC, no REST, no tRPC)
-  - Data flow: route loader → createServerFn → Drizzle → DB → TanStack Query cache → component
-
-  ## Implementation Rules
-
-  - All inputs validated with Zod before any DB access; error messages in Portuguese (pt-BR)
-  - All queries scoped by firmId from the authenticated session (multi-tenant)
-  - Soft delete only — active records have deletedAt IS NULL
-  - Every mutation must write a record to auditLogs
-  - Server-side role check required on every protected server function
-  - UI language: Portuguese (pt-BR). Codebase and logs: English
-  - Entity details → Drawer. Create/edit forms → Modal. Feedback → HeroUI toast
-  - All data formatting via src/shared/lib/formatters.ts — never inline
+  Multi-tenant: multiple firm branches (filiais) with strict data isolation per firm.
 
 rules:
   proposal:
-    - Read PRD.md before writing the proposal
+    - Read docs/PRD.md before writing the proposal
     - Keep proposals focused on a single feature or change
     - Include a "Non-goals" section to define boundaries
     - Identify affected user roles and multi-tenant implications
-    - Prefer clarity over completeness
 
-  spec:
-    - Focus on behavior and validation — avoid implementation details
+  specs:
+    - Read docs/PRD.md before writing specs
+    - Focus on behavior — avoid implementation details
     - Define clear, testable acceptance criteria
-    - Include edge cases, failure scenarios, and side effects (e.g. cascading soft deletes, auto-status changes)
-    - All user-facing text must be in Portuguese (pt-BR)
+    - Include edge cases and side effects
 
   design:
-    - List all server functions: name, input type, return type, access level (authenticated | admin)
-    - Define Drizzle schema changes explicitly (tables, columns, constraints, indexes)
-    - Specify audit log trigger points for every mutation
+    - Read docs/STACK.md, docs/ARCHITECTURE.md, and docs/CONVENTIONS.md before writing the design
     - Justify any deviation from existing patterns
 
   tasks:
-    - Follow this order: schema → server functions → components → tests
-    - Break into atomic units (≈1–2 hours each)
-    - Specify affected files or areas
+    - Read docs/CONVENTIONS.md before writing tasks
+    - Break into atomic units (~1–2 hours each)
     - Indicate if DB migrations are required
