@@ -1,29 +1,29 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteEmployeeOptions } from "../../api/delete";
+import { restoreEmployeeOptions } from "../../api/restore";
 import { EMPLOYEE_DATA_CACHE_KEY } from "../../constants";
 import type { Employee } from "../../schemas/model";
 import { toast } from "@/shared/lib/toast";
-import { DialogConfirm } from "@/shared/components/dialog-confirm";
 import { useOverlayState } from "@/shared/hooks/use-overlay-state";
+import { DialogConfirm } from "@/shared/components/dialog-confirm";
 
-interface EmployeeDeleteDialogProps {
+interface EmployeeRestoreDialogProps {
   employee: Employee;
   onClose: () => void;
 }
 
-export const EmployeeDeleteDialog = ({
+export const EmployeeRestoreDialog = ({
   employee,
   onClose,
-}: EmployeeDeleteDialogProps) => {
+}: EmployeeRestoreDialogProps) => {
   const queryClient = useQueryClient();
-  const mutation = useMutation(deleteEmployeeOptions());
+  const mutation = useMutation(restoreEmployeeOptions());
 
   const state = useOverlayState({ defaultOpen: true });
 
   const handleConfirm = async () => {
     try {
       await mutation.mutateAsync({ data: { id: employee.id } });
-      toast.success("Funcionário excluído com sucesso.");
+      toast.success("Funcionário restaurado com sucesso.");
       queryClient.invalidateQueries({ queryKey: [EMPLOYEE_DATA_CACHE_KEY] });
       onClose();
     } catch (error) {
@@ -35,11 +35,10 @@ export const EmployeeDeleteDialog = ({
 
   return (
     <DialogConfirm
-      title="Excluir funcionário"
-      description={`Tem certeza que deseja excluir ${employee.fullName}?
-      Esta ação pode ser desfeita restaurando o funcionário.`}
+      title="Restaurar funcionário"
+      description={`Deseja restaurar o acesso de ${employee.fullName}?`}
       onConfirm={handleConfirm}
-      confirmButtonLabel="Excluir"
+      confirmButtonLabel="Restaurar"
       cancelButtonLabel="Cancelar"
       state={state}
     />

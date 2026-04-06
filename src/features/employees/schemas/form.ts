@@ -1,29 +1,47 @@
 import * as z from "zod";
 import { entityIdSchema } from "@/shared/schemas/entity";
 
-export const employeeCreateSchema = z.object({
-	fullName: z.string().min(1, "Nome é obrigatório"),
-	email: z.email("Email inválido"),
-	oabNumber: z
-		.string()
-		.regex(/^RS\d{6}$/, "Formato OAB inválido (ex: RS123456)")
-		.optional()
-		.or(z.literal("")),
-	remunerationPercent: z.coerce
-		.number<number>()
-		.min(0.01, "Percentual deve ser maior que 0%")
-		.max(1, "Percentual não pode exceder 100%"),
-	referrerPercent: z.coerce
-		.number<number>()
-		.min(0.01, "Percentual deve ser maior que 0%")
-		.max(1, "Percentual não pode exceder 100%"),
-	type: z.coerce.number<number>().min(1, "Função é obrigatória"),
-	role: z.coerce.number<number>().min(1, "Cargo é obrigatório"),
-});
+const employeeBaseShape = {
+  fullName: z.string().min(1, "Nome é obrigatório"),
+  email: z.email("Email inválido"),
+  oabNumber: z
+    .string()
+    .regex(/^[A-Z]{2}\d{6}$/, "Formato OAB inválido (ex: RS123456)")
+    .optional()
+    .or(z.literal("")),
+  remunerationPercent: z.coerce
+    .number<number>()
+    .min(0, "Percentual deve ser maior ou igual a 0%")
+    .max(1, "Percentual não pode exceder 100%"),
+  referrerPercent: z.coerce
+    .number<number>()
+    .min(0, "Percentual deve ser maior ou igual a 0%")
+    .max(1, "Percentual não pode exceder 100%"),
+  type: z.coerce.number<number>().min(1, "Função é obrigatória"),
+  role: z.coerce.number<number>().min(1, "Cargo é obrigatório"),
+};
 
-export const employeeUpdateSchema = entityIdSchema.safeExtend(
-	employeeCreateSchema.shape,
-);
+const referrerRefinement = (
+  data: { referrerPercent: number; remunerationPercent: number },
+  ctx: z.RefinementCtx,
+) => {
+  if (data.referrerPercent > data.remunerationPercent) {
+    ctx.addIssue({
+      code: "custom",
+      message:
+        "Percentual de indicação não pode exceder o percentual de remuneração",
+      path: ["referrerPercent"],
+    });
+  }
+};
+
+export const employeeCreateSchema = z
+  .object(employeeBaseShape)
+  .superRefine(referrerRefinement);
+
+export const employeeUpdateSchema = entityIdSchema
+  .safeExtend(employeeBaseShape)
+  .superRefine(referrerRefinement);
 
 export const employeeDeleteSchema = entityIdSchema;
 

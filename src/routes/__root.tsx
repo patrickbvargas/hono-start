@@ -9,6 +9,7 @@ import {
 	useRouterState,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
+import { ToastProvider } from "@/shared/components/ui";
 import appCss from "@/styles/global.css?url";
 
 interface RouterContext {
@@ -74,6 +75,8 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 				)}
 
 				{children}
+
+				<ToastProvider />
 
 				<TanStackDevtools
 					plugins={[

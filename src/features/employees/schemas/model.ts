@@ -3,8 +3,12 @@ import { entityIdSchema } from "@/shared/schemas/entity";
 
 export const employeeSchema = entityIdSchema.safeExtend({
 	fullName: z.string(),
+	email: z.string(),
 	oabNumber: z.string().nullable(),
 	remunerationPercent: z.number(),
+	referrerPercent: z.number(),
+	typeId: z.number(),
+	roleId: z.number(),
 	type: z.string(),
 	role: z.string(),
 	slug: z.string(),

@@ -128,5 +128,9 @@ Always import from the validated `env` object in `src/shared/lib/env.ts` — nev
 ---
  
 ## After Every Change
- 
-Run `pnpm check` after every set of changes — this auto-fixes formatting, import order, and lint issues via Biome. Never manually reformat code.
+
+1. Run `pnpm check` — auto-fixes formatting, import order, and lint issues via Biome. Never manually reformat code.
+2. Run `npx tsc --noEmit` — verify there are no TypeScript compilation errors.
+3. **Fix all errors before considering the task done.** If `tsc` reports errors, resolve them. Do not skip, suppress with `@ts-ignore`, or leave them for later.
+
+A task is only complete when both commands pass with zero errors.

@@ -9,12 +9,17 @@
     "test": "vitest run",
     "format": "biome format",
     "lint": "biome lint",
-    "check": "biome check --write"
+    "check": "biome check --write",
+    "prisma": "prisma"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
     "@heroui/react": "^3.0.2",
     "@heroui/styles": "^3.0.2",
     "@internationalized/date": "^3.12.0",
+    "@prisma/client": "^7.6.0",
     "@tailwindcss/vite": "^4.2.2",
     "@tanstack/react-devtools": "^0.7.11",
     "@tanstack/react-form-devtools": "^0.2.20",
@@ -48,6 +53,7 @@
     "@vitejs/plugin-react": "^5.2.0",
     "dotenv": "^16.6.1",
     "jsdom": "^27.4.0",
+    "prisma": "^7.6.0",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
     "vite": "^7.3.1",

@@ -30,3 +30,4 @@ rules:
     - Use Context7 MCP to look up documentation for any library before implementing
     - Break into atomic units (~1–2 hours each)
     - Indicate if DB migrations are required
+    - After implementation, run `pnpm check` then `npx tsc --noEmit`. Fix all errors before marking the task as done — never skip, suppress with @ts-ignore, or leave for later.
