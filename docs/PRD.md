@@ -92,27 +92,27 @@ The following are explicitly out of scope for this system:
 | Responsible | Responsável | The lawyer with full responsibility for a contract |
 | Recommending | Indicante | The lawyer who referred the client or case |
 | Recommended | Indicado | The lawyer assigned to handle a referred case |
-| Additional | Adicional | A lawyer automatically assigned to Social Security contracts at a fixed 10% rate |
+| Additional | Adicional | A designated lawyer per firm who automatically receives a fixed 10% remuneration on Social Security contracts — unless already assigned to that contract in another role |
 | Admin Assistant | Assistente Administrativo | Administrative support staff assigned to a contract |
 
 ---
 
 ## 5. User Roles & Permissions
 
-### 4.1 Roles
+### 5.1 Roles
 
 | Role | Description |
 |---|---|
 | **Administrator** | Full system access — manages all data and all users |
 | **User** | Lawyer or assistant — sees own contracts, fees, and remunerations; has full access to all clients |
 
-### 4.2 Permission Matrix
+### 5.2 Permission Matrix
 
 | Capability | Administrator | User |
 |---|---|---|
-| View and update own profile | ✅ | ✅ |
-| View all employees | ✅ | ❌ |
-| Create, update, or delete employees | ✅ | ❌ |
+| View and update own profile (name, email, avatar, password) | ✅ | ✅ |
+| View all employees (basic info: name, type, OAB) | ✅ | ✅ |
+| Access User Management screen (percentages, role, email, full CRUD) | ✅ | ❌ |
 | View all clients | ✅ | ✅ |
 | Create or update clients | ✅ | ✅ |
 | Delete or restore clients | ✅ | ❌ |
@@ -133,7 +133,7 @@ The following are explicitly out of scope for this system:
 | View audit logs | ✅ | ❌ |
 | Manage users | ✅ | ❌ |
 
-### 4.3 Authentication
+### 5.3 Authentication
 
 - Login via **email** or **OAB number** combined with a password.
 - Password reset via email link.
@@ -145,7 +145,7 @@ The following are explicitly out of scope for this system:
 
 ## 6. Features
 
-### 5.1 Client Management
+### 6.1 Client Management
 
 Create, view, edit, and soft-delete clients. Clients are either individuals (Pessoa Física, identified by CPF) or companies (Pessoa Jurídica, identified by CNPJ). The form adapts dynamically based on client type. Each client's detail view shows related contracts and file attachments.
 
@@ -159,9 +159,9 @@ Create, view, edit, and soft-delete clients. Clients are either individuals (Pes
 | Email | No | |
 | Phone | No | Mobile phone |
 
-### 5.2 Contract Management
+### 6.2 Contract Management
 
-Create and manage legal contracts linked to a client. Each contract has a unique process number, a legal area, a fee percentage, and a team of assigned employees with defined roles. Contracts include one or more revenue plans (up to three, one per revenue type). Administrators can lock status changes on individual contracts.
+Create and manage legal contracts linked to a client. Each contract has a unique process number, a legal area, a fee percentage, and a team of assigned employees with defined roles. Contracts include one or more revenue plans (up to three, one per revenue type). The contract detail view displays a summary of the remaining value across all its revenues. Administrators can lock status changes on individual contracts.
 
 #### Attributes
 
@@ -177,9 +177,9 @@ Create and manage legal contracts linked to a client. Each contract has a unique
 | Revenues | Yes | At least one revenue plan at creation |
 | Notes | No | Free-text observations |
 
-### 5.3 Revenue Tracking
+### 6.3 Revenue Tracking
 
-Define payment plans on contracts. Each revenue specifies a total value, optional down payment, payment start date, and number of installments. The system tracks how many installments have been paid.
+Define payment plans on contracts. Each revenue specifies a total value, optional down payment, payment start date, and number of installments. The system tracks how many installments have been paid and displays the remaining value (total value minus down payment minus sum of recorded fees) as a progress indicator on each revenue row.
 
 #### Attributes
 
@@ -192,7 +192,7 @@ Define payment plans on contracts. Each revenue specifies a total value, optiona
 | Payment start date | Yes | |
 | Total installments | Yes | Number of expected installment payments |
 
-### 5.4 Fee Recording
+### 6.4 Fee Recording
 
 Record individual fee payments (installments) against a revenue. Fees can optionally trigger automatic remuneration generation. Bulk fee creation is supported for efficiency.
 
@@ -206,7 +206,7 @@ Record individual fee payments (installments) against a revenue. Fees can option
 | Installment number | Yes | Must be unique within the same revenue |
 | Generate remuneration | Yes | Defaults to true; controls whether remuneration records are created |
 
-### 5.5 Automated Remuneration Calculation
+### 6.5 Automated Remuneration Calculation
 
 When a fee is recorded with remuneration generation enabled, the system automatically calculates and creates remuneration records for every employee assigned to that contract, using their configured percentages and assignment type. Administrators can manually adjust remuneration records.
 
@@ -220,15 +220,15 @@ When a fee is recorded with remuneration generation enabled, the system automati
 | Amount | Yes | Calculated result |
 | Payment date | Yes | Copied from the originating fee |
 
-### 5.6 Dashboard & Analytics
+### 6.6 Dashboard & Analytics
 
 A summary dashboard showing revenue totals, remuneration totals, monthly comparisons, and recent activity. Charts for revenue by legal area and revenue type. Regular users see only their own data; administrators see firm-wide data.
 
-### 5.7 Report Export
+### 6.7 Report Export
 
 Export remunerations, revenues, or fees as PDF or Excel files, filtered by date range. Scoped by role (own data for users, firm-wide for administrators).
 
-### 5.8 File Attachments
+### 6.8 File Attachments
 
 Upload and manage file attachments (PDF, JPG, PNG; max 10 MB) on clients, employees, and contracts. Administrators can delete attachments; all authenticated users can upload and view.
 
@@ -240,7 +240,7 @@ Upload and manage file attachments (PDF, JPG, PNG; max 10 MB) on clients, employ
 | Entity | Yes | Reference to the parent entity |
 | File | Yes | PDF, JPG, or PNG; max 10 MB |
 
-### 5.9 User Management (Admin)
+### 6.9 User Management (Admin)
 
 Administrators can create, edit, soft-delete, and restore employee accounts. Each employee has a name, email, optional OAB number, role, type (lawyer or assistant), individual remuneration percentage, and referral percentage.
 
@@ -258,7 +258,9 @@ Administrators can create, edit, soft-delete, and restore employee accounts. Eac
 | Referral percentage | Yes | Percentage applied when the employee acts as a referrer |
 | Avatar | No | Profile photo |
 
-### 5.10 Audit Log (Admin)
+Users with access to the employee list can filter by type, role, and active/inactive status.
+
+### 6.10 Audit Log (Admin)
 
 An immutable log of all data changes across the system. Each entry records who made the change, when, what entity was affected, and what changed. Filterable by date, user, action, and entity type.
 
@@ -344,6 +346,7 @@ An immutable log of all data changes across the system. Each entry records who m
 | FR-CON-08 | Administrators may manually cancel a contract, unless status changes have been locked. |
 | FR-CON-09 | Administrators may lock a contract to prevent any status changes. |
 | FR-CON-10 | The system must prevent regular users from viewing contracts they are not assigned to. |
+| FR-CON-11 | The system must allow users to search and filter the contract list by client, legal area, status, and active/inactive status. |
 
 ### 8.4 Team Assignment
 
@@ -351,8 +354,9 @@ An immutable log of all data changes across the system. Each entry records who m
 |---|---|
 | FR-TEAM-01 | Each employee on a contract must have exactly one assignment type: Responsible, Recommending, Recommended, Additional, or Admin Assistant. |
 | FR-TEAM-02 | The system must prevent the same employee from being assigned to the same contract more than once. |
-| FR-TEAM-03 | The "Additional" assignment is only valid on Social Security (Previdenciário) contracts and is automatically assigned by the system. |
+| FR-TEAM-03 | The "Additional" assignment is only valid on Social Security (Previdenciário) contracts. The system automatically assigns the firm's designated Additional lawyer. If that lawyer is already assigned to the contract in another role, the Additional assignment is skipped. |
 | FR-TEAM-04 | The system must prevent removing an employee from a contract if that employee has active remuneration records on that contract. |
+| FR-TEAM-05 | The system must enforce assignment type compatibility with employee type: Lawyers may only hold Responsible, Recommending, Recommended, or Additional assignments; Admin Assistants may only hold the Admin Assistant assignment. |
 
 ### 8.5 Revenues
 
@@ -371,8 +375,9 @@ An immutable log of all data changes across the system. Each entry records who m
 | FR-FEE-02 | The system must prevent fee amounts from being zero or negative. |
 | FR-FEE-03 | The system must prevent duplicate installment numbers within the same revenue. |
 | FR-FEE-04 | Each fee has a "Generate Remuneration" toggle (default: enabled). When enabled, remuneration records are automatically created for all employees assigned to the contract. |
-| FR-FEE-05 | The system must support bulk creation of multiple fees at once. |
+| FR-FEE-05 | The system must support bulk creation of multiple fees for the same revenue. The form presents N rows (payment date, amount, installment number each). The entire batch is validated and saved as an all-or-nothing transaction — if any row fails, the whole batch is rejected. |
 | FR-FEE-06 | The system must prevent regular users from viewing fees from contracts they are not assigned to. |
+| FR-FEE-07 | The system must allow users to search and filter the fee list by contract, revenue, and date range. |
 
 ### 8.7 Remunerations
 
@@ -383,6 +388,7 @@ An immutable log of all data changes across the system. Each entry records who m
 | FR-REM-03 | Administrators may manually edit a remuneration's percentage and calculated amount. |
 | FR-REM-04 | The system must prevent regular users from viewing remunerations that belong to other employees. |
 | FR-REM-05 | The remuneration list must display a summary total. |
+| FR-REM-06 | The system must allow users to search and filter the remuneration list by employee, contract, and date range. |
 
 ### 8.8 Attachments
 
@@ -398,7 +404,7 @@ An immutable log of all data changes across the system. Each entry records who m
 
 | ID | Requirement |
 |---|---|
-| FR-DASH-01 | The dashboard must show: total revenue value, total remuneration value, monthly comparisons, and recent activity. |
+| FR-DASH-01 | The dashboard must show: total revenue value, total remuneration value, monthly comparisons, and recent activity. Recent activity displays the last 10 events across entity types (fees recorded, contracts created, clients added, remunerations generated), sourced from the audit log. Scoped by role: administrators see firm-wide activity; regular users see only activity related to their own contracts. |
 | FR-DASH-02 | Regular users must see only data related to their own contracts. Administrators must see firm-wide data. |
 | FR-DASH-03 | The dashboard must include revenue charts broken down by legal area and by revenue type. |
 
@@ -421,7 +427,7 @@ An immutable log of all data changes across the system. Each entry records who m
 | FR-AUD-04 | The audit log is accessible only to administrators. |
 | FR-AUD-05 | The audit log must be filterable by date range, user, action type, and entity type. |
 
-### 7.12 Data Management
+### 8.12 Data Management
 
 | ID | Requirement |
 |---|---|
@@ -430,19 +436,19 @@ An immutable log of all data changes across the system. Each entry records who m
 | FR-DATA-03 | The system must ensure that all data is fully isolated per firm — a user in one firm must never be able to access data belonging to another firm. |
 | FR-DATA-04 | The system must require explicit user confirmation before executing any delete or restore action. |
 
-### 7.13 Performance & Usability
+### 8.13 Performance & Usability
 
 | ID | Requirement |
 |---|---|
 | FR-PERF-01 | The system must feel responsive under normal usage — all common interactions (loading lists, viewing details, saving data) must complete without noticeable delay. |
-| FR-PERF-02 | All lists must be paginated to keep the interface fast and manageable. |
+| FR-PERF-02 | All lists must be paginated. Default page size: 25 rows. Available page size options: 10, 25, 50, 100. |
 | FR-PERF-03 | Sorting, filtering, and pagination state must be reflected in the URL so that views are shareable and bookmarkable. |
 
 ---
 
 ## 9. Business Rules
 
-### 8.1 Employee Assignment Types on Contracts
+### 9.1 Employee Assignment Types on Contracts
 
 Each employee assigned to a contract has a specific role that determines how their remuneration is calculated:
 
@@ -451,7 +457,7 @@ Each employee assigned to a contract has a specific role that determines how the
 | **Responsible** | Lawyer | Receives their full individual percentage of the fee |
 | **Recommending** (Referrer) | Lawyer | Receives their referral percentage of the fee |
 | **Recommended** (Referred) | Lawyer | Receives their individual percentage minus the referrer's percentage |
-| **Additional** | Lawyer (auto-assigned) | Fixed 10% of the fee — only on Social Security contracts |
+| **Additional** | Designated lawyer (auto-assigned) | Fixed 10% of the fee — only on Social Security contracts. Skipped if the designated lawyer is already assigned to the contract in another role (Responsible, Recommending, or Recommended). The designated lawyer is configured per firm via database seed. |
 | **Admin Assistant** | Administrative staff | Receives their full individual percentage of the fee |
 
 ### 9.2 Valid Team Compositions
@@ -499,6 +505,7 @@ Entities with active dependents cannot be deleted:
 | Revenue | Has active fees |
 | Fee | Has active remunerations |
 | Employee (from contract) | Has active remunerations on that contract |
+| Employee (account) | Has any active contract assignment that has active remunerations |
 
 ### 9.6 Referral Percentage Constraint
 
@@ -508,6 +515,8 @@ When a Recommending + Recommended pair is assigned to a contract, the referrer's
 
 - **Active** → **Completed**: Happens automatically when all revenues are fully paid.
 - **Active** → **Cancelled**: Manual action by an administrator (must respect the status lock).
+- **Cancelled and Completed contracts are read-only.** No fees can be recorded, no revenues can be added or edited, and no team changes are allowed.
+- An administrator may restore a Cancelled or Completed contract, which returns it to **Active** status.
 - The administrator may lock a contract to prevent any status transitions.
 
 ### 9.8 Data Formatting Standards
@@ -560,7 +569,7 @@ When a Recommending + Recommended pair is assigned to a contract, the referrer's
    - **Notes**: optional text area.
 4. User clicks "Salvar."
 5. On success: toast confirmation, modal closes, contract list refreshes.
-6. If the legal area is Social Security, the system automatically assigns the Additional employee.
+6. If the legal area is Social Security, the system checks the firm's designated Additional lawyer. If that lawyer is not already assigned to the contract in another role, the system automatically adds them with the Additional assignment type.
 
 ### 10.4 Record a Fee and Generate Remunerations
 
@@ -631,6 +640,7 @@ When a Recommending + Recommended pair is assigned to a contract, the referrer's
 | Two revenues of the same type on one contract | Rejected — each revenue type may only appear once |
 | Recommending lawyer's referral % exceeds Recommended lawyer's individual % | Assignment rejected with a clear error ("O percentual do indicante não pode ser maior que o percentual do indicado") |
 | Attempting to add "Additional" assignment to a non-Social Security contract | Rejected — Additional is only valid for Social Security |
+| Designated Additional lawyer is already assigned to the contract as Responsible, Recommending, or Recommended | Additional assignment is silently skipped — no error, no duplicate assignment |
 | Removing an employee who has active remunerations on the contract | Blocked with message: "Colaborador possui remunerações ativas e não pode ser removido do contrato" |
 | All installments for all revenues are paid | Contract status automatically transitions to Completed |
 | Administrator locked a contract's status, then all fees are paid | Status change to Completed is blocked by the lock — administrator must unlock first |
@@ -706,51 +716,66 @@ These are system-defined reference values. They are not editable through the app
 
 | Value | Label (pt-BR) |
 |---|---|
-| Lawyer | Advogado |
-| Admin Assistant | Assistente Administrativo |
+| LAWYER | Advogado |
+| ADMIN_ASSISTANT | Assistente Administrativo |
+
+### User Roles
+
+| Value | Label (pt-BR) |
+|---|---|
+| ADMIN | Administrador |
+| USER | Usuário |
 
 ### Client Types
 
 | Value | Label (pt-BR) |
 |---|---|
-| Individual | Pessoa Física |
-| Company | Pessoa Jurídica |
+| INDIVIDUAL | Pessoa Física |
+| COMPANY | Pessoa Jurídica |
 
 ### Legal Areas
 
 | Value | Label (pt-BR) |
 |---|---|
-| Social Security | Previdenciário |
-| Civil | Cível |
-| Family | Família |
-| Labor | Trabalhista |
-| Other | Outros |
+| SOCIAL_SECURITY | Previdenciário |
+| CIVIL | Cível |
+| FAMILY | Família |
+| LABOR | Trabalhista |
+| OTHER | Outros |
 
 ### Contract Statuses
 
 | Value | Label (pt-BR) |
 |---|---|
-| Active | Ativo |
-| Completed | Concluído |
-| Cancelled | Cancelado |
+| ACTIVE | Ativo |
+| COMPLETED | Concluído |
+| CANCELLED | Cancelado |
 
 ### Revenue Types
 
 | Value | Label (pt-BR) |
 |---|---|
-| Administrative | Administrativo |
-| Judicial | Judicial |
-| Succumbency | Sucumbência |
+| ADMINISTRATIVE | Administrativo |
+| JUDICIAL | Judicial |
+| SUCCUMBENCY | Sucumbência |
 
 ### Employee Assignment Types
 
 | Value | Label (pt-BR) |
 |---|---|
-| Responsible | Responsável |
-| Recommending | Indicante |
-| Recommended | Indicado |
-| Additional | Adicional |
-| Admin Assistant | Assistente Administrativo |
+| RESPONSIBLE | Responsável |
+| RECOMMENDING | Indicante |
+| RECOMMENDED | Indicado |
+| ADDITIONAL | Adicional |
+| ADMIN_ASSISTANT | Assistente Administrativo |
+
+### Attachment Types
+
+| Value | Label (pt-BR) |
+|---|---|
+| PDF | PDF |
+| JPG | JPG |
+| PNG | PNG |
 
 ---
 

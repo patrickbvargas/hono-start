@@ -32,4 +32,8 @@ These libraries are non-negotiable
 
 ## Open Choices
 
+| Concern | Notes |
+|---|---|
+| Email transport | Required for BetterAuth password reset. To be decided — candidates include Resend, Nodemailer + SMTP, or Supabase Edge Functions. |
+
 For anything not listed above, prefer well-maintained, widely adopted libraries that integrate naturally with the fixed stack. Justify deviations from obvious defaults.

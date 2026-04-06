@@ -64,7 +64,21 @@
 - Server functions are private — never export them; only export the options factory that wraps them
 - Wrap all DB calls in `try/catch`; log the real error server-side with a `[functionName]` prefix; throw a user-friendly Portuguese message to the client
 - Never expose database errors, SQL, or stack traces to the client
+- **Compound mutations** (e.g., contract creation = Contract + ContractEmployees + Revenues): use a single server function that receives the full payload and creates everything in one `prisma.$transaction()`. One API call, one rollback boundary. Never split multi-entity creation across multiple server function calls.
  
+---
+
+## Prisma / Database
+
+- Import the Prisma client from `@/db` — never instantiate `new PrismaClient()` elsewhere
+- **Every query** must filter by `firmId` (from session) and `deletedAt: null` — unless explicitly listing deleted records (e.g., admin status filter set to `inactive` or `all`)
+- Never trust `firmId` from client input — always read it from the authenticated session
+- Use `prisma.$transaction()` for all operations that span multiple tables (compound creates, soft-delete cascades, restore cascades)
+- Reference lookup table rows by their `value` field (e.g., `"LAWYER"`, `"SOCIAL_SECURITY"`) — never by `id` — since IDs may differ across environments
+- Never convert `Prisma.Decimal` to JavaScript `number` for financial arithmetic — use a decimal library (e.g., `decimal.js`) or Prisma's built-in Decimal methods
+- Sort queries must always append `{ id: "asc" }` as a tiebreaker for deterministic pagination
+- Keep Prisma `include` / `select` minimal — only fetch the relations needed for the current response
+
 ---
 
 ## Mutations & Cache
