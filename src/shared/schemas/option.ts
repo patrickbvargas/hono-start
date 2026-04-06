@@ -1,8 +1,8 @@
 import * as z from "zod";
+import { entityIdSchema } from "./entity";
 
-export const optionSchema = z
-	.object({
-		id: z.union([z.string(), z.number()]),
+export const optionSchema = entityIdSchema
+	.safeExtend({
 		description: z.string().min(1, "Descrição é obrigatória"),
 	})
 	.transform((option) => ({

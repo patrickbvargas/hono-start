@@ -22,9 +22,11 @@ rules:
 
   design:
     - Read docs/STACK.md, docs/ARCHITECTURE.md, and docs/CONVENTIONS.md before writing the design
+    - Use Context7 MCP to look up documentation for any library before implementing
     - Justify any deviation from existing patterns
 
   tasks:
     - Read docs/CONVENTIONS.md before writing tasks
+    - Use Context7 MCP to look up documentation for any library before implementing
     - Break into atomic units (~1–2 hours each)
     - Indicate if DB migrations are required

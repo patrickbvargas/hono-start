@@ -17,7 +17,7 @@ These libraries are non-negotiable
 | Data fetching / async state | TanStack Query |
 | Forms | TanStack Form |
 | Tables | TanStack Table |
-| Database ORM | Drizzle ORM |
+| Database ORM | Prisma ORM |
 | Database | PostgreSQL (hosted on Supabase) |
 | File storage | Supabase Storage |
 | Authentication | BetterAuth |

@@ -10,7 +10,7 @@
 
 ```
 src/
-├── db/                  # Database client and Drizzle schema definitions
+├── db/                  # Database client and Prisma schema definitions
 ├── features/            # Feature slices — one per domain entity
 │   └── <feature>/
 │       ├── api/         # Server functions and query/mutation option factories

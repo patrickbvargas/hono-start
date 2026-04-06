@@ -428,6 +428,7 @@ An immutable log of all data changes across the system. Each entry records who m
 | FR-DATA-01 | All deletions must be soft deletes — records are marked as inactive and never permanently removed. |
 | FR-DATA-02 | Administrators may restore soft-deleted records. |
 | FR-DATA-03 | The system must ensure that all data is fully isolated per firm — a user in one firm must never be able to access data belonging to another firm. |
+| FR-DATA-04 | The system must require explicit user confirmation before executing any delete or restore action. |
 
 ### 7.13 Performance & Usability
 
@@ -610,7 +611,7 @@ When a Recommending + Recommended pair is assigned to a contract, the referrer's
 
 | Scenario | Expected Behavior |
 |---|---|
-| User enters an OAB number in lowercase | The system normalizes it or rejects it with a clear format error |
+| User enters an OAB number in lowercase | The system normalizes it |
 | User exceeds 5 login attempts in one minute | Further attempts are temporarily blocked; the user is informed to wait |
 | Session expires while user is filling a form | On next action, user is redirected to login; unsaved data is lost (expected) |
 

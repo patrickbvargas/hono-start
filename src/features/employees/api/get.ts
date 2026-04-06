@@ -15,7 +15,7 @@ const getEmployees = createServerFn({ method: "GET" })
 		try {
 			const mockData: Employee[] = [
 				{
-					id: "1",
+					id: 1,
 					fullName: "Alice Ferreira Santos",
 					oabNumber: "234567",
 					remunerationPercent: 40,
@@ -28,7 +28,7 @@ const getEmployees = createServerFn({ method: "GET" })
 					updatedAt: "2024-05-20T14:45:12.000Z",
 				},
 				{
-					id: "2",
+					id: 2,
 					fullName: "Bruno Mendes Oliveira",
 					oabNumber: "890123",
 					remunerationPercent: 30,
@@ -41,7 +41,7 @@ const getEmployees = createServerFn({ method: "GET" })
 					updatedAt: "2024-02-10T08:15:00.000Z",
 				},
 				{
-					id: "3",
+					id: 3,
 					fullName: "Carla Souza Lima",
 					oabNumber: "456789",
 					remunerationPercent: 50,
@@ -54,7 +54,7 @@ const getEmployees = createServerFn({ method: "GET" })
 					updatedAt: "2024-01-12T09:00:00.000Z",
 				},
 				{
-					id: "4",
+					id: 4,
 					fullName: "Diego Rocha Pires",
 					oabNumber: "112233",
 					remunerationPercent: 45,
@@ -67,7 +67,7 @@ const getEmployees = createServerFn({ method: "GET" })
 					updatedAt: "2024-05-15T17:30:45.000Z",
 				},
 				{
-					id: "5",
+					id: 5,
 					fullName: "Elena Martins Costa",
 					oabNumber: "445566",
 					remunerationPercent: 60,
@@ -80,7 +80,7 @@ const getEmployees = createServerFn({ method: "GET" })
 					updatedAt: "2024-06-01T12:00:00.000Z",
 				},
 				{
-					id: "6",
+					id: 6,
 					fullName: "Fabio Junior Silva",
 					oabNumber: "778899",
 					remunerationPercent: 20,
@@ -93,7 +93,7 @@ const getEmployees = createServerFn({ method: "GET" })
 					updatedAt: "2024-05-01T13:10:00.000Z",
 				},
 				{
-					id: "7",
+					id: 7,
 					fullName: "Giovanna Albuquerque",
 					oabNumber: "334455",
 					remunerationPercent: 55,
@@ -106,7 +106,7 @@ const getEmployees = createServerFn({ method: "GET" })
 					updatedAt: "2024-04-18T10:15:00.000Z",
 				},
 				{
-					id: "8",
+					id: 8,
 					fullName: "Henrique Duarte",
 					oabNumber: "667788",
 					remunerationPercent: 35,
@@ -119,7 +119,7 @@ const getEmployees = createServerFn({ method: "GET" })
 					updatedAt: "2024-02-15T11:20:00.000Z",
 				},
 				{
-					id: "9",
+					id: 9,
 					fullName: "Isabela Fontana",
 					oabNumber: "990011",
 					remunerationPercent: 40,
@@ -132,7 +132,7 @@ const getEmployees = createServerFn({ method: "GET" })
 					updatedAt: "2024-06-05T16:45:00.000Z",
 				},
 				{
-					id: "10",
+					id: 10,
 					fullName: "João Vitor Neves",
 					oabNumber: "223344",
 					remunerationPercent: 25,
@@ -180,8 +180,10 @@ const getEmployees = createServerFn({ method: "GET" })
 			);
 
 			return {
-				items: employeeSchema.array().parse(paginatedData),
+				data: employeeSchema.array().parse(paginatedData),
 				total,
+				page: data.page,
+				pageSize: data.limit,
 			};
 		} catch (error) {
 			console.error("[getEmployees]", error);

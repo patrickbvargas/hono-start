@@ -9,12 +9,7 @@
     "test": "vitest run",
     "format": "biome format",
     "lint": "biome lint",
-    "check": "biome check --write",
-    "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate",
-    "db:push": "drizzle-kit push",
-    "db:pull": "drizzle-kit pull",
-    "db:studio": "drizzle-kit studio"
+    "check": "biome check --write"
   },
   "dependencies": {
     "@heroui/react": "^3.0.2",
@@ -34,10 +29,7 @@
     "@tanstack/router-plugin": "^1.167.12",
     "@tanstack/zod-adapter": "^1.166.9",
     "clsx": "^2.1.1",
-    "drizzle-kit": "^0.31.10",
-    "drizzle-orm": "^0.45.2",
     "lucide-react": "^1.7.0",
-    "pg": "^8.20.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "tailwind-merge": "^3.5.0",
@@ -51,7 +43,6 @@
     "@testing-library/dom": "^10.4.1",
     "@testing-library/react": "^16.3.2",
     "@types/node": "^22.19.17",
-    "@types/pg": "^8.20.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.2.0",
