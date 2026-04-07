@@ -4,6 +4,7 @@ export * from "./autocomplete";
 export * from "./button";
 export * from "./calendar";
 export * from "./checkbox-group";
+export * from "./chip";
 export * from "./combobox";
 export * from "./date-field";
 export * from "./date-picker";

@@ -1,4 +1,4 @@
-import { cn } from "@/shared/lib/utils";
+import { Chip } from "@heroui/react";
 
 interface EntityStatusProps {
 	status: string;
@@ -6,16 +6,6 @@ interface EntityStatusProps {
 
 export const EntityStatus = ({ status }: EntityStatusProps) => {
 	const isActive = status === "Ativo";
-	return (
-		<span
-			className={cn(
-				"inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium",
-				isActive
-					? "bg-success-soft text-success"
-					: "bg-danger-soft text-danger",
-			)}
-		>
-			{status}
-		</span>
-	);
+
+	return <Chip color={isActive ? "success" : "danger"}>{status}</Chip>;
 };
