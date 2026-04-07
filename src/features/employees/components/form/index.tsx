@@ -24,12 +24,12 @@ export const EmployeeForm = ({
 	});
 	const { roles, types } = useEmployeeOptions();
 
-	const typeValue = useStore(form.store, (state) => state.values.type);
+	const typeValue = useStore(form.store, (s) => s.values.type);
 	const isLawyer = typeValue === 1;
 	const isEditing = !!employee;
 
 	return (
-		<Modal isOpen={state.isOpen} onOpenChange={state.setOpen}>
+		<Modal isOpen={state.isOpen} onOpenChange={state.onOpenChange}>
 			<Modal.Backdrop>
 				<Modal.Container>
 					<Modal.Dialog>

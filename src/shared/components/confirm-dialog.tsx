@@ -28,7 +28,7 @@ export const ConfirmDialog = ({
 	onConfirm,
 	description,
 	isPending = false,
-	title = "Confirmação",
+	title = "Confirmação",
 	confirmButtonLabel = "Confirmar",
 	cancelButtonLabel = "Cancelar",
 	variant = "primary",
@@ -36,7 +36,7 @@ export const ConfirmDialog = ({
 	hideTitle = false,
 }: ConfirmDialogProps) => {
 	return (
-		<AlertDialog isOpen={state.isOpen} onOpenChange={state.setOpen}>
+		<AlertDialog isOpen={state.isOpen} onOpenChange={state.onOpenChange}>
 			<AlertDialog.Backdrop>
 				<AlertDialog.Container>
 					<AlertDialog.Dialog>

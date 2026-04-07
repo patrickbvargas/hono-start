@@ -1,3 +1,5 @@
-import type { UseOverlayStateReturn } from "@heroui/react";
-
-export type OverlayState = UseOverlayStateReturn;
+export interface OverlayState {
+	isOpen: boolean;
+	onOpenChange: (isOpen: boolean) => void;
+	close: () => void;
+}

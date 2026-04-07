@@ -15,7 +15,7 @@ import {
 import { Button } from "@/shared/components/ui";
 import { Wrapper, WrapperBody } from "@/shared/components/wrapper";
 import { ROUTES } from "@/shared/config/routes";
-import { useModals } from "@/shared/hooks/use-modals";
+import { useOverlay } from "@/shared/hooks/use-overlay";
 
 export const Route = createFileRoute("/colaboradores")({
 	validateSearch: zodValidator(employeeSearchSchema),
@@ -29,14 +29,14 @@ export const Route = createFileRoute("/colaboradores")({
 function RouteComponent() {
 	const search = Route.useSearch();
 	const { data } = useSuspenseQuery(getEmployeesOptions(search));
-	const { selected, open, close, stateOf } = useModals<Employee>();
+	const { overlay } = useOverlay<Employee>();
 
 	return (
 		<Wrapper
 			title={ROUTES.employee.title}
 			actions={
 				// TODO: show only for Admin role
-				<Button size="sm" onPress={() => open("form")}>
+				<Button size="sm" onPress={() => overlay.create.open()}>
 					<PlusIcon size={16} />
 					Novo Funcionário
 				</Button>
@@ -45,31 +45,38 @@ function RouteComponent() {
 			<WrapperBody>
 				<EmployeeTable
 					data={data}
-					onView={(row) => open("details", row)}
-					onEdit={(row) => open("form", row)}
-					onDelete={(row) => open("delete", row)}
-					onRestore={(row) => open("restore", row)}
+					onEdit={overlay.edit.open}
+					onView={overlay.details.open}
+					onDelete={overlay.delete.open}
+					onRestore={overlay.restore.open}
 				/>
-				<EmployeeForm
-					employee={selected}
-					onSuccess={() => close("form")}
-					state={stateOf("form")}
-				/>
-				<EmployeeDelete
-					employee={selected}
-					onSuccess={() => close("delete")}
-					state={stateOf("delete")}
-				/>
-				<EmployeeRestore
-					employee={selected}
-					onSuccess={() => close("restore")}
-					state={stateOf("restore")}
-				/>
-				<EmployeeDetails
-					employee={selected}
-					onSuccess={() => close("details")}
-					state={stateOf("details")}
-				/>
+				{overlay.create.render((state) => (
+					<EmployeeForm state={state} onSuccess={state.close} />
+				))}
+				{overlay.edit.render((employee, state) => (
+					<EmployeeForm
+						state={state}
+						employee={employee}
+						onSuccess={state.close}
+					/>
+				))}
+				{overlay.delete.render((employee, state) => (
+					<EmployeeDelete
+						state={state}
+						employee={employee}
+						onSuccess={state.close}
+					/>
+				))}
+				{overlay.restore.render((employee, state) => (
+					<EmployeeRestore
+						state={state}
+						employee={employee}
+						onSuccess={state.close}
+					/>
+				))}
+				{overlay.details.render((employee, state) => (
+					<EmployeeDetails state={state} employee={employee} />
+				))}
 			</WrapperBody>
 		</Wrapper>
 	);

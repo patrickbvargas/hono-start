@@ -8,21 +8,16 @@ interface EmployeeDetailsProps {
 	onSuccess?: () => void;
 }
 
-export const EmployeeDetails = ({
-	employee,
-	state,
-	onSuccess,
-}: EmployeeDetailsProps) => {
+export const EmployeeDetails = ({ employee, state }: EmployeeDetailsProps) => {
 	return (
-		<Drawer state={state}>
-			<Drawer.Backdrop>
+		<Drawer>
+			<Drawer.Backdrop isOpen={state.isOpen} onOpenChange={state.onOpenChange}>
 				<Drawer.Content placement="right">
 					<Drawer.Dialog>
-						{/*<Drawer.Handle /> {/* Optional: Drag handle */}
-						<Drawer.CloseTrigger /> {/* Optional: Close button */}
+						{/*<Drawer.Handle />*/}
+						<Drawer.CloseTrigger />
 						<Drawer.Header>
-							{/*<Drawer.Heading>{employee.fullName}</Drawer.Heading>*/}
-							<Drawer.Heading>Titulo</Drawer.Heading>
+							<Drawer.Heading>{employee.fullName}</Drawer.Heading>
 						</Drawer.Header>
 						<Drawer.Body>
 							<p>dsadsas</p>
