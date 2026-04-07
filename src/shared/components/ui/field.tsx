@@ -1,15 +1,17 @@
 import type {
 	DescriptionProps,
 	FieldErrorProps,
+	FieldGroupProps,
 	LabelProps,
 } from "@heroui/react";
 import {
 	Description,
-	FieldGroup,
-	FieldError as HeroFieldError,
+	FieldError as HFieldError,
+	FieldGroup as HFieldGroup,
 	Label,
 } from "@heroui/react";
 import * as React from "react";
+import { cn } from "@/shared/lib/utils";
 
 interface FieldLabelProps extends LabelProps {
 	label?: string;
@@ -52,7 +54,15 @@ const FieldError = ({ errors, children, ...props }: FieldError) => {
 
 	if (!content) return null;
 
-	return <HeroFieldError {...props}>{content}</HeroFieldError>;
+	return <HFieldError {...props}>{content}</HFieldError>;
+};
+
+const FieldGroup = ({ children, className, ...props }: FieldGroupProps) => {
+	return (
+		<HFieldGroup className={cn(className, "grid grid-cols-2 gap-4")} {...props}>
+			{children}
+		</HFieldGroup>
+	);
 };
 
 export const Field = {

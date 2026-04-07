@@ -1,10 +1,10 @@
 import { createColumnHelper } from "@tanstack/react-table";
-import { PencilIcon, RotateCcwIcon, Trash2Icon } from "lucide-react";
+import { EllipsisVerticalIcon } from "lucide-react";
 import * as React from "react";
 import { DataTable } from "@/shared/components/data-table";
 import { EntityStatus } from "@/shared/components/entity-status";
 import { Pagination } from "@/shared/components/pagination";
-import { Button } from "@/shared/components/ui";
+import { Button, Dropdown, Label } from "@/shared/components/ui";
 import { formatter } from "@/shared/lib/formatter";
 import type { QueryPaginatedReturnType } from "@/shared/types/api";
 import { EMPLOYEE_ALLOWED_SORT_COLUMNS } from "../../constants";
@@ -12,6 +12,7 @@ import type { Employee } from "../../schemas/model";
 
 export interface EmployeeTableProps {
 	data: QueryPaginatedReturnType<Employee>;
+	onView?: (employee: Employee) => void;
 	onEdit?: (employee: Employee) => void;
 	onDelete?: (employee: Employee) => void;
 	onRestore?: (employee: Employee) => void;
@@ -19,6 +20,7 @@ export interface EmployeeTableProps {
 
 export const EmployeeTable = ({
 	data: { data, total },
+	onView,
 	onEdit,
 	onDelete,
 	onRestore,
@@ -69,41 +71,48 @@ export const EmployeeTable = ({
 				cell: ({ row }) => {
 					const employee = row.original;
 					const isActive = employee.status === "Ativo";
+
+					// TODO: refatorar
 					return (
-						<div className="flex items-center gap-1">
-							<Button
-								size="sm"
-								variant="ghost"
-								onPress={() => onEdit?.(employee)}
-								aria-label="Editar"
-							>
-								<PencilIcon size={14} />
+						<Dropdown>
+							<Button isIconOnly size="sm" variant="ghost" aria-label="Actions">
+								<EllipsisVerticalIcon size={16} />
 							</Button>
-							{isActive ? (
-								<Button
-									size="sm"
-									variant="danger-soft"
-									onPress={() => onDelete?.(employee)}
-									aria-label="Excluir"
-								>
-									<Trash2Icon size={14} />
-								</Button>
-							) : (
-								<Button
-									size="sm"
-									variant="ghost"
-									onPress={() => onRestore?.(employee)}
-									aria-label="Restaurar"
-								>
-									<RotateCcwIcon size={14} />
-								</Button>
-							)}
-						</div>
+							<Dropdown.Popover>
+								<Dropdown.Menu>
+									<Dropdown.Item
+										textValue="Visualizar"
+										onPress={() => onView?.(employee)}
+									>
+										<Label>Visualizar</Label>
+									</Dropdown.Item>
+									<Dropdown.Item
+										textValue="Editar"
+										onPress={() => onEdit?.(employee)}
+									>
+										<Label>Editar</Label>
+									</Dropdown.Item>
+									<Dropdown.Item
+										textValue="Restaurar"
+										onPress={() => onRestore?.(employee)}
+									>
+										<Label>Restaurar</Label>
+									</Dropdown.Item>
+									<Dropdown.Item
+										textValue="Excluir"
+										variant="danger"
+										onPress={() => onDelete?.(employee)}
+									>
+										<Label>Excluir</Label>
+									</Dropdown.Item>
+								</Dropdown.Menu>
+							</Dropdown.Popover>
+						</Dropdown>
 					);
 				},
 			}),
 		];
-	}, [onEdit, onDelete, onRestore]);
+	}, [onView, onEdit, onDelete, onRestore]);
 
 	return (
 		<DataTable

@@ -1,5 +1,5 @@
-export { useOverlayState } from "@heroui/react";
 export type {
-  UseOverlayStateProps,
-  UseOverlayStateReturn,
+	UseOverlayStateProps,
+	UseOverlayStateReturn,
 } from "@heroui/react";
+export { useOverlayState } from "@heroui/react";

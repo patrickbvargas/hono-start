@@ -59,8 +59,8 @@ export const ROUTES: Record<RouteName, RouteItem> = {
 		icon: WalletIcon,
 	},
 	employee: {
-		title: "Funcionários",
-		url: "/funcionarios",
+		title: "Colaboradores",
+		url: "/colaboradores",
 		icon: UsersIcon,
 	},
 	setting: {

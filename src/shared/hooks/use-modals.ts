@@ -1,51 +1,74 @@
 import * as React from "react";
+import type { OverlayState } from "../types/overlay";
 
-type ModalKey = string;
+type ModalKey = "form" | "delete" | "details" | "restore";
 
 interface ModalState<T> {
-  selected: T | undefined;
-  openModals: Set<ModalKey>;
+	selected: T | undefined;
+	openModals: Set<ModalKey>;
 }
 
-export function useModals<T, K extends ModalKey = ModalKey>() {
-  const [state, setState] = React.useState<ModalState<T>>({
-    selected: undefined,
-    openModals: new Set(),
-  });
+export function useModals<T>() {
+	const [state, setState] = React.useState<ModalState<T>>({
+		selected: undefined,
+		openModals: new Set(),
+	});
 
-  const open = React.useCallback((key: K, data?: T) => {
-    setState((prev) => ({
-      selected: data ?? prev.selected,
-      openModals: new Set([key]),
-    }));
-  }, []);
+	const open = React.useCallback((key: ModalKey, data?: T) => {
+		setState((prev) => ({
+			selected: data ?? prev.selected,
+			openModals: new Set([key]),
+		}));
+	}, []);
 
-  const close = React.useCallback((key?: K) => {
-    setState((prev) => {
-      if (!key) return { selected: undefined, openModals: new Set() };
-      const next = new Set(prev.openModals);
-      next.delete(key);
-      return { ...prev, openModals: next };
-    });
-  }, []);
+	const close = React.useCallback((key?: ModalKey) => {
+		setState((prev) => {
+			if (!key) return { selected: undefined, openModals: new Set() };
+			const next = new Set(prev.openModals);
+			next.delete(key);
+			return { ...prev, openModals: next };
+		});
+	}, []);
 
-  const isOpen = React.useCallback(
-    (key: K) => state.openModals.has(key),
-    [state.openModals],
-  );
+	const isOpen = React.useCallback(
+		(key: ModalKey) => state.openModals.has(key),
+		[state.openModals],
+	);
 
-  const reset = React.useCallback(() => {
-    setState({ selected: undefined, openModals: new Set() });
-  }, []);
+	const reset = React.useCallback(() => {
+		setState({ selected: undefined, openModals: new Set() });
+	}, []);
 
-  const forModal = React.useCallback(
-    (key: K) => ({
-      isOpen: state.openModals.has(key),
-      data: state.selected,
-      onClose: () => close(key),
-    }),
-    [state, close],
-  );
+	const onOpenChange = React.useCallback((key: ModalKey, value: boolean) => {
+		setState((prev) => {
+			const next = new Set(prev.openModals);
+			if (value) {
+				next.add(key);
+			} else {
+				next.delete(key);
+			}
+			return { ...prev, openModals: next };
+		});
+	}, []);
 
-  return { selected: state.selected, open, close, isOpen, reset, forModal };
+	const stateOf = React.useCallback(
+		(key: ModalKey): OverlayState => ({
+			isOpen: state.openModals.has(key),
+			open: () => open(key),
+			close: () => close(key),
+			setOpen: (value: boolean) => onOpenChange(key, value),
+			toggle: () => onOpenChange(key, !state.openModals.has(key)),
+		}),
+		[state, open, close, onOpenChange],
+	);
+
+	return {
+		selected: state.selected,
+		open,
+		close,
+		isOpen,
+		onOpenChange,
+		reset,
+		stateOf,
+	};
 }

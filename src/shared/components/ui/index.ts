@@ -7,6 +7,8 @@ export * from "./checkbox-group";
 export * from "./combobox";
 export * from "./date-field";
 export * from "./date-picker";
+export * from "./drawer";
+export * from "./dropdown";
 export * from "./empty-state";
 export * from "./field";
 export * from "./form";
