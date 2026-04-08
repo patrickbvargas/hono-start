@@ -8,6 +8,10 @@ The system SHALL display a paginated, sortable, filterable list of employees bel
 - **THEN** the system displays a table with columns: full name, OAB number, type (Função), remuneration percentage, contract count, role (Perfil), and status
 - **AND** the list is paginated with a default page size of 25
 
+#### Scenario: Filter by name or OAB number
+- **WHEN** a user types a value in the name/OAB search field
+- **THEN** the table shows only employees whose full name OR OAB number contains the typed value (case-insensitive)
+
 #### Scenario: Filter by employee type
 - **WHEN** a user applies a type filter (e.g., Advogado)
 - **THEN** the table shows only employees whose type matches the selected value(s)
