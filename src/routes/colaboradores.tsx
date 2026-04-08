@@ -6,6 +6,7 @@ import {
 	type Employee,
 	EmployeeDelete,
 	EmployeeDetails,
+	EmployeeFilter,
 	EmployeeForm,
 	EmployeeRestore,
 	EmployeeTable,
@@ -13,7 +14,7 @@ import {
 	getEmployeesOptions,
 } from "@/features/employees";
 import { Button } from "@/shared/components/ui";
-import { Wrapper, WrapperBody } from "@/shared/components/wrapper";
+import { Wrapper } from "@/shared/components/wrapper";
 import { ROUTES } from "@/shared/config/routes";
 import { useOverlay } from "@/shared/hooks/use-overlay";
 
@@ -42,7 +43,10 @@ function RouteComponent() {
 				</Button>
 			}
 		>
-			<WrapperBody>
+			<Wrapper.Header>
+				<EmployeeFilter />
+			</Wrapper.Header>
+			<Wrapper.Body>
 				<EmployeeTable
 					data={data}
 					onEdit={overlay.edit.open}
@@ -77,7 +81,7 @@ function RouteComponent() {
 				{overlay.details.render((employee, state) => (
 					<EmployeeDetails state={state} employee={employee} />
 				))}
-			</WrapperBody>
+			</Wrapper.Body>
 		</Wrapper>
 	);
 }

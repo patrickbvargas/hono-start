@@ -4,7 +4,7 @@ import { toast } from "@/shared/lib/toast";
 import { createEmployeeOptions } from "../api/create";
 import { updateEmployeeOptions } from "../api/update";
 import { EMPLOYEE_DATA_CACHE_KEY } from "../constants";
-import type { EmployeeCreate, EmployeeUpdate } from "../schemas/form";
+import type { EmployeeUpdate } from "../schemas/form";
 import { employeeCreateSchema, employeeUpdateSchema } from "../schemas/form";
 import { defaultFormCreateValues } from "../utils/default";
 
@@ -31,10 +31,12 @@ export function useEmployeeForm({
 		onSubmit: async ({ value }) => {
 			try {
 				if (isEditing) {
-					await updateMutation.mutateAsync({ data: value as EmployeeUpdate });
+					const payload = employeeUpdateSchema.parse(value);
+					await updateMutation.mutateAsync({ data: payload });
 					toast.success("Funcionário atualizado com sucesso.");
 				} else {
-					await createMutation.mutateAsync({ data: value as EmployeeCreate });
+					const payload = employeeCreateSchema.parse(value);
+					await createMutation.mutateAsync({ data: payload });
 					toast.success("Funcionário criado com sucesso.");
 				}
 				queryClient.invalidateQueries({ queryKey: [EMPLOYEE_DATA_CACHE_KEY] });
@@ -47,12 +49,5 @@ export function useEmployeeForm({
 		},
 	});
 
-	return {
-		form,
-		mutation: isEditing ? updateMutation : createMutation,
-		Form: form.Form,
-		FormField: form.AppField,
-		FormSubmit: form.Submit,
-		FormReset: form.Reset,
-	};
+	return { form };
 }

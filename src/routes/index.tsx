@@ -3,11 +3,7 @@ import { DemoForm } from "@/shared/components/form/demo";
 import { Pagination } from "@/shared/components/pagination";
 import { RouteError } from "@/shared/components/route-error";
 import { RouteLoading } from "@/shared/components/route-loading";
-import {
-	Wrapper,
-	WrapperBody,
-	WrapperFooter,
-} from "@/shared/components/wrapper";
+import { Wrapper } from "@/shared/components/wrapper";
 
 export const Route = createFileRoute("/")({
 	loaderDeps: ({ search }) => ({ search }),
@@ -21,12 +17,12 @@ export const Route = createFileRoute("/")({
 function App() {
 	return (
 		<Wrapper title="Dashboard">
-			<WrapperBody>
+			<Wrapper.Body>
 				<DemoForm />
-			</WrapperBody>
-			<WrapperFooter>
+			</Wrapper.Body>
+			<Wrapper.Footer>
 				<Pagination totalRecords={1000} />
-			</WrapperFooter>
+			</Wrapper.Footer>
 		</Wrapper>
 	);
 }

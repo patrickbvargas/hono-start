@@ -7,7 +7,6 @@ import type { Employee } from "../../schemas/model";
 interface EmployeeDetailsProps {
 	employee: Employee;
 	state: OverlayState;
-	onSuccess?: () => void;
 }
 
 interface DetailRowProps {

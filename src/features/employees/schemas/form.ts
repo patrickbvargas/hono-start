@@ -43,8 +43,8 @@ export const employeeUpdateSchema = entityIdSchema
 	.safeExtend(employeeBaseShape)
 	.superRefine(referrerRefinement);
 
-export const employeeDeleteSchema = entityIdSchema;
+export const employeeByIdSchema = entityIdSchema;
 
 export type EmployeeCreate = z.infer<typeof employeeCreateSchema>;
 export type EmployeeUpdate = z.infer<typeof employeeUpdateSchema>;
-export type EmployeeDelete = z.infer<typeof employeeDeleteSchema>;
+export type EmployeeById = z.infer<typeof employeeByIdSchema>;

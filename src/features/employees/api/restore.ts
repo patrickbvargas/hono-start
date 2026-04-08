@@ -2,10 +2,10 @@ import { mutationOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import { prisma } from "@/shared/lib/prisma";
 import type { MutationReturnType } from "@/shared/types/api";
-import { employeeDeleteSchema } from "../schemas/form";
+import { employeeByIdSchema } from "../schemas/form";
 
 const restoreEmployee = createServerFn({ method: "POST" })
-	.inputValidator(employeeDeleteSchema)
+	.inputValidator(employeeByIdSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
 			// TODO: replace with session firmId

@@ -1,9 +1,6 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ConfirmDialog } from "@/shared/components/confirm-dialog";
-import { toast } from "@/shared/lib/toast";
 import type { OverlayState } from "@/shared/types/overlay";
-import { restoreEmployeeOptions } from "../../api/restore";
-import { EMPLOYEE_DATA_CACHE_KEY } from "../../constants";
+import { useEmployeeRestore } from "../../hooks/use-restore";
 import type { Employee } from "../../schemas/model";
 
 interface EmployeeRestoreProps {
@@ -17,21 +14,10 @@ export const EmployeeRestore = ({
 	state,
 	onSuccess,
 }: EmployeeRestoreProps) => {
-	const queryClient = useQueryClient();
-	const mutation = useMutation(restoreEmployeeOptions());
-
-	const handleConfirm = async () => {
-		try {
-			await mutation.mutateAsync({ data: { id: employee.id } });
-			toast.success("Funcionário restaurado com sucesso.");
-			queryClient.invalidateQueries({ queryKey: [EMPLOYEE_DATA_CACHE_KEY] });
-			onSuccess?.();
-		} catch (error) {
-			const message =
-				error instanceof Error ? error.message : "Ocorreu um erro inesperado";
-			toast.danger(message);
-		}
-	};
+	const { handleConfirm, isPending } = useEmployeeRestore({
+		employee,
+		onSuccess,
+	});
 
 	return (
 		<ConfirmDialog
@@ -40,7 +26,7 @@ export const EmployeeRestore = ({
 			onConfirm={handleConfirm}
 			confirmButtonLabel="Restaurar"
 			cancelButtonLabel="Cancelar"
-			isPending={mutation.isPending}
+			isPending={isPending}
 			state={state}
 		/>
 	);

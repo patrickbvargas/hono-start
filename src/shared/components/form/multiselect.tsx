@@ -11,7 +11,6 @@ import {
 	TagGroup,
 } from "@/shared/components/ui";
 import { useFieldContext } from "@/shared/hooks/use-app-form";
-import { useFilter } from "@/shared/hooks/use-filter";
 import type {
 	FieldClassNames,
 	FieldCommonProps,
@@ -42,7 +41,6 @@ export const FormMultiselect = ({
 	...props
 }: FormMultiselectProps) => {
 	const field = useFieldContext<Key[]>();
-	const { contains } = useFilter({ sensitivity: "base" });
 	const [isOpen, setIsOpen] = React.useState(false);
 
 	const triggerRef = React.useRef<HTMLDivElement>(null);
@@ -115,7 +113,7 @@ export const FormMultiselect = ({
 				<Autocomplete.Indicator />
 			</Autocomplete.Trigger>
 			<Autocomplete.Popover ref={popoverRef} placement="bottom start">
-				<Autocomplete.Filter filter={contains}>
+				<Autocomplete.Filter>
 					<SearchField
 						autoFocus
 						name="search"

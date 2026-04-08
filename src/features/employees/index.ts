@@ -1,10 +1,7 @@
-export * from "./api/create";
-export * from "./api/delete";
-export * from "./api/get";
-export * from "./api/restore";
-export * from "./api/update";
+export { getEmployeesOptions } from "./api/get";
 export * from "./components/delete";
 export * from "./components/details";
+export * from "./components/filter";
 export * from "./components/form";
 export * from "./components/restore";
 export * from "./components/table";

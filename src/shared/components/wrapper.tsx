@@ -1,17 +1,17 @@
 import { cn } from "@/shared/lib/utils";
 
-interface WrapperProps extends React.HTMLAttributes<HTMLDivElement> {
+interface RootProps extends React.HTMLAttributes<HTMLDivElement> {
 	title?: string;
 	actions?: React.ReactNode;
 }
 
-export const Wrapper = ({
+export const Root = ({
 	title,
 	actions,
 	children,
 	className,
 	...props
-}: WrapperProps) => {
+}: RootProps) => {
 	return (
 		<div
 			data-slot="wrapper"
@@ -19,7 +19,7 @@ export const Wrapper = ({
 			{...props}
 		>
 			<div className="h-12 flex items-center justify-between px-4 pt-1.5">
-				{title && <WrapperTitle title={title} />}
+				{title && <Title title={title} />}
 				{actions}
 			</div>
 			{children}
@@ -27,7 +27,7 @@ export const Wrapper = ({
 	);
 };
 
-export const WrapperHeader = ({
+export const Header = ({
 	children,
 	className,
 	...props
@@ -43,7 +43,7 @@ export const WrapperHeader = ({
 	);
 };
 
-export const WrapperBody = ({
+export const Body = ({
 	children,
 	className,
 	...props
@@ -62,7 +62,7 @@ export const WrapperBody = ({
 	);
 };
 
-export const WrapperFooter = ({
+export const Footer = ({
 	className,
 	...props
 }: React.HTMLAttributes<HTMLDivElement>) => {
@@ -78,12 +78,15 @@ export const WrapperFooter = ({
 interface WrapperTitleProps extends React.HTMLAttributes<HTMLHeadingElement> {
 	title: string;
 }
-export const WrapperTitle = ({
-	title,
-	className,
-	...props
-}: WrapperTitleProps) => (
+export const Title = ({ title, className, ...props }: WrapperTitleProps) => (
 	<h1 className={cn("text-base font-medium", className)} {...props}>
 		{title}
 	</h1>
 );
+
+export const Wrapper = Object.assign(Root, {
+	Header,
+	Body,
+	Footer,
+	Title,
+});

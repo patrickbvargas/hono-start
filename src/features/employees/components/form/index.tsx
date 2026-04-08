@@ -1,8 +1,8 @@
 import { useStore } from "@tanstack/react-form-start";
 import { Field, Modal } from "@/shared/components/ui";
 import type { OverlayState } from "@/shared/types/overlay";
-import { useEmployeeForm } from "../../hooks/form";
-import { useEmployeeOptions } from "../../hooks/options";
+import { useEmployeeForm } from "../../hooks/use-form";
+import { useEmployeeOptions } from "../../hooks/use-options";
 import type { Employee } from "../../schemas/model";
 import { defaultFormUpdateValues } from "../../utils/default";
 
@@ -18,14 +18,11 @@ export const EmployeeForm = ({
 	onSuccess,
 }: EmployeeFormProps) => {
 	const initialData = employee ? defaultFormUpdateValues(employee) : undefined;
-	const { form, Form, FormField, FormSubmit } = useEmployeeForm({
-		initialData,
-		onSuccess,
-	});
+	const { form } = useEmployeeForm({ initialData, onSuccess });
 	const { roles, types } = useEmployeeOptions();
 
 	const typeValue = useStore(form.store, (s) => s.values.type);
-	const isLawyer = typeValue === 1;
+	const isLawyer = typeValue === 1; // TODO: refatorar
 	const isEditing = !!employee;
 
 	return (
@@ -39,10 +36,10 @@ export const EmployeeForm = ({
 								{isEditing ? "Editar Funcionário" : "Novo Funcionário"}
 							</Modal.Heading>
 						</Modal.Header>
-						<Form form={form}>
+						<form.Form form={form}>
 							<Modal.Body className="flex flex-col gap-4 p-1">
 								<Field.Group>
-									<FormField name="fullName">
+									<form.AppField name="fullName">
 										{(field) => (
 											<field.Input
 												label="Nome"
@@ -50,8 +47,8 @@ export const EmployeeForm = ({
 												isRequired
 											/>
 										)}
-									</FormField>
-									<FormField name="email">
+									</form.AppField>
+									<form.AppField name="email">
 										{(field) => (
 											<field.Input
 												label="Email"
@@ -59,10 +56,10 @@ export const EmployeeForm = ({
 												isRequired
 											/>
 										)}
-									</FormField>
+									</form.AppField>
 								</Field.Group>
 								<Field.Group className="grid-cols-3">
-									<FormField name="type">
+									<form.AppField name="type">
 										{(field) => (
 											<field.Autocomplete
 												label="Função"
@@ -71,9 +68,9 @@ export const EmployeeForm = ({
 												isRequired
 											/>
 										)}
-									</FormField>
+									</form.AppField>
 									{isLawyer && (
-										<FormField name="oabNumber">
+										<form.AppField name="oabNumber">
 											{(field) => (
 												<field.Input
 													label="OAB"
@@ -82,9 +79,9 @@ export const EmployeeForm = ({
 													maxLength={8}
 												/>
 											)}
-										</FormField>
+										</form.AppField>
 									)}
-									<FormField name="role">
+									<form.AppField name="role">
 										{(field) => (
 											<field.Autocomplete
 												label="Perfil"
@@ -93,10 +90,10 @@ export const EmployeeForm = ({
 												isRequired
 											/>
 										)}
-									</FormField>
+									</form.AppField>
 								</Field.Group>
 								<Field.Group className="grid grid-cols-2">
-									<FormField name="remunerationPercent">
+									<form.AppField name="remunerationPercent">
 										{(field) => (
 											<field.Number
 												label="% Remuneração"
@@ -108,8 +105,8 @@ export const EmployeeForm = ({
 												formatOptions={{ style: "percent" }}
 											/>
 										)}
-									</FormField>
-									<FormField name="referrerPercent">
+									</form.AppField>
+									<form.AppField name="referrerPercent">
 										{(field) => (
 											<field.Number
 												label="% Indicação"
@@ -121,14 +118,14 @@ export const EmployeeForm = ({
 												formatOptions={{ style: "percent" }}
 											/>
 										)}
-									</FormField>
+									</form.AppField>
 								</Field.Group>
 								<div className="flex justify-start"></div>
 							</Modal.Body>
 							<Modal.Footer>
-								<FormSubmit />
+								<form.Submit />
 							</Modal.Footer>
-						</Form>
+						</form.Form>
 					</Modal.Dialog>
 				</Modal.Container>
 			</Modal.Backdrop>
