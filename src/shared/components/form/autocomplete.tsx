@@ -45,7 +45,7 @@ export const FormAutocomplete = ({
 		<ComboBox
 			name={field.name}
 			isInvalid={isInvalid}
-			value={field.state.value}
+			value={field.state.value?.toString()}
 			onBlur={field.handleBlur}
 			onChange={field.handleChange}
 			validationBehavior={validationBehavior}
