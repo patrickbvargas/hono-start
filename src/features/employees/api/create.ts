@@ -1,6 +1,6 @@
 import { mutationOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
-import { db } from "@/db";
+import { prisma } from "@/shared/lib/prisma";
 import type { MutationReturnType } from "@/shared/types/api";
 import { employeeCreateSchema } from "../schemas/form";
 
@@ -10,7 +10,7 @@ const createEmployee = createServerFn({ method: "POST" })
 		try {
 			// TODO: replace with session firmId
 			const firmId = 1;
-			await db.employee.create({
+			await prisma.employee.create({
 				data: {
 					firmId,
 					fullName: data.fullName,

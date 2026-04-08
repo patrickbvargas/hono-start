@@ -70,7 +70,7 @@ export const EmployeeTable = ({
 				header: "Ações",
 				cell: ({ row }) => {
 					const employee = row.original;
-					const isActive = employee.status === "Ativo";
+					// const isActive = employee.status === "Ativo";
 
 					// TODO: refatorar
 					return (

@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Firm {
+  id        Int        @id @default(autoincrement())
+  name      String
+  employees Employee[] @relation("FirmEmployee")
+
+  @@map("firms")
+}
+
+model EmployeeType {
+  id        Int        @id @default(autoincrement())
+  value     String     @unique
+  label     String
+  employees Employee[]
+
+  @@map("employee_types")
+}
+
+model UserRole {
+  id        Int        @id @default(autoincrement())
+  value     String     @unique
+  label     String
+  employees Employee[]
+
+  @@map("user_roles")
+}
+
+model Employee {
+  id                     Int          @id @default(autoincrement())
+  firmId                 Int
+  fullName               String
+  email                  String       @unique
+  typeId                 Int
+  roleId                 Int
+  oabNumber              String?
+  remunerationPercentage Decimal      @db.Decimal(5, 4)
+  referralPercentage     Decimal      @db.Decimal(5, 4)
+  avatarUrl              String?
+  createdAt              DateTime     @default(now())
+  updatedAt              DateTime     @updatedAt
+  deletedAt              DateTime?
+  firm                   Firm         @relation("FirmEmployee", fields: [firmId], references: [id])
+  type                   EmployeeType @relation(fields: [typeId], references: [id])
+  role                   UserRole     @relation(fields: [roleId], references: [id])
+
+  @@unique([firmId, oabNumber])
+  @@index([firmId])
+  @@index([deletedAt])
+  @@map("employees")
+}
