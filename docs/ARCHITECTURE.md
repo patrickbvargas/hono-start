@@ -9,13 +9,7 @@
 ## Project Structure
 
 ```
-prisma/
-├── schema.prisma          # Prisma schema definition (all models)
-├── seed.ts                # Lookup table seed script
-├── README.md              # Prisma setup instructions
-└── migrations/            # Generated migrations (do NOT edit)
-generated/
-└── prisma/                # Auto-generated Prisma client (do NOT edit)
+prisma/                    # Prisma schema definition
 src/
 ├── features/              # Feature slices — one per domain entity
 │   └── <feature>/
@@ -26,6 +20,8 @@ src/
 │       ├── schemas/       # Zod schemas for this feature
 │       ├── utils/         # Pure helper functions
 │       └── index.ts       # Public barrel — the only allowed import path for this feature
+├── generated/
+│    └── prisma/           # Auto-generated Prisma client (do NOT edit)
 ├── routes/                # TanStack file-based route definitions
 ├── shared/                # Cross-feature reusable code
 │   ├── components/
