@@ -9,6 +9,7 @@ import {
 	useRouterState,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
+import { AppLayout } from "@/shared/components/app-layout";
 import { ToastProvider } from "@/shared/components/ui";
 import appCss from "@/styles/global.css?url";
 
@@ -74,7 +75,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 					</div>
 				)}
 
-				{children}
+				<AppLayout>{children}</AppLayout>
 
 				<ToastProvider />
 
