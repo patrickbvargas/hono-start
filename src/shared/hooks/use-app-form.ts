@@ -14,6 +14,7 @@ import {
 	FormRadioGroup,
 	FormResetButton,
 	FormRoot,
+	FormSearch,
 	FormSubmitButton,
 	FormSwitch,
 	FormTextArea,
@@ -37,6 +38,7 @@ export const { useAppForm } = createFormHook({
 		RadioGroup: FormRadioGroup,
 		Switch: FormSwitch,
 		DatePicker: FormDatePicker,
+		Search: FormSearch,
 	},
 	formComponents: {
 		Form: FormRoot,

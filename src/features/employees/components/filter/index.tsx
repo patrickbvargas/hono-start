@@ -1,12 +1,9 @@
+import { SlidersHorizontalIcon } from "lucide-react";
+import { Button, Popover, Separator } from "@/shared/components/ui";
+import { STATUS_OPTIONS } from "@/shared/constants/options";
 import { useDebounce } from "@/shared/hooks/use-debounce";
-import type { FieldOption } from "@/shared/types/field";
 import { useEmployeeFilter } from "../../hooks/use-filter";
 import { useEmployeeOptions } from "../../hooks/use-options";
-
-const ACTIVE_OPTIONS: FieldOption[] = [
-	{ value: "true", label: "Ativo" },
-	{ value: "false", label: "Inativo" },
-];
 
 export const EmployeeFilter = () => {
 	const { form } = useEmployeeFilter();
@@ -16,56 +13,82 @@ export const EmployeeFilter = () => {
 
 	return (
 		<form.Form form={form}>
-			<div className="flex flex-wrap gap-3">
+			<div className="flex flex-wrap items-center justify-between gap-3">
 				<form.AppField
 					name="name"
 					listeners={{ onChange: () => debouncedSubmit() }}
 				>
 					{(field) => (
-						<field.Input
-							label="Nome ou OAB"
+						<field.Search
+							aria-label="Nome ou OAB"
+							variant="secondary"
 							placeholder="Buscar por nome ou OAB..."
-							variant="secondary"
 						/>
 					)}
 				</form.AppField>
-				<form.AppField
-					name="type"
-					listeners={{ onChange: () => form.handleSubmit() }}
-				>
-					{(field) => (
-						<field.Multiselect
-							label="Cargo"
-							options={types}
-							variant="secondary"
-						/>
-					)}
-				</form.AppField>
-				<form.AppField
-					name="role"
-					listeners={{ onChange: () => form.handleSubmit() }}
-				>
-					{(field) => (
-						<field.Multiselect
-							label="Perfil"
-							options={roles}
-							variant="secondary"
-						/>
-					)}
-				</form.AppField>
-				<form.AppField
-					name="active"
-					listeners={{ onChange: () => form.handleSubmit() }}
-				>
-					{(field) => (
-						<field.Autocomplete
-							label="Status"
-							options={ACTIVE_OPTIONS}
-							variant="secondary"
-							placeholder="Todos..."
-						/>
-					)}
-				</form.AppField>
+				<Popover>
+					<Popover.Trigger>
+						<Button size="sm" variant="outline">
+							<SlidersHorizontalIcon size={16} />
+							Filtros avançados
+						</Button>
+					</Popover.Trigger>
+					<Popover.Content
+						className="w-96 max-w-[calc(100vw-2rem)]"
+						placement="bottom end"
+					>
+						<Popover.Dialog className="space-y-3 p-4">
+							<form.AppField
+								name="type"
+								listeners={{ onChange: () => form.handleSubmit() }}
+							>
+								{(field) => (
+									<field.CheckboxGroup
+										label="Cargo"
+										options={types}
+										variant="secondary"
+									/>
+								)}
+							</form.AppField>
+							<form.AppField
+								name="role"
+								listeners={{ onChange: () => form.handleSubmit() }}
+							>
+								{(field) => (
+									<field.CheckboxGroup
+										label="Perfil"
+										options={roles}
+										variant="secondary"
+									/>
+								)}
+							</form.AppField>
+							<form.AppField
+								name="status"
+								listeners={{ onChange: () => form.handleSubmit() }}
+							>
+								{(field) => (
+									<field.CheckboxGroup
+										label="Status"
+										options={STATUS_OPTIONS}
+										variant="secondary"
+									/>
+								)}
+							</form.AppField>
+							<Separator />
+							<form.AppField
+								name="showDeleted"
+								listeners={{ onChange: () => form.handleSubmit() }}
+							>
+								{(field) => (
+									<field.Checkbox
+										label="Exibir excluídos"
+										variant="secondary"
+									/>
+								)}
+							</form.AppField>
+						</Popover.Dialog>
+					</Popover.Content>
+				</Popover>
 			</div>
 		</form.Form>
 	);

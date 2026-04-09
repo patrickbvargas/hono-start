@@ -7,8 +7,57 @@ import type {
 	QueryPaginatedReturnType,
 } from "@/shared/types/api";
 import { EMPLOYEE_DATA_CACHE_KEY } from "../constants";
+import type { EmployeeFilter } from "../schemas/filter";
 import { type Employee, employeeSchema } from "../schemas/model";
 import { type EmployeeSearch, employeeSearchSchema } from "../schemas/search";
+
+interface BuildEmployeeWhereParams {
+	firmId: number;
+	filter: EmployeeFilter;
+}
+
+export function buildEmployeeWhere({
+	firmId,
+	filter,
+}: BuildEmployeeWhereParams) {
+	const hasActive = filter.status.includes("Ativo");
+	const hasInactive = filter.status.includes("Inativo");
+
+	const activeWhere =
+		hasActive && !hasInactive
+			? { isActive: true }
+			: hasInactive && !hasActive
+				? { isActive: false }
+				: {};
+
+	const deletedWhere = filter.showDeleted ? {} : { deletedAt: null };
+
+	return {
+		firmId,
+		...deletedWhere,
+		...activeWhere,
+		...(filter.name
+			? {
+					OR: [
+						{
+							fullName: {
+								contains: filter.name,
+								mode: "insensitive" as const,
+							},
+						},
+						{
+							oabNumber: {
+								contains: filter.name,
+								mode: "insensitive" as const,
+							},
+						},
+					],
+				}
+			: {}),
+		...(filter.type.length > 0 ? { typeId: { in: filter.type } } : {}),
+		...(filter.role.length > 0 ? { roleId: { in: filter.role } } : {}),
+	};
+}
 
 const getEmployees = createServerFn({ method: "GET" })
 	.inputValidator(employeeSearchSchema)
@@ -17,47 +66,7 @@ const getEmployees = createServerFn({ method: "GET" })
 			// TODO: replace with session firmId
 			const firmId = 1;
 
-			const activeWhere =
-				data.active === "true"
-					? { isActive: true }
-					: data.active === "false"
-						? { isActive: false }
-						: {};
-
-			const statusWhere =
-				data.status.length === 1 && data.status.includes("Ativo")
-					? { deletedAt: null }
-					: data.status.length === 1 && data.status.includes("Inativo")
-						? { NOT: { deletedAt: null } }
-						: data.status.length === 0
-							? { deletedAt: null }
-							: {};
-
-			const where = {
-				firmId,
-				...activeWhere,
-				...statusWhere,
-				...(data.name
-					? {
-							OR: [
-								{
-									fullName: {
-										contains: data.name,
-										mode: "insensitive" as const,
-									},
-								},
-								{
-									oabNumber: {
-										contains: data.name,
-										mode: "insensitive" as const,
-									},
-								},
-							],
-						}
-					: {}),
-				...(data.type.length > 0 ? { typeId: { in: data.type } } : {}),
-				...(data.role.length > 0 ? { roleId: { in: data.role } } : {}),
-			};
+			const where = buildEmployeeWhere({ firmId, filter: data });
 
 			const sortMap: Record<string, object> = {
 				fullName: { fullName: data.direction },
@@ -65,7 +74,7 @@ const getEmployees = createServerFn({ method: "GET" })
 				remunerationPercent: { remunerationPercentage: data.direction },
 				type: { type: { label: data.direction } },
 				role: { role: { label: data.direction } },
-				status: { deletedAt: data.direction },
+				status: { isActive: data.direction },
 			};
 			const orderBy = [
 				sortMap[data.column] ?? { fullName: "asc" },
