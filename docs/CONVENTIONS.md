@@ -72,6 +72,8 @@
 
 - Import the Prisma client from `@/db` — never instantiate `new PrismaClient()` elsewhere
 - **Every query** must filter by `firmId` (from session) and `deletedAt: null` — unless explicitly listing deleted records (e.g., admin status filter set to `inactive` or `all`)
+- **Form option queries** (data for dropdowns, selects, and autocompletes) must additionally filter `isActive: true` — only active, non-deleted records are offered as selectable options
+- `deletedAt` and `isActive` are **independent** concerns: a record can be `isActive = false` without being soft-deleted, and vice versa. Never conflate them — soft-delete is a user-initiated removal action; active/inactive is a visibility toggle
 - Never trust `firmId` from client input — always read it from the authenticated session
 - Use `prisma.$transaction()` for all operations that span multiple tables (compound creates, soft-delete cascades, restore cascades)
 - Reference lookup table rows by their `value` field (e.g., `"LAWYER"`, `"SOCIAL_SECURITY"`) — never by `id` — since IDs may differ across environments
@@ -96,6 +98,7 @@
 - Default values live in `utils/default.ts` as `defaultFormCreateValues()` and `defaultFormUpdateValues(entity)`
 - Feature form hooks return `{ form, mutation, Form, FormField, FormSubmit, FormReset }`
 - Validation uses `validators: { onSubmit: zodSchema }` — runs on submit; error messages in Portuguese
+- The `isActive` field is always rendered as a `Checkbox` component (HeroUI) with the label **"Ativo"** — present in both create and edit forms for all entities that carry `isActive`
  
 ---
 
@@ -112,6 +115,8 @@ All data-to-UI transformations (currency, dates, percentages, document numbers) 
 **Create and edit forms** — displayed in a modal overlay, never on a dedicated page.
  
 **Delete and restore** — always require a confirmation modal before executing.
+ 
+**Active/inactive toggle** — the `isActive` field is always exposed as a checkbox in the entity's create and edit forms (label in pt-BR: "Ativo"). No confirmation modal is required for toggling active/inactive status.
  
 **Data tables** — filter, sort, and pagination state are URL-driven; never use React state for data that belongs in URL search params.
  

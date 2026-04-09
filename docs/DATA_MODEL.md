@@ -54,9 +54,10 @@ All business entities (except Firm, lookup tables, and AuditLog) include:
 deletedAt DateTime?
 ```
 
-- `null` → active record
-- not null → soft-deleted record
+- `null` → record has never been deleted or has been restored
+- not null → record was explicitly soft-deleted
 - Default queries **must** filter `deletedAt: null`
+- Soft delete and active/inactive status are **independent** — a record can be inactive (`isActive = false`) without being deleted, and a deleted record retains its last `isActive` value for when it is restored
 
 ---
 
@@ -91,18 +92,21 @@ All categorical values are stored as lookup tables with foreign key references �
 Each lookup table follows this structure:
 
 ```
-id    Int    @id @default(autoincrement())
-value String @unique    // stable code key (UPPER_SNAKE_CASE)
-label String            // pt-BR display label
+id       Int     @id @default(autoincrement())
+value    String  @unique    // stable code key (UPPER_SNAKE_CASE)
+label    String             // pt-BR display label
+isActive Boolean @default(true)
 ```
 
 Rules:
 
 - Sorted by `label` when displayed
 - Seeded via `prisma/seed.ts` (mandatory before app can run)
-- Immutable — no create, update, or delete via the UI
+- `value` and `label` are immutable — no create, update, or delete via the UI
+- `isActive` can be toggled by admins to hide a lookup option from all form dropdowns without removing the record
 - No soft delete (`deletedAt`)
 - No `firmId` — lookup values are global across all firms
+- **Form option queries** must filter `isActive: true` on lookup tables just as on business entities
 
 ---
 
@@ -112,6 +116,24 @@ Rules:
 - Database table names: `snake_case` plural via `@@map()` (e.g., `employees`, `contract_employees`)
 - Prisma field names: `camelCase` (e.g., `fullName`, `firmId`)
 - Database column names: Prisma default (matches field names)
+
+---
+
+## 1.8 Active/Inactive Status
+
+All business entities and lookup tables (except Firm, AuditLog, and Session/Account) include:
+
+```
+isActive Boolean @default(true)
+```
+
+- `true` → record is active and visible in form options, dropdowns, and default list views
+- `false` → record is inactive: still exists in the database, visible in admin lists (with filter), but excluded from form dropdowns and option selectors
+- This is **independent of soft-delete** — an inactive record is not deleted; it is simply hidden from selection UIs
+- For business entities, the `isActive` checkbox is always present in the create and edit forms; for lookup tables, `isActive` is managed via an admin-only settings panel (lookup tables have no other mutable fields)
+- **Business entity form options / dropdowns** must always filter: `deletedAt: null AND isActive: true`
+- **Lookup table form options / dropdowns** must always filter: `isActive: true` (lookup tables have no `deletedAt`)
+- **Tables / lists** default to non-deleted records; `isActive` can be filtered via the `active` URL search param
 
 ---
 
@@ -143,9 +165,10 @@ All lookup tables follow the identical Prisma model pattern. The only difference
 
 ```prisma
 model EmployeeType {
-  id    Int    @id @default(autoincrement())
-  value String @unique
-  label String
+  id       Int     @id @default(autoincrement())
+  value    String  @unique
+  label    String
+  isActive Boolean @default(true)
 
   employees Employee[]
 
@@ -153,9 +176,10 @@ model EmployeeType {
 }
 
 model UserRole {
-  id    Int    @id @default(autoincrement())
-  value String @unique
-  label String
+  id       Int     @id @default(autoincrement())
+  value    String  @unique
+  label    String
+  isActive Boolean @default(true)
 
   employees Employee[]
 
@@ -163,9 +187,10 @@ model UserRole {
 }
 
 model ClientType {
-  id    Int    @id @default(autoincrement())
-  value String @unique
-  label String
+  id       Int     @id @default(autoincrement())
+  value    String  @unique
+  label    String
+  isActive Boolean @default(true)
 
   clients Client[]
 
@@ -173,9 +198,10 @@ model ClientType {
 }
 
 model LegalArea {
-  id    Int    @id @default(autoincrement())
-  value String @unique
-  label String
+  id       Int     @id @default(autoincrement())
+  value    String  @unique
+  label    String
+  isActive Boolean @default(true)
 
   contracts Contract[]
 
@@ -183,9 +209,10 @@ model LegalArea {
 }
 
 model ContractStatus {
-  id    Int    @id @default(autoincrement())
-  value String @unique
-  label String
+  id       Int     @id @default(autoincrement())
+  value    String  @unique
+  label    String
+  isActive Boolean @default(true)
 
   contracts Contract[]
 
@@ -193,9 +220,10 @@ model ContractStatus {
 }
 
 model RevenueType {
-  id    Int    @id @default(autoincrement())
-  value String @unique
-  label String
+  id       Int     @id @default(autoincrement())
+  value    String  @unique
+  label    String
+  isActive Boolean @default(true)
 
   revenues Revenue[]
 
@@ -203,9 +231,10 @@ model RevenueType {
 }
 
 model AssignmentType {
-  id    Int    @id @default(autoincrement())
-  value String @unique
-  label String
+  id       Int     @id @default(autoincrement())
+  value    String  @unique
+  label    String
+  isActive Boolean @default(true)
 
   contractEmployees ContractEmployee[]
 
@@ -213,9 +242,10 @@ model AssignmentType {
 }
 
 model AttachmentType {
-  id    Int    @id @default(autoincrement())
-  value String @unique
-  label String
+  id       Int     @id @default(autoincrement())
+  value    String  @unique
+  label    String
+  isActive Boolean @default(true)
 
   attachments Attachment[]
 
@@ -227,68 +257,68 @@ model AttachmentType {
 
 #### EmployeeType
 
-| id | value | label |
-|----|-------|-------|
-| 1 | LAWYER | Advogado |
-| 2 | ADMIN_ASSISTANT | Assistente Administrativo |
+| id | value | label | isActive |
+|----|-------|-------|---------|
+| 1 | LAWYER | Advogado | true |
+| 2 | ADMIN_ASSISTANT | Assistente Administrativo | true |
 
 #### UserRole
 
-| id | value | label |
-|----|-------|-------|
-| 1 | ADMIN | Administrador |
-| 2 | USER | Usuário |
+| id | value | label | isActive |
+|----|-------|-------|---------|
+| 1 | ADMIN | Administrador | true |
+| 2 | USER | Usuário | true |
 
 #### ClientType
 
-| id | value | label |
-|----|-------|-------|
-| 1 | INDIVIDUAL | Pessoa Física |
-| 2 | COMPANY | Pessoa Jurídica |
+| id | value | label | isActive |
+|----|-------|-------|---------|
+| 1 | INDIVIDUAL | Pessoa Física | true |
+| 2 | COMPANY | Pessoa Jurídica | true |
 
 #### LegalArea
 
-| id | value | label |
-|----|-------|-------|
-| 1 | SOCIAL_SECURITY | Previdenciário |
-| 2 | CIVIL | Cível |
-| 3 | FAMILY | Família |
-| 4 | LABOR | Trabalhista |
-| 5 | OTHER | Outros |
+| id | value | label | isActive |
+|----|-------|-------|---------|
+| 1 | SOCIAL_SECURITY | Previdenciário | true |
+| 2 | CIVIL | Cível | true |
+| 3 | FAMILY | Família | true |
+| 4 | LABOR | Trabalhista | true |
+| 5 | OTHER | Outros | true |
 
 #### ContractStatus
 
-| id | value | label |
-|----|-------|-------|
-| 1 | ACTIVE | Ativo |
-| 2 | COMPLETED | Concluído |
-| 3 | CANCELLED | Cancelado |
+| id | value | label | isActive |
+|----|-------|-------|---------|
+| 1 | ACTIVE | Ativo | true |
+| 2 | COMPLETED | Concluído | true |
+| 3 | CANCELLED | Cancelado | true |
 
 #### RevenueType
 
-| id | value | label |
-|----|-------|-------|
-| 1 | ADMINISTRATIVE | Administrativo |
-| 2 | JUDICIAL | Judicial |
-| 3 | SUCCUMBENCY | Sucumbência |
+| id | value | label | isActive |
+|----|-------|-------|---------|
+| 1 | ADMINISTRATIVE | Administrativo | true |
+| 2 | JUDICIAL | Judicial | true |
+| 3 | SUCCUMBENCY | Sucumbência | true |
 
 #### AssignmentType
 
-| id | value | label |
-|----|-------|-------|
-| 1 | RESPONSIBLE | Responsável |
-| 2 | RECOMMENDING | Indicante |
-| 3 | RECOMMENDED | Indicado |
-| 4 | ADDITIONAL | Adicional |
-| 5 | ADMIN_ASSISTANT | Assistente Administrativo |
+| id | value | label | isActive |
+|----|-------|-------|---------|
+| 1 | RESPONSIBLE | Responsável | true |
+| 2 | RECOMMENDING | Indicante | true |
+| 3 | RECOMMENDED | Indicado | true |
+| 4 | ADDITIONAL | Adicional | true |
+| 5 | ADMIN_ASSISTANT | Assistente Administrativo | true |
 
 #### AttachmentType
 
-| id | value | label |
-|----|-------|-------|
-| 1 | PDF | PDF |
-| 2 | JPG | JPG |
-| 3 | PNG | PNG |
+| id | value | label | isActive |
+|----|-------|-------|---------|
+| 1 | PDF | PDF | true |
+| 2 | JPG | JPG | true |
+| 3 | PNG | PNG | true |
 
 ---
 
@@ -351,6 +381,8 @@ model Employee {
 
   avatarUrl String?
 
+  isActive  Boolean   @default(true)
+
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
@@ -370,6 +402,7 @@ model Employee {
   @@unique([firmId, oabNumber])
   @@index([firmId])
   @@index([deletedAt])
+  @@index([isActive])
   @@map("employees")
 }
 ```
@@ -405,6 +438,8 @@ model Client {
   email String?
   phone String?
 
+  isActive  Boolean   @default(true)
+
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
@@ -419,6 +454,7 @@ model Client {
   @@unique([firmId, document])
   @@index([firmId])
   @@index([deletedAt])
+  @@index([isActive])
   @@map("clients")
 }
 ```
@@ -456,6 +492,8 @@ model Contract {
 
   notes String?
 
+  isActive  Boolean   @default(true)
+
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
@@ -474,6 +512,7 @@ model Contract {
   @@index([firmId])
   @@index([clientId])
   @@index([deletedAt])
+  @@index([isActive])
   @@map("contracts")
 }
 ```
@@ -507,6 +546,8 @@ model ContractEmployee {
   employeeId       Int
   assignmentTypeId Int
 
+  isActive  Boolean   @default(true)
+
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
@@ -523,6 +564,7 @@ model ContractEmployee {
   @@index([contractId])
   @@index([employeeId])
   @@index([deletedAt])
+  @@index([isActive])
   @@map("contract_employees")
 }
 ```
@@ -559,6 +601,8 @@ model Revenue {
   paymentStartDate DateTime @db.Date
   totalInstallments Int
 
+  isActive  Boolean   @default(true)
+
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
@@ -573,6 +617,7 @@ model Revenue {
   @@index([firmId])
   @@index([contractId])
   @@index([deletedAt])
+  @@index([isActive])
   @@map("revenues")
 }
 ```
@@ -607,6 +652,8 @@ model Fee {
 
   generateRemuneration Boolean @default(true)
 
+  isActive  Boolean   @default(true)
+
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
@@ -620,6 +667,7 @@ model Fee {
   @@index([firmId])
   @@index([revenueId])
   @@index([deletedAt])
+  @@index([isActive])
   @@map("fees")
 }
 ```
@@ -662,6 +710,8 @@ model Remuneration {
 
   paymentDate DateTime @db.Date
 
+  isActive  Boolean   @default(true)
+
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
@@ -675,6 +725,7 @@ model Remuneration {
   @@index([feeId])
   @@index([contractEmployeeId])
   @@index([deletedAt])
+  @@index([isActive])
   @@map("remunerations")
 }
 ```
@@ -706,6 +757,8 @@ model Attachment {
 
   fileSize Int
 
+  isActive  Boolean   @default(true)
+
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
@@ -722,6 +775,7 @@ model Attachment {
   @@index([employeeId])
   @@index([contractId])
   @@index([deletedAt])
+  @@index([isActive])
   @@map("attachments")
 }
 ```
@@ -954,6 +1008,7 @@ All indexes are defined in the Prisma models (Section 4). This section provides 
 |---|---|
 | `firmId` | Fast tenant filtering on every query |
 | `deletedAt` | Fast filtering of active vs. soft-deleted records |
+| `isActive` | Fast filtering of active vs. inactive records for form options and list queries |
 
 ### Unique constraints (Prisma-enforced)
 
@@ -1003,13 +1058,16 @@ Additionally, enforce these constraints at the service layer (check before inser
 
 All list queries support **server-side filtering** via URL search params, validated by Zod schemas. Each entity defines the filter fields accepted by its list API.
 
+> **Filter conventions:** The `status` param (mapped to `deletedAt`) and the `active` param (mapped to `isActive`) are independent. A query for `status=active` returns all non-deleted records regardless of `isActive`; `active=true` returns only `isActive = true` records regardless of `deletedAt`. Form option queries always apply both: `deletedAt: null` and `isActive: true`.
+
 ## 11.1 Employee
 
 | Filter key | Field / relation | Type |
 |---|---|---|
 | `type` | `typeId` | Lookup ID (EmployeeType) |
 | `role` | `roleId` | Lookup ID (UserRole) |
-| `status` | `deletedAt` | `active` \| `inactive` \| `all` (default: `active`) |
+| `status`  | `deletedAt` | `active` \| `inactive` \| `all` (default: `active`) |
+| `active`  | `isActive`  | `true` \| `false` \| `all` (default: `all`)          |
 
 ## 11.2 Client
 
@@ -1017,7 +1075,8 @@ All list queries support **server-side filtering** via URL search params, valida
 |---|---|---|
 | `search` | `fullName`, `document` | Text (partial match) |
 | `type` | `typeId` | Lookup ID (ClientType) |
-| `status` | `deletedAt` | `active` \| `inactive` \| `all` (default: `active`) |
+| `status`  | `deletedAt` | `active` \| `inactive` \| `all` (default: `active`) |
+| `active`  | `isActive`  | `true` \| `false` \| `all` (default: `all`)          |
 
 ## 11.3 Contract
 
@@ -1026,7 +1085,8 @@ All list queries support **server-side filtering** via URL search params, valida
 | `clientId` | `clientId` | Entity ID |
 | `legalArea` | `legalAreaId` | Lookup ID (LegalArea) |
 | `contractStatus` | `statusId` | Lookup ID (ContractStatus) |
-| `status` | `deletedAt` | `active` \| `inactive` \| `all` (default: `active`) |
+| `status`  | `deletedAt` | `active` \| `inactive` \| `all` (default: `active`) |
+| `active`  | `isActive`  | `true` \| `false` \| `all` (default: `all`)          |
 
 ## 11.4 Fee
 

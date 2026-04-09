@@ -158,6 +158,7 @@ Create, view, edit, and soft-delete clients. Clients are either individuals (Pes
 | Document | Yes | CPF (11 digits) for individuals; CNPJ (14 digits) for companies — unique per firm |
 | Email | No | |
 | Phone | No | Mobile phone |
+| Active | Yes | Indicates whether the client is active; defaults to true — inactive clients are hidden from contract creation dropdowns |
 
 ### 6.2 Contract Management
 
@@ -176,6 +177,7 @@ Create and manage legal contracts linked to a client. Each contract has a unique
 | Team | Yes | At least one employee with an assignment type |
 | Revenues | Yes | At least one revenue plan at creation |
 | Notes | No | Free-text observations |
+| Active | Yes | Indicates whether the contract is active; defaults to true — inactive contracts are hidden from option selectors |
 
 ### 6.3 Revenue Tracking
 
@@ -257,6 +259,7 @@ Administrators can create, edit, soft-delete, and restore employee accounts. Eac
 | Remuneration percentage | Yes | Individual percentage used in remuneration calculations |
 | Referral percentage | Yes | Percentage applied when the employee acts as a referrer |
 | Avatar | No | Profile photo |
+| Active | Yes | Indicates whether the employee account is active; defaults to true — inactive employees are hidden from team assignment dropdowns |
 
 Users with access to the employee list can filter by type, role, and active/inactive status.
 
@@ -320,6 +323,8 @@ An immutable log of all data changes across the system. Each entry records who m
 | FR-AUTH-05 | After 5 failed login attempts within one minute for the same identifier, the system must temporarily block further attempts. |
 | FR-AUTH-06 | The system must support password reset via an email link. |
 | FR-AUTH-07 | The system must prevent access to any page except Login and Password Reset without an authenticated session. |
+| FR-AUTH-08 | The employee create and edit forms must include an "Ativo" checkbox that controls the employee's `isActive` field. |
+| FR-AUTH-09 | Inactive employees must not appear in team assignment dropdowns. |
 
 ### 8.2 Clients
 
@@ -329,7 +334,8 @@ An immutable log of all data changes across the system. Each entry records who m
 | FR-CLI-02 | The system must validate that individual clients have a valid CPF and company clients have a valid CNPJ. |
 | FR-CLI-03 | The system must prevent two clients in the same firm from sharing the same CPF or CNPJ. |
 | FR-CLI-04 | The client creation form must adapt its fields and labels based on the selected client type. |
-| FR-CLI-05 | The system must allow users to search and filter the client list by name, document number, type, and active/inactive status. |
+| FR-CLI-05 | The system must allow users to search and filter the client list by name, document number, type, soft-delete status, and active/inactive status (`isActive`). |
+| FR-CLI-07 | The client creation and edit forms must include an "Ativo" checkbox that controls the client's `isActive` field. Inactive clients must not appear in contract creation dropdowns. |
 | FR-CLI-06 | The client detail view must show related contracts and attachments. |
 
 ### 8.3 Contracts
@@ -346,7 +352,8 @@ An immutable log of all data changes across the system. Each entry records who m
 | FR-CON-08 | Administrators may manually cancel a contract, unless status changes have been locked. |
 | FR-CON-09 | Administrators may lock a contract to prevent any status changes. |
 | FR-CON-10 | The system must prevent regular users from viewing contracts they are not assigned to. |
-| FR-CON-11 | The system must allow users to search and filter the contract list by client, legal area, status, and active/inactive status. |
+| FR-CON-11 | The system must allow users to search and filter the contract list by client, legal area, contract status, soft-delete status, and active/inactive status (`isActive`). |
+| FR-CON-12 | The contract creation and edit forms must include an "Ativo" checkbox that controls the contract's `isActive` field. |
 
 ### 8.4 Team Assignment
 
@@ -435,6 +442,9 @@ An immutable log of all data changes across the system. Each entry records who m
 | FR-DATA-02 | Administrators may restore soft-deleted records. |
 | FR-DATA-03 | The system must ensure that all data is fully isolated per firm — a user in one firm must never be able to access data belonging to another firm. |
 | FR-DATA-04 | The system must require explicit user confirmation before executing any delete or restore action. |
+| FR-DATA-05 | All business entities must have an `isActive` boolean field (default: true) that controls visibility in form options and dropdowns. Active/inactive status is independent of soft-delete — an inactive record is not deleted. |
+| FR-DATA-06 | The entity create and edit forms must expose the `isActive` field as an "Ativo" checkbox. |
+| FR-DATA-07 | Form option queries (dropdowns, selects, autocompletes) must only return records where `isActive = true` and `deletedAt IS NULL`. |
 
 ### 8.13 Performance & Usability
 
@@ -710,7 +720,7 @@ When a Recommending + Recommended pair is assigned to a contract, the referrer's
 
 ## Appendix B: Lookup Values
 
-These are system-defined reference values. They are not editable through the application UI.
+These are system-defined reference values. Their `value` and `label` fields are immutable — they cannot be created, renamed, or deleted through the application UI. However, each lookup value carries an `isActive` boolean (default: `true`) that administrators can toggle to hide a specific option from all form dropdowns without removing the record.
 
 ### Employee Types
 
