@@ -9,5 +9,4 @@ export const EMPLOYEE_ALLOWED_SORT_COLUMNS: NonEmptyKeys<Employee> = [
 	"remunerationPercent",
 	"role",
 	"type",
-	"status",
 ] as const;

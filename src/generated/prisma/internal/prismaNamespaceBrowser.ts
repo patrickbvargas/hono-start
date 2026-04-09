@@ -113,6 +113,7 @@ export const EmployeeScalarFieldEnum = {
 	remunerationPercentage: "remunerationPercentage",
 	referralPercentage: "referralPercentage",
 	avatarUrl: "avatarUrl",
+	isActive: "isActive",
 	createdAt: "createdAt",
 	updatedAt: "updatedAt",
 	deletedAt: "deletedAt",

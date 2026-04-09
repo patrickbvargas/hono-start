@@ -120,7 +120,11 @@ export const EmployeeForm = ({
 										)}
 									</form.AppField>
 								</Field.Group>
-								<div className="flex justify-start"></div>
+								<div className="flex justify-start">
+									<form.AppField name="isActive">
+										{(field) => <field.Checkbox label="Ativo" />}
+									</form.AppField>
+								</div>
 							</Modal.Body>
 							<Modal.Footer>
 								<form.Submit />

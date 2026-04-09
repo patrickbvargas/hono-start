@@ -20,6 +20,7 @@ const createEmployee = createServerFn({ method: "POST" })
 					oabNumber: data.oabNumber || null,
 					remunerationPercentage: data.remunerationPercent,
 					referralPercentage: data.referrerPercent,
+					isActive: data.isActive,
 				},
 			});
 			return { success: true };

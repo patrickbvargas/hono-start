@@ -60,19 +60,17 @@ export const EmployeeTable = ({
 				header: "Perfil",
 				enableSorting: EMPLOYEE_ALLOWED_SORT_COLUMNS.includes("role"),
 			}),
-			c.accessor("status", {
+			c.accessor("isActive", {
 				header: "Status",
-				cell: ({ row }) => <EntityStatus status={row.original.status} />,
-				enableSorting: EMPLOYEE_ALLOWED_SORT_COLUMNS.includes("status"),
+				cell: ({ row }) => <EntityStatus isActive={row.original.isActive} />,
+				enableSorting: EMPLOYEE_ALLOWED_SORT_COLUMNS.includes("isActive"),
 			}),
 			c.display({
 				id: "actions",
 				header: "Ações",
 				cell: ({ row }) => {
 					const employee = row.original;
-					// const isActive = employee.status === "Ativo";
 
-					// TODO: refatorar
 					return (
 						<Dropdown>
 							<Button isIconOnly size="sm" variant="ghost" aria-label="Actions">
@@ -86,25 +84,31 @@ export const EmployeeTable = ({
 									>
 										<Label>Visualizar</Label>
 									</Dropdown.Item>
-									<Dropdown.Item
-										textValue="Editar"
-										onPress={() => onEdit?.(employee)}
-									>
-										<Label>Editar</Label>
-									</Dropdown.Item>
-									<Dropdown.Item
-										textValue="Restaurar"
-										onPress={() => onRestore?.(employee)}
-									>
-										<Label>Restaurar</Label>
-									</Dropdown.Item>
-									<Dropdown.Item
-										textValue="Excluir"
-										variant="danger"
-										onPress={() => onDelete?.(employee)}
-									>
-										<Label>Excluir</Label>
-									</Dropdown.Item>
+									{!employee.isSoftDeleted && (
+										<Dropdown.Item
+											textValue="Editar"
+											onPress={() => onEdit?.(employee)}
+										>
+											<Label>Editar</Label>
+										</Dropdown.Item>
+									)}
+									{employee.isSoftDeleted && (
+										<Dropdown.Item
+											textValue="Restaurar"
+											onPress={() => onRestore?.(employee)}
+										>
+											<Label>Restaurar</Label>
+										</Dropdown.Item>
+									)}
+									{!employee.isSoftDeleted && (
+										<Dropdown.Item
+											textValue="Excluir"
+											variant="danger"
+											onPress={() => onDelete?.(employee)}
+										>
+											<Label>Excluir</Label>
+										</Dropdown.Item>
+									)}
 								</Dropdown.Menu>
 							</Dropdown.Popover>
 						</Dropdown>

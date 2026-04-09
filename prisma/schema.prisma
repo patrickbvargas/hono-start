@@ -44,6 +44,7 @@ model Employee {
   remunerationPercentage Decimal      @db.Decimal(5, 4)
   referralPercentage     Decimal      @db.Decimal(5, 4)
   avatarUrl              String?
+  isActive               Boolean      @default(true)
   createdAt              DateTime     @default(now())
   updatedAt              DateTime     @updatedAt
   deletedAt              DateTime?
@@ -54,5 +55,6 @@ model Employee {
   @@unique([firmId, oabNumber])
   @@index([firmId])
   @@index([deletedAt])
+  @@index([isActive])
   @@map("employees")
 }

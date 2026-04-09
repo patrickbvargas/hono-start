@@ -5,6 +5,7 @@ export const employeeFilterSchema = z.object({
 	type: z.array(z.coerce.number<number>()).catch([]),
 	role: z.array(z.coerce.number<number>()).catch([]),
 	status: z.array(z.string()).catch([]),
+	active: z.string().catch(""),
 });
 
 export type EmployeeFilter = z.infer<typeof employeeFilterSchema>;

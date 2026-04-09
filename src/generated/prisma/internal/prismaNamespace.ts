@@ -824,6 +824,7 @@ export const EmployeeScalarFieldEnum = {
 	remunerationPercentage: "remunerationPercentage",
 	referralPercentage: "referralPercentage",
 	avatarUrl: "avatarUrl",
+	isActive: "isActive",
 	createdAt: "createdAt",
 	updatedAt: "updatedAt",
 	deletedAt: "deletedAt",
@@ -903,6 +904,14 @@ export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<
 export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<
 	$PrismaModel,
 	"Decimal[]"
+>;
+
+/**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<
+	$PrismaModel,
+	"Boolean"
 >;
 
 /**

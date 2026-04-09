@@ -11,9 +11,9 @@ export const employeeSchema = entityIdSchema.safeExtend({
 	roleId: z.number(),
 	type: z.string(),
 	role: z.string(),
-	slug: z.string(),
-	status: z.string(),
 	contractCount: z.number(),
+	isActive: z.boolean(),
+	isSoftDeleted: z.boolean(),
 	createdAt: z.iso.datetime(),
 	updatedAt: z.iso.datetime().nullable(),
 });

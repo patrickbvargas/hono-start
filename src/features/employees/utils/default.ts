@@ -9,6 +9,7 @@ export const defaultFormCreateValues = (): EmployeeCreate => ({
 	referrerPercent: 0,
 	type: 0,
 	role: 0,
+	isActive: true,
 });
 
 export const defaultFormUpdateValues = (
@@ -22,4 +23,5 @@ export const defaultFormUpdateValues = (
 	referrerPercent: initialValue.referrerPercent,
 	type: initialValue.typeId,
 	role: initialValue.roleId,
+	isActive: initialValue.isActive,
 });

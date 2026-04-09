@@ -55,6 +55,7 @@ export type EmployeeMinAggregateOutputType = {
 	remunerationPercentage: runtime.Decimal | null;
 	referralPercentage: runtime.Decimal | null;
 	avatarUrl: string | null;
+	isActive: boolean | null;
 	createdAt: Date | null;
 	updatedAt: Date | null;
 	deletedAt: Date | null;
@@ -71,6 +72,7 @@ export type EmployeeMaxAggregateOutputType = {
 	remunerationPercentage: runtime.Decimal | null;
 	referralPercentage: runtime.Decimal | null;
 	avatarUrl: string | null;
+	isActive: boolean | null;
 	createdAt: Date | null;
 	updatedAt: Date | null;
 	deletedAt: Date | null;
@@ -87,6 +89,7 @@ export type EmployeeCountAggregateOutputType = {
 	remunerationPercentage: number;
 	referralPercentage: number;
 	avatarUrl: number;
+	isActive: number;
 	createdAt: number;
 	updatedAt: number;
 	deletedAt: number;
@@ -122,6 +125,7 @@ export type EmployeeMinAggregateInputType = {
 	remunerationPercentage?: true;
 	referralPercentage?: true;
 	avatarUrl?: true;
+	isActive?: true;
 	createdAt?: true;
 	updatedAt?: true;
 	deletedAt?: true;
@@ -138,6 +142,7 @@ export type EmployeeMaxAggregateInputType = {
 	remunerationPercentage?: true;
 	referralPercentage?: true;
 	avatarUrl?: true;
+	isActive?: true;
 	createdAt?: true;
 	updatedAt?: true;
 	deletedAt?: true;
@@ -154,6 +159,7 @@ export type EmployeeCountAggregateInputType = {
 	remunerationPercentage?: true;
 	referralPercentage?: true;
 	avatarUrl?: true;
+	isActive?: true;
 	createdAt?: true;
 	updatedAt?: true;
 	deletedAt?: true;
@@ -264,6 +270,7 @@ export type EmployeeGroupByOutputType = {
 	remunerationPercentage: runtime.Decimal;
 	referralPercentage: runtime.Decimal;
 	avatarUrl: string | null;
+	isActive: boolean;
 	createdAt: Date;
 	updatedAt: Date;
 	deletedAt: Date | null;
@@ -311,6 +318,7 @@ export type EmployeeWhereInput = {
 		| number
 		| string;
 	avatarUrl?: Prisma.StringNullableFilter<"Employee"> | string | null;
+	isActive?: Prisma.BoolFilter<"Employee"> | boolean;
 	createdAt?: Prisma.DateTimeFilter<"Employee"> | Date | string;
 	updatedAt?: Prisma.DateTimeFilter<"Employee"> | Date | string;
 	deletedAt?: Prisma.DateTimeNullableFilter<"Employee"> | Date | string | null;
@@ -336,6 +344,7 @@ export type EmployeeOrderByWithRelationInput = {
 	remunerationPercentage?: Prisma.SortOrder;
 	referralPercentage?: Prisma.SortOrder;
 	avatarUrl?: Prisma.SortOrderInput | Prisma.SortOrder;
+	isActive?: Prisma.SortOrder;
 	createdAt?: Prisma.SortOrder;
 	updatedAt?: Prisma.SortOrder;
 	deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder;
@@ -370,6 +379,7 @@ export type EmployeeWhereUniqueInput = Prisma.AtLeast<
 			| number
 			| string;
 		avatarUrl?: Prisma.StringNullableFilter<"Employee"> | string | null;
+		isActive?: Prisma.BoolFilter<"Employee"> | boolean;
 		createdAt?: Prisma.DateTimeFilter<"Employee"> | Date | string;
 		updatedAt?: Prisma.DateTimeFilter<"Employee"> | Date | string;
 		deletedAt?:
@@ -401,6 +411,7 @@ export type EmployeeOrderByWithAggregationInput = {
 	remunerationPercentage?: Prisma.SortOrder;
 	referralPercentage?: Prisma.SortOrder;
 	avatarUrl?: Prisma.SortOrderInput | Prisma.SortOrder;
+	isActive?: Prisma.SortOrder;
 	createdAt?: Prisma.SortOrder;
 	updatedAt?: Prisma.SortOrder;
 	deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder;
@@ -445,6 +456,7 @@ export type EmployeeScalarWhereWithAggregatesInput = {
 		| Prisma.StringNullableWithAggregatesFilter<"Employee">
 		| string
 		| null;
+	isActive?: Prisma.BoolWithAggregatesFilter<"Employee"> | boolean;
 	createdAt?: Prisma.DateTimeWithAggregatesFilter<"Employee"> | Date | string;
 	updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Employee"> | Date | string;
 	deletedAt?:
@@ -465,6 +477,7 @@ export type EmployeeCreateInput = {
 		| string;
 	referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string;
 	avatarUrl?: string | null;
+	isActive?: boolean;
 	createdAt?: Date | string;
 	updatedAt?: Date | string;
 	deletedAt?: Date | string | null;
@@ -488,6 +501,7 @@ export type EmployeeUncheckedCreateInput = {
 		| string;
 	referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string;
 	avatarUrl?: string | null;
+	isActive?: boolean;
 	createdAt?: Date | string;
 	updatedAt?: Date | string;
 	deletedAt?: Date | string | null;
@@ -510,6 +524,7 @@ export type EmployeeUpdateInput = {
 		| number
 		| string;
 	avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+	isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
 	createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 	updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 	deletedAt?:
@@ -543,6 +558,7 @@ export type EmployeeUncheckedUpdateInput = {
 		| number
 		| string;
 	avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+	isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
 	createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 	updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 	deletedAt?:
@@ -567,6 +583,7 @@ export type EmployeeCreateManyInput = {
 		| string;
 	referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string;
 	avatarUrl?: string | null;
+	isActive?: boolean;
 	createdAt?: Date | string;
 	updatedAt?: Date | string;
 	deletedAt?: Date | string | null;
@@ -589,6 +606,7 @@ export type EmployeeUpdateManyMutationInput = {
 		| number
 		| string;
 	avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+	isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
 	createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 	updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 	deletedAt?:
@@ -619,6 +637,7 @@ export type EmployeeUncheckedUpdateManyInput = {
 		| number
 		| string;
 	avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+	isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
 	createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 	updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 	deletedAt?:
@@ -654,6 +673,7 @@ export type EmployeeCountOrderByAggregateInput = {
 	remunerationPercentage?: Prisma.SortOrder;
 	referralPercentage?: Prisma.SortOrder;
 	avatarUrl?: Prisma.SortOrder;
+	isActive?: Prisma.SortOrder;
 	createdAt?: Prisma.SortOrder;
 	updatedAt?: Prisma.SortOrder;
 	deletedAt?: Prisma.SortOrder;
@@ -679,6 +699,7 @@ export type EmployeeMaxOrderByAggregateInput = {
 	remunerationPercentage?: Prisma.SortOrder;
 	referralPercentage?: Prisma.SortOrder;
 	avatarUrl?: Prisma.SortOrder;
+	isActive?: Prisma.SortOrder;
 	createdAt?: Prisma.SortOrder;
 	updatedAt?: Prisma.SortOrder;
 	deletedAt?: Prisma.SortOrder;
@@ -695,6 +716,7 @@ export type EmployeeMinOrderByAggregateInput = {
 	remunerationPercentage?: Prisma.SortOrder;
 	referralPercentage?: Prisma.SortOrder;
 	avatarUrl?: Prisma.SortOrder;
+	isActive?: Prisma.SortOrder;
 	createdAt?: Prisma.SortOrder;
 	updatedAt?: Prisma.SortOrder;
 	deletedAt?: Prisma.SortOrder;
@@ -1003,6 +1025,10 @@ export type DecimalFieldUpdateOperationsInput = {
 	divide?: runtime.Decimal | runtime.DecimalJsLike | number | string;
 };
 
+export type BoolFieldUpdateOperationsInput = {
+	set?: boolean;
+};
+
 export type DateTimeFieldUpdateOperationsInput = {
 	set?: Date | string;
 };
@@ -1022,6 +1048,7 @@ export type EmployeeCreateWithoutFirmInput = {
 		| string;
 	referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string;
 	avatarUrl?: string | null;
+	isActive?: boolean;
 	createdAt?: Date | string;
 	updatedAt?: Date | string;
 	deletedAt?: Date | string | null;
@@ -1043,6 +1070,7 @@ export type EmployeeUncheckedCreateWithoutFirmInput = {
 		| string;
 	referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string;
 	avatarUrl?: string | null;
+	isActive?: boolean;
 	createdAt?: Date | string;
 	updatedAt?: Date | string;
 	deletedAt?: Date | string | null;
@@ -1115,6 +1143,7 @@ export type EmployeeScalarWhereInput = {
 		| number
 		| string;
 	avatarUrl?: Prisma.StringNullableFilter<"Employee"> | string | null;
+	isActive?: Prisma.BoolFilter<"Employee"> | boolean;
 	createdAt?: Prisma.DateTimeFilter<"Employee"> | Date | string;
 	updatedAt?: Prisma.DateTimeFilter<"Employee"> | Date | string;
 	deletedAt?: Prisma.DateTimeNullableFilter<"Employee"> | Date | string | null;
@@ -1131,6 +1160,7 @@ export type EmployeeCreateWithoutTypeInput = {
 		| string;
 	referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string;
 	avatarUrl?: string | null;
+	isActive?: boolean;
 	createdAt?: Date | string;
 	updatedAt?: Date | string;
 	deletedAt?: Date | string | null;
@@ -1152,6 +1182,7 @@ export type EmployeeUncheckedCreateWithoutTypeInput = {
 		| string;
 	referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string;
 	avatarUrl?: string | null;
+	isActive?: boolean;
 	createdAt?: Date | string;
 	updatedAt?: Date | string;
 	deletedAt?: Date | string | null;
@@ -1211,6 +1242,7 @@ export type EmployeeCreateWithoutRoleInput = {
 		| string;
 	referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string;
 	avatarUrl?: string | null;
+	isActive?: boolean;
 	createdAt?: Date | string;
 	updatedAt?: Date | string;
 	deletedAt?: Date | string | null;
@@ -1232,6 +1264,7 @@ export type EmployeeUncheckedCreateWithoutRoleInput = {
 		| string;
 	referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string;
 	avatarUrl?: string | null;
+	isActive?: boolean;
 	createdAt?: Date | string;
 	updatedAt?: Date | string;
 	deletedAt?: Date | string | null;
@@ -1294,6 +1327,7 @@ export type EmployeeCreateManyFirmInput = {
 		| string;
 	referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string;
 	avatarUrl?: string | null;
+	isActive?: boolean;
 	createdAt?: Date | string;
 	updatedAt?: Date | string;
 	deletedAt?: Date | string | null;
@@ -1316,6 +1350,7 @@ export type EmployeeUpdateWithoutFirmInput = {
 		| number
 		| string;
 	avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+	isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
 	createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 	updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 	deletedAt?:
@@ -1347,6 +1382,7 @@ export type EmployeeUncheckedUpdateWithoutFirmInput = {
 		| number
 		| string;
 	avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+	isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
 	createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 	updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 	deletedAt?:
@@ -1376,6 +1412,7 @@ export type EmployeeUncheckedUpdateManyWithoutFirmInput = {
 		| number
 		| string;
 	avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+	isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
 	createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 	updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 	deletedAt?:
@@ -1399,6 +1436,7 @@ export type EmployeeCreateManyTypeInput = {
 		| string;
 	referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string;
 	avatarUrl?: string | null;
+	isActive?: boolean;
 	createdAt?: Date | string;
 	updatedAt?: Date | string;
 	deletedAt?: Date | string | null;
@@ -1421,6 +1459,7 @@ export type EmployeeUpdateWithoutTypeInput = {
 		| number
 		| string;
 	avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+	isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
 	createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 	updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 	deletedAt?:
@@ -1452,6 +1491,7 @@ export type EmployeeUncheckedUpdateWithoutTypeInput = {
 		| number
 		| string;
 	avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+	isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
 	createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 	updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 	deletedAt?:
@@ -1481,6 +1521,7 @@ export type EmployeeUncheckedUpdateManyWithoutTypeInput = {
 		| number
 		| string;
 	avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+	isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
 	createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 	updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 	deletedAt?:
@@ -1504,6 +1545,7 @@ export type EmployeeCreateManyRoleInput = {
 		| string;
 	referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string;
 	avatarUrl?: string | null;
+	isActive?: boolean;
 	createdAt?: Date | string;
 	updatedAt?: Date | string;
 	deletedAt?: Date | string | null;
@@ -1526,6 +1568,7 @@ export type EmployeeUpdateWithoutRoleInput = {
 		| number
 		| string;
 	avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+	isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
 	createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 	updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 	deletedAt?:
@@ -1557,6 +1600,7 @@ export type EmployeeUncheckedUpdateWithoutRoleInput = {
 		| number
 		| string;
 	avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+	isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
 	createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 	updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 	deletedAt?:
@@ -1586,6 +1630,7 @@ export type EmployeeUncheckedUpdateManyWithoutRoleInput = {
 		| number
 		| string;
 	avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+	isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
 	createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 	updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 	deletedAt?:
@@ -1610,6 +1655,7 @@ export type EmployeeSelect<
 		remunerationPercentage?: boolean;
 		referralPercentage?: boolean;
 		avatarUrl?: boolean;
+		isActive?: boolean;
 		createdAt?: boolean;
 		updatedAt?: boolean;
 		deletedAt?: boolean;
@@ -1635,6 +1681,7 @@ export type EmployeeSelectCreateManyAndReturn<
 		remunerationPercentage?: boolean;
 		referralPercentage?: boolean;
 		avatarUrl?: boolean;
+		isActive?: boolean;
 		createdAt?: boolean;
 		updatedAt?: boolean;
 		deletedAt?: boolean;
@@ -1660,6 +1707,7 @@ export type EmployeeSelectUpdateManyAndReturn<
 		remunerationPercentage?: boolean;
 		referralPercentage?: boolean;
 		avatarUrl?: boolean;
+		isActive?: boolean;
 		createdAt?: boolean;
 		updatedAt?: boolean;
 		deletedAt?: boolean;
@@ -1681,6 +1729,7 @@ export type EmployeeSelectScalar = {
 	remunerationPercentage?: boolean;
 	referralPercentage?: boolean;
 	avatarUrl?: boolean;
+	isActive?: boolean;
 	createdAt?: boolean;
 	updatedAt?: boolean;
 	deletedAt?: boolean;
@@ -1700,6 +1749,7 @@ export type EmployeeOmit<
 	| "remunerationPercentage"
 	| "referralPercentage"
 	| "avatarUrl"
+	| "isActive"
 	| "createdAt"
 	| "updatedAt"
 	| "deletedAt",
@@ -1752,6 +1802,7 @@ export type $EmployeePayload<
 			remunerationPercentage: runtime.Decimal;
 			referralPercentage: runtime.Decimal;
 			avatarUrl: string | null;
+			isActive: boolean;
 			createdAt: Date;
 			updatedAt: Date;
 			deletedAt: Date | null;
@@ -2399,6 +2450,7 @@ export interface EmployeeFieldRefs {
 	readonly remunerationPercentage: Prisma.FieldRef<"Employee", "Decimal">;
 	readonly referralPercentage: Prisma.FieldRef<"Employee", "Decimal">;
 	readonly avatarUrl: Prisma.FieldRef<"Employee", "String">;
+	readonly isActive: Prisma.FieldRef<"Employee", "Boolean">;
 	readonly createdAt: Prisma.FieldRef<"Employee", "DateTime">;
 	readonly updatedAt: Prisma.FieldRef<"Employee", "DateTime">;
 	readonly deletedAt: Prisma.FieldRef<"Employee", "DateTime">;

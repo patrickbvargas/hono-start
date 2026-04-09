@@ -19,6 +19,7 @@ const employeeBaseShape = {
 		.max(1, "Percentual não pode exceder 100%"),
 	type: z.coerce.number<number>().min(1, "Função é obrigatória"),
 	role: z.coerce.number<number>().min(1, "Cargo é obrigatório"),
+	isActive: z.boolean(),
 };
 
 const referrerRefinement = (

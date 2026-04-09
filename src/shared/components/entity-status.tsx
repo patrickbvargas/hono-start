@@ -1,11 +1,13 @@
 import { Chip } from "@heroui/react";
 
 interface EntityStatusProps {
-	status: string;
+	isActive: boolean;
 }
 
-export const EntityStatus = ({ status }: EntityStatusProps) => {
-	const isActive = status === "Ativo";
-
-	return <Chip color={isActive ? "success" : "danger"}>{status}</Chip>;
+export const EntityStatus = ({ isActive }: EntityStatusProps) => {
+	return (
+		<Chip color={isActive ? "success" : "danger"}>
+			{isActive ? "Ativo" : "Inativo"}
+		</Chip>
+	);
 };

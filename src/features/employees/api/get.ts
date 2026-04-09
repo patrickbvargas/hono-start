@@ -17,6 +17,13 @@ const getEmployees = createServerFn({ method: "GET" })
 			// TODO: replace with session firmId
 			const firmId = 1;
 
+			const activeWhere =
+				data.active === "true"
+					? { isActive: true }
+					: data.active === "false"
+						? { isActive: false }
+						: {};
+
 			const statusWhere =
 				data.status.length === 1 && data.status.includes("Ativo")
 					? { deletedAt: null }
@@ -28,6 +35,7 @@ const getEmployees = createServerFn({ method: "GET" })
 
 			const where = {
 				firmId,
+				...activeWhere,
 				...statusWhere,
 				...(data.name
 					? {
@@ -86,9 +94,9 @@ const getEmployees = createServerFn({ method: "GET" })
 				roleId: emp.roleId,
 				type: emp.type.label,
 				role: emp.role.label,
-				slug: emp.fullName.toLowerCase().replace(/\s+/g, "-"),
-				status: emp.deletedAt ? "Inativo" : "Ativo",
 				contractCount: 0, // TODO: add when ContractEmployee model is available
+				isActive: emp.isActive,
+				isSoftDeleted: !!emp.deletedAt,
 				createdAt: emp.createdAt.toISOString(),
 				updatedAt: emp.updatedAt?.toISOString() ?? null,
 			}));

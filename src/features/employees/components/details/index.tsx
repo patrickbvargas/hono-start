@@ -49,7 +49,7 @@ export const EmployeeDetails = ({ employee, state }: EmployeeDetailsProps) => {
 										/>
 										<DetailRow
 											label="Status"
-											value={<EntityStatus status={employee.status} />}
+											value={<EntityStatus isActive={employee.isActive} />}
 										/>
 									</div>
 								</div>
