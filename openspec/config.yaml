@@ -13,17 +13,20 @@ rules:
     - Keep proposals focused on a single feature or change
     - Include a "Non-goals" section to define boundaries
     - Identify affected user roles and multi-tenant implications
+    - Use caveman skill (full intensity) for all responses — drop articles, filler, pleasantries, hedging; fragments OK; short synonyms; technical terms exact; code blocks unchanged. See .agents/skills/caveman/SKILL.md
 
   specs:
     - Read docs/PRD.md and docs/DATA_MODEL.md before writing specs
     - Focus on behavior — avoid implementation details
     - Define clear, testable acceptance criteria
     - Include edge cases and side effects
+    - Use caveman skill (full intensity) for all responses — drop articles, filler, pleasantries, hedging; fragments OK; short synonyms; technical terms exact; code blocks unchanged. See .agents/skills/caveman/SKILL.md
 
   design:
     - Read docs/STACK.md, docs/ARCHITECTURE.md, docs/CONVENTIONS.md, and docs/DATA_MODEL.md before writing the design
     - Use Context7 MCP to look up documentation for any library before implementing
     - Justify any deviation from existing patterns
+    - Use caveman skill (full intensity) for all responses — drop articles, filler, pleasantries, hedging; fragments OK; short synonyms; technical terms exact; code blocks unchanged. See .agents/skills/caveman/SKILL.md
 
   tasks:
     - Read docs/CONVENTIONS.md and docs/DATA_MODEL.md before writing tasks
@@ -31,3 +34,4 @@ rules:
     - Break into atomic units (~1–2 hours each)
     - Indicate if DB migrations are required
     - After implementation, run `pnpm check` then `npx tsc --noEmit`. Fix all errors before marking the task as done — never skip, suppress with @ts-ignore, or leave for later.
+    - Use caveman skill (full intensity) for all responses — drop articles, filler, pleasantries, hedging; fragments OK; short synonyms; technical terms exact; code blocks unchanged. See .agents/skills/caveman/SKILL.md
