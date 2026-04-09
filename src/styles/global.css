@@ -3,6 +3,23 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Inter font variable — defined separately so the :root theme block can be freely updated */
+:root {
+	--font-inter: "Inter", sans-serif;
+}
+
+body {
+	@apply m-0;
+	font-family: "Inter", sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+code {
+	font-family:
+		source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
 :root,
 .light,
 .default,
@@ -46,12 +63,7 @@
 
 	/* Font Family */
 	/* Make sure to load Inter font in your app */
-	--font-inter: "Inter", sans-serif;
 	--font-sans: var(--font-inter);
-}
-
-body {
-	font-family: var(--font-sans);
 }
 
 .dark,
