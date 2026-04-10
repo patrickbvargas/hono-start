@@ -1,7 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import { prisma } from "@/shared/lib/prisma";
-import { type Option, optionSchema } from "@/shared/schemas/option";
 import type {
 	QueryManyReturnType,
 	QueryPaginatedReturnType,
@@ -9,7 +8,12 @@ import type {
 import { EMPLOYEE_DATA_CACHE_KEY } from "../constants";
 import type { EmployeeFilter } from "../schemas/filter";
 import { type Employee, employeeSchema } from "../schemas/model";
-import { type EmployeeType, employeeTypeSchema } from "../schemas/option";
+import {
+	type EmployeeRole,
+	type EmployeeType,
+	employeeRoleSchema,
+	employeeTypeSchema,
+} from "../schemas/option";
 import { type EmployeeSearch, employeeSearchSchema } from "../schemas/search";
 
 interface BuildEmployeeWhereParams {
@@ -138,12 +142,12 @@ const getEmployeeTypes = createServerFn({ method: "GET" }).handler(
 );
 
 const getEmployeeRoles = createServerFn({ method: "GET" }).handler(
-	async (): Promise<QueryManyReturnType<Option>> => {
+	async (): Promise<QueryManyReturnType<EmployeeRole>> => {
 		try {
 			const roles = await prisma.userRole.findMany({
 				orderBy: { label: "asc" },
 			});
-			return optionSchema.array().parse(roles);
+			return employeeRoleSchema.array().parse(roles);
 		} catch (error) {
 			console.error("[getEmployeeRoles]", error);
 			throw new Error("Erro ao buscar cargos de funcionário");

@@ -22,7 +22,7 @@ export const EmployeeRestore = ({
 	return (
 		<ConfirmDialog
 			title="Restaurar funcionário"
-			description={`Deseja restaurar ${employee.fullName}?`}
+			description={`Tem certeza que deseja restaurar ${employee.fullName}?`}
 			onConfirm={handleConfirm}
 			confirmButtonLabel="Restaurar"
 			cancelButtonLabel="Cancelar"

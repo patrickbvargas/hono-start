@@ -2,6 +2,7 @@ interface RouteErrorProps {
 	error: unknown;
 }
 
+// TODO: refatore
 export const RouteError = ({ error }: RouteErrorProps) => {
 	const message =
 		error instanceof Error ? error.message : "Ocorreu um erro inesperado.";

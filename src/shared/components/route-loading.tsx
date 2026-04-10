@@ -1,5 +1,6 @@
 import { Skeleton } from "@/shared/components/ui";
 
+// TODO: refatore
 export const RouteLoading = () => {
 	return (
 		<div className="flex flex-col gap-4 p-4">

@@ -1,8 +1,8 @@
+import { createLink } from "@tanstack/react-router";
 import {
 	Pagination as HPagination,
 	type PaginationProps as HPaginationProps,
-} from "@heroui/react";
-import { createLink } from "@tanstack/react-router";
+} from "@/shared/components/ui";
 import { usePagination } from "@/shared/hooks/use-pagination";
 import { cn } from "@/shared/lib/utils";
 
