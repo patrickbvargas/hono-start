@@ -11,6 +11,12 @@ export function useEmployeeFilter() {
 			const payload = employeeFilterSchema.parse(value);
 			handleFilter(payload);
 		},
+		listeners: {
+			onChange: ({ formApi }) => {
+				formApi.handleSubmit();
+			},
+			onChangeDebounceMs: 500,
+		},
 	});
 
 	return { form };

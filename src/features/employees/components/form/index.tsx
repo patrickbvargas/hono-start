@@ -22,13 +22,13 @@ export const EmployeeForm = ({
 	const { roles, types } = useEmployeeOptions();
 
 	const typeValue = useStore(form.store, (s) => s.values.type);
-	const isLawyer = typeValue === 1; // TODO: refatorar
+	const isLawyer = Number(typeValue) === 1; // cast because of value coercion in autocomplete
 	const isEditing = !!employee;
 
 	return (
 		<Modal isOpen={state.isOpen} onOpenChange={state.onOpenChange}>
 			<Modal.Backdrop>
-				<Modal.Container>
+				<Modal.Container size="md">
 					<Modal.Dialog>
 						<Modal.CloseTrigger />
 						<Modal.Header>
@@ -58,12 +58,30 @@ export const EmployeeForm = ({
 										)}
 									</form.AppField>
 								</Field.Group>
-								<Field.Group className="grid-cols-3">
-									<form.AppField name="type">
+								<Field.Group className="grid-cols-2">
+									<form.AppField
+										name="type"
+										listeners={{
+											onChange: ({ value }) => {
+												if (Number(value) === 1)
+													form.setFieldValue("oabNumber", ""); // clear OAB when not lawyer
+											},
+										}}
+									>
 										{(field) => (
 											<field.Autocomplete
 												label="Função"
 												options={types}
+												variant="secondary"
+												isRequired
+											/>
+										)}
+									</form.AppField>
+									<form.AppField name="role">
+										{(field) => (
+											<field.Autocomplete
+												label="Perfil"
+												options={roles}
 												variant="secondary"
 												isRequired
 											/>
@@ -81,18 +99,8 @@ export const EmployeeForm = ({
 											)}
 										</form.AppField>
 									)}
-									<form.AppField name="role">
-										{(field) => (
-											<field.Autocomplete
-												label="Perfil"
-												options={roles}
-												variant="secondary"
-												isRequired
-											/>
-										)}
-									</form.AppField>
 								</Field.Group>
-								<Field.Group className="grid grid-cols-2">
+								<Field.Group className="grid-cols-2">
 									<form.AppField name="remunerationPercent">
 										{(field) => (
 											<field.Number
@@ -102,6 +110,7 @@ export const EmployeeForm = ({
 												step={0.05}
 												variant="secondary"
 												isRequired
+												fullWidth
 												formatOptions={{ style: "percent" }}
 											/>
 										)}
@@ -115,16 +124,17 @@ export const EmployeeForm = ({
 												step={0.05}
 												variant="secondary"
 												isRequired
+												fullWidth
 												formatOptions={{ style: "percent" }}
 											/>
 										)}
 									</form.AppField>
 								</Field.Group>
-								<div className="flex justify-start">
+								<Field.Group>
 									<form.AppField name="isActive">
 										{(field) => <field.Checkbox label="Ativo" />}
 									</form.AppField>
-								</div>
+								</Field.Group>
 							</Modal.Body>
 							<Modal.Footer>
 								<form.Submit />

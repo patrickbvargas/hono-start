@@ -59,7 +59,10 @@ const FieldError = ({ errors, children, ...props }: FieldError) => {
 
 const FieldGroup = ({ children, className, ...props }: FieldGroupProps) => {
 	return (
-		<HFieldGroup className={cn(className, "grid grid-cols-2 gap-4")} {...props}>
+		<HFieldGroup
+			className={cn("w-full grid grid-cols-1 gap-4", className)}
+			{...props}
+		>
 			{children}
 		</HFieldGroup>
 	);
