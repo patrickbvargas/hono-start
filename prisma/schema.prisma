@@ -19,6 +19,7 @@ model EmployeeType {
   id        Int        @id @default(autoincrement())
   value     String     @unique
   label     String
+  isActive  Boolean    @default(true)
   employees Employee[]
 
   @@map("employee_types")
@@ -28,6 +29,7 @@ model UserRole {
   id        Int        @id @default(autoincrement())
   value     String     @unique
   label     String
+  isActive  Boolean    @default(true)
   employees Employee[]
 
   @@map("user_roles")
