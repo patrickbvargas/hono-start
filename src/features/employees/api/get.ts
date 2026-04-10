@@ -9,6 +9,7 @@ import type {
 import { EMPLOYEE_DATA_CACHE_KEY } from "../constants";
 import type { EmployeeFilter } from "../schemas/filter";
 import { type Employee, employeeSchema } from "../schemas/model";
+import { type EmployeeType, employeeTypeSchema } from "../schemas/option";
 import { type EmployeeSearch, employeeSearchSchema } from "../schemas/search";
 
 interface BuildEmployeeWhereParams {
@@ -123,14 +124,12 @@ const getEmployees = createServerFn({ method: "GET" })
 	});
 
 const getEmployeeTypes = createServerFn({ method: "GET" }).handler(
-	async (): Promise<QueryManyReturnType<Option>> => {
+	async (): Promise<QueryManyReturnType<EmployeeType>> => {
 		try {
 			const types = await prisma.employeeType.findMany({
 				orderBy: { label: "asc" },
 			});
-			return optionSchema
-				.array()
-				.parse(types.map((t) => ({ id: t.id, description: t.label })));
+			return employeeTypeSchema.array().parse(types);
 		} catch (error) {
 			console.error("[getEmployeeTypes]", error);
 			throw new Error("Erro ao buscar tipos de funcionário");
@@ -144,9 +143,7 @@ const getEmployeeRoles = createServerFn({ method: "GET" }).handler(
 			const roles = await prisma.userRole.findMany({
 				orderBy: { label: "asc" },
 			});
-			return optionSchema
-				.array()
-				.parse(roles.map((r) => ({ id: r.id, description: r.label })));
+			return optionSchema.array().parse(roles);
 		} catch (error) {
 			console.error("[getEmployeeRoles]", error);
 			throw new Error("Erro ao buscar cargos de funcionário");

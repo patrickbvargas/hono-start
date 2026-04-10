@@ -21,14 +21,15 @@ export const EmployeeForm = ({
 	const { form } = useEmployeeForm({ initialData, onSuccess });
 	const { roles, types } = useEmployeeOptions();
 
-	const typeValue = useStore(form.store, (s) => s.values.type);
-	const isLawyer = Number(typeValue) === 1; // cast because of value coercion in autocomplete
-	const isEditing = !!employee;
+	const typeValue = Number(useStore(form.store, (s) => s.values.type)); // cast because of zod coercion
+	const isLawyer =
+		types.find((t) => t.id === Number(typeValue))?.isLawyer ?? false;
+	const isEditing = employee ?? false;
 
 	return (
 		<Modal isOpen={state.isOpen} onOpenChange={state.onOpenChange}>
 			<Modal.Backdrop>
-				<Modal.Container size="md">
+				<Modal.Container size="lg">
 					<Modal.Dialog>
 						<Modal.CloseTrigger />
 						<Modal.Header>
@@ -63,7 +64,8 @@ export const EmployeeForm = ({
 										name="type"
 										listeners={{
 											onChange: ({ value }) => {
-												if (Number(value) === 1)
+												const type = types.find((t) => t.id === Number(value));
+												if (!type?.isLawyer)
 													form.setFieldValue("oabNumber", ""); // clear OAB when not lawyer
 											},
 										}}

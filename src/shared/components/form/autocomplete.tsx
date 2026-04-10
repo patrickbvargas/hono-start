@@ -1,3 +1,4 @@
+import * as React from "react";
 import {
 	ComboBox,
 	type ComboBoxProps,
@@ -41,6 +42,11 @@ export const FormAutocomplete = ({
 
 	const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 
+	const opts = React.useMemo(
+		() => options.map((opt) => ({ ...opt, id: opt.id.toString() })),
+		[options],
+	);
+
 	return (
 		<ComboBox
 			name={field.name}
@@ -70,10 +76,10 @@ export const FormAutocomplete = ({
 					)}
 					className={classNames?.list}
 				>
-					{options.map((option) => (
+					{opts.map((option) => (
 						<ListBox.Item
-							key={option.value}
-							id={option.value}
+							key={option.id}
+							id={option.id}
 							textValue={option.label}
 							isDisabled={option.isDisabled}
 							className={classNames?.item}
