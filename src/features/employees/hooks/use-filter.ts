@@ -1,12 +1,19 @@
 import { useDebouncedCallback } from "use-debounce";
 import { useAppForm } from "@/shared/hooks/use-app-form";
 import { useFilter } from "@/shared/hooks/use-filter";
-import { type EmployeeFilter, employeeFilterSchema } from "../schemas/filter";
+import {
+	type EmployeeFilterInput,
+	employeeFilterInputSchema,
+	employeeFilterSchema,
+} from "../schemas/filter";
 
-const DEBOUNCED_FIELDS = new Set<keyof EmployeeFilter>(["name"]);
+const DEBOUNCED_FIELDS = new Set<keyof EmployeeFilterInput>(["name"]);
 
 export function useEmployeeFilter() {
-	const { filter, handleFilter } = useFilter(employeeFilterSchema);
+	const { inputFilter, handleFilter } = useFilter({
+		inputSchema: employeeFilterInputSchema,
+		outputSchema: employeeFilterSchema,
+	});
 
 	const debounceSubmit = useDebouncedCallback(
 		(submit: () => void | Promise<void>) => submit(),
@@ -14,7 +21,7 @@ export function useEmployeeFilter() {
 	);
 
 	const form = useAppForm({
-		defaultValues: filter,
+		defaultValues: inputFilter,
 		onSubmit: ({ value }) => {
 			const payload = employeeFilterSchema.parse(value);
 			handleFilter(payload);

@@ -25,7 +25,6 @@ export const EmployeeRestore = ({
 			description={`Tem certeza que deseja restaurar ${employee.fullName}?`}
 			onConfirm={handleConfirm}
 			confirmButtonLabel="Restaurar"
-			cancelButtonLabel="Cancelar"
 			isPending={isPending}
 			state={state}
 		/>

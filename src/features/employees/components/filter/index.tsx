@@ -53,7 +53,7 @@ export const EmployeeFilter = () => {
 				<Separator />
 				<form.AppField name="showDeleted">
 					{(field) => (
-						<field.Checkbox label="Exibir excluídos" variant="secondary" />
+						<field.Checkbox label="Exibir desativados" variant="secondary" />
 					)}
 				</form.AppField>
 			</FilterWrapper>

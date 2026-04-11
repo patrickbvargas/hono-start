@@ -1,5 +1,11 @@
 import { createColumnHelper } from "@tanstack/react-table";
-import { EllipsisVerticalIcon } from "lucide-react";
+import {
+	EllipsisVerticalIcon,
+	EyeIcon,
+	PenLineIcon,
+	TrashIcon,
+	Undo2Icon,
+} from "lucide-react";
 import * as React from "react";
 import { DataTable } from "@/shared/components/data-table";
 import { EntityStatus } from "@/shared/components/entity-status";
@@ -62,7 +68,12 @@ export const EmployeeTable = ({
 			}),
 			c.accessor("isActive", {
 				header: "Status",
-				cell: ({ row }) => <EntityStatus isActive={row.original.isActive} />,
+				cell: ({ row }) => (
+					<EntityStatus
+						isActive={row.original.isActive}
+						isSoftDeleted={row.original.isSoftDeleted}
+					/>
+				),
 				enableSorting: EMPLOYEE_ALLOWED_SORT_COLUMNS.includes("isActive"),
 			}),
 			c.display({
@@ -76,12 +87,13 @@ export const EmployeeTable = ({
 							<Button isIconOnly size="sm" variant="ghost" aria-label="Actions">
 								<EllipsisVerticalIcon size={16} />
 							</Button>
-							<Dropdown.Popover>
+							<Dropdown.Popover placement="bottom end">
 								<Dropdown.Menu>
 									<Dropdown.Item
 										textValue="Visualizar"
 										onPress={() => onView?.(employee)}
 									>
+										<EyeIcon size={16} />
 										<Label>Visualizar</Label>
 									</Dropdown.Item>
 									{!employee.isSoftDeleted && (
@@ -89,6 +101,7 @@ export const EmployeeTable = ({
 											textValue="Editar"
 											onPress={() => onEdit?.(employee)}
 										>
+											<PenLineIcon size={16} />
 											<Label>Editar</Label>
 										</Dropdown.Item>
 									)}
@@ -97,6 +110,7 @@ export const EmployeeTable = ({
 											textValue="Restaurar"
 											onPress={() => onRestore?.(employee)}
 										>
+											<Undo2Icon size={16} />
 											<Label>Restaurar</Label>
 										</Dropdown.Item>
 									)}
@@ -106,6 +120,7 @@ export const EmployeeTable = ({
 											variant="danger"
 											onPress={() => onDelete?.(employee)}
 										>
+											<TrashIcon size={16} />
 											<Label>Excluir</Label>
 										</Dropdown.Item>
 									)}
