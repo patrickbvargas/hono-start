@@ -45,9 +45,9 @@ const formDefaultValues: Form = {
 };
 
 const defaultOptions: FieldOption[] = [
-	{ value: "1", label: "Opt A" },
-	{ value: "2", label: "Opt B" },
-	{ value: "3", label: "Opt C" },
+	{ id: 1, label: "Opt A" },
+	{ id: 2, label: "Opt B" },
+	{ id: 3, label: "Opt C" },
 ];
 
 export const DemoForm = () => {

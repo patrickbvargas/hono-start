@@ -108,6 +108,7 @@ Administrators SHALL be able to create a new employee account with all required 
 - **WHEN** an administrator submits a valid create form
 - **THEN** the system creates the employee record scoped to the firm
 - **AND** the record stores the `isActive` value from the form
+- **AND** the selected employee type and user role come from active lookup options only
 - **AND** the modal closes
 - **AND** a success toast is shown
 - **AND** the employee list refreshes to include the new record
@@ -153,6 +154,7 @@ Administrators SHALL be able to edit an existing employee's profile fields, incl
 #### Scenario: Successful edit
 - **WHEN** an administrator submits a valid edit form
 - **THEN** the system updates the employee record including the `isActive` value
+- **AND** any newly selected employee type and user role come from active lookup options only
 - **AND** the modal closes
 - **AND** a success toast is shown
 - **AND** the employee row in the list reflects the updated data

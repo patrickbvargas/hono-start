@@ -6,7 +6,7 @@ export interface FieldClassNames {
 }
 
 export interface FieldOption {
-	value: string;
+	id: number | string;
 	label: string;
 	isDisabled?: boolean;
 }

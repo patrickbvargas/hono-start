@@ -22,7 +22,7 @@ export const EmployeeDelete = ({
 	return (
 		<ConfirmDialog
 			title="Excluir funcionário"
-			description={`Tem certeza que deseja excluir ${employee.fullName}? Esta ação pode ser desfeita restaurando o funcionário.`}
+			description={`Tem certeza que deseja excluir ${employee.fullName}?`}
 			onConfirm={handleConfirm}
 			confirmButtonLabel="Excluir"
 			variant="danger"

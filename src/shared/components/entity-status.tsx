@@ -1,4 +1,4 @@
-import { Chip } from "@heroui/react";
+import { Chip } from "@/shared/components/ui";
 
 interface EntityStatusProps {
 	isActive: boolean;

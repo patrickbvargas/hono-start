@@ -37,7 +37,7 @@ export const FormNumber = ({
 			/>
 			<NumberField.Group>
 				<NumberField.DecrementButton />
-				<NumberField.Input />
+				<NumberField.Input className="text-center" />
 				<NumberField.IncrementButton />
 			</NumberField.Group>
 			<Field.Description

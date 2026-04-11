@@ -12,24 +12,28 @@ async function main() {
 
   await prisma.employeeType.upsert({
     where: { value: "LAWYER" },
-    update: {},
-    create: { value: "LAWYER", label: "Advogado" },
+    update: { isActive: true },
+    create: { value: "LAWYER", label: "Advogado", isActive: true },
   });
   await prisma.employeeType.upsert({
     where: { value: "ADMIN_ASSISTANT" },
-    update: {},
-    create: { value: "ADMIN_ASSISTANT", label: "Assistente Administrativo" },
+    update: { isActive: true },
+    create: {
+      value: "ADMIN_ASSISTANT",
+      label: "Assistente Administrativo",
+      isActive: true,
+    },
   });
 
   await prisma.userRole.upsert({
     where: { value: "ADMIN" },
-    update: {},
-    create: { value: "ADMIN", label: "Administrador" },
+    update: { isActive: true },
+    create: { value: "ADMIN", label: "Administrador", isActive: true },
   });
   await prisma.userRole.upsert({
     where: { value: "USER" },
-    update: {},
-    create: { value: "USER", label: "Usuário" },
+    update: { isActive: true },
+    create: { value: "USER", label: "Usuário", isActive: true },
   });
 
   await prisma.firm.upsert({

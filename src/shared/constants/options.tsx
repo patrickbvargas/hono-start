@@ -1,6 +1,6 @@
 import type { FieldOption } from "@/shared/types/field";
 
 export const STATUS_OPTIONS: FieldOption[] = [
-	{ value: "Ativo", label: "Ativo" },
-	{ value: "Inativo", label: "Inativo" },
+	{ id: "Ativo", label: "Ativo" },
+	{ id: "Inativo", label: "Inativo" },
 ];
