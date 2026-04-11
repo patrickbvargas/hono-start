@@ -1,9 +1,17 @@
+import { useDebouncedCallback } from "use-debounce";
 import { useAppForm } from "@/shared/hooks/use-app-form";
 import { useFilter } from "@/shared/hooks/use-filter";
-import { employeeFilterSchema } from "../schemas/filter";
+import { type EmployeeFilter, employeeFilterSchema } from "../schemas/filter";
+
+const DEBOUNCED_FIELDS = new Set<keyof EmployeeFilter>(["name"]);
 
 export function useEmployeeFilter() {
 	const { filter, handleFilter } = useFilter(employeeFilterSchema);
+
+	const debounceSubmit = useDebouncedCallback(
+		(submit: () => void | Promise<void>) => submit(),
+		300,
+	);
 
 	const form = useAppForm({
 		defaultValues: filter,
@@ -12,10 +20,20 @@ export function useEmployeeFilter() {
 			handleFilter(payload);
 		},
 		listeners: {
-			onChange: ({ formApi }) => {
+			onChange: ({ formApi, fieldApi }) => {
+				if (DEBOUNCED_FIELDS.has(fieldApi.name)) {
+					debounceSubmit(formApi.handleSubmit);
+					return;
+				}
+
+				debounceSubmit.cancel();
 				formApi.handleSubmit();
 			},
-			onChangeDebounceMs: 500,
+			onBlur: ({ fieldApi }) => {
+				if (DEBOUNCED_FIELDS.has(fieldApi.name)) {
+					debounceSubmit.flush();
+				}
+			},
 		},
 	});
 

@@ -6,7 +6,6 @@ import {
 	createRootRouteWithContext,
 	HeadContent,
 	Scripts,
-	useRouterState,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { AppLayout } from "@/shared/components/app-layout";
@@ -55,26 +54,12 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 });
 
 function RootDocument({ children }: { children: React.ReactNode }) {
-	const { isLoading } = useRouterState();
-
 	return (
 		<html lang="pt-BR" className="dark">
 			<head>
 				<HeadContent />
 			</head>
 			<body>
-				{/* TODO: implement the final isLoading */}
-				{isLoading && (
-					<div className="fixed inset-0 z-9999 flex items-center justify-center backdrop-blur-[1px] cursor-wait">
-						<div className="flex flex-col items-center gap-2">
-							<div className="h-10 w-10 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-							<span className="text-sm font-medium text-gray-700">
-								Carregando...
-							</span>
-						</div>
-					</div>
-				)}
-
 				<AppLayout>{children}</AppLayout>
 
 				<ToastProvider />

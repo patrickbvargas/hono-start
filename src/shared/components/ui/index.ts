@@ -27,6 +27,7 @@ export * from "./search-field";
 export * from "./separator";
 export * from "./sidebar-nav";
 export * from "./skeleton";
+export * from "./spinner";
 export * from "./switch";
 export * from "./table";
 export * from "./tag-group";

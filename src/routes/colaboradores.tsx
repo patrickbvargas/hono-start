@@ -13,6 +13,7 @@ import {
 	employeeSearchSchema,
 	getEmployeesOptions,
 } from "@/features/employees";
+import { RouteLoading } from "@/shared/components/route-loading";
 import { Button } from "@/shared/components/ui";
 import { Wrapper } from "@/shared/components/wrapper";
 import { ROUTES } from "@/shared/config/routes";
@@ -21,8 +22,8 @@ import { useOverlay } from "@/shared/hooks/use-overlay";
 export const Route = createFileRoute("/colaboradores")({
 	validateSearch: zodValidator(employeeSearchSchema),
 	loaderDeps: ({ search }) => ({ search }),
-	loader: ({ context: { queryClient }, deps: { search } }) => {
-		queryClient.ensureQueryData(getEmployeesOptions(search));
+	loader: async ({ context: { queryClient }, deps: { search } }) => {
+		await queryClient.ensureQueryData(getEmployeesOptions(search));
 	},
 	component: RouteComponent,
 });
@@ -45,6 +46,7 @@ function RouteComponent() {
 		>
 			<Wrapper.Header>
 				<EmployeeFilter />
+				<RouteLoading />
 			</Wrapper.Header>
 			<Wrapper.Body>
 				<EmployeeTable
