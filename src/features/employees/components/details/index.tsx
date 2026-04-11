@@ -1,4 +1,8 @@
-import { DetailsWrapper } from "@/shared/components/details-wrapper";
+import * as React from "react";
+import {
+	Detail,
+	type DetailFieldItem,
+} from "@/shared/components/entity-detail";
 import { EntityStatus } from "@/shared/components/entity-status";
 import { formatter } from "@/shared/lib/formatter";
 import type { OverlayState } from "@/shared/types/overlay";
@@ -9,79 +13,63 @@ interface EmployeeDetailsProps {
 	state: OverlayState;
 }
 
-interface DetailRowProps {
-	label: string;
-	value: React.ReactNode;
-}
-
-// TODO: refatore, create shared component
-const DetailRow = ({ label, value }: DetailRowProps) => (
-	<div className="flex flex-col gap-0.5">
-		<span className="text-xs text-fg-muted">{label}</span>
-		<span className="text-sm font-medium">{value}</span>
-	</div>
-);
-
-// TODO: refatore, create shared component
-const SectionTitle = ({ children }: { children: React.ReactNode }) => (
-	<p className="text-xs font-semibold uppercase tracking-wide text-fg-muted mb-2 mt-4 first:mt-0">
-		{children}
-	</p>
-);
-
 export const EmployeeDetails = ({ employee, state }: EmployeeDetailsProps) => {
+	const generalInfo = React.useMemo<DetailFieldItem[]>(
+		() => [
+			{ term: "OAB", definition: formatter.oab(employee.oabNumber) },
+			{ term: "Cargo", definition: employee.type },
+			{ term: "Perfil", definition: employee.role },
+			{ term: "Contratos", definition: employee.contractCount },
+		],
+		[employee],
+	);
+
+	const contactInfo = React.useMemo<DetailFieldItem[]>(
+		() => [{ term: "Email", definition: employee.email }],
+		[employee],
+	);
+
+	const financialInfo = React.useMemo<DetailFieldItem[]>(
+		() => [
+			{
+				term: "Remuneração",
+				definition: formatter.percent(employee.remunerationPercent),
+			},
+		],
+		[employee],
+	);
+
+	const registerInfo = React.useMemo<DetailFieldItem[]>(
+		() => [
+			{
+				term: "Status",
+				definition: (
+					<EntityStatus
+						isActive={employee.isActive}
+						isSoftDeleted={employee.isSoftDeleted}
+					/>
+				),
+			},
+			{ term: "Criado em", definition: formatter.date(employee.createdAt) },
+		],
+		[employee],
+	);
+
 	return (
-		<DetailsWrapper state={state} title={employee.fullName}>
-			<div className="flex flex-col gap-4">
-				<div>
-					<SectionTitle>Identificação</SectionTitle>
-					<div className="flex flex-col gap-3">
-						<DetailRow label="E-mail" value={employee.email} />
-						<DetailRow label="OAB" value={formatter.oab(employee.oabNumber)} />
-						<DetailRow
-							label="Status"
-							value={<EntityStatus isActive={employee.isActive} />}
-						/>
-					</div>
-				</div>
-
-				<div>
-					<SectionTitle>Cargo & Perfil</SectionTitle>
-					<div className="flex flex-col gap-3">
-						<DetailRow label="Cargo" value={employee.type} />
-						<DetailRow label="Perfil" value={employee.role} />
-					</div>
-				</div>
-
-				<div>
-					<SectionTitle>Financeiro</SectionTitle>
-					<div className="flex flex-col gap-3">
-						<DetailRow
-							label="Remuneração"
-							value={formatter.percent(employee.remunerationPercent)}
-						/>
-						<DetailRow
-							label="Indicação"
-							value={formatter.percent(employee.referrerPercent)}
-						/>
-					</div>
-				</div>
-
-				<div>
-					<SectionTitle>Atividade</SectionTitle>
-					<div className="flex flex-col gap-3">
-						<DetailRow label="Contratos" value={employee.contractCount} />
-						<DetailRow
-							label="Criado em"
-							value={formatter.date(employee.createdAt)}
-						/>
-						<DetailRow
-							label="Atualizado em"
-							value={formatter.date(employee.updatedAt)}
-						/>
-					</div>
-				</div>
-			</div>
-		</DetailsWrapper>
+		<Detail state={state} title={employee.fullName}>
+			<Detail.Fields items={generalInfo} />
+			<Detail.Separator />
+			<Detail.Section title="Contato">
+				<Detail.Fields items={contactInfo} />
+			</Detail.Section>
+			<Detail.Separator />
+			<Detail.Section title="Financeiro">
+				<Detail.Fields items={financialInfo} />
+			</Detail.Section>
+			<Detail.Separator className="mt-auto" />
+			<Detail.Section title="Registro">
+				<Detail.Fields items={registerInfo} />
+			</Detail.Section>
+		</Detail>
 	);
 };
