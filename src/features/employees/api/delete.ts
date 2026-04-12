@@ -1,6 +1,11 @@
 import { mutationOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import { prisma } from "@/shared/lib/prisma";
+import {
+	assertCanManageEmployees,
+	getServerEmployeeScope,
+	getServerLoggedUserSession,
+} from "@/shared/session";
 import type { MutationReturnType } from "@/shared/types/api";
 import { employeeByIdSchema } from "../schemas/form";
 
@@ -8,8 +13,9 @@ const deleteEmployee = createServerFn({ method: "POST" })
 	.inputValidator(employeeByIdSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
-			// TODO: replace with session firmId
-			const firmId = 1;
+			const session = getServerLoggedUserSession();
+			assertCanManageEmployees(session);
+			const { firmId } = getServerEmployeeScope();
 			const existing = await prisma.employee.findFirst({
 				where: { id: data.id, firmId, deletedAt: null },
 			});

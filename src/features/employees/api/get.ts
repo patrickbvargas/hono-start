@@ -1,6 +1,7 @@
 import { queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import { prisma } from "@/shared/lib/prisma";
+import { getServerEmployeeScope } from "@/shared/session";
 import type {
 	QueryManyReturnType,
 	QueryPaginatedReturnType,
@@ -68,8 +69,7 @@ const getEmployees = createServerFn({ method: "GET" })
 	.inputValidator(employeeSearchSchema)
 	.handler(async ({ data }): Promise<QueryPaginatedReturnType<Employee>> => {
 		try {
-			// TODO: replace with session firmId
-			const firmId = 1;
+			const { firmId } = getServerEmployeeScope();
 
 			const where = buildEmployeeWhere({ firmId, filter: data });
 

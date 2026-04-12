@@ -18,6 +18,10 @@ import { Button } from "@/shared/components/ui";
 import { Wrapper } from "@/shared/components/wrapper";
 import { ROUTES } from "@/shared/config/routes";
 import { useOverlay } from "@/shared/hooks/use-overlay";
+import {
+	canManageEmployees,
+	useLoggedUserSessionStore,
+} from "@/shared/session";
 
 export const Route = createFileRoute("/colaboradores")({
 	validateSearch: zodValidator(employeeSearchSchema),
@@ -32,16 +36,18 @@ function RouteComponent() {
 	const search = Route.useSearch();
 	const { data } = useSuspenseQuery(getEmployeesOptions(search));
 	const { overlay } = useOverlay<Employee>();
+	const canManage = useLoggedUserSessionStore(canManageEmployees);
 
 	return (
 		<Wrapper
 			title={ROUTES.employee.title}
 			actions={
-				// TODO: show only for Admin role
-				<Button size="sm" onPress={() => overlay.create.open()}>
-					<PlusIcon size={16} />
-					Novo Funcionário
-				</Button>
+				canManage ? (
+					<Button size="sm" onPress={() => overlay.create.open()}>
+						<PlusIcon size={16} />
+						Novo Funcionário
+					</Button>
+				) : null
 			}
 		>
 			<Wrapper.Header>
@@ -50,6 +56,7 @@ function RouteComponent() {
 			</Wrapper.Header>
 			<Wrapper.Body>
 				<EmployeeTable
+					canManage={canManage}
 					data={data}
 					onEdit={overlay.edit.open}
 					onView={overlay.details.open}
