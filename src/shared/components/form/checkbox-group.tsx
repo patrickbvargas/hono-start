@@ -1,4 +1,3 @@
-import * as React from "react";
 import {
 	Checkbox,
 	CheckboxGroup,
@@ -33,11 +32,6 @@ export const FormCheckboxGroup = ({
 
 	const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 
-	const opts = React.useMemo(
-		() => options.map((opt) => ({ ...opt, id: opt.id.toString() })),
-		[options],
-	);
-
 	return (
 		<CheckboxGroup
 			name={field.name}
@@ -58,11 +52,11 @@ export const FormCheckboxGroup = ({
 				description={description}
 				className={classNames?.description}
 			/>
-			{opts.map((option) => (
+			{options.map((option) => (
 				<Checkbox
-					key={option.id}
-					id={option.id}
-					value={option.id}
+					key={option.value}
+					id={option.value}
+					value={option.value}
 					isDisabled={option.isDisabled}
 					className={classNames?.item}
 				>

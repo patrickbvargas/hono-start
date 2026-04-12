@@ -2,7 +2,7 @@ import { FilterWrapper } from "@/shared/components/filter-wrapper";
 import { Separator } from "@/shared/components/ui";
 import {
 	ENTITY_ACTIVE_FILTER_OPTIONS,
-	ENTITY_DELETED_VISIBILITY_OPTIONS,
+	ENTITY_DELETED_FILTER_OPTIONS,
 } from "@/shared/lib/entity-management";
 import { useEmployeeFilter } from "../../hooks/use-filter";
 import { useEmployeeOptions } from "../../hooks/use-options";
@@ -58,7 +58,7 @@ export const EmployeeFilter = () => {
 					{(field) => (
 						<field.RadioGroup
 							label="Exclusão"
-							options={ENTITY_DELETED_VISIBILITY_OPTIONS}
+							options={ENTITY_DELETED_FILTER_OPTIONS}
 							variant="secondary"
 						/>
 					)}

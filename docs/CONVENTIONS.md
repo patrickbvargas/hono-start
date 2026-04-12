@@ -78,6 +78,7 @@
 - Never trust `firmId` from client input — always read it from the authenticated session
 - Use `prisma.$transaction()` for all operations that span multiple tables (compound creates, soft-delete cascades, restore cascades)
 - Reference lookup table rows by their `value` field (e.g., `"LAWYER"`, `"SOCIAL_SECURITY"`) — never by `id` — since IDs may differ across environments
+- Lookup-backed form state and URL filter state must also use lookup `value`; resolve `value` to relational ids only at the server boundary
 - Never convert `Prisma.Decimal` to JavaScript `number` for financial arithmetic — use a decimal library (e.g., `decimal.js`) or Prisma's built-in Decimal methods
 - Sort queries must always append `{ id: "asc" }` as a tiebreaker for deterministic pagination
 - Keep Prisma `include` / `select` minimal — only fetch the relations needed for the current response

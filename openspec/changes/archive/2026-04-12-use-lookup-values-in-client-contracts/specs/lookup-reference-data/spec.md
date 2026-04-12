@@ -1,24 +1,4 @@
-# Spec: lookup-reference-data
-
-## Purpose
-
-Define the global employee lookup reference tables and the option-query behaviour used to populate employee type and user role selectors.
-
----
-
-## Requirements
-
-### Requirement: Employee lookup tables store active state
-The system SHALL store an `isActive` boolean on global lookup tables used by the employee feature, specifically `EmployeeType` and `UserRole`. The field SHALL default to `true` so existing and newly seeded lookup rows remain active unless explicitly deactivated later.
-
-#### Scenario: Existing lookup rows gain active state during migration
-- **WHEN** the database migration adds `isActive` to `employee_types` and `user_roles`
-- **THEN** all existing rows are persisted with `isActive = true`
-- **AND** future inserts default to `isActive = true`
-
-#### Scenario: Seeded lookup rows remain active
-- **WHEN** the seed script upserts the default employee types and user roles
-- **THEN** each seeded row is stored with `isActive = true`
+## MODIFIED Requirements
 
 ### Requirement: Employee lookup option queries return all rows
 The system SHALL return all employee lookup rows from option queries used to populate employee type and user role selectors. This lookup-options rule SHALL act as the canonical behavior for lookup-backed entity form options, and lookup option results SHALL remain sorted by `label` ascending.

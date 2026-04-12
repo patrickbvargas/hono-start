@@ -1,33 +1,22 @@
-import type { EmployeeType, UserRole } from "@/generated/prisma/client";
-import type { EmployeeCreate, EmployeeUpdate } from "../schemas/form";
-import {
-	ADMIN_ASSISTANT_TYPE_VALUE,
-	LAWYER_TYPE_VALUE,
-} from "../schemas/option";
-
-type EmployeeMutationInput = EmployeeCreate | EmployeeUpdate;
+import type {
+	EmployeeType,
+	PrismaClient,
+	UserRole,
+} from "@/generated/prisma/client";
 
 interface EmployeeLookupSelection {
 	role: UserRole;
 	type: EmployeeType;
 }
 
+interface EmployeeLookupSelectionInput {
+	role: string;
+	type: string;
+}
+
 interface EmployeeLookupValidationOptions {
 	currentRoleId?: number;
 	currentTypeId?: number;
-}
-
-export function normalizeEmployeeInput<T extends EmployeeMutationInput>(
-	input: T,
-	typeValue: string,
-) {
-	const normalizedOabNumber = input.oabNumber?.trim().toUpperCase() ?? "";
-
-	return {
-		...input,
-		oabNumber:
-			typeValue === ADMIN_ASSISTANT_TYPE_VALUE ? "" : normalizedOabNumber,
-	};
 }
 
 export function validateEmployeeLookupSelections(
@@ -43,19 +32,21 @@ export function validateEmployeeLookupSelections(
 	}
 }
 
-export function validateEmployeeBusinessRules<T extends EmployeeMutationInput>(
-	input: T,
-	typeValue: string,
+export async function resolveEmployeeLookupSelections(
+	prisma: PrismaClient,
+	input: EmployeeLookupSelectionInput,
 ) {
-	if (typeValue === LAWYER_TYPE_VALUE && !input.oabNumber) {
-		throw new Error("OAB é obrigatória para advogados");
-	}
+	const [type, role] = await Promise.all([
+		prisma.employeeType.findUnique({
+			where: { value: input.type },
+		}),
+		prisma.userRole.findUnique({
+			where: { value: input.role },
+		}),
+	]);
 
-	if (
-		typeValue !== LAWYER_TYPE_VALUE &&
-		typeValue !== ADMIN_ASSISTANT_TYPE_VALUE &&
-		input.oabNumber
-	) {
-		throw new Error("OAB só pode ser informada para advogados");
-	}
+	if (!type) throw new Error("Função não encontrada");
+	if (!role) throw new Error("Perfil não encontrado");
+
+	return { type, role };
 }

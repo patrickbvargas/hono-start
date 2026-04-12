@@ -7,8 +7,8 @@ export const defaultFormCreateValues = (): EmployeeCreate => ({
 	oabNumber: "",
 	remunerationPercent: 0,
 	referrerPercent: 0,
-	type: 0,
-	role: 0,
+	type: "",
+	role: "",
 	isActive: true,
 });
 
@@ -21,7 +21,7 @@ export const defaultFormUpdateValues = (
 	oabNumber: initialValue.oabNumber || "",
 	remunerationPercent: initialValue.remunerationPercent,
 	referrerPercent: initialValue.referrerPercent,
-	type: initialValue.typeId,
-	role: initialValue.roleId,
+	type: initialValue.typeValue,
+	role: initialValue.roleValue,
 	isActive: initialValue.isActive,
 });

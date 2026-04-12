@@ -15,12 +15,12 @@ The system SHALL display a paginated, sortable, filterable list of employees bel
 - **THEN** the table shows only employees whose full name OR OAB number contains the typed value (case-insensitive)
 
 #### Scenario: Filter by employee type
-- **WHEN** a user applies a type filter (e.g., Advogado)
-- **THEN** the table shows only employees whose type matches the selected value(s)
+- **WHEN** a user applies a type filter using one or more employee type lookup values
+- **THEN** the table shows only employees whose type matches the selected lookup value set
 
 #### Scenario: Filter by role
-- **WHEN** a user applies a role filter (e.g., Administrador)
-- **THEN** the table shows only employees whose role matches the selected value(s)
+- **WHEN** a user applies a role filter using one or more user role lookup values
+- **THEN** the table shows only employees whose role matches the selected lookup value set
 
 #### Scenario: Filter by deletion visibility
 - **WHEN** a user changes the employee list to show deleted records or all records
@@ -38,6 +38,7 @@ The system SHALL display a paginated, sortable, filterable list of employees bel
 #### Scenario: Filter and sort state persisted in URL
 - **WHEN** a user applies filters, changes sort, or changes page
 - **THEN** the URL search params are updated to reflect the current state
+- **AND** lookup-backed filter params use stable lookup values rather than database ids
 - **AND** refreshing the page or sharing the URL preserves the same view
 
 #### Scenario: Firm isolation
@@ -110,6 +111,7 @@ Administrators SHALL be able to create a new employee account with all required 
 - **THEN** the system creates the employee record scoped to the firm
 - **AND** the record stores the `isActive` value from the form
 - **AND** the employee type and user role fields are loaded from backend option queries that include inactive rows as disabled options
+- **AND** the submitted employee type and user role values are stable lookup values resolved by the server before persistence
 - **AND** the modal closes
 - **AND** a success toast is shown
 - **AND** the employee list refreshes to include the new record
@@ -120,13 +122,13 @@ Administrators SHALL be able to create a new employee account with all required 
 - **AND** an inline error message is shown in Portuguese indicating the email is already in use
 
 #### Scenario: OAB required for lawyers
-- **WHEN** the employee type is set to Advogado and the OAB field is empty
+- **WHEN** the employee type is set to the `LAWYER` lookup value and the OAB field is empty
 - **THEN** the form validation SHALL fail with a Portuguese error message
 
-#### Scenario: OAB forbidden for admin assistants
-- **WHEN** the employee type is set to Assistente Administrativo
+#### Scenario: OAB hidden for admin assistants in the form
+- **WHEN** the employee type is set to the `ADMIN_ASSISTANT` lookup value
 - **THEN** the OAB field SHALL be hidden or disabled
-- **AND** any submitted OAB value SHALL be rejected or cleared before persistence
+- **AND** changing the selected type away from `LAWYER` clears the current OAB value in the form
 
 #### Scenario: OAB format validation
 - **WHEN** an OAB number is provided
@@ -157,6 +159,7 @@ Administrators SHALL be able to edit an existing employee's profile fields, incl
 - **WHEN** an administrator submits a valid edit form
 - **THEN** the system updates the employee record including the `isActive` value
 - **AND** the employee type and user role fields are loaded from backend option queries that include inactive rows as disabled options
+- **AND** the submitted employee type and user role values are stable lookup values resolved by the server before persistence
 - **AND** the modal closes
 - **AND** a success toast is shown
 - **AND** the employee row in the list reflects the updated data

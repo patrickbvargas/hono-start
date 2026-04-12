@@ -1,15 +1,11 @@
 import { FormWrapper } from "@/shared/components/form-wrapper";
 import { Field } from "@/shared/components/ui";
 import type { OverlayState } from "@/shared/types/overlay";
+import { LAWYER_TYPE_VALUE } from "../../constants";
 import { useEmployeeForm } from "../../hooks/use-form";
 import { useEmployeeOptions } from "../../hooks/use-options";
 import type { Employee } from "../../schemas/model";
-import type { EmployeeType } from "../../schemas/option";
 import { defaultFormUpdateValues } from "../../utils/default";
-
-function getIsLawyer(types: EmployeeType[], typeValue: unknown) {
-	return types.find((t) => t.id === Number(typeValue))?.isLawyer ?? false;
-}
 
 interface EmployeeFormProps {
 	employee?: Employee;
@@ -50,7 +46,7 @@ export const EmployeeForm = ({
 						name="type"
 						listeners={{
 							onChange: ({ value }) => {
-								if (!getIsLawyer(types, value))
+								if (value !== LAWYER_TYPE_VALUE)
 									form.setFieldValue("oabNumber", ""); // clear OAB when not lawyer
 							},
 						}}
@@ -75,7 +71,7 @@ export const EmployeeForm = ({
 						)}
 					</form.AppField>
 					<form.Subscribe
-						selector={(state) => getIsLawyer(types, state.values.type)}
+						selector={(state) => state.values.type === LAWYER_TYPE_VALUE}
 					>
 						{(isLawyer) =>
 							isLawyer && (
@@ -86,6 +82,7 @@ export const EmployeeForm = ({
 											placeholder="RS000000"
 											variant="secondary"
 											maxLength={8}
+											isRequired
 										/>
 									)}
 								</form.AppField>

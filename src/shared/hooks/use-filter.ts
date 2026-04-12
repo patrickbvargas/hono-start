@@ -1,36 +1,31 @@
 import { useNavigate, useSearch } from "@tanstack/react-router";
 import type { ZodType } from "zod";
 
-interface FilterSchemas<
-	Input extends ZodType<Record<string, unknown>>,
-	Output extends ZodType<Record<string, unknown>>,
-> {
-	inputSchema: Input;
-	outputSchema: Output;
-}
-
-export function useFilter<
-	Input extends ZodType<Record<string, unknown>>,
-	Output extends ZodType<Record<string, unknown>>,
->({ inputSchema, outputSchema }: FilterSchemas<Input, Output>) {
-	type InputFilter = Input["_output"];
-	type OutputFilter = Output["_output"];
+export function useFilter<Schema extends ZodType<Record<string, unknown>>>(
+	schema: Schema,
+) {
+	type Filter = Schema["_output"];
 
 	const search = useSearch({ strict: false });
 	const navigate = useNavigate();
 
-	const inputFilter: InputFilter = inputSchema.parse(search);
-	const outputFilter: OutputFilter = outputSchema.parse(inputFilter);
+	const filter: Filter = schema.parse(search);
 
-	const getFilterSearch = (value: OutputFilter) => {
+	const getFilterSearch = (value: Filter) => {
 		return (prev: Record<string, unknown>): never => {
-			return { ...prev, ...value, page: 1 } as never;
+			return {
+				...prev,
+				...value,
+				page: 1,
+			} as never; // necessary for react-router (agnostic)
 		};
 	};
 
-	const handleFilter = (value: OutputFilter) => {
-		navigate({ search: getFilterSearch(value) });
+	const handleFilter = (value: Filter) => {
+		navigate({
+			search: getFilterSearch(value),
+		});
 	};
 
-	return { inputFilter, outputFilter, getFilterSearch, handleFilter };
+	return { filter, getFilterSearch, handleFilter };
 }

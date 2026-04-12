@@ -6,9 +6,10 @@ export interface FieldClassNames {
 }
 
 export interface FieldOption {
-	id: number | string;
+	value: string;
 	label: string;
 	isDisabled?: boolean;
+	id?: number | string;
 }
 
 export interface FieldCommonProps {

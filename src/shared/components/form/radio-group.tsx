@@ -1,4 +1,3 @@
-import * as React from "react";
 import {
 	Field,
 	Label,
@@ -33,11 +32,6 @@ export const FormRadioGroup = ({
 
 	const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 
-	const opts = React.useMemo(
-		() => options.map((opt) => ({ ...opt, id: opt.id.toString() })),
-		[options],
-	);
-
 	return (
 		<RadioGroup
 			name={field.name}
@@ -58,8 +52,12 @@ export const FormRadioGroup = ({
 				description={description}
 				className={classNames?.description}
 			/>
-			{opts.map((option) => (
-				<Radio key={option.id} value={option.id} isDisabled={option.isDisabled}>
+			{options.map((option) => (
+				<Radio
+					key={option.value}
+					value={option.value}
+					isDisabled={option.isDisabled}
+				>
 					<Radio.Control>
 						<Radio.Indicator />
 					</Radio.Control>

@@ -9,8 +9,7 @@ import {
 import type { MutationReturnType } from "@/shared/types/api";
 import { employeeCreateSchema } from "../schemas/form";
 import {
-	normalizeEmployeeInput,
-	validateEmployeeBusinessRules,
+	resolveEmployeeLookupSelections,
 	validateEmployeeLookupSelections,
 } from "../utils/validation";
 
@@ -21,32 +20,24 @@ const createEmployee = createServerFn({ method: "POST" })
 			const session = getServerLoggedUserSession();
 			assertCanManageEmployees(session);
 			const { firmId } = getServerEmployeeScope();
-			const [type, role] = await Promise.all([
-				prisma.employeeType.findUnique({
-					where: { id: data.type },
-				}),
-				prisma.userRole.findUnique({
-					where: { id: data.role },
-				}),
-			]);
-			if (!type) throw new Error("Função não encontrada");
-			if (!role) throw new Error("Perfil não encontrado");
 
+			const { type, role } = await resolveEmployeeLookupSelections(
+				prisma,
+				data,
+			);
 			validateEmployeeLookupSelections({ type, role });
-			const payload = normalizeEmployeeInput(data, type.value);
-			validateEmployeeBusinessRules(payload, type.value);
 
 			await prisma.employee.create({
 				data: {
 					firmId,
-					fullName: payload.fullName,
-					email: payload.email,
-					typeId: payload.type,
-					roleId: payload.role,
-					oabNumber: payload.oabNumber || null,
-					remunerationPercentage: payload.remunerationPercent,
-					referralPercentage: payload.referrerPercent,
-					isActive: payload.isActive,
+					fullName: data.fullName,
+					email: data.email,
+					typeId: type.id,
+					roleId: role.id,
+					oabNumber: data.oabNumber || null,
+					remunerationPercentage: data.remunerationPercent,
+					referralPercentage: data.referrerPercent,
+					isActive: data.isActive,
 				},
 			});
 			return { success: true };

@@ -9,8 +9,7 @@ import {
 import type { MutationReturnType } from "@/shared/types/api";
 import { employeeUpdateSchema } from "../schemas/form";
 import {
-	normalizeEmployeeInput,
-	validateEmployeeBusinessRules,
+	resolveEmployeeLookupSelections,
 	validateEmployeeLookupSelections,
 } from "../utils/validation";
 
@@ -25,35 +24,27 @@ const updateEmployee = createServerFn({ method: "POST" })
 				where: { id: data.id, firmId, deletedAt: null },
 			});
 			if (!existing) throw new Error("Funcionário não encontrado");
-			const [type, role] = await Promise.all([
-				prisma.employeeType.findUnique({
-					where: { id: data.type },
-				}),
-				prisma.userRole.findUnique({
-					where: { id: data.role },
-				}),
-			]);
-			if (!type) throw new Error("Função não encontrada");
-			if (!role) throw new Error("Perfil não encontrado");
 
+			const { type, role } = await resolveEmployeeLookupSelections(
+				prisma,
+				data,
+			);
 			validateEmployeeLookupSelections(
 				{ type, role },
 				{ currentTypeId: existing.typeId, currentRoleId: existing.roleId },
 			);
-			const payload = normalizeEmployeeInput(data, type.value);
-			validateEmployeeBusinessRules(payload, type.value);
 
 			await prisma.employee.update({
 				where: { id: data.id },
 				data: {
-					fullName: payload.fullName,
-					email: payload.email,
-					typeId: payload.type,
-					roleId: payload.role,
-					oabNumber: payload.oabNumber || null,
-					remunerationPercentage: payload.remunerationPercent,
-					referralPercentage: payload.referrerPercent,
-					isActive: payload.isActive,
+					fullName: data.fullName,
+					email: data.email,
+					typeId: type.id,
+					roleId: role.id,
+					oabNumber: data.oabNumber || null,
+					remunerationPercentage: data.remunerationPercent,
+					referralPercentage: data.referrerPercent,
+					isActive: data.isActive,
 				},
 			});
 			return { success: true };

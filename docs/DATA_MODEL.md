@@ -107,6 +107,7 @@ Rules:
 - No soft delete (`deletedAt`)
 - No `firmId` — lookup values are global across all firms
 - **Lookup-table form option queries** return all rows and rely on the form control to disable entries where `isActive = false`
+- **Lookup-backed client state** (form values and URL filters) uses the lookup `value`; server handlers resolve those values to relational ids for Prisma queries and writes
 
 ---
 
@@ -133,6 +134,7 @@ isActive Boolean @default(true)
 - For business entities, the `isActive` checkbox is always present in the create and edit forms; for lookup tables, `isActive` is managed via an admin-only settings panel (lookup tables have no other mutable fields)
 - **Business entity form options / dropdowns** must always filter: `deletedAt: null AND isActive: true`
 - **Lookup table form options / dropdowns** must always return all rows; inactive rows remain visible but disabled (lookup tables have no `deletedAt`)
+- **Lookup-backed form controls and URL filters** bind by `value`, not by database `id`
 - **Tables / lists** default to non-deleted records; `isActive` can be filtered via the `active` URL search param
 
 ---
@@ -417,7 +419,8 @@ model Employee {
 - `remunerationPercentage >= 0` and `referralPercentage >= 0` — both can be zero. An employee with 0% remunerationPercentage receives R$ 0.00 remunerations. `referralPercentage = 0` is the default for employees who never act as referrers.
 - `referralPercentage <= remunerationPercentage`
 - `oabNumber` format: 2 uppercase letters + 6 digits (e.g., `RS123456`)
-- `oabNumber` is required when `typeId` = LAWYER, forbidden when ADMIN_ASSISTANT
+- `oabNumber` is required when `typeId` = LAWYER
+- In the employee-management form, changing the selected type away from `LAWYER` clears the current `oabNumber` value and hides the field
 - Password minimum 8 characters (enforced by BetterAuth at account creation — credentials are stored in the Account table, not on Employee)
 - Employee serves as the user entity for BetterAuth (see Section 5)
 
@@ -1058,14 +1061,14 @@ Additionally, enforce these constraints at the service layer (check before inser
 
 All list queries support **server-side filtering** via URL search params, validated by Zod schemas. Each entity defines the filter fields accepted by its list API.
 
-> **Filter conventions:** The `status` param (mapped to `deletedAt`) and the `active` param (mapped to `isActive`) are independent. A query for `status=active` returns all non-deleted records regardless of `isActive`; `active=true` returns only `isActive = true` records regardless of `deletedAt`. Business-entity form option queries apply both `deletedAt: null` and `isActive: true`; lookup-table option queries return all rows and disable inactive values in the UI.
+> **Filter conventions:** The `status` param (mapped to `deletedAt`) and the `active` param (mapped to `isActive`) are independent. A query for `status=active` returns all non-deleted records regardless of `isActive`; `active=true` returns only `isActive = true` records regardless of `deletedAt`. Business-entity form option queries apply both `deletedAt: null` and `isActive: true`; lookup-table option queries return all rows and disable inactive values in the UI. Lookup-backed filter params use stable lookup `value` strings in the URL; server handlers resolve them to relational ids internally.
 
 ## 11.1 Employee
 
 | Filter key | Field / relation | Type |
 |---|---|---|
-| `type` | `typeId` | Lookup ID (EmployeeType) |
-| `role` | `roleId` | Lookup ID (UserRole) |
+| `type` | `typeId` | Lookup value (EmployeeType) |
+| `role` | `roleId` | Lookup value (UserRole) |
 | `status`  | `deletedAt` | `active` \| `inactive` \| `all` (default: `active`) |
 | `active`  | `isActive`  | `true` \| `false` \| `all` (default: `all`)          |
 

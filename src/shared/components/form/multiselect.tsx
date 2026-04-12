@@ -48,10 +48,9 @@ export const FormMultiselect = ({
 
 	const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 
-	const opts = React.useMemo(
-		() => options.map((opt) => ({ ...opt, id: opt.id.toString() })),
-		[options],
-	);
+	const handleChange = (value: Key[]) => {
+		field.handleChange(value.map((item) => item.toString()));
+	};
 
 	const onRemoveTags = (keys: Set<Key>) => {
 		field.handleChange((prev) => prev.filter((key) => !keys.has(key)));
@@ -71,9 +70,9 @@ export const FormMultiselect = ({
 			name={field.name}
 			isInvalid={isInvalid}
 			selectionMode="multiple"
-			value={Array.from(field.state.value).map(String)}
+			value={field.state.value}
 			onBlur={field.handleBlur}
-			onChange={field.handleChange}
+			onChange={handleChange}
 			placeholder={placeholder}
 			isOpen={isOpen}
 			onOpenChange={setIsOpen}
@@ -99,12 +98,12 @@ export const FormMultiselect = ({
 							<TagGroup size="sm" onRemove={onRemoveTags}>
 								<TagGroup.List>
 									{selectedItemsKeys.map((selectedItemKey) => {
-										const option = opts.find(
-											(opt) => opt.id === selectedItemKey,
+										const option = options.find(
+											(opt) => opt.value === selectedItemKey,
 										);
 										if (!option) return null;
 										return (
-											<Tag key={option.id} id={option.id}>
+											<Tag key={option.value} id={option.value}>
 												{option.label}
 											</Tag>
 										);
@@ -139,10 +138,10 @@ export const FormMultiselect = ({
 						)}
 						className={classNames?.list}
 					>
-						{opts.map((option) => (
+						{options.map((option) => (
 							<ListBox.Item
-								key={option.id}
-								id={option.id}
+								key={option.value}
+								id={option.value}
 								textValue={option.label}
 								isDisabled={option.isDisabled}
 								className={classNames?.item}

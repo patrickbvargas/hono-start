@@ -1,5 +1,6 @@
 import * as z from "zod";
 import { entityIdSchema } from "@/shared/schemas/entity";
+import { LAWYER_TYPE_VALUE } from "../constants";
 
 const employeeBaseShape = {
 	fullName: z.string().min(1, "Nome é obrigatório"),
@@ -17,13 +18,18 @@ const employeeBaseShape = {
 		.number<number>()
 		.min(0, "Percentual deve ser maior ou igual a 0%")
 		.max(1, "Percentual não pode exceder 100%"),
-	type: z.coerce.number<number>().min(1, "Função é obrigatória"),
-	role: z.coerce.number<number>().min(1, "Cargo é obrigatório"),
+	type: z.string().min(1, "Função é obrigatória"),
+	role: z.string().min(1, "Cargo é obrigatório"),
 	isActive: z.boolean(),
 };
 
 const referrerRefinement = (
-	data: { referrerPercent: number; remunerationPercent: number },
+	data: {
+		referrerPercent: number;
+		remunerationPercent: number;
+		type: string;
+		oabNumber?: string;
+	},
 	ctx: z.RefinementCtx,
 ) => {
 	if (data.referrerPercent > data.remunerationPercent) {
@@ -32,6 +38,14 @@ const referrerRefinement = (
 			message:
 				"Percentual de indicação não pode exceder o percentual de remuneração",
 			path: ["referrerPercent"],
+		});
+	}
+
+	if (data.type === LAWYER_TYPE_VALUE && !data.oabNumber) {
+		ctx.addIssue({
+			code: "custom",
+			message: "OAB é obrigatória",
+			path: ["oabNumber"],
 		});
 	}
 };

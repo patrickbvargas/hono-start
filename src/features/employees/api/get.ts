@@ -2,10 +2,11 @@ import { queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import {
 	getEntityActiveWhere,
-	getEntityDeletedVisibilityWhere,
+	getEntityDeletedWhere,
 	withDeterministicTieBreaker,
 } from "@/shared/lib/entity-management";
 import { prisma } from "@/shared/lib/prisma";
+import { type Option, optionSchema } from "@/shared/schemas/option";
 import {
 	assertCanManageEmployees,
 	getServerEmployeeScope,
@@ -18,26 +19,24 @@ import type {
 import { EMPLOYEE_DATA_CACHE_KEY } from "../constants";
 import type { EmployeeFilter } from "../schemas/filter";
 import { type Employee, employeeSchema } from "../schemas/model";
-import {
-	type EmployeeRole,
-	type EmployeeType,
-	employeeRoleSchema,
-	employeeTypeSchema,
-} from "../schemas/option";
 import { type EmployeeSearch, employeeSearchSchema } from "../schemas/search";
 
 interface BuildEmployeeWhereParams {
 	firmId: number;
 	filter: EmployeeFilter;
+	typeIds: number[];
+	roleIds: number[];
 }
 
 export function buildEmployeeWhere({
 	firmId,
 	filter,
+	typeIds,
+	roleIds,
 }: BuildEmployeeWhereParams) {
 	return {
 		firmId,
-		...getEntityDeletedVisibilityWhere(filter.status),
+		...getEntityDeletedWhere(filter.status),
 		...getEntityActiveWhere(filter.active),
 		...(filter.name
 			? {
@@ -57,8 +56,8 @@ export function buildEmployeeWhere({
 					],
 				}
 			: {}),
-		...(filter.type.length > 0 ? { typeId: { in: filter.type } } : {}),
-		...(filter.role.length > 0 ? { roleId: { in: filter.role } } : {}),
+		...(typeIds.length > 0 ? { typeId: { in: typeIds } } : {}),
+		...(roleIds.length > 0 ? { roleId: { in: roleIds } } : {}),
 	};
 }
 
@@ -68,8 +67,27 @@ const getEmployees = createServerFn({ method: "GET" })
 		try {
 			assertCanManageEmployees(getServerLoggedUserSession());
 			const { firmId } = getServerEmployeeScope();
+			const [resolvedTypes, resolvedRoles] = await Promise.all([
+				data.type.length > 0
+					? prisma.employeeType.findMany({
+							where: { value: { in: data.type } },
+							select: { id: true, value: true },
+						})
+					: Promise.resolve([]),
+				data.role.length > 0
+					? prisma.userRole.findMany({
+							where: { value: { in: data.role } },
+							select: { id: true, value: true },
+						})
+					: Promise.resolve([]),
+			]);
 
-			const where = buildEmployeeWhere({ firmId, filter: data });
+			const where = buildEmployeeWhere({
+				firmId,
+				filter: data,
+				typeIds: resolvedTypes.map((type) => type.id),
+				roleIds: resolvedRoles.map((role) => role.id),
+			});
 
 			const sortMap: Record<string, object> = {
 				fullName: { fullName: data.direction },
@@ -103,9 +121,9 @@ const getEmployees = createServerFn({ method: "GET" })
 				remunerationPercent: Number(emp.remunerationPercentage),
 				referrerPercent: Number(emp.referralPercentage),
 				typeId: emp.typeId,
-				roleId: emp.roleId,
 				type: emp.type.label,
 				typeValue: emp.type.value,
+				roleId: emp.roleId,
 				role: emp.role.label,
 				roleValue: emp.role.value,
 				contractCount: 0, // TODO: add when ContractEmployee model is available
@@ -134,12 +152,12 @@ const getEmployees = createServerFn({ method: "GET" })
 	});
 
 const getEmployeeTypes = createServerFn({ method: "GET" }).handler(
-	async (): Promise<QueryManyReturnType<EmployeeType>> => {
+	async (): Promise<QueryManyReturnType<Option>> => {
 		try {
 			const types = await prisma.employeeType.findMany({
 				orderBy: { label: "asc" },
 			});
-			return employeeTypeSchema.array().parse(types);
+			return optionSchema.array().parse(types);
 		} catch (error) {
 			console.error("[getEmployeeTypes]", error);
 			throw new Error("Erro ao buscar tipos de funcionário");
@@ -148,12 +166,12 @@ const getEmployeeTypes = createServerFn({ method: "GET" }).handler(
 );
 
 const getEmployeeRoles = createServerFn({ method: "GET" }).handler(
-	async (): Promise<QueryManyReturnType<EmployeeRole>> => {
+	async (): Promise<QueryManyReturnType<Option>> => {
 		try {
 			const roles = await prisma.userRole.findMany({
 				orderBy: { label: "asc" },
 			});
-			return employeeRoleSchema.array().parse(roles);
+			return optionSchema.array().parse(roles);
 		} catch (error) {
 			console.error("[getEmployeeRoles]", error);
 			throw new Error("Erro ao buscar cargos de funcionário");

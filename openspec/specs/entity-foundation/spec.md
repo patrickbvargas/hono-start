@@ -22,6 +22,11 @@ The system SHALL treat entity-management list screens as a shared interaction pa
 - **THEN** the result ordering SHALL be deterministic for pagination
 - **AND** repeated requests with the same search state SHALL return rows in the same order
 
+#### Scenario: Lookup-backed filters use stable values in URL state
+- **WHEN** an entity-management list screen includes filters backed by lookup tables
+- **THEN** the URL stores the selected lookup values rather than relational database ids
+- **AND** the server resolves those values to relational filters internally
+
 ### Requirement: Entity-management filters separate active state from deletion visibility
 The system SHALL model `isActive` filtering and soft-delete visibility as separate list concerns for entity-management screens that support both states.
 
@@ -42,6 +47,11 @@ The system SHALL use a shared option-loading rule for data returned to dropdowns
 - **WHEN** a form option query loads lookup-table records
 - **THEN** rows with `isActive = true` and `isActive = false` are both returned
 - **AND** inactive rows are rendered as disabled options in the form UI
+
+#### Scenario: Lookup-backed field components bind stable values
+- **WHEN** a shared field component renders lookup-table options
+- **THEN** the selected option is keyed by the lookup row `value`
+- **AND** the component contract does not require the database `id` as the UI selection key
 
 #### Scenario: Business-entity option query returns only active non-deleted rows
 - **WHEN** a form option query loads business-entity records

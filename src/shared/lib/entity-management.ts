@@ -2,19 +2,19 @@ import type { QueryClient } from "@tanstack/react-query";
 import type { FieldOption } from "@/shared/types/field";
 
 export const ENTITY_ACTIVE_FILTER_OPTIONS: FieldOption[] = [
-	{ id: "all", label: "Todos" },
-	{ id: "true", label: "Ativo" },
-	{ id: "false", label: "Inativo" },
+	{ value: "all", label: "Todos" },
+	{ value: "true", label: "Ativo" },
+	{ value: "false", label: "Inativo" },
 ];
 
-export const ENTITY_DELETED_VISIBILITY_OPTIONS: FieldOption[] = [
-	{ id: "active", label: "Não excluídos" },
-	{ id: "deleted", label: "Excluídos" },
-	{ id: "all", label: "Todos" },
+export const ENTITY_DELETED_FILTER_OPTIONS: FieldOption[] = [
+	{ value: "active", label: "Não excluídos" },
+	{ value: "deleted", label: "Excluídos" },
+	{ value: "all", label: "Todos" },
 ];
 
 export type EntityActiveFilterValue = "all" | "false" | "true";
-export type EntityDeletedVisibilityValue = "active" | "all" | "deleted";
+export type EntityDeletedFilterValue = "active" | "all" | "deleted";
 
 export function getEntityActiveWhere(value: EntityActiveFilterValue) {
 	if (value === "true") {
@@ -28,9 +28,7 @@ export function getEntityActiveWhere(value: EntityActiveFilterValue) {
 	return {};
 }
 
-export function getEntityDeletedVisibilityWhere(
-	value: EntityDeletedVisibilityValue,
-) {
+export function getEntityDeletedWhere(value: EntityDeletedFilterValue) {
 	if (value === "deleted") {
 		return { deletedAt: { not: null } };
 	}
