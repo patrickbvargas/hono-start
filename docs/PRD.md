@@ -111,7 +111,7 @@ The following are explicitly out of scope for this system:
 | Capability | Administrator | User |
 |---|---|---|
 | View and update own profile (name, email, avatar, password) | ✅ | ✅ |
-| View all employees (basic info: name, type, OAB) | ✅ | ✅ |
+| View employee options in contract team assignment flows | ✅ | ✅ |
 | Access User Management screen (percentages, role, email, full CRUD) | ✅ | ❌ |
 | View all clients | ✅ | ✅ |
 | Create or update clients | ✅ | ✅ |
@@ -261,7 +261,7 @@ Administrators can create, edit, soft-delete, and restore employee accounts. Eac
 | Avatar | No | Profile photo |
 | Active | Yes | Indicates whether the employee account is active; defaults to true — inactive employees are hidden from team assignment dropdowns |
 
-Users with access to the employee list can filter by type, role, and active/inactive status.
+The User Management screen is administrator-only. Regular users may still see active employees in contract team assignment selectors where that is required to create or update contracts, but this does not grant access to employee account management.
 
 ### 6.10 Audit Log (Admin)
 

@@ -4,23 +4,23 @@
 The system SHALL render an `EmployeeFilter` component that keeps the fullname/OAB search visible in the employees page header and groups the remaining employee filters inside an advanced filters popover.
 
 #### Scenario: Filter component renders search input
-- **WHEN** an authenticated user views the employees page
+- **WHEN** an administrator views the employees page
 - **THEN** a search input labeled "Nome ou OAB" is visible without opening any overlay
 - **AND** the input reflects the current `name` filter value from the URL
 
 #### Scenario: Filter component renders advanced filters trigger
-- **WHEN** an authenticated user views the employees page
+- **WHEN** an administrator views the employees page
 - **THEN** a trigger for advanced filters is visible next to the search input
 - **AND** opening that trigger reveals the employee filter controls that are not part of the primary search field
 
 #### Scenario: Filter component renders type multi-select
-- **WHEN** an authenticated user views the employees page
+- **WHEN** an administrator views the employees page
 - **THEN** a multi-select control labeled "Cargo" is visible inside the popover
 - **AND** the available options correspond to all employee types fetched from the server
 - **AND** selected values reflect the current `type` filter from the URL
 
 #### Scenario: Filter component renders role multi-select
-- **WHEN** an authenticated user views the employees page
+- **WHEN** an administrator views the employees page
 - **THEN** a multi-select control labeled "Perfil" is visible inside the popover
 - **AND** the available options correspond to all user roles fetched from the server
 - **AND** selected values reflect the current `role` filter from the URL
@@ -40,7 +40,7 @@ The system SHALL render an `EmployeeFilter` component that keeps the fullname/OA
 The system SHALL render the employee active status filter inside the advanced filters popover so users can filter the list by `isActive` without keeping the status control inline in the page header.
 
 #### Scenario: Filter component renders active status control
-- **WHEN** an authenticated user views the employees page
+- **WHEN** an administrator views the employees page
 - **THEN** an active status filter control labeled "Status" is visible inside the popover
 - **AND** the available options are "Ativo" and "Inativo"
 - **AND** the selected value reflects the current `active` filter from the URL

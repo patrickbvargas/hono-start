@@ -3,10 +3,10 @@
 Define the employee-management capability for firm-scoped employee listing, lifecycle actions, visibility rules, and authorization constraints.
 ## Requirements
 ### Requirement: List employees
-The system SHALL display a paginated, sortable, filterable list of employees belonging to the authenticated user's firm.
+The system SHALL display a paginated, sortable, filterable list of employees belonging to the authenticated administrator's firm.
 
 #### Scenario: Default list view
-- **WHEN** an authenticated user navigates to the employees route
+- **WHEN** an administrator navigates to the employees route
 - **THEN** the system displays a table with columns: full name, OAB number, type (Função), remuneration percentage, contract count, role (Perfil), and status
 - **AND** the list is paginated with a default page size of 25
 
@@ -220,17 +220,18 @@ Administrators SHALL be able to restore a previously soft-deleted employee.
 
 ---
 
-### Requirement: Read-only employee view (regular users)
-Regular users SHALL be able to view a simplified, read-only list of all employees in their firm showing only basic info: full name, type (Função), and OAB number. They SHALL NOT see sensitive fields such as remuneration percentage, referral percentage, email, or role.
+### Requirement: Employee-management route is administrator-only
+Regular users SHALL NOT be able to access the employee-management screen or employee detail views. Employee visibility for contract team assignment is handled by the contract-management capability and does not grant access to the employee-management feature.
 
-#### Scenario: Regular user views list
+#### Scenario: Regular user is denied employee-management route access
 - **WHEN** a regular user navigates to the employees route
-- **THEN** the system displays a read-only table with columns: full name, type (Função), OAB number
-- **AND** no create, edit, delete, or restore actions are visible
+- **THEN** the route denies access to the employee-management feature
+- **AND** the regular user does not see the employee list, employee filters, or employee detail UI
 
-#### Scenario: Regular user cannot access full employee data
-- **WHEN** a regular user is authenticated
-- **THEN** the server SHALL NOT return remuneration percentage, referral percentage, email, or role fields to the client for employee list queries
+#### Scenario: Regular user can still select employees in contract flows
+- **WHEN** a regular user creates or updates a contract
+- **THEN** the system MAY show employee options required for contract team assignment
+- **AND** that contract flow does not expose the employee-management screen or employee account details
 
 ---
 
@@ -249,10 +250,10 @@ All employee queries and mutations SHALL be strictly scoped to the authenticated
 ### Requirement: Employee-management uses shared authorization boundaries
 The employee-management capability SHALL use the shared session authorization helpers as the authoritative source for admin-only access and firm isolation.
 
-#### Scenario: Route hides admin-only actions for regular users
+#### Scenario: Route denies employee-management screen for regular users
 - **WHEN** a regular user navigates to the employees route
 - **THEN** the route evaluates the shared authorization helper for employee-management access
-- **AND** admin-only actions such as creating, editing, deleting, and restoring employees are not shown
+- **AND** access to the employee-management screen is denied
 
 #### Scenario: Server rejects unauthorized employee mutation
 - **WHEN** a regular user attempts to trigger an employee create, update, delete, or restore mutation directly
@@ -263,4 +264,3 @@ The employee-management capability SHALL use the shared session authorization he
 - **WHEN** an employee list query or mutation is executed
 - **THEN** the server derives the authoritative `firmId` from the shared server session helper
 - **AND** the employee-management capability does not rely on hardcoded tenant placeholders
-
