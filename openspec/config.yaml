@@ -21,12 +21,12 @@ rules:
     - Include edge cases and side effects
 
   design:
-    - Read docs/STACK.md, docs/ARCHITECTURE.md, docs/CONVENTIONS.md, and docs/DATA_MODEL.md before writing the design
+    - Read docs/STACK.md, docs/ARCHITECTURE.md, docs/CONVENTIONS.md, docs/WORKFLOW.md, and docs/DATA_MODEL.md before writing the design
     - Use Context7 MCP to look up documentation for any library before implementing
     - Justify any deviation from existing patterns
 
   tasks:
-    - Read docs/CONVENTIONS.md and docs/DATA_MODEL.md before writing tasks
+    - Read docs/CONVENTIONS.md, docs/WORKFLOW.md and docs/DATA_MODEL.md before writing tasks
     - Use Context7 MCP to look up documentation for any library before implementing
     - Break into atomic units (~1–2 hours each)
     - Indicate if DB migrations are required
