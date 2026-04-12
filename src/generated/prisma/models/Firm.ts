@@ -192,12 +192,14 @@ export type FirmWhereInput = {
   NOT?: Prisma.FirmWhereInput | Prisma.FirmWhereInput[]
   id?: Prisma.IntFilter<"Firm"> | number
   name?: Prisma.StringFilter<"Firm"> | string
+  clients?: Prisma.ClientListRelationFilter
   employees?: Prisma.EmployeeListRelationFilter
 }
 
 export type FirmOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  clients?: Prisma.ClientOrderByRelationAggregateInput
   employees?: Prisma.EmployeeOrderByRelationAggregateInput
 }
 
@@ -207,6 +209,7 @@ export type FirmWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.FirmWhereInput[]
   NOT?: Prisma.FirmWhereInput | Prisma.FirmWhereInput[]
   name?: Prisma.StringFilter<"Firm"> | string
+  clients?: Prisma.ClientListRelationFilter
   employees?: Prisma.EmployeeListRelationFilter
 }, "id">
 
@@ -230,23 +233,27 @@ export type FirmScalarWhereWithAggregatesInput = {
 
 export type FirmCreateInput = {
   name: string
+  clients?: Prisma.ClientCreateNestedManyWithoutFirmInput
   employees?: Prisma.EmployeeCreateNestedManyWithoutFirmInput
 }
 
 export type FirmUncheckedCreateInput = {
   id?: number
   name: string
+  clients?: Prisma.ClientUncheckedCreateNestedManyWithoutFirmInput
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFirmInput
 }
 
 export type FirmUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  clients?: Prisma.ClientUpdateManyWithoutFirmNestedInput
   employees?: Prisma.EmployeeUpdateManyWithoutFirmNestedInput
 }
 
 export type FirmUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  clients?: Prisma.ClientUncheckedUpdateManyWithoutFirmNestedInput
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutFirmNestedInput
 }
 
@@ -318,13 +325,29 @@ export type FirmUpdateOneRequiredWithoutEmployeesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.FirmUpdateToOneWithWhereWithoutEmployeesInput, Prisma.FirmUpdateWithoutEmployeesInput>, Prisma.FirmUncheckedUpdateWithoutEmployeesInput>
 }
 
+export type FirmCreateNestedOneWithoutClientsInput = {
+  create?: Prisma.XOR<Prisma.FirmCreateWithoutClientsInput, Prisma.FirmUncheckedCreateWithoutClientsInput>
+  connectOrCreate?: Prisma.FirmCreateOrConnectWithoutClientsInput
+  connect?: Prisma.FirmWhereUniqueInput
+}
+
+export type FirmUpdateOneRequiredWithoutClientsNestedInput = {
+  create?: Prisma.XOR<Prisma.FirmCreateWithoutClientsInput, Prisma.FirmUncheckedCreateWithoutClientsInput>
+  connectOrCreate?: Prisma.FirmCreateOrConnectWithoutClientsInput
+  upsert?: Prisma.FirmUpsertWithoutClientsInput
+  connect?: Prisma.FirmWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.FirmUpdateToOneWithWhereWithoutClientsInput, Prisma.FirmUpdateWithoutClientsInput>, Prisma.FirmUncheckedUpdateWithoutClientsInput>
+}
+
 export type FirmCreateWithoutEmployeesInput = {
   name: string
+  clients?: Prisma.ClientCreateNestedManyWithoutFirmInput
 }
 
 export type FirmUncheckedCreateWithoutEmployeesInput = {
   id?: number
   name: string
+  clients?: Prisma.ClientUncheckedCreateNestedManyWithoutFirmInput
 }
 
 export type FirmCreateOrConnectWithoutEmployeesInput = {
@@ -345,11 +368,51 @@ export type FirmUpdateToOneWithWhereWithoutEmployeesInput = {
 
 export type FirmUpdateWithoutEmployeesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  clients?: Prisma.ClientUpdateManyWithoutFirmNestedInput
 }
 
 export type FirmUncheckedUpdateWithoutEmployeesInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  clients?: Prisma.ClientUncheckedUpdateManyWithoutFirmNestedInput
+}
+
+export type FirmCreateWithoutClientsInput = {
+  name: string
+  employees?: Prisma.EmployeeCreateNestedManyWithoutFirmInput
+}
+
+export type FirmUncheckedCreateWithoutClientsInput = {
+  id?: number
+  name: string
+  employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFirmInput
+}
+
+export type FirmCreateOrConnectWithoutClientsInput = {
+  where: Prisma.FirmWhereUniqueInput
+  create: Prisma.XOR<Prisma.FirmCreateWithoutClientsInput, Prisma.FirmUncheckedCreateWithoutClientsInput>
+}
+
+export type FirmUpsertWithoutClientsInput = {
+  update: Prisma.XOR<Prisma.FirmUpdateWithoutClientsInput, Prisma.FirmUncheckedUpdateWithoutClientsInput>
+  create: Prisma.XOR<Prisma.FirmCreateWithoutClientsInput, Prisma.FirmUncheckedCreateWithoutClientsInput>
+  where?: Prisma.FirmWhereInput
+}
+
+export type FirmUpdateToOneWithWhereWithoutClientsInput = {
+  where?: Prisma.FirmWhereInput
+  data: Prisma.XOR<Prisma.FirmUpdateWithoutClientsInput, Prisma.FirmUncheckedUpdateWithoutClientsInput>
+}
+
+export type FirmUpdateWithoutClientsInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  employees?: Prisma.EmployeeUpdateManyWithoutFirmNestedInput
+}
+
+export type FirmUncheckedUpdateWithoutClientsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  employees?: Prisma.EmployeeUncheckedUpdateManyWithoutFirmNestedInput
 }
 
 
@@ -358,10 +421,12 @@ export type FirmUncheckedUpdateWithoutEmployeesInput = {
  */
 
 export type FirmCountOutputType = {
+  clients: number
   employees: number
 }
 
 export type FirmCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  clients?: boolean | FirmCountOutputTypeCountClientsArgs
   employees?: boolean | FirmCountOutputTypeCountEmployeesArgs
 }
 
@@ -378,6 +443,13 @@ export type FirmCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensi
 /**
  * FirmCountOutputType without action
  */
+export type FirmCountOutputTypeCountClientsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ClientWhereInput
+}
+
+/**
+ * FirmCountOutputType without action
+ */
 export type FirmCountOutputTypeCountEmployeesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.EmployeeWhereInput
 }
@@ -386,6 +458,7 @@ export type FirmCountOutputTypeCountEmployeesArgs<ExtArgs extends runtime.Types.
 export type FirmSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  clients?: boolean | Prisma.Firm$clientsArgs<ExtArgs>
   employees?: boolean | Prisma.Firm$employeesArgs<ExtArgs>
   _count?: boolean | Prisma.FirmCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["firm"]>
@@ -407,6 +480,7 @@ export type FirmSelectScalar = {
 
 export type FirmOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name", ExtArgs["result"]["firm"]>
 export type FirmInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  clients?: boolean | Prisma.Firm$clientsArgs<ExtArgs>
   employees?: boolean | Prisma.Firm$employeesArgs<ExtArgs>
   _count?: boolean | Prisma.FirmCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -416,6 +490,7 @@ export type FirmIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type $FirmPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Firm"
   objects: {
+    clients: Prisma.$ClientPayload<ExtArgs>[]
     employees: Prisma.$EmployeePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -815,6 +890,7 @@ readonly fields: FirmFieldRefs;
  */
 export interface Prisma__FirmClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  clients<T extends Prisma.Firm$clientsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Firm$clientsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ClientPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   employees<T extends Prisma.Firm$employeesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Firm$employeesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1237,6 +1313,30 @@ export type FirmDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Limit how many Firms to delete.
    */
   limit?: number
+}
+
+/**
+ * Firm.clients
+ */
+export type Firm$clientsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Client
+   */
+  select?: Prisma.ClientSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Client
+   */
+  omit?: Prisma.ClientOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ClientInclude<ExtArgs> | null
+  where?: Prisma.ClientWhereInput
+  orderBy?: Prisma.ClientOrderByWithRelationInput | Prisma.ClientOrderByWithRelationInput[]
+  cursor?: Prisma.ClientWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ClientScalarFieldEnum | Prisma.ClientScalarFieldEnum[]
 }
 
 /**

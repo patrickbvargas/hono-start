@@ -36,6 +36,25 @@ async function main() {
     create: { value: "USER", label: "Usuário", isActive: true },
   });
 
+  await prisma.clientType.upsert({
+    where: { value: "INDIVIDUAL" },
+    update: { isActive: true },
+    create: {
+      value: "INDIVIDUAL",
+      label: "Pessoa Física",
+      isActive: true,
+    },
+  });
+  await prisma.clientType.upsert({
+    where: { value: "COMPANY" },
+    update: { isActive: true },
+    create: {
+      value: "COMPANY",
+      label: "Pessoa Jurídica",
+      isActive: true,
+    },
+  });
+
   await prisma.firm.upsert({
     where: { id: 1 },
     update: {},

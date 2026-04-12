@@ -10,9 +10,20 @@ datasource db {
 model Firm {
   id        Int        @id @default(autoincrement())
   name      String
+  clients   Client[]   @relation("FirmClient")
   employees Employee[] @relation("FirmEmployee")
 
   @@map("firms")
+}
+
+model ClientType {
+  id       Int      @id @default(autoincrement())
+  value    String   @unique
+  label    String
+  isActive Boolean  @default(true)
+  clients  Client[]
+
+  @@map("client_types")
 }
 
 model EmployeeType {
@@ -59,4 +70,26 @@ model Employee {
   @@index([deletedAt])
   @@index([isActive])
   @@map("employees")
+}
+
+model Client {
+  id        Int        @id @default(autoincrement())
+  firmId    Int
+  typeId    Int
+  fullName  String
+  document  String
+  email     String?
+  phone     String?
+  isActive  Boolean    @default(true)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  deletedAt DateTime?
+  firm      Firm       @relation("FirmClient", fields: [firmId], references: [id])
+  type      ClientType @relation(fields: [typeId], references: [id])
+
+  @@unique([firmId, document])
+  @@index([firmId])
+  @@index([deletedAt])
+  @@index([isActive])
+  @@map("clients")
 }

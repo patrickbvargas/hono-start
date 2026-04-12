@@ -52,9 +52,11 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   Firm: 'Firm',
+  ClientType: 'ClientType',
   EmployeeType: 'EmployeeType',
   UserRole: 'UserRole',
-  Employee: 'Employee'
+  Employee: 'Employee',
+  Client: 'Client'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -79,6 +81,16 @@ export const FirmScalarFieldEnum = {
 } as const
 
 export type FirmScalarFieldEnum = (typeof FirmScalarFieldEnum)[keyof typeof FirmScalarFieldEnum]
+
+
+export const ClientTypeScalarFieldEnum = {
+  id: 'id',
+  value: 'value',
+  label: 'label',
+  isActive: 'isActive'
+} as const
+
+export type ClientTypeScalarFieldEnum = (typeof ClientTypeScalarFieldEnum)[keyof typeof ClientTypeScalarFieldEnum]
 
 
 export const EmployeeTypeScalarFieldEnum = {
@@ -119,6 +131,23 @@ export const EmployeeScalarFieldEnum = {
 } as const
 
 export type EmployeeScalarFieldEnum = (typeof EmployeeScalarFieldEnum)[keyof typeof EmployeeScalarFieldEnum]
+
+
+export const ClientScalarFieldEnum = {
+  id: 'id',
+  firmId: 'firmId',
+  typeId: 'typeId',
+  fullName: 'fullName',
+  document: 'document',
+  email: 'email',
+  phone: 'phone',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+} as const
+
+export type ClientScalarFieldEnum = (typeof ClientScalarFieldEnum)[keyof typeof ClientScalarFieldEnum]
 
 
 export const SortOrder = {

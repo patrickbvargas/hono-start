@@ -336,10 +336,6 @@ export type EmployeeTypeScalarRelationFilter = {
   isNot?: Prisma.EmployeeTypeWhereInput
 }
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
-}
-
 export type EmployeeTypeCreateNestedOneWithoutEmployeesInput = {
   create?: Prisma.XOR<Prisma.EmployeeTypeCreateWithoutEmployeesInput, Prisma.EmployeeTypeUncheckedCreateWithoutEmployeesInput>
   connectOrCreate?: Prisma.EmployeeTypeCreateOrConnectWithoutEmployeesInput
