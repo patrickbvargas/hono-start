@@ -3,7 +3,7 @@
 Define the employee-management capability for firm-scoped employee listing, lifecycle actions, visibility rules, and authorization constraints.
 ## Requirements
 ### Requirement: List employees
-The system SHALL display a paginated, sortable, filterable list of employees belonging to the authenticated administrator's firm.
+The system SHALL display a paginated, sortable, filterable list of employees belonging to the authenticated administrator's firm, following the shared entity-management list contract.
 
 #### Scenario: Default list view
 - **WHEN** an administrator navigates to the employees route
@@ -22,10 +22,9 @@ The system SHALL display a paginated, sortable, filterable list of employees bel
 - **WHEN** a user applies a role filter (e.g., Administrador)
 - **THEN** the table shows only employees whose role matches the selected value(s)
 
-#### Scenario: Filter by status
-- **WHEN** a user applies a status filter (Active or Inactive)
-- **THEN** the table shows only employees in that status
-- **AND** inactive (soft-deleted) employees are hidden by default unless the filter is set to inactive or all
+#### Scenario: Filter by deletion visibility
+- **WHEN** a user changes the employee list to show deleted records or all records
+- **THEN** the table updates soft-delete visibility without changing the current `isActive` filter
 
 #### Scenario: Sort by column
 - **WHEN** a user clicks a sortable column header
@@ -127,6 +126,7 @@ Administrators SHALL be able to create a new employee account with all required 
 #### Scenario: OAB forbidden for admin assistants
 - **WHEN** the employee type is set to Assistente Administrativo
 - **THEN** the OAB field SHALL be hidden or disabled
+- **AND** any submitted OAB value SHALL be rejected or cleared before persistence
 
 #### Scenario: OAB format validation
 - **WHEN** an OAB number is provided
@@ -163,7 +163,8 @@ Administrators SHALL be able to edit an existing employee's profile fields, incl
 
 #### Scenario: Validation on edit
 - **WHEN** an administrator submits an edit form with invalid data
-- **THEN** the same validation rules as create apply (OAB format, referral percentage constraint, etc.)
+- **THEN** the same validation rules as create apply
+- **AND** the system enforces the lawyer/admin-assistant OAB rules, OAB format validation, and referral percentage constraint
 
 #### Scenario: Regular user cannot edit
 - **WHEN** a regular user is authenticated

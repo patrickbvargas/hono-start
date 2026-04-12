@@ -1,6 +1,9 @@
 import { FilterWrapper } from "@/shared/components/filter-wrapper";
 import { Separator } from "@/shared/components/ui";
-import { STATUS_OPTIONS } from "@/shared/constants/options";
+import {
+	ENTITY_ACTIVE_FILTER_OPTIONS,
+	ENTITY_DELETED_VISIBILITY_OPTIONS,
+} from "@/shared/lib/entity-management";
 import { useEmployeeFilter } from "../../hooks/use-filter";
 import { useEmployeeOptions } from "../../hooks/use-options";
 
@@ -26,7 +29,7 @@ export const EmployeeFilter = () => {
 				<form.AppField name="type">
 					{(field) => (
 						<field.CheckboxGroup
-							label="Cargo"
+							label="Função"
 							options={types}
 							variant="secondary"
 						/>
@@ -41,19 +44,23 @@ export const EmployeeFilter = () => {
 						/>
 					)}
 				</form.AppField>
-				<form.AppField name="status">
+				<form.AppField name="active">
 					{(field) => (
-						<field.CheckboxGroup
-							label="Status"
-							options={STATUS_OPTIONS}
+						<field.RadioGroup
+							label="Ativo"
+							options={ENTITY_ACTIVE_FILTER_OPTIONS}
 							variant="secondary"
 						/>
 					)}
 				</form.AppField>
 				<Separator />
-				<form.AppField name="showDeleted">
+				<form.AppField name="status">
 					{(field) => (
-						<field.Checkbox label="Exibir excluídos" variant="secondary" />
+						<field.RadioGroup
+							label="Exclusão"
+							options={ENTITY_DELETED_VISIBILITY_OPTIONS}
+							variant="secondary"
+						/>
 					)}
 				</form.AppField>
 			</FilterWrapper>

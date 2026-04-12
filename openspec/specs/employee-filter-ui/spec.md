@@ -15,7 +15,7 @@ The system SHALL render an `EmployeeFilter` component that keeps the fullname/OA
 
 #### Scenario: Filter component renders type multi-select
 - **WHEN** an administrator views the employees page
-- **THEN** a multi-select control labeled "Cargo" is visible inside the popover
+- **THEN** a multi-select control labeled "Função" is visible inside the popover
 - **AND** the available options correspond to all employee types fetched from the server
 - **AND** selected values reflect the current `type` filter from the URL
 
@@ -41,8 +41,8 @@ The system SHALL render the employee active status filter inside the advanced fi
 
 #### Scenario: Filter component renders active status control
 - **WHEN** an administrator views the employees page
-- **THEN** an active status filter control labeled "Status" is visible inside the popover
-- **AND** the available options are "Ativo" and "Inativo"
+- **THEN** an active status filter control labeled "Ativo" is visible inside the popover
+- **AND** the available options are "Todos", "Ativo", and "Inativo"
 - **AND** the selected value reflects the current `active` filter from the URL
 
 #### Scenario: Selecting "Ativo" updates the active filter
@@ -57,10 +57,30 @@ The system SHALL render the employee active status filter inside the advanced fi
 
 #### Scenario: Clearing the status filter shows all employees regardless of isActive
 - **WHEN** the user clears the status filter selection
-- **THEN** the `active` URL search param is updated to `""`
+- **THEN** the `active` URL search param is updated to `"all"`
 - **AND** the employee list reloads showing all non-deleted employees regardless of isActive
 
 #### Scenario: Active status filter state is persisted in URL
 - **WHEN** the user applies the status filter
 - **THEN** the `active` URL search param is updated to reflect the current selection
 - **AND** refreshing the page or sharing the URL preserves the same filter state
+
+---
+
+### Requirement: Display employee deletion visibility filter control
+The system SHALL render a dedicated deleted-state filter in the employee advanced filters so users can control soft-delete visibility independently from the `isActive` status filter.
+
+#### Scenario: Filter component renders deleted-state control
+- **WHEN** an administrator views the employees page
+- **THEN** a deleted-state filter control is visible inside the advanced filters
+- **AND** the control offers explicit visibility choices for non-deleted records, deleted records, or all records
+
+#### Scenario: Deleted-state control updates URL state independently
+- **WHEN** the user changes the deleted-state filter
+- **THEN** the URL search params are updated to reflect the new deleted-state visibility
+- **AND** the current `active` filter value remains unchanged
+
+#### Scenario: Deleted-state control composes with active status filter
+- **WHEN** the user applies both a deleted-state filter and an active status filter
+- **THEN** the employee list reloads using both constraints together
+- **AND** the result reflects the intersection of soft-delete visibility and `isActive` status

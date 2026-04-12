@@ -1,4 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+	getMutationErrorMessage,
+	refreshEntityQueries,
+} from "@/shared/lib/entity-management";
 import { toast } from "@/shared/lib/toast";
 import { deleteEmployeeOptions } from "../api/delete";
 import { EMPLOYEE_DATA_CACHE_KEY } from "../constants";
@@ -20,12 +24,10 @@ export function useEmployeeDelete({
 		try {
 			await mutation.mutateAsync({ data: { id: employee.id } });
 			toast.success("Funcionário excluído com sucesso.");
-			queryClient.invalidateQueries({ queryKey: [EMPLOYEE_DATA_CACHE_KEY] });
+			await refreshEntityQueries(queryClient, EMPLOYEE_DATA_CACHE_KEY);
 			onSuccess?.();
 		} catch (error) {
-			const message =
-				error instanceof Error ? error.message : "Ocorreu um erro inesperado";
-			toast.danger(message);
+			toast.danger(getMutationErrorMessage(error));
 		}
 	};
 

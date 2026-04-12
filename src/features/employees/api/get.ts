@@ -1,7 +1,16 @@
 import { queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
+import {
+	getEntityActiveWhere,
+	getEntityDeletedVisibilityWhere,
+	withDeterministicTieBreaker,
+} from "@/shared/lib/entity-management";
 import { prisma } from "@/shared/lib/prisma";
-import { getServerEmployeeScope } from "@/shared/session";
+import {
+	assertCanManageEmployees,
+	getServerEmployeeScope,
+	getServerLoggedUserSession,
+} from "@/shared/session";
 import type {
 	QueryManyReturnType,
 	QueryPaginatedReturnType,
@@ -26,22 +35,10 @@ export function buildEmployeeWhere({
 	firmId,
 	filter,
 }: BuildEmployeeWhereParams) {
-	const hasActive = filter.status.includes("Ativo");
-	const hasInactive = filter.status.includes("Inativo");
-
-	const activeWhere =
-		hasActive && !hasInactive
-			? { isActive: true }
-			: hasInactive && !hasActive
-				? { isActive: false }
-				: {};
-
-	const deletedWhere = filter.showDeleted ? {} : { deletedAt: null };
-
 	return {
 		firmId,
-		...deletedWhere,
-		...activeWhere,
+		...getEntityDeletedVisibilityWhere(filter.status),
+		...getEntityActiveWhere(filter.active),
 		...(filter.name
 			? {
 					OR: [
@@ -69,6 +66,7 @@ const getEmployees = createServerFn({ method: "GET" })
 	.inputValidator(employeeSearchSchema)
 	.handler(async ({ data }): Promise<QueryPaginatedReturnType<Employee>> => {
 		try {
+			assertCanManageEmployees(getServerLoggedUserSession());
 			const { firmId } = getServerEmployeeScope();
 
 			const where = buildEmployeeWhere({ firmId, filter: data });
@@ -79,12 +77,12 @@ const getEmployees = createServerFn({ method: "GET" })
 				remunerationPercent: { remunerationPercentage: data.direction },
 				type: { type: { label: data.direction } },
 				role: { role: { label: data.direction } },
-				status: { isActive: data.direction },
+				isActive: { isActive: data.direction },
 			};
-			const orderBy = [
+			const orderBy = withDeterministicTieBreaker(
 				sortMap[data.column] ?? { fullName: "asc" },
 				{ id: "asc" },
-			];
+			);
 
 			const [employees, total] = await Promise.all([
 				prisma.employee.findMany({
@@ -107,7 +105,9 @@ const getEmployees = createServerFn({ method: "GET" })
 				typeId: emp.typeId,
 				roleId: emp.roleId,
 				type: emp.type.label,
+				typeValue: emp.type.value,
 				role: emp.role.label,
+				roleValue: emp.role.value,
 				contractCount: 0, // TODO: add when ContractEmployee model is available
 				isActive: emp.isActive,
 				isSoftDeleted: !!emp.deletedAt,
@@ -123,6 +123,12 @@ const getEmployees = createServerFn({ method: "GET" })
 			};
 		} catch (error) {
 			console.error("[getEmployees]", error);
+			if (
+				error instanceof Error &&
+				error.message.includes("Apenas administradores")
+			) {
+				throw error;
+			}
 			throw new Error("Erro ao buscar funcionários");
 		}
 	});
@@ -131,6 +137,7 @@ const getEmployeeTypes = createServerFn({ method: "GET" }).handler(
 	async (): Promise<QueryManyReturnType<EmployeeType>> => {
 		try {
 			const types = await prisma.employeeType.findMany({
+				where: { isActive: true },
 				orderBy: { label: "asc" },
 			});
 			return employeeTypeSchema.array().parse(types);
@@ -145,6 +152,7 @@ const getEmployeeRoles = createServerFn({ method: "GET" }).handler(
 	async (): Promise<QueryManyReturnType<EmployeeRole>> => {
 		try {
 			const roles = await prisma.userRole.findMany({
+				where: { isActive: true },
 				orderBy: { label: "asc" },
 			});
 			return employeeRoleSchema.array().parse(roles);

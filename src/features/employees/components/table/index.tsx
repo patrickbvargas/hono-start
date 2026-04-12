@@ -50,7 +50,7 @@ export const EmployeeTable = ({
 				enableSorting: EMPLOYEE_ALLOWED_SORT_COLUMNS.includes("oabNumber"),
 			}),
 			c.accessor("type", {
-				header: "Cargo",
+				header: "Função",
 				enableSorting: EMPLOYEE_ALLOWED_SORT_COLUMNS.includes("type"),
 			}),
 			c.accessor("remunerationPercent", {

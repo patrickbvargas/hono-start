@@ -5,6 +5,7 @@ export const EMPLOYEE_DATA_CACHE_KEY = "employee" as const;
 
 export const EMPLOYEE_ALLOWED_SORT_COLUMNS: NonEmptyKeys<Employee> = [
 	"fullName",
+	"isActive",
 	"oabNumber",
 	"remunerationPercent",
 	"role",

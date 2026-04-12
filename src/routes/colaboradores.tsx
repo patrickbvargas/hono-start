@@ -19,12 +19,17 @@ import { Wrapper } from "@/shared/components/wrapper";
 import { ROUTES } from "@/shared/config/routes";
 import { useOverlay } from "@/shared/hooks/use-overlay";
 import {
+	assertCanManageEmployees,
 	canManageEmployees,
+	getLoggedUserSession,
 	useLoggedUserSessionStore,
 } from "@/shared/session";
 
 export const Route = createFileRoute("/colaboradores")({
 	validateSearch: zodValidator(employeeSearchSchema),
+	beforeLoad: () => {
+		assertCanManageEmployees(getLoggedUserSession());
+	},
 	loaderDeps: ({ search }) => ({ search }),
 	loader: async ({ context: { queryClient }, deps: { search } }) => {
 		await queryClient.ensureQueryData(getEmployeesOptions(search));
