@@ -109,7 +109,7 @@ Administrators SHALL be able to create a new employee account with all required 
 - **WHEN** an administrator submits a valid create form
 - **THEN** the system creates the employee record scoped to the firm
 - **AND** the record stores the `isActive` value from the form
-- **AND** the selected employee type and user role come from active lookup options only
+- **AND** the employee type and user role fields are loaded from backend option queries that include inactive rows as disabled options
 - **AND** the modal closes
 - **AND** a success toast is shown
 - **AND** the employee list refreshes to include the new record
@@ -156,10 +156,15 @@ Administrators SHALL be able to edit an existing employee's profile fields, incl
 #### Scenario: Successful edit
 - **WHEN** an administrator submits a valid edit form
 - **THEN** the system updates the employee record including the `isActive` value
-- **AND** any newly selected employee type and user role come from active lookup options only
+- **AND** the employee type and user role fields are loaded from backend option queries that include inactive rows as disabled options
 - **AND** the modal closes
 - **AND** a success toast is shown
 - **AND** the employee row in the list reflects the updated data
+
+#### Scenario: Edit form preserves current inactive lookup values
+- **WHEN** an employee already references an inactive type or role
+- **THEN** the edit form still shows the persisted lookup value
+- **AND** that option is disabled in the selector
 
 #### Scenario: Validation on edit
 - **WHEN** an administrator submits an edit form with invalid data

@@ -35,21 +35,22 @@ The system SHALL model `isActive` filtering and soft-delete visibility as separa
 - **THEN** the list changes soft-delete visibility accordingly
 - **AND** any active-state filter continues to apply independently
 
-### Requirement: Entity form option queries return only selectable options
-The system SHALL use a shared selectable-options rule for data returned to dropdowns, selects, autocompletes, and other entity form pickers.
+### Requirement: Entity form option queries return complete selectable context
+The system SHALL use a shared option-loading rule for data returned to dropdowns, selects, autocompletes, and other entity form pickers.
 
-#### Scenario: Lookup-table option query returns only active rows
+#### Scenario: Lookup-table option query returns all rows
 - **WHEN** a form option query loads lookup-table records
-- **THEN** only rows with `isActive = true` are returned
+- **THEN** rows with `isActive = true` and `isActive = false` are both returned
+- **AND** inactive rows are rendered as disabled options in the form UI
 
 #### Scenario: Business-entity option query returns only active non-deleted rows
 - **WHEN** a form option query loads business-entity records
 - **THEN** only rows with `deletedAt = null` and `isActive = true` are returned
 
-#### Scenario: Historical references remain valid outside generic option queries
+#### Scenario: Historical references remain valid without feature-local merge helpers
 - **WHEN** an existing record references an inactive or soft-deleted related row
 - **THEN** the persisted reference remains valid for display or edit context
-- **AND** the generic option query still excludes that row from new selections
+- **AND** the feature does not need to inject a synthetic option in the UI layer
 
 ### Requirement: Reference entity slice defines the baseline structure for new entities
 The system SHALL use one stabilized entity slice as the reference implementation before new business entities are introduced.

@@ -72,7 +72,8 @@
 
 - Import the Prisma client from `@/db` — never instantiate `new PrismaClient()` elsewhere
 - **Every query** must filter by `firmId` (from session) and `deletedAt: null` — unless explicitly listing deleted records (e.g., admin status filter set to `inactive` or `all`)
-- **Form option queries** (data for dropdowns, selects, and autocompletes) must additionally filter `isActive: true` — only active, non-deleted records are offered as selectable options
+- **Business-entity form option queries** (data for dropdowns, selects, and autocompletes) must additionally filter `deletedAt: null` and `isActive: true`
+- **Lookup-table form option queries** must return all rows and rely on the field component to disable items where `isActive = false`
 - `deletedAt` and `isActive` are **independent** concerns: a record can be `isActive = false` without being soft-deleted, and vice versa. Never conflate them — soft-delete is a user-initiated removal action; active/inactive is a visibility toggle
 - Never trust `firmId` from client input — always read it from the authenticated session
 - Use `prisma.$transaction()` for all operations that span multiple tables (compound creates, soft-delete cascades, restore cascades)

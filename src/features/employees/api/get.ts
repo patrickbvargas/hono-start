@@ -137,7 +137,6 @@ const getEmployeeTypes = createServerFn({ method: "GET" }).handler(
 	async (): Promise<QueryManyReturnType<EmployeeType>> => {
 		try {
 			const types = await prisma.employeeType.findMany({
-				where: { isActive: true },
 				orderBy: { label: "asc" },
 			});
 			return employeeTypeSchema.array().parse(types);
@@ -152,7 +151,6 @@ const getEmployeeRoles = createServerFn({ method: "GET" }).handler(
 	async (): Promise<QueryManyReturnType<EmployeeRole>> => {
 		try {
 			const roles = await prisma.userRole.findMany({
-				where: { isActive: true },
 				orderBy: { label: "asc" },
 			});
 			return employeeRoleSchema.array().parse(roles);

@@ -444,7 +444,7 @@ An immutable log of all data changes across the system. Each entry records who m
 | FR-DATA-04 | The system must require explicit user confirmation before executing any delete or restore action. |
 | FR-DATA-05 | All business entities must have an `isActive` boolean field (default: true) that controls visibility in form options and dropdowns. Active/inactive status is independent of soft-delete — an inactive record is not deleted. |
 | FR-DATA-06 | The entity create and edit forms must expose the `isActive` field as an "Ativo" checkbox. |
-| FR-DATA-07 | Form option queries (dropdowns, selects, autocompletes) must only return records where `isActive = true` and `deletedAt IS NULL`. |
+| FR-DATA-07 | Business-entity form option queries (dropdowns, selects, autocompletes) must only return records where `isActive = true` and `deletedAt IS NULL`; lookup-table option queries must return all rows and render inactive values as disabled. |
 
 ### 8.13 Performance & Usability
 
@@ -720,7 +720,7 @@ When a Recommending + Recommended pair is assigned to a contract, the referrer's
 
 ## Appendix B: Lookup Values
 
-These are system-defined reference values. Their `value` and `label` fields are immutable — they cannot be created, renamed, or deleted through the application UI. However, each lookup value carries an `isActive` boolean (default: `true`) that administrators can toggle to hide a specific option from all form dropdowns without removing the record.
+These are system-defined reference values. Their `value` and `label` fields are immutable — they cannot be created, renamed, or deleted through the application UI. However, each lookup value carries an `isActive` boolean (default: `true`) that administrators can toggle to keep a specific option visible but disabled in form dropdowns without removing the record.
 
 ### Employee Types
 

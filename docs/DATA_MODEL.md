@@ -103,10 +103,10 @@ Rules:
 - Sorted by `label` when displayed
 - Seeded via `prisma/seed.ts` (mandatory before app can run)
 - `value` and `label` are immutable — no create, update, or delete via the UI
-- `isActive` can be toggled by admins to hide a lookup option from all form dropdowns without removing the record
+- `isActive` can be toggled by admins to keep a lookup option visible but disabled in form dropdowns without removing the record
 - No soft delete (`deletedAt`)
 - No `firmId` — lookup values are global across all firms
-- **Form option queries** must filter `isActive: true` on lookup tables just as on business entities
+- **Lookup-table form option queries** return all rows and rely on the form control to disable entries where `isActive = false`
 
 ---
 
@@ -129,10 +129,10 @@ isActive Boolean @default(true)
 
 - `true` → record is active and visible in form options, dropdowns, and default list views
 - `false` → record is inactive: still exists in the database, visible in admin lists (with filter), but excluded from form dropdowns and option selectors
-- This is **independent of soft-delete** — an inactive record is not deleted; it is simply hidden from selection UIs
+- This is **independent of soft-delete** — an inactive record is not deleted; for lookup tables it remains visible but disabled in selection UIs
 - For business entities, the `isActive` checkbox is always present in the create and edit forms; for lookup tables, `isActive` is managed via an admin-only settings panel (lookup tables have no other mutable fields)
 - **Business entity form options / dropdowns** must always filter: `deletedAt: null AND isActive: true`
-- **Lookup table form options / dropdowns** must always filter: `isActive: true` (lookup tables have no `deletedAt`)
+- **Lookup table form options / dropdowns** must always return all rows; inactive rows remain visible but disabled (lookup tables have no `deletedAt`)
 - **Tables / lists** default to non-deleted records; `isActive` can be filtered via the `active` URL search param
 
 ---
@@ -1058,7 +1058,7 @@ Additionally, enforce these constraints at the service layer (check before inser
 
 All list queries support **server-side filtering** via URL search params, validated by Zod schemas. Each entity defines the filter fields accepted by its list API.
 
-> **Filter conventions:** The `status` param (mapped to `deletedAt`) and the `active` param (mapped to `isActive`) are independent. A query for `status=active` returns all non-deleted records regardless of `isActive`; `active=true` returns only `isActive = true` records regardless of `deletedAt`. Form option queries always apply both: `deletedAt: null` and `isActive: true`.
+> **Filter conventions:** The `status` param (mapped to `deletedAt`) and the `active` param (mapped to `isActive`) are independent. A query for `status=active` returns all non-deleted records regardless of `isActive`; `active=true` returns only `isActive = true` records regardless of `deletedAt`. Business-entity form option queries apply both `deletedAt: null` and `isActive: true`; lookup-table option queries return all rows and disable inactive values in the UI.
 
 ## 11.1 Employee
 
