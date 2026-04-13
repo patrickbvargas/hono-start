@@ -9,24 +9,20 @@ context: |
 
 rules:
   proposal:
-    - Read docs/PRD.md before writing the proposal
     - Keep proposals focused on a single feature or change
     - Include a "Non-goals" section to define boundaries
     - Identify affected user roles and multi-tenant implications
 
   specs:
-    - Read docs/PRD.md and docs/DATA_MODEL.md before writing specs
     - Focus on behavior — avoid implementation details
     - Define clear, testable acceptance criteria
     - Include edge cases and side effects
 
   design:
-    - Read docs/STACK.md, docs/ARCHITECTURE.md, docs/CONVENTIONS.md, docs/WORKFLOW.md, and docs/DATA_MODEL.md before writing the design
     - Use Context7 MCP to look up documentation for any library before implementing
     - Justify any deviation from existing patterns
 
   tasks:
-    - Read docs/CONVENTIONS.md, docs/WORKFLOW.md and docs/DATA_MODEL.md before writing tasks
     - Use Context7 MCP to look up documentation for any library before implementing
     - Break into atomic units (~1–2 hours each)
     - Indicate if DB migrations are required

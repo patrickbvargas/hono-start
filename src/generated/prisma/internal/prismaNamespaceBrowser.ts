@@ -55,8 +55,15 @@ export const ModelName = {
   ClientType: 'ClientType',
   EmployeeType: 'EmployeeType',
   UserRole: 'UserRole',
+  LegalArea: 'LegalArea',
+  ContractStatus: 'ContractStatus',
+  AssignmentType: 'AssignmentType',
+  RevenueType: 'RevenueType',
   Employee: 'Employee',
-  Client: 'Client'
+  Client: 'Client',
+  Contract: 'Contract',
+  ContractEmployee: 'ContractEmployee',
+  Revenue: 'Revenue'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -113,6 +120,46 @@ export const UserRoleScalarFieldEnum = {
 export type UserRoleScalarFieldEnum = (typeof UserRoleScalarFieldEnum)[keyof typeof UserRoleScalarFieldEnum]
 
 
+export const LegalAreaScalarFieldEnum = {
+  id: 'id',
+  value: 'value',
+  label: 'label',
+  isActive: 'isActive'
+} as const
+
+export type LegalAreaScalarFieldEnum = (typeof LegalAreaScalarFieldEnum)[keyof typeof LegalAreaScalarFieldEnum]
+
+
+export const ContractStatusScalarFieldEnum = {
+  id: 'id',
+  value: 'value',
+  label: 'label',
+  isActive: 'isActive'
+} as const
+
+export type ContractStatusScalarFieldEnum = (typeof ContractStatusScalarFieldEnum)[keyof typeof ContractStatusScalarFieldEnum]
+
+
+export const AssignmentTypeScalarFieldEnum = {
+  id: 'id',
+  value: 'value',
+  label: 'label',
+  isActive: 'isActive'
+} as const
+
+export type AssignmentTypeScalarFieldEnum = (typeof AssignmentTypeScalarFieldEnum)[keyof typeof AssignmentTypeScalarFieldEnum]
+
+
+export const RevenueTypeScalarFieldEnum = {
+  id: 'id',
+  value: 'value',
+  label: 'label',
+  isActive: 'isActive'
+} as const
+
+export type RevenueTypeScalarFieldEnum = (typeof RevenueTypeScalarFieldEnum)[keyof typeof RevenueTypeScalarFieldEnum]
+
+
 export const EmployeeScalarFieldEnum = {
   id: 'id',
   firmId: 'firmId',
@@ -148,6 +195,58 @@ export const ClientScalarFieldEnum = {
 } as const
 
 export type ClientScalarFieldEnum = (typeof ClientScalarFieldEnum)[keyof typeof ClientScalarFieldEnum]
+
+
+export const ContractScalarFieldEnum = {
+  id: 'id',
+  firmId: 'firmId',
+  clientId: 'clientId',
+  legalAreaId: 'legalAreaId',
+  statusId: 'statusId',
+  processNumber: 'processNumber',
+  feePercentage: 'feePercentage',
+  notes: 'notes',
+  allowStatusChange: 'allowStatusChange',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+} as const
+
+export type ContractScalarFieldEnum = (typeof ContractScalarFieldEnum)[keyof typeof ContractScalarFieldEnum]
+
+
+export const ContractEmployeeScalarFieldEnum = {
+  id: 'id',
+  firmId: 'firmId',
+  contractId: 'contractId',
+  employeeId: 'employeeId',
+  assignmentTypeId: 'assignmentTypeId',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+} as const
+
+export type ContractEmployeeScalarFieldEnum = (typeof ContractEmployeeScalarFieldEnum)[keyof typeof ContractEmployeeScalarFieldEnum]
+
+
+export const RevenueScalarFieldEnum = {
+  id: 'id',
+  firmId: 'firmId',
+  contractId: 'contractId',
+  typeId: 'typeId',
+  totalValue: 'totalValue',
+  downPaymentValue: 'downPaymentValue',
+  paymentStartDate: 'paymentStartDate',
+  totalInstallments: 'totalInstallments',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+} as const
+
+export type RevenueScalarFieldEnum = (typeof RevenueScalarFieldEnum)[keyof typeof RevenueScalarFieldEnum]
 
 
 export const SortOrder = {

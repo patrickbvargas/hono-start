@@ -274,6 +274,7 @@ export type ClientWhereInput = {
   deletedAt?: Prisma.DateTimeNullableFilter<"Client"> | Date | string | null
   firm?: Prisma.XOR<Prisma.FirmScalarRelationFilter, Prisma.FirmWhereInput>
   type?: Prisma.XOR<Prisma.ClientTypeScalarRelationFilter, Prisma.ClientTypeWhereInput>
+  contracts?: Prisma.ContractListRelationFilter
 }
 
 export type ClientOrderByWithRelationInput = {
@@ -290,6 +291,7 @@ export type ClientOrderByWithRelationInput = {
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   firm?: Prisma.FirmOrderByWithRelationInput
   type?: Prisma.ClientTypeOrderByWithRelationInput
+  contracts?: Prisma.ContractOrderByRelationAggregateInput
 }
 
 export type ClientWhereUniqueInput = Prisma.AtLeast<{
@@ -310,6 +312,7 @@ export type ClientWhereUniqueInput = Prisma.AtLeast<{
   deletedAt?: Prisma.DateTimeNullableFilter<"Client"> | Date | string | null
   firm?: Prisma.XOR<Prisma.FirmScalarRelationFilter, Prisma.FirmWhereInput>
   type?: Prisma.XOR<Prisma.ClientTypeScalarRelationFilter, Prisma.ClientTypeWhereInput>
+  contracts?: Prisma.ContractListRelationFilter
 }, "id" | "firmId_document">
 
 export type ClientOrderByWithAggregationInput = {
@@ -359,6 +362,7 @@ export type ClientCreateInput = {
   deletedAt?: Date | string | null
   firm: Prisma.FirmCreateNestedOneWithoutClientsInput
   type: Prisma.ClientTypeCreateNestedOneWithoutClientsInput
+  contracts?: Prisma.ContractCreateNestedManyWithoutClientInput
 }
 
 export type ClientUncheckedCreateInput = {
@@ -373,6 +377,7 @@ export type ClientUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutClientInput
 }
 
 export type ClientUpdateInput = {
@@ -386,6 +391,7 @@ export type ClientUpdateInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   firm?: Prisma.FirmUpdateOneRequiredWithoutClientsNestedInput
   type?: Prisma.ClientTypeUpdateOneRequiredWithoutClientsNestedInput
+  contracts?: Prisma.ContractUpdateManyWithoutClientNestedInput
 }
 
 export type ClientUncheckedUpdateInput = {
@@ -400,6 +406,7 @@ export type ClientUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  contracts?: Prisma.ContractUncheckedUpdateManyWithoutClientNestedInput
 }
 
 export type ClientCreateManyInput = {
@@ -510,6 +517,11 @@ export type ClientSumOrderByAggregateInput = {
   typeId?: Prisma.SortOrder
 }
 
+export type ClientScalarRelationFilter = {
+  is?: Prisma.ClientWhereInput
+  isNot?: Prisma.ClientWhereInput
+}
+
 export type ClientCreateNestedManyWithoutFirmInput = {
   create?: Prisma.XOR<Prisma.ClientCreateWithoutFirmInput, Prisma.ClientUncheckedCreateWithoutFirmInput> | Prisma.ClientCreateWithoutFirmInput[] | Prisma.ClientUncheckedCreateWithoutFirmInput[]
   connectOrCreate?: Prisma.ClientCreateOrConnectWithoutFirmInput | Prisma.ClientCreateOrConnectWithoutFirmInput[]
@@ -594,6 +606,20 @@ export type ClientUncheckedUpdateManyWithoutTypeNestedInput = {
   deleteMany?: Prisma.ClientScalarWhereInput | Prisma.ClientScalarWhereInput[]
 }
 
+export type ClientCreateNestedOneWithoutContractsInput = {
+  create?: Prisma.XOR<Prisma.ClientCreateWithoutContractsInput, Prisma.ClientUncheckedCreateWithoutContractsInput>
+  connectOrCreate?: Prisma.ClientCreateOrConnectWithoutContractsInput
+  connect?: Prisma.ClientWhereUniqueInput
+}
+
+export type ClientUpdateOneRequiredWithoutContractsNestedInput = {
+  create?: Prisma.XOR<Prisma.ClientCreateWithoutContractsInput, Prisma.ClientUncheckedCreateWithoutContractsInput>
+  connectOrCreate?: Prisma.ClientCreateOrConnectWithoutContractsInput
+  upsert?: Prisma.ClientUpsertWithoutContractsInput
+  connect?: Prisma.ClientWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ClientUpdateToOneWithWhereWithoutContractsInput, Prisma.ClientUpdateWithoutContractsInput>, Prisma.ClientUncheckedUpdateWithoutContractsInput>
+}
+
 export type ClientCreateWithoutFirmInput = {
   fullName: string
   document: string
@@ -604,6 +630,7 @@ export type ClientCreateWithoutFirmInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   type: Prisma.ClientTypeCreateNestedOneWithoutClientsInput
+  contracts?: Prisma.ContractCreateNestedManyWithoutClientInput
 }
 
 export type ClientUncheckedCreateWithoutFirmInput = {
@@ -617,6 +644,7 @@ export type ClientUncheckedCreateWithoutFirmInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutClientInput
 }
 
 export type ClientCreateOrConnectWithoutFirmInput = {
@@ -672,6 +700,7 @@ export type ClientCreateWithoutTypeInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   firm: Prisma.FirmCreateNestedOneWithoutClientsInput
+  contracts?: Prisma.ContractCreateNestedManyWithoutClientInput
 }
 
 export type ClientUncheckedCreateWithoutTypeInput = {
@@ -685,6 +714,7 @@ export type ClientUncheckedCreateWithoutTypeInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutClientInput
 }
 
 export type ClientCreateOrConnectWithoutTypeInput = {
@@ -713,6 +743,76 @@ export type ClientUpdateManyWithWhereWithoutTypeInput = {
   data: Prisma.XOR<Prisma.ClientUpdateManyMutationInput, Prisma.ClientUncheckedUpdateManyWithoutTypeInput>
 }
 
+export type ClientCreateWithoutContractsInput = {
+  fullName: string
+  document: string
+  email?: string | null
+  phone?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  firm: Prisma.FirmCreateNestedOneWithoutClientsInput
+  type: Prisma.ClientTypeCreateNestedOneWithoutClientsInput
+}
+
+export type ClientUncheckedCreateWithoutContractsInput = {
+  id?: number
+  firmId: number
+  typeId: number
+  fullName: string
+  document: string
+  email?: string | null
+  phone?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+}
+
+export type ClientCreateOrConnectWithoutContractsInput = {
+  where: Prisma.ClientWhereUniqueInput
+  create: Prisma.XOR<Prisma.ClientCreateWithoutContractsInput, Prisma.ClientUncheckedCreateWithoutContractsInput>
+}
+
+export type ClientUpsertWithoutContractsInput = {
+  update: Prisma.XOR<Prisma.ClientUpdateWithoutContractsInput, Prisma.ClientUncheckedUpdateWithoutContractsInput>
+  create: Prisma.XOR<Prisma.ClientCreateWithoutContractsInput, Prisma.ClientUncheckedCreateWithoutContractsInput>
+  where?: Prisma.ClientWhereInput
+}
+
+export type ClientUpdateToOneWithWhereWithoutContractsInput = {
+  where?: Prisma.ClientWhereInput
+  data: Prisma.XOR<Prisma.ClientUpdateWithoutContractsInput, Prisma.ClientUncheckedUpdateWithoutContractsInput>
+}
+
+export type ClientUpdateWithoutContractsInput = {
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  document?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  firm?: Prisma.FirmUpdateOneRequiredWithoutClientsNestedInput
+  type?: Prisma.ClientTypeUpdateOneRequiredWithoutClientsNestedInput
+}
+
+export type ClientUncheckedUpdateWithoutContractsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  firmId?: Prisma.IntFieldUpdateOperationsInput | number
+  typeId?: Prisma.IntFieldUpdateOperationsInput | number
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  document?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
 export type ClientCreateManyFirmInput = {
   id?: number
   typeId: number
@@ -736,6 +836,7 @@ export type ClientUpdateWithoutFirmInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   type?: Prisma.ClientTypeUpdateOneRequiredWithoutClientsNestedInput
+  contracts?: Prisma.ContractUpdateManyWithoutClientNestedInput
 }
 
 export type ClientUncheckedUpdateWithoutFirmInput = {
@@ -749,6 +850,7 @@ export type ClientUncheckedUpdateWithoutFirmInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  contracts?: Prisma.ContractUncheckedUpdateManyWithoutClientNestedInput
 }
 
 export type ClientUncheckedUpdateManyWithoutFirmInput = {
@@ -787,6 +889,7 @@ export type ClientUpdateWithoutTypeInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   firm?: Prisma.FirmUpdateOneRequiredWithoutClientsNestedInput
+  contracts?: Prisma.ContractUpdateManyWithoutClientNestedInput
 }
 
 export type ClientUncheckedUpdateWithoutTypeInput = {
@@ -800,6 +903,7 @@ export type ClientUncheckedUpdateWithoutTypeInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  contracts?: Prisma.ContractUncheckedUpdateManyWithoutClientNestedInput
 }
 
 export type ClientUncheckedUpdateManyWithoutTypeInput = {
@@ -816,6 +920,35 @@ export type ClientUncheckedUpdateManyWithoutTypeInput = {
 }
 
 
+/**
+ * Count Type ClientCountOutputType
+ */
+
+export type ClientCountOutputType = {
+  contracts: number
+}
+
+export type ClientCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  contracts?: boolean | ClientCountOutputTypeCountContractsArgs
+}
+
+/**
+ * ClientCountOutputType without action
+ */
+export type ClientCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ClientCountOutputType
+   */
+  select?: Prisma.ClientCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * ClientCountOutputType without action
+ */
+export type ClientCountOutputTypeCountContractsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ContractWhereInput
+}
+
 
 export type ClientSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -831,6 +964,8 @@ export type ClientSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   deletedAt?: boolean
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
   type?: boolean | Prisma.ClientTypeDefaultArgs<ExtArgs>
+  contracts?: boolean | Prisma.Client$contractsArgs<ExtArgs>
+  _count?: boolean | Prisma.ClientCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["client"]>
 
 export type ClientSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -883,6 +1018,8 @@ export type ClientOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
 export type ClientInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
   type?: boolean | Prisma.ClientTypeDefaultArgs<ExtArgs>
+  contracts?: boolean | Prisma.Client$contractsArgs<ExtArgs>
+  _count?: boolean | Prisma.ClientCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ClientIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
@@ -898,6 +1035,7 @@ export type $ClientPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   objects: {
     firm: Prisma.$FirmPayload<ExtArgs>
     type: Prisma.$ClientTypePayload<ExtArgs>
+    contracts: Prisma.$ContractPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1307,6 +1445,7 @@ export interface Prisma__ClientClient<T, Null = never, ExtArgs extends runtime.T
   readonly [Symbol.toStringTag]: "PrismaPromise"
   firm<T extends Prisma.FirmDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FirmDefaultArgs<ExtArgs>>): Prisma.Prisma__FirmClient<runtime.Types.Result.GetResult<Prisma.$FirmPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   type<T extends Prisma.ClientTypeDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ClientTypeDefaultArgs<ExtArgs>>): Prisma.Prisma__ClientTypeClient<runtime.Types.Result.GetResult<Prisma.$ClientTypePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  contracts<T extends Prisma.Client$contractsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Client$contractsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ContractPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1745,6 +1884,30 @@ export type ClientDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Limit how many Clients to delete.
    */
   limit?: number
+}
+
+/**
+ * Client.contracts
+ */
+export type Client$contractsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Contract
+   */
+  select?: Prisma.ContractSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Contract
+   */
+  omit?: Prisma.ContractOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ContractInclude<ExtArgs> | null
+  where?: Prisma.ContractWhereInput
+  orderBy?: Prisma.ContractOrderByWithRelationInput | Prisma.ContractOrderByWithRelationInput[]
+  cursor?: Prisma.ContractWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ContractScalarFieldEnum | Prisma.ContractScalarFieldEnum[]
 }
 
 /**

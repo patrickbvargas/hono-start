@@ -18,12 +18,12 @@ export async function getActiveContractCountByClientIds(clientIds: number[]) {
 		Array<{ clientId: number; total: number }>
 	>(Prisma.sql`
 		SELECT
-			client_id AS "clientId",
+			"clientId" AS "clientId",
 			COUNT(*)::int AS "total"
 		FROM "contracts"
-		WHERE "client_id" IN (${Prisma.join(clientIds)})
-			AND "deleted_at" IS NULL
-		GROUP BY "client_id"
+		WHERE "clientId" IN (${Prisma.join(clientIds)})
+			AND "deletedAt" IS NULL
+		GROUP BY "clientId"
 	`);
 
 	return new Map(rows.map((row) => [row.clientId, Number(row.total)]));

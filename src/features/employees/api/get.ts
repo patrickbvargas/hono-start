@@ -20,6 +20,7 @@ import { EMPLOYEE_DATA_CACHE_KEY } from "../constants";
 import type { EmployeeFilter } from "../schemas/filter";
 import { type Employee, employeeSchema } from "../schemas/model";
 import { type EmployeeSearch, employeeSearchSchema } from "../schemas/search";
+import { getActiveContractCountByEmployeeIds } from "./contracts";
 
 interface BuildEmployeeWhereParams {
 	firmId: number;
@@ -113,6 +114,10 @@ const getEmployees = createServerFn({ method: "GET" })
 				prisma.employee.count({ where }),
 			]);
 
+			const contractCounts = await getActiveContractCountByEmployeeIds(
+				employees.map((employee) => employee.id),
+			);
+
 			const mapped = employees.map((emp) => ({
 				id: emp.id,
 				fullName: emp.fullName,
@@ -126,7 +131,7 @@ const getEmployees = createServerFn({ method: "GET" })
 				roleId: emp.roleId,
 				role: emp.role.label,
 				roleValue: emp.role.value,
-				contractCount: 0, // TODO: add when ContractEmployee model is available
+				contractCount: contractCounts.get(emp.id) ?? 0,
 				isActive: emp.isActive,
 				isSoftDeleted: !!emp.deletedAt,
 				createdAt: emp.createdAt.toISOString(),

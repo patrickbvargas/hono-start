@@ -1,38 +1,44 @@
-import { useStore } from "zustand";
-import { createStore } from "zustand/vanilla";
+import { useSyncExternalStore } from "react";
 import { cloneLoggedUserSession, createMockLoggedUserSession } from "./mock";
 import type { LoggedUserSession } from "./model";
 
-interface LoggedUserSessionState {
-	session: LoggedUserSession;
-	setSession: (session: LoggedUserSession) => void;
-	resetSession: () => void;
+let currentSession = createMockLoggedUserSession();
+const listeners = new Set<() => void>();
+
+function emitChange() {
+	for (const listener of listeners) {
+		listener();
+	}
 }
 
-const loggedUserSessionStore = createStore<LoggedUserSessionState>()((set) => ({
-	session: createMockLoggedUserSession(),
-	setSession: (session) => {
-		set({ session: cloneLoggedUserSession(session) });
-	},
-	resetSession: () => {
-		set({ session: createMockLoggedUserSession() });
-	},
-}));
+function subscribe(listener: () => void) {
+	listeners.add(listener);
+
+	return () => {
+		listeners.delete(listener);
+	};
+}
+
+function getSnapshot() {
+	return currentSession;
+}
 
 export function getLoggedUserSession() {
-	return cloneLoggedUserSession(loggedUserSessionStore.getState().session);
+	return cloneLoggedUserSession(currentSession);
 }
 
 export function setLoggedUserSession(session: LoggedUserSession) {
-	loggedUserSessionStore.getState().setSession(session);
+	currentSession = cloneLoggedUserSession(session);
+	emitChange();
 }
 
 export function resetLoggedUserSession() {
-	loggedUserSessionStore.getState().resetSession();
+	currentSession = createMockLoggedUserSession();
+	emitChange();
 }
 
 export function useLoggedUserSessionStore<T>(
 	selector: (session: LoggedUserSession) => T,
 ) {
-	return useStore(loggedUserSessionStore, (state) => selector(state.session));
+	return useSyncExternalStore(subscribe, () => selector(getSnapshot()));
 }

@@ -44,7 +44,7 @@ function isAssignedToActor(
 	);
 }
 
-function isContractReadOnly(resource?: ContractAccessResource | null) {
+export function isContractReadOnly(resource?: ContractAccessResource | null) {
 	if (!resource?.statusValue) {
 		return false;
 	}
@@ -69,6 +69,14 @@ function canAccessOwnEmployee(
 		isSameFirm(session, resource) &&
 		resource.employeeId === getCurrentEmployeeId(session)
 	);
+}
+
+export function isContractWritable(resource?: ContractAccessResource | null) {
+	if (!resource) {
+		return false;
+	}
+
+	return !isContractReadOnly(resource);
 }
 
 export function can(
@@ -113,7 +121,7 @@ export function can(
 		case "contract.update":
 			return (
 				isAssignedToActor(session, resource as ContractAccessResource) &&
-				!isContractReadOnly(resource as ContractAccessResource)
+				isContractWritable(resource as ContractAccessResource)
 			);
 	}
 }

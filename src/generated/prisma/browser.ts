@@ -38,6 +38,26 @@ export type EmployeeType = Prisma.EmployeeTypeModel
  */
 export type UserRole = Prisma.UserRoleModel
 /**
+ * Model LegalArea
+ * 
+ */
+export type LegalArea = Prisma.LegalAreaModel
+/**
+ * Model ContractStatus
+ * 
+ */
+export type ContractStatus = Prisma.ContractStatusModel
+/**
+ * Model AssignmentType
+ * 
+ */
+export type AssignmentType = Prisma.AssignmentTypeModel
+/**
+ * Model RevenueType
+ * 
+ */
+export type RevenueType = Prisma.RevenueTypeModel
+/**
  * Model Employee
  * 
  */
@@ -47,3 +67,18 @@ export type Employee = Prisma.EmployeeModel
  * 
  */
 export type Client = Prisma.ClientModel
+/**
+ * Model Contract
+ * 
+ */
+export type Contract = Prisma.ContractModel
+/**
+ * Model ContractEmployee
+ * 
+ */
+export type ContractEmployee = Prisma.ContractEmployeeModel
+/**
+ * Model Revenue
+ * 
+ */
+export type Revenue = Prisma.RevenueModel
