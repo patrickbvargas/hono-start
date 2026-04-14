@@ -54,16 +54,16 @@ const referrerRefinement = (
 	}
 };
 
-export const employeeCreateSchema = z
+export const employeeCreateInputSchema = z
 	.object(employeeBaseShape)
 	.superRefine(referrerRefinement);
 
-export const employeeUpdateSchema = entityIdSchema
+export const employeeUpdateInputSchema = entityIdSchema
 	.safeExtend(employeeBaseShape)
 	.superRefine(referrerRefinement);
 
-export const employeeByIdSchema = entityIdSchema;
+export const employeeIdInputSchema = entityIdSchema;
 
-export type EmployeeCreate = z.infer<typeof employeeCreateSchema>;
-export type EmployeeUpdate = z.infer<typeof employeeUpdateSchema>;
-export type EmployeeById = z.infer<typeof employeeByIdSchema>;
+export type EmployeeCreateInput = z.infer<typeof employeeCreateInputSchema>;
+export type EmployeeUpdateInput = z.infer<typeof employeeUpdateInputSchema>;
+export type EmployeeIdInput = z.infer<typeof employeeIdInputSchema>;

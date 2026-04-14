@@ -35,6 +35,8 @@
 - URL-driven schemas must use safe defaults.
 - Keep schema and inferred type definitions close together.
 - `schemas/form.ts` is the canonical home for request-shape validation and database-free schema refinements.
+- `schemas/form.ts` request and write schemas must use explicit `...InputSchema` names, and inferred types must use matching `...Input` names.
+- `schemas/model.ts` read-model schemas and inferred types keep concise domain names such as `contractSchema` and `Contract`.
 
 ## Feature Boundary Rules
 

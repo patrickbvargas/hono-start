@@ -1,7 +1,7 @@
-import type { ClientCreate, ClientUpdate } from "../schemas/form";
+import type { ClientCreateInput, ClientUpdateInput } from "../schemas/form";
 import type { Client } from "../schemas/model";
 
-export const defaultClientCreateValues = (): ClientCreate => ({
+export const defaultClientCreateValues = (): ClientCreateInput => ({
 	fullName: "",
 	document: "",
 	email: "",
@@ -12,7 +12,7 @@ export const defaultClientCreateValues = (): ClientCreate => ({
 
 export const defaultClientUpdateValues = (
 	initialValue: Client,
-): ClientUpdate => ({
+): ClientUpdateInput => ({
 	id: initialValue.id,
 	fullName: initialValue.fullName,
 	document: initialValue.document,

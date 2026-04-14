@@ -10,12 +10,12 @@ import {
 } from "../constants";
 import type {
 	ContractAssignmentInput,
-	ContractCreate,
+	ContractCreateInput,
 	ContractRevenueInput,
-	ContractUpdate,
+	ContractUpdateInput,
 } from "../schemas/form";
 
-type ContractWriteInput = ContractCreate | ContractUpdate;
+type ContractWriteInput = ContractCreateInput | ContractUpdateInput;
 
 export function assertContractPayloadHasAssignments(
 	assignments: ContractAssignmentInput[],

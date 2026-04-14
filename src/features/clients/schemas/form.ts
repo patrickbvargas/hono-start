@@ -29,16 +29,16 @@ const documentRefinement = (
 	}
 };
 
-export const clientCreateSchema = z
+export const clientCreateInputSchema = z
 	.object(clientBaseShape)
 	.superRefine(documentRefinement);
 
-export const clientUpdateSchema = entityIdSchema
+export const clientUpdateInputSchema = entityIdSchema
 	.safeExtend(clientBaseShape)
 	.superRefine(documentRefinement);
 
-export const clientByIdSchema = entityIdSchema;
+export const clientIdInputSchema = entityIdSchema;
 
-export type ClientCreate = z.infer<typeof clientCreateSchema>;
-export type ClientUpdate = z.infer<typeof clientUpdateSchema>;
-export type ClientById = z.infer<typeof clientByIdSchema>;
+export type ClientCreateInput = z.infer<typeof clientCreateInputSchema>;
+export type ClientUpdateInput = z.infer<typeof clientUpdateInputSchema>;
+export type ClientIdInput = z.infer<typeof clientIdInputSchema>;

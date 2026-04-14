@@ -1,8 +1,4 @@
-## Purpose
-
-Define the canonical repository boundary for feature form schemas, pure validation helpers, normalization helpers, and Prisma-backed lookup resolution used by feature writes.
-
-## Requirements
+## MODIFIED Requirements
 
 ### Requirement: Feature form concerns use a canonical boundary
 The system SHALL organize form-related feature concerns using a canonical boundary so schemas, normalization helpers, pure validation helpers, and Prisma-backed lookup resolution have distinct ownership.

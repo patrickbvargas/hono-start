@@ -19,7 +19,7 @@ import type {
 } from "@/shared/types/api";
 import { CONTRACT_DATA_CACHE_KEY } from "../constants";
 import type { ContractFilter } from "../schemas/filter";
-import { contractByIdSchema } from "../schemas/form";
+import { contractIdInputSchema } from "../schemas/form";
 import { type Contract, contractSchema } from "../schemas/model";
 import { type ContractSearch, contractSearchSchema } from "../schemas/search";
 
@@ -260,7 +260,7 @@ const getContracts = createServerFn({ method: "GET" })
 	});
 
 const getContractById = createServerFn({ method: "GET" })
-	.inputValidator(contractByIdSchema)
+	.inputValidator(contractIdInputSchema)
 	.handler(async ({ data }): Promise<QueryOneReturnType<Contract>> => {
 		try {
 			const session = getServerLoggedUserSession();

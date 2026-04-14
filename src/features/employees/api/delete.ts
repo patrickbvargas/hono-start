@@ -7,10 +7,10 @@ import {
 	getServerLoggedUserSession,
 } from "@/shared/session";
 import type { MutationReturnType } from "@/shared/types/api";
-import { employeeByIdSchema } from "../schemas/form";
+import { employeeIdInputSchema } from "../schemas/form";
 
 const deleteEmployee = createServerFn({ method: "POST" })
-	.inputValidator(employeeByIdSchema)
+	.inputValidator(employeeIdInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
 			const session = getServerLoggedUserSession();

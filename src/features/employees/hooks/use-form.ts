@@ -8,12 +8,15 @@ import { toast } from "@/shared/lib/toast";
 import { createEmployeeOptions } from "../api/create";
 import { updateEmployeeOptions } from "../api/update";
 import { EMPLOYEE_DATA_CACHE_KEY } from "../constants";
-import type { EmployeeUpdate } from "../schemas/form";
-import { employeeCreateSchema, employeeUpdateSchema } from "../schemas/form";
+import type { EmployeeUpdateInput } from "../schemas/form";
+import {
+	employeeCreateInputSchema,
+	employeeUpdateInputSchema,
+} from "../schemas/form";
 import { defaultFormCreateValues } from "../utils/default";
 
 interface UseEmployeeFormOptions {
-	initialData?: EmployeeUpdate;
+	initialData?: EmployeeUpdateInput;
 	onSuccess?: () => void;
 }
 
@@ -30,16 +33,18 @@ export function useEmployeeForm({
 	const form = useAppForm({
 		defaultValues: initialData ?? defaultFormCreateValues(),
 		validators: {
-			onSubmit: isEditing ? employeeUpdateSchema : employeeCreateSchema,
+			onSubmit: isEditing
+				? employeeUpdateInputSchema
+				: employeeCreateInputSchema,
 		},
 		onSubmit: async ({ value }) => {
 			try {
 				if (isEditing) {
-					const parsed = employeeUpdateSchema.parse(value);
+					const parsed = employeeUpdateInputSchema.parse(value);
 					await updateMutation.mutateAsync({ data: parsed });
 					toast.success("Funcionário atualizado com sucesso.");
 				} else {
-					const parsed = employeeCreateSchema.parse(value);
+					const parsed = employeeCreateInputSchema.parse(value);
 					await createMutation.mutateAsync({ data: parsed });
 					toast.success("Funcionário criado com sucesso.");
 				}

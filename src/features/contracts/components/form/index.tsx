@@ -1,4 +1,5 @@
 import { PlusIcon, Trash2Icon } from "lucide-react";
+import { useRef } from "react";
 import { FormWrapper } from "@/shared/components/form-wrapper";
 import { Button, Field } from "@/shared/components/ui";
 import { isAdminSession, useLoggedUserSessionStore } from "@/shared/session";
@@ -24,6 +25,8 @@ export const ContractForm = ({
 	state,
 	onSuccess,
 }: ContractFormProps) => {
+	const rowKeysRef = useRef(new WeakMap<object, string>());
+	const rowKeyCountRef = useRef(0);
 	const {
 		clients,
 		legalAreas,
@@ -37,6 +40,18 @@ export const ContractForm = ({
 		onSuccess,
 	});
 	const isAdmin = useLoggedUserSessionStore(isAdminSession);
+
+	const getRowKey = (value: object) => {
+		const existingKey = rowKeysRef.current.get(value);
+		if (existingKey) {
+			return existingKey;
+		}
+
+		rowKeyCountRef.current += 1;
+		const nextKey = `contract-form-row-${rowKeyCountRef.current}`;
+		rowKeysRef.current.set(value, nextKey);
+		return nextKey;
+	};
 
 	const title = contract ? "Editar contrato" : "Novo contrato";
 
@@ -134,8 +149,11 @@ export const ContractForm = ({
 								<PlusIcon size={16} />
 								Colaborador
 							</Button>
-							{subField.state.value.map((_, i) => (
-								<Field.Group key={i} className="grid-cols-[repeat(2,1fr)_auto]">
+							{subField.state.value.map((assignment, i) => (
+								<Field.Group
+									key={getRowKey(assignment)}
+									className="grid-cols-[repeat(2,1fr)_auto]"
+								>
 									<form.AppField name={`assignments[${i}].employeeId`}>
 										{(field) => (
 											<field.Autocomplete
@@ -185,8 +203,8 @@ export const ContractForm = ({
 								<PlusIcon size={16} />
 								Colaborador
 							</Button>
-							{subField.state.value.map((_, i) => (
-								<Field.Group key={i}>
+							{subField.state.value.map((revenue, i) => (
+								<Field.Group key={getRowKey(revenue)}>
 									<Field.Group className="grid-cols-[1fr_1fr_auto] items-end">
 										<form.AppField name={`revenues[${i}].type`}>
 											{(field) => (

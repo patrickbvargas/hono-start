@@ -9,7 +9,7 @@ import {
 } from "@/shared/session";
 import type { MutationReturnType } from "@/shared/types/api";
 import { CONTRACT_STATUS_ACTIVE_VALUE } from "../constants";
-import { contractCreateSchema } from "../schemas/form";
+import { contractCreateInputSchema } from "../schemas/form";
 import { normalizeOptionalText } from "../utils/normalization";
 import { assertContractWritePayload } from "../utils/validation";
 import {
@@ -20,7 +20,7 @@ import {
 } from "./lookups";
 
 const createContract = createServerFn({ method: "POST" })
-	.inputValidator(contractCreateSchema)
+	.inputValidator(contractCreateInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
 			const session = getServerLoggedUserSession();

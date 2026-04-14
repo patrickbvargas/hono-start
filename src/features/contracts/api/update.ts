@@ -12,7 +12,7 @@ import {
 	CONTRACT_STATUS_CANCELLED_VALUE,
 	CONTRACT_STATUS_COMPLETED_VALUE,
 } from "../constants";
-import { contractUpdateSchema } from "../schemas/form";
+import { contractUpdateInputSchema } from "../schemas/form";
 import { normalizeOptionalText } from "../utils/normalization";
 import { assertContractWritePayload } from "../utils/validation";
 import {
@@ -139,7 +139,7 @@ async function syncRevenues(
 }
 
 const updateContract = createServerFn({ method: "POST" })
-	.inputValidator(contractUpdateSchema)
+	.inputValidator(contractUpdateInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
 			const session = getServerLoggedUserSession();

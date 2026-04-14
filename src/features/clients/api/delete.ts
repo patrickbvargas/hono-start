@@ -7,11 +7,11 @@ import {
 	getServerScope,
 } from "@/shared/session";
 import type { MutationReturnType } from "@/shared/types/api";
-import { clientByIdSchema } from "../schemas/form";
+import { clientIdInputSchema } from "../schemas/form";
 import { assertClientHasNoActiveContracts } from "./contracts";
 
 const deleteClient = createServerFn({ method: "POST" })
-	.inputValidator(clientByIdSchema)
+	.inputValidator(clientIdInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
 			const session = getServerLoggedUserSession();

@@ -3,11 +3,11 @@ import { createServerFn } from "@tanstack/react-start";
 import { prisma } from "@/shared/lib/prisma";
 import { getServerLoggedUserSession } from "@/shared/session";
 import type { MutationReturnType } from "@/shared/types/api";
-import { contractByIdSchema } from "../schemas/form";
+import { contractIdInputSchema } from "../schemas/form";
 import { assertCanAccessContractById } from "./resource";
 
 const deleteContract = createServerFn({ method: "POST" })
-	.inputValidator(contractByIdSchema)
+	.inputValidator(contractIdInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
 			const session = getServerLoggedUserSession();

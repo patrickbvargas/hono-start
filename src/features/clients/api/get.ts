@@ -15,7 +15,7 @@ import type {
 } from "@/shared/types/api";
 import { CLIENT_DATA_CACHE_KEY } from "../constants";
 import type { ClientFilter } from "../schemas/filter";
-import { clientByIdSchema } from "../schemas/form";
+import { clientIdInputSchema } from "../schemas/form";
 import { type Client, clientSchema } from "../schemas/model";
 import { type ClientSearch, clientSearchSchema } from "../schemas/search";
 import { formatClientDocument } from "../utils/formatting";
@@ -158,7 +158,7 @@ const getClients = createServerFn({ method: "GET" })
 	});
 
 const getClientById = createServerFn({ method: "GET" })
-	.inputValidator(clientByIdSchema)
+	.inputValidator(clientIdInputSchema)
 	.handler(async ({ data }): Promise<QueryOneReturnType<Client>> => {
 		try {
 			getServerLoggedUserSession();

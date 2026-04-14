@@ -7,14 +7,14 @@ import {
 	getServerLoggedUserSession,
 } from "@/shared/session";
 import type { MutationReturnType } from "@/shared/types/api";
-import { employeeUpdateSchema } from "../schemas/form";
+import { employeeUpdateInputSchema } from "../schemas/form";
 import {
 	resolveEmployeeLookupSelections,
 	validateEmployeeLookupSelections,
 } from "./lookups";
 
 const updateEmployee = createServerFn({ method: "POST" })
-	.inputValidator(employeeUpdateSchema)
+	.inputValidator(employeeUpdateInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
 			const session = getServerLoggedUserSession();

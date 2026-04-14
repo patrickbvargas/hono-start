@@ -1,8 +1,8 @@
 import type {
 	ContractAssignmentInput,
-	ContractCreate,
+	ContractCreateInput,
 	ContractRevenueInput,
-	ContractUpdate,
+	ContractUpdateInput,
 } from "../schemas/form";
 import type { Contract } from "../schemas/model";
 
@@ -21,7 +21,7 @@ export const defaultContractRevenueValues = (): ContractRevenueInput => ({
 	isActive: true,
 });
 
-export const defaultContractCreateValues = (): ContractCreate => ({
+export const defaultContractCreateValues = (): ContractCreateInput => ({
 	clientId: "",
 	processNumber: "",
 	legalArea: "",
@@ -36,7 +36,7 @@ export const defaultContractCreateValues = (): ContractCreate => ({
 
 export const defaultContractUpdateValues = (
 	initialValue: Contract,
-): ContractUpdate => ({
+): ContractUpdateInput => ({
 	id: initialValue.id,
 	clientId: String(initialValue.clientId),
 	processNumber: initialValue.processNumber,

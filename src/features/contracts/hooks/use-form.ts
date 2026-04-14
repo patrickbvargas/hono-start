@@ -8,12 +8,15 @@ import { toast } from "@/shared/lib/toast";
 import { createContractOptions } from "../api/create";
 import { updateContractOptions } from "../api/update";
 import { CONTRACT_DATA_CACHE_KEY } from "../constants";
-import type { ContractUpdate } from "../schemas/form";
-import { contractCreateSchema, contractUpdateSchema } from "../schemas/form";
+import type { ContractUpdateInput } from "../schemas/form";
+import {
+	contractCreateInputSchema,
+	contractUpdateInputSchema,
+} from "../schemas/form";
 import { defaultContractCreateValues } from "../utils/default";
 
 interface UseContractFormOptions {
-	initialData?: ContractUpdate;
+	initialData?: ContractUpdateInput;
 	onSuccess?: () => void;
 }
 
@@ -30,16 +33,18 @@ export function useContractForm({
 	const form = useAppForm({
 		defaultValues: initialData ?? defaultContractCreateValues(),
 		validators: {
-			onSubmit: isEditing ? contractUpdateSchema : contractCreateSchema,
+			onSubmit: isEditing
+				? contractUpdateInputSchema
+				: contractCreateInputSchema,
 		},
 		onSubmit: async ({ value }) => {
 			try {
 				if (isEditing) {
-					const parsed = contractUpdateSchema.parse(value);
+					const parsed = contractUpdateInputSchema.parse(value);
 					await updateMutation.mutateAsync({ data: parsed });
 					toast.success("Contrato atualizado com sucesso.");
 				} else {
-					const parsed = contractCreateSchema.parse(value);
+					const parsed = contractCreateInputSchema.parse(value);
 					await createMutation.mutateAsync({ data: parsed });
 					toast.success("Contrato criado com sucesso.");
 				}

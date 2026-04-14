@@ -7,7 +7,7 @@ import {
 	getServerScope,
 } from "@/shared/session";
 import type { MutationReturnType } from "@/shared/types/api";
-import { clientCreateSchema } from "../schemas/form";
+import { clientCreateInputSchema } from "../schemas/form";
 import {
 	normalizeClientDocument,
 	normalizeOptionalText,
@@ -19,7 +19,7 @@ import {
 } from "./lookups";
 
 const createClient = createServerFn({ method: "POST" })
-	.inputValidator(clientCreateSchema)
+	.inputValidator(clientCreateInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
 			const session = getServerLoggedUserSession();

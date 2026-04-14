@@ -1,14 +1,14 @@
 import * as z from "zod";
 import { entityIdSchema } from "@/shared/schemas/entity";
 
-const contractAssignmentInputSchema = z.object({
+export const contractAssignmentInputSchema = z.object({
 	id: z.number().optional(),
 	employeeId: z.string().trim().min(1, "Colaborador é obrigatório"),
 	assignmentType: z.string().trim().min(1, "Tipo de atribuição é obrigatório"),
 	isActive: z.boolean(),
 });
 
-const contractRevenueInputSchema = z.object({
+export const contractRevenueInputSchema = z.object({
 	id: z.number().optional(),
 	type: z.string().trim().min(1, "Tipo de receita é obrigatório"),
 	totalValue: z.number().positive("Valor total deve ser maior que zero"),
@@ -40,17 +40,17 @@ const contractBaseShape = {
 	revenues: z.array(contractRevenueInputSchema),
 };
 
-export const contractCreateSchema = z.object(contractBaseShape);
+export const contractCreateInputSchema = z.object(contractBaseShape);
 
-export const contractUpdateSchema =
+export const contractUpdateInputSchema =
 	entityIdSchema.safeExtend(contractBaseShape);
 
-export const contractByIdSchema = entityIdSchema;
+export const contractIdInputSchema = entityIdSchema;
 
 export type ContractAssignmentInput = z.infer<
 	typeof contractAssignmentInputSchema
 >;
 export type ContractRevenueInput = z.infer<typeof contractRevenueInputSchema>;
-export type ContractCreate = z.infer<typeof contractCreateSchema>;
-export type ContractUpdate = z.infer<typeof contractUpdateSchema>;
-export type ContractById = z.infer<typeof contractByIdSchema>;
+export type ContractCreateInput = z.infer<typeof contractCreateInputSchema>;
+export type ContractUpdateInput = z.infer<typeof contractUpdateInputSchema>;
+export type ContractIdInput = z.infer<typeof contractIdInputSchema>;

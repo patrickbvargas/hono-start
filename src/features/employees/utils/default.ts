@@ -1,7 +1,7 @@
-import type { EmployeeCreate, EmployeeUpdate } from "../schemas/form";
+import type { EmployeeCreateInput, EmployeeUpdateInput } from "../schemas/form";
 import type { Employee } from "../schemas/model";
 
-export const defaultFormCreateValues = (): EmployeeCreate => ({
+export const defaultFormCreateValues = (): EmployeeCreateInput => ({
 	fullName: "",
 	email: "",
 	oabNumber: "",
@@ -14,7 +14,7 @@ export const defaultFormCreateValues = (): EmployeeCreate => ({
 
 export const defaultFormUpdateValues = (
 	initialValue: Employee,
-): EmployeeUpdate => ({
+): EmployeeUpdateInput => ({
 	id: initialValue.id,
 	fullName: initialValue.fullName,
 	email: initialValue.email,
