@@ -11,7 +11,7 @@ import { employeeCreateSchema } from "../schemas/form";
 import {
 	resolveEmployeeLookupSelections,
 	validateEmployeeLookupSelections,
-} from "../utils/validation";
+} from "./lookups";
 
 const createEmployee = createServerFn({ method: "POST" })
 	.inputValidator(employeeCreateSchema)

@@ -3,7 +3,10 @@
 ## Validation Boundary
 
 - All server-facing inputs must be validated before business logic executes.
+- Form schemas validate request shape and database-free cross-field rules before business logic executes.
+- Input normalization remains separate from business validation and must be applied consistently by the consuming schema or server handler.
 - Business constraints must be enforced consistently at the service or server-function boundary.
+- Lookup-backed selections that require Prisma or persisted-state checks must be resolved and validated at the server-function boundary rather than inside form schemas.
 - Invalid state transitions must fail with user-friendly pt-BR messages.
 - URL-driven list state must be validated before it reaches queries.
 

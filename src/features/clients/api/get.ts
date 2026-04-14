@@ -18,10 +18,8 @@ import type { ClientFilter } from "../schemas/filter";
 import { clientByIdSchema } from "../schemas/form";
 import { type Client, clientSchema } from "../schemas/model";
 import { type ClientSearch, clientSearchSchema } from "../schemas/search";
-import {
-	formatClientDocument,
-	normalizeClientDocument,
-} from "../utils/validation";
+import { formatClientDocument } from "../utils/formatting";
+import { normalizeClientDocument } from "../utils/normalization";
 import { getActiveContractCountByClientIds } from "./contracts";
 
 interface BuildClientWhereParams {

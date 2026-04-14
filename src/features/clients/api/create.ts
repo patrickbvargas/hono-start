@@ -9,12 +9,14 @@ import {
 import type { MutationReturnType } from "@/shared/types/api";
 import { clientCreateSchema } from "../schemas/form";
 import {
-	getClientDocumentValidationMessage,
 	normalizeClientDocument,
 	normalizeOptionalText,
+} from "../utils/normalization";
+import { getClientDocumentValidationMessage } from "../utils/validation";
+import {
 	resolveClientTypeSelection,
 	validateClientTypeSelection,
-} from "../utils/validation";
+} from "./lookups";
 
 const createClient = createServerFn({ method: "POST" })
 	.inputValidator(clientCreateSchema)

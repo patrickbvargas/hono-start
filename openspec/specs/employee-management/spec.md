@@ -273,3 +273,20 @@ The employee-management capability SHALL use the shared session authorization he
 - **WHEN** an employee list query or mutation is executed
 - **THEN** the server derives the authoritative `firmId` from the shared server session helper
 - **AND** the employee-management capability does not rely on hardcoded tenant placeholders
+
+### Requirement: Employee writes preserve the shared form-validation boundary
+The system SHALL apply the shared form-validation boundary to employee create and update writes so schema validation, normalization, pure business validation, and lookup-backed server checks remain consistently separated.
+
+#### Scenario: Employee schema uses only pure validation helpers
+- **WHEN** the employee create or update schema validates submitted fields
+- **THEN** any schema-level refinement uses only pure helpers that do not require Prisma or persisted employee state
+
+#### Scenario: Employee type and role selections are resolved at the server boundary
+- **WHEN** an employee create or update mutation receives submitted employee type and user role lookup values
+- **THEN** the server resolves those lookup values before persistence
+- **AND** lookup activity checks that depend on persisted state execute at the server boundary rather than inside the form schema
+
+#### Scenario: Employee write behavior remains user-friendly after boundary separation
+- **WHEN** the server rejects an unknown, inactive, or otherwise disallowed lookup-backed employee write
+- **THEN** the mutation returns a user-friendly Portuguese error
+- **AND** the separation of responsibilities does not change the documented employee-management behavior

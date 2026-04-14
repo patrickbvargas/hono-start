@@ -14,7 +14,7 @@ import { Button, Dropdown, Label } from "@/shared/components/ui";
 import type { QueryPaginatedReturnType } from "@/shared/types/api";
 import { CLIENT_ALLOWED_SORT_COLUMNS } from "../../constants";
 import type { Client } from "../../schemas/model";
-import { formatClientDocument } from "../../utils/validation";
+import { formatClientDocument } from "../../utils/formatting";
 
 export interface ClientTableProps {
 	canManageLifecycle?: boolean;

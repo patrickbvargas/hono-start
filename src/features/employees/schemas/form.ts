@@ -1,6 +1,9 @@
 import * as z from "zod";
 import { entityIdSchema } from "@/shared/schemas/entity";
-import { LAWYER_TYPE_VALUE } from "../constants";
+import {
+	getEmployeeOabRequiredMessage,
+	getEmployeeReferrerPercentMessage,
+} from "../utils/validation";
 
 const employeeBaseShape = {
 	fullName: z.string().min(1, "Nome é obrigatório"),
@@ -32,19 +35,20 @@ const referrerRefinement = (
 	},
 	ctx: z.RefinementCtx,
 ) => {
-	if (data.referrerPercent > data.remunerationPercent) {
+	const referrerPercentMessage = getEmployeeReferrerPercentMessage(data);
+	if (referrerPercentMessage) {
 		ctx.addIssue({
 			code: "custom",
-			message:
-				"Percentual de indicação não pode exceder o percentual de remuneração",
+			message: referrerPercentMessage,
 			path: ["referrerPercent"],
 		});
 	}
 
-	if (data.type === LAWYER_TYPE_VALUE && !data.oabNumber) {
+	const oabRequiredMessage = getEmployeeOabRequiredMessage(data);
+	if (oabRequiredMessage) {
 		ctx.addIssue({
 			code: "custom",
-			message: "OAB é obrigatória",
+			message: oabRequiredMessage,
 			path: ["oabNumber"],
 		});
 	}

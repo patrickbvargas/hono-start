@@ -9,7 +9,7 @@ import {
 	getClientDocumentLabel,
 	getClientDocumentPlaceholder,
 	getClientNameLabel,
-} from "../../utils/validation";
+} from "../../utils/formatting";
 
 interface ClientFormProps {
 	client?: Client;

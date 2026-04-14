@@ -13,21 +13,17 @@ import {
 	CONTRACT_STATUS_COMPLETED_VALUE,
 } from "../constants";
 import { contractUpdateSchema } from "../schemas/form";
+import { normalizeOptionalText } from "../utils/normalization";
+import { assertContractWritePayload } from "../utils/validation";
 import {
-	assertContractWritePayload,
 	type ResolvedContractAssignment,
 	type ResolvedContractRevenue,
 	resolveContractAssignments,
 	resolveContractLookupSelections,
 	resolveRevenueTypes,
 	validateContractLookupSelections,
-} from "../utils/validation";
+} from "./lookups";
 import { assertCanAccessContractById } from "./resource";
-
-function normalizeOptionalText(value?: string) {
-	const normalized = value?.trim();
-	return normalized ? normalized : null;
-}
 
 async function syncAssignments(
 	tx: Prisma.TransactionClient,

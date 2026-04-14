@@ -34,6 +34,13 @@
 - Use Zod v4 APIs.
 - URL-driven schemas must use safe defaults.
 - Keep schema and inferred type definitions close together.
+- `schemas/form.ts` is the canonical home for request-shape validation and database-free schema refinements.
+
+## Feature Boundary Rules
+
+- `utils/validation.ts` is reserved for pure business validation helpers and assertions that do not require Prisma or persisted resource lookups.
+- `utils/normalization.ts` is reserved for pure input canonicalization helpers such as trimming, empty-to-null conversion, and mask removal.
+- Feature-local `api/` modules own Prisma-backed lookup resolution and persisted-state lookup checks used by create and update flows.
 
 ## Cache And Mutation Rules
 

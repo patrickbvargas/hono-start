@@ -10,18 +10,14 @@ import {
 import type { MutationReturnType } from "@/shared/types/api";
 import { CONTRACT_STATUS_ACTIVE_VALUE } from "../constants";
 import { contractCreateSchema } from "../schemas/form";
+import { normalizeOptionalText } from "../utils/normalization";
+import { assertContractWritePayload } from "../utils/validation";
 import {
-	assertContractWritePayload,
 	resolveContractAssignments,
 	resolveContractLookupSelections,
 	resolveRevenueTypes,
 	validateContractLookupSelections,
-} from "../utils/validation";
-
-function normalizeOptionalText(value?: string) {
-	const normalized = value?.trim();
-	return normalized ? normalized : null;
-}
+} from "./lookups";
 
 const createContract = createServerFn({ method: "POST" })
 	.inputValidator(contractCreateSchema)

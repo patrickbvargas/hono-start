@@ -1,52 +1,26 @@
-import type {
-	EmployeeType,
-	PrismaClient,
-	UserRole,
-} from "@/generated/prisma/client";
+import { LAWYER_TYPE_VALUE } from "../constants";
 
-interface EmployeeLookupSelection {
-	role: UserRole;
-	type: EmployeeType;
-}
-
-interface EmployeeLookupSelectionInput {
-	role: string;
+interface EmployeeValidationInput {
+	oabNumber?: string;
+	referrerPercent: number;
+	remunerationPercent: number;
 	type: string;
 }
 
-interface EmployeeLookupValidationOptions {
-	currentRoleId?: number;
-	currentTypeId?: number;
-}
-
-export function validateEmployeeLookupSelections(
-	selection: EmployeeLookupSelection,
-	options: EmployeeLookupValidationOptions = {},
+export function getEmployeeReferrerPercentMessage(
+	input: EmployeeValidationInput,
 ) {
-	if (!selection.type.isActive && selection.type.id !== options.currentTypeId) {
-		throw new Error("Selecione uma função ativa");
+	if (input.referrerPercent > input.remunerationPercent) {
+		return "Percentual de indicação não pode exceder o percentual de remuneração";
 	}
 
-	if (!selection.role.isActive && selection.role.id !== options.currentRoleId) {
-		throw new Error("Selecione um perfil ativo");
-	}
+	return null;
 }
 
-export async function resolveEmployeeLookupSelections(
-	prisma: PrismaClient,
-	input: EmployeeLookupSelectionInput,
-) {
-	const [type, role] = await Promise.all([
-		prisma.employeeType.findUnique({
-			where: { value: input.type },
-		}),
-		prisma.userRole.findUnique({
-			where: { value: input.role },
-		}),
-	]);
+export function getEmployeeOabRequiredMessage(input: EmployeeValidationInput) {
+	if (input.type === LAWYER_TYPE_VALUE && !input.oabNumber) {
+		return "OAB é obrigatória";
+	}
 
-	if (!type) throw new Error("Função não encontrada");
-	if (!role) throw new Error("Perfil não encontrado");
-
-	return { type, role };
+	return null;
 }

@@ -118,6 +118,7 @@ The goal of this document is to define reusable persistence patterns that can su
 ## Implementation Boundary
 
 - Query construction belongs in feature API modules.
+- Lookup-backed write resolution belongs in feature API modules.
 - Routes do not construct Prisma filters or order clauses.
 - Shared data-access helpers may support features, but feature ownership remains local.
 - Product-rule enforcement stays in the service or API layer; database constraints are a safety net rather than the primary contract.

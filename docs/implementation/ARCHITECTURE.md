@@ -36,12 +36,12 @@ The canonical slice shape for feature work is defined by this document. New feat
 
 Each feature slice is expected to contain:
 
-- `api/`: feature-local server operations and query or mutation option factories
+- `api/`: feature-local server operations, query or mutation option factories, and server-only lookup resolution used by feature writes
 - `components/`: feature-local UI pieces
 - `constants/`: cache keys and feature-local constants
 - `hooks/`: orchestration hooks such as `use-form`, `use-filter`, `use-delete`, `use-restore`, and `use-options`
-- `schemas/`: `model`, `form`, `filter`, `search`, and `sort` contracts
-- `utils/`: feature-local helpers such as defaults and validation utilities
+- `schemas/`: `model`, `form`, `filter`, `search`, and `sort` contracts, including Zod request schemas and database-free schema refinements
+- `utils/`: feature-local pure helpers such as defaults, normalization helpers, formatting helpers, and business validation utilities that do not require Prisma
 - `index.ts`: public barrel
 
 ## Architectural Rules

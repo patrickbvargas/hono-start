@@ -156,3 +156,20 @@ The system SHALL enforce client access and tenant scope from the authenticated s
 - **THEN** the server derives the authoritative `firmId` from the authenticated session
 - **AND** any client-supplied tenant scope is ignored
 
+### Requirement: Client writes preserve the shared form-validation boundary
+The system SHALL apply the shared form-validation boundary to client create and update writes so schema validation, normalization, pure business validation, and lookup-backed server checks remain consistently separated.
+
+#### Scenario: Client schema uses only pure validation helpers
+- **WHEN** the client create or update schema validates submitted fields
+- **THEN** any schema-level refinement uses only pure helpers that do not require Prisma or persisted client state
+
+#### Scenario: Client type selection is resolved at the server boundary
+- **WHEN** a client create or update mutation receives a submitted client type lookup value
+- **THEN** the server resolves that lookup value before persistence
+- **AND** the server rejects unknown or disallowed selections with a user-friendly Portuguese error
+
+#### Scenario: Client input is normalized separately from validation
+- **WHEN** the client create or update flow canonicalizes document or optional text inputs
+- **THEN** that normalization executes separately from the pure business validation helpers
+- **AND** the normalized values are the ones persisted by the server
+

@@ -1,3 +1,7 @@
+## Purpose
+
+Define the contract-management capability for firm-scoped contract listing, aggregate writes, lifecycle actions, and role-aware access rules.
+
 ## Requirements
 
 ### Requirement: List contracts
@@ -190,3 +194,20 @@ The system SHALL derive tenant scope and role-aware contract access from the aut
 - **WHEN** any contract list query, detail query, option query, create, update, delete, or restore mutation is executed
 - **THEN** the server derives the authoritative `firmId` from the authenticated session
 - **AND** any client-supplied tenant scope is ignored
+
+### Requirement: Contract writes preserve the shared form-validation boundary
+The system SHALL apply the shared form-validation boundary to contract create and update writes so schema validation, normalization, pure business validation, and lookup-backed server checks remain consistently separated.
+
+#### Scenario: Contract schema keeps database-free validation in the schema layer
+- **WHEN** the contract create or update schema validates submitted fields
+- **THEN** schema-level validation is limited to request-shape rules and cross-field rules that do not require Prisma or persisted contract state
+
+#### Scenario: Contract lookups are resolved at the server boundary
+- **WHEN** a contract create or update mutation receives submitted legal area, status, assignment type, or revenue type lookup values
+- **THEN** the server resolves those lookup values before persistence
+- **AND** any lookup activity or current-record allowance check executes at the server boundary
+
+#### Scenario: Contract normalization remains distinct from business validation
+- **WHEN** the contract create or update flow canonicalizes optional submitted values before persistence
+- **THEN** that normalization logic remains separate from the contract business-rule assertions
+- **AND** the contract write continues to enforce aggregate business constraints with user-friendly Portuguese errors

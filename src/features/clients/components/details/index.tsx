@@ -9,7 +9,7 @@ import { formatter } from "@/shared/lib/formatter";
 import type { OverlayState } from "@/shared/types/overlay";
 import { getClientByIdOptions } from "../../api/get";
 import type { Client } from "../../schemas/model";
-import { formatClientDocument } from "../../utils/validation";
+import { formatClientDocument } from "../../utils/formatting";
 
 interface ClientDetailsProps {
 	client: Client;

@@ -11,7 +11,7 @@ import { employeeUpdateSchema } from "../schemas/form";
 import {
 	resolveEmployeeLookupSelections,
 	validateEmployeeLookupSelections,
-} from "../utils/validation";
+} from "./lookups";
 
 const updateEmployee = createServerFn({ method: "POST" })
 	.inputValidator(employeeUpdateSchema)
