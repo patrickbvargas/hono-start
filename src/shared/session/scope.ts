@@ -22,6 +22,7 @@ export function getScope(
 			return { firmId: getCurrentFirmId(session) };
 		case "contract":
 		case "fee":
+		case "remuneration":
 			if (isAdminSession(session)) {
 				return { firmId: getCurrentFirmId(session) };
 			}
@@ -43,4 +44,8 @@ export function getContractScope(session: LoggedUserSession) {
 
 export function getFeeScope(session: LoggedUserSession) {
 	return getScope(session, "fee");
+}
+
+export function getRemunerationScope(session: LoggedUserSession) {
+	return getScope(session, "remuneration");
 }

@@ -6,6 +6,7 @@ import {
 	type EmployeeAccessResource,
 	type FeeAccessResource,
 	type LoggedUserSession,
+	type RemunerationAccessResource,
 	type SessionAction,
 	type SessionResource,
 } from "./model";
@@ -73,6 +74,20 @@ function canAccessOwnEmployee(
 	);
 }
 
+function canAccessOwnRemuneration(
+	session: LoggedUserSession,
+	resource?: RemunerationAccessResource | null,
+) {
+	if (!resource) {
+		return true;
+	}
+
+	return (
+		isSameFirm(session, resource) &&
+		resource.employeeId === getCurrentEmployeeId(session)
+	);
+}
+
 export function isContractWritable(
 	resource?: ContractAccessResource | FeeAccessResource | null,
 ) {
@@ -110,6 +125,9 @@ export function can(
 		case "contract.restore":
 		case "fee.delete":
 		case "fee.restore":
+		case "remuneration.update":
+		case "remuneration.delete":
+		case "remuneration.restore":
 		case "attachment.delete":
 		case "audit-log.view":
 			return false;
@@ -120,6 +138,12 @@ export function can(
 			return isAssignedToActor(
 				session,
 				resource as ContractAccessResource | FeeAccessResource,
+			);
+		case "remuneration.view":
+		case "remuneration.export":
+			return canAccessOwnRemuneration(
+				session,
+				resource as RemunerationAccessResource,
 			);
 		case "fee.create":
 		case "fee.update":
@@ -171,6 +195,14 @@ export function assertCan(
 		"fee.restore": "Apenas administradores podem restaurar honorários",
 		"fee.update": "Você não tem permissão para editar este honorário",
 		"fee.view": "Você não tem permissão para visualizar estes honorários",
+		"remuneration.delete": "Apenas administradores podem excluir remunerações",
+		"remuneration.export":
+			"Você não tem permissão para exportar estas remunerações",
+		"remuneration.restore":
+			"Apenas administradores podem restaurar remunerações",
+		"remuneration.update": "Apenas administradores podem editar remunerações",
+		"remuneration.view":
+			"Você não tem permissão para visualizar esta remuneração",
 	};
 
 	throw new Error(errorMessages[action]);
@@ -238,6 +270,13 @@ export function canDeleteAttachment(
 	resource: AttachmentAccessResource,
 ) {
 	return can(session, "attachment.delete", resource);
+}
+
+export function canViewRemuneration(
+	session: LoggedUserSession,
+	resource: RemunerationAccessResource,
+) {
+	return can(session, "remuneration.view", resource);
 }
 
 export function assertCanManageEmployees(session: LoggedUserSession) {

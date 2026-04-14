@@ -51,6 +51,11 @@ export type SessionAction =
 	| "fee.view"
 	| "fee.delete"
 	| "fee.restore"
+	| "remuneration.view"
+	| "remuneration.update"
+	| "remuneration.delete"
+	| "remuneration.restore"
+	| "remuneration.export"
 	| "attachment.view"
 	| "attachment.upload"
 	| "attachment.delete"
@@ -62,6 +67,7 @@ export type SessionScopeSubject =
 	| "client"
 	| "contract"
 	| "fee"
+	| "remuneration"
 	| "attachment"
 	| "dashboard"
 	| "audit-log";
@@ -88,6 +94,10 @@ export interface FeeAccessResource extends SessionFirmResource {
 	allowStatusChange?: boolean;
 }
 
+export interface RemunerationAccessResource extends SessionFirmResource {
+	employeeId: number;
+}
+
 export interface AttachmentAccessResource extends SessionFirmResource {}
 
 export interface DashboardAccessResource extends SessionFirmResource {}
@@ -101,6 +111,7 @@ export type SessionResource =
 	| DashboardAccessResource
 	| EmployeeAccessResource
 	| FeeAccessResource
+	| RemunerationAccessResource
 	| null
 	| undefined;
 
