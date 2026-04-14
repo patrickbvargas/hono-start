@@ -197,6 +197,8 @@ export type FirmWhereInput = {
   contracts?: Prisma.ContractListRelationFilter
   contractEmployees?: Prisma.ContractEmployeeListRelationFilter
   revenues?: Prisma.RevenueListRelationFilter
+  fees?: Prisma.FeeListRelationFilter
+  remunerations?: Prisma.RemunerationListRelationFilter
 }
 
 export type FirmOrderByWithRelationInput = {
@@ -207,6 +209,8 @@ export type FirmOrderByWithRelationInput = {
   contracts?: Prisma.ContractOrderByRelationAggregateInput
   contractEmployees?: Prisma.ContractEmployeeOrderByRelationAggregateInput
   revenues?: Prisma.RevenueOrderByRelationAggregateInput
+  fees?: Prisma.FeeOrderByRelationAggregateInput
+  remunerations?: Prisma.RemunerationOrderByRelationAggregateInput
 }
 
 export type FirmWhereUniqueInput = Prisma.AtLeast<{
@@ -220,6 +224,8 @@ export type FirmWhereUniqueInput = Prisma.AtLeast<{
   contracts?: Prisma.ContractListRelationFilter
   contractEmployees?: Prisma.ContractEmployeeListRelationFilter
   revenues?: Prisma.RevenueListRelationFilter
+  fees?: Prisma.FeeListRelationFilter
+  remunerations?: Prisma.RemunerationListRelationFilter
 }, "id">
 
 export type FirmOrderByWithAggregationInput = {
@@ -247,6 +253,8 @@ export type FirmCreateInput = {
   contracts?: Prisma.ContractCreateNestedManyWithoutFirmInput
   contractEmployees?: Prisma.ContractEmployeeCreateNestedManyWithoutFirmInput
   revenues?: Prisma.RevenueCreateNestedManyWithoutFirmInput
+  fees?: Prisma.FeeCreateNestedManyWithoutFirmInput
+  remunerations?: Prisma.RemunerationCreateNestedManyWithoutFirmInput
 }
 
 export type FirmUncheckedCreateInput = {
@@ -257,6 +265,8 @@ export type FirmUncheckedCreateInput = {
   contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutFirmInput
   contractEmployees?: Prisma.ContractEmployeeUncheckedCreateNestedManyWithoutFirmInput
   revenues?: Prisma.RevenueUncheckedCreateNestedManyWithoutFirmInput
+  fees?: Prisma.FeeUncheckedCreateNestedManyWithoutFirmInput
+  remunerations?: Prisma.RemunerationUncheckedCreateNestedManyWithoutFirmInput
 }
 
 export type FirmUpdateInput = {
@@ -266,6 +276,8 @@ export type FirmUpdateInput = {
   contracts?: Prisma.ContractUpdateManyWithoutFirmNestedInput
   contractEmployees?: Prisma.ContractEmployeeUpdateManyWithoutFirmNestedInput
   revenues?: Prisma.RevenueUpdateManyWithoutFirmNestedInput
+  fees?: Prisma.FeeUpdateManyWithoutFirmNestedInput
+  remunerations?: Prisma.RemunerationUpdateManyWithoutFirmNestedInput
 }
 
 export type FirmUncheckedUpdateInput = {
@@ -276,6 +288,8 @@ export type FirmUncheckedUpdateInput = {
   contracts?: Prisma.ContractUncheckedUpdateManyWithoutFirmNestedInput
   contractEmployees?: Prisma.ContractEmployeeUncheckedUpdateManyWithoutFirmNestedInput
   revenues?: Prisma.RevenueUncheckedUpdateManyWithoutFirmNestedInput
+  fees?: Prisma.FeeUncheckedUpdateManyWithoutFirmNestedInput
+  remunerations?: Prisma.RemunerationUncheckedUpdateManyWithoutFirmNestedInput
 }
 
 export type FirmCreateManyInput = {
@@ -402,12 +416,42 @@ export type FirmUpdateOneRequiredWithoutRevenuesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.FirmUpdateToOneWithWhereWithoutRevenuesInput, Prisma.FirmUpdateWithoutRevenuesInput>, Prisma.FirmUncheckedUpdateWithoutRevenuesInput>
 }
 
+export type FirmCreateNestedOneWithoutFeesInput = {
+  create?: Prisma.XOR<Prisma.FirmCreateWithoutFeesInput, Prisma.FirmUncheckedCreateWithoutFeesInput>
+  connectOrCreate?: Prisma.FirmCreateOrConnectWithoutFeesInput
+  connect?: Prisma.FirmWhereUniqueInput
+}
+
+export type FirmUpdateOneRequiredWithoutFeesNestedInput = {
+  create?: Prisma.XOR<Prisma.FirmCreateWithoutFeesInput, Prisma.FirmUncheckedCreateWithoutFeesInput>
+  connectOrCreate?: Prisma.FirmCreateOrConnectWithoutFeesInput
+  upsert?: Prisma.FirmUpsertWithoutFeesInput
+  connect?: Prisma.FirmWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.FirmUpdateToOneWithWhereWithoutFeesInput, Prisma.FirmUpdateWithoutFeesInput>, Prisma.FirmUncheckedUpdateWithoutFeesInput>
+}
+
+export type FirmCreateNestedOneWithoutRemunerationsInput = {
+  create?: Prisma.XOR<Prisma.FirmCreateWithoutRemunerationsInput, Prisma.FirmUncheckedCreateWithoutRemunerationsInput>
+  connectOrCreate?: Prisma.FirmCreateOrConnectWithoutRemunerationsInput
+  connect?: Prisma.FirmWhereUniqueInput
+}
+
+export type FirmUpdateOneRequiredWithoutRemunerationsNestedInput = {
+  create?: Prisma.XOR<Prisma.FirmCreateWithoutRemunerationsInput, Prisma.FirmUncheckedCreateWithoutRemunerationsInput>
+  connectOrCreate?: Prisma.FirmCreateOrConnectWithoutRemunerationsInput
+  upsert?: Prisma.FirmUpsertWithoutRemunerationsInput
+  connect?: Prisma.FirmWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.FirmUpdateToOneWithWhereWithoutRemunerationsInput, Prisma.FirmUpdateWithoutRemunerationsInput>, Prisma.FirmUncheckedUpdateWithoutRemunerationsInput>
+}
+
 export type FirmCreateWithoutEmployeesInput = {
   name: string
   clients?: Prisma.ClientCreateNestedManyWithoutFirmInput
   contracts?: Prisma.ContractCreateNestedManyWithoutFirmInput
   contractEmployees?: Prisma.ContractEmployeeCreateNestedManyWithoutFirmInput
   revenues?: Prisma.RevenueCreateNestedManyWithoutFirmInput
+  fees?: Prisma.FeeCreateNestedManyWithoutFirmInput
+  remunerations?: Prisma.RemunerationCreateNestedManyWithoutFirmInput
 }
 
 export type FirmUncheckedCreateWithoutEmployeesInput = {
@@ -417,6 +461,8 @@ export type FirmUncheckedCreateWithoutEmployeesInput = {
   contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutFirmInput
   contractEmployees?: Prisma.ContractEmployeeUncheckedCreateNestedManyWithoutFirmInput
   revenues?: Prisma.RevenueUncheckedCreateNestedManyWithoutFirmInput
+  fees?: Prisma.FeeUncheckedCreateNestedManyWithoutFirmInput
+  remunerations?: Prisma.RemunerationUncheckedCreateNestedManyWithoutFirmInput
 }
 
 export type FirmCreateOrConnectWithoutEmployeesInput = {
@@ -441,6 +487,8 @@ export type FirmUpdateWithoutEmployeesInput = {
   contracts?: Prisma.ContractUpdateManyWithoutFirmNestedInput
   contractEmployees?: Prisma.ContractEmployeeUpdateManyWithoutFirmNestedInput
   revenues?: Prisma.RevenueUpdateManyWithoutFirmNestedInput
+  fees?: Prisma.FeeUpdateManyWithoutFirmNestedInput
+  remunerations?: Prisma.RemunerationUpdateManyWithoutFirmNestedInput
 }
 
 export type FirmUncheckedUpdateWithoutEmployeesInput = {
@@ -450,6 +498,8 @@ export type FirmUncheckedUpdateWithoutEmployeesInput = {
   contracts?: Prisma.ContractUncheckedUpdateManyWithoutFirmNestedInput
   contractEmployees?: Prisma.ContractEmployeeUncheckedUpdateManyWithoutFirmNestedInput
   revenues?: Prisma.RevenueUncheckedUpdateManyWithoutFirmNestedInput
+  fees?: Prisma.FeeUncheckedUpdateManyWithoutFirmNestedInput
+  remunerations?: Prisma.RemunerationUncheckedUpdateManyWithoutFirmNestedInput
 }
 
 export type FirmCreateWithoutClientsInput = {
@@ -458,6 +508,8 @@ export type FirmCreateWithoutClientsInput = {
   contracts?: Prisma.ContractCreateNestedManyWithoutFirmInput
   contractEmployees?: Prisma.ContractEmployeeCreateNestedManyWithoutFirmInput
   revenues?: Prisma.RevenueCreateNestedManyWithoutFirmInput
+  fees?: Prisma.FeeCreateNestedManyWithoutFirmInput
+  remunerations?: Prisma.RemunerationCreateNestedManyWithoutFirmInput
 }
 
 export type FirmUncheckedCreateWithoutClientsInput = {
@@ -467,6 +519,8 @@ export type FirmUncheckedCreateWithoutClientsInput = {
   contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutFirmInput
   contractEmployees?: Prisma.ContractEmployeeUncheckedCreateNestedManyWithoutFirmInput
   revenues?: Prisma.RevenueUncheckedCreateNestedManyWithoutFirmInput
+  fees?: Prisma.FeeUncheckedCreateNestedManyWithoutFirmInput
+  remunerations?: Prisma.RemunerationUncheckedCreateNestedManyWithoutFirmInput
 }
 
 export type FirmCreateOrConnectWithoutClientsInput = {
@@ -491,6 +545,8 @@ export type FirmUpdateWithoutClientsInput = {
   contracts?: Prisma.ContractUpdateManyWithoutFirmNestedInput
   contractEmployees?: Prisma.ContractEmployeeUpdateManyWithoutFirmNestedInput
   revenues?: Prisma.RevenueUpdateManyWithoutFirmNestedInput
+  fees?: Prisma.FeeUpdateManyWithoutFirmNestedInput
+  remunerations?: Prisma.RemunerationUpdateManyWithoutFirmNestedInput
 }
 
 export type FirmUncheckedUpdateWithoutClientsInput = {
@@ -500,6 +556,8 @@ export type FirmUncheckedUpdateWithoutClientsInput = {
   contracts?: Prisma.ContractUncheckedUpdateManyWithoutFirmNestedInput
   contractEmployees?: Prisma.ContractEmployeeUncheckedUpdateManyWithoutFirmNestedInput
   revenues?: Prisma.RevenueUncheckedUpdateManyWithoutFirmNestedInput
+  fees?: Prisma.FeeUncheckedUpdateManyWithoutFirmNestedInput
+  remunerations?: Prisma.RemunerationUncheckedUpdateManyWithoutFirmNestedInput
 }
 
 export type FirmCreateWithoutContractsInput = {
@@ -508,6 +566,8 @@ export type FirmCreateWithoutContractsInput = {
   employees?: Prisma.EmployeeCreateNestedManyWithoutFirmInput
   contractEmployees?: Prisma.ContractEmployeeCreateNestedManyWithoutFirmInput
   revenues?: Prisma.RevenueCreateNestedManyWithoutFirmInput
+  fees?: Prisma.FeeCreateNestedManyWithoutFirmInput
+  remunerations?: Prisma.RemunerationCreateNestedManyWithoutFirmInput
 }
 
 export type FirmUncheckedCreateWithoutContractsInput = {
@@ -517,6 +577,8 @@ export type FirmUncheckedCreateWithoutContractsInput = {
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFirmInput
   contractEmployees?: Prisma.ContractEmployeeUncheckedCreateNestedManyWithoutFirmInput
   revenues?: Prisma.RevenueUncheckedCreateNestedManyWithoutFirmInput
+  fees?: Prisma.FeeUncheckedCreateNestedManyWithoutFirmInput
+  remunerations?: Prisma.RemunerationUncheckedCreateNestedManyWithoutFirmInput
 }
 
 export type FirmCreateOrConnectWithoutContractsInput = {
@@ -541,6 +603,8 @@ export type FirmUpdateWithoutContractsInput = {
   employees?: Prisma.EmployeeUpdateManyWithoutFirmNestedInput
   contractEmployees?: Prisma.ContractEmployeeUpdateManyWithoutFirmNestedInput
   revenues?: Prisma.RevenueUpdateManyWithoutFirmNestedInput
+  fees?: Prisma.FeeUpdateManyWithoutFirmNestedInput
+  remunerations?: Prisma.RemunerationUpdateManyWithoutFirmNestedInput
 }
 
 export type FirmUncheckedUpdateWithoutContractsInput = {
@@ -550,6 +614,8 @@ export type FirmUncheckedUpdateWithoutContractsInput = {
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutFirmNestedInput
   contractEmployees?: Prisma.ContractEmployeeUncheckedUpdateManyWithoutFirmNestedInput
   revenues?: Prisma.RevenueUncheckedUpdateManyWithoutFirmNestedInput
+  fees?: Prisma.FeeUncheckedUpdateManyWithoutFirmNestedInput
+  remunerations?: Prisma.RemunerationUncheckedUpdateManyWithoutFirmNestedInput
 }
 
 export type FirmCreateWithoutContractEmployeesInput = {
@@ -558,6 +624,8 @@ export type FirmCreateWithoutContractEmployeesInput = {
   employees?: Prisma.EmployeeCreateNestedManyWithoutFirmInput
   contracts?: Prisma.ContractCreateNestedManyWithoutFirmInput
   revenues?: Prisma.RevenueCreateNestedManyWithoutFirmInput
+  fees?: Prisma.FeeCreateNestedManyWithoutFirmInput
+  remunerations?: Prisma.RemunerationCreateNestedManyWithoutFirmInput
 }
 
 export type FirmUncheckedCreateWithoutContractEmployeesInput = {
@@ -567,6 +635,8 @@ export type FirmUncheckedCreateWithoutContractEmployeesInput = {
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFirmInput
   contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutFirmInput
   revenues?: Prisma.RevenueUncheckedCreateNestedManyWithoutFirmInput
+  fees?: Prisma.FeeUncheckedCreateNestedManyWithoutFirmInput
+  remunerations?: Prisma.RemunerationUncheckedCreateNestedManyWithoutFirmInput
 }
 
 export type FirmCreateOrConnectWithoutContractEmployeesInput = {
@@ -591,6 +661,8 @@ export type FirmUpdateWithoutContractEmployeesInput = {
   employees?: Prisma.EmployeeUpdateManyWithoutFirmNestedInput
   contracts?: Prisma.ContractUpdateManyWithoutFirmNestedInput
   revenues?: Prisma.RevenueUpdateManyWithoutFirmNestedInput
+  fees?: Prisma.FeeUpdateManyWithoutFirmNestedInput
+  remunerations?: Prisma.RemunerationUpdateManyWithoutFirmNestedInput
 }
 
 export type FirmUncheckedUpdateWithoutContractEmployeesInput = {
@@ -600,6 +672,8 @@ export type FirmUncheckedUpdateWithoutContractEmployeesInput = {
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutFirmNestedInput
   contracts?: Prisma.ContractUncheckedUpdateManyWithoutFirmNestedInput
   revenues?: Prisma.RevenueUncheckedUpdateManyWithoutFirmNestedInput
+  fees?: Prisma.FeeUncheckedUpdateManyWithoutFirmNestedInput
+  remunerations?: Prisma.RemunerationUncheckedUpdateManyWithoutFirmNestedInput
 }
 
 export type FirmCreateWithoutRevenuesInput = {
@@ -608,6 +682,8 @@ export type FirmCreateWithoutRevenuesInput = {
   employees?: Prisma.EmployeeCreateNestedManyWithoutFirmInput
   contracts?: Prisma.ContractCreateNestedManyWithoutFirmInput
   contractEmployees?: Prisma.ContractEmployeeCreateNestedManyWithoutFirmInput
+  fees?: Prisma.FeeCreateNestedManyWithoutFirmInput
+  remunerations?: Prisma.RemunerationCreateNestedManyWithoutFirmInput
 }
 
 export type FirmUncheckedCreateWithoutRevenuesInput = {
@@ -617,6 +693,8 @@ export type FirmUncheckedCreateWithoutRevenuesInput = {
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFirmInput
   contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutFirmInput
   contractEmployees?: Prisma.ContractEmployeeUncheckedCreateNestedManyWithoutFirmInput
+  fees?: Prisma.FeeUncheckedCreateNestedManyWithoutFirmInput
+  remunerations?: Prisma.RemunerationUncheckedCreateNestedManyWithoutFirmInput
 }
 
 export type FirmCreateOrConnectWithoutRevenuesInput = {
@@ -641,6 +719,8 @@ export type FirmUpdateWithoutRevenuesInput = {
   employees?: Prisma.EmployeeUpdateManyWithoutFirmNestedInput
   contracts?: Prisma.ContractUpdateManyWithoutFirmNestedInput
   contractEmployees?: Prisma.ContractEmployeeUpdateManyWithoutFirmNestedInput
+  fees?: Prisma.FeeUpdateManyWithoutFirmNestedInput
+  remunerations?: Prisma.RemunerationUpdateManyWithoutFirmNestedInput
 }
 
 export type FirmUncheckedUpdateWithoutRevenuesInput = {
@@ -650,6 +730,124 @@ export type FirmUncheckedUpdateWithoutRevenuesInput = {
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutFirmNestedInput
   contracts?: Prisma.ContractUncheckedUpdateManyWithoutFirmNestedInput
   contractEmployees?: Prisma.ContractEmployeeUncheckedUpdateManyWithoutFirmNestedInput
+  fees?: Prisma.FeeUncheckedUpdateManyWithoutFirmNestedInput
+  remunerations?: Prisma.RemunerationUncheckedUpdateManyWithoutFirmNestedInput
+}
+
+export type FirmCreateWithoutFeesInput = {
+  name: string
+  clients?: Prisma.ClientCreateNestedManyWithoutFirmInput
+  employees?: Prisma.EmployeeCreateNestedManyWithoutFirmInput
+  contracts?: Prisma.ContractCreateNestedManyWithoutFirmInput
+  contractEmployees?: Prisma.ContractEmployeeCreateNestedManyWithoutFirmInput
+  revenues?: Prisma.RevenueCreateNestedManyWithoutFirmInput
+  remunerations?: Prisma.RemunerationCreateNestedManyWithoutFirmInput
+}
+
+export type FirmUncheckedCreateWithoutFeesInput = {
+  id?: number
+  name: string
+  clients?: Prisma.ClientUncheckedCreateNestedManyWithoutFirmInput
+  employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFirmInput
+  contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutFirmInput
+  contractEmployees?: Prisma.ContractEmployeeUncheckedCreateNestedManyWithoutFirmInput
+  revenues?: Prisma.RevenueUncheckedCreateNestedManyWithoutFirmInput
+  remunerations?: Prisma.RemunerationUncheckedCreateNestedManyWithoutFirmInput
+}
+
+export type FirmCreateOrConnectWithoutFeesInput = {
+  where: Prisma.FirmWhereUniqueInput
+  create: Prisma.XOR<Prisma.FirmCreateWithoutFeesInput, Prisma.FirmUncheckedCreateWithoutFeesInput>
+}
+
+export type FirmUpsertWithoutFeesInput = {
+  update: Prisma.XOR<Prisma.FirmUpdateWithoutFeesInput, Prisma.FirmUncheckedUpdateWithoutFeesInput>
+  create: Prisma.XOR<Prisma.FirmCreateWithoutFeesInput, Prisma.FirmUncheckedCreateWithoutFeesInput>
+  where?: Prisma.FirmWhereInput
+}
+
+export type FirmUpdateToOneWithWhereWithoutFeesInput = {
+  where?: Prisma.FirmWhereInput
+  data: Prisma.XOR<Prisma.FirmUpdateWithoutFeesInput, Prisma.FirmUncheckedUpdateWithoutFeesInput>
+}
+
+export type FirmUpdateWithoutFeesInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  clients?: Prisma.ClientUpdateManyWithoutFirmNestedInput
+  employees?: Prisma.EmployeeUpdateManyWithoutFirmNestedInput
+  contracts?: Prisma.ContractUpdateManyWithoutFirmNestedInput
+  contractEmployees?: Prisma.ContractEmployeeUpdateManyWithoutFirmNestedInput
+  revenues?: Prisma.RevenueUpdateManyWithoutFirmNestedInput
+  remunerations?: Prisma.RemunerationUpdateManyWithoutFirmNestedInput
+}
+
+export type FirmUncheckedUpdateWithoutFeesInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  clients?: Prisma.ClientUncheckedUpdateManyWithoutFirmNestedInput
+  employees?: Prisma.EmployeeUncheckedUpdateManyWithoutFirmNestedInput
+  contracts?: Prisma.ContractUncheckedUpdateManyWithoutFirmNestedInput
+  contractEmployees?: Prisma.ContractEmployeeUncheckedUpdateManyWithoutFirmNestedInput
+  revenues?: Prisma.RevenueUncheckedUpdateManyWithoutFirmNestedInput
+  remunerations?: Prisma.RemunerationUncheckedUpdateManyWithoutFirmNestedInput
+}
+
+export type FirmCreateWithoutRemunerationsInput = {
+  name: string
+  clients?: Prisma.ClientCreateNestedManyWithoutFirmInput
+  employees?: Prisma.EmployeeCreateNestedManyWithoutFirmInput
+  contracts?: Prisma.ContractCreateNestedManyWithoutFirmInput
+  contractEmployees?: Prisma.ContractEmployeeCreateNestedManyWithoutFirmInput
+  revenues?: Prisma.RevenueCreateNestedManyWithoutFirmInput
+  fees?: Prisma.FeeCreateNestedManyWithoutFirmInput
+}
+
+export type FirmUncheckedCreateWithoutRemunerationsInput = {
+  id?: number
+  name: string
+  clients?: Prisma.ClientUncheckedCreateNestedManyWithoutFirmInput
+  employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFirmInput
+  contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutFirmInput
+  contractEmployees?: Prisma.ContractEmployeeUncheckedCreateNestedManyWithoutFirmInput
+  revenues?: Prisma.RevenueUncheckedCreateNestedManyWithoutFirmInput
+  fees?: Prisma.FeeUncheckedCreateNestedManyWithoutFirmInput
+}
+
+export type FirmCreateOrConnectWithoutRemunerationsInput = {
+  where: Prisma.FirmWhereUniqueInput
+  create: Prisma.XOR<Prisma.FirmCreateWithoutRemunerationsInput, Prisma.FirmUncheckedCreateWithoutRemunerationsInput>
+}
+
+export type FirmUpsertWithoutRemunerationsInput = {
+  update: Prisma.XOR<Prisma.FirmUpdateWithoutRemunerationsInput, Prisma.FirmUncheckedUpdateWithoutRemunerationsInput>
+  create: Prisma.XOR<Prisma.FirmCreateWithoutRemunerationsInput, Prisma.FirmUncheckedCreateWithoutRemunerationsInput>
+  where?: Prisma.FirmWhereInput
+}
+
+export type FirmUpdateToOneWithWhereWithoutRemunerationsInput = {
+  where?: Prisma.FirmWhereInput
+  data: Prisma.XOR<Prisma.FirmUpdateWithoutRemunerationsInput, Prisma.FirmUncheckedUpdateWithoutRemunerationsInput>
+}
+
+export type FirmUpdateWithoutRemunerationsInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  clients?: Prisma.ClientUpdateManyWithoutFirmNestedInput
+  employees?: Prisma.EmployeeUpdateManyWithoutFirmNestedInput
+  contracts?: Prisma.ContractUpdateManyWithoutFirmNestedInput
+  contractEmployees?: Prisma.ContractEmployeeUpdateManyWithoutFirmNestedInput
+  revenues?: Prisma.RevenueUpdateManyWithoutFirmNestedInput
+  fees?: Prisma.FeeUpdateManyWithoutFirmNestedInput
+}
+
+export type FirmUncheckedUpdateWithoutRemunerationsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  clients?: Prisma.ClientUncheckedUpdateManyWithoutFirmNestedInput
+  employees?: Prisma.EmployeeUncheckedUpdateManyWithoutFirmNestedInput
+  contracts?: Prisma.ContractUncheckedUpdateManyWithoutFirmNestedInput
+  contractEmployees?: Prisma.ContractEmployeeUncheckedUpdateManyWithoutFirmNestedInput
+  revenues?: Prisma.RevenueUncheckedUpdateManyWithoutFirmNestedInput
+  fees?: Prisma.FeeUncheckedUpdateManyWithoutFirmNestedInput
 }
 
 
@@ -663,6 +861,8 @@ export type FirmCountOutputType = {
   contracts: number
   contractEmployees: number
   revenues: number
+  fees: number
+  remunerations: number
 }
 
 export type FirmCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -671,6 +871,8 @@ export type FirmCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   contracts?: boolean | FirmCountOutputTypeCountContractsArgs
   contractEmployees?: boolean | FirmCountOutputTypeCountContractEmployeesArgs
   revenues?: boolean | FirmCountOutputTypeCountRevenuesArgs
+  fees?: boolean | FirmCountOutputTypeCountFeesArgs
+  remunerations?: boolean | FirmCountOutputTypeCountRemunerationsArgs
 }
 
 /**
@@ -718,6 +920,20 @@ export type FirmCountOutputTypeCountRevenuesArgs<ExtArgs extends runtime.Types.E
   where?: Prisma.RevenueWhereInput
 }
 
+/**
+ * FirmCountOutputType without action
+ */
+export type FirmCountOutputTypeCountFeesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FeeWhereInput
+}
+
+/**
+ * FirmCountOutputType without action
+ */
+export type FirmCountOutputTypeCountRemunerationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RemunerationWhereInput
+}
+
 
 export type FirmSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -727,6 +943,8 @@ export type FirmSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   contracts?: boolean | Prisma.Firm$contractsArgs<ExtArgs>
   contractEmployees?: boolean | Prisma.Firm$contractEmployeesArgs<ExtArgs>
   revenues?: boolean | Prisma.Firm$revenuesArgs<ExtArgs>
+  fees?: boolean | Prisma.Firm$feesArgs<ExtArgs>
+  remunerations?: boolean | Prisma.Firm$remunerationsArgs<ExtArgs>
   _count?: boolean | Prisma.FirmCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["firm"]>
 
@@ -752,6 +970,8 @@ export type FirmInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   contracts?: boolean | Prisma.Firm$contractsArgs<ExtArgs>
   contractEmployees?: boolean | Prisma.Firm$contractEmployeesArgs<ExtArgs>
   revenues?: boolean | Prisma.Firm$revenuesArgs<ExtArgs>
+  fees?: boolean | Prisma.Firm$feesArgs<ExtArgs>
+  remunerations?: boolean | Prisma.Firm$remunerationsArgs<ExtArgs>
   _count?: boolean | Prisma.FirmCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type FirmIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -765,6 +985,8 @@ export type $FirmPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     contracts: Prisma.$ContractPayload<ExtArgs>[]
     contractEmployees: Prisma.$ContractEmployeePayload<ExtArgs>[]
     revenues: Prisma.$RevenuePayload<ExtArgs>[]
+    fees: Prisma.$FeePayload<ExtArgs>[]
+    remunerations: Prisma.$RemunerationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1168,6 +1390,8 @@ export interface Prisma__FirmClient<T, Null = never, ExtArgs extends runtime.Typ
   contracts<T extends Prisma.Firm$contractsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Firm$contractsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ContractPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   contractEmployees<T extends Prisma.Firm$contractEmployeesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Firm$contractEmployeesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ContractEmployeePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   revenues<T extends Prisma.Firm$revenuesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Firm$revenuesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RevenuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  fees<T extends Prisma.Firm$feesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Firm$feesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FeePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  remunerations<T extends Prisma.Firm$remunerationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Firm$remunerationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RemunerationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1709,6 +1933,54 @@ export type Firm$revenuesArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.RevenueScalarFieldEnum | Prisma.RevenueScalarFieldEnum[]
+}
+
+/**
+ * Firm.fees
+ */
+export type Firm$feesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Fee
+   */
+  select?: Prisma.FeeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Fee
+   */
+  omit?: Prisma.FeeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FeeInclude<ExtArgs> | null
+  where?: Prisma.FeeWhereInput
+  orderBy?: Prisma.FeeOrderByWithRelationInput | Prisma.FeeOrderByWithRelationInput[]
+  cursor?: Prisma.FeeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FeeScalarFieldEnum | Prisma.FeeScalarFieldEnum[]
+}
+
+/**
+ * Firm.remunerations
+ */
+export type Firm$remunerationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Remuneration
+   */
+  select?: Prisma.RemunerationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Remuneration
+   */
+  omit?: Prisma.RemunerationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RemunerationInclude<ExtArgs> | null
+  where?: Prisma.RemunerationWhereInput
+  orderBy?: Prisma.RemunerationOrderByWithRelationInput | Prisma.RemunerationOrderByWithRelationInput[]
+  cursor?: Prisma.RemunerationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RemunerationScalarFieldEnum | Prisma.RemunerationScalarFieldEnum[]
 }
 
 /**

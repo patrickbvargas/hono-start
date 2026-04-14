@@ -9,11 +9,17 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as HonorariosRouteImport } from './routes/honorarios'
 import { Route as ContratosRouteImport } from './routes/contratos'
 import { Route as ColaboradoresRouteImport } from './routes/colaboradores'
 import { Route as ClientesRouteImport } from './routes/clientes'
 import { Route as IndexRouteImport } from './routes/index'
 
+const HonorariosRoute = HonorariosRouteImport.update({
+  id: '/honorarios',
+  path: '/honorarios',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ContratosRoute = ContratosRouteImport.update({
   id: '/contratos',
   path: '/contratos',
@@ -40,12 +46,14 @@ export interface FileRoutesByFullPath {
   '/clientes': typeof ClientesRoute
   '/colaboradores': typeof ColaboradoresRoute
   '/contratos': typeof ContratosRoute
+  '/honorarios': typeof HonorariosRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/clientes': typeof ClientesRoute
   '/colaboradores': typeof ColaboradoresRoute
   '/contratos': typeof ContratosRoute
+  '/honorarios': typeof HonorariosRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -53,13 +61,20 @@ export interface FileRoutesById {
   '/clientes': typeof ClientesRoute
   '/colaboradores': typeof ColaboradoresRoute
   '/contratos': typeof ContratosRoute
+  '/honorarios': typeof HonorariosRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/clientes' | '/colaboradores' | '/contratos'
+  fullPaths: '/' | '/clientes' | '/colaboradores' | '/contratos' | '/honorarios'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/clientes' | '/colaboradores' | '/contratos'
-  id: '__root__' | '/' | '/clientes' | '/colaboradores' | '/contratos'
+  to: '/' | '/clientes' | '/colaboradores' | '/contratos' | '/honorarios'
+  id:
+    | '__root__'
+    | '/'
+    | '/clientes'
+    | '/colaboradores'
+    | '/contratos'
+    | '/honorarios'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -67,10 +82,18 @@ export interface RootRouteChildren {
   ClientesRoute: typeof ClientesRoute
   ColaboradoresRoute: typeof ColaboradoresRoute
   ContratosRoute: typeof ContratosRoute
+  HonorariosRoute: typeof HonorariosRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/honorarios': {
+      id: '/honorarios'
+      path: '/honorarios'
+      fullPath: '/honorarios'
+      preLoaderRoute: typeof HonorariosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/contratos': {
       id: '/contratos'
       path: '/contratos'
@@ -107,6 +130,7 @@ const rootRouteChildren: RootRouteChildren = {
   ClientesRoute: ClientesRoute,
   ColaboradoresRoute: ColaboradoresRoute,
   ContratosRoute: ContratosRoute,
+  HonorariosRoute: HonorariosRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

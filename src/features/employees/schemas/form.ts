@@ -6,7 +6,7 @@ import {
 } from "../utils/validation";
 
 const employeeBaseShape = {
-	fullName: z.string().min(1, "Nome é obrigatório"),
+	fullName: z.string().trim().min(1, "Nome é obrigatório"),
 	email: z.email("Email inválido"),
 	oabNumber: z
 		.string()

@@ -44,7 +44,9 @@ function isAssignedToActor(
 	);
 }
 
-export function isContractReadOnly(resource?: ContractAccessResource | null) {
+export function isContractReadOnly(
+	resource?: ContractAccessResource | FeeAccessResource | null,
+) {
 	if (!resource?.statusValue) {
 		return false;
 	}
@@ -71,7 +73,9 @@ function canAccessOwnEmployee(
 	);
 }
 
-export function isContractWritable(resource?: ContractAccessResource | null) {
+export function isContractWritable(
+	resource?: ContractAccessResource | FeeAccessResource | null,
+) {
 	if (!resource) {
 		return false;
 	}
@@ -104,6 +108,8 @@ export function can(
 		case "client.restore":
 		case "contract.delete":
 		case "contract.restore":
+		case "fee.delete":
+		case "fee.restore":
 		case "attachment.delete":
 		case "audit-log.view":
 			return false;
@@ -114,6 +120,12 @@ export function can(
 			return isAssignedToActor(
 				session,
 				resource as ContractAccessResource | FeeAccessResource,
+			);
+		case "fee.create":
+		case "fee.update":
+			return (
+				isAssignedToActor(session, resource as FeeAccessResource) &&
+				isContractWritable(resource as FeeAccessResource)
 			);
 		case "contract.create":
 			return true;
@@ -154,6 +166,10 @@ export function assertCan(
 		"dashboard.view": "Você não tem permissão para visualizar o dashboard",
 		"employee.manage": "Apenas administradores podem gerenciar funcionários",
 		"employee.update": "Você não tem permissão para editar este funcionário",
+		"fee.create": "Você não tem permissão para criar honorários",
+		"fee.delete": "Apenas administradores podem excluir honorários",
+		"fee.restore": "Apenas administradores podem restaurar honorários",
+		"fee.update": "Você não tem permissão para editar este honorário",
 		"fee.view": "Você não tem permissão para visualizar estes honorários",
 	};
 
@@ -201,6 +217,20 @@ export function canViewFee(
 	resource: FeeAccessResource,
 ) {
 	return can(session, "fee.view", resource);
+}
+
+export function canCreateFee(
+	session: LoggedUserSession,
+	resource: FeeAccessResource,
+) {
+	return can(session, "fee.create", resource);
+}
+
+export function canUpdateFee(
+	session: LoggedUserSession,
+	resource: FeeAccessResource,
+) {
+	return can(session, "fee.update", resource);
 }
 
 export function canDeleteAttachment(

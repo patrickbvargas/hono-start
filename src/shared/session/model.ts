@@ -46,7 +46,11 @@ export type SessionAction =
 	| "contract.delete"
 	| "contract.restore"
 	| "contract.assign-employee"
+	| "fee.create"
+	| "fee.update"
 	| "fee.view"
+	| "fee.delete"
+	| "fee.restore"
 	| "attachment.view"
 	| "attachment.upload"
 	| "attachment.delete"
@@ -80,6 +84,8 @@ export interface ContractAccessResource extends SessionFirmResource {
 export interface FeeAccessResource extends SessionFirmResource {
 	assignedEmployeeIds?: number[];
 	isAssignedToActor?: boolean;
+	statusValue?: string;
+	allowStatusChange?: boolean;
 }
 
 export interface AttachmentAccessResource extends SessionFirmResource {}

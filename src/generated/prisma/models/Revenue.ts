@@ -299,6 +299,7 @@ export type RevenueWhereInput = {
   contract?: Prisma.XOR<Prisma.ContractScalarRelationFilter, Prisma.ContractWhereInput>
   firm?: Prisma.XOR<Prisma.FirmScalarRelationFilter, Prisma.FirmWhereInput>
   type?: Prisma.XOR<Prisma.RevenueTypeScalarRelationFilter, Prisma.RevenueTypeWhereInput>
+  fees?: Prisma.FeeListRelationFilter
 }
 
 export type RevenueOrderByWithRelationInput = {
@@ -317,6 +318,7 @@ export type RevenueOrderByWithRelationInput = {
   contract?: Prisma.ContractOrderByWithRelationInput
   firm?: Prisma.FirmOrderByWithRelationInput
   type?: Prisma.RevenueTypeOrderByWithRelationInput
+  fees?: Prisma.FeeOrderByRelationAggregateInput
 }
 
 export type RevenueWhereUniqueInput = Prisma.AtLeast<{
@@ -338,6 +340,7 @@ export type RevenueWhereUniqueInput = Prisma.AtLeast<{
   contract?: Prisma.XOR<Prisma.ContractScalarRelationFilter, Prisma.ContractWhereInput>
   firm?: Prisma.XOR<Prisma.FirmScalarRelationFilter, Prisma.FirmWhereInput>
   type?: Prisma.XOR<Prisma.RevenueTypeScalarRelationFilter, Prisma.RevenueTypeWhereInput>
+  fees?: Prisma.FeeListRelationFilter
 }, "id">
 
 export type RevenueOrderByWithAggregationInput = {
@@ -390,6 +393,7 @@ export type RevenueCreateInput = {
   contract: Prisma.ContractCreateNestedOneWithoutRevenuesInput
   firm: Prisma.FirmCreateNestedOneWithoutRevenuesInput
   type: Prisma.RevenueTypeCreateNestedOneWithoutRevenuesInput
+  fees?: Prisma.FeeCreateNestedManyWithoutRevenueInput
 }
 
 export type RevenueUncheckedCreateInput = {
@@ -405,6 +409,7 @@ export type RevenueUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  fees?: Prisma.FeeUncheckedCreateNestedManyWithoutRevenueInput
 }
 
 export type RevenueUpdateInput = {
@@ -419,6 +424,7 @@ export type RevenueUpdateInput = {
   contract?: Prisma.ContractUpdateOneRequiredWithoutRevenuesNestedInput
   firm?: Prisma.FirmUpdateOneRequiredWithoutRevenuesNestedInput
   type?: Prisma.RevenueTypeUpdateOneRequiredWithoutRevenuesNestedInput
+  fees?: Prisma.FeeUpdateManyWithoutRevenueNestedInput
 }
 
 export type RevenueUncheckedUpdateInput = {
@@ -434,6 +440,7 @@ export type RevenueUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fees?: Prisma.FeeUncheckedUpdateManyWithoutRevenueNestedInput
 }
 
 export type RevenueCreateManyInput = {
@@ -550,6 +557,11 @@ export type RevenueSumOrderByAggregateInput = {
   totalValue?: Prisma.SortOrder
   downPaymentValue?: Prisma.SortOrder
   totalInstallments?: Prisma.SortOrder
+}
+
+export type RevenueScalarRelationFilter = {
+  is?: Prisma.RevenueWhereInput
+  isNot?: Prisma.RevenueWhereInput
 }
 
 export type RevenueCreateNestedManyWithoutFirmInput = {
@@ -686,6 +698,20 @@ export type NullableDecimalFieldUpdateOperationsInput = {
   divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
+export type RevenueCreateNestedOneWithoutFeesInput = {
+  create?: Prisma.XOR<Prisma.RevenueCreateWithoutFeesInput, Prisma.RevenueUncheckedCreateWithoutFeesInput>
+  connectOrCreate?: Prisma.RevenueCreateOrConnectWithoutFeesInput
+  connect?: Prisma.RevenueWhereUniqueInput
+}
+
+export type RevenueUpdateOneRequiredWithoutFeesNestedInput = {
+  create?: Prisma.XOR<Prisma.RevenueCreateWithoutFeesInput, Prisma.RevenueUncheckedCreateWithoutFeesInput>
+  connectOrCreate?: Prisma.RevenueCreateOrConnectWithoutFeesInput
+  upsert?: Prisma.RevenueUpsertWithoutFeesInput
+  connect?: Prisma.RevenueWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.RevenueUpdateToOneWithWhereWithoutFeesInput, Prisma.RevenueUpdateWithoutFeesInput>, Prisma.RevenueUncheckedUpdateWithoutFeesInput>
+}
+
 export type RevenueCreateWithoutFirmInput = {
   totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
   downPaymentValue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -697,6 +723,7 @@ export type RevenueCreateWithoutFirmInput = {
   deletedAt?: Date | string | null
   contract: Prisma.ContractCreateNestedOneWithoutRevenuesInput
   type: Prisma.RevenueTypeCreateNestedOneWithoutRevenuesInput
+  fees?: Prisma.FeeCreateNestedManyWithoutRevenueInput
 }
 
 export type RevenueUncheckedCreateWithoutFirmInput = {
@@ -711,6 +738,7 @@ export type RevenueUncheckedCreateWithoutFirmInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  fees?: Prisma.FeeUncheckedCreateNestedManyWithoutRevenueInput
 }
 
 export type RevenueCreateOrConnectWithoutFirmInput = {
@@ -768,6 +796,7 @@ export type RevenueCreateWithoutTypeInput = {
   deletedAt?: Date | string | null
   contract: Prisma.ContractCreateNestedOneWithoutRevenuesInput
   firm: Prisma.FirmCreateNestedOneWithoutRevenuesInput
+  fees?: Prisma.FeeCreateNestedManyWithoutRevenueInput
 }
 
 export type RevenueUncheckedCreateWithoutTypeInput = {
@@ -782,6 +811,7 @@ export type RevenueUncheckedCreateWithoutTypeInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  fees?: Prisma.FeeUncheckedCreateNestedManyWithoutRevenueInput
 }
 
 export type RevenueCreateOrConnectWithoutTypeInput = {
@@ -821,6 +851,7 @@ export type RevenueCreateWithoutContractInput = {
   deletedAt?: Date | string | null
   firm: Prisma.FirmCreateNestedOneWithoutRevenuesInput
   type: Prisma.RevenueTypeCreateNestedOneWithoutRevenuesInput
+  fees?: Prisma.FeeCreateNestedManyWithoutRevenueInput
 }
 
 export type RevenueUncheckedCreateWithoutContractInput = {
@@ -835,6 +866,7 @@ export type RevenueUncheckedCreateWithoutContractInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  fees?: Prisma.FeeUncheckedCreateNestedManyWithoutRevenueInput
 }
 
 export type RevenueCreateOrConnectWithoutContractInput = {
@@ -863,6 +895,80 @@ export type RevenueUpdateManyWithWhereWithoutContractInput = {
   data: Prisma.XOR<Prisma.RevenueUpdateManyMutationInput, Prisma.RevenueUncheckedUpdateManyWithoutContractInput>
 }
 
+export type RevenueCreateWithoutFeesInput = {
+  totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
+  downPaymentValue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  paymentStartDate: Date | string
+  totalInstallments: number
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  contract: Prisma.ContractCreateNestedOneWithoutRevenuesInput
+  firm: Prisma.FirmCreateNestedOneWithoutRevenuesInput
+  type: Prisma.RevenueTypeCreateNestedOneWithoutRevenuesInput
+}
+
+export type RevenueUncheckedCreateWithoutFeesInput = {
+  id?: number
+  firmId: number
+  contractId: number
+  typeId: number
+  totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
+  downPaymentValue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  paymentStartDate: Date | string
+  totalInstallments: number
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+}
+
+export type RevenueCreateOrConnectWithoutFeesInput = {
+  where: Prisma.RevenueWhereUniqueInput
+  create: Prisma.XOR<Prisma.RevenueCreateWithoutFeesInput, Prisma.RevenueUncheckedCreateWithoutFeesInput>
+}
+
+export type RevenueUpsertWithoutFeesInput = {
+  update: Prisma.XOR<Prisma.RevenueUpdateWithoutFeesInput, Prisma.RevenueUncheckedUpdateWithoutFeesInput>
+  create: Prisma.XOR<Prisma.RevenueCreateWithoutFeesInput, Prisma.RevenueUncheckedCreateWithoutFeesInput>
+  where?: Prisma.RevenueWhereInput
+}
+
+export type RevenueUpdateToOneWithWhereWithoutFeesInput = {
+  where?: Prisma.RevenueWhereInput
+  data: Prisma.XOR<Prisma.RevenueUpdateWithoutFeesInput, Prisma.RevenueUncheckedUpdateWithoutFeesInput>
+}
+
+export type RevenueUpdateWithoutFeesInput = {
+  totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  downPaymentValue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  paymentStartDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  totalInstallments?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  contract?: Prisma.ContractUpdateOneRequiredWithoutRevenuesNestedInput
+  firm?: Prisma.FirmUpdateOneRequiredWithoutRevenuesNestedInput
+  type?: Prisma.RevenueTypeUpdateOneRequiredWithoutRevenuesNestedInput
+}
+
+export type RevenueUncheckedUpdateWithoutFeesInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  firmId?: Prisma.IntFieldUpdateOperationsInput | number
+  contractId?: Prisma.IntFieldUpdateOperationsInput | number
+  typeId?: Prisma.IntFieldUpdateOperationsInput | number
+  totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  downPaymentValue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  paymentStartDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  totalInstallments?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
 export type RevenueCreateManyFirmInput = {
   id?: number
   contractId: number
@@ -888,6 +994,7 @@ export type RevenueUpdateWithoutFirmInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   contract?: Prisma.ContractUpdateOneRequiredWithoutRevenuesNestedInput
   type?: Prisma.RevenueTypeUpdateOneRequiredWithoutRevenuesNestedInput
+  fees?: Prisma.FeeUpdateManyWithoutRevenueNestedInput
 }
 
 export type RevenueUncheckedUpdateWithoutFirmInput = {
@@ -902,6 +1009,7 @@ export type RevenueUncheckedUpdateWithoutFirmInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fees?: Prisma.FeeUncheckedUpdateManyWithoutRevenueNestedInput
 }
 
 export type RevenueUncheckedUpdateManyWithoutFirmInput = {
@@ -943,6 +1051,7 @@ export type RevenueUpdateWithoutTypeInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   contract?: Prisma.ContractUpdateOneRequiredWithoutRevenuesNestedInput
   firm?: Prisma.FirmUpdateOneRequiredWithoutRevenuesNestedInput
+  fees?: Prisma.FeeUpdateManyWithoutRevenueNestedInput
 }
 
 export type RevenueUncheckedUpdateWithoutTypeInput = {
@@ -957,6 +1066,7 @@ export type RevenueUncheckedUpdateWithoutTypeInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fees?: Prisma.FeeUncheckedUpdateManyWithoutRevenueNestedInput
 }
 
 export type RevenueUncheckedUpdateManyWithoutTypeInput = {
@@ -998,6 +1108,7 @@ export type RevenueUpdateWithoutContractInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   firm?: Prisma.FirmUpdateOneRequiredWithoutRevenuesNestedInput
   type?: Prisma.RevenueTypeUpdateOneRequiredWithoutRevenuesNestedInput
+  fees?: Prisma.FeeUpdateManyWithoutRevenueNestedInput
 }
 
 export type RevenueUncheckedUpdateWithoutContractInput = {
@@ -1012,6 +1123,7 @@ export type RevenueUncheckedUpdateWithoutContractInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fees?: Prisma.FeeUncheckedUpdateManyWithoutRevenueNestedInput
 }
 
 export type RevenueUncheckedUpdateManyWithoutContractInput = {
@@ -1028,6 +1140,35 @@ export type RevenueUncheckedUpdateManyWithoutContractInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
+
+/**
+ * Count Type RevenueCountOutputType
+ */
+
+export type RevenueCountOutputType = {
+  fees: number
+}
+
+export type RevenueCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  fees?: boolean | RevenueCountOutputTypeCountFeesArgs
+}
+
+/**
+ * RevenueCountOutputType without action
+ */
+export type RevenueCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the RevenueCountOutputType
+   */
+  select?: Prisma.RevenueCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * RevenueCountOutputType without action
+ */
+export type RevenueCountOutputTypeCountFeesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FeeWhereInput
+}
 
 
 export type RevenueSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1046,6 +1187,8 @@ export type RevenueSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   contract?: boolean | Prisma.ContractDefaultArgs<ExtArgs>
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
   type?: boolean | Prisma.RevenueTypeDefaultArgs<ExtArgs>
+  fees?: boolean | Prisma.Revenue$feesArgs<ExtArgs>
+  _count?: boolean | Prisma.RevenueCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["revenue"]>
 
 export type RevenueSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1104,6 +1247,8 @@ export type RevenueInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   contract?: boolean | Prisma.ContractDefaultArgs<ExtArgs>
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
   type?: boolean | Prisma.RevenueTypeDefaultArgs<ExtArgs>
+  fees?: boolean | Prisma.Revenue$feesArgs<ExtArgs>
+  _count?: boolean | Prisma.RevenueCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type RevenueIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   contract?: boolean | Prisma.ContractDefaultArgs<ExtArgs>
@@ -1122,6 +1267,7 @@ export type $RevenuePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     contract: Prisma.$ContractPayload<ExtArgs>
     firm: Prisma.$FirmPayload<ExtArgs>
     type: Prisma.$RevenueTypePayload<ExtArgs>
+    fees: Prisma.$FeePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1533,6 +1679,7 @@ export interface Prisma__RevenueClient<T, Null = never, ExtArgs extends runtime.
   contract<T extends Prisma.ContractDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ContractDefaultArgs<ExtArgs>>): Prisma.Prisma__ContractClient<runtime.Types.Result.GetResult<Prisma.$ContractPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   firm<T extends Prisma.FirmDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FirmDefaultArgs<ExtArgs>>): Prisma.Prisma__FirmClient<runtime.Types.Result.GetResult<Prisma.$FirmPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   type<T extends Prisma.RevenueTypeDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RevenueTypeDefaultArgs<ExtArgs>>): Prisma.Prisma__RevenueTypeClient<runtime.Types.Result.GetResult<Prisma.$RevenueTypePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  fees<T extends Prisma.Revenue$feesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Revenue$feesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FeePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1972,6 +2119,30 @@ export type RevenueDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Limit how many Revenues to delete.
    */
   limit?: number
+}
+
+/**
+ * Revenue.fees
+ */
+export type Revenue$feesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Fee
+   */
+  select?: Prisma.FeeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Fee
+   */
+  omit?: Prisma.FeeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FeeInclude<ExtArgs> | null
+  where?: Prisma.FeeWhereInput
+  orderBy?: Prisma.FeeOrderByWithRelationInput | Prisma.FeeOrderByWithRelationInput[]
+  cursor?: Prisma.FeeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FeeScalarFieldEnum | Prisma.FeeScalarFieldEnum[]
 }
 
 /**

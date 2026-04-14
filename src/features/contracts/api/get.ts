@@ -1,5 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
+import { Prisma } from "@/generated/prisma/client";
 import {
 	getEntityActiveWhere,
 	getEntityDeletedWhere,
@@ -99,6 +100,9 @@ async function mapContracts(
 			downPaymentValue: { toString(): string } | null;
 			paymentStartDate: Date;
 			totalInstallments: number;
+			fees: Array<{
+				amount: { toString(): string };
+			}>;
 			isActive: boolean;
 			deletedAt: Date | null;
 			type: { label: string; value: string };
@@ -137,6 +141,25 @@ async function mapContracts(
 					isSoftDeleted: !!assignment.deletedAt,
 				})),
 				revenues: contract.revenues.map((revenue) => ({
+					...(function deriveRevenueState() {
+						const paidValue = revenue.fees.reduce(
+							(total, fee) => total.add(fee.amount.toString()),
+							new Prisma.Decimal(revenue.downPaymentValue?.toString() ?? 0),
+						);
+						const remainingValue = Prisma.Decimal.max(
+							new Prisma.Decimal(revenue.totalValue.toString()).minus(
+								paidValue,
+							),
+							new Prisma.Decimal(0),
+						);
+
+						return {
+							paidValue: Number(paidValue),
+							installmentsPaid: revenue.fees.length,
+							remainingValue: Number(remainingValue),
+							isFullyPaid: remainingValue.equals(0),
+						};
+					})(),
 					id: revenue.id,
 					typeId: revenue.typeId,
 					type: revenue.type.label,
@@ -184,7 +207,20 @@ const contractInclude = {
 		},
 	},
 	revenues: {
+		where: {
+			deletedAt: null,
+			isActive: true,
+		},
 		include: {
+			fees: {
+				where: {
+					deletedAt: null,
+					isActive: true,
+				},
+				select: {
+					amount: true,
+				},
+			},
 			type: { select: { label: true, value: true } },
 		},
 	},

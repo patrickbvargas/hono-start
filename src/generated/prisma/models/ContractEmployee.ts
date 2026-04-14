@@ -268,6 +268,7 @@ export type ContractEmployeeWhereInput = {
   contract?: Prisma.XOR<Prisma.ContractScalarRelationFilter, Prisma.ContractWhereInput>
   employee?: Prisma.XOR<Prisma.EmployeeScalarRelationFilter, Prisma.EmployeeWhereInput>
   firm?: Prisma.XOR<Prisma.FirmScalarRelationFilter, Prisma.FirmWhereInput>
+  remunerations?: Prisma.RemunerationListRelationFilter
 }
 
 export type ContractEmployeeOrderByWithRelationInput = {
@@ -284,6 +285,7 @@ export type ContractEmployeeOrderByWithRelationInput = {
   contract?: Prisma.ContractOrderByWithRelationInput
   employee?: Prisma.EmployeeOrderByWithRelationInput
   firm?: Prisma.FirmOrderByWithRelationInput
+  remunerations?: Prisma.RemunerationOrderByRelationAggregateInput
 }
 
 export type ContractEmployeeWhereUniqueInput = Prisma.AtLeast<{
@@ -303,6 +305,7 @@ export type ContractEmployeeWhereUniqueInput = Prisma.AtLeast<{
   contract?: Prisma.XOR<Prisma.ContractScalarRelationFilter, Prisma.ContractWhereInput>
   employee?: Prisma.XOR<Prisma.EmployeeScalarRelationFilter, Prisma.EmployeeWhereInput>
   firm?: Prisma.XOR<Prisma.FirmScalarRelationFilter, Prisma.FirmWhereInput>
+  remunerations?: Prisma.RemunerationListRelationFilter
 }, "id">
 
 export type ContractEmployeeOrderByWithAggregationInput = {
@@ -346,6 +349,7 @@ export type ContractEmployeeCreateInput = {
   contract: Prisma.ContractCreateNestedOneWithoutAssignmentsInput
   employee: Prisma.EmployeeCreateNestedOneWithoutContractAssignmentsInput
   firm: Prisma.FirmCreateNestedOneWithoutContractEmployeesInput
+  remunerations?: Prisma.RemunerationCreateNestedManyWithoutContractEmployeeInput
 }
 
 export type ContractEmployeeUncheckedCreateInput = {
@@ -358,6 +362,7 @@ export type ContractEmployeeUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  remunerations?: Prisma.RemunerationUncheckedCreateNestedManyWithoutContractEmployeeInput
 }
 
 export type ContractEmployeeUpdateInput = {
@@ -369,6 +374,7 @@ export type ContractEmployeeUpdateInput = {
   contract?: Prisma.ContractUpdateOneRequiredWithoutAssignmentsNestedInput
   employee?: Prisma.EmployeeUpdateOneRequiredWithoutContractAssignmentsNestedInput
   firm?: Prisma.FirmUpdateOneRequiredWithoutContractEmployeesNestedInput
+  remunerations?: Prisma.RemunerationUpdateManyWithoutContractEmployeeNestedInput
 }
 
 export type ContractEmployeeUncheckedUpdateInput = {
@@ -381,6 +387,7 @@ export type ContractEmployeeUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  remunerations?: Prisma.RemunerationUncheckedUpdateManyWithoutContractEmployeeNestedInput
 }
 
 export type ContractEmployeeCreateManyInput = {
@@ -474,6 +481,11 @@ export type ContractEmployeeSumOrderByAggregateInput = {
   contractId?: Prisma.SortOrder
   employeeId?: Prisma.SortOrder
   assignmentTypeId?: Prisma.SortOrder
+}
+
+export type ContractEmployeeScalarRelationFilter = {
+  is?: Prisma.ContractEmployeeWhereInput
+  isNot?: Prisma.ContractEmployeeWhereInput
 }
 
 export type ContractEmployeeCreateNestedManyWithoutFirmInput = {
@@ -644,6 +656,20 @@ export type ContractEmployeeUncheckedUpdateManyWithoutContractNestedInput = {
   deleteMany?: Prisma.ContractEmployeeScalarWhereInput | Prisma.ContractEmployeeScalarWhereInput[]
 }
 
+export type ContractEmployeeCreateNestedOneWithoutRemunerationsInput = {
+  create?: Prisma.XOR<Prisma.ContractEmployeeCreateWithoutRemunerationsInput, Prisma.ContractEmployeeUncheckedCreateWithoutRemunerationsInput>
+  connectOrCreate?: Prisma.ContractEmployeeCreateOrConnectWithoutRemunerationsInput
+  connect?: Prisma.ContractEmployeeWhereUniqueInput
+}
+
+export type ContractEmployeeUpdateOneRequiredWithoutRemunerationsNestedInput = {
+  create?: Prisma.XOR<Prisma.ContractEmployeeCreateWithoutRemunerationsInput, Prisma.ContractEmployeeUncheckedCreateWithoutRemunerationsInput>
+  connectOrCreate?: Prisma.ContractEmployeeCreateOrConnectWithoutRemunerationsInput
+  upsert?: Prisma.ContractEmployeeUpsertWithoutRemunerationsInput
+  connect?: Prisma.ContractEmployeeWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ContractEmployeeUpdateToOneWithWhereWithoutRemunerationsInput, Prisma.ContractEmployeeUpdateWithoutRemunerationsInput>, Prisma.ContractEmployeeUncheckedUpdateWithoutRemunerationsInput>
+}
+
 export type ContractEmployeeCreateWithoutFirmInput = {
   isActive?: boolean
   createdAt?: Date | string
@@ -652,6 +678,7 @@ export type ContractEmployeeCreateWithoutFirmInput = {
   assignmentType: Prisma.AssignmentTypeCreateNestedOneWithoutContractEmployeesInput
   contract: Prisma.ContractCreateNestedOneWithoutAssignmentsInput
   employee: Prisma.EmployeeCreateNestedOneWithoutContractAssignmentsInput
+  remunerations?: Prisma.RemunerationCreateNestedManyWithoutContractEmployeeInput
 }
 
 export type ContractEmployeeUncheckedCreateWithoutFirmInput = {
@@ -663,6 +690,7 @@ export type ContractEmployeeUncheckedCreateWithoutFirmInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  remunerations?: Prisma.RemunerationUncheckedCreateNestedManyWithoutContractEmployeeInput
 }
 
 export type ContractEmployeeCreateOrConnectWithoutFirmInput = {
@@ -714,6 +742,7 @@ export type ContractEmployeeCreateWithoutAssignmentTypeInput = {
   contract: Prisma.ContractCreateNestedOneWithoutAssignmentsInput
   employee: Prisma.EmployeeCreateNestedOneWithoutContractAssignmentsInput
   firm: Prisma.FirmCreateNestedOneWithoutContractEmployeesInput
+  remunerations?: Prisma.RemunerationCreateNestedManyWithoutContractEmployeeInput
 }
 
 export type ContractEmployeeUncheckedCreateWithoutAssignmentTypeInput = {
@@ -725,6 +754,7 @@ export type ContractEmployeeUncheckedCreateWithoutAssignmentTypeInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  remunerations?: Prisma.RemunerationUncheckedCreateNestedManyWithoutContractEmployeeInput
 }
 
 export type ContractEmployeeCreateOrConnectWithoutAssignmentTypeInput = {
@@ -761,6 +791,7 @@ export type ContractEmployeeCreateWithoutEmployeeInput = {
   assignmentType: Prisma.AssignmentTypeCreateNestedOneWithoutContractEmployeesInput
   contract: Prisma.ContractCreateNestedOneWithoutAssignmentsInput
   firm: Prisma.FirmCreateNestedOneWithoutContractEmployeesInput
+  remunerations?: Prisma.RemunerationCreateNestedManyWithoutContractEmployeeInput
 }
 
 export type ContractEmployeeUncheckedCreateWithoutEmployeeInput = {
@@ -772,6 +803,7 @@ export type ContractEmployeeUncheckedCreateWithoutEmployeeInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  remunerations?: Prisma.RemunerationUncheckedCreateNestedManyWithoutContractEmployeeInput
 }
 
 export type ContractEmployeeCreateOrConnectWithoutEmployeeInput = {
@@ -808,6 +840,7 @@ export type ContractEmployeeCreateWithoutContractInput = {
   assignmentType: Prisma.AssignmentTypeCreateNestedOneWithoutContractEmployeesInput
   employee: Prisma.EmployeeCreateNestedOneWithoutContractAssignmentsInput
   firm: Prisma.FirmCreateNestedOneWithoutContractEmployeesInput
+  remunerations?: Prisma.RemunerationCreateNestedManyWithoutContractEmployeeInput
 }
 
 export type ContractEmployeeUncheckedCreateWithoutContractInput = {
@@ -819,6 +852,7 @@ export type ContractEmployeeUncheckedCreateWithoutContractInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  remunerations?: Prisma.RemunerationUncheckedCreateNestedManyWithoutContractEmployeeInput
 }
 
 export type ContractEmployeeCreateOrConnectWithoutContractInput = {
@@ -847,6 +881,68 @@ export type ContractEmployeeUpdateManyWithWhereWithoutContractInput = {
   data: Prisma.XOR<Prisma.ContractEmployeeUpdateManyMutationInput, Prisma.ContractEmployeeUncheckedUpdateManyWithoutContractInput>
 }
 
+export type ContractEmployeeCreateWithoutRemunerationsInput = {
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  assignmentType: Prisma.AssignmentTypeCreateNestedOneWithoutContractEmployeesInput
+  contract: Prisma.ContractCreateNestedOneWithoutAssignmentsInput
+  employee: Prisma.EmployeeCreateNestedOneWithoutContractAssignmentsInput
+  firm: Prisma.FirmCreateNestedOneWithoutContractEmployeesInput
+}
+
+export type ContractEmployeeUncheckedCreateWithoutRemunerationsInput = {
+  id?: number
+  firmId: number
+  contractId: number
+  employeeId: number
+  assignmentTypeId: number
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+}
+
+export type ContractEmployeeCreateOrConnectWithoutRemunerationsInput = {
+  where: Prisma.ContractEmployeeWhereUniqueInput
+  create: Prisma.XOR<Prisma.ContractEmployeeCreateWithoutRemunerationsInput, Prisma.ContractEmployeeUncheckedCreateWithoutRemunerationsInput>
+}
+
+export type ContractEmployeeUpsertWithoutRemunerationsInput = {
+  update: Prisma.XOR<Prisma.ContractEmployeeUpdateWithoutRemunerationsInput, Prisma.ContractEmployeeUncheckedUpdateWithoutRemunerationsInput>
+  create: Prisma.XOR<Prisma.ContractEmployeeCreateWithoutRemunerationsInput, Prisma.ContractEmployeeUncheckedCreateWithoutRemunerationsInput>
+  where?: Prisma.ContractEmployeeWhereInput
+}
+
+export type ContractEmployeeUpdateToOneWithWhereWithoutRemunerationsInput = {
+  where?: Prisma.ContractEmployeeWhereInput
+  data: Prisma.XOR<Prisma.ContractEmployeeUpdateWithoutRemunerationsInput, Prisma.ContractEmployeeUncheckedUpdateWithoutRemunerationsInput>
+}
+
+export type ContractEmployeeUpdateWithoutRemunerationsInput = {
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  assignmentType?: Prisma.AssignmentTypeUpdateOneRequiredWithoutContractEmployeesNestedInput
+  contract?: Prisma.ContractUpdateOneRequiredWithoutAssignmentsNestedInput
+  employee?: Prisma.EmployeeUpdateOneRequiredWithoutContractAssignmentsNestedInput
+  firm?: Prisma.FirmUpdateOneRequiredWithoutContractEmployeesNestedInput
+}
+
+export type ContractEmployeeUncheckedUpdateWithoutRemunerationsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  firmId?: Prisma.IntFieldUpdateOperationsInput | number
+  contractId?: Prisma.IntFieldUpdateOperationsInput | number
+  employeeId?: Prisma.IntFieldUpdateOperationsInput | number
+  assignmentTypeId?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
 export type ContractEmployeeCreateManyFirmInput = {
   id?: number
   contractId: number
@@ -866,6 +962,7 @@ export type ContractEmployeeUpdateWithoutFirmInput = {
   assignmentType?: Prisma.AssignmentTypeUpdateOneRequiredWithoutContractEmployeesNestedInput
   contract?: Prisma.ContractUpdateOneRequiredWithoutAssignmentsNestedInput
   employee?: Prisma.EmployeeUpdateOneRequiredWithoutContractAssignmentsNestedInput
+  remunerations?: Prisma.RemunerationUpdateManyWithoutContractEmployeeNestedInput
 }
 
 export type ContractEmployeeUncheckedUpdateWithoutFirmInput = {
@@ -877,6 +974,7 @@ export type ContractEmployeeUncheckedUpdateWithoutFirmInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  remunerations?: Prisma.RemunerationUncheckedUpdateManyWithoutContractEmployeeNestedInput
 }
 
 export type ContractEmployeeUncheckedUpdateManyWithoutFirmInput = {
@@ -909,6 +1007,7 @@ export type ContractEmployeeUpdateWithoutAssignmentTypeInput = {
   contract?: Prisma.ContractUpdateOneRequiredWithoutAssignmentsNestedInput
   employee?: Prisma.EmployeeUpdateOneRequiredWithoutContractAssignmentsNestedInput
   firm?: Prisma.FirmUpdateOneRequiredWithoutContractEmployeesNestedInput
+  remunerations?: Prisma.RemunerationUpdateManyWithoutContractEmployeeNestedInput
 }
 
 export type ContractEmployeeUncheckedUpdateWithoutAssignmentTypeInput = {
@@ -920,6 +1019,7 @@ export type ContractEmployeeUncheckedUpdateWithoutAssignmentTypeInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  remunerations?: Prisma.RemunerationUncheckedUpdateManyWithoutContractEmployeeNestedInput
 }
 
 export type ContractEmployeeUncheckedUpdateManyWithoutAssignmentTypeInput = {
@@ -952,6 +1052,7 @@ export type ContractEmployeeUpdateWithoutEmployeeInput = {
   assignmentType?: Prisma.AssignmentTypeUpdateOneRequiredWithoutContractEmployeesNestedInput
   contract?: Prisma.ContractUpdateOneRequiredWithoutAssignmentsNestedInput
   firm?: Prisma.FirmUpdateOneRequiredWithoutContractEmployeesNestedInput
+  remunerations?: Prisma.RemunerationUpdateManyWithoutContractEmployeeNestedInput
 }
 
 export type ContractEmployeeUncheckedUpdateWithoutEmployeeInput = {
@@ -963,6 +1064,7 @@ export type ContractEmployeeUncheckedUpdateWithoutEmployeeInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  remunerations?: Prisma.RemunerationUncheckedUpdateManyWithoutContractEmployeeNestedInput
 }
 
 export type ContractEmployeeUncheckedUpdateManyWithoutEmployeeInput = {
@@ -995,6 +1097,7 @@ export type ContractEmployeeUpdateWithoutContractInput = {
   assignmentType?: Prisma.AssignmentTypeUpdateOneRequiredWithoutContractEmployeesNestedInput
   employee?: Prisma.EmployeeUpdateOneRequiredWithoutContractAssignmentsNestedInput
   firm?: Prisma.FirmUpdateOneRequiredWithoutContractEmployeesNestedInput
+  remunerations?: Prisma.RemunerationUpdateManyWithoutContractEmployeeNestedInput
 }
 
 export type ContractEmployeeUncheckedUpdateWithoutContractInput = {
@@ -1006,6 +1109,7 @@ export type ContractEmployeeUncheckedUpdateWithoutContractInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  remunerations?: Prisma.RemunerationUncheckedUpdateManyWithoutContractEmployeeNestedInput
 }
 
 export type ContractEmployeeUncheckedUpdateManyWithoutContractInput = {
@@ -1019,6 +1123,35 @@ export type ContractEmployeeUncheckedUpdateManyWithoutContractInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
+
+/**
+ * Count Type ContractEmployeeCountOutputType
+ */
+
+export type ContractEmployeeCountOutputType = {
+  remunerations: number
+}
+
+export type ContractEmployeeCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  remunerations?: boolean | ContractEmployeeCountOutputTypeCountRemunerationsArgs
+}
+
+/**
+ * ContractEmployeeCountOutputType without action
+ */
+export type ContractEmployeeCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ContractEmployeeCountOutputType
+   */
+  select?: Prisma.ContractEmployeeCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * ContractEmployeeCountOutputType without action
+ */
+export type ContractEmployeeCountOutputTypeCountRemunerationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RemunerationWhereInput
+}
 
 
 export type ContractEmployeeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1035,6 +1168,8 @@ export type ContractEmployeeSelect<ExtArgs extends runtime.Types.Extensions.Inte
   contract?: boolean | Prisma.ContractDefaultArgs<ExtArgs>
   employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
+  remunerations?: boolean | Prisma.ContractEmployee$remunerationsArgs<ExtArgs>
+  _count?: boolean | Prisma.ContractEmployeeCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["contractEmployee"]>
 
 export type ContractEmployeeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1087,6 +1222,8 @@ export type ContractEmployeeInclude<ExtArgs extends runtime.Types.Extensions.Int
   contract?: boolean | Prisma.ContractDefaultArgs<ExtArgs>
   employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
+  remunerations?: boolean | Prisma.ContractEmployee$remunerationsArgs<ExtArgs>
+  _count?: boolean | Prisma.ContractEmployeeCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ContractEmployeeIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   assignmentType?: boolean | Prisma.AssignmentTypeDefaultArgs<ExtArgs>
@@ -1108,6 +1245,7 @@ export type $ContractEmployeePayload<ExtArgs extends runtime.Types.Extensions.In
     contract: Prisma.$ContractPayload<ExtArgs>
     employee: Prisma.$EmployeePayload<ExtArgs>
     firm: Prisma.$FirmPayload<ExtArgs>
+    remunerations: Prisma.$RemunerationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1517,6 +1655,7 @@ export interface Prisma__ContractEmployeeClient<T, Null = never, ExtArgs extends
   contract<T extends Prisma.ContractDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ContractDefaultArgs<ExtArgs>>): Prisma.Prisma__ContractClient<runtime.Types.Result.GetResult<Prisma.$ContractPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   employee<T extends Prisma.EmployeeDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmployeeDefaultArgs<ExtArgs>>): Prisma.Prisma__EmployeeClient<runtime.Types.Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   firm<T extends Prisma.FirmDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FirmDefaultArgs<ExtArgs>>): Prisma.Prisma__FirmClient<runtime.Types.Result.GetResult<Prisma.$FirmPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  remunerations<T extends Prisma.ContractEmployee$remunerationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ContractEmployee$remunerationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RemunerationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1953,6 +2092,30 @@ export type ContractEmployeeDeleteManyArgs<ExtArgs extends runtime.Types.Extensi
    * Limit how many ContractEmployees to delete.
    */
   limit?: number
+}
+
+/**
+ * ContractEmployee.remunerations
+ */
+export type ContractEmployee$remunerationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Remuneration
+   */
+  select?: Prisma.RemunerationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Remuneration
+   */
+  omit?: Prisma.RemunerationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RemunerationInclude<ExtArgs> | null
+  where?: Prisma.RemunerationWhereInput
+  orderBy?: Prisma.RemunerationOrderByWithRelationInput | Prisma.RemunerationOrderByWithRelationInput[]
+  cursor?: Prisma.RemunerationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RemunerationScalarFieldEnum | Prisma.RemunerationScalarFieldEnum[]
 }
 
 /**

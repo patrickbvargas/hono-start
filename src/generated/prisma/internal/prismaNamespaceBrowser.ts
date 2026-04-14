@@ -63,7 +63,9 @@ export const ModelName = {
   Client: 'Client',
   Contract: 'Contract',
   ContractEmployee: 'ContractEmployee',
-  Revenue: 'Revenue'
+  Revenue: 'Revenue',
+  Fee: 'Fee',
+  Remuneration: 'Remuneration'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -247,6 +249,41 @@ export const RevenueScalarFieldEnum = {
 } as const
 
 export type RevenueScalarFieldEnum = (typeof RevenueScalarFieldEnum)[keyof typeof RevenueScalarFieldEnum]
+
+
+export const FeeScalarFieldEnum = {
+  id: 'id',
+  firmId: 'firmId',
+  revenueId: 'revenueId',
+  paymentDate: 'paymentDate',
+  amount: 'amount',
+  installmentNumber: 'installmentNumber',
+  generatesRemuneration: 'generatesRemuneration',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+} as const
+
+export type FeeScalarFieldEnum = (typeof FeeScalarFieldEnum)[keyof typeof FeeScalarFieldEnum]
+
+
+export const RemunerationScalarFieldEnum = {
+  id: 'id',
+  firmId: 'firmId',
+  feeId: 'feeId',
+  contractEmployeeId: 'contractEmployeeId',
+  effectivePercentage: 'effectivePercentage',
+  amount: 'amount',
+  paymentDate: 'paymentDate',
+  isSystemGenerated: 'isSystemGenerated',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+} as const
+
+export type RemunerationScalarFieldEnum = (typeof RemunerationScalarFieldEnum)[keyof typeof RemunerationScalarFieldEnum]
 
 
 export const SortOrder = {

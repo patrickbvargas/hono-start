@@ -15,6 +15,8 @@ model Firm {
   contracts         Contract[]         @relation("FirmContract")
   contractEmployees ContractEmployee[] @relation("FirmContractEmployee")
   revenues          Revenue[]          @relation("FirmRevenue")
+  fees              Fee[]              @relation("FirmFee")
+  remunerations     Remuneration[]     @relation("FirmRemuneration")
 
   @@map("firms")
 }
@@ -185,6 +187,7 @@ model ContractEmployee {
   contract         Contract       @relation(fields: [contractId], references: [id])
   employee         Employee       @relation(fields: [employeeId], references: [id])
   firm             Firm           @relation("FirmContractEmployee", fields: [firmId], references: [id])
+  remunerations    Remuneration[]
 
   @@index([firmId])
   @@index([contractId])
@@ -197,21 +200,22 @@ model ContractEmployee {
 }
 
 model Revenue {
-  id               Int         @id @default(autoincrement())
-  firmId           Int
-  contractId       Int
-  typeId           Int
-  totalValue       Decimal     @db.Decimal(14, 2)
-  downPaymentValue Decimal?    @db.Decimal(14, 2)
-  paymentStartDate DateTime
+  id                Int         @id @default(autoincrement())
+  firmId            Int
+  contractId        Int
+  typeId            Int
+  totalValue        Decimal     @db.Decimal(14, 2)
+  downPaymentValue  Decimal?    @db.Decimal(14, 2)
+  paymentStartDate  DateTime
   totalInstallments Int
-  isActive         Boolean     @default(true)
-  createdAt        DateTime    @default(now())
-  updatedAt        DateTime    @updatedAt
-  deletedAt        DateTime?
-  contract         Contract    @relation(fields: [contractId], references: [id])
-  firm             Firm        @relation("FirmRevenue", fields: [firmId], references: [id])
-  type             RevenueType @relation(fields: [typeId], references: [id])
+  isActive          Boolean     @default(true)
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+  deletedAt         DateTime?
+  contract          Contract    @relation(fields: [contractId], references: [id])
+  firm              Firm        @relation("FirmRevenue", fields: [firmId], references: [id])
+  type              RevenueType @relation(fields: [typeId], references: [id])
+  fees              Fee[]
 
   @@index([firmId])
   @@index([contractId])
@@ -220,4 +224,56 @@ model Revenue {
   @@index([isActive])
   @@index([createdAt])
   @@map("revenues")
+}
+
+model Fee {
+  id                    Int            @id @default(autoincrement())
+  firmId                Int
+  revenueId             Int
+  paymentDate           DateTime
+  amount                Decimal        @db.Decimal(14, 2)
+  installmentNumber     Int
+  generatesRemuneration Boolean        @default(true)
+  isActive              Boolean        @default(true)
+  createdAt             DateTime       @default(now())
+  updatedAt             DateTime       @updatedAt
+  deletedAt             DateTime?
+  firm                  Firm           @relation("FirmFee", fields: [firmId], references: [id])
+  revenue               Revenue        @relation(fields: [revenueId], references: [id])
+  remunerations         Remuneration[]
+
+  @@index([firmId])
+  @@index([revenueId])
+  @@index([paymentDate])
+  @@index([deletedAt])
+  @@index([isActive])
+  @@index([createdAt])
+  @@map("fees")
+}
+
+model Remuneration {
+  id                 Int              @id @default(autoincrement())
+  firmId             Int
+  feeId              Int
+  contractEmployeeId Int
+  effectivePercentage Decimal         @db.Decimal(5, 4)
+  amount             Decimal          @db.Decimal(14, 2)
+  paymentDate        DateTime
+  isSystemGenerated  Boolean          @default(true)
+  isActive           Boolean          @default(true)
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  deletedAt          DateTime?
+  contractEmployee   ContractEmployee @relation(fields: [contractEmployeeId], references: [id])
+  fee                Fee              @relation(fields: [feeId], references: [id])
+  firm               Firm             @relation("FirmRemuneration", fields: [firmId], references: [id])
+
+  @@index([firmId])
+  @@index([feeId])
+  @@index([contractEmployeeId])
+  @@index([paymentDate])
+  @@index([deletedAt])
+  @@index([isActive])
+  @@index([createdAt])
+  @@map("remunerations")
 }

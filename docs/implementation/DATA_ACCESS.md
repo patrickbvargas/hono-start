@@ -93,6 +93,14 @@ The goal of this document is to define reusable persistence patterns that can su
 - Lookup values must be seeded before the application is considered operational.
 - Any required initial tenant bootstrap or project-level defaults are part of environment setup, not ad hoc runtime behavior.
 
+## Prisma Development Migration Workflow
+
+- In this repository, local Prisma schema changes must use the documented reset-first workflow because attempting to run a plain development migration first has proven unreliable and can time out.
+- Before generating a new local development migration, run `npx prisma migrate reset`.
+- After the reset completes, run `npx prisma migrate dev --name <change-name>`.
+- After the migration is created and applied, run `npx prisma db seed`.
+- Contributors must treat reset, migration generation, and reseeding as one workflow for local Prisma schema work in this repository.
+
 ## Authentication Tables
 
 - BetterAuth manages session, account, and verification tables.

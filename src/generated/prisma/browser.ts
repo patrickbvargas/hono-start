@@ -82,3 +82,13 @@ export type ContractEmployee = Prisma.ContractEmployeeModel
  * 
  */
 export type Revenue = Prisma.RevenueModel
+/**
+ * Model Fee
+ * 
+ */
+export type Fee = Prisma.FeeModel
+/**
+ * Model Remuneration
+ * 
+ */
+export type Remuneration = Prisma.RemunerationModel
