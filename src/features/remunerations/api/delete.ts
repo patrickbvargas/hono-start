@@ -1,5 +1,6 @@
 import { mutationOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
+import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
 import { prisma } from "@/shared/lib/prisma";
 import { getServerLoggedUserSession } from "@/shared/session";
 import type { MutationReturnType } from "@/shared/types/api";
@@ -28,9 +29,10 @@ const deleteRemuneration = createServerFn({ method: "POST" })
 		} catch (error) {
 			console.error("[deleteRemuneration]", error);
 			if (
-				error instanceof Error &&
-				(error.message.includes("Remuneração não encontrada") ||
-					error.message.includes("administradores"))
+				hasExactErrorMessage(error, [
+					"Remuneração não encontrada",
+					"Apenas administradores podem excluir remunerações",
+				])
 			) {
 				throw error;
 			}

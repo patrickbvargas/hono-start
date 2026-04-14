@@ -1,5 +1,9 @@
 import { mutationOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
+import {
+	hasExactErrorMessage,
+	isPrismaUniqueConstraintError,
+} from "@/shared/lib/error-mapping";
 import { prisma } from "@/shared/lib/prisma";
 import {
 	assertCan,
@@ -108,29 +112,37 @@ const createContract = createServerFn({ method: "POST" })
 			return { success: true };
 		} catch (error) {
 			console.error("[createContract]", error);
-			if (
-				error instanceof Error &&
-				error.message.includes("Unique constraint") &&
-				error.message.includes("firmId") &&
-				error.message.includes("processNumber")
-			) {
+			if (isPrismaUniqueConstraintError(error, ["firmId", "processNumber"])) {
 				throw new Error("Este número de processo já está cadastrado");
 			}
 
 			if (
-				error instanceof Error &&
-				(error.message.includes("cliente") ||
-					error.message.includes("Cliente") ||
-					error.message.includes("status") ||
-					error.message.includes("Status") ||
-					error.message.includes("área") ||
-					error.message.includes("Área") ||
-					error.message.includes("colaborador") ||
-					error.message.includes("receita") ||
-					error.message.includes("advogado") ||
-					error.message.includes("atribuição") ||
-					error.message.includes("administradores") ||
-					error.message.includes("processo"))
+				hasExactErrorMessage(error, [
+					"Você não tem permissão para criar contratos",
+					"Apenas administradores podem controlar o bloqueio de status",
+					"Selecione um cliente ativo",
+					"Selecione uma área jurídica ativa",
+					"Selecione um status de contrato ativo",
+					"Novos contratos devem começar com status ativo",
+					"Informe pelo menos um colaborador",
+					"Informe pelo menos uma receita",
+					"O contrato permite no máximo três receitas",
+					"Não é permitido repetir tipos de receita ativos",
+					"O mesmo colaborador não pode ser atribuído mais de uma vez",
+					"A entrada não pode ser maior que o valor total",
+					"Colaborador não encontrado",
+					"Selecione um colaborador ativo",
+					"Tipo de atribuição não encontrado",
+					"Selecione um tipo de atribuição ativo",
+					"Tipo de receita não encontrado",
+					"Selecione um tipo de receita ativo",
+					"Assistentes administrativos só podem usar a atribuição correspondente",
+					"Advogados não podem usar a atribuição de assistente administrativo",
+					"Contratos com indicação precisam informar ao menos um indicado",
+					"Contratos com indicado precisam informar ao menos um indicante",
+					"O percentual de indicação não pode exceder o percentual de remuneração do indicado",
+					"Informe ao menos um advogado responsável",
+				])
 			) {
 				throw error;
 			}

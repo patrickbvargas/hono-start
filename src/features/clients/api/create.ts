@@ -1,5 +1,9 @@
 import { mutationOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
+import {
+	hasExactErrorMessage,
+	isPrismaUniqueConstraintError,
+} from "@/shared/lib/error-mapping";
 import { prisma } from "@/shared/lib/prisma";
 import {
 	assertCan,
@@ -52,20 +56,20 @@ const createClient = createServerFn({ method: "POST" })
 			return { success: true };
 		} catch (error) {
 			console.error("[createClient]", error);
-			if (
-				error instanceof Error &&
-				error.message.includes("Unique constraint") &&
-				error.message.includes("firmId") &&
-				error.message.includes("document")
-			) {
+			if (isPrismaUniqueConstraintError(error, ["firmId", "document"])) {
 				throw new Error("Este documento já está cadastrado");
 			}
+
 			if (
-				error instanceof Error &&
-				(error.message.includes("Tipo de cliente") ||
-					error.message.includes("CPF") ||
-					error.message.includes("CNPJ") ||
-					error.message.includes("documento"))
+				hasExactErrorMessage(error, [
+					"Você não tem permissão para criar clientes",
+					"Tipo de cliente não encontrado",
+					"Selecione um tipo de cliente ativo",
+					"Documento é obrigatório",
+					"CPF inválido",
+					"CNPJ inválido",
+					"Tipo de cliente inválido",
+				])
 			) {
 				throw error;
 			}

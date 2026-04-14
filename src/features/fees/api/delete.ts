@@ -1,5 +1,6 @@
 import { mutationOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
+import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
 import { prisma } from "@/shared/lib/prisma";
 import { getServerLoggedUserSession } from "@/shared/session";
 import type { MutationReturnType } from "@/shared/types/api";
@@ -29,9 +30,10 @@ const deleteFee = createServerFn({ method: "POST" })
 		} catch (error) {
 			console.error("[deleteFee]", error);
 			if (
-				error instanceof Error &&
-				(error.message.includes("Honorário não encontrado") ||
-					error.message.includes("administradores"))
+				hasExactErrorMessage(error, [
+					"Honorário não encontrado",
+					"Apenas administradores podem excluir honorários",
+				])
 			) {
 				throw error;
 			}

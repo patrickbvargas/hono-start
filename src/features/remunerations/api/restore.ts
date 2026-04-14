@@ -1,5 +1,6 @@
 import { mutationOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
+import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
 import { prisma } from "@/shared/lib/prisma";
 import { getServerLoggedUserSession } from "@/shared/session";
 import type { MutationReturnType } from "@/shared/types/api";
@@ -34,10 +35,11 @@ const restoreRemuneration = createServerFn({ method: "POST" })
 		} catch (error) {
 			console.error("[restoreRemuneration]", error);
 			if (
-				error instanceof Error &&
-				(error.message.includes("Remuneração não encontrada") ||
-					error.message.includes("administradores") ||
-					error.message.includes("honorário de origem"))
+				hasExactErrorMessage(error, [
+					"Remuneração não encontrada",
+					"Apenas administradores podem restaurar remunerações",
+					"Não é possível restaurar a remuneração enquanto o honorário de origem estiver excluído",
+				])
 			) {
 				throw error;
 			}

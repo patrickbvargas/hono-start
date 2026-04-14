@@ -1,5 +1,6 @@
 import { mutationOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
+import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
 import { prisma } from "@/shared/lib/prisma";
 import { getServerLoggedUserSession } from "@/shared/session";
 import type { MutationReturnType } from "@/shared/types/api";
@@ -47,12 +48,15 @@ const updateRemuneration = createServerFn({ method: "POST" })
 		} catch (error) {
 			console.error("[updateRemuneration]", error);
 			if (
-				error instanceof Error &&
-				(error.message.includes("Remuneração") ||
-					error.message.includes("remuneração") ||
-					error.message.includes("honorário") ||
-					error.message.includes("Percentual") ||
-					error.message.includes("Valor"))
+				hasExactErrorMessage(error, [
+					"Apenas administradores podem editar remunerações",
+					"Remuneração não encontrada",
+					"Não é possível editar uma remuneração excluída",
+					"Não é possível editar uma remuneração vinculada a um honorário excluído",
+					"Valor deve ser maior que zero",
+					"Percentual não pode ser negativo",
+					"Percentual deve ser menor ou igual a 100%",
+				])
 			) {
 				throw error;
 			}

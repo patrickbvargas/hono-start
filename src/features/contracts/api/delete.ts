@@ -1,5 +1,6 @@
 import { mutationOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
+import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
 import { prisma } from "@/shared/lib/prisma";
 import { getServerLoggedUserSession } from "@/shared/session";
 import type { MutationReturnType } from "@/shared/types/api";
@@ -32,10 +33,11 @@ const deleteContract = createServerFn({ method: "POST" })
 		} catch (error) {
 			console.error("[deleteContract]", error);
 			if (
-				error instanceof Error &&
-				(error.message.includes("Contrato não encontrado") ||
-					error.message.includes("receitas ativas") ||
-					error.message.includes("administradores"))
+				hasExactErrorMessage(error, [
+					"Contrato não encontrado",
+					"Não é possível excluir um contrato com receitas ativas",
+					"Apenas administradores podem excluir contratos",
+				])
 			) {
 				throw error;
 			}

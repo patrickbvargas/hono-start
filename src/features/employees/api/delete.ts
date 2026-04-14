@@ -1,5 +1,6 @@
 import { mutationOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
+import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
 import { prisma } from "@/shared/lib/prisma";
 import {
 	assertCanManageEmployees,
@@ -28,11 +29,13 @@ const deleteEmployee = createServerFn({ method: "POST" })
 		} catch (error) {
 			console.error("[deleteEmployee]", error);
 			if (
-				error instanceof Error &&
-				(error.message.includes("não encontrado") ||
-					error.message.includes("possui"))
-			)
+				hasExactErrorMessage(error, [
+					"Funcionário não encontrado",
+					"Apenas administradores podem gerenciar funcionários",
+				])
+			) {
 				throw error;
+			}
 			throw new Error("Erro ao excluir funcionário");
 		}
 	});

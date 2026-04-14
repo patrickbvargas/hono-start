@@ -1,5 +1,9 @@
 import { mutationOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
+import {
+	hasExactErrorMessage,
+	isPrismaUniqueConstraintError,
+} from "@/shared/lib/error-mapping";
 import { prisma } from "@/shared/lib/prisma";
 import {
 	assertCanManageEmployees,
@@ -43,18 +47,17 @@ const createEmployee = createServerFn({ method: "POST" })
 			return { success: true };
 		} catch (error: unknown) {
 			console.error("[createEmployee]", error);
-			if (
-				error instanceof Error &&
-				error.message.includes("Unique constraint") &&
-				error.message.includes("email")
-			) {
+			if (isPrismaUniqueConstraintError(error, ["email"])) {
 				throw new Error("Este email já está em uso");
 			}
+
 			if (
-				error instanceof Error &&
-				(error.message.includes("Selecione uma") ||
-					error.message.includes("não encontrada") ||
-					error.message.includes("OAB"))
+				hasExactErrorMessage(error, [
+					"Função não encontrada",
+					"Perfil não encontrado",
+					"Selecione uma função ativa",
+					"Selecione um perfil ativo",
+				])
 			) {
 				throw error;
 			}

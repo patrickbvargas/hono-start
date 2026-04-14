@@ -5,6 +5,7 @@ import {
 	getEntityDeletedWhere,
 	withDeterministicTieBreaker,
 } from "@/shared/lib/entity-management";
+import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
 import { prisma } from "@/shared/lib/prisma";
 import { type Option, optionSchema } from "@/shared/schemas/option";
 import {
@@ -147,8 +148,9 @@ const getEmployees = createServerFn({ method: "GET" })
 		} catch (error) {
 			console.error("[getEmployees]", error);
 			if (
-				error instanceof Error &&
-				error.message.includes("Apenas administradores")
+				hasExactErrorMessage(error, [
+					"Apenas administradores podem gerenciar funcionários",
+				])
 			) {
 				throw error;
 			}

@@ -1,5 +1,6 @@
 import { mutationOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
+import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
 import { prisma } from "@/shared/lib/prisma";
 import {
 	assertCanManageEmployees,
@@ -27,7 +28,12 @@ const restoreEmployee = createServerFn({ method: "POST" })
 			return { success: true };
 		} catch (error) {
 			console.error("[restoreEmployee]", error);
-			if (error instanceof Error && error.message.includes("não encontrado"))
+			if (
+				hasExactErrorMessage(error, [
+					"Funcionário não encontrado",
+					"Apenas administradores podem gerenciar funcionários",
+				])
+			)
 				throw error;
 			throw new Error("Erro ao restaurar funcionário");
 		}

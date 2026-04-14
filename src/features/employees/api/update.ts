@@ -1,5 +1,9 @@
 import { mutationOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
+import {
+	hasExactErrorMessage,
+	isPrismaUniqueConstraintError,
+} from "@/shared/lib/error-mapping";
 import { prisma } from "@/shared/lib/prisma";
 import {
 	assertCanManageEmployees,
@@ -50,14 +54,21 @@ const updateEmployee = createServerFn({ method: "POST" })
 			return { success: true };
 		} catch (error) {
 			console.error("[updateEmployee]", error);
+			if (isPrismaUniqueConstraintError(error, ["email"])) {
+				throw new Error("Este email já está em uso");
+			}
+
 			if (
-				error instanceof Error &&
-				(error.message === "Funcionário não encontrado" ||
-					error.message.includes("Selecione uma") ||
-					error.message.includes("não encontrada") ||
-					error.message.includes("OAB"))
-			)
+				hasExactErrorMessage(error, [
+					"Funcionário não encontrado",
+					"Função não encontrada",
+					"Perfil não encontrado",
+					"Selecione uma função ativa",
+					"Selecione um perfil ativo",
+				])
+			) {
 				throw error;
+			}
 			throw new Error("Erro ao atualizar funcionário");
 		}
 	});

@@ -1,5 +1,6 @@
 import { mutationOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
+import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
 import { prisma } from "@/shared/lib/prisma";
 import { assertCan, getServerLoggedUserSession } from "@/shared/session";
 import type { MutationReturnType } from "@/shared/types/api";
@@ -45,9 +46,10 @@ const restoreContract = createServerFn({ method: "POST" })
 		} catch (error) {
 			console.error("[restoreContract]", error);
 			if (
-				error instanceof Error &&
-				(error.message.includes("Contrato não encontrado") ||
-					error.message.includes("administradores"))
+				hasExactErrorMessage(error, [
+					"Contrato não encontrado",
+					"Apenas administradores podem restaurar contratos",
+				])
 			) {
 				throw error;
 			}

@@ -1,5 +1,6 @@
 import { mutationOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
+import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
 import { prisma } from "@/shared/lib/prisma";
 import {
 	assertCan,
@@ -33,9 +34,10 @@ const restoreClient = createServerFn({ method: "POST" })
 		} catch (error) {
 			console.error("[restoreClient]", error);
 			if (
-				error instanceof Error &&
-				(error.message.includes("não encontrado") ||
-					error.message.includes("administradores"))
+				hasExactErrorMessage(error, [
+					"Cliente não encontrado",
+					"Apenas administradores podem restaurar clientes",
+				])
 			) {
 				throw error;
 			}

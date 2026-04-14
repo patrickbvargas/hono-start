@@ -1,6 +1,7 @@
 import { mutationOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import { Prisma } from "@/generated/prisma/client";
+import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
 import { prisma } from "@/shared/lib/prisma";
 import { assertCan, getServerLoggedUserSession } from "@/shared/session";
 import type { MutationReturnType } from "@/shared/types/api";
@@ -142,15 +143,15 @@ const createFee = createServerFn({ method: "POST" })
 		} catch (error) {
 			console.error("[createFee]", error);
 			if (
-				error instanceof Error &&
-				(error.message.includes("receita") ||
-					error.message.includes("Receita") ||
-					error.message.includes("contrato") ||
-					error.message.includes("Contrato") ||
-					error.message.includes("parcela") ||
-					error.message.includes("Valor") ||
-					error.message.includes("honorário") ||
-					error.message.includes("permissão"))
+				hasExactErrorMessage(error, [
+					"Você não tem permissão para criar honorários",
+					"Selecione uma receita válida",
+					"A receita selecionada não pertence ao contrato informado",
+					"Valor deve ser maior que zero",
+					"Parcela deve ser maior que zero",
+					"Já existe um honorário ativo para esta parcela",
+					"Não é possível lançar honorários após quitar todas as parcelas previstas",
+				])
 			) {
 				throw error;
 			}

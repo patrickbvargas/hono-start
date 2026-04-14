@@ -1,5 +1,9 @@
 import { mutationOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
+import {
+	hasExactErrorMessage,
+	isPrismaUniqueConstraintError,
+} from "@/shared/lib/error-mapping";
 import { prisma } from "@/shared/lib/prisma";
 import {
 	assertCan,
@@ -61,22 +65,22 @@ const updateClient = createServerFn({ method: "POST" })
 			return { success: true };
 		} catch (error) {
 			console.error("[updateClient]", error);
-			if (
-				error instanceof Error &&
-				error.message.includes("Unique constraint") &&
-				error.message.includes("firmId") &&
-				error.message.includes("document")
-			) {
+			if (isPrismaUniqueConstraintError(error, ["firmId", "document"])) {
 				throw new Error("Este documento já está cadastrado");
 			}
+
 			if (
-				error instanceof Error &&
-				(error.message === "Cliente não encontrado" ||
-					error.message.includes("Tipo de cliente") ||
-					error.message.includes("CPF") ||
-					error.message.includes("CNPJ") ||
-					error.message.includes("documento") ||
-					error.message.includes("tipo"))
+				hasExactErrorMessage(error, [
+					"Você não tem permissão para editar clientes",
+					"Cliente não encontrado",
+					"Tipo de cliente não encontrado",
+					"Selecione um tipo de cliente ativo",
+					"O tipo do cliente não pode ser alterado",
+					"Documento é obrigatório",
+					"CPF inválido",
+					"CNPJ inválido",
+					"Tipo de cliente inválido",
+				])
 			) {
 				throw error;
 			}

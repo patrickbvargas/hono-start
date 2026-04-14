@@ -1,16 +1,8 @@
 import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/shared/lib/prisma";
 
-async function hasContractsTable() {
-	const [result] = await prisma.$queryRaw<Array<{ tableName: string | null }>>`
-		SELECT to_regclass('public.contracts')::text AS "tableName"
-	`;
-
-	return !!result?.tableName;
-}
-
 export async function getActiveContractCountByClientIds(clientIds: number[]) {
-	if (clientIds.length === 0 || !(await hasContractsTable())) {
+	if (clientIds.length === 0) {
 		return new Map<number, number>();
 	}
 
