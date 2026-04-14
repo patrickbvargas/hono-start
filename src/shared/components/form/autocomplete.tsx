@@ -8,6 +8,7 @@ import {
 	ListBox,
 } from "@/shared/components/ui";
 import { useFieldContext } from "@/shared/hooks/use-app-form";
+import { cn } from "@/shared/lib/utils";
 import type {
 	FieldClassNames,
 	FieldCommonProps,
@@ -53,7 +54,7 @@ export const FormAutocomplete = ({
 			onBlur={field.handleBlur}
 			onChange={handleChange}
 			validationBehavior={validationBehavior}
-			className={classNames?.wrapper}
+			className={cn("min-w-0", classNames?.wrapper)}
 			{...props}
 		>
 			<Field.Label

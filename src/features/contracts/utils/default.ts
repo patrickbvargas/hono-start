@@ -1,5 +1,25 @@
-import type { ContractCreate, ContractUpdate } from "../schemas/form";
+import type {
+	ContractAssignmentInput,
+	ContractCreate,
+	ContractRevenueInput,
+	ContractUpdate,
+} from "../schemas/form";
 import type { Contract } from "../schemas/model";
+
+export const defaultContractAssignmentValues = (): ContractAssignmentInput => ({
+	employeeId: "",
+	assignmentType: "",
+	isActive: true,
+});
+
+export const defaultContractRevenueValues = (): ContractRevenueInput => ({
+	type: "",
+	totalValue: 0,
+	downPaymentValue: null,
+	paymentStartDate: "",
+	totalInstallments: 1,
+	isActive: true,
+});
 
 export const defaultContractCreateValues = (): ContractCreate => ({
 	clientId: "",
@@ -10,23 +30,8 @@ export const defaultContractCreateValues = (): ContractCreate => ({
 	notes: "",
 	allowStatusChange: true,
 	isActive: true,
-	assignments: [
-		{
-			employeeId: "",
-			assignmentType: "",
-			isActive: true,
-		},
-	],
-	revenues: [
-		{
-			type: "",
-			totalValue: 0,
-			downPaymentValue: null,
-			paymentStartDate: "",
-			totalInstallments: 1,
-			isActive: true,
-		},
-	],
+	assignments: [defaultContractAssignmentValues()],
+	revenues: [defaultContractRevenueValues()],
 });
 
 export const defaultContractUpdateValues = (

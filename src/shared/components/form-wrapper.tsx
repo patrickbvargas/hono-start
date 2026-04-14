@@ -23,7 +23,7 @@ export const FormWrapper = ({
 						<Modal.Header>
 							<Modal.Heading>{title}</Modal.Heading>
 						</Modal.Header>
-						<Modal.Body className="flex flex-col gap-4 p-1">
+						<Modal.Body className="flex flex-col gap-2.5 overflow-hidden">
 							{children}
 						</Modal.Body>
 						{footer && <Modal.Footer>{footer}</Modal.Footer>}

@@ -25,3 +25,4 @@ export const EMPLOYEE_TYPE_LAWYER_VALUE = "LAWYER" as const;
 export const EMPLOYEE_TYPE_ADMIN_ASSISTANT_VALUE = "ADMIN_ASSISTANT" as const;
 
 export const CONTRACT_MAX_REVENUES = 3 as const;
+export const CONTRACT_MAX_EMPLOYEES = 3 as const;

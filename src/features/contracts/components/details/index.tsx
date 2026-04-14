@@ -79,23 +79,11 @@ export const ContractDetails = ({ contract, state }: ContractDetailsProps) => {
 			<Detail.Fields items={generalInfo} />
 			<Detail.Separator />
 			<Detail.Section title="Equipe">
-				<Detail.Fields
-					items={
-						assignmentInfo.length > 0
-							? assignmentInfo
-							: [{ term: "Equipe", definition: "Nenhum colaborador informado" }]
-					}
-				/>
+				<Detail.Fields items={assignmentInfo} />
 			</Detail.Section>
 			<Detail.Separator />
 			<Detail.Section title="Receitas">
-				<Detail.Fields
-					items={
-						revenueInfo.length > 0
-							? revenueInfo
-							: [{ term: "Receitas", definition: "Nenhuma receita informada" }]
-					}
-				/>
+				<Detail.Fields items={revenueInfo} />
 			</Detail.Section>
 			<Detail.Separator className="mt-auto" />
 			<Detail.Section title="Registro">
