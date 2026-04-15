@@ -23,6 +23,7 @@
     "**/.codex",
     "**/.github",
     "**/public",
+    "**/router.tsx",
     "**/routeTree.gen.ts",
     "**/logo.svg",
   ],

@@ -14,11 +14,6 @@ import type { MutationReturnType } from "@/shared/types/api";
 import { CLIENT_ERRORS } from "../constants/errors";
 import { clientUpdateInputSchema } from "../schemas/form";
 import {
-	normalizeClientDocument,
-	normalizeOptionalText,
-} from "../utils/normalization";
-import { validateClientDocumentBusinessRules } from "../utils/validation";
-import {
 	resolveClientTypeSelection,
 	validateClientTypeSelection,
 	validateImmutableClientType,
@@ -43,22 +38,13 @@ const updateClient = createServerFn({ method: "POST" })
 			validateClientTypeSelection({ type }, { currentTypeId: existing.typeId });
 			validateImmutableClientType({ type }, { currentTypeId: existing.typeId });
 
-			const document = normalizeClientDocument(data.document);
-			const documentIssues = validateClientDocumentBusinessRules({
-				type: type.value,
-				document,
-			});
-			if (documentIssues.length > 0) {
-				throw new Error(documentIssues[0].message);
-			}
-
 			await prisma.client.update({
 				where: { id: data.id },
 				data: {
-					fullName: data.fullName.trim(),
-					document,
-					email: normalizeOptionalText(data.email),
-					phone: normalizeOptionalText(data.phone),
+					fullName: data.fullName,
+					document: data.document,
+					email: data.email,
+					phone: data.phone,
 					isActive: data.isActive,
 				},
 			});

@@ -2,16 +2,17 @@ import type { ValidationIssue } from "@/shared/types/validation";
 import {
 	CLIENT_TYPE_COMPANY_VALUE,
 	CLIENT_TYPE_INDIVIDUAL_VALUE,
-} from "../constants";
-import { CLIENT_ERRORS } from "../constants/errors";
-import { normalizeClientDocument } from "./normalization";
+} from "./constants";
+import { CLIENT_ERRORS } from "./constants/errors";
+
+const ONLY_DIGITS_REGEX = /\D/g;
 
 function isRepeatedDigits(value: string) {
 	return /^(\d)\1+$/.test(value);
 }
 
-export function isValidCpf(value: string) {
-	const cpf = normalizeClientDocument(value);
+function isValidCpf(cpf: string) {
+	cpf = cpf.replace(ONLY_DIGITS_REGEX, "");
 
 	if (cpf.length !== 11 || isRepeatedDigits(cpf)) {
 		return false;
@@ -39,8 +40,8 @@ export function isValidCpf(value: string) {
 	return remainder === Number(cpf[10]);
 }
 
-export function isValidCnpj(value: string) {
-	const cnpj = normalizeClientDocument(value);
+function isValidCnpj(cnpj: string) {
+	cnpj = cnpj.replace(ONLY_DIGITS_REGEX, "");
 
 	if (cnpj.length !== 14 || isRepeatedDigits(cnpj)) {
 		return false;
@@ -79,14 +80,14 @@ export interface ClientDocumentValidationInput {
 	type: string;
 }
 
-export function validateClientDocumentBusinessRules({
+export function validateClientDocumentRules({
 	document,
 	type,
 }: ClientDocumentValidationInput): ValidationIssue[] {
 	const issues: ValidationIssue[] = [];
-	const normalizedDocument = normalizeClientDocument(document);
+	document = document.replace(ONLY_DIGITS_REGEX, "");
 
-	if (!normalizedDocument) {
+	if (!document) {
 		issues.push({
 			path: ["document"],
 			message: CLIENT_ERRORS.CLIENT_DOCUMENT_REQUIRED,
@@ -94,17 +95,14 @@ export function validateClientDocumentBusinessRules({
 		return issues;
 	}
 
-	if (
-		type === CLIENT_TYPE_INDIVIDUAL_VALUE &&
-		!isValidCpf(normalizedDocument)
-	) {
+	if (type === CLIENT_TYPE_INDIVIDUAL_VALUE && !isValidCpf(document)) {
 		issues.push({
 			path: ["document"],
 			message: CLIENT_ERRORS.CLIENT_DOCUMENT_CPF_INVALID,
 		});
 	}
 
-	if (type === CLIENT_TYPE_COMPANY_VALUE && !isValidCnpj(normalizedDocument)) {
+	if (type === CLIENT_TYPE_COMPANY_VALUE && !isValidCnpj(document)) {
 		issues.push({
 			path: ["document"],
 			message: CLIENT_ERRORS.CLIENT_DOCUMENT_CNPJ_INVALID,

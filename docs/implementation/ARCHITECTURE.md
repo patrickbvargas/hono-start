@@ -13,6 +13,7 @@ src/
     components/
     constants/
     hooks/
+    rules.ts
     schemas/
     utils/
     index.ts
@@ -40,8 +41,9 @@ Each feature slice is expected to contain:
 - `components/`: feature-local UI pieces
 - `constants/`: cache keys and feature-local constants
 - `hooks/`: orchestration hooks such as `use-form`, `use-filter`, `use-delete`, `use-restore`, and `use-options`
+- `rules.ts`: the canonical home for feature-local pure business validation that does not require Prisma or persisted resource lookups
 - `schemas/`: `model`, `form`, `filter`, `search`, and `sort` contracts, including Zod request schemas and database-free schema refinements
-- `utils/`: feature-local pure helpers such as defaults, normalization helpers, formatting helpers, and business validation utilities that do not require Prisma
+- `utils/`: feature-local pure helpers such as defaults, normalization helpers, and formatting helpers
 - `index.ts`: public barrel
 
 ## Architectural Rules
@@ -50,6 +52,7 @@ Each feature slice is expected to contain:
 - External consumers must import from a feature's public `index.ts` barrel only.
 - Routes own composition, route-level search parsing, prefetching, and authorization wiring.
 - Routes must not own feature business logic, Prisma query construction, or mutation orchestration.
+- Pure feature business validation belongs in `rules.ts`, not in route files or generic `utils/`.
 - `shared/` is reserved for generic infrastructure, primitives, and reusable building blocks that are not tied to one domain's business rules.
 
 ## Public Barrel Rule

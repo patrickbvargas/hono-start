@@ -14,11 +14,6 @@ import type { MutationReturnType } from "@/shared/types/api";
 import { CLIENT_ERRORS } from "../constants/errors";
 import { clientCreateInputSchema } from "../schemas/form";
 import {
-	normalizeClientDocument,
-	normalizeOptionalText,
-} from "../utils/normalization";
-import { validateClientDocumentBusinessRules } from "../utils/validation";
-import {
 	resolveClientTypeSelection,
 	validateClientTypeSelection,
 } from "./lookups";
@@ -33,23 +28,14 @@ const createClient = createServerFn({ method: "POST" })
 			const { type } = await resolveClientTypeSelection(prisma, data);
 			validateClientTypeSelection({ type });
 
-			const document = normalizeClientDocument(data.document);
-			const documentIssues = validateClientDocumentBusinessRules({
-				type: type.value,
-				document,
-			});
-			if (documentIssues.length > 0) {
-				throw new Error(documentIssues[0].message);
-			}
-
 			await prisma.client.create({
 				data: {
 					firmId,
 					typeId: type.id,
-					fullName: data.fullName.trim(),
-					document,
-					email: normalizeOptionalText(data.email),
-					phone: normalizeOptionalText(data.phone),
+					fullName: data.fullName,
+					document: data.document,
+					email: data.email,
+					phone: data.phone,
 					isActive: data.isActive,
 				},
 			});

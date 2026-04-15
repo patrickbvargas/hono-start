@@ -20,7 +20,6 @@ import { clientIdInputSchema } from "../schemas/form";
 import { type Client, clientSchema } from "../schemas/model";
 import { type ClientSearch, clientSearchSchema } from "../schemas/search";
 import { formatClientDocument } from "../utils/formatting";
-import { normalizeClientDocument } from "../utils/normalization";
 import { getActiveContractCountByClientIds } from "./contracts";
 
 interface BuildClientWhereParams {
@@ -34,8 +33,6 @@ export function buildClientWhere({
 	filter,
 	typeIds,
 }: BuildClientWhereParams) {
-	const normalizedSearch = normalizeClientDocument(filter.name);
-
 	return {
 		firmId,
 		...getEntityDeletedWhere(filter.status),
@@ -49,11 +46,11 @@ export function buildClientWhere({
 								mode: "insensitive" as const,
 							},
 						},
-						...(normalizedSearch
+						...(filter.name
 							? [
 									{
 										document: {
-											contains: normalizedSearch,
+											contains: filter.name,
 										},
 									},
 								]

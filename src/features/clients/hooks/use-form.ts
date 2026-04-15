@@ -8,7 +8,10 @@ import { toast } from "@/shared/lib/toast";
 import { createClientOptions } from "../api/create";
 import { updateClientOptions } from "../api/update";
 import { CLIENT_DATA_CACHE_KEY } from "../constants";
-import type { ClientUpdateInput } from "../schemas/form";
+import type {
+	ClientCreateFormInput,
+	ClientUpdateFormInput,
+} from "../schemas/form";
 import {
 	clientCreateInputSchema,
 	clientUpdateInputSchema,
@@ -16,7 +19,7 @@ import {
 import { defaultClientCreateValues } from "../utils/default";
 
 interface UseClientFormOptions {
-	initialData?: ClientUpdateInput;
+	initialData?: ClientUpdateFormInput;
 	onSuccess?: () => void;
 }
 
@@ -38,12 +41,16 @@ export function useClientForm({
 		onSubmit: async ({ value }) => {
 			try {
 				if (isEditing) {
-					const parsed = clientUpdateInputSchema.parse(value);
-					await updateMutation.mutateAsync({ data: parsed });
+					clientUpdateInputSchema.parse(value);
+					await updateMutation.mutateAsync({
+						data: value as ClientUpdateFormInput,
+					});
 					toast.success("Cliente atualizado com sucesso.");
 				} else {
-					const parsed = clientCreateInputSchema.parse(value);
-					await createMutation.mutateAsync({ data: parsed });
+					clientCreateInputSchema.parse(value);
+					await createMutation.mutateAsync({
+						data: value as ClientCreateFormInput,
+					});
 					toast.success("Cliente criado com sucesso.");
 				}
 				await refreshEntityQueries(queryClient, CLIENT_DATA_CACHE_KEY);

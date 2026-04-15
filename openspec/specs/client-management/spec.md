@@ -163,6 +163,11 @@ The system SHALL apply the shared form-validation boundary to client create and 
 - **WHEN** the client create or update schema validates submitted fields
 - **THEN** any schema-level refinement uses only pure helpers that do not require Prisma or persisted client state
 
+#### Scenario: Pure client business validation is discoverable from one file
+- **WHEN** a contributor needs to change a pure client validation rule
+- **THEN** the authoritative implementation SHALL be discoverable in `src/features/clients/rules.ts`
+- **AND** exported rule entrypoints SHALL use a `validate...` prefix
+
 #### Scenario: Client type selection is resolved at the server boundary
 - **WHEN** a client create or update mutation receives a submitted client type lookup value
 - **THEN** the server resolves that lookup value before persistence

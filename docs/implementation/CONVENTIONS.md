@@ -11,6 +11,7 @@
 - React components: `PascalCase`
 - Hooks: `camelCase` with `use` prefix
 - Constants: `UPPER_SNAKE_CASE`
+- Exported business-rule entrypoints: `camelCase` with `validate` prefix
 - Zod schemas: `camelCase` ending in `Schema`
 - Exported types inferred from schemas must follow the schema name without the `Schema` suffix
 
@@ -40,8 +41,10 @@
 
 ## Feature Boundary Rules
 
-- `utils/validation.ts` is reserved for pure business validation helpers and assertions that do not require Prisma or persisted resource lookups.
+- `rules.ts` is the canonical home for pure business validation helpers and assertions that do not require Prisma or persisted resource lookups.
+- Exported validators in `rules.ts` must use a `validate...` prefix.
 - `utils/normalization.ts` is reserved for pure input canonicalization helpers such as trimming, empty-to-null conversion, and mask removal.
+- `utils/` is reserved for generic helpers such as normalization, formatting, and default-value helpers.
 - Feature-local `api/` modules own Prisma-backed lookup resolution and persisted-state lookup checks used by create and update flows.
 
 ## Cache And Mutation Rules
