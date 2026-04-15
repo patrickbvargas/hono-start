@@ -1,6 +1,6 @@
 import * as z from "zod";
 import { entityIdSchema } from "@/shared/schemas/entity";
-import { validateClientDocumentRules } from "../rules";
+import { validateClientWriteRules } from "../rules";
 
 const ONLY_DIGITS_REGEX = /\D/g;
 
@@ -30,7 +30,7 @@ const clientBusinessRulesRefinement = (
 	data: ClientBaseInput,
 	ctx: z.RefinementCtx,
 ) => {
-	const issues = validateClientDocumentRules(data);
+	const issues = validateClientWriteRules(data);
 
 	for (const issue of issues) {
 		ctx.addIssue({

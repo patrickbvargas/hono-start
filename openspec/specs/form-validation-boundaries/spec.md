@@ -18,6 +18,7 @@ The system SHALL organize feature validation concerns using a canonical boundary
 - **WHEN** a feature defines reusable business validation helpers for form writes
 - **THEN** those helpers SHALL live separately from Prisma-backed lookup resolution
 - **AND** they SHALL be reusable by schemas or server handlers without requiring data access
+- **AND** helpers that report field-level validation problems SHALL return `ValidationIssue` objects directly rather than message-only fragments
 
 #### Scenario: Normalization stays separate from validation
 - **WHEN** a feature canonicalizes submitted input values before validation or persistence

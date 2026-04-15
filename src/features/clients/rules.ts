@@ -80,7 +80,7 @@ export interface ClientDocumentValidationInput {
 	type: string;
 }
 
-export function validateClientDocumentRules({
+export function validateClientWriteRules({
 	document,
 	type,
 }: ClientDocumentValidationInput): ValidationIssue[] {

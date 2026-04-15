@@ -9,41 +9,45 @@ export interface EmployeeValidationInput {
 	type: string;
 }
 
-function getEmployeeReferrerPercentMessage(input: EmployeeValidationInput) {
-	if (input.referrerPercent > input.remunerationPercent) {
-		return EMPLOYEE_ERRORS.EMPLOYEE_REFERRAL_PERCENTAGE_TOO_HIGH;
+function getEmployeeReferrerPercentIssue(
+	input: EmployeeValidationInput,
+): ValidationIssue | null {
+	if (input.referrerPercent <= input.remunerationPercent) {
+		return null;
 	}
 
-	return null;
+	return {
+		path: ["referrerPercent"],
+		message: EMPLOYEE_ERRORS.EMPLOYEE_REFERRAL_PERCENTAGE_TOO_HIGH,
+	};
 }
 
-function getEmployeeOabRequiredMessage(input: EmployeeValidationInput) {
-	if (input.type === LAWYER_TYPE_VALUE && !input.oabNumber) {
-		return EMPLOYEE_ERRORS.EMPLOYEE_OAB_REQUIRED;
+function getEmployeeOabRequiredIssue(
+	input: EmployeeValidationInput,
+): ValidationIssue | null {
+	if (input.type !== LAWYER_TYPE_VALUE || input.oabNumber) {
+		return null;
 	}
 
-	return null;
+	return {
+		path: ["oabNumber"],
+		message: EMPLOYEE_ERRORS.EMPLOYEE_OAB_REQUIRED,
+	};
 }
 
-export function validateEmployeeBusinessRules(
+export function validateEmployeeWriteRules(
 	input: EmployeeValidationInput,
 ): ValidationIssue[] {
 	const issues: ValidationIssue[] = [];
 
-	const referrerPercentMessage = getEmployeeReferrerPercentMessage(input);
-	if (referrerPercentMessage) {
-		issues.push({
-			path: ["referrerPercent"],
-			message: referrerPercentMessage,
-		});
+	const referrerPercentIssue = getEmployeeReferrerPercentIssue(input);
+	if (referrerPercentIssue) {
+		issues.push(referrerPercentIssue);
 	}
 
-	const oabRequiredMessage = getEmployeeOabRequiredMessage(input);
-	if (oabRequiredMessage) {
-		issues.push({
-			path: ["oabNumber"],
-			message: oabRequiredMessage,
-		});
+	const oabRequiredIssue = getEmployeeOabRequiredIssue(input);
+	if (oabRequiredIssue) {
+		issues.push(oabRequiredIssue);
 	}
 
 	return issues;

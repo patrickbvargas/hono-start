@@ -4,12 +4,12 @@ import {
 	CLIENT_TYPE_INDIVIDUAL_VALUE,
 } from "../constants";
 import { CLIENT_ERRORS } from "../constants/errors";
-import { validateClientDocumentRules } from "../rules";
+import { validateClientWriteRules } from "../rules";
 
-describe("validateClientDocumentRules", () => {
+describe("validateClientWriteRules", () => {
 	it("returns required error when document is empty", () => {
 		expect(
-			validateClientDocumentRules({
+			validateClientWriteRules({
 				document: "",
 				type: CLIENT_TYPE_INDIVIDUAL_VALUE,
 			}),
@@ -23,7 +23,7 @@ describe("validateClientDocumentRules", () => {
 
 	it("accepts a valid cpf for an individual client", () => {
 		expect(
-			validateClientDocumentRules({
+			validateClientWriteRules({
 				document: "529.982.247-25",
 				type: CLIENT_TYPE_INDIVIDUAL_VALUE,
 			}),
@@ -32,7 +32,7 @@ describe("validateClientDocumentRules", () => {
 
 	it("rejects an invalid cpf for an individual client", () => {
 		expect(
-			validateClientDocumentRules({
+			validateClientWriteRules({
 				document: "111.111.111-11",
 				type: CLIENT_TYPE_INDIVIDUAL_VALUE,
 			}),
@@ -46,7 +46,7 @@ describe("validateClientDocumentRules", () => {
 
 	it("accepts a valid cnpj for a company client", () => {
 		expect(
-			validateClientDocumentRules({
+			validateClientWriteRules({
 				document: "04.252.011/0001-10",
 				type: CLIENT_TYPE_COMPANY_VALUE,
 			}),
@@ -55,7 +55,7 @@ describe("validateClientDocumentRules", () => {
 
 	it("rejects an invalid cnpj for a company client", () => {
 		expect(
-			validateClientDocumentRules({
+			validateClientWriteRules({
 				document: "11.111.111/1111-11",
 				type: CLIENT_TYPE_COMPANY_VALUE,
 			}),
@@ -69,7 +69,7 @@ describe("validateClientDocumentRules", () => {
 
 	it("rejects an unknown client type", () => {
 		expect(
-			validateClientDocumentRules({
+			validateClientWriteRules({
 				document: "52998224725",
 				type: "UNKNOWN",
 			}),

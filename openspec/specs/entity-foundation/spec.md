@@ -41,6 +41,7 @@ The system SHALL keep clear ownership boundaries between feature slices, routes,
 - **WHEN** a feature slice defines pure business validation that does not require Prisma or persisted resource lookups
 - **THEN** the authoritative implementation SHALL live in the feature-local `rules.ts` file by default
 - **AND** exported rule entrypoints SHALL use a `validate...` prefix
+- **AND** private helpers in `rules.ts` that return a single `ValidationIssue` or `null` SHALL use a `get...Issue` name
 - **AND** `utils/` SHALL remain reserved for generic helpers rather than authoritative business-rule implementations
 
 #### Scenario: Shared code remains generic

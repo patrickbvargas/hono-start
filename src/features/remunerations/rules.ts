@@ -19,14 +19,12 @@ function getRemunerationAmountPositiveIssue(
 	};
 }
 
-export function validateRemunerationAmountRules(
-	amount: number,
-): ValidationIssue[] {
+function validateRemunerationAmountRules(amount: number): ValidationIssue[] {
 	const amountIssue = getRemunerationAmountPositiveIssue(amount);
 	return amountIssue ? [amountIssue] : [];
 }
 
-export function validateRemunerationEffectivePercentageRules(
+function validateRemunerationEffectivePercentageRules(
 	effectivePercentage: number,
 ): ValidationIssue[] {
 	const issues: ValidationIssue[] = [];

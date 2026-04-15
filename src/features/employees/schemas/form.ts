@@ -2,7 +2,7 @@ import * as z from "zod";
 import { entityIdSchema } from "@/shared/schemas/entity";
 import {
 	type EmployeeValidationInput,
-	validateEmployeeBusinessRules,
+	validateEmployeeWriteRules,
 } from "../rules";
 
 const employeeBaseInputSchema = z.object({
@@ -31,7 +31,7 @@ const employeeBusinessRulesRefinement = (
 	data: EmployeeValidationInput,
 	ctx: z.RefinementCtx,
 ) => {
-	const issues = validateEmployeeBusinessRules(data);
+	const issues = validateEmployeeWriteRules(data);
 
 	for (const issue of issues) {
 		ctx.addIssue({
