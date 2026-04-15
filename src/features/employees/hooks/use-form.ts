@@ -13,7 +13,7 @@ import {
 	employeeCreateInputSchema,
 	employeeUpdateInputSchema,
 } from "../schemas/form";
-import { defaultFormCreateValues } from "../utils/default";
+import { defaultEmployeeCreateValues } from "../utils/default";
 
 interface UseEmployeeFormOptions {
 	initialData?: EmployeeUpdateInput;
@@ -31,7 +31,7 @@ export function useEmployeeForm({
 	const isEditing = !!initialData;
 
 	const form = useAppForm({
-		defaultValues: initialData ?? defaultFormCreateValues(),
+		defaultValues: initialData ?? defaultEmployeeCreateValues(),
 		validators: {
 			onSubmit: isEditing
 				? employeeUpdateInputSchema

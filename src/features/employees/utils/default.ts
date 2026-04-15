@@ -1,7 +1,7 @@
 import type { EmployeeCreateInput, EmployeeUpdateInput } from "../schemas/form";
 import type { Employee } from "../schemas/model";
 
-export const defaultFormCreateValues = (): EmployeeCreateInput => ({
+export const defaultEmployeeCreateValues = (): EmployeeCreateInput => ({
 	fullName: "",
 	email: "",
 	oabNumber: "",
@@ -12,7 +12,7 @@ export const defaultFormCreateValues = (): EmployeeCreateInput => ({
 	isActive: true,
 });
 
-export const defaultFormUpdateValues = (
+export const defaultEmployeeUpdateValues = (
 	initialValue: Employee,
 ): EmployeeUpdateInput => ({
 	id: initialValue.id,

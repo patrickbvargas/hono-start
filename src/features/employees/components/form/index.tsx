@@ -5,7 +5,7 @@ import { LAWYER_TYPE_VALUE } from "../../constants";
 import { useEmployeeForm } from "../../hooks/use-form";
 import { useEmployeeOptions } from "../../hooks/use-options";
 import type { Employee } from "../../schemas/model";
-import { defaultFormUpdateValues } from "../../utils/default";
+import { defaultEmployeeUpdateValues } from "../../utils/default";
 
 interface EmployeeFormProps {
 	employee?: Employee;
@@ -20,7 +20,7 @@ export const EmployeeForm = ({
 }: EmployeeFormProps) => {
 	const { roles, types } = useEmployeeOptions();
 	const { form } = useEmployeeForm({
-		initialData: employee && defaultFormUpdateValues(employee),
+		initialData: employee && defaultEmployeeUpdateValues(employee),
 		onSuccess,
 	});
 

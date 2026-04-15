@@ -11,17 +11,8 @@ const clientBaseInputSchema = z.object({
 		.trim()
 		.min(1, "Documento é obrigatório")
 		.transform((value) => value.replace(ONLY_DIGITS_REGEX, "")),
-	email: z
-		.string()
-		.trim()
-		.transform((value) => (value.length > 0 ? value : null))
-		.refine((value) => value === null || z.email().safeParse(value).success, {
-			message: "Email inválido",
-		}),
-	phone: z
-		.string()
-		.trim()
-		.transform((value) => (value.length > 0 ? value : null)),
+	email: z.string().trim(),
+	phone: z.string().trim(),
 	type: z.string().trim().min(1, "Tipo de cliente é obrigatório"),
 	isActive: z.boolean(),
 });
