@@ -19,6 +19,7 @@ import type {
 	QueryPaginatedReturnType,
 } from "@/shared/types/api";
 import { CONTRACT_DATA_CACHE_KEY } from "../constants";
+import { CONTRACT_ERRORS } from "../constants/errors";
 import type { ContractFilter } from "../schemas/filter";
 import { contractIdInputSchema } from "../schemas/form";
 import { type Contract, contractSchema } from "../schemas/model";
@@ -291,7 +292,7 @@ const getContracts = createServerFn({ method: "GET" })
 			};
 		} catch (error) {
 			console.error("[getContracts]", error);
-			throw new Error("Erro ao buscar contratos");
+			throw new Error(CONTRACT_ERRORS.CONTRACT_GET_FAILED);
 		}
 	});
 
@@ -323,13 +324,13 @@ const getContractById = createServerFn({ method: "GET" })
 			});
 
 			if (!contract) {
-				throw new Error("Contrato não encontrado");
+				throw new Error(CONTRACT_ERRORS.CONTRACT_DETAIL_NOT_FOUND);
 			}
 
 			const [mapped] = await mapContracts(session, [contract]);
 
 			if (!mapped) {
-				throw new Error("Contrato não encontrado");
+				throw new Error(CONTRACT_ERRORS.CONTRACT_DETAIL_NOT_FOUND);
 			}
 
 			return mapped;
@@ -337,11 +338,11 @@ const getContractById = createServerFn({ method: "GET" })
 			console.error("[getContractById]", error);
 			if (
 				error instanceof Error &&
-				error.message === "Contrato não encontrado"
+				error.message === CONTRACT_ERRORS.CONTRACT_DETAIL_NOT_FOUND
 			) {
 				throw error;
 			}
-			throw new Error("Erro ao buscar contrato");
+			throw new Error(CONTRACT_ERRORS.CONTRACT_DETAIL_FAILED);
 		}
 	});
 
@@ -356,7 +357,7 @@ const getContractLegalAreas = createServerFn({ method: "GET" }).handler(
 			return optionSchema.array().parse(legalAreas);
 		} catch (error) {
 			console.error("[getContractLegalAreas]", error);
-			throw new Error("Erro ao buscar áreas jurídicas");
+			throw new Error(CONTRACT_ERRORS.CONTRACT_LEGAL_AREAS_FAILED);
 		}
 	},
 );
@@ -372,7 +373,7 @@ const getContractStatuses = createServerFn({ method: "GET" }).handler(
 			return optionSchema.array().parse(statuses);
 		} catch (error) {
 			console.error("[getContractStatuses]", error);
-			throw new Error("Erro ao buscar status de contrato");
+			throw new Error(CONTRACT_ERRORS.CONTRACT_STATUSES_FAILED);
 		}
 	},
 );
@@ -388,7 +389,7 @@ const getContractAssignmentTypes = createServerFn({ method: "GET" }).handler(
 			return optionSchema.array().parse(assignmentTypes);
 		} catch (error) {
 			console.error("[getContractAssignmentTypes]", error);
-			throw new Error("Erro ao buscar tipos de atribuição");
+			throw new Error(CONTRACT_ERRORS.CONTRACT_ASSIGNMENT_TYPES_FAILED);
 		}
 	},
 );
@@ -404,7 +405,7 @@ const getContractRevenueTypes = createServerFn({ method: "GET" }).handler(
 			return optionSchema.array().parse(revenueTypes);
 		} catch (error) {
 			console.error("[getContractRevenueTypes]", error);
-			throw new Error("Erro ao buscar tipos de receita");
+			throw new Error(CONTRACT_ERRORS.CONTRACT_REVENUE_TYPES_FAILED);
 		}
 	},
 );
@@ -431,7 +432,7 @@ const getSelectableContractClients = createServerFn({ method: "GET" }).handler(
 			}));
 		} catch (error) {
 			console.error("[getSelectableContractClients]", error);
-			throw new Error("Erro ao buscar clientes disponíveis");
+			throw new Error(CONTRACT_ERRORS.CONTRACT_SELECTABLE_CLIENTS_FAILED);
 		}
 	},
 );
@@ -460,7 +461,7 @@ const getSelectableContractEmployees = createServerFn({
 		}));
 	} catch (error) {
 		console.error("[getSelectableContractEmployees]", error);
-		throw new Error("Erro ao buscar colaboradores disponíveis");
+		throw new Error(CONTRACT_ERRORS.CONTRACT_SELECTABLE_EMPLOYEES_FAILED);
 	}
 });
 

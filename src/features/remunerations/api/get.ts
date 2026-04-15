@@ -13,6 +13,7 @@ import type {
 	QueryPaginatedReturnType,
 } from "@/shared/types/api";
 import { REMUNERATION_DATA_CACHE_KEY } from "../constants";
+import { REMUNERATION_ERRORS } from "../constants/errors";
 import { remunerationIdInputSchema } from "../schemas/form";
 import type { Remuneration } from "../schemas/model";
 import {
@@ -59,7 +60,7 @@ const getRemunerations = createServerFn({ method: "GET" })
 				};
 			} catch (error) {
 				console.error("[getRemunerations]", error);
-				throw new Error("Erro ao buscar remunerações");
+				throw new Error(REMUNERATION_ERRORS.REMUNERATION_GET_FAILED);
 			}
 		},
 	);
@@ -91,13 +92,13 @@ const getRemunerationById = createServerFn({ method: "GET" })
 			});
 
 			if (!remuneration) {
-				throw new Error("Remuneração não encontrada");
+				throw new Error(REMUNERATION_ERRORS.REMUNERATION_DETAIL_NOT_FOUND);
 			}
 
 			const [mapped] = await mapRemunerations([remuneration]);
 
 			if (!mapped) {
-				throw new Error("Remuneração não encontrada");
+				throw new Error(REMUNERATION_ERRORS.REMUNERATION_DETAIL_NOT_FOUND);
 			}
 
 			return mapped;
@@ -105,12 +106,12 @@ const getRemunerationById = createServerFn({ method: "GET" })
 			console.error("[getRemunerationById]", error);
 			if (
 				error instanceof Error &&
-				error.message === "Remuneração não encontrada"
+				error.message === REMUNERATION_ERRORS.REMUNERATION_DETAIL_NOT_FOUND
 			) {
 				throw error;
 			}
 
-			throw new Error("Erro ao buscar remuneração");
+			throw new Error(REMUNERATION_ERRORS.REMUNERATION_DETAIL_FAILED);
 		}
 	});
 
@@ -162,7 +163,9 @@ const getSelectableRemunerationContracts = createServerFn({
 		}));
 	} catch (error) {
 		console.error("[getSelectableRemunerationContracts]", error);
-		throw new Error("Erro ao buscar contratos disponíveis");
+		throw new Error(
+			REMUNERATION_ERRORS.REMUNERATION_SELECTABLE_CONTRACTS_FAILED,
+		);
 	}
 });
 
@@ -205,7 +208,9 @@ const getSelectableRemunerationEmployees = createServerFn({
 		}));
 	} catch (error) {
 		console.error("[getSelectableRemunerationEmployees]", error);
-		throw new Error("Erro ao buscar colaboradores disponíveis");
+		throw new Error(
+			REMUNERATION_ERRORS.REMUNERATION_SELECTABLE_EMPLOYEES_FAILED,
+		);
 	}
 });
 

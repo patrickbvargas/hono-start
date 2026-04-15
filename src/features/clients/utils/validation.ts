@@ -3,6 +3,7 @@ import {
 	CLIENT_TYPE_COMPANY_VALUE,
 	CLIENT_TYPE_INDIVIDUAL_VALUE,
 } from "../constants";
+import { CLIENT_ERRORS } from "../constants/errors";
 import { normalizeClientDocument } from "./normalization";
 
 function isRepeatedDigits(value: string) {
@@ -88,7 +89,7 @@ export function validateClientDocumentBusinessRules({
 	if (!normalizedDocument) {
 		issues.push({
 			path: ["document"],
-			message: "Documento é obrigatório",
+			message: CLIENT_ERRORS.CLIENT_DOCUMENT_REQUIRED,
 		});
 		return issues;
 	}
@@ -99,14 +100,14 @@ export function validateClientDocumentBusinessRules({
 	) {
 		issues.push({
 			path: ["document"],
-			message: "CPF inválido",
+			message: CLIENT_ERRORS.CLIENT_DOCUMENT_CPF_INVALID,
 		});
 	}
 
 	if (type === CLIENT_TYPE_COMPANY_VALUE && !isValidCnpj(normalizedDocument)) {
 		issues.push({
 			path: ["document"],
-			message: "CNPJ inválido",
+			message: CLIENT_ERRORS.CLIENT_DOCUMENT_CNPJ_INVALID,
 		});
 	}
 
@@ -116,7 +117,7 @@ export function validateClientDocumentBusinessRules({
 	) {
 		issues.push({
 			path: ["type"],
-			message: "Tipo de cliente inválido",
+			message: CLIENT_ERRORS.CLIENT_TYPE_INVALID,
 		});
 	}
 

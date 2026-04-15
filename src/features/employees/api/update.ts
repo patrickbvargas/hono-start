@@ -11,6 +11,7 @@ import {
 	getServerLoggedUserSession,
 } from "@/shared/session";
 import type { MutationReturnType } from "@/shared/types/api";
+import { EMPLOYEE_ERRORS } from "../constants/errors";
 import { employeeUpdateInputSchema } from "../schemas/form";
 import {
 	resolveEmployeeLookupSelections,
@@ -27,7 +28,7 @@ const updateEmployee = createServerFn({ method: "POST" })
 			const existing = await prisma.employee.findFirst({
 				where: { id: data.id, firmId, deletedAt: null },
 			});
-			if (!existing) throw new Error("Funcionário não encontrado");
+			if (!existing) throw new Error(EMPLOYEE_ERRORS.EMPLOYEE_NOT_FOUND);
 
 			const { type, role } = await resolveEmployeeLookupSelections(
 				prisma,
@@ -55,21 +56,13 @@ const updateEmployee = createServerFn({ method: "POST" })
 		} catch (error) {
 			console.error("[updateEmployee]", error);
 			if (isPrismaUniqueConstraintError(error, ["email"])) {
-				throw new Error("Este email já está em uso");
+				throw new Error(EMPLOYEE_ERRORS.EMPLOYEE_EMAIL_ALREADY_IN_USE);
 			}
 
-			if (
-				hasExactErrorMessage(error, [
-					"Funcionário não encontrado",
-					"Função não encontrada",
-					"Perfil não encontrado",
-					"Selecione uma função ativa",
-					"Selecione um perfil ativo",
-				])
-			) {
+			if (hasExactErrorMessage(error, EMPLOYEE_ERRORS)) {
 				throw error;
 			}
-			throw new Error("Erro ao atualizar funcionário");
+			throw new Error(EMPLOYEE_ERRORS.EMPLOYEE_UPDATE_FAILED);
 		}
 	});
 

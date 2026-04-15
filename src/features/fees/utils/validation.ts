@@ -1,3 +1,5 @@
+import { FEE_ERRORS } from "../constants/errors";
+
 interface AssertUniqueActiveInstallmentParams {
 	excludeFeeId?: number;
 	fees: Array<{
@@ -16,13 +18,13 @@ interface AssertFeeParentConsistencyParams {
 
 export function assertFeeAmountPositive(amount: number) {
 	if (amount <= 0) {
-		throw new Error("Valor deve ser maior que zero");
+		throw new Error(FEE_ERRORS.FEE_AMOUNT_TOO_LOW);
 	}
 }
 
 export function assertFeeInstallmentNumber(installmentNumber: number) {
 	if (installmentNumber < 1) {
-		throw new Error("Parcela deve ser maior que zero");
+		throw new Error(FEE_ERRORS.FEE_INSTALLMENT_TOO_LOW);
 	}
 }
 
@@ -44,7 +46,7 @@ export function assertUniqueActiveInstallment({
 	});
 
 	if (hasDuplicate) {
-		throw new Error("Já existe um honorário ativo para esta parcela");
+		throw new Error(FEE_ERRORS.FEE_DUPLICATE_INSTALLMENT);
 	}
 }
 
@@ -53,7 +55,7 @@ export function assertFeeParentConsistency({
 	revenueContractId,
 }: AssertFeeParentConsistencyParams) {
 	if (contractId !== revenueContractId) {
-		throw new Error("A receita selecionada não pertence ao contrato informado");
+		throw new Error(FEE_ERRORS.FEE_PARENT_MISMATCH);
 	}
 }
 

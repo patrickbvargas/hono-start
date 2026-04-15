@@ -18,6 +18,7 @@ import type {
 	QueryPaginatedReturnType,
 } from "@/shared/types/api";
 import { EMPLOYEE_DATA_CACHE_KEY } from "../constants";
+import { EMPLOYEE_ERRORS } from "../constants/errors";
 import type { EmployeeFilter } from "../schemas/filter";
 import { type Employee, employeeSchema } from "../schemas/model";
 import { type EmployeeSearch, employeeSearchSchema } from "../schemas/search";
@@ -147,14 +148,10 @@ const getEmployees = createServerFn({ method: "GET" })
 			};
 		} catch (error) {
 			console.error("[getEmployees]", error);
-			if (
-				hasExactErrorMessage(error, [
-					"Apenas administradores podem gerenciar funcionários",
-				])
-			) {
+			if (hasExactErrorMessage(error, EMPLOYEE_ERRORS)) {
 				throw error;
 			}
-			throw new Error("Erro ao buscar funcionários");
+			throw new Error(EMPLOYEE_ERRORS.EMPLOYEE_GET_FAILED);
 		}
 	});
 
@@ -167,7 +164,7 @@ const getEmployeeTypes = createServerFn({ method: "GET" }).handler(
 			return optionSchema.array().parse(types);
 		} catch (error) {
 			console.error("[getEmployeeTypes]", error);
-			throw new Error("Erro ao buscar tipos de funcionário");
+			throw new Error(EMPLOYEE_ERRORS.EMPLOYEE_TYPES_GET_FAILED);
 		}
 	},
 );
@@ -181,7 +178,7 @@ const getEmployeeRoles = createServerFn({ method: "GET" }).handler(
 			return optionSchema.array().parse(roles);
 		} catch (error) {
 			console.error("[getEmployeeRoles]", error);
-			throw new Error("Erro ao buscar cargos de funcionário");
+			throw new Error(EMPLOYEE_ERRORS.EMPLOYEE_ROLES_GET_FAILED);
 		}
 	},
 );

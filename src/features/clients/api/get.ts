@@ -14,6 +14,7 @@ import type {
 	QueryPaginatedReturnType,
 } from "@/shared/types/api";
 import { CLIENT_DATA_CACHE_KEY } from "../constants";
+import { CLIENT_ERRORS } from "../constants/errors";
 import type { ClientFilter } from "../schemas/filter";
 import { clientIdInputSchema } from "../schemas/form";
 import { type Client, clientSchema } from "../schemas/model";
@@ -153,7 +154,7 @@ const getClients = createServerFn({ method: "GET" })
 			};
 		} catch (error) {
 			console.error("[getClients]", error);
-			throw new Error("Erro ao buscar clientes");
+			throw new Error(CLIENT_ERRORS.CLIENT_GET_FAILED);
 		}
 	});
 
@@ -169,13 +170,13 @@ const getClientById = createServerFn({ method: "GET" })
 			});
 
 			if (!client) {
-				throw new Error("Cliente não encontrado");
+				throw new Error(CLIENT_ERRORS.CLIENT_DETAIL_NOT_FOUND);
 			}
 
 			const [mappedClient] = await mapClients([client]);
 
 			if (!mappedClient) {
-				throw new Error("Cliente não encontrado");
+				throw new Error(CLIENT_ERRORS.CLIENT_DETAIL_NOT_FOUND);
 			}
 
 			return mappedClient;
@@ -183,11 +184,11 @@ const getClientById = createServerFn({ method: "GET" })
 			console.error("[getClientById]", error);
 			if (
 				error instanceof Error &&
-				error.message === "Cliente não encontrado"
+				error.message === CLIENT_ERRORS.CLIENT_DETAIL_NOT_FOUND
 			) {
 				throw error;
 			}
-			throw new Error("Erro ao buscar cliente");
+			throw new Error(CLIENT_ERRORS.CLIENT_DETAIL_FAILED);
 		}
 	});
 
@@ -201,7 +202,7 @@ const getClientTypes = createServerFn({ method: "GET" }).handler(
 			return optionSchema.array().parse(types);
 		} catch (error) {
 			console.error("[getClientTypes]", error);
-			throw new Error("Erro ao buscar tipos de cliente");
+			throw new Error(CLIENT_ERRORS.CLIENT_TYPES_GET_FAILED);
 		}
 	},
 );
@@ -229,7 +230,7 @@ const getSelectableClients = createServerFn({ method: "GET" }).handler(
 			}));
 		} catch (error) {
 			console.error("[getSelectableClients]", error);
-			throw new Error("Erro ao buscar clientes disponíveis");
+			throw new Error(CLIENT_ERRORS.CLIENT_SELECTABLE_GET_FAILED);
 		}
 	},
 );

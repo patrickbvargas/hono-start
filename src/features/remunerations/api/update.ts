@@ -4,6 +4,7 @@ import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
 import { prisma } from "@/shared/lib/prisma";
 import { getServerLoggedUserSession } from "@/shared/session";
 import type { MutationReturnType } from "@/shared/types/api";
+import { REMUNERATION_ERRORS } from "../constants/errors";
 import { remunerationUpdateInputSchema } from "../schemas/form";
 import {
 	assertRemunerationAmountPositive,
@@ -23,13 +24,11 @@ const updateRemuneration = createServerFn({ method: "POST" })
 			);
 
 			if (remuneration.deletedAt) {
-				throw new Error("Não é possível editar uma remuneração excluída");
+				throw new Error(REMUNERATION_ERRORS.REMUNERATION_EDIT_DELETED);
 			}
 
 			if (remuneration.parentFeeIsSoftDeleted) {
-				throw new Error(
-					"Não é possível editar uma remuneração vinculada a um honorário excluído",
-				);
+				throw new Error(REMUNERATION_ERRORS.REMUNERATION_EDIT_PARENT_DELETED);
 			}
 
 			assertRemunerationAmountPositive(data.amount);
@@ -47,21 +46,11 @@ const updateRemuneration = createServerFn({ method: "POST" })
 			return { success: true };
 		} catch (error) {
 			console.error("[updateRemuneration]", error);
-			if (
-				hasExactErrorMessage(error, [
-					"Apenas administradores podem editar remunerações",
-					"Remuneração não encontrada",
-					"Não é possível editar uma remuneração excluída",
-					"Não é possível editar uma remuneração vinculada a um honorário excluído",
-					"Valor deve ser maior que zero",
-					"Percentual não pode ser negativo",
-					"Percentual deve ser menor ou igual a 100%",
-				])
-			) {
+			if (hasExactErrorMessage(error, REMUNERATION_ERRORS)) {
 				throw error;
 			}
 
-			throw new Error("Erro ao atualizar remuneração");
+			throw new Error(REMUNERATION_ERRORS.REMUNERATION_UPDATE_FAILED);
 		}
 	});
 

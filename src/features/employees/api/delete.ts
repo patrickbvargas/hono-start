@@ -8,6 +8,7 @@ import {
 	getServerLoggedUserSession,
 } from "@/shared/session";
 import type { MutationReturnType } from "@/shared/types/api";
+import { EMPLOYEE_ERRORS } from "../constants/errors";
 import { employeeIdInputSchema } from "../schemas/form";
 
 const deleteEmployee = createServerFn({ method: "POST" })
@@ -20,7 +21,7 @@ const deleteEmployee = createServerFn({ method: "POST" })
 			const existing = await prisma.employee.findFirst({
 				where: { id: data.id, firmId, deletedAt: null },
 			});
-			if (!existing) throw new Error("Funcionário não encontrado");
+			if (!existing) throw new Error(EMPLOYEE_ERRORS.EMPLOYEE_NOT_FOUND);
 			await prisma.employee.update({
 				where: { id: data.id },
 				data: { deletedAt: new Date() },
@@ -28,15 +29,10 @@ const deleteEmployee = createServerFn({ method: "POST" })
 			return { success: true };
 		} catch (error) {
 			console.error("[deleteEmployee]", error);
-			if (
-				hasExactErrorMessage(error, [
-					"Funcionário não encontrado",
-					"Apenas administradores podem gerenciar funcionários",
-				])
-			) {
+			if (hasExactErrorMessage(error, EMPLOYEE_ERRORS)) {
 				throw error;
 			}
-			throw new Error("Erro ao excluir funcionário");
+			throw new Error(EMPLOYEE_ERRORS.EMPLOYEE_DELETE_FAILED);
 		}
 	});
 

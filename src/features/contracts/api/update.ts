@@ -16,6 +16,7 @@ import {
 	CONTRACT_STATUS_CANCELLED_VALUE,
 	CONTRACT_STATUS_COMPLETED_VALUE,
 } from "../constants";
+import { CONTRACT_ERRORS } from "../constants/errors";
 import { contractUpdateInputSchema } from "../schemas/form";
 import { normalizeOptionalText } from "../utils/normalization";
 import { assertContractWritePayload } from "../utils/validation";
@@ -155,9 +156,7 @@ const updateContract = createServerFn({ method: "POST" })
 			const isAdmin = isAdminSession(session);
 
 			if (isContractReadOnly(access.resource)) {
-				throw new Error(
-					"Contratos concluídos ou cancelados são somente leitura",
-				);
+				throw new Error(CONTRACT_ERRORS.CONTRACT_READ_ONLY);
 			}
 
 			const existing = await prisma.contract.findFirst({
@@ -168,13 +167,11 @@ const updateContract = createServerFn({ method: "POST" })
 			});
 
 			if (!existing) {
-				throw new Error("Contrato não encontrado");
+				throw new Error(CONTRACT_ERRORS.CONTRACT_NOT_FOUND);
 			}
 
 			if (!isAdmin && data.allowStatusChange !== existing.allowStatusChange) {
-				throw new Error(
-					"Apenas administradores podem controlar o bloqueio de status",
-				);
+				throw new Error(CONTRACT_ERRORS.CONTRACT_STATUS_LOCK_FORBIDDEN);
 			}
 
 			const { legalArea, status } = await resolveContractLookupSelections(
@@ -190,24 +187,18 @@ const updateContract = createServerFn({ method: "POST" })
 			);
 
 			if (!isAdmin && status.id !== existing.statusId) {
-				throw new Error(
-					"Apenas administradores podem alterar o status do contrato",
-				);
+				throw new Error(CONTRACT_ERRORS.CONTRACT_STATUS_CHANGE_FORBIDDEN);
 			}
 
 			if (status.id !== existing.statusId && !existing.allowStatusChange) {
-				throw new Error(
-					"As mudanças de status estão bloqueadas para este contrato",
-				);
+				throw new Error(CONTRACT_ERRORS.CONTRACT_STATUS_CHANGE_LOCKED);
 			}
 
 			if (
 				existing.status.value === CONTRACT_STATUS_COMPLETED_VALUE ||
 				existing.status.value === CONTRACT_STATUS_CANCELLED_VALUE
 			) {
-				throw new Error(
-					"Contratos concluídos ou cancelados são somente leitura",
-				);
+				throw new Error(CONTRACT_ERRORS.CONTRACT_READ_ONLY);
 			}
 
 			const clientId = Number(data.clientId);
@@ -222,7 +213,7 @@ const updateContract = createServerFn({ method: "POST" })
 			});
 
 			if (!client) {
-				throw new Error("Selecione um cliente ativo");
+				throw new Error(CONTRACT_ERRORS.CONTRACT_CLIENT_INACTIVE);
 			}
 
 			const resolvedAssignments = await resolveContractAssignments(
@@ -267,44 +258,14 @@ const updateContract = createServerFn({ method: "POST" })
 		} catch (error) {
 			console.error("[updateContract]", error);
 			if (isPrismaUniqueConstraintError(error, ["firmId", "processNumber"])) {
-				throw new Error("Este número de processo já está cadastrado");
+				throw new Error(CONTRACT_ERRORS.CONTRACT_PROCESS_NUMBER_DUPLICATE);
 			}
 
-			if (
-				hasExactErrorMessage(error, [
-					"Você não tem permissão para editar este contrato",
-					"Contrato não encontrado",
-					"Contratos concluídos ou cancelados são somente leitura",
-					"Apenas administradores podem controlar o bloqueio de status",
-					"Apenas administradores podem alterar o status do contrato",
-					"As mudanças de status estão bloqueadas para este contrato",
-					"Selecione um cliente ativo",
-					"Selecione uma área jurídica ativa",
-					"Selecione um status de contrato ativo",
-					"Informe pelo menos um colaborador",
-					"Informe pelo menos uma receita",
-					"O contrato permite no máximo três receitas",
-					"Não é permitido repetir tipos de receita ativos",
-					"O mesmo colaborador não pode ser atribuído mais de uma vez",
-					"A entrada não pode ser maior que o valor total",
-					"Colaborador não encontrado",
-					"Selecione um colaborador ativo",
-					"Tipo de atribuição não encontrado",
-					"Selecione um tipo de atribuição ativo",
-					"Tipo de receita não encontrado",
-					"Selecione um tipo de receita ativo",
-					"Assistentes administrativos só podem usar a atribuição correspondente",
-					"Advogados não podem usar a atribuição de assistente administrativo",
-					"Contratos com indicação precisam informar ao menos um indicado",
-					"Contratos com indicado precisam informar ao menos um indicante",
-					"O percentual de indicação não pode exceder o percentual de remuneração do indicado",
-					"Informe ao menos um advogado responsável",
-				])
-			) {
+			if (hasExactErrorMessage(error, CONTRACT_ERRORS)) {
 				throw error;
 			}
 
-			throw new Error("Erro ao atualizar contrato");
+			throw new Error(CONTRACT_ERRORS.CONTRACT_UPDATE_FAILED);
 		}
 	});
 

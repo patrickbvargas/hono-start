@@ -11,6 +11,7 @@ import {
 	getServerScope,
 } from "@/shared/session";
 import type { MutationReturnType } from "@/shared/types/api";
+import { CLIENT_ERRORS } from "../constants/errors";
 import { clientUpdateInputSchema } from "../schemas/form";
 import {
 	normalizeClientDocument,
@@ -35,7 +36,7 @@ const updateClient = createServerFn({ method: "POST" })
 			});
 
 			if (!existing) {
-				throw new Error("Cliente não encontrado");
+				throw new Error(CLIENT_ERRORS.CLIENT_NOT_FOUND);
 			}
 
 			const { type } = await resolveClientTypeSelection(prisma, data);
@@ -66,25 +67,13 @@ const updateClient = createServerFn({ method: "POST" })
 		} catch (error) {
 			console.error("[updateClient]", error);
 			if (isPrismaUniqueConstraintError(error, ["firmId", "document"])) {
-				throw new Error("Este documento já está cadastrado");
+				throw new Error(CLIENT_ERRORS.CLIENT_DOCUMENT_DUPLICATE);
 			}
 
-			if (
-				hasExactErrorMessage(error, [
-					"Você não tem permissão para editar clientes",
-					"Cliente não encontrado",
-					"Tipo de cliente não encontrado",
-					"Selecione um tipo de cliente ativo",
-					"O tipo do cliente não pode ser alterado",
-					"Documento é obrigatório",
-					"CPF inválido",
-					"CNPJ inválido",
-					"Tipo de cliente inválido",
-				])
-			) {
+			if (hasExactErrorMessage(error, CLIENT_ERRORS)) {
 				throw error;
 			}
-			throw new Error("Erro ao atualizar cliente");
+			throw new Error(CLIENT_ERRORS.CLIENT_UPDATE_FAILED);
 		}
 	});
 

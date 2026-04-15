@@ -4,6 +4,7 @@ import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
 import { prisma } from "@/shared/lib/prisma";
 import { getServerLoggedUserSession } from "@/shared/session";
 import type { MutationReturnType } from "@/shared/types/api";
+import { REMUNERATION_ERRORS } from "../constants/errors";
 import { remunerationIdInputSchema } from "../schemas/form";
 import { assertCanAccessRemunerationById } from "./resource";
 
@@ -28,16 +29,11 @@ const deleteRemuneration = createServerFn({ method: "POST" })
 			return { success: true };
 		} catch (error) {
 			console.error("[deleteRemuneration]", error);
-			if (
-				hasExactErrorMessage(error, [
-					"Remuneração não encontrada",
-					"Apenas administradores podem excluir remunerações",
-				])
-			) {
+			if (hasExactErrorMessage(error, REMUNERATION_ERRORS)) {
 				throw error;
 			}
 
-			throw new Error("Erro ao excluir remuneração");
+			throw new Error(REMUNERATION_ERRORS.REMUNERATION_DELETE_FAILED);
 		}
 	});
 

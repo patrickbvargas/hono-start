@@ -3,36 +3,36 @@ import { entityIdSchema } from "@/shared/schemas/entity";
 import { validateClientDocumentBusinessRules } from "../utils/validation";
 
 const clientBaseInputSchema = z.object({
-  fullName: z.string().trim().min(1, "Nome é obrigatório"),
-  document: z.string().trim().min(1, "Documento é obrigatório"),
-  email: z.email("Email inválido").optional().or(z.literal("")),
-  phone: z.string().trim().optional().or(z.literal("")),
-  type: z.string().min(1, "Tipo de cliente é obrigatório"),
-  isActive: z.boolean(),
+	fullName: z.string().trim().min(1, "Nome é obrigatório"),
+	document: z.string().trim().min(1, "Documento é obrigatório"),
+	email: z.email("Email inválido").optional().or(z.literal("")),
+	phone: z.string().trim().optional().or(z.literal("")),
+	type: z.string().min(1, "Tipo de cliente é obrigatório"),
+	isActive: z.boolean(),
 });
 
 const clientBusinessRulesRefinement = (
-  data: ClientBaseInput,
-  ctx: z.RefinementCtx,
+	data: ClientBaseInput,
+	ctx: z.RefinementCtx,
 ) => {
-  const issues = validateClientDocumentBusinessRules(data);
+	const issues = validateClientDocumentBusinessRules(data);
 
-  for (const issue of issues) {
-    ctx.addIssue({
-      code: "custom",
-      message: issue.message,
-      path: issue.path,
-    });
-  }
+	for (const issue of issues) {
+		ctx.addIssue({
+			code: "custom",
+			message: issue.message,
+			path: issue.path,
+		});
+	}
 };
 
 export const clientCreateInputSchema = clientBaseInputSchema.superRefine(
-  clientBusinessRulesRefinement,
+	clientBusinessRulesRefinement,
 );
 
 export const clientUpdateInputSchema = entityIdSchema
-  .safeExtend(clientBaseInputSchema.shape)
-  .superRefine(clientBusinessRulesRefinement);
+	.safeExtend(clientBaseInputSchema.shape)
+	.superRefine(clientBusinessRulesRefinement);
 
 export const clientIdInputSchema = entityIdSchema;
 

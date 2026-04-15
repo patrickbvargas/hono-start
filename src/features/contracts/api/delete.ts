@@ -4,6 +4,7 @@ import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
 import { prisma } from "@/shared/lib/prisma";
 import { getServerLoggedUserSession } from "@/shared/session";
 import type { MutationReturnType } from "@/shared/types/api";
+import { CONTRACT_ERRORS } from "../constants/errors";
 import { contractIdInputSchema } from "../schemas/form";
 import { assertCanAccessContractById } from "./resource";
 
@@ -19,9 +20,7 @@ const deleteContract = createServerFn({ method: "POST" })
 			);
 
 			if (contract.hasActiveRevenues) {
-				throw new Error(
-					"Não é possível excluir um contrato com receitas ativas",
-				);
+				throw new Error(CONTRACT_ERRORS.CONTRACT_HAS_ACTIVE_REVENUES);
 			}
 
 			await prisma.contract.update({
@@ -32,16 +31,10 @@ const deleteContract = createServerFn({ method: "POST" })
 			return { success: true };
 		} catch (error) {
 			console.error("[deleteContract]", error);
-			if (
-				hasExactErrorMessage(error, [
-					"Contrato não encontrado",
-					"Não é possível excluir um contrato com receitas ativas",
-					"Apenas administradores podem excluir contratos",
-				])
-			) {
+			if (hasExactErrorMessage(error, CONTRACT_ERRORS)) {
 				throw error;
 			}
-			throw new Error("Erro ao excluir contrato");
+			throw new Error(CONTRACT_ERRORS.CONTRACT_DELETE_FAILED);
 		}
 	});
 

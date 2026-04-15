@@ -8,6 +8,7 @@ import {
 	getServerScope,
 } from "@/shared/session";
 import type { MutationReturnType } from "@/shared/types/api";
+import { CLIENT_ERRORS } from "../constants/errors";
 import { clientIdInputSchema } from "../schemas/form";
 
 const restoreClient = createServerFn({ method: "POST" })
@@ -22,7 +23,7 @@ const restoreClient = createServerFn({ method: "POST" })
 			});
 
 			if (!existing) {
-				throw new Error("Cliente não encontrado");
+				throw new Error(CLIENT_ERRORS.CLIENT_NOT_FOUND);
 			}
 
 			await prisma.client.update({
@@ -33,15 +34,10 @@ const restoreClient = createServerFn({ method: "POST" })
 			return { success: true };
 		} catch (error) {
 			console.error("[restoreClient]", error);
-			if (
-				hasExactErrorMessage(error, [
-					"Cliente não encontrado",
-					"Apenas administradores podem restaurar clientes",
-				])
-			) {
+			if (hasExactErrorMessage(error, CLIENT_ERRORS)) {
 				throw error;
 			}
-			throw new Error("Erro ao restaurar cliente");
+			throw new Error(CLIENT_ERRORS.CLIENT_RESTORE_FAILED);
 		}
 	});
 

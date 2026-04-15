@@ -2,11 +2,21 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 	return typeof value === "object" && value !== null;
 }
 
+export type ErrorMessageCatalog = Record<string, string>;
+
+export function getErrorMessages(
+	messages: readonly string[] | ErrorMessageCatalog,
+) {
+	return Array.isArray(messages) ? messages : Object.values(messages);
+}
+
 export function hasExactErrorMessage(
 	error: unknown,
-	messages: readonly string[],
+	messages: readonly string[] | ErrorMessageCatalog,
 ) {
-	return error instanceof Error && messages.includes(error.message);
+	return (
+		error instanceof Error && getErrorMessages(messages).includes(error.message)
+	);
 }
 
 export function isPrismaUniqueConstraintError(

@@ -11,6 +11,7 @@ import {
 	getServerLoggedUserSession,
 } from "@/shared/session";
 import type { MutationReturnType } from "@/shared/types/api";
+import { EMPLOYEE_ERRORS } from "../constants/errors";
 import { employeeCreateInputSchema } from "../schemas/form";
 import {
 	resolveEmployeeLookupSelections,
@@ -48,20 +49,13 @@ const createEmployee = createServerFn({ method: "POST" })
 		} catch (error: unknown) {
 			console.error("[createEmployee]", error);
 			if (isPrismaUniqueConstraintError(error, ["email"])) {
-				throw new Error("Este email já está em uso");
+				throw new Error(EMPLOYEE_ERRORS.EMPLOYEE_EMAIL_ALREADY_IN_USE);
 			}
 
-			if (
-				hasExactErrorMessage(error, [
-					"Função não encontrada",
-					"Perfil não encontrado",
-					"Selecione uma função ativa",
-					"Selecione um perfil ativo",
-				])
-			) {
+			if (hasExactErrorMessage(error, EMPLOYEE_ERRORS)) {
 				throw error;
 			}
-			throw new Error("Erro ao criar funcionário");
+			throw new Error(EMPLOYEE_ERRORS.EMPLOYEE_CREATE_FAILED);
 		}
 	});
 

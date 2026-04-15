@@ -4,6 +4,7 @@ import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
 import { prisma } from "@/shared/lib/prisma";
 import { getServerLoggedUserSession } from "@/shared/session";
 import type { MutationReturnType } from "@/shared/types/api";
+import { FEE_ERRORS } from "../constants/errors";
 import { feeIdInputSchema } from "../schemas/form";
 import { assertCanAccessFeeById } from "./resource";
 import { syncContractStatusFromFees, syncFeeDeleteState } from "./write";
@@ -29,16 +30,11 @@ const deleteFee = createServerFn({ method: "POST" })
 			return { success: true };
 		} catch (error) {
 			console.error("[deleteFee]", error);
-			if (
-				hasExactErrorMessage(error, [
-					"Honorário não encontrado",
-					"Apenas administradores podem excluir honorários",
-				])
-			) {
+			if (hasExactErrorMessage(error, FEE_ERRORS)) {
 				throw error;
 			}
 
-			throw new Error("Erro ao excluir honorário");
+			throw new Error(FEE_ERRORS.FEE_DELETE_FAILED);
 		}
 	});
 

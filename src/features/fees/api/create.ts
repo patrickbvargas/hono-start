@@ -5,6 +5,7 @@ import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
 import { prisma } from "@/shared/lib/prisma";
 import { assertCan, getServerLoggedUserSession } from "@/shared/session";
 import type { MutationReturnType } from "@/shared/types/api";
+import { FEE_ERRORS } from "../constants/errors";
 import { feeCreateInputSchema } from "../schemas/form";
 import { normalizeFeeReference } from "../utils/normalization";
 import {
@@ -82,7 +83,7 @@ const createFee = createServerFn({ method: "POST" })
 			});
 
 			if (!revenue) {
-				throw new Error("Selecione uma receita válida");
+				throw new Error(FEE_ERRORS.FEE_SELECT_REVENUE);
 			}
 
 			assertFeeParentConsistency({
@@ -107,9 +108,7 @@ const createFee = createServerFn({ method: "POST" })
 			});
 
 			if (revenue.fees.length >= revenue.totalInstallments) {
-				throw new Error(
-					"Não é possível lançar honorários após quitar todas as parcelas previstas",
-				);
+				throw new Error(FEE_ERRORS.FEE_CONTRACT_EXHAUSTED);
 			}
 
 			await prisma.$transaction(async (tx) => {
@@ -142,21 +141,11 @@ const createFee = createServerFn({ method: "POST" })
 			return { success: true };
 		} catch (error) {
 			console.error("[createFee]", error);
-			if (
-				hasExactErrorMessage(error, [
-					"Você não tem permissão para criar honorários",
-					"Selecione uma receita válida",
-					"A receita selecionada não pertence ao contrato informado",
-					"Valor deve ser maior que zero",
-					"Parcela deve ser maior que zero",
-					"Já existe um honorário ativo para esta parcela",
-					"Não é possível lançar honorários após quitar todas as parcelas previstas",
-				])
-			) {
+			if (hasExactErrorMessage(error, FEE_ERRORS)) {
 				throw error;
 			}
 
-			throw new Error("Erro ao criar honorário");
+			throw new Error(FEE_ERRORS.FEE_CREATE_FAILED);
 		}
 	});
 

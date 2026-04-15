@@ -8,6 +8,7 @@ import {
 	getServerLoggedUserSession,
 } from "@/shared/session";
 import type { MutationReturnType } from "@/shared/types/api";
+import { EMPLOYEE_ERRORS } from "../constants/errors";
 import { employeeIdInputSchema } from "../schemas/form";
 
 const restoreEmployee = createServerFn({ method: "POST" })
@@ -20,7 +21,7 @@ const restoreEmployee = createServerFn({ method: "POST" })
 			const existing = await prisma.employee.findFirst({
 				where: { id: data.id, firmId, NOT: { deletedAt: null } },
 			});
-			if (!existing) throw new Error("Funcionário não encontrado");
+			if (!existing) throw new Error(EMPLOYEE_ERRORS.EMPLOYEE_NOT_FOUND);
 			await prisma.employee.update({
 				where: { id: data.id },
 				data: { deletedAt: null },
@@ -28,14 +29,8 @@ const restoreEmployee = createServerFn({ method: "POST" })
 			return { success: true };
 		} catch (error) {
 			console.error("[restoreEmployee]", error);
-			if (
-				hasExactErrorMessage(error, [
-					"Funcionário não encontrado",
-					"Apenas administradores podem gerenciar funcionários",
-				])
-			)
-				throw error;
-			throw new Error("Erro ao restaurar funcionário");
+			if (hasExactErrorMessage(error, EMPLOYEE_ERRORS)) throw error;
+			throw new Error(EMPLOYEE_ERRORS.EMPLOYEE_RESTORE_FAILED);
 		}
 	});
 

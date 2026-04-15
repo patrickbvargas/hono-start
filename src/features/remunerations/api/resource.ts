@@ -4,6 +4,7 @@ import type {
 	RemunerationAccessResource,
 } from "@/shared/session";
 import { assertCan, getServerScope } from "@/shared/session";
+import { REMUNERATION_ERRORS } from "../constants/errors";
 
 export async function getRemunerationAccessResourceById(id: number) {
 	const scope = getServerScope("remuneration");
@@ -54,7 +55,7 @@ export async function requireRemunerationAccessResourceById(id: number) {
 	const remuneration = await getRemunerationAccessResourceById(id);
 
 	if (!remuneration) {
-		throw new Error("Remuneração não encontrada");
+		throw new Error(REMUNERATION_ERRORS.REMUNERATION_NOT_FOUND);
 	}
 
 	return remuneration;

@@ -1,5 +1,6 @@
 import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/shared/lib/prisma";
+import { CLIENT_ERRORS } from "../constants/errors";
 
 export async function getActiveContractCountByClientIds(clientIds: number[]) {
 	if (clientIds.length === 0) {
@@ -25,6 +26,6 @@ export async function assertClientHasNoActiveContracts(clientId: number) {
 	const counts = await getActiveContractCountByClientIds([clientId]);
 
 	if ((counts.get(clientId) ?? 0) > 0) {
-		throw new Error("Não é possível excluir um cliente com contratos ativos");
+		throw new Error(CLIENT_ERRORS.CLIENT_ALREADY_HAS_ACTIVE_CONTRACTS);
 	}
 }

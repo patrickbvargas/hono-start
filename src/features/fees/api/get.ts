@@ -21,6 +21,7 @@ import type {
 	QueryPaginatedReturnType,
 } from "@/shared/types/api";
 import { FEE_DATA_CACHE_KEY } from "../constants";
+import { FEE_ERRORS } from "../constants/errors";
 import type { FeeFilter } from "../schemas/filter";
 import { feeIdInputSchema } from "../schemas/form";
 import { type Fee, feeSchema } from "../schemas/model";
@@ -213,7 +214,7 @@ const getFees = createServerFn({ method: "GET" })
 			};
 		} catch (error) {
 			console.error("[getFees]", error);
-			throw new Error("Erro ao buscar honorários");
+			throw new Error(FEE_ERRORS.FEE_GET_FAILED);
 		}
 	});
 
@@ -244,13 +245,13 @@ const getFeeById = createServerFn({ method: "GET" })
 			});
 
 			if (!fee) {
-				throw new Error("Honorário não encontrado");
+				throw new Error(FEE_ERRORS.FEE_DETAIL_NOT_FOUND);
 			}
 
 			const [mapped] = await mapFees([fee]);
 
 			if (!mapped) {
-				throw new Error("Honorário não encontrado");
+				throw new Error(FEE_ERRORS.FEE_DETAIL_NOT_FOUND);
 			}
 
 			return mapped;
@@ -258,12 +259,12 @@ const getFeeById = createServerFn({ method: "GET" })
 			console.error("[getFeeById]", error);
 			if (
 				error instanceof Error &&
-				error.message === "Honorário não encontrado"
+				error.message === FEE_ERRORS.FEE_DETAIL_NOT_FOUND
 			) {
 				throw error;
 			}
 
-			throw new Error("Erro ao buscar honorário");
+			throw new Error(FEE_ERRORS.FEE_DETAIL_FAILED);
 		}
 	});
 
@@ -312,7 +313,7 @@ const getSelectableFeeContracts = createServerFn({ method: "GET" }).handler(
 			}));
 		} catch (error) {
 			console.error("[getSelectableFeeContracts]", error);
-			throw new Error("Erro ao buscar contratos disponíveis");
+			throw new Error(FEE_ERRORS.FEE_SELECTABLE_CONTRACTS_FAILED);
 		}
 	},
 );
@@ -380,7 +381,7 @@ const getSelectableFeeRevenues = createServerFn({ method: "GET" })
 			}));
 		} catch (error) {
 			console.error("[getSelectableFeeRevenues]", error);
-			throw new Error("Erro ao buscar receitas disponíveis");
+			throw new Error(FEE_ERRORS.FEE_SELECTABLE_REVENUES_FAILED);
 		}
 	});
 

@@ -4,6 +4,7 @@ import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
 import { prisma } from "@/shared/lib/prisma";
 import { getServerLoggedUserSession } from "@/shared/session";
 import type { MutationReturnType } from "@/shared/types/api";
+import { REMUNERATION_ERRORS } from "../constants/errors";
 import { remunerationIdInputSchema } from "../schemas/form";
 import { assertCanAccessRemunerationById } from "./resource";
 
@@ -20,7 +21,7 @@ const restoreRemuneration = createServerFn({ method: "POST" })
 
 			if (remuneration.parentFeeIsSoftDeleted) {
 				throw new Error(
-					"Não é possível restaurar a remuneração enquanto o honorário de origem estiver excluído",
+					REMUNERATION_ERRORS.REMUNERATION_RESTORE_PARENT_DELETED,
 				);
 			}
 
@@ -34,17 +35,11 @@ const restoreRemuneration = createServerFn({ method: "POST" })
 			return { success: true };
 		} catch (error) {
 			console.error("[restoreRemuneration]", error);
-			if (
-				hasExactErrorMessage(error, [
-					"Remuneração não encontrada",
-					"Apenas administradores podem restaurar remunerações",
-					"Não é possível restaurar a remuneração enquanto o honorário de origem estiver excluído",
-				])
-			) {
+			if (hasExactErrorMessage(error, REMUNERATION_ERRORS)) {
 				throw error;
 			}
 
-			throw new Error("Erro ao restaurar remuneração");
+			throw new Error(REMUNERATION_ERRORS.REMUNERATION_RESTORE_FAILED);
 		}
 	});
 

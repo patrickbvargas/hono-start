@@ -8,6 +8,7 @@ import {
 	EMPLOYEE_TYPE_ADMIN_ASSISTANT_VALUE,
 	EMPLOYEE_TYPE_LAWYER_VALUE,
 } from "../constants";
+import { CONTRACT_ERRORS } from "../constants/errors";
 import type {
 	ContractAssignmentInput,
 	ContractCreateInput,
@@ -21,7 +22,7 @@ export function assertContractPayloadHasAssignments(
 	assignments: ContractAssignmentInput[],
 ) {
 	if (assignments.filter((assignment) => assignment.isActive).length === 0) {
-		throw new Error("Informe pelo menos um colaborador");
+		throw new Error(CONTRACT_ERRORS.CONTRACT_ASSIGNMENT_REQUIRED);
 	}
 }
 
@@ -29,7 +30,7 @@ export function assertContractPayloadHasRevenues(
 	revenues: ContractRevenueInput[],
 ) {
 	if (revenues.filter((revenue) => revenue.isActive).length === 0) {
-		throw new Error("Informe pelo menos uma receita");
+		throw new Error(CONTRACT_ERRORS.CONTRACT_REVENUE_REQUIRED);
 	}
 }
 
@@ -38,7 +39,7 @@ export function assertRevenueLimit(revenues: ContractRevenueInput[]) {
 		revenues.filter((revenue) => revenue.isActive).length >
 		CONTRACT_MAX_REVENUES
 	) {
-		throw new Error("O contrato permite no máximo três receitas");
+		throw new Error(CONTRACT_ERRORS.CONTRACT_REVENUE_LIMIT);
 	}
 }
 
@@ -50,7 +51,7 @@ export function assertUniqueActiveRevenueTypes(
 		.map((revenue) => revenue.type);
 
 	if (new Set(activeTypes).size !== activeTypes.length) {
-		throw new Error("Não é permitido repetir tipos de receita ativos");
+		throw new Error(CONTRACT_ERRORS.CONTRACT_REVENUE_TYPE_DUPLICATE);
 	}
 }
 
@@ -62,9 +63,7 @@ export function assertUniqueActiveAssignments(
 		.map((assignment) => assignment.employeeId);
 
 	if (new Set(activeEmployeeIds).size !== activeEmployeeIds.length) {
-		throw new Error(
-			"O mesmo colaborador não pode ser atribuído mais de uma vez",
-		);
+		throw new Error(CONTRACT_ERRORS.CONTRACT_ASSIGNMENT_DUPLICATE);
 	}
 }
 
@@ -75,7 +74,7 @@ export function assertRevenueDownPaymentBounds(
 		const downPaymentValue = revenue.downPaymentValue ?? 0;
 
 		if (downPaymentValue > revenue.totalValue) {
-			throw new Error("A entrada não pode ser maior que o valor total");
+			throw new Error(CONTRACT_ERRORS.CONTRACT_DOWN_PAYMENT_TOO_HIGH);
 		}
 	}
 }
@@ -95,7 +94,7 @@ export function assertResponsibleLawyerPresence(
 	);
 
 	if (!hasResponsibleLawyer) {
-		throw new Error("Informe ao menos um advogado responsável");
+		throw new Error(CONTRACT_ERRORS.CONTRACT_RESPONSIBLE_LAWYER_REQUIRED);
 	}
 }
 
@@ -113,18 +112,14 @@ export function assertAssignmentCompatibility(
 			employeeTypeValue === EMPLOYEE_TYPE_ADMIN_ASSISTANT_VALUE &&
 			assignment.assignmentType.value !== ASSIGNMENT_TYPE_ADMIN_ASSISTANT_VALUE
 		) {
-			throw new Error(
-				"Assistentes administrativos só podem usar a atribuição correspondente",
-			);
+			throw new Error(CONTRACT_ERRORS.CONTRACT_ADMIN_ASSISTANT_ASSIGNMENT);
 		}
 
 		if (
 			employeeTypeValue === EMPLOYEE_TYPE_LAWYER_VALUE &&
 			assignment.assignmentType.value === ASSIGNMENT_TYPE_ADMIN_ASSISTANT_VALUE
 		) {
-			throw new Error(
-				"Advogados não podem usar a atribuição de assistente administrativo",
-			);
+			throw new Error(CONTRACT_ERRORS.CONTRACT_LAWYER_ASSIGNMENT);
 		}
 	}
 }
@@ -148,18 +143,14 @@ export function assertReferralTeamComposition(
 		recommendingAssignments.length > 0 &&
 		recommendedAssignments.length === 0
 	) {
-		throw new Error(
-			"Contratos com indicação precisam informar ao menos um indicado",
-		);
+		throw new Error(CONTRACT_ERRORS.CONTRACT_REFERRAL_RECOMMENDED_REQUIRED);
 	}
 
 	if (
 		recommendedAssignments.length > 0 &&
 		recommendingAssignments.length === 0
 	) {
-		throw new Error(
-			"Contratos com indicado precisam informar ao menos um indicante",
-		);
+		throw new Error(CONTRACT_ERRORS.CONTRACT_REFERRAL_RECOMMENDING_REQUIRED);
 	}
 }
 
@@ -189,9 +180,7 @@ export function assertReferralPercentageCompatibility(
 			);
 
 			if (recommendingReferralPercentage > recommendedRemunerationPercentage) {
-				throw new Error(
-					"O percentual de indicação não pode exceder o percentual de remuneração do indicado",
-				);
+				throw new Error(CONTRACT_ERRORS.CONTRACT_REFERRAL_PERCENTAGE_TOO_HIGH);
 			}
 		}
 	}

@@ -4,6 +4,7 @@ import {
 	CONTRACT_STATUS_CANCELLED_VALUE,
 	CONTRACT_STATUS_COMPLETED_VALUE,
 } from "@/shared/session";
+import { FEE_ERRORS } from "../constants/errors";
 
 const ASSIGNMENT_TYPE_RESPONSIBLE_VALUE = "RESPONSIBLE";
 const ASSIGNMENT_TYPE_RECOMMENDING_VALUE = "RECOMMENDING";
@@ -208,7 +209,7 @@ export async function syncContractStatusFromFees(
 	});
 
 	if (!targetStatus) {
-		throw new Error("Status do contrato não encontrado");
+		throw new Error(FEE_ERRORS.FEE_CONTRACT_STATUS_NOT_FOUND);
 	}
 
 	await tx.contract.update({

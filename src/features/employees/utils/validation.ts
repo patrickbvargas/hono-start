@@ -1,5 +1,6 @@
 import type { ValidationIssue } from "@/shared/types/validation";
 import { LAWYER_TYPE_VALUE } from "../constants";
+import { EMPLOYEE_ERRORS } from "../constants/errors";
 
 export interface EmployeeValidationInput {
 	oabNumber?: string;
@@ -10,7 +11,7 @@ export interface EmployeeValidationInput {
 
 function getEmployeeReferrerPercentMessage(input: EmployeeValidationInput) {
 	if (input.referrerPercent > input.remunerationPercent) {
-		return "Percentual de indicação não pode exceder o percentual de remuneração";
+		return EMPLOYEE_ERRORS.EMPLOYEE_REFERRAL_PERCENTAGE_TOO_HIGH;
 	}
 
 	return null;
@@ -18,7 +19,7 @@ function getEmployeeReferrerPercentMessage(input: EmployeeValidationInput) {
 
 function getEmployeeOabRequiredMessage(input: EmployeeValidationInput) {
 	if (input.type === LAWYER_TYPE_VALUE && !input.oabNumber) {
-		return "OAB é obrigatória";
+		return EMPLOYEE_ERRORS.EMPLOYEE_OAB_REQUIRED;
 	}
 
 	return null;

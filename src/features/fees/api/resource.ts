@@ -1,6 +1,7 @@
 import { prisma } from "@/shared/lib/prisma";
 import type { FeeAccessResource, LoggedUserSession } from "@/shared/session";
 import { assertCan, getServerScope } from "@/shared/session";
+import { FEE_ERRORS } from "../constants/errors";
 
 export async function getFeeAccessResourceById(id: number) {
 	const scope = getServerScope("fee");
@@ -79,7 +80,7 @@ export async function requireFeeAccessResourceById(id: number) {
 	const fee = await getFeeAccessResourceById(id);
 
 	if (!fee) {
-		throw new Error("Honorário não encontrado");
+		throw new Error(FEE_ERRORS.FEE_NOT_FOUND);
 	}
 
 	return fee;

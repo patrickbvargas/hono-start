@@ -13,6 +13,7 @@ import {
 } from "@/shared/session";
 import type { MutationReturnType } from "@/shared/types/api";
 import { CONTRACT_STATUS_ACTIVE_VALUE } from "../constants";
+import { CONTRACT_ERRORS } from "../constants/errors";
 import { contractCreateInputSchema } from "../schemas/form";
 import { normalizeOptionalText } from "../utils/normalization";
 import { assertContractWritePayload } from "../utils/validation";
@@ -33,9 +34,7 @@ const createContract = createServerFn({ method: "POST" })
 			const isAdmin = isAdminSession(session);
 
 			if (!isAdmin && !data.allowStatusChange) {
-				throw new Error(
-					"Apenas administradores podem controlar o bloqueio de status",
-				);
+				throw new Error(CONTRACT_ERRORS.CONTRACT_STATUS_LOCK_FORBIDDEN);
 			}
 
 			const clientId = Number(data.clientId);
@@ -45,7 +44,7 @@ const createContract = createServerFn({ method: "POST" })
 			});
 
 			if (!client) {
-				throw new Error("Selecione um cliente ativo");
+				throw new Error(CONTRACT_ERRORS.CONTRACT_CLIENT_INACTIVE);
 			}
 
 			const { legalArea, status } = await resolveContractLookupSelections(
@@ -55,7 +54,7 @@ const createContract = createServerFn({ method: "POST" })
 			validateContractLookupSelections({ legalArea, status });
 
 			if (status.value !== CONTRACT_STATUS_ACTIVE_VALUE) {
-				throw new Error("Novos contratos devem começar com status ativo");
+				throw new Error(CONTRACT_ERRORS.CONTRACT_NEW_STATUS_REQUIRED);
 			}
 
 			const resolvedAssignments = await resolveContractAssignments(
@@ -113,41 +112,14 @@ const createContract = createServerFn({ method: "POST" })
 		} catch (error) {
 			console.error("[createContract]", error);
 			if (isPrismaUniqueConstraintError(error, ["firmId", "processNumber"])) {
-				throw new Error("Este número de processo já está cadastrado");
+				throw new Error(CONTRACT_ERRORS.CONTRACT_PROCESS_NUMBER_DUPLICATE);
 			}
 
-			if (
-				hasExactErrorMessage(error, [
-					"Você não tem permissão para criar contratos",
-					"Apenas administradores podem controlar o bloqueio de status",
-					"Selecione um cliente ativo",
-					"Selecione uma área jurídica ativa",
-					"Selecione um status de contrato ativo",
-					"Novos contratos devem começar com status ativo",
-					"Informe pelo menos um colaborador",
-					"Informe pelo menos uma receita",
-					"O contrato permite no máximo três receitas",
-					"Não é permitido repetir tipos de receita ativos",
-					"O mesmo colaborador não pode ser atribuído mais de uma vez",
-					"A entrada não pode ser maior que o valor total",
-					"Colaborador não encontrado",
-					"Selecione um colaborador ativo",
-					"Tipo de atribuição não encontrado",
-					"Selecione um tipo de atribuição ativo",
-					"Tipo de receita não encontrado",
-					"Selecione um tipo de receita ativo",
-					"Assistentes administrativos só podem usar a atribuição correspondente",
-					"Advogados não podem usar a atribuição de assistente administrativo",
-					"Contratos com indicação precisam informar ao menos um indicado",
-					"Contratos com indicado precisam informar ao menos um indicante",
-					"O percentual de indicação não pode exceder o percentual de remuneração do indicado",
-					"Informe ao menos um advogado responsável",
-				])
-			) {
+			if (hasExactErrorMessage(error, CONTRACT_ERRORS)) {
 				throw error;
 			}
 
-			throw new Error("Erro ao criar contrato");
+			throw new Error(CONTRACT_ERRORS.CONTRACT_CREATE_FAILED);
 		}
 	});
 

@@ -6,6 +6,7 @@ import {
 	getServerScope,
 	isAdminSession,
 } from "@/shared/session";
+import { REMUNERATION_ERRORS } from "../constants/errors";
 import { remunerationExportInputSchema } from "../schemas/form";
 import {
 	buildRemunerationPdf,
@@ -64,7 +65,7 @@ const exportRemunerations = createServerFn({ method: "POST" })
 			};
 		} catch (error) {
 			console.error("[exportRemunerations]", error);
-			throw new Error("Erro ao exportar remunerações");
+			throw new Error(REMUNERATION_ERRORS.REMUNERATION_EXPORT_FAILED);
 		}
 	});
 

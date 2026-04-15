@@ -11,6 +11,7 @@ import {
 	getServerScope,
 } from "@/shared/session";
 import type { MutationReturnType } from "@/shared/types/api";
+import { CLIENT_ERRORS } from "../constants/errors";
 import { clientCreateInputSchema } from "../schemas/form";
 import {
 	normalizeClientDocument,
@@ -57,23 +58,13 @@ const createClient = createServerFn({ method: "POST" })
 		} catch (error) {
 			console.error("[createClient]", error);
 			if (isPrismaUniqueConstraintError(error, ["firmId", "document"])) {
-				throw new Error("Este documento já está cadastrado");
+				throw new Error(CLIENT_ERRORS.CLIENT_DOCUMENT_DUPLICATE);
 			}
 
-			if (
-				hasExactErrorMessage(error, [
-					"Você não tem permissão para criar clientes",
-					"Tipo de cliente não encontrado",
-					"Selecione um tipo de cliente ativo",
-					"Documento é obrigatório",
-					"CPF inválido",
-					"CNPJ inválido",
-					"Tipo de cliente inválido",
-				])
-			) {
+			if (hasExactErrorMessage(error, CLIENT_ERRORS)) {
 				throw error;
 			}
-			throw new Error("Erro ao criar cliente");
+			throw new Error(CLIENT_ERRORS.CLIENT_CREATE_FAILED);
 		}
 	});
 

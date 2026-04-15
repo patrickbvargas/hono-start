@@ -1,6 +1,8 @@
+import { REMUNERATION_ERRORS } from "../constants/errors";
+
 export function assertRemunerationAmountPositive(amount: number) {
 	if (amount <= 0) {
-		throw new Error("Valor deve ser maior que zero");
+		throw new Error(REMUNERATION_ERRORS.REMUNERATION_AMOUNT_TOO_LOW);
 	}
 }
 
@@ -8,10 +10,10 @@ export function assertRemunerationEffectivePercentage(
 	effectivePercentage: number,
 ) {
 	if (effectivePercentage < 0) {
-		throw new Error("Percentual não pode ser negativo");
+		throw new Error(REMUNERATION_ERRORS.REMUNERATION_PERCENTAGE_TOO_LOW);
 	}
 
 	if (effectivePercentage > 1) {
-		throw new Error("Percentual deve ser menor ou igual a 100%");
+		throw new Error(REMUNERATION_ERRORS.REMUNERATION_PERCENTAGE_TOO_HIGH);
 	}
 }

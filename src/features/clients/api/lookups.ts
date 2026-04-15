@@ -1,4 +1,5 @@
 import type { ClientType, PrismaClient } from "@/generated/prisma/client";
+import { CLIENT_ERRORS } from "../constants/errors";
 
 interface ClientTypeSelection {
 	type: ClientType;
@@ -17,7 +18,7 @@ export function validateClientTypeSelection(
 	options: ClientTypeValidationOptions = {},
 ) {
 	if (!selection.type.isActive && selection.type.id !== options.currentTypeId) {
-		throw new Error("Selecione um tipo de cliente ativo");
+		throw new Error(CLIENT_ERRORS.CLIENT_TYPE_INACTIVE);
 	}
 }
 
@@ -26,7 +27,7 @@ export function validateImmutableClientType(
 	options: ClientTypeValidationOptions = {},
 ) {
 	if (options.currentTypeId && selection.type.id !== options.currentTypeId) {
-		throw new Error("O tipo do cliente não pode ser alterado");
+		throw new Error(CLIENT_ERRORS.CLIENT_TYPE_NOT_MUTABLE);
 	}
 }
 
@@ -39,7 +40,7 @@ export async function resolveClientTypeSelection(
 	});
 
 	if (!type) {
-		throw new Error("Tipo de cliente não encontrado");
+		throw new Error(CLIENT_ERRORS.CLIENT_TYPE_NOT_FOUND);
 	}
 
 	return { type };

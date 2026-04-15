@@ -4,6 +4,7 @@ import type {
 	LoggedUserSession,
 } from "@/shared/session";
 import { assertCan, getServerScope, isAdminSession } from "@/shared/session";
+import { CONTRACT_ERRORS } from "../constants/errors";
 
 export async function getContractAccessResourceById(id: number) {
 	const scope = getServerScope("contract");
@@ -44,7 +45,7 @@ export async function requireContractAccessResourceById(id: number) {
 	const contract = await getContractAccessResourceById(id);
 
 	if (!contract) {
-		throw new Error("Contrato não encontrado");
+		throw new Error(CONTRACT_ERRORS.CONTRACT_NOT_FOUND);
 	}
 
 	return contract;

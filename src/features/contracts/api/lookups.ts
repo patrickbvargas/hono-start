@@ -4,6 +4,7 @@ import type {
 	Prisma,
 	PrismaClient,
 } from "@/generated/prisma/client";
+import { CONTRACT_ERRORS } from "../constants/errors";
 import type {
 	ContractAssignmentInput,
 	ContractRevenueInput,
@@ -56,14 +57,14 @@ export function validateContractLookupSelections(
 		!selection.legalArea.isActive &&
 		selection.legalArea.id !== options.currentLegalAreaId
 	) {
-		throw new Error("Selecione uma área jurídica ativa");
+		throw new Error(CONTRACT_ERRORS.CONTRACT_LEGAL_AREA_INACTIVE);
 	}
 
 	if (
 		!selection.status.isActive &&
 		selection.status.id !== options.currentStatusId
 	) {
-		throw new Error("Selecione um status de contrato ativo");
+		throw new Error(CONTRACT_ERRORS.CONTRACT_STATUS_INACTIVE);
 	}
 }
 
@@ -76,8 +77,8 @@ export async function resolveContractLookupSelections(
 		prisma.contractStatus.findUnique({ where: { value: input.status } }),
 	]);
 
-	if (!legalArea) throw new Error("Área jurídica não encontrada");
-	if (!status) throw new Error("Status do contrato não encontrado");
+	if (!legalArea) throw new Error(CONTRACT_ERRORS.CONTRACT_NOT_FOUND);
+	if (!status) throw new Error(CONTRACT_ERRORS.CONTRACT_NOT_FOUND);
 
 	return { legalArea, status };
 }
@@ -113,19 +114,19 @@ export async function resolveContractAssignments(
 		);
 
 		if (!employee) {
-			throw new Error("Colaborador não encontrado");
+			throw new Error(CONTRACT_ERRORS.CONTRACT_EMPLOYEE_NOT_FOUND);
 		}
 
 		if (employee.deletedAt || !employee.isActive) {
-			throw new Error("Selecione um colaborador ativo");
+			throw new Error(CONTRACT_ERRORS.CONTRACT_EMPLOYEE_INACTIVE);
 		}
 
 		if (!assignmentType) {
-			throw new Error("Tipo de atribuição não encontrado");
+			throw new Error(CONTRACT_ERRORS.CONTRACT_ASSIGNMENT_TYPE_NOT_FOUND);
 		}
 
 		if (!assignmentType.isActive) {
-			throw new Error("Selecione um tipo de atribuição ativo");
+			throw new Error(CONTRACT_ERRORS.CONTRACT_ASSIGNMENT_TYPE_INACTIVE);
 		}
 
 		return {
@@ -149,11 +150,11 @@ export async function resolveRevenueTypes(
 		const type = revenueTypes.find((item) => item.value === revenue.type);
 
 		if (!type) {
-			throw new Error("Tipo de receita não encontrado");
+			throw new Error(CONTRACT_ERRORS.CONTRACT_REVENUE_TYPE_NOT_FOUND);
 		}
 
 		if (!type.isActive) {
-			throw new Error("Selecione um tipo de receita ativo");
+			throw new Error(CONTRACT_ERRORS.CONTRACT_REVENUE_TYPE_INACTIVE);
 		}
 
 		return { ...revenue, type };

@@ -3,6 +3,7 @@ import type {
 	PrismaClient,
 	UserRole,
 } from "@/generated/prisma/client";
+import { EMPLOYEE_ERRORS } from "../constants/errors";
 
 interface EmployeeLookupSelection {
 	role: UserRole;
@@ -24,11 +25,11 @@ export function validateEmployeeLookupSelections(
 	options: EmployeeLookupValidationOptions = {},
 ) {
 	if (!selection.type.isActive && selection.type.id !== options.currentTypeId) {
-		throw new Error("Selecione uma função ativa");
+		throw new Error(EMPLOYEE_ERRORS.EMPLOYEE_TYPE_INACTIVE);
 	}
 
 	if (!selection.role.isActive && selection.role.id !== options.currentRoleId) {
-		throw new Error("Selecione um perfil ativo");
+		throw new Error(EMPLOYEE_ERRORS.EMPLOYEE_ROLE_INACTIVE);
 	}
 }
 
@@ -45,8 +46,8 @@ export async function resolveEmployeeLookupSelections(
 		}),
 	]);
 
-	if (!type) throw new Error("Função não encontrada");
-	if (!role) throw new Error("Perfil não encontrado");
+	if (!type) throw new Error(EMPLOYEE_ERRORS.EMPLOYEE_TYPE_NOT_FOUND);
+	if (!role) throw new Error(EMPLOYEE_ERRORS.EMPLOYEE_ROLE_NOT_FOUND);
 
 	return { type, role };
 }

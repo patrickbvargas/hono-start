@@ -4,6 +4,7 @@ import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
 import { prisma } from "@/shared/lib/prisma";
 import { assertCan, getServerLoggedUserSession } from "@/shared/session";
 import type { MutationReturnType } from "@/shared/types/api";
+import { CONTRACT_ERRORS } from "../constants/errors";
 import { contractIdInputSchema } from "../schemas/form";
 import { getContractAccessResourceById } from "./resource";
 
@@ -15,11 +16,11 @@ const restoreContract = createServerFn({ method: "POST" })
 			const contract = await getContractAccessResourceById(data.id);
 
 			if (!contract) {
-				throw new Error("Contrato não encontrado");
+				throw new Error(CONTRACT_ERRORS.CONTRACT_NOT_FOUND);
 			}
 
 			if (!contract.resource) {
-				throw new Error("Contrato não encontrado");
+				throw new Error(CONTRACT_ERRORS.CONTRACT_NOT_FOUND);
 			}
 
 			assertCan(session, "contract.restore", contract.resource);
@@ -34,7 +35,7 @@ const restoreContract = createServerFn({ method: "POST" })
 			});
 
 			if (!existing) {
-				throw new Error("Contrato não encontrado");
+				throw new Error(CONTRACT_ERRORS.CONTRACT_NOT_FOUND);
 			}
 
 			await prisma.contract.update({
@@ -45,15 +46,10 @@ const restoreContract = createServerFn({ method: "POST" })
 			return { success: true };
 		} catch (error) {
 			console.error("[restoreContract]", error);
-			if (
-				hasExactErrorMessage(error, [
-					"Contrato não encontrado",
-					"Apenas administradores podem restaurar contratos",
-				])
-			) {
+			if (hasExactErrorMessage(error, CONTRACT_ERRORS)) {
 				throw error;
 			}
-			throw new Error("Erro ao restaurar contrato");
+			throw new Error(CONTRACT_ERRORS.CONTRACT_RESTORE_FAILED);
 		}
 	});
 

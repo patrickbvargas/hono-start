@@ -8,6 +8,7 @@ import {
 	getServerScope,
 } from "@/shared/session";
 import type { MutationReturnType } from "@/shared/types/api";
+import { CLIENT_ERRORS } from "../constants/errors";
 import { clientIdInputSchema } from "../schemas/form";
 import { assertClientHasNoActiveContracts } from "./contracts";
 
@@ -23,7 +24,7 @@ const deleteClient = createServerFn({ method: "POST" })
 			});
 
 			if (!existing) {
-				throw new Error("Cliente não encontrado");
+				throw new Error(CLIENT_ERRORS.CLIENT_NOT_FOUND);
 			}
 
 			await assertClientHasNoActiveContracts(data.id);
@@ -36,16 +37,10 @@ const deleteClient = createServerFn({ method: "POST" })
 			return { success: true };
 		} catch (error) {
 			console.error("[deleteClient]", error);
-			if (
-				hasExactErrorMessage(error, [
-					"Cliente não encontrado",
-					"Não é possível excluir um cliente com contratos ativos",
-					"Apenas administradores podem excluir clientes",
-				])
-			) {
+			if (hasExactErrorMessage(error, CLIENT_ERRORS)) {
 				throw error;
 			}
-			throw new Error("Erro ao excluir cliente");
+			throw new Error(CLIENT_ERRORS.CLIENT_DELETE_FAILED);
 		}
 	});
 
