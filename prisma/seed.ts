@@ -291,7 +291,8 @@ function createContractSeeds(
     .map((employee) => employee.email);
   const activeAssistantEmails = employees
     .filter(
-      (employee) => employee.typeValue === "ADMIN_ASSISTANT" && employee.isActive,
+      (employee) =>
+        employee.typeValue === "ADMIN_ASSISTANT" && employee.isActive,
     )
     .map((employee) => employee.email);
 
@@ -330,7 +331,8 @@ function createContractSeeds(
           legalAreaValue,
           statusValue: "ACTIVE",
           feePercentage: "0.3000",
-          notes: "Contrato seed padrao com advogado responsavel e pagamento parcial.",
+          notes:
+            "Contrato seed padrao com advogado responsavel e pagamento parcial.",
           allowStatusChange: true,
           isActive: true,
           assignments: [
@@ -373,7 +375,8 @@ function createContractSeeds(
           legalAreaValue,
           statusValue: "ACTIVE",
           feePercentage: "0.3000",
-          notes: "Contrato seed com assistente administrativo e honorarios ativos.",
+          notes:
+            "Contrato seed com assistente administrativo e honorarios ativos.",
           allowStatusChange: true,
           isActive: index % 12 !== 1,
           assignments: [
@@ -420,7 +423,8 @@ function createContractSeeds(
           legalAreaValue,
           statusValue: "ACTIVE",
           feePercentage: "0.3500",
-          notes: "Contrato seed de indicacao com responsavel, indicante e indicado.",
+          notes:
+            "Contrato seed de indicacao com responsavel, indicante e indicado.",
           allowStatusChange: true,
           isActive: true,
           assignments: [
@@ -504,7 +508,8 @@ function createContractSeeds(
           legalAreaValue,
           statusValue: "COMPLETED",
           feePercentage: "0.3000",
-          notes: "Contrato seed quitado para validar fechamento automatico e historico.",
+          notes:
+            "Contrato seed quitado para validar fechamento automatico e historico.",
           allowStatusChange: true,
           isActive: true,
           assignments: [
@@ -663,10 +668,7 @@ function getRecommendingReferralPercentage(
     .filter((assignment) => assignment.assignmentTypeValue === "RECOMMENDING")
     .reduce(
       (highest, assignment) =>
-        Prisma.Decimal.max(
-          highest,
-          assignment.employee.referralPercentage,
-        ),
+        Prisma.Decimal.max(highest, assignment.employee.referralPercentage),
       decimal(0),
     );
 }

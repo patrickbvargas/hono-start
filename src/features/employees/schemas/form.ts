@@ -1,15 +1,16 @@
 import * as z from "zod";
 import { entityIdSchema } from "@/shared/schemas/entity";
 import {
-	getEmployeeOabRequiredMessage,
-	getEmployeeReferrerPercentMessage,
+	type EmployeeValidationInput,
+	validateEmployeeBusinessRules,
 } from "../utils/validation";
 
-const employeeBaseShape = {
+const employeeBaseInputSchema = z.object({
 	fullName: z.string().trim().min(1, "Nome é obrigatório"),
 	email: z.email("Email inválido"),
 	oabNumber: z
 		.string()
+		.trim()
 		.regex(/^[A-Z]{2}\d{6}$/, "Formato OAB inválido (ex: RS123456)")
 		.optional()
 		.or(z.literal("")),
@@ -24,43 +25,30 @@ const employeeBaseShape = {
 	type: z.string().min(1, "Função é obrigatória"),
 	role: z.string().min(1, "Cargo é obrigatório"),
 	isActive: z.boolean(),
-};
+});
 
-const referrerRefinement = (
-	data: {
-		referrerPercent: number;
-		remunerationPercent: number;
-		type: string;
-		oabNumber?: string;
-	},
+const employeeBusinessRulesRefinement = (
+	data: EmployeeValidationInput,
 	ctx: z.RefinementCtx,
 ) => {
-	const referrerPercentMessage = getEmployeeReferrerPercentMessage(data);
-	if (referrerPercentMessage) {
-		ctx.addIssue({
-			code: "custom",
-			message: referrerPercentMessage,
-			path: ["referrerPercent"],
-		});
-	}
+	const issues = validateEmployeeBusinessRules(data);
 
-	const oabRequiredMessage = getEmployeeOabRequiredMessage(data);
-	if (oabRequiredMessage) {
+	for (const issue of issues) {
 		ctx.addIssue({
 			code: "custom",
-			message: oabRequiredMessage,
-			path: ["oabNumber"],
+			path: issue.path,
+			message: issue.message,
 		});
 	}
 };
 
-export const employeeCreateInputSchema = z
-	.object(employeeBaseShape)
-	.superRefine(referrerRefinement);
+export const employeeCreateInputSchema = employeeBaseInputSchema.superRefine(
+	employeeBusinessRulesRefinement,
+);
 
 export const employeeUpdateInputSchema = entityIdSchema
-	.safeExtend(employeeBaseShape)
-	.superRefine(referrerRefinement);
+	.safeExtend(employeeBaseInputSchema.shape)
+	.superRefine(employeeBusinessRulesRefinement);
 
 export const employeeIdInputSchema = entityIdSchema;
 

@@ -1,129 +1,56 @@
-## Purpose
+## MODIFIED Requirements
 
-Define the shared behavioral foundation for entity-management screens so future entity slices can follow the stabilized contract established by employees.
-
-## Requirements
-
-### Requirement: Entity-management screens follow a shared list contract
-The system SHALL treat entity-management list screens as a shared interaction pattern so future entities can reuse the same behavioral contract established by the employees feature.
-
-#### Scenario: Canonical list state lives in the URL
-- **WHEN** a user interacts with an entity-management list screen
-- **THEN** the active search, filter, sort, and pagination state SHALL be represented in the URL
-- **AND** reloading or sharing the URL SHALL preserve the same list view
-
-#### Scenario: Canonical list state resets pagination on filter changes
-- **WHEN** a user changes search text or filter values on an entity-management list screen
-- **THEN** the list reloads using the new criteria
-- **AND** the current page resets to the first page
-
-#### Scenario: Canonical list state supports deterministic sorting
-- **WHEN** an entity-management list screen applies server-side sorting
-- **THEN** the result ordering SHALL be deterministic for pagination
-- **AND** repeated requests with the same search state SHALL return rows in the same order
-
-#### Scenario: Lookup-backed filters use stable values in URL state
-- **WHEN** an entity-management list screen includes filters backed by lookup tables
-- **THEN** the URL stores the selected lookup values rather than relational database ids
-- **AND** the server resolves those values to relational filters internally
-
-### Requirement: Entity-management filters separate active state from deletion visibility
-The system SHALL model `isActive` filtering and soft-delete visibility as separate list concerns for entity-management screens that support both states.
-
-#### Scenario: Active-state filter does not imply deleted-state changes
-- **WHEN** a user filters an entity-management list by active or inactive records
-- **THEN** the list applies that `isActive` constraint
-- **AND** the deleted-state visibility remains controlled independently
-
-#### Scenario: Deleted-state filter does not imply active-state changes
-- **WHEN** a user changes an entity-management list from non-deleted records to deleted or all records
-- **THEN** the list changes soft-delete visibility accordingly
-- **AND** any active-state filter continues to apply independently
-
-### Requirement: Entity form option queries return complete selectable context
-The system SHALL use a shared option-loading rule for data returned to dropdowns, selects, autocompletes, and other entity form pickers.
-
-#### Scenario: Lookup-table option query returns all rows
-- **WHEN** a form option query loads lookup-table records
-- **THEN** rows with `isActive = true` and `isActive = false` are both returned
-- **AND** inactive rows are rendered as disabled options in the form UI
-
-#### Scenario: Lookup-backed field components bind stable values
-- **WHEN** a shared field component renders lookup-table options
-- **THEN** the selected option is keyed by the lookup row `value`
-- **AND** the component contract does not require the database `id` as the UI selection key
-
-#### Scenario: Business-entity option query returns only active non-deleted rows
-- **WHEN** a form option query loads business-entity records
-- **THEN** only rows with `deletedAt = null` and `isActive = true` are returned
-
-#### Scenario: Historical references remain valid without feature-local merge helpers
-- **WHEN** an existing record references an inactive or soft-deleted related row
-- **THEN** the persisted reference remains valid for display or edit context
-- **AND** the feature does not need to inject a synthetic option in the UI layer
-
-### Requirement: Reference entity slice defines the baseline structure for new entities
-The system SHALL use one stabilized entity slice as the reference implementation before new business entities are introduced.
+### Requirement: Reference feature slice defines the baseline structure for future feature work
+The system SHALL treat `src/features/employees` as the reference slice for route structure, feature boundaries, list behavior, option-query behavior, and protected mutation flows. Future feature slices SHALL compare any planned deviation against the reference slice before changing the workflow shape.
 
 #### Scenario: Employees serves as the reference slice
-- **WHEN** the application prepares to implement the next entity-management feature
-- **THEN** the employees slice SHALL be treated as the baseline example for route structure, feature boundaries, list behavior, option-query behavior, and protected mutation flows
-- **AND** the employees slice SHALL be used as a workflow reference rather than as a copy-paste template for domain-specific logic
-- **AND** contributors SHALL compare any planned deviation against the employees slice before changing the workflow shape for a new entity
+- **WHEN** the application prepares to implement a new feature slice or refactor an existing one
+- **THEN** `src/features/employees` SHALL be treated as the baseline example for route structure, feature boundaries, list behavior, option-query behavior, and protected mutation flows
+- **AND** the reference slice SHALL be used as a workflow reference rather than a copy-paste template for domain-specific logic
 
-#### Scenario: New entities inherit the same management workflow shape
-- **WHEN** a new entity-management feature is proposed after this change
-- **THEN** its route and feature structure SHALL follow the same high-level workflow shape established by the reference slice
-- **AND** deviations SHALL be justified by entity-specific behavior rather than ad hoc implementation preference
+#### Scenario: Planned deviations are justified against the reference slice
+- **WHEN** a contributor proposes a structural deviation from the reference feature slice
+- **THEN** the deviation SHALL be compared against `src/features/employees` before it is accepted
+- **AND** the deviation SHALL be justified by feature-specific behavior rather than ad hoc implementation preference
 
-### Requirement: New entity slices follow a standard implementation sequence
-The system SHALL define a repeatable implementation workflow for new entity-management features so contributors can add entities without re-interpreting the architecture from scratch.
+### Requirement: Feature slices follow a standard implementation sequence
+The system SHALL define a repeatable implementation workflow for feature slices so contributors can add or refactor features without reinterpreting architecture from scratch.
 
-#### Scenario: Entity contract is defined before UI assembly
-- **WHEN** a new entity-management feature is started
+#### Scenario: Feature contract is defined before UI assembly
+- **WHEN** a feature slice is started or materially refactored
 - **THEN** the feature SHALL define its schema contract before route wiring
-- **AND** the schema contract SHALL include entity model, form payload, filter, sort, and search definitions
+- **AND** the schema contract SHALL include entity model, form payload, filter, sort, and search definitions when those concerns exist
 - **AND** the implementation sequence SHALL proceed from schemas to feature-local APIs, then hooks, then components, and finally the route
 
-#### Scenario: Server boundary follows the schema contract
-- **WHEN** a new entity-management feature adds server operations
-- **THEN** feature-local read and write handlers SHALL validate against the feature schemas
-- **AND** the handlers SHALL map persistence concerns into the feature model before route composition occurs
-
-#### Scenario: Route is wired after feature behavior exists
-- **WHEN** a new entity-management route is implemented
+#### Scenario: Route wiring happens after feature behavior exists
+- **WHEN** a feature slice is wired into a route
 - **THEN** the route SHALL validate search state, prefetch feature queries, and mount feature UI pieces
-- **AND** the route SHALL not be the first location where entity business rules are defined
+- **AND** the route SHALL not be the first location where feature business rules are defined
 - **AND** overlays for create, edit, delete, restore, and details SHALL be wired only after the feature contract and feature UI pieces already exist
 
-### Requirement: New entity slices preserve ownership boundaries
-The system SHALL keep clear ownership boundaries between feature slices, routes, and shared infrastructure for entity-management work.
+### Requirement: Feature slices preserve ownership boundaries
+The system SHALL keep clear ownership boundaries between feature slices, routes, and shared infrastructure for feature work.
 
-#### Scenario: Feature owns entity-specific behavior
-- **WHEN** an entity-management feature is implemented
-- **THEN** its feature slice SHALL own entity-specific schemas, server operations, orchestration hooks, presentation components, constants, and pure helpers
-- **AND** entity-specific rules SHALL not be defined inside route files
+#### Scenario: Feature owns feature-specific behavior
+- **WHEN** a feature slice is implemented
+- **THEN** its feature slice SHALL own feature-specific schemas, server operations, orchestration hooks, presentation components, constants, and pure helpers
+- **AND** feature-specific rules SHALL not be defined inside route files
 - **AND** routes SHALL remain declarative composition points that consume the feature barrel rather than feature internals
 
 #### Scenario: Shared code remains generic
-- **WHEN** reusable infrastructure is added for entity-management features
-- **THEN** the `shared/` layer SHALL own only generic primitives, helpers, and infrastructure that are not tied to one entity’s domain rules
-- **AND** entity-specific logic SHALL remain inside the feature until a stable abstraction is proven
+- **WHEN** reusable infrastructure is added for multiple features
+- **THEN** the `shared/` layer SHALL own only generic primitives, helpers, and infrastructure that are not tied to one feature's domain rules
+- **AND** feature-specific logic SHALL remain inside the feature until a stable abstraction is proven
 
-### Requirement: Shared abstractions are extracted only after repeated usage
-The system SHALL prefer local entity implementations over premature generic abstractions when establishing new entity-management patterns.
+### Requirement: Shared abstractions are extracted only after repeated cross-feature usage
+The system SHALL prefer local feature implementation over premature generic abstractions when establishing validation or workflow patterns.
 
-#### Scenario: First entity proves the pattern locally
-- **WHEN** a workflow or helper exists for only one entity slice
+#### Scenario: First feature proves the pattern locally
+- **WHEN** a workflow or helper exists for only one feature slice
 - **THEN** the implementation MAY remain feature-local
 - **AND** the team SHALL not treat single-use code as sufficient evidence for a shared abstraction
 
 #### Scenario: Repeated patterns justify extraction
-- **WHEN** multiple entity slices require the same behavioral helper or structure
+- **WHEN** multiple feature slices require the same behavioral helper or structure
 - **THEN** the team MAY extract a shared abstraction after comparing the repeated usage
-- **AND** the abstraction SHALL reflect the stable common contract rather than one feature’s accidental details
-
-#### Scenario: Shared extraction follows repeated cross-entity proof
-- **WHEN** a contributor considers moving entity-management code into `shared/`
-- **THEN** the contributor SHALL first verify the behavior has repeated across multiple entity slices
-- **AND** the extraction SHALL preserve a generic contract instead of encoding employee-specific assumptions
+- **AND** the abstraction SHALL reflect the stable common contract rather than one feature's accidental details

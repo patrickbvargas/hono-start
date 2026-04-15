@@ -14,10 +14,12 @@ The system SHALL organize feature validation concerns using a canonical boundary
 - **THEN** the schema SHALL use Zod request-shape validation and schema-level refinements that do not require database access
 - **AND** the schema SHALL consume only pure helpers that are safe to execute without Prisma or persisted resource lookups
 
-#### Scenario: Pure business validation stays outside lookup resolution
+#### Scenario: Pure business validation helpers return reusable issues
 - **WHEN** a feature defines reusable business validation helpers for form writes
 - **THEN** those helpers SHALL live separately from Prisma-backed lookup resolution
-- **AND** they SHALL be reusable by schemas or server handlers without requiring data access
+- **AND** those helpers SHALL return standardized validation issues with field path and message data when business rules fail
+- **AND** schemas SHALL translate those returned issues into `ctx.addIssue` calls
+- **AND** the helpers SHALL remain reusable by schemas or server handlers without requiring data access
 
 #### Scenario: Normalization stays separate from validation
 - **WHEN** a feature canonicalizes submitted input values before validation or persistence

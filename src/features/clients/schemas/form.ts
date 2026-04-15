@@ -1,6 +1,6 @@
 import * as z from "zod";
 import { entityIdSchema } from "@/shared/schemas/entity";
-import { getClientDocumentValidationMessage } from "../utils/validation";
+import { validateClientDocumentBusinessRules } from "../utils/validation";
 
 const clientBaseShape = {
 	fullName: z.string().trim().min(1, "Nome é obrigatório"),
@@ -18,13 +18,13 @@ const documentRefinement = (
 	},
 	ctx: z.RefinementCtx,
 ) => {
-	const message = getClientDocumentValidationMessage(data.type, data.document);
+	const issues = validateClientDocumentBusinessRules(data);
 
-	if (message) {
+	for (const issue of issues) {
 		ctx.addIssue({
 			code: "custom",
-			message,
-			path: ["document"],
+			message: issue.message,
+			path: issue.path,
 		});
 	}
 };

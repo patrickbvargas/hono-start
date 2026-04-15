@@ -16,7 +16,7 @@ import {
 	normalizeClientDocument,
 	normalizeOptionalText,
 } from "../utils/normalization";
-import { getClientDocumentValidationMessage } from "../utils/validation";
+import { validateClientDocumentBusinessRules } from "../utils/validation";
 import {
 	resolveClientTypeSelection,
 	validateClientTypeSelection,
@@ -43,12 +43,12 @@ const updateClient = createServerFn({ method: "POST" })
 			validateImmutableClientType({ type }, { currentTypeId: existing.typeId });
 
 			const document = normalizeClientDocument(data.document);
-			const documentError = getClientDocumentValidationMessage(
-				type.value,
+			const documentIssues = validateClientDocumentBusinessRules({
+				type: type.value,
 				document,
-			);
-			if (documentError) {
-				throw new Error(documentError);
+			});
+			if (documentIssues.length > 0) {
+				throw new Error(documentIssues[0].message);
 			}
 
 			await prisma.client.update({

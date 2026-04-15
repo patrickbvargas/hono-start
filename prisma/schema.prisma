@@ -10,13 +10,13 @@ datasource db {
 model Firm {
   id                Int                @id @default(autoincrement())
   name              String
-  clients           Client[]           @relation("FirmClient")
-  employees         Employee[]         @relation("FirmEmployee")
-  contracts         Contract[]         @relation("FirmContract")
-  contractEmployees ContractEmployee[] @relation("FirmContractEmployee")
-  revenues          Revenue[]          @relation("FirmRevenue")
-  fees              Fee[]              @relation("FirmFee")
-  remunerations     Remuneration[]     @relation("FirmRemuneration")
+  clients           Client[]
+  employees         Employee[]
+  contracts         Contract[]
+  contractEmployees ContractEmployee[]
+  revenues          Revenue[]
+  fees              Fee[]
+  remunerations     Remuneration[]
 
   @@map("firms")
 }
@@ -106,7 +106,7 @@ model Employee {
   createdAt              DateTime     @default(now())
   updatedAt              DateTime     @updatedAt
   deletedAt              DateTime?
-  firm                   Firm         @relation("FirmEmployee", fields: [firmId], references: [id])
+  firm                   Firm         @relation(fields: [firmId], references: [id])
   type                   EmployeeType @relation(fields: [typeId], references: [id])
   role                   UserRole     @relation(fields: [roleId], references: [id])
   contractAssignments    ContractEmployee[]
@@ -130,7 +130,7 @@ model Client {
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   deletedAt DateTime?
-  firm      Firm       @relation("FirmClient", fields: [firmId], references: [id])
+  firm      Firm       @relation(fields: [firmId], references: [id])
   type      ClientType @relation(fields: [typeId], references: [id])
   contracts Contract[]
 
@@ -156,7 +156,7 @@ model Contract {
   updatedAt         DateTime           @updatedAt
   deletedAt         DateTime?
   client            Client             @relation(fields: [clientId], references: [id])
-  firm              Firm               @relation("FirmContract", fields: [firmId], references: [id])
+  firm              Firm               @relation(fields: [firmId], references: [id])
   legalArea         LegalArea          @relation(fields: [legalAreaId], references: [id])
   status            ContractStatus     @relation(fields: [statusId], references: [id])
   assignments       ContractEmployee[]
@@ -186,7 +186,7 @@ model ContractEmployee {
   assignmentType   AssignmentType @relation(fields: [assignmentTypeId], references: [id])
   contract         Contract       @relation(fields: [contractId], references: [id])
   employee         Employee       @relation(fields: [employeeId], references: [id])
-  firm             Firm           @relation("FirmContractEmployee", fields: [firmId], references: [id])
+  firm             Firm           @relation(fields: [firmId], references: [id])
   remunerations    Remuneration[]
 
   @@index([firmId])
@@ -213,7 +213,7 @@ model Revenue {
   updatedAt         DateTime    @updatedAt
   deletedAt         DateTime?
   contract          Contract    @relation(fields: [contractId], references: [id])
-  firm              Firm        @relation("FirmRevenue", fields: [firmId], references: [id])
+  firm              Firm        @relation(fields: [firmId], references: [id])
   type              RevenueType @relation(fields: [typeId], references: [id])
   fees              Fee[]
 
@@ -238,7 +238,7 @@ model Fee {
   createdAt             DateTime       @default(now())
   updatedAt             DateTime       @updatedAt
   deletedAt             DateTime?
-  firm                  Firm           @relation("FirmFee", fields: [firmId], references: [id])
+  firm                  Firm           @relation(fields: [firmId], references: [id])
   revenue               Revenue        @relation(fields: [revenueId], references: [id])
   remunerations         Remuneration[]
 
@@ -266,7 +266,7 @@ model Remuneration {
   deletedAt          DateTime?
   contractEmployee   ContractEmployee @relation(fields: [contractEmployeeId], references: [id])
   fee                Fee              @relation(fields: [feeId], references: [id])
-  firm               Firm             @relation("FirmRemuneration", fields: [firmId], references: [id])
+  firm               Firm             @relation(fields: [firmId], references: [id])
 
   @@index([firmId])
   @@index([feeId])

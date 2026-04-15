@@ -1,3 +1,4 @@
+import type { ValidationIssue } from "@/shared/types/validation";
 import {
 	CLIENT_TYPE_COMPANY_VALUE,
 	CLIENT_TYPE_INDIVIDUAL_VALUE,
@@ -72,23 +73,52 @@ export function isValidCnpj(value: string) {
 	return secondDigit === Number(cnpj[13]);
 }
 
-export function getClientDocumentValidationMessage(
-	typeValue: string,
-	value: string,
-) {
-	const document = normalizeClientDocument(value);
+export interface ClientDocumentValidationInput {
+	document: string;
+	type: string;
+}
 
-	if (!document) {
-		return "Documento é obrigatório";
+export function validateClientDocumentBusinessRules({
+	document,
+	type,
+}: ClientDocumentValidationInput): ValidationIssue[] {
+	const issues: ValidationIssue[] = [];
+	const normalizedDocument = normalizeClientDocument(document);
+
+	if (!normalizedDocument) {
+		issues.push({
+			path: ["document"],
+			message: "Documento é obrigatório",
+		});
+		return issues;
 	}
 
-	if (typeValue === CLIENT_TYPE_INDIVIDUAL_VALUE) {
-		return isValidCpf(document) ? null : "CPF inválido";
+	if (
+		type === CLIENT_TYPE_INDIVIDUAL_VALUE &&
+		!isValidCpf(normalizedDocument)
+	) {
+		issues.push({
+			path: ["document"],
+			message: "CPF inválido",
+		});
 	}
 
-	if (typeValue === CLIENT_TYPE_COMPANY_VALUE) {
-		return isValidCnpj(document) ? null : "CNPJ inválido";
+	if (type === CLIENT_TYPE_COMPANY_VALUE && !isValidCnpj(normalizedDocument)) {
+		issues.push({
+			path: ["document"],
+			message: "CNPJ inválido",
+		});
 	}
 
-	return "Tipo de cliente inválido";
+	if (
+		type !== CLIENT_TYPE_INDIVIDUAL_VALUE &&
+		type !== CLIENT_TYPE_COMPANY_VALUE
+	) {
+		issues.push({
+			path: ["type"],
+			message: "Tipo de cliente inválido",
+		});
+	}
+
+	return issues;
 }
