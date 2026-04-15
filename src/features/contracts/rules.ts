@@ -259,7 +259,9 @@ export function validateContractWriteRules(
 		issues.push(assignmentsRequiredIssue);
 	}
 
-	const revenuesRequiredIssue = getContractRevenuesRequiredIssue(input.revenues);
+	const revenuesRequiredIssue = getContractRevenuesRequiredIssue(
+		input.revenues,
+	);
 	if (revenuesRequiredIssue) {
 		issues.push(revenuesRequiredIssue);
 	}

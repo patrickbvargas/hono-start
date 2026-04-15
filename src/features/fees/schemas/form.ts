@@ -1,5 +1,6 @@
 import * as z from "zod";
 import { entityIdSchema } from "@/shared/schemas/entity";
+import { validateFeeWriteRules } from "../rules";
 
 const feeBaseInputSchema = z.object({
 	contractId: z.string().trim().min(1, "Contrato é obrigatório"),
@@ -14,15 +15,32 @@ const feeBaseInputSchema = z.object({
 	isActive: z.boolean(),
 });
 
-export const feeCreateInputSchema = feeBaseInputSchema;
+const feeBusinessRulesRefinement = (
+	data: FeeBaseInput,
+	ctx: z.RefinementCtx,
+) => {
+	const issues = validateFeeWriteRules(data);
 
-export const feeUpdateInputSchema = entityIdSchema.safeExtend(
-	feeBaseInputSchema.shape,
+	for (const issue of issues) {
+		ctx.addIssue({
+			code: "custom",
+			message: issue.message,
+			path: issue.path,
+		});
+	}
+};
+
+export const feeCreateInputSchema = feeBaseInputSchema.superRefine(
+	feeBusinessRulesRefinement,
 );
+
+export const feeUpdateInputSchema = entityIdSchema
+	.safeExtend(feeBaseInputSchema.shape)
+	.superRefine(feeBusinessRulesRefinement);
 
 export const feeIdInputSchema = entityIdSchema;
 
-export type FeeBaseInput = z.infer<typeof feeBaseInputSchema>;
-export type FeeCreateInput = z.infer<typeof feeCreateInputSchema>;
-export type FeeUpdateInput = z.infer<typeof feeUpdateInputSchema>;
+export type FeeBaseInput = z.output<typeof feeBaseInputSchema>;
+export type FeeCreateInput = z.output<typeof feeCreateInputSchema>;
+export type FeeUpdateInput = z.output<typeof feeUpdateInputSchema>;
 export type FeeIdInput = z.infer<typeof feeIdInputSchema>;

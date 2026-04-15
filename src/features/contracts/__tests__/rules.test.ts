@@ -1,4 +1,6 @@
 import { describe, expect, it } from "vitest";
+import { Prisma } from "@/generated/prisma/client";
+import type { ResolvedContractAssignment } from "../api/lookups";
 import {
 	ASSIGNMENT_TYPE_ADMIN_ASSISTANT_VALUE,
 	ASSIGNMENT_TYPE_RECOMMENDED_VALUE,
@@ -68,7 +70,7 @@ function createResolvedAssignment(options: {
 	isActive?: boolean;
 	referralPercentage?: number;
 	remunerationPercentage?: number;
-}) {
+}): ResolvedContractAssignment {
 	return {
 		id: 1,
 		employeeId: options.employeeId ?? "1",
@@ -85,18 +87,18 @@ function createResolvedAssignment(options: {
 				label: "Tipo",
 				value: options.employeeTypeValue ?? EMPLOYEE_TYPE_LAWYER_VALUE,
 				isActive: true,
-				createdAt: new Date(),
-				updatedAt: new Date(),
-				deletedAt: null,
 			},
-			referralPercentage: options.referralPercentage ?? 0.1,
-			remunerationPercentage: options.remunerationPercentage ?? 0.5,
+			referralPercentage: new Prisma.Decimal(options.referralPercentage ?? 0.1),
+			remunerationPercentage: new Prisma.Decimal(
+				options.remunerationPercentage ?? 0.5,
+			),
 			fullName: "Maria Silva",
 			email: "maria@example.com",
 			oabNumber: "RS123456",
-			role: "USER",
 			firmId: 1,
+			roleId: 1,
 			typeId: 1,
+			avatarUrl: null,
 			isActive: true,
 			createdAt: new Date(),
 			updatedAt: new Date(),

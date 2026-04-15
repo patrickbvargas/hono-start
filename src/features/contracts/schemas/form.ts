@@ -62,9 +62,9 @@ export const contractCreateInputSchema = contractBaseInputSchema.superRefine(
 	contractBusinessRulesRefinement,
 );
 
-export const contractUpdateInputSchema = entityIdSchema.safeExtend(
-	contractBaseInputSchema.shape,
-).superRefine(contractBusinessRulesRefinement);
+export const contractUpdateInputSchema = entityIdSchema
+	.safeExtend(contractBaseInputSchema.shape)
+	.superRefine(contractBusinessRulesRefinement);
 
 export const contractIdInputSchema = entityIdSchema;
 

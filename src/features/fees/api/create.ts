@@ -6,15 +6,13 @@ import { prisma } from "@/shared/lib/prisma";
 import { assertCan, getServerLoggedUserSession } from "@/shared/session";
 import type { MutationReturnType } from "@/shared/types/api";
 import { FEE_ERRORS } from "../constants/errors";
+import {
+	validateFeeParentConsistency,
+	validateFeeShouldGenerateRemunerations,
+	validateUniqueActiveInstallment,
+} from "../rules";
 import { feeCreateInputSchema } from "../schemas/form";
 import { normalizeFeeReference } from "../utils/normalization";
-import {
-	assertFeeAmountPositive,
-	assertFeeInstallmentNumber,
-	assertFeeParentConsistency,
-	assertUniqueActiveInstallment,
-	shouldGenerateFeeRemunerations,
-} from "../utils/validation";
 import { syncContractStatusFromFees, syncFeeRemunerations } from "./write";
 
 const createFee = createServerFn({ method: "POST" })
@@ -86,7 +84,7 @@ const createFee = createServerFn({ method: "POST" })
 				throw new Error(FEE_ERRORS.FEE_SELECT_REVENUE);
 			}
 
-			assertFeeParentConsistency({
+			validateFeeParentConsistency({
 				contractId,
 				revenueContractId: revenue.contractId,
 			});
@@ -100,9 +98,7 @@ const createFee = createServerFn({ method: "POST" })
 				),
 			});
 
-			assertFeeAmountPositive(data.amount);
-			assertFeeInstallmentNumber(data.installmentNumber);
-			assertUniqueActiveInstallment({
+			validateUniqueActiveInstallment({
 				fees: revenue.fees,
 				installmentNumber: data.installmentNumber,
 			});
@@ -124,7 +120,9 @@ const createFee = createServerFn({ method: "POST" })
 					},
 				});
 
-				if (shouldGenerateFeeRemunerations(data.generatesRemuneration)) {
+				if (
+					validateFeeShouldGenerateRemunerations(data.generatesRemuneration)
+				) {
 					await syncFeeRemunerations({
 						tx,
 						feeId: fee.id,
