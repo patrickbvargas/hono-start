@@ -6,10 +6,6 @@ import { getServerLoggedUserSession } from "@/shared/session";
 import type { MutationReturnType } from "@/shared/types/api";
 import { REMUNERATION_ERRORS } from "../constants/errors";
 import { remunerationUpdateInputSchema } from "../schemas/form";
-import {
-	assertRemunerationAmountPositive,
-	assertRemunerationEffectivePercentage,
-} from "../utils/validation";
 import { assertCanAccessRemunerationById } from "./resource";
 
 const updateRemuneration = createServerFn({ method: "POST" })
@@ -30,9 +26,6 @@ const updateRemuneration = createServerFn({ method: "POST" })
 			if (remuneration.parentFeeIsSoftDeleted) {
 				throw new Error(REMUNERATION_ERRORS.REMUNERATION_EDIT_PARENT_DELETED);
 			}
-
-			assertRemunerationAmountPositive(data.amount);
-			assertRemunerationEffectivePercentage(data.effectivePercentage);
 
 			await prisma.remuneration.update({
 				where: { id: data.id },

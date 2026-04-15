@@ -1,18 +1,31 @@
 import * as z from "zod";
 import { entityIdSchema } from "@/shared/schemas/entity";
+import { validateRemunerationWriteRules } from "../rules";
 import { remunerationSearchSchema } from "./search";
 
 const remunerationBaseInputSchema = z.object({
-	amount: z.number().positive("Valor deve ser maior que zero"),
-	effectivePercentage: z
-		.number()
-		.min(0, "Percentual não pode ser negativo")
-		.max(1, "Percentual deve ser menor ou igual a 100%"),
+	amount: z.number(),
+	effectivePercentage: z.number(),
 });
 
-export const remunerationUpdateInputSchema = entityIdSchema.safeExtend(
-	remunerationBaseInputSchema.shape,
-);
+const remunerationBusinessRulesRefinement = (
+	data: RemunerationUpdateInput,
+	ctx: z.RefinementCtx,
+) => {
+	const issues = validateRemunerationWriteRules(data);
+
+	for (const issue of issues) {
+		ctx.addIssue({
+			code: "custom",
+			message: issue.message,
+			path: issue.path,
+		});
+	}
+};
+
+export const remunerationUpdateInputSchema = entityIdSchema
+	.safeExtend(remunerationBaseInputSchema.shape)
+	.superRefine(remunerationBusinessRulesRefinement);
 
 export const remunerationIdInputSchema = entityIdSchema;
 
