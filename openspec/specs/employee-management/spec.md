@@ -277,16 +277,19 @@ The employee-management capability SHALL use the shared session authorization he
 ### Requirement: Employee writes preserve the shared form-validation boundary
 The system SHALL apply the shared form-validation boundary to employee create and update writes so schema validation, normalization, pure business validation, and lookup-backed server checks remain consistently separated.
 
-#### Scenario: Employee schema uses only pure validation helpers
+#### Scenario: Pure employee business validation is discoverable from one file
+- **WHEN** a contributor needs to change a pure employee validation rule
+- **THEN** the authoritative implementation SHALL be discoverable in `src/features/employees/rules.ts`
+- **AND** exported rule entrypoints SHALL use a `validate...` prefix
+
+#### Scenario: Employee schema uses the canonical rules file
 - **WHEN** the employee create or update schema validates submitted fields
-- **THEN** any schema-level refinement uses only pure helpers that do not require Prisma or persisted employee state
+- **THEN** any schema-level refinement for pure business rules SHALL reuse `src/features/employees/rules.ts`
+- **AND** a successful schema parse SHALL mean the submitted payload is valid for the feature's pure employee rules
+- **AND** the schema SHALL NOT become the authoritative home of the underlying rule logic
 
-#### Scenario: Employee type and role selections are resolved at the server boundary
-- **WHEN** an employee create or update mutation receives submitted employee type and user role lookup values
-- **THEN** the server resolves those lookup values before persistence
-- **AND** lookup activity checks that depend on persisted state execute at the server boundary rather than inside the form schema
+#### Scenario: Employee validation tests are colocated with the feature
+- **WHEN** the employee validation boundary is implemented or updated
+- **THEN** focused tests SHALL live in feature-local `__tests__` folders
+- **AND** those tests SHALL cover the schema parse boundary plus the canonical employee rules
 
-#### Scenario: Employee write behavior remains user-friendly after boundary separation
-- **WHEN** the server rejects an unknown, inactive, or otherwise disallowed lookup-backed employee write
-- **THEN** the mutation returns a user-friendly Portuguese error
-- **AND** the separation of responsibilities does not change the documented employee-management behavior

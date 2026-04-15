@@ -3,7 +3,7 @@ import { entityIdSchema } from "@/shared/schemas/entity";
 import {
 	type EmployeeValidationInput,
 	validateEmployeeBusinessRules,
-} from "../utils/validation";
+} from "../rules";
 
 const employeeBaseInputSchema = z.object({
 	fullName: z.string().trim().min(1, "Nome é obrigatório"),
