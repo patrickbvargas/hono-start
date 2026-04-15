@@ -1,14 +1,8 @@
 import * as z from "zod";
-
-const activeFilterSchema = z
-	.enum(["all", "false", "true"])
-	.catch("all")
-	.default("all");
-
-const deletedVisibilitySchema = z
-	.enum(["active", "all", "deleted"])
-	.catch("active")
-	.default("active");
+import {
+	activeFilterSchema,
+	deletedFilterSchema,
+} from "@/shared/schemas/filter";
 
 export const remunerationFilterSchema = z.object({
 	employeeId: z.string().catch("").default(""),
@@ -16,7 +10,7 @@ export const remunerationFilterSchema = z.object({
 	dateFrom: z.string().catch("").default(""),
 	dateTo: z.string().catch("").default(""),
 	active: activeFilterSchema,
-	status: deletedVisibilitySchema,
+	status: deletedFilterSchema,
 });
 
 export type RemunerationFilter = z.infer<typeof remunerationFilterSchema>;
