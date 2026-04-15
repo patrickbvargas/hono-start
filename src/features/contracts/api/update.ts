@@ -17,9 +17,9 @@ import {
 	CONTRACT_STATUS_COMPLETED_VALUE,
 } from "../constants";
 import { CONTRACT_ERRORS } from "../constants/errors";
+import { validateResolvedContractWriteRules } from "../rules";
 import { contractUpdateInputSchema } from "../schemas/form";
 import { normalizeOptionalText } from "../utils/normalization";
-import { assertContractWritePayload } from "../utils/validation";
 import {
 	type ResolvedContractAssignment,
 	type ResolvedContractRevenue,
@@ -222,7 +222,10 @@ const updateContract = createServerFn({ method: "POST" })
 				data.assignments,
 			);
 			const resolvedRevenues = await resolveRevenueTypes(prisma, data.revenues);
-			assertContractWritePayload(data, resolvedAssignments);
+			const issues = validateResolvedContractWriteRules(resolvedAssignments);
+			if (issues[0]) {
+				throw new Error(issues[0].message);
+			}
 
 			await prisma.$transaction(async (tx) => {
 				await tx.contract.update({

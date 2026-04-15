@@ -14,9 +14,9 @@ import {
 import type { MutationReturnType } from "@/shared/types/api";
 import { CONTRACT_STATUS_ACTIVE_VALUE } from "../constants";
 import { CONTRACT_ERRORS } from "../constants/errors";
+import { validateResolvedContractWriteRules } from "../rules";
 import { contractCreateInputSchema } from "../schemas/form";
 import { normalizeOptionalText } from "../utils/normalization";
-import { assertContractWritePayload } from "../utils/validation";
 import {
 	resolveContractAssignments,
 	resolveContractLookupSelections,
@@ -63,7 +63,10 @@ const createContract = createServerFn({ method: "POST" })
 				data.assignments,
 			);
 			const resolvedRevenues = await resolveRevenueTypes(prisma, data.revenues);
-			assertContractWritePayload(data, resolvedAssignments);
+			const issues = validateResolvedContractWriteRules(resolvedAssignments);
+			if (issues[0]) {
+				throw new Error(issues[0].message);
+			}
 
 			await prisma.$transaction(async (tx) => {
 				const contract = await tx.contract.create({

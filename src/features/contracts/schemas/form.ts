@@ -1,5 +1,6 @@
 import * as z from "zod";
 import { entityIdSchema } from "@/shared/schemas/entity";
+import { validateContractWriteRules } from "../rules";
 
 export const contractAssignmentInputSchema = z.object({
 	id: z.number().optional(),
@@ -40,15 +41,33 @@ const contractBaseInputSchema = z.object({
 	revenues: z.array(contractRevenueInputSchema),
 });
 
-export const contractCreateInputSchema = contractBaseInputSchema;
+type ContractBaseInput = z.output<typeof contractBaseInputSchema>;
+
+const contractBusinessRulesRefinement = (
+	data: ContractBaseInput,
+	ctx: z.RefinementCtx,
+) => {
+	const issues = validateContractWriteRules(data);
+
+	for (const issue of issues) {
+		ctx.addIssue({
+			code: "custom",
+			path: issue.path,
+			message: issue.message,
+		});
+	}
+};
+
+export const contractCreateInputSchema = contractBaseInputSchema.superRefine(
+	contractBusinessRulesRefinement,
+);
 
 export const contractUpdateInputSchema = entityIdSchema.safeExtend(
 	contractBaseInputSchema.shape,
-);
+).superRefine(contractBusinessRulesRefinement);
 
 export const contractIdInputSchema = entityIdSchema;
 
-export type ContractBaseInput = z.infer<typeof contractBaseInputSchema>;
 export type ContractAssignmentInput = z.infer<
 	typeof contractAssignmentInputSchema
 >;
