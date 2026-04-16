@@ -11,12 +11,7 @@ import {
 } from "@/shared/session";
 import type { MutationReturnType } from "@/shared/types/api";
 import { CLIENT_ERRORS } from "../constants/errors";
-import {
-	createClientRecord,
-	deleteClientRecord,
-	restoreClientRecord,
-	updateClientRecord,
-} from "../data/mutations";
+import { create, remove, restore, update } from "../data/mutations";
 import {
 	clientCreateInputSchema,
 	clientIdInputSchema,
@@ -31,7 +26,7 @@ const createClient = createServerFn({ method: "POST" })
 			assertCan(session, "client.create");
 			const { firmId } = getServerScope("client");
 
-			return await createClientRecord({ firmId, input: data });
+			return await create({ firmId, input: data });
 		} catch (error) {
 			console.error("[createClient]", error);
 			if (isPrismaUniqueConstraintError(error, ["firmId", "document"]))
@@ -51,7 +46,7 @@ const updateClient = createServerFn({ method: "POST" })
 			assertCan(session, "client.update");
 			const { firmId } = getServerScope("client");
 
-			return await updateClientRecord({ firmId, input: data });
+			return await update({ firmId, input: data });
 		} catch (error) {
 			console.error("[updateClient]", error);
 			if (isPrismaUniqueConstraintError(error, ["firmId", "document"]))
@@ -71,7 +66,7 @@ const deleteClient = createServerFn({ method: "POST" })
 			assertCan(session, "client.delete");
 			const { firmId } = getServerScope("client");
 
-			return await deleteClientRecord({ firmId, id: data.id });
+			return await remove({ firmId, id: data.id });
 		} catch (error) {
 			console.error("[deleteClient]", error);
 			if (hasExactErrorMessage(error, CLIENT_ERRORS)) throw error;
@@ -88,7 +83,7 @@ const restoreClient = createServerFn({ method: "POST" })
 			assertCan(session, "client.restore");
 			const { firmId } = getServerScope("client");
 
-			return await restoreClientRecord({ firmId, id: data.id });
+			return await restore({ firmId, id: data.id });
 		} catch (error) {
 			console.error("[restoreClient]", error);
 			if (hasExactErrorMessage(error, CLIENT_ERRORS)) throw error;

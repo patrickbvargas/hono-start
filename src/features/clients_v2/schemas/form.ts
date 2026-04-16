@@ -1,6 +1,5 @@
 import * as z from "zod";
 import { entityIdSchema } from "@/shared/schemas/entity";
-import { validateClientDocumentRules } from "../rules/document";
 
 const ONLY_DIGITS_REGEX = /\D/g;
 
@@ -17,28 +16,11 @@ const clientBaseInputSchema = z.object({
 	isActive: z.boolean(),
 });
 
-const clientBusinessRulesRefinement = (
-	data: ClientBaseInput,
-	ctx: z.RefinementCtx,
-) => {
-	const issues = validateClientDocumentRules(data);
+export const clientCreateInputSchema = clientBaseInputSchema;
 
-	for (const issue of issues) {
-		ctx.addIssue({
-			code: "custom",
-			message: issue.message,
-			path: issue.path,
-		});
-	}
-};
-
-export const clientCreateInputSchema = clientBaseInputSchema.superRefine(
-	clientBusinessRulesRefinement,
+export const clientUpdateInputSchema = entityIdSchema.safeExtend(
+	clientBaseInputSchema.shape,
 );
-
-export const clientUpdateInputSchema = entityIdSchema
-	.safeExtend(clientBaseInputSchema.shape)
-	.superRefine(clientBusinessRulesRefinement);
 
 export const clientIdInputSchema = entityIdSchema;
 

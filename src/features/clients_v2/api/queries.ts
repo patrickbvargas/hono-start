@@ -11,12 +11,8 @@ import type {
 } from "@/shared/types/api";
 import { CLIENT_DATA_CACHE_KEY } from "../constants/cache";
 import { CLIENT_ERRORS } from "../constants/errors";
-import {
-	findClientById,
-	findClientsPage,
-	findClientTypes,
-	findSelectableClients,
-} from "../data/queries";
+import { findClientTypes } from "../data/lookup";
+import { findById, findPage, findSelectableClients } from "../data/queries";
 import { clientIdInputSchema } from "../schemas/form";
 import type { Client } from "../schemas/model";
 import { type ClientSearch, clientSearchSchema } from "../schemas/search";
@@ -28,7 +24,7 @@ const getClients = createServerFn({ method: "GET" })
 			getServerLoggedUserSession();
 			const { firmId } = getServerScope("client");
 
-			return await findClientsPage({ firmId, search: data });
+			return await findPage({ firmId, search: data });
 		} catch (error) {
 			console.error("[getClients]", error);
 			throw new Error(CLIENT_ERRORS.CLIENT_GET_FAILED);
@@ -42,7 +38,7 @@ const getClientById = createServerFn({ method: "GET" })
 			getServerLoggedUserSession();
 			const { firmId } = getServerScope("client");
 
-			return await findClientById({ firmId, id: data.id });
+			return await findById({ firmId, id: data.id });
 		} catch (error) {
 			console.error("[getClientById]", error);
 			if (hasExactErrorMessage(error, CLIENT_ERRORS)) throw error;

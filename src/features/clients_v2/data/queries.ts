@@ -17,6 +17,7 @@ import type { ClientFilter } from "../schemas/filter";
 import { type Client, clientSchema } from "../schemas/model";
 import type { ClientSearch } from "../schemas/search";
 import { formatClientDocument } from "../utils/formatting";
+import { resolveClientTypeIdsByValues } from "./lookup";
 
 interface BuildClientWhereParams {
 	firmId: EntityId;
@@ -24,6 +25,7 @@ interface BuildClientWhereParams {
 	typeIds: EntityId[];
 }
 
+// TODO: refatorar
 export function buildClientWhere({
 	firmId,
 	filter,
@@ -54,7 +56,6 @@ export function buildClientWhere({
 	};
 }
 
-// TODO: refatorar
 async function mapClients(
 	clients: Array<{
 		id: number;
@@ -93,7 +94,7 @@ async function mapClients(
 	);
 }
 
-export async function findClientsPage({
+export async function findPage({
 	firmId,
 	search,
 }: {
@@ -135,7 +136,7 @@ export async function findClientsPage({
 	};
 }
 
-export async function findClientById({
+export async function findById({
 	firmId,
 	id,
 }: {
@@ -160,12 +161,22 @@ export async function findClientById({
 	return mappedClient;
 }
 
-export async function findClientTypes(): Promise<QueryManyReturnType<Option>> {
-	const types = await prisma.clientType.findMany({
-		orderBy: { label: "asc" },
+export async function requireById({
+	firmId,
+	id,
+}: {
+	firmId: EntityId;
+	id: EntityId;
+}) {
+	const client = await prisma.client.findFirst({
+		where: { firmId: firmId, id: id },
 	});
 
-	return optionSchema.array().parse(types);
+	if (!client) {
+		throw new Error(CLIENT_ERRORS.CLIENT_NOT_FOUND);
+	}
+
+	return client;
 }
 
 export async function findSelectableClients({
@@ -183,31 +194,14 @@ export async function findSelectableClients({
 		},
 	});
 
-	return clients.map((client) => ({
-		id: client.id,
-		label: `${client.fullName} • ${formatClientDocument(client.document)}`,
-		value: String(client.id),
-		isDisabled: false,
-	}));
-}
-
-export async function findClientTypeByValue(value: string) {
-	return prisma.clientType.findUnique({
-		where: { value },
-	});
-}
-
-export async function resolveClientTypeIdsByValues(values: string[]) {
-	if (values.length === 0) {
-		return [];
-	}
-
-	const resolved = await prisma.clientType.findMany({
-		where: { value: { in: values } },
-		select: { id: true },
-	});
-
-	return resolved.map((item) => item.id);
+	return optionSchema.array().parse(
+		clients.map((client) => ({
+			id: client.id,
+			label: `${client.fullName} • ${formatClientDocument(client.document)}`,
+			value: String(client.id),
+			isDisabled: false,
+		})),
+	);
 }
 
 // TODO: refatorar

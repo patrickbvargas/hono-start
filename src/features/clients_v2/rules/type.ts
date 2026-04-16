@@ -1,7 +1,7 @@
 import type { ClientType } from "@/generated/prisma/client";
 import { CLIENT_ERRORS } from "../constants/errors";
 
-export function assertClientTypeExists(
+export function assertTypeExists(
 	type: ClientType | null,
 ): asserts type is ClientType {
 	if (!type) {
@@ -9,16 +9,16 @@ export function assertClientTypeExists(
 	}
 }
 
-export function assertClientTypeCanBeSelected(
+export function assertTypeCanBeSelected(
 	type: ClientType,
 	currentTypeId?: number,
 ) {
-	if (!type.isActive && type.id !== currentTypeId) {
+	if (type && !type.isActive && type.id !== currentTypeId) {
 		throw new Error(CLIENT_ERRORS.CLIENT_TYPE_INACTIVE);
 	}
 }
 
-export function assertClientTypeImmutableOnUpdate(
+export function assertTypeImmutableOnUpdate(
 	type: ClientType,
 	currentTypeId?: number,
 ) {

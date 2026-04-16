@@ -1,4 +1,3 @@
-import type { ValidationIssue } from "@/shared/types/validation";
 import { CLIENT_ERRORS } from "../constants/errors";
 import {
 	CLIENT_TYPE_COMPANY_VALUE,
@@ -11,7 +10,7 @@ function isRepeatedDigits(value: string) {
 	return /^(\d)\1+$/.test(value);
 }
 
-function isValidCpf(cpf: string) {
+function isValidCPF(cpf: string) {
 	cpf = cpf.replace(ONLY_DIGITS_REGEX, "");
 
 	if (cpf.length !== 11 || isRepeatedDigits(cpf)) {
@@ -40,7 +39,7 @@ function isValidCpf(cpf: string) {
 	return remainder === Number(cpf[10]);
 }
 
-function isValidCnpj(cnpj: string) {
+function isValidCNPJ(cnpj: string) {
 	cnpj = cnpj.replace(ONLY_DIGITS_REGEX, "");
 
 	if (cnpj.length !== 14 || isRepeatedDigits(cnpj)) {
@@ -76,49 +75,12 @@ function isValidCnpj(cnpj: string) {
 	return secondDigit === Number(cnpj[13]);
 }
 
-export interface ClientDocumentValidationInput {
-	document: string;
-	type: string;
-}
-
-export function validateClientDocumentRules({
-	document,
-	type,
-}: ClientDocumentValidationInput): ValidationIssue[] {
-	const issues: ValidationIssue[] = [];
-	document = document.replace(ONLY_DIGITS_REGEX, "");
-
-	if (!document) {
-		issues.push({
-			path: ["document"],
-			message: CLIENT_ERRORS.CLIENT_DOCUMENT_REQUIRED,
-		});
-		return issues;
+export function assertDocumentMatchesType(type: string, document: string) {
+	if (type === CLIENT_TYPE_INDIVIDUAL_VALUE && !isValidCPF(document)) {
+		throw new Error(CLIENT_ERRORS.CLIENT_DOCUMENT_CPF_INVALID);
 	}
 
-	if (type === CLIENT_TYPE_INDIVIDUAL_VALUE && !isValidCpf(document)) {
-		issues.push({
-			path: ["document"],
-			message: CLIENT_ERRORS.CLIENT_DOCUMENT_CPF_INVALID,
-		});
+	if (type === CLIENT_TYPE_COMPANY_VALUE && !isValidCNPJ(document)) {
+		throw new Error(CLIENT_ERRORS.CLIENT_DOCUMENT_CNPJ_INVALID);
 	}
-
-	if (type === CLIENT_TYPE_COMPANY_VALUE && !isValidCnpj(document)) {
-		issues.push({
-			path: ["document"],
-			message: CLIENT_ERRORS.CLIENT_DOCUMENT_CNPJ_INVALID,
-		});
-	}
-
-	if (
-		type !== CLIENT_TYPE_INDIVIDUAL_VALUE &&
-		type !== CLIENT_TYPE_COMPANY_VALUE
-	) {
-		issues.push({
-			path: ["type"],
-			message: CLIENT_ERRORS.CLIENT_TYPE_INVALID,
-		});
-	}
-
-	return issues;
 }
