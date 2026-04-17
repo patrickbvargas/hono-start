@@ -35,7 +35,7 @@ export function useClientForm({ id, onSuccess }: UseClientFormOptions) {
 	const isEditing = !!id;
 
 	const { data } = useQuery({
-		...getClientByIdQueryOptions(id as EntityId),
+		...getClientByIdQueryOptions(id ?? 0),
 		enabled: isEditing,
 	});
 

@@ -10,13 +10,13 @@ interface ClientDeleteProps {
 }
 
 export const ClientDelete = ({ id, state, onSuccess }: ClientDeleteProps) => {
-	const { handleConfirm, isPending } = useClientDelete({ id, onSuccess });
+	const { handleConfirm, isPending } = useClientDelete({ onSuccess });
 
 	return (
 		<ConfirmDialog
 			title="Excluir cliente"
 			description="Tem certeza que deseja excluir?"
-			onConfirm={handleConfirm}
+			onConfirm={() => handleConfirm(id)}
 			confirmButtonLabel="Excluir"
 			variant="danger"
 			isPending={isPending}

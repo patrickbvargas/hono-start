@@ -9,15 +9,14 @@ import { restoreClientMutationOptions } from "../api/mutations";
 import { CLIENT_DATA_CACHE_KEY } from "../constants/cache";
 
 interface UseClientRestoreOptions {
-	id: EntityId;
 	onSuccess?: () => void;
 }
 
-export function useClientRestore({ id, onSuccess }: UseClientRestoreOptions) {
+export function useClientRestore({ onSuccess }: UseClientRestoreOptions) {
 	const queryClient = useQueryClient();
 	const mutation = useMutation(restoreClientMutationOptions());
 
-	const handleConfirm = async () => {
+	const handleConfirm = async (id: EntityId) => {
 		try {
 			await mutation.mutateAsync({ data: { id } });
 			toast.success("Cliente restaurado com sucesso.");

@@ -10,10 +10,15 @@ It should remain valid even if the domain layer is replaced by another product d
 src/
   features/<feature>/
     api/
+      queries.ts
+      mutations.ts
     components/
     constants/
+    data/
+      queries.ts
+      mutations.ts
     hooks/
-    rules.ts
+    rules/
     schemas/
     utils/
     index.ts
@@ -33,18 +38,23 @@ src/
 
 The canonical slice shape for feature work is defined by this document. New feature slices must follow it unless a documented exception exists.
 
+`src/features/clients_v2` is the named reference slice for this repository. Contributors should compare new slices and refactors against that slice before introducing structural deviations.
+
 ## Canonical Feature Slice Contract
 
 Each feature slice is expected to contain:
 
-- `api/`: feature-local server operations, query or mutation option factories, and server-only lookup resolution used by feature writes
+- `api/queries.ts`: route-facing read wrappers and query option factories
+- `api/mutations.ts`: route-facing write wrappers and mutation option factories
 - `components/`: feature-local UI pieces
 - `constants/`: cache keys and feature-local constants
+- `data/queries.ts`: Prisma-backed reads, option loading, search translation, deterministic ordering, and read-model mapping
+- `data/mutations.ts`: Prisma-backed writes and persistence-aware checks that depend on current stored state
 - `hooks/`: orchestration hooks such as `use-form`, `use-filter`, `use-delete`, `use-restore`, and `use-options`
-- `rules.ts`: the canonical home for feature-local pure business validation that does not require Prisma or persisted resource lookups
+- `rules/`: the canonical home for feature-local pure business assertions that do not require Prisma or persisted resource lookups
 - `schemas/`: `model`, `form`, `filter`, `search`, and `sort` contracts, including Zod request schemas and database-free schema refinements
 - `utils/`: feature-local pure helpers such as defaults, normalization helpers, and formatting helpers
-- `index.ts`: public barrel
+- `index.ts`: minimal public barrel for route-facing consumers
 
 ## Architectural Rules
 
@@ -52,17 +62,19 @@ Each feature slice is expected to contain:
 - External consumers must import from a feature's public `index.ts` barrel only.
 - Routes own composition, route-level search parsing, prefetching, and authorization wiring.
 - Routes must not own feature business logic, Prisma query construction, or mutation orchestration.
-- Pure feature business validation belongs in `rules.ts`, not in route files or generic `utils/`.
+- Route-facing server wrappers belong in `api/`; Prisma-backed reads and writes belong in `data/`.
+- Pure feature business assertions belong in `rules/`, not in route files or generic `utils/`.
+- Read models are feature-owned UI contracts and must be mapped from persistence rows before `schemas/model.ts` parsing.
 - `shared/` is reserved for generic infrastructure, primitives, and reusable building blocks that are not tied to one domain's business rules.
 
 ## Public Barrel Rule
 
 Feature barrels expose only the public surface required by routes or other top-level consumers:
 
-- query option factories
+- route-consumed query option factories
 - top-level feature UI components
 - exported search schema
-- exported feature model types
+- route-consumed feature model types when needed
 
 Internal helpers, implementation-only schemas, and server handlers must not leak through the barrel by default.
 
@@ -82,6 +94,6 @@ Internal helpers, implementation-only schemas, and server handlers must not leak
 ## Architectural Intent
 
 - The system is organized around feature-local ownership, not horizontal file-type sprawl.
-- Each feature must use the same slice anatomy unless a documented exception exists.
+- Each feature should converge on the `clients_v2` slice anatomy unless a documented exception exists.
 - Route files must read like orchestration code, not like a second implementation layer.
 - Business domains may change between repositories; this slice pattern should not.

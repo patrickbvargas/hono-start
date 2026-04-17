@@ -9,15 +9,14 @@ import { deleteClientMutationOptions } from "../api/mutations";
 import { CLIENT_DATA_CACHE_KEY } from "../constants/cache";
 
 interface UseClientDeleteOptions {
-	id: EntityId;
 	onSuccess?: () => void;
 }
 
-export function useClientDelete({ id, onSuccess }: UseClientDeleteOptions) {
+export function useClientDelete({ onSuccess }: UseClientDeleteOptions) {
 	const queryClient = useQueryClient();
 	const mutation = useMutation(deleteClientMutationOptions());
 
-	const handleConfirm = async () => {
+	const handleConfirm = async (id: EntityId) => {
 		try {
 			await mutation.mutateAsync({ data: { id } });
 			toast.success("Cliente excluído com sucesso.");

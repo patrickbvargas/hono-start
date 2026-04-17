@@ -10,13 +10,13 @@ interface ClientRestoreProps {
 }
 
 export const ClientRestore = ({ id, state, onSuccess }: ClientRestoreProps) => {
-	const { handleConfirm, isPending } = useClientRestore({ id, onSuccess });
+	const { handleConfirm, isPending } = useClientRestore({ onSuccess });
 
 	return (
 		<ConfirmDialog
 			title="Restaurar cliente"
 			description="Tem certeza que deseja restaurar?"
-			onConfirm={handleConfirm}
+			onConfirm={() => handleConfirm(id)}
 			confirmButtonLabel="Restaurar"
 			isPending={isPending}
 			state={state}

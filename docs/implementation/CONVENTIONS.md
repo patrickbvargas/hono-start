@@ -11,7 +11,7 @@
 - React components: `PascalCase`
 - Hooks: `camelCase` with `use` prefix
 - Constants: `UPPER_SNAKE_CASE`
-- Exported business-rule entrypoints: `camelCase` with `validate` prefix
+- Exported pure business-rule assertions in `rules/`: `camelCase` with `assert` prefix
 - Zod schemas: `camelCase` ending in `Schema`
 - Exported types inferred from schemas must follow the schema name without the `Schema` suffix
 
@@ -20,6 +20,7 @@
 - Named exports only, except framework-required defaults.
 - Public feature access goes through the feature barrel only.
 - Server function handlers stay private; exported API surface is the options factory wrapping them.
+- Feature barrels stay minimal and route-facing; do not export `data/` modules, internal helpers, or implementation-only schemas.
 - Shared UI components are consumed through `@/shared/components/ui`.
 
 ## TypeScript Rules
@@ -37,15 +38,19 @@
 - Keep schema and inferred type definitions close together.
 - `schemas/form.ts` is the canonical home for request-shape validation and database-free schema refinements.
 - `schemas/form.ts` request and write schemas must use explicit `...InputSchema` names, and inferred types must use matching `...Input` names.
-- `schemas/model.ts` read-model schemas and inferred types keep concise domain names such as `contractSchema` and `Contract`.
+- `schemas/model.ts` read-model schemas and inferred types keep concise domain names such as `clientSummarySchema`, `ClientSummary`, `clientDetailSchema`, or `ClientDetail`.
+- `schemas/model.ts` represents UI-ready read contracts, not raw Prisma row shapes.
 
 ## Feature Boundary Rules
 
-- `rules.ts` is the canonical home for pure business validation helpers and assertions that do not require Prisma or persisted resource lookups.
-- Exported validators in `rules.ts` must use a `validate...` prefix.
+- `api/queries.ts` and `api/mutations.ts` are the canonical route-facing boundary for server functions and React Query option factories.
+- `data/queries.ts` and `data/mutations.ts` own Prisma-backed reads, writes, lookup resolution, and persistence-aware checks.
+- `rules/` is the canonical home for pure business assertions that do not require Prisma or persisted resource lookups.
+- Exported assertion entrypoints in `rules/` must use an `assert...` prefix.
 - `utils/normalization.ts` is reserved for pure input canonicalization helpers such as trimming, empty-to-null conversion, and mask removal.
 - `utils/` is reserved for generic helpers such as normalization, formatting, and default-value helpers.
-- Feature-local `api/` modules own Prisma-backed lookup resolution and persisted-state lookup checks used by create and update flows.
+- Feature read modules must map raw persistence rows into explicit read models before parsing with `schemas/model.ts`.
+- Lookup-backed read models should expose UI-ready labels and keep stable lookup `value` fields when edit defaults or later write flows need both.
 
 ## Cache And Mutation Rules
 
@@ -56,7 +61,7 @@
 ## Form Hook Rule
 
 - Shared form primitives are created through `useAppForm`.
-- Feature-level form hooks own create vs update branching, schema selection, mutation calls, toast feedback, and query refresh behavior.
+- Feature-level form hooks own create vs update branching, schema selection, parsed payload submission, toast feedback, edit-default hydration, and query refresh behavior.
 - Feature form hooks must keep the route and form component free of persistence orchestration details.
 
 ## Reusability Rule
