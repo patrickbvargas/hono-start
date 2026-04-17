@@ -11,18 +11,19 @@ import { DataTable } from "@/shared/components/data-table";
 import { EntityStatus } from "@/shared/components/entity-status";
 import { Pagination } from "@/shared/components/pagination";
 import { Button, Dropdown, Label } from "@/shared/components/ui";
+import type { EntityId } from "@/shared/schemas/entity";
 import type { QueryPaginatedReturnType } from "@/shared/types/api";
 import { CLIENT_ALLOWED_SORT_COLUMNS } from "../../constants/sorting";
-import type { Client } from "../../schemas/model";
-import { formatClientDocument } from "../../utils/formatting";
+import type { ClientSummary } from "../../schemas/model";
+import { formatClientDocument } from "../../utils/format";
 
-export interface ClientTableProps {
+interface ClientTableProps {
 	canManageLifecycle?: boolean;
-	data: QueryPaginatedReturnType<Client>;
-	onView?: (client: Client) => void;
-	onEdit?: (client: Client) => void;
-	onDelete?: (client: Client) => void;
-	onRestore?: (client: Client) => void;
+	data: QueryPaginatedReturnType<ClientSummary>;
+	onView?: (id: EntityId) => void;
+	onEdit?: (id: EntityId) => void;
+	onDelete?: (id: EntityId) => void;
+	onRestore?: (id: EntityId) => void;
 }
 
 export const ClientTable = ({
@@ -34,7 +35,7 @@ export const ClientTable = ({
 	onRestore,
 }: ClientTableProps) => {
 	const columns = React.useMemo(() => {
-		const c = createColumnHelper<Client>();
+		const c = createColumnHelper<ClientSummary>();
 
 		return [
 			c.accessor("fullName", {
@@ -82,7 +83,7 @@ export const ClientTable = ({
 								<Dropdown.Menu>
 									<Dropdown.Item
 										textValue="Visualizar"
-										onPress={() => onView?.(client)}
+										onPress={() => onView?.(client.id)}
 									>
 										<EyeIcon size={16} />
 										<Label>Visualizar</Label>
@@ -90,7 +91,7 @@ export const ClientTable = ({
 									{!client.isSoftDeleted && (
 										<Dropdown.Item
 											textValue="Editar"
-											onPress={() => onEdit?.(client)}
+											onPress={() => onEdit?.(client.id)}
 										>
 											<PenLineIcon size={16} />
 											<Label>Editar</Label>
@@ -99,7 +100,7 @@ export const ClientTable = ({
 									{canManageLifecycle && client.isSoftDeleted && (
 										<Dropdown.Item
 											textValue="Restaurar"
-											onPress={() => onRestore?.(client)}
+											onPress={() => onRestore?.(client.id)}
 										>
 											<Undo2Icon size={16} />
 											<Label>Restaurar</Label>
@@ -109,7 +110,7 @@ export const ClientTable = ({
 										<Dropdown.Item
 											textValue="Excluir"
 											variant="danger"
-											onPress={() => onDelete?.(client)}
+											onPress={() => onDelete?.(client.id)}
 										>
 											<TrashIcon size={16} />
 											<Label>Excluir</Label>

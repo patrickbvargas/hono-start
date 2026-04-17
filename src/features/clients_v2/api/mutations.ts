@@ -11,14 +11,19 @@ import {
 } from "@/shared/session";
 import type { MutationReturnType } from "@/shared/types/api";
 import { CLIENT_ERRORS } from "../constants/errors";
-import { create, remove, restore, update } from "../data/mutations";
+import {
+	createClient,
+	deleteClient,
+	restoreClient,
+	updateClient,
+} from "../data/mutations";
 import {
 	clientCreateInputSchema,
 	clientIdInputSchema,
 	clientUpdateInputSchema,
 } from "../schemas/form";
 
-const createClient = createServerFn({ method: "POST" })
+const createClientFn = createServerFn({ method: "POST" })
 	.inputValidator(clientCreateInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
@@ -26,19 +31,19 @@ const createClient = createServerFn({ method: "POST" })
 			assertCan(session, "client.create");
 			const { firmId } = getServerScope("client");
 
-			return await create({ firmId, input: data });
+			return await createClient({ firmId, input: data });
 		} catch (error) {
 			console.error("[createClient]", error);
 			if (isPrismaUniqueConstraintError(error, ["firmId", "document"]))
-				throw new Error(CLIENT_ERRORS.CLIENT_DOCUMENT_DUPLICATE);
+				throw new Error(CLIENT_ERRORS.DOCUMENT_DUPLICATE);
 
 			if (hasExactErrorMessage(error, CLIENT_ERRORS)) throw error;
 
-			throw new Error(CLIENT_ERRORS.CLIENT_CREATE_FAILED);
+			throw new Error(CLIENT_ERRORS.CREATE_FAILED);
 		}
 	});
 
-const updateClient = createServerFn({ method: "POST" })
+const updateClientFn = createServerFn({ method: "POST" })
 	.inputValidator(clientUpdateInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
@@ -46,19 +51,19 @@ const updateClient = createServerFn({ method: "POST" })
 			assertCan(session, "client.update");
 			const { firmId } = getServerScope("client");
 
-			return await update({ firmId, input: data });
+			return await updateClient({ firmId, input: data });
 		} catch (error) {
 			console.error("[updateClient]", error);
 			if (isPrismaUniqueConstraintError(error, ["firmId", "document"]))
-				throw new Error(CLIENT_ERRORS.CLIENT_DOCUMENT_DUPLICATE);
+				throw new Error(CLIENT_ERRORS.DOCUMENT_DUPLICATE);
 
 			if (hasExactErrorMessage(error, CLIENT_ERRORS)) throw error;
 
-			throw new Error(CLIENT_ERRORS.CLIENT_UPDATE_FAILED);
+			throw new Error(CLIENT_ERRORS.UPDATE_FAILED);
 		}
 	});
 
-const deleteClient = createServerFn({ method: "POST" })
+const deleteClientFn = createServerFn({ method: "POST" })
 	.inputValidator(clientIdInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
@@ -66,16 +71,16 @@ const deleteClient = createServerFn({ method: "POST" })
 			assertCan(session, "client.delete");
 			const { firmId } = getServerScope("client");
 
-			return await remove({ firmId, id: data.id });
+			return await deleteClient({ firmId, id: data.id });
 		} catch (error) {
 			console.error("[deleteClient]", error);
 			if (hasExactErrorMessage(error, CLIENT_ERRORS)) throw error;
 
-			throw new Error(CLIENT_ERRORS.CLIENT_DELETE_FAILED);
+			throw new Error(CLIENT_ERRORS.DELETE_FAILED);
 		}
 	});
 
-const restoreClient = createServerFn({ method: "POST" })
+const restoreClientFn = createServerFn({ method: "POST" })
 	.inputValidator(clientIdInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
@@ -83,23 +88,23 @@ const restoreClient = createServerFn({ method: "POST" })
 			assertCan(session, "client.restore");
 			const { firmId } = getServerScope("client");
 
-			return await restore({ firmId, id: data.id });
+			return await restoreClient({ firmId, id: data.id });
 		} catch (error) {
 			console.error("[restoreClient]", error);
 			if (hasExactErrorMessage(error, CLIENT_ERRORS)) throw error;
 
-			throw new Error(CLIENT_ERRORS.CLIENT_RESTORE_FAILED);
+			throw new Error(CLIENT_ERRORS.RESTORE_FAILED);
 		}
 	});
 
-export const createClientOptions = () =>
-	mutationOptions({ mutationFn: createClient });
+export const createClientMutationOptions = () =>
+	mutationOptions({ mutationFn: createClientFn });
 
-export const updateClientOptions = () =>
-	mutationOptions({ mutationFn: updateClient });
+export const updateClientMutationOptions = () =>
+	mutationOptions({ mutationFn: updateClientFn });
 
-export const deleteClientOptions = () =>
-	mutationOptions({ mutationFn: deleteClient });
+export const deleteClientMutationOptions = () =>
+	mutationOptions({ mutationFn: deleteClientFn });
 
-export const restoreClientOptions = () =>
-	mutationOptions({ mutationFn: restoreClient });
+export const restoreClientMutationOptions = () =>
+	mutationOptions({ mutationFn: restoreClientFn });

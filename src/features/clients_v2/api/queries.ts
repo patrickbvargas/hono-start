@@ -11,91 +11,71 @@ import type {
 } from "@/shared/types/api";
 import { CLIENT_DATA_CACHE_KEY } from "../constants/cache";
 import { CLIENT_ERRORS } from "../constants/errors";
-import { findClientTypes } from "../data/lookup";
-import { getOne, getMany, findSelectableClients } from "../data/queries";
+import { getClientById, getClients, getClientTypes } from "../data/queries";
 import { clientIdInputSchema } from "../schemas/form";
-import type { Client } from "../schemas/model";
+import type { ClientDetail, ClientSummary } from "../schemas/model";
 import { type ClientSearch, clientSearchSchema } from "../schemas/search";
 
-const getClients = createServerFn({ method: "GET" })
+const getClientsFn = createServerFn({ method: "GET" })
   .inputValidator(clientSearchSchema)
-  .handler(async ({ data }): Promise<QueryPaginatedReturnType<Client>> => {
-    try {
-      getServerLoggedUserSession();
-      const { firmId } = getServerScope("client");
+  .handler(
+    async ({ data }): Promise<QueryPaginatedReturnType<ClientSummary>> => {
+      try {
+        getServerLoggedUserSession();
+        const { firmId } = getServerScope("client");
 
-      return await getMany({ firmId, search: data });
-    } catch (error) {
-      console.error("[getClients]", error);
-      throw new Error(CLIENT_ERRORS.CLIENT_GET_FAILED);
-    }
-  });
+        return await getClients({ firmId, search: data });
+      } catch (error) {
+        console.error("[getClients]", error);
+        throw new Error(CLIENT_ERRORS.GET_FAILED);
+      }
+    },
+  );
 
-const getClientById = createServerFn({ method: "GET" })
+const getClientByIdFn = createServerFn({ method: "GET" })
   .inputValidator(clientIdInputSchema)
-  .handler(async ({ data }): Promise<QueryOneReturnType<Client>> => {
+  .handler(async ({ data }): Promise<QueryOneReturnType<ClientDetail>> => {
     try {
       getServerLoggedUserSession();
       const { firmId } = getServerScope("client");
 
-      return await getOne({ firmId, id: data.id });
+      return await getClientById({ firmId, id: data.id });
     } catch (error) {
       console.error("[getClientById]", error);
       if (hasExactErrorMessage(error, CLIENT_ERRORS)) throw error;
 
-      throw new Error(CLIENT_ERRORS.CLIENT_DETAIL_FAILED);
+      throw new Error(CLIENT_ERRORS.DETAIL_FAILED);
     }
   });
 
-const getClientTypes = createServerFn({ method: "GET" }).handler(
+const getClientTypesFn = createServerFn({ method: "GET" }).handler(
   async (): Promise<QueryManyReturnType<Option>> => {
     try {
-      return await findClientTypes();
+      return await getClientTypes();
     } catch (error) {
       console.error("[getClientTypes]", error);
-      throw new Error(CLIENT_ERRORS.CLIENT_TYPES_GET_FAILED);
+      throw new Error(CLIENT_ERRORS.TYPES_GET_FAILED);
     }
   },
 );
 
-const getSelectableClients = createServerFn({ method: "GET" }).handler(
-  async (): Promise<QueryManyReturnType<Option>> => {
-    try {
-      getServerLoggedUserSession();
-      const { firmId } = getServerScope("client");
-
-      return await findSelectableClients({ firmId });
-    } catch (error) {
-      console.error("[getSelectableClients]", error);
-      throw new Error(CLIENT_ERRORS.CLIENT_SELECTABLE_GET_FAILED);
-    }
-  },
-);
-
-export const getClientsOptions = (search: ClientSearch) =>
+export const getClientsQueryOptions = (search: ClientSearch) =>
   queryOptions({
     queryKey: [CLIENT_DATA_CACHE_KEY, search],
-    queryFn: () => getClients({ data: search }),
+    queryFn: () => getClientsFn({ data: search }),
     staleTime: 5 * 60 * 1000,
   });
 
-export const getClientByIdOptions = (id: EntityId) =>
+export const getClientByIdQueryOptions = (id: EntityId) =>
   queryOptions({
     queryKey: [CLIENT_DATA_CACHE_KEY, "detail", id],
-    queryFn: () => getClientById({ data: { id } }),
+    queryFn: () => getClientByIdFn({ data: { id } }),
     staleTime: 5 * 60 * 1000,
   });
 
-export const getClientTypesOptions = () =>
+export const getClientTypesQueryOptions = () =>
   queryOptions({
     queryKey: [CLIENT_DATA_CACHE_KEY, "types"],
-    queryFn: getClientTypes,
+    queryFn: getClientTypesFn,
     staleTime: "static",
-  });
-
-export const getSelectableClientsOptions = () =>
-  queryOptions({
-    queryKey: [CLIENT_DATA_CACHE_KEY, "options"],
-    queryFn: getSelectableClients,
-    staleTime: 5 * 60 * 1000,
   });

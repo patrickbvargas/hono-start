@@ -3,7 +3,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import { PlusIcon } from "lucide-react";
 import {
-	type Client,
 	ClientDelete,
 	ClientDetails,
 	ClientFilter,
@@ -11,13 +10,14 @@ import {
 	ClientRestore,
 	ClientTable,
 	clientSearchSchema,
-	getClientsOptions,
-} from "@/features/clients";
+	getClientsQueryOptions,
+} from "@/features/clients_v2";
 import { RouteLoading } from "@/shared/components/route-loading";
 import { Button } from "@/shared/components/ui";
 import { Wrapper } from "@/shared/components/wrapper";
 import { ROUTES } from "@/shared/config/routes";
 import { useOverlay } from "@/shared/hooks/use-overlay";
+import type { EntityId } from "@/shared/schemas/entity";
 import {
 	getLoggedUserSession,
 	isAdminSession,
@@ -31,15 +31,15 @@ export const Route = createFileRoute("/clientes")({
 	},
 	loaderDeps: ({ search }) => ({ search }),
 	loader: async ({ context: { queryClient }, deps: { search } }) => {
-		await queryClient.ensureQueryData(getClientsOptions(search));
+		await queryClient.ensureQueryData(getClientsQueryOptions(search));
 	},
 	component: RouteComponent,
 });
 
 function RouteComponent() {
 	const search = Route.useSearch();
-	const { data } = useSuspenseQuery(getClientsOptions(search));
-	const { overlay } = useOverlay<Client>();
+	const { data } = useSuspenseQuery(getClientsQueryOptions(search));
+	const { overlay } = useOverlay<EntityId>();
 	const isAdmin = useLoggedUserSessionStore(isAdminSession);
 
 	return (
@@ -58,31 +58,27 @@ function RouteComponent() {
 			</Wrapper.Header>
 			<Wrapper.Body>
 				<ClientTable
-					canManageLifecycle={isAdmin}
 					data={data}
 					onEdit={overlay.edit.open}
 					onView={overlay.details.open}
 					onDelete={overlay.delete.open}
 					onRestore={overlay.restore.open}
+					canManageLifecycle={isAdmin}
 				/>
 				{overlay.create.render((state) => (
 					<ClientForm state={state} onSuccess={state.close} />
 				))}
-				{overlay.edit.render((client, state) => (
-					<ClientForm state={state} client={client} onSuccess={state.close} />
+				{overlay.edit.render((id, state) => (
+					<ClientForm state={state} id={id} onSuccess={state.close} />
 				))}
-				{overlay.delete.render((client, state) => (
-					<ClientDelete client={client} state={state} onSuccess={state.close} />
+				{overlay.delete.render((id, state) => (
+					<ClientDelete id={id} state={state} onSuccess={state.close} />
 				))}
-				{overlay.restore.render((client, state) => (
-					<ClientRestore
-						client={client}
-						state={state}
-						onSuccess={state.close}
-					/>
+				{overlay.restore.render((id, state) => (
+					<ClientRestore id={id} state={state} onSuccess={state.close} />
 				))}
-				{overlay.details.render((client, state) => (
-					<ClientDetails client={client} state={state} />
+				{overlay.details.render((id, state) => (
+					<ClientDetails id={id} state={state} />
 				))}
 			</Wrapper.Body>
 		</Wrapper>

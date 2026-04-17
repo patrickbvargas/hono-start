@@ -4,25 +4,22 @@ import {
 	refreshEntityQueries,
 } from "@/shared/lib/entity-management";
 import { toast } from "@/shared/lib/toast";
-import { restoreClientOptions } from "../api/mutations";
+import type { EntityId } from "@/shared/schemas/entity";
+import { restoreClientMutationOptions } from "../api/mutations";
 import { CLIENT_DATA_CACHE_KEY } from "../constants/cache";
-import type { Client } from "../schemas/model";
 
 interface UseClientRestoreOptions {
-	client: Client;
+	id: EntityId;
 	onSuccess?: () => void;
 }
 
-export function useClientRestore({
-	client,
-	onSuccess,
-}: UseClientRestoreOptions) {
+export function useClientRestore({ id, onSuccess }: UseClientRestoreOptions) {
 	const queryClient = useQueryClient();
-	const mutation = useMutation(restoreClientOptions());
+	const mutation = useMutation(restoreClientMutationOptions());
 
 	const handleConfirm = async () => {
 		try {
-			await mutation.mutateAsync({ data: { id: client.id } });
+			await mutation.mutateAsync({ data: { id } });
 			toast.success("Cliente restaurado com sucesso.");
 			await refreshEntityQueries(queryClient, CLIENT_DATA_CACHE_KEY);
 			onSuccess?.();

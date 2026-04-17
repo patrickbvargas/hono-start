@@ -1,11 +1,10 @@
-import { Prisma } from "@/generated/prisma/client";
+import type { Prisma } from "@/generated/prisma/client";
 import {
   getEntityActiveWhere,
   getEntityDeletedWhere,
   withDeterministicTieBreaker,
 } from "@/shared/lib/entity-management";
 import { prisma } from "@/shared/lib/prisma";
-import type { EntityId } from "@/shared/schemas/entity";
 import { type Option, optionSchema } from "@/shared/schemas/option";
 import type {
   QueryManyReturnType,
@@ -13,131 +12,75 @@ import type {
   QueryPaginatedReturnType,
 } from "@/shared/types/api";
 import type {
+  EntityFilterParams,
   EntitySearchParams,
-  EntityTenantParams,
   EntityUniqueParams,
 } from "@/shared/types/entity";
 import { CLIENT_ERRORS } from "../constants/errors";
 import type { ClientFilter } from "../schemas/filter";
-import { type Client, clientSchema } from "../schemas/model";
+import {
+  type ClientDetail,
+  type ClientSummary,
+  clientDetailSchema,
+  clientSummarySchema,
+} from "../schemas/model";
 import type { ClientSearch } from "../schemas/search";
-import { formatClientDocument } from "../utils/formatting";
-import { resolveClientTypeIdsByValues } from "./lookup";
 
-interface BuildClientWhereParams {
-  firmId: EntityId;
-  filter: ClientFilter;
-  typeIds: EntityId[];
-}
-
-// TODO: refatorar
-export function buildClientWhere({
+function buildClientWhere({
   firmId,
   filter,
-  typeIds,
-}: BuildClientWhereParams) {
+}: EntityFilterParams<ClientFilter>): Prisma.ClientWhereInput {
+  const searchWhere = filter.query
+    ? {
+        OR: [
+          {
+            fullName: {
+              contains: filter.query,
+              mode: "insensitive" as const,
+            },
+          },
+          {
+            document: {
+              contains: filter.query,
+            },
+          },
+        ],
+      }
+    : {};
+
+  const typeWhere =
+    filter.type.length > 0
+      ? {
+          type: {
+            value: {
+              in: filter.type,
+            },
+          },
+        }
+      : {};
+
   return {
     firmId,
     ...getEntityDeletedWhere(filter.status),
     ...getEntityActiveWhere(filter.active),
-    ...(filter.name
-      ? {
-          OR: [
-            {
-              fullName: {
-                contains: filter.name,
-                mode: "insensitive" as const,
-              },
-            },
-            {
-              document: {
-                contains: filter.name,
-              },
-            },
-          ],
-        }
-      : {}),
-    ...(typeIds.length > 0 ? { typeId: { in: typeIds } } : {}),
+    ...searchWhere,
+    ...typeWhere,
   };
 }
 
-async function mapClients(
-  clients: Array<{
-    id: number;
-    fullName: string;
-    document: string;
-    email: string | null;
-    phone: string | null;
-    typeId: number;
-    type: { label: string; value: string };
-    isActive: boolean;
-    deletedAt: Date | null;
-    createdAt: Date;
-    updatedAt: Date;
-  }>,
-) {
-  const contractCounts = await getActiveContractCountByClientIds(
-    clients.map((client) => client.id),
-  );
-
-  return clientSchema.array().parse(
-    clients.map((client) => ({
-      id: client.id,
-      fullName: client.fullName,
-      document: client.document,
-      email: client.email,
-      phone: client.phone,
-      typeId: client.typeId,
-      type: client.type.label,
-      typeValue: client.type.value,
-      contractCount: contractCounts.get(client.id) ?? 0,
-      isActive: client.isActive,
-      isSoftDeleted: !!client.deletedAt,
-      createdAt: client.createdAt.toISOString(),
-      updatedAt: client.updatedAt?.toISOString() ?? null,
-    })),
-  );
-}
-
-// * -----------------------------------------------------
-
-export async function getOne({
-  firmId,
-  id,
-}: EntityUniqueParams): Promise<QueryOneReturnType<Client>> {
-  const client = await prisma.client.findFirst({
-    where: { id, firmId },
-    include: { type: true },
-  });
-
-  if (!client) {
-    throw new Error(CLIENT_ERRORS.CLIENT_DETAIL_NOT_FOUND);
-  }
-
-  const [mappedClient] = await mapClients([client]);
-
-  if (!mappedClient) {
-    throw new Error(CLIENT_ERRORS.CLIENT_DETAIL_NOT_FOUND);
-  }
-
-  return mappedClient;
-}
-
-export async function getMany({
+export async function getClients({
   firmId,
   search,
 }: EntitySearchParams<ClientSearch>): Promise<
-  QueryPaginatedReturnType<Client>
+  QueryPaginatedReturnType<ClientSummary>
 > {
-  const typeIds = await resolveClientTypeIdsByValues(search.type);
-  const where = buildClientWhere({ firmId, filter: search, typeIds });
+  const where = buildClientWhere({ firmId, filter: search });
 
   const sortMap: Record<string, object> = {
     fullName: { fullName: search.direction },
     document: { document: search.direction },
     type: { type: { label: search.direction } },
     isActive: { isActive: search.direction },
-    createdAt: { createdAt: search.direction },
   };
 
   const orderBy = withDeterministicTieBreaker(
@@ -145,10 +88,17 @@ export async function getMany({
     { id: "asc" },
   );
 
-  const [clients, total] = await Promise.all([
+  const [rawData, total] = await Promise.all([
     prisma.client.findMany({
       where,
-      include: { type: true },
+      include: {
+        type: true,
+        _count: {
+          select: {
+            contracts: true,
+          },
+        },
+      },
       orderBy,
       skip: (search.page - 1) * search.limit,
       take: search.limit,
@@ -156,73 +106,73 @@ export async function getMany({
     prisma.client.count({ where }),
   ]);
 
+  const clients = rawData.map((c) => ({
+    id: c.id,
+    fullName: c.fullName,
+    document: c.document,
+    type: c.type.label,
+    contractCount: c._count.contracts,
+    isActive: c.isActive,
+    isSoftDeleted: Boolean(c.deletedAt),
+  }));
+
   return {
-    data: await mapClients(clients),
+    data: clientSummarySchema.array().parse(clients),
     total,
     page: search.page,
     pageSize: search.limit,
   };
 }
 
-export async function findSelectableClients({
+export async function getClientById({
   firmId,
-}: EntityTenantParams): Promise<QueryManyReturnType<Option>> {
-  const clients = await prisma.client.findMany({
-    where: { firmId, deletedAt: null, isActive: true },
-    orderBy: { fullName: "asc" },
-    select: {
-      id: true,
-      fullName: true,
-      document: true,
+  id,
+}: EntityUniqueParams): Promise<QueryOneReturnType<ClientDetail>> {
+  const rawData = await prisma.client.findFirst({
+    where: { id, firmId },
+    include: {
+      type: true,
+      _count: {
+        select: {
+          contracts: true,
+        },
+      },
     },
   });
 
-  return optionSchema.array().parse(
-    clients.map((client) => ({
-      id: client.id,
-      label: `${client.fullName} • ${formatClientDocument(client.document)}`,
-      value: String(client.id),
-      isDisabled: false,
-    })),
-  );
+  if (!rawData) {
+    throw new Error(CLIENT_ERRORS.NOT_FOUND);
+  }
+
+  const client = {
+    id: rawData.id,
+    fullName: rawData.fullName,
+    document: rawData.document,
+    email: rawData.email,
+    phone: rawData.phone,
+    typeId: rawData.type.id,
+    type: rawData.type.label,
+    typeValue: rawData.type.value,
+    contractCount: rawData._count.contracts,
+    isActive: rawData.isActive,
+    isSoftDeleted: Boolean(rawData.deletedAt),
+    createdAt: rawData.createdAt.toISOString(),
+    updatedAt: rawData.updatedAt?.toISOString(),
+  };
+
+  return clientDetailSchema.parse(client);
 }
 
-export async function requireById({ firmId, id }: EntityUniqueParams) {
-  const client = await prisma.client.findFirst({
-    where: { firmId: firmId, id: id },
+export async function getClientTypes(): Promise<QueryManyReturnType<Option>> {
+  const types = await prisma.clientType.findMany({
+    orderBy: { label: "asc" },
   });
 
-  if (!client) {
-    throw new Error(CLIENT_ERRORS.CLIENT_NOT_FOUND);
-  }
-
-  return client;
+  return optionSchema.array().parse(types);
 }
 
-// * -----------------------------------------------------
-
-// TODO: refatorar
-export async function getActiveContractCountByClientIds(clientIds: number[]) {
-  if (clientIds.length === 0) {
-    return new Map<number, number>();
-  }
-
-  const rows = await prisma.$queryRaw<
-    Array<{ clientId: number; total: number }>
-  >(Prisma.sql`
-    SELECT
-      "clientId" AS "clientId",
-      COUNT(*)::int AS "total"
-    FROM "contracts"
-    WHERE "clientId" IN (${Prisma.join(clientIds)})
-      AND "deletedAt" IS NULL
-    GROUP BY "clientId"
-  `);
-
-  return new Map(rows.map((row) => [row.clientId, Number(row.total)]));
-}
-
-export async function countActiveContractsByClientId(clientId: number) {
-  const counts = await getActiveContractCountByClientIds([clientId]);
-  return counts.get(clientId) ?? 0;
+export async function getClientTypeByValue(value: string) {
+  return prisma.clientType.findUnique({
+    where: { value },
+  });
 }

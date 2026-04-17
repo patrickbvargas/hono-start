@@ -12,14 +12,13 @@ import {
 	assertTypeImmutableOnUpdate,
 } from "../rules/type";
 import type { ClientCreateInput, ClientUpdateInput } from "../schemas/form";
-import { findClientTypeByValue } from "./lookup";
-import { countActiveContractsByClientId, requireById } from "./queries";
+import { getClientById, getClientTypeByValue } from "./queries";
 
-export async function create({
+export async function createClient({
 	firmId,
 	input,
 }: EntityInputParams<ClientCreateInput>): Promise<MutationReturnType> {
-	const type = await findClientTypeByValue(input.type);
+	const type = await getClientTypeByValue(input.type);
 
 	assertTypeExists(type);
 	assertTypeCanBeSelected(type);
@@ -40,17 +39,17 @@ export async function create({
 	return { success: true };
 }
 
-export async function update({
+export async function updateClient({
 	firmId,
 	input,
 }: EntityInputParams<ClientUpdateInput>): Promise<MutationReturnType> {
-	const existing = await requireById({ firmId, id: input.id });
+	const client = await getClientById({ firmId, id: input.id });
 
-	const type = await findClientTypeByValue(input.type);
+	const type = await getClientTypeByValue(input.type);
 
 	assertTypeExists(type);
-	assertTypeCanBeSelected(type, existing.typeId);
-	assertTypeImmutableOnUpdate(type, existing.typeId);
+	assertTypeCanBeSelected(type, client.typeId);
+	assertTypeImmutableOnUpdate(type, client.typeId);
 	assertDocumentMatchesType(type.value, input.document);
 
 	await prisma.client.update({
@@ -67,14 +66,35 @@ export async function update({
 	return { success: true };
 }
 
-export async function remove({
+export async function deleteClient({
 	firmId,
 	id,
 }: EntityUniqueParams): Promise<MutationReturnType> {
-	await requireById({ firmId, id });
+	await getClientById({ firmId, id });
 
-	const activeContractCount = await countActiveContractsByClientId(id);
-	assertCanBeDeleted(activeContractCount);
+	const contractCount = await prisma.client.findFirst({
+		where: { id },
+		select: {
+			_count: {
+				select: {
+					contracts: {
+						where: {
+							AND: [
+								{
+									deletedAt: null,
+								},
+								{
+									isActive: true,
+								},
+							],
+						},
+					},
+				},
+			},
+		},
+	});
+
+	assertCanBeDeleted(contractCount?._count.contracts ?? 0);
 
 	await prisma.client.update({
 		where: { id },
@@ -84,11 +104,11 @@ export async function remove({
 	return { success: true };
 }
 
-export async function restore({
+export async function restoreClient({
 	firmId,
 	id,
 }: EntityUniqueParams): Promise<MutationReturnType> {
-	await requireById({ firmId, id });
+	await getClientById({ firmId, id });
 
 	await prisma.client.update({
 		where: { id },

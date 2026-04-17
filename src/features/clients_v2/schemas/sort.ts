@@ -1,9 +1,9 @@
 import type { z } from "zod";
 import { createSortSchema } from "@/shared/schemas/sort";
 import { CLIENT_ALLOWED_SORT_COLUMNS } from "../constants/sorting";
-import type { Client } from "./model";
+import type { ClientSummary } from "./model";
 
-export const clientSortSchema = createSortSchema<Client>({
+export const clientSortSchema = createSortSchema<ClientSummary>({
 	columns: CLIENT_ALLOWED_SORT_COLUMNS,
 	defaultColumn: "fullName",
 });

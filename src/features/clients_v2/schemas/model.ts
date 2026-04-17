@@ -1,14 +1,14 @@
 import * as z from "zod";
 import { entityIdSchema } from "@/shared/schemas/entity";
 
-export const clientSchema = entityIdSchema.safeExtend({
+export const clientDetailSchema = entityIdSchema.safeExtend({
 	fullName: z.string(),
 	document: z.string(),
 	email: z.string().nullable(),
 	phone: z.string().nullable(),
 	typeId: z.number(),
-	type: z.string(),
 	typeValue: z.string(),
+	type: z.string(),
 	contractCount: z.number(),
 	isActive: z.boolean(),
 	isSoftDeleted: z.boolean(),
@@ -16,4 +16,15 @@ export const clientSchema = entityIdSchema.safeExtend({
 	updatedAt: z.iso.datetime().nullable(),
 });
 
-export type Client = z.infer<typeof clientSchema>;
+export const clientSummarySchema = clientDetailSchema.pick({
+	id: true,
+	fullName: true,
+	document: true,
+	type: true,
+	contractCount: true,
+	isActive: true,
+	isSoftDeleted: true,
+});
+
+export type ClientDetail = z.infer<typeof clientDetailSchema>;
+export type ClientSummary = z.infer<typeof clientSummarySchema>;

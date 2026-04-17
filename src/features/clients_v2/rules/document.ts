@@ -1,17 +1,16 @@
 import { CLIENT_ERRORS } from "../constants/errors";
 import {
+	CLIENT_DOCUMENT_REGEX,
 	CLIENT_TYPE_COMPANY_VALUE,
 	CLIENT_TYPE_INDIVIDUAL_VALUE,
 } from "../constants/values";
-
-const ONLY_DIGITS_REGEX = /\D/g;
 
 function isRepeatedDigits(value: string) {
 	return /^(\d)\1+$/.test(value);
 }
 
 function isValidCPF(cpf: string) {
-	cpf = cpf.replace(ONLY_DIGITS_REGEX, "");
+	cpf = cpf.replace(CLIENT_DOCUMENT_REGEX, "");
 
 	if (cpf.length !== 11 || isRepeatedDigits(cpf)) {
 		return false;
@@ -40,7 +39,7 @@ function isValidCPF(cpf: string) {
 }
 
 function isValidCNPJ(cnpj: string) {
-	cnpj = cnpj.replace(ONLY_DIGITS_REGEX, "");
+	cnpj = cnpj.replace(CLIENT_DOCUMENT_REGEX, "");
 
 	if (cnpj.length !== 14 || isRepeatedDigits(cnpj)) {
 		return false;
@@ -77,10 +76,10 @@ function isValidCNPJ(cnpj: string) {
 
 export function assertDocumentMatchesType(type: string, document: string) {
 	if (type === CLIENT_TYPE_INDIVIDUAL_VALUE && !isValidCPF(document)) {
-		throw new Error(CLIENT_ERRORS.CLIENT_DOCUMENT_CPF_INVALID);
+		throw new Error(CLIENT_ERRORS.DOCUMENT_CPF_INVALID);
 	}
 
 	if (type === CLIENT_TYPE_COMPANY_VALUE && !isValidCNPJ(document)) {
-		throw new Error(CLIENT_ERRORS.CLIENT_DOCUMENT_CNPJ_INVALID);
+		throw new Error(CLIENT_ERRORS.DOCUMENT_CNPJ_INVALID);
 	}
 }
