@@ -3,7 +3,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import { PlusIcon } from "lucide-react";
 import {
-	type Employee,
 	EmployeeDelete,
 	EmployeeDetails,
 	EmployeeFilter,
@@ -11,13 +10,14 @@ import {
 	EmployeeRestore,
 	EmployeeTable,
 	employeeSearchSchema,
-	getEmployeesOptions,
+	getEmployeesQueryOptions,
 } from "@/features/employees";
 import { RouteLoading } from "@/shared/components/route-loading";
 import { Button } from "@/shared/components/ui";
 import { Wrapper } from "@/shared/components/wrapper";
 import { ROUTES } from "@/shared/config/routes";
 import { useOverlay } from "@/shared/hooks/use-overlay";
+import type { EntityId } from "@/shared/schemas/entity";
 import {
 	assertCanManageEmployees,
 	canManageEmployees,
@@ -32,15 +32,15 @@ export const Route = createFileRoute("/colaboradores")({
 	},
 	loaderDeps: ({ search }) => ({ search }),
 	loader: async ({ context: { queryClient }, deps: { search } }) => {
-		await queryClient.ensureQueryData(getEmployeesOptions(search));
+		await queryClient.ensureQueryData(getEmployeesQueryOptions(search));
 	},
 	component: RouteComponent,
 });
 
 function RouteComponent() {
 	const search = Route.useSearch();
-	const { data } = useSuspenseQuery(getEmployeesOptions(search));
-	const { overlay } = useOverlay<Employee>();
+	const { data } = useSuspenseQuery(getEmployeesQueryOptions(search));
+	const { overlay } = useOverlay<EntityId>();
 	const canManage = useLoggedUserSessionStore(canManageEmployees);
 
 	return (
@@ -71,29 +71,17 @@ function RouteComponent() {
 				{overlay.create.render((state) => (
 					<EmployeeForm state={state} onSuccess={state.close} />
 				))}
-				{overlay.edit.render((employee, state) => (
-					<EmployeeForm
-						state={state}
-						employee={employee}
-						onSuccess={state.close}
-					/>
+				{overlay.edit.render((id, state) => (
+					<EmployeeForm state={state} id={id} onSuccess={state.close} />
 				))}
-				{overlay.delete.render((employee, state) => (
-					<EmployeeDelete
-						state={state}
-						employee={employee}
-						onSuccess={state.close}
-					/>
+				{overlay.delete.render((id, state) => (
+					<EmployeeDelete id={id} state={state} onSuccess={state.close} />
 				))}
-				{overlay.restore.render((employee, state) => (
-					<EmployeeRestore
-						state={state}
-						employee={employee}
-						onSuccess={state.close}
-					/>
+				{overlay.restore.render((id, state) => (
+					<EmployeeRestore id={id} state={state} onSuccess={state.close} />
 				))}
-				{overlay.details.render((employee, state) => (
-					<EmployeeDetails state={state} employee={employee} />
+				{overlay.details.render((id, state) => (
+					<EmployeeDetails id={id} state={state} />
 				))}
 			</Wrapper.Body>
 		</Wrapper>

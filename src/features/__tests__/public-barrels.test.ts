@@ -11,7 +11,7 @@ describe("feature public barrels", () => {
 		expect(clients).toHaveProperty("ClientForm");
 		expect(clients).not.toHaveProperty("useClientForm");
 
-		expect(employees).toHaveProperty("getEmployeesOptions");
+		expect(employees).toHaveProperty("getEmployeesQueryOptions");
 		expect(employees).toHaveProperty("EmployeeForm");
 		expect(employees).not.toHaveProperty("useEmployeeForm");
 	});

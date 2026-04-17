@@ -4,25 +4,21 @@ import {
 	refreshEntityQueries,
 } from "@/shared/lib/entity-management";
 import { toast } from "@/shared/lib/toast";
-import { deleteEmployeeOptions } from "../api/delete";
+import type { EntityId } from "@/shared/schemas/entity";
+import { deleteEmployeeMutationOptions } from "../api/mutations";
 import { EMPLOYEE_DATA_CACHE_KEY } from "../constants";
-import type { Employee } from "../schemas/model";
 
 interface UseEmployeeDeleteOptions {
-	employee: Employee;
 	onSuccess?: () => void;
 }
 
-export function useEmployeeDelete({
-	employee,
-	onSuccess,
-}: UseEmployeeDeleteOptions) {
+export function useEmployeeDelete({ onSuccess }: UseEmployeeDeleteOptions) {
 	const queryClient = useQueryClient();
-	const mutation = useMutation(deleteEmployeeOptions());
+	const mutation = useMutation(deleteEmployeeMutationOptions());
 
-	const handleConfirm = async () => {
+	const handleConfirm = async (id: EntityId) => {
 		try {
-			await mutation.mutateAsync({ data: { id: employee.id } });
+			await mutation.mutateAsync({ data: { id } });
 			toast.success("Funcionário excluído com sucesso.");
 			await refreshEntityQueries(queryClient, EMPLOYEE_DATA_CACHE_KEY);
 			onSuccess?.();

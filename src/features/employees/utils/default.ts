@@ -1,5 +1,5 @@
 import type { EmployeeCreateInput, EmployeeUpdateInput } from "../schemas/form";
-import type { Employee } from "../schemas/model";
+import type { EmployeeDetail } from "../schemas/model";
 
 export const defaultEmployeeCreateValues = (): EmployeeCreateInput => ({
 	fullName: "",
@@ -13,7 +13,7 @@ export const defaultEmployeeCreateValues = (): EmployeeCreateInput => ({
 });
 
 export const defaultEmployeeUpdateValues = (
-	initialValue: Employee,
+	initialValue: EmployeeDetail,
 ): EmployeeUpdateInput => ({
 	id: initialValue.id,
 	fullName: initialValue.fullName,

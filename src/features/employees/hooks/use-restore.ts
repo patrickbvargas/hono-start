@@ -4,25 +4,21 @@ import {
 	refreshEntityQueries,
 } from "@/shared/lib/entity-management";
 import { toast } from "@/shared/lib/toast";
-import { restoreEmployeeOptions } from "../api/restore";
+import type { EntityId } from "@/shared/schemas/entity";
+import { restoreEmployeeMutationOptions } from "../api/mutations";
 import { EMPLOYEE_DATA_CACHE_KEY } from "../constants";
-import type { Employee } from "../schemas/model";
 
 interface UseEmployeeRestoreOptions {
-	employee: Employee;
 	onSuccess?: () => void;
 }
 
-export function useEmployeeRestore({
-	employee,
-	onSuccess,
-}: UseEmployeeRestoreOptions) {
+export function useEmployeeRestore({ onSuccess }: UseEmployeeRestoreOptions) {
 	const queryClient = useQueryClient();
-	const mutation = useMutation(restoreEmployeeOptions());
+	const mutation = useMutation(restoreEmployeeMutationOptions());
 
-	const handleConfirm = async () => {
+	const handleConfirm = async (id: EntityId) => {
 		try {
-			await mutation.mutateAsync({ data: { id: employee.id } });
+			await mutation.mutateAsync({ data: { id } });
 			toast.success("Funcionário restaurado com sucesso.");
 			await refreshEntityQueries(queryClient, EMPLOYEE_DATA_CACHE_KEY);
 			onSuccess?.();

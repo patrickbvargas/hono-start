@@ -1,9 +1,12 @@
 import { useSuspenseQueries } from "@tanstack/react-query";
-import { getEmployeeRolesOptions, getEmployeeTypesOptions } from "../api/get";
+import {
+	getEmployeeRolesQueryOptions,
+	getEmployeeTypesQueryOptions,
+} from "../api/queries";
 
 export function useEmployeeOptions() {
 	const [{ data: types }, { data: roles }] = useSuspenseQueries({
-		queries: [getEmployeeTypesOptions(), getEmployeeRolesOptions()],
+		queries: [getEmployeeTypesQueryOptions(), getEmployeeRolesQueryOptions()],
 	});
 
 	return { types, roles };

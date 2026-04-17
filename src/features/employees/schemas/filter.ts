@@ -5,7 +5,7 @@ import {
 } from "@/shared/schemas/filter";
 
 export const employeeFilterSchema = z.object({
-	name: z.string().catch(""),
+	query: z.string().trim().catch(""),
 	type: z.array(z.string()).catch([]),
 	role: z.array(z.string()).catch([]),
 	active: activeFilterSchema,

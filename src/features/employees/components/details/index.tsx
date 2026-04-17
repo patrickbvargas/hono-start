@@ -1,3 +1,4 @@
+import { useSuspenseQuery } from "@tanstack/react-query";
 import * as React from "react";
 import {
 	Detail,
@@ -5,38 +6,41 @@ import {
 } from "@/shared/components/entity-detail";
 import { EntityStatus } from "@/shared/components/entity-status";
 import { formatter } from "@/shared/lib/formatter";
+import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
-import type { Employee } from "../../schemas/model";
+import { getEmployeeByIdQueryOptions } from "../../api/queries";
 
 interface EmployeeDetailsProps {
-	employee: Employee;
+	id: EntityId;
 	state: OverlayState;
 }
 
-export const EmployeeDetails = ({ employee, state }: EmployeeDetailsProps) => {
+export const EmployeeDetails = ({ id, state }: EmployeeDetailsProps) => {
+	const { data } = useSuspenseQuery(getEmployeeByIdQueryOptions(id));
+
 	const generalInfo = React.useMemo<DetailFieldItem[]>(
 		() => [
-			{ term: "OAB", definition: formatter.oab(employee.oabNumber) },
-			{ term: "Cargo", definition: employee.type },
-			{ term: "Perfil", definition: employee.role },
-			{ term: "Contratos", definition: employee.contractCount },
+			{ term: "OAB", definition: formatter.oab(data.oabNumber) },
+			{ term: "Cargo", definition: data.type },
+			{ term: "Perfil", definition: data.role },
+			{ term: "Contratos", definition: data.contractCount },
 		],
-		[employee],
+		[data],
 	);
 
 	const contactInfo = React.useMemo<DetailFieldItem[]>(
-		() => [{ term: "Email", definition: employee.email }],
-		[employee],
+		() => [{ term: "Email", definition: data.email }],
+		[data],
 	);
 
 	const financialInfo = React.useMemo<DetailFieldItem[]>(
 		() => [
 			{
 				term: "Remuneração",
-				definition: formatter.percent(employee.remunerationPercent),
+				definition: formatter.percent(data.remunerationPercent),
 			},
 		],
-		[employee],
+		[data],
 	);
 
 	const registerInfo = React.useMemo<DetailFieldItem[]>(
@@ -45,18 +49,18 @@ export const EmployeeDetails = ({ employee, state }: EmployeeDetailsProps) => {
 				term: "Status",
 				definition: (
 					<EntityStatus
-						isActive={employee.isActive}
-						isSoftDeleted={employee.isSoftDeleted}
+						isActive={data.isActive}
+						isSoftDeleted={data.isSoftDeleted}
 					/>
 				),
 			},
-			{ term: "Criado em", definition: formatter.date(employee.createdAt) },
+			{ term: "Criado em", definition: formatter.date(data.createdAt) },
 		],
-		[employee],
+		[data],
 	);
 
 	return (
-		<Detail state={state} title={employee.fullName}>
+		<Detail state={state} title={data.fullName}>
 			<Detail.Fields items={generalInfo} />
 			<Detail.Separator />
 			<Detail.Section title="Contato">

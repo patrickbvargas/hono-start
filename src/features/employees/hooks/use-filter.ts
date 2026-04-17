@@ -3,7 +3,7 @@ import { useAppForm } from "@/shared/hooks/use-app-form";
 import { useFilter } from "@/shared/hooks/use-filter";
 import { type EmployeeFilter, employeeFilterSchema } from "../schemas/filter";
 
-const DEBOUNCED_FIELDS = new Set<keyof EmployeeFilter>(["name"]);
+const DEBOUNCED_FIELDS = new Set<keyof EmployeeFilter>(["query"]);
 
 export function useEmployeeFilter() {
 	const { filter, handleFilter } = useFilter(employeeFilterSchema);

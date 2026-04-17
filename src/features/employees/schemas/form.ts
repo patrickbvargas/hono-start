@@ -1,9 +1,7 @@
 import * as z from "zod";
 import { entityIdSchema } from "@/shared/schemas/entity";
-import {
-	type EmployeeValidationInput,
-	validateEmployeeWriteRules,
-} from "../rules";
+import { assertLawyerHasOab } from "../rules/oab";
+import { assertReferralPercentageWithinRemuneration } from "../rules/referral";
 
 const employeeBaseInputSchema = z.object({
 	fullName: z.string().trim().min(1, "Nome é obrigatório"),
@@ -28,16 +26,26 @@ const employeeBaseInputSchema = z.object({
 });
 
 const employeeBusinessRulesRefinement = (
-	data: EmployeeValidationInput,
+	data: z.infer<typeof employeeBaseInputSchema>,
 	ctx: z.RefinementCtx,
 ) => {
-	const issues = validateEmployeeWriteRules(data);
-
-	for (const issue of issues) {
+	try {
+		assertReferralPercentageWithinRemuneration(data);
+	} catch (error) {
 		ctx.addIssue({
 			code: "custom",
-			path: issue.path,
-			message: issue.message,
+			path: ["referrerPercent"],
+			message: error instanceof Error ? error.message : "Valor inválido",
+		});
+	}
+
+	try {
+		assertLawyerHasOab(data);
+	} catch (error) {
+		ctx.addIssue({
+			code: "custom",
+			path: ["oabNumber"],
+			message: error instanceof Error ? error.message : "Valor inválido",
 		});
 	}
 };

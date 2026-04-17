@@ -1,30 +1,22 @@
 import { FormWrapper } from "@/shared/components/form-wrapper";
 import { Field } from "@/shared/components/ui";
+import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
 import { LAWYER_TYPE_VALUE } from "../../constants";
 import { useEmployeeForm } from "../../hooks/use-form";
 import { useEmployeeOptions } from "../../hooks/use-options";
-import type { Employee } from "../../schemas/model";
-import { defaultEmployeeUpdateValues } from "../../utils/default";
 
 interface EmployeeFormProps {
-	employee?: Employee;
+	id?: EntityId;
 	state: OverlayState;
 	onSuccess?: () => void;
 }
 
-export const EmployeeForm = ({
-	employee,
-	state,
-	onSuccess,
-}: EmployeeFormProps) => {
+export const EmployeeForm = ({ id, state, onSuccess }: EmployeeFormProps) => {
 	const { roles, types } = useEmployeeOptions();
-	const { form } = useEmployeeForm({
-		initialData: employee && defaultEmployeeUpdateValues(employee),
-		onSuccess,
-	});
+	const { form } = useEmployeeForm({ id, onSuccess });
 
-	const title = employee ? "Editar funcionário" : "Novo funcionário";
+	const title = id ? "Editar funcionário" : "Novo funcionário";
 
 	return (
 		<form.Form form={form}>

@@ -74,7 +74,15 @@ function isValidCNPJ(cnpj: string) {
 	return secondDigit === Number(cnpj[13]);
 }
 
-export function assertDocumentMatchesType(type: string, document: string) {
+interface ClientDocumentInput {
+	type: string;
+	document: string;
+}
+
+export function assertDocumentMatchesType({
+	type,
+	document,
+}: ClientDocumentInput) {
 	if (type === CLIENT_TYPE_INDIVIDUAL_VALUE && !isValidCPF(document)) {
 		throw new Error(CLIENT_ERRORS.DOCUMENT_CPF_INVALID);
 	}

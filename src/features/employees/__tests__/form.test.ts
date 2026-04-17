@@ -35,9 +35,7 @@ describe("employee form schemas", () => {
 		});
 
 		expect(result.success).toBe(false);
-		expect(result.error?.issues[0]?.message).toBe(
-			EMPLOYEE_ERRORS.EMPLOYEE_OAB_REQUIRED,
-		);
+		expect(result.error?.issues[0]?.message).toBe(EMPLOYEE_ERRORS.OAB_REQUIRED);
 	});
 
 	it("rejects referral percentage above remuneration percentage on update", () => {
@@ -55,7 +53,7 @@ describe("employee form schemas", () => {
 
 		expect(result.success).toBe(false);
 		expect(result.error?.issues[0]?.message).toBe(
-			EMPLOYEE_ERRORS.EMPLOYEE_REFERRAL_PERCENTAGE_TOO_HIGH,
+			EMPLOYEE_ERRORS.REFERRAL_PERCENTAGE_TOO_HIGH,
 		);
 	});
 });

@@ -20,16 +20,16 @@ interface EmployeeLookupValidationOptions {
 	currentTypeId?: number;
 }
 
-export function validateEmployeeLookupSelections(
+export function assertLookupSelectionsAreActive(
 	selection: EmployeeLookupSelection,
 	options: EmployeeLookupValidationOptions = {},
 ) {
 	if (!selection.type.isActive && selection.type.id !== options.currentTypeId) {
-		throw new Error(EMPLOYEE_ERRORS.EMPLOYEE_TYPE_INACTIVE);
+		throw new Error(EMPLOYEE_ERRORS.TYPE_INACTIVE);
 	}
 
 	if (!selection.role.isActive && selection.role.id !== options.currentRoleId) {
-		throw new Error(EMPLOYEE_ERRORS.EMPLOYEE_ROLE_INACTIVE);
+		throw new Error(EMPLOYEE_ERRORS.ROLE_INACTIVE);
 	}
 }
 
@@ -46,8 +46,8 @@ export async function resolveEmployeeLookupSelections(
 		}),
 	]);
 
-	if (!type) throw new Error(EMPLOYEE_ERRORS.EMPLOYEE_TYPE_NOT_FOUND);
-	if (!role) throw new Error(EMPLOYEE_ERRORS.EMPLOYEE_ROLE_NOT_FOUND);
+	if (!type) throw new Error(EMPLOYEE_ERRORS.TYPE_NOT_FOUND);
+	if (!role) throw new Error(EMPLOYEE_ERRORS.ROLE_NOT_FOUND);
 
 	return { type, role };
 }

@@ -12,17 +12,18 @@ import { EntityStatus } from "@/shared/components/entity-status";
 import { Pagination } from "@/shared/components/pagination";
 import { Button, Dropdown, Label } from "@/shared/components/ui";
 import { formatter } from "@/shared/lib/formatter";
+import type { EntityId } from "@/shared/schemas/entity";
 import type { QueryPaginatedReturnType } from "@/shared/types/api";
 import { EMPLOYEE_ALLOWED_SORT_COLUMNS } from "../../constants";
-import type { Employee } from "../../schemas/model";
+import type { EmployeeSummary } from "../../schemas/model";
 
 export interface EmployeeTableProps {
 	canManage?: boolean;
-	data: QueryPaginatedReturnType<Employee>;
-	onView?: (employee: Employee) => void;
-	onEdit?: (employee: Employee) => void;
-	onDelete?: (employee: Employee) => void;
-	onRestore?: (employee: Employee) => void;
+	data: QueryPaginatedReturnType<EmployeeSummary>;
+	onView?: (id: EntityId) => void;
+	onEdit?: (id: EntityId) => void;
+	onDelete?: (id: EntityId) => void;
+	onRestore?: (id: EntityId) => void;
 }
 
 export const EmployeeTable = ({
@@ -34,7 +35,7 @@ export const EmployeeTable = ({
 	onRestore,
 }: EmployeeTableProps) => {
 	const columns = React.useMemo(() => {
-		const c = createColumnHelper<Employee>();
+		const c = createColumnHelper<EmployeeSummary>();
 
 		return [
 			c.accessor("fullName", {
@@ -93,7 +94,7 @@ export const EmployeeTable = ({
 								<Dropdown.Menu>
 									<Dropdown.Item
 										textValue="Visualizar"
-										onPress={() => onView?.(employee)}
+										onPress={() => onView?.(employee.id)}
 									>
 										<EyeIcon size={16} />
 										<Label>Visualizar</Label>
@@ -101,7 +102,7 @@ export const EmployeeTable = ({
 									{canManage && !employee.isSoftDeleted && (
 										<Dropdown.Item
 											textValue="Editar"
-											onPress={() => onEdit?.(employee)}
+											onPress={() => onEdit?.(employee.id)}
 										>
 											<PenLineIcon size={16} />
 											<Label>Editar</Label>
@@ -110,7 +111,7 @@ export const EmployeeTable = ({
 									{canManage && employee.isSoftDeleted && (
 										<Dropdown.Item
 											textValue="Restaurar"
-											onPress={() => onRestore?.(employee)}
+											onPress={() => onRestore?.(employee.id)}
 										>
 											<Undo2Icon size={16} />
 											<Label>Restaurar</Label>
@@ -120,7 +121,7 @@ export const EmployeeTable = ({
 										<Dropdown.Item
 											textValue="Excluir"
 											variant="danger"
-											onPress={() => onDelete?.(employee)}
+											onPress={() => onDelete?.(employee.id)}
 										>
 											<TrashIcon size={16} />
 											<Label>Excluir</Label>

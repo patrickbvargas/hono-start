@@ -10,7 +10,7 @@ import {
 	assertTypeCanBeSelected,
 	assertTypeExists,
 	assertTypeImmutableOnUpdate,
-} from "../rules/type";
+} from "../rules/lookups";
 import type { ClientCreateInput, ClientUpdateInput } from "../schemas/form";
 import { getClientById, getClientTypeByValue } from "./queries";
 
@@ -22,7 +22,7 @@ export async function createClient({
 
 	assertTypeExists(type);
 	assertTypeCanBeSelected(type);
-	assertDocumentMatchesType(type.value, input.document);
+	assertDocumentMatchesType({ type: type.value, document: input.document });
 
 	await prisma.client.create({
 		data: {
@@ -50,7 +50,7 @@ export async function updateClient({
 	assertTypeExists(type);
 	assertTypeCanBeSelected(type, client.typeId);
 	assertTypeImmutableOnUpdate(type, client.typeId);
-	assertDocumentMatchesType(type.value, input.document);
+	assertDocumentMatchesType({ type: type.value, document: input.document });
 
 	await prisma.client.update({
 		where: { id: input.id },
@@ -94,7 +94,9 @@ export async function deleteClient({
 		},
 	});
 
-	assertCanBeDeleted(contractCount?._count.contracts ?? 0);
+	assertCanBeDeleted({
+		activeContractCount: contractCount?._count.contracts ?? 0,
+	});
 
 	await prisma.client.update({
 		where: { id },
