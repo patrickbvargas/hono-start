@@ -4,25 +4,25 @@ import {
 	refreshEntityQueries,
 } from "@/shared/lib/entity-management";
 import { toast } from "@/shared/lib/toast";
-import { restoreContractOptions } from "../api/restore";
+import type { EntityId } from "@/shared/schemas/entity";
+import { restoreContractMutationOptions } from "../api/mutations";
 import { CONTRACT_DATA_CACHE_KEY } from "../constants";
-import type { Contract } from "../schemas/model";
 
 interface UseContractRestoreOptions {
-	contract: Contract;
+	id: EntityId;
 	onSuccess?: () => void;
 }
 
 export function useContractRestore({
-	contract,
+	id,
 	onSuccess,
 }: UseContractRestoreOptions) {
 	const queryClient = useQueryClient();
-	const mutation = useMutation(restoreContractOptions());
+	const mutation = useMutation(restoreContractMutationOptions());
 
 	const handleConfirm = async () => {
 		try {
-			await mutation.mutateAsync({ data: { id: contract.id } });
+			await mutation.mutateAsync({ data: { id } });
 			toast.success("Contrato restaurado com sucesso.");
 			await refreshEntityQueries(queryClient, CONTRACT_DATA_CACHE_KEY);
 			onSuccess?.();

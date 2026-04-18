@@ -1,37 +1,45 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import * as React from "react";
 import { useAppForm } from "@/shared/hooks/use-app-form";
 import {
 	getMutationErrorMessage,
 	refreshEntityQueries,
 } from "@/shared/lib/entity-management";
 import { toast } from "@/shared/lib/toast";
-import { createContractOptions } from "../api/create";
-import { updateContractOptions } from "../api/update";
+import type { EntityId } from "@/shared/schemas/entity";
+import {
+	createContractMutationOptions,
+	updateContractMutationOptions,
+} from "../api/mutations";
+import { getContractByIdQueryOptions } from "../api/queries";
 import { CONTRACT_DATA_CACHE_KEY } from "../constants";
-import type { ContractUpdateInput } from "../schemas/form";
 import {
 	contractCreateInputSchema,
 	contractUpdateInputSchema,
 } from "../schemas/form";
-import { defaultContractCreateValues } from "../utils/default";
+import {
+	defaultContractCreateValues,
+	defaultContractUpdateValues,
+} from "../utils/default";
 
 interface UseContractFormOptions {
-	initialData?: ContractUpdateInput;
+	id?: EntityId;
 	onSuccess?: () => void;
 }
 
-export function useContractForm({
-	initialData,
-	onSuccess,
-}: UseContractFormOptions) {
+export function useContractForm({ id, onSuccess }: UseContractFormOptions) {
 	const queryClient = useQueryClient();
-	const createMutation = useMutation(createContractOptions());
-	const updateMutation = useMutation(updateContractOptions());
+	const createMutation = useMutation(createContractMutationOptions());
+	const updateMutation = useMutation(updateContractMutationOptions());
 
-	const isEditing = !!initialData;
+	const isEditing = !!id;
+	const { data } = useQuery({
+		...getContractByIdQueryOptions(id ?? 0),
+		enabled: isEditing,
+	});
 
 	const form = useAppForm({
-		defaultValues: initialData ?? defaultContractCreateValues(),
+		defaultValues: defaultContractCreateValues(),
 		validators: {
 			onSubmit: isEditing
 				? contractUpdateInputSchema
@@ -55,6 +63,12 @@ export function useContractForm({
 			}
 		},
 	});
+
+	React.useEffect(() => {
+		if (isEditing && data) {
+			form.reset(defaultContractUpdateValues(data));
+		}
+	}, [data, form, isEditing]);
 
 	return { form };
 }

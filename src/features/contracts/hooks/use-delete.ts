@@ -4,25 +4,22 @@ import {
 	refreshEntityQueries,
 } from "@/shared/lib/entity-management";
 import { toast } from "@/shared/lib/toast";
-import { deleteContractOptions } from "../api/delete";
+import type { EntityId } from "@/shared/schemas/entity";
+import { deleteContractMutationOptions } from "../api/mutations";
 import { CONTRACT_DATA_CACHE_KEY } from "../constants";
-import type { Contract } from "../schemas/model";
 
 interface UseContractDeleteOptions {
-	contract: Contract;
+	id: EntityId;
 	onSuccess?: () => void;
 }
 
-export function useContractDelete({
-	contract,
-	onSuccess,
-}: UseContractDeleteOptions) {
+export function useContractDelete({ id, onSuccess }: UseContractDeleteOptions) {
 	const queryClient = useQueryClient();
-	const mutation = useMutation(deleteContractOptions());
+	const mutation = useMutation(deleteContractMutationOptions());
 
 	const handleConfirm = async () => {
 		try {
-			await mutation.mutateAsync({ data: { id: contract.id } });
+			await mutation.mutateAsync({ data: { id } });
 			toast.success("Contrato excluído com sucesso.");
 			await refreshEntityQueries(queryClient, CONTRACT_DATA_CACHE_KEY);
 			onSuccess?.();

@@ -4,7 +4,7 @@ import type {
 	ContractRevenueInput,
 	ContractUpdateInput,
 } from "../schemas/form";
-import type { Contract } from "../schemas/model";
+import type { ContractDetail } from "../schemas/model";
 
 export const defaultContractAssignmentValues = (): ContractAssignmentInput => ({
 	employeeId: "",
@@ -35,7 +35,7 @@ export const defaultContractCreateValues = (): ContractCreateInput => ({
 });
 
 export const defaultContractUpdateValues = (
-	initialValue: Contract,
+	initialValue: ContractDetail,
 ): ContractUpdateInput => ({
 	id: initialValue.id,
 	clientId: String(initialValue.clientId),

@@ -12,21 +12,22 @@ import { EntityStatus } from "@/shared/components/entity-status";
 import { Pagination } from "@/shared/components/pagination";
 import { Button, Dropdown, Label } from "@/shared/components/ui";
 import { formatter } from "@/shared/lib/formatter";
+import type { EntityId } from "@/shared/schemas/entity";
 import type { QueryPaginatedReturnType } from "@/shared/types/api";
 import {
 	CONTRACT_ALLOWED_SORT_COLUMNS,
 	CONTRACT_STATUS_CANCELLED_VALUE,
 	CONTRACT_STATUS_COMPLETED_VALUE,
 } from "../../constants";
-import type { Contract } from "../../schemas/model";
+import type { ContractSummary } from "../../schemas/model";
 
 export interface ContractTableProps {
 	canManageLifecycle?: boolean;
-	data: QueryPaginatedReturnType<Contract>;
-	onView?: (contract: Contract) => void;
-	onEdit?: (contract: Contract) => void;
-	onDelete?: (contract: Contract) => void;
-	onRestore?: (contract: Contract) => void;
+	data: QueryPaginatedReturnType<ContractSummary>;
+	onView?: (id: EntityId) => void;
+	onEdit?: (id: EntityId) => void;
+	onDelete?: (id: EntityId) => void;
+	onRestore?: (id: EntityId) => void;
 }
 
 export const ContractTable = ({
@@ -38,7 +39,7 @@ export const ContractTable = ({
 	onRestore,
 }: ContractTableProps) => {
 	const columns = React.useMemo(() => {
-		const c = createColumnHelper<Contract>();
+		const c = createColumnHelper<ContractSummary>();
 
 		return [
 			c.accessor("processNumber", {
@@ -106,7 +107,7 @@ export const ContractTable = ({
 								<Dropdown.Menu>
 									<Dropdown.Item
 										textValue="Visualizar"
-										onPress={() => onView?.(contract)}
+										onPress={() => onView?.(contract.id)}
 									>
 										<EyeIcon size={16} />
 										<Label>Visualizar</Label>
@@ -114,7 +115,7 @@ export const ContractTable = ({
 									{canEditContract && (
 										<Dropdown.Item
 											textValue="Editar"
-											onPress={() => onEdit?.(contract)}
+											onPress={() => onEdit?.(contract.id)}
 										>
 											<PenLineIcon size={16} />
 											<Label>Editar</Label>
@@ -123,7 +124,7 @@ export const ContractTable = ({
 									{canManageLifecycle && contract.isSoftDeleted && (
 										<Dropdown.Item
 											textValue="Restaurar"
-											onPress={() => onRestore?.(contract)}
+											onPress={() => onRestore?.(contract.id)}
 										>
 											<Undo2Icon size={16} />
 											<Label>Restaurar</Label>
@@ -133,7 +134,7 @@ export const ContractTable = ({
 										<Dropdown.Item
 											textValue="Excluir"
 											variant="danger"
-											onPress={() => onDelete?.(contract)}
+											onPress={() => onDelete?.(contract.id)}
 										>
 											<TrashIcon size={16} />
 											<Label>Excluir</Label>

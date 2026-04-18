@@ -2,29 +2,24 @@ import { PlusIcon, Trash2Icon } from "lucide-react";
 import { useRef } from "react";
 import { FormWrapper } from "@/shared/components/form-wrapper";
 import { Button, Field } from "@/shared/components/ui";
+import type { EntityId } from "@/shared/schemas/entity";
 import { isAdminSession, useLoggedUserSessionStore } from "@/shared/session";
 import type { OverlayState } from "@/shared/types/overlay";
 import { CONTRACT_MAX_EMPLOYEES, CONTRACT_MAX_REVENUES } from "../../constants";
 import { useContractForm } from "../../hooks/use-form";
 import { useContractOptions } from "../../hooks/use-options";
-import type { Contract } from "../../schemas/model";
 import {
 	defaultContractAssignmentValues,
 	defaultContractRevenueValues,
-	defaultContractUpdateValues,
 } from "../../utils/default";
 
 interface ContractFormProps {
-	contract?: Contract;
+	id?: EntityId;
 	state: OverlayState;
 	onSuccess?: () => void;
 }
 
-export const ContractForm = ({
-	contract,
-	state,
-	onSuccess,
-}: ContractFormProps) => {
+export const ContractForm = ({ id, state, onSuccess }: ContractFormProps) => {
 	const rowKeysRef = useRef(new WeakMap<object, string>());
 	const rowKeyCountRef = useRef(0);
 	const {
@@ -35,10 +30,7 @@ export const ContractForm = ({
 		revenueTypes,
 		employees,
 	} = useContractOptions();
-	const { form } = useContractForm({
-		initialData: contract && defaultContractUpdateValues(contract),
-		onSuccess,
-	});
+	const { form } = useContractForm({ id, onSuccess });
 	const isAdmin = useLoggedUserSessionStore(isAdminSession);
 
 	const getRowKey = (value: object) => {
@@ -53,7 +45,7 @@ export const ContractForm = ({
 		return nextKey;
 	};
 
-	const title = contract ? "Editar contrato" : "Novo contrato";
+	const title = id ? "Editar contrato" : "Novo contrato";
 
 	return (
 		<form.Form form={form}>

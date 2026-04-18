@@ -1,28 +1,28 @@
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { ConfirmDialog } from "@/shared/components/confirm-dialog";
+import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
+import { getContractByIdQueryOptions } from "../../api/queries";
 import { useContractRestore } from "../../hooks/use-restore";
-import type { Contract } from "../../schemas/model";
 
 interface ContractRestoreProps {
-	contract: Contract;
+	id: EntityId;
 	state: OverlayState;
 	onSuccess?: () => void;
 }
 
 export const ContractRestore = ({
-	contract,
+	id,
 	state,
 	onSuccess,
 }: ContractRestoreProps) => {
-	const { handleConfirm, isPending } = useContractRestore({
-		contract,
-		onSuccess,
-	});
+	const { data } = useSuspenseQuery(getContractByIdQueryOptions(id));
+	const { handleConfirm, isPending } = useContractRestore({ id, onSuccess });
 
 	return (
 		<ConfirmDialog
 			title="Restaurar contrato"
-			description={`Tem certeza que deseja restaurar o contrato ${contract.processNumber}?`}
+			description={`Tem certeza que deseja restaurar o contrato ${data.processNumber}?`}
 			onConfirm={handleConfirm}
 			confirmButtonLabel="Restaurar"
 			isPending={isPending}

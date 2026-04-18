@@ -1,7 +1,7 @@
 import type { NonEmptyKeys } from "@/shared/types/utils";
-import type { Contract } from "../schemas/model";
+import type { ContractSummary } from "../schemas/model";
 
-export const CONTRACT_ALLOWED_SORT_COLUMNS: NonEmptyKeys<Contract> = [
+export const CONTRACT_ALLOWED_SORT_COLUMNS: NonEmptyKeys<ContractSummary> = [
 	"client",
 	"createdAt",
 	"feePercentage",

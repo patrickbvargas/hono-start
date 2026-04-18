@@ -6,17 +6,17 @@ import {
 } from "@/shared/components/entity-detail";
 import { EntityStatus } from "@/shared/components/entity-status";
 import { formatter } from "@/shared/lib/formatter";
+import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
-import { getContractByIdOptions } from "../../api/get";
-import type { Contract } from "../../schemas/model";
+import { getContractByIdQueryOptions } from "../../api/queries";
 
 interface ContractDetailsProps {
-	contract: Contract;
+	id: EntityId;
 	state: OverlayState;
 }
 
-export const ContractDetails = ({ contract, state }: ContractDetailsProps) => {
-	const { data } = useSuspenseQuery(getContractByIdOptions(contract.id));
+export const ContractDetails = ({ id, state }: ContractDetailsProps) => {
+	const { data } = useSuspenseQuery(getContractByIdQueryOptions(id));
 
 	const generalInfo = React.useMemo<DetailFieldItem[]>(
 		() => [

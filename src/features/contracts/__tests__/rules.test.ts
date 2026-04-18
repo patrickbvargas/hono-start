@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import { Prisma } from "@/generated/prisma/client";
-import type { ResolvedContractAssignment } from "../api/lookups";
 import {
 	ASSIGNMENT_TYPE_ADMIN_ASSISTANT_VALUE,
 	ASSIGNMENT_TYPE_RECOMMENDED_VALUE,
@@ -10,10 +9,22 @@ import {
 	EMPLOYEE_TYPE_LAWYER_VALUE,
 } from "../constants";
 import { CONTRACT_ERRORS } from "../constants/errors";
+import type { ResolvedContractAssignment } from "../data/mutations";
 import {
-	validateContractWriteRules,
-	validateResolvedContractWriteRules,
-} from "../rules";
+	assertContractAssignmentCompatibility,
+	assertContractReferralPercentageCompatibility,
+	assertContractReferralTeamComposition,
+	assertContractResponsibleLawyer,
+	assertResolvedContractAssignmentRules,
+} from "../rules/assignments";
+import {
+	assertContractHasActiveAssignment,
+	assertContractHasActiveRevenue,
+	assertContractRevenueDownPayment,
+	assertContractUniqueActiveAssignments,
+	assertContractUniqueActiveRevenueTypes,
+	assertContractWriteRules,
+} from "../rules/write";
 import type {
 	ContractAssignmentInput,
 	ContractCreateInput,
@@ -108,121 +119,100 @@ function createResolvedAssignment(options: {
 	};
 }
 
-describe("validateContractWriteRules", () => {
+describe("contract write rules", () => {
 	it("requires at least one active assignment", () => {
-		expect(
-			validateContractWriteRules(
+		expect(() =>
+			assertContractHasActiveAssignment([
+				createAssignment({ isActive: false }),
+			]),
+		).toThrowError(CONTRACT_ERRORS.CONTRACT_ASSIGNMENT_REQUIRED);
+	});
+
+	it("requires at least one active revenue", () => {
+		expect(() =>
+			assertContractHasActiveRevenue([createRevenue({ isActive: false })]),
+		).toThrowError(CONTRACT_ERRORS.CONTRACT_REVENUE_REQUIRED);
+	});
+
+	it("rejects duplicate active assignments", () => {
+		expect(() =>
+			assertContractUniqueActiveAssignments([
+				createAssignment(),
+				createAssignment(),
+			]),
+		).toThrowError(CONTRACT_ERRORS.CONTRACT_ASSIGNMENT_DUPLICATE);
+	});
+
+	it("rejects duplicate active revenue types", () => {
+		expect(() =>
+			assertContractUniqueActiveRevenueTypes([
+				createRevenue(),
+				createRevenue(),
+			]),
+		).toThrowError(CONTRACT_ERRORS.CONTRACT_REVENUE_TYPE_DUPLICATE);
+	});
+
+	it("rejects down payment above total value", () => {
+		expect(() =>
+			assertContractRevenueDownPayment([
+				createRevenue({ totalValue: 500, downPaymentValue: 600 }),
+			]),
+		).toThrowError(CONTRACT_ERRORS.CONTRACT_DOWN_PAYMENT_TOO_HIGH);
+	});
+
+	it("aggregates checks through assertContractWriteRules", () => {
+		expect(() =>
+			assertContractWriteRules(
 				createContractInput({
 					assignments: [createAssignment({ isActive: false })],
 				}),
 			),
-		).toContainEqual({
-			path: ["assignments"],
-			message: CONTRACT_ERRORS.CONTRACT_ASSIGNMENT_REQUIRED,
-		});
-	});
-
-	it("requires at least one active revenue", () => {
-		expect(
-			validateContractWriteRules(
-				createContractInput({
-					revenues: [createRevenue({ isActive: false })],
-				}),
-			),
-		).toContainEqual({
-			path: ["revenues"],
-			message: CONTRACT_ERRORS.CONTRACT_REVENUE_REQUIRED,
-		});
-	});
-
-	it("rejects duplicate active assignments", () => {
-		expect(
-			validateContractWriteRules(
-				createContractInput({
-					assignments: [createAssignment(), createAssignment()],
-				}),
-			),
-		).toContainEqual({
-			path: ["assignments"],
-			message: CONTRACT_ERRORS.CONTRACT_ASSIGNMENT_DUPLICATE,
-		});
-	});
-
-	it("rejects duplicate active revenue types", () => {
-		expect(
-			validateContractWriteRules(
-				createContractInput({
-					revenues: [createRevenue(), createRevenue()],
-				}),
-			),
-		).toContainEqual({
-			path: ["revenues"],
-			message: CONTRACT_ERRORS.CONTRACT_REVENUE_TYPE_DUPLICATE,
-		});
-	});
-
-	it("rejects down payment above total value", () => {
-		expect(
-			validateContractWriteRules(
-				createContractInput({
-					revenues: [createRevenue({ totalValue: 500, downPaymentValue: 600 })],
-				}),
-			),
-		).toContainEqual({
-			path: ["revenues", 0, "downPaymentValue"],
-			message: CONTRACT_ERRORS.CONTRACT_DOWN_PAYMENT_TOO_HIGH,
-		});
+		).toThrowError(CONTRACT_ERRORS.CONTRACT_ASSIGNMENT_REQUIRED);
 	});
 });
 
-describe("validateResolvedContractWriteRules", () => {
+describe("contract assignment rules", () => {
 	it("requires a responsible lawyer", () => {
-		expect(
-			validateResolvedContractWriteRules([
-				createResolvedAssignment({
+		expect(() =>
+			assertContractResponsibleLawyer([
+				{
+					isActive: true,
 					assignmentTypeValue: ASSIGNMENT_TYPE_RECOMMENDING_VALUE,
-				}),
-				createResolvedAssignment({
-					employeeId: "2",
+					employeeTypeValue: EMPLOYEE_TYPE_LAWYER_VALUE,
+				},
+				{
+					isActive: true,
 					assignmentTypeValue: ASSIGNMENT_TYPE_RECOMMENDED_VALUE,
-				}),
+					employeeTypeValue: EMPLOYEE_TYPE_LAWYER_VALUE,
+				},
 			]),
-		).toContainEqual({
-			path: ["assignments"],
-			message: CONTRACT_ERRORS.CONTRACT_RESPONSIBLE_LAWYER_REQUIRED,
-		});
+		).toThrowError(CONTRACT_ERRORS.CONTRACT_RESPONSIBLE_LAWYER_REQUIRED);
 	});
 
 	it("rejects admin assistants using non-admin assignments", () => {
-		expect(
-			validateResolvedContractWriteRules([
+		expect(() =>
+			assertContractAssignmentCompatibility([
 				createResolvedAssignment({
 					employeeTypeValue: EMPLOYEE_TYPE_ADMIN_ASSISTANT_VALUE,
 					assignmentTypeValue: ASSIGNMENT_TYPE_RESPONSIBLE_VALUE,
 				}),
 			]),
-		).toContainEqual({
-			path: ["assignments", 0, "assignmentType"],
-			message: CONTRACT_ERRORS.CONTRACT_ADMIN_ASSISTANT_ASSIGNMENT,
-		});
+		).toThrowError(CONTRACT_ERRORS.CONTRACT_ADMIN_ASSISTANT_ASSIGNMENT);
 	});
 
 	it("rejects lawyers using admin-assistant assignments", () => {
-		expect(
-			validateResolvedContractWriteRules([
+		expect(() =>
+			assertContractAssignmentCompatibility([
 				createResolvedAssignment({
 					assignmentTypeValue: ASSIGNMENT_TYPE_ADMIN_ASSISTANT_VALUE,
 				}),
 			]),
-		).toContainEqual({
-			path: ["assignments", 0, "assignmentType"],
-			message: CONTRACT_ERRORS.CONTRACT_LAWYER_ASSIGNMENT,
-		});
+		).toThrowError(CONTRACT_ERRORS.CONTRACT_LAWYER_ASSIGNMENT);
 	});
 
 	it("requires a recommended participant when there is a recommender", () => {
-		expect(
-			validateResolvedContractWriteRules([
+		expect(() =>
+			assertContractReferralTeamComposition([
 				createResolvedAssignment({
 					assignmentTypeValue: ASSIGNMENT_TYPE_RESPONSIBLE_VALUE,
 				}),
@@ -231,15 +221,12 @@ describe("validateResolvedContractWriteRules", () => {
 					assignmentTypeValue: ASSIGNMENT_TYPE_RECOMMENDING_VALUE,
 				}),
 			]),
-		).toContainEqual({
-			path: ["assignments"],
-			message: CONTRACT_ERRORS.CONTRACT_REFERRAL_RECOMMENDED_REQUIRED,
-		});
+		).toThrowError(CONTRACT_ERRORS.CONTRACT_REFERRAL_RECOMMENDED_REQUIRED);
 	});
 
 	it("requires a recommender when there is a recommended participant", () => {
-		expect(
-			validateResolvedContractWriteRules([
+		expect(() =>
+			assertContractReferralTeamComposition([
 				createResolvedAssignment({
 					assignmentTypeValue: ASSIGNMENT_TYPE_RESPONSIBLE_VALUE,
 				}),
@@ -248,15 +235,12 @@ describe("validateResolvedContractWriteRules", () => {
 					assignmentTypeValue: ASSIGNMENT_TYPE_RECOMMENDED_VALUE,
 				}),
 			]),
-		).toContainEqual({
-			path: ["assignments"],
-			message: CONTRACT_ERRORS.CONTRACT_REFERRAL_RECOMMENDING_REQUIRED,
-		});
+		).toThrowError(CONTRACT_ERRORS.CONTRACT_REFERRAL_RECOMMENDING_REQUIRED);
 	});
 
 	it("rejects referral percentage above recommended remuneration percentage", () => {
-		expect(
-			validateResolvedContractWriteRules([
+		expect(() =>
+			assertContractReferralPercentageCompatibility([
 				createResolvedAssignment({
 					assignmentTypeValue: ASSIGNMENT_TYPE_RESPONSIBLE_VALUE,
 				}),
@@ -271,9 +255,16 @@ describe("validateResolvedContractWriteRules", () => {
 					remunerationPercentage: 0.2,
 				}),
 			]),
-		).toContainEqual({
-			path: ["assignments"],
-			message: CONTRACT_ERRORS.CONTRACT_REFERRAL_PERCENTAGE_TOO_HIGH,
-		});
+		).toThrowError(CONTRACT_ERRORS.CONTRACT_REFERRAL_PERCENTAGE_TOO_HIGH);
+	});
+
+	it("aggregates checks through assertResolvedContractAssignmentRules", () => {
+		expect(() =>
+			assertResolvedContractAssignmentRules([
+				createResolvedAssignment({
+					assignmentTypeValue: ASSIGNMENT_TYPE_ADMIN_ASSISTANT_VALUE,
+				}),
+			]),
+		).toThrowError(CONTRACT_ERRORS.CONTRACT_LAWYER_ASSIGNMENT);
 	});
 });

@@ -1,28 +1,28 @@
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { ConfirmDialog } from "@/shared/components/confirm-dialog";
+import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
+import { getContractByIdQueryOptions } from "../../api/queries";
 import { useContractDelete } from "../../hooks/use-delete";
-import type { Contract } from "../../schemas/model";
 
 interface ContractDeleteProps {
-	contract: Contract;
+	id: EntityId;
 	state: OverlayState;
 	onSuccess?: () => void;
 }
 
 export const ContractDelete = ({
-	contract,
+	id,
 	state,
 	onSuccess,
 }: ContractDeleteProps) => {
-	const { handleConfirm, isPending } = useContractDelete({
-		contract,
-		onSuccess,
-	});
+	const { data } = useSuspenseQuery(getContractByIdQueryOptions(id));
+	const { handleConfirm, isPending } = useContractDelete({ id, onSuccess });
 
 	return (
 		<ConfirmDialog
 			title="Excluir contrato"
-			description={`Tem certeza que deseja excluir o contrato ${contract.processNumber}?`}
+			description={`Tem certeza que deseja excluir o contrato ${data.processNumber}?`}
 			onConfirm={handleConfirm}
 			confirmButtonLabel="Excluir"
 			variant="danger"

@@ -1,27 +1,31 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import {
-	getContractAssignmentTypesOptions,
-	getContractLegalAreasOptions,
-	getContractRevenueTypesOptions,
-	getContractStatusesOptions,
-	getSelectableContractClientsOptions,
-	getSelectableContractEmployeesOptions,
-} from "../api/get";
+	getContractAssignmentTypesQueryOptions,
+	getContractLegalAreasQueryOptions,
+	getContractRevenueTypesQueryOptions,
+	getContractStatusesQueryOptions,
+	getSelectableContractClientsQueryOptions,
+	getSelectableContractEmployeesQueryOptions,
+} from "../api/queries";
 
 export function useContractOptions() {
 	const { data: clients } = useSuspenseQuery(
-		getSelectableContractClientsOptions(),
+		getSelectableContractClientsQueryOptions(),
 	);
 	const { data: employees } = useSuspenseQuery(
-		getSelectableContractEmployeesOptions(),
+		getSelectableContractEmployeesQueryOptions(),
 	);
-	const { data: legalAreas } = useSuspenseQuery(getContractLegalAreasOptions());
-	const { data: statuses } = useSuspenseQuery(getContractStatusesOptions());
+	const { data: legalAreas } = useSuspenseQuery(
+		getContractLegalAreasQueryOptions(),
+	);
+	const { data: statuses } = useSuspenseQuery(
+		getContractStatusesQueryOptions(),
+	);
 	const { data: assignmentTypes } = useSuspenseQuery(
-		getContractAssignmentTypesOptions(),
+		getContractAssignmentTypesQueryOptions(),
 	);
 	const { data: revenueTypes } = useSuspenseQuery(
-		getContractRevenueTypesOptions(),
+		getContractRevenueTypesQueryOptions(),
 	);
 
 	return {

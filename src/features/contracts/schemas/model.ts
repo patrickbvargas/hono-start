@@ -28,7 +28,7 @@ export const contractRevenueSchema = entityIdSchema.safeExtend({
 	isSoftDeleted: z.boolean(),
 });
 
-export const contractSchema = entityIdSchema.safeExtend({
+export const contractSummarySchema = entityIdSchema.safeExtend({
 	processNumber: z.string(),
 	clientId: z.number(),
 	client: z.string(),
@@ -39,10 +39,6 @@ export const contractSchema = entityIdSchema.safeExtend({
 	status: z.string(),
 	statusValue: z.string(),
 	feePercentage: z.number(),
-	notes: z.string().nullable(),
-	allowStatusChange: z.boolean(),
-	assignments: z.array(contractAssignmentSchema),
-	revenues: z.array(contractRevenueSchema),
 	assignmentCount: z.number(),
 	revenueCount: z.number(),
 	assignedEmployeeIds: z.array(z.number()),
@@ -53,6 +49,14 @@ export const contractSchema = entityIdSchema.safeExtend({
 	updatedAt: z.iso.datetime().nullable(),
 });
 
+export const contractDetailSchema = contractSummarySchema.safeExtend({
+	notes: z.string().nullable(),
+	allowStatusChange: z.boolean(),
+	assignments: z.array(contractAssignmentSchema),
+	revenues: z.array(contractRevenueSchema),
+});
+
 export type ContractAssignment = z.infer<typeof contractAssignmentSchema>;
 export type ContractRevenue = z.infer<typeof contractRevenueSchema>;
-export type Contract = z.infer<typeof contractSchema>;
+export type ContractSummary = z.infer<typeof contractSummarySchema>;
+export type ContractDetail = z.infer<typeof contractDetailSchema>;

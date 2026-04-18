@@ -3,7 +3,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import { PlusIcon } from "lucide-react";
 import {
-	type Contract,
 	ContractDelete,
 	ContractDetails,
 	ContractFilter,
@@ -11,13 +10,14 @@ import {
 	ContractRestore,
 	ContractTable,
 	contractSearchSchema,
-	getContractsOptions,
+	getContractsQueryOptions,
 } from "@/features/contracts";
 import { RouteLoading } from "@/shared/components/route-loading";
 import { Button } from "@/shared/components/ui";
 import { Wrapper } from "@/shared/components/wrapper";
 import { ROUTES } from "@/shared/config/routes";
 import { useOverlay } from "@/shared/hooks/use-overlay";
+import type { EntityId } from "@/shared/schemas/entity";
 import {
 	getLoggedUserSession,
 	isAdminSession,
@@ -31,15 +31,15 @@ export const Route = createFileRoute("/contratos")({
 	},
 	loaderDeps: ({ search }) => ({ search }),
 	loader: async ({ context: { queryClient }, deps: { search } }) => {
-		await queryClient.ensureQueryData(getContractsOptions(search));
+		await queryClient.ensureQueryData(getContractsQueryOptions(search));
 	},
 	component: RouteComponent,
 });
 
 function RouteComponent() {
 	const search = Route.useSearch();
-	const { data } = useSuspenseQuery(getContractsOptions(search));
-	const { overlay } = useOverlay<Contract>();
+	const { data } = useSuspenseQuery(getContractsQueryOptions(search));
+	const { overlay } = useOverlay<EntityId>();
 	const isAdmin = useLoggedUserSessionStore(isAdminSession);
 
 	return (
@@ -68,29 +68,17 @@ function RouteComponent() {
 				{overlay.create.render((state) => (
 					<ContractForm state={state} onSuccess={state.close} />
 				))}
-				{overlay.edit.render((contract, state) => (
-					<ContractForm
-						state={state}
-						contract={contract}
-						onSuccess={state.close}
-					/>
+				{overlay.edit.render((id, state) => (
+					<ContractForm state={state} id={id} onSuccess={state.close} />
 				))}
-				{overlay.delete.render((contract, state) => (
-					<ContractDelete
-						contract={contract}
-						state={state}
-						onSuccess={state.close}
-					/>
+				{overlay.delete.render((id, state) => (
+					<ContractDelete id={id} state={state} onSuccess={state.close} />
 				))}
-				{overlay.restore.render((contract, state) => (
-					<ContractRestore
-						contract={contract}
-						state={state}
-						onSuccess={state.close}
-					/>
+				{overlay.restore.render((id, state) => (
+					<ContractRestore id={id} state={state} onSuccess={state.close} />
 				))}
-				{overlay.details.render((contract, state) => (
-					<ContractDetails contract={contract} state={state} />
+				{overlay.details.render((id, state) => (
+					<ContractDetails id={id} state={state} />
 				))}
 			</Wrapper.Body>
 		</Wrapper>

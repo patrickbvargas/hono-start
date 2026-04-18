@@ -1,6 +1,13 @@
 import * as z from "zod";
 import { entityIdSchema } from "@/shared/schemas/entity";
-import { validateContractWriteRules } from "../rules";
+import {
+	assertContractHasActiveAssignment,
+	assertContractHasActiveRevenue,
+	assertContractRevenueDownPayment,
+	assertContractRevenueLimit,
+	assertContractUniqueActiveAssignments,
+	assertContractUniqueActiveRevenueTypes,
+} from "../rules/write";
 
 export const contractAssignmentInputSchema = z.object({
 	id: z.number().optional(),
@@ -47,15 +54,60 @@ const contractBusinessRulesRefinement = (
 	data: ContractBaseInput,
 	ctx: z.RefinementCtx,
 ) => {
-	const issues = validateContractWriteRules(data);
+	const checks: Array<{ run: () => void; path: (string | number)[] }> = [
+		{
+			run: () => assertContractHasActiveAssignment(data.assignments),
+			path: ["assignments"],
+		},
+		{
+			run: () => assertContractHasActiveRevenue(data.revenues),
+			path: ["revenues"],
+		},
+		{
+			run: () => assertContractRevenueLimit(data.revenues),
+			path: ["revenues"],
+		},
+		{
+			run: () => assertContractUniqueActiveRevenueTypes(data.revenues),
+			path: ["revenues"],
+		},
+		{
+			run: () => assertContractUniqueActiveAssignments(data.assignments),
+			path: ["assignments"],
+		},
+	];
 
-	for (const issue of issues) {
-		ctx.addIssue({
-			code: "custom",
-			path: issue.path,
-			message: issue.message,
-		});
+	for (const check of checks) {
+		try {
+			check.run();
+		} catch (error) {
+			if (!(error instanceof Error)) {
+				throw error;
+			}
+
+			ctx.addIssue({
+				code: "custom",
+				path: check.path,
+				message: error.message,
+			});
+		}
 	}
+
+	data.revenues.forEach((revenue, index) => {
+		try {
+			assertContractRevenueDownPayment([revenue]);
+		} catch (error) {
+			if (!(error instanceof Error)) {
+				throw error;
+			}
+
+			ctx.addIssue({
+				code: "custom",
+				path: ["revenues", index, "downPaymentValue"],
+				message: error.message,
+			});
+		}
+	});
 };
 
 export const contractCreateInputSchema = contractBaseInputSchema.superRefine(
