@@ -60,3 +60,16 @@ The system SHALL organize feature validation concerns using a canonical boundary
 - **THEN** the feature SHALL map raw Prisma rows into explicit contract summary or detail models before parsing with `schemas/model.ts`
 - **AND** lookup-backed read fields SHALL expose UI-ready labels when rendered to users
 - **AND** stable lookup `value` fields SHALL remain available alongside labels when the feature needs them for edit defaults or downstream write flows
+
+#### Scenario: Remuneration server wrappers stay separate from persistence modules
+- **WHEN** the remunerations feature implements route-facing reads, exports, or writes
+- **THEN** route-facing server functions and React Query option factories SHALL live in `src/features/remunerations/api/queries.ts` and `src/features/remunerations/api/mutations.ts`
+- **AND** Prisma-backed remuneration reads, writes, option loading, access-resource loading, and persistence-aware checks SHALL live in `src/features/remunerations/data/queries.ts` and `src/features/remunerations/data/mutations.ts`
+- **AND** remuneration hooks and routes SHALL consume the `api/` surface rather than importing persistence modules directly
+
+#### Scenario: Remuneration pure business assertions use the canonical assert boundary
+- **WHEN** the remunerations feature defines reusable write rules that do not require Prisma
+- **THEN** exported pure rule entrypoints SHALL live under `src/features/remunerations/rules/`
+- **AND** exported pure rule entrypoints SHALL use an `assert...` prefix
+- **AND** exported pure rule entrypoints SHALL throw when the asserted invariant fails
+- **AND** non-throwing validation collectors SHALL NOT be exported from the remuneration rules boundary
