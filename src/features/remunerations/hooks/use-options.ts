@@ -2,7 +2,7 @@ import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import {
 	getSelectableRemunerationContractsOptions,
 	getSelectableRemunerationEmployeesOptions,
-} from "../api/get";
+} from "../api/queries";
 
 export function useRemunerationOptions(includeEmployees = false) {
 	const { data: contracts } = useSuspenseQuery(

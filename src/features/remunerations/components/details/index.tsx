@@ -7,7 +7,7 @@ import {
 import { EntityStatus } from "@/shared/components/entity-status";
 import { formatter } from "@/shared/lib/formatter";
 import type { OverlayState } from "@/shared/types/overlay";
-import { getRemunerationByIdOptions } from "../../api/get";
+import { getRemunerationByIdOptions } from "../../api/queries";
 import type { Remuneration } from "../../schemas/model";
 
 interface RemunerationDetailsProps {

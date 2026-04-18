@@ -1,23 +1,22 @@
 import { FormWrapper } from "@/shared/components/form-wrapper";
 import { Field } from "@/shared/components/ui";
+import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
 import { useRemunerationForm } from "../../hooks/use-form";
-import type { Remuneration } from "../../schemas/model";
-import { defaultRemunerationUpdateValues } from "../../utils/default";
 
 interface RemunerationFormProps {
-	remuneration: Remuneration;
+	id: EntityId;
 	state: OverlayState;
 	onSuccess?: () => void;
 }
 
 export const RemunerationForm = ({
-	remuneration,
+	id,
 	state,
 	onSuccess,
 }: RemunerationFormProps) => {
 	const { form } = useRemunerationForm({
-		initialData: defaultRemunerationUpdateValues(remuneration),
+		id,
 		onSuccess,
 	});
 

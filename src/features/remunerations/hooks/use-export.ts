@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import * as React from "react";
 import { toast } from "@/shared/lib/toast";
-import { exportRemunerationsOptions } from "../api/export";
+import { exportRemunerationsOptions } from "../api/queries";
 import type { RemunerationSearch } from "../schemas/search";
 
 type ExportFormat = "pdf" | "spreadsheet";

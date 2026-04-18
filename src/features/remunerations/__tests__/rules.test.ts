@@ -1,56 +1,36 @@
 import { describe, expect, it } from "vitest";
 import { REMUNERATION_ERRORS } from "../constants/errors";
-import { validateRemunerationWriteRules } from "../rules";
+import {
+	assertRemunerationAmountPositive,
+	assertRemunerationEffectivePercentageRange,
+	assertRemunerationWriteRules,
+} from "../rules/write";
 
-describe("validateRemunerationWriteRules", () => {
-	it("returns no issues for a valid remuneration payload", () => {
-		expect(
-			validateRemunerationWriteRules({
+describe("remuneration write rules", () => {
+	it("does not throw for a valid remuneration payload", () => {
+		expect(() =>
+			assertRemunerationWriteRules({
 				amount: 1500,
 				effectivePercentage: 0.4,
 			}),
-		).toEqual([]);
+		).not.toThrow();
 	});
 
-	it("returns the amount error when amount is not positive", () => {
-		expect(
-			validateRemunerationWriteRules({
-				amount: 0,
-				effectivePercentage: 0.4,
-			}),
-		).toEqual([
-			{
-				path: ["amount"],
-				message: REMUNERATION_ERRORS.REMUNERATION_AMOUNT_TOO_LOW,
-			},
-		]);
+	it("throws the amount error when amount is not positive", () => {
+		expect(() => assertRemunerationAmountPositive(0)).toThrow(
+			REMUNERATION_ERRORS.REMUNERATION_AMOUNT_TOO_LOW,
+		);
 	});
 
-	it("returns the percentage-too-low error when percentage is negative", () => {
-		expect(
-			validateRemunerationWriteRules({
-				amount: 1500,
-				effectivePercentage: -0.1,
-			}),
-		).toEqual([
-			{
-				path: ["effectivePercentage"],
-				message: REMUNERATION_ERRORS.REMUNERATION_PERCENTAGE_TOO_LOW,
-			},
-		]);
+	it("throws the percentage-too-low error when percentage is negative", () => {
+		expect(() => assertRemunerationEffectivePercentageRange(-0.1)).toThrow(
+			REMUNERATION_ERRORS.REMUNERATION_PERCENTAGE_TOO_LOW,
+		);
 	});
 
-	it("returns the percentage-too-high error when percentage exceeds one", () => {
-		expect(
-			validateRemunerationWriteRules({
-				amount: 1500,
-				effectivePercentage: 1.1,
-			}),
-		).toEqual([
-			{
-				path: ["effectivePercentage"],
-				message: REMUNERATION_ERRORS.REMUNERATION_PERCENTAGE_TOO_HIGH,
-			},
-		]);
+	it("throws the percentage-too-high error when percentage exceeds one", () => {
+		expect(() => assertRemunerationEffectivePercentageRange(1.1)).toThrow(
+			REMUNERATION_ERRORS.REMUNERATION_PERCENTAGE_TOO_HIGH,
+		);
 	});
 });

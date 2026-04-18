@@ -1,4 +1,4 @@
-export { getRemunerationsOptions } from "./api/get";
+export { getRemunerationsOptions } from "./api/queries";
 export * from "./components/delete";
 export * from "./components/details";
 export * from "./components/filter";

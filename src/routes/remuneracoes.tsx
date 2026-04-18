@@ -70,21 +70,21 @@ function RouteComponent() {
 				/>
 				{overlay.edit.render((remuneration, state) => (
 					<RemunerationForm
-						remuneration={remuneration}
+						id={remuneration.id}
 						state={state}
 						onSuccess={state.close}
 					/>
 				))}
 				{overlay.delete.render((remuneration, state) => (
 					<RemunerationDelete
-						remuneration={remuneration}
+						id={remuneration.id}
 						state={state}
 						onSuccess={state.close}
 					/>
 				))}
 				{overlay.restore.render((remuneration, state) => (
 					<RemunerationRestore
-						remuneration={remuneration}
+						id={remuneration.id}
 						state={state}
 						onSuccess={state.close}
 					/>

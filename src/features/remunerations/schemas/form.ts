@@ -1,6 +1,9 @@
 import * as z from "zod";
 import { entityIdSchema } from "@/shared/schemas/entity";
-import { validateRemunerationWriteRules } from "../rules";
+import {
+	assertRemunerationAmountPositive,
+	assertRemunerationEffectivePercentageRange,
+} from "../rules/write";
 import { remunerationSearchSchema } from "./search";
 
 const remunerationBaseInputSchema = z.object({
@@ -12,14 +15,32 @@ const remunerationBusinessRulesRefinement = (
 	data: RemunerationUpdateInput,
 	ctx: z.RefinementCtx,
 ) => {
-	const issues = validateRemunerationWriteRules(data);
+	const assertions = [
+		{
+			path: ["amount"],
+			run: () => assertRemunerationAmountPositive(data.amount),
+		},
+		{
+			path: ["effectivePercentage"],
+			run: () =>
+				assertRemunerationEffectivePercentageRange(data.effectivePercentage),
+		},
+	] as const;
 
-	for (const issue of issues) {
-		ctx.addIssue({
-			code: "custom",
-			message: issue.message,
-			path: issue.path,
-		});
+	for (const assertion of assertions) {
+		try {
+			assertion.run();
+		} catch (error) {
+			if (!(error instanceof Error)) {
+				throw error;
+			}
+
+			ctx.addIssue({
+				code: "custom",
+				message: error.message,
+				path: [...assertion.path],
+			});
+		}
 	}
 };
 

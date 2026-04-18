@@ -14,7 +14,7 @@ import { Pagination } from "@/shared/components/pagination";
 import { Button, Dropdown, Label } from "@/shared/components/ui";
 import { formatter } from "@/shared/lib/formatter";
 import type { QueryPaginatedReturnType } from "@/shared/types/api";
-import { REMUNERATION_ALLOWED_SORT_COLUMNS } from "../../constants";
+import { REMUNERATION_ALLOWED_SORT_COLUMNS } from "../../constants/sorting";
 import type { Remuneration } from "../../schemas/model";
 
 export interface RemunerationTableProps {

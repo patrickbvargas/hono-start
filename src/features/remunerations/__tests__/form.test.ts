@@ -29,6 +29,7 @@ describe("remuneration form schemas", () => {
 		expect(result.error?.issues[0]?.message).toBe(
 			REMUNERATION_ERRORS.REMUNERATION_AMOUNT_TOO_LOW,
 		);
+		expect(result.error?.issues[0]?.path).toEqual(["amount"]);
 	});
 
 	it("rejects a negative effective percentage", () => {
@@ -42,6 +43,7 @@ describe("remuneration form schemas", () => {
 		expect(result.error?.issues[0]?.message).toBe(
 			REMUNERATION_ERRORS.REMUNERATION_PERCENTAGE_TOO_LOW,
 		);
+		expect(result.error?.issues[0]?.path).toEqual(["effectivePercentage"]);
 	});
 
 	it("rejects an effective percentage above one", () => {
@@ -55,5 +57,6 @@ describe("remuneration form schemas", () => {
 		expect(result.error?.issues[0]?.message).toBe(
 			REMUNERATION_ERRORS.REMUNERATION_PERCENTAGE_TOO_HIGH,
 		);
+		expect(result.error?.issues[0]?.path).toEqual(["effectivePercentage"]);
 	});
 });
