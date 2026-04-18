@@ -6,17 +6,17 @@ import {
 } from "@/shared/components/entity-detail";
 import { EntityStatus } from "@/shared/components/entity-status";
 import { formatter } from "@/shared/lib/formatter";
+import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
-import { getFeeByIdOptions } from "../../api/get";
-import type { Fee } from "../../schemas/model";
+import { getFeeByIdQueryOptions } from "../../api/queries";
 
 interface FeeDetailsProps {
-	fee: Fee;
+	id: EntityId;
 	state: OverlayState;
 }
 
-export const FeeDetails = ({ fee, state }: FeeDetailsProps) => {
-	const { data } = useSuspenseQuery(getFeeByIdOptions(fee.id));
+export const FeeDetails = ({ id, state }: FeeDetailsProps) => {
+	const { data } = useSuspenseQuery(getFeeByIdQueryOptions(id));
 
 	const generalInfo = React.useMemo<DetailFieldItem[]>(
 		() => [

@@ -1,7 +1,7 @@
 import * as z from "zod";
 import { entityIdSchema } from "@/shared/schemas/entity";
 
-export const feeSchema = entityIdSchema.safeExtend({
+export const feeDetailSchema = entityIdSchema.safeExtend({
 	contractId: z.number(),
 	contractProcessNumber: z.string(),
 	client: z.string(),
@@ -20,4 +20,7 @@ export const feeSchema = entityIdSchema.safeExtend({
 	updatedAt: z.iso.datetime().nullable(),
 });
 
-export type Fee = z.infer<typeof feeSchema>;
+export const feeSummarySchema = feeDetailSchema;
+
+export type FeeDetail = z.infer<typeof feeDetailSchema>;
+export type FeeSummary = z.infer<typeof feeSummarySchema>;

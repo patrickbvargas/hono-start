@@ -1,21 +1,19 @@
 import { FormWrapper } from "@/shared/components/form-wrapper";
 import { Field } from "@/shared/components/ui";
+import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
 import { useFeeForm } from "../../hooks/use-form";
 import { useFeeOptions } from "../../hooks/use-options";
-import type { Fee } from "../../schemas/model";
-import { defaultFeeUpdateValues } from "../../utils/default";
 
 interface FeeFormProps {
-	fee?: Fee;
+	id?: EntityId;
 	state: OverlayState;
 	onSuccess?: () => void;
 }
 
-export const FeeForm = ({ fee, state, onSuccess }: FeeFormProps) => {
-	const initialData = fee ? defaultFeeUpdateValues(fee) : undefined;
+export const FeeForm = ({ id, state, onSuccess }: FeeFormProps) => {
 	const { form } = useFeeForm({
-		initialData,
+		id,
 		onSuccess,
 	});
 
@@ -27,7 +25,7 @@ export const FeeForm = ({ fee, state, onSuccess }: FeeFormProps) => {
 						contractId={contractId}
 						form={form}
 						state={state}
-						title={fee ? "Editar honorário" : "Novo honorário"}
+						title={id ? "Editar honorário" : "Novo honorário"}
 					/>
 				)}
 			</form.Subscribe>

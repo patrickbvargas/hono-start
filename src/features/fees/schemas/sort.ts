@@ -1,5 +1,5 @@
 import * as z from "zod";
-import { FEE_ALLOWED_SORT_COLUMNS } from "../constants";
+import { FEE_ALLOWED_SORT_COLUMNS } from "../constants/sorting";
 
 export const feeSortSchema = z.object({
 	column: z

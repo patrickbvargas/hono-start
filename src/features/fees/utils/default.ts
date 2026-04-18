@@ -1,5 +1,5 @@
 import type { FeeCreateInput, FeeUpdateInput } from "../schemas/form";
-import type { Fee } from "../schemas/model";
+import type { FeeDetail } from "../schemas/model";
 
 export const defaultFeeCreateValues = (): FeeCreateInput => ({
 	contractId: "",
@@ -11,7 +11,9 @@ export const defaultFeeCreateValues = (): FeeCreateInput => ({
 	isActive: true,
 });
 
-export const defaultFeeUpdateValues = (initialValue: Fee): FeeUpdateInput => ({
+export const defaultFeeUpdateValues = (
+	initialValue: FeeDetail,
+): FeeUpdateInput => ({
 	id: initialValue.id,
 	contractId: String(initialValue.contractId),
 	revenueId: String(initialValue.revenueId),

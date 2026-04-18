@@ -4,22 +4,21 @@ import {
 	refreshEntityQueries,
 } from "@/shared/lib/entity-management";
 import { toast } from "@/shared/lib/toast";
-import { restoreFeeOptions } from "../api/restore";
-import { FEE_DATA_CACHE_KEY } from "../constants";
-import type { Fee } from "../schemas/model";
+import type { EntityId } from "@/shared/schemas/entity";
+import { restoreFeeMutationOptions } from "../api/mutations";
+import { FEE_DATA_CACHE_KEY } from "../constants/cache";
 
 interface UseFeeRestoreOptions {
-	fee: Fee;
 	onSuccess?: () => void;
 }
 
-export function useFeeRestore({ fee, onSuccess }: UseFeeRestoreOptions) {
+export function useFeeRestore({ onSuccess }: UseFeeRestoreOptions) {
 	const queryClient = useQueryClient();
-	const mutation = useMutation(restoreFeeOptions());
+	const mutation = useMutation(restoreFeeMutationOptions());
 
-	const handleConfirm = async () => {
+	const handleConfirm = async (id: EntityId) => {
 		try {
-			await mutation.mutateAsync({ data: { id: fee.id } });
+			await mutation.mutateAsync({ data: { id } });
 			toast.success("Honorário restaurado com sucesso.");
 			await refreshEntityQueries(queryClient, FEE_DATA_CACHE_KEY);
 			onSuccess?.();

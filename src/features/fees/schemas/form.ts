@@ -1,6 +1,9 @@
 import * as z from "zod";
 import { entityIdSchema } from "@/shared/schemas/entity";
-import { validateFeeWriteRules } from "../rules";
+import {
+	assertFeeAmountPositive,
+	assertFeeInstallmentNumber,
+} from "../rules/write";
 
 const feeBaseInputSchema = z.object({
 	contractId: z.string().trim().min(1, "Contrato é obrigatório"),
@@ -19,14 +22,31 @@ const feeBusinessRulesRefinement = (
 	data: FeeBaseInput,
 	ctx: z.RefinementCtx,
 ) => {
-	const issues = validateFeeWriteRules(data);
+	const assertions = [
+		{
+			path: ["amount"],
+			run: () => assertFeeAmountPositive(data.amount),
+		},
+		{
+			path: ["installmentNumber"],
+			run: () => assertFeeInstallmentNumber(data.installmentNumber),
+		},
+	] as const;
 
-	for (const issue of issues) {
-		ctx.addIssue({
-			code: "custom",
-			message: issue.message,
-			path: issue.path,
-		});
+	for (const assertion of assertions) {
+		try {
+			assertion.run();
+		} catch (error) {
+			if (!(error instanceof Error)) {
+				throw error;
+			}
+
+			ctx.addIssue({
+				code: "custom",
+				message: error.message,
+				path: [...assertion.path],
+			});
+		}
 	}
 };
 

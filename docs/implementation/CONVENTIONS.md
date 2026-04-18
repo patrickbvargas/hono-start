@@ -46,7 +46,10 @@
 - `api/queries.ts` and `api/mutations.ts` are the canonical route-facing boundary for server functions and React Query option factories.
 - `data/queries.ts` and `data/mutations.ts` own Prisma-backed reads, writes, lookup resolution, and persistence-aware checks.
 - `rules/` is the canonical home for pure business assertions that do not require Prisma or persisted resource lookups.
-- Exported assertion entrypoints in `rules/` must use an `assert...` prefix.
+- Rules always assert a business invariant and throw an error when that invariant fails.
+- Exported functions in `rules/` must be throwing assertions named with an `assert...` prefix.
+- Non-throwing `validate...`, `should...`, and predicate helpers must not be exported from `rules/`; keep them private or place them outside `rules/`.
+- `rules/` modules are imported by explicit module path, such as `rules/write`, rather than through a `rules/index.ts` barrel.
 - `utils/normalization.ts` is reserved for pure input canonicalization helpers such as trimming, empty-to-null conversion, and mask removal.
 - `utils/` is reserved for generic helpers such as normalization, formatting, and default-value helpers.
 - Feature read modules must map raw persistence rows into explicit read models before parsing with `schemas/model.ts`.

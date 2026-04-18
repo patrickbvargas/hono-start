@@ -3,7 +3,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import { PlusIcon } from "lucide-react";
 import {
-	type Fee,
 	FeeDelete,
 	FeeDetails,
 	FeeFilter,
@@ -11,13 +10,14 @@ import {
 	FeeRestore,
 	FeeTable,
 	feeSearchSchema,
-	getFeesOptions,
+	getFeesQueryOptions,
 } from "@/features/fees";
 import { RouteLoading } from "@/shared/components/route-loading";
 import { Button } from "@/shared/components/ui";
 import { Wrapper } from "@/shared/components/wrapper";
 import { ROUTES } from "@/shared/config/routes";
 import { useOverlay } from "@/shared/hooks/use-overlay";
+import type { EntityId } from "@/shared/schemas/entity";
 import {
 	getLoggedUserSession,
 	isAdminSession,
@@ -31,15 +31,15 @@ export const Route = createFileRoute("/honorarios")({
 	},
 	loaderDeps: ({ search }) => ({ search }),
 	loader: async ({ context: { queryClient }, deps: { search } }) => {
-		await queryClient.ensureQueryData(getFeesOptions(search));
+		await queryClient.ensureQueryData(getFeesQueryOptions(search));
 	},
 	component: RouteComponent,
 });
 
 function RouteComponent() {
 	const search = Route.useSearch();
-	const { data } = useSuspenseQuery(getFeesOptions(search));
-	const { overlay } = useOverlay<Fee>();
+	const { data } = useSuspenseQuery(getFeesQueryOptions(search));
+	const { overlay } = useOverlay<EntityId>();
 	const isAdmin = useLoggedUserSessionStore(isAdminSession);
 
 	return (
@@ -68,17 +68,17 @@ function RouteComponent() {
 				{overlay.create.render((state) => (
 					<FeeForm state={state} onSuccess={state.close} />
 				))}
-				{overlay.edit.render((fee, state) => (
-					<FeeForm fee={fee} state={state} onSuccess={state.close} />
+				{overlay.edit.render((id, state) => (
+					<FeeForm id={id} state={state} onSuccess={state.close} />
 				))}
-				{overlay.delete.render((fee, state) => (
-					<FeeDelete fee={fee} state={state} onSuccess={state.close} />
+				{overlay.delete.render((id, state) => (
+					<FeeDelete id={id} state={state} onSuccess={state.close} />
 				))}
-				{overlay.restore.render((fee, state) => (
-					<FeeRestore fee={fee} state={state} onSuccess={state.close} />
+				{overlay.restore.render((id, state) => (
+					<FeeRestore id={id} state={state} onSuccess={state.close} />
 				))}
-				{overlay.details.render((fee, state) => (
-					<FeeDetails fee={fee} state={state} />
+				{overlay.details.render((id, state) => (
+					<FeeDetails id={id} state={state} />
 				))}
 			</Wrapper.Body>
 		</Wrapper>

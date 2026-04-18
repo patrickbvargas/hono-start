@@ -1,34 +1,42 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import * as React from "react";
 import { useAppForm } from "@/shared/hooks/use-app-form";
 import {
 	getMutationErrorMessage,
 	refreshEntityQueries,
 } from "@/shared/lib/entity-management";
 import { toast } from "@/shared/lib/toast";
-import { createFeeOptions } from "../api/create";
-import { updateFeeOptions } from "../api/update";
-import { FEE_DATA_CACHE_KEY } from "../constants";
+import type { EntityId } from "@/shared/schemas/entity";
 import {
-	type FeeUpdateInput,
-	feeCreateInputSchema,
-	feeUpdateInputSchema,
-} from "../schemas/form";
-import { defaultFeeCreateValues } from "../utils/default";
+	createFeeMutationOptions,
+	updateFeeMutationOptions,
+} from "../api/mutations";
+import { getFeeByIdQueryOptions } from "../api/queries";
+import { FEE_DATA_CACHE_KEY } from "../constants/cache";
+import { feeCreateInputSchema, feeUpdateInputSchema } from "../schemas/form";
+import {
+	defaultFeeCreateValues,
+	defaultFeeUpdateValues,
+} from "../utils/default";
 
 interface UseFeeFormOptions {
-	initialData?: FeeUpdateInput;
+	id?: EntityId;
 	onSuccess?: () => void;
 }
 
-export function useFeeForm({ initialData, onSuccess }: UseFeeFormOptions) {
+export function useFeeForm({ id, onSuccess }: UseFeeFormOptions) {
 	const queryClient = useQueryClient();
-	const createMutation = useMutation(createFeeOptions());
-	const updateMutation = useMutation(updateFeeOptions());
+	const createMutation = useMutation(createFeeMutationOptions());
+	const updateMutation = useMutation(updateFeeMutationOptions());
 
-	const isEditing = !!initialData;
+	const isEditing = !!id;
+	const { data } = useQuery({
+		...getFeeByIdQueryOptions(id ?? 0),
+		enabled: isEditing,
+	});
 
 	const form = useAppForm({
-		defaultValues: initialData ?? defaultFeeCreateValues(),
+		defaultValues: defaultFeeCreateValues(),
 		validators: {
 			onSubmit: isEditing ? feeUpdateInputSchema : feeCreateInputSchema,
 		},
@@ -51,6 +59,12 @@ export function useFeeForm({ initialData, onSuccess }: UseFeeFormOptions) {
 			}
 		},
 	});
+
+	React.useEffect(() => {
+		if (isEditing && data) {
+			form.reset(defaultFeeUpdateValues(data));
+		}
+	}, [data, form, isEditing]);
 
 	return { form };
 }

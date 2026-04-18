@@ -12,21 +12,22 @@ import { EntityStatus } from "@/shared/components/entity-status";
 import { Pagination } from "@/shared/components/pagination";
 import { Button, Dropdown, Label } from "@/shared/components/ui";
 import { formatter } from "@/shared/lib/formatter";
+import type { EntityId } from "@/shared/schemas/entity";
 import {
 	CONTRACT_STATUS_CANCELLED_VALUE,
 	CONTRACT_STATUS_COMPLETED_VALUE,
 } from "@/shared/session";
 import type { QueryPaginatedReturnType } from "@/shared/types/api";
-import { FEE_ALLOWED_SORT_COLUMNS } from "../../constants";
-import type { Fee } from "../../schemas/model";
+import { FEE_ALLOWED_SORT_COLUMNS } from "../../constants/sorting";
+import type { FeeSummary } from "../../schemas/model";
 
 export interface FeeTableProps {
 	canManageLifecycle?: boolean;
-	data: QueryPaginatedReturnType<Fee>;
-	onView?: (fee: Fee) => void;
-	onEdit?: (fee: Fee) => void;
-	onDelete?: (fee: Fee) => void;
-	onRestore?: (fee: Fee) => void;
+	data: QueryPaginatedReturnType<FeeSummary>;
+	onView?: (id: EntityId) => void;
+	onEdit?: (id: EntityId) => void;
+	onDelete?: (id: EntityId) => void;
+	onRestore?: (id: EntityId) => void;
 }
 
 export const FeeTable = ({
@@ -38,7 +39,7 @@ export const FeeTable = ({
 	onRestore,
 }: FeeTableProps) => {
 	const columns = React.useMemo(() => {
-		const c = createColumnHelper<Fee>();
+		const c = createColumnHelper<FeeSummary>();
 
 		return [
 			c.accessor("contractProcessNumber", {
@@ -104,7 +105,7 @@ export const FeeTable = ({
 								<Dropdown.Menu>
 									<Dropdown.Item
 										textValue="Visualizar"
-										onPress={() => onView?.(fee)}
+										onPress={() => onView?.(fee.id)}
 									>
 										<EyeIcon size={16} />
 										<Label>Visualizar</Label>
@@ -112,7 +113,7 @@ export const FeeTable = ({
 									{canEditFee ? (
 										<Dropdown.Item
 											textValue="Editar"
-											onPress={() => onEdit?.(fee)}
+											onPress={() => onEdit?.(fee.id)}
 										>
 											<PenLineIcon size={16} />
 											<Label>Editar</Label>
@@ -121,7 +122,7 @@ export const FeeTable = ({
 									{canManageLifecycle && fee.isSoftDeleted ? (
 										<Dropdown.Item
 											textValue="Restaurar"
-											onPress={() => onRestore?.(fee)}
+											onPress={() => onRestore?.(fee.id)}
 										>
 											<Undo2Icon size={16} />
 											<Label>Restaurar</Label>
@@ -131,7 +132,7 @@ export const FeeTable = ({
 										<Dropdown.Item
 											textValue="Excluir"
 											variant="danger"
-											onPress={() => onDelete?.(fee)}
+											onPress={() => onDelete?.(fee.id)}
 										>
 											<TrashIcon size={16} />
 											<Label>Excluir</Label>

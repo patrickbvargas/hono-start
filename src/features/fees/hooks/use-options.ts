@@ -1,15 +1,15 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import {
-	getSelectableFeeContractsOptions,
-	getSelectableFeeRevenuesOptions,
-} from "../api/get";
+	getSelectableFeeContractsQueryOptions,
+	getSelectableFeeRevenuesQueryOptions,
+} from "../api/queries";
 
 export function useFeeOptions(contractId = "") {
 	const { data: contracts } = useSuspenseQuery(
-		getSelectableFeeContractsOptions(),
+		getSelectableFeeContractsQueryOptions(),
 	);
 	const { data: revenues } = useSuspenseQuery(
-		getSelectableFeeRevenuesOptions(contractId),
+		getSelectableFeeRevenuesQueryOptions(contractId),
 	);
 
 	return {

@@ -1,7 +1,7 @@
 import type { NonEmptyKeys } from "@/shared/types/utils";
-import type { Fee } from "../schemas/model";
+import type { FeeSummary } from "../schemas/model";
 
-export const FEE_ALLOWED_SORT_COLUMNS: NonEmptyKeys<Fee> = [
+export const FEE_ALLOWED_SORT_COLUMNS: NonEmptyKeys<FeeSummary> = [
 	"amount",
 	"createdAt",
 	"installmentNumber",
