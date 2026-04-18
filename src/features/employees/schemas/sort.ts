@@ -1,6 +1,6 @@
 import type { z } from "zod";
 import { createSortSchema } from "@/shared/schemas/sort";
-import { EMPLOYEE_ALLOWED_SORT_COLUMNS } from "../constants";
+import { EMPLOYEE_ALLOWED_SORT_COLUMNS } from "../constants/sorting";
 import type { EmployeeSummary } from "./model";
 
 export const employeeSortSchema = createSortSchema<EmployeeSummary>({

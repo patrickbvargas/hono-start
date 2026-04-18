@@ -1,5 +1,5 @@
-import { LAWYER_TYPE_VALUE } from "../constants";
 import { EMPLOYEE_ERRORS } from "../constants/errors";
+import { LAWYER_TYPE_VALUE } from "../constants/values";
 
 interface EmployeeOabInput {
 	oabNumber?: string;

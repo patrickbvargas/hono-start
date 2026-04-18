@@ -6,7 +6,7 @@ import {
 import { toast } from "@/shared/lib/toast";
 import type { EntityId } from "@/shared/schemas/entity";
 import { deleteEmployeeMutationOptions } from "../api/mutations";
-import { EMPLOYEE_DATA_CACHE_KEY } from "../constants";
+import { EMPLOYEE_DATA_CACHE_KEY } from "../constants/cache";
 
 interface UseEmployeeDeleteOptions {
 	onSuccess?: () => void;

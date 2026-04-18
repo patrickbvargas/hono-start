@@ -14,7 +14,7 @@ import { Button, Dropdown, Label } from "@/shared/components/ui";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { QueryPaginatedReturnType } from "@/shared/types/api";
-import { EMPLOYEE_ALLOWED_SORT_COLUMNS } from "../../constants";
+import { EMPLOYEE_ALLOWED_SORT_COLUMNS } from "../../constants/sorting";
 import type { EmployeeSummary } from "../../schemas/model";
 
 export interface EmployeeTableProps {

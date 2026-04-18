@@ -219,3 +219,15 @@ export async function getEmployeeRoles(): Promise<QueryManyReturnType<Option>> {
 
 	return optionSchema.array().parse(roles);
 }
+
+export async function getEmployeeTypeByValue(value: string) {
+	return prisma.employeeType.findUnique({
+		where: { value },
+	});
+}
+
+export async function getUserRoleByValue(value: string) {
+	return prisma.userRole.findUnique({
+		where: { value },
+	});
+}

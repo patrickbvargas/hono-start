@@ -13,7 +13,7 @@ import type {
 	QueryOneReturnType,
 	QueryPaginatedReturnType,
 } from "@/shared/types/api";
-import { EMPLOYEE_DATA_CACHE_KEY } from "../constants";
+import { EMPLOYEE_DATA_CACHE_KEY } from "../constants/cache";
 import { EMPLOYEE_ERRORS } from "../constants/errors";
 import {
 	getEmployeeById,

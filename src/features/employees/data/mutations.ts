@@ -6,19 +6,31 @@ import type {
 } from "@/shared/types/entity";
 import { EMPLOYEE_ERRORS } from "../constants/errors";
 import {
-	assertLookupSelectionsAreActive,
-	resolveEmployeeLookupSelections,
+	assertRoleCanBeSelected,
+	assertRoleExists,
+	assertTypeCanBeSelected,
+	assertTypeExists,
 } from "../rules/lookups";
 import type { EmployeeCreateInput, EmployeeUpdateInput } from "../schemas/form";
-import { getEmployeeById } from "./queries";
+import {
+	getEmployeeById,
+	getEmployeeTypeByValue,
+	getUserRoleByValue,
+} from "./queries";
 
 export async function createEmployee({
 	firmId,
 	input,
 }: EntityInputParams<EmployeeCreateInput>): Promise<MutationReturnType> {
-	const { type, role } = await resolveEmployeeLookupSelections(prisma, input);
+	const [type, role] = await Promise.all([
+		getEmployeeTypeByValue(input.type),
+		getUserRoleByValue(input.role),
+	]);
 
-	assertLookupSelectionsAreActive({ type, role });
+	assertTypeExists(type);
+	assertRoleExists(role);
+	assertTypeCanBeSelected(type);
+	assertRoleCanBeSelected(role);
 
 	await prisma.employee.create({
 		data: {
@@ -46,12 +58,15 @@ export async function updateEmployee({
 		throw new Error(EMPLOYEE_ERRORS.NOT_FOUND);
 	}
 
-	const { type, role } = await resolveEmployeeLookupSelections(prisma, input);
+	const [type, role] = await Promise.all([
+		getEmployeeTypeByValue(input.type),
+		getUserRoleByValue(input.role),
+	]);
 
-	assertLookupSelectionsAreActive(
-		{ type, role },
-		{ currentTypeId: employee.typeId, currentRoleId: employee.roleId },
-	);
+	assertTypeExists(type);
+	assertRoleExists(role);
+	assertTypeCanBeSelected(type, employee.typeId);
+	assertRoleCanBeSelected(role, employee.roleId);
 
 	await prisma.employee.update({
 		where: { id: input.id },

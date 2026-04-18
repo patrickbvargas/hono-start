@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { LAWYER_TYPE_VALUE } from "../constants";
 import { EMPLOYEE_ERRORS } from "../constants/errors";
+import { LAWYER_TYPE_VALUE } from "../constants/values";
 import { assertLawyerHasOab } from "../rules/oab";
 import { assertReferralPercentageWithinRemuneration } from "../rules/referral";
 

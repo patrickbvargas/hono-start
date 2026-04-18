@@ -2,7 +2,7 @@ import { FormWrapper } from "@/shared/components/form-wrapper";
 import { Field } from "@/shared/components/ui";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
-import { LAWYER_TYPE_VALUE } from "../../constants";
+import { LAWYER_TYPE_VALUE } from "../../constants/values";
 import { useEmployeeForm } from "../../hooks/use-form";
 import { useEmployeeOptions } from "../../hooks/use-options";
 

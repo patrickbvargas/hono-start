@@ -1,53 +1,36 @@
-import type {
-	EmployeeType,
-	PrismaClient,
-	UserRole,
-} from "@/generated/prisma/client";
+import type { EmployeeType, UserRole } from "@/generated/prisma/client";
 import { EMPLOYEE_ERRORS } from "../constants/errors";
 
-interface EmployeeLookupSelection {
-	role: UserRole;
-	type: EmployeeType;
+export function assertTypeExists(
+	type: EmployeeType | null,
+): asserts type is EmployeeType {
+	if (!type) {
+		throw new Error(EMPLOYEE_ERRORS.TYPE_NOT_FOUND);
+	}
 }
 
-interface EmployeeLookupSelectionInput {
-	role: string;
-	type: string;
-}
-
-interface EmployeeLookupValidationOptions {
-	currentRoleId?: number;
-	currentTypeId?: number;
-}
-
-export function assertLookupSelectionsAreActive(
-	selection: EmployeeLookupSelection,
-	options: EmployeeLookupValidationOptions = {},
+export function assertTypeCanBeSelected(
+	type: EmployeeType,
+	currentTypeId?: number,
 ) {
-	if (!selection.type.isActive && selection.type.id !== options.currentTypeId) {
+	if (!type.isActive && type.id !== currentTypeId) {
 		throw new Error(EMPLOYEE_ERRORS.TYPE_INACTIVE);
 	}
+}
 
-	if (!selection.role.isActive && selection.role.id !== options.currentRoleId) {
-		throw new Error(EMPLOYEE_ERRORS.ROLE_INACTIVE);
+export function assertRoleExists(
+	role: UserRole | null,
+): asserts role is UserRole {
+	if (!role) {
+		throw new Error(EMPLOYEE_ERRORS.ROLE_NOT_FOUND);
 	}
 }
 
-export async function resolveEmployeeLookupSelections(
-	prisma: PrismaClient,
-	input: EmployeeLookupSelectionInput,
+export function assertRoleCanBeSelected(
+	role: UserRole,
+	currentRoleId?: number,
 ) {
-	const [type, role] = await Promise.all([
-		prisma.employeeType.findUnique({
-			where: { value: input.type },
-		}),
-		prisma.userRole.findUnique({
-			where: { value: input.role },
-		}),
-	]);
-
-	if (!type) throw new Error(EMPLOYEE_ERRORS.TYPE_NOT_FOUND);
-	if (!role) throw new Error(EMPLOYEE_ERRORS.ROLE_NOT_FOUND);
-
-	return { type, role };
+	if (!role.isActive && role.id !== currentRoleId) {
+		throw new Error(EMPLOYEE_ERRORS.ROLE_INACTIVE);
+	}
 }

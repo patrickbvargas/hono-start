@@ -12,7 +12,7 @@ import {
 	updateEmployeeMutationOptions,
 } from "../api/mutations";
 import { getEmployeeByIdQueryOptions } from "../api/queries";
-import { EMPLOYEE_DATA_CACHE_KEY } from "../constants";
+import { EMPLOYEE_DATA_CACHE_KEY } from "../constants/cache";
 import {
 	employeeCreateInputSchema,
 	employeeUpdateInputSchema,
