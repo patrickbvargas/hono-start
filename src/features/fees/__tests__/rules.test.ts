@@ -1,3 +1,4 @@
+import { parseDate } from "@internationalized/date";
 import { describe, expect, it } from "vitest";
 import { FEE_ERRORS } from "../constants/errors";
 import {
@@ -14,7 +15,7 @@ describe("assertFeeWriteRules", () => {
 			assertFeeWriteRules({
 				contractId: "1",
 				revenueId: "2",
-				paymentDate: "2026-04-15",
+				paymentDate: parseDate("2026-04-15"),
 				amount: 1500,
 				installmentNumber: 2,
 				generatesRemuneration: true,

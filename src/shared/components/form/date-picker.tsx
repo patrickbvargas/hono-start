@@ -40,8 +40,7 @@ export const FormDatePicker = ({
 				htmlFor={field.name}
 				className={classNames?.label}
 			/>
-
-			<DateField.Group fullWidth>
+			<DateField.Group fullWidth variant="secondary">
 				<DateField.Input>
 					{(segment) => <DateField.Segment segment={segment} />}
 				</DateField.Input>

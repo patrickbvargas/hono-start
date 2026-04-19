@@ -90,7 +90,9 @@ export const ClientForm = ({ id, state, onSuccess }: ClientFormProps) => {
 								</Field.Group>
 								<Field.Group>
 									<form.AppField name="isActive">
-										{(field) => <field.Checkbox label="Ativo" />}
+										{(field) => (
+											<field.Checkbox label="Ativo" variant="secondary" />
+										)}
 									</form.AppField>
 								</Field.Group>
 							</>

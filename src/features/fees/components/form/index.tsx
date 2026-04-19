@@ -67,14 +67,7 @@ function FeeFormFields({ contractId, form, state, title }: FeeFormFieldsProps) {
 					)}
 				</form.AppField>
 				<form.AppField name="paymentDate">
-					{(field) => (
-						<field.Input
-							label="Data de pagamento"
-							type="date"
-							variant="secondary"
-							isRequired
-						/>
-					)}
+					{(field) => <field.DatePicker label="Data de pagamento" isRequired />}
 				</form.AppField>
 				<form.AppField name="installmentNumber">
 					{(field) => (

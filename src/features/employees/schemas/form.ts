@@ -26,7 +26,7 @@ const employeeBaseInputSchema = z.object({
 });
 
 const employeeBusinessRulesRefinement = (
-	data: z.infer<typeof employeeBaseInputSchema>,
+	data: EmployeeBaseInput,
 	ctx: z.RefinementCtx,
 ) => {
 	try {
@@ -60,6 +60,7 @@ export const employeeUpdateInputSchema = entityIdSchema
 
 export const employeeIdInputSchema = entityIdSchema;
 
+export type EmployeeBaseInput = z.infer<typeof employeeBaseInputSchema>;
 export type EmployeeCreateInput = z.infer<typeof employeeCreateInputSchema>;
 export type EmployeeUpdateInput = z.infer<typeof employeeUpdateInputSchema>;
 export type EmployeeIdInput = z.infer<typeof employeeIdInputSchema>;

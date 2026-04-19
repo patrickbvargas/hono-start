@@ -1,3 +1,4 @@
+import { CalendarDate } from "@internationalized/date";
 import * as z from "zod";
 import { entityIdSchema } from "@/shared/schemas/entity";
 import {
@@ -8,7 +9,9 @@ import {
 const feeBaseInputSchema = z.object({
 	contractId: z.string().trim().min(1, "Contrato é obrigatório"),
 	revenueId: z.string().trim().min(1, "Receita é obrigatória"),
-	paymentDate: z.iso.date("Data de pagamento é obrigatória"),
+	paymentDate: z.instanceof(CalendarDate, {
+		error: "Data de pagamento é obrigatória",
+	}),
 	amount: z.number().positive("Valor deve ser maior que zero"),
 	installmentNumber: z
 		.number()
@@ -22,31 +25,24 @@ const feeBusinessRulesRefinement = (
 	data: FeeBaseInput,
 	ctx: z.RefinementCtx,
 ) => {
-	const assertions = [
-		{
+	try {
+		assertFeeAmountPositive(data.amount);
+	} catch (error) {
+		ctx.addIssue({
+			code: "custom",
 			path: ["amount"],
-			run: () => assertFeeAmountPositive(data.amount),
-		},
-		{
+			message: error instanceof Error ? error.message : "Valor inválido",
+		});
+	}
+
+	try {
+		assertFeeInstallmentNumber(data.installmentNumber);
+	} catch (error) {
+		ctx.addIssue({
+			code: "custom",
 			path: ["installmentNumber"],
-			run: () => assertFeeInstallmentNumber(data.installmentNumber),
-		},
-	] as const;
-
-	for (const assertion of assertions) {
-		try {
-			assertion.run();
-		} catch (error) {
-			if (!(error instanceof Error)) {
-				throw error;
-			}
-
-			ctx.addIssue({
-				code: "custom",
-				message: error.message,
-				path: [...assertion.path],
-			});
-		}
+			message: error instanceof Error ? error.message : "Valor inválido",
+		});
 	}
 };
 

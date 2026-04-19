@@ -56,7 +56,7 @@ export const EmployeeForm = ({ id, state, onSuccess }: EmployeeFormProps) => {
 					<form.AppField name="role">
 						{(field) => (
 							<field.Autocomplete
-								label="Perfil"
+								label="Cargo"
 								options={roles}
 								variant="secondary"
 								isRequired
@@ -115,7 +115,7 @@ export const EmployeeForm = ({ id, state, onSuccess }: EmployeeFormProps) => {
 				</Field.Group>
 				<Field.Group>
 					<form.AppField name="isActive">
-						{(field) => <field.Checkbox label="Ativo" />}
+						{(field) => <field.Checkbox label="Ativo" variant="secondary" />}
 					</form.AppField>
 				</Field.Group>
 			</FormWrapper>

@@ -15,32 +15,24 @@ const remunerationBusinessRulesRefinement = (
 	data: RemunerationUpdateInput,
 	ctx: z.RefinementCtx,
 ) => {
-	const assertions = [
-		{
+	try {
+		assertRemunerationAmountPositive(data.amount);
+	} catch (error) {
+		ctx.addIssue({
+			code: "custom",
 			path: ["amount"],
-			run: () => assertRemunerationAmountPositive(data.amount),
-		},
-		{
+			message: error instanceof Error ? error.message : "Valor inválido",
+		});
+	}
+
+	try {
+		assertRemunerationEffectivePercentageRange(data.effectivePercentage);
+	} catch (error) {
+		ctx.addIssue({
+			code: "custom",
 			path: ["effectivePercentage"],
-			run: () =>
-				assertRemunerationEffectivePercentageRange(data.effectivePercentage),
-		},
-	] as const;
-
-	for (const assertion of assertions) {
-		try {
-			assertion.run();
-		} catch (error) {
-			if (!(error instanceof Error)) {
-				throw error;
-			}
-
-			ctx.addIssue({
-				code: "custom",
-				message: error.message,
-				path: [...assertion.path],
-			});
-		}
+			message: error instanceof Error ? error.message : "Valor inválido",
+		});
 	}
 };
 

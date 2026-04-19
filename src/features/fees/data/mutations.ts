@@ -326,7 +326,7 @@ export async function createFee({
 			data: {
 				firmId: revenue.firmId,
 				revenueId: revenue.id,
-				paymentDate: new Date(input.paymentDate),
+				paymentDate: new Date(input.paymentDate.toString()),
 				amount: input.amount,
 				installmentNumber: input.installmentNumber,
 				generatesRemuneration: input.generatesRemuneration,
@@ -340,7 +340,7 @@ export async function createFee({
 				feeId: fee.id,
 				firmId: revenue.firmId,
 				amount: new Prisma.Decimal(input.amount),
-				paymentDate: new Date(input.paymentDate),
+				paymentDate: new Date(input.paymentDate.toString()),
 				assignments: revenue.contract.assignments,
 			});
 		}
@@ -403,7 +403,7 @@ export async function updateFee({
 			where: { id: input.id },
 			data: {
 				revenueId: nextRevenue.id,
-				paymentDate: new Date(input.paymentDate),
+				paymentDate: new Date(input.paymentDate.toString()),
 				amount: input.amount,
 				installmentNumber: input.installmentNumber,
 				generatesRemuneration: input.generatesRemuneration,
@@ -418,7 +418,7 @@ export async function updateFee({
 				feeId: input.id,
 				firmId: nextRevenue.firmId,
 				amount: new Prisma.Decimal(input.amount),
-				paymentDate: new Date(input.paymentDate),
+				paymentDate: new Date(input.paymentDate.toString()),
 				assignments: nextRevenue.contract.assignments,
 			});
 		}
