@@ -4,22 +4,21 @@ import {
 	refreshEntityQueries,
 } from "@/shared/lib/entity-management";
 import { toast } from "@/shared/lib/toast";
-import { deleteClientOptions } from "../api/delete";
-import { CLIENT_DATA_CACHE_KEY } from "../constants";
-import type { Client } from "../schemas/model";
+import type { EntityId } from "@/shared/schemas/entity";
+import { deleteClientMutationOptions } from "../api/mutations";
+import { CLIENT_DATA_CACHE_KEY } from "../constants/cache";
 
 interface UseClientDeleteOptions {
-	client: Client;
 	onSuccess?: () => void;
 }
 
-export function useClientDelete({ client, onSuccess }: UseClientDeleteOptions) {
+export function useClientDelete({ onSuccess }: UseClientDeleteOptions) {
 	const queryClient = useQueryClient();
-	const mutation = useMutation(deleteClientOptions());
+	const mutation = useMutation(deleteClientMutationOptions());
 
-	const handleConfirm = async () => {
+	const handleConfirm = async (id: EntityId) => {
 		try {
-			await mutation.mutateAsync({ data: { id: client.id } });
+			await mutation.mutateAsync({ data: { id } });
 			toast.success("Cliente excluído com sucesso.");
 			await refreshEntityQueries(queryClient, CLIENT_DATA_CACHE_KEY);
 			onSuccess?.();

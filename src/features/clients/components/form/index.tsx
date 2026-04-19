@@ -1,30 +1,26 @@
 import { FormWrapper } from "@/shared/components/form-wrapper";
 import { Field } from "@/shared/components/ui";
+import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
 import { useClientForm } from "../../hooks/use-form";
 import { useClientOptions } from "../../hooks/use-options";
-import type { Client } from "../../schemas/model";
-import { defaultClientUpdateValues } from "../../utils/default";
 import {
 	getClientDocumentLabel,
 	getClientDocumentPlaceholder,
 	getClientNameLabel,
-} from "../../utils/formatting";
+} from "../../utils/format";
 
 interface ClientFormProps {
-	client?: Client;
+	id?: EntityId;
 	state: OverlayState;
 	onSuccess?: () => void;
 }
 
-export const ClientForm = ({ client, state, onSuccess }: ClientFormProps) => {
+export const ClientForm = ({ id, state, onSuccess }: ClientFormProps) => {
 	const { types } = useClientOptions();
-	const { form } = useClientForm({
-		initialData: client && defaultClientUpdateValues(client),
-		onSuccess,
-	});
+	const { form } = useClientForm({ id, onSuccess });
 
-	const title = client ? "Editar cliente" : "Novo cliente";
+	const title = id ? "Editar cliente" : "Novo cliente";
 
 	return (
 		<form.Form form={form}>
@@ -45,9 +41,9 @@ export const ClientForm = ({ client, state, onSuccess }: ClientFormProps) => {
 												options={types}
 												variant="secondary"
 												isRequired
-												isDisabled={!!client}
+												isDisabled={!!id}
 												description={
-													client
+													id
 														? "O tipo do cliente não pode ser alterado."
 														: undefined
 												}

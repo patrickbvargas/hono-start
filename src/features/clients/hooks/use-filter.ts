@@ -3,7 +3,7 @@ import { useAppForm } from "@/shared/hooks/use-app-form";
 import { useFilter } from "@/shared/hooks/use-filter";
 import { type ClientFilter, clientFilterSchema } from "../schemas/filter";
 
-const DEBOUNCED_FIELDS = new Set<keyof ClientFilter>(["name"]);
+const DEBOUNCED_FIELDS = new Set<keyof ClientFilter>(["query"]);
 
 export function useClientFilter() {
 	const { filter, handleFilter } = useFilter(clientFilterSchema);

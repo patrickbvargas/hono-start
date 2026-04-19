@@ -11,7 +11,7 @@ It is meant to survive domain changes as long as the project keeps the same UI a
 - Route search state is the canonical home for list filters, sorting, and pagination.
 - Route files use `createFileRoute` with validated search state and loader prefetching for list screens.
 - Route loaders must ensure query data ahead of render rather than letting the page fetch ad hoc.
-- The canonical list route shape is the `src/routes/clientes.tsx` flow backed by `src/features/clients_v2`.
+- The canonical list route shape is the `src/routes/clientes.tsx` flow backed by `src/features/clients`.
 
 ## Layout Rules
 

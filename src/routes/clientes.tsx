@@ -11,7 +11,7 @@ import {
 	ClientTable,
 	clientSearchSchema,
 	getClientsQueryOptions,
-} from "@/features/clients_v2";
+} from "@/features/clients";
 import { RouteLoading } from "@/shared/components/route-loading";
 import { Button } from "@/shared/components/ui";
 import { Wrapper } from "@/shared/components/wrapper";

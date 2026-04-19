@@ -16,7 +16,7 @@ export const ClientFilter = () => {
 			form={form}
 			className="flex flex-wrap items-center justify-between gap-3"
 		>
-			<form.AppField name="name">
+			<form.AppField name="query">
 				{(field) => (
 					<field.Search
 						aria-label="Nome ou documento"

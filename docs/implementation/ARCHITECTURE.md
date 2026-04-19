@@ -38,7 +38,7 @@ src/
 
 The canonical slice shape for feature work is defined by this document. New feature slices must follow it unless a documented exception exists.
 
-`src/features/clients_v2` is the named reference slice for this repository. Contributors should compare new slices and refactors against that slice before introducing structural deviations.
+`src/features/clients` is the named reference slice for this repository. Contributors should compare new slices and refactors against that slice before introducing structural deviations.
 
 ## Canonical Feature Slice Contract
 
@@ -95,6 +95,6 @@ Internal helpers, implementation-only schemas, and server handlers must not leak
 ## Architectural Intent
 
 - The system is organized around feature-local ownership, not horizontal file-type sprawl.
-- Each feature should converge on the `clients_v2` slice anatomy unless a documented exception exists.
+- Each feature should converge on the `clients` slice anatomy unless a documented exception exists.
 - Route files must read like orchestration code, not like a second implementation layer.
 - Business domains may change between repositories; this slice pattern should not.

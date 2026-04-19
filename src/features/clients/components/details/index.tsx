@@ -6,18 +6,18 @@ import {
 } from "@/shared/components/entity-detail";
 import { EntityStatus } from "@/shared/components/entity-status";
 import { formatter } from "@/shared/lib/formatter";
+import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
-import { getClientByIdOptions } from "../../api/get";
-import type { Client } from "../../schemas/model";
-import { formatClientDocument } from "../../utils/formatting";
+import { getClientByIdQueryOptions } from "../../api/queries";
+import { formatClientDocument } from "../../utils/format";
 
 interface ClientDetailsProps {
-	client: Client;
+	id: EntityId;
 	state: OverlayState;
 }
 
-export const ClientDetails = ({ client, state }: ClientDetailsProps) => {
-	const { data } = useSuspenseQuery(getClientByIdOptions(client.id));
+export const ClientDetails = ({ id, state }: ClientDetailsProps) => {
+	const { data } = useSuspenseQuery(getClientByIdQueryOptions(id));
 
 	const generalInfo = React.useMemo<DetailFieldItem[]>(
 		() => [
