@@ -33,19 +33,3 @@ export function getScope(
 			};
 	}
 }
-
-export function getEmployeeScope(session: LoggedUserSession) {
-	return getScope(session, "employee");
-}
-
-export function getContractScope(session: LoggedUserSession) {
-	return getScope(session, "contract");
-}
-
-export function getFeeScope(session: LoggedUserSession) {
-	return getScope(session, "fee");
-}
-
-export function getRemunerationScope(session: LoggedUserSession) {
-	return getScope(session, "remuneration");
-}

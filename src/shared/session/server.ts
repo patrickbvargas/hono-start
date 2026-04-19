@@ -1,6 +1,5 @@
 import type { SessionScopeSubject } from "./model";
-import { getEmployeeScope, getScope } from "./scope";
-import { getCurrentFirmId } from "./selectors";
+import { getScope } from "./scope";
 import { getLoggedUserSession } from "./store";
 
 export function getServerLoggedUserSession() {
@@ -9,12 +8,4 @@ export function getServerLoggedUserSession() {
 
 export function getServerScope(subject: SessionScopeSubject) {
 	return getScope(getServerLoggedUserSession(), subject);
-}
-
-export function getServerEmployeeScope() {
-	return getEmployeeScope(getServerLoggedUserSession());
-}
-
-export function getServerFirmId() {
-	return getCurrentFirmId(getServerLoggedUserSession());
 }

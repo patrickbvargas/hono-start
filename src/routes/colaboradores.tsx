@@ -19,8 +19,8 @@ import { ROUTES } from "@/shared/config/routes";
 import { useOverlay } from "@/shared/hooks/use-overlay";
 import type { EntityId } from "@/shared/schemas/entity";
 import {
-	assertCanManageEmployees,
-	canManageEmployees,
+	assertCan,
+	can,
 	getLoggedUserSession,
 	useLoggedUserSessionStore,
 } from "@/shared/session";
@@ -28,7 +28,8 @@ import {
 export const Route = createFileRoute("/colaboradores")({
 	validateSearch: zodValidator(employeeSearchSchema),
 	beforeLoad: () => {
-		assertCanManageEmployees(getLoggedUserSession());
+		const session = getLoggedUserSession();
+		assertCan(session, "employee.manage");
 	},
 	loaderDeps: ({ search }) => ({ search }),
 	loader: async ({ context: { queryClient }, deps: { search } }) => {
@@ -41,7 +42,9 @@ function RouteComponent() {
 	const search = Route.useSearch();
 	const { data } = useSuspenseQuery(getEmployeesQueryOptions(search));
 	const { overlay } = useOverlay<EntityId>();
-	const canManage = useLoggedUserSessionStore(canManageEmployees);
+	const canManage = useLoggedUserSessionStore((session) =>
+		can(session, "employee.manage"),
+	);
 
 	return (
 		<Wrapper

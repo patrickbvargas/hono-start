@@ -5,9 +5,9 @@ import {
 	isPrismaUniqueConstraintError,
 } from "@/shared/lib/error-mapping";
 import {
-	assertCanManageEmployees,
-	getServerEmployeeScope,
+	assertCan,
 	getServerLoggedUserSession,
+	getServerScope,
 } from "@/shared/session";
 import type { MutationReturnType } from "@/shared/types/api";
 import { EMPLOYEE_ERRORS } from "../constants/errors";
@@ -27,8 +27,9 @@ const createEmployeeFn = createServerFn({ method: "POST" })
 	.inputValidator(employeeCreateInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
-			assertCanManageEmployees(getServerLoggedUserSession());
-			const { firmId } = getServerEmployeeScope();
+			const session = getServerLoggedUserSession();
+			assertCan(session, "employee.manage");
+			const { firmId } = getServerScope("employee");
 
 			return await createEmployee({ firmId, input: data });
 		} catch (error) {
@@ -49,8 +50,9 @@ const updateEmployeeFn = createServerFn({ method: "POST" })
 	.inputValidator(employeeUpdateInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
-			assertCanManageEmployees(getServerLoggedUserSession());
-			const { firmId } = getServerEmployeeScope();
+			const session = getServerLoggedUserSession();
+			assertCan(session, "employee.manage");
+			const { firmId } = getServerScope("employee");
 
 			return await updateEmployee({ firmId, input: data });
 		} catch (error) {
@@ -71,8 +73,9 @@ const deleteEmployeeFn = createServerFn({ method: "POST" })
 	.inputValidator(employeeIdInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
-			assertCanManageEmployees(getServerLoggedUserSession());
-			const { firmId } = getServerEmployeeScope();
+			const session = getServerLoggedUserSession();
+			assertCan(session, "employee.manage");
+			const { firmId } = getServerScope("employee");
 
 			return await deleteEmployee({ firmId, id: data.id });
 		} catch (error) {
@@ -89,8 +92,9 @@ const restoreEmployeeFn = createServerFn({ method: "POST" })
 	.inputValidator(employeeIdInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
-			assertCanManageEmployees(getServerLoggedUserSession());
-			const { firmId } = getServerEmployeeScope();
+			const session = getServerLoggedUserSession();
+			assertCan(session, "employee.manage");
+			const { firmId } = getServerScope("employee");
 
 			return await restoreEmployee({ firmId, id: data.id });
 		} catch (error) {
