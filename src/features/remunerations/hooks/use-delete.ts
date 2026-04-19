@@ -5,7 +5,7 @@ import {
 } from "@/shared/lib/entity-management";
 import { toast } from "@/shared/lib/toast";
 import type { EntityId } from "@/shared/schemas/entity";
-import { deleteRemunerationOptions } from "../api/mutations";
+import { deleteRemunerationMutationOptions } from "../api/mutations";
 import { REMUNERATION_DATA_CACHE_KEY } from "../constants/cache";
 
 interface UseRemunerationDeleteOptions {
@@ -16,7 +16,7 @@ export function useRemunerationDelete({
 	onSuccess,
 }: UseRemunerationDeleteOptions) {
 	const queryClient = useQueryClient();
-	const mutation = useMutation(deleteRemunerationOptions());
+	const mutation = useMutation(deleteRemunerationMutationOptions());
 
 	const handleConfirm = async (id: EntityId) => {
 		try {

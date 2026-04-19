@@ -1,15 +1,15 @@
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import {
-	getSelectableRemunerationContractsOptions,
-	getSelectableRemunerationEmployeesOptions,
+	getSelectableRemunerationContractsQueryOptions,
+	getSelectableRemunerationEmployeesQueryOptions,
 } from "../api/queries";
 
 export function useRemunerationOptions(includeEmployees = false) {
 	const { data: contracts } = useSuspenseQuery(
-		getSelectableRemunerationContractsOptions(),
+		getSelectableRemunerationContractsQueryOptions(),
 	);
 	const { data: employees } = useQuery({
-		...getSelectableRemunerationEmployeesOptions(),
+		...getSelectableRemunerationEmployeesQueryOptions(),
 		enabled: includeEmployees,
 	});
 

@@ -151,35 +151,35 @@ const exportRemunerationsFn = createServerFn({ method: "POST" })
 		}
 	});
 
-export const getRemunerationsOptions = (search: RemunerationSearch) =>
+export const getRemunerationsQueryOptions = (search: RemunerationSearch) =>
 	queryOptions({
 		queryKey: [REMUNERATION_DATA_CACHE_KEY, search],
 		queryFn: () => getRemunerationsFn({ data: search }),
 		staleTime: 5 * 60 * 1000,
 	});
 
-export const getRemunerationByIdOptions = (id: number) =>
+export const getRemunerationByIdQueryOptions = (id: number) =>
 	queryOptions({
 		queryKey: [REMUNERATION_DATA_CACHE_KEY, "detail", id],
 		queryFn: () => getRemunerationByIdFn({ data: { id } }),
 		staleTime: 5 * 60 * 1000,
 	});
 
-export const getSelectableRemunerationContractsOptions = () =>
+export const getSelectableRemunerationContractsQueryOptions = () =>
 	queryOptions({
 		queryKey: [REMUNERATION_DATA_CACHE_KEY, "contract-options"],
 		queryFn: getSelectableRemunerationContractsFn,
 		staleTime: 5 * 60 * 1000,
 	});
 
-export const getSelectableRemunerationEmployeesOptions = () =>
+export const getSelectableRemunerationEmployeesQueryOptions = () =>
 	queryOptions({
 		queryKey: [REMUNERATION_DATA_CACHE_KEY, "employee-options"],
 		queryFn: getSelectableRemunerationEmployeesFn,
 		staleTime: 5 * 60 * 1000,
 	});
 
-export const exportRemunerationsOptions = () =>
+export const exportRemunerationsMutationOptions = () =>
 	mutationOptions({
 		mutationFn: exportRemunerationsFn,
 	});

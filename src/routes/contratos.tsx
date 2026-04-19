@@ -58,12 +58,12 @@ function RouteComponent() {
 			</Wrapper.Header>
 			<Wrapper.Body>
 				<ContractTable
-					canManageLifecycle={isAdmin}
 					data={data}
 					onEdit={overlay.edit.open}
 					onView={overlay.details.open}
 					onDelete={overlay.delete.open}
 					onRestore={overlay.restore.open}
+					canManageLifecycle={isAdmin}
 				/>
 				{overlay.create.render((state) => (
 					<ContractForm state={state} onSuccess={state.close} />

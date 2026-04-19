@@ -9,15 +9,14 @@ import { deleteContractMutationOptions } from "../api/mutations";
 import { CONTRACT_DATA_CACHE_KEY } from "../constants/cache";
 
 interface UseContractDeleteOptions {
-	id: EntityId;
 	onSuccess?: () => void;
 }
 
-export function useContractDelete({ id, onSuccess }: UseContractDeleteOptions) {
+export function useContractDelete({ onSuccess }: UseContractDeleteOptions) {
 	const queryClient = useQueryClient();
 	const mutation = useMutation(deleteContractMutationOptions());
 
-	const handleConfirm = async () => {
+	const handleConfirm = async (id: EntityId) => {
 		try {
 			await mutation.mutateAsync({ data: { id } });
 			toast.success("Contrato excluído com sucesso.");

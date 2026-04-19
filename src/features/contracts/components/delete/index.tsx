@@ -17,13 +17,13 @@ export const ContractDelete = ({
 	onSuccess,
 }: ContractDeleteProps) => {
 	const { data } = useSuspenseQuery(getContractByIdQueryOptions(id));
-	const { handleConfirm, isPending } = useContractDelete({ id, onSuccess });
+	const { handleConfirm, isPending } = useContractDelete({ onSuccess });
 
 	return (
 		<ConfirmDialog
 			title="Excluir contrato"
 			description={`Tem certeza que deseja excluir o contrato ${data.processNumber}?`}
-			onConfirm={handleConfirm}
+			onConfirm={() => handleConfirm(id)}
 			confirmButtonLabel="Excluir"
 			variant="danger"
 			isPending={isPending}

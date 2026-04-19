@@ -73,10 +73,18 @@ Each feature slice is expected to use these responsibilities:
 - `utils/`: feature-local pure helpers such as defaults, normalization helpers, and formatting helpers
 - `index.ts`: minimal public barrel for route-facing consumers
 
-Feature subfolders must not contain local barrel files such as
-`components/table/index.tsx`, `constants/index.ts`, or `rules/index.ts`. Inside a
-feature, import concrete modules directly. The only feature barrel is the
-top-level `src/features/<feature>/index.ts`.
+Route-facing React Query factories follow a stable suffix convention:
+`get...QueryOptions` for query factories and `...MutationOptions` for mutation
+factories. Non-mutating export flows may live beside query/export orchestration,
+but their factory names still use the mutation suffix when they return
+`mutationOptions`.
+
+Feature subfolders must not contain local re-export barrel files such as
+`constants/index.ts` or `rules/index.ts`. Inside a feature, import concrete
+modules directly. Leaf component folders may use an `index.tsx` implementation
+file when that file defines the component directly; it must not be a nested
+re-export barrel. The only feature barrel is the top-level
+`src/features/<feature>/index.ts`.
 
 Feature-specific extensions are allowed when they represent real product
 responsibility. For example, `remunerations` owns export orchestration because

@@ -21,7 +21,7 @@ import type { QueryPaginatedReturnType } from "@/shared/types/api";
 import { FEE_ALLOWED_SORT_COLUMNS } from "../../constants/sorting";
 import type { FeeSummary } from "../../schemas/model";
 
-export interface FeeTableProps {
+interface FeeTableProps {
 	canManageLifecycle?: boolean;
 	data: QueryPaginatedReturnType<FeeSummary>;
 	onView?: (id: EntityId) => void;

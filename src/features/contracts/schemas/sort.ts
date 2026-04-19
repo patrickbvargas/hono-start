@@ -1,11 +1,12 @@
-import * as z from "zod";
+import type { z } from "zod";
+import { createSortSchema } from "@/shared/schemas/sort";
 import { CONTRACT_ALLOWED_SORT_COLUMNS } from "../constants/sorting";
-export const contractSortSchema = z.object({
-	column: z
-		.enum(CONTRACT_ALLOWED_SORT_COLUMNS)
-		.catch("createdAt")
-		.default("createdAt"),
-	direction: z.enum(["asc", "desc"]).catch("desc").default("desc"),
+import type { ContractSummary } from "./model";
+
+export const contractSortSchema = createSortSchema<ContractSummary>({
+	columns: CONTRACT_ALLOWED_SORT_COLUMNS,
+	defaultColumn: "createdAt",
+	defaultDirection: "desc",
 });
 
 export type ContractSort = z.infer<typeof contractSortSchema>;

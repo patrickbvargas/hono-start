@@ -21,7 +21,7 @@ It is meant to survive domain changes as long as the project keeps the same UI a
 - Destructive actions require explicit confirmation UI.
 - Entity list pages must be composed with `Wrapper`, `Wrapper.Header`, and `Wrapper.Body`.
 - Entity lists are the main entrypoint for operational work.
-- Feature UI modules follow the canonical slice pattern in `ARCHITECTURE.md`; nested component barrels are not part of the frontend pattern.
+- Feature UI modules follow the canonical slice pattern in `ARCHITECTURE.md`; nested component re-export barrels are not part of the frontend pattern.
 
 ## Form Rules
 
@@ -31,6 +31,7 @@ It is meant to survive domain changes as long as the project keeps the same UI a
 - Form hook options and component props use explicit local interfaces as defined in `CONVENTIONS.md`.
 - Validation errors and helper copy are shown in the product locale defined by the domain or product contract.
 - Create and edit flows must share the same feature form component unless a documented exception exists.
+- Private child components inside a form are allowed when React hook boundaries require them, such as dependent option loading from a subscribed field value; they must stay feature-local and must not become a second form pattern.
 
 ## Table And List Rules
 
@@ -55,6 +56,7 @@ It is meant to survive domain changes as long as the project keeps the same UI a
   - details drawer
   - delete confirmation flow
   - restore confirmation flow
+- Equivalent entity tables expose lifecycle authority through `canManageLifecycle` when they show edit, delete, or restore actions.
 
 ## HeroUI Rules
 

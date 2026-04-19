@@ -5,7 +5,7 @@ import {
 } from "@/shared/lib/entity-management";
 import { toast } from "@/shared/lib/toast";
 import type { EntityId } from "@/shared/schemas/entity";
-import { restoreRemunerationOptions } from "../api/mutations";
+import { restoreRemunerationMutationOptions } from "../api/mutations";
 import { REMUNERATION_DATA_CACHE_KEY } from "../constants/cache";
 
 interface UseRemunerationRestoreOptions {
@@ -16,7 +16,7 @@ export function useRemunerationRestore({
 	onSuccess,
 }: UseRemunerationRestoreOptions) {
 	const queryClient = useQueryClient();
-	const mutation = useMutation(restoreRemunerationOptions());
+	const mutation = useMutation(restoreRemunerationMutationOptions());
 
 	const handleConfirm = async (id: EntityId) => {
 		try {

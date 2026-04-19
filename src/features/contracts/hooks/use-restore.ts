@@ -9,18 +9,14 @@ import { restoreContractMutationOptions } from "../api/mutations";
 import { CONTRACT_DATA_CACHE_KEY } from "../constants/cache";
 
 interface UseContractRestoreOptions {
-	id: EntityId;
 	onSuccess?: () => void;
 }
 
-export function useContractRestore({
-	id,
-	onSuccess,
-}: UseContractRestoreOptions) {
+export function useContractRestore({ onSuccess }: UseContractRestoreOptions) {
 	const queryClient = useQueryClient();
 	const mutation = useMutation(restoreContractMutationOptions());
 
-	const handleConfirm = async () => {
+	const handleConfirm = async (id: EntityId) => {
 		try {
 			await mutation.mutateAsync({ data: { id } });
 			toast.success("Contrato restaurado com sucesso.");

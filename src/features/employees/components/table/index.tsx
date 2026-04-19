@@ -17,8 +17,8 @@ import type { QueryPaginatedReturnType } from "@/shared/types/api";
 import { EMPLOYEE_ALLOWED_SORT_COLUMNS } from "../../constants/sorting";
 import type { EmployeeSummary } from "../../schemas/model";
 
-export interface EmployeeTableProps {
-	canManage?: boolean;
+interface EmployeeTableProps {
+	canManageLifecycle?: boolean;
 	data: QueryPaginatedReturnType<EmployeeSummary>;
 	onView?: (id: EntityId) => void;
 	onEdit?: (id: EntityId) => void;
@@ -27,7 +27,7 @@ export interface EmployeeTableProps {
 }
 
 export const EmployeeTable = ({
-	canManage = false,
+	canManageLifecycle = false,
 	data: { data, total },
 	onView,
 	onEdit,
@@ -99,7 +99,7 @@ export const EmployeeTable = ({
 										<EyeIcon size={16} />
 										<Label>Visualizar</Label>
 									</Dropdown.Item>
-									{canManage && !employee.isSoftDeleted && (
+									{canManageLifecycle && !employee.isSoftDeleted && (
 										<Dropdown.Item
 											textValue="Editar"
 											onPress={() => onEdit?.(employee.id)}
@@ -108,7 +108,7 @@ export const EmployeeTable = ({
 											<Label>Editar</Label>
 										</Dropdown.Item>
 									)}
-									{canManage && employee.isSoftDeleted && (
+									{canManageLifecycle && employee.isSoftDeleted && (
 										<Dropdown.Item
 											textValue="Restaurar"
 											onPress={() => onRestore?.(employee.id)}
@@ -117,7 +117,7 @@ export const EmployeeTable = ({
 											<Label>Restaurar</Label>
 										</Dropdown.Item>
 									)}
-									{canManage && !employee.isSoftDeleted && (
+									{canManageLifecycle && !employee.isSoftDeleted && (
 										<Dropdown.Item
 											textValue="Excluir"
 											variant="danger"
@@ -134,7 +134,7 @@ export const EmployeeTable = ({
 				},
 			}),
 		];
-	}, [canManage, onView, onEdit, onDelete, onRestore]);
+	}, [canManageLifecycle, onView, onEdit, onDelete, onRestore]);
 
 	return (
 		<DataTable

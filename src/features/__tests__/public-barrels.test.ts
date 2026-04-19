@@ -29,10 +29,12 @@ describe("feature public barrels", () => {
 	});
 
 	it("keeps remuneration barrel minimal while preserving the route-level export hook", () => {
-		expect(remunerations).toHaveProperty("getRemunerationsOptions");
+		expect(remunerations).toHaveProperty("getRemunerationsQueryOptions");
 		expect(remunerations).toHaveProperty("RemunerationForm");
 		expect(remunerations).toHaveProperty("useRemunerationExport");
-		expect(remunerations).not.toHaveProperty("updateRemunerationOptions");
+		expect(remunerations).not.toHaveProperty(
+			"updateRemunerationMutationOptions",
+		);
 		expect(remunerations).not.toHaveProperty("useRemunerationForm");
 	});
 });

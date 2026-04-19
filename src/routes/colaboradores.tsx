@@ -61,12 +61,12 @@ function RouteComponent() {
 			</Wrapper.Header>
 			<Wrapper.Body>
 				<EmployeeTable
-					canManage={canManage}
 					data={data}
 					onEdit={overlay.edit.open}
 					onView={overlay.details.open}
 					onDelete={overlay.delete.open}
 					onRestore={overlay.restore.open}
+					canManageLifecycle={canManage}
 				/>
 				{overlay.create.render((state) => (
 					<EmployeeForm state={state} onSuccess={state.close} />

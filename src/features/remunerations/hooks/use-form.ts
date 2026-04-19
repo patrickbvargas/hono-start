@@ -7,8 +7,8 @@ import {
 } from "@/shared/lib/entity-management";
 import { toast } from "@/shared/lib/toast";
 import type { EntityId } from "@/shared/schemas/entity";
-import { updateRemunerationOptions } from "../api/mutations";
-import { getRemunerationByIdOptions } from "../api/queries";
+import { updateRemunerationMutationOptions } from "../api/mutations";
+import { getRemunerationByIdQueryOptions } from "../api/queries";
 import { REMUNERATION_DATA_CACHE_KEY } from "../constants/cache";
 import { remunerationUpdateInputSchema } from "../schemas/form";
 import { defaultRemunerationUpdateValues } from "../utils/default";
@@ -23,8 +23,8 @@ export function useRemunerationForm({
 	onSuccess,
 }: UseRemunerationFormOptions) {
 	const queryClient = useQueryClient();
-	const updateMutation = useMutation(updateRemunerationOptions());
-	const { data } = useQuery(getRemunerationByIdOptions(id));
+	const updateMutation = useMutation(updateRemunerationMutationOptions());
+	const { data } = useQuery(getRemunerationByIdQueryOptions(id));
 
 	const form = useAppForm({
 		defaultValues: {

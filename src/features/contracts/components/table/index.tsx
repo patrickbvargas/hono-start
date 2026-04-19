@@ -21,7 +21,7 @@ import {
 } from "../../constants/values";
 import type { ContractSummary } from "../../schemas/model";
 
-export interface ContractTableProps {
+interface ContractTableProps {
 	canManageLifecycle?: boolean;
 	data: QueryPaginatedReturnType<ContractSummary>;
 	onView?: (id: EntityId) => void;

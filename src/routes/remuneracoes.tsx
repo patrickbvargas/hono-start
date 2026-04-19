@@ -2,7 +2,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import {
-	getRemunerationsOptions,
+	getRemunerationsQueryOptions,
 	type Remuneration,
 	RemunerationDelete,
 	RemunerationDetails,
@@ -31,14 +31,14 @@ export const Route = createFileRoute("/remuneracoes")({
 	},
 	loaderDeps: ({ search }) => ({ search }),
 	loader: async ({ context: { queryClient }, deps: { search } }) => {
-		await queryClient.ensureQueryData(getRemunerationsOptions(search));
+		await queryClient.ensureQueryData(getRemunerationsQueryOptions(search));
 	},
 	component: RouteComponent,
 });
 
 function RouteComponent() {
 	const search = Route.useSearch();
-	const { data } = useSuspenseQuery(getRemunerationsOptions(search));
+	const { data } = useSuspenseQuery(getRemunerationsQueryOptions(search));
 	const { overlay } = useOverlay<Remuneration>();
 	const isAdmin = useLoggedUserSessionStore(isAdminSession);
 	const { handleExport, isPending, pendingFormat } =
@@ -61,12 +61,12 @@ function RouteComponent() {
 			</Wrapper.Header>
 			<Wrapper.Body>
 				<RemunerationTable
-					canManageLifecycle={isAdmin}
 					data={data}
 					onEdit={overlay.edit.open}
 					onView={overlay.details.open}
 					onDelete={overlay.delete.open}
 					onRestore={overlay.restore.open}
+					canManageLifecycle={isAdmin}
 				/>
 				{overlay.edit.render((remuneration, state) => (
 					<RemunerationForm

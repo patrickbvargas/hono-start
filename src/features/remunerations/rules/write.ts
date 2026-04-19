@@ -1,6 +1,6 @@
 import { REMUNERATION_ERRORS } from "../constants/errors";
 
-export interface RemunerationWriteInput {
+interface RemunerationWriteInput {
 	amount: number;
 	effectivePercentage: number;
 }

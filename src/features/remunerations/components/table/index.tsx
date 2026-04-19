@@ -17,7 +17,7 @@ import type { QueryPaginatedReturnType } from "@/shared/types/api";
 import { REMUNERATION_ALLOWED_SORT_COLUMNS } from "../../constants/sorting";
 import type { Remuneration } from "../../schemas/model";
 
-export interface RemunerationTableProps {
+interface RemunerationTableProps {
 	canManageLifecycle?: boolean;
 	data: QueryPaginatedReturnType<Remuneration>;
 	onView?: (remuneration: Remuneration) => void;
@@ -151,7 +151,7 @@ export const RemunerationTable = ({
 	);
 };
 
-export interface RemunerationExportMenuProps {
+interface RemunerationExportMenuProps {
 	onExport: (format: "pdf" | "spreadsheet") => void;
 	isPending?: boolean;
 	pendingFormat?: "pdf" | "spreadsheet" | null;

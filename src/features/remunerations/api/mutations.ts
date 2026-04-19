@@ -97,17 +97,17 @@ const restoreRemunerationFn = createServerFn({ method: "POST" })
 		}
 	});
 
-export const updateRemunerationOptions = () =>
+export const updateRemunerationMutationOptions = () =>
 	mutationOptions({
 		mutationFn: updateRemunerationFn,
 	});
 
-export const deleteRemunerationOptions = () =>
+export const deleteRemunerationMutationOptions = () =>
 	mutationOptions({
 		mutationFn: deleteRemunerationFn,
 	});
 
-export const restoreRemunerationOptions = () =>
+export const restoreRemunerationMutationOptions = () =>
 	mutationOptions({
 		mutationFn: restoreRemunerationFn,
 	});

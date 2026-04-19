@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import * as React from "react";
 import { toast } from "@/shared/lib/toast";
-import { exportRemunerationsOptions } from "../api/queries";
+import { exportRemunerationsMutationOptions } from "../api/queries";
 import type { RemunerationSearch } from "../schemas/search";
 
 type ExportFormat = "pdf" | "spreadsheet";
@@ -26,7 +26,7 @@ function downloadBase64File(params: {
 }
 
 export function useRemunerationExport(search: RemunerationSearch) {
-	const mutation = useMutation(exportRemunerationsOptions());
+	const mutation = useMutation(exportRemunerationsMutationOptions());
 	const [pendingFormat, setPendingFormat] = React.useState<ExportFormat | null>(
 		null,
 	);

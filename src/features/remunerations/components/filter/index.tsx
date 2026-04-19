@@ -7,7 +7,7 @@ import {
 import { useRemunerationFilter } from "../../hooks/use-filter";
 import { useRemunerationOptions } from "../../hooks/use-options";
 
-export interface RemunerationFilterProps {
+interface RemunerationFilterProps {
 	isAdmin?: boolean;
 }
 

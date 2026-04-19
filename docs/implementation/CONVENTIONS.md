@@ -12,6 +12,8 @@
 - Hooks: `camelCase` with `use` prefix
 - Constants: `UPPER_SNAKE_CASE`
 - Exported pure business-rule assertions in `rules/`: `camelCase` with `assert` prefix
+- React Query option factories: `get...QueryOptions` for queries and
+  `...MutationOptions` for mutations
 - Zod schemas: `camelCase` ending in `Schema`
 - Exported types inferred from schemas must follow the schema name without the `Schema` suffix
 
@@ -21,7 +23,7 @@
 - Public feature access goes through the feature barrel only.
 - Server function handlers stay private; exported API surface is the options factory wrapping them.
 - Feature barrels stay minimal and route-facing; do not export `data/` modules, internal helpers, or implementation-only schemas.
-- Feature subfolders do not use local barrel `index.ts` or `index.tsx` files; import concrete modules inside the feature.
+- Feature subfolders do not use local re-export barrel `index.ts` or `index.tsx` files; import concrete modules inside the feature.
 - Shared UI components are consumed through `@/shared/components/ui`.
 
 ## TypeScript Rules
@@ -51,14 +53,17 @@
 - `rules/` is the canonical home for pure business assertions that do not require Prisma or persisted resource lookups.
 - Rules always assert a business invariant and throw an error when that invariant fails.
 - Exported functions in `rules/` must be throwing assertions named with an `assert...` prefix.
+- Rule input helper types and interfaces stay private unless a route-facing contract explicitly requires otherwise.
 - Non-throwing `validate...`, `should...`, and predicate helpers must not be exported from `rules/`; keep them private or place them outside `rules/`.
 - `rules/` modules are imported by explicit module path, such as `rules/write`, rather than through a `rules/index.ts` barrel.
 - `utils/normalization.ts` is reserved for pure input canonicalization helpers such as trimming, empty-to-null conversion, and mask removal.
 - `utils/` is reserved for generic helpers such as normalization, formatting, and default-value helpers.
 - Feature read modules must map raw persistence rows into explicit read models before parsing with `schemas/model.ts`.
 - Lookup-backed read models should expose UI-ready labels and keep stable lookup `value` fields when edit defaults or later write flows need both.
-- Feature components define local `PascalCaseProps` interfaces near the component.
+- Feature components define local, non-exported `PascalCaseProps` interfaces near the component.
+- Equivalent table lifecycle props use `canManageLifecycle`; route-local policy variable names may keep their domain-specific meaning.
 - Feature hooks that accept object parameters define local `Use<Feature><Concern>Options` interfaces.
+- Delete and restore hooks accept `{ onSuccess }` options and expose `handleConfirm(id)` so lifecycle confirmation components pass the current overlay id consistently.
 - Route-facing query and mutation boundaries use explicit object input shapes when a call accepts multiple values or optional values.
 
 ## Cache And Mutation Rules

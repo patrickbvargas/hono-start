@@ -17,13 +17,13 @@ export const ContractRestore = ({
 	onSuccess,
 }: ContractRestoreProps) => {
 	const { data } = useSuspenseQuery(getContractByIdQueryOptions(id));
-	const { handleConfirm, isPending } = useContractRestore({ id, onSuccess });
+	const { handleConfirm, isPending } = useContractRestore({ onSuccess });
 
 	return (
 		<ConfirmDialog
 			title="Restaurar contrato"
 			description={`Tem certeza que deseja restaurar o contrato ${data.processNumber}?`}
-			onConfirm={handleConfirm}
+			onConfirm={() => handleConfirm(id)}
 			confirmButtonLabel="Restaurar"
 			isPending={isPending}
 			state={state}
