@@ -21,6 +21,7 @@
 - Public feature access goes through the feature barrel only.
 - Server function handlers stay private; exported API surface is the options factory wrapping them.
 - Feature barrels stay minimal and route-facing; do not export `data/` modules, internal helpers, or implementation-only schemas.
+- Feature subfolders do not use local barrel `index.ts` or `index.tsx` files; import concrete modules inside the feature.
 - Shared UI components are consumed through `@/shared/components/ui`.
 
 ## TypeScript Rules
@@ -29,6 +30,8 @@
 - Use `import type` for type-only imports.
 - Props are defined as `interface`, not `type`.
 - Prefer explicit return types for server boundaries and shared abstractions.
+- `if` statements always use braces, including early returns and throw branches.
+- Do not write inline braceless control flow such as `if (condition) return value;`.
 
 ## Zod Rules
 
@@ -54,6 +57,9 @@
 - `utils/` is reserved for generic helpers such as normalization, formatting, and default-value helpers.
 - Feature read modules must map raw persistence rows into explicit read models before parsing with `schemas/model.ts`.
 - Lookup-backed read models should expose UI-ready labels and keep stable lookup `value` fields when edit defaults or later write flows need both.
+- Feature components define local `PascalCaseProps` interfaces near the component.
+- Feature hooks that accept object parameters define local `Use<Feature><Concern>Options` interfaces.
+- Route-facing query and mutation boundaries use explicit object input shapes when a call accepts multiple values or optional values.
 
 ## Cache And Mutation Rules
 

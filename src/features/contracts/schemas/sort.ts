@@ -1,5 +1,5 @@
 import * as z from "zod";
-import { CONTRACT_ALLOWED_SORT_COLUMNS } from "../constants";
+import { CONTRACT_ALLOWED_SORT_COLUMNS } from "../constants/sorting";
 export const contractSortSchema = z.object({
 	column: z
 		.enum(CONTRACT_ALLOWED_SORT_COLUMNS)

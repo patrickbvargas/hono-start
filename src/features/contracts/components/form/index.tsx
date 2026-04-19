@@ -5,7 +5,10 @@ import { Button, Field } from "@/shared/components/ui";
 import type { EntityId } from "@/shared/schemas/entity";
 import { isAdminSession, useLoggedUserSessionStore } from "@/shared/session";
 import type { OverlayState } from "@/shared/types/overlay";
-import { CONTRACT_MAX_EMPLOYEES, CONTRACT_MAX_REVENUES } from "../../constants";
+import {
+	CONTRACT_MAX_EMPLOYEES,
+	CONTRACT_MAX_REVENUES,
+} from "../../constants/values";
 import { useContractForm } from "../../hooks/use-form";
 import { useContractOptions } from "../../hooks/use-options";
 import {

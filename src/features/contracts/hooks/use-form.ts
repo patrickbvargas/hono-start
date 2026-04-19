@@ -12,7 +12,7 @@ import {
 	updateContractMutationOptions,
 } from "../api/mutations";
 import { getContractByIdQueryOptions } from "../api/queries";
-import { CONTRACT_DATA_CACHE_KEY } from "../constants";
+import { CONTRACT_DATA_CACHE_KEY } from "../constants/cache";
 import {
 	contractCreateInputSchema,
 	contractUpdateInputSchema,

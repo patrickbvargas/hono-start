@@ -42,12 +42,29 @@ The canonical slice shape for feature work is defined by this document. New feat
 
 ## Canonical Feature Slice Contract
 
-Each feature slice is expected to contain:
+Each feature slice is validated by responsibility. A feature should include the
+directories whose responsibilities it owns, and any structural deviation from
+the `clients` reference slice must be justified by feature-specific behavior.
+
+```text
+src/features/<feature>/
+  api/          route-facing server wrappers and query/mutation options
+  components/   feature UI pieces with local props interfaces
+  constants/    cache keys, sort defaults, stable values, and error catalogs
+  data/         Prisma-backed reads, writes, lookup resolution, and persisted checks
+  hooks/        form, filter, option, delete, restore, and export orchestration
+  rules/        pure throwing business assertions only
+  schemas/      model, form, filter, search, and sort contracts
+  utils/        pure defaults, normalization, and formatting helpers
+  index.ts      minimal route-facing public barrel
+```
+
+Each feature slice is expected to use these responsibilities:
 
 - `api/queries.ts`: route-facing read wrappers and query option factories
 - `api/mutations.ts`: route-facing write wrappers and mutation option factories
 - `components/`: feature-local UI pieces
-- `constants/`: cache keys and feature-local constants
+- `constants/`: cache keys, sorting defaults, stable values, and safe pt-BR feature error catalogs
 - `data/queries.ts`: Prisma-backed reads, option loading, search translation, deterministic ordering, and read-model mapping
 - `data/mutations.ts`: Prisma-backed writes and persistence-aware checks that depend on current stored state
 - `hooks/`: orchestration hooks such as `use-form`, `use-filter`, `use-delete`, `use-restore`, and `use-options`
@@ -55,6 +72,16 @@ Each feature slice is expected to contain:
 - `schemas/`: `model`, `form`, `filter`, `search`, and `sort` contracts, including Zod request schemas and database-free schema refinements
 - `utils/`: feature-local pure helpers such as defaults, normalization helpers, and formatting helpers
 - `index.ts`: minimal public barrel for route-facing consumers
+
+Feature subfolders must not contain local barrel files such as
+`components/table/index.tsx`, `constants/index.ts`, or `rules/index.ts`. Inside a
+feature, import concrete modules directly. The only feature barrel is the
+top-level `src/features/<feature>/index.ts`.
+
+Feature-specific extensions are allowed when they represent real product
+responsibility. For example, `remunerations` owns export orchestration because
+the remuneration route exposes report export behavior; that does not require
+unrelated slices to add export files.
 
 ## Architectural Rules
 
@@ -65,6 +92,7 @@ Each feature slice is expected to contain:
 - Route-facing server wrappers belong in `api/`; Prisma-backed reads and writes belong in `data/`.
 - Pure feature business assertions belong in `rules/`, not in route files or generic `utils/`.
 - A rule function always asserts an invariant and throws when the invariant fails; non-throwing decisions, predicates, and validation issue collectors are not rule exports.
+- Expected business and authorization errors use feature-local safe pt-BR error catalogs or documented shared safe-error helpers.
 - Read models are feature-owned UI contracts and must be mapped from persistence rows before `schemas/model.ts` parsing.
 - `shared/` is reserved for generic infrastructure, primitives, and reusable building blocks that are not tied to one domain's business rules.
 

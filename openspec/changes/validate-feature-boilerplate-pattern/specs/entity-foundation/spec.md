@@ -25,21 +25,6 @@ The system SHALL treat `src/features/clients` as the reference slice for feature
 - **THEN** the deviation SHALL be compared against `src/features/clients` before it is accepted
 - **AND** the deviation SHALL be justified by feature-specific behavior rather than ad hoc implementation preference
 
-### Requirement: Feature slices follow a standard implementation sequence
-The system SHALL define a repeatable implementation workflow for feature slices so contributors can add or refactor features without reinterpreting architecture from scratch.
-
-#### Scenario: Feature contract is defined before UI assembly
-- **WHEN** a feature slice is started or materially refactored
-- **THEN** the feature SHALL define its schema contract before route wiring
-- **AND** the schema contract SHALL include entity model, form payload, filter, sort, and search definitions when those concerns exist
-- **AND** the implementation sequence SHALL proceed from schemas to feature-local APIs, then hooks, then components, and finally the route
-
-#### Scenario: Route wiring happens after feature behavior exists
-- **WHEN** a feature slice is wired into a route
-- **THEN** the route SHALL validate search state, prefetch feature queries, and mount feature UI pieces
-- **AND** the route SHALL not be the first location where feature business rules are defined
-- **AND** overlays for create, edit, delete, restore, and details SHALL be wired only after the feature contract and feature UI pieces already exist
-
 ### Requirement: Feature slices preserve ownership boundaries
 The system SHALL keep clear ownership boundaries between feature slices, routes, and shared infrastructure for feature work.
 
@@ -50,6 +35,14 @@ The system SHALL keep clear ownership boundaries between feature slices, routes,
 - **AND** Prisma-backed reads, writes, lookup access, and persistence-aware checks SHALL live in the feature-local `data/` modules
 - **AND** feature-specific rules SHALL not be defined inside route files
 - **AND** routes SHALL remain declarative composition points that consume the feature barrel rather than feature internals
+
+#### Scenario: Feature files have canonical responsibilities
+- **WHEN** a contributor reviews or changes a feature slice
+- **THEN** `schemas/model.ts` SHALL define UI-ready read models parsed after raw persistence rows are mapped
+- **AND** `schemas/form.ts` SHALL define request input schemas and database-free refinements
+- **AND** `schemas/filter.ts`, `schemas/search.ts`, and `schemas/sort.ts` SHALL define URL/list state contracts when the feature has list state
+- **AND** `constants/cache.ts`, `constants/sorting.ts`, `constants/values.ts`, and `constants/errors.ts` SHALL own cache keys, default sorting, stable feature values, and feature error messages when those concerns exist
+- **AND** `utils/` SHALL own pure default-value, normalization, and formatting helpers rather than business-rule assertions
 
 #### Scenario: Pure feature business assertions use a canonical location and naming pattern
 - **WHEN** a feature slice defines pure business assertions that do not require Prisma or persisted resource lookups
@@ -84,28 +77,6 @@ The system SHALL keep clear ownership boundaries between feature slices, routes,
 - **AND** lookup-backed read models SHALL expose UI-ready labels when rendered to users
 - **AND** stable lookup `value` fields SHALL remain available alongside labels when the feature needs them for edit defaults or downstream write flows
 
-#### Scenario: Equivalent slice responsibilities use aligned naming
-- **WHEN** multiple feature slices implement the same kind of responsibility such as create-default helpers, primary form hooks, list/data query modules, or primary write assertions
-- **THEN** those responsibilities SHALL use aligned naming across features unless a documented exception requires otherwise
-- **AND** one feature slice SHALL NOT keep ad hoc names for an equivalent responsibility when the repository already has a clearer house convention
-
-#### Scenario: Existing slices converge on the canonical ownership pattern
-- **WHEN** an existing feature slice is refactored to align with the repository's reference slice
-- **THEN** the refactor SHALL move remaining route-facing query wrappers into `api/queries.ts` and `api/mutations.ts`
-- **AND** the refactor SHALL move Prisma-backed reads and writes into `data/queries.ts` and `data/mutations.ts`
-- **AND** overlay-driven route flows SHALL consume ids and feature-owned detail hydration rather than row-object snapshots when following the canonical entity-management pattern
-
-#### Scenario: Contracts converge on the canonical ownership pattern
-- **WHEN** the `contracts` feature is refactored to align with the repository's reference slice
-- **THEN** the refactor SHALL move remaining route-facing query wrappers into `src/features/contracts/api/queries.ts` and `src/features/contracts/api/mutations.ts`
-- **AND** the refactor SHALL move Prisma-backed reads and writes into `src/features/contracts/data/queries.ts` and `src/features/contracts/data/mutations.ts`
-- **AND** overlay-driven contract route flows SHALL consume ids and feature-owned detail hydration rather than row-object snapshots
-
-#### Scenario: Contracts align naming with equivalent slice responsibilities
-- **WHEN** `contracts` implements responsibilities already present in `clients` and `employees`, such as route-facing query boundaries, feature data modules, edit hydration, or public-barrel exports
-- **THEN** those responsibilities SHALL use aligned naming and ownership boundaries unless a documented contract-management behavior requires a different shape
-- **AND** the contracts slice SHALL NOT preserve older ad hoc names for equivalent responsibilities once the canonical pattern exists
-
 #### Scenario: Feature barrels expose a consistent public surface
 - **WHEN** a feature slice defines its public `index.ts` barrel
 - **THEN** the barrel SHALL expose the categories of public API that top-level consumers need in a consistent way across equivalent feature slices
@@ -118,21 +89,3 @@ The system SHALL keep clear ownership boundaries between feature slices, routes,
 - **THEN** `clients`, `employees`, `contracts`, `fees`, and `remunerations` SHALL be audited against the same feature boilerplate responsibility matrix
 - **AND** unjustified drift SHALL be synchronized with the canonical pattern
 - **AND** justified exceptions SHALL be documented in the owning implementation docs or feature-specific specification
-
-#### Scenario: Shared code remains generic
-- **WHEN** reusable infrastructure is added for multiple features
-- **THEN** the `shared/` layer SHALL own only generic primitives, helpers, and infrastructure that are not tied to one feature's domain rules
-- **AND** feature-specific logic SHALL remain inside the feature until a stable abstraction is proven
-
-### Requirement: Shared abstractions are extracted only after repeated cross-feature usage
-The system SHALL prefer local feature implementation over premature generic abstractions when establishing validation or workflow patterns.
-
-#### Scenario: First feature proves the pattern locally
-- **WHEN** a workflow or helper exists for only one feature slice
-- **THEN** the implementation MAY remain feature-local
-- **AND** the team SHALL not treat single-use code as sufficient evidence for a shared abstraction
-
-#### Scenario: Repeated patterns justify extraction
-- **WHEN** multiple feature slices require the same behavioral helper or structure
-- **THEN** the team MAY extract a shared abstraction after comparing the repeated usage
-- **AND** the abstraction SHALL reflect the stable common contract rather than one feature's accidental details

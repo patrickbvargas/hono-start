@@ -1,7 +1,9 @@
 import { CLIENT_TYPE_COMPANY_VALUE } from "../constants/values";
 
 export function formatClientDocument(document: string | null) {
-	if (!document) return "—";
+	if (!document) {
+		return "—";
+	}
 
 	if (document.length === 11) {
 		return `${document.slice(0, 3)}.${document.slice(3, 6)}.${document.slice(6, 9)}-${document.slice(9)}`;

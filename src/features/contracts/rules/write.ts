@@ -1,5 +1,5 @@
-import { CONTRACT_MAX_REVENUES } from "../constants";
 import { CONTRACT_ERRORS } from "../constants/errors";
+import { CONTRACT_MAX_REVENUES } from "../constants/values";
 import type {
 	ContractAssignmentInput,
 	ContractCreateInput,

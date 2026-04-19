@@ -22,7 +22,10 @@ function isValidCPF(cpf: string) {
 	}
 
 	let remainder = (sum * 10) % 11;
-	if (remainder === 10) remainder = 0;
+	if (remainder === 10) {
+		remainder = 0;
+	}
+
 	if (remainder !== Number(cpf[9])) {
 		return false;
 	}
@@ -33,7 +36,9 @@ function isValidCPF(cpf: string) {
 	}
 
 	remainder = (sum * 10) % 11;
-	if (remainder === 10) remainder = 0;
+	if (remainder === 10) {
+		remainder = 0;
+	}
 
 	return remainder === Number(cpf[10]);
 }

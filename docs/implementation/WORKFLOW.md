@@ -19,6 +19,8 @@ It is intended to remain reusable even if another project adopts the same reposi
 - Features own business-specific schemas, API logic, hooks, components, constants, and helpers.
 - Routes own composition only.
 - Shared code is extracted only when the pattern is proven across multiple features.
+- Feature slices are validated against the boilerplate matrix in `ARCHITECTURE.md`.
+- Equivalent responsibilities across features must use the same ownership and naming pattern unless a documented exception explains the difference.
 
 ## Refactor Rule
 
@@ -45,6 +47,7 @@ During implementation:
 2. Keep feature ownership local.
 3. Avoid inventing a second pattern when the contract already defines one.
 4. Reuse canonical terminology from the glossary and domain docs.
+5. Keep `if` statements braced and avoid nested feature-folder barrels.
 
 Before finishing:
 

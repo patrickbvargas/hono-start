@@ -1,4 +1,5 @@
 import { Prisma } from "@/generated/prisma/client";
+import { CONTRACT_ERRORS } from "../constants/errors";
 import {
 	ASSIGNMENT_TYPE_ADMIN_ASSISTANT_VALUE,
 	ASSIGNMENT_TYPE_RECOMMENDED_VALUE,
@@ -6,8 +7,7 @@ import {
 	ASSIGNMENT_TYPE_RESPONSIBLE_VALUE,
 	EMPLOYEE_TYPE_ADMIN_ASSISTANT_VALUE,
 	EMPLOYEE_TYPE_LAWYER_VALUE,
-} from "../constants";
-import { CONTRACT_ERRORS } from "../constants/errors";
+} from "../constants/values";
 import type { ResolvedContractAssignment } from "../data/mutations";
 
 interface ResponsibleLawyerAssignmentInput {

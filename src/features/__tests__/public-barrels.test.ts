@@ -7,7 +7,7 @@ import * as remunerations from "@/features/remunerations";
 
 describe("feature public barrels", () => {
 	it("keeps client and employee barrels route-focused", () => {
-		expect(clients).toHaveProperty("getClientsOptions");
+		expect(clients).toHaveProperty("getClientsQueryOptions");
 		expect(clients).toHaveProperty("ClientForm");
 		expect(clients).not.toHaveProperty("useClientForm");
 
@@ -17,14 +17,14 @@ describe("feature public barrels", () => {
 	});
 
 	it("keeps contract and fee barrels aligned with the same minimal surface", () => {
-		expect(contracts).toHaveProperty("getContractsOptions");
+		expect(contracts).toHaveProperty("getContractsQueryOptions");
 		expect(contracts).toHaveProperty("ContractForm");
-		expect(contracts).not.toHaveProperty("createContractOptions");
+		expect(contracts).not.toHaveProperty("createContractMutationOptions");
 		expect(contracts).not.toHaveProperty("useContractOptions");
 
-		expect(fees).toHaveProperty("getFeesOptions");
+		expect(fees).toHaveProperty("getFeesQueryOptions");
 		expect(fees).toHaveProperty("FeeForm");
-		expect(fees).not.toHaveProperty("createFeeOptions");
+		expect(fees).not.toHaveProperty("createFeeMutationOptions");
 		expect(fees).not.toHaveProperty("useFeeForm");
 	});
 

@@ -42,7 +42,9 @@ const getClientByIdFn = createServerFn({ method: "GET" })
 			return await getClientById({ firmId, id: data.id });
 		} catch (error) {
 			console.error("[getClientById]", error);
-			if (hasExactErrorMessage(error, CLIENT_ERRORS)) throw error;
+			if (hasExactErrorMessage(error, CLIENT_ERRORS)) {
+				throw error;
+			}
 
 			throw new Error(CLIENT_ERRORS.DETAIL_FAILED);
 		}

@@ -14,11 +14,11 @@ import { Button, Dropdown, Label } from "@/shared/components/ui";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { QueryPaginatedReturnType } from "@/shared/types/api";
+import { CONTRACT_ALLOWED_SORT_COLUMNS } from "../../constants/sorting";
 import {
-	CONTRACT_ALLOWED_SORT_COLUMNS,
 	CONTRACT_STATUS_CANCELLED_VALUE,
 	CONTRACT_STATUS_COMPLETED_VALUE,
-} from "../../constants";
+} from "../../constants/values";
 import type { ContractSummary } from "../../schemas/model";
 
 export interface ContractTableProps {

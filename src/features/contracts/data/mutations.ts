@@ -12,12 +12,12 @@ import {
 	isContractReadOnly,
 } from "@/shared/session";
 import type { MutationReturnType } from "@/shared/types/api";
+import { CONTRACT_ERRORS } from "../constants/errors";
 import {
 	CONTRACT_STATUS_ACTIVE_VALUE,
 	CONTRACT_STATUS_CANCELLED_VALUE,
 	CONTRACT_STATUS_COMPLETED_VALUE,
-} from "../constants";
-import { CONTRACT_ERRORS } from "../constants/errors";
+} from "../constants/values";
 import { assertResolvedContractAssignmentRules } from "../rules/assignments";
 import type {
 	ContractAssignmentInput,

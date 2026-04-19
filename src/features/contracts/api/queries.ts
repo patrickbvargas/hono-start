@@ -13,7 +13,7 @@ import type {
 	QueryOneReturnType,
 	QueryPaginatedReturnType,
 } from "@/shared/types/api";
-import { CONTRACT_DATA_CACHE_KEY } from "../constants";
+import { CONTRACT_DATA_CACHE_KEY } from "../constants/cache";
 import { CONTRACT_ERRORS } from "../constants/errors";
 import {
 	getContractAssignmentTypes,

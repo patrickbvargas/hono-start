@@ -34,10 +34,13 @@ const createClientFn = createServerFn({ method: "POST" })
 			return await createClient({ firmId, input: data });
 		} catch (error) {
 			console.error("[createClient]", error);
-			if (isPrismaUniqueConstraintError(error, ["firmId", "document"]))
+			if (isPrismaUniqueConstraintError(error, ["firmId", "document"])) {
 				throw new Error(CLIENT_ERRORS.DOCUMENT_DUPLICATE);
+			}
 
-			if (hasExactErrorMessage(error, CLIENT_ERRORS)) throw error;
+			if (hasExactErrorMessage(error, CLIENT_ERRORS)) {
+				throw error;
+			}
 
 			throw new Error(CLIENT_ERRORS.CREATE_FAILED);
 		}
@@ -54,10 +57,13 @@ const updateClientFn = createServerFn({ method: "POST" })
 			return await updateClient({ firmId, input: data });
 		} catch (error) {
 			console.error("[updateClient]", error);
-			if (isPrismaUniqueConstraintError(error, ["firmId", "document"]))
+			if (isPrismaUniqueConstraintError(error, ["firmId", "document"])) {
 				throw new Error(CLIENT_ERRORS.DOCUMENT_DUPLICATE);
+			}
 
-			if (hasExactErrorMessage(error, CLIENT_ERRORS)) throw error;
+			if (hasExactErrorMessage(error, CLIENT_ERRORS)) {
+				throw error;
+			}
 
 			throw new Error(CLIENT_ERRORS.UPDATE_FAILED);
 		}
@@ -74,7 +80,9 @@ const deleteClientFn = createServerFn({ method: "POST" })
 			return await deleteClient({ firmId, id: data.id });
 		} catch (error) {
 			console.error("[deleteClient]", error);
-			if (hasExactErrorMessage(error, CLIENT_ERRORS)) throw error;
+			if (hasExactErrorMessage(error, CLIENT_ERRORS)) {
+				throw error;
+			}
 
 			throw new Error(CLIENT_ERRORS.DELETE_FAILED);
 		}
@@ -91,7 +99,9 @@ const restoreClientFn = createServerFn({ method: "POST" })
 			return await restoreClient({ firmId, id: data.id });
 		} catch (error) {
 			console.error("[restoreClient]", error);
-			if (hasExactErrorMessage(error, CLIENT_ERRORS)) throw error;
+			if (hasExactErrorMessage(error, CLIENT_ERRORS)) {
+				throw error;
+			}
 
 			throw new Error(CLIENT_ERRORS.RESTORE_FAILED);
 		}

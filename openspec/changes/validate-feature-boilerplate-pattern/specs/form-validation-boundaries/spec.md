@@ -22,12 +22,6 @@ The system SHALL organize feature validation concerns using a canonical boundary
 - **AND** exported assertion entrypoints that throw on invalid state SHALL use an `assert...` prefix
 - **AND** assertion failures SHALL use safe pt-BR business messages rather than internal diagnostic text
 
-#### Scenario: Read models are mapped before schema parsing
-- **WHEN** a feature reads persisted data for list or detail views
-- **THEN** the feature SHALL map raw Prisma rows into the feature read-model shape before parsing with `schemas/model.ts`
-- **AND** lookup-backed read fields SHALL expose UI-ready labels when rendered to users
-- **AND** stable lookup `value` fields SHALL remain available alongside labels when the feature needs them for edits or downstream write flows
-
 #### Scenario: Form hook submits the parsed payload consistently
 - **WHEN** a feature form hook coordinates create or update submission after schema validation
 - **THEN** the hook SHALL submit the parsed payload to the mutation boundary
@@ -45,12 +39,6 @@ The system SHALL organize feature validation concerns using a canonical boundary
 - **THEN** every `if` statement SHALL use braces
 - **AND** inline braceless early returns SHALL NOT be used in the synchronized validation boundary
 
-#### Scenario: Contract form hook submits and hydrates through canonical feature boundaries
-- **WHEN** the contracts feature form hook coordinates create or update submission after schema validation
-- **THEN** the hook SHALL submit the parsed payload to the contract mutation boundary
-- **AND** create-versus-update branching, cache refresh, toast feedback, and edit-default hydration SHALL remain the hook's responsibility
-- **AND** edit hydration SHALL use a feature-owned contract detail query rather than a route-supplied row object
-
 #### Scenario: Lookup-backed writes resolve selections at the server boundary
 - **WHEN** a create or update mutation receives lookup-backed form values
 - **THEN** the server SHALL resolve the submitted lookup `value` semantics to persisted relational records before writing
@@ -61,28 +49,3 @@ The system SHALL organize feature validation concerns using a canonical boundary
 - **THEN** route-facing server functions and React Query option factories SHALL live in the feature `api/` modules
 - **AND** Prisma-backed reads, writes, lookup access, and persistence-aware checks SHALL live in feature-local `data/` modules
 - **AND** the feature form hook and route SHALL consume the `api/` surface rather than importing persistence modules directly
-
-#### Scenario: Contract server wrappers stay separate from persistence modules
-- **WHEN** the contracts feature implements route-facing reads or writes
-- **THEN** route-facing server functions and React Query option factories SHALL live in `src/features/contracts/api/queries.ts` and `src/features/contracts/api/mutations.ts`
-- **AND** Prisma-backed contract reads, writes, lookup access, and persistence-aware checks SHALL live in `src/features/contracts/data/queries.ts` and `src/features/contracts/data/mutations.ts`
-- **AND** the contract form hook and `/contratos` route SHALL consume the `api/` surface rather than importing persistence modules directly
-
-#### Scenario: Contract read models are mapped before schema parsing
-- **WHEN** the contracts feature reads persisted data for list or detail views
-- **THEN** the feature SHALL map raw Prisma rows into explicit contract summary or detail models before parsing with `schemas/model.ts`
-- **AND** lookup-backed read fields SHALL expose UI-ready labels when rendered to users
-- **AND** stable lookup `value` fields SHALL remain available alongside labels when the feature needs them for edit defaults or downstream write flows
-
-#### Scenario: Remuneration server wrappers stay separate from persistence modules
-- **WHEN** the remunerations feature implements route-facing reads, exports, or writes
-- **THEN** route-facing server functions and React Query option factories SHALL live in `src/features/remunerations/api/queries.ts` and `src/features/remunerations/api/mutations.ts`
-- **AND** Prisma-backed remuneration reads, writes, option loading, access-resource loading, and persistence-aware checks SHALL live in `src/features/remunerations/data/queries.ts` and `src/features/remunerations/data/mutations.ts`
-- **AND** remuneration hooks and routes SHALL consume the `api/` surface rather than importing persistence modules directly
-
-#### Scenario: Remuneration pure business assertions use the canonical assert boundary
-- **WHEN** the remunerations feature defines reusable write rules that do not require Prisma
-- **THEN** exported pure rule entrypoints SHALL live under `src/features/remunerations/rules/`
-- **AND** exported pure rule entrypoints SHALL use an `assert...` prefix
-- **AND** exported pure rule entrypoints SHALL throw when the asserted invariant fails
-- **AND** non-throwing validation collectors SHALL NOT be exported from the remuneration rules boundary

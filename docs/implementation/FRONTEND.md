@@ -21,12 +21,14 @@ It is meant to survive domain changes as long as the project keeps the same UI a
 - Destructive actions require explicit confirmation UI.
 - Entity list pages must be composed with `Wrapper`, `Wrapper.Header`, and `Wrapper.Body`.
 - Entity lists are the main entrypoint for operational work.
+- Feature UI modules follow the canonical slice pattern in `ARCHITECTURE.md`; nested component barrels are not part of the frontend pattern.
 
 ## Form Rules
 
 - Forms are built through the shared app-form pattern and then wrapped by feature-local hooks.
 - Feature form hooks are the canonical orchestration layer for create and edit behavior.
 - The feature form hook selects the active schema, submits the parsed payload to the feature mutation boundary, refreshes caches, drives toast feedback, and hydrates edit defaults from the detail query when needed.
+- Form hook options and component props use explicit local interfaces as defined in `CONVENTIONS.md`.
 - Validation errors and helper copy are shown in the product locale defined by the domain or product contract.
 - Create and edit flows must share the same feature form component unless a documented exception exists.
 

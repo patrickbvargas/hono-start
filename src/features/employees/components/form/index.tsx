@@ -38,8 +38,9 @@ export const EmployeeForm = ({ id, state, onSuccess }: EmployeeFormProps) => {
 						name="type"
 						listeners={{
 							onChange: ({ value }) => {
-								if (value !== LAWYER_TYPE_VALUE)
-									form.setFieldValue("oabNumber", ""); // clear OAB when not lawyer
+								if (value !== LAWYER_TYPE_VALUE) {
+									form.setFieldValue("oabNumber", "");
+								}
 							},
 						}}
 					>

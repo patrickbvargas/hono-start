@@ -6,7 +6,7 @@ import {
 import { toast } from "@/shared/lib/toast";
 import type { EntityId } from "@/shared/schemas/entity";
 import { deleteContractMutationOptions } from "../api/mutations";
-import { CONTRACT_DATA_CACHE_KEY } from "../constants";
+import { CONTRACT_DATA_CACHE_KEY } from "../constants/cache";
 
 interface UseContractDeleteOptions {
 	id: EntityId;

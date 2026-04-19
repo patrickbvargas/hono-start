@@ -64,7 +64,9 @@ export function useClientForm({ id, onSuccess }: UseClientFormOptions) {
 	});
 
 	React.useEffect(() => {
-		if (isEditing && data) form.reset(defaultClientUpdateValues(data));
+		if (isEditing && data) {
+			form.reset(defaultClientUpdateValues(data));
+		}
 	}, [isEditing, data, form]);
 
 	return { form };
