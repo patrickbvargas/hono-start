@@ -1,4 +1,4 @@
-import type { DateValue } from "@internationalized/date";
+import { type DateValue, parseDate } from "@internationalized/date";
 import {
 	Calendar,
 	DateField,
@@ -20,7 +20,7 @@ export const FormDatePicker = ({
 	classNames,
 	...props
 }: FormDatePickerProps) => {
-	const field = useFieldContext<DateValue | null>();
+	const field = useFieldContext<string>();
 
 	const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 
@@ -28,9 +28,9 @@ export const FormDatePicker = ({
 		<DatePicker
 			name={field.name}
 			isInvalid={isInvalid}
-			value={field.state.value}
+			value={field.state.value ? parseDate(field.state.value) : null}
 			onBlur={field.handleBlur}
-			onChange={field.handleChange}
+			onChange={(value) => field.handleChange(value ? value.toString() : "")}
 			validationBehavior={validationBehavior}
 			className={classNames?.wrapper}
 			{...props}

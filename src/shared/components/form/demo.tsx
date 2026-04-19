@@ -1,4 +1,3 @@
-import { CalendarDate, parseDate } from "@internationalized/date";
 import * as z from "zod";
 import { useAppForm } from "@/shared/hooks/use-app-form";
 import type { FieldOption } from "@/shared/types/field";
@@ -14,13 +13,7 @@ const formSchema = z.object({
 	checkboxGroup: z.string().array().min(1, "CheckboxGroup is required"),
 	multiselect: z.string().array().min(1, "Multiselect is required"),
 	radioGroup: z.string().min(1, "RadioGroup is required"),
-	datePicker: z
-		.instanceof(CalendarDate, {
-			error: "DatePicker é obrigatório",
-		})
-		.refine((value) => value.compare(parseDate("2025-01-01")) > 0, {
-			message: "DatePicker deve ser posterior à 2025-01-01",
-		}),
+	datePicker: z.iso.date("DatePicker is required"),
 });
 type Form = z.infer<typeof formSchema>;
 
@@ -35,7 +28,7 @@ const formDefaultValues: Form = {
 	autocomplete: "",
 	radioGroup: "",
 	number: 0,
-	datePicker: parseDate("2023-01-01"),
+	datePicker: "2023-01-01",
 };
 
 const defaultOptions: FieldOption[] = [

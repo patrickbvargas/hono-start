@@ -45,7 +45,10 @@ export const DataTable = <TData, TValue>({
 	});
 
 	return (
-		<Table className={cn(className, classNames?.table)} {...props}>
+		<Table
+			className={cn("max-h-full", className, classNames?.table)}
+			{...props}
+		>
 			<Table.ScrollContainer>
 				<Table.ResizableContainer>
 					<Table.Content

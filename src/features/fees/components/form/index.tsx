@@ -18,7 +18,7 @@ export const FeeForm = ({ id, state, onSuccess }: FeeFormProps) => {
 	});
 
 	return (
-		<form.Form form={form}>
+		<form.Form form={form} showDebug>
 			<form.Subscribe selector={(current) => current.values.contractId}>
 				{(contractId) => (
 					<FeeFormFields

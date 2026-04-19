@@ -13,7 +13,7 @@ export const AppLayout = ({ children }: AppLayoutProps) => {
 	const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
 	return (
-		<div className="container mx-auto flex min-h-screen border">
+		<div className="container max-h-screen mx-auto flex min-h-screen border">
 			{/* Desktop sidebar */}
 			<aside
 				className={`hidden md:flex flex-col border-r border-border transition-all duration-200 ${
@@ -52,7 +52,7 @@ export const AppLayout = ({ children }: AppLayoutProps) => {
 				</header>
 
 				{/* Main content */}
-				<main className="flex-1 overflow-hidden">{children}</main>
+				<main className="flex-1 h-full overflow-hidden pb-4">{children}</main>
 			</div>
 
 			{/* Mobile Drawer */}
