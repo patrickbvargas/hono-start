@@ -26,5 +26,6 @@
     "**/router.tsx",
     "**/routeTree.gen.ts",
     "**/logo.svg",
+    "**/.pnpm-store",
   ],
 }
