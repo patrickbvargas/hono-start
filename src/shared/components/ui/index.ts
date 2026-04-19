@@ -3,6 +3,7 @@ export * from "./alert-dialog";
 export * from "./autocomplete";
 export * from "./button";
 export * from "./calendar";
+export * from "./card";
 export * from "./checkbox-group";
 export * from "./chip";
 export * from "./combobox";

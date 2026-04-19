@@ -1,28 +1,34 @@
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { DemoForm } from "@/shared/components/form/demo";
-import { Pagination } from "@/shared/components/pagination";
+import {
+	Dashboard,
+	getDashboardSummaryQueryOptions,
+} from "@/features/dashboard";
 import { RouteError } from "@/shared/components/route-error";
 import { RouteLoading } from "@/shared/components/route-loading";
 import { Wrapper } from "@/shared/components/wrapper";
+import { getLoggedUserSession } from "@/shared/session";
 
 export const Route = createFileRoute("/")({
-	loaderDeps: ({ search }) => ({ search }),
-	loader: async ({ deps: { search } }) => ({ search }),
+	beforeLoad: () => {
+		getLoggedUserSession();
+	},
+	loader: async ({ context: { queryClient } }) => {
+		await queryClient.ensureQueryData(getDashboardSummaryQueryOptions());
+	},
 	pendingComponent: () => <RouteLoading />,
 	errorComponent: ({ error }) => <RouteError error={error} />,
 	component: App,
 });
 
-// TODO: demo feature - remove from production
 function App() {
+	const { data } = useSuspenseQuery(getDashboardSummaryQueryOptions());
+
 	return (
 		<Wrapper title="Dashboard">
 			<Wrapper.Body>
-				<DemoForm />
+				<Dashboard data={data} />
 			</Wrapper.Body>
-			<Wrapper.Footer>
-				<Pagination totalRecords={1000} />
-			</Wrapper.Footer>
 		</Wrapper>
 	);
 }
