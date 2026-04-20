@@ -1,30 +1,27 @@
-import type { EmployeeCreate, EmployeeUpdate } from "../schemas/form";
-import type { Employee } from "../schemas/model";
+import type { EmployeeCreateInput, EmployeeUpdateInput } from "../schemas/form";
+import type { EmployeeDetail } from "../schemas/model";
 
-export const defaultFormCreateValues = (): EmployeeCreate => {
-	return {
-		fullName: "",
-		email: "",
-		oabNumber: "",
-		remunerationPercent: 0,
-		referrerPercent: 0.05,
-		type: 0,
-		role: 0,
-	};
-};
+export const defaultEmployeeCreateValues = (): EmployeeCreateInput => ({
+	fullName: "",
+	email: "",
+	oabNumber: "",
+	remunerationPercent: 0,
+	referrerPercent: 0,
+	type: "",
+	role: "",
+	isActive: true,
+});
 
-// TODO: refatorar
-export const defaultFormUpdateValues = (
-	initialValue: Employee,
-): EmployeeUpdate => {
-	return {
-		fullName: initialValue.fullName,
-		oabNumber: initialValue.oabNumber || "",
-		remunerationPercent: initialValue.remunerationPercent,
-		role: 999,
-		email: "",
-		id: initialValue.id,
-		referrerPercent: 999,
-		type: 999,
-	};
-};
+export const defaultEmployeeUpdateValues = (
+	initialValue: EmployeeDetail,
+): EmployeeUpdateInput => ({
+	id: initialValue.id,
+	fullName: initialValue.fullName,
+	email: initialValue.email,
+	oabNumber: initialValue.oabNumber || "",
+	remunerationPercent: initialValue.remunerationPercent,
+	referrerPercent: initialValue.referrerPercent,
+	type: initialValue.typeValue,
+	role: initialValue.roleValue,
+	isActive: initialValue.isActive,
+});

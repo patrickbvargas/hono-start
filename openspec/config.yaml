@@ -1,0 +1,29 @@
+schema: spec-driven
+
+context: |
+  # Hono — Legal Fee Management System
+
+  Internal web app for a Brazilian law firm specializing in Social Security Law.
+  Automates legal fee management and lawyer remuneration calculations, replacing manual spreadsheets.
+  Multi-tenant: multiple firm branches (filiais) with strict data isolation per firm.
+
+rules:
+  proposal:
+    - Keep proposals focused on a single feature or change
+    - Include a "Non-goals" section to define boundaries
+    - Identify affected user roles and multi-tenant implications
+
+  specs:
+    - Focus on behavior — avoid implementation details
+    - Define clear, testable acceptance criteria
+    - Include edge cases and side effects
+
+  design:
+    - Use Context7 MCP to look up documentation for any library before implementing
+    - Justify any deviation from existing patterns
+
+  tasks:
+    - Use Context7 MCP to look up documentation for any library before implementing
+    - Break into atomic units (~1–2 hours each)
+    - Indicate if DB migrations are required
+    - After implementation, run `pnpm check` then `npx tsc --noEmit`. Fix all errors before marking the task as done — never skip, suppress with @ts-ignore, or leave for later.

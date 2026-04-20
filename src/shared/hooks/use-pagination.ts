@@ -13,7 +13,7 @@ export function usePagination() {
 				...prev,
 				page,
 				limit,
-			} as never; // neecessary for react-router (agnostic)
+			} as never; // necessary for react-router (agnostic)
 		};
 	};
 

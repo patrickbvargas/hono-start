@@ -1,0 +1,279 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Firm {
+  id                Int                @id @default(autoincrement())
+  name              String
+  clients           Client[]
+  employees         Employee[]
+  contracts         Contract[]
+  contractEmployees ContractEmployee[]
+  revenues          Revenue[]
+  fees              Fee[]
+  remunerations     Remuneration[]
+
+  @@map("firms")
+}
+
+model ClientType {
+  id       Int      @id @default(autoincrement())
+  value    String   @unique
+  label    String
+  isActive Boolean  @default(true)
+  clients  Client[]
+
+  @@map("client_types")
+}
+
+model EmployeeType {
+  id        Int        @id @default(autoincrement())
+  value     String     @unique
+  label     String
+  isActive  Boolean    @default(true)
+  employees Employee[]
+
+  @@map("employee_types")
+}
+
+model UserRole {
+  id        Int        @id @default(autoincrement())
+  value     String     @unique
+  label     String
+  isActive  Boolean    @default(true)
+  employees Employee[]
+
+  @@map("user_roles")
+}
+
+model LegalArea {
+  id        Int        @id @default(autoincrement())
+  value     String     @unique
+  label     String
+  isActive  Boolean    @default(true)
+  contracts Contract[]
+
+  @@map("legal_areas")
+}
+
+model ContractStatus {
+  id        Int        @id @default(autoincrement())
+  value     String     @unique
+  label     String
+  isActive  Boolean    @default(true)
+  contracts Contract[]
+
+  @@map("contract_statuses")
+}
+
+model AssignmentType {
+  id                Int                @id @default(autoincrement())
+  value             String             @unique
+  label             String
+  isActive          Boolean            @default(true)
+  contractEmployees ContractEmployee[]
+
+  @@map("assignment_types")
+}
+
+model RevenueType {
+  id        Int       @id @default(autoincrement())
+  value     String    @unique
+  label     String
+  isActive  Boolean   @default(true)
+  revenues  Revenue[]
+
+  @@map("revenue_types")
+}
+
+model Employee {
+  id                     Int          @id @default(autoincrement())
+  firmId                 Int
+  fullName               String
+  email                  String       @unique
+  typeId                 Int
+  roleId                 Int
+  oabNumber              String?
+  remunerationPercentage Decimal      @db.Decimal(5, 4)
+  referralPercentage     Decimal      @db.Decimal(5, 4)
+  avatarUrl              String?
+  isActive               Boolean      @default(true)
+  createdAt              DateTime     @default(now())
+  updatedAt              DateTime     @updatedAt
+  deletedAt              DateTime?
+  firm                   Firm         @relation(fields: [firmId], references: [id])
+  type                   EmployeeType @relation(fields: [typeId], references: [id])
+  role                   UserRole     @relation(fields: [roleId], references: [id])
+  contractAssignments    ContractEmployee[]
+
+  @@unique([firmId, oabNumber])
+  @@index([firmId])
+  @@index([deletedAt])
+  @@index([isActive])
+  @@map("employees")
+}
+
+model Client {
+  id        Int        @id @default(autoincrement())
+  firmId    Int
+  typeId    Int
+  fullName  String
+  document  String
+  email     String?
+  phone     String?
+  isActive  Boolean    @default(true)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  deletedAt DateTime?
+  firm      Firm       @relation(fields: [firmId], references: [id])
+  type      ClientType @relation(fields: [typeId], references: [id])
+  contracts Contract[]
+
+  @@unique([firmId, document])
+  @@index([firmId])
+  @@index([deletedAt])
+  @@index([isActive])
+  @@map("clients")
+}
+
+model Contract {
+  id                Int                @id @default(autoincrement())
+  firmId            Int
+  clientId          Int
+  legalAreaId       Int
+  statusId          Int
+  processNumber     String
+  feePercentage     Decimal            @db.Decimal(5, 4)
+  notes             String?
+  allowStatusChange Boolean            @default(true)
+  isActive          Boolean            @default(true)
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  deletedAt         DateTime?
+  client            Client             @relation(fields: [clientId], references: [id])
+  firm              Firm               @relation(fields: [firmId], references: [id])
+  legalArea         LegalArea          @relation(fields: [legalAreaId], references: [id])
+  status            ContractStatus     @relation(fields: [statusId], references: [id])
+  assignments       ContractEmployee[]
+  revenues          Revenue[]
+
+  @@unique([firmId, processNumber])
+  @@index([firmId])
+  @@index([clientId])
+  @@index([legalAreaId])
+  @@index([statusId])
+  @@index([deletedAt])
+  @@index([isActive])
+  @@index([createdAt])
+  @@map("contracts")
+}
+
+model ContractEmployee {
+  id               Int            @id @default(autoincrement())
+  firmId           Int
+  contractId       Int
+  employeeId       Int
+  assignmentTypeId Int
+  isActive         Boolean        @default(true)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  deletedAt        DateTime?
+  assignmentType   AssignmentType @relation(fields: [assignmentTypeId], references: [id])
+  contract         Contract       @relation(fields: [contractId], references: [id])
+  employee         Employee       @relation(fields: [employeeId], references: [id])
+  firm             Firm           @relation(fields: [firmId], references: [id])
+  remunerations    Remuneration[]
+
+  @@index([firmId])
+  @@index([contractId])
+  @@index([employeeId])
+  @@index([assignmentTypeId])
+  @@index([deletedAt])
+  @@index([isActive])
+  @@index([createdAt])
+  @@map("contract_employees")
+}
+
+model Revenue {
+  id                Int         @id @default(autoincrement())
+  firmId            Int
+  contractId        Int
+  typeId            Int
+  totalValue        Decimal     @db.Decimal(14, 2)
+  downPaymentValue  Decimal?    @db.Decimal(14, 2)
+  paymentStartDate  DateTime
+  totalInstallments Int
+  isActive          Boolean     @default(true)
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+  deletedAt         DateTime?
+  contract          Contract    @relation(fields: [contractId], references: [id])
+  firm              Firm        @relation(fields: [firmId], references: [id])
+  type              RevenueType @relation(fields: [typeId], references: [id])
+  fees              Fee[]
+
+  @@index([firmId])
+  @@index([contractId])
+  @@index([typeId])
+  @@index([deletedAt])
+  @@index([isActive])
+  @@index([createdAt])
+  @@map("revenues")
+}
+
+model Fee {
+  id                    Int            @id @default(autoincrement())
+  firmId                Int
+  revenueId             Int
+  paymentDate           DateTime
+  amount                Decimal        @db.Decimal(14, 2)
+  installmentNumber     Int
+  generatesRemuneration Boolean        @default(true)
+  isActive              Boolean        @default(true)
+  createdAt             DateTime       @default(now())
+  updatedAt             DateTime       @updatedAt
+  deletedAt             DateTime?
+  firm                  Firm           @relation(fields: [firmId], references: [id])
+  revenue               Revenue        @relation(fields: [revenueId], references: [id])
+  remunerations         Remuneration[]
+
+  @@index([firmId])
+  @@index([revenueId])
+  @@index([paymentDate])
+  @@index([deletedAt])
+  @@index([isActive])
+  @@index([createdAt])
+  @@map("fees")
+}
+
+model Remuneration {
+  id                 Int              @id @default(autoincrement())
+  firmId             Int
+  feeId              Int
+  contractEmployeeId Int
+  effectivePercentage Decimal         @db.Decimal(5, 4)
+  amount             Decimal          @db.Decimal(14, 2)
+  paymentDate        DateTime
+  isSystemGenerated  Boolean          @default(true)
+  isActive           Boolean          @default(true)
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  deletedAt          DateTime?
+  contractEmployee   ContractEmployee @relation(fields: [contractEmployeeId], references: [id])
+  fee                Fee              @relation(fields: [feeId], references: [id])
+  firm               Firm             @relation(fields: [firmId], references: [id])
+
+  @@index([firmId])
+  @@index([feeId])
+  @@index([contractEmployeeId])
+  @@index([paymentDate])
+  @@index([deletedAt])
+  @@index([isActive])
+  @@index([createdAt])
+  @@map("remunerations")
+}

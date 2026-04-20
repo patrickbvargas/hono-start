@@ -1,0 +1,284 @@
+import {
+	type AttachmentAccessResource,
+	CONTRACT_STATUS_CANCELLED_VALUE,
+	CONTRACT_STATUS_COMPLETED_VALUE,
+	type ContractAccessResource,
+	type EmployeeAccessResource,
+	type FeeAccessResource,
+	type LoggedUserSession,
+	type RemunerationAccessResource,
+	type SessionAction,
+	type SessionResource,
+} from "./model";
+import {
+	getCurrentEmployeeId,
+	getCurrentFirmId,
+	isAdminSession,
+} from "./selectors";
+
+function isSameFirm(
+	session: LoggedUserSession,
+	resource?: { firmId: number } | null,
+) {
+	if (!resource) {
+		return true;
+	}
+
+	return resource.firmId === getCurrentFirmId(session);
+}
+
+function isAssignedToActor(
+	session: LoggedUserSession,
+	resource?: ContractAccessResource | FeeAccessResource | null,
+) {
+	if (!resource) {
+		return false;
+	}
+
+	if (typeof resource.isAssignedToActor === "boolean") {
+		return resource.isAssignedToActor;
+	}
+
+	return (
+		resource.assignedEmployeeIds?.includes(getCurrentEmployeeId(session)) ??
+		false
+	);
+}
+
+export function isContractReadOnly(
+	resource?: ContractAccessResource | FeeAccessResource | null,
+) {
+	if (!resource?.statusValue) {
+		return false;
+	}
+
+	return (
+		[
+			CONTRACT_STATUS_CANCELLED_VALUE,
+			CONTRACT_STATUS_COMPLETED_VALUE,
+		] as string[]
+	).includes(resource.statusValue);
+}
+
+function canAccessOwnEmployee(
+	session: LoggedUserSession,
+	resource?: EmployeeAccessResource | null,
+) {
+	if (!resource) {
+		return false;
+	}
+
+	return (
+		isSameFirm(session, resource) &&
+		resource.employeeId === getCurrentEmployeeId(session)
+	);
+}
+
+function canAccessOwnRemuneration(
+	session: LoggedUserSession,
+	resource?: RemunerationAccessResource | null,
+) {
+	if (!resource) {
+		return true;
+	}
+
+	return (
+		isSameFirm(session, resource) &&
+		resource.employeeId === getCurrentEmployeeId(session)
+	);
+}
+
+export function isContractWritable(
+	resource?: ContractAccessResource | FeeAccessResource | null,
+) {
+	if (!resource) {
+		return false;
+	}
+
+	return !isContractReadOnly(resource);
+}
+
+export function can(
+	session: LoggedUserSession,
+	action: SessionAction,
+	resource?: SessionResource,
+) {
+	if (!isSameFirm(session, resource)) {
+		return false;
+	}
+
+	if (isAdminSession(session)) {
+		return true;
+	}
+
+	switch (action) {
+		case "attachment.view":
+		case "attachment.upload":
+		case "client.create":
+		case "client.update":
+		case "dashboard.view":
+			return true;
+		case "employee.manage":
+		case "client.delete":
+		case "client.restore":
+		case "contract.delete":
+		case "contract.restore":
+		case "fee.delete":
+		case "fee.restore":
+		case "remuneration.update":
+		case "remuneration.delete":
+		case "remuneration.restore":
+		case "attachment.delete":
+		case "audit-log.view":
+			return false;
+		case "employee.update":
+			return canAccessOwnEmployee(session, resource as EmployeeAccessResource);
+		case "contract.view":
+		case "fee.view":
+			return isAssignedToActor(
+				session,
+				resource as ContractAccessResource | FeeAccessResource,
+			);
+		case "remuneration.view":
+		case "remuneration.export":
+			return canAccessOwnRemuneration(
+				session,
+				resource as RemunerationAccessResource,
+			);
+		case "fee.create":
+		case "fee.update":
+			return (
+				isAssignedToActor(session, resource as FeeAccessResource) &&
+				isContractWritable(resource as FeeAccessResource)
+			);
+		case "contract.create":
+			return true;
+		case "contract.assign-employee":
+		case "contract.update":
+			return (
+				isAssignedToActor(session, resource as ContractAccessResource) &&
+				isContractWritable(resource as ContractAccessResource)
+			);
+	}
+}
+
+export function assertCan(
+	session: LoggedUserSession,
+	action: SessionAction,
+	resource?: SessionResource,
+) {
+	if (can(session, action, resource)) {
+		return;
+	}
+
+	const errorMessages: Record<SessionAction, string> = {
+		"attachment.delete": "Apenas administradores podem excluir anexos",
+		"attachment.upload": "Você não tem permissão para enviar anexos",
+		"attachment.view": "Você não tem permissão para visualizar este anexo",
+		"audit-log.view": "Apenas administradores podem visualizar o audit log",
+		"client.create": "Você não tem permissão para criar clientes",
+		"client.delete": "Apenas administradores podem excluir clientes",
+		"client.restore": "Apenas administradores podem restaurar clientes",
+		"client.update": "Você não tem permissão para editar clientes",
+		"contract.assign-employee":
+			"Você não tem permissão para alterar a equipe deste contrato",
+		"contract.create": "Você não tem permissão para criar contratos",
+		"contract.delete": "Apenas administradores podem excluir contratos",
+		"contract.restore": "Apenas administradores podem restaurar contratos",
+		"contract.update": "Você não tem permissão para editar este contrato",
+		"contract.view": "Você não tem permissão para visualizar este contrato",
+		"dashboard.view": "Você não tem permissão para visualizar o dashboard",
+		"employee.manage": "Apenas administradores podem gerenciar funcionários",
+		"employee.update": "Você não tem permissão para editar este funcionário",
+		"fee.create": "Você não tem permissão para criar honorários",
+		"fee.delete": "Apenas administradores podem excluir honorários",
+		"fee.restore": "Apenas administradores podem restaurar honorários",
+		"fee.update": "Você não tem permissão para editar este honorário",
+		"fee.view": "Você não tem permissão para visualizar estes honorários",
+		"remuneration.delete": "Apenas administradores podem excluir remunerações",
+		"remuneration.export":
+			"Você não tem permissão para exportar estas remunerações",
+		"remuneration.restore":
+			"Apenas administradores podem restaurar remunerações",
+		"remuneration.update": "Apenas administradores podem editar remunerações",
+		"remuneration.view":
+			"Você não tem permissão para visualizar esta remuneração",
+	};
+
+	throw new Error(errorMessages[action]);
+}
+
+export function canManageEmployees(session: LoggedUserSession) {
+	return can(session, "employee.manage");
+}
+
+export function canUpdateEmployee(
+	session: LoggedUserSession,
+	resource: EmployeeAccessResource,
+) {
+	return can(session, "employee.update", resource);
+}
+
+export function canCreateContract(session: LoggedUserSession) {
+	return can(session, "contract.create");
+}
+
+export function canViewContract(
+	session: LoggedUserSession,
+	resource: ContractAccessResource,
+) {
+	return can(session, "contract.view", resource);
+}
+
+export function canUpdateContract(
+	session: LoggedUserSession,
+	resource: ContractAccessResource,
+) {
+	return can(session, "contract.update", resource);
+}
+
+export function canDeleteContract(
+	session: LoggedUserSession,
+	resource: ContractAccessResource,
+) {
+	return can(session, "contract.delete", resource);
+}
+
+export function canViewFee(
+	session: LoggedUserSession,
+	resource: FeeAccessResource,
+) {
+	return can(session, "fee.view", resource);
+}
+
+export function canCreateFee(
+	session: LoggedUserSession,
+	resource: FeeAccessResource,
+) {
+	return can(session, "fee.create", resource);
+}
+
+export function canUpdateFee(
+	session: LoggedUserSession,
+	resource: FeeAccessResource,
+) {
+	return can(session, "fee.update", resource);
+}
+
+export function canDeleteAttachment(
+	session: LoggedUserSession,
+	resource: AttachmentAccessResource,
+) {
+	return can(session, "attachment.delete", resource);
+}
+
+export function canViewRemuneration(
+	session: LoggedUserSession,
+	resource: RemunerationAccessResource,
+) {
+	return can(session, "remuneration.view", resource);
+}
+
+export function assertCanManageEmployees(session: LoggedUserSession) {
+	assertCan(session, "employee.manage");
+}

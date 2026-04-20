@@ -9,6 +9,7 @@ export * from "./multiselect";
 export * from "./number";
 export * from "./radio-group";
 export * from "./reset-button";
+export * from "./search";
 export * from "./submit-button";
 export * from "./switch";
 export * from "./textarea";

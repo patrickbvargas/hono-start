@@ -18,7 +18,7 @@ export function useSort() {
 				column: column,
 				direction: toggleDirection(column),
 				page: 1,
-			} as never; // neecessary for react-router (agnostic)
+			} as never; // necessary for react-router (agnostic)
 		};
 	};
 

@@ -12,7 +12,7 @@ import {
 	Link,
 	Table,
 	type TableProps,
-} from "@/shared/components/hui";
+} from "@/shared/components/ui";
 import { useSort } from "@/shared/hooks/use-sort";
 import { cn } from "@/shared/lib/utils";
 
@@ -45,7 +45,10 @@ export const DataTable = <TData, TValue>({
 	});
 
 	return (
-		<Table className={cn(className, classNames?.table)} {...props}>
+		<Table
+			className={cn("max-h-full", className, classNames?.table)}
+			{...props}
+		>
 			<Table.ScrollContainer>
 				<Table.ResizableContainer>
 					<Table.Content

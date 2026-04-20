@@ -9,9 +9,8 @@ import {
 	SearchField,
 	Tag,
 	TagGroup,
-} from "@/shared/components/hui";
+} from "@/shared/components/ui";
 import { useFieldContext } from "@/shared/hooks/use-app-form";
-import { useFilter } from "@/shared/hooks/use-filter";
 import type {
 	FieldClassNames,
 	FieldCommonProps,
@@ -42,13 +41,16 @@ export const FormMultiselect = ({
 	...props
 }: FormMultiselectProps) => {
 	const field = useFieldContext<Key[]>();
-	const { contains } = useFilter({ sensitivity: "base" });
 	const [isOpen, setIsOpen] = React.useState(false);
 
 	const triggerRef = React.useRef<HTMLDivElement>(null);
 	const popoverRef = React.useRef<HTMLDivElement>(null);
 
 	const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+
+	const handleChange = (value: Key[]) => {
+		field.handleChange(value.map((item) => item.toString()));
+	};
 
 	const onRemoveTags = (keys: Set<Key>) => {
 		field.handleChange((prev) => prev.filter((key) => !keys.has(key)));
@@ -70,7 +72,7 @@ export const FormMultiselect = ({
 			selectionMode="multiple"
 			value={field.state.value}
 			onBlur={field.handleBlur}
-			onChange={field.handleChange}
+			onChange={handleChange}
 			placeholder={placeholder}
 			isOpen={isOpen}
 			onOpenChange={setIsOpen}
@@ -115,7 +117,7 @@ export const FormMultiselect = ({
 				<Autocomplete.Indicator />
 			</Autocomplete.Trigger>
 			<Autocomplete.Popover ref={popoverRef} placement="bottom start">
-				<Autocomplete.Filter filter={contains}>
+				<Autocomplete.Filter>
 					<SearchField
 						autoFocus
 						name="search"

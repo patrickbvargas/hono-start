@@ -1,14 +1,17 @@
 import * as z from "zod";
+import { entityIdSchema } from "./entity";
 
-export const optionSchema = z
-	.object({
-		id: z.union([z.string(), z.number()]),
-		description: z.string().min(1, "Descrição é obrigatória"),
+export const optionSchema = entityIdSchema
+	.safeExtend({
+		value: z.string().min(1, "Valor é obrigatória"),
+		label: z.string().min(1, "Label é obrigatória"),
+		isActive: z.boolean().default(false),
 	})
-	.transform((option) => ({
-		value: option.id.toString(),
-		label: option.description,
+	.transform((data) => ({
+		id: data.id,
+		value: data.value,
+		label: data.label,
+		isDisabled: !data.isActive,
 	}));
 
-export type OptionInput = z.input<typeof optionSchema>;
 export type Option = z.infer<typeof optionSchema>;

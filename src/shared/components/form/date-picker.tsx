@@ -1,11 +1,11 @@
-import type { DateValue } from "@internationalized/date";
+import { type DateValue, parseDate } from "@internationalized/date";
 import {
 	Calendar,
 	DateField,
 	DatePicker,
 	type DatePickerProps,
 	Field,
-} from "@/shared/components/hui";
+} from "@/shared/components/ui";
 import { useFieldContext } from "@/shared/hooks/use-app-form";
 import type { FieldCommonProps } from "@/shared/types/field";
 
@@ -20,7 +20,7 @@ export const FormDatePicker = ({
 	classNames,
 	...props
 }: FormDatePickerProps) => {
-	const field = useFieldContext<DateValue | null>();
+	const field = useFieldContext<string>();
 
 	const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 
@@ -28,9 +28,9 @@ export const FormDatePicker = ({
 		<DatePicker
 			name={field.name}
 			isInvalid={isInvalid}
-			value={field.state.value}
+			value={field.state.value ? parseDate(field.state.value) : null}
 			onBlur={field.handleBlur}
-			onChange={field.handleChange}
+			onChange={(value) => field.handleChange(value ? value.toString() : "")}
 			validationBehavior={validationBehavior}
 			className={classNames?.wrapper}
 			{...props}
@@ -40,8 +40,7 @@ export const FormDatePicker = ({
 				htmlFor={field.name}
 				className={classNames?.label}
 			/>
-
-			<DateField.Group fullWidth>
+			<DateField.Group fullWidth variant="secondary">
 				<DateField.Input>
 					{(segment) => <DateField.Segment segment={segment} />}
 				</DateField.Input>

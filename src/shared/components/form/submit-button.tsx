@@ -1,4 +1,4 @@
-import { Button } from "@/shared/components/hui";
+import { Button } from "@/shared/components/ui";
 import { useFormContext } from "@/shared/hooks/use-app-form";
 
 export const FormSubmitButton = ({
@@ -10,7 +10,12 @@ export const FormSubmitButton = ({
 	return (
 		<form.Subscribe selector={(state) => state.isSubmitting}>
 			{(isSubmitting) => (
-				<Button type="submit" isDisabled={isSubmitting} {...props}>
+				<Button
+					type="submit"
+					onPress={form.handleSubmit}
+					isDisabled={isSubmitting}
+					{...props}
+				>
 					{children || "Salvar"}
 				</Button>
 			)}

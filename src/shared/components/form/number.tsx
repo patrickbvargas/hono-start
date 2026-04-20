@@ -2,7 +2,7 @@ import {
 	Field,
 	NumberField,
 	type NumberFieldProps,
-} from "@/shared/components/hui";
+} from "@/shared/components/ui";
 import { useFieldContext } from "@/shared/hooks/use-app-form";
 import type { FieldCommonProps } from "@/shared/types/field";
 
@@ -37,7 +37,7 @@ export const FormNumber = ({
 			/>
 			<NumberField.Group>
 				<NumberField.DecrementButton />
-				<NumberField.Input />
+				<NumberField.Input className="text-center" />
 				<NumberField.IncrementButton />
 			</NumberField.Group>
 			<Field.Description

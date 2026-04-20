@@ -6,8 +6,9 @@ import {
 	Input,
 	type Key,
 	ListBox,
-} from "@/shared/components/hui";
+} from "@/shared/components/ui";
 import { useFieldContext } from "@/shared/hooks/use-app-form";
+import { cn } from "@/shared/lib/utils";
 import type {
 	FieldClassNames,
 	FieldCommonProps,
@@ -41,15 +42,19 @@ export const FormAutocomplete = ({
 
 	const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 
+	const handleChange = (value: Key | null) => {
+		field.handleChange(value?.toString() ?? null);
+	};
+
 	return (
 		<ComboBox
 			name={field.name}
 			isInvalid={isInvalid}
 			value={field.state.value}
 			onBlur={field.handleBlur}
-			onChange={field.handleChange}
+			onChange={handleChange}
 			validationBehavior={validationBehavior}
-			className={classNames?.wrapper}
+			className={cn("min-w-0", classNames?.wrapper)}
 			{...props}
 		>
 			<Field.Label

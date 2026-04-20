@@ -9,6 +9,7 @@ export interface FieldOption {
 	value: string;
 	label: string;
 	isDisabled?: boolean;
+	id?: number | string;
 }
 
 export interface FieldCommonProps {

@@ -9,12 +9,36 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as FuncionariosRouteImport } from './routes/funcionarios'
+import { Route as RemuneracoesRouteImport } from './routes/remuneracoes'
+import { Route as HonorariosRouteImport } from './routes/honorarios'
+import { Route as ContratosRouteImport } from './routes/contratos'
+import { Route as ColaboradoresRouteImport } from './routes/colaboradores'
+import { Route as ClientesRouteImport } from './routes/clientes'
 import { Route as IndexRouteImport } from './routes/index'
 
-const FuncionariosRoute = FuncionariosRouteImport.update({
-  id: '/funcionarios',
-  path: '/funcionarios',
+const RemuneracoesRoute = RemuneracoesRouteImport.update({
+  id: '/remuneracoes',
+  path: '/remuneracoes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HonorariosRoute = HonorariosRouteImport.update({
+  id: '/honorarios',
+  path: '/honorarios',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContratosRoute = ContratosRouteImport.update({
+  id: '/contratos',
+  path: '/contratos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ColaboradoresRoute = ColaboradoresRouteImport.update({
+  id: '/colaboradores',
+  path: '/colaboradores',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ClientesRoute = ClientesRouteImport.update({
+  id: '/clientes',
+  path: '/clientes',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -25,37 +49,100 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/funcionarios': typeof FuncionariosRoute
+  '/clientes': typeof ClientesRoute
+  '/colaboradores': typeof ColaboradoresRoute
+  '/contratos': typeof ContratosRoute
+  '/honorarios': typeof HonorariosRoute
+  '/remuneracoes': typeof RemuneracoesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/funcionarios': typeof FuncionariosRoute
+  '/clientes': typeof ClientesRoute
+  '/colaboradores': typeof ColaboradoresRoute
+  '/contratos': typeof ContratosRoute
+  '/honorarios': typeof HonorariosRoute
+  '/remuneracoes': typeof RemuneracoesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/funcionarios': typeof FuncionariosRoute
+  '/clientes': typeof ClientesRoute
+  '/colaboradores': typeof ColaboradoresRoute
+  '/contratos': typeof ContratosRoute
+  '/honorarios': typeof HonorariosRoute
+  '/remuneracoes': typeof RemuneracoesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/funcionarios'
+  fullPaths:
+    | '/'
+    | '/clientes'
+    | '/colaboradores'
+    | '/contratos'
+    | '/honorarios'
+    | '/remuneracoes'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/funcionarios'
-  id: '__root__' | '/' | '/funcionarios'
+  to:
+    | '/'
+    | '/clientes'
+    | '/colaboradores'
+    | '/contratos'
+    | '/honorarios'
+    | '/remuneracoes'
+  id:
+    | '__root__'
+    | '/'
+    | '/clientes'
+    | '/colaboradores'
+    | '/contratos'
+    | '/honorarios'
+    | '/remuneracoes'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  FuncionariosRoute: typeof FuncionariosRoute
+  ClientesRoute: typeof ClientesRoute
+  ColaboradoresRoute: typeof ColaboradoresRoute
+  ContratosRoute: typeof ContratosRoute
+  HonorariosRoute: typeof HonorariosRoute
+  RemuneracoesRoute: typeof RemuneracoesRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/funcionarios': {
-      id: '/funcionarios'
-      path: '/funcionarios'
-      fullPath: '/funcionarios'
-      preLoaderRoute: typeof FuncionariosRouteImport
+    '/remuneracoes': {
+      id: '/remuneracoes'
+      path: '/remuneracoes'
+      fullPath: '/remuneracoes'
+      preLoaderRoute: typeof RemuneracoesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/honorarios': {
+      id: '/honorarios'
+      path: '/honorarios'
+      fullPath: '/honorarios'
+      preLoaderRoute: typeof HonorariosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contratos': {
+      id: '/contratos'
+      path: '/contratos'
+      fullPath: '/contratos'
+      preLoaderRoute: typeof ContratosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/colaboradores': {
+      id: '/colaboradores'
+      path: '/colaboradores'
+      fullPath: '/colaboradores'
+      preLoaderRoute: typeof ColaboradoresRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/clientes': {
+      id: '/clientes'
+      path: '/clientes'
+      fullPath: '/clientes'
+      preLoaderRoute: typeof ClientesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -70,7 +157,11 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  FuncionariosRoute: FuncionariosRoute,
+  ClientesRoute: ClientesRoute,
+  ColaboradoresRoute: ColaboradoresRoute,
+  ContratosRoute: ContratosRoute,
+  HonorariosRoute: HonorariosRoute,
+  RemuneracoesRoute: RemuneracoesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

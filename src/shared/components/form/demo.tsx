@@ -1,4 +1,3 @@
-import { CalendarDate, parseDate } from "@internationalized/date";
 import * as z from "zod";
 import { useAppForm } from "@/shared/hooks/use-app-form";
 import type { FieldOption } from "@/shared/types/field";
@@ -8,25 +7,13 @@ const formSchema = z.object({
 	inputOTP: z.string().min(1, "InputOTP is required"),
 	textarea: z.string().min(1, "Textarea is required"),
 	number: z.number().min(1, "Number is required"),
-	autocomplete: z.coerce.number<number>().min(1, "Autocomplete is required"),
+	autocomplete: z.string().min(1, "Autocomplete is required"),
 	checkbox: z.boolean().refine((value) => value, "Checkbox is required"),
 	switch: z.boolean().refine((value) => value, "Switch is required"),
-	checkboxGroup: z.coerce
-		.number<number>()
-		.array()
-		.min(1, "CheckboxGroup is required"),
-	multiselect: z.coerce
-		.number<number>()
-		.array()
-		.min(1, "Multiselect is required"),
-	radioGroup: z.coerce.number<number>().min(1, "RadioGroup is required"),
-	datePicker: z
-		.instanceof(CalendarDate, {
-			error: "DatePicker é obrigatório",
-		})
-		.refine((value) => value.compare(parseDate("2025-01-01")) > 0, {
-			message: "DatePicker deve ser posterior à 2025-01-01",
-		}),
+	checkboxGroup: z.string().array().min(1, "CheckboxGroup is required"),
+	multiselect: z.string().array().min(1, "Multiselect is required"),
+	radioGroup: z.string().min(1, "RadioGroup is required"),
+	datePicker: z.iso.date("DatePicker is required"),
 });
 type Form = z.infer<typeof formSchema>;
 
@@ -38,16 +25,16 @@ const formDefaultValues: Form = {
 	switch: true,
 	checkboxGroup: [],
 	multiselect: [],
-	autocomplete: 0,
-	radioGroup: 0,
+	autocomplete: "",
+	radioGroup: "",
 	number: 0,
-	datePicker: parseDate("2023-01-01"),
+	datePicker: "2023-01-01",
 };
 
 const defaultOptions: FieldOption[] = [
-	{ value: "1", label: "Opt A" },
-	{ value: "2", label: "Opt B" },
-	{ value: "3", label: "Opt C" },
+	{ value: "A", label: "Opt A" },
+	{ value: "B", label: "Opt B" },
+	{ value: "C", label: "Opt C" },
 ];
 
 export const DemoForm = () => {

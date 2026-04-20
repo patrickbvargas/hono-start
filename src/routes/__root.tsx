@@ -6,11 +6,10 @@ import {
 	createRootRouteWithContext,
 	HeadContent,
 	Scripts,
-	useRouterState,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
-import { AppSidebar } from "@/features/app-sidebar";
-import { SidebarInset, SidebarProvider } from "@/shared/components/ui/sidebar";
+import { AppLayout } from "@/shared/components/app-layout";
+import { ToastProvider } from "@/shared/components/ui";
 import appCss from "@/styles/global.css?url";
 
 interface RouterContext {
@@ -55,30 +54,16 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 });
 
 function RootDocument({ children }: { children: React.ReactNode }) {
-	const { isLoading } = useRouterState();
-
 	return (
 		<html lang="pt-BR" className="dark">
 			<head>
 				<HeadContent />
 			</head>
 			<body>
-				{/* TODO: implement the final isLoading */}
-				{isLoading && (
-					<div className="fixed inset-0 z-9999 flex items-center justify-center backdrop-blur-[1px] cursor-wait">
-						<div className="flex flex-col items-center gap-2">
-							<div className="h-10 w-10 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-							<span className="text-sm font-medium text-gray-700">
-								Carregando...
-							</span>
-						</div>
-					</div>
-				)}
+				<AppLayout>{children}</AppLayout>
 
-				<SidebarProvider className="container max-w-7xl mx-auto h-screen">
-					<AppSidebar />
-					<SidebarInset>{children}</SidebarInset>
-				</SidebarProvider>
+				<ToastProvider />
+
 				<TanStackDevtools
 					plugins={[
 						{
