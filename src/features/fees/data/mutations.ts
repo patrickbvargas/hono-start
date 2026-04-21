@@ -1,3 +1,5 @@
+import type { AuditLogActor } from "@/features/audit-logs/data/mutations";
+import { createAuditLog } from "@/features/audit-logs/data/mutations";
 import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/shared/lib/prisma";
 import {
@@ -25,11 +27,13 @@ interface FeeWriteScope {
 }
 
 interface CreateFeeParams {
+	actor?: AuditLogActor;
 	scope: FeeWriteScope;
 	input: FeeCreateInput;
 }
 
 interface UpdateFeeParams {
+	actor?: AuditLogActor;
 	scope: FeeWriteScope;
 	input: FeeUpdateInput;
 	access: NonNullable<Awaited<ReturnType<typeof getFeeAccessResourceById>>>;
@@ -296,6 +300,7 @@ async function syncContractStatusFromFees(
 }
 
 export async function createFee({
+	actor,
 	scope,
 	input,
 }: CreateFeeParams): Promise<MutationReturnType> {
@@ -346,12 +351,24 @@ export async function createFee({
 		}
 
 		await syncContractStatusFromFees(tx, revenue.contractId);
+
+		await createAuditLog(tx, {
+			firmId: revenue.firmId,
+			actor,
+			action: "CREATE",
+			entityType: "Fee",
+			entityId: fee.id,
+			entityName: `Installment ${fee.installmentNumber}`,
+			changeData: input,
+			description: `Created fee installment ${fee.installmentNumber}.`,
+		});
 	});
 
 	return { success: true };
 }
 
 export async function updateFee({
+	actor,
 	scope,
 	input,
 	access,
@@ -428,15 +445,30 @@ export async function updateFee({
 		if (access.contractId !== nextRevenue.contractId) {
 			await syncContractStatusFromFees(tx, nextRevenue.contractId);
 		}
+
+		await createAuditLog(tx, {
+			firmId: nextRevenue.firmId,
+			actor,
+			action: "UPDATE",
+			entityType: "Fee",
+			entityId: input.id,
+			entityName: `Installment ${input.installmentNumber}`,
+			changeData: input,
+			description: `Updated fee installment ${input.installmentNumber}.`,
+		});
 	});
 
 	return { success: true };
 }
 
 export async function deleteFee({
+	actor,
+	firmId,
 	id,
 	contractId,
 }: {
+	actor?: AuditLogActor;
+	firmId: number;
 	id: number;
 	contractId: number;
 }): Promise<MutationReturnType> {
@@ -450,15 +482,30 @@ export async function deleteFee({
 
 		await syncFeeDeleteState(tx, id, deletedAt);
 		await syncContractStatusFromFees(tx, contractId);
+
+		await createAuditLog(tx, {
+			firmId,
+			actor,
+			action: "DELETE",
+			entityType: "Fee",
+			entityId: id,
+			entityName: `Fee ${id}`,
+			changeData: { id, contractId },
+			description: `Deleted fee ${id}.`,
+		});
 	});
 
 	return { success: true };
 }
 
 export async function restoreFee({
+	actor,
+	firmId,
 	id,
 	contractId,
 }: {
+	actor?: AuditLogActor;
+	firmId: number;
 	id: number;
 	contractId: number;
 }): Promise<MutationReturnType> {
@@ -470,6 +517,17 @@ export async function restoreFee({
 
 		await syncFeeDeleteState(tx, id, null);
 		await syncContractStatusFromFees(tx, contractId);
+
+		await createAuditLog(tx, {
+			firmId,
+			actor,
+			action: "RESTORE",
+			entityType: "Fee",
+			entityId: id,
+			entityName: `Fee ${id}`,
+			changeData: { id, contractId },
+			description: `Restored fee ${id}.`,
+		});
 	});
 
 	return { success: true };

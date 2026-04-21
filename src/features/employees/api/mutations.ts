@@ -31,7 +31,15 @@ const createEmployeeFn = createServerFn({ method: "POST" })
 			assertCan(session, "employee.manage");
 			const { firmId } = getServerScope("employee");
 
-			return await createEmployee({ firmId, input: data });
+			return await createEmployee({
+				actor: {
+					id: session.employee.id,
+					name: session.user.fullName,
+					email: session.user.email,
+				},
+				firmId,
+				input: data,
+			});
 		} catch (error) {
 			console.error("[createEmployee]", error);
 			if (isPrismaUniqueConstraintError(error, ["email"])) {
@@ -54,7 +62,15 @@ const updateEmployeeFn = createServerFn({ method: "POST" })
 			assertCan(session, "employee.manage");
 			const { firmId } = getServerScope("employee");
 
-			return await updateEmployee({ firmId, input: data });
+			return await updateEmployee({
+				actor: {
+					id: session.employee.id,
+					name: session.user.fullName,
+					email: session.user.email,
+				},
+				firmId,
+				input: data,
+			});
 		} catch (error) {
 			console.error("[updateEmployee]", error);
 			if (isPrismaUniqueConstraintError(error, ["email"])) {
@@ -77,7 +93,15 @@ const deleteEmployeeFn = createServerFn({ method: "POST" })
 			assertCan(session, "employee.manage");
 			const { firmId } = getServerScope("employee");
 
-			return await deleteEmployee({ firmId, id: data.id });
+			return await deleteEmployee({
+				actor: {
+					id: session.employee.id,
+					name: session.user.fullName,
+					email: session.user.email,
+				},
+				firmId,
+				id: data.id,
+			});
 		} catch (error) {
 			console.error("[deleteEmployee]", error);
 			if (hasExactErrorMessage(error, EMPLOYEE_ERRORS)) {
@@ -96,7 +120,15 @@ const restoreEmployeeFn = createServerFn({ method: "POST" })
 			assertCan(session, "employee.manage");
 			const { firmId } = getServerScope("employee");
 
-			return await restoreEmployee({ firmId, id: data.id });
+			return await restoreEmployee({
+				actor: {
+					id: session.employee.id,
+					name: session.user.fullName,
+					email: session.user.email,
+				},
+				firmId,
+				id: data.id,
+			});
 		} catch (error) {
 			console.error("[restoreEmployee]", error);
 			if (hasExactErrorMessage(error, EMPLOYEE_ERRORS)) {

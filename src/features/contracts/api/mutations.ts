@@ -34,6 +34,11 @@ const createContractFn = createServerFn({ method: "POST" })
 			const scope = getServerScope("contract");
 
 			return await createContract({
+				actor: {
+					id: session.employee.id,
+					name: session.user.fullName,
+					email: session.user.email,
+				},
 				scope: { firmId: scope.firmId },
 				input: data,
 				isAdmin: isAdminSession(session),
@@ -67,6 +72,11 @@ const updateContractFn = createServerFn({ method: "POST" })
 			const scope = getServerScope("contract");
 
 			return await updateContract({
+				actor: {
+					id: session.employee.id,
+					name: session.user.fullName,
+					email: session.user.email,
+				},
 				scope: { firmId: scope.firmId },
 				input: data,
 				isAdmin: isAdminSession(session),
@@ -99,7 +109,15 @@ const deleteContractFn = createServerFn({ method: "POST" })
 			assertCan(session, "contract.delete", access.resource);
 			const { firmId } = getServerScope("contract");
 
-			return await deleteContract({ firmId, id: data.id });
+			return await deleteContract({
+				actor: {
+					id: session.employee.id,
+					name: session.user.fullName,
+					email: session.user.email,
+				},
+				firmId,
+				id: data.id,
+			});
 		} catch (error) {
 			console.error("[deleteContract]", error);
 			if (hasExactErrorMessage(error, CONTRACT_ERRORS)) {
@@ -124,7 +142,15 @@ const restoreContractFn = createServerFn({ method: "POST" })
 			assertCan(session, "contract.restore", access.resource);
 			const { firmId } = getServerScope("contract");
 
-			return await restoreContract({ firmId, id: data.id });
+			return await restoreContract({
+				actor: {
+					id: session.employee.id,
+					name: session.user.fullName,
+					email: session.user.email,
+				},
+				firmId,
+				id: data.id,
+			});
 		} catch (error) {
 			console.error("[restoreContract]", error);
 			if (hasExactErrorMessage(error, CONTRACT_ERRORS)) {

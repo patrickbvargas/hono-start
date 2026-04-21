@@ -1,3 +1,5 @@
+import type { AuditLogActor } from "@/features/audit-logs/data/mutations";
+import { createAuditLog } from "@/features/audit-logs/data/mutations";
 import type {
 	AssignmentType,
 	ContractStatus,
@@ -40,12 +42,14 @@ interface ContractWriteScope {
 }
 
 interface CreateContractParams {
+	actor?: AuditLogActor;
 	scope: ContractWriteScope;
 	input: ContractCreateInput;
 	isAdmin: boolean;
 }
 
 interface UpdateContractParams {
+	actor?: AuditLogActor;
 	scope: ContractWriteScope;
 	input: ContractUpdateInput;
 	isAdmin: boolean;
@@ -303,6 +307,7 @@ async function syncRevenues(
 }
 
 export async function createContract({
+	actor,
 	scope,
 	input,
 	isAdmin,
@@ -382,12 +387,24 @@ export async function createContract({
 				})),
 			});
 		}
+
+		await createAuditLog(tx, {
+			firmId: scope.firmId,
+			actor,
+			action: "CREATE",
+			entityType: "Contract",
+			entityId: contract.id,
+			entityName: contract.processNumber,
+			changeData: input,
+			description: `Created contract ${contract.processNumber}.`,
+		});
 	});
 
 	return { success: true };
 }
 
 export async function updateContract({
+	actor,
 	scope,
 	input,
 	isAdmin,
@@ -492,15 +509,39 @@ export async function updateContract({
 			firmId: scope.firmId,
 			revenues: resolvedRevenues,
 		});
+
+		await createAuditLog(tx, {
+			firmId: scope.firmId,
+			actor,
+			action: "UPDATE",
+			entityType: "Contract",
+			entityId: input.id,
+			entityName: input.processNumber,
+			changeData: {
+				before: {
+					id: existing.id,
+					processNumber: existing.processNumber,
+					legalAreaId: existing.legalAreaId,
+					statusId: existing.statusId,
+					allowStatusChange: existing.allowStatusChange,
+				},
+				after: input,
+			},
+			description: `Updated contract ${input.processNumber}.`,
+		});
 	});
 
 	return { success: true };
 }
 
 export async function deleteContract({
+	actor,
 	firmId,
 	id,
-}: ContractWriteScope & { id: number }): Promise<MutationReturnType> {
+}: ContractWriteScope & {
+	actor?: AuditLogActor;
+	id: number;
+}): Promise<MutationReturnType> {
 	const access = await getContractAccessResourceById(id);
 
 	if (!access || !access.resource || access.resource.firmId !== firmId) {
@@ -520,18 +561,35 @@ export async function deleteContract({
 		throw new Error(CONTRACT_ERRORS.CONTRACT_NOT_FOUND);
 	}
 
-	await prisma.contract.update({
-		where: { id },
-		data: { deletedAt: new Date() },
+	await prisma.$transaction(async (tx) => {
+		await tx.contract.update({
+			where: { id },
+			data: { deletedAt: new Date() },
+		});
+
+		await createAuditLog(tx, {
+			firmId,
+			actor,
+			action: "DELETE",
+			entityType: "Contract",
+			entityId: id,
+			entityName: contract.processNumber,
+			changeData: { before: contract },
+			description: `Deleted contract ${contract.processNumber}.`,
+		});
 	});
 
 	return { success: true };
 }
 
 export async function restoreContract({
+	actor,
 	firmId,
 	id,
-}: ContractWriteScope & { id: number }): Promise<MutationReturnType> {
+}: ContractWriteScope & {
+	actor?: AuditLogActor;
+	id: number;
+}): Promise<MutationReturnType> {
 	const access = await getContractAccessResourceById(id);
 
 	if (!access || !access.resource || access.resource.firmId !== firmId) {
@@ -547,9 +605,22 @@ export async function restoreContract({
 		throw new Error(CONTRACT_ERRORS.CONTRACT_NOT_FOUND);
 	}
 
-	await prisma.contract.update({
-		where: { id },
-		data: { deletedAt: null },
+	await prisma.$transaction(async (tx) => {
+		await tx.contract.update({
+			where: { id },
+			data: { deletedAt: null },
+		});
+
+		await createAuditLog(tx, {
+			firmId,
+			actor,
+			action: "RESTORE",
+			entityType: "Contract",
+			entityId: id,
+			entityName: contract.processNumber,
+			changeData: { before: contract },
+			description: `Restored contract ${contract.processNumber}.`,
+		});
 	});
 
 	return { success: true };

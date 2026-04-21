@@ -5,6 +5,7 @@ import {
 	LayoutDashboardIcon,
 	LifeBuoyIcon,
 	type LucideIcon,
+	ScrollTextIcon,
 	Settings2Icon,
 	UserIcon,
 	UsersIcon,
@@ -29,6 +30,7 @@ type RouteName =
 	| "fee"
 	| "remuneration"
 	| "employee"
+	| "auditLog"
 	| "setting"
 	| "support";
 
@@ -62,6 +64,11 @@ export const ROUTES: Record<RouteName, RouteItem> = {
 		title: "Colaboradores",
 		url: "/colaboradores",
 		icon: UsersIcon,
+	},
+	auditLog: {
+		title: "Auditoria",
+		url: "/audit-log",
+		icon: ScrollTextIcon,
 	},
 	setting: {
 		title: "Configurações",

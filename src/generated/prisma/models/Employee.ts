@@ -311,6 +311,7 @@ export type EmployeeWhereInput = {
   firm?: Prisma.XOR<Prisma.FirmScalarRelationFilter, Prisma.FirmWhereInput>
   type?: Prisma.XOR<Prisma.EmployeeTypeScalarRelationFilter, Prisma.EmployeeTypeWhereInput>
   role?: Prisma.XOR<Prisma.UserRoleScalarRelationFilter, Prisma.UserRoleWhereInput>
+  auditLogs?: Prisma.AuditLogListRelationFilter
   contractAssignments?: Prisma.ContractEmployeeListRelationFilter
 }
 
@@ -332,6 +333,7 @@ export type EmployeeOrderByWithRelationInput = {
   firm?: Prisma.FirmOrderByWithRelationInput
   type?: Prisma.EmployeeTypeOrderByWithRelationInput
   role?: Prisma.UserRoleOrderByWithRelationInput
+  auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
   contractAssignments?: Prisma.ContractEmployeeOrderByRelationAggregateInput
 }
 
@@ -357,6 +359,7 @@ export type EmployeeWhereUniqueInput = Prisma.AtLeast<{
   firm?: Prisma.XOR<Prisma.FirmScalarRelationFilter, Prisma.FirmWhereInput>
   type?: Prisma.XOR<Prisma.EmployeeTypeScalarRelationFilter, Prisma.EmployeeTypeWhereInput>
   role?: Prisma.XOR<Prisma.UserRoleScalarRelationFilter, Prisma.UserRoleWhereInput>
+  auditLogs?: Prisma.AuditLogListRelationFilter
   contractAssignments?: Prisma.ContractEmployeeListRelationFilter
 }, "id" | "email" | "firmId_oabNumber">
 
@@ -416,6 +419,7 @@ export type EmployeeCreateInput = {
   firm: Prisma.FirmCreateNestedOneWithoutEmployeesInput
   type: Prisma.EmployeeTypeCreateNestedOneWithoutEmployeesInput
   role: Prisma.UserRoleCreateNestedOneWithoutEmployeesInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
   contractAssignments?: Prisma.ContractEmployeeCreateNestedManyWithoutEmployeeInput
 }
 
@@ -434,6 +438,7 @@ export type EmployeeUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
   contractAssignments?: Prisma.ContractEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
@@ -451,6 +456,7 @@ export type EmployeeUpdateInput = {
   firm?: Prisma.FirmUpdateOneRequiredWithoutEmployeesNestedInput
   type?: Prisma.EmployeeTypeUpdateOneRequiredWithoutEmployeesNestedInput
   role?: Prisma.UserRoleUpdateOneRequiredWithoutEmployeesNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
   contractAssignments?: Prisma.ContractEmployeeUpdateManyWithoutEmployeeNestedInput
 }
 
@@ -469,6 +475,7 @@ export type EmployeeUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
   contractAssignments?: Prisma.ContractEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
@@ -601,6 +608,11 @@ export type EmployeeSumOrderByAggregateInput = {
   roleId?: Prisma.SortOrder
   remunerationPercentage?: Prisma.SortOrder
   referralPercentage?: Prisma.SortOrder
+}
+
+export type EmployeeNullableScalarRelationFilter = {
+  is?: Prisma.EmployeeWhereInput | null
+  isNot?: Prisma.EmployeeWhereInput | null
 }
 
 export type EmployeeScalarRelationFilter = {
@@ -754,6 +766,22 @@ export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null
 }
 
+export type EmployeeCreateNestedOneWithoutAuditLogsInput = {
+  create?: Prisma.XOR<Prisma.EmployeeCreateWithoutAuditLogsInput, Prisma.EmployeeUncheckedCreateWithoutAuditLogsInput>
+  connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutAuditLogsInput
+  connect?: Prisma.EmployeeWhereUniqueInput
+}
+
+export type EmployeeUpdateOneWithoutAuditLogsNestedInput = {
+  create?: Prisma.XOR<Prisma.EmployeeCreateWithoutAuditLogsInput, Prisma.EmployeeUncheckedCreateWithoutAuditLogsInput>
+  connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutAuditLogsInput
+  upsert?: Prisma.EmployeeUpsertWithoutAuditLogsInput
+  disconnect?: Prisma.EmployeeWhereInput | boolean
+  delete?: Prisma.EmployeeWhereInput | boolean
+  connect?: Prisma.EmployeeWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EmployeeUpdateToOneWithWhereWithoutAuditLogsInput, Prisma.EmployeeUpdateWithoutAuditLogsInput>, Prisma.EmployeeUncheckedUpdateWithoutAuditLogsInput>
+}
+
 export type EmployeeCreateNestedOneWithoutContractAssignmentsInput = {
   create?: Prisma.XOR<Prisma.EmployeeCreateWithoutContractAssignmentsInput, Prisma.EmployeeUncheckedCreateWithoutContractAssignmentsInput>
   connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutContractAssignmentsInput
@@ -781,6 +809,7 @@ export type EmployeeCreateWithoutFirmInput = {
   deletedAt?: Date | string | null
   type: Prisma.EmployeeTypeCreateNestedOneWithoutEmployeesInput
   role: Prisma.UserRoleCreateNestedOneWithoutEmployeesInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
   contractAssignments?: Prisma.ContractEmployeeCreateNestedManyWithoutEmployeeInput
 }
 
@@ -798,6 +827,7 @@ export type EmployeeUncheckedCreateWithoutFirmInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
   contractAssignments?: Prisma.ContractEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
@@ -860,6 +890,7 @@ export type EmployeeCreateWithoutTypeInput = {
   deletedAt?: Date | string | null
   firm: Prisma.FirmCreateNestedOneWithoutEmployeesInput
   role: Prisma.UserRoleCreateNestedOneWithoutEmployeesInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
   contractAssignments?: Prisma.ContractEmployeeCreateNestedManyWithoutEmployeeInput
 }
 
@@ -877,6 +908,7 @@ export type EmployeeUncheckedCreateWithoutTypeInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
   contractAssignments?: Prisma.ContractEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
@@ -919,6 +951,7 @@ export type EmployeeCreateWithoutRoleInput = {
   deletedAt?: Date | string | null
   firm: Prisma.FirmCreateNestedOneWithoutEmployeesInput
   type: Prisma.EmployeeTypeCreateNestedOneWithoutEmployeesInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
   contractAssignments?: Prisma.ContractEmployeeCreateNestedManyWithoutEmployeeInput
 }
 
@@ -936,6 +969,7 @@ export type EmployeeUncheckedCreateWithoutRoleInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
   contractAssignments?: Prisma.ContractEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
@@ -965,6 +999,92 @@ export type EmployeeUpdateManyWithWhereWithoutRoleInput = {
   data: Prisma.XOR<Prisma.EmployeeUpdateManyMutationInput, Prisma.EmployeeUncheckedUpdateManyWithoutRoleInput>
 }
 
+export type EmployeeCreateWithoutAuditLogsInput = {
+  fullName: string
+  email: string
+  oabNumber?: string | null
+  remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
+  referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
+  avatarUrl?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  firm: Prisma.FirmCreateNestedOneWithoutEmployeesInput
+  type: Prisma.EmployeeTypeCreateNestedOneWithoutEmployeesInput
+  role: Prisma.UserRoleCreateNestedOneWithoutEmployeesInput
+  contractAssignments?: Prisma.ContractEmployeeCreateNestedManyWithoutEmployeeInput
+}
+
+export type EmployeeUncheckedCreateWithoutAuditLogsInput = {
+  id?: number
+  firmId: number
+  fullName: string
+  email: string
+  typeId: number
+  roleId: number
+  oabNumber?: string | null
+  remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
+  referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
+  avatarUrl?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  contractAssignments?: Prisma.ContractEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
+}
+
+export type EmployeeCreateOrConnectWithoutAuditLogsInput = {
+  where: Prisma.EmployeeWhereUniqueInput
+  create: Prisma.XOR<Prisma.EmployeeCreateWithoutAuditLogsInput, Prisma.EmployeeUncheckedCreateWithoutAuditLogsInput>
+}
+
+export type EmployeeUpsertWithoutAuditLogsInput = {
+  update: Prisma.XOR<Prisma.EmployeeUpdateWithoutAuditLogsInput, Prisma.EmployeeUncheckedUpdateWithoutAuditLogsInput>
+  create: Prisma.XOR<Prisma.EmployeeCreateWithoutAuditLogsInput, Prisma.EmployeeUncheckedCreateWithoutAuditLogsInput>
+  where?: Prisma.EmployeeWhereInput
+}
+
+export type EmployeeUpdateToOneWithWhereWithoutAuditLogsInput = {
+  where?: Prisma.EmployeeWhereInput
+  data: Prisma.XOR<Prisma.EmployeeUpdateWithoutAuditLogsInput, Prisma.EmployeeUncheckedUpdateWithoutAuditLogsInput>
+}
+
+export type EmployeeUpdateWithoutAuditLogsInput = {
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  firm?: Prisma.FirmUpdateOneRequiredWithoutEmployeesNestedInput
+  type?: Prisma.EmployeeTypeUpdateOneRequiredWithoutEmployeesNestedInput
+  role?: Prisma.UserRoleUpdateOneRequiredWithoutEmployeesNestedInput
+  contractAssignments?: Prisma.ContractEmployeeUpdateManyWithoutEmployeeNestedInput
+}
+
+export type EmployeeUncheckedUpdateWithoutAuditLogsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  firmId?: Prisma.IntFieldUpdateOperationsInput | number
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  typeId?: Prisma.IntFieldUpdateOperationsInput | number
+  roleId?: Prisma.IntFieldUpdateOperationsInput | number
+  oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  contractAssignments?: Prisma.ContractEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
+}
+
 export type EmployeeCreateWithoutContractAssignmentsInput = {
   fullName: string
   email: string
@@ -979,6 +1099,7 @@ export type EmployeeCreateWithoutContractAssignmentsInput = {
   firm: Prisma.FirmCreateNestedOneWithoutEmployeesInput
   type: Prisma.EmployeeTypeCreateNestedOneWithoutEmployeesInput
   role: Prisma.UserRoleCreateNestedOneWithoutEmployeesInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
 }
 
 export type EmployeeUncheckedCreateWithoutContractAssignmentsInput = {
@@ -996,6 +1117,7 @@ export type EmployeeUncheckedCreateWithoutContractAssignmentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
 }
 
 export type EmployeeCreateOrConnectWithoutContractAssignmentsInput = {
@@ -1028,6 +1150,7 @@ export type EmployeeUpdateWithoutContractAssignmentsInput = {
   firm?: Prisma.FirmUpdateOneRequiredWithoutEmployeesNestedInput
   type?: Prisma.EmployeeTypeUpdateOneRequiredWithoutEmployeesNestedInput
   role?: Prisma.UserRoleUpdateOneRequiredWithoutEmployeesNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutContractAssignmentsInput = {
@@ -1045,6 +1168,7 @@ export type EmployeeUncheckedUpdateWithoutContractAssignmentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
 }
 
 export type EmployeeCreateManyFirmInput = {
@@ -1076,6 +1200,7 @@ export type EmployeeUpdateWithoutFirmInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   type?: Prisma.EmployeeTypeUpdateOneRequiredWithoutEmployeesNestedInput
   role?: Prisma.UserRoleUpdateOneRequiredWithoutEmployeesNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
   contractAssignments?: Prisma.ContractEmployeeUpdateManyWithoutEmployeeNestedInput
 }
 
@@ -1093,6 +1218,7 @@ export type EmployeeUncheckedUpdateWithoutFirmInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
   contractAssignments?: Prisma.ContractEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
@@ -1141,6 +1267,7 @@ export type EmployeeUpdateWithoutTypeInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   firm?: Prisma.FirmUpdateOneRequiredWithoutEmployeesNestedInput
   role?: Prisma.UserRoleUpdateOneRequiredWithoutEmployeesNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
   contractAssignments?: Prisma.ContractEmployeeUpdateManyWithoutEmployeeNestedInput
 }
 
@@ -1158,6 +1285,7 @@ export type EmployeeUncheckedUpdateWithoutTypeInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
   contractAssignments?: Prisma.ContractEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
@@ -1206,6 +1334,7 @@ export type EmployeeUpdateWithoutRoleInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   firm?: Prisma.FirmUpdateOneRequiredWithoutEmployeesNestedInput
   type?: Prisma.EmployeeTypeUpdateOneRequiredWithoutEmployeesNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
   contractAssignments?: Prisma.ContractEmployeeUpdateManyWithoutEmployeeNestedInput
 }
 
@@ -1223,6 +1352,7 @@ export type EmployeeUncheckedUpdateWithoutRoleInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
   contractAssignments?: Prisma.ContractEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
@@ -1248,10 +1378,12 @@ export type EmployeeUncheckedUpdateManyWithoutRoleInput = {
  */
 
 export type EmployeeCountOutputType = {
+  auditLogs: number
   contractAssignments: number
 }
 
 export type EmployeeCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  auditLogs?: boolean | EmployeeCountOutputTypeCountAuditLogsArgs
   contractAssignments?: boolean | EmployeeCountOutputTypeCountContractAssignmentsArgs
 }
 
@@ -1263,6 +1395,13 @@ export type EmployeeCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Ext
    * Select specific fields to fetch from the EmployeeCountOutputType
    */
   select?: Prisma.EmployeeCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * EmployeeCountOutputType without action
+ */
+export type EmployeeCountOutputTypeCountAuditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AuditLogWhereInput
 }
 
 /**
@@ -1291,6 +1430,7 @@ export type EmployeeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
   type?: boolean | Prisma.EmployeeTypeDefaultArgs<ExtArgs>
   role?: boolean | Prisma.UserRoleDefaultArgs<ExtArgs>
+  auditLogs?: boolean | Prisma.Employee$auditLogsArgs<ExtArgs>
   contractAssignments?: boolean | Prisma.Employee$contractAssignmentsArgs<ExtArgs>
   _count?: boolean | Prisma.EmployeeCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["employee"]>
@@ -1357,6 +1497,7 @@ export type EmployeeInclude<ExtArgs extends runtime.Types.Extensions.InternalArg
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
   type?: boolean | Prisma.EmployeeTypeDefaultArgs<ExtArgs>
   role?: boolean | Prisma.UserRoleDefaultArgs<ExtArgs>
+  auditLogs?: boolean | Prisma.Employee$auditLogsArgs<ExtArgs>
   contractAssignments?: boolean | Prisma.Employee$contractAssignmentsArgs<ExtArgs>
   _count?: boolean | Prisma.EmployeeCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -1377,6 +1518,7 @@ export type $EmployeePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     firm: Prisma.$FirmPayload<ExtArgs>
     type: Prisma.$EmployeeTypePayload<ExtArgs>
     role: Prisma.$UserRolePayload<ExtArgs>
+    auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
     contractAssignments: Prisma.$ContractEmployeePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1791,6 +1933,7 @@ export interface Prisma__EmployeeClient<T, Null = never, ExtArgs extends runtime
   firm<T extends Prisma.FirmDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FirmDefaultArgs<ExtArgs>>): Prisma.Prisma__FirmClient<runtime.Types.Result.GetResult<Prisma.$FirmPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   type<T extends Prisma.EmployeeTypeDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmployeeTypeDefaultArgs<ExtArgs>>): Prisma.Prisma__EmployeeTypeClient<runtime.Types.Result.GetResult<Prisma.$EmployeeTypePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   role<T extends Prisma.UserRoleDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserRoleDefaultArgs<ExtArgs>>): Prisma.Prisma__UserRoleClient<runtime.Types.Result.GetResult<Prisma.$UserRolePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  auditLogs<T extends Prisma.Employee$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   contractAssignments<T extends Prisma.Employee$contractAssignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$contractAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ContractEmployeePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -2233,6 +2376,30 @@ export type EmployeeDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Limit how many Employees to delete.
    */
   limit?: number
+}
+
+/**
+ * Employee.auditLogs
+ */
+export type Employee$auditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AuditLog
+   */
+  select?: Prisma.AuditLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AuditLog
+   */
+  omit?: Prisma.AuditLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AuditLogInclude<ExtArgs> | null
+  where?: Prisma.AuditLogWhereInput
+  orderBy?: Prisma.AuditLogOrderByWithRelationInput | Prisma.AuditLogOrderByWithRelationInput[]
+  cursor?: Prisma.AuditLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AuditLogScalarFieldEnum | Prisma.AuditLogScalarFieldEnum[]
 }
 
 /**

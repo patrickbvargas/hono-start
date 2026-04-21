@@ -87,6 +87,11 @@ export type RevenueType = Prisma.RevenueTypeModel
  */
 export type Employee = Prisma.EmployeeModel
 /**
+ * Model AuditLog
+ * 
+ */
+export type AuditLog = Prisma.AuditLogModel
+/**
  * Model Client
  * 
  */

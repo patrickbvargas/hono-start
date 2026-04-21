@@ -31,7 +31,15 @@ const createClientFn = createServerFn({ method: "POST" })
 			assertCan(session, "client.create");
 			const { firmId } = getServerScope("client");
 
-			return await createClient({ firmId, input: data });
+			return await createClient({
+				actor: {
+					id: session.employee.id,
+					name: session.user.fullName,
+					email: session.user.email,
+				},
+				firmId,
+				input: data,
+			});
 		} catch (error) {
 			console.error("[createClient]", error);
 			if (isPrismaUniqueConstraintError(error, ["firmId", "document"])) {
@@ -54,7 +62,15 @@ const updateClientFn = createServerFn({ method: "POST" })
 			assertCan(session, "client.update");
 			const { firmId } = getServerScope("client");
 
-			return await updateClient({ firmId, input: data });
+			return await updateClient({
+				actor: {
+					id: session.employee.id,
+					name: session.user.fullName,
+					email: session.user.email,
+				},
+				firmId,
+				input: data,
+			});
 		} catch (error) {
 			console.error("[updateClient]", error);
 			if (isPrismaUniqueConstraintError(error, ["firmId", "document"])) {
@@ -77,7 +93,15 @@ const deleteClientFn = createServerFn({ method: "POST" })
 			assertCan(session, "client.delete");
 			const { firmId } = getServerScope("client");
 
-			return await deleteClient({ firmId, id: data.id });
+			return await deleteClient({
+				actor: {
+					id: session.employee.id,
+					name: session.user.fullName,
+					email: session.user.email,
+				},
+				firmId,
+				id: data.id,
+			});
 		} catch (error) {
 			console.error("[deleteClient]", error);
 			if (hasExactErrorMessage(error, CLIENT_ERRORS)) {
@@ -96,7 +120,15 @@ const restoreClientFn = createServerFn({ method: "POST" })
 			assertCan(session, "client.restore");
 			const { firmId } = getServerScope("client");
 
-			return await restoreClient({ firmId, id: data.id });
+			return await restoreClient({
+				actor: {
+					id: session.employee.id,
+					name: session.user.fullName,
+					email: session.user.email,
+				},
+				firmId,
+				id: data.id,
+			});
 		} catch (error) {
 			console.error("[restoreClient]", error);
 			if (hasExactErrorMessage(error, CLIENT_ERRORS)) {

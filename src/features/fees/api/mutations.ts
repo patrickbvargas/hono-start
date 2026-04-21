@@ -36,6 +36,11 @@ const createFeeFn = createServerFn({ method: "POST" })
 			assertCan(session, "fee.create", access.resource);
 
 			return await createFee({
+				actor: {
+					id: session.employee.id,
+					name: session.user.fullName,
+					email: session.user.email,
+				},
 				scope: { firmId },
 				input: data,
 			});
@@ -76,6 +81,11 @@ const updateFeeFn = createServerFn({ method: "POST" })
 			assertCan(session, "fee.update", nextRevenueAccess.resource);
 
 			return await updateFee({
+				actor: {
+					id: session.employee.id,
+					name: session.user.fullName,
+					email: session.user.email,
+				},
 				scope: { firmId },
 				input: data,
 				access,
@@ -105,6 +115,12 @@ const deleteFeeFn = createServerFn({ method: "POST" })
 			assertCan(session, "fee.delete", access.resource);
 
 			return await deleteFee({
+				actor: {
+					id: session.employee.id,
+					name: session.user.fullName,
+					email: session.user.email,
+				},
+				firmId,
 				id: data.id,
 				contractId: access.contractId,
 			});
@@ -133,6 +149,12 @@ const restoreFeeFn = createServerFn({ method: "POST" })
 			assertCan(session, "fee.restore", access.resource);
 
 			return await restoreFee({
+				actor: {
+					id: session.employee.id,
+					name: session.user.fullName,
+					email: session.user.email,
+				},
+				firmId,
 				id: data.id,
 				contractId: access.contractId,
 			});

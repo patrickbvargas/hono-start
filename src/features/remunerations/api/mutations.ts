@@ -48,8 +48,17 @@ const updateRemunerationFn = createServerFn({ method: "POST" })
 				"remuneration.update",
 				data.id,
 			);
+			const session = getServerLoggedUserSession();
 
-			return await updateRemuneration({ access, input: data });
+			return await updateRemuneration({
+				actor: {
+					id: session.employee.id,
+					name: session.user.fullName,
+					email: session.user.email,
+				},
+				access,
+				input: data,
+			});
 		} catch (error) {
 			console.error("[updateRemuneration]", error);
 			if (hasExactErrorMessage(error, REMUNERATION_ERRORS)) {
@@ -64,9 +73,21 @@ const deleteRemunerationFn = createServerFn({ method: "POST" })
 	.inputValidator(remunerationIdInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
-			await getAuthorizedRemunerationAccess("remuneration.delete", data.id);
+			const access = await getAuthorizedRemunerationAccess(
+				"remuneration.delete",
+				data.id,
+			);
+			const session = getServerLoggedUserSession();
 
-			return await deleteRemuneration(data.id);
+			return await deleteRemuneration({
+				actor: {
+					id: session.employee.id,
+					name: session.user.fullName,
+					email: session.user.email,
+				},
+				access,
+				id: data.id,
+			});
 		} catch (error) {
 			console.error("[deleteRemuneration]", error);
 			if (hasExactErrorMessage(error, REMUNERATION_ERRORS)) {
@@ -85,8 +106,17 @@ const restoreRemunerationFn = createServerFn({ method: "POST" })
 				"remuneration.restore",
 				data.id,
 			);
+			const session = getServerLoggedUserSession();
 
-			return await restoreRemuneration({ access, id: data.id });
+			return await restoreRemuneration({
+				actor: {
+					id: session.employee.id,
+					name: session.user.fullName,
+					email: session.user.email,
+				},
+				access,
+				id: data.id,
+			});
 		} catch (error) {
 			console.error("[restoreRemuneration]", error);
 			if (hasExactErrorMessage(error, REMUNERATION_ERRORS)) {

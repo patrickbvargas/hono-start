@@ -14,6 +14,7 @@ import { Route as HonorariosRouteImport } from './routes/honorarios'
 import { Route as ContratosRouteImport } from './routes/contratos'
 import { Route as ColaboradoresRouteImport } from './routes/colaboradores'
 import { Route as ClientesRouteImport } from './routes/clientes'
+import { Route as AuditLogRouteImport } from './routes/audit-log'
 import { Route as IndexRouteImport } from './routes/index'
 
 const RemuneracoesRoute = RemuneracoesRouteImport.update({
@@ -41,6 +42,11 @@ const ClientesRoute = ClientesRouteImport.update({
   path: '/clientes',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuditLogRoute = AuditLogRouteImport.update({
+  id: '/audit-log',
+  path: '/audit-log',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -49,6 +55,7 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/audit-log': typeof AuditLogRoute
   '/clientes': typeof ClientesRoute
   '/colaboradores': typeof ColaboradoresRoute
   '/contratos': typeof ContratosRoute
@@ -57,6 +64,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/audit-log': typeof AuditLogRoute
   '/clientes': typeof ClientesRoute
   '/colaboradores': typeof ColaboradoresRoute
   '/contratos': typeof ContratosRoute
@@ -66,6 +74,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/audit-log': typeof AuditLogRoute
   '/clientes': typeof ClientesRoute
   '/colaboradores': typeof ColaboradoresRoute
   '/contratos': typeof ContratosRoute
@@ -76,6 +85,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/audit-log'
     | '/clientes'
     | '/colaboradores'
     | '/contratos'
@@ -84,6 +94,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/audit-log'
     | '/clientes'
     | '/colaboradores'
     | '/contratos'
@@ -92,6 +103,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/audit-log'
     | '/clientes'
     | '/colaboradores'
     | '/contratos'
@@ -101,6 +113,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuditLogRoute: typeof AuditLogRoute
   ClientesRoute: typeof ClientesRoute
   ColaboradoresRoute: typeof ColaboradoresRoute
   ContratosRoute: typeof ContratosRoute
@@ -145,6 +158,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ClientesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/audit-log': {
+      id: '/audit-log'
+      path: '/audit-log'
+      fullPath: '/audit-log'
+      preLoaderRoute: typeof AuditLogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -157,6 +177,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuditLogRoute: AuditLogRoute,
   ClientesRoute: ClientesRoute,
   ColaboradoresRoute: ColaboradoresRoute,
   ContratosRoute: ContratosRoute,
