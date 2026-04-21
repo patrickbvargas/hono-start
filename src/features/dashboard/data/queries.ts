@@ -1,20 +1,25 @@
 import { Prisma } from "@/generated/prisma/client";
 import { formatter } from "@/shared/lib/formatter";
 import { prisma } from "@/shared/lib/prisma";
+import type { Option } from "@/shared/schemas/option";
+import type { QueryManyReturnType } from "@/shared/types/api";
 import {
 	type DashboardSummary,
 	dashboardSummarySchema,
 } from "../schemas/model";
+import type { DashboardSearch } from "../schemas/search";
 
 interface DashboardScope {
 	firmId: number;
 	employeeId?: number;
 	isAdmin: boolean;
+	search: DashboardSearch;
 }
 
 interface RevenueRow {
 	totalValue: Prisma.Decimal;
 	downPaymentValue: Prisma.Decimal | null;
+	paymentStartDate: Date;
 	type: {
 		label: string;
 		value: string;
@@ -30,21 +35,83 @@ interface RevenueRow {
 	}>;
 }
 
+interface DashboardPeriod {
+	dateFrom?: Date;
+	dateTo?: Date;
+	hasPeriod: boolean;
+}
+
+interface ComparisonBoundaries {
+	currentStart: Date;
+	nextStart: Date;
+	previousStart: Date;
+	currentLabel: string;
+}
+
 interface GroupTotal {
 	label: string;
 	value: string;
 	total: Prisma.Decimal;
 }
 
+interface EffectiveEmployeeParams {
+	isAdmin: boolean;
+	requestedEmployeeId?: number;
+	sessionEmployeeId?: number;
+}
+
+function parseOptionalEntityId(value: string): number | undefined {
+	if (!value) {
+		return undefined;
+	}
+
+	const parsed = Number(value);
+
+	if (!Number.isInteger(parsed) || parsed <= 0) {
+		return undefined;
+	}
+
+	return parsed;
+}
+
+export function getEffectiveDashboardEmployeeId({
+	isAdmin,
+	requestedEmployeeId,
+	sessionEmployeeId,
+}: EffectiveEmployeeParams): number | undefined {
+	if (isAdmin) {
+		return requestedEmployeeId;
+	}
+
+	return sessionEmployeeId;
+}
+
+function getSelectedEmployeeId(scope: DashboardScope): number | undefined {
+	return getEffectiveDashboardEmployeeId({
+		isAdmin: scope.isAdmin,
+		requestedEmployeeId: parseOptionalEntityId(scope.search.employeeId),
+		sessionEmployeeId: scope.employeeId,
+	});
+}
+
 function getAssignedContractWhere(scope: DashboardScope) {
-	if (scope.isAdmin) {
+	const employeeId = getSelectedEmployeeId(scope);
+
+	if (scope.isAdmin && !employeeId) {
 		return {};
+	}
+
+	if (!employeeId) {
+		throw new Error(
+			"Não foi possível identificar o colaborador da sessão para consultar o dashboard",
+		);
 	}
 
 	return {
 		assignments: {
 			some: {
-				employeeId: scope.employeeId,
+				firmId: scope.firmId,
+				employeeId,
 				deletedAt: null,
 				isActive: true,
 			},
@@ -52,13 +119,104 @@ function getAssignedContractWhere(scope: DashboardScope) {
 	};
 }
 
-function getMonthBoundaries() {
-	const now = new Date();
-	const currentStart = new Date(now.getFullYear(), now.getMonth(), 1);
-	const nextStart = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-	const previousStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+function createDayStart(value: string): Date {
+	return new Date(`${value}T00:00:00.000Z`);
+}
 
-	return { currentStart, nextStart, previousStart };
+function createDayEnd(value: string): Date {
+	return new Date(`${value}T23:59:59.999Z`);
+}
+
+function addDays(value: Date, days: number): Date {
+	const next = new Date(value);
+	next.setUTCDate(next.getUTCDate() + days);
+	return next;
+}
+
+function getDashboardPeriod(search: DashboardSearch): DashboardPeriod {
+	const dateFrom = search.dateFrom
+		? createDayStart(search.dateFrom)
+		: undefined;
+	const dateTo = search.dateTo ? createDayEnd(search.dateTo) : undefined;
+
+	return {
+		dateFrom,
+		dateTo,
+		hasPeriod: Boolean(dateFrom || dateTo),
+	};
+}
+
+export function buildDashboardPaymentDateWhere(
+	period: DashboardPeriod,
+): Prisma.DateTimeFilter | undefined {
+	if (!period.hasPeriod) {
+		return undefined;
+	}
+
+	return {
+		...(period.dateFrom ? { gte: period.dateFrom } : {}),
+		...(period.dateTo ? { lte: period.dateTo } : {}),
+	};
+}
+
+function isDateInsidePeriod(value: Date, period: DashboardPeriod): boolean {
+	if (!period.hasPeriod) {
+		return true;
+	}
+
+	if (period.dateFrom && value < period.dateFrom) {
+		return false;
+	}
+
+	if (period.dateTo && value > period.dateTo) {
+		return false;
+	}
+
+	return true;
+}
+
+function getComparisonBoundaries(
+	search: DashboardSearch,
+): ComparisonBoundaries {
+	const now = new Date();
+	const period = getDashboardPeriod(search);
+
+	if (!period.hasPeriod) {
+		return {
+			currentStart: new Date(now.getFullYear(), now.getMonth(), 1),
+			nextStart: new Date(now.getFullYear(), now.getMonth() + 1, 1),
+			previousStart: new Date(now.getFullYear(), now.getMonth() - 1, 1),
+			currentLabel: "do mês",
+		};
+	}
+
+	const currentStart =
+		period.dateFrom ??
+		new Date(
+			period.dateTo?.getUTCFullYear() ?? now.getUTCFullYear(),
+			period.dateTo?.getUTCMonth() ?? now.getUTCMonth(),
+			1,
+		);
+	const inclusiveEnd =
+		period.dateTo ?? createDayEnd(now.toISOString().slice(0, 10));
+	const nextStart = addDays(
+		createDayStart(inclusiveEnd.toISOString().slice(0, 10)),
+		1,
+	);
+	const daySpan = Math.max(
+		1,
+		Math.round(
+			(nextStart.getTime() - currentStart.getTime()) / (24 * 60 * 60 * 1000),
+		),
+	);
+	const previousStart = addDays(currentStart, -daySpan);
+
+	return {
+		currentStart,
+		nextStart,
+		previousStart,
+		currentLabel: "do período",
+	};
 }
 
 function sumDecimal(values: Prisma.Decimal[]): Prisma.Decimal {
@@ -106,10 +264,17 @@ function mapBreakdown(groups: Map<string, GroupTotal>, total: Prisma.Decimal) {
 		}));
 }
 
-function getRevenueReceived(revenue: RevenueRow): Prisma.Decimal {
+function getRevenueReceived(
+	revenue: RevenueRow,
+	period: DashboardPeriod,
+): Prisma.Decimal {
+	const downPayment = isDateInsidePeriod(revenue.paymentStartDate, period)
+		? new Prisma.Decimal(revenue.downPaymentValue?.toString() ?? 0)
+		: new Prisma.Decimal(0);
+
 	return revenue.fees.reduce(
 		(total, fee) => total.add(fee.amount),
-		new Prisma.Decimal(revenue.downPaymentValue?.toString() ?? 0),
+		downPayment,
 	);
 }
 
@@ -120,7 +285,11 @@ function getRecentDate(value: Date): string {
 export async function getDashboardSummary(
 	scope: DashboardScope,
 ): Promise<DashboardSummary> {
-	const { currentStart, nextStart, previousStart } = getMonthBoundaries();
+	const { currentStart, nextStart, previousStart, currentLabel } =
+		getComparisonBoundaries(scope.search);
+	const period = getDashboardPeriod(scope.search);
+	const paymentDateWhere = buildDashboardPaymentDateWhere(period);
+	const employeeId = getSelectedEmployeeId(scope);
 	const contractWhere = getAssignedContractWhere(scope);
 	const firmWhere = {
 		firmId: scope.firmId,
@@ -160,7 +329,10 @@ export async function getDashboardSummary(
 					...contractWhere,
 				},
 			},
-			include: {
+			select: {
+				totalValue: true,
+				downPaymentValue: true,
+				paymentStartDate: true,
 				type: {
 					select: {
 						label: true,
@@ -181,6 +353,7 @@ export async function getDashboardSummary(
 					where: {
 						deletedAt: null,
 						isActive: true,
+						...(paymentDateWhere ? { paymentDate: paymentDateWhere } : {}),
 					},
 					select: {
 						amount: true,
@@ -227,11 +400,8 @@ export async function getDashboardSummary(
 		prisma.remuneration.findMany({
 			where: {
 				...firmWhere,
-				contractEmployee: scope.isAdmin
-					? {}
-					: {
-							employeeId: scope.employeeId,
-						},
+				...(paymentDateWhere ? { paymentDate: paymentDateWhere } : {}),
+				contractEmployee: employeeId ? { employeeId } : {},
 			},
 			select: {
 				amount: true,
@@ -244,11 +414,7 @@ export async function getDashboardSummary(
 					gte: currentStart,
 					lt: nextStart,
 				},
-				contractEmployee: scope.isAdmin
-					? {}
-					: {
-							employeeId: scope.employeeId,
-						},
+				contractEmployee: employeeId ? { employeeId } : {},
 			},
 			select: {
 				amount: true,
@@ -261,11 +427,7 @@ export async function getDashboardSummary(
 					gte: previousStart,
 					lt: currentStart,
 				},
-				contractEmployee: scope.isAdmin
-					? {}
-					: {
-							employeeId: scope.employeeId,
-						},
+				contractEmployee: employeeId ? { employeeId } : {},
 			},
 			select: {
 				amount: true,
@@ -302,6 +464,7 @@ export async function getDashboardSummary(
 		prisma.fee.findMany({
 			where: {
 				...firmWhere,
+				...(paymentDateWhere ? { paymentDate: paymentDateWhere } : {}),
 				revenue: {
 					contract: {
 						...firmWhere,
@@ -334,11 +497,8 @@ export async function getDashboardSummary(
 		prisma.remuneration.findMany({
 			where: {
 				...firmWhere,
-				contractEmployee: scope.isAdmin
-					? {}
-					: {
-							employeeId: scope.employeeId,
-						},
+				...(paymentDateWhere ? { paymentDate: paymentDateWhere } : {}),
+				contractEmployee: employeeId ? { employeeId } : {},
 			},
 			orderBy: { paymentDate: "desc" },
 			take: 5,
@@ -367,7 +527,9 @@ export async function getDashboardSummary(
 	const revenueTotal = sumDecimal(
 		revenues.map((revenue) => revenue.totalValue),
 	);
-	const revenueReceived = sumDecimal(revenues.map(getRevenueReceived));
+	const revenueReceived = sumDecimal(
+		revenues.map((revenue) => getRevenueReceived(revenue, period)),
+	);
 	const currentRevenue = sumDecimal(currentFees.map((fee) => fee.amount));
 	const previousRevenue = sumDecimal(previousFees.map((fee) => fee.amount));
 	const currentRemuneration = sumDecimal(
@@ -383,7 +545,7 @@ export async function getDashboardSummary(
 	const revenueTypeGroups = new Map<string, GroupTotal>();
 
 	for (const revenue of revenues) {
-		const received = getRevenueReceived(revenue);
+		const received = getRevenueReceived(revenue, period);
 		pushGroupTotal(legalAreaGroups, {
 			label: revenue.contract.legalArea.label,
 			value: revenue.contract.legalArea.value,
@@ -463,7 +625,9 @@ export async function getDashboardSummary(
 				label: "Remunerações",
 				value: Number(remunerationTotal),
 				formattedValue: formatter.currency(Number(remunerationTotal)),
-				description: "Pagamentos gerados nos meses comparados",
+				description: period.hasPeriod
+					? "Pagamentos gerados no período filtrado"
+					: "Pagamentos gerados no escopo atual",
 				tone: "warning",
 			},
 			{
@@ -476,7 +640,7 @@ export async function getDashboardSummary(
 		],
 		comparisons: [
 			{
-				label: "Receita do mês",
+				label: `Receita ${currentLabel}`,
 				currentValue: Number(currentRevenue),
 				previousValue: Number(previousRevenue),
 				formattedCurrentValue: formatter.currency(Number(currentRevenue)),
@@ -484,7 +648,7 @@ export async function getDashboardSummary(
 				changePercent: calculateChangePercent(currentRevenue, previousRevenue),
 			},
 			{
-				label: "Remuneração do mês",
+				label: `Remuneração ${currentLabel}`,
 				currentValue: Number(currentRemuneration),
 				previousValue: Number(previousRemuneration),
 				formattedCurrentValue: formatter.currency(Number(currentRemuneration)),
@@ -501,4 +665,30 @@ export async function getDashboardSummary(
 		revenueTypeRevenue: mapBreakdown(revenueTypeGroups, revenueReceived),
 		recentActivity,
 	});
+}
+
+export async function getDashboardEmployeeOptions({
+	firmId,
+}: {
+	firmId: number;
+}): Promise<QueryManyReturnType<Option>> {
+	const employees = await prisma.employee.findMany({
+		where: {
+			firmId,
+			deletedAt: null,
+			isActive: true,
+		},
+		orderBy: [{ fullName: "asc" }, { id: "asc" }],
+		select: {
+			id: true,
+			fullName: true,
+		},
+	});
+
+	return employees.map((employee) => ({
+		id: employee.id,
+		value: String(employee.id),
+		label: employee.fullName,
+		isDisabled: false,
+	}));
 }

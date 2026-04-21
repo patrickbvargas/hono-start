@@ -1,15 +1,4 @@
-# dashboard Specification
-
-## Purpose
-Dashboard defines the authenticated landing experience and summary data shown to firm users after sign-in.
-
-## Requirements
-### Requirement: Authenticated Dashboard Landing
-The system SHALL render the dashboard on the authenticated home route instead of demo-only content.
-
-#### Scenario: User opens home route
-- **WHEN** an authenticated user opens `/`
-- **THEN** the system displays dashboard content and does not display the demo form or fake demo pagination
+## ADDED Requirements
 
 ### Requirement: Dashboard Filters
 The system SHALL provide URL-driven dashboard filters for period and employee scope while preserving Matrix OS permissions.
@@ -33,6 +22,8 @@ The system SHALL provide URL-driven dashboard filters for period and employee sc
 #### Scenario: Filtered dashboard URL is shared
 - **WHEN** an authenticated user opens a dashboard URL containing valid filter search parameters
 - **THEN** the system restores those filters from the URL and loads dashboard data for the validated filter state
+
+## MODIFIED Requirements
 
 ### Requirement: Role-Scoped Dashboard Data
 Dashboard data MUST respect firm isolation, the session role visibility model, and validated dashboard filters.
