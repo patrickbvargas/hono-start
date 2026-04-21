@@ -4,9 +4,9 @@ import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { Option } from "@/shared/schemas/option";
 import {
-	assertCanManageEmployees,
-	getServerEmployeeScope,
+	assertCan,
 	getServerLoggedUserSession,
+	getServerScope,
 } from "@/shared/session";
 import type {
 	QueryManyReturnType,
@@ -30,8 +30,9 @@ const getEmployeesFn = createServerFn({ method: "GET" })
 	.handler(
 		async ({ data }): Promise<QueryPaginatedReturnType<EmployeeSummary>> => {
 			try {
-				assertCanManageEmployees(getServerLoggedUserSession());
-				const { firmId } = getServerEmployeeScope();
+				const session = getServerLoggedUserSession();
+				assertCan(session, "employee.manage");
+				const { firmId } = getServerScope("employee");
 
 				return await getEmployees({ firmId, search: data });
 			} catch (error) {
@@ -49,8 +50,9 @@ const getEmployeeByIdFn = createServerFn({ method: "GET" })
 	.inputValidator(employeeIdInputSchema)
 	.handler(async ({ data }): Promise<QueryOneReturnType<EmployeeDetail>> => {
 		try {
-			assertCanManageEmployees(getServerLoggedUserSession());
-			const { firmId } = getServerEmployeeScope();
+			const session = getServerLoggedUserSession();
+			assertCan(session, "employee.manage");
+			const { firmId } = getServerScope("employee");
 
 			return await getEmployeeById({ firmId, id: data.id });
 		} catch (error) {
