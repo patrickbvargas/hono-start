@@ -28,8 +28,6 @@ function DatePicker({
 	isInvalid,
 	isDisabled,
 	className,
-	value,
-	onChange,
 	calendarProps,
 	...props
 }: DatePickerProps) {
@@ -76,7 +74,7 @@ function DatePicker({
 								}
 							/>
 							<PopoverContent className="w-auto p-0" align="end">
-								<Calendar />
+								<Calendar {...calendarProps} />
 							</PopoverContent>
 						</Popover>
 					</InputGroupAddon>
