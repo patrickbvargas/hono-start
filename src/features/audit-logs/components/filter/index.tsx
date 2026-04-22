@@ -13,31 +13,15 @@ export const AuditLogFilter = () => {
 		>
 			<FilterWrapper>
 				<form.AppField name="action">
-					{(field) => (
-						<field.CheckboxGroup
-							label="Ação"
-							options={actions}
-							variant="secondary"
-						/>
-					)}
+					{(field) => <field.CheckboxGroup label="Ação" options={actions} />}
 				</form.AppField>
 				<form.AppField name="entityType">
 					{(field) => (
-						<field.CheckboxGroup
-							label="Tipo"
-							options={entityTypes}
-							variant="secondary"
-						/>
+						<field.CheckboxGroup label="Tipo" options={entityTypes} />
 					)}
 				</form.AppField>
 				<form.AppField name="actorName">
-					{(field) => (
-						<field.CheckboxGroup
-							label="Usuário"
-							options={actors}
-							variant="secondary"
-						/>
-					)}
+					{(field) => <field.CheckboxGroup label="Usuário" options={actors} />}
 				</form.AppField>
 			</FilterWrapper>
 		</form.Form>

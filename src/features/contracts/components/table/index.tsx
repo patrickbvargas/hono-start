@@ -9,8 +9,8 @@ import {
 import * as React from "react";
 import { DataTable } from "@/shared/components/data-table";
 import { EntityStatus } from "@/shared/components/entity-status";
+import { Button, Dropdown, Label } from "@/shared/components/Hui";
 import { Pagination } from "@/shared/components/pagination";
-import { Button, Dropdown, Label } from "@/shared/components/ui";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { QueryPaginatedReturnType } from "@/shared/types/api";
@@ -153,7 +153,7 @@ export const ContractTable = ({
 		<DataTable
 			columns={columns}
 			data={data}
-			footerContent={<Pagination totalRecords={total} size="sm" />}
+			footerContent={<Pagination totalRecords={total} />}
 		/>
 	);
 };

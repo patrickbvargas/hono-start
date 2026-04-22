@@ -1,5 +1,5 @@
 import { useRouterState } from "@tanstack/react-router";
-import { Spinner } from "@/shared/components/ui";
+import { Spinner } from "@/shared/components/Hui";
 
 export const RouteLoading = () => {
 	const { isLoading } = useRouterState();

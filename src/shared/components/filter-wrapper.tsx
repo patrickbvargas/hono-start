@@ -1,5 +1,5 @@
 import { Settings2Icon } from "lucide-react";
-import { Button, Popover, type PopoverProps } from "@/shared/components/ui";
+import { Button, Popover, type PopoverProps } from "@/shared/components/Hui";
 
 export const FilterWrapper = ({ children, ...props }: PopoverProps) => {
 	return (

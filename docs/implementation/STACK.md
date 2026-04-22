@@ -13,7 +13,7 @@ These technical choices are mandatory for this repository:
 - Database: PostgreSQL
 - File storage: Supabase Storage
 - Authentication: BetterAuth
-- UI components: HeroUI via shared re-exports only
+- UI components: shadcn/ui via shared re-exports only
 - Validation: Zod
 - Linting and formatting: Biome
 - Testing: Vitest and Testing Library

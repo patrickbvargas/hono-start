@@ -1,48 +1,43 @@
-import { Field, Switch, type SwitchProps } from "@/shared/components/ui";
+import { FieldWrapper, Switch } from "@/shared/components/ui";
 import { useFieldContext } from "@/shared/hooks/use-app-form";
+import { cn } from "@/shared/lib/utils";
 import type { FieldCommonProps } from "@/shared/types/field";
 
-interface FormSwitchProps extends SwitchProps, FieldCommonProps {
-	isRequired?: boolean;
-}
+interface FormSwitchProps
+	extends Omit<FieldCommonProps, "description">,
+		React.ComponentPropsWithoutRef<typeof Switch> {}
 
 export const FormSwitch = ({
 	label,
-	description,
 	isRequired,
+	isDisabled,
 	classNames,
 	...props
 }: FormSwitchProps) => {
 	const field = useFieldContext<boolean>();
 
+	const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+
 	return (
-		<Switch
-			name={field.name}
-			isSelected={field.state.value}
-			onBlur={field.handleBlur}
-			onChange={field.handleChange}
-			className={classNames?.wrapper}
-			{...props}
+		<FieldWrapper
+			id={field.name}
+			label={label}
+			isRequired={isRequired}
+			errors={field.state.meta.errors}
+			data-invalid={isInvalid}
+			className={cn(classNames?.wrapper, "flex-row-reverse")}
+			orientation="horizontal"
 		>
-			<Switch.Control>
-				<Switch.Thumb />
-			</Switch.Control>
-			<Switch.Content>
-				<Field.Label
-					label={label}
-					htmlFor={field.name}
-					isRequired={isRequired}
-					className={classNames?.label}
-				/>
-				<Field.Description
-					description={description}
-					className={classNames?.description}
-				/>
-				<Field.Error
-					errors={field.state.meta.errors}
-					className={classNames?.error}
-				/>
-			</Switch.Content>
-		</Switch>
+			<Switch
+				id={field.name}
+				name={field.name}
+				checked={field.state.value}
+				onBlur={field.handleBlur}
+				onCheckedChange={field.handleChange}
+				aria-invalid={isInvalid}
+				disabled={isDisabled}
+				{...props}
+			/>
+		</FieldWrapper>
 	);
 };

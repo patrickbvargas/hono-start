@@ -4,7 +4,7 @@ import {
 	Drawer,
 	type DrawerProps,
 	Separator,
-} from "@/shared/components/ui";
+} from "@/shared/components/Hui";
 import { cn } from "@/shared/lib/utils";
 import type { OverlayState } from "@/shared/types/overlay";
 

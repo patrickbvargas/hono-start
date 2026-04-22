@@ -1,5 +1,5 @@
 import { CheckIcon, XIcon } from "lucide-react";
-import { AlertDialog, Button, type ButtonProps } from "@/shared/components/ui";
+import { AlertDialog, Button, type ButtonProps } from "@/shared/components/Hui";
 import type { OverlayState } from "@/shared/types/overlay";
 
 export interface ConfirmDialogProps {

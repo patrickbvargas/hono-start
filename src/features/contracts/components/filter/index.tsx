@@ -1,5 +1,5 @@
 import { FilterWrapper } from "@/shared/components/filter-wrapper";
-import { Separator } from "@/shared/components/ui";
+import { Separator } from "@/shared/components/Hui";
 import {
 	ENTITY_ACTIVE_FILTER_OPTIONS,
 	ENTITY_DELETED_FILTER_OPTIONS,
@@ -18,21 +18,11 @@ export const ContractFilter = () => {
 		>
 			<FilterWrapper>
 				<form.AppField name="clientId">
-					{(field) => (
-						<field.Autocomplete
-							label="Cliente"
-							options={clients}
-							variant="secondary"
-						/>
-					)}
+					{(field) => <field.Autocomplete label="Cliente" options={clients} />}
 				</form.AppField>
 				<form.AppField name="legalArea">
 					{(field) => (
-						<field.CheckboxGroup
-							label="Área jurídica"
-							options={legalAreas}
-							variant="secondary"
-						/>
+						<field.CheckboxGroup label="Área jurídica" options={legalAreas} />
 					)}
 				</form.AppField>
 				<form.AppField name="contractStatus">
@@ -40,7 +30,6 @@ export const ContractFilter = () => {
 						<field.CheckboxGroup
 							label="Status do contrato"
 							options={statuses}
-							variant="secondary"
 						/>
 					)}
 				</form.AppField>
@@ -49,7 +38,6 @@ export const ContractFilter = () => {
 						<field.RadioGroup
 							label="Ativo"
 							options={ENTITY_ACTIVE_FILTER_OPTIONS}
-							variant="secondary"
 						/>
 					)}
 				</form.AppField>
@@ -59,7 +47,6 @@ export const ContractFilter = () => {
 						<field.RadioGroup
 							label="Exclusão"
 							options={ENTITY_DELETED_FILTER_OPTIONS}
-							variant="secondary"
 						/>
 					)}
 				</form.AppField>

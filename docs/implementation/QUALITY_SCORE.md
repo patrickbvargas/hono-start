@@ -43,7 +43,7 @@ It is also intended to be reusable as a boilerplate review rubric when the domai
 
 - A route owns business logic that must live in the feature layer.
 - A feature imports another feature's internal files.
-- Direct `@heroui/*` imports appear in routes or features.
+- Direct vendor UI imports appear in routes or features instead of going through `@/shared/components/ui`.
 - The implementation bypasses documented form, cache, or overlay patterns.
 - Business logic becomes harder to infer after the change.
 

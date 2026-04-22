@@ -1,53 +1,44 @@
-import {
-	Field,
-	Input,
-	TextField,
-	type TextFieldProps,
-} from "@/shared/components/ui";
+import { FieldWrapper, Input } from "@/shared/components/ui";
 import { useFieldContext } from "@/shared/hooks/use-app-form";
 import type { FieldCommonProps } from "@/shared/types/field";
 
-interface FormInputProps extends TextFieldProps, FieldCommonProps {
-	placeholder?: string;
-}
+interface FormInputProps
+	extends FieldCommonProps,
+		React.ComponentPropsWithoutRef<typeof Input> {}
 
 export const FormInput = ({
 	label,
 	description,
-	placeholder,
-	validationBehavior = "aria",
+	isRequired,
+	isDisabled,
 	classNames,
 	...props
 }: FormInputProps) => {
-	const field = useFieldContext<string | undefined>();
+	const field = useFieldContext<string>();
 
 	const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 
 	return (
-		<TextField
-			name={field.name}
-			isInvalid={isInvalid}
-			value={field.state.value}
-			onBlur={field.handleBlur}
-			onChange={field.handleChange}
-			validationBehavior={validationBehavior}
+		<FieldWrapper
+			id={field.name}
+			label={label}
+			description={description}
+			isRequired={isRequired}
+			errors={field.state.meta.errors}
+			data-invalid={isInvalid}
 			className={classNames?.wrapper}
-			{...props}
 		>
-			<Field.Label
-				label={label}
-				htmlFor={field.name}
-				className={classNames?.label}
+			<Input
+				id={field.name}
+				name={field.name}
+				value={field.state.value}
+				onBlur={field.handleBlur}
+				onChange={(e) => field.handleChange(e.target.value)}
+				aria-invalid={isInvalid}
+				disabled={isDisabled}
+				required={isRequired}
+				{...props}
 			/>
-			<Input id={field.name} placeholder={placeholder} />
-			<Field.Description
-				description={description}
-				className={classNames?.description}
-			/>
-			<Field.Error
-				errors={field.state.meta.errors}
-				className={classNames?.error}
-			/>
-		</TextField>
+		</FieldWrapper>
 	);
 };

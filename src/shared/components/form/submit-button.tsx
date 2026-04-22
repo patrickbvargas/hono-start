@@ -12,8 +12,8 @@ export const FormSubmitButton = ({
 			{(isSubmitting) => (
 				<Button
 					type="submit"
-					onPress={form.handleSubmit}
-					isDisabled={isSubmitting}
+					onClick={form.handleSubmit}
+					disabled={isSubmitting}
 					{...props}
 				>
 					{children || "Salvar"}

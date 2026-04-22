@@ -19,23 +19,15 @@ export function DashboardFilter({ isAdmin = false }: DashboardFilterProps) {
 				{isAdmin ? (
 					<form.AppField name="employeeId">
 						{(field) => (
-							<field.Autocomplete
-								label="Colaborador"
-								options={employees}
-								variant="secondary"
-							/>
+							<field.Autocomplete label="Colaborador" options={employees} />
 						)}
 					</form.AppField>
 				) : null}
 				<form.AppField name="dateFrom">
-					{(field) => (
-						<field.Input label="Período de" type="date" variant="secondary" />
-					)}
+					{(field) => <field.Input label="Período de" type="date" />}
 				</form.AppField>
 				<form.AppField name="dateTo">
-					{(field) => (
-						<field.Input label="Período até" type="date" variant="secondary" />
-					)}
+					{(field) => <field.Input label="Período até" type="date" />}
 				</form.AppField>
 			</FilterWrapper>
 		</form.Form>

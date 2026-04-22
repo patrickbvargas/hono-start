@@ -68,7 +68,7 @@ export const AuditLogTable = ({
 		<DataTable
 			columns={columns}
 			data={data}
-			footerContent={<Pagination totalRecords={total} size="sm" />}
+			footerContent={<Pagination totalRecords={total} />}
 		/>
 	);
 };

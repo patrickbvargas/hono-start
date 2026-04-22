@@ -1,5 +1,5 @@
 import { FormWrapper } from "@/shared/components/form-wrapper";
-import { Field } from "@/shared/components/ui";
+import { Field } from "@/shared/components/Hui";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
 import { useRemunerationForm } from "../../hooks/use-form";
@@ -34,9 +34,7 @@ export const RemunerationForm = ({
 								label="Valor"
 								minValue={0}
 								step={100}
-								variant="secondary"
 								isRequired
-								fullWidth
 								formatOptions={{
 									style: "currency",
 									currency: "BRL",
@@ -51,9 +49,7 @@ export const RemunerationForm = ({
 								minValue={0}
 								maxValue={1}
 								step={0.01}
-								variant="secondary"
 								isRequired
-								fullWidth
 							/>
 						)}
 					</form.AppField>

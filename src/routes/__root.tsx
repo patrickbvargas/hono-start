@@ -9,7 +9,7 @@ import {
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { AppLayout } from "@/shared/components/app-layout";
-import { ToastProvider } from "@/shared/components/ui";
+import { ToastProvider } from "@/shared/components/Hui";
 import appCss from "@/styles/global.css?url";
 
 interface RouterContext {

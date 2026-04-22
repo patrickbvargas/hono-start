@@ -1,4 +1,4 @@
-import { Modal, type ModalProps } from "@/shared/components/ui";
+import { Modal, type ModalProps } from "@/shared/components/Hui";
 import type { OverlayState } from "@/shared/types/overlay";
 
 interface FormWrapperProps extends Omit<ModalProps, "state"> {

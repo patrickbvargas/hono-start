@@ -1,5 +1,5 @@
 import { FilterWrapper } from "@/shared/components/filter-wrapper";
-import { Separator } from "@/shared/components/ui";
+import { Separator } from "@/shared/components/Hui";
 import {
 	ENTITY_ACTIVE_FILTER_OPTIONS,
 	ENTITY_DELETED_FILTER_OPTIONS,
@@ -26,43 +26,26 @@ export const RemunerationFilter = ({
 				{isAdmin ? (
 					<form.AppField name="employeeId">
 						{(field) => (
-							<field.Autocomplete
-								label="Colaborador"
-								options={employees}
-								variant="secondary"
-							/>
+							<field.Autocomplete label="Colaborador" options={employees} />
 						)}
 					</form.AppField>
 				) : null}
 				<form.AppField name="contractId">
 					{(field) => (
-						<field.Autocomplete
-							label="Contrato"
-							options={contracts}
-							variant="secondary"
-						/>
+						<field.Autocomplete label="Contrato" options={contracts} />
 					)}
 				</form.AppField>
 				<form.AppField name="dateFrom">
-					{(field) => (
-						<field.Input label="Pagamento de" type="date" variant="secondary" />
-					)}
+					{(field) => <field.Input label="Pagamento de" type="date" />}
 				</form.AppField>
 				<form.AppField name="dateTo">
-					{(field) => (
-						<field.Input
-							label="Pagamento até"
-							type="date"
-							variant="secondary"
-						/>
-					)}
+					{(field) => <field.Input label="Pagamento até" type="date" />}
 				</form.AppField>
 				<form.AppField name="active">
 					{(field) => (
 						<field.RadioGroup
 							label="Ativo"
 							options={ENTITY_ACTIVE_FILTER_OPTIONS}
-							variant="secondary"
 						/>
 					)}
 				</form.AppField>
@@ -72,7 +55,6 @@ export const RemunerationFilter = ({
 						<field.RadioGroup
 							label="Exclusão"
 							options={ENTITY_DELETED_FILTER_OPTIONS}
-							variant="secondary"
 						/>
 					)}
 				</form.AppField>

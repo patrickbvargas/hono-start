@@ -1,14 +1,15 @@
-import * as React from "react";
 import {
-	Autocomplete,
-	type AutocompleteProps,
-	EmptyState,
-	Field,
-	type Key,
-	ListBox,
-	SearchField,
-	Tag,
-	TagGroup,
+	Combobox,
+	ComboboxChip,
+	ComboboxChips,
+	ComboboxChipsInput,
+	ComboboxContent,
+	ComboboxEmpty,
+	ComboboxItem,
+	ComboboxList,
+	ComboboxValue,
+	FieldWrapper,
+	useComboboxAnchor,
 } from "@/shared/components/ui";
 import { useFieldContext } from "@/shared/hooks/use-app-form";
 import type {
@@ -18,13 +19,13 @@ import type {
 } from "@/shared/types/field";
 
 interface FormMultiselectProps
-	extends AutocompleteProps<FieldOption, "multiple">,
-		FieldCommonProps {
+	extends FieldCommonProps,
+		React.ComponentPropsWithoutRef<typeof Combobox> {
 	options: FieldOption[];
 	placeholder?: string;
+	searchPlaceholder?: string;
 	emptyMessage?: string;
 	classNames?: FieldClassNames & {
-		empty?: string;
 		list?: string;
 		item?: string;
 	};
@@ -33,137 +34,78 @@ interface FormMultiselectProps
 export const FormMultiselect = ({
 	label,
 	description,
-	options = [],
-	placeholder = "Selecionar itens...",
+	isRequired,
+	isDisabled,
+	options,
+	placeholder = "Selecionar item...",
+	searchPlaceholder = "Buscar...",
 	emptyMessage = "Nenhum item encontrado",
-	validationBehavior = "aria",
 	classNames,
 	...props
 }: FormMultiselectProps) => {
-	const field = useFieldContext<Key[]>();
-	const [isOpen, setIsOpen] = React.useState(false);
-
-	const triggerRef = React.useRef<HTMLDivElement>(null);
-	const popoverRef = React.useRef<HTMLDivElement>(null);
+	const anchor = useComboboxAnchor();
+	const field = useFieldContext<string[]>();
 
 	const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 
-	const handleChange = (value: Key[]) => {
-		field.handleChange(value.map((item) => item.toString()));
-	};
-
-	const onRemoveTags = (keys: Set<Key>) => {
-		field.handleChange((prev) => prev.filter((key) => !keys.has(key)));
-	};
-
-	React.useEffect(() => {
-		if (isOpen && popoverRef.current && triggerRef.current) {
-			const selectRect = triggerRef.current.getBoundingClientRect();
-			const popover = popoverRef.current;
-			popover.style.width = `${selectRect.width}px`;
-		}
-	}, [isOpen]);
-
 	return (
-		<Autocomplete
-			ref={triggerRef}
-			name={field.name}
-			isInvalid={isInvalid}
-			selectionMode="multiple"
-			value={field.state.value}
-			onBlur={field.handleBlur}
-			onChange={handleChange}
-			placeholder={placeholder}
-			isOpen={isOpen}
-			onOpenChange={setIsOpen}
-			validationBehavior={validationBehavior}
+		<FieldWrapper
+			id={field.name}
+			label={label}
+			description={description}
+			isRequired={isRequired}
+			errors={field.state.meta.errors}
+			data-invalid={isInvalid}
 			className={classNames?.wrapper}
-			{...props}
 		>
-			<Field.Label
-				label={label}
-				htmlFor={field.name}
-				className={classNames?.label}
-			/>
-			<Autocomplete.Trigger>
-				<Autocomplete.Value>
-					{({ defaultChildren, isPlaceholder, state }) => {
-						if (isPlaceholder || state.selectedItems.length === 0) {
-							return defaultChildren;
-						}
-						const selectedItemsKeys = state.selectedItems.map(
-							(item) => item.key,
-						);
-						return (
-							<TagGroup size="sm" onRemove={onRemoveTags}>
-								<TagGroup.List>
-									{selectedItemsKeys.map((selectedItemKey) => {
-										const option = options.find(
-											(opt) => opt.value === selectedItemKey,
-										);
-										if (!option) return null;
-										return (
-											<Tag key={option.value} id={option.value}>
-												{option.label}
-											</Tag>
-										);
-									})}
-								</TagGroup.List>
-							</TagGroup>
-						);
-					}}
-				</Autocomplete.Value>
-				<Autocomplete.ClearButton />
-				<Autocomplete.Indicator />
-			</Autocomplete.Trigger>
-			<Autocomplete.Popover ref={popoverRef} placement="bottom start">
-				<Autocomplete.Filter>
-					<SearchField
-						autoFocus
-						name="search"
-						variant="secondary"
-						aria-label="Busca"
-					>
-						<SearchField.Group>
-							<SearchField.SearchIcon />
-							<SearchField.Input placeholder="Buscar..." />
-							<SearchField.ClearButton />
-						</SearchField.Group>
-					</SearchField>
-					<ListBox
-						renderEmptyState={() => (
-							<EmptyState className={classNames?.empty}>
-								{emptyMessage}
-							</EmptyState>
+			<Combobox
+				id={field.name}
+				name={field.name}
+				value={field.state.value}
+				onValueChange={(e) => {
+					if (!Array.isArray(e)) return;
+					field.handleChange(e);
+				}}
+				aria-invalid={isInvalid}
+				disabled={isDisabled}
+				items={options}
+				multiple
+				autoHighlight
+				{...props}
+			>
+				<ComboboxChips ref={anchor} className="w-full max-w-xs">
+					<ComboboxValue>
+						{(values) => (
+							<>
+								{values.map((value: string) => (
+									<ComboboxChip key={value}>
+										{options.find((opt) => opt.value === value)?.label || value}
+									</ComboboxChip>
+								))}
+								<ComboboxChipsInput
+									placeholder={searchPlaceholder}
+									aria-invalid={isInvalid}
+								/>
+							</>
 						)}
-						className={classNames?.list}
-					>
-						{options.map((option) => (
-							<ListBox.Item
+					</ComboboxValue>
+				</ComboboxChips>
+				<ComboboxContent anchor={anchor}>
+					<ComboboxEmpty>{emptyMessage}</ComboboxEmpty>
+					<ComboboxList className={classNames?.list}>
+						{(option) => (
+							<ComboboxItem
 								key={option.value}
-								id={option.value}
-								textValue={option.label}
-								isDisabled={option.isDisabled}
+								value={option.value}
 								className={classNames?.item}
+								disabled={option.isDisabled}
 							>
 								{option.label}
-								<ListBox.ItemIndicator />
-							</ListBox.Item>
-						))}
-					</ListBox>
-				</Autocomplete.Filter>
-			</Autocomplete.Popover>
-			{!isInvalid ? (
-				<Field.Description
-					description={description}
-					className={classNames?.description}
-				/>
-			) : (
-				<Field.Error
-					errors={field.state.meta.errors}
-					className={classNames?.error}
-				/>
-			)}
-		</Autocomplete>
+							</ComboboxItem>
+						)}
+					</ComboboxList>
+				</ComboboxContent>
+			</Combobox>
+		</FieldWrapper>
 	);
 };

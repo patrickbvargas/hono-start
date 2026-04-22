@@ -20,36 +20,22 @@ export const EmployeeFilter = () => {
 				{(field) => (
 					<field.Search
 						aria-label="Nome ou OAB"
-						variant="secondary"
 						placeholder="Buscar por nome ou OAB..."
 					/>
 				)}
 			</form.AppField>
 			<FilterWrapper>
 				<form.AppField name="type">
-					{(field) => (
-						<field.CheckboxGroup
-							label="Função"
-							options={types}
-							variant="secondary"
-						/>
-					)}
+					{(field) => <field.CheckboxGroup label="Função" options={types} />}
 				</form.AppField>
 				<form.AppField name="role">
-					{(field) => (
-						<field.CheckboxGroup
-							label="Perfil"
-							options={roles}
-							variant="secondary"
-						/>
-					)}
+					{(field) => <field.CheckboxGroup label="Perfil" options={roles} />}
 				</form.AppField>
 				<form.AppField name="active">
 					{(field) => (
 						<field.RadioGroup
 							label="Ativo"
 							options={ENTITY_ACTIVE_FILTER_OPTIONS}
-							variant="secondary"
 						/>
 					)}
 				</form.AppField>
@@ -59,7 +45,6 @@ export const EmployeeFilter = () => {
 						<field.RadioGroup
 							label="Exclusão"
 							options={ENTITY_DELETED_FILTER_OPTIONS}
-							variant="secondary"
 						/>
 					)}
 				</form.AppField>

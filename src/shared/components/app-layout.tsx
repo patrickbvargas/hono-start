@@ -1,8 +1,8 @@
 import { MenuIcon, PanelLeftCloseIcon, PanelLeftOpenIcon } from "lucide-react";
 import { useState } from "react";
-import { Button } from "@/shared/components/ui/button";
-import { Drawer } from "@/shared/components/ui/drawer";
-import { SidebarNav } from "@/shared/components/ui/sidebar-nav";
+import { Button } from "@/shared/components/Hui/button";
+import { Drawer } from "@/shared/components/Hui/drawer";
+import { SidebarNav } from "@/shared/components/Hui/sidebar-nav";
 
 interface AppLayoutProps {
 	children: React.ReactNode;

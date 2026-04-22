@@ -1,4 +1,3 @@
-import { ScrollShadow } from "@heroui/react";
 import { type AnyFormApi, useStore } from "@tanstack/react-form-start";
 import { createPortal } from "react-dom";
 import { cn } from "@/shared/lib/utils";
@@ -28,7 +27,7 @@ export const FormDebug = ({ form }: FormRootProps) => {
 				"w-72",
 			)}
 		>
-			<ScrollShadow className="size-full">
+			<div className="size-full overflow-auto">
 				<div className="p-4">
 					{info.map(({ title, data }) => (
 						<pre
@@ -39,7 +38,7 @@ export const FormDebug = ({ form }: FormRootProps) => {
 						</pre>
 					))}
 				</div>
-			</ScrollShadow>
+			</div>
 		</div>,
 		document.querySelector('[data-slot="modal-backdrop"]') ?? document.body,
 	);

@@ -1,14 +1,14 @@
+import * as React from "react";
 import {
-	ComboBox,
-	type ComboBoxProps,
-	EmptyState,
-	Field,
-	Input,
-	type Key,
-	ListBox,
+	Combobox,
+	ComboboxContent,
+	ComboboxEmpty,
+	ComboboxInput,
+	ComboboxItem,
+	ComboboxList,
+	FieldWrapper,
 } from "@/shared/components/ui";
 import { useFieldContext } from "@/shared/hooks/use-app-form";
-import { cn } from "@/shared/lib/utils";
 import type {
 	FieldClassNames,
 	FieldCommonProps,
@@ -16,11 +16,15 @@ import type {
 } from "@/shared/types/field";
 
 interface FormAutocompleteProps
-	extends ComboBoxProps<FieldOption>,
-		FieldCommonProps {
+	extends FieldCommonProps,
+		Omit<
+			React.ComponentPropsWithoutRef<typeof Combobox<FieldOption>>,
+			"multiple"
+		> {
 	options: FieldOption[];
 	placeholder?: string;
 	emptyMessage?: string;
+	isClearable?: boolean;
 	classNames?: FieldClassNames & {
 		empty?: string;
 		list?: string;
@@ -31,72 +35,80 @@ interface FormAutocompleteProps
 export const FormAutocomplete = ({
 	label,
 	description,
-	options = [],
+	isRequired,
+	isDisabled,
+	options,
+	isClearable = true,
 	placeholder = "Selecionar item...",
 	emptyMessage = "Nenhum item encontrado",
-	validationBehavior = "aria",
 	classNames,
 	...props
 }: FormAutocompleteProps) => {
-	const field = useFieldContext<Key | null>();
+	const field = useFieldContext<string>();
 
 	const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 
-	const handleChange = (value: Key | null) => {
-		field.handleChange(value?.toString() ?? null);
-	};
+	const selectedOption = React.useMemo(
+		() => options.find((opt) => opt.value === field.state.value) ?? null,
+		[options, field.state.value],
+	);
+
+	const handleValueChange = React.useCallback(
+		(option: FieldOption | null) => {
+			if (!option) {
+				field.clearValues();
+				return;
+			}
+
+			field.handleChange(option.value);
+		},
+		[field],
+	);
 
 	return (
-		<ComboBox
-			name={field.name}
-			isInvalid={isInvalid}
-			value={field.state.value}
-			onBlur={field.handleBlur}
-			onChange={handleChange}
-			validationBehavior={validationBehavior}
-			className={cn("min-w-0", classNames?.wrapper)}
-			{...props}
+		<FieldWrapper
+			id={field.name}
+			label={label}
+			description={description}
+			isRequired={isRequired}
+			errors={field.state.meta.errors}
+			data-invalid={isInvalid}
+			className={classNames?.wrapper}
 		>
-			<Field.Label
-				label={label}
-				htmlFor={field.name}
-				className={classNames?.label}
-			/>
-			<ComboBox.InputGroup>
-				<Input id={field.name} placeholder={placeholder} />
-				<ComboBox.Trigger />
-			</ComboBox.InputGroup>
-			<ComboBox.Popover>
-				<ListBox
-					renderEmptyState={() => (
-						<EmptyState className={classNames?.empty}>
-							{emptyMessage}
-						</EmptyState>
-					)}
-					className={classNames?.list}
-				>
-					{options.map((option) => (
-						<ListBox.Item
-							key={option.value}
-							id={option.value}
-							textValue={option.label}
-							isDisabled={option.isDisabled}
-							className={classNames?.item}
-						>
-							{option.label}
-							<ListBox.ItemIndicator />
-						</ListBox.Item>
-					))}
-				</ListBox>
-			</ComboBox.Popover>
-			<Field.Description
-				description={description}
-				className={classNames?.description}
-			/>
-			<Field.Error
-				errors={field.state.meta.errors}
-				className={classNames?.error}
-			/>
-		</ComboBox>
+			<Combobox
+				id={field.name}
+				name={field.name}
+				value={selectedOption}
+				onValueChange={handleValueChange}
+				aria-invalid={isInvalid}
+				disabled={isDisabled}
+				items={options}
+				itemToStringValue={(option) => option.label}
+				{...props}
+			>
+				<ComboboxInput
+					placeholder={placeholder}
+					aria-invalid={isInvalid}
+					showClear={isClearable}
+				/>
+				<ComboboxContent>
+					<ComboboxEmpty className={classNames?.empty}>
+						{emptyMessage}
+					</ComboboxEmpty>
+					<ComboboxList className={classNames?.list}>
+						{(option) => (
+							<ComboboxItem
+								key={option.value}
+								value={option}
+								className={classNames?.item}
+								disabled={option.isDisabled}
+							>
+								{option.label}
+							</ComboboxItem>
+						)}
+					</ComboboxList>
+				</ComboboxContent>
+			</Combobox>
+		</FieldWrapper>
 	);
 };

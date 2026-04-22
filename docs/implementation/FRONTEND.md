@@ -58,10 +58,12 @@ It is meant to survive domain changes as long as the project keeps the same UI a
   - restore confirmation flow
 - Equivalent entity tables expose lifecycle authority through `canManageLifecycle` when they show edit, delete, or restore actions.
 
-## HeroUI Rules
+## shadcn/ui Rules
 
-- HeroUI components and prop types are imported through shared UI re-exports only.
-- Features must not bind themselves directly to `@heroui/*`.
+- shadcn/ui components and prop types are imported through shared UI re-exports only.
+- Features must not bind themselves directly to shadcn, Radix, Base UI, or other vendor UI primitives.
+- Shared UI modules keep shadcn-style named exports for composed parts such as `TableHeader`, `TableBody`, `CardHeader`, `TabsList`, and `AlertDialogContent`.
+- `src/shared/components/Hui` is a temporary compatibility layer during migration and is not the canonical shared UI entrypoint.
 - UI patterns must remain consistent across entities unless an intentional difference is documented.
 
 ## Interaction Contract

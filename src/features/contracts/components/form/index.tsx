@@ -1,7 +1,7 @@
 import { AlertCircleIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { useRef, useState } from "react";
 import { FormWrapper } from "@/shared/components/form-wrapper";
-import { Button, Field, Tabs } from "@/shared/components/ui";
+import { Button, Field, Tabs } from "@/shared/components/Hui";
 import type { EntityId } from "@/shared/schemas/entity";
 import { isAdminSession, useLoggedUserSessionStore } from "@/shared/session";
 import type { OverlayState } from "@/shared/types/overlay";
@@ -268,7 +268,6 @@ export const ContractForm = ({ id, state, onSuccess }: ContractFormProps) => {
 							<Tabs
 								className="w-full"
 								selectedKey={activeTab}
-								variant="secondary"
 								onSelectionChange={(key) => setActiveTab(String(key))}
 							>
 								<Tabs.ListContainer>
@@ -307,7 +306,6 @@ export const ContractForm = ({ id, state, onSuccess }: ContractFormProps) => {
 												<field.Autocomplete
 													label="Cliente"
 													options={clients}
-													variant="secondary"
 													isRequired
 												/>
 											)}
@@ -315,20 +313,13 @@ export const ContractForm = ({ id, state, onSuccess }: ContractFormProps) => {
 									</Field.Group>
 									<Field.Group className="grid-cols-2">
 										<form.AppField name="processNumber">
-											{(field) => (
-												<field.Input
-													label="Processo"
-													variant="secondary"
-													isRequired
-												/>
-											)}
+											{(field) => <field.Input label="Processo" isRequired />}
 										</form.AppField>
 										<form.AppField name="legalArea">
 											{(field) => (
 												<field.Autocomplete
 													label="Área"
 													options={legalAreas}
-													variant="secondary"
 													isRequired
 												/>
 											)}
@@ -338,7 +329,6 @@ export const ContractForm = ({ id, state, onSuccess }: ContractFormProps) => {
 												<field.Autocomplete
 													label="Status"
 													options={statuses}
-													variant="secondary"
 													isRequired
 												/>
 											)}
@@ -350,9 +340,7 @@ export const ContractForm = ({ id, state, onSuccess }: ContractFormProps) => {
 													minValue={0}
 													maxValue={1}
 													step={0.01}
-													variant="secondary"
 													isRequired
-													fullWidth
 													formatOptions={{ style: "percent" }}
 												/>
 											)}
@@ -360,27 +348,17 @@ export const ContractForm = ({ id, state, onSuccess }: ContractFormProps) => {
 									</Field.Group>
 									<Field.Group>
 										<form.AppField name="notes">
-											{(field) => (
-												<field.Textarea
-													label="Observações"
-													variant="secondary"
-												/>
-											)}
+											{(field) => <field.Textarea label="Observações" />}
 										</form.AppField>
 									</Field.Group>
 									<Field.Group className="grid-cols-2">
 										<form.AppField name="isActive">
-											{(field) => (
-												<field.Checkbox label="Ativo" variant="secondary" />
-											)}
+											{(field) => <field.Checkbox label="Ativo" />}
 										</form.AppField>
 										{isAdmin ? (
 											<form.AppField name="allowStatusChange">
 												{(field) => (
-													<field.Checkbox
-														label="Permitir mudança de status"
-														variant="secondary"
-													/>
+													<field.Checkbox label="Permitir mudança de status" />
 												)}
 											</form.AppField>
 										) : null}
@@ -395,7 +373,6 @@ export const ContractForm = ({ id, state, onSuccess }: ContractFormProps) => {
 											<Field.Group>
 												<Button
 													size="sm"
-													variant="secondary"
 													onPress={() =>
 														subField.pushValue(
 															defaultContractAssignmentValues(),
@@ -421,7 +398,6 @@ export const ContractForm = ({ id, state, onSuccess }: ContractFormProps) => {
 																<field.Autocomplete
 																	label="Colaborador"
 																	options={employees}
-																	variant="secondary"
 																	isRequired
 																/>
 															)}
@@ -433,7 +409,6 @@ export const ContractForm = ({ id, state, onSuccess }: ContractFormProps) => {
 																<field.Autocomplete
 																	label="Atribuição"
 																	options={assignmentTypes}
-																	variant="secondary"
 																	isRequired
 																/>
 															)}
@@ -461,7 +436,6 @@ export const ContractForm = ({ id, state, onSuccess }: ContractFormProps) => {
 											<Field.Group>
 												<Button
 													size="sm"
-													variant="secondary"
 													onPress={() =>
 														subField.pushValue(defaultContractRevenueValues())
 													}
@@ -480,7 +454,6 @@ export const ContractForm = ({ id, state, onSuccess }: ContractFormProps) => {
 																	<field.Autocomplete
 																		label="Tipo de receita"
 																		options={revenueTypes}
-																		variant="secondary"
 																		isRequired
 																	/>
 																)}
@@ -492,7 +465,6 @@ export const ContractForm = ({ id, state, onSuccess }: ContractFormProps) => {
 																	<field.Input
 																		label="Início do pagamento"
 																		type="date"
-																		variant="secondary"
 																		isRequired
 																	/>
 																)}
@@ -505,9 +477,7 @@ export const ContractForm = ({ id, state, onSuccess }: ContractFormProps) => {
 																		label="Valor total"
 																		minValue={0}
 																		step={100}
-																		variant="secondary"
 																		isRequired
-																		fullWidth
 																		formatOptions={{
 																			style: "currency",
 																			currency: "BRL",
@@ -523,8 +493,6 @@ export const ContractForm = ({ id, state, onSuccess }: ContractFormProps) => {
 																		label="Entrada"
 																		minValue={0}
 																		step={100}
-																		variant="secondary"
-																		fullWidth
 																		formatOptions={{
 																			style: "currency",
 																			currency: "BRL",
@@ -540,9 +508,7 @@ export const ContractForm = ({ id, state, onSuccess }: ContractFormProps) => {
 																		label="Parcelas"
 																		minValue={1}
 																		step={1}
-																		variant="secondary"
 																		isRequired
-																		fullWidth
 																	/>
 																)}
 															</form.AppField>

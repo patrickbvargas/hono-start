@@ -1,5 +1,5 @@
 import { FormWrapper } from "@/shared/components/form-wrapper";
-import { Field } from "@/shared/components/ui";
+import { Field } from "@/shared/components/Hui";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
 import { useClientForm } from "../../hooks/use-form";
@@ -39,7 +39,6 @@ export const ClientForm = ({ id, state, onSuccess }: ClientFormProps) => {
 											<field.Autocomplete
 												label="Tipo"
 												options={types}
-												variant="secondary"
 												isRequired
 												isDisabled={!!id}
 												description={
@@ -54,7 +53,6 @@ export const ClientForm = ({ id, state, onSuccess }: ClientFormProps) => {
 										{(field) => (
 											<field.Input
 												label={documentLabel}
-												variant="secondary"
 												placeholder={documentPlaceholder}
 												isRequired
 											/>
@@ -63,36 +61,20 @@ export const ClientForm = ({ id, state, onSuccess }: ClientFormProps) => {
 								</Field.Group>
 								<Field.Group>
 									<form.AppField name="fullName">
-										{(field) => (
-											<field.Input
-												label={nameLabel}
-												variant="secondary"
-												isRequired
-											/>
-										)}
+										{(field) => <field.Input label={nameLabel} isRequired />}
 									</form.AppField>
 								</Field.Group>
 								<Field.Group className="grid-cols-2">
 									<form.AppField name="email">
-										{(field) => (
-											<field.Input
-												label="Email"
-												type="email"
-												variant="secondary"
-											/>
-										)}
+										{(field) => <field.Input label="Email" type="email" />}
 									</form.AppField>
 									<form.AppField name="phone">
-										{(field) => (
-											<field.Input label="Telefone" variant="secondary" />
-										)}
+										{(field) => <field.Input label="Telefone" />}
 									</form.AppField>
 								</Field.Group>
 								<Field.Group>
 									<form.AppField name="isActive">
-										{(field) => (
-											<field.Checkbox label="Ativo" variant="secondary" />
-										)}
+										{(field) => <field.Checkbox label="Ativo" />}
 									</form.AppField>
 								</Field.Group>
 							</>

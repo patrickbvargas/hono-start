@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import {
 	type ColumnDef,
 	flexRender,
@@ -6,25 +7,23 @@ import {
 	type TableOptions,
 	useReactTable,
 } from "@tanstack/react-table";
-import { ChevronUpIcon, InboxIcon } from "lucide-react";
+import { ChevronUpIcon } from "lucide-react";
 import {
-	EmptyState,
-	Link,
 	Table,
-	type TableProps,
+	TableBody,
+	TableCell,
+	TableFooter,
+	TableHead,
+	TableHeader,
+	TableRow,
 } from "@/shared/components/ui";
 import { useSort } from "@/shared/hooks/use-sort";
 import { cn } from "@/shared/lib/utils";
 
-interface DataTableProps<TData, TValue> extends TableProps {
+interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[] | TableOptions<TData>["columns"];
 	data: TData[];
-	classNames?: {
-		table?: string;
-		content?: string;
-		header?: string;
-		body?: string;
-	};
+	className?: string;
 	onRowAction?: (index: number) => void;
 	footerContent?: React.ReactNode;
 }
@@ -34,9 +33,6 @@ export const DataTable = <TData, TValue>({
 	data,
 	onRowAction,
 	footerContent,
-	className,
-	classNames,
-	...props
 }: DataTableProps<TData, TValue>) => {
 	const table = useReactTable({
 		data,
@@ -45,110 +41,90 @@ export const DataTable = <TData, TValue>({
 	});
 
 	return (
-		<Table
-			className={cn("max-h-full", className, classNames?.table)}
-			{...props}
-		>
-			<Table.ScrollContainer>
-				<Table.ResizableContainer>
-					<Table.Content
-						aria-label="TanStack Table"
-						className={classNames?.content}
-					>
-						<Table.Header className={classNames?.header}>
-							{table.getFlatHeaders().map((header) => (
-								<Table.Column
-									id={header.id}
-									key={header.id}
-									allowsSorting={header.column.getCanSort()}
-									isRowHeader={header.column.getIndex() === 0}
-									minWidth={header.column.columnDef.meta?.minColumnWidth}
-									className={cn(
-										"p-0",
-										header.column.columnDef.meta?.headerClassName,
-									)}
-								>
-									<SortableColumnHeader header={header} />
-									<Table.ColumnResizer />
-								</Table.Column>
-							))}
-						</Table.Header>
-						<Table.Body
-							renderEmptyState={() => (
-								<EmptyState className="w-full min-h-40 flex flex-col items-center justify-center gap-4 text-center">
-									<InboxIcon size={18} className="text-muted" />
-									<span className="text-sm text-muted">
-										Nenhum resultado encontrado
-									</span>
-								</EmptyState>
-							)}
-							className={classNames?.body}
+		<Table>
+			<TableHeader>
+				<TableRow>
+					{table.getFlatHeaders().map((header) => (
+						<TableHead
+							key={header.id}
+							colSpan={header.colSpan}
+							className={header.column.columnDef.meta?.headerClassName}
 						>
-							{table.getRowModel().rows.map((row, index) => (
-								<Table.Row
-									key={row.id}
-									id={row.id}
-									onPress={() => onRowAction?.(index)}
+							{!header.isPlaceholder && <DataTableHeader header={header} />}
+						</TableHead>
+					))}
+				</TableRow>
+			</TableHeader>
+			<TableBody>
+				{table.getRowModel().rows?.length ? (
+					table.getRowModel().rows.map((row, index) => (
+						<TableRow
+							key={row.id}
+							onClick={() => onRowAction?.(index)}
+							className="cursor-pointer"
+							data-state={row.getIsSelected() && "selected"}
+						>
+							{row.getVisibleCells().map((cell) => (
+								<TableCell
+									key={cell.id}
+									className={cell.column.columnDef.meta?.cellClassName}
 								>
-									{row.getVisibleCells().map((cell) => (
-										<Table.Cell key={cell.id}>
-											{flexRender(
-												cell.column.columnDef.cell,
-												cell.getContext(),
-											)}
-										</Table.Cell>
-									))}
-								</Table.Row>
+									{flexRender(cell.column.columnDef.cell, cell.getContext())}
+								</TableCell>
 							))}
-						</Table.Body>
-					</Table.Content>
-				</Table.ResizableContainer>
-			</Table.ScrollContainer>
-			{footerContent && <Table.Footer>{footerContent}</Table.Footer>}
+						</TableRow>
+					))
+				) : (
+					<TableRow>
+						<TableCell
+							colSpan={columns.length}
+							className="h-24 text-center text-muted-foreground"
+						>
+							Nenhum registro encontrado.
+						</TableCell>
+					</TableRow>
+				)}
+			</TableBody>
+			{footerContent && <TableFooter>{footerContent}</TableFooter>}
 		</Table>
 	);
 };
 
-interface SortableColumnHeaderProps<TData> {
+interface DataTableHeaderProps<TData> {
 	header: Header<TData, unknown>;
 }
 
-const SortableColumnHeader = <TData,>({
-	header,
-}: SortableColumnHeaderProps<TData>) => {
+const DataTableHeader = <TData,>({ header }: DataTableHeaderProps<TData>) => {
 	const { column, direction, getSortSearch } = useSort();
 
-	if (header.isPlaceholder) return null;
+	const canSort = header.column.getCanSort();
+	const columnId = header.column.id;
+	const isActive = column === columnId;
 
-	const {
-		column: { id, columnDef, getCanSort },
-		getContext,
-	} = header;
+	const content = flexRender(
+		header.column.columnDef.header,
+		header.getContext(),
+	);
 
-	const content = flexRender(columnDef.header, getContext());
-
-	if (!getCanSort())
-		return <span className="block px-3 py-2.5">{content}</span>;
-
-	const isActive = column === id;
+	if (!canSort) return <div className="flex items-center py-3">{content}</div>;
 
 	return (
 		<Link
 			to="."
 			preload="intent"
-			search={getSortSearch(id)}
-			className="group px-3 py-2.5 size-full text-inherit text-xs no-underline gap-1 rounded-lg focus:ring-offset-0 focus:ring-inset"
+			search={getSortSearch(columnId)}
+			className="group flex items-center gap-2 py-3 cursor-pointer select-none"
 		>
 			{content}
-			<Link.Icon
+			<ChevronUpIcon
 				className={cn(
-					"size-4 transition-all duration-200 invisible",
-					isActive && "visible opacity-100",
+					"size-4 transition-all duration-200",
+					isActive
+						? "opacity-100 text-primary"
+						: "opacity-0 group-hover:opacity-50 text-muted-foreground",
 					isActive && direction === "desc" && "rotate-180",
 				)}
-			>
-				<ChevronUpIcon />
-			</Link.Icon>
+			/>
 		</Link>
 	);
 };

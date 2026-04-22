@@ -25,6 +25,7 @@
 - Feature barrels stay minimal and route-facing; do not export `data/` modules, internal helpers, or implementation-only schemas.
 - Feature subfolders do not use local re-export barrel `index.ts` or `index.tsx` files; import concrete modules inside the feature.
 - Shared UI components are consumed through `@/shared/components/ui`.
+- Shared UI generated components and shared UI composites live under `src/shared/components/ui`.
 
 ## TypeScript Rules
 
@@ -85,7 +86,8 @@
 
 ## Forbidden Drift
 
-- Do not import `@heroui/*` directly from features or routes.
+- Do not import shadcn, Radix, Base UI, or other vendor UI primitives directly from features or routes; shared UI implementation files are the exception.
+- Do not add new imports from `src/shared/components/Hui`; it is a temporary compatibility layer only.
 - Do not import a feature's internal files from outside that feature.
 - Do not introduce new architectural patterns when a documented house pattern already exists.
 - Do not move orchestration into route files when the feature already owns that concern.

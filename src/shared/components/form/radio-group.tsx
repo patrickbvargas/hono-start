@@ -1,9 +1,9 @@
 import {
 	Field,
-	Label,
-	Radio,
+	FieldLabel,
+	FieldWrapperGroup,
 	RadioGroup,
-	type RadioGroupProps,
+	RadioGroupItem,
 } from "@/shared/components/ui";
 import { useFieldContext } from "@/shared/hooks/use-app-form";
 import { cn } from "@/shared/lib/utils";
@@ -13,9 +13,13 @@ import type {
 	FieldOption,
 } from "@/shared/types/field";
 
-interface FormRadioGroupProps extends RadioGroupProps, FieldCommonProps {
+interface FormRadioGroupProps
+	extends FieldCommonProps,
+		React.ComponentPropsWithoutRef<typeof RadioGroup> {
 	options: FieldOption[];
+	orientation?: "horizontal" | "vertical";
 	classNames?: FieldClassNames & {
+		list?: string;
 		item?: string;
 	};
 }
@@ -23,8 +27,10 @@ interface FormRadioGroupProps extends RadioGroupProps, FieldCommonProps {
 export const FormRadioGroup = ({
 	label,
 	description,
+	isRequired,
+	isDisabled,
 	options = [],
-	validationBehavior = "aria",
+	orientation = "vertical",
 	classNames,
 	...props
 }: FormRadioGroupProps) => {
@@ -33,43 +39,43 @@ export const FormRadioGroup = ({
 	const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 
 	return (
-		<RadioGroup
-			name={field.name}
-			isInvalid={isInvalid}
-			value={field.state.value}
-			onBlur={field.handleBlur}
-			onChange={field.handleChange}
-			validationBehavior={validationBehavior}
+		<FieldWrapperGroup
+			id={field.name}
+			label={label}
+			description={description}
+			isRequired={isRequired}
+			errors={field.state.meta.errors}
+			data-invalid={isInvalid}
 			className={classNames?.wrapper}
-			{...props}
 		>
-			<Field.Label
-				label={label}
-				htmlFor={field.name}
-				className={classNames?.label}
-			/>
-			<Field.Description
-				description={description}
-				className={classNames?.description}
-			/>
-			{options.map((option) => (
-				<Radio
-					key={option.value}
-					value={option.value}
-					isDisabled={option.isDisabled}
-				>
-					<Radio.Control>
-						<Radio.Indicator />
-					</Radio.Control>
-					<Radio.Content className={classNames?.item}>
-						<Label>{option.label}</Label>
-					</Radio.Content>
-				</Radio>
-			))}
-			<Field.Error
-				errors={field.state.meta.errors}
-				className={cn("mt-2", classNames?.error)}
-			/>
-		</RadioGroup>
+			<RadioGroup
+				name={field.name}
+				value={field.state.value}
+				onValueChange={field.handleChange}
+				className={cn(
+					"flex flex-col",
+					orientation === "horizontal" && "flex-row",
+					classNames?.list,
+				)}
+				{...props}
+			>
+				{options.map((option) => (
+					<Field
+						key={option.value}
+						orientation="horizontal"
+						data-invalid={isInvalid}
+						className={cn("w-fit", classNames?.item)}
+					>
+						<RadioGroupItem
+							id={`radio-opt-${option.value}`}
+							value={option.value}
+						/>
+						<FieldLabel htmlFor={`radio-opt-${option.value}`}>
+							{option.label}
+						</FieldLabel>
+					</Field>
+				))}
+			</RadioGroup>
+		</FieldWrapperGroup>
 	);
 };

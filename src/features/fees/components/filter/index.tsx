@@ -19,42 +19,23 @@ export const FeeFilter = () => {
 			<FilterWrapper>
 				<form.AppField name="contractId">
 					{(field) => (
-						<field.Autocomplete
-							label="Contrato"
-							options={contracts}
-							variant="secondary"
-						/>
+						<field.Autocomplete label="Contrato" options={contracts} />
 					)}
 				</form.AppField>
 				<form.AppField name="revenueId">
-					{(field) => (
-						<field.Autocomplete
-							label="Receita"
-							options={revenues}
-							variant="secondary"
-						/>
-					)}
+					{(field) => <field.Autocomplete label="Receita" options={revenues} />}
 				</form.AppField>
 				<form.AppField name="dateFrom">
-					{(field) => (
-						<field.Input label="Pagamento de" type="date" variant="secondary" />
-					)}
+					{(field) => <field.Input label="Pagamento de" type="date" />}
 				</form.AppField>
 				<form.AppField name="dateTo">
-					{(field) => (
-						<field.Input
-							label="Pagamento até"
-							type="date"
-							variant="secondary"
-						/>
-					)}
+					{(field) => <field.Input label="Pagamento até" type="date" />}
 				</form.AppField>
 				<form.AppField name="active">
 					{(field) => (
 						<field.RadioGroup
 							label="Ativo"
 							options={ENTITY_ACTIVE_FILTER_OPTIONS}
-							variant="secondary"
 						/>
 					)}
 				</form.AppField>
@@ -64,7 +45,6 @@ export const FeeFilter = () => {
 						<field.RadioGroup
 							label="Exclusão"
 							options={ENTITY_DELETED_FILTER_OPTIONS}
-							variant="secondary"
 						/>
 					)}
 				</form.AppField>

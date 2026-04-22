@@ -1,5 +1,5 @@
 import { FilterWrapper } from "@/shared/components/filter-wrapper";
-import { Separator } from "@/shared/components/ui";
+import { Separator } from "@/shared/components/Hui";
 import {
 	ENTITY_ACTIVE_FILTER_OPTIONS,
 	ENTITY_DELETED_FILTER_OPTIONS,
@@ -20,27 +20,19 @@ export const ClientFilter = () => {
 				{(field) => (
 					<field.Search
 						aria-label="Nome ou documento"
-						variant="secondary"
 						placeholder="Buscar por nome ou documento..."
 					/>
 				)}
 			</form.AppField>
 			<FilterWrapper>
 				<form.AppField name="type">
-					{(field) => (
-						<field.CheckboxGroup
-							label="Tipo"
-							options={types}
-							variant="secondary"
-						/>
-					)}
+					{(field) => <field.CheckboxGroup label="Tipo" options={types} />}
 				</form.AppField>
 				<form.AppField name="active">
 					{(field) => (
 						<field.RadioGroup
 							label="Ativo"
 							options={ENTITY_ACTIVE_FILTER_OPTIONS}
-							variant="secondary"
 						/>
 					)}
 				</form.AppField>
@@ -50,7 +42,6 @@ export const ClientFilter = () => {
 						<field.RadioGroup
 							label="Exclusão"
 							options={ENTITY_DELETED_FILTER_OPTIONS}
-							variant="secondary"
 						/>
 					)}
 				</form.AppField>

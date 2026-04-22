@@ -1,5 +1,5 @@
 import { FormWrapper } from "@/shared/components/form-wrapper";
-import { Field } from "@/shared/components/ui";
+import { Field } from "@/shared/components/Hui";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
 import { LAWYER_TYPE_VALUE } from "../../constants/values";
@@ -23,14 +23,10 @@ export const EmployeeForm = ({ id, state, onSuccess }: EmployeeFormProps) => {
 			<FormWrapper state={state} title={title} footer={<form.Submit />}>
 				<Field.Group>
 					<form.AppField name="fullName">
-						{(field) => (
-							<field.Input label="Nome" variant="secondary" isRequired />
-						)}
+						{(field) => <field.Input label="Nome" isRequired />}
 					</form.AppField>
 					<form.AppField name="email">
-						{(field) => (
-							<field.Input label="Email" variant="secondary" isRequired />
-						)}
+						{(field) => <field.Input label="Email" isRequired />}
 					</form.AppField>
 				</Field.Group>
 				<Field.Group className="grid-cols-2">
@@ -45,22 +41,12 @@ export const EmployeeForm = ({ id, state, onSuccess }: EmployeeFormProps) => {
 						}}
 					>
 						{(field) => (
-							<field.Autocomplete
-								label="Função"
-								options={types}
-								variant="secondary"
-								isRequired
-							/>
+							<field.Autocomplete label="Função" options={types} isRequired />
 						)}
 					</form.AppField>
 					<form.AppField name="role">
 						{(field) => (
-							<field.Autocomplete
-								label="Cargo"
-								options={roles}
-								variant="secondary"
-								isRequired
-							/>
+							<field.Autocomplete label="Cargo" options={roles} isRequired />
 						)}
 					</form.AppField>
 					<form.Subscribe
@@ -73,7 +59,6 @@ export const EmployeeForm = ({ id, state, onSuccess }: EmployeeFormProps) => {
 										<field.Input
 											label="OAB"
 											placeholder="RS000000"
-											variant="secondary"
 											maxLength={8}
 											isRequired
 										/>
@@ -91,9 +76,7 @@ export const EmployeeForm = ({ id, state, onSuccess }: EmployeeFormProps) => {
 								minValue={0}
 								maxValue={1}
 								step={0.05}
-								variant="secondary"
 								isRequired
-								fullWidth
 								formatOptions={{ style: "percent" }}
 							/>
 						)}
@@ -105,9 +88,7 @@ export const EmployeeForm = ({ id, state, onSuccess }: EmployeeFormProps) => {
 								minValue={0}
 								maxValue={1}
 								step={0.05}
-								variant="secondary"
 								isRequired
-								fullWidth
 								formatOptions={{ style: "percent" }}
 							/>
 						)}
@@ -115,7 +96,7 @@ export const EmployeeForm = ({ id, state, onSuccess }: EmployeeFormProps) => {
 				</Field.Group>
 				<Field.Group>
 					<form.AppField name="isActive">
-						{(field) => <field.Checkbox label="Ativo" variant="secondary" />}
+						{(field) => <field.Checkbox label="Ativo" />}
 					</form.AppField>
 				</Field.Group>
 			</FormWrapper>

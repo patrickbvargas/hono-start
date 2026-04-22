@@ -1,5 +1,5 @@
 import { FormWrapper } from "@/shared/components/form-wrapper";
-import { Field } from "@/shared/components/ui";
+import { Field } from "@/shared/components/Hui";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
 import { useFeeForm } from "../../hooks/use-form";
@@ -51,19 +51,13 @@ function FeeFormFields({ contractId, form, state, title }: FeeFormFieldsProps) {
 						<field.Autocomplete
 							label="Contrato"
 							options={contracts}
-							variant="secondary"
 							isRequired
 						/>
 					)}
 				</form.AppField>
 				<form.AppField name="revenueId">
 					{(field) => (
-						<field.Autocomplete
-							label="Receita"
-							options={revenues}
-							variant="secondary"
-							isRequired
-						/>
+						<field.Autocomplete label="Receita" options={revenues} isRequired />
 					)}
 				</form.AppField>
 				<form.AppField name="paymentDate">
@@ -71,14 +65,7 @@ function FeeFormFields({ contractId, form, state, title }: FeeFormFieldsProps) {
 				</form.AppField>
 				<form.AppField name="installmentNumber">
 					{(field) => (
-						<field.Number
-							label="Parcela"
-							minValue={1}
-							step={1}
-							variant="secondary"
-							isRequired
-							fullWidth
-						/>
+						<field.Number label="Parcela" minValue={1} step={1} isRequired />
 					)}
 				</form.AppField>
 			</Field.Group>
@@ -89,9 +76,7 @@ function FeeFormFields({ contractId, form, state, title }: FeeFormFieldsProps) {
 							label="Valor"
 							minValue={0}
 							step={100}
-							variant="secondary"
 							isRequired
-							fullWidth
 							formatOptions={{
 								style: "currency",
 								currency: "BRL",
@@ -103,14 +88,11 @@ function FeeFormFields({ contractId, form, state, title }: FeeFormFieldsProps) {
 			<Field.Group className="grid-cols-2">
 				<form.AppField name="generatesRemuneration">
 					{(field) => (
-						<field.Checkbox
-							label="Gerar remunerações automaticamente"
-							variant="secondary"
-						/>
+						<field.Checkbox label="Gerar remunerações automaticamente" />
 					)}
 				</form.AppField>
 				<form.AppField name="isActive">
-					{(field) => <field.Checkbox label="Ativo" variant="secondary" />}
+					{(field) => <field.Checkbox label="Ativo" />}
 				</form.AppField>
 			</Field.Group>
 		</FormWrapper>

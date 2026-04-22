@@ -27,5 +27,7 @@
     "**/routeTree.gen.ts",
     "**/logo.svg",
     "**/.pnpm-store",
+    "**/.output",
+    "**/README.md",
   ],
 }

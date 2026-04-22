@@ -1,18 +1,22 @@
 import { createLink } from "@tanstack/react-router";
 import {
-	Pagination as HPagination,
-	type PaginationProps as HPaginationProps,
+	PaginationContent,
+	PaginationItem,
+	PaginationLink,
+	PaginationNext,
+	PaginationPrevious,
+	PaginationRoot,
 } from "@/shared/components/ui";
 import { usePagination } from "@/shared/hooks/use-pagination";
 import { cn } from "@/shared/lib/utils";
 
-const CustomLink = createLink(HPagination.Link);
-const CustomLinkNext = createLink(HPagination.Next);
-const CustomLinkPrevious = createLink(HPagination.Previous);
+const CustomLink = createLink(PaginationLink);
+const CustomLinkNext = createLink(PaginationNext);
+const CustomLinkPrevious = createLink(PaginationPrevious);
 
 const DEFAULT_SIBLING_COUNT = 1;
 
-interface PaginationProps extends Omit<HPaginationProps, "children"> {
+interface PaginationProps extends React.ComponentProps<typeof PaginationRoot> {
 	totalRecords: number;
 	siblingCount?: number;
 }
@@ -40,7 +44,7 @@ export const Pagination = ({
 		Array.from({ length: endPage - startPage + 1 }, (_, index) => {
 			const pageNumber = startPage + index;
 			return (
-				<HPagination.Item key={pageNumber}>
+				<PaginationItem key={pageNumber}>
 					<CustomLink
 						to="."
 						search={getPaginationSearch(pageNumber)}
@@ -48,49 +52,27 @@ export const Pagination = ({
 					>
 						{pageNumber}
 					</CustomLink>
-				</HPagination.Item>
+				</PaginationItem>
 			);
 		});
 
-	const generateFeedback = () => {
-		const initialItem = (page - 1) * limit + 1;
-		const finalItem = Math.min(initialItem + limit - 1, totalRecords);
-		const entityName = totalRecords === 1 ? "registro" : "registros";
-		return `${initialItem}-${finalItem} de ${totalRecords} ${entityName}`;
-	};
-
 	return (
-		<HPagination
+		<PaginationRoot
 			className={cn(
-				"flex flex-col-reverse gap-3 sm:flex-row sm:justify-between",
+				"flex flex-col-reverse gap-3 sm:flex-row sm:justify-end",
 				className,
 			)}
 			{...props}
 		>
-			<HPagination.Summary>{generateFeedback()}</HPagination.Summary>
-			<HPagination.Content>
-				<HPagination.Item>
-					<CustomLinkPrevious
-						to="."
-						search={getPaginationSearch(page - 1)}
-						isDisabled={page === 1}
-					>
-						<HPagination.PreviousIcon />
-						<span>Anterior</span>
-					</CustomLinkPrevious>
-				</HPagination.Item>
+			<PaginationContent>
+				<PaginationItem>
+					<CustomLinkPrevious to="." search={getPaginationSearch(page - 1)} />
+				</PaginationItem>
 				{renderPageLinks()}
-				<HPagination.Item>
-					<CustomLinkNext
-						to="."
-						search={getPaginationSearch(page + 1)}
-						isDisabled={!(page < totalPagesCount)}
-					>
-						<span>Próximo</span>
-						<HPagination.NextIcon />
-					</CustomLinkNext>
-				</HPagination.Item>
-			</HPagination.Content>
-		</HPagination>
+				<PaginationItem>
+					<CustomLinkNext to="." search={getPaginationSearch(page + 1)} />
+				</PaginationItem>
+			</PaginationContent>
+		</PaginationRoot>
 	);
 };

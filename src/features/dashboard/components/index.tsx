@@ -7,7 +7,7 @@ import {
 	TrendingUpIcon,
 	UsersIcon,
 } from "lucide-react";
-import { Card, Chip } from "@/shared/components/ui";
+import { Card, Chip } from "@/shared/components/Hui";
 import type { DashboardSummary } from "../schemas/model";
 
 interface DashboardProps {

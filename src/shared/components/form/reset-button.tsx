@@ -8,7 +8,7 @@ export const FormResetButton = ({
 	const form = useFormContext();
 
 	return (
-		<Button variant="ghost" onPress={() => form.reset()} {...props}>
+		<Button variant="ghost" onClick={() => form.reset()} {...props}>
 			{children || "Limpar"}
 		</Button>
 	);

@@ -1,4 +1,4 @@
-import { Chip } from "@/shared/components/ui";
+import { Chip } from "@/shared/components/Hui";
 
 const STATUS_CONFIG = {
 	active: { color: "success", label: "Ativo" },
