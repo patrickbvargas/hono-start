@@ -120,7 +120,7 @@ const DataTableHeader = <TData,>({ header }: DataTableHeaderProps<TData>) => {
 				className={cn(
 					"size-4 transition-all duration-200",
 					isActive
-						? "opacity-100 text-primary"
+						? "opacity-100 text-muted-foreground"
 						: "opacity-0 group-hover:opacity-50 text-muted-foreground",
 					isActive && direction === "desc" && "rotate-180",
 				)}

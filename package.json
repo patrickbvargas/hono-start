@@ -23,8 +23,6 @@
   "dependencies": {
     "@base-ui/react": "^1.4.1",
     "@fontsource-variable/geist": "^5.2.8",
-    "@heroui/react": "^3.0.2",
-    "@heroui/styles": "^3.0.2",
     "@internationalized/date": "^3.12.1",
     "@prisma/adapter-pg": "^7.7.0",
     "@prisma/client": "^7.7.0",

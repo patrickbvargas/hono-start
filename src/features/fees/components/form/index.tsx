@@ -1,5 +1,5 @@
 import { FormWrapper } from "@/shared/components/form-wrapper";
-import { Field } from "@/shared/components/Hui";
+import { FieldGroup } from "@/shared/components/ui";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
 import { useFeeForm } from "../../hooks/use-form";
@@ -45,7 +45,7 @@ function FeeFormFields({ contractId, form, state, title }: FeeFormFieldsProps) {
 
 	return (
 		<FormWrapper state={state} title={title} footer={<form.Submit />}>
-			<Field.Group className="grid-cols-2">
+			<FieldGroup className="grid gap-5 sm:grid-cols-2">
 				<form.AppField name="contractId">
 					{(field) => (
 						<field.Autocomplete
@@ -68,8 +68,8 @@ function FeeFormFields({ contractId, form, state, title }: FeeFormFieldsProps) {
 						<field.Number label="Parcela" minValue={1} step={1} isRequired />
 					)}
 				</form.AppField>
-			</Field.Group>
-			<Field.Group className="grid-cols-2">
+			</FieldGroup>
+			<FieldGroup className="grid gap-5 sm:grid-cols-2">
 				<form.AppField name="amount">
 					{(field) => (
 						<field.Number
@@ -84,8 +84,8 @@ function FeeFormFields({ contractId, form, state, title }: FeeFormFieldsProps) {
 						/>
 					)}
 				</form.AppField>
-			</Field.Group>
-			<Field.Group className="grid-cols-2">
+			</FieldGroup>
+			<FieldGroup className="grid gap-5 sm:grid-cols-2">
 				<form.AppField name="generatesRemuneration">
 					{(field) => (
 						<field.Checkbox label="Gerar remunerações automaticamente" />
@@ -94,7 +94,7 @@ function FeeFormFields({ contractId, form, state, title }: FeeFormFieldsProps) {
 				<form.AppField name="isActive">
 					{(field) => <field.Checkbox label="Ativo" />}
 				</form.AppField>
-			</Field.Group>
+			</FieldGroup>
 		</FormWrapper>
 	);
 }

@@ -18,7 +18,6 @@
     "**/.devcontainer",
     "**/.tanstack",
     "**/.vscode",
-    "**/.heroui-docs",
     "**/.claude",
     "**/.codex",
     "**/.github",

@@ -1,5 +1,5 @@
 import { FormWrapper } from "@/shared/components/form-wrapper";
-import { Field } from "@/shared/components/Hui";
+import { FieldGroup } from "@/shared/components/ui";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
 import { LAWYER_TYPE_VALUE } from "../../constants/values";
@@ -21,15 +21,15 @@ export const EmployeeForm = ({ id, state, onSuccess }: EmployeeFormProps) => {
 	return (
 		<form.Form form={form}>
 			<FormWrapper state={state} title={title} footer={<form.Submit />}>
-				<Field.Group>
+				<FieldGroup>
 					<form.AppField name="fullName">
 						{(field) => <field.Input label="Nome" isRequired />}
 					</form.AppField>
 					<form.AppField name="email">
 						{(field) => <field.Input label="Email" isRequired />}
 					</form.AppField>
-				</Field.Group>
-				<Field.Group className="grid-cols-2">
+				</FieldGroup>
+				<FieldGroup className="grid gap-5 sm:grid-cols-2">
 					<form.AppField
 						name="type"
 						listeners={{
@@ -67,8 +67,8 @@ export const EmployeeForm = ({ id, state, onSuccess }: EmployeeFormProps) => {
 							)
 						}
 					</form.Subscribe>
-				</Field.Group>
-				<Field.Group className="grid-cols-2">
+				</FieldGroup>
+				<FieldGroup className="grid gap-5 sm:grid-cols-2">
 					<form.AppField name="remunerationPercent">
 						{(field) => (
 							<field.Number
@@ -93,12 +93,12 @@ export const EmployeeForm = ({ id, state, onSuccess }: EmployeeFormProps) => {
 							/>
 						)}
 					</form.AppField>
-				</Field.Group>
-				<Field.Group>
+				</FieldGroup>
+				<FieldGroup>
 					<form.AppField name="isActive">
 						{(field) => <field.Checkbox label="Ativo" />}
 					</form.AppField>
-				</Field.Group>
+				</FieldGroup>
 			</FormWrapper>
 		</form.Form>
 	);

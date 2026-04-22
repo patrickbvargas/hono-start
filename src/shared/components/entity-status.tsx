@@ -1,9 +1,18 @@
 import { Badge } from "@/shared/components/ui";
 
 const STATUS_CONFIG = {
-	active: { color: "success", label: "Ativo" },
-	inactive: { color: "warning", label: "Inativo" },
-	deleted: { color: "danger", label: "Excluído" },
+	active: {
+		variant: "secondary",
+		label: "Ativo",
+	},
+	inactive: {
+		variant: "outline",
+		label: "Inativo",
+	},
+	deleted: {
+		variant: "destructive",
+		label: "Excluído",
+	},
 } as const;
 
 interface EntityStatusProps {
@@ -21,5 +30,5 @@ export const EntityStatus = ({
 			? STATUS_CONFIG.active
 			: STATUS_CONFIG.inactive;
 
-	return <Badge color={status.color}>{status.label}</Badge>;
+	return <Badge variant={status.variant}>{status.label}</Badge>;
 };

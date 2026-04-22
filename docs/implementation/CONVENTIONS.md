@@ -87,7 +87,7 @@
 ## Forbidden Drift
 
 - Do not import shadcn, Radix, Base UI, or other vendor UI primitives directly from features or routes; shared UI implementation files are the exception.
-- Do not add new imports from `src/shared/components/Hui`; it is a temporary compatibility layer only.
+- Do not add imports from removed migration compatibility layers.
 - Do not import a feature's internal files from outside that feature.
 - Do not introduce new architectural patterns when a documented house pattern already exists.
 - Do not move orchestration into route files when the feature already owns that concern.

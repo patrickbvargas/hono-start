@@ -9,8 +9,14 @@ import {
 import * as React from "react";
 import { DataTable } from "@/shared/components/data-table";
 import { EntityStatus } from "@/shared/components/entity-status";
-import { Button, Dropdown, Label } from "@/shared/components/Hui";
 import { Pagination } from "@/shared/components/pagination";
+import {
+	Button,
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/shared/components/ui";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
 import {
@@ -97,50 +103,42 @@ export const FeeTable = ({
 						).includes(fee.contractStatusValue);
 
 					return (
-						<Dropdown>
-							<Button isIconOnly size="sm" variant="ghost" aria-label="Ações">
+						<DropdownMenu>
+							<DropdownMenuTrigger
+								render={
+									<Button size="icon-sm" variant="ghost" aria-label="Ações" />
+								}
+							>
 								<EllipsisVerticalIcon size={16} />
-							</Button>
-							<Dropdown.Popover placement="bottom end">
-								<Dropdown.Menu>
-									<Dropdown.Item
-										textValue="Visualizar"
-										onPress={() => onView?.(fee.id)}
+							</DropdownMenuTrigger>
+							<DropdownMenuContent align="end">
+								<DropdownMenuItem onClick={() => onView?.(fee.id)}>
+									<EyeIcon size={16} />
+									Visualizar
+								</DropdownMenuItem>
+								{canEditFee ? (
+									<DropdownMenuItem onClick={() => onEdit?.(fee.id)}>
+										<PenLineIcon size={16} />
+										Editar
+									</DropdownMenuItem>
+								) : null}
+								{canManageLifecycle && fee.isSoftDeleted ? (
+									<DropdownMenuItem onClick={() => onRestore?.(fee.id)}>
+										<Undo2Icon size={16} />
+										Restaurar
+									</DropdownMenuItem>
+								) : null}
+								{canManageLifecycle && !fee.isSoftDeleted ? (
+									<DropdownMenuItem
+										variant="destructive"
+										onClick={() => onDelete?.(fee.id)}
 									>
-										<EyeIcon size={16} />
-										<Label>Visualizar</Label>
-									</Dropdown.Item>
-									{canEditFee ? (
-										<Dropdown.Item
-											textValue="Editar"
-											onPress={() => onEdit?.(fee.id)}
-										>
-											<PenLineIcon size={16} />
-											<Label>Editar</Label>
-										</Dropdown.Item>
-									) : null}
-									{canManageLifecycle && fee.isSoftDeleted ? (
-										<Dropdown.Item
-											textValue="Restaurar"
-											onPress={() => onRestore?.(fee.id)}
-										>
-											<Undo2Icon size={16} />
-											<Label>Restaurar</Label>
-										</Dropdown.Item>
-									) : null}
-									{canManageLifecycle && !fee.isSoftDeleted ? (
-										<Dropdown.Item
-											textValue="Excluir"
-											variant="danger"
-											onPress={() => onDelete?.(fee.id)}
-										>
-											<TrashIcon size={16} />
-											<Label>Excluir</Label>
-										</Dropdown.Item>
-									) : null}
-								</Dropdown.Menu>
-							</Dropdown.Popover>
-						</Dropdown>
+										<TrashIcon size={16} />
+										Excluir
+									</DropdownMenuItem>
+								) : null}
+							</DropdownMenuContent>
+						</DropdownMenu>
 					);
 				},
 			}),

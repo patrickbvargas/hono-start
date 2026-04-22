@@ -9,8 +9,14 @@ import {
 import * as React from "react";
 import { DataTable } from "@/shared/components/data-table";
 import { EntityStatus } from "@/shared/components/entity-status";
-import { Button, Dropdown, Label } from "@/shared/components/Hui";
 import { Pagination } from "@/shared/components/pagination";
+import {
+	Button,
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/shared/components/ui";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { QueryPaginatedReturnType } from "@/shared/types/api";
@@ -99,50 +105,42 @@ export const ContractTable = ({
 						).includes(contract.statusValue);
 
 					return (
-						<Dropdown>
-							<Button isIconOnly size="sm" variant="ghost" aria-label="Ações">
+						<DropdownMenu>
+							<DropdownMenuTrigger
+								render={
+									<Button size="icon-sm" variant="ghost" aria-label="Ações" />
+								}
+							>
 								<EllipsisVerticalIcon size={16} />
-							</Button>
-							<Dropdown.Popover placement="bottom end">
-								<Dropdown.Menu>
-									<Dropdown.Item
-										textValue="Visualizar"
-										onPress={() => onView?.(contract.id)}
+							</DropdownMenuTrigger>
+							<DropdownMenuContent align="end">
+								<DropdownMenuItem onClick={() => onView?.(contract.id)}>
+									<EyeIcon size={16} />
+									Visualizar
+								</DropdownMenuItem>
+								{canEditContract && (
+									<DropdownMenuItem onClick={() => onEdit?.(contract.id)}>
+										<PenLineIcon size={16} />
+										Editar
+									</DropdownMenuItem>
+								)}
+								{canManageLifecycle && contract.isSoftDeleted && (
+									<DropdownMenuItem onClick={() => onRestore?.(contract.id)}>
+										<Undo2Icon size={16} />
+										Restaurar
+									</DropdownMenuItem>
+								)}
+								{canManageLifecycle && !contract.isSoftDeleted && (
+									<DropdownMenuItem
+										variant="destructive"
+										onClick={() => onDelete?.(contract.id)}
 									>
-										<EyeIcon size={16} />
-										<Label>Visualizar</Label>
-									</Dropdown.Item>
-									{canEditContract && (
-										<Dropdown.Item
-											textValue="Editar"
-											onPress={() => onEdit?.(contract.id)}
-										>
-											<PenLineIcon size={16} />
-											<Label>Editar</Label>
-										</Dropdown.Item>
-									)}
-									{canManageLifecycle && contract.isSoftDeleted && (
-										<Dropdown.Item
-											textValue="Restaurar"
-											onPress={() => onRestore?.(contract.id)}
-										>
-											<Undo2Icon size={16} />
-											<Label>Restaurar</Label>
-										</Dropdown.Item>
-									)}
-									{canManageLifecycle && !contract.isSoftDeleted && (
-										<Dropdown.Item
-											textValue="Excluir"
-											variant="danger"
-											onPress={() => onDelete?.(contract.id)}
-										>
-											<TrashIcon size={16} />
-											<Label>Excluir</Label>
-										</Dropdown.Item>
-									)}
-								</Dropdown.Menu>
-							</Dropdown.Popover>
-						</Dropdown>
+										<TrashIcon size={16} />
+										Excluir
+									</DropdownMenuItem>
+								)}
+							</DropdownMenuContent>
+						</DropdownMenu>
 					);
 				},
 			}),

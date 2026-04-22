@@ -1,7 +1,14 @@
 import { AlertCircleIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { useRef, useState } from "react";
 import { FormWrapper } from "@/shared/components/form-wrapper";
-import { Button, Field, Tabs } from "@/shared/components/Hui";
+import {
+	Button,
+	FieldGroup,
+	Tabs,
+	TabsContent,
+	TabsList,
+	TabsTrigger,
+} from "@/shared/components/ui";
 import type { EntityId } from "@/shared/schemas/entity";
 import { isAdminSession, useLoggedUserSessionStore } from "@/shared/session";
 import type { OverlayState } from "@/shared/types/overlay";
@@ -182,7 +189,7 @@ function TabLabel({
 			{hasError ? (
 				<AlertCircleIcon
 					aria-label="Há erros nesta seção"
-					className="text-danger"
+					className="text-destructive"
 					size={14}
 				/>
 			) : null}
@@ -212,7 +219,7 @@ function HiddenErrorMessage({
 	}
 
 	return (
-		<p className="rounded-md border border-danger/30 bg-danger/10 px-3 py-2 text-danger text-sm">
+		<p className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-destructive text-sm">
 			Revise também: {hiddenErrorLabels.join(", ")}.
 		</p>
 	);
@@ -267,40 +274,35 @@ export const ContractForm = ({ id, state, onSuccess }: ContractFormProps) => {
 						return (
 							<Tabs
 								className="w-full"
-								selectedKey={activeTab}
-								onSelectionChange={(key) => setActiveTab(String(key))}
+								value={activeTab}
+								onValueChange={(value) => setActiveTab(String(value))}
 							>
-								<Tabs.ListContainer>
-									<Tabs.List aria-label="Seções do contrato">
-										<Tabs.Tab id={CONTRACT_FORM_TABS.data}>
-											<TabLabel hasError={tabErrors.data}>Dados</TabLabel>
-											<Tabs.Indicator />
-										</Tabs.Tab>
-										<Tabs.Tab id={CONTRACT_FORM_TABS.assignments}>
-											<TabLabel hasError={tabErrors.assignments}>
-												Colaboradores ({formState.assignmentCount})
-											</TabLabel>
-											<Tabs.Indicator />
-										</Tabs.Tab>
-										<Tabs.Tab id={CONTRACT_FORM_TABS.revenues}>
-											<TabLabel hasError={tabErrors.revenues}>
-												Receitas ({formState.revenueCount})
-											</TabLabel>
-											<Tabs.Indicator />
-										</Tabs.Tab>
-									</Tabs.List>
-								</Tabs.ListContainer>
+								<TabsList aria-label="Seções do contrato">
+									<TabsTrigger value={CONTRACT_FORM_TABS.data}>
+										<TabLabel hasError={tabErrors.data}>Dados</TabLabel>
+									</TabsTrigger>
+									<TabsTrigger value={CONTRACT_FORM_TABS.assignments}>
+										<TabLabel hasError={tabErrors.assignments}>
+											Colaboradores ({formState.assignmentCount})
+										</TabLabel>
+									</TabsTrigger>
+									<TabsTrigger value={CONTRACT_FORM_TABS.revenues}>
+										<TabLabel hasError={tabErrors.revenues}>
+											Receitas ({formState.revenueCount})
+										</TabLabel>
+									</TabsTrigger>
+								</TabsList>
 								<div className="pt-3">
 									<HiddenErrorMessage
 										activeTab={activeTab}
 										errors={tabErrors}
 									/>
 								</div>
-								<Tabs.Panel
+								<TabsContent
 									className="flex flex-col gap-2.5 pt-3"
-									id={CONTRACT_FORM_TABS.data}
+									value={CONTRACT_FORM_TABS.data}
 								>
-									<Field.Group>
+									<FieldGroup>
 										<form.AppField name="clientId">
 											{(field) => (
 												<field.Autocomplete
@@ -310,8 +312,8 @@ export const ContractForm = ({ id, state, onSuccess }: ContractFormProps) => {
 												/>
 											)}
 										</form.AppField>
-									</Field.Group>
-									<Field.Group className="grid-cols-2">
+									</FieldGroup>
+									<FieldGroup className="grid gap-5 sm:grid-cols-2">
 										<form.AppField name="processNumber">
 											{(field) => <field.Input label="Processo" isRequired />}
 										</form.AppField>
@@ -345,13 +347,13 @@ export const ContractForm = ({ id, state, onSuccess }: ContractFormProps) => {
 												/>
 											)}
 										</form.AppField>
-									</Field.Group>
-									<Field.Group>
+									</FieldGroup>
+									<FieldGroup>
 										<form.AppField name="notes">
 											{(field) => <field.Textarea label="Observações" />}
 										</form.AppField>
-									</Field.Group>
-									<Field.Group className="grid-cols-2">
+									</FieldGroup>
+									<FieldGroup className="grid gap-5 sm:grid-cols-2">
 										<form.AppField name="isActive">
 											{(field) => <field.Checkbox label="Ativo" />}
 										</form.AppField>
@@ -362,23 +364,24 @@ export const ContractForm = ({ id, state, onSuccess }: ContractFormProps) => {
 												)}
 											</form.AppField>
 										) : null}
-									</Field.Group>
-								</Tabs.Panel>
-								<Tabs.Panel
+									</FieldGroup>
+								</TabsContent>
+								<TabsContent
 									className="flex flex-col gap-2.5 pt-3"
-									id={CONTRACT_FORM_TABS.assignments}
+									value={CONTRACT_FORM_TABS.assignments}
 								>
 									<form.AppField name="assignments" mode="array">
 										{(subField) => (
-											<Field.Group>
+											<FieldGroup>
 												<Button
+													type="button"
 													size="sm"
-													onPress={() =>
+													onClick={() =>
 														subField.pushValue(
 															defaultContractAssignmentValues(),
 														)
 													}
-													isDisabled={
+													disabled={
 														subField.state.value.length >=
 														CONTRACT_MAX_EMPLOYEES
 													}
@@ -387,9 +390,9 @@ export const ContractForm = ({ id, state, onSuccess }: ContractFormProps) => {
 													Colaborador
 												</Button>
 												{subField.state.value.map((assignment, i) => (
-													<Field.Group
+													<FieldGroup
 														key={getRowKey(assignment)}
-														className="grid-cols-[repeat(2,1fr)_auto]"
+														className="grid gap-5 sm:grid-cols-[repeat(2,1fr)_auto]"
 													>
 														<form.AppField
 															name={`assignments[${i}].employeeId`}
@@ -414,32 +417,34 @@ export const ContractForm = ({ id, state, onSuccess }: ContractFormProps) => {
 															)}
 														</form.AppField>
 														<Button
-															isIconOnly
-															variant="danger-soft"
+															type="button"
+															size="icon-sm"
+															variant="destructive"
 															className="place-self-end"
-															onPress={() => subField.removeValue(i)}
+															onClick={() => subField.removeValue(i)}
 														>
 															<Trash2Icon size={16} />
 														</Button>
-													</Field.Group>
+													</FieldGroup>
 												))}
-											</Field.Group>
+											</FieldGroup>
 										)}
 									</form.AppField>
-								</Tabs.Panel>
-								<Tabs.Panel
+								</TabsContent>
+								<TabsContent
 									className="flex flex-col gap-2.5 pt-3"
-									id={CONTRACT_FORM_TABS.revenues}
+									value={CONTRACT_FORM_TABS.revenues}
 								>
 									<form.AppField name="revenues" mode="array">
 										{(subField) => (
-											<Field.Group>
+											<FieldGroup>
 												<Button
+													type="button"
 													size="sm"
-													onPress={() =>
+													onClick={() =>
 														subField.pushValue(defaultContractRevenueValues())
 													}
-													isDisabled={
+													disabled={
 														subField.state.value.length >= CONTRACT_MAX_REVENUES
 													}
 												>
@@ -447,8 +452,8 @@ export const ContractForm = ({ id, state, onSuccess }: ContractFormProps) => {
 													Receita
 												</Button>
 												{subField.state.value.map((revenue, i) => (
-													<Field.Group key={getRowKey(revenue)}>
-														<Field.Group className="grid-cols-[1fr_1fr_auto] items-end">
+													<FieldGroup key={getRowKey(revenue)}>
+														<FieldGroup className="grid items-end gap-5 sm:grid-cols-[1fr_1fr_auto]">
 															<form.AppField name={`revenues[${i}].type`}>
 																{(field) => (
 																	<field.Autocomplete
@@ -469,8 +474,8 @@ export const ContractForm = ({ id, state, onSuccess }: ContractFormProps) => {
 																	/>
 																)}
 															</form.AppField>
-														</Field.Group>
-														<Field.Group className="grid-cols-3">
+														</FieldGroup>
+														<FieldGroup className="grid gap-5 sm:grid-cols-3">
 															<form.AppField name={`revenues[${i}].totalValue`}>
 																{(field) => (
 																	<field.Number
@@ -512,26 +517,27 @@ export const ContractForm = ({ id, state, onSuccess }: ContractFormProps) => {
 																	/>
 																)}
 															</form.AppField>
-														</Field.Group>
+														</FieldGroup>
 														<form.AppField name={`revenues[${i}].isActive`}>
 															{(field) => (
 																<field.Checkbox label="Receita ativa" />
 															)}
 														</form.AppField>
 														<Button
-															isIconOnly
-															variant="danger-soft"
+															type="button"
+															size="icon-sm"
+															variant="destructive"
 															className="place-self-end"
-															onPress={() => subField.removeValue(i)}
+															onClick={() => subField.removeValue(i)}
 														>
 															<Trash2Icon size={16} />
 														</Button>
-													</Field.Group>
+													</FieldGroup>
 												))}
-											</Field.Group>
+											</FieldGroup>
 										)}
 									</form.AppField>
-								</Tabs.Panel>
+								</TabsContent>
 							</Tabs>
 						);
 					}}

@@ -1,5 +1,5 @@
 import { FilterWrapper } from "@/shared/components/filter-wrapper";
-import { Separator } from "@/shared/components/Hui";
+import { Separator } from "@/shared/components/ui";
 import {
 	ENTITY_ACTIVE_FILTER_OPTIONS,
 	ENTITY_DELETED_FILTER_OPTIONS,

@@ -7,7 +7,14 @@ import {
 	TrendingUpIcon,
 	UsersIcon,
 } from "lucide-react";
-import { Card, Chip } from "@/shared/components/Hui";
+import {
+	Badge,
+	Card,
+	CardContent,
+	CardHeader,
+	CardTitle,
+} from "@/shared/components/ui";
+import { cn } from "@/shared/lib/utils";
 import type { DashboardSummary } from "../schemas/model";
 
 interface DashboardProps {
@@ -23,9 +30,16 @@ const metricIcons = [
 
 const toneClassNames = {
 	default: "text-foreground",
-	success: "text-success",
-	warning: "text-warning",
-	danger: "text-danger",
+	success: "text-emerald-600 dark:text-emerald-400",
+	warning: "text-amber-600 dark:text-amber-400",
+	danger: "text-destructive",
+};
+
+const badgeToneClassNames = {
+	default: "bg-secondary text-secondary-foreground",
+	success: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
+	warning: "bg-amber-500/10 text-amber-700 dark:text-amber-300",
+	danger: "bg-destructive/10 text-destructive",
 };
 
 function formatChange(value: number) {
@@ -56,12 +70,12 @@ function DashboardBreakdown({
 }) {
 	return (
 		<Card className="min-h-72">
-			<Card.Header>
-				<Card.Title>{title}</Card.Title>
-			</Card.Header>
-			<Card.Content className="space-y-4">
+			<CardHeader>
+				<CardTitle>{title}</CardTitle>
+			</CardHeader>
+			<CardContent className="space-y-4">
 				{items.length === 0 ? (
-					<p className="text-sm text-muted">{emptyLabel}</p>
+					<p className="text-sm text-muted-foreground">{emptyLabel}</p>
 				) : (
 					items.map((item) => (
 						<div className="space-y-2" key={item.value}>
@@ -69,23 +83,23 @@ function DashboardBreakdown({
 								<span className="min-w-0 truncate font-medium">
 									{item.label}
 								</span>
-								<span className="shrink-0 text-muted">
+								<span className="shrink-0 text-muted-foreground">
 									{item.formattedTotal}
 								</span>
 							</div>
-							<div className="h-2 overflow-hidden rounded-full bg-surface-tertiary">
+							<div className="h-2 overflow-hidden rounded-full bg-muted">
 								<div
 									className="h-full rounded-full bg-accent"
 									style={{ width: `${Math.max(item.percentage, 2)}%` }}
 								/>
 							</div>
-							<p className="text-xs text-muted">
+							<p className="text-xs text-muted-foreground">
 								{item.percentage.toFixed(0)}% da receita recebida
 							</p>
 						</div>
 					))
 				)}
-			</Card.Content>
+			</CardContent>
 		</Card>
 	);
 }
@@ -96,23 +110,25 @@ export function Dashboard({ data }: DashboardProps) {
 			<div className="flex flex-col gap-4">
 				<div className="flex flex-wrap items-center justify-between gap-3">
 					<div>
-						<p className="text-sm text-muted">
+						<p className="text-sm text-muted-foreground">
 							Resumo operacional e financeiro
 						</p>
 						<h2 className="text-2xl font-semibold">Dashboard</h2>
 					</div>
-					<Chip color={data.isAdmin ? "accent" : "default"} variant="soft">
+					<Badge variant={data.isAdmin ? "default" : "secondary"}>
 						{data.scopeLabel}
-					</Chip>
+					</Badge>
 				</div>
 
 				<div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
 					{data.metrics.map((metric, index) => (
 						<Card key={metric.label}>
-							<Card.Content className="flex min-h-36 flex-col justify-between gap-4">
+							<CardContent className="flex min-h-36 flex-col justify-between gap-4">
 								<div className="flex items-start justify-between gap-3">
 									<div>
-										<p className="text-sm text-muted">{metric.label}</p>
+										<p className="text-sm text-muted-foreground">
+											{metric.label}
+										</p>
 										<p className="mt-2 text-2xl font-semibold">
 											{metric.formattedValue}
 										</p>
@@ -121,8 +137,10 @@ export function Dashboard({ data }: DashboardProps) {
 										{metricIcons[index]}
 									</span>
 								</div>
-								<p className="text-sm text-muted">{metric.description}</p>
-							</Card.Content>
+								<p className="text-sm text-muted-foreground">
+									{metric.description}
+								</p>
+							</CardContent>
 						</Card>
 					))}
 				</div>
@@ -135,23 +153,28 @@ export function Dashboard({ data }: DashboardProps) {
 
 						return (
 							<Card key={comparison.label}>
-								<Card.Content className="flex min-h-40 flex-col justify-between gap-4">
+								<CardContent className="flex min-h-40 flex-col justify-between gap-4">
 									<div className="flex items-start justify-between gap-3">
 										<div>
-											<p className="text-sm text-muted">{comparison.label}</p>
+											<p className="text-sm text-muted-foreground">
+												{comparison.label}
+											</p>
 											<p className="mt-2 text-3xl font-semibold">
 												{comparison.formattedCurrentValue}
 											</p>
 										</div>
-										<Chip color={tone} variant="soft">
+										<Badge
+											variant="secondary"
+											className={cn(badgeToneClassNames[tone])}
+										>
 											<TrendIcon className="size-3.5" />
 											{formatChange(comparison.changePercent)}
-										</Chip>
+										</Badge>
 									</div>
-									<p className="text-sm text-muted">
+									<p className="text-sm text-muted-foreground">
 										Mês anterior: {comparison.formattedPreviousValue}
 									</p>
-								</Card.Content>
+								</CardContent>
 							</Card>
 						);
 					})}
@@ -169,29 +192,31 @@ export function Dashboard({ data }: DashboardProps) {
 						emptyLabel="Nenhuma receita recebida por tipo."
 					/>
 					<Card className="min-h-72">
-						<Card.Header>
-							<Card.Title>Atividade recente</Card.Title>
-						</Card.Header>
-						<Card.Content className="space-y-3">
+						<CardHeader>
+							<CardTitle>Atividade recente</CardTitle>
+						</CardHeader>
+						<CardContent className="space-y-3">
 							{data.recentActivity.length === 0 ? (
-								<p className="text-sm text-muted">Nenhum evento recente.</p>
+								<p className="text-sm text-muted-foreground">
+									Nenhum evento recente.
+								</p>
 							) : (
 								data.recentActivity.map((activity) => (
 									<div
 										className="flex items-start gap-3 rounded-md border border-border p-3"
 										key={activity.id}
 									>
-										<span className="mt-0.5 rounded-md bg-surface-tertiary p-2 text-muted">
+										<span className="mt-0.5 rounded-md bg-muted p-2 text-muted-foreground">
 											<ActivityIcon className="size-4" />
 										</span>
 										<div className="min-w-0 flex-1">
 											<div className="flex items-start justify-between gap-3">
 												<p className="font-medium">{activity.label}</p>
-												<span className="shrink-0 text-xs text-muted">
+												<span className="shrink-0 text-xs text-muted-foreground">
 													{activity.formattedDate}
 												</span>
 											</div>
-											<p className="truncate text-sm text-muted">
+											<p className="truncate text-sm text-muted-foreground">
 												{activity.description}
 											</p>
 											{activity.formattedAmount ? (
@@ -203,11 +228,11 @@ export function Dashboard({ data }: DashboardProps) {
 									</div>
 								))
 							)}
-						</Card.Content>
+						</CardContent>
 					</Card>
 				</div>
 
-				<div className="flex items-center gap-2 text-sm text-muted">
+				<div className="flex items-center gap-2 text-sm text-muted-foreground">
 					<UsersIcon className="size-4" />
 					<span>
 						Dados calculados conforme escopo da sessão e registros ativos.

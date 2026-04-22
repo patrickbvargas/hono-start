@@ -1,5 +1,5 @@
 import { FormWrapper } from "@/shared/components/form-wrapper";
-import { Field } from "@/shared/components/Hui";
+import { FieldGroup } from "@/shared/components/ui";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
 import { useClientForm } from "../../hooks/use-form";
@@ -33,7 +33,7 @@ export const ClientForm = ({ id, state, onSuccess }: ClientFormProps) => {
 
 						return (
 							<>
-								<Field.Group className="grid-cols-2">
+								<FieldGroup className="grid gap-5 sm:grid-cols-2">
 									<form.AppField name="type">
 										{(field) => (
 											<field.Autocomplete
@@ -58,25 +58,25 @@ export const ClientForm = ({ id, state, onSuccess }: ClientFormProps) => {
 											/>
 										)}
 									</form.AppField>
-								</Field.Group>
-								<Field.Group>
+								</FieldGroup>
+								<FieldGroup>
 									<form.AppField name="fullName">
 										{(field) => <field.Input label={nameLabel} isRequired />}
 									</form.AppField>
-								</Field.Group>
-								<Field.Group className="grid-cols-2">
+								</FieldGroup>
+								<FieldGroup className="grid gap-5 sm:grid-cols-2">
 									<form.AppField name="email">
 										{(field) => <field.Input label="Email" type="email" />}
 									</form.AppField>
 									<form.AppField name="phone">
 										{(field) => <field.Input label="Telefone" />}
 									</form.AppField>
-								</Field.Group>
-								<Field.Group>
+								</FieldGroup>
+								<FieldGroup>
 									<form.AppField name="isActive">
 										{(field) => <field.Checkbox label="Ativo" />}
 									</form.AppField>
-								</Field.Group>
+								</FieldGroup>
 							</>
 						);
 					}}

@@ -1,5 +1,5 @@
 import { FormWrapper } from "@/shared/components/form-wrapper";
-import { Field } from "@/shared/components/Hui";
+import { FieldGroup } from "@/shared/components/ui";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
 import { useRemunerationForm } from "../../hooks/use-form";
@@ -27,7 +27,7 @@ export const RemunerationForm = ({
 				title="Editar remuneração"
 				footer={<form.Submit />}
 			>
-				<Field.Group className="grid-cols-2">
+				<FieldGroup className="grid gap-5 sm:grid-cols-2">
 					<form.AppField name="amount">
 						{(field) => (
 							<field.Number
@@ -53,7 +53,7 @@ export const RemunerationForm = ({
 							/>
 						)}
 					</form.AppField>
-				</Field.Group>
+				</FieldGroup>
 			</FormWrapper>
 		</form.Form>
 	);
