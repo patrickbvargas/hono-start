@@ -1,5 +1,5 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { ConfirmDialog } from "@/shared/components/confirm-dialog";
+import { EntityDeleteConfirm } from "@/shared/components/entity-confirmation";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
 import { getContractByIdQueryOptions } from "../../api/queries";
@@ -20,12 +20,10 @@ export const ContractDelete = ({
 	const { handleConfirm, isPending } = useContractDelete({ onSuccess });
 
 	return (
-		<ConfirmDialog
+		<EntityDeleteConfirm
 			title="Excluir contrato"
 			description={`Tem certeza que deseja excluir o contrato ${data.processNumber}?`}
 			onConfirm={() => handleConfirm(id)}
-			confirmButtonLabel="Excluir"
-			variant="destructive"
 			isPending={isPending}
 			state={state}
 		/>

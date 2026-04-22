@@ -1,4 +1,4 @@
-import { ConfirmDialog } from "@/shared/components/confirm-dialog";
+import { EntityDeleteConfirm } from "@/shared/components/entity-confirmation";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
 import { useFeeDelete } from "../../hooks/use-delete";
@@ -15,12 +15,10 @@ export const FeeDelete = ({ id, state, onSuccess }: FeeDeleteProps) => {
 	});
 
 	return (
-		<ConfirmDialog
+		<EntityDeleteConfirm
 			title="Excluir honorário"
 			description="Tem certeza que deseja excluir?"
 			onConfirm={() => handleConfirm(id)}
-			confirmButtonLabel="Excluir"
-			variant="destructive"
 			isPending={isPending}
 			state={state}
 		/>

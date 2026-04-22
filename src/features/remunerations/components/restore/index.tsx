@@ -1,4 +1,4 @@
-import { ConfirmDialog } from "@/shared/components/confirm-dialog";
+import { EntityRestoreConfirm } from "@/shared/components/entity-confirmation";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
 import { useRemunerationRestore } from "../../hooks/use-restore";
@@ -19,11 +19,10 @@ export const RemunerationRestore = ({
 	});
 
 	return (
-		<ConfirmDialog
+		<EntityRestoreConfirm
 			title="Restaurar remuneração"
 			description="Tem certeza que deseja restaurar?"
 			onConfirm={() => handleConfirm(id)}
-			confirmButtonLabel="Restaurar"
 			isPending={isPending}
 			state={state}
 		/>

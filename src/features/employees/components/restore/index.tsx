@@ -1,5 +1,5 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { ConfirmDialog } from "@/shared/components/confirm-dialog";
+import { EntityRestoreConfirm } from "@/shared/components/entity-confirmation";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
 import { getEmployeeByIdQueryOptions } from "../../api/queries";
@@ -20,11 +20,10 @@ export const EmployeeRestore = ({
 	const { handleConfirm, isPending } = useEmployeeRestore({ onSuccess });
 
 	return (
-		<ConfirmDialog
+		<EntityRestoreConfirm
 			title="Restaurar funcionário"
 			description={`Tem certeza que deseja restaurar ${data.fullName}?`}
 			onConfirm={() => handleConfirm(id)}
-			confirmButtonLabel="Restaurar"
 			isPending={isPending}
 			state={state}
 		/>
