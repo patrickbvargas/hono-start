@@ -1,22 +1,9 @@
 import { createColumnHelper } from "@tanstack/react-table";
-import {
-	EllipsisVerticalIcon,
-	EyeIcon,
-	PenLineIcon,
-	TrashIcon,
-	Undo2Icon,
-} from "lucide-react";
 import * as React from "react";
 import { DataTable } from "@/shared/components/data-table";
+import { EntityActions } from "@/shared/components/entity-actions";
 import { EntityStatus } from "@/shared/components/entity-status";
 import { Pagination } from "@/shared/components/pagination";
-import {
-	Button,
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from "@/shared/components/ui";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { QueryPaginatedReturnType } from "@/shared/types/api";
 import { CLIENT_ALLOWED_SORT_COLUMNS } from "../../constants/sorting";
@@ -81,42 +68,15 @@ export const ClientTable = ({
 					const client = row.original;
 
 					return (
-						<DropdownMenu>
-							<DropdownMenuTrigger
-								render={
-									<Button size="icon-sm" variant="ghost" aria-label="Ações" />
-								}
-							>
-								<EllipsisVerticalIcon size={16} />
-							</DropdownMenuTrigger>
-							<DropdownMenuContent align="end">
-								<DropdownMenuItem onClick={() => onView?.(client.id)}>
-									<EyeIcon size={16} />
-									Visualizar
-								</DropdownMenuItem>
-								{!client.isSoftDeleted && (
-									<DropdownMenuItem onClick={() => onEdit?.(client.id)}>
-										<PenLineIcon size={16} />
-										Editar
-									</DropdownMenuItem>
-								)}
-								{canManageLifecycle && client.isSoftDeleted && (
-									<DropdownMenuItem onClick={() => onRestore?.(client.id)}>
-										<Undo2Icon size={16} />
-										Restaurar
-									</DropdownMenuItem>
-								)}
-								{canManageLifecycle && !client.isSoftDeleted && (
-									<DropdownMenuItem
-										variant="destructive"
-										onClick={() => onDelete?.(client.id)}
-									>
-										<TrashIcon size={16} />
-										Excluir
-									</DropdownMenuItem>
-								)}
-							</DropdownMenuContent>
-						</DropdownMenu>
+						<EntityActions
+							canEdit={!client.isSoftDeleted}
+							canRestore={canManageLifecycle && client.isSoftDeleted}
+							canDelete={canManageLifecycle && !client.isSoftDeleted}
+							onView={() => onView?.(client.id)}
+							onEdit={() => onEdit?.(client.id)}
+							onRestore={() => onRestore?.(client.id)}
+							onDelete={() => onDelete?.(client.id)}
+						/>
 					);
 				},
 			}),

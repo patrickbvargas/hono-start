@@ -1,14 +1,8 @@
 import { createColumnHelper } from "@tanstack/react-table";
-import {
-	EllipsisVerticalIcon,
-	EyeIcon,
-	FileDownIcon,
-	PenLineIcon,
-	TrashIcon,
-	Undo2Icon,
-} from "lucide-react";
+import { FileDownIcon } from "lucide-react";
 import * as React from "react";
 import { DataTable } from "@/shared/components/data-table";
+import { EntityActions } from "@/shared/components/entity-actions";
 import { EntityStatus } from "@/shared/components/entity-status";
 import { Pagination } from "@/shared/components/pagination";
 import {
@@ -99,42 +93,15 @@ export const RemunerationTable = ({
 					const remuneration = row.original;
 
 					return (
-						<DropdownMenu>
-							<DropdownMenuTrigger
-								render={
-									<Button size="icon-sm" variant="ghost" aria-label="Ações" />
-								}
-							>
-								<EllipsisVerticalIcon size={16} />
-							</DropdownMenuTrigger>
-							<DropdownMenuContent align="end">
-								<DropdownMenuItem onClick={() => onView?.(remuneration)}>
-									<EyeIcon size={16} />
-									Visualizar
-								</DropdownMenuItem>
-								{canManageLifecycle && !remuneration.isSoftDeleted ? (
-									<DropdownMenuItem onClick={() => onEdit?.(remuneration)}>
-										<PenLineIcon size={16} />
-										Editar
-									</DropdownMenuItem>
-								) : null}
-								{canManageLifecycle && remuneration.isSoftDeleted ? (
-									<DropdownMenuItem onClick={() => onRestore?.(remuneration)}>
-										<Undo2Icon size={16} />
-										Restaurar
-									</DropdownMenuItem>
-								) : null}
-								{canManageLifecycle && !remuneration.isSoftDeleted ? (
-									<DropdownMenuItem
-										variant="destructive"
-										onClick={() => onDelete?.(remuneration)}
-									>
-										<TrashIcon size={16} />
-										Excluir
-									</DropdownMenuItem>
-								) : null}
-							</DropdownMenuContent>
-						</DropdownMenu>
+						<EntityActions
+							canEdit={canManageLifecycle && !remuneration.isSoftDeleted}
+							canRestore={canManageLifecycle && remuneration.isSoftDeleted}
+							canDelete={canManageLifecycle && !remuneration.isSoftDeleted}
+							onView={() => onView?.(remuneration)}
+							onEdit={() => onEdit?.(remuneration)}
+							onRestore={() => onRestore?.(remuneration)}
+							onDelete={() => onDelete?.(remuneration)}
+						/>
 					);
 				},
 			}),

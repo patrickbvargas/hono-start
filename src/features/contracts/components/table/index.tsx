@@ -1,22 +1,9 @@
 import { createColumnHelper } from "@tanstack/react-table";
-import {
-	EllipsisVerticalIcon,
-	EyeIcon,
-	PenLineIcon,
-	TrashIcon,
-	Undo2Icon,
-} from "lucide-react";
 import * as React from "react";
 import { DataTable } from "@/shared/components/data-table";
+import { EntityActions } from "@/shared/components/entity-actions";
 import { EntityStatus } from "@/shared/components/entity-status";
 import { Pagination } from "@/shared/components/pagination";
-import {
-	Button,
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from "@/shared/components/ui";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { QueryPaginatedReturnType } from "@/shared/types/api";
@@ -105,42 +92,15 @@ export const ContractTable = ({
 						).includes(contract.statusValue);
 
 					return (
-						<DropdownMenu>
-							<DropdownMenuTrigger
-								render={
-									<Button size="icon-sm" variant="ghost" aria-label="Ações" />
-								}
-							>
-								<EllipsisVerticalIcon size={16} />
-							</DropdownMenuTrigger>
-							<DropdownMenuContent align="end">
-								<DropdownMenuItem onClick={() => onView?.(contract.id)}>
-									<EyeIcon size={16} />
-									Visualizar
-								</DropdownMenuItem>
-								{canEditContract && (
-									<DropdownMenuItem onClick={() => onEdit?.(contract.id)}>
-										<PenLineIcon size={16} />
-										Editar
-									</DropdownMenuItem>
-								)}
-								{canManageLifecycle && contract.isSoftDeleted && (
-									<DropdownMenuItem onClick={() => onRestore?.(contract.id)}>
-										<Undo2Icon size={16} />
-										Restaurar
-									</DropdownMenuItem>
-								)}
-								{canManageLifecycle && !contract.isSoftDeleted && (
-									<DropdownMenuItem
-										variant="destructive"
-										onClick={() => onDelete?.(contract.id)}
-									>
-										<TrashIcon size={16} />
-										Excluir
-									</DropdownMenuItem>
-								)}
-							</DropdownMenuContent>
-						</DropdownMenu>
+						<EntityActions
+							canEdit={canEditContract}
+							canRestore={canManageLifecycle && contract.isSoftDeleted}
+							canDelete={canManageLifecycle && !contract.isSoftDeleted}
+							onView={() => onView?.(contract.id)}
+							onEdit={() => onEdit?.(contract.id)}
+							onRestore={() => onRestore?.(contract.id)}
+							onDelete={() => onDelete?.(contract.id)}
+						/>
 					);
 				},
 			}),
