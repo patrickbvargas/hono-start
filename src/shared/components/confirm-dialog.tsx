@@ -1,5 +1,16 @@
+import type { VariantProps } from "class-variance-authority";
 import { CheckIcon, XIcon } from "lucide-react";
-import { AlertDialog, Button, type ButtonProps } from "@/shared/components/Hui";
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+	type buttonVariants,
+} from "@/shared/components/ui";
 import type { OverlayState } from "@/shared/types/overlay";
 
 export interface ConfirmDialogProps {
@@ -12,10 +23,9 @@ export interface ConfirmDialogProps {
 	showIcons?: boolean;
 	confirmButtonLabel?: string;
 	cancelButtonLabel?: string;
-	variant?: ButtonProps["variant"];
+	variant?: VariantProps<typeof buttonVariants>["variant"];
 }
 
-// TODO: refatorar para shadcn
 export const ConfirmDialog = ({
 	state,
 	onConfirm,
@@ -24,41 +34,32 @@ export const ConfirmDialog = ({
 	title = "Confirmação",
 	confirmButtonLabel = "Confirmar",
 	cancelButtonLabel = "Cancelar",
-	variant = "primary",
+	variant = "default",
 	showIcons = false,
 	hideTitle = false,
 }: ConfirmDialogProps) => {
 	return (
-		<AlertDialog isOpen={state.isOpen} onOpenChange={state.onOpenChange}>
-			<AlertDialog.Backdrop>
-				<AlertDialog.Container>
-					<AlertDialog.Dialog>
-						<AlertDialog.CloseTrigger />
-						{!hideTitle && <AlertDialog.Header>{title}</AlertDialog.Header>}
-						<AlertDialog.Body>
-							<p>{description}</p>
-						</AlertDialog.Body>
-						<AlertDialog.Footer>
-							<Button
-								variant={variant}
-								onPress={onConfirm}
-								isPending={isPending}
-							>
-								{showIcons && <CheckIcon size={20} />}
-								{confirmButtonLabel}
-							</Button>
-							<Button
-								variant="tertiary"
-								onPress={state.close}
-								isPending={isPending}
-							>
-								{showIcons && <XIcon size={20} />}
-								{cancelButtonLabel}
-							</Button>
-						</AlertDialog.Footer>
-					</AlertDialog.Dialog>
-				</AlertDialog.Container>
-			</AlertDialog.Backdrop>
+		<AlertDialog open={state.isOpen} onOpenChange={state.onOpenChange}>
+			<AlertDialogContent>
+				<AlertDialogHeader>
+					{!hideTitle && <AlertDialogTitle>{title}</AlertDialogTitle>}
+					<AlertDialogDescription>{description}</AlertDialogDescription>
+				</AlertDialogHeader>
+				<AlertDialogFooter>
+					<AlertDialogCancel disabled={isPending}>
+						{showIcons && <XIcon size={20} />}
+						{cancelButtonLabel}
+					</AlertDialogCancel>
+					<AlertDialogAction
+						variant={variant}
+						onClick={onConfirm}
+						disabled={isPending}
+					>
+						{showIcons && <CheckIcon size={20} />}
+						{confirmButtonLabel}
+					</AlertDialogAction>
+				</AlertDialogFooter>
+			</AlertDialogContent>
 		</AlertDialog>
 	);
 };

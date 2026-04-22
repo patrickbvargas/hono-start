@@ -1,19 +1,26 @@
 import { Settings2Icon } from "lucide-react";
-import { Button, Popover, type PopoverProps } from "@/shared/components/Hui";
+import type * as React from "react";
+import {
+	Button,
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "@/shared/components/ui";
 
-// TODO: refatorar para shadcn
-export const FilterWrapper = ({ children, ...props }: PopoverProps) => {
+interface FilterWrapperProps extends React.ComponentProps<typeof Popover> {
+	children: React.ReactNode;
+}
+
+export const FilterWrapper = ({ children, ...props }: FilterWrapperProps) => {
 	return (
 		<Popover {...props}>
-			<Popover.Trigger>
-				<Button variant="tertiary">
-					<Settings2Icon size={16} />
-					Filtros
-				</Button>
-			</Popover.Trigger>
-			<Popover.Content placement="bottom end">
-				<Popover.Dialog className="space-y-3 p-4">{children}</Popover.Dialog>
-			</Popover.Content>
+			<PopoverTrigger render={<Button variant="ghost" />}>
+				<Settings2Icon size={16} />
+				Filtros
+			</PopoverTrigger>
+			<PopoverContent align="end" side="bottom" className="space-y-3 p-4">
+				{children}
+			</PopoverContent>
 		</Popover>
 	);
 };

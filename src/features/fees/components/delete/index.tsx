@@ -20,7 +20,7 @@ export const FeeDelete = ({ id, state, onSuccess }: FeeDeleteProps) => {
 			description="Tem certeza que deseja excluir?"
 			onConfirm={() => handleConfirm(id)}
 			confirmButtonLabel="Excluir"
-			variant="danger"
+			variant="destructive"
 			isPending={isPending}
 			state={state}
 		/>

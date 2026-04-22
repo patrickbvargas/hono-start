@@ -25,7 +25,7 @@ export const ContractDelete = ({
 			description={`Tem certeza que deseja excluir o contrato ${data.processNumber}?`}
 			onConfirm={() => handleConfirm(id)}
 			confirmButtonLabel="Excluir"
-			variant="danger"
+			variant="destructive"
 			isPending={isPending}
 			state={state}
 		/>

@@ -25,7 +25,7 @@ export const EmployeeDelete = ({
 			description={`Tem certeza que deseja excluir ${data.fullName}?`}
 			onConfirm={() => handleConfirm(id)}
 			confirmButtonLabel="Excluir"
-			variant="danger"
+			variant="destructive"
 			isPending={isPending}
 			state={state}
 		/>

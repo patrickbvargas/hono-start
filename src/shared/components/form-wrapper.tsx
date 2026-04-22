@@ -1,13 +1,22 @@
-import { Modal, type ModalProps } from "@/shared/components/Hui";
+import type * as React from "react";
+import {
+	Dialog,
+	DialogBody,
+	DialogContent,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from "@/shared/components/ui";
 import type { OverlayState } from "@/shared/types/overlay";
 
-interface FormWrapperProps extends Omit<ModalProps, "state"> {
+interface FormWrapperProps
+	extends Omit<React.ComponentProps<typeof Dialog>, "children"> {
 	title: string;
 	state: OverlayState;
 	footer?: React.ReactNode;
+	children: React.ReactNode;
 }
 
-// TODO: refatorar para shadcn
 export const FormWrapper = ({
 	title,
 	state,
@@ -16,21 +25,16 @@ export const FormWrapper = ({
 	...props
 }: FormWrapperProps) => {
 	return (
-		<Modal {...props}>
-			<Modal.Backdrop isOpen={state.isOpen} onOpenChange={state.onOpenChange}>
-				<Modal.Container size="lg">
-					<Modal.Dialog>
-						<Modal.CloseTrigger />
-						<Modal.Header>
-							<Modal.Heading>{title}</Modal.Heading>
-						</Modal.Header>
-						<Modal.Body className="flex flex-col gap-2.5 overflow-hidden">
-							{children}
-						</Modal.Body>
-						{footer && <Modal.Footer>{footer}</Modal.Footer>}
-					</Modal.Dialog>
-				</Modal.Container>
-			</Modal.Backdrop>
-		</Modal>
+		<Dialog open={state.isOpen} onOpenChange={state.onOpenChange} {...props}>
+			<DialogContent className="sm:max-w-lg">
+				<DialogHeader>
+					<DialogTitle>{title}</DialogTitle>
+				</DialogHeader>
+				<DialogBody className="flex flex-col gap-2.5 overflow-hidden">
+					{children}
+				</DialogBody>
+				{footer && <DialogFooter>{footer}</DialogFooter>}
+			</DialogContent>
+		</Dialog>
 	);
 };

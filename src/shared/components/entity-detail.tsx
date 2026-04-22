@@ -2,9 +2,13 @@ import type * as React from "react";
 import {
 	Button,
 	Drawer,
-	type DrawerProps,
+	DrawerClose,
+	DrawerContent,
+	DrawerFooter,
+	DrawerHeader,
+	DrawerTitle,
 	Separator,
-} from "@/shared/components/Hui";
+} from "@/shared/components/ui";
 import { cn } from "@/shared/lib/utils";
 import type { OverlayState } from "@/shared/types/overlay";
 
@@ -30,33 +34,35 @@ export interface DetailFieldItem {
 	classNames?: FieldClassNames;
 }
 
-interface WrapperProps extends Omit<DrawerProps, "state"> {
+interface WrapperProps {
 	title: string;
 	state: OverlayState;
+	children: React.ReactNode;
 }
 
-// TODO: refatorar para shadcn
 export const Wrapper = ({ title, state, children, ...props }: WrapperProps) => {
 	return (
-		<Drawer {...props}>
-			<Drawer.Backdrop isOpen={state.isOpen} onOpenChange={state.onOpenChange}>
-				<Drawer.Content placement="right">
-					<Drawer.Dialog>
-						<Drawer.CloseTrigger />
-						<Drawer.Header>
-							<Drawer.Heading>{title}</Drawer.Heading>
-						</Drawer.Header>
-						<Drawer.Body className="flex flex-col gap-4">
-							{children}
-						</Drawer.Body>
-						<Drawer.Footer>
-							<Button slot="close" variant="outline" className="w-full">
-								Fechar
-							</Button>
-						</Drawer.Footer>
-					</Drawer.Dialog>
-				</Drawer.Content>
-			</Drawer.Backdrop>
+		<Drawer
+			direction="right"
+			open={state.isOpen}
+			onOpenChange={state.onOpenChange}
+			{...props}
+		>
+			<DrawerContent>
+				<DrawerHeader>
+					<DrawerTitle>{title}</DrawerTitle>
+				</DrawerHeader>
+				<div className="flex flex-col gap-4 overflow-y-auto px-4">
+					{children}
+				</div>
+				<DrawerFooter>
+					<DrawerClose asChild>
+						<Button variant="outline" className="w-full">
+							Fechar
+						</Button>
+					</DrawerClose>
+				</DrawerFooter>
+			</DrawerContent>
 		</Drawer>
 	);
 };
