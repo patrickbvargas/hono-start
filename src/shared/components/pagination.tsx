@@ -1,18 +1,15 @@
-import { createLink } from "@tanstack/react-router";
+import { cn } from "@/shared/lib/utils";
+import { usePagination } from "../hooks/use-pagination";
 import {
 	PaginationContent,
+	PaginationFirst,
 	PaginationItem,
+	PaginationLast,
 	PaginationLink,
 	PaginationNext,
 	PaginationPrevious,
 	PaginationRoot,
-} from "@/shared/components/ui";
-import { usePagination } from "@/shared/hooks/use-pagination";
-import { cn } from "@/shared/lib/utils";
-
-const CustomLink = createLink(PaginationLink);
-const CustomLinkNext = createLink(PaginationNext);
-const CustomLinkPrevious = createLink(PaginationPrevious);
+} from "./ui/pagination";
 
 const DEFAULT_SIBLING_COUNT = 1;
 
@@ -45,13 +42,12 @@ export const Pagination = ({
 			const pageNumber = startPage + index;
 			return (
 				<PaginationItem key={pageNumber}>
-					<CustomLink
-						to="."
+					<PaginationLink
 						search={getPaginationSearch(pageNumber)}
 						isActive={pageNumber === page}
 					>
 						{pageNumber}
-					</CustomLink>
+					</PaginationLink>
 				</PaginationItem>
 			);
 		});
@@ -65,12 +61,18 @@ export const Pagination = ({
 			{...props}
 		>
 			<PaginationContent>
-				<PaginationItem>
-					<CustomLinkPrevious to="." search={getPaginationSearch(page - 1)} />
+				<PaginationItem isDisabled={page === 1}>
+					<PaginationFirst search={getPaginationSearch(1)} />
+				</PaginationItem>
+				<PaginationItem isDisabled={page === 1}>
+					<PaginationPrevious search={getPaginationSearch(page - 1)} />
 				</PaginationItem>
 				{renderPageLinks()}
-				<PaginationItem>
-					<CustomLinkNext to="." search={getPaginationSearch(page + 1)} />
+				<PaginationItem isDisabled={!(page < totalPagesCount)}>
+					<PaginationNext search={getPaginationSearch(page + 1)} />
+				</PaginationItem>
+				<PaginationItem isDisabled={!(page < totalPagesCount)}>
+					<PaginationLast search={getPaginationSearch(totalPagesCount)} />
 				</PaginationItem>
 			</PaginationContent>
 		</PaginationRoot>

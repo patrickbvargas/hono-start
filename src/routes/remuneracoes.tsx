@@ -15,7 +15,11 @@ import {
 	useRemunerationExport,
 } from "@/features/remunerations";
 import { RouteLoading } from "@/shared/components/route-loading";
-import { Wrapper } from "@/shared/components/wrapper";
+import {
+	Wrapper,
+	WrapperBody,
+	WrapperHeader,
+} from "@/shared/components/wrapper";
 import { ROUTES } from "@/shared/config/routes";
 import { useOverlay } from "@/shared/hooks/use-overlay";
 import {
@@ -55,11 +59,11 @@ function RouteComponent() {
 				/>
 			}
 		>
-			<Wrapper.Header>
+			<WrapperHeader>
 				<RemunerationFilter isAdmin={isAdmin} />
 				<RouteLoading />
-			</Wrapper.Header>
-			<Wrapper.Body>
+			</WrapperHeader>
+			<WrapperBody>
 				<RemunerationTable
 					data={data}
 					onEdit={overlay.edit.open}
@@ -92,7 +96,7 @@ function RouteComponent() {
 				{overlay.details.render((remuneration, state) => (
 					<RemunerationDetails remuneration={remuneration} state={state} />
 				))}
-			</Wrapper.Body>
+			</WrapperBody>
 		</Wrapper>
 	);
 }

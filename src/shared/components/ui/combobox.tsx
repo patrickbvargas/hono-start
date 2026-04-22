@@ -1,5 +1,3 @@
-"use client";
-
 import { Combobox as ComboboxPrimitive } from "@base-ui/react";
 import { CheckIcon, ChevronDownIcon, XIcon } from "lucide-react";
 import * as React from "react";
@@ -281,18 +279,18 @@ function useComboboxAnchor() {
 
 export {
 	Combobox,
-	ComboboxChip,
-	ComboboxChips,
-	ComboboxChipsInput,
-	ComboboxCollection,
-	ComboboxContent,
-	ComboboxEmpty,
-	ComboboxGroup,
 	ComboboxInput,
-	ComboboxItem,
-	ComboboxLabel,
+	ComboboxContent,
 	ComboboxList,
+	ComboboxItem,
+	ComboboxGroup,
+	ComboboxLabel,
+	ComboboxCollection,
+	ComboboxEmpty,
 	ComboboxSeparator,
+	ComboboxChips,
+	ComboboxChip,
+	ComboboxChipsInput,
 	ComboboxTrigger,
 	ComboboxValue,
 	useComboboxAnchor,

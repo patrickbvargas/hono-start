@@ -15,6 +15,7 @@ export interface ConfirmDialogProps {
 	variant?: ButtonProps["variant"];
 }
 
+// TODO: refatorar para shadcn
 export const ConfirmDialog = ({
 	state,
 	onConfirm,

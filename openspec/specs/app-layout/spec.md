@@ -34,7 +34,7 @@ On desktop (`md` and above), `AppLayout` SHALL render a persistent sidebar that 
 - **THEN** the sidebar expands to show both icons and route labels
 
 ### Requirement: Mobile sidebar renders as a Drawer
-On mobile (below `md` breakpoint), the persistent sidebar SHALL be hidden. A hamburger trigger button SHALL be visible. Tapping it SHALL open a HeroUI `Drawer` from the left side containing the same navigation items.
+On mobile (below `md` breakpoint), the persistent sidebar SHALL be hidden. A hamburger trigger button SHALL be visible. Tapping it SHALL open a shared UI Drawer from the left side containing the same navigation items.
 
 #### Scenario: User opens mobile navigation
 - **WHEN** the user taps the hamburger button on a mobile viewport

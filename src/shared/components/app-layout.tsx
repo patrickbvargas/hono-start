@@ -8,6 +8,7 @@ interface AppLayoutProps {
 	children: React.ReactNode;
 }
 
+// TODO: remover
 export const AppLayout = ({ children }: AppLayoutProps) => {
 	const [isCollapsed, setIsCollapsed] = useState(false);
 	const [isDrawerOpen, setIsDrawerOpen] = useState(false);

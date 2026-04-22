@@ -14,7 +14,11 @@ import {
 } from "@/features/employees";
 import { RouteLoading } from "@/shared/components/route-loading";
 import { Button } from "@/shared/components/ui";
-import { Wrapper } from "@/shared/components/wrapper";
+import {
+	Wrapper,
+	WrapperBody,
+	WrapperHeader,
+} from "@/shared/components/wrapper";
 import { ROUTES } from "@/shared/config/routes";
 import { useOverlay } from "@/shared/hooks/use-overlay";
 import type { EntityId } from "@/shared/schemas/entity";
@@ -51,18 +55,18 @@ function RouteComponent() {
 			title={ROUTES.employee.title}
 			actions={
 				canManage ? (
-					<Button size="sm" onPress={() => overlay.create.open()}>
+					<Button size="sm" onClick={() => overlay.create.open()}>
 						<PlusIcon size={16} />
 						Novo Funcionário
 					</Button>
 				) : null
 			}
 		>
-			<Wrapper.Header>
+			<WrapperHeader>
 				<EmployeeFilter />
 				<RouteLoading />
-			</Wrapper.Header>
-			<Wrapper.Body>
+			</WrapperHeader>
+			<WrapperBody>
 				<EmployeeTable
 					data={data}
 					onEdit={overlay.edit.open}
@@ -86,7 +90,7 @@ function RouteComponent() {
 				{overlay.details.render((id, state) => (
 					<EmployeeDetails id={id} state={state} />
 				))}
-			</Wrapper.Body>
+			</WrapperBody>
 		</Wrapper>
 	);
 }

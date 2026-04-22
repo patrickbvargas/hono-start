@@ -1,6 +1,7 @@
 import { Settings2Icon } from "lucide-react";
 import { Button, Popover, type PopoverProps } from "@/shared/components/Hui";
 
+// TODO: refatorar para shadcn
 export const FilterWrapper = ({ children, ...props }: PopoverProps) => {
 	return (
 		<Popover {...props}>

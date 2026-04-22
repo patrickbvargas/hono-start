@@ -1,5 +1,4 @@
 import { cva, type VariantProps } from "class-variance-authority";
-import type * as React from "react";
 import { useMemo } from "react";
 import { Label } from "@/shared/components/ui/label";
 import { Separator } from "@/shared/components/ui/separator";
@@ -28,7 +27,7 @@ function FieldLegend({
 			data-slot="field-legend"
 			data-variant={variant}
 			className={cn(
-				"mb-1.5 font-medium data-[variant=label]:text-sm data-[variant=legend]:text-base",
+				"flex gap-2 mb-1.5 font-medium data-[variant=label]:text-sm data-[variant=legend]:text-base",
 				className,
 			)}
 			{...props}
@@ -74,7 +73,6 @@ function Field({
 }: React.ComponentProps<"div"> & VariantProps<typeof fieldVariants>) {
 	return (
 		<div
-			role="group"
 			data-slot="field"
 			data-orientation={orientation}
 			className={cn(fieldVariants({ orientation }), className)}
@@ -118,7 +116,7 @@ function FieldTitle({ className, ...props }: React.ComponentProps<"div">) {
 		<div
 			data-slot="field-label"
 			className={cn(
-				"flex w-fit items-center gap-2 text-sm font-medium group-data-[disabled=true]/field:opacity-50",
+				"flex w-fit items-center gap-2 text-sm leading-snug font-medium group-data-[disabled=true]/field:opacity-50",
 				className,
 			)}
 			{...props}
@@ -200,8 +198,9 @@ function FieldError({
 			<ul className="ml-4 flex list-disc flex-col gap-1">
 				{uniqueErrors.map(
 					(error, index) =>
-						// biome-ignore lint/suspicious/noArrayIndexKey: without index, this is not a list
-						error?.message && <li key={index}>{error.message}</li>,
+						error?.message && (
+							<li key={`${error.message}-${index}`}>{error.message}</li>
+						),
 				)}
 			</ul>
 		);

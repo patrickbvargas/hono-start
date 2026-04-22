@@ -1,12 +1,4 @@
-# Spec: sidebar-nav
-
-## Purpose
-
-`SidebarNav` is the navigation component rendered inside the sidebar shell. It displays all application routes as selectable list items with icons and labels, highlights the active route, and supports collapsed (icon-only) mode.
-
----
-
-## Requirements
+## MODIFIED Requirements
 
 ### Requirement: All ROUTES rendered as navigation items
 `SidebarNav` SHALL render every entry from the `ROUTES` constant in `src/shared/config/routes.ts` as accessible navigation items through the shared UI layer. Each item SHALL display the route's icon and title.
@@ -29,24 +21,6 @@
 #### Scenario: Active state updates on navigation
 - **WHEN** the user navigates to a different route
 - **THEN** the previously active item loses its highlight and the new route item becomes highlighted
-
-### Requirement: Navigation items use TanStack Router Link
-Each `ListBox.Item` SHALL use TanStack Router's `Link` component to navigate to its route URL, enabling client-side SPA navigation without full page reloads.
-
-#### Scenario: User clicks a navigation item
-- **WHEN** the user clicks or presses Enter on a route item
-- **THEN** TanStack Router navigates to the corresponding route without a full page reload
-
-### Requirement: Collapsed mode shows icons only
-When `SidebarNav` receives `isCollapsed={true}`, route labels SHALL be hidden and only icons SHALL be visible. Icons SHALL remain visible at all times.
-
-#### Scenario: Labels hidden in collapsed mode
-- **WHEN** `isCollapsed` is `true`
-- **THEN** route title text is not visible but icons remain visible
-
-#### Scenario: Labels visible in expanded mode
-- **WHEN** `isCollapsed` is `false`
-- **THEN** both icon and title text are displayed for each route item
 
 ### Requirement: Keyboard navigation supported
 Users SHALL be able to move focus between navigation items with keyboard controls and activate the focused item with Enter through accessible shared UI behavior.

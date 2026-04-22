@@ -35,6 +35,7 @@ interface WrapperProps extends Omit<DrawerProps, "state"> {
 	state: OverlayState;
 }
 
+// TODO: refatorar para shadcn
 export const Wrapper = ({ title, state, children, ...props }: WrapperProps) => {
 	return (
 		<Drawer {...props}>

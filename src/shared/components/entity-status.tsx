@@ -1,4 +1,4 @@
-import { Chip } from "@/shared/components/Hui";
+import { Badge } from "@/shared/components/ui";
 
 const STATUS_CONFIG = {
 	active: { color: "success", label: "Ativo" },
@@ -21,5 +21,5 @@ export const EntityStatus = ({
 			? STATUS_CONFIG.active
 			: STATUS_CONFIG.inactive;
 
-	return <Chip color={status.color}>{status.label}</Chip>;
+	return <Badge color={status.color}>{status.label}</Badge>;
 };

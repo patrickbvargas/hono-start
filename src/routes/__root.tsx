@@ -8,8 +8,8 @@ import {
 	Scripts,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
-import { AppLayout } from "@/shared/components/app-layout";
-import { ToastProvider } from "@/shared/components/Hui";
+import { AppSidebar } from "@/features/app-sidebar";
+import { SidebarInset, SidebarProvider, Toaster } from "@/shared/components/ui";
 import appCss from "@/styles/global.css?url";
 
 interface RouterContext {
@@ -60,10 +60,11 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 				<HeadContent />
 			</head>
 			<body>
-				<AppLayout>{children}</AppLayout>
-
-				<ToastProvider />
-
+				<SidebarProvider className="container max-w-7xl mx-auto h-screen">
+					<AppSidebar />
+					<SidebarInset>{children}</SidebarInset>
+				</SidebarProvider>
+				<Toaster />
 				<TanStackDevtools
 					plugins={[
 						{

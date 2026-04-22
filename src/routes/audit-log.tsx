@@ -8,7 +8,11 @@ import {
 	getAuditLogsQueryOptions,
 } from "@/features/audit-logs";
 import { RouteLoading } from "@/shared/components/route-loading";
-import { Wrapper } from "@/shared/components/wrapper";
+import {
+	Wrapper,
+	WrapperBody,
+	WrapperHeader,
+} from "@/shared/components/wrapper";
 import { ROUTES } from "@/shared/config/routes";
 import { assertCan, getLoggedUserSession } from "@/shared/session";
 
@@ -31,13 +35,13 @@ function RouteComponent() {
 
 	return (
 		<Wrapper title={ROUTES.auditLog.title}>
-			<Wrapper.Header>
+			<WrapperHeader>
 				<AuditLogFilter />
 				<RouteLoading />
-			</Wrapper.Header>
-			<Wrapper.Body>
+			</WrapperHeader>
+			<WrapperBody>
 				<AuditLogTable data={data} />
-			</Wrapper.Body>
+			</WrapperBody>
 		</Wrapper>
 	);
 }

@@ -9,7 +9,11 @@ import {
 } from "@/features/dashboard";
 import { RouteError } from "@/shared/components/route-error";
 import { RouteLoading } from "@/shared/components/route-loading";
-import { Wrapper } from "@/shared/components/wrapper";
+import {
+	Wrapper,
+	WrapperBody,
+	WrapperHeader,
+} from "@/shared/components/wrapper";
 import {
 	getLoggedUserSession,
 	isAdminSession,
@@ -37,13 +41,13 @@ function App() {
 
 	return (
 		<Wrapper title="Dashboard">
-			<Wrapper.Header>
+			<WrapperHeader>
 				<DashboardFilter isAdmin={isAdmin} />
 				<RouteLoading />
-			</Wrapper.Header>
-			<Wrapper.Body>
+			</WrapperHeader>
+			<WrapperBody>
 				<Dashboard data={data} />
-			</Wrapper.Body>
+			</WrapperBody>
 		</Wrapper>
 	);
 }

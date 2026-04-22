@@ -14,7 +14,11 @@ import {
 } from "@/features/clients";
 import { RouteLoading } from "@/shared/components/route-loading";
 import { Button } from "@/shared/components/ui";
-import { Wrapper } from "@/shared/components/wrapper";
+import {
+	Wrapper,
+	WrapperBody,
+	WrapperHeader,
+} from "@/shared/components/wrapper";
 import { ROUTES } from "@/shared/config/routes";
 import { useOverlay } from "@/shared/hooks/use-overlay";
 import type { EntityId } from "@/shared/schemas/entity";
@@ -46,17 +50,17 @@ function RouteComponent() {
 		<Wrapper
 			title={ROUTES.client.title}
 			actions={
-				<Button size="sm" onPress={() => overlay.create.open()}>
+				<Button size="sm" onClick={() => overlay.create.open()}>
 					<PlusIcon size={16} />
 					Novo Cliente
 				</Button>
 			}
 		>
-			<Wrapper.Header>
+			<WrapperHeader>
 				<ClientFilter />
 				<RouteLoading />
-			</Wrapper.Header>
-			<Wrapper.Body>
+			</WrapperHeader>
+			<WrapperBody>
 				<ClientTable
 					data={data}
 					onEdit={overlay.edit.open}
@@ -80,7 +84,7 @@ function RouteComponent() {
 				{overlay.details.render((id, state) => (
 					<ClientDetails id={id} state={state} />
 				))}
-			</Wrapper.Body>
+			</WrapperBody>
 		</Wrapper>
 	);
 }

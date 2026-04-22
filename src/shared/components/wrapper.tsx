@@ -1,17 +1,18 @@
+import { ScrollArea, Separator, SidebarTrigger } from "@/shared/components/ui";
 import { cn } from "@/shared/lib/utils";
 
-interface RootProps extends React.HTMLAttributes<HTMLDivElement> {
+interface WrapperProps extends React.HTMLAttributes<HTMLDivElement> {
 	title?: string;
 	actions?: React.ReactNode;
 }
 
-export const Root = ({
+export const Wrapper = ({
 	title,
 	actions,
 	children,
 	className,
 	...props
-}: RootProps) => {
+}: WrapperProps) => {
 	return (
 		<div
 			data-slot="wrapper"
@@ -19,7 +20,14 @@ export const Root = ({
 			{...props}
 		>
 			<div className="h-12 flex items-center justify-between px-4 pt-1.5">
-				{title && <Title title={title} />}
+				<div className="flex items-center gap-0.5">
+					<SidebarTrigger />
+					<Separator
+						orientation="vertical"
+						className="mx-2 my-auto data-[orientation=vertical]:h-4"
+					/>
+					{title && <WrapperTitle title={title} />}
+				</div>
 				{actions}
 			</div>
 			{children}
@@ -27,7 +35,7 @@ export const Root = ({
 	);
 };
 
-export const Header = ({
+export const WrapperHeader = ({
 	children,
 	className,
 	...props
@@ -43,26 +51,25 @@ export const Header = ({
 	);
 };
 
-export const Body = ({
+export const WrapperBody = ({
 	children,
 	className,
 	...props
-}: React.HTMLAttributes<HTMLDivElement>) => {
+}: React.ComponentProps<typeof ScrollArea>) => {
 	return (
-		<div
+		<ScrollArea
 			data-slot="wrapper-content"
-			className={cn(
-				"h-full w-full overflow-hidden flex flex-col px-4 gap-3",
-				className,
-			)}
+			className={cn("h-full w-full overflow-hidden", className)}
 			{...props}
 		>
-			{children}
-		</div>
+			<div className={cn("flex flex-col px-4 gap-3", className)}>
+				{children}
+			</div>
+		</ScrollArea>
 	);
 };
 
-export const Footer = ({
+export const WrapperFooter = ({
 	className,
 	...props
 }: React.HTMLAttributes<HTMLDivElement>) => {
@@ -78,15 +85,12 @@ export const Footer = ({
 interface WrapperTitleProps extends React.HTMLAttributes<HTMLHeadingElement> {
 	title: string;
 }
-export const Title = ({ title, className, ...props }: WrapperTitleProps) => (
+export const WrapperTitle = ({
+	title,
+	className,
+	...props
+}: WrapperTitleProps) => (
 	<h1 className={cn("text-base font-medium", className)} {...props}>
 		{title}
 	</h1>
 );
-
-export const Wrapper = Object.assign(Root, {
-	Header,
-	Body,
-	Footer,
-	Title,
-});
