@@ -6,9 +6,9 @@ import {
 	SidebarHeader,
 } from "@/shared/components/ui";
 import { ROUTES, type RouteSection } from "@/shared/config/routes";
-import { NavHeader } from "./components/nav-header";
-import { NavMain } from "./components/nav-main";
-import { NavUser } from "./components/nav-user";
+import { NavHeader } from "./nav-header";
+import { NavMain } from "./nav-main";
+import { NavUser } from "./nav-user";
 
 const items: RouteSection[] = [
 	{

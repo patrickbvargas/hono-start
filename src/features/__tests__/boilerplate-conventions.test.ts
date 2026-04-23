@@ -5,9 +5,11 @@ import { describe, expect, it } from "vitest";
 const featureRoot = "src/features";
 const sourceExtensions = [".ts", ".tsx"] as const;
 const allowedFeatureIndexes = new Set([
+	"app-sidebar/index.ts",
 	"audit-logs/index.ts",
 	"clients/index.ts",
 	"contracts/index.ts",
+	"dashboard/index.ts",
 	"employees/index.ts",
 	"fees/index.ts",
 	"remunerations/index.ts",
@@ -50,15 +52,27 @@ describe("feature boilerplate conventions", () => {
 			.filter(isSourceFile)
 			.flatMap((path) => {
 				const normalizedPath = normalizePath(relative(featureRoot, path));
+				const segments = normalizedPath.split("/");
+				const isTopLevelFeatureIndex =
+					segments.length === 2 &&
+					(segments[1] === "index.ts" || segments[1] === "index.tsx");
+
+				if (isTopLevelFeatureIndex) {
+					if (segments[1] !== "index.ts") {
+						return [`${normalizedPath}:1:top-level feature barrel must use index.ts`];
+					}
+
+					if (allowedFeatureIndexes.has(normalizedPath)) {
+						return [];
+					}
+
+					return [`${normalizedPath}:1:unexpected top-level feature barrel`];
+				}
 
 				if (
 					!normalizedPath.endsWith("/index.ts") &&
 					!normalizedPath.endsWith("/index.tsx")
 				) {
-					return [];
-				}
-
-				if (allowedFeatureIndexes.has(normalizedPath)) {
 					return [];
 				}
 
