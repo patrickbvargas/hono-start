@@ -1,5 +1,6 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import * as React from "react";
+import { AttachmentSection } from "@/features/attachments";
 import {
 	Detail,
 	type DetailFieldItem,
@@ -7,6 +8,7 @@ import {
 import { EntityStatus } from "@/shared/components/entity-status";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
+import { isContractReadOnly } from "@/shared/session";
 import type { OverlayState } from "@/shared/types/overlay";
 import { getContractByIdQueryOptions } from "../../api/queries";
 
@@ -86,6 +88,19 @@ export const ContractDetails = ({ id, state }: ContractDetailsProps) => {
 				<Detail.Fields items={revenueInfo} />
 			</Detail.Section>
 			<Detail.Separator className="mt-auto" />
+			<AttachmentSection
+				ownerId={data.id}
+				ownerKind="contract"
+				canUpload={
+					!data.isSoftDeleted &&
+					data.isAssignedToActor &&
+					!isContractReadOnly({
+						firmId: 0,
+						statusValue: data.statusValue,
+					})
+				}
+			/>
+			<Detail.Separator />
 			<Detail.Section title="Registro">
 				<Detail.Fields items={registerInfo} />
 			</Detail.Section>

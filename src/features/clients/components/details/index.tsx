@@ -1,5 +1,6 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import * as React from "react";
+import { AttachmentSection } from "@/features/attachments";
 import {
 	Detail,
 	type DetailFieldItem,
@@ -60,6 +61,12 @@ export const ClientDetails = ({ id, state }: ClientDetailsProps) => {
 				<Detail.Fields items={contactInfo} />
 			</Detail.Section>
 			<Detail.Separator className="mt-auto" />
+			<AttachmentSection
+				ownerId={data.id}
+				ownerKind="client"
+				canUpload={!data.isSoftDeleted}
+			/>
+			<Detail.Separator />
 			<Detail.Section title="Registro">
 				<Detail.Fields items={registerInfo} />
 			</Detail.Section>

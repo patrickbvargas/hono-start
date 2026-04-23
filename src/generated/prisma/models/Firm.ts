@@ -193,6 +193,7 @@ export type FirmWhereInput = {
   id?: Prisma.IntFilter<"Firm"> | number
   name?: Prisma.StringFilter<"Firm"> | string
   auditLogs?: Prisma.AuditLogListRelationFilter
+  attachments?: Prisma.AttachmentListRelationFilter
   clients?: Prisma.ClientListRelationFilter
   employees?: Prisma.EmployeeListRelationFilter
   contracts?: Prisma.ContractListRelationFilter
@@ -206,6 +207,7 @@ export type FirmOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
+  attachments?: Prisma.AttachmentOrderByRelationAggregateInput
   clients?: Prisma.ClientOrderByRelationAggregateInput
   employees?: Prisma.EmployeeOrderByRelationAggregateInput
   contracts?: Prisma.ContractOrderByRelationAggregateInput
@@ -222,6 +224,7 @@ export type FirmWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.FirmWhereInput | Prisma.FirmWhereInput[]
   name?: Prisma.StringFilter<"Firm"> | string
   auditLogs?: Prisma.AuditLogListRelationFilter
+  attachments?: Prisma.AttachmentListRelationFilter
   clients?: Prisma.ClientListRelationFilter
   employees?: Prisma.EmployeeListRelationFilter
   contracts?: Prisma.ContractListRelationFilter
@@ -252,6 +255,7 @@ export type FirmScalarWhereWithAggregatesInput = {
 export type FirmCreateInput = {
   name: string
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutFirmInput
+  attachments?: Prisma.AttachmentCreateNestedManyWithoutFirmInput
   clients?: Prisma.ClientCreateNestedManyWithoutFirmInput
   employees?: Prisma.EmployeeCreateNestedManyWithoutFirmInput
   contracts?: Prisma.ContractCreateNestedManyWithoutFirmInput
@@ -265,6 +269,7 @@ export type FirmUncheckedCreateInput = {
   id?: number
   name: string
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutFirmInput
+  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutFirmInput
   clients?: Prisma.ClientUncheckedCreateNestedManyWithoutFirmInput
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFirmInput
   contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutFirmInput
@@ -277,6 +282,7 @@ export type FirmUncheckedCreateInput = {
 export type FirmUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   auditLogs?: Prisma.AuditLogUpdateManyWithoutFirmNestedInput
+  attachments?: Prisma.AttachmentUpdateManyWithoutFirmNestedInput
   clients?: Prisma.ClientUpdateManyWithoutFirmNestedInput
   employees?: Prisma.EmployeeUpdateManyWithoutFirmNestedInput
   contracts?: Prisma.ContractUpdateManyWithoutFirmNestedInput
@@ -290,6 +296,7 @@ export type FirmUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutFirmNestedInput
+  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutFirmNestedInput
   clients?: Prisma.ClientUncheckedUpdateManyWithoutFirmNestedInput
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutFirmNestedInput
   contracts?: Prisma.ContractUncheckedUpdateManyWithoutFirmNestedInput
@@ -465,9 +472,24 @@ export type FirmUpdateOneRequiredWithoutRemunerationsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.FirmUpdateToOneWithWhereWithoutRemunerationsInput, Prisma.FirmUpdateWithoutRemunerationsInput>, Prisma.FirmUncheckedUpdateWithoutRemunerationsInput>
 }
 
+export type FirmCreateNestedOneWithoutAttachmentsInput = {
+  create?: Prisma.XOR<Prisma.FirmCreateWithoutAttachmentsInput, Prisma.FirmUncheckedCreateWithoutAttachmentsInput>
+  connectOrCreate?: Prisma.FirmCreateOrConnectWithoutAttachmentsInput
+  connect?: Prisma.FirmWhereUniqueInput
+}
+
+export type FirmUpdateOneRequiredWithoutAttachmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.FirmCreateWithoutAttachmentsInput, Prisma.FirmUncheckedCreateWithoutAttachmentsInput>
+  connectOrCreate?: Prisma.FirmCreateOrConnectWithoutAttachmentsInput
+  upsert?: Prisma.FirmUpsertWithoutAttachmentsInput
+  connect?: Prisma.FirmWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.FirmUpdateToOneWithWhereWithoutAttachmentsInput, Prisma.FirmUpdateWithoutAttachmentsInput>, Prisma.FirmUncheckedUpdateWithoutAttachmentsInput>
+}
+
 export type FirmCreateWithoutEmployeesInput = {
   name: string
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutFirmInput
+  attachments?: Prisma.AttachmentCreateNestedManyWithoutFirmInput
   clients?: Prisma.ClientCreateNestedManyWithoutFirmInput
   contracts?: Prisma.ContractCreateNestedManyWithoutFirmInput
   contractEmployees?: Prisma.ContractEmployeeCreateNestedManyWithoutFirmInput
@@ -480,6 +502,7 @@ export type FirmUncheckedCreateWithoutEmployeesInput = {
   id?: number
   name: string
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutFirmInput
+  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutFirmInput
   clients?: Prisma.ClientUncheckedCreateNestedManyWithoutFirmInput
   contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutFirmInput
   contractEmployees?: Prisma.ContractEmployeeUncheckedCreateNestedManyWithoutFirmInput
@@ -507,6 +530,7 @@ export type FirmUpdateToOneWithWhereWithoutEmployeesInput = {
 export type FirmUpdateWithoutEmployeesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   auditLogs?: Prisma.AuditLogUpdateManyWithoutFirmNestedInput
+  attachments?: Prisma.AttachmentUpdateManyWithoutFirmNestedInput
   clients?: Prisma.ClientUpdateManyWithoutFirmNestedInput
   contracts?: Prisma.ContractUpdateManyWithoutFirmNestedInput
   contractEmployees?: Prisma.ContractEmployeeUpdateManyWithoutFirmNestedInput
@@ -519,6 +543,7 @@ export type FirmUncheckedUpdateWithoutEmployeesInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutFirmNestedInput
+  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutFirmNestedInput
   clients?: Prisma.ClientUncheckedUpdateManyWithoutFirmNestedInput
   contracts?: Prisma.ContractUncheckedUpdateManyWithoutFirmNestedInput
   contractEmployees?: Prisma.ContractEmployeeUncheckedUpdateManyWithoutFirmNestedInput
@@ -529,6 +554,7 @@ export type FirmUncheckedUpdateWithoutEmployeesInput = {
 
 export type FirmCreateWithoutAuditLogsInput = {
   name: string
+  attachments?: Prisma.AttachmentCreateNestedManyWithoutFirmInput
   clients?: Prisma.ClientCreateNestedManyWithoutFirmInput
   employees?: Prisma.EmployeeCreateNestedManyWithoutFirmInput
   contracts?: Prisma.ContractCreateNestedManyWithoutFirmInput
@@ -541,6 +567,7 @@ export type FirmCreateWithoutAuditLogsInput = {
 export type FirmUncheckedCreateWithoutAuditLogsInput = {
   id?: number
   name: string
+  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutFirmInput
   clients?: Prisma.ClientUncheckedCreateNestedManyWithoutFirmInput
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFirmInput
   contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutFirmInput
@@ -568,6 +595,7 @@ export type FirmUpdateToOneWithWhereWithoutAuditLogsInput = {
 
 export type FirmUpdateWithoutAuditLogsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  attachments?: Prisma.AttachmentUpdateManyWithoutFirmNestedInput
   clients?: Prisma.ClientUpdateManyWithoutFirmNestedInput
   employees?: Prisma.EmployeeUpdateManyWithoutFirmNestedInput
   contracts?: Prisma.ContractUpdateManyWithoutFirmNestedInput
@@ -580,6 +608,7 @@ export type FirmUpdateWithoutAuditLogsInput = {
 export type FirmUncheckedUpdateWithoutAuditLogsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutFirmNestedInput
   clients?: Prisma.ClientUncheckedUpdateManyWithoutFirmNestedInput
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutFirmNestedInput
   contracts?: Prisma.ContractUncheckedUpdateManyWithoutFirmNestedInput
@@ -592,6 +621,7 @@ export type FirmUncheckedUpdateWithoutAuditLogsInput = {
 export type FirmCreateWithoutClientsInput = {
   name: string
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutFirmInput
+  attachments?: Prisma.AttachmentCreateNestedManyWithoutFirmInput
   employees?: Prisma.EmployeeCreateNestedManyWithoutFirmInput
   contracts?: Prisma.ContractCreateNestedManyWithoutFirmInput
   contractEmployees?: Prisma.ContractEmployeeCreateNestedManyWithoutFirmInput
@@ -604,6 +634,7 @@ export type FirmUncheckedCreateWithoutClientsInput = {
   id?: number
   name: string
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutFirmInput
+  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutFirmInput
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFirmInput
   contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutFirmInput
   contractEmployees?: Prisma.ContractEmployeeUncheckedCreateNestedManyWithoutFirmInput
@@ -631,6 +662,7 @@ export type FirmUpdateToOneWithWhereWithoutClientsInput = {
 export type FirmUpdateWithoutClientsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   auditLogs?: Prisma.AuditLogUpdateManyWithoutFirmNestedInput
+  attachments?: Prisma.AttachmentUpdateManyWithoutFirmNestedInput
   employees?: Prisma.EmployeeUpdateManyWithoutFirmNestedInput
   contracts?: Prisma.ContractUpdateManyWithoutFirmNestedInput
   contractEmployees?: Prisma.ContractEmployeeUpdateManyWithoutFirmNestedInput
@@ -643,6 +675,7 @@ export type FirmUncheckedUpdateWithoutClientsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutFirmNestedInput
+  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutFirmNestedInput
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutFirmNestedInput
   contracts?: Prisma.ContractUncheckedUpdateManyWithoutFirmNestedInput
   contractEmployees?: Prisma.ContractEmployeeUncheckedUpdateManyWithoutFirmNestedInput
@@ -654,6 +687,7 @@ export type FirmUncheckedUpdateWithoutClientsInput = {
 export type FirmCreateWithoutContractsInput = {
   name: string
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutFirmInput
+  attachments?: Prisma.AttachmentCreateNestedManyWithoutFirmInput
   clients?: Prisma.ClientCreateNestedManyWithoutFirmInput
   employees?: Prisma.EmployeeCreateNestedManyWithoutFirmInput
   contractEmployees?: Prisma.ContractEmployeeCreateNestedManyWithoutFirmInput
@@ -666,6 +700,7 @@ export type FirmUncheckedCreateWithoutContractsInput = {
   id?: number
   name: string
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutFirmInput
+  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutFirmInput
   clients?: Prisma.ClientUncheckedCreateNestedManyWithoutFirmInput
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFirmInput
   contractEmployees?: Prisma.ContractEmployeeUncheckedCreateNestedManyWithoutFirmInput
@@ -693,6 +728,7 @@ export type FirmUpdateToOneWithWhereWithoutContractsInput = {
 export type FirmUpdateWithoutContractsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   auditLogs?: Prisma.AuditLogUpdateManyWithoutFirmNestedInput
+  attachments?: Prisma.AttachmentUpdateManyWithoutFirmNestedInput
   clients?: Prisma.ClientUpdateManyWithoutFirmNestedInput
   employees?: Prisma.EmployeeUpdateManyWithoutFirmNestedInput
   contractEmployees?: Prisma.ContractEmployeeUpdateManyWithoutFirmNestedInput
@@ -705,6 +741,7 @@ export type FirmUncheckedUpdateWithoutContractsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutFirmNestedInput
+  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutFirmNestedInput
   clients?: Prisma.ClientUncheckedUpdateManyWithoutFirmNestedInput
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutFirmNestedInput
   contractEmployees?: Prisma.ContractEmployeeUncheckedUpdateManyWithoutFirmNestedInput
@@ -716,6 +753,7 @@ export type FirmUncheckedUpdateWithoutContractsInput = {
 export type FirmCreateWithoutContractEmployeesInput = {
   name: string
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutFirmInput
+  attachments?: Prisma.AttachmentCreateNestedManyWithoutFirmInput
   clients?: Prisma.ClientCreateNestedManyWithoutFirmInput
   employees?: Prisma.EmployeeCreateNestedManyWithoutFirmInput
   contracts?: Prisma.ContractCreateNestedManyWithoutFirmInput
@@ -728,6 +766,7 @@ export type FirmUncheckedCreateWithoutContractEmployeesInput = {
   id?: number
   name: string
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutFirmInput
+  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutFirmInput
   clients?: Prisma.ClientUncheckedCreateNestedManyWithoutFirmInput
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFirmInput
   contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutFirmInput
@@ -755,6 +794,7 @@ export type FirmUpdateToOneWithWhereWithoutContractEmployeesInput = {
 export type FirmUpdateWithoutContractEmployeesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   auditLogs?: Prisma.AuditLogUpdateManyWithoutFirmNestedInput
+  attachments?: Prisma.AttachmentUpdateManyWithoutFirmNestedInput
   clients?: Prisma.ClientUpdateManyWithoutFirmNestedInput
   employees?: Prisma.EmployeeUpdateManyWithoutFirmNestedInput
   contracts?: Prisma.ContractUpdateManyWithoutFirmNestedInput
@@ -767,6 +807,7 @@ export type FirmUncheckedUpdateWithoutContractEmployeesInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutFirmNestedInput
+  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutFirmNestedInput
   clients?: Prisma.ClientUncheckedUpdateManyWithoutFirmNestedInput
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutFirmNestedInput
   contracts?: Prisma.ContractUncheckedUpdateManyWithoutFirmNestedInput
@@ -778,6 +819,7 @@ export type FirmUncheckedUpdateWithoutContractEmployeesInput = {
 export type FirmCreateWithoutRevenuesInput = {
   name: string
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutFirmInput
+  attachments?: Prisma.AttachmentCreateNestedManyWithoutFirmInput
   clients?: Prisma.ClientCreateNestedManyWithoutFirmInput
   employees?: Prisma.EmployeeCreateNestedManyWithoutFirmInput
   contracts?: Prisma.ContractCreateNestedManyWithoutFirmInput
@@ -790,6 +832,7 @@ export type FirmUncheckedCreateWithoutRevenuesInput = {
   id?: number
   name: string
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutFirmInput
+  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutFirmInput
   clients?: Prisma.ClientUncheckedCreateNestedManyWithoutFirmInput
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFirmInput
   contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutFirmInput
@@ -817,6 +860,7 @@ export type FirmUpdateToOneWithWhereWithoutRevenuesInput = {
 export type FirmUpdateWithoutRevenuesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   auditLogs?: Prisma.AuditLogUpdateManyWithoutFirmNestedInput
+  attachments?: Prisma.AttachmentUpdateManyWithoutFirmNestedInput
   clients?: Prisma.ClientUpdateManyWithoutFirmNestedInput
   employees?: Prisma.EmployeeUpdateManyWithoutFirmNestedInput
   contracts?: Prisma.ContractUpdateManyWithoutFirmNestedInput
@@ -829,6 +873,7 @@ export type FirmUncheckedUpdateWithoutRevenuesInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutFirmNestedInput
+  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutFirmNestedInput
   clients?: Prisma.ClientUncheckedUpdateManyWithoutFirmNestedInput
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutFirmNestedInput
   contracts?: Prisma.ContractUncheckedUpdateManyWithoutFirmNestedInput
@@ -840,6 +885,7 @@ export type FirmUncheckedUpdateWithoutRevenuesInput = {
 export type FirmCreateWithoutFeesInput = {
   name: string
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutFirmInput
+  attachments?: Prisma.AttachmentCreateNestedManyWithoutFirmInput
   clients?: Prisma.ClientCreateNestedManyWithoutFirmInput
   employees?: Prisma.EmployeeCreateNestedManyWithoutFirmInput
   contracts?: Prisma.ContractCreateNestedManyWithoutFirmInput
@@ -852,6 +898,7 @@ export type FirmUncheckedCreateWithoutFeesInput = {
   id?: number
   name: string
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutFirmInput
+  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutFirmInput
   clients?: Prisma.ClientUncheckedCreateNestedManyWithoutFirmInput
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFirmInput
   contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutFirmInput
@@ -879,6 +926,7 @@ export type FirmUpdateToOneWithWhereWithoutFeesInput = {
 export type FirmUpdateWithoutFeesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   auditLogs?: Prisma.AuditLogUpdateManyWithoutFirmNestedInput
+  attachments?: Prisma.AttachmentUpdateManyWithoutFirmNestedInput
   clients?: Prisma.ClientUpdateManyWithoutFirmNestedInput
   employees?: Prisma.EmployeeUpdateManyWithoutFirmNestedInput
   contracts?: Prisma.ContractUpdateManyWithoutFirmNestedInput
@@ -891,6 +939,7 @@ export type FirmUncheckedUpdateWithoutFeesInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutFirmNestedInput
+  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutFirmNestedInput
   clients?: Prisma.ClientUncheckedUpdateManyWithoutFirmNestedInput
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutFirmNestedInput
   contracts?: Prisma.ContractUncheckedUpdateManyWithoutFirmNestedInput
@@ -902,6 +951,7 @@ export type FirmUncheckedUpdateWithoutFeesInput = {
 export type FirmCreateWithoutRemunerationsInput = {
   name: string
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutFirmInput
+  attachments?: Prisma.AttachmentCreateNestedManyWithoutFirmInput
   clients?: Prisma.ClientCreateNestedManyWithoutFirmInput
   employees?: Prisma.EmployeeCreateNestedManyWithoutFirmInput
   contracts?: Prisma.ContractCreateNestedManyWithoutFirmInput
@@ -914,6 +964,7 @@ export type FirmUncheckedCreateWithoutRemunerationsInput = {
   id?: number
   name: string
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutFirmInput
+  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutFirmInput
   clients?: Prisma.ClientUncheckedCreateNestedManyWithoutFirmInput
   employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFirmInput
   contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutFirmInput
@@ -941,6 +992,7 @@ export type FirmUpdateToOneWithWhereWithoutRemunerationsInput = {
 export type FirmUpdateWithoutRemunerationsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   auditLogs?: Prisma.AuditLogUpdateManyWithoutFirmNestedInput
+  attachments?: Prisma.AttachmentUpdateManyWithoutFirmNestedInput
   clients?: Prisma.ClientUpdateManyWithoutFirmNestedInput
   employees?: Prisma.EmployeeUpdateManyWithoutFirmNestedInput
   contracts?: Prisma.ContractUpdateManyWithoutFirmNestedInput
@@ -953,12 +1005,79 @@ export type FirmUncheckedUpdateWithoutRemunerationsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutFirmNestedInput
+  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutFirmNestedInput
   clients?: Prisma.ClientUncheckedUpdateManyWithoutFirmNestedInput
   employees?: Prisma.EmployeeUncheckedUpdateManyWithoutFirmNestedInput
   contracts?: Prisma.ContractUncheckedUpdateManyWithoutFirmNestedInput
   contractEmployees?: Prisma.ContractEmployeeUncheckedUpdateManyWithoutFirmNestedInput
   revenues?: Prisma.RevenueUncheckedUpdateManyWithoutFirmNestedInput
   fees?: Prisma.FeeUncheckedUpdateManyWithoutFirmNestedInput
+}
+
+export type FirmCreateWithoutAttachmentsInput = {
+  name: string
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutFirmInput
+  clients?: Prisma.ClientCreateNestedManyWithoutFirmInput
+  employees?: Prisma.EmployeeCreateNestedManyWithoutFirmInput
+  contracts?: Prisma.ContractCreateNestedManyWithoutFirmInput
+  contractEmployees?: Prisma.ContractEmployeeCreateNestedManyWithoutFirmInput
+  revenues?: Prisma.RevenueCreateNestedManyWithoutFirmInput
+  fees?: Prisma.FeeCreateNestedManyWithoutFirmInput
+  remunerations?: Prisma.RemunerationCreateNestedManyWithoutFirmInput
+}
+
+export type FirmUncheckedCreateWithoutAttachmentsInput = {
+  id?: number
+  name: string
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutFirmInput
+  clients?: Prisma.ClientUncheckedCreateNestedManyWithoutFirmInput
+  employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFirmInput
+  contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutFirmInput
+  contractEmployees?: Prisma.ContractEmployeeUncheckedCreateNestedManyWithoutFirmInput
+  revenues?: Prisma.RevenueUncheckedCreateNestedManyWithoutFirmInput
+  fees?: Prisma.FeeUncheckedCreateNestedManyWithoutFirmInput
+  remunerations?: Prisma.RemunerationUncheckedCreateNestedManyWithoutFirmInput
+}
+
+export type FirmCreateOrConnectWithoutAttachmentsInput = {
+  where: Prisma.FirmWhereUniqueInput
+  create: Prisma.XOR<Prisma.FirmCreateWithoutAttachmentsInput, Prisma.FirmUncheckedCreateWithoutAttachmentsInput>
+}
+
+export type FirmUpsertWithoutAttachmentsInput = {
+  update: Prisma.XOR<Prisma.FirmUpdateWithoutAttachmentsInput, Prisma.FirmUncheckedUpdateWithoutAttachmentsInput>
+  create: Prisma.XOR<Prisma.FirmCreateWithoutAttachmentsInput, Prisma.FirmUncheckedCreateWithoutAttachmentsInput>
+  where?: Prisma.FirmWhereInput
+}
+
+export type FirmUpdateToOneWithWhereWithoutAttachmentsInput = {
+  where?: Prisma.FirmWhereInput
+  data: Prisma.XOR<Prisma.FirmUpdateWithoutAttachmentsInput, Prisma.FirmUncheckedUpdateWithoutAttachmentsInput>
+}
+
+export type FirmUpdateWithoutAttachmentsInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutFirmNestedInput
+  clients?: Prisma.ClientUpdateManyWithoutFirmNestedInput
+  employees?: Prisma.EmployeeUpdateManyWithoutFirmNestedInput
+  contracts?: Prisma.ContractUpdateManyWithoutFirmNestedInput
+  contractEmployees?: Prisma.ContractEmployeeUpdateManyWithoutFirmNestedInput
+  revenues?: Prisma.RevenueUpdateManyWithoutFirmNestedInput
+  fees?: Prisma.FeeUpdateManyWithoutFirmNestedInput
+  remunerations?: Prisma.RemunerationUpdateManyWithoutFirmNestedInput
+}
+
+export type FirmUncheckedUpdateWithoutAttachmentsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutFirmNestedInput
+  clients?: Prisma.ClientUncheckedUpdateManyWithoutFirmNestedInput
+  employees?: Prisma.EmployeeUncheckedUpdateManyWithoutFirmNestedInput
+  contracts?: Prisma.ContractUncheckedUpdateManyWithoutFirmNestedInput
+  contractEmployees?: Prisma.ContractEmployeeUncheckedUpdateManyWithoutFirmNestedInput
+  revenues?: Prisma.RevenueUncheckedUpdateManyWithoutFirmNestedInput
+  fees?: Prisma.FeeUncheckedUpdateManyWithoutFirmNestedInput
+  remunerations?: Prisma.RemunerationUncheckedUpdateManyWithoutFirmNestedInput
 }
 
 
@@ -968,6 +1087,7 @@ export type FirmUncheckedUpdateWithoutRemunerationsInput = {
 
 export type FirmCountOutputType = {
   auditLogs: number
+  attachments: number
   clients: number
   employees: number
   contracts: number
@@ -979,6 +1099,7 @@ export type FirmCountOutputType = {
 
 export type FirmCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   auditLogs?: boolean | FirmCountOutputTypeCountAuditLogsArgs
+  attachments?: boolean | FirmCountOutputTypeCountAttachmentsArgs
   clients?: boolean | FirmCountOutputTypeCountClientsArgs
   employees?: boolean | FirmCountOutputTypeCountEmployeesArgs
   contracts?: boolean | FirmCountOutputTypeCountContractsArgs
@@ -1003,6 +1124,13 @@ export type FirmCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensi
  */
 export type FirmCountOutputTypeCountAuditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.AuditLogWhereInput
+}
+
+/**
+ * FirmCountOutputType without action
+ */
+export type FirmCountOutputTypeCountAttachmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AttachmentWhereInput
 }
 
 /**
@@ -1059,6 +1187,7 @@ export type FirmSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   id?: boolean
   name?: boolean
   auditLogs?: boolean | Prisma.Firm$auditLogsArgs<ExtArgs>
+  attachments?: boolean | Prisma.Firm$attachmentsArgs<ExtArgs>
   clients?: boolean | Prisma.Firm$clientsArgs<ExtArgs>
   employees?: boolean | Prisma.Firm$employeesArgs<ExtArgs>
   contracts?: boolean | Prisma.Firm$contractsArgs<ExtArgs>
@@ -1087,6 +1216,7 @@ export type FirmSelectScalar = {
 export type FirmOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name", ExtArgs["result"]["firm"]>
 export type FirmInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   auditLogs?: boolean | Prisma.Firm$auditLogsArgs<ExtArgs>
+  attachments?: boolean | Prisma.Firm$attachmentsArgs<ExtArgs>
   clients?: boolean | Prisma.Firm$clientsArgs<ExtArgs>
   employees?: boolean | Prisma.Firm$employeesArgs<ExtArgs>
   contracts?: boolean | Prisma.Firm$contractsArgs<ExtArgs>
@@ -1103,6 +1233,7 @@ export type $FirmPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   name: "Firm"
   objects: {
     auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
+    attachments: Prisma.$AttachmentPayload<ExtArgs>[]
     clients: Prisma.$ClientPayload<ExtArgs>[]
     employees: Prisma.$EmployeePayload<ExtArgs>[]
     contracts: Prisma.$ContractPayload<ExtArgs>[]
@@ -1509,6 +1640,7 @@ readonly fields: FirmFieldRefs;
 export interface Prisma__FirmClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   auditLogs<T extends Prisma.Firm$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Firm$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  attachments<T extends Prisma.Firm$attachmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Firm$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   clients<T extends Prisma.Firm$clientsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Firm$clientsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ClientPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   employees<T extends Prisma.Firm$employeesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Firm$employeesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   contracts<T extends Prisma.Firm$contractsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Firm$contractsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ContractPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -1961,6 +2093,30 @@ export type Firm$auditLogsArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.AuditLogScalarFieldEnum | Prisma.AuditLogScalarFieldEnum[]
+}
+
+/**
+ * Firm.attachments
+ */
+export type Firm$attachmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Attachment
+   */
+  select?: Prisma.AttachmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Attachment
+   */
+  omit?: Prisma.AttachmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AttachmentInclude<ExtArgs> | null
+  where?: Prisma.AttachmentWhereInput
+  orderBy?: Prisma.AttachmentOrderByWithRelationInput | Prisma.AttachmentOrderByWithRelationInput[]
+  cursor?: Prisma.AttachmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AttachmentScalarFieldEnum | Prisma.AttachmentScalarFieldEnum[]
 }
 
 /**

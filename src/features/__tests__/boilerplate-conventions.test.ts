@@ -6,6 +6,7 @@ const featureRoot = "src/features";
 const sourceExtensions = [".ts", ".tsx"] as const;
 const allowedFeatureIndexes = new Set([
 	"app-sidebar/index.ts",
+	"attachments/index.ts",
 	"audit-logs/index.ts",
 	"clients/index.ts",
 	"contracts/index.ts",
@@ -59,7 +60,9 @@ describe("feature boilerplate conventions", () => {
 
 				if (isTopLevelFeatureIndex) {
 					if (segments[1] !== "index.ts") {
-						return [`${normalizedPath}:1:top-level feature barrel must use index.ts`];
+						return [
+							`${normalizedPath}:1:top-level feature barrel must use index.ts`,
+						];
 					}
 
 					if (allowedFeatureIndexes.has(normalizedPath)) {

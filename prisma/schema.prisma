@@ -11,6 +11,7 @@ model Firm {
   id                Int                @id @default(autoincrement())
   name              String
   auditLogs         AuditLog[]
+  attachments       Attachment[]
   clients           Client[]
   employees         Employee[]
   contracts         Contract[]
@@ -92,6 +93,16 @@ model RevenueType {
   @@map("revenue_types")
 }
 
+model AttachmentType {
+  id          Int          @id @default(autoincrement())
+  value       String       @unique
+  label       String
+  isActive    Boolean      @default(true)
+  attachments Attachment[]
+
+  @@map("attachment_types")
+}
+
 model Employee {
   id                     Int          @id @default(autoincrement())
   firmId                 Int
@@ -111,6 +122,7 @@ model Employee {
   type                   EmployeeType @relation(fields: [typeId], references: [id])
   role                   UserRole     @relation(fields: [roleId], references: [id])
   auditLogs              AuditLog[]
+  attachments            Attachment[]
   contractAssignments    ContractEmployee[]
 
   @@unique([firmId, oabNumber])
@@ -159,6 +171,7 @@ model Client {
   deletedAt DateTime?
   firm      Firm       @relation(fields: [firmId], references: [id])
   type      ClientType @relation(fields: [typeId], references: [id])
+  attachments Attachment[]
   contracts Contract[]
 
   @@unique([firmId, document])
@@ -186,6 +199,7 @@ model Contract {
   firm              Firm               @relation(fields: [firmId], references: [id])
   legalArea         LegalArea          @relation(fields: [legalAreaId], references: [id])
   status            ContractStatus     @relation(fields: [statusId], references: [id])
+  attachments       Attachment[]
   assignments       ContractEmployee[]
   revenues          Revenue[]
 
@@ -303,4 +317,36 @@ model Remuneration {
   @@index([isActive])
   @@index([createdAt])
   @@map("remunerations")
+}
+
+model Attachment {
+  id          Int            @id @default(autoincrement())
+  firmId      Int
+  clientId    Int?
+  employeeId  Int?
+  contractId  Int?
+  typeId      Int
+  fileName    String
+  storagePath String         @unique
+  mimeType    String
+  fileSize    Int
+  isActive    Boolean        @default(true)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  deletedAt   DateTime?
+  client      Client?        @relation(fields: [clientId], references: [id])
+  contract    Contract?      @relation(fields: [contractId], references: [id])
+  employee    Employee?      @relation(fields: [employeeId], references: [id])
+  firm        Firm           @relation(fields: [firmId], references: [id])
+  type        AttachmentType @relation(fields: [typeId], references: [id])
+
+  @@index([firmId])
+  @@index([clientId])
+  @@index([employeeId])
+  @@index([contractId])
+  @@index([typeId])
+  @@index([deletedAt])
+  @@index([isActive])
+  @@index([createdAt])
+  @@map("attachments")
 }

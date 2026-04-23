@@ -392,6 +392,7 @@ export const ModelName = {
   ContractStatus: 'ContractStatus',
   AssignmentType: 'AssignmentType',
   RevenueType: 'RevenueType',
+  AttachmentType: 'AttachmentType',
   Employee: 'Employee',
   AuditLog: 'AuditLog',
   Client: 'Client',
@@ -399,7 +400,8 @@ export const ModelName = {
   ContractEmployee: 'ContractEmployee',
   Revenue: 'Revenue',
   Fee: 'Fee',
-  Remuneration: 'Remuneration'
+  Remuneration: 'Remuneration',
+  Attachment: 'Attachment'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -415,7 +417,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "firm" | "clientType" | "employeeType" | "userRole" | "legalArea" | "contractStatus" | "assignmentType" | "revenueType" | "employee" | "auditLog" | "client" | "contract" | "contractEmployee" | "revenue" | "fee" | "remuneration"
+    modelProps: "firm" | "clientType" | "employeeType" | "userRole" | "legalArea" | "contractStatus" | "assignmentType" | "revenueType" | "attachmentType" | "employee" | "auditLog" | "client" | "contract" | "contractEmployee" | "revenue" | "fee" | "remuneration" | "attachment"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1011,6 +1013,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    AttachmentType: {
+      payload: Prisma.$AttachmentTypePayload<ExtArgs>
+      fields: Prisma.AttachmentTypeFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AttachmentTypeFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AttachmentTypePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AttachmentTypeFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AttachmentTypePayload>
+        }
+        findFirst: {
+          args: Prisma.AttachmentTypeFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AttachmentTypePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AttachmentTypeFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AttachmentTypePayload>
+        }
+        findMany: {
+          args: Prisma.AttachmentTypeFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AttachmentTypePayload>[]
+        }
+        create: {
+          args: Prisma.AttachmentTypeCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AttachmentTypePayload>
+        }
+        createMany: {
+          args: Prisma.AttachmentTypeCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AttachmentTypeCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AttachmentTypePayload>[]
+        }
+        delete: {
+          args: Prisma.AttachmentTypeDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AttachmentTypePayload>
+        }
+        update: {
+          args: Prisma.AttachmentTypeUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AttachmentTypePayload>
+        }
+        deleteMany: {
+          args: Prisma.AttachmentTypeDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AttachmentTypeUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AttachmentTypeUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AttachmentTypePayload>[]
+        }
+        upsert: {
+          args: Prisma.AttachmentTypeUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AttachmentTypePayload>
+        }
+        aggregate: {
+          args: Prisma.AttachmentTypeAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAttachmentType>
+        }
+        groupBy: {
+          args: Prisma.AttachmentTypeGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AttachmentTypeGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AttachmentTypeCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AttachmentTypeCountAggregateOutputType> | number
+        }
+      }
+    }
     Employee: {
       payload: Prisma.$EmployeePayload<ExtArgs>
       fields: Prisma.EmployeeFieldRefs
@@ -1603,6 +1679,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Attachment: {
+      payload: Prisma.$AttachmentPayload<ExtArgs>
+      fields: Prisma.AttachmentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AttachmentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AttachmentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AttachmentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AttachmentPayload>
+        }
+        findFirst: {
+          args: Prisma.AttachmentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AttachmentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AttachmentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AttachmentPayload>
+        }
+        findMany: {
+          args: Prisma.AttachmentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AttachmentPayload>[]
+        }
+        create: {
+          args: Prisma.AttachmentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AttachmentPayload>
+        }
+        createMany: {
+          args: Prisma.AttachmentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AttachmentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AttachmentPayload>[]
+        }
+        delete: {
+          args: Prisma.AttachmentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AttachmentPayload>
+        }
+        update: {
+          args: Prisma.AttachmentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AttachmentPayload>
+        }
+        deleteMany: {
+          args: Prisma.AttachmentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AttachmentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AttachmentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AttachmentPayload>[]
+        }
+        upsert: {
+          args: Prisma.AttachmentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AttachmentPayload>
+        }
+        aggregate: {
+          args: Prisma.AttachmentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAttachment>
+        }
+        groupBy: {
+          args: Prisma.AttachmentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AttachmentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AttachmentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AttachmentCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1718,6 +1868,16 @@ export const RevenueTypeScalarFieldEnum = {
 } as const
 
 export type RevenueTypeScalarFieldEnum = (typeof RevenueTypeScalarFieldEnum)[keyof typeof RevenueTypeScalarFieldEnum]
+
+
+export const AttachmentTypeScalarFieldEnum = {
+  id: 'id',
+  value: 'value',
+  label: 'label',
+  isActive: 'isActive'
+} as const
+
+export type AttachmentTypeScalarFieldEnum = (typeof AttachmentTypeScalarFieldEnum)[keyof typeof AttachmentTypeScalarFieldEnum]
 
 
 export const EmployeeScalarFieldEnum = {
@@ -1862,6 +2022,26 @@ export const RemunerationScalarFieldEnum = {
 } as const
 
 export type RemunerationScalarFieldEnum = (typeof RemunerationScalarFieldEnum)[keyof typeof RemunerationScalarFieldEnum]
+
+
+export const AttachmentScalarFieldEnum = {
+  id: 'id',
+  firmId: 'firmId',
+  clientId: 'clientId',
+  employeeId: 'employeeId',
+  contractId: 'contractId',
+  typeId: 'typeId',
+  fileName: 'fileName',
+  storagePath: 'storagePath',
+  mimeType: 'mimeType',
+  fileSize: 'fileSize',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+} as const
+
+export type AttachmentScalarFieldEnum = (typeof AttachmentScalarFieldEnum)[keyof typeof AttachmentScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -2103,6 +2283,7 @@ export type GlobalOmitConfig = {
   contractStatus?: Prisma.ContractStatusOmit
   assignmentType?: Prisma.AssignmentTypeOmit
   revenueType?: Prisma.RevenueTypeOmit
+  attachmentType?: Prisma.AttachmentTypeOmit
   employee?: Prisma.EmployeeOmit
   auditLog?: Prisma.AuditLogOmit
   client?: Prisma.ClientOmit
@@ -2111,6 +2292,7 @@ export type GlobalOmitConfig = {
   revenue?: Prisma.RevenueOmit
   fee?: Prisma.FeeOmit
   remuneration?: Prisma.RemunerationOmit
+  attachment?: Prisma.AttachmentOmit
 }
 
 /* Types for Logging */

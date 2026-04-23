@@ -428,6 +428,7 @@ export async function getContractAccessResourceById(id: number) {
 
 	return {
 		id: contract.id,
+		deletedAt: contract.deletedAt,
 		resource: {
 			firmId: contract.firmId,
 			statusValue: contract.status.value,

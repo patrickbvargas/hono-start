@@ -1,12 +1,4 @@
-# Spec: lookup-reference-data
-
-## Purpose
-
-Define the global employee and attachment lookup reference tables and the option-query behaviour used to populate lookup-backed selectors.
-
----
-
-## Requirements
+## MODIFIED Requirements
 
 ### Requirement: Employee lookup tables store active state
 The system SHALL store an `isActive` boolean on global lookup tables used by product features, including `EmployeeType`, `UserRole`, and `AttachmentType`. The field SHALL default to `true` so existing and newly seeded lookup rows remain active unless explicitly deactivated later.

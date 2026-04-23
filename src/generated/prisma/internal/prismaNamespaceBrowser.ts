@@ -59,6 +59,7 @@ export const ModelName = {
   ContractStatus: 'ContractStatus',
   AssignmentType: 'AssignmentType',
   RevenueType: 'RevenueType',
+  AttachmentType: 'AttachmentType',
   Employee: 'Employee',
   AuditLog: 'AuditLog',
   Client: 'Client',
@@ -66,7 +67,8 @@ export const ModelName = {
   ContractEmployee: 'ContractEmployee',
   Revenue: 'Revenue',
   Fee: 'Fee',
-  Remuneration: 'Remuneration'
+  Remuneration: 'Remuneration',
+  Attachment: 'Attachment'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -161,6 +163,16 @@ export const RevenueTypeScalarFieldEnum = {
 } as const
 
 export type RevenueTypeScalarFieldEnum = (typeof RevenueTypeScalarFieldEnum)[keyof typeof RevenueTypeScalarFieldEnum]
+
+
+export const AttachmentTypeScalarFieldEnum = {
+  id: 'id',
+  value: 'value',
+  label: 'label',
+  isActive: 'isActive'
+} as const
+
+export type AttachmentTypeScalarFieldEnum = (typeof AttachmentTypeScalarFieldEnum)[keyof typeof AttachmentTypeScalarFieldEnum]
 
 
 export const EmployeeScalarFieldEnum = {
@@ -305,6 +317,26 @@ export const RemunerationScalarFieldEnum = {
 } as const
 
 export type RemunerationScalarFieldEnum = (typeof RemunerationScalarFieldEnum)[keyof typeof RemunerationScalarFieldEnum]
+
+
+export const AttachmentScalarFieldEnum = {
+  id: 'id',
+  firmId: 'firmId',
+  clientId: 'clientId',
+  employeeId: 'employeeId',
+  contractId: 'contractId',
+  typeId: 'typeId',
+  fileName: 'fileName',
+  storagePath: 'storagePath',
+  mimeType: 'mimeType',
+  fileSize: 'fileSize',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+} as const
+
+export type AttachmentScalarFieldEnum = (typeof AttachmentScalarFieldEnum)[keyof typeof AttachmentScalarFieldEnum]
 
 
 export const SortOrder = {

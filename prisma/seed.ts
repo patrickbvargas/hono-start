@@ -25,6 +25,7 @@ type AssignmentTypeValue =
   | "RECOMMENDED"
   | "ADMIN_ASSISTANT";
 type RevenueTypeValue = "ADMINISTRATIVE" | "JUDICIAL" | "SUCCUMBENCY";
+type AttachmentTypeValue = "PDF" | "JPG" | "PNG";
 
 interface EmployeeSeedInput {
   fullName: string;
@@ -1023,6 +1024,20 @@ async function main() {
     ].map((item) =>
       prisma.revenueType.upsert({
         where: { value: item.value },
+        update: { label: item.label, isActive: true },
+        create: { ...item, isActive: true },
+      }),
+    ),
+  );
+
+  await Promise.all(
+    [
+      { value: "PDF", label: "PDF" },
+      { value: "JPG", label: "JPG" },
+      { value: "PNG", label: "PNG" },
+    ].map((item) =>
+      prisma.attachmentType.upsert({
+        where: { value: item.value as AttachmentTypeValue },
         update: { label: item.label, isActive: true },
         create: { ...item, isActive: true },
       }),

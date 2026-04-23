@@ -82,6 +82,11 @@ export type AssignmentType = Prisma.AssignmentTypeModel
  */
 export type RevenueType = Prisma.RevenueTypeModel
 /**
+ * Model AttachmentType
+ * 
+ */
+export type AttachmentType = Prisma.AttachmentTypeModel
+/**
  * Model Employee
  * 
  */
@@ -121,3 +126,8 @@ export type Fee = Prisma.FeeModel
  * 
  */
 export type Remuneration = Prisma.RemunerationModel
+/**
+ * Model Attachment
+ * 
+ */
+export type Attachment = Prisma.AttachmentModel
