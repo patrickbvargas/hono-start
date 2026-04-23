@@ -71,7 +71,9 @@ describe("feature boilerplate conventions", () => {
 					/^export\s+(\*|\{)/.test(line),
 				);
 
-				return isReExportOnlyBarrel ? [normalizedPath] : [];
+				return isReExportOnlyBarrel
+					? [`${normalizedPath}:1:nested re-export barrel`]
+					: [];
 			});
 
 		expect(nestedIndexes).toEqual([]);
@@ -135,7 +137,7 @@ describe("feature boilerplate conventions", () => {
 					)
 					.map((name) => {
 						const line = getLine(content, content.indexOf(name));
-						return `${normalizePath(path)}:${line}:${name}`;
+						return `${normalizePath(path)}:${line}:${name} must end with QueryOptions or MutationOptions`;
 					});
 			});
 
@@ -160,7 +162,7 @@ describe("feature boilerplate conventions", () => {
 					)
 					.map((match) => {
 						const line = getLine(content, match.index);
-						return `${normalizePath(path)}:${line}:${match[0].trim()}`;
+						return `${normalizePath(path)}:${line}:${match[0].trim()} must be an exported assert function`;
 					});
 			});
 

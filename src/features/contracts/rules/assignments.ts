@@ -8,12 +8,25 @@ import {
 	EMPLOYEE_TYPE_ADMIN_ASSISTANT_VALUE,
 	EMPLOYEE_TYPE_LAWYER_VALUE,
 } from "../constants/values";
-import type { ResolvedContractAssignment } from "../data/mutations";
 
 interface ResponsibleLawyerAssignmentInput {
 	isActive: boolean;
 	assignmentTypeValue: string;
 	employeeTypeValue: string;
+}
+
+interface ContractAssignmentRuleInput {
+	isActive: boolean;
+	assignmentType: {
+		value: string;
+	};
+	employee: {
+		referralPercentage: Prisma.Decimal | number | string;
+		remunerationPercentage: Prisma.Decimal | number | string;
+		type: {
+			value: string;
+		};
+	};
 }
 
 export function assertContractResponsibleLawyer(
@@ -32,7 +45,7 @@ export function assertContractResponsibleLawyer(
 }
 
 export function assertContractAssignmentCompatibility(
-	assignments: ResolvedContractAssignment[],
+	assignments: ContractAssignmentRuleInput[],
 ) {
 	for (const assignment of assignments) {
 		if (!assignment.isActive) {
@@ -58,7 +71,7 @@ export function assertContractAssignmentCompatibility(
 }
 
 export function assertContractReferralTeamComposition(
-	assignments: ResolvedContractAssignment[],
+	assignments: ContractAssignmentRuleInput[],
 ) {
 	const activeAssignments = assignments.filter(
 		(assignment) => assignment.isActive,
@@ -88,7 +101,7 @@ export function assertContractReferralTeamComposition(
 }
 
 export function assertContractReferralPercentageCompatibility(
-	assignments: ResolvedContractAssignment[],
+	assignments: ContractAssignmentRuleInput[],
 ) {
 	const activeAssignments = assignments.filter(
 		(assignment) => assignment.isActive,
@@ -124,7 +137,7 @@ export function assertContractReferralPercentageCompatibility(
 }
 
 export function assertResolvedContractAssignmentRules(
-	assignments: ResolvedContractAssignment[],
+	assignments: ContractAssignmentRuleInput[],
 ) {
 	assertContractAssignmentCompatibility(assignments);
 	assertContractReferralTeamComposition(assignments);
