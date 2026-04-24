@@ -4,8 +4,8 @@ import {
 	ENTITY_ACTIVE_FILTER_OPTIONS,
 	ENTITY_DELETED_FILTER_OPTIONS,
 } from "@/shared/lib/entity-management";
+import { useRemunerationOptions } from "../../hooks/use-data";
 import { useRemunerationFilter } from "../../hooks/use-filter";
-import { useRemunerationOptions } from "../../hooks/use-options";
 
 interface RemunerationFilterProps {
 	isAdmin?: boolean;

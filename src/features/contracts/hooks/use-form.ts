@@ -11,8 +11,7 @@ import {
 	createContractMutationOptions,
 	updateContractMutationOptions,
 } from "../api/mutations";
-import { getContractByIdQueryOptions } from "../api/queries";
-import { CONTRACT_DATA_CACHE_KEY } from "../constants/cache";
+import { contractKeys, getContractByIdQueryOptions } from "../api/queries";
 import {
 	contractCreateInputSchema,
 	contractUpdateInputSchema,
@@ -56,7 +55,7 @@ export function useContractForm({ id, onSuccess }: UseContractFormOptions) {
 					await createMutation.mutateAsync({ data: parsed });
 					toast.success("Contrato criado com sucesso.");
 				}
-				await refreshEntityQueries(queryClient, CONTRACT_DATA_CACHE_KEY);
+				await refreshEntityQueries(queryClient, contractKeys.all);
 				onSuccess?.();
 			} catch (error) {
 				toast.danger(getMutationErrorMessage(error));

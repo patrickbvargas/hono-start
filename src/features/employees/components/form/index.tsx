@@ -3,8 +3,8 @@ import { FieldGroup } from "@/shared/components/ui";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
 import { LAWYER_TYPE_VALUE } from "../../constants/values";
+import { useEmployeeOptions } from "../../hooks/use-data";
 import { useEmployeeForm } from "../../hooks/use-form";
-import { useEmployeeOptions } from "../../hooks/use-options";
 
 interface EmployeeFormProps {
 	id?: EntityId;

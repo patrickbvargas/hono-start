@@ -4,8 +4,8 @@ import {
 	ENTITY_ACTIVE_FILTER_OPTIONS,
 	ENTITY_DELETED_FILTER_OPTIONS,
 } from "@/shared/lib/entity-management";
+import { useClientOptions } from "../../hooks/use-data";
 import { useClientFilter } from "../../hooks/use-filter";
-import { useClientOptions } from "../../hooks/use-options";
 
 export const ClientFilter = () => {
 	const { form } = useClientFilter();

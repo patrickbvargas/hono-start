@@ -1,4 +1,3 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import { PlusIcon } from "lucide-react";
@@ -11,6 +10,7 @@ import {
 	ClientTable,
 	clientSearchSchema,
 	getClientsQueryOptions,
+	useClientData,
 } from "@/features/clients";
 import { RouteLoading } from "@/shared/components/route-loading";
 import { Button } from "@/shared/components/ui";
@@ -42,7 +42,7 @@ export const Route = createFileRoute("/clientes")({
 
 function RouteComponent() {
 	const search = Route.useSearch();
-	const { data } = useSuspenseQuery(getClientsQueryOptions(search));
+	const { clients } = useClientData(search);
 	const { overlay } = useOverlay<EntityId>();
 	const isAdmin = useLoggedUserSessionStore(isAdminSession);
 
@@ -62,7 +62,7 @@ function RouteComponent() {
 			</WrapperHeader>
 			<WrapperBody>
 				<ClientTable
-					data={data}
+					data={clients}
 					onEdit={overlay.edit.open}
 					onView={overlay.details.open}
 					onDelete={overlay.delete.open}

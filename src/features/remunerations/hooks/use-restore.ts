@@ -6,7 +6,7 @@ import {
 import { toast } from "@/shared/lib/toast";
 import type { EntityId } from "@/shared/schemas/entity";
 import { restoreRemunerationMutationOptions } from "../api/mutations";
-import { REMUNERATION_DATA_CACHE_KEY } from "../constants/cache";
+import { remunerationKeys } from "../api/queries";
 
 interface UseRemunerationRestoreOptions {
 	onSuccess?: () => void;
@@ -22,7 +22,7 @@ export function useRemunerationRestore({
 		try {
 			await mutation.mutateAsync({ data: { id } });
 			toast.success("Remuneração restaurada com sucesso.");
-			await refreshEntityQueries(queryClient, REMUNERATION_DATA_CACHE_KEY);
+			await refreshEntityQueries(queryClient, remunerationKeys.all);
 			onSuccess?.();
 		} catch (error) {
 			toast.danger(getMutationErrorMessage(error));

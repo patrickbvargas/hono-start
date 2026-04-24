@@ -13,7 +13,6 @@ import type {
 	QueryOneReturnType,
 	QueryPaginatedReturnType,
 } from "@/shared/types/api";
-import { EMPLOYEE_DATA_CACHE_KEY } from "../constants/cache";
 import { EMPLOYEE_ERRORS } from "../constants/errors";
 import {
 	getEmployeeById,
@@ -24,6 +23,14 @@ import {
 import { employeeIdInputSchema } from "../schemas/form";
 import type { EmployeeDetail, EmployeeSummary } from "../schemas/model";
 import { type EmployeeSearch, employeeSearchSchema } from "../schemas/search";
+
+export const employeeKeys = {
+	all: ["employee"] as const,
+	list: (search: EmployeeSearch) => [...employeeKeys.all, search] as const,
+	detail: (id: EntityId) => [...employeeKeys.all, "detail", id] as const,
+	types: () => [...employeeKeys.all, "types"] as const,
+	roles: () => [...employeeKeys.all, "roles"] as const,
+};
 
 const getEmployeesFn = createServerFn({ method: "GET" })
 	.inputValidator(employeeSearchSchema)
@@ -89,28 +96,28 @@ const getEmployeeRolesFn = createServerFn({ method: "GET" }).handler(
 
 export const getEmployeesQueryOptions = (search: EmployeeSearch) =>
 	queryOptions({
-		queryKey: [EMPLOYEE_DATA_CACHE_KEY, search],
+		queryKey: employeeKeys.list(search),
 		queryFn: () => getEmployeesFn({ data: search }),
 		staleTime: 5 * 60 * 1000,
 	});
 
 export const getEmployeeByIdQueryOptions = (id: EntityId) =>
 	queryOptions({
-		queryKey: [EMPLOYEE_DATA_CACHE_KEY, "detail", id],
+		queryKey: employeeKeys.detail(id),
 		queryFn: () => getEmployeeByIdFn({ data: { id } }),
 		staleTime: 5 * 60 * 1000,
 	});
 
 export const getEmployeeTypesQueryOptions = () =>
 	queryOptions({
-		queryKey: [EMPLOYEE_DATA_CACHE_KEY, "types"],
+		queryKey: employeeKeys.types(),
 		queryFn: getEmployeeTypesFn,
 		staleTime: "static",
 	});
 
 export const getEmployeeRolesQueryOptions = () =>
 	queryOptions({
-		queryKey: [EMPLOYEE_DATA_CACHE_KEY, "roles"],
+		queryKey: employeeKeys.roles(),
 		queryFn: getEmployeeRolesFn,
 		staleTime: "static",
 	});

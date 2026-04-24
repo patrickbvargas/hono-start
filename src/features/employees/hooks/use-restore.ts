@@ -6,7 +6,7 @@ import {
 import { toast } from "@/shared/lib/toast";
 import type { EntityId } from "@/shared/schemas/entity";
 import { restoreEmployeeMutationOptions } from "../api/mutations";
-import { EMPLOYEE_DATA_CACHE_KEY } from "../constants/cache";
+import { employeeKeys } from "../api/queries";
 
 interface UseEmployeeRestoreOptions {
 	onSuccess?: () => void;
@@ -20,7 +20,7 @@ export function useEmployeeRestore({ onSuccess }: UseEmployeeRestoreOptions) {
 		try {
 			await mutation.mutateAsync({ data: { id } });
 			toast.success("Funcionário restaurado com sucesso.");
-			await refreshEntityQueries(queryClient, EMPLOYEE_DATA_CACHE_KEY);
+			await refreshEntityQueries(queryClient, employeeKeys.all);
 			onSuccess?.();
 		} catch (error) {
 			toast.danger(getMutationErrorMessage(error));

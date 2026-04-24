@@ -9,12 +9,18 @@ import type {
 	QueryOneReturnType,
 	QueryPaginatedReturnType,
 } from "@/shared/types/api";
-import { CLIENT_DATA_CACHE_KEY } from "../constants/cache";
 import { CLIENT_ERRORS } from "../constants/errors";
 import { getClientById, getClients, getClientTypes } from "../data/queries";
 import { clientIdInputSchema } from "../schemas/form";
 import type { ClientDetail, ClientSummary } from "../schemas/model";
 import { type ClientSearch, clientSearchSchema } from "../schemas/search";
+
+export const clientKeys = {
+	all: ["client"] as const,
+	list: (search: ClientSearch) => [...clientKeys.all, search] as const,
+	detail: (id: EntityId) => [...clientKeys.all, "detail", id] as const,
+	types: () => [...clientKeys.all, "types"] as const,
+};
 
 const getClientsFn = createServerFn({ method: "GET" })
 	.inputValidator(clientSearchSchema)
@@ -63,21 +69,21 @@ const getClientTypesFn = createServerFn({ method: "GET" }).handler(
 
 export const getClientsQueryOptions = (search: ClientSearch) =>
 	queryOptions({
-		queryKey: [CLIENT_DATA_CACHE_KEY, search],
+		queryKey: clientKeys.list(search),
 		queryFn: () => getClientsFn({ data: search }),
 		staleTime: 5 * 60 * 1000,
 	});
 
 export const getClientByIdQueryOptions = (id: EntityId) =>
 	queryOptions({
-		queryKey: [CLIENT_DATA_CACHE_KEY, "detail", id],
+		queryKey: clientKeys.detail(id),
 		queryFn: () => getClientByIdFn({ data: { id } }),
 		staleTime: 5 * 60 * 1000,
 	});
 
 export const getClientTypesQueryOptions = () =>
 	queryOptions({
-		queryKey: [CLIENT_DATA_CACHE_KEY, "types"],
+		queryKey: clientKeys.types(),
 		queryFn: getClientTypesFn,
 		staleTime: "static",
 	});

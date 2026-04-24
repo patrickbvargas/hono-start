@@ -5,5 +5,6 @@ export * from "./components/filter";
 export * from "./components/form";
 export * from "./components/restore";
 export * from "./components/table";
+export { useClientData } from "./hooks/use-data";
 export type { ClientSummary } from "./schemas/model";
 export * from "./schemas/search";

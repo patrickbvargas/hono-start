@@ -1,6 +1,6 @@
 import { FilterWrapper } from "@/shared/components/filter-wrapper";
+import { useDashboardOptions } from "../../hooks/use-data";
 import { useDashboardFilter } from "../../hooks/use-filter";
-import { useDashboardOptions } from "../../hooks/use-options";
 
 interface DashboardFilterProps {
 	isAdmin?: boolean;

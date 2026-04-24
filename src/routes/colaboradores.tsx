@@ -1,4 +1,3 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import { PlusIcon } from "lucide-react";
@@ -11,6 +10,7 @@ import {
 	EmployeeTable,
 	employeeSearchSchema,
 	getEmployeesQueryOptions,
+	useEmployeeData,
 } from "@/features/employees";
 import { RouteLoading } from "@/shared/components/route-loading";
 import { Button } from "@/shared/components/ui";
@@ -44,7 +44,7 @@ export const Route = createFileRoute("/colaboradores")({
 
 function RouteComponent() {
 	const search = Route.useSearch();
-	const { data } = useSuspenseQuery(getEmployeesQueryOptions(search));
+	const { employees } = useEmployeeData(search);
 	const { overlay } = useOverlay<EntityId>();
 	const canManage = useLoggedUserSessionStore((session) =>
 		can(session, "employee.manage"),
@@ -68,7 +68,7 @@ function RouteComponent() {
 			</WrapperHeader>
 			<WrapperBody>
 				<EmployeeTable
-					data={data}
+					data={employees}
 					onEdit={overlay.edit.open}
 					onView={overlay.details.open}
 					onDelete={overlay.delete.open}

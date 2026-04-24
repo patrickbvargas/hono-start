@@ -6,7 +6,7 @@ import {
 import { toast } from "@/shared/lib/toast";
 import type { EntityId } from "@/shared/schemas/entity";
 import { deleteRemunerationMutationOptions } from "../api/mutations";
-import { REMUNERATION_DATA_CACHE_KEY } from "../constants/cache";
+import { remunerationKeys } from "../api/queries";
 
 interface UseRemunerationDeleteOptions {
 	onSuccess?: () => void;
@@ -22,7 +22,7 @@ export function useRemunerationDelete({
 		try {
 			await mutation.mutateAsync({ data: { id } });
 			toast.success("Remuneração excluída com sucesso.");
-			await refreshEntityQueries(queryClient, REMUNERATION_DATA_CACHE_KEY);
+			await refreshEntityQueries(queryClient, remunerationKeys.all);
 			onSuccess?.();
 		} catch (error) {
 			toast.danger(getMutationErrorMessage(error));

@@ -1,4 +1,4 @@
-import type { QueryClient } from "@tanstack/react-query";
+import type { QueryClient, QueryKey } from "@tanstack/react-query";
 import type { FieldOption } from "@/shared/types/field";
 
 export const ENTITY_ACTIVE_FILTER_OPTIONS: FieldOption[] = [
@@ -49,9 +49,9 @@ export function withDeterministicTieBreaker<TOrderBy>(
 
 export async function refreshEntityQueries(
 	queryClient: QueryClient,
-	cacheKey: string,
+	queryKey: QueryKey,
 ) {
-	await queryClient.invalidateQueries({ queryKey: [cacheKey] });
+	await queryClient.invalidateQueries({ queryKey });
 }
 
 export function getMutationErrorMessage(error: unknown) {

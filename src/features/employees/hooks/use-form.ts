@@ -11,8 +11,7 @@ import {
 	createEmployeeMutationOptions,
 	updateEmployeeMutationOptions,
 } from "../api/mutations";
-import { getEmployeeByIdQueryOptions } from "../api/queries";
-import { EMPLOYEE_DATA_CACHE_KEY } from "../constants/cache";
+import { employeeKeys, getEmployeeByIdQueryOptions } from "../api/queries";
 import {
 	employeeCreateInputSchema,
 	employeeUpdateInputSchema,
@@ -57,7 +56,7 @@ export function useEmployeeForm({ id, onSuccess }: UseEmployeeFormOptions) {
 					await createMutation.mutateAsync({ data: parsed });
 					toast.success("Funcionário criado com sucesso.");
 				}
-				await refreshEntityQueries(queryClient, EMPLOYEE_DATA_CACHE_KEY);
+				await refreshEntityQueries(queryClient, employeeKeys.all);
 				onSuccess?.();
 			} catch (error) {
 				toast.danger(getMutationErrorMessage(error));

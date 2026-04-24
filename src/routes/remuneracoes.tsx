@@ -1,4 +1,3 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import {
@@ -12,6 +11,7 @@ import {
 	RemunerationRestore,
 	RemunerationTable,
 	remunerationSearchSchema,
+	useRemunerationData,
 	useRemunerationExport,
 } from "@/features/remunerations";
 import { RouteLoading } from "@/shared/components/route-loading";
@@ -42,7 +42,7 @@ export const Route = createFileRoute("/remuneracoes")({
 
 function RouteComponent() {
 	const search = Route.useSearch();
-	const { data } = useSuspenseQuery(getRemunerationsQueryOptions(search));
+	const { remunerations } = useRemunerationData(search);
 	const { overlay } = useOverlay<Remuneration>();
 	const isAdmin = useLoggedUserSessionStore(isAdminSession);
 	const { handleExport, isPending, pendingFormat } =
@@ -65,7 +65,7 @@ function RouteComponent() {
 			</WrapperHeader>
 			<WrapperBody>
 				<RemunerationTable
-					data={data}
+					data={remunerations}
 					onEdit={overlay.edit.open}
 					onView={overlay.details.open}
 					onDelete={overlay.delete.open}

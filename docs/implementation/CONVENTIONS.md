@@ -71,7 +71,8 @@
 
 - Mutation option factories remain pure.
 - Cache invalidation and toast feedback are handled by orchestration hooks or form hooks, not hidden inside mutation definitions.
-- Cache keys are defined through feature constants, not inline strings.
+- React Query keys are defined through feature `api/queries.ts` key factories, not inline strings.
+- Mutation invalidation uses the exported `featureKeys.all` root from `api/queries.ts`.
 
 ## Form Hook Rule
 

@@ -10,7 +10,6 @@ import type {
 	QueryManyReturnType,
 	QueryPaginatedReturnType,
 } from "@/shared/types/api";
-import { AUDIT_LOG_DATA_CACHE_KEY } from "../constants/cache";
 import { AUDIT_LOG_ERRORS } from "../constants/errors";
 import {
 	getAuditLogActions,
@@ -20,6 +19,14 @@ import {
 } from "../data/queries";
 import type { AuditLog } from "../schemas/model";
 import { type AuditLogSearch, auditLogSearchSchema } from "../schemas/search";
+
+export const auditLogKeys = {
+	all: ["audit-log"] as const,
+	list: (search: AuditLogSearch) => [...auditLogKeys.all, search] as const,
+	actions: () => [...auditLogKeys.all, "actions"] as const,
+	entityTypes: () => [...auditLogKeys.all, "entity-types"] as const,
+	actors: () => [...auditLogKeys.all, "actors"] as const,
+};
 
 const getAuditLogsFn = createServerFn({ method: "GET" })
 	.inputValidator(auditLogSearchSchema)
@@ -83,28 +90,28 @@ const getAuditLogActorsFn = createServerFn({ method: "GET" }).handler(
 
 export const getAuditLogsQueryOptions = (search: AuditLogSearch) =>
 	queryOptions({
-		queryKey: [AUDIT_LOG_DATA_CACHE_KEY, search],
+		queryKey: auditLogKeys.list(search),
 		queryFn: () => getAuditLogsFn({ data: search }),
 		staleTime: 5 * 60 * 1000,
 	});
 
 export const getAuditLogActionsQueryOptions = () =>
 	queryOptions({
-		queryKey: [AUDIT_LOG_DATA_CACHE_KEY, "actions"],
+		queryKey: auditLogKeys.actions(),
 		queryFn: getAuditLogActionsFn,
 		staleTime: "static",
 	});
 
 export const getAuditLogEntityTypesQueryOptions = () =>
 	queryOptions({
-		queryKey: [AUDIT_LOG_DATA_CACHE_KEY, "entity-types"],
+		queryKey: auditLogKeys.entityTypes(),
 		queryFn: getAuditLogEntityTypesFn,
 		staleTime: "static",
 	});
 
 export const getAuditLogActorsQueryOptions = () =>
 	queryOptions({
-		queryKey: [AUDIT_LOG_DATA_CACHE_KEY, "actors"],
+		queryKey: auditLogKeys.actors(),
 		queryFn: getAuditLogActorsFn,
 		staleTime: "static",
 	});

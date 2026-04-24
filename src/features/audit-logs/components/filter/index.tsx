@@ -1,6 +1,6 @@
 import { FilterWrapper } from "@/shared/components/filter-wrapper";
+import { useAuditLogOptions } from "../../hooks/use-data";
 import { useAuditLogFilter } from "../../hooks/use-filter";
-import { useAuditLogOptions } from "../../hooks/use-options";
 
 export const AuditLogFilter = () => {
 	const { form } = useAuditLogFilter();

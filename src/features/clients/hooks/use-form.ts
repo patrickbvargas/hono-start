@@ -11,8 +11,7 @@ import {
 	createClientMutationOptions,
 	updateClientMutationOptions,
 } from "../api/mutations";
-import { getClientByIdQueryOptions } from "../api/queries";
-import { CLIENT_DATA_CACHE_KEY } from "../constants/cache";
+import { clientKeys, getClientByIdQueryOptions } from "../api/queries";
 import {
 	clientCreateInputSchema,
 	clientUpdateInputSchema,
@@ -55,7 +54,7 @@ export function useClientForm({ id, onSuccess }: UseClientFormOptions) {
 					await createMutation.mutateAsync({ data: parsed });
 					toast.success("Cliente criado com sucesso.");
 				}
-				await refreshEntityQueries(queryClient, CLIENT_DATA_CACHE_KEY);
+				await refreshEntityQueries(queryClient, clientKeys.all);
 				onSuccess?.();
 			} catch (error) {
 				toast.danger(getMutationErrorMessage(error));

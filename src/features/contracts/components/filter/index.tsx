@@ -4,8 +4,8 @@ import {
 	ENTITY_ACTIVE_FILTER_OPTIONS,
 	ENTITY_DELETED_FILTER_OPTIONS,
 } from "@/shared/lib/entity-management";
+import { useContractOptions } from "../../hooks/use-data";
 import { useContractFilter } from "../../hooks/use-filter";
-import { useContractOptions } from "../../hooks/use-options";
 
 export const ContractFilter = () => {
 	const { form } = useContractFilter();

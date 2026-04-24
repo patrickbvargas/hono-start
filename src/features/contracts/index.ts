@@ -5,5 +5,6 @@ export * from "./components/filter";
 export * from "./components/form";
 export * from "./components/restore";
 export * from "./components/table";
+export { useContractData } from "./hooks/use-data";
 export type { ContractSummary } from "./schemas/model";
 export * from "./schemas/search";

@@ -16,8 +16,8 @@ import {
 	CONTRACT_MAX_EMPLOYEES,
 	CONTRACT_MAX_REVENUES,
 } from "../../constants/values";
+import { useContractOptions } from "../../hooks/use-data";
 import { useContractForm } from "../../hooks/use-form";
-import { useContractOptions } from "../../hooks/use-options";
 import {
 	defaultContractAssignmentValues,
 	defaultContractRevenueValues,

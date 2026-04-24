@@ -13,7 +13,6 @@ import type {
 	QueryOneReturnType,
 	QueryPaginatedReturnType,
 } from "@/shared/types/api";
-import { CONTRACT_DATA_CACHE_KEY } from "../constants/cache";
 import { CONTRACT_ERRORS } from "../constants/errors";
 import {
 	getContractAssignmentTypes,
@@ -28,6 +27,18 @@ import {
 import { contractIdInputSchema } from "../schemas/form";
 import type { ContractDetail, ContractSummary } from "../schemas/model";
 import { type ContractSearch, contractSearchSchema } from "../schemas/search";
+
+export const contractKeys = {
+	all: ["contract"] as const,
+	list: (search: ContractSearch) => [...contractKeys.all, search] as const,
+	detail: (id: EntityId) => [...contractKeys.all, "detail", id] as const,
+	legalAreas: () => [...contractKeys.all, "legal-areas"] as const,
+	statuses: () => [...contractKeys.all, "statuses"] as const,
+	assignmentTypes: () => [...contractKeys.all, "assignment-types"] as const,
+	revenueTypes: () => [...contractKeys.all, "revenue-types"] as const,
+	clientOptions: () => [...contractKeys.all, "client-options"] as const,
+	employeeOptions: () => [...contractKeys.all, "employee-options"] as const,
+};
 
 const getContractsFn = createServerFn({ method: "GET" })
 	.inputValidator(contractSearchSchema)
@@ -153,56 +164,56 @@ const getSelectableContractEmployeesFn = createServerFn({
 
 export const getContractsQueryOptions = (search: ContractSearch) =>
 	queryOptions({
-		queryKey: [CONTRACT_DATA_CACHE_KEY, search],
+		queryKey: contractKeys.list(search),
 		queryFn: () => getContractsFn({ data: search }),
 		staleTime: 5 * 60 * 1000,
 	});
 
 export const getContractByIdQueryOptions = (id: EntityId) =>
 	queryOptions({
-		queryKey: [CONTRACT_DATA_CACHE_KEY, "detail", id],
+		queryKey: contractKeys.detail(id),
 		queryFn: () => getContractByIdFn({ data: { id } }),
 		staleTime: 5 * 60 * 1000,
 	});
 
 export const getContractLegalAreasQueryOptions = () =>
 	queryOptions({
-		queryKey: [CONTRACT_DATA_CACHE_KEY, "legal-areas"],
+		queryKey: contractKeys.legalAreas(),
 		queryFn: getContractLegalAreasFn,
 		staleTime: "static",
 	});
 
 export const getContractStatusesQueryOptions = () =>
 	queryOptions({
-		queryKey: [CONTRACT_DATA_CACHE_KEY, "statuses"],
+		queryKey: contractKeys.statuses(),
 		queryFn: getContractStatusesFn,
 		staleTime: "static",
 	});
 
 export const getContractAssignmentTypesQueryOptions = () =>
 	queryOptions({
-		queryKey: [CONTRACT_DATA_CACHE_KEY, "assignment-types"],
+		queryKey: contractKeys.assignmentTypes(),
 		queryFn: getContractAssignmentTypesFn,
 		staleTime: "static",
 	});
 
 export const getContractRevenueTypesQueryOptions = () =>
 	queryOptions({
-		queryKey: [CONTRACT_DATA_CACHE_KEY, "revenue-types"],
+		queryKey: contractKeys.revenueTypes(),
 		queryFn: getContractRevenueTypesFn,
 		staleTime: "static",
 	});
 
 export const getSelectableContractClientsQueryOptions = () =>
 	queryOptions({
-		queryKey: [CONTRACT_DATA_CACHE_KEY, "client-options"],
+		queryKey: contractKeys.clientOptions(),
 		queryFn: getSelectableContractClientsFn,
 		staleTime: 5 * 60 * 1000,
 	});
 
 export const getSelectableContractEmployeesQueryOptions = () =>
 	queryOptions({
-		queryKey: [CONTRACT_DATA_CACHE_KEY, "employee-options"],
+		queryKey: contractKeys.employeeOptions(),
 		queryFn: getSelectableContractEmployeesFn,
 		staleTime: 5 * 60 * 1000,
 	});

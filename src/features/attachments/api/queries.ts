@@ -7,7 +7,6 @@ import {
 	getServerScope,
 } from "@/shared/session";
 import type { QueryManyReturnType } from "@/shared/types/api";
-import { ATTACHMENT_DATA_CACHE_KEY } from "../constants/cache";
 import { ATTACHMENT_ERRORS } from "../constants/errors";
 import {
 	assertAttachmentOwnerExists,
@@ -19,6 +18,20 @@ import {
 	attachmentListInputSchema,
 } from "../schemas/form";
 import type { AttachmentSummary } from "../schemas/model";
+
+export const attachmentKeys = {
+	all: ["attachments"] as const,
+	list: (input: AttachmentListInput) => {
+		const owner =
+			input.clientId ??
+			input.employeeId ??
+			input.contractId ??
+			attachmentKeys.all[0];
+
+		return [...attachmentKeys.all, "list", owner, input] as const;
+	},
+	types: () => [...attachmentKeys.all, "types"] as const,
+};
 
 function assertAttachmentOwnerReadAccess(
 	session: ReturnType<typeof getServerLoggedUserSession>,
@@ -79,21 +92,15 @@ const getAttachmentTypesFn = createServerFn({ method: "GET" }).handler(
 export const getAttachmentsByOwnerQueryOptions = (
 	input: AttachmentListInput,
 ) => {
-	const owner =
-		input.clientId ??
-		input.employeeId ??
-		input.contractId ??
-		ATTACHMENT_DATA_CACHE_KEY;
-
 	return queryOptions({
-		queryKey: [ATTACHMENT_DATA_CACHE_KEY, "list", owner, input],
+		queryKey: attachmentKeys.list(input),
 		queryFn: () => getAttachmentsByOwnerFn({ data: input }),
 	});
 };
 
 export const getAttachmentTypesQueryOptions = () =>
 	queryOptions({
-		queryKey: [ATTACHMENT_DATA_CACHE_KEY, "types"],
+		queryKey: attachmentKeys.types(),
 		queryFn: getAttachmentTypesFn,
 		staleTime: "static",
 	});

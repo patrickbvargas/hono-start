@@ -5,5 +5,6 @@ export * from "./components/filter";
 export * from "./components/form";
 export * from "./components/restore";
 export * from "./components/table";
+export { useFeeData } from "./hooks/use-data";
 export type { FeeSummary } from "./schemas/model";
 export * from "./schemas/search";

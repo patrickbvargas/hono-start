@@ -6,7 +6,7 @@ import {
 import { toast } from "@/shared/lib/toast";
 import type { EntityId } from "@/shared/schemas/entity";
 import { deleteAttachmentMutationOptions } from "../api/mutations";
-import { ATTACHMENT_DATA_CACHE_KEY } from "../constants/cache";
+import { attachmentKeys } from "../api/queries";
 
 interface UseAttachmentDeleteOptions {
 	onSuccess?: () => void;
@@ -20,7 +20,7 @@ export function useAttachmentDelete({ onSuccess }: UseAttachmentDeleteOptions) {
 		try {
 			await mutation.mutateAsync({ data: { id } });
 			toast.success("Anexo excluído com sucesso.");
-			await refreshEntityQueries(queryClient, ATTACHMENT_DATA_CACHE_KEY);
+			await refreshEntityQueries(queryClient, attachmentKeys.all);
 			onSuccess?.();
 		} catch (error) {
 			toast.danger(getMutationErrorMessage(error));

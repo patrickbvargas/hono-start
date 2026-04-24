@@ -11,7 +11,6 @@ import type {
 	QueryManyReturnType,
 	QueryOneReturnType,
 } from "@/shared/types/api";
-import { DASHBOARD_DATA_CACHE_KEY } from "../constants/cache";
 import { DASHBOARD_ERRORS } from "../constants/errors";
 import {
 	getDashboardEmployeeOptions,
@@ -19,6 +18,13 @@ import {
 } from "../data/queries";
 import type { DashboardSummary } from "../schemas/model";
 import { type DashboardSearch, dashboardSearchSchema } from "../schemas/search";
+
+export const dashboardKeys = {
+	all: ["dashboard"] as const,
+	summary: (search: DashboardSearch) =>
+		[...dashboardKeys.all, "summary", search] as const,
+	employeeOptions: () => [...dashboardKeys.all, "employee-options"] as const,
+};
 
 const getDashboardSummaryFn = createServerFn({ method: "GET" })
 	.inputValidator(dashboardSearchSchema)
@@ -60,14 +66,14 @@ const getDashboardEmployeeOptionsFn = createServerFn({
 
 export const getDashboardSummaryQueryOptions = (search: DashboardSearch) =>
 	queryOptions({
-		queryKey: [DASHBOARD_DATA_CACHE_KEY, "summary", search],
+		queryKey: dashboardKeys.summary(search),
 		queryFn: () => getDashboardSummaryFn({ data: search }),
 		staleTime: 5 * 60 * 1000,
 	});
 
 export const getDashboardEmployeeOptionsQueryOptions = () =>
 	queryOptions({
-		queryKey: [DASHBOARD_DATA_CACHE_KEY, "employee-options"],
+		queryKey: dashboardKeys.employeeOptions(),
 		queryFn: getDashboardEmployeeOptionsFn,
 		staleTime: 5 * 60 * 1000,
 	});

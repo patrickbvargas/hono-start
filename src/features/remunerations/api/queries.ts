@@ -12,7 +12,6 @@ import type {
 	QueryOneReturnType,
 	QueryPaginatedReturnType,
 } from "@/shared/types/api";
-import { REMUNERATION_DATA_CACHE_KEY } from "../constants/cache";
 import { REMUNERATION_ERRORS } from "../constants/errors";
 import {
 	getRemunerationById,
@@ -41,6 +40,15 @@ interface RemunerationExportResult {
 	mimeType: string;
 	contentBase64: string;
 }
+
+export const remunerationKeys = {
+	all: ["remuneration"] as const,
+	list: (search: RemunerationSearch) =>
+		[...remunerationKeys.all, search] as const,
+	detail: (id: number) => [...remunerationKeys.all, "detail", id] as const,
+	contractOptions: () => [...remunerationKeys.all, "contract-options"] as const,
+	employeeOptions: () => [...remunerationKeys.all, "employee-options"] as const,
+};
 
 function getRemunerationScope() {
 	const session = getServerLoggedUserSession();
@@ -153,28 +161,28 @@ const exportRemunerationsFn = createServerFn({ method: "POST" })
 
 export const getRemunerationsQueryOptions = (search: RemunerationSearch) =>
 	queryOptions({
-		queryKey: [REMUNERATION_DATA_CACHE_KEY, search],
+		queryKey: remunerationKeys.list(search),
 		queryFn: () => getRemunerationsFn({ data: search }),
 		staleTime: 5 * 60 * 1000,
 	});
 
 export const getRemunerationByIdQueryOptions = (id: number) =>
 	queryOptions({
-		queryKey: [REMUNERATION_DATA_CACHE_KEY, "detail", id],
+		queryKey: remunerationKeys.detail(id),
 		queryFn: () => getRemunerationByIdFn({ data: { id } }),
 		staleTime: 5 * 60 * 1000,
 	});
 
 export const getSelectableRemunerationContractsQueryOptions = () =>
 	queryOptions({
-		queryKey: [REMUNERATION_DATA_CACHE_KEY, "contract-options"],
+		queryKey: remunerationKeys.contractOptions(),
 		queryFn: getSelectableRemunerationContractsFn,
 		staleTime: 5 * 60 * 1000,
 	});
 
 export const getSelectableRemunerationEmployeesQueryOptions = () =>
 	queryOptions({
-		queryKey: [REMUNERATION_DATA_CACHE_KEY, "employee-options"],
+		queryKey: remunerationKeys.employeeOptions(),
 		queryFn: getSelectableRemunerationEmployeesFn,
 		staleTime: 5 * 60 * 1000,
 	});

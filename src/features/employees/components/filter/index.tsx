@@ -4,8 +4,8 @@ import {
 	ENTITY_ACTIVE_FILTER_OPTIONS,
 	ENTITY_DELETED_FILTER_OPTIONS,
 } from "@/shared/lib/entity-management";
+import { useEmployeeOptions } from "../../hooks/use-data";
 import { useEmployeeFilter } from "../../hooks/use-filter";
-import { useEmployeeOptions } from "../../hooks/use-options";
 
 export const EmployeeFilter = () => {
 	const { form } = useEmployeeFilter();

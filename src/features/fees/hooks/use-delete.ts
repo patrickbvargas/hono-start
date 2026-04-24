@@ -6,7 +6,7 @@ import {
 import { toast } from "@/shared/lib/toast";
 import type { EntityId } from "@/shared/schemas/entity";
 import { deleteFeeMutationOptions } from "../api/mutations";
-import { FEE_DATA_CACHE_KEY } from "../constants/cache";
+import { feeKeys } from "../api/queries";
 
 interface UseFeeDeleteOptions {
 	onSuccess?: () => void;
@@ -20,7 +20,7 @@ export function useFeeDelete({ onSuccess }: UseFeeDeleteOptions) {
 		try {
 			await mutation.mutateAsync({ data: { id } });
 			toast.success("Honorário excluído com sucesso.");
-			await refreshEntityQueries(queryClient, FEE_DATA_CACHE_KEY);
+			await refreshEntityQueries(queryClient, feeKeys.all);
 			onSuccess?.();
 		} catch (error) {
 			toast.danger(getMutationErrorMessage(error));

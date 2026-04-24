@@ -11,8 +11,7 @@ import {
 	createFeeMutationOptions,
 	updateFeeMutationOptions,
 } from "../api/mutations";
-import { getFeeByIdQueryOptions } from "../api/queries";
-import { FEE_DATA_CACHE_KEY } from "../constants/cache";
+import { feeKeys, getFeeByIdQueryOptions } from "../api/queries";
 import { feeCreateInputSchema, feeUpdateInputSchema } from "../schemas/form";
 import {
 	defaultFeeCreateValues,
@@ -52,7 +51,7 @@ export function useFeeForm({ id, onSuccess }: UseFeeFormOptions) {
 					toast.success("Honorário criado com sucesso.");
 				}
 
-				await refreshEntityQueries(queryClient, FEE_DATA_CACHE_KEY);
+				await refreshEntityQueries(queryClient, feeKeys.all);
 				onSuccess?.();
 			} catch (error) {
 				toast.danger(getMutationErrorMessage(error));

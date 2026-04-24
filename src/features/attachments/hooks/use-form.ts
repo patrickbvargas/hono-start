@@ -6,7 +6,7 @@ import {
 } from "@/shared/lib/entity-management";
 import { toast } from "@/shared/lib/toast";
 import { createAttachmentMutationOptions } from "../api/mutations";
-import { ATTACHMENT_DATA_CACHE_KEY } from "../constants/cache";
+import { attachmentKeys } from "../api/queries";
 import {
 	type AttachmentOwnerInput,
 	attachmentUploadInputSchema,
@@ -34,7 +34,7 @@ export function useAttachmentForm({
 				const parsed = attachmentUploadInputSchema.parse(value);
 				await mutation.mutateAsync({ data: parsed });
 				toast.success("Anexo enviado com sucesso.");
-				await refreshEntityQueries(queryClient, ATTACHMENT_DATA_CACHE_KEY);
+				await refreshEntityQueries(queryClient, attachmentKeys.all);
 				onSuccess?.();
 			} catch (error) {
 				toast.danger(getMutationErrorMessage(error));

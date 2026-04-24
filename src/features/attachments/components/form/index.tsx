@@ -8,8 +8,8 @@ import {
 } from "@/shared/components/ui";
 import type { OverlayState } from "@/shared/types/overlay";
 import { ATTACHMENT_ACCEPT_ATTRIBUTE } from "../../constants/values";
+import { useAttachmentOptions } from "../../hooks/use-data";
 import { useAttachmentForm } from "../../hooks/use-form";
-import { useAttachmentOptions } from "../../hooks/use-options";
 import type { AttachmentOwnerInput } from "../../schemas/form";
 
 interface AttachmentFormProps {

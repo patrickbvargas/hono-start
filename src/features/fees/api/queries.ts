@@ -13,7 +13,6 @@ import type {
 	QueryOneReturnType,
 	QueryPaginatedReturnType,
 } from "@/shared/types/api";
-import { FEE_DATA_CACHE_KEY } from "../constants/cache";
 import { FEE_ERRORS } from "../constants/errors";
 import {
 	getFeeById,
@@ -24,6 +23,15 @@ import {
 import { feeIdInputSchema } from "../schemas/form";
 import type { FeeDetail, FeeSummary } from "../schemas/model";
 import { type FeeSearch, feeSearchSchema } from "../schemas/search";
+
+export const feeKeys = {
+	all: ["fee"] as const,
+	list: (search: FeeSearch) => [...feeKeys.all, search] as const,
+	detail: (id: number) => [...feeKeys.all, "detail", id] as const,
+	contractOptions: () => [...feeKeys.all, "contract-options"] as const,
+	revenueOptions: (contractId: string) =>
+		[...feeKeys.all, "revenue-options", contractId] as const,
+};
 
 const getFeesFn = createServerFn({ method: "GET" })
 	.inputValidator(feeSearchSchema)
@@ -116,28 +124,28 @@ const getSelectableFeeRevenuesFn = createServerFn({ method: "GET" })
 
 export const getFeesQueryOptions = (search: FeeSearch) =>
 	queryOptions({
-		queryKey: [FEE_DATA_CACHE_KEY, search],
+		queryKey: feeKeys.list(search),
 		queryFn: () => getFeesFn({ data: search }),
 		staleTime: 5 * 60 * 1000,
 	});
 
 export const getFeeByIdQueryOptions = (id: number) =>
 	queryOptions({
-		queryKey: [FEE_DATA_CACHE_KEY, "detail", id],
+		queryKey: feeKeys.detail(id),
 		queryFn: () => getFeeByIdFn({ data: { id } }),
 		staleTime: 5 * 60 * 1000,
 	});
 
 export const getSelectableFeeContractsQueryOptions = () =>
 	queryOptions({
-		queryKey: [FEE_DATA_CACHE_KEY, "contract-options"],
+		queryKey: feeKeys.contractOptions(),
 		queryFn: getSelectableFeeContractsFn,
 		staleTime: 5 * 60 * 1000,
 	});
 
 export const getSelectableFeeRevenuesQueryOptions = (contractId = "") =>
 	queryOptions({
-		queryKey: [FEE_DATA_CACHE_KEY, "revenue-options", contractId],
+		queryKey: feeKeys.revenueOptions(contractId),
 		queryFn: () => getSelectableFeeRevenuesFn({ data: { contractId } }),
 		staleTime: 5 * 60 * 1000,
 	});

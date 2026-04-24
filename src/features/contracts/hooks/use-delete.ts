@@ -6,7 +6,7 @@ import {
 import { toast } from "@/shared/lib/toast";
 import type { EntityId } from "@/shared/schemas/entity";
 import { deleteContractMutationOptions } from "../api/mutations";
-import { CONTRACT_DATA_CACHE_KEY } from "../constants/cache";
+import { contractKeys } from "../api/queries";
 
 interface UseContractDeleteOptions {
 	onSuccess?: () => void;
@@ -20,7 +20,7 @@ export function useContractDelete({ onSuccess }: UseContractDeleteOptions) {
 		try {
 			await mutation.mutateAsync({ data: { id } });
 			toast.success("Contrato excluído com sucesso.");
-			await refreshEntityQueries(queryClient, CONTRACT_DATA_CACHE_KEY);
+			await refreshEntityQueries(queryClient, contractKeys.all);
 			onSuccess?.();
 		} catch (error) {
 			toast.danger(getMutationErrorMessage(error));

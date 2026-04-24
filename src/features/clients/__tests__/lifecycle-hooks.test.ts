@@ -46,7 +46,7 @@ vi.mock("../api/mutations", () => ({
 	restoreClientMutationOptions: restoreClientMutationOptionsMock,
 }));
 
-import { CLIENT_DATA_CACHE_KEY } from "../constants/cache";
+import { clientKeys } from "../api/queries";
 import { useClientDelete } from "../hooks/use-delete";
 import { useClientRestore } from "../hooks/use-restore";
 
@@ -76,7 +76,7 @@ describe("client lifecycle hooks", () => {
 		);
 		expect(refreshEntityQueriesMock).toHaveBeenCalledWith(
 			queryClientMock,
-			CLIENT_DATA_CACHE_KEY,
+			clientKeys.all,
 		);
 		expect(onSuccess).toHaveBeenCalledOnce();
 	});
@@ -94,7 +94,7 @@ describe("client lifecycle hooks", () => {
 		);
 		expect(refreshEntityQueriesMock).toHaveBeenCalledWith(
 			queryClientMock,
-			CLIENT_DATA_CACHE_KEY,
+			clientKeys.all,
 		);
 		expect(onSuccess).toHaveBeenCalledOnce();
 	});

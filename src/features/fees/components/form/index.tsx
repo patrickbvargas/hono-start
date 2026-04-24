@@ -2,8 +2,8 @@ import { FormWrapper } from "@/shared/components/form-wrapper";
 import { FieldGroup } from "@/shared/components/ui";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
+import { useFeeOptions } from "../../hooks/use-data";
 import { useFeeForm } from "../../hooks/use-form";
-import { useFeeOptions } from "../../hooks/use-options";
 
 interface FeeFormProps {
 	id?: EntityId;

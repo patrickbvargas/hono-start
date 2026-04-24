@@ -2,8 +2,8 @@ import { FormWrapper } from "@/shared/components/form-wrapper";
 import { FieldGroup } from "@/shared/components/ui";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
+import { useClientOptions } from "../../hooks/use-data";
 import { useClientForm } from "../../hooks/use-form";
-import { useClientOptions } from "../../hooks/use-options";
 import {
 	getClientDocumentLabel,
 	getClientDocumentPlaceholder,

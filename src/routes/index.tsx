@@ -1,4 +1,3 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import {
@@ -6,6 +5,7 @@ import {
 	DashboardFilter,
 	dashboardSearchSchema,
 	getDashboardSummaryQueryOptions,
+	useDashboardData,
 } from "@/features/dashboard";
 import { RouteError } from "@/shared/components/route-error";
 import { RouteLoading } from "@/shared/components/route-loading";
@@ -36,7 +36,7 @@ export const Route = createFileRoute("/")({
 
 function App() {
 	const search = Route.useSearch();
-	const { data } = useSuspenseQuery(getDashboardSummaryQueryOptions(search));
+	const { summary } = useDashboardData(search);
 	const isAdmin = useLoggedUserSessionStore(isAdminSession);
 
 	return (
@@ -46,7 +46,7 @@ function App() {
 				<RouteLoading />
 			</WrapperHeader>
 			<WrapperBody>
-				<Dashboard data={data} />
+				<Dashboard data={summary} />
 			</WrapperBody>
 		</Wrapper>
 	);

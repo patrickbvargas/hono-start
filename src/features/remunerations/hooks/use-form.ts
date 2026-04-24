@@ -8,8 +8,10 @@ import {
 import { toast } from "@/shared/lib/toast";
 import type { EntityId } from "@/shared/schemas/entity";
 import { updateRemunerationMutationOptions } from "../api/mutations";
-import { getRemunerationByIdQueryOptions } from "../api/queries";
-import { REMUNERATION_DATA_CACHE_KEY } from "../constants/cache";
+import {
+	getRemunerationByIdQueryOptions,
+	remunerationKeys,
+} from "../api/queries";
 import { remunerationUpdateInputSchema } from "../schemas/form";
 import { defaultRemunerationUpdateValues } from "../utils/default";
 
@@ -40,7 +42,7 @@ export function useRemunerationForm({
 				const parsed = remunerationUpdateInputSchema.parse(value);
 				await updateMutation.mutateAsync({ data: parsed });
 				toast.success("Remuneração atualizada com sucesso.");
-				await refreshEntityQueries(queryClient, REMUNERATION_DATA_CACHE_KEY);
+				await refreshEntityQueries(queryClient, remunerationKeys.all);
 				onSuccess?.();
 			} catch (error) {
 				toast.danger(getMutationErrorMessage(error));

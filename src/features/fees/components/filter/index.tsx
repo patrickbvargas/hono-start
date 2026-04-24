@@ -4,8 +4,8 @@ import {
 	ENTITY_ACTIVE_FILTER_OPTIONS,
 	ENTITY_DELETED_FILTER_OPTIONS,
 } from "@/shared/lib/entity-management";
+import { useFeeOptions } from "../../hooks/use-data";
 import { useFeeFilter } from "../../hooks/use-filter";
-import { useFeeOptions } from "../../hooks/use-options";
 
 export const FeeFilter = () => {
 	const { form } = useFeeFilter();

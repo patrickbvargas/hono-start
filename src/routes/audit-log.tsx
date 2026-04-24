@@ -1,4 +1,3 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import {
@@ -6,6 +5,7 @@ import {
 	AuditLogTable,
 	auditLogSearchSchema,
 	getAuditLogsQueryOptions,
+	useAuditLogData,
 } from "@/features/audit-logs";
 import { RouteLoading } from "@/shared/components/route-loading";
 import {
@@ -31,7 +31,7 @@ export const Route = createFileRoute("/audit-log")({
 
 function RouteComponent() {
 	const search = Route.useSearch();
-	const { data } = useSuspenseQuery(getAuditLogsQueryOptions(search));
+	const { auditLogs } = useAuditLogData(search);
 
 	return (
 		<Wrapper title={ROUTES.auditLog.title}>
@@ -40,7 +40,7 @@ function RouteComponent() {
 				<RouteLoading />
 			</WrapperHeader>
 			<WrapperBody>
-				<AuditLogTable data={data} />
+				<AuditLogTable data={auditLogs} />
 			</WrapperBody>
 		</Wrapper>
 	);

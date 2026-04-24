@@ -50,7 +50,7 @@ the `clients` reference slice must be justified by feature-specific behavior.
 src/features/<feature>/
   api/          route-facing server wrappers and query/mutation options
   components/   feature UI pieces with local props interfaces
-  constants/    cache keys, sort defaults, stable values, and error catalogs
+  constants/    sort defaults, stable values, and error catalogs
   data/         Prisma-backed reads, writes, lookup resolution, and persisted checks
   hooks/        form, filter, option, delete, restore, and export orchestration
   rules/        pure throwing business assertions only
@@ -61,10 +61,10 @@ src/features/<feature>/
 
 Each feature slice is expected to use these responsibilities:
 
-- `api/queries.ts`: route-facing read wrappers and query option factories
+- `api/queries.ts`: feature-owned React Query key factories, route-facing read wrappers, and query option factories
 - `api/mutations.ts`: route-facing write wrappers and mutation option factories
 - `components/`: feature-local UI pieces
-- `constants/`: cache keys, sorting defaults, stable values, and safe pt-BR feature error catalogs
+- `constants/`: sorting defaults, stable values, and safe pt-BR feature error catalogs
 - `data/queries.ts`: Prisma-backed reads, option loading, search translation, deterministic ordering, and read-model mapping
 - `data/mutations.ts`: Prisma-backed writes and persistence-aware checks that depend on current stored state
 - `hooks/`: orchestration hooks such as `use-form`, `use-filter`, `use-delete`, `use-restore`, and `use-options`
@@ -78,6 +78,10 @@ Route-facing React Query factories follow a stable suffix convention:
 factories. Non-mutating export flows may live beside query/export orchestration,
 but their factory names still use the mutation suffix when they return
 `mutationOptions`.
+
+Feature-owned React Query key factories live in `api/queries.ts` beside the
+query option factories that consume them. They expose the public key factory
+object, such as `clientKeys`, and own root key tuples directly.
 
 Feature subfolders must not contain local re-export barrel files such as
 `constants/index.ts` or `rules/index.ts`. Inside a feature, import concrete

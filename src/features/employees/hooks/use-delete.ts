@@ -6,7 +6,7 @@ import {
 import { toast } from "@/shared/lib/toast";
 import type { EntityId } from "@/shared/schemas/entity";
 import { deleteEmployeeMutationOptions } from "../api/mutations";
-import { EMPLOYEE_DATA_CACHE_KEY } from "../constants/cache";
+import { employeeKeys } from "../api/queries";
 
 interface UseEmployeeDeleteOptions {
 	onSuccess?: () => void;
@@ -20,7 +20,7 @@ export function useEmployeeDelete({ onSuccess }: UseEmployeeDeleteOptions) {
 		try {
 			await mutation.mutateAsync({ data: { id } });
 			toast.success("Funcionário excluído com sucesso.");
-			await refreshEntityQueries(queryClient, EMPLOYEE_DATA_CACHE_KEY);
+			await refreshEntityQueries(queryClient, employeeKeys.all);
 			onSuccess?.();
 		} catch (error) {
 			toast.danger(getMutationErrorMessage(error));
