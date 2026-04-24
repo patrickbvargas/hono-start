@@ -68,6 +68,45 @@ repository keeps the same implementation pattern.
 - A contributor may add behavior, but may not redesign the project's stack, folder structure, or documented house patterns without updating the implementation contract first.
 - If a change intentionally alters project truth, update the canonical docs in the same piece of work.
 
+## Commit Message Rule
+
+Commit messages must follow the Conventional Commits pattern:
+
+```text
+type(scope): subject
+```
+
+- `type` is required and must describe the change category.
+- `scope` is optional and should name the affected feature, route, shared layer, or project area when it adds useful context.
+- `subject` is required, concise, and written in the imperative mood so it describes what the commit will do if applied.
+- Use only one `type` per commit; if more than one type seems necessary, split the work into smaller commits.
+- Keep commits focused on one logical change.
+
+Allowed types:
+
+- `feat`: add user-facing behavior, API capability, or feature functionality.
+- `fix`: correct a bug or broken behavior.
+- `docs`: change documentation only.
+- `refactor`: restructure code without changing runtime behavior or business rules.
+- `style`: change formatting or code style only, with no runtime behavior change.
+- `test`: add or update tests.
+- `build`: change build tooling, packaging, or production dependencies.
+- `ci`: change CI configuration or automation.
+- `perf`: improve performance without changing behavior.
+- `chore`: change repository maintenance, local tooling, generated metadata, or development-only setup.
+- `revert`: revert a previous commit.
+
+Examples:
+
+```text
+feat(clients): add lifecycle filters
+fix(employees): preserve list params after restore
+docs(implementation): define commit message pattern
+refactor(shared-ui): normalize dialog exports
+test(clients): cover mutation invalidation
+chore(prisma): regenerate client
+```
+
 ## Contributor Checklist
 
 Before implementing:
