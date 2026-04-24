@@ -46,7 +46,7 @@ The Prisma schema includes the core tenant model, lookup catalogs, clients, empl
 - PostgreSQL
 - Supabase Storage
 - BetterAuth
-- HeroUI React v3 through shared UI re-exports
+- shadcn/ui through shared UI re-exports
 - Zod
 - Biome
 - Vitest and Testing Library
@@ -61,10 +61,9 @@ Start here before non-trivial changes:
 
 1. `docs/index.md`
 2. `docs/domain/PRODUCT_SENSE.md`
-3. `docs/implementation/STACK.md`
-4. `docs/implementation/ARCHITECTURE.md`
-5. `docs/implementation/CONVENTIONS.md`
-6. `docs/implementation/WORKFLOW.md`
+3. `docs/implementation/ARCHITECTURE.md`
+4. `docs/implementation/CONVENTIONS.md`
+5. `docs/implementation/QUALITY_WORKFLOW.md`
 
 For full context, follow the reading order in `docs/index.md`.
 
@@ -146,7 +145,7 @@ Feature slices own business behavior. Routes compose feature APIs and UI. Shared
 - Keep route files thin.
 - Keep Prisma access in feature `data/` modules and route-facing wrappers in `api/`.
 - Put pure throwing business assertions in feature `rules/`.
-- Consume HeroUI only through `@/shared/components/ui`.
+- Consume shadcn/ui only through `@/shared/components/ui`.
 - Keep user-facing text in pt-BR.
 - Keep code names, comments, and logs in English.
 - Use lookup `value` at application boundaries, not lookup database IDs.

@@ -25,15 +25,12 @@ Read in this order before making substantial changes:
 9. `docs/domain/USER_FLOWS.md`
 10. `docs/domain/EDGE_CASES.md`
 11. `docs/domain/SUCCESS_CRITERIA.md`
-12. `docs/implementation/STACK.md`
-13. `docs/implementation/ARCHITECTURE.md`
-14. `docs/implementation/DATA_ACCESS.md`
-15. `docs/implementation/CONVENTIONS.md`
-16. `docs/implementation/FRONTEND.md`
-17. `docs/implementation/SECURITY.md`
-18. `docs/implementation/RELIABILITY.md`
-19. `docs/implementation/WORKFLOW.md`
-20. `docs/implementation/QUALITY_SCORE.md`
+12. `docs/implementation/ARCHITECTURE.md`
+13. `docs/implementation/DATA_ACCESS.md`
+14. `docs/implementation/CONVENTIONS.md`
+15. `docs/implementation/FRONTEND.md`
+16. `docs/implementation/SECURITY.md`
+17. `docs/implementation/QUALITY_WORKFLOW.md`
 
 ### Contract Rules
 

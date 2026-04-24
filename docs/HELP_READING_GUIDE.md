@@ -118,17 +118,12 @@ Owns:
 - shared vocabulary
 - term normalization across business and implementation discussion
 
-### `docs/implementation/STACK.md`
+### `docs/implementation/ARCHITECTURE.md`
 
 Owns:
 
 - fixed technical stack choices
 - explicitly open technical choices
-
-### `docs/implementation/ARCHITECTURE.md`
-
-Owns:
-
 - repository shape
 - feature-slice anatomy
 - dependency boundaries
@@ -170,27 +165,17 @@ Owns:
 - authorization enforcement rules
 - secret and environment handling
 
-### `docs/implementation/RELIABILITY.md`
-
-Owns:
-
-- validation boundary expectations
-- error-handling doctrine
-- transactional expectations
-- definition of done
-
-### `docs/implementation/WORKFLOW.md`
+### `docs/implementation/QUALITY_WORKFLOW.md`
 
 Owns:
 
 - standard implementation sequence
 - feature ownership sequencing
 - refactor timing rules
-
-### `docs/implementation/QUALITY_SCORE.md`
-
-Owns:
-
+- validation boundary expectations
+- error-handling doctrine
+- transactional expectations
+- definition of done
 - evaluation rubric for aligned work
 
 ## Review Questions
