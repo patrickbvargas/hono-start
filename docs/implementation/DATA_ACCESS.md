@@ -88,6 +88,8 @@ The goal of this document is to define reusable persistence patterns that can su
   - one active categorized child per scoped parent when the product forbids duplicates by category
   - one active sequenced child per scoped parent when the product requires unique sequence numbers
 
+Prisma schema cannot represent PostgreSQL filtered unique indexes directly. When a domain requires filtered uniqueness, preserve it through migrations and make the constraint discoverable near the persistence source, such as schema comments or migration notes. Do not list domain-specific constraint inventories in this implementation guide.
+
 ## Seed And Environment Assumptions
 
 - Lookup values must be seeded before the application is considered operational.

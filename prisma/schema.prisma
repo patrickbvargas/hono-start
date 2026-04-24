@@ -230,6 +230,9 @@ model ContractEmployee {
   firm             Firm           @relation(fields: [firmId], references: [id])
   remunerations    Remuneration[]
 
+  /// Database migration-managed partial unique index:
+  /// contract_employees_contractId_employeeId_active_key
+  /// UNIQUE ("contractId", "employeeId") WHERE "deletedAt" IS NULL AND "isActive" = true
   @@index([firmId])
   @@index([contractId])
   @@index([employeeId])
@@ -258,6 +261,9 @@ model Revenue {
   type              RevenueType @relation(fields: [typeId], references: [id])
   fees              Fee[]
 
+  /// Database migration-managed partial unique index:
+  /// revenues_contractId_typeId_active_key
+  /// UNIQUE ("contractId", "typeId") WHERE "deletedAt" IS NULL AND "isActive" = true
   @@index([firmId])
   @@index([contractId])
   @@index([typeId])
@@ -283,6 +289,9 @@ model Fee {
   revenue               Revenue        @relation(fields: [revenueId], references: [id])
   remunerations         Remuneration[]
 
+  /// Database migration-managed partial unique index:
+  /// fees_revenueId_installmentNumber_active_key
+  /// UNIQUE ("revenueId", "installmentNumber") WHERE "deletedAt" IS NULL AND "isActive" = true
   @@index([firmId])
   @@index([revenueId])
   @@index([paymentDate])
@@ -309,6 +318,9 @@ model Remuneration {
   fee                Fee              @relation(fields: [feeId], references: [id])
   firm               Firm             @relation(fields: [firmId], references: [id])
 
+  /// Database migration-managed partial unique index:
+  /// remunerations_feeId_contractEmployeeId_active_key
+  /// UNIQUE ("feeId", "contractEmployeeId") WHERE "deletedAt" IS NULL
   @@index([firmId])
   @@index([feeId])
   @@index([contractEmployeeId])

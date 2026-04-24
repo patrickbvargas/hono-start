@@ -1,7 +1,7 @@
-import { getContractAccessResourceById } from "@/features/contracts/data/queries";
 import { createAttachmentSignedUrl } from "@/shared/lib/attachment-storage";
 import { prisma } from "@/shared/lib/prisma";
 import { type Option, optionSchema } from "@/shared/schemas/option";
+import type { ContractAccessResource } from "@/shared/session";
 import type {
 	QueryManyReturnType,
 	QueryOneReturnType,
@@ -28,9 +28,7 @@ interface AttachmentEmployeeOwnerResource extends AttachmentOwnerResource {
 }
 
 interface AttachmentContractOwnerResource extends AttachmentOwnerResource {
-	resource: NonNullable<
-		Awaited<ReturnType<typeof getContractAccessResourceById>>
-	>["resource"];
+	resource: ContractAccessResource;
 }
 
 export async function getAttachmentTypes(): Promise<
@@ -95,17 +93,41 @@ export async function getAttachmentContractOwnerResource(
 	firmId: number,
 	id: number,
 ): Promise<AttachmentContractOwnerResource | null> {
-	const contract = await getContractAccessResourceById(id);
+	const contract = await prisma.contract.findFirst({
+		where: { id, firmId },
+		select: {
+			id: true,
+			firmId: true,
+			deletedAt: true,
+			allowStatusChange: true,
+			status: {
+				select: {
+					value: true,
+				},
+			},
+			assignments: {
+				where: { deletedAt: null, isActive: true },
+				select: { employeeId: true },
+			},
+		},
+	});
 
-	if (!contract || contract.resource.firmId !== firmId) {
+	if (!contract) {
 		return null;
 	}
 
 	return {
 		id: contract.id,
 		deletedAt: contract.deletedAt,
-		firmId: contract.resource.firmId,
-		resource: contract.resource,
+		firmId: contract.firmId,
+		resource: {
+			firmId: contract.firmId,
+			statusValue: contract.status.value,
+			allowStatusChange: contract.allowStatusChange,
+			assignedEmployeeIds: contract.assignments.map(
+				(assignment) => assignment.employeeId,
+			),
+		},
 	};
 }
 
