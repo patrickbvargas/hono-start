@@ -43,6 +43,8 @@ It is meant to survive domain changes as long as the project keeps the same UI a
 - Overlay state for create, edit, details, delete, and restore must use the shared overlay pattern rather than ad hoc modal state.
 - Entity routes must preserve list context while overlays are open.
 - The canonical overlay composition is: route-level `useOverlay`, create and edit form modals, delete and restore confirmations, and a details drawer rendered from the route body.
+- `useOverlay` state is route-local to the hook instance, permits only one active overlay at a time, opens `create` without entity data, and opens `edit`, `details`, `delete`, and `restore` with selected entity data.
+- Overlay render callbacks are the canonical bridge from route composition to shared modal, confirmation, and drawer wrappers through `OverlayState`.
 - Loading states use skeleton-style placeholders.
 - Empty states use helpful user-facing copy in the product locale.
 - Buttons show loading state and become disabled during submission.

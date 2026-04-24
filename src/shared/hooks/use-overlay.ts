@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useCallback, useMemo, useReducer, useRef } from "react";
 import type { OverlayState } from "@/shared/types/overlay";
 
 // "create" carries no data — it always opens a blank form
@@ -14,16 +14,50 @@ type InternalState<T> =
 	| { key: DataKey; selected: T }
 	| { key: null };
 
+type OverlayAction<T> =
+	| { type: "close" }
+	| { type: "open-create" }
+	| { type: "open-data"; key: DataKey; selected: T };
+
+function overlayReducer<T>(
+	_state: InternalState<T>,
+	action: OverlayAction<T>,
+): InternalState<T> {
+	switch (action.type) {
+		case "close":
+			return { key: null };
+		case "open-create":
+			return { key: "create" };
+		case "open-data":
+			return { key: action.key, selected: action.selected };
+	}
+}
+
+function isDataState<T>(
+	state: InternalState<T>,
+	key: DataKey,
+): state is { key: DataKey; selected: T } {
+	return state.key === key;
+}
+
 export function useOverlay<T>() {
-	const [state, setState] = React.useState<InternalState<T>>({ key: null });
+	const [state, dispatch] = useReducer(
+		(current: InternalState<T>, action: OverlayAction<T>) =>
+			overlayReducer(current, action),
+		{ key: null } as InternalState<T>,
+	);
+	const activeKeyRef = useRef<InternalState<T>["key"]>(state.key);
+	activeKeyRef.current = state.key;
 
-	const close = React.useCallback(() => setState({ key: null }), []);
+	const close = useCallback(() => dispatch({ type: "close" }), []);
 
-	const overlay = React.useMemo(() => {
+	const overlay = useMemo(() => {
 		const makeState = (key: OverlayKey): OverlayState => ({
 			isOpen: state.key === key,
 			onOpenChange: (isOpen: boolean) => {
-				if (!isOpen && state.key === key) close();
+				if (!isOpen && activeKeyRef.current === key) {
+					close();
+				}
 			},
 			close,
 		});
@@ -35,10 +69,13 @@ export function useOverlay<T>() {
 		 */
 		const createVoidScope = (key: VoidKey) => ({
 			isOpen: state.key === key,
-			open: () => setState({ key }),
+			open: () => dispatch({ type: "open-create" }),
 			close,
 			render: <R>(fn: (state: OverlayState) => R): R | null => {
-				if (state.key !== key) return null;
+				if (state.key !== key) {
+					return null;
+				}
+
 				return fn(makeState(key));
 			},
 		});
@@ -50,12 +87,14 @@ export function useOverlay<T>() {
 		 */
 		const createDataScope = <K extends DataKey>(key: K) => ({
 			isOpen: state.key === key,
-			open: (data: T) =>
-				setState({ key, selected: data } as { key: DataKey; selected: T }),
+			open: (data: T) => dispatch({ type: "open-data", key, selected: data }),
 			close,
 			render: <R>(fn: (data: T, state: OverlayState) => R): R | null => {
-				if (state.key !== key) return null;
-				return fn((state as { selected: T }).selected, makeState(key));
+				if (!isDataState(state, key)) {
+					return null;
+				}
+
+				return fn(state.selected, makeState(key));
 			},
 		});
 

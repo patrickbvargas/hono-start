@@ -28,6 +28,12 @@ It is intended to remain reusable even if another project adopts the same reposi
 - Extract to `shared/` only after the repeated contract is stable.
 - Do not promote one feature's incidental shape into a global abstraction prematurely.
 
+## Testing Rule
+
+- Feature, refactor, and new-code changes that alter runtime behavior, shared contracts, route orchestration, validation, data access, or reusable abstractions must include focused Vitest coverage for the changed contract.
+- Documentation-only, generated-only, formatting, or mechanical metadata changes may omit new Vitest coverage when they do not change runtime behavior or shared contracts.
+- If Vitest coverage is impractical for a behavior-changing change, document the reason and run the closest feasible verification before completion.
+
 ## Contribution Rule
 
 - A contributor may add behavior, but may not redesign the project's stack, folder structure, or documented house patterns without updating the implementation contract first.
@@ -47,7 +53,8 @@ During implementation:
 2. Keep feature ownership local.
 3. Avoid inventing a second pattern when the contract already defines one.
 4. Reuse canonical terminology from the glossary and domain docs.
-5. Keep `if` statements braced and avoid nested feature-folder barrels.
+5. Add focused Vitest coverage for behavior-changing feature, refactor, and new-code work.
+6. Keep `if` statements braced and avoid nested feature-folder barrels.
 
 Before finishing:
 

@@ -32,6 +32,7 @@ It is also intended to be reusable as a boilerplate review rubric when the domai
 - Errors are handled safely.
 - Deterministic sorting and list refresh behavior are preserved.
 - Multi-step writes remain atomic.
+- Behavior-changing feature, refactor, and shared-code changes include focused Vitest coverage for the changed contract.
 
 ### 5. Maintainability
 
