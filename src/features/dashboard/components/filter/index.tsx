@@ -1,4 +1,4 @@
-import { FilterWrapper } from "@/shared/components/filter-wrapper";
+import { FilterPopover } from "@/shared/components/filter-popover";
 import { useDashboardOptions } from "../../hooks/use-data";
 import { useDashboardFilter } from "../../hooks/use-filter";
 
@@ -15,7 +15,7 @@ export function DashboardFilter({ isAdmin = false }: DashboardFilterProps) {
 			form={form}
 			className="flex flex-wrap items-center justify-between gap-3"
 		>
-			<FilterWrapper>
+			<FilterPopover>
 				{isAdmin ? (
 					<form.AppField name="employeeId">
 						{(field) => (
@@ -29,7 +29,7 @@ export function DashboardFilter({ isAdmin = false }: DashboardFilterProps) {
 				<form.AppField name="dateTo">
 					{(field) => <field.Input label="Período até" type="date" />}
 				</form.AppField>
-			</FilterWrapper>
+			</FilterPopover>
 		</form.Form>
 	);
 }

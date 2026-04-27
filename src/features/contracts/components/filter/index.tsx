@@ -1,4 +1,4 @@
-import { FilterWrapper } from "@/shared/components/filter-wrapper";
+import { FilterPopover } from "@/shared/components/filter-popover";
 import { Separator } from "@/shared/components/ui";
 import {
 	ENTITY_ACTIVE_FILTER_OPTIONS,
@@ -16,7 +16,7 @@ export const ContractFilter = () => {
 			form={form}
 			className="flex flex-wrap items-center justify-between gap-3"
 		>
-			<FilterWrapper>
+			<FilterPopover>
 				<form.AppField name="clientId">
 					{(field) => <field.Autocomplete label="Cliente" options={clients} />}
 				</form.AppField>
@@ -50,7 +50,7 @@ export const ContractFilter = () => {
 						/>
 					)}
 				</form.AppField>
-			</FilterWrapper>
+			</FilterPopover>
 		</form.Form>
 	);
 };

@@ -40,7 +40,12 @@ interface WrapperProps {
 	children: React.ReactNode;
 }
 
-export const Wrapper = ({ title, state, children, ...props }: WrapperProps) => {
+export const EntityDetailDrawer = ({
+	title,
+	state,
+	children,
+	...props
+}: WrapperProps) => {
 	return (
 		<Drawer
 			direction="right"
@@ -165,7 +170,7 @@ const Fields = ({
 	</dl>
 );
 
-export const Detail = Object.assign(Wrapper, {
+export const EntityDetail = Object.assign(EntityDetailDrawer, {
 	Section,
 	Fields,
 	Separator,

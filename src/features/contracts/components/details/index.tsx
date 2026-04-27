@@ -2,7 +2,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import * as React from "react";
 import { AttachmentSection } from "@/features/attachments";
 import {
-	Detail,
+	EntityDetail,
 	type DetailFieldItem,
 } from "@/shared/components/entity-detail";
 import { EntityStatus } from "@/shared/components/entity-status";
@@ -77,17 +77,17 @@ export const ContractDetails = ({ id, state }: ContractDetailsProps) => {
 	);
 
 	return (
-		<Detail state={state} title={data.processNumber}>
-			<Detail.Fields items={generalInfo} />
-			<Detail.Separator />
-			<Detail.Section title="Equipe">
-				<Detail.Fields items={assignmentInfo} />
-			</Detail.Section>
-			<Detail.Separator />
-			<Detail.Section title="Receitas">
-				<Detail.Fields items={revenueInfo} />
-			</Detail.Section>
-			<Detail.Separator className="mt-auto" />
+		<EntityDetail state={state} title={data.processNumber}>
+			<EntityDetail.Fields items={generalInfo} />
+			<EntityDetail.Separator />
+			<EntityDetail.Section title="Equipe">
+				<EntityDetail.Fields items={assignmentInfo} />
+			</EntityDetail.Section>
+			<EntityDetail.Separator />
+			<EntityDetail.Section title="Receitas">
+				<EntityDetail.Fields items={revenueInfo} />
+			</EntityDetail.Section>
+			<EntityDetail.Separator className="mt-auto" />
 			<AttachmentSection
 				ownerId={data.id}
 				ownerKind="contract"
@@ -100,10 +100,10 @@ export const ContractDetails = ({ id, state }: ContractDetailsProps) => {
 					})
 				}
 			/>
-			<Detail.Separator />
-			<Detail.Section title="Registro">
-				<Detail.Fields items={registerInfo} />
-			</Detail.Section>
-		</Detail>
+			<EntityDetail.Separator />
+			<EntityDetail.Section title="Registro">
+				<EntityDetail.Fields items={registerInfo} />
+			</EntityDetail.Section>
+		</EntityDetail>
 	);
 };

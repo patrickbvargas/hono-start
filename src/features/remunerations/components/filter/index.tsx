@@ -1,4 +1,4 @@
-import { FilterWrapper } from "@/shared/components/filter-wrapper";
+import { FilterPopover } from "@/shared/components/filter-popover";
 import { Separator } from "@/shared/components/ui";
 import {
 	ENTITY_ACTIVE_FILTER_OPTIONS,
@@ -22,7 +22,7 @@ export const RemunerationFilter = ({
 			form={form}
 			className="flex flex-wrap items-center justify-between gap-3"
 		>
-			<FilterWrapper>
+			<FilterPopover>
 				{isAdmin ? (
 					<form.AppField name="employeeId">
 						{(field) => (
@@ -58,7 +58,7 @@ export const RemunerationFilter = ({
 						/>
 					)}
 				</form.AppField>
-			</FilterWrapper>
+			</FilterPopover>
 		</form.Form>
 	);
 };

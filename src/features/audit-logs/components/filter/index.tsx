@@ -1,4 +1,4 @@
-import { FilterWrapper } from "@/shared/components/filter-wrapper";
+import { FilterPopover } from "@/shared/components/filter-popover";
 import { useAuditLogOptions } from "../../hooks/use-data";
 import { useAuditLogFilter } from "../../hooks/use-filter";
 
@@ -11,7 +11,7 @@ export const AuditLogFilter = () => {
 			form={form}
 			className="flex flex-wrap items-center justify-end gap-3"
 		>
-			<FilterWrapper>
+			<FilterPopover>
 				<form.AppField name="action">
 					{(field) => <field.CheckboxGroup label="Ação" options={actions} />}
 				</form.AppField>
@@ -23,7 +23,7 @@ export const AuditLogFilter = () => {
 				<form.AppField name="actorName">
 					{(field) => <field.CheckboxGroup label="Usuário" options={actors} />}
 				</form.AppField>
-			</FilterWrapper>
+			</FilterPopover>
 		</form.Form>
 	);
 };

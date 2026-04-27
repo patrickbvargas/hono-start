@@ -1,4 +1,4 @@
-import { FilterWrapper } from "@/shared/components/filter-wrapper";
+import { FilterPopover } from "@/shared/components/filter-popover";
 import { Separator } from "@/shared/components/ui";
 import {
 	ENTITY_ACTIVE_FILTER_OPTIONS,
@@ -24,7 +24,7 @@ export const ClientFilter = () => {
 					/>
 				)}
 			</form.AppField>
-			<FilterWrapper>
+			<FilterPopover>
 				<form.AppField name="type">
 					{(field) => <field.CheckboxGroup label="Tipo" options={types} />}
 				</form.AppField>
@@ -45,7 +45,7 @@ export const ClientFilter = () => {
 						/>
 					)}
 				</form.AppField>
-			</FilterWrapper>
+			</FilterPopover>
 		</form.Form>
 	);
 };

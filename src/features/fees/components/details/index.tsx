@@ -1,7 +1,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import * as React from "react";
 import {
-	Detail,
+	EntityDetail,
 	type DetailFieldItem,
 } from "@/shared/components/entity-detail";
 import { EntityStatus } from "@/shared/components/entity-status";
@@ -61,16 +61,16 @@ export const FeeDetails = ({ id, state }: FeeDetailsProps) => {
 	);
 
 	return (
-		<Detail state={state} title={data.contractProcessNumber}>
-			<Detail.Fields items={generalInfo} />
-			<Detail.Separator />
-			<Detail.Section title="Remuneração">
-				<Detail.Fields items={remunerationInfo} />
-			</Detail.Section>
-			<Detail.Separator className="mt-auto" />
-			<Detail.Section title="Registro">
-				<Detail.Fields items={registerInfo} />
-			</Detail.Section>
-		</Detail>
+		<EntityDetail state={state} title={data.contractProcessNumber}>
+			<EntityDetail.Fields items={generalInfo} />
+			<EntityDetail.Separator />
+			<EntityDetail.Section title="Remuneração">
+				<EntityDetail.Fields items={remunerationInfo} />
+			</EntityDetail.Section>
+			<EntityDetail.Separator className="mt-auto" />
+			<EntityDetail.Section title="Registro">
+				<EntityDetail.Fields items={registerInfo} />
+			</EntityDetail.Section>
+		</EntityDetail>
 	);
 };

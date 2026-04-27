@@ -2,7 +2,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import * as React from "react";
 import { AttachmentSection } from "@/features/attachments";
 import {
-	Detail,
+	EntityDetail,
 	type DetailFieldItem,
 } from "@/shared/components/entity-detail";
 import { EntityStatus } from "@/shared/components/entity-status";
@@ -54,22 +54,22 @@ export const ClientDetails = ({ id, state }: ClientDetailsProps) => {
 	);
 
 	return (
-		<Detail state={state} title={data.fullName}>
-			<Detail.Fields items={generalInfo} />
-			<Detail.Separator />
-			<Detail.Section title="Contato">
-				<Detail.Fields items={contactInfo} />
-			</Detail.Section>
-			<Detail.Separator className="mt-auto" />
+		<EntityDetail state={state} title={data.fullName}>
+			<EntityDetail.Fields items={generalInfo} />
+			<EntityDetail.Separator />
+			<EntityDetail.Section title="Contato">
+				<EntityDetail.Fields items={contactInfo} />
+			</EntityDetail.Section>
+			<EntityDetail.Separator className="mt-auto" />
 			<AttachmentSection
 				ownerId={data.id}
 				ownerKind="client"
 				canUpload={!data.isSoftDeleted}
 			/>
-			<Detail.Separator />
-			<Detail.Section title="Registro">
-				<Detail.Fields items={registerInfo} />
-			</Detail.Section>
-		</Detail>
+			<EntityDetail.Separator />
+			<EntityDetail.Section title="Registro">
+				<EntityDetail.Fields items={registerInfo} />
+			</EntityDetail.Section>
+		</EntityDetail>
 	);
 };

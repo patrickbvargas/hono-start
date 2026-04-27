@@ -7,11 +7,11 @@ import {
 	PopoverTrigger,
 } from "@/shared/components/ui";
 
-interface FilterWrapperProps extends React.ComponentProps<typeof Popover> {
+interface FilterPopoverProps extends React.ComponentProps<typeof Popover> {
 	children: React.ReactNode;
 }
 
-export const FilterWrapper = ({ children, ...props }: FilterWrapperProps) => {
+export const FilterPopover = ({ children, ...props }: FilterPopoverProps) => {
 	return (
 		<Popover {...props}>
 			<PopoverTrigger render={<Button variant="ghost" />}>
