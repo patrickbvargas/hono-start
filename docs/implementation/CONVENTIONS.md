@@ -11,6 +11,7 @@
 - React components: `PascalCase`
 - Hooks: `camelCase` with `use` prefix
 - Constants: `UPPER_SNAKE_CASE`
+- Generic type parameters use short letter names such as `T`, `K`, and `V`
 - Exported pure business-rule assertions in `rules/`: `camelCase` with `assert` prefix
 - React Query option factories: `get...QueryOptions` for queries and
   `...MutationOptions` for mutations

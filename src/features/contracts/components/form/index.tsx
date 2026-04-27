@@ -1,15 +1,17 @@
-import { AlertCircleIcon, PlusIcon, Trash2Icon } from "lucide-react";
-import { useRef, useState } from "react";
-import { FormWrapper } from "@/shared/components/form-wrapper";
+import { PlusIcon, Trash2Icon } from "lucide-react";
+import { useRef } from "react";
+import { EntityForm } from "@/shared/components/entity-form";
+import { EntityFormList } from "@/shared/components/entity-form-list";
+import { FormSection } from "@/shared/components/form-section";
 import {
 	Button,
+	FieldError,
 	FieldGroup,
-	Tabs,
-	TabsContent,
-	TabsList,
-	TabsTrigger,
+	ScrollArea,
 } from "@/shared/components/ui";
+import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
+import type { Option } from "@/shared/schemas/option";
 import { isAdminSession, useLoggedUserSessionStore } from "@/shared/session";
 import type { OverlayState } from "@/shared/types/overlay";
 import {
@@ -18,16 +20,14 @@ import {
 } from "../../constants/values";
 import { useContractOptions } from "../../hooks/use-data";
 import { useContractForm } from "../../hooks/use-form";
+import type {
+	ContractAssignmentInput,
+	ContractRevenueInput,
+} from "../../schemas/form";
 import {
 	defaultContractAssignmentValues,
 	defaultContractRevenueValues,
 } from "../../utils/default";
-
-const CONTRACT_FORM_TABS = {
-	data: "data",
-	assignments: "assignments",
-	revenues: "revenues",
-} as const;
 
 interface ContractFormProps {
 	id?: EntityId;
@@ -35,200 +35,45 @@ interface ContractFormProps {
 	onSuccess?: () => void;
 }
 
-interface ContractFormTabErrors {
-	data: boolean;
-	assignments: boolean;
-	revenues: boolean;
+function getAssignmentSummary(
+	assignment: ContractAssignmentInput,
+	index: number,
+	employees: Option[],
+	assignmentTypes: Option[],
+) {
+	const employeeLabel = assignment.employeeId.trim()
+		? (employees.find((option) => option.value === assignment.employeeId)
+				?.label ?? `Colaborador #${assignment.employeeId}`)
+		: `Colaborador ${index + 1}`;
+	const assignmentTypeLabel = assignment.assignmentType.trim()
+		? (assignmentTypes.find(
+				(option) => option.value === assignment.assignmentType,
+			)?.label ?? assignment.assignmentType)
+		: "Atribuição pendente";
+
+	return `${employeeLabel} • ${assignmentTypeLabel}`;
 }
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-	return typeof value === "object" && value !== null && !Array.isArray(value);
-}
+function getRevenueSummary(
+	revenue: ContractRevenueInput,
+	index: number,
+	revenueTypes: Option[],
+) {
+	const typeLabel = revenue.type.trim()
+		? (revenueTypes.find((option) => option.value === revenue.type)?.label ??
+			revenue.type)
+		: `Receita ${index + 1}`;
+	const totalValue =
+		revenue.totalValue > 0
+			? formatter.currency(revenue.totalValue)
+			: "Valor pendente";
 
-function hasValidationError(value: unknown): boolean {
-	if (!value) {
-		return false;
-	}
-
-	if (typeof value === "string") {
-		return value.length > 0;
-	}
-
-	if (Array.isArray(value)) {
-		return value.some((item) => hasValidationError(item));
-	}
-
-	if (isRecord(value)) {
-		return Object.values(value).some((item) => hasValidationError(item));
-	}
-
-	return true;
-}
-
-function formatIssuePath(path: unknown): string | null {
-	if (typeof path === "string") {
-		return path;
-	}
-
-	if (Array.isArray(path)) {
-		return path.map(String).join(".");
-	}
-
-	return null;
-}
-
-function collectErrorPaths(value: unknown): string[] {
-	const paths: string[] = [];
-
-	function visit(item: unknown, fallbackPath?: string): void {
-		if (!hasValidationError(item)) {
-			return;
-		}
-
-		if (isRecord(item)) {
-			const issuePath = formatIssuePath(item.path);
-			if (issuePath) {
-				paths.push(issuePath);
-				return;
-			}
-
-			for (const [key, child] of Object.entries(item)) {
-				visit(child, key);
-			}
-			return;
-		}
-
-		if (Array.isArray(item)) {
-			for (const child of item) {
-				visit(child, fallbackPath);
-			}
-			return;
-		}
-
-		if (fallbackPath) {
-			paths.push(fallbackPath);
-		}
-	}
-
-	visit(value);
-	return paths;
-}
-
-function collectFieldMetaErrorPaths(fieldMetaBase: unknown): string[] {
-	if (!isRecord(fieldMetaBase)) {
-		return [];
-	}
-
-	return Object.entries(fieldMetaBase)
-		.filter(([, meta]) => {
-			if (!isRecord(meta)) {
-				return false;
-			}
-
-			return hasValidationError(meta.errorMap);
-		})
-		.map(([path]) => path);
-}
-
-function normalizeErrorPath(path: string): string {
-	return path.replaceAll(/\[(\d+)\]/g, ".$1");
-}
-
-function isSectionPath(path: string, section: "assignments" | "revenues") {
-	const normalizedPath = normalizeErrorPath(path);
-	return normalizedPath === section || normalizedPath.startsWith(`${section}.`);
-}
-
-function getContractFormTabErrors(formState: {
-	errorMap: unknown;
-	errors: unknown;
-	fieldMetaBase: unknown;
-	isSubmitSuccessful: boolean;
-	submissionAttempts: number;
-}): ContractFormTabErrors {
-	if (formState.submissionAttempts === 0 || formState.isSubmitSuccessful) {
-		return { data: false, assignments: false, revenues: false };
-	}
-
-	const paths = [
-		...collectErrorPaths(formState.errorMap),
-		...collectErrorPaths(formState.errors),
-		...collectFieldMetaErrorPaths(formState.fieldMetaBase),
-	];
-	const hasAssignmentsError = paths.some((path) =>
-		isSectionPath(path, CONTRACT_FORM_TABS.assignments),
-	);
-	const hasRevenuesError = paths.some((path) =>
-		isSectionPath(path, CONTRACT_FORM_TABS.revenues),
-	);
-	const hasKnownPath = paths.length > 0;
-
-	return {
-		data:
-			hasKnownPath &&
-			paths.some(
-				(path) =>
-					!isSectionPath(path, CONTRACT_FORM_TABS.assignments) &&
-					!isSectionPath(path, CONTRACT_FORM_TABS.revenues),
-			),
-		assignments: hasAssignmentsError,
-		revenues: hasRevenuesError,
-	};
-}
-
-function TabLabel({
-	children,
-	hasError,
-}: {
-	children: React.ReactNode;
-	hasError: boolean;
-}) {
-	return (
-		<span className="inline-flex items-center gap-1.5">
-			<span>{children}</span>
-			{hasError ? (
-				<AlertCircleIcon
-					aria-label="Há erros nesta seção"
-					className="text-destructive"
-					size={14}
-				/>
-			) : null}
-		</span>
-	);
-}
-
-function HiddenErrorMessage({
-	activeTab,
-	errors,
-}: {
-	activeTab: string;
-	errors: ContractFormTabErrors;
-}) {
-	const hiddenErrorLabels = [
-		activeTab !== CONTRACT_FORM_TABS.data && errors.data ? "Dados" : null,
-		activeTab !== CONTRACT_FORM_TABS.assignments && errors.assignments
-			? "Colaboradores"
-			: null,
-		activeTab !== CONTRACT_FORM_TABS.revenues && errors.revenues
-			? "Receitas"
-			: null,
-	].filter((label) => label !== null);
-
-	if (hiddenErrorLabels.length === 0) {
-		return null;
-	}
-
-	return (
-		<p className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-destructive text-sm">
-			Revise também: {hiddenErrorLabels.join(", ")}.
-		</p>
-	);
+	return `${typeLabel} • ${totalValue} • ${revenue.totalInstallments} parcela(s)`;
 }
 
 export const ContractForm = ({ id, state, onSuccess }: ContractFormProps) => {
 	const rowKeysRef = useRef(new WeakMap<object, string>());
 	const rowKeyCountRef = useRef(0);
-	const [activeTab, setActiveTab] = useState<string>(CONTRACT_FORM_TABS.data);
 	const {
 		clients,
 		legalAreas,
@@ -256,144 +101,126 @@ export const ContractForm = ({ id, state, onSuccess }: ContractFormProps) => {
 
 	return (
 		<form.Form form={form}>
-			<FormWrapper state={state} title={title} footer={<form.Submit />}>
-				<form.Subscribe
-					selector={(formState) => ({
-						assignmentCount: formState.values.assignments.length,
-						errorMap: formState.errorMap,
-						errors: formState.errors,
-						fieldMetaBase: formState.fieldMetaBase,
-						isSubmitSuccessful: formState.isSubmitSuccessful,
-						revenueCount: formState.values.revenues.length,
-						submissionAttempts: formState.submissionAttempts,
-					})}
-				>
-					{(formState) => {
-						const tabErrors = getContractFormTabErrors(formState);
+			<EntityForm
+				state={state}
+				title={title}
+				footer={<form.Submit />}
+				contentClassName="sm:max-w-4xl"
+			>
+				<ScrollArea className="max-h-[min(70vh,calc(100dvh-12rem))]">
+					<div className="flex flex-col gap-6 pr-3">
+						<FormSection title="Dados do contrato">
+							<FieldGroup>
+								<form.AppField name="clientId">
+									{(field) => (
+										<field.Autocomplete
+											label="Cliente"
+											options={clients}
+											isRequired
+										/>
+									)}
+								</form.AppField>
+							</FieldGroup>
+							<FieldGroup className="grid gap-5 sm:grid-cols-2">
+								<form.AppField name="processNumber">
+									{(field) => <field.Input label="Processo" isRequired />}
+								</form.AppField>
+								<form.AppField name="legalArea">
+									{(field) => (
+										<field.Autocomplete
+											label="Área"
+											options={legalAreas}
+											isRequired
+										/>
+									)}
+								</form.AppField>
+								<form.AppField name="status">
+									{(field) => (
+										<field.Autocomplete
+											label="Status"
+											options={statuses}
+											isRequired
+										/>
+									)}
+								</form.AppField>
+								<form.AppField name="feePercentage">
+									{(field) => (
+										<field.Number
+											label="% Honorários"
+											minValue={0}
+											maxValue={1}
+											step={0.01}
+											isRequired
+											formatOptions={{ style: "percent" }}
+										/>
+									)}
+								</form.AppField>
+							</FieldGroup>
+							<FieldGroup>
+								<form.AppField name="notes">
+									{(field) => <field.Textarea label="Observações" />}
+								</form.AppField>
+							</FieldGroup>
+							<FieldGroup className="grid gap-5 sm:grid-cols-2">
+								<form.AppField name="isActive">
+									{(field) => <field.Checkbox label="Ativo" />}
+								</form.AppField>
+								{isAdmin ? (
+									<form.AppField name="allowStatusChange">
+										{(field) => (
+											<field.Checkbox label="Permitir mudança de status" />
+										)}
+									</form.AppField>
+								) : null}
+							</FieldGroup>
+						</FormSection>
 
-						return (
-							<Tabs
-								className="w-full"
-								value={activeTab}
-								onValueChange={(value) => setActiveTab(String(value))}
-							>
-								<TabsList aria-label="Seções do contrato">
-									<TabsTrigger value={CONTRACT_FORM_TABS.data}>
-										<TabLabel hasError={tabErrors.data}>Dados</TabLabel>
-									</TabsTrigger>
-									<TabsTrigger value={CONTRACT_FORM_TABS.assignments}>
-										<TabLabel hasError={tabErrors.assignments}>
-											Colaboradores ({formState.assignmentCount})
-										</TabLabel>
-									</TabsTrigger>
-									<TabsTrigger value={CONTRACT_FORM_TABS.revenues}>
-										<TabLabel hasError={tabErrors.revenues}>
-											Receitas ({formState.revenueCount})
-										</TabLabel>
-									</TabsTrigger>
-								</TabsList>
-								<div className="pt-3">
-									<HiddenErrorMessage
-										activeTab={activeTab}
-										errors={tabErrors}
-									/>
-								</div>
-								<TabsContent
-									className="flex flex-col gap-2.5 pt-3"
-									value={CONTRACT_FORM_TABS.data}
-								>
-									<FieldGroup>
-										<form.AppField name="clientId">
-											{(field) => (
-												<field.Autocomplete
-													label="Cliente"
-													options={clients}
-													isRequired
-												/>
-											)}
-										</form.AppField>
-									</FieldGroup>
-									<FieldGroup className="grid gap-5 sm:grid-cols-2">
-										<form.AppField name="processNumber">
-											{(field) => <field.Input label="Processo" isRequired />}
-										</form.AppField>
-										<form.AppField name="legalArea">
-											{(field) => (
-												<field.Autocomplete
-													label="Área"
-													options={legalAreas}
-													isRequired
-												/>
-											)}
-										</form.AppField>
-										<form.AppField name="status">
-											{(field) => (
-												<field.Autocomplete
-													label="Status"
-													options={statuses}
-													isRequired
-												/>
-											)}
-										</form.AppField>
-										<form.AppField name="feePercentage">
-											{(field) => (
-												<field.Number
-													label="% Honorários"
-													minValue={0}
-													maxValue={1}
-													step={0.01}
-													isRequired
-													formatOptions={{ style: "percent" }}
-												/>
-											)}
-										</form.AppField>
-									</FieldGroup>
-									<FieldGroup>
-										<form.AppField name="notes">
-											{(field) => <field.Textarea label="Observações" />}
-										</form.AppField>
-									</FieldGroup>
-									<FieldGroup className="grid gap-5 sm:grid-cols-2">
-										<form.AppField name="isActive">
-											{(field) => <field.Checkbox label="Ativo" />}
-										</form.AppField>
-										{isAdmin ? (
-											<form.AppField name="allowStatusChange">
-												{(field) => (
-													<field.Checkbox label="Permitir mudança de status" />
-												)}
-											</form.AppField>
+						<FormSection
+							title="Colaboradores"
+							description={`Até ${CONTRACT_MAX_EMPLOYEES} colaboradores por contrato.`}
+						>
+							<form.AppField name="assignments" mode="array">
+								{(subField) => (
+									<>
+										<Button
+											type="button"
+											size="sm"
+											className="w-fit"
+											onClick={() =>
+												subField.pushValue(defaultContractAssignmentValues())
+											}
+											disabled={
+												subField.state.value.length >= CONTRACT_MAX_EMPLOYEES
+											}
+										>
+											<PlusIcon size={16} />
+											Adicionar colaborador
+										</Button>
+										{subField.state.meta.errors.length > 0 ? (
+											<FieldError errors={subField.state.meta.errors} />
 										) : null}
-									</FieldGroup>
-								</TabsContent>
-								<TabsContent
-									className="flex flex-col gap-2.5 pt-3"
-									value={CONTRACT_FORM_TABS.assignments}
-								>
-									<form.AppField name="assignments" mode="array">
-										{(subField) => (
-											<FieldGroup>
-												<Button
-													type="button"
-													size="sm"
-													onClick={() =>
-														subField.pushValue(
-															defaultContractAssignmentValues(),
-														)
-													}
-													disabled={
-														subField.state.value.length >=
-														CONTRACT_MAX_EMPLOYEES
-													}
-												>
-													<PlusIcon size={16} />
-													Colaborador
-												</Button>
-												{subField.state.value.map((assignment, i) => (
-													<FieldGroup
-														key={getRowKey(assignment)}
-														className="grid gap-5 sm:grid-cols-[repeat(2,1fr)_auto]"
-													>
+										{subField.state.value.length === 0 ? (
+											<p className="text-muted-foreground text-sm">
+												Adicione pelo menos um colaborador.
+											</p>
+										) : (
+											<EntityFormList
+												items={subField.state.value}
+												getKey={(assignment) => getRowKey(assignment)}
+												getTitle={(_, index) => `Colaborador ${index + 1}`}
+												getSummary={(assignment, index) =>
+													getAssignmentSummary(
+														assignment,
+														index,
+														employees,
+														assignmentTypes,
+													)
+												}
+												getDescription={() =>
+													"Defina colaborador e atribuição para manter o contrato editável."
+												}
+												renderContent={(_, i) => (
+													<FieldGroup className="grid gap-5 sm:grid-cols-[repeat(2,1fr)_auto]">
 														<form.AppField
 															name={`assignments[${i}].employeeId`}
 														>
@@ -421,38 +248,63 @@ export const ContractForm = ({ id, state, onSuccess }: ContractFormProps) => {
 															size="icon-sm"
 															variant="destructive"
 															className="place-self-end"
+															aria-label={`Remover colaborador ${i + 1}`}
 															onClick={() => subField.removeValue(i)}
 														>
 															<Trash2Icon size={16} />
 														</Button>
 													</FieldGroup>
-												))}
-											</FieldGroup>
+												)}
+											/>
 										)}
-									</form.AppField>
-								</TabsContent>
-								<TabsContent
-									className="flex flex-col gap-2.5 pt-3"
-									value={CONTRACT_FORM_TABS.revenues}
-								>
-									<form.AppField name="revenues" mode="array">
-										{(subField) => (
-											<FieldGroup>
-												<Button
-													type="button"
-													size="sm"
-													onClick={() =>
-														subField.pushValue(defaultContractRevenueValues())
-													}
-													disabled={
-														subField.state.value.length >= CONTRACT_MAX_REVENUES
-													}
-												>
-													<PlusIcon size={16} />
-													Receita
-												</Button>
-												{subField.state.value.map((revenue, i) => (
-													<FieldGroup key={getRowKey(revenue)}>
+									</>
+								)}
+							</form.AppField>
+						</FormSection>
+
+						<FormSection
+							title="Receitas"
+							description={`Até ${CONTRACT_MAX_REVENUES} receitas ativas por contrato.`}
+						>
+							<form.AppField name="revenues" mode="array">
+								{(subField) => (
+									<>
+										<Button
+											type="button"
+											size="sm"
+											className="w-fit"
+											onClick={() =>
+												subField.pushValue(defaultContractRevenueValues())
+											}
+											disabled={
+												subField.state.value.length >= CONTRACT_MAX_REVENUES
+											}
+										>
+											<PlusIcon size={16} />
+											Adicionar receita
+										</Button>
+										{subField.state.meta.errors.length > 0 ? (
+											<FieldError errors={subField.state.meta.errors} />
+										) : null}
+										{subField.state.value.length === 0 ? (
+											<p className="text-muted-foreground text-sm">
+												Adicione pelo menos uma receita.
+											</p>
+										) : (
+											<EntityFormList
+												items={subField.state.value}
+												getKey={(revenue) => getRowKey(revenue)}
+												getTitle={(_, index) => `Receita ${index + 1}`}
+												getSummary={(revenue, index) =>
+													getRevenueSummary(revenue, index, revenueTypes)
+												}
+												getDescription={(revenue) =>
+													revenue.paymentStartDate
+														? `Início ${formatter.date(revenue.paymentStartDate)}`
+														: "Defina tipo, valor e cronograma de pagamento."
+												}
+												renderContent={(_, i) => (
+													<>
 														<FieldGroup className="grid items-end gap-5 sm:grid-cols-[1fr_1fr_auto]">
 															<form.AppField name={`revenues[${i}].type`}>
 																{(field) => (
@@ -474,6 +326,16 @@ export const ContractForm = ({ id, state, onSuccess }: ContractFormProps) => {
 																	/>
 																)}
 															</form.AppField>
+															<Button
+																type="button"
+																size="icon-sm"
+																variant="destructive"
+																className="place-self-end"
+																aria-label={`Remover receita ${i + 1}`}
+																onClick={() => subField.removeValue(i)}
+															>
+																<Trash2Icon size={16} />
+															</Button>
 														</FieldGroup>
 														<FieldGroup className="grid gap-5 sm:grid-cols-3">
 															<form.AppField name={`revenues[${i}].totalValue`}>
@@ -518,31 +380,24 @@ export const ContractForm = ({ id, state, onSuccess }: ContractFormProps) => {
 																)}
 															</form.AppField>
 														</FieldGroup>
-														<form.AppField name={`revenues[${i}].isActive`}>
-															{(field) => (
-																<field.Checkbox label="Receita ativa" />
-															)}
-														</form.AppField>
-														<Button
-															type="button"
-															size="icon-sm"
-															variant="destructive"
-															className="place-self-end"
-															onClick={() => subField.removeValue(i)}
-														>
-															<Trash2Icon size={16} />
-														</Button>
-													</FieldGroup>
-												))}
-											</FieldGroup>
+														<FieldGroup>
+															<form.AppField name={`revenues[${i}].isActive`}>
+																{(field) => (
+																	<field.Checkbox label="Receita ativa" />
+																)}
+															</form.AppField>
+														</FieldGroup>
+													</>
+												)}
+											/>
 										)}
-									</form.AppField>
-								</TabsContent>
-							</Tabs>
-						);
-					}}
-				</form.Subscribe>
-			</FormWrapper>
+									</>
+								)}
+							</form.AppField>
+						</FormSection>
+					</div>
+				</ScrollArea>
+			</EntityForm>
 		</form.Form>
 	);
 };

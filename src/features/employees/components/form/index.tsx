@@ -1,4 +1,5 @@
-import { FormWrapper } from "@/shared/components/form-wrapper";
+import { EntityForm } from "@/shared/components/entity-form";
+import { FormSection } from "@/shared/components/form-section";
 import { FieldGroup } from "@/shared/components/ui";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
@@ -20,86 +21,90 @@ export const EmployeeForm = ({ id, state, onSuccess }: EmployeeFormProps) => {
 
 	return (
 		<form.Form form={form}>
-			<FormWrapper state={state} title={title} footer={<form.Submit />}>
-				<FieldGroup>
-					<form.AppField name="fullName">
-						{(field) => <field.Input label="Nome" isRequired />}
-					</form.AppField>
-					<form.AppField name="email">
-						{(field) => <field.Input label="Email" isRequired />}
-					</form.AppField>
-				</FieldGroup>
-				<FieldGroup className="grid gap-5 sm:grid-cols-2">
-					<form.AppField
-						name="type"
-						listeners={{
-							onChange: ({ value }) => {
-								if (value !== LAWYER_TYPE_VALUE) {
-									form.setFieldValue("oabNumber", "");
-								}
-							},
-						}}
-					>
-						{(field) => (
-							<field.Autocomplete label="Função" options={types} isRequired />
-						)}
-					</form.AppField>
-					<form.AppField name="role">
-						{(field) => (
-							<field.Autocomplete label="Cargo" options={roles} isRequired />
-						)}
-					</form.AppField>
-					<form.Subscribe
-						selector={(state) => state.values.type === LAWYER_TYPE_VALUE}
-					>
-						{(isLawyer) =>
-							isLawyer && (
-								<form.AppField name="oabNumber">
-									{(field) => (
-										<field.Input
-											label="OAB"
-											placeholder="RS000000"
-											maxLength={8}
-											isRequired
-										/>
-									)}
-								</form.AppField>
-							)
-						}
-					</form.Subscribe>
-				</FieldGroup>
-				<FieldGroup className="grid gap-5 sm:grid-cols-2">
-					<form.AppField name="remunerationPercent">
-						{(field) => (
-							<field.Number
-								label="% Remuneração"
-								minValue={0}
-								maxValue={1}
-								step={0.05}
-								isRequired
-								formatOptions={{ style: "percent" }}
-							/>
-						)}
-					</form.AppField>
-					<form.AppField name="referrerPercent">
-						{(field) => (
-							<field.Number
-								label="% Indicação"
-								minValue={0}
-								maxValue={1}
-								step={0.05}
-								isRequired
-								formatOptions={{ style: "percent" }}
-							/>
-						)}
-					</form.AppField>
-				</FieldGroup>
-				<FieldGroup>
-					<form.AppField name="isActive">
-						{(field) => <field.Checkbox label="Ativo" />}
-					</form.AppField>
-				</FieldGroup>
-			</FormWrapper>
+			<EntityForm state={state} title={title} footer={<form.Submit />}>
+				<FormSection title="Dados do colaborador">
+					<FieldGroup>
+						<form.AppField name="fullName">
+							{(field) => <field.Input label="Nome" isRequired />}
+						</form.AppField>
+						<form.AppField name="email">
+							{(field) => <field.Input label="Email" isRequired />}
+						</form.AppField>
+					</FieldGroup>
+					<FieldGroup className="grid gap-5 sm:grid-cols-2">
+						<form.AppField
+							name="type"
+							listeners={{
+								onChange: ({ value }) => {
+									if (value !== LAWYER_TYPE_VALUE) {
+										form.setFieldValue("oabNumber", "");
+									}
+								},
+							}}
+						>
+							{(field) => (
+								<field.Autocomplete label="Função" options={types} isRequired />
+							)}
+						</form.AppField>
+						<form.AppField name="role">
+							{(field) => (
+								<field.Autocomplete label="Cargo" options={roles} isRequired />
+							)}
+						</form.AppField>
+						<form.Subscribe
+							selector={(state) => state.values.type === LAWYER_TYPE_VALUE}
+						>
+							{(isLawyer) =>
+								isLawyer && (
+									<form.AppField name="oabNumber">
+										{(field) => (
+											<field.Input
+												label="OAB"
+												placeholder="RS000000"
+												maxLength={8}
+												isRequired
+											/>
+										)}
+									</form.AppField>
+								)
+							}
+						</form.Subscribe>
+					</FieldGroup>
+				</FormSection>
+				<FormSection title="Percentuais e status">
+					<FieldGroup className="grid gap-5 sm:grid-cols-2">
+						<form.AppField name="remunerationPercent">
+							{(field) => (
+								<field.Number
+									label="% Remuneração"
+									minValue={0}
+									maxValue={1}
+									step={0.05}
+									isRequired
+									formatOptions={{ style: "percent" }}
+								/>
+							)}
+						</form.AppField>
+						<form.AppField name="referrerPercent">
+							{(field) => (
+								<field.Number
+									label="% Indicação"
+									minValue={0}
+									maxValue={1}
+									step={0.05}
+									isRequired
+									formatOptions={{ style: "percent" }}
+								/>
+							)}
+						</form.AppField>
+					</FieldGroup>
+					<FieldGroup>
+						<form.AppField name="isActive">
+							{(field) => <field.Checkbox label="Ativo" />}
+						</form.AppField>
+					</FieldGroup>
+				</FormSection>
+			</EntityForm>
 		</form.Form>
 	);
 };

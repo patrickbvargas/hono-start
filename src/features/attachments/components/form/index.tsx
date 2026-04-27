@@ -1,5 +1,6 @@
 import { useId } from "react";
-import { FormWrapper } from "@/shared/components/form-wrapper";
+import { EntityForm } from "@/shared/components/entity-form";
+import { FormSection } from "@/shared/components/form-section";
 import {
 	FieldGroup,
 	FieldWrapper,
@@ -45,7 +46,7 @@ export const AttachmentForm = ({
 
 	return (
 		<form.Form form={form}>
-			<FormWrapper state={state} title="Novo anexo" footer={<form.Submit />}>
+			<EntityForm state={state} title="Novo anexo" footer={<form.Submit />}>
 				{isLoadingOptions ? (
 					<div className="flex items-center gap-2 text-sm text-muted-foreground">
 						<Spinner />
@@ -59,56 +60,61 @@ export const AttachmentForm = ({
 							: "Não foi possível carregar tipos de anexo."}
 					</p>
 				) : null}
-				<FieldGroup>
-					<form.AppField name="type">
-						{(field) => (
-							<field.Autocomplete
-								label="Tipo"
-								options={types ?? []}
-								isRequired
-							/>
-						)}
-					</form.AppField>
-					<form.AppField name="fileName">
-						{(field) => (
-							<FieldWrapper
-								id={fileInputId}
-								label="Arquivo"
-								isRequired
-								description="Formatos aceitos: PDF, JPG e PNG. Tamanho máximo: 10 MB."
-								errors={field.state.meta.errors}
-							>
-								<Input
-									id={fileInputId}
-									type="file"
-									accept={ATTACHMENT_ACCEPT_ATTRIBUTE}
-									disabled={isPending}
-									onBlur={field.handleBlur}
-									onChange={async (event) => {
-										const file = event.target.files?.[0];
-
-										if (!file) {
-											field.handleChange("");
-											form.setFieldValue("mimeType", "");
-											form.setFieldValue("fileSize", 0);
-											form.setFieldValue("fileBase64", "");
-											return;
-										}
-
-										field.handleChange(file.name);
-										form.setFieldValue("mimeType", file.type);
-										form.setFieldValue("fileSize", file.size);
-										form.setFieldValue("fileBase64", await fileToBase64(file));
-									}}
+				<FormSection title="Arquivo">
+					<FieldGroup>
+						<form.AppField name="type">
+							{(field) => (
+								<field.Autocomplete
+									label="Tipo"
+									options={types ?? []}
+									isRequired
 								/>
-							</FieldWrapper>
-						)}
-					</form.AppField>
-					<form.AppField name="isActive">
-						{(field) => <field.Checkbox label="Ativo" />}
-					</form.AppField>
-				</FieldGroup>
-			</FormWrapper>
+							)}
+						</form.AppField>
+						<form.AppField name="fileName">
+							{(field) => (
+								<FieldWrapper
+									id={fileInputId}
+									label="Arquivo"
+									isRequired
+									description="Formatos aceitos: PDF, JPG e PNG. Tamanho máximo: 10 MB."
+									errors={field.state.meta.errors}
+								>
+									<Input
+										id={fileInputId}
+										type="file"
+										accept={ATTACHMENT_ACCEPT_ATTRIBUTE}
+										disabled={isPending}
+										onBlur={field.handleBlur}
+										onChange={async (event) => {
+											const file = event.target.files?.[0];
+
+											if (!file) {
+												field.handleChange("");
+												form.setFieldValue("mimeType", "");
+												form.setFieldValue("fileSize", 0);
+												form.setFieldValue("fileBase64", "");
+												return;
+											}
+
+											field.handleChange(file.name);
+											form.setFieldValue("mimeType", file.type);
+											form.setFieldValue("fileSize", file.size);
+											form.setFieldValue(
+												"fileBase64",
+												await fileToBase64(file),
+											);
+										}}
+									/>
+								</FieldWrapper>
+							)}
+						</form.AppField>
+						<form.AppField name="isActive">
+							{(field) => <field.Checkbox label="Ativo" />}
+						</form.AppField>
+					</FieldGroup>
+				</FormSection>
+			</EntityForm>
 		</form.Form>
 	);
 };

@@ -1,4 +1,5 @@
-import { FormWrapper } from "@/shared/components/form-wrapper";
+import { EntityForm } from "@/shared/components/entity-form";
+import { FormSection } from "@/shared/components/form-section";
 import { FieldGroup } from "@/shared/components/ui";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
@@ -24,7 +25,7 @@ export const ClientForm = ({ id, state, onSuccess }: ClientFormProps) => {
 
 	return (
 		<form.Form form={form}>
-			<FormWrapper state={state} title={title} footer={<form.Submit />}>
+			<EntityForm state={state} title={title} footer={<form.Submit />}>
 				<form.Subscribe selector={(formState) => formState.values.type}>
 					{(typeValue) => {
 						const nameLabel = getClientNameLabel(typeValue);
@@ -32,7 +33,7 @@ export const ClientForm = ({ id, state, onSuccess }: ClientFormProps) => {
 						const documentPlaceholder = getClientDocumentPlaceholder(typeValue);
 
 						return (
-							<>
+							<FormSection title="Dados do cliente">
 								<FieldGroup className="grid gap-5 sm:grid-cols-2">
 									<form.AppField name="type">
 										{(field) => (
@@ -77,11 +78,11 @@ export const ClientForm = ({ id, state, onSuccess }: ClientFormProps) => {
 										{(field) => <field.Checkbox label="Ativo" />}
 									</form.AppField>
 								</FieldGroup>
-							</>
+							</FormSection>
 						);
 					}}
 				</form.Subscribe>
-			</FormWrapper>
+			</EntityForm>
 		</form.Form>
 	);
 };

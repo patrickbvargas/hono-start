@@ -7,30 +7,37 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "@/shared/components/ui";
+import { cn } from "@/shared/lib/utils";
 import type { OverlayState } from "@/shared/types/overlay";
 
-interface FormWrapperProps
+interface EntityFormProps
 	extends Omit<React.ComponentProps<typeof Dialog>, "children"> {
 	title: string;
 	state: OverlayState;
 	footer?: React.ReactNode;
 	children: React.ReactNode;
+	contentClassName?: string;
+	bodyClassName?: string;
 }
 
-export const FormWrapper = ({
+export const EntityForm = ({
 	title,
 	state,
 	footer,
 	children,
+	contentClassName,
+	bodyClassName,
 	...props
-}: FormWrapperProps) => {
+}: EntityFormProps) => {
 	return (
 		<Dialog open={state.isOpen} onOpenChange={state.onOpenChange} {...props}>
-			<DialogContent className="sm:max-w-lg">
+			<DialogContent className={cn("sm:max-w-lg", contentClassName)}>
 				<DialogHeader>
 					<DialogTitle>{title}</DialogTitle>
 				</DialogHeader>
-				<DialogBody className="flex flex-col gap-2.5 overflow-hidden">
+				<DialogBody
+					className={cn("flex flex-col gap-5 overflow-hidden", bodyClassName)}
+				>
 					{children}
 				</DialogBody>
 				{footer && <DialogFooter>{footer}</DialogFooter>}

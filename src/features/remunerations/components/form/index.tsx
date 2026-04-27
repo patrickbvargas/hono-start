@@ -1,4 +1,4 @@
-import { FormWrapper } from "@/shared/components/form-wrapper";
+import { EntityForm } from "@/shared/components/entity-form";
 import { FieldGroup } from "@/shared/components/ui";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
@@ -22,7 +22,7 @@ export const RemunerationForm = ({
 
 	return (
 		<form.Form form={form}>
-			<FormWrapper
+			<EntityForm
 				state={state}
 				title="Editar remuneração"
 				footer={<form.Submit />}
@@ -54,7 +54,7 @@ export const RemunerationForm = ({
 						)}
 					</form.AppField>
 				</FieldGroup>
-			</FormWrapper>
+			</EntityForm>
 		</form.Form>
 	);
 };
