@@ -57,7 +57,6 @@ const userSession = createSession({
 
 const allActions: SessionAction[] = [
 	"employee.manage",
-	"employee.update",
 	"client.create",
 	"client.update",
 	"client.delete",
@@ -160,15 +159,6 @@ describe("session authorization policy", () => {
 		for (const action of adminOnlyActions) {
 			expect(can(userSession, action, { firmId: 100 })).toBe(false);
 		}
-	});
-
-	it("allows regular users to update only their own employee profile", () => {
-		expect(
-			can(userSession, "employee.update", { firmId: 100, employeeId: 10 }),
-		).toBe(true);
-		expect(
-			can(userSession, "employee.update", { firmId: 100, employeeId: 11 }),
-		).toBe(false);
 	});
 
 	it("allows regular users to access assigned contracts and fees", () => {

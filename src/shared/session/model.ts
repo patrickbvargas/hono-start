@@ -35,7 +35,6 @@ export interface LoggedUserSession {
 
 export type SessionAction =
 	| "employee.manage"
-	| "employee.update"
 	| "client.create"
 	| "client.update"
 	| "client.delete"
@@ -76,10 +75,6 @@ interface SessionFirmResource {
 	firmId: number;
 }
 
-export interface EmployeeAccessResource extends SessionFirmResource {
-	employeeId: number;
-}
-
 export interface ContractAccessResource extends SessionFirmResource {
 	assignedEmployeeIds?: number[];
 	isAssignedToActor?: boolean;
@@ -109,7 +104,6 @@ export type SessionResource =
 	| AuditLogAccessResource
 	| ContractAccessResource
 	| DashboardAccessResource
-	| EmployeeAccessResource
 	| FeeAccessResource
 	| RemunerationAccessResource
 	| null

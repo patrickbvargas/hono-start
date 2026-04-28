@@ -2,7 +2,6 @@ import {
 	CONTRACT_STATUS_CANCELLED_VALUE,
 	CONTRACT_STATUS_COMPLETED_VALUE,
 	type ContractAccessResource,
-	type EmployeeAccessResource,
 	type FeeAccessResource,
 	type LoggedUserSession,
 	type RemunerationAccessResource,
@@ -38,8 +37,6 @@ const ADMIN_ONLY_ACTIONS = new Set<SessionAction>([
 	"remuneration.restore",
 	"remuneration.update",
 ]);
-
-const OWN_EMPLOYEE_ACTIONS = new Set<SessionAction>(["employee.update"]);
 
 const ASSIGNED_RESOURCE_READ_ACTIONS = new Set<SessionAction>([
 	"contract.view",
@@ -79,7 +76,6 @@ const ERROR_MESSAGES: Record<SessionAction, string> = {
 	"contract.view": "Você não tem permissão para visualizar este contrato",
 	"dashboard.view": "Você não tem permissão para visualizar o dashboard",
 	"employee.manage": "Apenas administradores podem gerenciar funcionários",
-	"employee.update": "Você não tem permissão para editar este funcionário",
 	"fee.create": "Você não tem permissão para criar honorários",
 	"fee.delete": "Apenas administradores podem excluir honorários",
 	"fee.restore": "Apenas administradores podem restaurar honorários",
@@ -138,20 +134,6 @@ export function isContractReadOnly(
 	).includes(resource.statusValue);
 }
 
-function canAccessOwnEmployee(
-	session: LoggedUserSession,
-	resource?: EmployeeAccessResource | null,
-) {
-	if (!resource) {
-		return false;
-	}
-
-	return (
-		isSameFirm(session, resource) &&
-		resource.employeeId === getCurrentEmployeeId(session)
-	);
-}
-
 function canAccessOwnRemuneration(
 	session: LoggedUserSession,
 	resource?: RemunerationAccessResource | null,
@@ -201,10 +183,6 @@ function canRegularUser(
 
 	if (ADMIN_ONLY_ACTIONS.has(action)) {
 		return false;
-	}
-
-	if (OWN_EMPLOYEE_ACTIONS.has(action)) {
-		return canAccessOwnEmployee(session, resource as EmployeeAccessResource);
 	}
 
 	if (ASSIGNED_RESOURCE_READ_ACTIONS.has(action)) {

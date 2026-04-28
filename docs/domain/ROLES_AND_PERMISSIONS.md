@@ -9,7 +9,6 @@
 
 | Capability | Administrator | User |
 |---|---|---|
-| View and update own profile context | Yes | Yes |
 | Access employee management screen | Yes | No |
 | View all clients | Yes | Yes |
 | Create or update clients | Yes | Yes |
@@ -35,7 +34,7 @@
 
 ## Permission Baseline
 
-- All authenticated users may access the application shell and their own profile context.
+- All authenticated users may access the application shell.
 - Administrators manage employee accounts, full financial visibility, audit logs, and restore/delete operations.
 - Regular users must not access administrative account management or firm-wide confidential financial views.
 
@@ -44,7 +43,6 @@
 - Administrators see firm-wide clients, contracts, fees, revenues, and remunerations.
 - Regular users see all clients but only the contracts, fees, and revenues allowed by their assignment-based visibility rules.
 - Regular users only see their own remunerations and own dashboard-scoped financial data.
-- Regular users may update only their own employee profile context unless elevated privileges are granted by role.
 - "Allowed contract boundaries" means the actor is inside the same firm, is assigned where assignment-based visibility is required, and the target resource remains writable by lifecycle rules.
 
 ## Protected Actions

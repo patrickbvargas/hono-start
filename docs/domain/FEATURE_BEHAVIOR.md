@@ -53,7 +53,6 @@ The software core includes these feature areas:
 
 - Provides administrative employee-account management.
 - Supports role, employee-type, and remuneration-related configuration.
-- Allows authenticated users to see only the profile context they are allowed to access.
 - Supplies collaborator options to contract-team workflows.
 
 ### Contracts
@@ -148,7 +147,6 @@ The software core includes these feature areas:
 
 - Administrators can create and maintain employee accounts.
 - Administrators can manage employee role, type, and remuneration-related settings.
-- Regular users may update only their own profile context when policy allows it.
 
 ### Contract Expectations
 
@@ -199,7 +197,6 @@ The software core includes these feature areas:
 
 - As an administrator, I can create and maintain employee accounts.
 - As an administrator, I can control employee role, type, and remuneration-related fields.
-- As a user, I can update only my own profile context when allowed by policy.
 
 ### Contract Management
 
