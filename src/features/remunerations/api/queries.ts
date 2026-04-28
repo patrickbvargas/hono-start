@@ -2,11 +2,11 @@ import { mutationOptions, queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
 import type { Option } from "@/shared/schemas/option";
+import { isAdminSession } from "@/shared/session";
 import {
-	getServerLoggedUserSession,
+	getRequiredServerLoggedUserSession,
 	getServerScope,
-	isAdminSession,
-} from "@/shared/session";
+} from "@/shared/session/server";
 import type {
 	QueryManyReturnType,
 	QueryOneReturnType,
@@ -50,9 +50,9 @@ export const remunerationKeys = {
 	employeeOptions: () => [...remunerationKeys.all, "employee-options"] as const,
 };
 
-function getRemunerationScope() {
-	const session = getServerLoggedUserSession();
-	const scope = getServerScope("remuneration");
+async function getRemunerationScope() {
+	const session = await getRequiredServerLoggedUserSession();
+	const scope = await getServerScope("remuneration");
 
 	return {
 		session,
@@ -69,7 +69,7 @@ const getRemunerationsFn = createServerFn({ method: "GET" })
 	.handler(
 		async ({ data }): Promise<QueryPaginatedReturnType<Remuneration>> => {
 			try {
-				const { scope } = getRemunerationScope();
+				const { scope } = await getRemunerationScope();
 
 				return await getRemunerations({ scope, search: data });
 			} catch (error) {
@@ -83,7 +83,7 @@ const getRemunerationByIdFn = createServerFn({ method: "GET" })
 	.inputValidator(remunerationIdInputSchema)
 	.handler(async ({ data }): Promise<QueryOneReturnType<Remuneration>> => {
 		try {
-			const { scope } = getRemunerationScope();
+			const { scope } = await getRemunerationScope();
 
 			return await getRemunerationById({ id: data.id, scope });
 		} catch (error) {
@@ -100,7 +100,7 @@ const getSelectableRemunerationContractsFn = createServerFn({
 	method: "GET",
 }).handler(async (): Promise<QueryManyReturnType<Option>> => {
 	try {
-		const { scope } = getRemunerationScope();
+		const { scope } = await getRemunerationScope();
 
 		return await getSelectableRemunerationContracts(scope);
 	} catch (error) {
@@ -115,7 +115,7 @@ const getSelectableRemunerationEmployeesFn = createServerFn({
 	method: "GET",
 }).handler(async (): Promise<QueryManyReturnType<Option>> => {
 	try {
-		const { scope } = getRemunerationScope();
+		const { scope } = await getRemunerationScope();
 
 		return await getSelectableRemunerationEmployees(scope);
 	} catch (error) {
@@ -130,7 +130,7 @@ const exportRemunerationsFn = createServerFn({ method: "POST" })
 	.inputValidator(remunerationExportInputSchema)
 	.handler(async ({ data }): Promise<RemunerationExportResult> => {
 		try {
-			const { scope } = getRemunerationScope();
+			const { scope } = await getRemunerationScope();
 			const remunerations = await getRemunerationsForExport({
 				scope,
 				search: data,

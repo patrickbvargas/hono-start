@@ -12,6 +12,7 @@ import {
 	getEmployeesQueryOptions,
 	useEmployeeData,
 } from "@/features/employees";
+import { AuthenticatedShell } from "@/shared/components/authenticated-shell";
 import { RouteLoading } from "@/shared/components/route-loading";
 import { Button } from "@/shared/components/ui";
 import {
@@ -25,24 +26,30 @@ import type { EntityId } from "@/shared/schemas/entity";
 import {
 	assertCan,
 	can,
-	getLoggedUserSession,
+	requireRouteSession,
 	useLoggedUserSessionStore,
 } from "@/shared/session";
 
 export const Route = createFileRoute("/colaboradores")({
 	validateSearch: zodValidator(employeeSearchSchema),
-	beforeLoad: () => {
-		const session = getLoggedUserSession();
-		assertCan(session, "employee.manage");
-	},
 	loaderDeps: ({ search }) => ({ search }),
 	loader: async ({ context: { queryClient }, deps: { search } }) => {
+		const session = await requireRouteSession(queryClient);
+		assertCan(session, "employee.manage");
 		await queryClient.ensureQueryData(getEmployeesQueryOptions(search));
 	},
 	component: RouteComponent,
 });
 
 function RouteComponent() {
+	return (
+		<AuthenticatedShell>
+			<ColaboradoresContent />
+		</AuthenticatedShell>
+	);
+}
+
+function ColaboradoresContent() {
 	const search = Route.useSearch();
 	const { employees } = useEmployeeData(search);
 	const { overlay } = useOverlay<EntityId>();

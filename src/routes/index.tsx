@@ -7,6 +7,7 @@ import {
 	getDashboardSummaryQueryOptions,
 	useDashboardData,
 } from "@/features/dashboard";
+import { AuthenticatedShell } from "@/shared/components/authenticated-shell";
 import { RouteError } from "@/shared/components/route-error";
 import { RouteLoading } from "@/shared/components/route-loading";
 import {
@@ -15,18 +16,16 @@ import {
 	WrapperHeader,
 } from "@/shared/components/wrapper";
 import {
-	getLoggedUserSession,
 	isAdminSession,
+	requireRouteSession,
 	useLoggedUserSessionStore,
 } from "@/shared/session";
 
 export const Route = createFileRoute("/")({
 	validateSearch: zodValidator(dashboardSearchSchema),
-	beforeLoad: () => {
-		getLoggedUserSession();
-	},
 	loaderDeps: ({ search }) => ({ search }),
 	loader: async ({ context: { queryClient }, deps: { search } }) => {
+		await requireRouteSession(queryClient);
 		await queryClient.ensureQueryData(getDashboardSummaryQueryOptions(search));
 	},
 	pendingComponent: () => <RouteLoading />,
@@ -35,6 +34,14 @@ export const Route = createFileRoute("/")({
 });
 
 function App() {
+	return (
+		<AuthenticatedShell>
+			<DashboardContent />
+		</AuthenticatedShell>
+	);
+}
+
+function DashboardContent() {
 	const search = Route.useSearch();
 	const { summary } = useDashboardData(search);
 	const isAdmin = useLoggedUserSessionStore(isAdminSession);

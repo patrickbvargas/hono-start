@@ -3,11 +3,11 @@ import { createServerFn } from "@tanstack/react-start";
 import * as z from "zod";
 import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
 import type { Option } from "@/shared/schemas/option";
+import { isAdminSession } from "@/shared/session";
 import {
-	getServerLoggedUserSession,
+	getRequiredServerLoggedUserSession,
 	getServerScope,
-	isAdminSession,
-} from "@/shared/session";
+} from "@/shared/session/server";
 import type {
 	QueryManyReturnType,
 	QueryOneReturnType,
@@ -37,8 +37,8 @@ const getFeesFn = createServerFn({ method: "GET" })
 	.inputValidator(feeSearchSchema)
 	.handler(async ({ data }): Promise<QueryPaginatedReturnType<FeeSummary>> => {
 		try {
-			const session = getServerLoggedUserSession();
-			const scope = getServerScope("fee");
+			const session = await getRequiredServerLoggedUserSession();
+			const scope = await getServerScope("fee");
 
 			return await getFees({
 				scope: {
@@ -58,8 +58,8 @@ const getFeeByIdFn = createServerFn({ method: "GET" })
 	.inputValidator(feeIdInputSchema)
 	.handler(async ({ data }): Promise<QueryOneReturnType<FeeDetail>> => {
 		try {
-			const session = getServerLoggedUserSession();
-			const scope = getServerScope("fee");
+			const session = await getRequiredServerLoggedUserSession();
+			const scope = await getServerScope("fee");
 
 			return await getFeeById({
 				scope: {
@@ -82,8 +82,8 @@ const getFeeByIdFn = createServerFn({ method: "GET" })
 const getSelectableFeeContractsFn = createServerFn({ method: "GET" }).handler(
 	async (): Promise<QueryManyReturnType<Option>> => {
 		try {
-			const session = getServerLoggedUserSession();
-			const scope = getServerScope("fee");
+			const session = await getRequiredServerLoggedUserSession();
+			const scope = await getServerScope("fee");
 
 			return await getSelectableFeeContracts({
 				firmId: scope.firmId,
@@ -105,8 +105,8 @@ const getSelectableFeeRevenuesFn = createServerFn({ method: "GET" })
 	)
 	.handler(async ({ data }): Promise<QueryManyReturnType<Option>> => {
 		try {
-			const session = getServerLoggedUserSession();
-			const scope = getServerScope("fee");
+			const session = await getRequiredServerLoggedUserSession();
+			const scope = await getServerScope("fee");
 
 			return await getSelectableFeeRevenues({
 				scope: {

@@ -1,11 +1,11 @@
 import { queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import type { Option } from "@/shared/schemas/option";
+import { assertCan } from "@/shared/session";
 import {
-	assertCan,
-	getServerLoggedUserSession,
+	getRequiredServerLoggedUserSession,
 	getServerScope,
-} from "@/shared/session";
+} from "@/shared/session/server";
 import type { QueryManyReturnType } from "@/shared/types/api";
 import { ATTACHMENT_ERRORS } from "../constants/errors";
 import {
@@ -34,7 +34,7 @@ export const attachmentKeys = {
 };
 
 function assertAttachmentOwnerReadAccess(
-	session: ReturnType<typeof getServerLoggedUserSession>,
+	session: Awaited<ReturnType<typeof getRequiredServerLoggedUserSession>>,
 	owner: Awaited<ReturnType<typeof assertAttachmentOwnerExists>>,
 ) {
 	assertCan(session, "attachment.view", owner.access.resource);
@@ -53,8 +53,8 @@ const getAttachmentsByOwnerFn = createServerFn({ method: "GET" })
 	.handler(
 		async ({ data }): Promise<QueryManyReturnType<AttachmentSummary>> => {
 			try {
-				const session = getServerLoggedUserSession();
-				const { firmId } = getServerScope("attachment");
+				const session = await getRequiredServerLoggedUserSession();
+				const { firmId } = await getServerScope("attachment");
 				const owner = await assertAttachmentOwnerExists({
 					firmId,
 					input: data,
@@ -80,7 +80,7 @@ const getAttachmentsByOwnerFn = createServerFn({ method: "GET" })
 const getAttachmentTypesFn = createServerFn({ method: "GET" }).handler(
 	async (): Promise<QueryManyReturnType<Option>> => {
 		try {
-			getServerLoggedUserSession();
+			await getRequiredServerLoggedUserSession();
 			return await getAttachmentTypes();
 		} catch (error) {
 			console.error("[getAttachmentTypes]", error);

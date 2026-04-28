@@ -4,12 +4,11 @@ import {
 	hasExactErrorMessage,
 	isPrismaUniqueConstraintError,
 } from "@/shared/lib/error-mapping";
+import { assertCan, isAdminSession } from "@/shared/session";
 import {
-	assertCan,
-	getServerLoggedUserSession,
+	getRequiredServerLoggedUserSession,
 	getServerScope,
-	isAdminSession,
-} from "@/shared/session";
+} from "@/shared/session/server";
 import type { MutationReturnType } from "@/shared/types/api";
 import { CONTRACT_ERRORS } from "../constants/errors";
 import {
@@ -29,9 +28,9 @@ const createContractFn = createServerFn({ method: "POST" })
 	.inputValidator(contractCreateInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
-			const session = getServerLoggedUserSession();
+			const session = await getRequiredServerLoggedUserSession();
 			assertCan(session, "contract.create");
-			const scope = getServerScope("contract");
+			const scope = await getServerScope("contract");
 
 			return await createContract({
 				actor: {
@@ -61,7 +60,7 @@ const updateContractFn = createServerFn({ method: "POST" })
 	.inputValidator(contractUpdateInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
-			const session = getServerLoggedUserSession();
+			const session = await getRequiredServerLoggedUserSession();
 			const access = await getContractAccessResourceById(data.id);
 
 			if (!access?.resource) {
@@ -69,7 +68,7 @@ const updateContractFn = createServerFn({ method: "POST" })
 			}
 
 			assertCan(session, "contract.update", access.resource);
-			const scope = getServerScope("contract");
+			const scope = await getServerScope("contract");
 
 			return await updateContract({
 				actor: {
@@ -99,7 +98,7 @@ const deleteContractFn = createServerFn({ method: "POST" })
 	.inputValidator(contractIdInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
-			const session = getServerLoggedUserSession();
+			const session = await getRequiredServerLoggedUserSession();
 			const access = await getContractAccessResourceById(data.id);
 
 			if (!access?.resource) {
@@ -107,7 +106,7 @@ const deleteContractFn = createServerFn({ method: "POST" })
 			}
 
 			assertCan(session, "contract.delete", access.resource);
-			const { firmId } = getServerScope("contract");
+			const { firmId } = await getServerScope("contract");
 
 			return await deleteContract({
 				actor: {
@@ -132,7 +131,7 @@ const restoreContractFn = createServerFn({ method: "POST" })
 	.inputValidator(contractIdInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
-			const session = getServerLoggedUserSession();
+			const session = await getRequiredServerLoggedUserSession();
 			const access = await getContractAccessResourceById(data.id);
 
 			if (!access?.resource) {
@@ -140,7 +139,7 @@ const restoreContractFn = createServerFn({ method: "POST" })
 			}
 
 			assertCan(session, "contract.restore", access.resource);
-			const { firmId } = getServerScope("contract");
+			const { firmId } = await getServerScope("contract");
 
 			return await restoreContract({
 				actor: {

@@ -4,10 +4,11 @@ import {
 	EllipsisVerticalIcon,
 	LogOutIcon,
 } from "lucide-react";
+import { useLogout } from "@/features/authentication";
 import {
 	Avatar,
 	AvatarFallback,
-	AvatarImage,
+	Badge,
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuGroup,
@@ -20,29 +21,18 @@ import {
 	SidebarMenuItem,
 	useSidebar,
 } from "@/shared/components/ui";
+import { useLoggedUserSession } from "@/shared/session";
 
 export const NavUser = () => {
 	const { isMobile } = useSidebar();
-	// const { theme, setTheme } = useTheme();
-
-	const user = {
-		name: "Patrick Vargas",
-		email: "fj8oT@example.com",
-		avatar: "https://github.com/patrickbvargas.png",
-	};
-
-	// const getThemeIcon = (themeName: string) => {
-	//   switch (themeName) {
-	//     case "light":
-	//       _getThemeIconcon size={16} />;
-	//     case "dark":
-	//       return <MoonIcon size={16} />;
-	//     case "system":
-	//       return <MonitorIcon size={16} />;
-	//     default:
-	//       return <MonitorIcon size={16} />;
-	//   }
-	// };
+	const session = useLoggedUserSession();
+	const { handleLogout, isPending } = useLogout();
+	const userInitials = session.user.fullName
+		.split(" ")
+		.filter(Boolean)
+		.slice(0, 2)
+		.map((part) => part[0]?.toUpperCase() ?? "")
+		.join("");
 
 	return (
 		<SidebarMenu>
@@ -52,13 +42,14 @@ export const NavUser = () => {
 						render={
 							<SidebarMenuButton size="lg">
 								<Avatar>
-									<AvatarImage src={user.avatar} alt={user.name} />
-									<AvatarFallback>PV</AvatarFallback>
+									<AvatarFallback>{userInitials}</AvatarFallback>
 								</Avatar>
 								<div className="grid flex-1 text-left text-sm leading-tight">
-									<span className="truncate font-medium">{user.name}</span>
+									<span className="truncate font-medium">
+										{session.user.fullName}
+									</span>
 									<span className="text-muted-foreground truncate text-xs">
-										{user.email}
+										{session.user.email}
 									</span>
 								</div>
 								<EllipsisVerticalIcon size={16} />
@@ -75,14 +66,22 @@ export const NavUser = () => {
 							<DropdownMenuLabel className="p-0 font-normal">
 								<div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
 									<Avatar className="h-8 w-8 rounded-lg">
-										<AvatarImage src={user.avatar} alt={user.name} />
-										<AvatarFallback className="rounded-lg">CN</AvatarFallback>
+										<AvatarFallback className="rounded-lg">
+											{userInitials}
+										</AvatarFallback>
 									</Avatar>
 									<div className="grid flex-1 text-left text-sm leading-tight">
-										<span className="truncate font-medium">{user.name}</span>
-										<span className="text-muted-foreground truncate text-xs">
-											{user.email}
+										<span className="truncate font-medium">
+											{session.user.fullName}
 										</span>
+										<span className="text-muted-foreground truncate text-xs">
+											{session.user.email}
+										</span>
+										<div className="mt-1">
+											<Badge variant="secondary" className="text-[10px]">
+												{session.role.label}
+											</Badge>
+										</div>
 									</div>
 								</div>
 							</DropdownMenuLabel>
@@ -99,7 +98,7 @@ export const NavUser = () => {
 							</DropdownMenuItem>
 						</DropdownMenuGroup>
 						<DropdownMenuSeparator />
-						<DropdownMenuItem>
+						<DropdownMenuItem onClick={handleLogout} disabled={isPending}>
 							<LogOutIcon size={16} />
 							Sair
 						</DropdownMenuItem>

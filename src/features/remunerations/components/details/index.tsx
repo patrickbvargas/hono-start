@@ -1,27 +1,25 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import * as React from "react";
 import {
-	EntityDetail,
 	type DetailFieldItem,
+	EntityDetail,
 } from "@/shared/components/entity-detail";
 import { EntityStatus } from "@/shared/components/entity-status";
 import { formatter } from "@/shared/lib/formatter";
+import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
 import { getRemunerationByIdQueryOptions } from "../../api/queries";
-import type { Remuneration } from "../../schemas/model";
 
 interface RemunerationDetailsProps {
-	remuneration: Remuneration;
+	id: EntityId;
 	state: OverlayState;
 }
 
 export const RemunerationDetails = ({
-	remuneration,
+	id,
 	state,
 }: RemunerationDetailsProps) => {
-	const { data } = useSuspenseQuery(
-		getRemunerationByIdQueryOptions(remuneration.id),
-	);
+	const { data } = useSuspenseQuery(getRemunerationByIdQueryOptions(id));
 
 	const summaryInfo = React.useMemo<DetailFieldItem[]>(
 		() => [

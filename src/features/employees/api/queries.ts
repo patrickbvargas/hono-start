@@ -3,11 +3,11 @@ import { createServerFn } from "@tanstack/react-start";
 import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { Option } from "@/shared/schemas/option";
+import { assertCan } from "@/shared/session";
 import {
-	assertCan,
-	getServerLoggedUserSession,
+	getRequiredServerLoggedUserSession,
 	getServerScope,
-} from "@/shared/session";
+} from "@/shared/session/server";
 import type {
 	QueryManyReturnType,
 	QueryOneReturnType,
@@ -37,9 +37,9 @@ const getEmployeesFn = createServerFn({ method: "GET" })
 	.handler(
 		async ({ data }): Promise<QueryPaginatedReturnType<EmployeeSummary>> => {
 			try {
-				const session = getServerLoggedUserSession();
+				const session = await getRequiredServerLoggedUserSession();
 				assertCan(session, "employee.manage");
-				const { firmId } = getServerScope("employee");
+				const { firmId } = await getServerScope("employee");
 
 				return await getEmployees({ firmId, search: data });
 			} catch (error) {
@@ -57,9 +57,9 @@ const getEmployeeByIdFn = createServerFn({ method: "GET" })
 	.inputValidator(employeeIdInputSchema)
 	.handler(async ({ data }): Promise<QueryOneReturnType<EmployeeDetail>> => {
 		try {
-			const session = getServerLoggedUserSession();
+			const session = await getRequiredServerLoggedUserSession();
 			assertCan(session, "employee.manage");
-			const { firmId } = getServerScope("employee");
+			const { firmId } = await getServerScope("employee");
 
 			return await getEmployeeById({ firmId, id: data.id });
 		} catch (error) {

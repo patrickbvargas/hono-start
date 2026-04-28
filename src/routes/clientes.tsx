@@ -12,6 +12,7 @@ import {
 	getClientsQueryOptions,
 	useClientData,
 } from "@/features/clients";
+import { AuthenticatedShell } from "@/shared/components/authenticated-shell";
 import { RouteLoading } from "@/shared/components/route-loading";
 import { Button } from "@/shared/components/ui";
 import {
@@ -23,24 +24,30 @@ import { ROUTES } from "@/shared/config/routes";
 import { useOverlay } from "@/shared/hooks/use-overlay";
 import type { EntityId } from "@/shared/schemas/entity";
 import {
-	getLoggedUserSession,
 	isAdminSession,
+	requireRouteSession,
 	useLoggedUserSessionStore,
 } from "@/shared/session";
 
 export const Route = createFileRoute("/clientes")({
 	validateSearch: zodValidator(clientSearchSchema),
-	beforeLoad: () => {
-		getLoggedUserSession();
-	},
 	loaderDeps: ({ search }) => ({ search }),
 	loader: async ({ context: { queryClient }, deps: { search } }) => {
+		await requireRouteSession(queryClient);
 		await queryClient.ensureQueryData(getClientsQueryOptions(search));
 	},
 	component: RouteComponent,
 });
 
 function RouteComponent() {
+	return (
+		<AuthenticatedShell>
+			<ClientesContent />
+		</AuthenticatedShell>
+	);
+}
+
+function ClientesContent() {
 	const search = Route.useSearch();
 	const { clients } = useClientData(search);
 	const { overlay } = useOverlay<EntityId>();

@@ -1,11 +1,11 @@
 import { queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import type { Option } from "@/shared/schemas/option";
+import { assertCan } from "@/shared/session";
 import {
-	assertCan,
-	getServerLoggedUserSession,
+	getRequiredServerLoggedUserSession,
 	getServerScope,
-} from "@/shared/session";
+} from "@/shared/session/server";
 import type {
 	QueryManyReturnType,
 	QueryPaginatedReturnType,
@@ -32,9 +32,9 @@ const getAuditLogsFn = createServerFn({ method: "GET" })
 	.inputValidator(auditLogSearchSchema)
 	.handler(async ({ data }): Promise<QueryPaginatedReturnType<AuditLog>> => {
 		try {
-			const session = getServerLoggedUserSession();
+			const session = await getRequiredServerLoggedUserSession();
 			assertCan(session, "audit-log.view");
-			const { firmId } = getServerScope("audit-log");
+			const { firmId } = await getServerScope("audit-log");
 
 			return await getAuditLogs({ firmId, search: data });
 		} catch (error) {
@@ -46,9 +46,9 @@ const getAuditLogsFn = createServerFn({ method: "GET" })
 const getAuditLogActionsFn = createServerFn({ method: "GET" }).handler(
 	async (): Promise<QueryManyReturnType<Option>> => {
 		try {
-			const session = getServerLoggedUserSession();
+			const session = await getRequiredServerLoggedUserSession();
 			assertCan(session, "audit-log.view");
-			const { firmId } = getServerScope("audit-log");
+			const { firmId } = await getServerScope("audit-log");
 
 			return await getAuditLogActions(firmId);
 		} catch (error) {
@@ -61,9 +61,9 @@ const getAuditLogActionsFn = createServerFn({ method: "GET" }).handler(
 const getAuditLogEntityTypesFn = createServerFn({ method: "GET" }).handler(
 	async (): Promise<QueryManyReturnType<Option>> => {
 		try {
-			const session = getServerLoggedUserSession();
+			const session = await getRequiredServerLoggedUserSession();
 			assertCan(session, "audit-log.view");
-			const { firmId } = getServerScope("audit-log");
+			const { firmId } = await getServerScope("audit-log");
 
 			return await getAuditLogEntityTypes(firmId);
 		} catch (error) {
@@ -76,9 +76,9 @@ const getAuditLogEntityTypesFn = createServerFn({ method: "GET" }).handler(
 const getAuditLogActorsFn = createServerFn({ method: "GET" }).handler(
 	async (): Promise<QueryManyReturnType<Option>> => {
 		try {
-			const session = getServerLoggedUserSession();
+			const session = await getRequiredServerLoggedUserSession();
 			assertCan(session, "audit-log.view");
-			const { firmId } = getServerScope("audit-log");
+			const { firmId } = await getServerScope("audit-log");
 
 			return await getAuditLogActors(firmId);
 		} catch (error) {

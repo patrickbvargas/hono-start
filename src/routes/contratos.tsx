@@ -12,6 +12,7 @@ import {
 	getContractsQueryOptions,
 	useContractData,
 } from "@/features/contracts";
+import { AuthenticatedShell } from "@/shared/components/authenticated-shell";
 import { RouteLoading } from "@/shared/components/route-loading";
 import { Button } from "@/shared/components/ui";
 import {
@@ -23,24 +24,30 @@ import { ROUTES } from "@/shared/config/routes";
 import { useOverlay } from "@/shared/hooks/use-overlay";
 import type { EntityId } from "@/shared/schemas/entity";
 import {
-	getLoggedUserSession,
 	isAdminSession,
+	requireRouteSession,
 	useLoggedUserSessionStore,
 } from "@/shared/session";
 
 export const Route = createFileRoute("/contratos")({
 	validateSearch: zodValidator(contractSearchSchema),
-	beforeLoad: () => {
-		getLoggedUserSession();
-	},
 	loaderDeps: ({ search }) => ({ search }),
 	loader: async ({ context: { queryClient }, deps: { search } }) => {
+		await requireRouteSession(queryClient);
 		await queryClient.ensureQueryData(getContractsQueryOptions(search));
 	},
 	component: RouteComponent,
 });
 
 function RouteComponent() {
+	return (
+		<AuthenticatedShell>
+			<ContratosContent />
+		</AuthenticatedShell>
+	);
+}
+
+function ContratosContent() {
 	const search = Route.useSearch();
 	const { contracts } = useContractData(search);
 	const { overlay } = useOverlay<EntityId>();

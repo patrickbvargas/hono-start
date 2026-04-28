@@ -4,11 +4,11 @@ import {
 	hasExactErrorMessage,
 	isPrismaUniqueConstraintError,
 } from "@/shared/lib/error-mapping";
+import { assertCan } from "@/shared/session";
 import {
-	assertCan,
-	getServerLoggedUserSession,
+	getRequiredServerLoggedUserSession,
 	getServerScope,
-} from "@/shared/session";
+} from "@/shared/session/server";
 import type { MutationReturnType } from "@/shared/types/api";
 import { CLIENT_ERRORS } from "../constants/errors";
 import {
@@ -27,9 +27,9 @@ const createClientFn = createServerFn({ method: "POST" })
 	.inputValidator(clientCreateInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
-			const session = getServerLoggedUserSession();
+			const session = await getRequiredServerLoggedUserSession();
 			assertCan(session, "client.create");
-			const { firmId } = getServerScope("client");
+			const { firmId } = await getServerScope("client");
 
 			return await createClient({
 				actor: {
@@ -58,9 +58,9 @@ const updateClientFn = createServerFn({ method: "POST" })
 	.inputValidator(clientUpdateInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
-			const session = getServerLoggedUserSession();
+			const session = await getRequiredServerLoggedUserSession();
 			assertCan(session, "client.update");
-			const { firmId } = getServerScope("client");
+			const { firmId } = await getServerScope("client");
 
 			return await updateClient({
 				actor: {
@@ -89,9 +89,9 @@ const deleteClientFn = createServerFn({ method: "POST" })
 	.inputValidator(clientIdInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
-			const session = getServerLoggedUserSession();
+			const session = await getRequiredServerLoggedUserSession();
 			assertCan(session, "client.delete");
-			const { firmId } = getServerScope("client");
+			const { firmId } = await getServerScope("client");
 
 			return await deleteClient({
 				actor: {
@@ -116,9 +116,9 @@ const restoreClientFn = createServerFn({ method: "POST" })
 	.inputValidator(clientIdInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
-			const session = getServerLoggedUserSession();
+			const session = await getRequiredServerLoggedUserSession();
 			assertCan(session, "client.restore");
-			const { firmId } = getServerScope("client");
+			const { firmId } = await getServerScope("client");
 
 			return await restoreClient({
 				actor: {

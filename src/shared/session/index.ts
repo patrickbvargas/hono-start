@@ -1,4 +1,8 @@
-export { getServerLoggedUserSession } from "./server";
+export {
+	getCurrentSessionQueryOptions,
+	getOptionalCurrentSessionQueryOptions,
+} from "./api";
+export { getRouteSession, requireRouteSession } from "./route";
 export {
 	assertCan,
 	CONTRACT_STATUS_ACTIVE_VALUE,
@@ -10,7 +14,6 @@ export {
 	getCurrentEmployeeId,
 	getCurrentFirmId,
 	getScope,
-	getServerScope,
 	isAdminSession,
 	isContractReadOnly,
 	isContractWritable,
@@ -24,8 +27,7 @@ export {
 	type SessionScopeSubject,
 } from "./session";
 export {
-	getLoggedUserSession,
-	resetLoggedUserSession,
-	setLoggedUserSession,
+	LoggedUserSessionProvider,
+	useLoggedUserSession,
 	useLoggedUserSessionStore,
 } from "./store";

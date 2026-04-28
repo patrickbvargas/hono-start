@@ -2,7 +2,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import {
 	getRemunerationsQueryOptions,
-	type Remuneration,
 	RemunerationDelete,
 	RemunerationDetails,
 	RemunerationExportMenu,
@@ -14,6 +13,7 @@ import {
 	useRemunerationData,
 	useRemunerationExport,
 } from "@/features/remunerations";
+import { AuthenticatedShell } from "@/shared/components/authenticated-shell";
 import { RouteLoading } from "@/shared/components/route-loading";
 import {
 	Wrapper,
@@ -22,28 +22,35 @@ import {
 } from "@/shared/components/wrapper";
 import { ROUTES } from "@/shared/config/routes";
 import { useOverlay } from "@/shared/hooks/use-overlay";
+import type { EntityId } from "@/shared/schemas/entity";
 import {
-	getLoggedUserSession,
 	isAdminSession,
+	requireRouteSession,
 	useLoggedUserSessionStore,
 } from "@/shared/session";
 
 export const Route = createFileRoute("/remuneracoes")({
 	validateSearch: zodValidator(remunerationSearchSchema),
-	beforeLoad: () => {
-		getLoggedUserSession();
-	},
 	loaderDeps: ({ search }) => ({ search }),
 	loader: async ({ context: { queryClient }, deps: { search } }) => {
+		await requireRouteSession(queryClient);
 		await queryClient.ensureQueryData(getRemunerationsQueryOptions(search));
 	},
 	component: RouteComponent,
 });
 
 function RouteComponent() {
+	return (
+		<AuthenticatedShell>
+			<RemuneracoesContent />
+		</AuthenticatedShell>
+	);
+}
+
+function RemuneracoesContent() {
 	const search = Route.useSearch();
 	const { remunerations } = useRemunerationData(search);
-	const { overlay } = useOverlay<Remuneration>();
+	const { overlay } = useOverlay<EntityId>();
 	const isAdmin = useLoggedUserSessionStore(isAdminSession);
 	const { handleExport, isPending, pendingFormat } =
 		useRemunerationExport(search);
@@ -72,29 +79,17 @@ function RouteComponent() {
 					onRestore={overlay.restore.open}
 					canManageLifecycle={isAdmin}
 				/>
-				{overlay.edit.render((remuneration, state) => (
-					<RemunerationForm
-						id={remuneration.id}
-						state={state}
-						onSuccess={state.close}
-					/>
+				{overlay.edit.render((id, state) => (
+					<RemunerationForm id={id} state={state} onSuccess={state.close} />
 				))}
-				{overlay.delete.render((remuneration, state) => (
-					<RemunerationDelete
-						id={remuneration.id}
-						state={state}
-						onSuccess={state.close}
-					/>
+				{overlay.delete.render((id, state) => (
+					<RemunerationDelete id={id} state={state} onSuccess={state.close} />
 				))}
-				{overlay.restore.render((remuneration, state) => (
-					<RemunerationRestore
-						id={remuneration.id}
-						state={state}
-						onSuccess={state.close}
-					/>
+				{overlay.restore.render((id, state) => (
+					<RemunerationRestore id={id} state={state} onSuccess={state.close} />
 				))}
-				{overlay.details.render((remuneration, state) => (
-					<RemunerationDetails remuneration={remuneration} state={state} />
+				{overlay.details.render((id, state) => (
+					<RemunerationDetails id={id} state={state} />
 				))}
 			</WrapperBody>
 		</Wrapper>

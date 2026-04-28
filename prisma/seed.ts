@@ -1,5 +1,6 @@
 import { Prisma, PrismaClient } from "../src/generated/prisma/client.js";
 import { PrismaPg } from "@prisma/adapter-pg";
+import { hashPassword } from "better-auth/crypto";
 
 const adapter = new PrismaPg({
   connectionString: process.env.DATABASE_URL!,
@@ -87,8 +88,16 @@ interface ContractSeedInput {
 interface EmployeeRecord {
   id: number;
   email: string;
+  fullName: string;
   remunerationPercentage: Prisma.Decimal;
   referralPercentage: Prisma.Decimal;
+}
+
+interface AuthUserSeedInput {
+  userId: string;
+  accountId: string;
+  employeeEmail: string;
+  password: string;
 }
 
 interface ClientRecord {
@@ -267,6 +276,23 @@ function createClientSeeds(): ClientSeedInput[] {
   }));
 
   return [...individuals, ...companies];
+}
+
+function createAuthUserSeeds(): AuthUserSeedInput[] {
+  return [
+    {
+      userId: "auth-user-amanda-admin",
+      accountId: "auth-account-amanda-admin",
+      employeeEmail: "amanda.admin@matriz.test",
+      password: "SenhaAdmin123!",
+    },
+    {
+      userId: "auth-user-carlos-mendes",
+      accountId: "auth-account-carlos-mendes",
+      employeeEmail: "carlos.mendes@matriz.test",
+      password: "SenhaUsuario123!",
+    },
+  ];
 }
 
 function getRotatedValue<T>(items: T[], index: number, offset = 0) {
@@ -923,6 +949,58 @@ async function reconcileContractFinancialFixture(params: {
   }
 }
 
+async function reconcileAuthUserFixture(params: {
+  userSeed: AuthUserSeedInput;
+  employeeByEmail: Map<string, EmployeeRecord>;
+}) {
+  const employee = getRequiredMapValue(
+    params.employeeByEmail,
+    params.userSeed.employeeEmail,
+    `employee ${params.userSeed.employeeEmail}`,
+  );
+  const passwordHash = await hashPassword(params.userSeed.password);
+
+  await prisma.user.upsert({
+    where: {
+      id: params.userSeed.userId,
+    },
+    update: {
+      name: employee.fullName,
+      email: employee.email,
+      emailVerified: true,
+      image: null,
+      employeeId: employee.id,
+    },
+    create: {
+      id: params.userSeed.userId,
+      name: employee.fullName,
+      email: employee.email,
+      emailVerified: true,
+      image: null,
+      employeeId: employee.id,
+    },
+  });
+
+  await prisma.account.upsert({
+    where: {
+      id: params.userSeed.accountId,
+    },
+    update: {
+      accountId: params.userSeed.userId,
+      providerId: "credential",
+      userId: params.userSeed.userId,
+      password: passwordHash,
+    },
+    create: {
+      id: params.userSeed.accountId,
+      accountId: params.userSeed.userId,
+      providerId: "credential",
+      userId: params.userSeed.userId,
+      password: passwordHash,
+    },
+  });
+}
+
 async function main() {
   console.log("🌱 Seeding database...");
 
@@ -1155,6 +1233,7 @@ async function main() {
       select: {
         id: true,
         email: true,
+        fullName: true,
         remunerationPercentage: true,
         referralPercentage: true,
       },
@@ -1193,6 +1272,7 @@ async function main() {
   ]);
 
   const contractSeeds = createContractSeeds(clientSeeds, employeeSeeds);
+  const authUserSeeds = createAuthUserSeeds();
   const employeeByEmail = mapByKey(
     employeeRecords as EmployeeRecord[],
     (employee) => employee.email,
@@ -1231,6 +1311,13 @@ async function main() {
         assignmentTypeByValue,
         revenueTypeByValue,
       });
+    });
+  }
+
+  for (const authUserSeed of authUserSeeds) {
+    await reconcileAuthUserFixture({
+      userSeed: authUserSeed,
+      employeeByEmail,
     });
   }
 }

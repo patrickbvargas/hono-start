@@ -4,9 +4,9 @@ import type { Option } from "@/shared/schemas/option";
 import {
 	getCurrentEmployeeId,
 	getCurrentFirmId,
-	getServerLoggedUserSession,
 	isAdminSession,
 } from "@/shared/session";
+import { getRequiredServerLoggedUserSession } from "@/shared/session/server";
 import type {
 	QueryManyReturnType,
 	QueryOneReturnType,
@@ -30,7 +30,7 @@ const getDashboardSummaryFn = createServerFn({ method: "GET" })
 	.inputValidator(dashboardSearchSchema)
 	.handler(async ({ data }): Promise<QueryOneReturnType<DashboardSummary>> => {
 		try {
-			const session = getServerLoggedUserSession();
+			const session = await getRequiredServerLoggedUserSession();
 			const isAdmin = isAdminSession(session);
 
 			return await getDashboardSummary({
@@ -49,7 +49,7 @@ const getDashboardEmployeeOptionsFn = createServerFn({
 	method: "GET",
 }).handler(async (): Promise<QueryManyReturnType<Option>> => {
 	try {
-		const session = getServerLoggedUserSession();
+		const session = await getRequiredServerLoggedUserSession();
 
 		if (!isAdminSession(session)) {
 			return [];

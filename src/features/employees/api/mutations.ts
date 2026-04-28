@@ -4,11 +4,11 @@ import {
 	hasExactErrorMessage,
 	isPrismaUniqueConstraintError,
 } from "@/shared/lib/error-mapping";
+import { assertCan } from "@/shared/session";
 import {
-	assertCan,
-	getServerLoggedUserSession,
+	getRequiredServerLoggedUserSession,
 	getServerScope,
-} from "@/shared/session";
+} from "@/shared/session/server";
 import type { MutationReturnType } from "@/shared/types/api";
 import { EMPLOYEE_ERRORS } from "../constants/errors";
 import {
@@ -27,9 +27,9 @@ const createEmployeeFn = createServerFn({ method: "POST" })
 	.inputValidator(employeeCreateInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
-			const session = getServerLoggedUserSession();
+			const session = await getRequiredServerLoggedUserSession();
 			assertCan(session, "employee.manage");
-			const { firmId } = getServerScope("employee");
+			const { firmId } = await getServerScope("employee");
 
 			return await createEmployee({
 				actor: {
@@ -58,9 +58,9 @@ const updateEmployeeFn = createServerFn({ method: "POST" })
 	.inputValidator(employeeUpdateInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
-			const session = getServerLoggedUserSession();
+			const session = await getRequiredServerLoggedUserSession();
 			assertCan(session, "employee.manage");
-			const { firmId } = getServerScope("employee");
+			const { firmId } = await getServerScope("employee");
 
 			return await updateEmployee({
 				actor: {
@@ -89,9 +89,9 @@ const deleteEmployeeFn = createServerFn({ method: "POST" })
 	.inputValidator(employeeIdInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
-			const session = getServerLoggedUserSession();
+			const session = await getRequiredServerLoggedUserSession();
 			assertCan(session, "employee.manage");
-			const { firmId } = getServerScope("employee");
+			const { firmId } = await getServerScope("employee");
 
 			return await deleteEmployee({
 				actor: {
@@ -116,9 +116,9 @@ const restoreEmployeeFn = createServerFn({ method: "POST" })
 	.inputValidator(employeeIdInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
-			const session = getServerLoggedUserSession();
+			const session = await getRequiredServerLoggedUserSession();
 			assertCan(session, "employee.manage");
-			const { firmId } = getServerScope("employee");
+			const { firmId } = await getServerScope("employee");
 
 			return await restoreEmployee({
 				actor: {

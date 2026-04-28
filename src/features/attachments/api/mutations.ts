@@ -1,11 +1,10 @@
 import { mutationOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
+import { assertCan, isContractWritable } from "@/shared/session";
 import {
-	assertCan,
-	getServerLoggedUserSession,
+	getRequiredServerLoggedUserSession,
 	getServerScope,
-	isContractWritable,
-} from "@/shared/session";
+} from "@/shared/session/server";
 import type { MutationReturnType } from "@/shared/types/api";
 import { ATTACHMENT_ERRORS } from "../constants/errors";
 import { createAttachment, deleteAttachment } from "../data/mutations";
@@ -19,7 +18,7 @@ import {
 } from "../schemas/form";
 
 function assertAttachmentOwnerUploadAccess(
-	session: ReturnType<typeof getServerLoggedUserSession>,
+	session: Awaited<ReturnType<typeof getRequiredServerLoggedUserSession>>,
 	owner: Awaited<ReturnType<typeof assertAttachmentOwnerExists>>,
 ) {
 	if (owner.access.deletedAt) {
@@ -45,8 +44,8 @@ const createAttachmentFn = createServerFn({ method: "POST" })
 	.inputValidator(attachmentUploadInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
-			const session = getServerLoggedUserSession();
-			const { firmId } = getServerScope("attachment");
+			const session = await getRequiredServerLoggedUserSession();
+			const { firmId } = await getServerScope("attachment");
 			const owner = await assertAttachmentOwnerExists({ firmId, input: data });
 
 			assertAttachmentOwnerUploadAccess(session, owner);
@@ -79,8 +78,8 @@ const deleteAttachmentFn = createServerFn({ method: "POST" })
 	.inputValidator(attachmentIdInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
-			const session = getServerLoggedUserSession();
-			const { firmId } = getServerScope("attachment");
+			const session = await getRequiredServerLoggedUserSession();
+			const { firmId } = await getServerScope("attachment");
 			const access = await getAttachmentAccessById(firmId, data.id);
 
 			if (!access) {

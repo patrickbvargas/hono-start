@@ -3,7 +3,10 @@ import { createServerFn } from "@tanstack/react-start";
 import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { Option } from "@/shared/schemas/option";
-import { getServerLoggedUserSession, getServerScope } from "@/shared/session";
+import {
+	getRequiredServerLoggedUserSession,
+	getServerScope,
+} from "@/shared/session/server";
 import type {
 	QueryManyReturnType,
 	QueryOneReturnType,
@@ -27,8 +30,8 @@ const getClientsFn = createServerFn({ method: "GET" })
 	.handler(
 		async ({ data }): Promise<QueryPaginatedReturnType<ClientSummary>> => {
 			try {
-				getServerLoggedUserSession();
-				const { firmId } = getServerScope("client");
+				await getRequiredServerLoggedUserSession();
+				const { firmId } = await getServerScope("client");
 
 				return await getClients({ firmId, search: data });
 			} catch (error) {
@@ -42,8 +45,8 @@ const getClientByIdFn = createServerFn({ method: "GET" })
 	.inputValidator(clientIdInputSchema)
 	.handler(async ({ data }): Promise<QueryOneReturnType<ClientDetail>> => {
 		try {
-			getServerLoggedUserSession();
-			const { firmId } = getServerScope("client");
+			await getRequiredServerLoggedUserSession();
+			const { firmId } = await getServerScope("client");
 
 			return await getClientById({ firmId, id: data.id });
 		} catch (error) {

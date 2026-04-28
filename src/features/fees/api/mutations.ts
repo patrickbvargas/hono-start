@@ -1,11 +1,11 @@
 import { mutationOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
+import { assertCan } from "@/shared/session";
 import {
-	assertCan,
-	getServerLoggedUserSession,
+	getRequiredServerLoggedUserSession,
 	getServerScope,
-} from "@/shared/session";
+} from "@/shared/session/server";
 import type { MutationReturnType } from "@/shared/types/api";
 import { FEE_ERRORS } from "../constants/errors";
 import { createFee, deleteFee, restoreFee, updateFee } from "../data/mutations";
@@ -24,8 +24,8 @@ const createFeeFn = createServerFn({ method: "POST" })
 	.inputValidator(feeCreateInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
-			const session = getServerLoggedUserSession();
-			const { firmId } = getServerScope("fee");
+			const session = await getRequiredServerLoggedUserSession();
+			const { firmId } = await getServerScope("fee");
 			const revenueId = Number(normalizeFeeReference(data.revenueId));
 			const access = await getFeeRevenueAccessResourceById(firmId, revenueId);
 
@@ -58,8 +58,8 @@ const updateFeeFn = createServerFn({ method: "POST" })
 	.inputValidator(feeUpdateInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
-			const session = getServerLoggedUserSession();
-			const { firmId } = getServerScope("fee");
+			const session = await getRequiredServerLoggedUserSession();
+			const { firmId } = await getServerScope("fee");
 			const access = await getFeeAccessResourceById(firmId, data.id);
 
 			if (!access) {
@@ -104,8 +104,8 @@ const deleteFeeFn = createServerFn({ method: "POST" })
 	.inputValidator(feeIdInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
-			const session = getServerLoggedUserSession();
-			const { firmId } = getServerScope("fee");
+			const session = await getRequiredServerLoggedUserSession();
+			const { firmId } = await getServerScope("fee");
 			const access = await getFeeAccessResourceById(firmId, data.id);
 
 			if (!access) {
@@ -138,8 +138,8 @@ const restoreFeeFn = createServerFn({ method: "POST" })
 	.inputValidator(feeIdInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
-			const session = getServerLoggedUserSession();
-			const { firmId } = getServerScope("fee");
+			const session = await getRequiredServerLoggedUserSession();
+			const { firmId } = await getServerScope("fee");
 			const access = await getFeeAccessResourceById(firmId, data.id);
 
 			if (!access) {

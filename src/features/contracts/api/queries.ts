@@ -3,11 +3,11 @@ import { createServerFn } from "@tanstack/react-start";
 import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { Option } from "@/shared/schemas/option";
+import { isAdminSession } from "@/shared/session";
 import {
-	getServerLoggedUserSession,
+	getRequiredServerLoggedUserSession,
 	getServerScope,
-	isAdminSession,
-} from "@/shared/session";
+} from "@/shared/session/server";
 import type {
 	QueryManyReturnType,
 	QueryOneReturnType,
@@ -45,8 +45,8 @@ const getContractsFn = createServerFn({ method: "GET" })
 	.handler(
 		async ({ data }): Promise<QueryPaginatedReturnType<ContractSummary>> => {
 			try {
-				const session = getServerLoggedUserSession();
-				const scope = getServerScope("contract");
+				const session = await getRequiredServerLoggedUserSession();
+				const scope = await getServerScope("contract");
 
 				return await getContracts({
 					scope: {
@@ -67,8 +67,8 @@ const getContractByIdFn = createServerFn({ method: "GET" })
 	.inputValidator(contractIdInputSchema)
 	.handler(async ({ data }): Promise<QueryOneReturnType<ContractDetail>> => {
 		try {
-			const session = getServerLoggedUserSession();
-			const scope = getServerScope("contract");
+			const session = await getRequiredServerLoggedUserSession();
+			const scope = await getServerScope("contract");
 
 			return await getContractById({
 				scope: {
@@ -91,7 +91,7 @@ const getContractByIdFn = createServerFn({ method: "GET" })
 const getContractLegalAreasFn = createServerFn({ method: "GET" }).handler(
 	async (): Promise<QueryManyReturnType<Option>> => {
 		try {
-			getServerLoggedUserSession();
+			await getRequiredServerLoggedUserSession();
 			return await getContractLegalAreas();
 		} catch (error) {
 			console.error("[getContractLegalAreas]", error);
@@ -103,7 +103,7 @@ const getContractLegalAreasFn = createServerFn({ method: "GET" }).handler(
 const getContractStatusesFn = createServerFn({ method: "GET" }).handler(
 	async (): Promise<QueryManyReturnType<Option>> => {
 		try {
-			getServerLoggedUserSession();
+			await getRequiredServerLoggedUserSession();
 			return await getContractStatuses();
 		} catch (error) {
 			console.error("[getContractStatuses]", error);
@@ -115,7 +115,7 @@ const getContractStatusesFn = createServerFn({ method: "GET" }).handler(
 const getContractAssignmentTypesFn = createServerFn({ method: "GET" }).handler(
 	async (): Promise<QueryManyReturnType<Option>> => {
 		try {
-			getServerLoggedUserSession();
+			await getRequiredServerLoggedUserSession();
 			return await getContractAssignmentTypes();
 		} catch (error) {
 			console.error("[getContractAssignmentTypes]", error);
@@ -127,7 +127,7 @@ const getContractAssignmentTypesFn = createServerFn({ method: "GET" }).handler(
 const getContractRevenueTypesFn = createServerFn({ method: "GET" }).handler(
 	async (): Promise<QueryManyReturnType<Option>> => {
 		try {
-			getServerLoggedUserSession();
+			await getRequiredServerLoggedUserSession();
 			return await getContractRevenueTypes();
 		} catch (error) {
 			console.error("[getContractRevenueTypes]", error);
@@ -140,8 +140,8 @@ const getSelectableContractClientsFn = createServerFn({
 	method: "GET",
 }).handler(async (): Promise<QueryManyReturnType<Option>> => {
 	try {
-		getServerLoggedUserSession();
-		const { firmId } = getServerScope("contract");
+		await getRequiredServerLoggedUserSession();
+		const { firmId } = await getServerScope("contract");
 		return await getSelectableContractClients(firmId);
 	} catch (error) {
 		console.error("[getSelectableContractClients]", error);
@@ -153,8 +153,8 @@ const getSelectableContractEmployeesFn = createServerFn({
 	method: "GET",
 }).handler(async (): Promise<QueryManyReturnType<Option>> => {
 	try {
-		getServerLoggedUserSession();
-		const { firmId } = getServerScope("contract");
+		await getRequiredServerLoggedUserSession();
+		const { firmId } = await getServerScope("contract");
 		return await getSelectableContractEmployees(firmId);
 	} catch (error) {
 		console.error("[getSelectableContractEmployees]", error);

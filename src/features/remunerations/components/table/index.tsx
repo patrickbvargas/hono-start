@@ -14,6 +14,7 @@ import {
 	Spinner,
 } from "@/shared/components/ui";
 import { formatter } from "@/shared/lib/formatter";
+import type { EntityId } from "@/shared/schemas/entity";
 import type { QueryPaginatedReturnType } from "@/shared/types/api";
 import { REMUNERATION_ALLOWED_SORT_COLUMNS } from "../../constants/sorting";
 import type { Remuneration } from "../../schemas/model";
@@ -21,10 +22,10 @@ import type { Remuneration } from "../../schemas/model";
 interface RemunerationTableProps {
 	canManageLifecycle?: boolean;
 	data: QueryPaginatedReturnType<Remuneration>;
-	onView?: (remuneration: Remuneration) => void;
-	onEdit?: (remuneration: Remuneration) => void;
-	onDelete?: (remuneration: Remuneration) => void;
-	onRestore?: (remuneration: Remuneration) => void;
+	onView?: (id: EntityId) => void;
+	onEdit?: (id: EntityId) => void;
+	onDelete?: (id: EntityId) => void;
+	onRestore?: (id: EntityId) => void;
 }
 
 export const RemunerationTable = ({
@@ -97,10 +98,10 @@ export const RemunerationTable = ({
 							canEdit={canManageLifecycle && !remuneration.isSoftDeleted}
 							canRestore={canManageLifecycle && remuneration.isSoftDeleted}
 							canDelete={canManageLifecycle && !remuneration.isSoftDeleted}
-							onView={() => onView?.(remuneration)}
-							onEdit={() => onEdit?.(remuneration)}
-							onRestore={() => onRestore?.(remuneration)}
-							onDelete={() => onDelete?.(remuneration)}
+							onView={() => onView?.(remuneration.id)}
+							onEdit={() => onEdit?.(remuneration.id)}
+							onRestore={() => onRestore?.(remuneration.id)}
+							onDelete={() => onDelete?.(remuneration.id)}
 						/>
 					);
 				},
