@@ -21,6 +21,7 @@ repository keeps the same implementation pattern.
 - Shared code is extracted only when the pattern is proven across multiple features.
 - Feature slices are validated against the boilerplate matrix in `ARCHITECTURE.md`.
 - Equivalent responsibilities across features must use the same ownership and naming pattern unless a documented exception explains the difference.
+- Equivalent micro-patterns such as public barrels, `hooks/use-data.ts` behavior, lifecycle props, and id-based table actions must converge across features and stay enforced by boundary tests.
 
 ## Refactor Rule
 

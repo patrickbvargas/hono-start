@@ -138,6 +138,51 @@ describe("frontend orchestration boundaries", () => {
 		expect(violations).toEqual([]);
 	});
 
+	it("keeps option hooks on suspense-first feature data consumption", () => {
+		const optionHooks = [
+			{
+				hookFile: "src/features/attachments/hooks/use-data.ts",
+				hookName: "useAttachmentOptions",
+				expectedQueryHook: "useSuspenseQuery(",
+			},
+			{
+				hookFile: "src/features/dashboard/hooks/use-data.ts",
+				hookName: "useDashboardOptions",
+				expectedQueryHook: "useSuspenseQueries({",
+			},
+			{
+				hookFile: "src/features/remunerations/hooks/use-data.ts",
+				hookName: "useRemunerationOptions",
+				expectedQueryHook: "useSuspenseQueries({",
+			},
+		];
+		const violations = optionHooks.flatMap(
+			({ hookFile, hookName, expectedQueryHook }) => {
+				const content = readFileSync(hookFile, "utf8");
+				const hookStart = content.indexOf(`function ${hookName}`);
+				const nextHookStart = content.indexOf("export function", hookStart + 1);
+				const hookContent =
+					nextHookStart === -1
+						? content.slice(hookStart)
+						: content.slice(hookStart, nextHookStart);
+				const checks = [
+					{
+						passes: hookContent.includes(expectedQueryHook),
+						message: `${hookFile}:1:${hookName} must use ${expectedQueryHook.replace("(", "").replace("{", "").trim()}`,
+					},
+					{
+						passes: !hookContent.includes("useQuery("),
+						message: `${hookFile}:1:${hookName} must not use useQuery`,
+					},
+				];
+
+				return checks.flatMap((check) => (check.passes ? [] : [check.message]));
+			},
+		);
+
+		expect(violations).toEqual([]);
+	});
+
 	it("keeps cache invalidation rooted in feature key factories", () => {
 		const refreshCallFiles = listFiles("src/features")
 			.map(normalizePath)

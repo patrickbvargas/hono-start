@@ -24,6 +24,7 @@
 - Public feature access goes through the feature barrel only.
 - Server function handlers stay private; exported API surface is the options factory wrapping them.
 - Feature barrels stay minimal and route-facing; do not export `data/` modules, internal helpers, or implementation-only schemas.
+- Equivalent route-facing feature barrels export the same public API categories: route query factories, top-level route-consumed UI entrypoints, primary route-facing data hooks, search schemas, and route-consumed model types when needed.
 - Feature subfolders do not use local re-export barrel `index.ts` or `index.tsx` files; import concrete modules inside the feature.
 - Shared UI components are consumed through `@/shared/components/ui`.
 - Shared UI generated components and shared UI composites live under `src/shared/components/ui`.
@@ -64,7 +65,10 @@
 - Lookup-backed read models should expose UI-ready labels and keep stable lookup `value` fields when edit defaults or later write flows need both.
 - Feature components define local, non-exported `PascalCaseProps` interfaces near the component.
 - Equivalent table lifecycle props use `canManageLifecycle`; route-local policy variable names may keep their domain-specific meaning.
+- Equivalent lifecycle and detail overlays prefer `id: EntityId` or equivalent id-based selection props instead of row-object snapshots.
+- Equivalent route-level table actions prefer id-based callbacks such as `onView(id)`, `onEdit(id)`, `onDelete(id)`, and `onRestore(id)`.
 - Feature hooks that accept object parameters define local `Use<Feature><Concern>Options` interfaces.
+- Feature option hooks stay in `hooks/use-data.ts`, use `useXOptions` naming, and return named fields instead of raw React Query result objects.
 - Delete and restore hooks accept `{ onSuccess }` options and expose `handleConfirm(id)` so lifecycle confirmation components pass the current overlay id consistently.
 - Route-facing query and mutation boundaries use explicit object input shapes when a call accepts multiple values or optional values.
 

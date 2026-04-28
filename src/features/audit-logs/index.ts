@@ -1,5 +1,5 @@
-export * from "./api/queries";
-export * from "./components/filter";
-export * from "./components/table";
+export { getAuditLogsQueryOptions } from "./api/queries";
+export { AuditLogFilter } from "./components/filter";
+export { AuditLogTable } from "./components/table";
 export { useAuditLogs } from "./hooks/use-data";
-export * from "./schemas/search";
+export { auditLogSearchSchema } from "./schemas/search";

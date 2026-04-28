@@ -142,10 +142,16 @@ Feature barrels expose only the public surface required by routes or other top-l
 
 - route-consumed query option factories
 - top-level feature UI components
+- exported primary route-facing data hooks
 - exported search schema
 - route-consumed feature model types when needed
 
 Internal helpers, implementation-only schemas, and server handlers must not leak through the barrel by default.
+
+Equivalent route-facing feature slices keep the same public API categories in
+`index.ts`. If one slice exports extra query factories, form schemas, or other
+internal helpers that an equivalent slice does not need, treat that as drift
+unless a route-facing consumer requires the difference.
 
 ## Dependency Direction
 

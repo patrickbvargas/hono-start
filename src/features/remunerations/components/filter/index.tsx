@@ -15,7 +15,7 @@ export const RemunerationFilter = ({
 	isAdmin = false,
 }: RemunerationFilterProps) => {
 	const { form } = useRemunerationFilter();
-	const { contracts, employees } = useRemunerationOptions(isAdmin);
+	const { contracts, employees } = useRemunerationOptions();
 
 	return (
 		<form.Form

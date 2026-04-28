@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
+import * as attachments from "@/features/attachments";
+import * as auditLogs from "@/features/audit-logs";
 import * as authentication from "@/features/authentication";
 import * as clients from "@/features/clients";
 import * as contracts from "@/features/contracts";
+import * as dashboard from "@/features/dashboard";
 import * as employees from "@/features/employees";
 import * as fees from "@/features/fees";
 import * as remunerations from "@/features/remunerations";
@@ -47,5 +50,23 @@ describe("feature public barrels", () => {
 			"updateRemunerationMutationOptions",
 		);
 		expect(remunerations).not.toHaveProperty("useRemunerationForm");
+	});
+
+	it("keeps supporting and reporting barrels free of incidental exports", () => {
+		expect(attachments).toHaveProperty("AttachmentSection");
+		expect(attachments).not.toHaveProperty("getAttachmentsByOwnerQueryOptions");
+		expect(attachments).not.toHaveProperty("AttachmentForm");
+		expect(attachments).not.toHaveProperty("attachmentUploadInputSchema");
+
+		expect(auditLogs).toHaveProperty("getAuditLogsQueryOptions");
+		expect(auditLogs).toHaveProperty("AuditLogFilter");
+		expect(auditLogs).not.toHaveProperty("getAuditLogActionsQueryOptions");
+		expect(auditLogs).not.toHaveProperty("getAuditLogActorsQueryOptions");
+
+		expect(dashboard).toHaveProperty("getDashboardSummaryQueryOptions");
+		expect(dashboard).toHaveProperty("DashboardFilter");
+		expect(dashboard).not.toHaveProperty(
+			"getDashboardEmployeeOptionsQueryOptions",
+		);
 	});
 });

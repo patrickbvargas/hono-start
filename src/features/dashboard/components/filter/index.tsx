@@ -8,7 +8,7 @@ interface DashboardFilterProps {
 
 export function DashboardFilter({ isAdmin = false }: DashboardFilterProps) {
 	const { form } = useDashboardFilter();
-	const { employees } = useDashboardOptions(isAdmin);
+	const { employees } = useDashboardOptions();
 
 	return (
 		<form.Form

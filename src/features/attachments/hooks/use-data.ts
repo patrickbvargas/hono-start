@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import {
 	getAttachmentsByOwnerQueryOptions,
 	getAttachmentTypesQueryOptions,
@@ -20,5 +20,7 @@ export function useAttachments(owner: AttachmentOwnerInput) {
 }
 
 export function useAttachmentOptions() {
-	return useQuery(getAttachmentTypesQueryOptions());
+	const { data: types } = useSuspenseQuery(getAttachmentTypesQueryOptions());
+
+	return { types };
 }

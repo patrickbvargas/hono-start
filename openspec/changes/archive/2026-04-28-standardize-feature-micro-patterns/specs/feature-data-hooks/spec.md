@@ -1,7 +1,3 @@
-## Purpose
-
-Define the route-facing and feature-component data hook boundaries for feature page data.
-
 ## MODIFIED Requirements
 
 ### Requirement: Feature page data is consumed through feature-local data hooks
@@ -58,37 +54,6 @@ The system SHALL provide feature-local data hooks for routes and feature compone
 - **WHEN** a feature has both unconditional required option data and conditionally enabled option data
 - **THEN** the feature SHALL structure its `use-data.ts` hooks so the unconditional option concern still follows the canonical suspense-first pattern
 - **AND** the feature SHALL prefer splitting option concerns into smaller hooks over collapsing equivalent concerns into one ad hoc query-consumption pattern
-
-### Requirement: Query option factories remain the reusable query boundary
-The system SHALL keep React Query option factories as the reusable query boundary for hooks, loaders, tests, and cache operations.
-
-#### Scenario: Data hook loads query data
-- **WHEN** a feature data hook consumes TanStack Query data
-- **THEN** it SHALL call the existing feature `get...QueryOptions` factory
-- **AND** it SHALL NOT duplicate query keys, query functions, stale times, or server function calls
-
-#### Scenario: Query options are needed outside render
-- **WHEN** loaders, mutation orchestration, tests, or cache utilities need query keys or query functions
-- **THEN** they SHALL continue consuming feature `get...QueryOptions` factories
-- **AND** the feature SHALL keep those factories available through its route-facing public surface when top-level consumers require them
-
-### Requirement: Feature query keys are centrally managed
-The system SHALL manage query key shapes through feature-owned query key factories.
-
-#### Scenario: Feature defines multiple related query keys
-- **WHEN** a feature has list, detail, option, or other related query variants
-- **THEN** the feature SHALL define its key factory in `src/features/<feature>/api/queries.ts`
-- **AND** query option factories SHALL consume the centralized key shape instead of inventing unrelated inline roots
-
-#### Scenario: Query inputs change loaded data
-- **WHEN** validated route search state or other query input changes the loaded data
-- **THEN** the changed input SHALL remain represented in the query key
-- **AND** the system SHALL rely on the query key change to load the matching data
-
-#### Scenario: Feature invalidates broad query data
-- **WHEN** a feature mutation flow refreshes broad feature query data after a successful mutation
-- **THEN** it SHALL invalidate using the feature key factory root such as `featureKeys.all`
-- **AND** the feature SHALL NOT export or define a separate raw root cache key constant
 
 ### Requirement: Data hooks preserve feature and route ownership boundaries
 The system SHALL keep feature data hooks limited to client-side query consumption and route or feature-component data orchestration, and the same ownership rule SHALL apply to feature option hooks.

@@ -78,3 +78,12 @@ It is meant to survive domain changes as long as the project keeps the same UI a
 - Routes stay declarative: they validate search state, prefetch list data, mount feature UI, and wire overlays, but they do not take over feature mutation or persistence orchestration.
 - Feature-owned components consume feature query data through feature-local hooks in `src/features/<feature>/hooks/use-data.ts` instead of calling TanStack Query hooks directly in render files.
 - Feature `api/queries.ts` option factories remain the reusable query boundary for loaders, tests, mutations, and imperative cache access.
+
+## Data Hook Rules
+
+- `hooks/use-data.ts` is the canonical feature-local query-consumption boundary for route data, single-entity data, and option data.
+- Primary route data hooks use `useSuspenseQuery` so routes consume prefetched data through one consistent suspense-first pattern.
+- Equivalent single-entity hooks for details, delete, restore, and edit hydration use `useSuspenseQuery` when the consumer requires the data unconditionally.
+- Option hooks live in `hooks/use-data.ts` and return named fields rather than raw React Query result objects.
+- Option hooks that require multiple unconditional queries use one `useSuspenseQueries` call.
+- If a feature has both unconditional and conditional option concerns, split the hook concerns instead of collapsing the whole feature into an ad hoc query-consumption pattern.

@@ -1,12 +1,7 @@
 import { useId } from "react";
 import { EntityForm } from "@/shared/components/entity-form";
 import { FormSection } from "@/shared/components/form-section";
-import {
-	FieldGroup,
-	FieldWrapper,
-	Input,
-	Spinner,
-} from "@/shared/components/ui";
+import { FieldGroup, FieldWrapper, Input } from "@/shared/components/ui";
 import type { OverlayState } from "@/shared/types/overlay";
 import { ATTACHMENT_ACCEPT_ATTRIBUTE } from "../../constants/values";
 import { useAttachmentOptions } from "../../hooks/use-data";
@@ -37,38 +32,17 @@ export const AttachmentForm = ({
 	state,
 }: AttachmentFormProps) => {
 	const fileInputId = useId();
-	const {
-		data: types,
-		error,
-		isPending: isLoadingOptions,
-	} = useAttachmentOptions();
+	const { types } = useAttachmentOptions();
 	const { form, isPending } = useAttachmentForm({ owner, onSuccess });
 
 	return (
 		<form.Form form={form}>
 			<EntityForm state={state} title="Novo anexo" footer={<form.Submit />}>
-				{isLoadingOptions ? (
-					<div className="flex items-center gap-2 text-sm text-muted-foreground">
-						<Spinner />
-						Carregando tipos de anexo...
-					</div>
-				) : null}
-				{error ? (
-					<p className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-destructive text-sm">
-						{error instanceof Error
-							? error.message
-							: "Não foi possível carregar tipos de anexo."}
-					</p>
-				) : null}
 				<FormSection title="Arquivo">
 					<FieldGroup>
 						<form.AppField name="type">
 							{(field) => (
-								<field.Autocomplete
-									label="Tipo"
-									options={types ?? []}
-									isRequired
-								/>
+								<field.Autocomplete label="Tipo" options={types} isRequired />
 							)}
 						</form.AppField>
 						<form.AppField name="fileName">

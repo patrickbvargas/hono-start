@@ -1,4 +1,4 @@
-import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
+import { useSuspenseQueries, useSuspenseQuery } from "@tanstack/react-query";
 import {
 	getDashboardEmployeeOptionsQueryOptions,
 	getDashboardSummaryQueryOptions,
@@ -13,13 +13,12 @@ export function useDashboardData(search: DashboardSearch) {
 	return { summary };
 }
 
-export function useDashboardOptions(includeEmployees = false) {
-	const { data: employees } = useQuery({
-		...getDashboardEmployeeOptionsQueryOptions(),
-		enabled: includeEmployees,
+export function useDashboardOptions() {
+	const [{ data: employees }] = useSuspenseQueries({
+		queries: [getDashboardEmployeeOptionsQueryOptions()],
 	});
 
 	return {
-		employees: employees ?? [],
+		employees,
 	};
 }

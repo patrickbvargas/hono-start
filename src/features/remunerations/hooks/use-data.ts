@@ -1,4 +1,4 @@
-import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
+import { useSuspenseQueries, useSuspenseQuery } from "@tanstack/react-query";
 import type { EntityId } from "@/shared/schemas/entity";
 import {
 	getRemunerationByIdQueryOptions,
@@ -24,17 +24,16 @@ export function useRemuneration(id: EntityId) {
 	return { remuneration };
 }
 
-export function useRemunerationOptions(includeEmployees = false) {
-	const { data: contracts } = useSuspenseQuery(
-		getSelectableRemunerationContractsQueryOptions(),
-	);
-	const { data: employees } = useQuery({
-		...getSelectableRemunerationEmployeesQueryOptions(),
-		enabled: includeEmployees,
+export function useRemunerationOptions() {
+	const [{ data: contracts }, { data: employees }] = useSuspenseQueries({
+		queries: [
+			getSelectableRemunerationContractsQueryOptions(),
+			getSelectableRemunerationEmployeesQueryOptions(),
+		],
 	});
 
 	return {
 		contracts,
-		employees: employees ?? [],
+		employees,
 	};
 }
