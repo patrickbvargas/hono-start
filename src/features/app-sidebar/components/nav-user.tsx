@@ -3,7 +3,11 @@ import {
 	BellIcon,
 	EllipsisVerticalIcon,
 	LogOutIcon,
+	MonitorCogIcon,
+	MoonIcon,
+	SunIcon,
 } from "lucide-react";
+import { useTheme } from "next-themes";
 import { useLogout } from "@/features/authentication";
 import {
 	Avatar,
@@ -14,7 +18,12 @@ import {
 	DropdownMenuGroup,
 	DropdownMenuItem,
 	DropdownMenuLabel,
+	DropdownMenuRadioGroup,
+	DropdownMenuRadioItem,
 	DropdownMenuSeparator,
+	DropdownMenuSub,
+	DropdownMenuSubContent,
+	DropdownMenuSubTrigger,
 	DropdownMenuTrigger,
 	SidebarMenu,
 	SidebarMenuButton,
@@ -27,6 +36,7 @@ export const NavUser = () => {
 	const { isMobile } = useSidebar();
 	const session = useLoggedUserSession();
 	const { handleLogout, isPending } = useLogout();
+	const { theme, setTheme } = useTheme();
 	const userInitials = session.user.fullName
 		.split(" ")
 		.filter(Boolean)
@@ -96,6 +106,31 @@ export const NavUser = () => {
 								<BellIcon size={16} />
 								Notificações
 							</DropdownMenuItem>
+							<DropdownMenuSub>
+								<DropdownMenuSubTrigger>
+									<MonitorCogIcon size={16} />
+									Tema
+								</DropdownMenuSubTrigger>
+								<DropdownMenuSubContent>
+									<DropdownMenuRadioGroup
+										value={theme ?? "system"}
+										onValueChange={setTheme}
+									>
+										<DropdownMenuRadioItem value="system">
+											<MonitorCogIcon size={16} />
+											Sistema
+										</DropdownMenuRadioItem>
+										<DropdownMenuRadioItem value="light">
+											<SunIcon size={16} />
+											Claro
+										</DropdownMenuRadioItem>
+										<DropdownMenuRadioItem value="dark">
+											<MoonIcon size={16} />
+											Escuro
+										</DropdownMenuRadioItem>
+									</DropdownMenuRadioGroup>
+								</DropdownMenuSubContent>
+							</DropdownMenuSub>
 						</DropdownMenuGroup>
 						<DropdownMenuSeparator />
 						<DropdownMenuItem onClick={handleLogout} disabled={isPending}>
