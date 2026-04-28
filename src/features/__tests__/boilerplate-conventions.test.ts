@@ -5,6 +5,7 @@ import { describe, expect, it } from "vitest";
 const featureRoot = "src/features";
 const sourceExtensions = [".ts", ".tsx"] as const;
 const allowedFeatureIndexes = new Set([
+	"authentication/index.ts",
 	"app-sidebar/index.ts",
 	"attachments/index.ts",
 	"audit-logs/index.ts",

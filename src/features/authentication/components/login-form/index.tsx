@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { FieldGroup } from "@/shared/components/ui";
-import { useLoginForm } from "../hooks/use-login-form";
+import { useLoginForm } from "../../hooks/use-login-form";
 
 export function LoginForm() {
 	const { form, isPending } = useLoginForm();
@@ -26,13 +26,13 @@ export function LoginForm() {
 						)}
 					</form.AppField>
 				</FieldGroup>
-				<div className="flex items-center justify-between gap-4">
+				<div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 					<form.AppField name="rememberMe">
 						{(field) => <field.Checkbox label="Manter conectado por 7 dias" />}
 					</form.AppField>
 					<Link
 						to="/recuperar-senha"
-						className="text-sm font-medium text-slate-700 underline underline-offset-4"
+						className="text-sm font-medium text-foreground underline underline-offset-4"
 					>
 						Esqueci minha senha
 					</Link>

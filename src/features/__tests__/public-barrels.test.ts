@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import * as authentication from "@/features/authentication";
 import * as clients from "@/features/clients";
 import * as contracts from "@/features/contracts";
 import * as employees from "@/features/employees";
@@ -6,6 +7,16 @@ import * as fees from "@/features/fees";
 import * as remunerations from "@/features/remunerations";
 
 describe("feature public barrels", () => {
+	it("keeps the authentication barrel limited to public screens and route hooks", () => {
+		expect(authentication).toHaveProperty("AuthenticationScreen");
+		expect(authentication).toHaveProperty("LoginForm");
+		expect(authentication).toHaveProperty("PasswordResetRequestForm");
+		expect(authentication).toHaveProperty("PasswordResetCompleteForm");
+		expect(authentication).toHaveProperty("useLogout");
+		expect(authentication).not.toHaveProperty("useLoginForm");
+		expect(authentication).not.toHaveProperty("loginMutationOptions");
+	});
+
 	it("keeps client and employee barrels route-focused", () => {
 		expect(clients).toHaveProperty("getClientsQueryOptions");
 		expect(clients).toHaveProperty("ClientForm");

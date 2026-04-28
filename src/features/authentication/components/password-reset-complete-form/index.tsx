@@ -1,5 +1,5 @@
 import { FieldGroup } from "@/shared/components/ui";
-import { usePasswordResetCompleteForm } from "../hooks/use-password-reset-complete-form";
+import { usePasswordResetCompleteForm } from "../../hooks/use-password-reset-complete-form";
 
 interface PasswordResetCompleteFormProps {
 	token: string;

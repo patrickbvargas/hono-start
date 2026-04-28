@@ -1,5 +1,5 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { AuthPanel, LoginForm } from "@/features/authentication";
+import { AuthenticationScreen, LoginForm } from "@/features/authentication";
 import { getRouteSession } from "@/shared/session";
 
 export const Route = createFileRoute("/login")({
@@ -17,13 +17,12 @@ export const Route = createFileRoute("/login")({
 
 function RouteComponent() {
 	return (
-		<AuthPanel
-			eyebrow="Acesso seguro"
+		<AuthenticationScreen
 			title="Entrar na plataforma"
 			description="Use seu email ou número da OAB para acessar os módulos protegidos do sistema."
-			footer={null}
+			showBackToLoginLink={false}
 		>
 			<LoginForm />
-		</AuthPanel>
+		</AuthenticationScreen>
 	);
 }

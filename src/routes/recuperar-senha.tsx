@@ -2,7 +2,7 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import * as z from "zod";
 import {
-	AuthPanel,
+	AuthenticationScreen,
 	PasswordResetCompleteForm,
 	PasswordResetRequestForm,
 } from "@/features/authentication";
@@ -31,8 +31,7 @@ function RouteComponent() {
 	const isCompletingReset = !!token;
 
 	return (
-		<AuthPanel
-			eyebrow="Recuperação"
+		<AuthenticationScreen
 			title={isCompletingReset ? "Definir nova senha" : "Recuperar acesso"}
 			description={
 				isCompletingReset
@@ -46,6 +45,6 @@ function RouteComponent() {
 			) : (
 				<PasswordResetRequestForm />
 			)}
-		</AuthPanel>
+		</AuthenticationScreen>
 	);
 }

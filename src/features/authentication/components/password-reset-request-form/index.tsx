@@ -1,5 +1,5 @@
 import { FieldGroup } from "@/shared/components/ui";
-import { usePasswordResetRequestForm } from "../hooks/use-password-reset-request-form";
+import { usePasswordResetRequestForm } from "../../hooks/use-password-reset-request-form";
 
 export function PasswordResetRequestForm() {
 	const { form, isPending } = usePasswordResetRequestForm();

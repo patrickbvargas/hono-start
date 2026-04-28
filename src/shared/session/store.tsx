@@ -1,4 +1,4 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { createContext, useContext } from "react";
 import { getCurrentSessionQueryOptions } from "./api";
 import type { LoggedUserSession } from "./model";
@@ -23,6 +23,10 @@ export function LoggedUserSessionProvider({
 
 export function useLoggedUserSession() {
 	const session = useContext(LoggedUserSessionContext);
+	const fallbackSessionQuery = useQuery({
+		...getCurrentSessionQueryOptions(),
+		enabled: session === null,
+	});
 
 	if (session) {
 		return session;
@@ -30,7 +34,11 @@ export function useLoggedUserSession() {
 
 	// Fallback to cached required-session query so authenticated consumers do not
 	// crash if they render outside the provider boundary during route composition.
-	return useSuspenseQuery(getCurrentSessionQueryOptions()).data;
+	if (fallbackSessionQuery.data) {
+		return fallbackSessionQuery.data;
+	}
+
+	throw new Error("Sessão autenticada indisponível.");
 }
 
 export function useLoggedUserSessionStore<T>(
