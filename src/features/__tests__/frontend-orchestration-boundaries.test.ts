@@ -206,42 +206,42 @@ describe("frontend orchestration boundaries", () => {
 			{
 				route: "src/routes/clientes.tsx",
 				hookFile: "src/features/clients/hooks/use-data.ts",
-				hookName: "useClientData",
+				hookName: "useClients",
 				queryFactoryName: "getClientsQueryOptions",
 				dataField: "clients",
 			},
 			{
 				route: "src/routes/colaboradores.tsx",
 				hookFile: "src/features/employees/hooks/use-data.ts",
-				hookName: "useEmployeeData",
+				hookName: "useEmployees",
 				queryFactoryName: "getEmployeesQueryOptions",
 				dataField: "employees",
 			},
 			{
 				route: "src/routes/contratos.tsx",
 				hookFile: "src/features/contracts/hooks/use-data.ts",
-				hookName: "useContractData",
+				hookName: "useContracts",
 				queryFactoryName: "getContractsQueryOptions",
 				dataField: "contracts",
 			},
 			{
 				route: "src/routes/honorarios.tsx",
 				hookFile: "src/features/fees/hooks/use-data.ts",
-				hookName: "useFeeData",
+				hookName: "useFees",
 				queryFactoryName: "getFeesQueryOptions",
 				dataField: "fees",
 			},
 			{
 				route: "src/routes/remuneracoes.tsx",
 				hookFile: "src/features/remunerations/hooks/use-data.ts",
-				hookName: "useRemunerationData",
+				hookName: "useRemunerations",
 				queryFactoryName: "getRemunerationsQueryOptions",
 				dataField: "remunerations",
 			},
 			{
 				route: "src/routes/audit-log.tsx",
 				hookFile: "src/features/audit-logs/hooks/use-data.ts",
-				hookName: "useAuditLogData",
+				hookName: "useAuditLogs",
 				queryFactoryName: "getAuditLogsQueryOptions",
 				dataField: "auditLogs",
 			},
@@ -278,6 +278,85 @@ describe("frontend orchestration boundaries", () => {
 					{
 						passes: hookContent.includes(`return { ${dataField} };`),
 						message: `${hookFile}:1:data hook must return named ${dataField} data`,
+					},
+				];
+
+				return checks.flatMap((check) => (check.passes ? [] : [check.message]));
+			},
+		);
+
+		expect(violations).toEqual([]);
+	});
+
+	it("keeps feature-owned component query consumption behind feature data hooks", () => {
+		const componentFiles = [
+			"src/features/clients/components/details/index.tsx",
+			"src/features/employees/components/details/index.tsx",
+			"src/features/employees/components/delete/index.tsx",
+			"src/features/employees/components/restore/index.tsx",
+			"src/features/contracts/components/details/index.tsx",
+			"src/features/contracts/components/delete/index.tsx",
+			"src/features/contracts/components/restore/index.tsx",
+			"src/features/fees/components/details/index.tsx",
+			"src/features/remunerations/components/details/index.tsx",
+			"src/features/attachments/components/section/index.tsx",
+		];
+		const violations = componentFiles.flatMap((path) => {
+			const content = readFileSync(path, "utf8");
+			const matches = [...content.matchAll(/use(Query|SuspenseQuery)\(/g)];
+
+			return matches.map((match) =>
+				formatViolation(
+					path,
+					content,
+					match.index ?? 0,
+					"feature-owned components must consume query data through hooks/use-data.ts",
+				),
+			);
+		});
+
+		expect(violations).toEqual([]);
+	});
+
+	it("keeps collection and single-entity data hook naming aligned", () => {
+		const features = [
+			{
+				hookFile: "src/features/clients/hooks/use-data.ts",
+				collectionHook: "useClients",
+				entityHook: "useClient",
+			},
+			{
+				hookFile: "src/features/employees/hooks/use-data.ts",
+				collectionHook: "useEmployees",
+				entityHook: "useEmployee",
+			},
+			{
+				hookFile: "src/features/contracts/hooks/use-data.ts",
+				collectionHook: "useContracts",
+				entityHook: "useContract",
+			},
+			{
+				hookFile: "src/features/fees/hooks/use-data.ts",
+				collectionHook: "useFees",
+				entityHook: "useFee",
+			},
+			{
+				hookFile: "src/features/remunerations/hooks/use-data.ts",
+				collectionHook: "useRemunerations",
+				entityHook: "useRemuneration",
+			},
+		];
+		const violations = features.flatMap(
+			({ hookFile, collectionHook, entityHook }) => {
+				const content = readFileSync(hookFile, "utf8");
+				const checks = [
+					{
+						passes: content.includes(`function ${collectionHook}`),
+						message: `${hookFile}:1:missing ${collectionHook}`,
+					},
+					{
+						passes: content.includes(`function ${entityHook}`),
+						message: `${hookFile}:1:missing ${entityHook}`,
 					},
 				];
 

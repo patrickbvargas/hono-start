@@ -5,6 +5,6 @@ export * from "./components/filter";
 export * from "./components/form";
 export * from "./components/restore";
 export * from "./components/table";
-export { useEmployeeData } from "./hooks/use-data";
+export { useEmployees } from "./hooks/use-data";
 export type { EmployeeSummary } from "./schemas/model";
 export * from "./schemas/search";

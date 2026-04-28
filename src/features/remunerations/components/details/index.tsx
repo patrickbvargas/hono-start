@@ -1,4 +1,3 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
 import * as React from "react";
 import {
 	type DetailFieldItem,
@@ -8,7 +7,7 @@ import { EntityStatus } from "@/shared/components/entity-status";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
-import { getRemunerationByIdQueryOptions } from "../../api/queries";
+import { useRemuneration } from "../../hooks/use-data";
 
 interface RemunerationDetailsProps {
 	id: EntityId;
@@ -19,43 +18,49 @@ export const RemunerationDetails = ({
 	id,
 	state,
 }: RemunerationDetailsProps) => {
-	const { data } = useSuspenseQuery(getRemunerationByIdQueryOptions(id));
+	const { remuneration } = useRemuneration(id);
 
 	const summaryInfo = React.useMemo<DetailFieldItem[]>(
 		() => [
-			{ term: "Colaborador", definition: data.employeeName },
-			{ term: "Cliente", definition: data.client },
-			{ term: "Contrato", definition: data.contractProcessNumber },
-			{ term: "Pagamento", definition: formatter.date(data.paymentDate) },
-			{ term: "Valor", definition: formatter.currency(data.amount) },
+			{ term: "Colaborador", definition: remuneration.employeeName },
+			{ term: "Cliente", definition: remuneration.client },
+			{ term: "Contrato", definition: remuneration.contractProcessNumber },
+			{
+				term: "Pagamento",
+				definition: formatter.date(remuneration.paymentDate),
+			},
+			{ term: "Valor", definition: formatter.currency(remuneration.amount) },
 			{
 				term: "Percentual efetivo",
-				definition: formatter.percent(data.effectivePercentage),
+				definition: formatter.percent(remuneration.effectivePercentage),
 			},
 		],
-		[data],
+		[remuneration],
 	);
 
 	const sourceInfo = React.useMemo<DetailFieldItem[]>(
 		() => [
-			{ term: "Honorário", definition: `#${data.feeId}` },
-			{ term: "Parcela", definition: String(data.feeInstallmentNumber) },
+			{ term: "Honorário", definition: `#${remuneration.feeId}` },
+			{
+				term: "Parcela",
+				definition: String(remuneration.feeInstallmentNumber),
+			},
 			{
 				term: "Valor do honorário",
-				definition: formatter.currency(data.feeAmount),
+				definition: formatter.currency(remuneration.feeAmount),
 			},
 			{
 				term: "Origem",
-				definition: data.isManualOverride
+				definition: remuneration.isManualOverride
 					? "Ajuste manual"
 					: "Gerada automaticamente",
 			},
 			{
 				term: "Honorário de origem",
-				definition: data.parentFeeIsSoftDeleted ? "Excluído" : "Ativo",
+				definition: remuneration.parentFeeIsSoftDeleted ? "Excluído" : "Ativo",
 			},
 		],
-		[data],
+		[remuneration],
 	);
 
 	const registerInfo = React.useMemo<DetailFieldItem[]>(
@@ -64,21 +69,24 @@ export const RemunerationDetails = ({
 				term: "Situação",
 				definition: (
 					<EntityStatus
-						isActive={data.isActive}
-						isSoftDeleted={data.isSoftDeleted}
+						isActive={remuneration.isActive}
+						isSoftDeleted={remuneration.isSoftDeleted}
 					/>
 				),
 			},
-			{ term: "Criado em", definition: formatter.date(data.createdAt) },
-			{ term: "Atualizado em", definition: formatter.date(data.updatedAt) },
+			{ term: "Criado em", definition: formatter.date(remuneration.createdAt) },
+			{
+				term: "Atualizado em",
+				definition: formatter.date(remuneration.updatedAt),
+			},
 		],
-		[data],
+		[remuneration],
 	);
 
 	return (
 		<EntityDetail
 			state={state}
-			title={`${data.employeeName} • ${data.contractProcessNumber}`}
+			title={`${remuneration.employeeName} • ${remuneration.contractProcessNumber}`}
 		>
 			<EntityDetail.Fields items={summaryInfo} />
 			<EntityDetail.Separator />

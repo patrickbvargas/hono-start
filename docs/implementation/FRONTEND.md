@@ -76,3 +76,5 @@ It is meant to survive domain changes as long as the project keeps the same UI a
 - Sidebar route labels and user-facing navigation remain in the product locale.
 - The route, overlay, loader, and list-management patterns are reusable even when the business domain changes.
 - Routes stay declarative: they validate search state, prefetch list data, mount feature UI, and wire overlays, but they do not take over feature mutation or persistence orchestration.
+- Feature-owned components consume feature query data through feature-local hooks in `src/features/<feature>/hooks/use-data.ts` instead of calling TanStack Query hooks directly in render files.
+- Feature `api/queries.ts` option factories remain the reusable query boundary for loaders, tests, mutations, and imperative cache access.

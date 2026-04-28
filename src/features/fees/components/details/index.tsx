@@ -1,4 +1,3 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
 import * as React from "react";
 import {
 	type DetailFieldItem,
@@ -8,7 +7,7 @@ import { EntityStatus } from "@/shared/components/entity-status";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
-import { getFeeByIdQueryOptions } from "../../api/queries";
+import { useFee } from "../../hooks/use-data";
 
 interface FeeDetailsProps {
 	id: EntityId;
@@ -16,32 +15,32 @@ interface FeeDetailsProps {
 }
 
 export const FeeDetails = ({ id, state }: FeeDetailsProps) => {
-	const { data } = useSuspenseQuery(getFeeByIdQueryOptions(id));
+	const { fee } = useFee(id);
 
 	const generalInfo = React.useMemo<DetailFieldItem[]>(
 		() => [
-			{ term: "Contrato", definition: data.contractProcessNumber },
-			{ term: "Cliente", definition: data.client },
-			{ term: "Receita", definition: data.revenueType },
-			{ term: "Pagamento", definition: formatter.date(data.paymentDate) },
-			{ term: "Valor", definition: formatter.currency(data.amount) },
-			{ term: "Parcela", definition: String(data.installmentNumber) },
+			{ term: "Contrato", definition: fee.contractProcessNumber },
+			{ term: "Cliente", definition: fee.client },
+			{ term: "Receita", definition: fee.revenueType },
+			{ term: "Pagamento", definition: formatter.date(fee.paymentDate) },
+			{ term: "Valor", definition: formatter.currency(fee.amount) },
+			{ term: "Parcela", definition: String(fee.installmentNumber) },
 		],
-		[data],
+		[fee],
 	);
 
 	const remunerationInfo = React.useMemo<DetailFieldItem[]>(
 		() => [
 			{
 				term: "Gera remuneração",
-				definition: data.generatesRemuneration ? "Sim" : "Não",
+				definition: fee.generatesRemuneration ? "Sim" : "Não",
 			},
 			{
 				term: "Remunerações vinculadas",
-				definition: String(data.remunerationCount),
+				definition: String(fee.remunerationCount),
 			},
 		],
-		[data],
+		[fee],
 	);
 
 	const registerInfo = React.useMemo<DetailFieldItem[]>(
@@ -50,18 +49,18 @@ export const FeeDetails = ({ id, state }: FeeDetailsProps) => {
 				term: "Situação",
 				definition: (
 					<EntityStatus
-						isActive={data.isActive}
-						isSoftDeleted={data.isSoftDeleted}
+						isActive={fee.isActive}
+						isSoftDeleted={fee.isSoftDeleted}
 					/>
 				),
 			},
-			{ term: "Criado em", definition: formatter.date(data.createdAt) },
+			{ term: "Criado em", definition: formatter.date(fee.createdAt) },
 		],
-		[data],
+		[fee],
 	);
 
 	return (
-		<EntityDetail state={state} title={data.contractProcessNumber}>
+		<EntityDetail state={state} title={fee.contractProcessNumber}>
 			<EntityDetail.Fields items={generalInfo} />
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Remuneração">

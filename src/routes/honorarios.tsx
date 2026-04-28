@@ -10,7 +10,7 @@ import {
 	FeeTable,
 	feeSearchSchema,
 	getFeesQueryOptions,
-	useFeeData,
+	useFees,
 } from "@/features/fees";
 import { AuthenticatedShell } from "@/shared/components/authenticated-shell";
 import { RouteLoading } from "@/shared/components/route-loading";
@@ -49,7 +49,7 @@ function RouteComponent() {
 
 function HonorariosContent() {
 	const search = Route.useSearch();
-	const { fees } = useFeeData(search);
+	const { fees } = useFees(search);
 	const { overlay } = useOverlay<EntityId>();
 	const isAdmin = useLoggedUserSessionStore(isAdminSession);
 

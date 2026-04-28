@@ -10,7 +10,7 @@ import {
 	EmployeeTable,
 	employeeSearchSchema,
 	getEmployeesQueryOptions,
-	useEmployeeData,
+	useEmployees,
 } from "@/features/employees";
 import { AuthenticatedShell } from "@/shared/components/authenticated-shell";
 import { RouteLoading } from "@/shared/components/route-loading";
@@ -51,7 +51,7 @@ function RouteComponent() {
 
 function ColaboradoresContent() {
 	const search = Route.useSearch();
-	const { employees } = useEmployeeData(search);
+	const { employees } = useEmployees(search);
 	const { overlay } = useOverlay<EntityId>();
 	const canManage = useLoggedUserSessionStore((session) =>
 		can(session, "employee.manage"),

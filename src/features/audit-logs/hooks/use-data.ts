@@ -7,7 +7,7 @@ import {
 } from "../api/queries";
 import type { AuditLogSearch } from "../schemas/search";
 
-export function useAuditLogData(search: AuditLogSearch) {
+export function useAuditLogs(search: AuditLogSearch) {
 	const { data: auditLogs } = useSuspenseQuery(
 		getAuditLogsQueryOptions(search),
 	);

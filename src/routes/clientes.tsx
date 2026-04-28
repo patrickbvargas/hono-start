@@ -10,7 +10,7 @@ import {
 	ClientTable,
 	clientSearchSchema,
 	getClientsQueryOptions,
-	useClientData,
+	useClients,
 } from "@/features/clients";
 import { AuthenticatedShell } from "@/shared/components/authenticated-shell";
 import { RouteLoading } from "@/shared/components/route-loading";
@@ -49,7 +49,7 @@ function RouteComponent() {
 
 function ClientesContent() {
 	const search = Route.useSearch();
-	const { clients } = useClientData(search);
+	const { clients } = useClients(search);
 	const { overlay } = useOverlay<EntityId>();
 	const isAdmin = useLoggedUserSessionStore(isAdminSession);
 

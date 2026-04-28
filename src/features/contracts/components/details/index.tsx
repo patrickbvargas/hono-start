@@ -1,4 +1,3 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
 import * as React from "react";
 import { AttachmentSection } from "@/features/attachments";
 import {
@@ -10,7 +9,7 @@ import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
 import { isContractReadOnly } from "@/shared/session";
 import type { OverlayState } from "@/shared/types/overlay";
-import { getContractByIdQueryOptions } from "../../api/queries";
+import { useContract } from "../../hooks/use-data";
 
 interface ContractDetailsProps {
 	id: EntityId;
@@ -18,42 +17,42 @@ interface ContractDetailsProps {
 }
 
 export const ContractDetails = ({ id, state }: ContractDetailsProps) => {
-	const { data } = useSuspenseQuery(getContractByIdQueryOptions(id));
+	const { contract } = useContract(id);
 
 	const generalInfo = React.useMemo<DetailFieldItem[]>(
 		() => [
-			{ term: "Processo", definition: data.processNumber },
-			{ term: "Cliente", definition: data.client },
-			{ term: "Área jurídica", definition: data.legalArea },
-			{ term: "Status do contrato", definition: data.status },
+			{ term: "Processo", definition: contract.processNumber },
+			{ term: "Cliente", definition: contract.client },
+			{ term: "Área jurídica", definition: contract.legalArea },
+			{ term: "Status do contrato", definition: contract.status },
 			{
 				term: "Percentual",
-				definition: formatter.percent(data.feePercentage),
+				definition: formatter.percent(contract.feePercentage),
 			},
 			{
 				term: "Bloqueio de status",
-				definition: data.allowStatusChange ? "Desbloqueado" : "Bloqueado",
+				definition: contract.allowStatusChange ? "Desbloqueado" : "Bloqueado",
 			},
 		],
-		[data],
+		[contract],
 	);
 
 	const assignmentInfo = React.useMemo<DetailFieldItem[]>(
 		() =>
-			data.assignments.map((assignment) => ({
+			contract.assignments.map((assignment) => ({
 				term: assignment.assignmentType,
 				definition: `${assignment.employeeName} • ${assignment.employeeType}`,
 			})),
-		[data],
+		[contract],
 	);
 
 	const revenueInfo = React.useMemo<DetailFieldItem[]>(
 		() =>
-			data.revenues.map((revenue) => ({
+			contract.revenues.map((revenue) => ({
 				term: revenue.type,
 				definition: `${formatter.currency(revenue.totalValue)} • ${revenue.totalInstallments} parcela(s)`,
 			})),
-		[data],
+		[contract],
 	);
 
 	const registerInfo = React.useMemo<DetailFieldItem[]>(
@@ -62,22 +61,22 @@ export const ContractDetails = ({ id, state }: ContractDetailsProps) => {
 				term: "Situação",
 				definition: (
 					<EntityStatus
-						isActive={data.isActive}
-						isSoftDeleted={data.isSoftDeleted}
+						isActive={contract.isActive}
+						isSoftDeleted={contract.isSoftDeleted}
 					/>
 				),
 			},
-			{ term: "Criado em", definition: formatter.date(data.createdAt) },
+			{ term: "Criado em", definition: formatter.date(contract.createdAt) },
 			{
 				term: "Observações",
-				definition: data.notes?.trim() ? data.notes : "—",
+				definition: contract.notes?.trim() ? contract.notes : "—",
 			},
 		],
-		[data],
+		[contract],
 	);
 
 	return (
-		<EntityDetail state={state} title={data.processNumber}>
+		<EntityDetail state={state} title={contract.processNumber}>
 			<EntityDetail.Fields items={generalInfo} />
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Equipe">
@@ -89,14 +88,14 @@ export const ContractDetails = ({ id, state }: ContractDetailsProps) => {
 			</EntityDetail.Section>
 			<EntityDetail.Separator className="mt-auto" />
 			<AttachmentSection
-				ownerId={data.id}
+				ownerId={contract.id}
 				ownerKind="contract"
 				canUpload={
-					!data.isSoftDeleted &&
-					data.isAssignedToActor &&
+					!contract.isSoftDeleted &&
+					contract.isAssignedToActor &&
 					!isContractReadOnly({
 						firmId: 0,
-						statusValue: data.statusValue,
+						statusValue: contract.statusValue,
 					})
 				}
 			/>

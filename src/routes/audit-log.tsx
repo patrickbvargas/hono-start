@@ -5,7 +5,7 @@ import {
 	AuditLogTable,
 	auditLogSearchSchema,
 	getAuditLogsQueryOptions,
-	useAuditLogData,
+	useAuditLogs,
 } from "@/features/audit-logs";
 import { AuthenticatedShell } from "@/shared/components/authenticated-shell";
 import { RouteLoading } from "@/shared/components/route-loading";
@@ -30,7 +30,7 @@ export const Route = createFileRoute("/audit-log")({
 
 function RouteComponent() {
 	const search = Route.useSearch();
-	const { auditLogs } = useAuditLogData(search);
+	const { auditLogs } = useAuditLogs(search);
 
 	return (
 		<AuthenticatedShell>

@@ -5,7 +5,7 @@ export * from "./components/filter";
 export * from "./components/form";
 export * from "./components/restore";
 export * from "./components/table";
-export { useRemunerationData } from "./hooks/use-data";
+export { useRemunerations } from "./hooks/use-data";
 export { useRemunerationExport } from "./hooks/use-export";
 export type { Remuneration } from "./schemas/model";
 export * from "./schemas/search";

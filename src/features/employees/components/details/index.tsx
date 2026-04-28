@@ -1,4 +1,3 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
 import * as React from "react";
 import { AttachmentSection } from "@/features/attachments";
 import {
@@ -9,7 +8,7 @@ import { EntityStatus } from "@/shared/components/entity-status";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
-import { getEmployeeByIdQueryOptions } from "../../api/queries";
+import { useEmployee } from "../../hooks/use-data";
 
 interface EmployeeDetailsProps {
 	id: EntityId;
@@ -17,31 +16,31 @@ interface EmployeeDetailsProps {
 }
 
 export const EmployeeDetails = ({ id, state }: EmployeeDetailsProps) => {
-	const { data } = useSuspenseQuery(getEmployeeByIdQueryOptions(id));
+	const { employee } = useEmployee(id);
 
 	const generalInfo = React.useMemo<DetailFieldItem[]>(
 		() => [
-			{ term: "OAB", definition: formatter.oab(data.oabNumber) },
-			{ term: "Cargo", definition: data.type },
-			{ term: "Perfil", definition: data.role },
-			{ term: "Contratos", definition: data.contractCount },
+			{ term: "OAB", definition: formatter.oab(employee.oabNumber) },
+			{ term: "Cargo", definition: employee.type },
+			{ term: "Perfil", definition: employee.role },
+			{ term: "Contratos", definition: employee.contractCount },
 		],
-		[data],
+		[employee],
 	);
 
 	const contactInfo = React.useMemo<DetailFieldItem[]>(
-		() => [{ term: "Email", definition: data.email }],
-		[data],
+		() => [{ term: "Email", definition: employee.email }],
+		[employee],
 	);
 
 	const financialInfo = React.useMemo<DetailFieldItem[]>(
 		() => [
 			{
 				term: "Remuneração",
-				definition: formatter.percent(data.remunerationPercent),
+				definition: formatter.percent(employee.remunerationPercent),
 			},
 		],
-		[data],
+		[employee],
 	);
 
 	const registerInfo = React.useMemo<DetailFieldItem[]>(
@@ -50,18 +49,18 @@ export const EmployeeDetails = ({ id, state }: EmployeeDetailsProps) => {
 				term: "Status",
 				definition: (
 					<EntityStatus
-						isActive={data.isActive}
-						isSoftDeleted={data.isSoftDeleted}
+						isActive={employee.isActive}
+						isSoftDeleted={employee.isSoftDeleted}
 					/>
 				),
 			},
-			{ term: "Criado em", definition: formatter.date(data.createdAt) },
+			{ term: "Criado em", definition: formatter.date(employee.createdAt) },
 		],
-		[data],
+		[employee],
 	);
 
 	return (
-		<EntityDetail state={state} title={data.fullName}>
+		<EntityDetail state={state} title={employee.fullName}>
 			<EntityDetail.Fields items={generalInfo} />
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Contato">
@@ -73,9 +72,9 @@ export const EmployeeDetails = ({ id, state }: EmployeeDetailsProps) => {
 			</EntityDetail.Section>
 			<EntityDetail.Separator className="mt-auto" />
 			<AttachmentSection
-				ownerId={data.id}
+				ownerId={employee.id}
 				ownerKind="employee"
-				canUpload={!data.isSoftDeleted}
+				canUpload={!employee.isSoftDeleted}
 			/>
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Registro">

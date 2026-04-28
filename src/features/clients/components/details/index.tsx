@@ -1,4 +1,3 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
 import * as React from "react";
 import { AttachmentSection } from "@/features/attachments";
 import {
@@ -9,7 +8,7 @@ import { EntityStatus } from "@/shared/components/entity-status";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
-import { getClientByIdQueryOptions } from "../../api/queries";
+import { useClient } from "../../hooks/use-data";
 import { formatClientDocument } from "../../utils/format";
 
 interface ClientDetailsProps {
@@ -18,23 +17,23 @@ interface ClientDetailsProps {
 }
 
 export const ClientDetails = ({ id, state }: ClientDetailsProps) => {
-	const { data } = useSuspenseQuery(getClientByIdQueryOptions(id));
+	const { client } = useClient(id);
 
 	const generalInfo = React.useMemo<DetailFieldItem[]>(
 		() => [
-			{ term: "Documento", definition: formatClientDocument(data.document) },
-			{ term: "Tipo", definition: data.type },
-			{ term: "Contratos", definition: data.contractCount },
+			{ term: "Documento", definition: formatClientDocument(client.document) },
+			{ term: "Tipo", definition: client.type },
+			{ term: "Contratos", definition: client.contractCount },
 		],
-		[data],
+		[client],
 	);
 
 	const contactInfo = React.useMemo<DetailFieldItem[]>(
 		() => [
-			{ term: "Email", definition: data.email ?? "—" },
-			{ term: "Telefone", definition: data.phone ?? "—" },
+			{ term: "Email", definition: client.email ?? "—" },
+			{ term: "Telefone", definition: client.phone ?? "—" },
 		],
-		[data],
+		[client],
 	);
 
 	const registerInfo = React.useMemo<DetailFieldItem[]>(
@@ -43,18 +42,18 @@ export const ClientDetails = ({ id, state }: ClientDetailsProps) => {
 				term: "Status",
 				definition: (
 					<EntityStatus
-						isActive={data.isActive}
-						isSoftDeleted={data.isSoftDeleted}
+						isActive={client.isActive}
+						isSoftDeleted={client.isSoftDeleted}
 					/>
 				),
 			},
-			{ term: "Criado em", definition: formatter.date(data.createdAt) },
+			{ term: "Criado em", definition: formatter.date(client.createdAt) },
 		],
-		[data],
+		[client],
 	);
 
 	return (
-		<EntityDetail state={state} title={data.fullName}>
+		<EntityDetail state={state} title={client.fullName}>
 			<EntityDetail.Fields items={generalInfo} />
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Contato">
@@ -62,9 +61,9 @@ export const ClientDetails = ({ id, state }: ClientDetailsProps) => {
 			</EntityDetail.Section>
 			<EntityDetail.Separator className="mt-auto" />
 			<AttachmentSection
-				ownerId={data.id}
+				ownerId={client.id}
 				ownerKind="client"
-				canUpload={!data.isSoftDeleted}
+				canUpload={!client.isSoftDeleted}
 			/>
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Registro">

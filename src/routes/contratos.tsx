@@ -10,7 +10,7 @@ import {
 	ContractTable,
 	contractSearchSchema,
 	getContractsQueryOptions,
-	useContractData,
+	useContracts,
 } from "@/features/contracts";
 import { AuthenticatedShell } from "@/shared/components/authenticated-shell";
 import { RouteLoading } from "@/shared/components/route-loading";
@@ -49,7 +49,7 @@ function RouteComponent() {
 
 function ContratosContent() {
 	const search = Route.useSearch();
-	const { contracts } = useContractData(search);
+	const { contracts } = useContracts(search);
 	const { overlay } = useOverlay<EntityId>();
 	const isAdmin = useLoggedUserSessionStore(isAdminSession);
 

@@ -1,8 +1,7 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { EntityDeleteConfirm } from "@/shared/components/entity-confirmation";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
-import { getEmployeeByIdQueryOptions } from "../../api/queries";
+import { useEmployee } from "../../hooks/use-data";
 import { useEmployeeDelete } from "../../hooks/use-delete";
 
 interface EmployeeDeleteProps {
@@ -16,13 +15,13 @@ export const EmployeeDelete = ({
 	state,
 	onSuccess,
 }: EmployeeDeleteProps) => {
-	const { data } = useSuspenseQuery(getEmployeeByIdQueryOptions(id));
+	const { employee } = useEmployee(id);
 	const { handleConfirm, isPending } = useEmployeeDelete({ onSuccess });
 
 	return (
 		<EntityDeleteConfirm
 			title="Excluir funcionário"
-			description={`Tem certeza que deseja excluir ${data.fullName}?`}
+			description={`Tem certeza que deseja excluir ${employee.fullName}?`}
 			onConfirm={() => handleConfirm(id)}
 			isPending={isPending}
 			state={state}

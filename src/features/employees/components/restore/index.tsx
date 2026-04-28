@@ -1,8 +1,7 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { EntityRestoreConfirm } from "@/shared/components/entity-confirmation";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
-import { getEmployeeByIdQueryOptions } from "../../api/queries";
+import { useEmployee } from "../../hooks/use-data";
 import { useEmployeeRestore } from "../../hooks/use-restore";
 
 interface EmployeeRestoreProps {
@@ -16,13 +15,13 @@ export const EmployeeRestore = ({
 	state,
 	onSuccess,
 }: EmployeeRestoreProps) => {
-	const { data } = useSuspenseQuery(getEmployeeByIdQueryOptions(id));
+	const { employee } = useEmployee(id);
 	const { handleConfirm, isPending } = useEmployeeRestore({ onSuccess });
 
 	return (
 		<EntityRestoreConfirm
 			title="Restaurar funcionário"
-			description={`Tem certeza que deseja restaurar ${data.fullName}?`}
+			description={`Tem certeza que deseja restaurar ${employee.fullName}?`}
 			onConfirm={() => handleConfirm(id)}
 			isPending={isPending}
 			state={state}

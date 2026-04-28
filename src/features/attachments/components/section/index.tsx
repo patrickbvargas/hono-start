@@ -1,11 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
 import { FileIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { Button, Separator, Spinner } from "@/shared/components/ui";
 import { useOverlay } from "@/shared/hooks/use-overlay";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
 import { isAdminSession, useLoggedUserSessionStore } from "@/shared/session";
-import { getAttachmentsByOwnerQueryOptions } from "../../api/queries";
+import { useAttachments } from "../../hooks/use-data";
 import {
 	type AttachmentOwnerKind,
 	getAttachmentOwnerInput,
@@ -37,9 +36,7 @@ export const AttachmentSection = ({
 	ownerKind,
 }: AttachmentSectionProps) => {
 	const owner = getAttachmentOwnerInput({ ownerId, ownerKind });
-	const { data, error, isPending } = useQuery(
-		getAttachmentsByOwnerQueryOptions(owner),
-	);
+	const { attachments, error, isPending } = useAttachments(owner);
 	const isAdmin = useLoggedUserSessionStore(isAdminSession);
 	const { overlay } = useOverlay<EntityId>();
 
@@ -72,15 +69,15 @@ export const AttachmentSection = ({
 				</p>
 			) : null}
 
-			{!isPending && !error && (data?.length ?? 0) === 0 ? (
+			{!isPending && !error && attachments.length === 0 ? (
 				<p className="rounded-md border border-dashed px-3 py-4 text-muted-foreground text-sm">
 					Nenhum anexo cadastrado.
 				</p>
 			) : null}
 
-			{!isPending && !error && (data?.length ?? 0) > 0 ? (
+			{!isPending && !error && attachments.length > 0 ? (
 				<div className="rounded-md border">
-					{data?.map((attachment, index) => (
+					{attachments.map((attachment, index) => (
 						<div key={attachment.id} className="px-3 py-3">
 							<div className="flex items-start justify-between gap-3">
 								<div className="min-w-0 space-y-1">
@@ -121,7 +118,7 @@ export const AttachmentSection = ({
 									) : null}
 								</div>
 							</div>
-							{index < (data?.length ?? 0) - 1 ? (
+							{index < attachments.length - 1 ? (
 								<Separator className="mt-3" />
 							) : null}
 						</div>

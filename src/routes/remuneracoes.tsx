@@ -10,8 +10,8 @@ import {
 	RemunerationRestore,
 	RemunerationTable,
 	remunerationSearchSchema,
-	useRemunerationData,
 	useRemunerationExport,
+	useRemunerations,
 } from "@/features/remunerations";
 import { AuthenticatedShell } from "@/shared/components/authenticated-shell";
 import { RouteLoading } from "@/shared/components/route-loading";
@@ -49,7 +49,7 @@ function RouteComponent() {
 
 function RemuneracoesContent() {
 	const search = Route.useSearch();
-	const { remunerations } = useRemunerationData(search);
+	const { remunerations } = useRemunerations(search);
 	const { overlay } = useOverlay<EntityId>();
 	const isAdmin = useLoggedUserSessionStore(isAdminSession);
 	const { handleExport, isPending, pendingFormat } =

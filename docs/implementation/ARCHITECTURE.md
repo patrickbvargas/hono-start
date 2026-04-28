@@ -95,7 +95,7 @@ Each feature slice is expected to use these responsibilities:
 - `constants/`: sorting defaults, stable values, and safe pt-BR feature error catalogs
 - `data/queries.ts`: Prisma-backed reads, option loading, search translation, deterministic ordering, and read-model mapping
 - `data/mutations.ts`: Prisma-backed writes and persistence-aware checks that depend on current stored state
-- `hooks/`: orchestration hooks such as `use-form`, `use-filter`, `use-delete`, `use-restore`, and `use-options`
+- `hooks/`: orchestration hooks such as `use-data`, `use-form`, `use-filter`, `use-delete`, `use-restore`, and option-loading hooks
 - `rules/`: the canonical home for feature-local pure business assertions that do not require Prisma or persisted resource lookups; rule modules export `assert...` functions that throw on failure, and consumers import concrete rule modules directly instead of adding a `rules/index.ts` barrel
 - `schemas/`: `model`, `form`, `filter`, `search`, and `sort` contracts, including Zod request schemas and database-free schema refinements
 - `utils/`: feature-local pure helpers such as defaults, normalization helpers, and formatting helpers
