@@ -1,23 +1,13 @@
 import { queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
-import {
-	getOptionalServerLoggedUserSession,
-	getRequiredServerLoggedUserSession,
-} from "./server";
+import { getOptionalServerLoggedUserSession } from "./server";
 
 export const sessionKeys = {
 	all: ["session"] as const,
-	currentRequired: () => [...sessionKeys.all, "current", "required"] as const,
-	currentOptional: () => [...sessionKeys.all, "current", "optional"] as const,
+	current: () => [...sessionKeys.all, "current"] as const,
 };
 
 const getCurrentSessionFn = createServerFn({ method: "GET" }).handler(
-	async () => {
-		return getRequiredServerLoggedUserSession();
-	},
-);
-
-const getOptionalCurrentSessionFn = createServerFn({ method: "GET" }).handler(
 	async () => {
 		return getOptionalServerLoggedUserSession();
 	},
@@ -25,14 +15,7 @@ const getOptionalCurrentSessionFn = createServerFn({ method: "GET" }).handler(
 
 export const getCurrentSessionQueryOptions = () =>
 	queryOptions({
-		queryKey: sessionKeys.currentRequired(),
+		queryKey: sessionKeys.current(),
 		queryFn: getCurrentSessionFn,
-		staleTime: 60 * 1000,
-	});
-
-export const getOptionalCurrentSessionQueryOptions = () =>
-	queryOptions({
-		queryKey: sessionKeys.currentOptional(),
-		queryFn: getOptionalCurrentSessionFn,
 		staleTime: 60 * 1000,
 	});

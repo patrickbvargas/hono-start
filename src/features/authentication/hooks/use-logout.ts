@@ -12,6 +12,7 @@ export function useLogout() {
 	async function handleLogout() {
 		try {
 			await mutation.mutateAsync({});
+			queryClient.setQueryData(sessionKeys.current(), null);
 			queryClient.removeQueries({
 				queryKey: sessionKeys.all,
 			});

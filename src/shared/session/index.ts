@@ -1,7 +1,4 @@
-export {
-	getCurrentSessionQueryOptions,
-	getOptionalCurrentSessionQueryOptions,
-} from "./api";
+export { getCurrentSessionQueryOptions } from "./api";
 export { getRouteSession, requireRouteSession } from "./route";
 export {
 	assertCan,

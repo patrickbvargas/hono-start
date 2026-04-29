@@ -26,7 +26,7 @@ import type { EntityId } from "@/shared/schemas/entity";
 import {
 	assertCan,
 	can,
-	getRouteSession,
+	requireRouteSession,
 	useLoggedUserSessionStore,
 } from "@/shared/session";
 
@@ -34,10 +34,7 @@ export const Route = createFileRoute("/_app/colaboradores")({
 	validateSearch: zodValidator(employeeSearchSchema),
 	loaderDeps: ({ search }) => ({ search }),
 	loader: async ({ context: { queryClient }, deps: { search } }) => {
-		const session = await getRouteSession(queryClient);
-		if (!session) {
-			throw new Error("Sessão autenticada indisponível.");
-		}
+		const session = await requireRouteSession(queryClient);
 		assertCan(session, "employee.manage");
 		await queryClient.ensureQueryData(getEmployeesQueryOptions(search));
 	},

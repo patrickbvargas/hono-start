@@ -4,7 +4,7 @@
 TBD - created by archiving change refactor-shared-session-boundaries. Update Purpose after archive.
 ## Requirements
 ### Requirement: Shared logged-user session contract
-The system SHALL expose a shared session contract that represents the authenticated actor consistently across client and server session consumers, while allowing unauthenticated session reads to return no actor before route or server guards assert access.
+The system SHALL expose a shared session contract that represents the authenticated actor consistently across client and server session consumers, while allowing unauthenticated session reads to return no actor before route or server guards assert access. On the frontend, the authenticated actor MUST have exactly one browser-side source of truth so protected consumers do not depend on divergent client session caches.
 
 #### Scenario: Session actor shape is consistent
 - **WHEN** the current authenticated session is read in a client consumer or in a server-side session helper
@@ -17,6 +17,11 @@ The system SHALL expose a shared session contract that represents the authentica
 #### Scenario: Unauthenticated read returns no actor
 - **WHEN** a public route or public server flow reads session state before authentication
 - **THEN** the shared session reader returns an unauthenticated result instead of a fabricated logged-user actor
+
+#### Scenario: Frontend protected consumers share one actor source
+- **WHEN** multiple protected frontend consumers read the authenticated actor during the same browser session
+- **THEN** they resolve from one shared frontend session query
+- **AND** they do not diverge because different client caches hold conflicting session results
 
 ### Requirement: Shared authorization helpers
 The system SHALL evaluate permission decisions through shared authorization helpers that accept the logged-user actor and optional resource context as explicit inputs. The shared authorization surface MUST keep `can(session, action, resource)` and `assertCan(session, action, resource)` as the canonical action API, and MUST avoid duplicative feature-specific permission wrappers unless a wrapper has a clear route-facing purpose.
@@ -60,7 +65,7 @@ The system SHALL evaluate tenant scope and protected-action permissions in serve
 - **AND** the function does not continue with a placeholder tenant or actor
 
 ### Requirement: Management routes use shared authorization gating before rendering protected UI
-The system SHALL evaluate administrator-only management route access through shared authorization helpers before rendering protected management screens.
+The system SHALL evaluate administrator-only management route access through shared authorization helpers before rendering protected management screens. Protected management routes MUST resolve the authenticated actor from the required authenticated-session path rather than from an optional unauthenticated browser-session snapshot.
 
 #### Scenario: Route blocks regular user before rendering employee management UI
 - **WHEN** a regular user navigates directly to the employee-management route
@@ -71,6 +76,11 @@ The system SHALL evaluate administrator-only management route access through sha
 - **WHEN** an administrator navigates to the employee-management route
 - **THEN** the route evaluates the shared authorization helper
 - **AND** the employee-management screen is rendered when access is allowed
+
+#### Scenario: Admin route ignores stale optional unauthenticated browser session data
+- **WHEN** an authenticated administrator opens an administrator-only management route after login
+- **THEN** the route reads the authenticated actor from the required protected-session path
+- **AND** it does not deny access because a separate optional browser-session cache still holds `null`
 
 ### Requirement: Shared session helpers map authenticated identity to domain actor
 The system SHALL map the authenticated identity to the existing domain session actor shape using the linked employee, firm, role, and employee-type records so downstream authorization and scope decisions remain consistent.
@@ -83,4 +93,3 @@ The system SHALL map the authenticated identity to the existing domain session a
 - **WHEN** an authenticated identity does not resolve to a valid employee record in the same tenant context
 - **THEN** protected access is denied safely
 - **AND** downstream feature logic does not receive a partial actor
-

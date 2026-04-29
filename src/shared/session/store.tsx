@@ -1,6 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
 import { createContext, useContext } from "react";
-import { getCurrentSessionQueryOptions } from "./api";
 import type { LoggedUserSession } from "./model";
 
 const LoggedUserSessionContext = createContext<LoggedUserSession | null>(null);
@@ -23,19 +21,9 @@ export function LoggedUserSessionProvider({
 
 export function useLoggedUserSession() {
 	const session = useContext(LoggedUserSessionContext);
-	const fallbackSessionQuery = useQuery({
-		...getCurrentSessionQueryOptions(),
-		enabled: session === null,
-	});
 
 	if (session) {
 		return session;
-	}
-
-	// Fallback to cached required-session query so authenticated consumers do not
-	// crash if they render outside the provider boundary during route composition.
-	if (fallbackSessionQuery.data) {
-		return fallbackSessionQuery.data;
 	}
 
 	throw new Error("Sessão autenticada indisponível.");

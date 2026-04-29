@@ -15,16 +15,13 @@ import {
 	WrapperHeader,
 } from "@/shared/components/wrapper";
 import { ROUTES } from "@/shared/config/routes";
-import { assertCan, getRouteSession } from "@/shared/session";
+import { assertCan, requireRouteSession } from "@/shared/session";
 
 export const Route = createFileRoute("/_app/audit-log")({
 	validateSearch: zodValidator(auditLogSearchSchema),
 	loaderDeps: ({ search }) => ({ search }),
 	loader: async ({ context: { queryClient }, deps: { search } }) => {
-		const session = await getRouteSession(queryClient);
-		if (!session) {
-			throw new Error("Sessão autenticada indisponível.");
-		}
+		const session = await requireRouteSession(queryClient);
 		assertCan(session, "audit-log.view");
 		await queryClient.ensureQueryData(getAuditLogsQueryOptions(search));
 	},
