@@ -1,7 +1,7 @@
 import { queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import type { Option } from "@/shared/schemas/option";
-import { assertCan } from "@/shared/session";
+import { assertCan, authMiddleware } from "@/shared/session";
 import {
 	getRequiredServerLoggedUserSession,
 	getServerScope,
@@ -29,6 +29,7 @@ export const auditLogKeys = {
 };
 
 const getAuditLogsFn = createServerFn({ method: "GET" })
+	.middleware([authMiddleware])
 	.inputValidator(auditLogSearchSchema)
 	.handler(async ({ data }): Promise<QueryPaginatedReturnType<AuditLog>> => {
 		try {
@@ -43,8 +44,9 @@ const getAuditLogsFn = createServerFn({ method: "GET" })
 		}
 	});
 
-const getAuditLogActionsFn = createServerFn({ method: "GET" }).handler(
-	async (): Promise<QueryManyReturnType<Option>> => {
+const getAuditLogActionsFn = createServerFn({ method: "GET" })
+	.middleware([authMiddleware])
+	.handler(async (): Promise<QueryManyReturnType<Option>> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();
 			assertCan(session, "audit-log.view");
@@ -55,11 +57,11 @@ const getAuditLogActionsFn = createServerFn({ method: "GET" }).handler(
 			console.error("[getAuditLogActions]", error);
 			throw new Error(AUDIT_LOG_ERRORS.ACTIONS_GET_FAILED);
 		}
-	},
-);
+	});
 
-const getAuditLogEntityTypesFn = createServerFn({ method: "GET" }).handler(
-	async (): Promise<QueryManyReturnType<Option>> => {
+const getAuditLogEntityTypesFn = createServerFn({ method: "GET" })
+	.middleware([authMiddleware])
+	.handler(async (): Promise<QueryManyReturnType<Option>> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();
 			assertCan(session, "audit-log.view");
@@ -70,11 +72,11 @@ const getAuditLogEntityTypesFn = createServerFn({ method: "GET" }).handler(
 			console.error("[getAuditLogEntityTypes]", error);
 			throw new Error(AUDIT_LOG_ERRORS.ENTITY_TYPES_GET_FAILED);
 		}
-	},
-);
+	});
 
-const getAuditLogActorsFn = createServerFn({ method: "GET" }).handler(
-	async (): Promise<QueryManyReturnType<Option>> => {
+const getAuditLogActorsFn = createServerFn({ method: "GET" })
+	.middleware([authMiddleware])
+	.handler(async (): Promise<QueryManyReturnType<Option>> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();
 			assertCan(session, "audit-log.view");
@@ -85,8 +87,7 @@ const getAuditLogActorsFn = createServerFn({ method: "GET" }).handler(
 			console.error("[getAuditLogActors]", error);
 			throw new Error(AUDIT_LOG_ERRORS.ACTORS_GET_FAILED);
 		}
-	},
-);
+	});
 
 export const getAuditLogsQueryOptions = (search: AuditLogSearch) =>
 	queryOptions({

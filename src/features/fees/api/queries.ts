@@ -3,7 +3,7 @@ import { createServerFn } from "@tanstack/react-start";
 import * as z from "zod";
 import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
 import type { Option } from "@/shared/schemas/option";
-import { isAdminSession } from "@/shared/session";
+import { authMiddleware, isAdminSession } from "@/shared/session";
 import {
 	getRequiredServerLoggedUserSession,
 	getServerScope,
@@ -34,6 +34,7 @@ export const feeKeys = {
 };
 
 const getFeesFn = createServerFn({ method: "GET" })
+	.middleware([authMiddleware])
 	.inputValidator(feeSearchSchema)
 	.handler(async ({ data }): Promise<QueryPaginatedReturnType<FeeSummary>> => {
 		try {
@@ -55,6 +56,7 @@ const getFeesFn = createServerFn({ method: "GET" })
 	});
 
 const getFeeByIdFn = createServerFn({ method: "GET" })
+	.middleware([authMiddleware])
 	.inputValidator(feeIdInputSchema)
 	.handler(async ({ data }): Promise<QueryOneReturnType<FeeDetail>> => {
 		try {
@@ -79,8 +81,9 @@ const getFeeByIdFn = createServerFn({ method: "GET" })
 		}
 	});
 
-const getSelectableFeeContractsFn = createServerFn({ method: "GET" }).handler(
-	async (): Promise<QueryManyReturnType<Option>> => {
+const getSelectableFeeContractsFn = createServerFn({ method: "GET" })
+	.middleware([authMiddleware])
+	.handler(async (): Promise<QueryManyReturnType<Option>> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();
 			const scope = await getServerScope("fee");
@@ -94,10 +97,10 @@ const getSelectableFeeContractsFn = createServerFn({ method: "GET" }).handler(
 			console.error("[getSelectableFeeContracts]", error);
 			throw new Error(FEE_ERRORS.FEE_SELECTABLE_CONTRACTS_FAILED);
 		}
-	},
-);
+	});
 
 const getSelectableFeeRevenuesFn = createServerFn({ method: "GET" })
+	.middleware([authMiddleware])
 	.inputValidator(
 		z.object({
 			contractId: z.string().catch("").default(""),

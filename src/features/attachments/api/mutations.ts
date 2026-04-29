@@ -1,6 +1,10 @@
 import { mutationOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
-import { assertCan, isContractWritable } from "@/shared/session";
+import {
+	assertCan,
+	authMiddleware,
+	isContractWritable,
+} from "@/shared/session";
 import {
 	getRequiredServerLoggedUserSession,
 	getServerScope,
@@ -41,6 +45,7 @@ function assertAttachmentOwnerUploadAccess(
 }
 
 const createAttachmentFn = createServerFn({ method: "POST" })
+	.middleware([authMiddleware])
 	.inputValidator(attachmentUploadInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
@@ -75,6 +80,7 @@ const createAttachmentFn = createServerFn({ method: "POST" })
 	});
 
 const deleteAttachmentFn = createServerFn({ method: "POST" })
+	.middleware([authMiddleware])
 	.inputValidator(attachmentIdInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {

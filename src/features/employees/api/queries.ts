@@ -3,7 +3,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { Option } from "@/shared/schemas/option";
-import { assertCan } from "@/shared/session";
+import { assertCan, authMiddleware } from "@/shared/session";
 import {
 	getRequiredServerLoggedUserSession,
 	getServerScope,
@@ -33,6 +33,7 @@ export const employeeKeys = {
 };
 
 const getEmployeesFn = createServerFn({ method: "GET" })
+	.middleware([authMiddleware])
 	.inputValidator(employeeSearchSchema)
 	.handler(
 		async ({ data }): Promise<QueryPaginatedReturnType<EmployeeSummary>> => {
@@ -54,6 +55,7 @@ const getEmployeesFn = createServerFn({ method: "GET" })
 	);
 
 const getEmployeeByIdFn = createServerFn({ method: "GET" })
+	.middleware([authMiddleware])
 	.inputValidator(employeeIdInputSchema)
 	.handler(async ({ data }): Promise<QueryOneReturnType<EmployeeDetail>> => {
 		try {
@@ -72,27 +74,27 @@ const getEmployeeByIdFn = createServerFn({ method: "GET" })
 		}
 	});
 
-const getEmployeeTypesFn = createServerFn({ method: "GET" }).handler(
-	async (): Promise<QueryManyReturnType<Option>> => {
+const getEmployeeTypesFn = createServerFn({ method: "GET" })
+	.middleware([authMiddleware])
+	.handler(async (): Promise<QueryManyReturnType<Option>> => {
 		try {
 			return await getEmployeeTypes();
 		} catch (error) {
 			console.error("[getEmployeeTypes]", error);
 			throw new Error(EMPLOYEE_ERRORS.TYPES_GET_FAILED);
 		}
-	},
-);
+	});
 
-const getEmployeeRolesFn = createServerFn({ method: "GET" }).handler(
-	async (): Promise<QueryManyReturnType<Option>> => {
+const getEmployeeRolesFn = createServerFn({ method: "GET" })
+	.middleware([authMiddleware])
+	.handler(async (): Promise<QueryManyReturnType<Option>> => {
 		try {
 			return await getEmployeeRoles();
 		} catch (error) {
 			console.error("[getEmployeeRoles]", error);
 			throw new Error(EMPLOYEE_ERRORS.ROLES_GET_FAILED);
 		}
-	},
-);
+	});
 
 export const getEmployeesQueryOptions = (search: EmployeeSearch) =>
 	queryOptions({

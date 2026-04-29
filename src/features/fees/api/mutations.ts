@@ -1,7 +1,7 @@
 import { mutationOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
-import { assertCan } from "@/shared/session";
+import { assertCan, authMiddleware } from "@/shared/session";
 import {
 	getRequiredServerLoggedUserSession,
 	getServerScope,
@@ -21,6 +21,7 @@ import {
 import { normalizeFeeReference } from "../utils/normalization";
 
 const createFeeFn = createServerFn({ method: "POST" })
+	.middleware([authMiddleware])
 	.inputValidator(feeCreateInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
@@ -55,6 +56,7 @@ const createFeeFn = createServerFn({ method: "POST" })
 	});
 
 const updateFeeFn = createServerFn({ method: "POST" })
+	.middleware([authMiddleware])
 	.inputValidator(feeUpdateInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
@@ -101,6 +103,7 @@ const updateFeeFn = createServerFn({ method: "POST" })
 	});
 
 const deleteFeeFn = createServerFn({ method: "POST" })
+	.middleware([authMiddleware])
 	.inputValidator(feeIdInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
@@ -135,6 +138,7 @@ const deleteFeeFn = createServerFn({ method: "POST" })
 	});
 
 const restoreFeeFn = createServerFn({ method: "POST" })
+	.middleware([authMiddleware])
 	.inputValidator(feeIdInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {

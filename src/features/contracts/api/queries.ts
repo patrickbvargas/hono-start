@@ -3,7 +3,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { Option } from "@/shared/schemas/option";
-import { isAdminSession } from "@/shared/session";
+import { authMiddleware, isAdminSession } from "@/shared/session";
 import {
 	getRequiredServerLoggedUserSession,
 	getServerScope,
@@ -41,6 +41,7 @@ export const contractKeys = {
 };
 
 const getContractsFn = createServerFn({ method: "GET" })
+	.middleware([authMiddleware])
 	.inputValidator(contractSearchSchema)
 	.handler(
 		async ({ data }): Promise<QueryPaginatedReturnType<ContractSummary>> => {
@@ -64,6 +65,7 @@ const getContractsFn = createServerFn({ method: "GET" })
 	);
 
 const getContractByIdFn = createServerFn({ method: "GET" })
+	.middleware([authMiddleware])
 	.inputValidator(contractIdInputSchema)
 	.handler(async ({ data }): Promise<QueryOneReturnType<ContractDetail>> => {
 		try {
@@ -88,8 +90,9 @@ const getContractByIdFn = createServerFn({ method: "GET" })
 		}
 	});
 
-const getContractLegalAreasFn = createServerFn({ method: "GET" }).handler(
-	async (): Promise<QueryManyReturnType<Option>> => {
+const getContractLegalAreasFn = createServerFn({ method: "GET" })
+	.middleware([authMiddleware])
+	.handler(async (): Promise<QueryManyReturnType<Option>> => {
 		try {
 			await getRequiredServerLoggedUserSession();
 			return await getContractLegalAreas();
@@ -97,11 +100,11 @@ const getContractLegalAreasFn = createServerFn({ method: "GET" }).handler(
 			console.error("[getContractLegalAreas]", error);
 			throw new Error(CONTRACT_ERRORS.CONTRACT_LEGAL_AREAS_FAILED);
 		}
-	},
-);
+	});
 
-const getContractStatusesFn = createServerFn({ method: "GET" }).handler(
-	async (): Promise<QueryManyReturnType<Option>> => {
+const getContractStatusesFn = createServerFn({ method: "GET" })
+	.middleware([authMiddleware])
+	.handler(async (): Promise<QueryManyReturnType<Option>> => {
 		try {
 			await getRequiredServerLoggedUserSession();
 			return await getContractStatuses();
@@ -109,11 +112,11 @@ const getContractStatusesFn = createServerFn({ method: "GET" }).handler(
 			console.error("[getContractStatuses]", error);
 			throw new Error(CONTRACT_ERRORS.CONTRACT_STATUSES_FAILED);
 		}
-	},
-);
+	});
 
-const getContractAssignmentTypesFn = createServerFn({ method: "GET" }).handler(
-	async (): Promise<QueryManyReturnType<Option>> => {
+const getContractAssignmentTypesFn = createServerFn({ method: "GET" })
+	.middleware([authMiddleware])
+	.handler(async (): Promise<QueryManyReturnType<Option>> => {
 		try {
 			await getRequiredServerLoggedUserSession();
 			return await getContractAssignmentTypes();
@@ -121,11 +124,11 @@ const getContractAssignmentTypesFn = createServerFn({ method: "GET" }).handler(
 			console.error("[getContractAssignmentTypes]", error);
 			throw new Error(CONTRACT_ERRORS.CONTRACT_ASSIGNMENT_TYPES_FAILED);
 		}
-	},
-);
+	});
 
-const getContractRevenueTypesFn = createServerFn({ method: "GET" }).handler(
-	async (): Promise<QueryManyReturnType<Option>> => {
+const getContractRevenueTypesFn = createServerFn({ method: "GET" })
+	.middleware([authMiddleware])
+	.handler(async (): Promise<QueryManyReturnType<Option>> => {
 		try {
 			await getRequiredServerLoggedUserSession();
 			return await getContractRevenueTypes();
@@ -133,34 +136,37 @@ const getContractRevenueTypesFn = createServerFn({ method: "GET" }).handler(
 			console.error("[getContractRevenueTypes]", error);
 			throw new Error(CONTRACT_ERRORS.CONTRACT_REVENUE_TYPES_FAILED);
 		}
-	},
-);
+	});
 
 const getSelectableContractClientsFn = createServerFn({
 	method: "GET",
-}).handler(async (): Promise<QueryManyReturnType<Option>> => {
-	try {
-		await getRequiredServerLoggedUserSession();
-		const { firmId } = await getServerScope("contract");
-		return await getSelectableContractClients(firmId);
-	} catch (error) {
-		console.error("[getSelectableContractClients]", error);
-		throw new Error(CONTRACT_ERRORS.CONTRACT_SELECTABLE_CLIENTS_FAILED);
-	}
-});
+})
+	.middleware([authMiddleware])
+	.handler(async (): Promise<QueryManyReturnType<Option>> => {
+		try {
+			await getRequiredServerLoggedUserSession();
+			const { firmId } = await getServerScope("contract");
+			return await getSelectableContractClients(firmId);
+		} catch (error) {
+			console.error("[getSelectableContractClients]", error);
+			throw new Error(CONTRACT_ERRORS.CONTRACT_SELECTABLE_CLIENTS_FAILED);
+		}
+	});
 
 const getSelectableContractEmployeesFn = createServerFn({
 	method: "GET",
-}).handler(async (): Promise<QueryManyReturnType<Option>> => {
-	try {
-		await getRequiredServerLoggedUserSession();
-		const { firmId } = await getServerScope("contract");
-		return await getSelectableContractEmployees(firmId);
-	} catch (error) {
-		console.error("[getSelectableContractEmployees]", error);
-		throw new Error(CONTRACT_ERRORS.CONTRACT_SELECTABLE_EMPLOYEES_FAILED);
-	}
-});
+})
+	.middleware([authMiddleware])
+	.handler(async (): Promise<QueryManyReturnType<Option>> => {
+		try {
+			await getRequiredServerLoggedUserSession();
+			const { firmId } = await getServerScope("contract");
+			return await getSelectableContractEmployees(firmId);
+		} catch (error) {
+			console.error("[getSelectableContractEmployees]", error);
+			throw new Error(CONTRACT_ERRORS.CONTRACT_SELECTABLE_EMPLOYEES_FAILED);
+		}
+	});
 
 export const getContractsQueryOptions = (search: ContractSearch) =>
 	queryOptions({

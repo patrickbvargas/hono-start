@@ -2,6 +2,7 @@ import { queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import type { Option } from "@/shared/schemas/option";
 import {
+	authMiddleware,
 	getCurrentEmployeeId,
 	getCurrentFirmId,
 	isAdminSession,
@@ -27,6 +28,7 @@ export const dashboardKeys = {
 };
 
 const getDashboardSummaryFn = createServerFn({ method: "GET" })
+	.middleware([authMiddleware])
 	.inputValidator(dashboardSearchSchema)
 	.handler(async ({ data }): Promise<QueryOneReturnType<DashboardSummary>> => {
 		try {
@@ -47,22 +49,24 @@ const getDashboardSummaryFn = createServerFn({ method: "GET" })
 
 const getDashboardEmployeeOptionsFn = createServerFn({
 	method: "GET",
-}).handler(async (): Promise<QueryManyReturnType<Option>> => {
-	try {
-		const session = await getRequiredServerLoggedUserSession();
+})
+	.middleware([authMiddleware])
+	.handler(async (): Promise<QueryManyReturnType<Option>> => {
+		try {
+			const session = await getRequiredServerLoggedUserSession();
 
-		if (!isAdminSession(session)) {
-			return [];
+			if (!isAdminSession(session)) {
+				return [];
+			}
+
+			return await getDashboardEmployeeOptions({
+				firmId: getCurrentFirmId(session),
+			});
+		} catch (error) {
+			console.error("[getDashboardEmployeeOptions]", error);
+			throw new Error(DASHBOARD_ERRORS.EMPLOYEE_OPTIONS_GET_FAILED);
 		}
-
-		return await getDashboardEmployeeOptions({
-			firmId: getCurrentFirmId(session),
-		});
-	} catch (error) {
-		console.error("[getDashboardEmployeeOptions]", error);
-		throw new Error(DASHBOARD_ERRORS.EMPLOYEE_OPTIONS_GET_FAILED);
-	}
-});
+	});
 
 export const getDashboardSummaryQueryOptions = (search: DashboardSearch) =>
 	queryOptions({

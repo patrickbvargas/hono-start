@@ -5,6 +5,10 @@ export {
 	requireRouteSession,
 } from "./route";
 export {
+	type AuthenticatedServerFunctionContext,
+	authMiddleware,
+} from "./server-functions";
+export {
 	assertCan,
 	CONTRACT_STATUS_ACTIVE_VALUE,
 	CONTRACT_STATUS_CANCELLED_VALUE,

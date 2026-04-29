@@ -4,7 +4,7 @@ import {
 	hasExactErrorMessage,
 	isPrismaUniqueConstraintError,
 } from "@/shared/lib/error-mapping";
-import { assertCan, isAdminSession } from "@/shared/session";
+import { assertCan, authMiddleware, isAdminSession } from "@/shared/session";
 import {
 	getRequiredServerLoggedUserSession,
 	getServerScope,
@@ -25,6 +25,7 @@ import {
 } from "../schemas/form";
 
 const createContractFn = createServerFn({ method: "POST" })
+	.middleware([authMiddleware])
 	.inputValidator(contractCreateInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
@@ -57,6 +58,7 @@ const createContractFn = createServerFn({ method: "POST" })
 	});
 
 const updateContractFn = createServerFn({ method: "POST" })
+	.middleware([authMiddleware])
 	.inputValidator(contractUpdateInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
@@ -95,6 +97,7 @@ const updateContractFn = createServerFn({ method: "POST" })
 	});
 
 const deleteContractFn = createServerFn({ method: "POST" })
+	.middleware([authMiddleware])
 	.inputValidator(contractIdInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
@@ -128,6 +131,7 @@ const deleteContractFn = createServerFn({ method: "POST" })
 	});
 
 const restoreContractFn = createServerFn({ method: "POST" })
+	.middleware([authMiddleware])
 	.inputValidator(contractIdInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {

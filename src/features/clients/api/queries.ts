@@ -3,10 +3,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { Option } from "@/shared/schemas/option";
-import {
-	getRequiredServerLoggedUserSession,
-	getServerScope,
-} from "@/shared/session/server";
+import { authMiddleware, getScope } from "@/shared/session";
 import type {
 	QueryManyReturnType,
 	QueryOneReturnType,
@@ -26,12 +23,15 @@ export const clientKeys = {
 };
 
 const getClientsFn = createServerFn({ method: "GET" })
+	.middleware([authMiddleware])
 	.inputValidator(clientSearchSchema)
 	.handler(
-		async ({ data }): Promise<QueryPaginatedReturnType<ClientSummary>> => {
+		async ({
+			data,
+			context,
+		}): Promise<QueryPaginatedReturnType<ClientSummary>> => {
 			try {
-				await getRequiredServerLoggedUserSession();
-				const { firmId } = await getServerScope("client");
+				const { firmId } = getScope(context.session, "client");
 
 				return await getClients({ firmId, search: data });
 			} catch (error) {
@@ -42,33 +42,38 @@ const getClientsFn = createServerFn({ method: "GET" })
 	);
 
 const getClientByIdFn = createServerFn({ method: "GET" })
+	.middleware([authMiddleware])
 	.inputValidator(clientIdInputSchema)
-	.handler(async ({ data }): Promise<QueryOneReturnType<ClientDetail>> => {
-		try {
-			await getRequiredServerLoggedUserSession();
-			const { firmId } = await getServerScope("client");
+	.handler(
+		async ({ data, context }): Promise<QueryOneReturnType<ClientDetail>> => {
+			try {
+				const { firmId } = getScope(context.session, "client");
 
-			return await getClientById({ firmId, id: data.id });
-		} catch (error) {
-			console.error("[getClientById]", error);
-			if (hasExactErrorMessage(error, CLIENT_ERRORS)) {
-				throw error;
+				return await getClientById({
+					firmId,
+					id: data.id,
+				});
+			} catch (error) {
+				console.error("[getClientById]", error);
+				if (hasExactErrorMessage(error, CLIENT_ERRORS)) {
+					throw error;
+				}
+
+				throw new Error(CLIENT_ERRORS.DETAIL_FAILED);
 			}
+		},
+	);
 
-			throw new Error(CLIENT_ERRORS.DETAIL_FAILED);
-		}
-	});
-
-const getClientTypesFn = createServerFn({ method: "GET" }).handler(
-	async (): Promise<QueryManyReturnType<Option>> => {
+const getClientTypesFn = createServerFn({ method: "GET" })
+	.middleware([authMiddleware])
+	.handler(async (): Promise<QueryManyReturnType<Option>> => {
 		try {
 			return await getClientTypes();
 		} catch (error) {
 			console.error("[getClientTypes]", error);
 			throw new Error(CLIENT_ERRORS.TYPES_GET_FAILED);
 		}
-	},
-);
+	});
 
 export const getClientsQueryOptions = (search: ClientSearch) =>
 	queryOptions({

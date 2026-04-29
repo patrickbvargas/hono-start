@@ -1,7 +1,7 @@
 import { mutationOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
-import { assertCan } from "@/shared/session";
+import { assertCan, authMiddleware } from "@/shared/session";
 import {
 	getRequiredServerLoggedUserSession,
 	getServerScope,
@@ -41,6 +41,7 @@ async function getAuthorizedRemunerationAccess(
 }
 
 const updateRemunerationFn = createServerFn({ method: "POST" })
+	.middleware([authMiddleware])
 	.inputValidator(remunerationUpdateInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
@@ -70,6 +71,7 @@ const updateRemunerationFn = createServerFn({ method: "POST" })
 	});
 
 const deleteRemunerationFn = createServerFn({ method: "POST" })
+	.middleware([authMiddleware])
 	.inputValidator(remunerationIdInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
@@ -99,6 +101,7 @@ const deleteRemunerationFn = createServerFn({ method: "POST" })
 	});
 
 const restoreRemunerationFn = createServerFn({ method: "POST" })
+	.middleware([authMiddleware])
 	.inputValidator(remunerationIdInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {

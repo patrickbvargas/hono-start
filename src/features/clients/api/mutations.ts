@@ -4,11 +4,7 @@ import {
 	hasExactErrorMessage,
 	isPrismaUniqueConstraintError,
 } from "@/shared/lib/error-mapping";
-import { assertCan } from "@/shared/session";
-import {
-	getRequiredServerLoggedUserSession,
-	getServerScope,
-} from "@/shared/session/server";
+import { assertCan, authMiddleware, getScope } from "@/shared/session";
 import type { MutationReturnType } from "@/shared/types/api";
 import { CLIENT_ERRORS } from "../constants/errors";
 import {
@@ -24,18 +20,18 @@ import {
 } from "../schemas/form";
 
 const createClientFn = createServerFn({ method: "POST" })
+	.middleware([authMiddleware])
 	.inputValidator(clientCreateInputSchema)
-	.handler(async ({ data }): Promise<MutationReturnType> => {
+	.handler(async ({ data, context }): Promise<MutationReturnType> => {
 		try {
-			const session = await getRequiredServerLoggedUserSession();
-			assertCan(session, "client.create");
-			const { firmId } = await getServerScope("client");
+			assertCan(context.session, "client.create");
+			const { firmId } = getScope(context.session, "client");
 
 			return await createClient({
 				actor: {
-					id: session.employee.id,
-					name: session.user.fullName,
-					email: session.user.email,
+					id: context.session.employee.id,
+					name: context.session.user.fullName,
+					email: context.session.user.email,
 				},
 				firmId,
 				input: data,
@@ -55,18 +51,18 @@ const createClientFn = createServerFn({ method: "POST" })
 	});
 
 const updateClientFn = createServerFn({ method: "POST" })
+	.middleware([authMiddleware])
 	.inputValidator(clientUpdateInputSchema)
-	.handler(async ({ data }): Promise<MutationReturnType> => {
+	.handler(async ({ data, context }): Promise<MutationReturnType> => {
 		try {
-			const session = await getRequiredServerLoggedUserSession();
-			assertCan(session, "client.update");
-			const { firmId } = await getServerScope("client");
+			assertCan(context.session, "client.update");
+			const { firmId } = getScope(context.session, "client");
 
 			return await updateClient({
 				actor: {
-					id: session.employee.id,
-					name: session.user.fullName,
-					email: session.user.email,
+					id: context.session.employee.id,
+					name: context.session.user.fullName,
+					email: context.session.user.email,
 				},
 				firmId,
 				input: data,
@@ -86,18 +82,18 @@ const updateClientFn = createServerFn({ method: "POST" })
 	});
 
 const deleteClientFn = createServerFn({ method: "POST" })
+	.middleware([authMiddleware])
 	.inputValidator(clientIdInputSchema)
-	.handler(async ({ data }): Promise<MutationReturnType> => {
+	.handler(async ({ data, context }): Promise<MutationReturnType> => {
 		try {
-			const session = await getRequiredServerLoggedUserSession();
-			assertCan(session, "client.delete");
-			const { firmId } = await getServerScope("client");
+			assertCan(context.session, "client.delete");
+			const { firmId } = getScope(context.session, "client");
 
 			return await deleteClient({
 				actor: {
-					id: session.employee.id,
-					name: session.user.fullName,
-					email: session.user.email,
+					id: context.session.employee.id,
+					name: context.session.user.fullName,
+					email: context.session.user.email,
 				},
 				firmId,
 				id: data.id,
@@ -113,18 +109,18 @@ const deleteClientFn = createServerFn({ method: "POST" })
 	});
 
 const restoreClientFn = createServerFn({ method: "POST" })
+	.middleware([authMiddleware])
 	.inputValidator(clientIdInputSchema)
-	.handler(async ({ data }): Promise<MutationReturnType> => {
+	.handler(async ({ data, context }): Promise<MutationReturnType> => {
 		try {
-			const session = await getRequiredServerLoggedUserSession();
-			assertCan(session, "client.restore");
-			const { firmId } = await getServerScope("client");
+			assertCan(context.session, "client.restore");
+			const { firmId } = getScope(context.session, "client");
 
 			return await restoreClient({
 				actor: {
-					id: session.employee.id,
-					name: session.user.fullName,
-					email: session.user.email,
+					id: context.session.employee.id,
+					name: context.session.user.fullName,
+					email: context.session.user.email,
 				},
 				firmId,
 				id: data.id,

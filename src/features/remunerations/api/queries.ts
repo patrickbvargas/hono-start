@@ -2,7 +2,7 @@ import { mutationOptions, queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
 import type { Option } from "@/shared/schemas/option";
-import { isAdminSession } from "@/shared/session";
+import { authMiddleware, isAdminSession } from "@/shared/session";
 import {
 	getRequiredServerLoggedUserSession,
 	getServerScope,
@@ -65,6 +65,7 @@ async function getRemunerationScope() {
 }
 
 const getRemunerationsFn = createServerFn({ method: "GET" })
+	.middleware([authMiddleware])
 	.inputValidator(remunerationSearchSchema)
 	.handler(
 		async ({ data }): Promise<QueryPaginatedReturnType<Remuneration>> => {
@@ -80,6 +81,7 @@ const getRemunerationsFn = createServerFn({ method: "GET" })
 	);
 
 const getRemunerationByIdFn = createServerFn({ method: "GET" })
+	.middleware([authMiddleware])
 	.inputValidator(remunerationIdInputSchema)
 	.handler(async ({ data }): Promise<QueryOneReturnType<Remuneration>> => {
 		try {
@@ -98,35 +100,40 @@ const getRemunerationByIdFn = createServerFn({ method: "GET" })
 
 const getSelectableRemunerationContractsFn = createServerFn({
 	method: "GET",
-}).handler(async (): Promise<QueryManyReturnType<Option>> => {
-	try {
-		const { scope } = await getRemunerationScope();
+})
+	.middleware([authMiddleware])
+	.handler(async (): Promise<QueryManyReturnType<Option>> => {
+		try {
+			const { scope } = await getRemunerationScope();
 
-		return await getSelectableRemunerationContracts(scope);
-	} catch (error) {
-		console.error("[getSelectableRemunerationContracts]", error);
-		throw new Error(
-			REMUNERATION_ERRORS.REMUNERATION_SELECTABLE_CONTRACTS_FAILED,
-		);
-	}
-});
+			return await getSelectableRemunerationContracts(scope);
+		} catch (error) {
+			console.error("[getSelectableRemunerationContracts]", error);
+			throw new Error(
+				REMUNERATION_ERRORS.REMUNERATION_SELECTABLE_CONTRACTS_FAILED,
+			);
+		}
+	});
 
 const getSelectableRemunerationEmployeesFn = createServerFn({
 	method: "GET",
-}).handler(async (): Promise<QueryManyReturnType<Option>> => {
-	try {
-		const { scope } = await getRemunerationScope();
+})
+	.middleware([authMiddleware])
+	.handler(async (): Promise<QueryManyReturnType<Option>> => {
+		try {
+			const { scope } = await getRemunerationScope();
 
-		return await getSelectableRemunerationEmployees(scope);
-	} catch (error) {
-		console.error("[getSelectableRemunerationEmployees]", error);
-		throw new Error(
-			REMUNERATION_ERRORS.REMUNERATION_SELECTABLE_EMPLOYEES_FAILED,
-		);
-	}
-});
+			return await getSelectableRemunerationEmployees(scope);
+		} catch (error) {
+			console.error("[getSelectableRemunerationEmployees]", error);
+			throw new Error(
+				REMUNERATION_ERRORS.REMUNERATION_SELECTABLE_EMPLOYEES_FAILED,
+			);
+		}
+	});
 
 const exportRemunerationsFn = createServerFn({ method: "POST" })
+	.middleware([authMiddleware])
 	.inputValidator(remunerationExportInputSchema)
 	.handler(async ({ data }): Promise<RemunerationExportResult> => {
 		try {
