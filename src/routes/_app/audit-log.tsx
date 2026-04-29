@@ -15,13 +15,12 @@ import {
 	WrapperHeader,
 } from "@/shared/components/wrapper";
 import { ROUTES } from "@/shared/config/routes";
-import { assertCan, requireRouteSession } from "@/shared/session";
+import { assertCan } from "@/shared/session";
 
 export const Route = createFileRoute("/_app/audit-log")({
 	validateSearch: zodValidator(auditLogSearchSchema),
 	loaderDeps: ({ search }) => ({ search }),
-	loader: async ({ context: { queryClient }, deps: { search } }) => {
-		const session = await requireRouteSession(queryClient);
+	loader: async ({ context: { queryClient, session }, deps: { search } }) => {
 		assertCan(session, "audit-log.view");
 		await queryClient.ensureQueryData(getAuditLogsQueryOptions(search));
 	},

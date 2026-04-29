@@ -1,5 +1,9 @@
 export { getCurrentSessionQueryOptions } from "./api";
-export { getRouteSession, requireRouteSession } from "./route";
+export {
+	getRouteSession,
+	getSafeInternalRedirectPath,
+	requireRouteSession,
+} from "./route";
 export {
 	assertCan,
 	CONTRACT_STATUS_ACTIVE_VALUE,

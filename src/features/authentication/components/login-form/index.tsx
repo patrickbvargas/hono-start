@@ -2,8 +2,12 @@ import { Link } from "@tanstack/react-router";
 import { FieldGroup } from "@/shared/components/ui";
 import { useLoginForm } from "../../hooks/use-login-form";
 
-export function LoginForm() {
-	const { form, isPending } = useLoginForm();
+interface LoginFormProps {
+	redirectTo?: string;
+}
+
+export function LoginForm({ redirectTo }: LoginFormProps) {
+	const { form, isPending } = useLoginForm({ redirectTo });
 
 	return (
 		<form.Form form={form}>

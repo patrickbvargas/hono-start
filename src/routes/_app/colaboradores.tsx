@@ -23,18 +23,12 @@ import {
 import { ROUTES } from "@/shared/config/routes";
 import { useOverlay } from "@/shared/hooks/use-overlay";
 import type { EntityId } from "@/shared/schemas/entity";
-import {
-	assertCan,
-	can,
-	requireRouteSession,
-	useLoggedUserSessionStore,
-} from "@/shared/session";
+import { assertCan, can, useLoggedUserSessionStore } from "@/shared/session";
 
 export const Route = createFileRoute("/_app/colaboradores")({
 	validateSearch: zodValidator(employeeSearchSchema),
 	loaderDeps: ({ search }) => ({ search }),
-	loader: async ({ context: { queryClient }, deps: { search } }) => {
-		const session = await requireRouteSession(queryClient);
+	loader: async ({ context: { queryClient, session }, deps: { search } }) => {
 		assertCan(session, "employee.manage");
 		await queryClient.ensureQueryData(getEmployeesQueryOptions(search));
 	},

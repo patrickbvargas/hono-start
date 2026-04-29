@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { useAppForm } from "@/shared/hooks/use-app-form";
 import { toast } from "@/shared/lib/toast";
+import { getSafeInternalRedirectPath } from "@/shared/session";
 import {
 	getCurrentSessionQueryOptions,
 	sessionKeys,
@@ -9,7 +10,11 @@ import {
 import { loginMutationOptions } from "../api/mutations";
 import { loginInputSchema } from "../schemas/form";
 
-export function useLoginForm() {
+interface UseLoginFormOptions {
+	redirectTo?: string;
+}
+
+export function useLoginForm({ redirectTo }: UseLoginFormOptions = {}) {
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();
 	const loginMutation = useMutation(loginMutationOptions());
@@ -38,7 +43,9 @@ export function useLoginForm() {
 					throw new Error("Sessão autenticada indisponível.");
 				}
 
-				await navigate({ to: "/" });
+				await navigate({
+					to: getSafeInternalRedirectPath(redirectTo) ?? "/",
+				});
 			} catch (error) {
 				toast.danger(
 					error instanceof Error

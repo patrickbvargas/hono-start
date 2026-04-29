@@ -53,20 +53,26 @@ describe("authentication public screen contracts", () => {
 		const passwordResetRoute = read("src/routes/_auth/recuperar-senha.tsx");
 
 		expect(authLayoutRoute).toContain('createFileRoute("/_auth")');
-		expect(authLayoutRoute).toContain("container mx-auto");
+		expect(authLayoutRoute).toContain("items-center justify-center px-4");
 		expect(authLayoutRoute).toContain("<Outlet />");
 		expect(loginRoute).toContain(
 			'import { AuthenticationScreen, LoginForm } from "@/features/authentication";',
 		);
+		expect(loginRoute).toContain("beforeLoad:");
+		expect(loginRoute).toContain("validateSearch: zodValidator(");
+		expect(loginRoute).toContain("<LoginForm redirectTo={redirect} />");
 		expect(loginRoute).toContain("<AuthenticationScreen");
 		expect(loginRoute).toContain("showBackToLoginLink={false}");
-		expect(loginRoute).not.toContain("/components/");
+		expect(loginRoute).not.toContain("@/features/authentication/components/");
 
 		expect(passwordResetRoute).toContain("AuthenticationScreen,");
+		expect(passwordResetRoute).toContain("beforeLoad:");
 		expect(passwordResetRoute).toContain("<AuthenticationScreen");
 		expect(passwordResetRoute).toContain("PasswordResetCompleteForm");
 		expect(passwordResetRoute).toContain("PasswordResetRequestForm");
-		expect(passwordResetRoute).not.toContain("/components/");
+		expect(passwordResetRoute).not.toContain(
+			"@/features/authentication/components/",
+		);
 	});
 
 	it("keeps the authentication screen on shared UI composition", () => {

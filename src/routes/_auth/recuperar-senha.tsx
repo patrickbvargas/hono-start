@@ -15,7 +15,7 @@ const passwordResetSearchSchema = z.object({
 
 export const Route = createFileRoute("/_auth/recuperar-senha")({
 	validateSearch: zodValidator(passwordResetSearchSchema),
-	loader: async ({ context: { queryClient } }) => {
+	beforeLoad: async ({ context: { queryClient } }) => {
 		const session = await getRouteSession(queryClient);
 
 		if (session) {

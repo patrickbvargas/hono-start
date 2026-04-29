@@ -8,15 +8,16 @@ import {
 } from "@/shared/session";
 
 export const Route = createFileRoute("/_app")({
-	loader: async ({ context: { queryClient } }) => {
-		return requireRouteSession(queryClient);
+	beforeLoad: async ({ context: { queryClient }, location }) => {
+		const session = await requireRouteSession(queryClient, location.href);
+		return { session };
 	},
 	errorComponent: ({ error }) => <RouteError error={error} />,
 	component: RouteComponent,
 });
 
 function RouteComponent() {
-	const session = Route.useLoaderData();
+	const { session } = Route.useRouteContext();
 
 	return (
 		<LoggedUserSessionProvider session={session}>

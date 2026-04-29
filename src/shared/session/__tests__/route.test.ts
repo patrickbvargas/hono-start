@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const { redirectMock } = vi.hoisted(() => ({
-	redirectMock: vi.fn(({ to }) => ({ to })),
+	redirectMock: vi.fn(({ to, search }) => ({ to, search })),
 }));
 
 vi.mock("@tanstack/react-router", () => ({
@@ -15,7 +15,11 @@ vi.mock("../api", () => ({
 	getCurrentSessionQueryOptions: () => ({ queryKey: ["session", "current"] }),
 }));
 
-import { getRouteSession, requireRouteSession } from "../route";
+import {
+	getRouteSession,
+	getSafeInternalRedirectPath,
+	requireRouteSession,
+} from "../route";
 
 describe("route session helpers", () => {
 	beforeEach(() => {
@@ -43,12 +47,16 @@ describe("route session helpers", () => {
 
 		await expect(requireRouteSession(queryClient as never)).rejects.toEqual({
 			to: "/login",
+			search: undefined,
 		});
 		expect(queryClient.setQueryData).toHaveBeenCalledWith(
 			["session", "current"],
 			null,
 		);
-		expect(redirectMock).toHaveBeenCalledWith({ to: "/login" });
+		expect(redirectMock).toHaveBeenCalledWith({
+			to: "/login",
+			search: undefined,
+		});
 	});
 
 	it("redirects protected routes to /login when the shared session query resolves to null", async () => {
@@ -57,14 +65,20 @@ describe("route session helpers", () => {
 			setQueryData: vi.fn(),
 		};
 
-		await expect(requireRouteSession(queryClient as never)).rejects.toEqual({
+		await expect(
+			requireRouteSession(queryClient as never, "/clientes?page=2"),
+		).rejects.toEqual({
 			to: "/login",
+			search: { redirect: "/clientes?page=2" },
 		});
 		expect(queryClient.setQueryData).toHaveBeenCalledWith(
 			["session", "current"],
 			null,
 		);
-		expect(redirectMock).toHaveBeenCalledWith({ to: "/login" });
+		expect(redirectMock).toHaveBeenCalledWith({
+			to: "/login",
+			search: { redirect: "/clientes?page=2" },
+		});
 	});
 
 	it("reads public-route session state from the shared session query without redirecting", async () => {
@@ -76,5 +90,19 @@ describe("route session helpers", () => {
 		expect(queryClient.ensureQueryData).toHaveBeenCalledWith({
 			queryKey: ["session", "current"],
 		});
+	});
+
+	it("accepts only safe internal redirect targets", () => {
+		expect(getSafeInternalRedirectPath("/clientes?page=2")).toBe(
+			"/clientes?page=2",
+		);
+		expect(getSafeInternalRedirectPath("/")).toBe("/");
+		expect(getSafeInternalRedirectPath("/login")).toBeUndefined();
+		expect(
+			getSafeInternalRedirectPath("/recuperar-senha?token=abc"),
+		).toBeUndefined();
+		expect(getSafeInternalRedirectPath("https://evil.test")).toBeUndefined();
+		expect(getSafeInternalRedirectPath("//evil.test")).toBeUndefined();
+		expect(getSafeInternalRedirectPath(undefined)).toBeUndefined();
 	});
 });
