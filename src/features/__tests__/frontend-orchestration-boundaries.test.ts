@@ -242,49 +242,49 @@ describe("frontend orchestration boundaries", () => {
 	it("keeps route page data behind feature data hooks", () => {
 		const routeDataHooks = [
 			{
-				route: "src/routes/index.tsx",
+				route: "src/routes/_app/index.tsx",
 				hookFile: "src/features/dashboard/hooks/use-data.ts",
 				hookName: "useDashboardData",
 				queryFactoryName: "getDashboardSummaryQueryOptions",
 				dataField: "summary",
 			},
 			{
-				route: "src/routes/clientes.tsx",
+				route: "src/routes/_app/clientes.tsx",
 				hookFile: "src/features/clients/hooks/use-data.ts",
 				hookName: "useClients",
 				queryFactoryName: "getClientsQueryOptions",
 				dataField: "clients",
 			},
 			{
-				route: "src/routes/colaboradores.tsx",
+				route: "src/routes/_app/colaboradores.tsx",
 				hookFile: "src/features/employees/hooks/use-data.ts",
 				hookName: "useEmployees",
 				queryFactoryName: "getEmployeesQueryOptions",
 				dataField: "employees",
 			},
 			{
-				route: "src/routes/contratos.tsx",
+				route: "src/routes/_app/contratos.tsx",
 				hookFile: "src/features/contracts/hooks/use-data.ts",
 				hookName: "useContracts",
 				queryFactoryName: "getContractsQueryOptions",
 				dataField: "contracts",
 			},
 			{
-				route: "src/routes/honorarios.tsx",
+				route: "src/routes/_app/honorarios.tsx",
 				hookFile: "src/features/fees/hooks/use-data.ts",
 				hookName: "useFees",
 				queryFactoryName: "getFeesQueryOptions",
 				dataField: "fees",
 			},
 			{
-				route: "src/routes/remuneracoes.tsx",
+				route: "src/routes/_app/remuneracoes.tsx",
 				hookFile: "src/features/remunerations/hooks/use-data.ts",
 				hookName: "useRemunerations",
 				queryFactoryName: "getRemunerationsQueryOptions",
 				dataField: "remunerations",
 			},
 			{
-				route: "src/routes/audit-log.tsx",
+				route: "src/routes/_app/audit-log.tsx",
 				hookFile: "src/features/audit-logs/hooks/use-data.ts",
 				hookName: "useAuditLogs",
 				queryFactoryName: "getAuditLogsQueryOptions",
@@ -512,11 +512,11 @@ describe("frontend orchestration boundaries", () => {
 
 	it("keeps entity routes declarative with validated search, loader prefetch, and overlays", () => {
 		const routeFiles = [
-			"src/routes/clientes.tsx",
-			"src/routes/colaboradores.tsx",
-			"src/routes/contratos.tsx",
-			"src/routes/honorarios.tsx",
-			"src/routes/remuneracoes.tsx",
+			"src/routes/_app/clientes.tsx",
+			"src/routes/_app/colaboradores.tsx",
+			"src/routes/_app/contratos.tsx",
+			"src/routes/_app/honorarios.tsx",
+			"src/routes/_app/remuneracoes.tsx",
 		];
 		const violations = routeFiles.flatMap((path) => {
 			const content = readFileSync(path, "utf8");

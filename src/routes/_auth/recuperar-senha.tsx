@@ -6,13 +6,14 @@ import {
 	PasswordResetCompleteForm,
 	PasswordResetRequestForm,
 } from "@/features/authentication";
+import { RouteError } from "@/shared/components/route-error";
 import { getRouteSession } from "@/shared/session";
 
 const passwordResetSearchSchema = z.object({
 	token: z.string().optional().catch(undefined),
 });
 
-export const Route = createFileRoute("/recuperar-senha")({
+export const Route = createFileRoute("/_auth/recuperar-senha")({
 	validateSearch: zodValidator(passwordResetSearchSchema),
 	loader: async ({ context: { queryClient } }) => {
 		const session = await getRouteSession(queryClient);
@@ -23,6 +24,7 @@ export const Route = createFileRoute("/recuperar-senha")({
 			});
 		}
 	},
+	errorComponent: ({ error }) => <RouteError error={error} />,
 	component: RouteComponent,
 });
 

@@ -7,7 +7,6 @@ import {
 	getDashboardSummaryQueryOptions,
 	useDashboardData,
 } from "@/features/dashboard";
-import { AuthenticatedShell } from "@/shared/components/authenticated-shell";
 import { RouteError } from "@/shared/components/route-error";
 import { RouteLoading } from "@/shared/components/route-loading";
 import {
@@ -15,33 +14,20 @@ import {
 	WrapperBody,
 	WrapperHeader,
 } from "@/shared/components/wrapper";
-import {
-	isAdminSession,
-	requireRouteSession,
-	useLoggedUserSessionStore,
-} from "@/shared/session";
+import { isAdminSession, useLoggedUserSessionStore } from "@/shared/session";
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/_app/")({
 	validateSearch: zodValidator(dashboardSearchSchema),
 	loaderDeps: ({ search }) => ({ search }),
 	loader: async ({ context: { queryClient }, deps: { search } }) => {
-		await requireRouteSession(queryClient);
 		await queryClient.ensureQueryData(getDashboardSummaryQueryOptions(search));
 	},
 	pendingComponent: () => <RouteLoading />,
 	errorComponent: ({ error }) => <RouteError error={error} />,
-	component: App,
+	component: RouteComponent,
 });
 
-function App() {
-	return (
-		<AuthenticatedShell>
-			<DashboardContent />
-		</AuthenticatedShell>
-	);
-}
-
-function DashboardContent() {
+function RouteComponent() {
 	const search = Route.useSearch();
 	const { summary } = useDashboardData(search);
 	const isAdmin = useLoggedUserSessionStore(isAdminSession);

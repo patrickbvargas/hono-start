@@ -3,10 +3,8 @@ import {
 	BriefcaseIcon,
 	DollarSignIcon,
 	LayoutDashboardIcon,
-	LifeBuoyIcon,
 	type LucideIcon,
 	ScrollTextIcon,
-	Settings2Icon,
 	UserIcon,
 	UsersIcon,
 	WalletIcon,
@@ -30,9 +28,7 @@ type RouteName =
 	| "fee"
 	| "remuneration"
 	| "employee"
-	| "auditLog"
-	| "setting"
-	| "support";
+	| "auditLog";
 
 export const ROUTES: Record<RouteName, RouteItem> = {
 	dashboard: {
@@ -69,15 +65,5 @@ export const ROUTES: Record<RouteName, RouteItem> = {
 		title: "Auditoria",
 		url: "/audit-log",
 		icon: ScrollTextIcon,
-	},
-	setting: {
-		title: "Configurações",
-		url: "/configuracoes",
-		icon: Settings2Icon,
-	},
-	support: {
-		title: "Suporte",
-		url: "/suporte",
-		icon: LifeBuoyIcon,
 	},
 } as const;

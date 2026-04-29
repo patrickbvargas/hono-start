@@ -48,9 +48,13 @@ describe("authentication public screen contracts", () => {
 	});
 
 	it("keeps public routes declarative and feature-barrel based", () => {
-		const loginRoute = read("src/routes/login.tsx");
-		const passwordResetRoute = read("src/routes/recuperar-senha.tsx");
+		const authLayoutRoute = read("src/routes/_auth/route.tsx");
+		const loginRoute = read("src/routes/_auth/login.tsx");
+		const passwordResetRoute = read("src/routes/_auth/recuperar-senha.tsx");
 
+		expect(authLayoutRoute).toContain('createFileRoute("/_auth")');
+		expect(authLayoutRoute).toContain("container mx-auto");
+		expect(authLayoutRoute).toContain("<Outlet />");
 		expect(loginRoute).toContain(
 			'import { AuthenticationScreen, LoginForm } from "@/features/authentication";',
 		);
@@ -73,6 +77,7 @@ describe("authentication public screen contracts", () => {
 		expect(content).toContain('from "@/shared/components/ui";');
 		expect(content).toContain("Card");
 		expect(content).toContain("Separator");
+		expect(content).not.toContain("container mx-auto");
 		expect(content).not.toContain("@base-ui/react");
 		expect(content).not.toContain("@radix-ui/");
 		expect(content).not.toContain("@/shared/components/Hui");

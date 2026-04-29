@@ -9,61 +9,71 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as RemuneracoesRouteImport } from './routes/remuneracoes'
-import { Route as RecuperarSenhaRouteImport } from './routes/recuperar-senha'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as HonorariosRouteImport } from './routes/honorarios'
-import { Route as ContratosRouteImport } from './routes/contratos'
-import { Route as ColaboradoresRouteImport } from './routes/colaboradores'
-import { Route as ClientesRouteImport } from './routes/clientes'
-import { Route as AuditLogRouteImport } from './routes/audit-log'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthRouteRouteImport } from './routes/_auth/route'
+import { Route as AppRouteRouteImport } from './routes/_app/route'
+import { Route as AppIndexRouteImport } from './routes/_app/index'
+import { Route as AuthRecuperarSenhaRouteImport } from './routes/_auth/recuperar-senha'
+import { Route as AuthLoginRouteImport } from './routes/_auth/login'
+import { Route as AppRemuneracoesRouteImport } from './routes/_app/remuneracoes'
+import { Route as AppHonorariosRouteImport } from './routes/_app/honorarios'
+import { Route as AppContratosRouteImport } from './routes/_app/contratos'
+import { Route as AppColaboradoresRouteImport } from './routes/_app/colaboradores'
+import { Route as AppClientesRouteImport } from './routes/_app/clientes'
+import { Route as AppAuditLogRouteImport } from './routes/_app/audit-log'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
-const RemuneracoesRoute = RemuneracoesRouteImport.update({
-  id: '/remuneracoes',
-  path: '/remuneracoes',
+const AuthRouteRoute = AuthRouteRouteImport.update({
+  id: '/_auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const RecuperarSenhaRoute = RecuperarSenhaRouteImport.update({
-  id: '/recuperar-senha',
-  path: '/recuperar-senha',
+const AppRouteRoute = AppRouteRouteImport.update({
+  id: '/_app',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const HonorariosRoute = HonorariosRouteImport.update({
-  id: '/honorarios',
-  path: '/honorarios',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ContratosRoute = ContratosRouteImport.update({
-  id: '/contratos',
-  path: '/contratos',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ColaboradoresRoute = ColaboradoresRouteImport.update({
-  id: '/colaboradores',
-  path: '/colaboradores',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ClientesRoute = ClientesRouteImport.update({
-  id: '/clientes',
-  path: '/clientes',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuditLogRoute = AuditLogRouteImport.update({
-  id: '/audit-log',
-  path: '/audit-log',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const IndexRoute = IndexRouteImport.update({
+const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AuthRecuperarSenhaRoute = AuthRecuperarSenhaRouteImport.update({
+  id: '/recuperar-senha',
+  path: '/recuperar-senha',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthLoginRoute = AuthLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AppRemuneracoesRoute = AppRemuneracoesRouteImport.update({
+  id: '/remuneracoes',
+  path: '/remuneracoes',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppHonorariosRoute = AppHonorariosRouteImport.update({
+  id: '/honorarios',
+  path: '/honorarios',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppContratosRoute = AppContratosRouteImport.update({
+  id: '/contratos',
+  path: '/contratos',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppColaboradoresRoute = AppColaboradoresRouteImport.update({
+  id: '/colaboradores',
+  path: '/colaboradores',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppClientesRoute = AppClientesRouteImport.update({
+  id: '/clientes',
+  path: '/clientes',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppAuditLogRoute = AppAuditLogRouteImport.update({
+  id: '/audit-log',
+  path: '/audit-log',
+  getParentRoute: () => AppRouteRoute,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
@@ -72,40 +82,42 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/audit-log': typeof AuditLogRoute
-  '/clientes': typeof ClientesRoute
-  '/colaboradores': typeof ColaboradoresRoute
-  '/contratos': typeof ContratosRoute
-  '/honorarios': typeof HonorariosRoute
-  '/login': typeof LoginRoute
-  '/recuperar-senha': typeof RecuperarSenhaRoute
-  '/remuneracoes': typeof RemuneracoesRoute
+  '/': typeof AppIndexRoute
+  '/audit-log': typeof AppAuditLogRoute
+  '/clientes': typeof AppClientesRoute
+  '/colaboradores': typeof AppColaboradoresRoute
+  '/contratos': typeof AppContratosRoute
+  '/honorarios': typeof AppHonorariosRoute
+  '/remuneracoes': typeof AppRemuneracoesRoute
+  '/login': typeof AuthLoginRoute
+  '/recuperar-senha': typeof AuthRecuperarSenhaRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/audit-log': typeof AuditLogRoute
-  '/clientes': typeof ClientesRoute
-  '/colaboradores': typeof ColaboradoresRoute
-  '/contratos': typeof ContratosRoute
-  '/honorarios': typeof HonorariosRoute
-  '/login': typeof LoginRoute
-  '/recuperar-senha': typeof RecuperarSenhaRoute
-  '/remuneracoes': typeof RemuneracoesRoute
+  '/': typeof AppIndexRoute
+  '/audit-log': typeof AppAuditLogRoute
+  '/clientes': typeof AppClientesRoute
+  '/colaboradores': typeof AppColaboradoresRoute
+  '/contratos': typeof AppContratosRoute
+  '/honorarios': typeof AppHonorariosRoute
+  '/remuneracoes': typeof AppRemuneracoesRoute
+  '/login': typeof AuthLoginRoute
+  '/recuperar-senha': typeof AuthRecuperarSenhaRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/audit-log': typeof AuditLogRoute
-  '/clientes': typeof ClientesRoute
-  '/colaboradores': typeof ColaboradoresRoute
-  '/contratos': typeof ContratosRoute
-  '/honorarios': typeof HonorariosRoute
-  '/login': typeof LoginRoute
-  '/recuperar-senha': typeof RecuperarSenhaRoute
-  '/remuneracoes': typeof RemuneracoesRoute
+  '/_app': typeof AppRouteRouteWithChildren
+  '/_auth': typeof AuthRouteRouteWithChildren
+  '/_app/audit-log': typeof AppAuditLogRoute
+  '/_app/clientes': typeof AppClientesRoute
+  '/_app/colaboradores': typeof AppColaboradoresRoute
+  '/_app/contratos': typeof AppContratosRoute
+  '/_app/honorarios': typeof AppHonorariosRoute
+  '/_app/remuneracoes': typeof AppRemuneracoesRoute
+  '/_auth/login': typeof AuthLoginRoute
+  '/_auth/recuperar-senha': typeof AuthRecuperarSenhaRoute
+  '/_app/': typeof AppIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRouteTypes {
@@ -117,9 +129,9 @@ export interface FileRouteTypes {
     | '/colaboradores'
     | '/contratos'
     | '/honorarios'
+    | '/remuneracoes'
     | '/login'
     | '/recuperar-senha'
-    | '/remuneracoes'
     | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -129,101 +141,110 @@ export interface FileRouteTypes {
     | '/colaboradores'
     | '/contratos'
     | '/honorarios'
+    | '/remuneracoes'
     | '/login'
     | '/recuperar-senha'
-    | '/remuneracoes'
     | '/api/auth/$'
   id:
     | '__root__'
-    | '/'
-    | '/audit-log'
-    | '/clientes'
-    | '/colaboradores'
-    | '/contratos'
-    | '/honorarios'
-    | '/login'
-    | '/recuperar-senha'
-    | '/remuneracoes'
+    | '/_app'
+    | '/_auth'
+    | '/_app/audit-log'
+    | '/_app/clientes'
+    | '/_app/colaboradores'
+    | '/_app/contratos'
+    | '/_app/honorarios'
+    | '/_app/remuneracoes'
+    | '/_auth/login'
+    | '/_auth/recuperar-senha'
+    | '/_app/'
     | '/api/auth/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  AuditLogRoute: typeof AuditLogRoute
-  ClientesRoute: typeof ClientesRoute
-  ColaboradoresRoute: typeof ColaboradoresRoute
-  ContratosRoute: typeof ContratosRoute
-  HonorariosRoute: typeof HonorariosRoute
-  LoginRoute: typeof LoginRoute
-  RecuperarSenhaRoute: typeof RecuperarSenhaRoute
-  RemuneracoesRoute: typeof RemuneracoesRoute
+  AppRouteRoute: typeof AppRouteRouteWithChildren
+  AuthRouteRoute: typeof AuthRouteRouteWithChildren
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/remuneracoes': {
-      id: '/remuneracoes'
-      path: '/remuneracoes'
-      fullPath: '/remuneracoes'
-      preLoaderRoute: typeof RemuneracoesRouteImport
+    '/_auth': {
+      id: '/_auth'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/recuperar-senha': {
-      id: '/recuperar-senha'
-      path: '/recuperar-senha'
-      fullPath: '/recuperar-senha'
-      preLoaderRoute: typeof RecuperarSenhaRouteImport
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AppRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/honorarios': {
-      id: '/honorarios'
-      path: '/honorarios'
-      fullPath: '/honorarios'
-      preLoaderRoute: typeof HonorariosRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/contratos': {
-      id: '/contratos'
-      path: '/contratos'
-      fullPath: '/contratos'
-      preLoaderRoute: typeof ContratosRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/colaboradores': {
-      id: '/colaboradores'
-      path: '/colaboradores'
-      fullPath: '/colaboradores'
-      preLoaderRoute: typeof ColaboradoresRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/clientes': {
-      id: '/clientes'
-      path: '/clientes'
-      fullPath: '/clientes'
-      preLoaderRoute: typeof ClientesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/audit-log': {
-      id: '/audit-log'
-      path: '/audit-log'
-      fullPath: '/audit-log'
-      preLoaderRoute: typeof AuditLogRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/': {
-      id: '/'
+    '/_app/': {
+      id: '/_app/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_auth/recuperar-senha': {
+      id: '/_auth/recuperar-senha'
+      path: '/recuperar-senha'
+      fullPath: '/recuperar-senha'
+      preLoaderRoute: typeof AuthRecuperarSenhaRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/_auth/login': {
+      id: '/_auth/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof AuthLoginRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/_app/remuneracoes': {
+      id: '/_app/remuneracoes'
+      path: '/remuneracoes'
+      fullPath: '/remuneracoes'
+      preLoaderRoute: typeof AppRemuneracoesRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/honorarios': {
+      id: '/_app/honorarios'
+      path: '/honorarios'
+      fullPath: '/honorarios'
+      preLoaderRoute: typeof AppHonorariosRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/contratos': {
+      id: '/_app/contratos'
+      path: '/contratos'
+      fullPath: '/contratos'
+      preLoaderRoute: typeof AppContratosRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/colaboradores': {
+      id: '/_app/colaboradores'
+      path: '/colaboradores'
+      fullPath: '/colaboradores'
+      preLoaderRoute: typeof AppColaboradoresRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/clientes': {
+      id: '/_app/clientes'
+      path: '/clientes'
+      fullPath: '/clientes'
+      preLoaderRoute: typeof AppClientesRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/audit-log': {
+      id: '/_app/audit-log'
+      path: '/audit-log'
+      fullPath: '/audit-log'
+      preLoaderRoute: typeof AppAuditLogRouteImport
+      parentRoute: typeof AppRouteRoute
     }
     '/api/auth/$': {
       id: '/api/auth/$'
@@ -235,16 +256,47 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AppRouteRouteChildren {
+  AppAuditLogRoute: typeof AppAuditLogRoute
+  AppClientesRoute: typeof AppClientesRoute
+  AppColaboradoresRoute: typeof AppColaboradoresRoute
+  AppContratosRoute: typeof AppContratosRoute
+  AppHonorariosRoute: typeof AppHonorariosRoute
+  AppRemuneracoesRoute: typeof AppRemuneracoesRoute
+  AppIndexRoute: typeof AppIndexRoute
+}
+
+const AppRouteRouteChildren: AppRouteRouteChildren = {
+  AppAuditLogRoute: AppAuditLogRoute,
+  AppClientesRoute: AppClientesRoute,
+  AppColaboradoresRoute: AppColaboradoresRoute,
+  AppContratosRoute: AppContratosRoute,
+  AppHonorariosRoute: AppHonorariosRoute,
+  AppRemuneracoesRoute: AppRemuneracoesRoute,
+  AppIndexRoute: AppIndexRoute,
+}
+
+const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
+  AppRouteRouteChildren,
+)
+
+interface AuthRouteRouteChildren {
+  AuthLoginRoute: typeof AuthLoginRoute
+  AuthRecuperarSenhaRoute: typeof AuthRecuperarSenhaRoute
+}
+
+const AuthRouteRouteChildren: AuthRouteRouteChildren = {
+  AuthLoginRoute: AuthLoginRoute,
+  AuthRecuperarSenhaRoute: AuthRecuperarSenhaRoute,
+}
+
+const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
+  AuthRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  AuditLogRoute: AuditLogRoute,
-  ClientesRoute: ClientesRoute,
-  ColaboradoresRoute: ColaboradoresRoute,
-  ContratosRoute: ContratosRoute,
-  HonorariosRoute: HonorariosRoute,
-  LoginRoute: LoginRoute,
-  RecuperarSenhaRoute: RecuperarSenhaRoute,
-  RemuneracoesRoute: RemuneracoesRoute,
+  AppRouteRoute: AppRouteRouteWithChildren,
+  AuthRouteRoute: AuthRouteRouteWithChildren,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport

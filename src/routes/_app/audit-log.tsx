@@ -7,7 +7,7 @@ import {
 	getAuditLogsQueryOptions,
 	useAuditLogs,
 } from "@/features/audit-logs";
-import { AuthenticatedShell } from "@/shared/components/authenticated-shell";
+import { RouteError } from "@/shared/components/route-error";
 import { RouteLoading } from "@/shared/components/route-loading";
 import {
 	Wrapper,
@@ -15,16 +15,20 @@ import {
 	WrapperHeader,
 } from "@/shared/components/wrapper";
 import { ROUTES } from "@/shared/config/routes";
-import { assertCan, requireRouteSession } from "@/shared/session";
+import { assertCan, getRouteSession } from "@/shared/session";
 
-export const Route = createFileRoute("/audit-log")({
+export const Route = createFileRoute("/_app/audit-log")({
 	validateSearch: zodValidator(auditLogSearchSchema),
 	loaderDeps: ({ search }) => ({ search }),
 	loader: async ({ context: { queryClient }, deps: { search } }) => {
-		const session = await requireRouteSession(queryClient);
+		const session = await getRouteSession(queryClient);
+		if (!session) {
+			throw new Error("Sessão autenticada indisponível.");
+		}
 		assertCan(session, "audit-log.view");
 		await queryClient.ensureQueryData(getAuditLogsQueryOptions(search));
 	},
+	errorComponent: ({ error }) => <RouteError error={error} />,
 	component: RouteComponent,
 });
 
@@ -33,16 +37,14 @@ function RouteComponent() {
 	const { auditLogs } = useAuditLogs(search);
 
 	return (
-		<AuthenticatedShell>
-			<Wrapper title={ROUTES.auditLog.title}>
-				<WrapperHeader>
-					<AuditLogFilter />
-					<RouteLoading />
-				</WrapperHeader>
-				<WrapperBody>
-					<AuditLogTable data={auditLogs} />
-				</WrapperBody>
-			</Wrapper>
-		</AuthenticatedShell>
+		<Wrapper title={ROUTES.auditLog.title}>
+			<WrapperHeader>
+				<AuditLogFilter />
+				<RouteLoading />
+			</WrapperHeader>
+			<WrapperBody>
+				<AuditLogTable data={auditLogs} />
+			</WrapperBody>
+		</Wrapper>
 	);
 }

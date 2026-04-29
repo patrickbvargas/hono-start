@@ -2,17 +2,17 @@ import { createFileRoute } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import { PlusIcon } from "lucide-react";
 import {
-	FeeDelete,
-	FeeDetails,
-	FeeFilter,
-	FeeForm,
-	FeeRestore,
-	FeeTable,
-	feeSearchSchema,
-	getFeesQueryOptions,
-	useFees,
-} from "@/features/fees";
-import { AuthenticatedShell } from "@/shared/components/authenticated-shell";
+	ClientDelete,
+	ClientDetails,
+	ClientFilter,
+	ClientForm,
+	ClientRestore,
+	ClientTable,
+	clientSearchSchema,
+	getClientsQueryOptions,
+	useClients,
+} from "@/features/clients";
+import { RouteError } from "@/shared/components/route-error";
 import { RouteLoading } from "@/shared/components/route-loading";
 import { Button } from "@/shared/components/ui";
 import {
@@ -23,53 +23,41 @@ import {
 import { ROUTES } from "@/shared/config/routes";
 import { useOverlay } from "@/shared/hooks/use-overlay";
 import type { EntityId } from "@/shared/schemas/entity";
-import {
-	isAdminSession,
-	requireRouteSession,
-	useLoggedUserSessionStore,
-} from "@/shared/session";
+import { isAdminSession, useLoggedUserSessionStore } from "@/shared/session";
 
-export const Route = createFileRoute("/honorarios")({
-	validateSearch: zodValidator(feeSearchSchema),
+export const Route = createFileRoute("/_app/clientes")({
+	validateSearch: zodValidator(clientSearchSchema),
 	loaderDeps: ({ search }) => ({ search }),
 	loader: async ({ context: { queryClient }, deps: { search } }) => {
-		await requireRouteSession(queryClient);
-		await queryClient.ensureQueryData(getFeesQueryOptions(search));
+		await queryClient.ensureQueryData(getClientsQueryOptions(search));
 	},
+	errorComponent: ({ error }) => <RouteError error={error} />,
 	component: RouteComponent,
 });
 
 function RouteComponent() {
-	return (
-		<AuthenticatedShell>
-			<HonorariosContent />
-		</AuthenticatedShell>
-	);
-}
-
-function HonorariosContent() {
 	const search = Route.useSearch();
-	const { fees } = useFees(search);
+	const { clients } = useClients(search);
 	const { overlay } = useOverlay<EntityId>();
 	const isAdmin = useLoggedUserSessionStore(isAdminSession);
 
 	return (
 		<Wrapper
-			title={ROUTES.fee.title}
+			title={ROUTES.client.title}
 			actions={
 				<Button size="sm" onClick={() => overlay.create.open()}>
 					<PlusIcon size={16} />
-					Novo Honorário
+					Novo Cliente
 				</Button>
 			}
 		>
 			<WrapperHeader>
-				<FeeFilter />
+				<ClientFilter />
 				<RouteLoading />
 			</WrapperHeader>
 			<WrapperBody>
-				<FeeTable
-					data={fees}
+				<ClientTable
+					data={clients}
 					onEdit={overlay.edit.open}
 					onView={overlay.details.open}
 					onDelete={overlay.delete.open}
@@ -77,19 +65,19 @@ function HonorariosContent() {
 					canManageLifecycle={isAdmin}
 				/>
 				{overlay.create.render((state) => (
-					<FeeForm state={state} onSuccess={state.close} />
+					<ClientForm state={state} onSuccess={state.close} />
 				))}
 				{overlay.edit.render((id, state) => (
-					<FeeForm id={id} state={state} onSuccess={state.close} />
+					<ClientForm state={state} id={id} onSuccess={state.close} />
 				))}
 				{overlay.delete.render((id, state) => (
-					<FeeDelete id={id} state={state} onSuccess={state.close} />
+					<ClientDelete id={id} state={state} onSuccess={state.close} />
 				))}
 				{overlay.restore.render((id, state) => (
-					<FeeRestore id={id} state={state} onSuccess={state.close} />
+					<ClientRestore id={id} state={state} onSuccess={state.close} />
 				))}
 				{overlay.details.render((id, state) => (
-					<FeeDetails id={id} state={state} />
+					<ClientDetails id={id} state={state} />
 				))}
 			</WrapperBody>
 		</Wrapper>

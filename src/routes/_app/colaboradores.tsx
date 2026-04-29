@@ -12,7 +12,7 @@ import {
 	getEmployeesQueryOptions,
 	useEmployees,
 } from "@/features/employees";
-import { AuthenticatedShell } from "@/shared/components/authenticated-shell";
+import { RouteError } from "@/shared/components/route-error";
 import { RouteLoading } from "@/shared/components/route-loading";
 import { Button } from "@/shared/components/ui";
 import {
@@ -26,30 +26,26 @@ import type { EntityId } from "@/shared/schemas/entity";
 import {
 	assertCan,
 	can,
-	requireRouteSession,
+	getRouteSession,
 	useLoggedUserSessionStore,
 } from "@/shared/session";
 
-export const Route = createFileRoute("/colaboradores")({
+export const Route = createFileRoute("/_app/colaboradores")({
 	validateSearch: zodValidator(employeeSearchSchema),
 	loaderDeps: ({ search }) => ({ search }),
 	loader: async ({ context: { queryClient }, deps: { search } }) => {
-		const session = await requireRouteSession(queryClient);
+		const session = await getRouteSession(queryClient);
+		if (!session) {
+			throw new Error("Sessão autenticada indisponível.");
+		}
 		assertCan(session, "employee.manage");
 		await queryClient.ensureQueryData(getEmployeesQueryOptions(search));
 	},
+	errorComponent: ({ error }) => <RouteError error={error} />,
 	component: RouteComponent,
 });
 
 function RouteComponent() {
-	return (
-		<AuthenticatedShell>
-			<ColaboradoresContent />
-		</AuthenticatedShell>
-	);
-}
-
-function ColaboradoresContent() {
 	const search = Route.useSearch();
 	const { employees } = useEmployees(search);
 	const { overlay } = useOverlay<EntityId>();

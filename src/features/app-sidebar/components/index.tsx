@@ -1,4 +1,8 @@
-import { LayoutDashboardIcon, LifeBuoyIcon, PiggyBankIcon } from "lucide-react";
+import {
+	LayoutDashboardIcon,
+	PiggyBankIcon,
+	ScrollTextIcon,
+} from "lucide-react";
 import {
 	Sidebar,
 	SidebarContent,
@@ -26,11 +30,11 @@ const items: RouteSection[] = [
 		items: [ROUTES.fee, ROUTES.remuneration],
 	},
 	{
-		title: "Ajuda",
+		title: "Auditoria",
 		url: "#",
 		isActive: true,
-		icon: LifeBuoyIcon,
-		items: [ROUTES.setting, ROUTES.support],
+		icon: ScrollTextIcon,
+		items: [ROUTES.auditLog],
 	},
 ] as const;
 

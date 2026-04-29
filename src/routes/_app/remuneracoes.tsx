@@ -13,7 +13,7 @@ import {
 	useRemunerationExport,
 	useRemunerations,
 } from "@/features/remunerations";
-import { AuthenticatedShell } from "@/shared/components/authenticated-shell";
+import { RouteError } from "@/shared/components/route-error";
 import { RouteLoading } from "@/shared/components/route-loading";
 import {
 	Wrapper,
@@ -23,31 +23,19 @@ import {
 import { ROUTES } from "@/shared/config/routes";
 import { useOverlay } from "@/shared/hooks/use-overlay";
 import type { EntityId } from "@/shared/schemas/entity";
-import {
-	isAdminSession,
-	requireRouteSession,
-	useLoggedUserSessionStore,
-} from "@/shared/session";
+import { isAdminSession, useLoggedUserSessionStore } from "@/shared/session";
 
-export const Route = createFileRoute("/remuneracoes")({
+export const Route = createFileRoute("/_app/remuneracoes")({
 	validateSearch: zodValidator(remunerationSearchSchema),
 	loaderDeps: ({ search }) => ({ search }),
 	loader: async ({ context: { queryClient }, deps: { search } }) => {
-		await requireRouteSession(queryClient);
 		await queryClient.ensureQueryData(getRemunerationsQueryOptions(search));
 	},
+	errorComponent: ({ error }) => <RouteError error={error} />,
 	component: RouteComponent,
 });
 
 function RouteComponent() {
-	return (
-		<AuthenticatedShell>
-			<RemuneracoesContent />
-		</AuthenticatedShell>
-	);
-}
-
-function RemuneracoesContent() {
 	const search = Route.useSearch();
 	const { remunerations } = useRemunerations(search);
 	const { overlay } = useOverlay<EntityId>();
