@@ -4,15 +4,17 @@
 TBD - created by archiving change implement-authentication-feature. Update Purpose after archive.
 ## Requirements
 ### Requirement: Public authentication routes exist outside the authenticated shell
-The system SHALL expose `/login` and `/recuperar-senha` as public routes that do not require an authenticated session and do not render the authenticated sidebar shell.
+The system SHALL expose `/login` and `/recuperar-senha` as public routes grouped under a TanStack Router pathless layout route at `_auth/route.tsx`. These routes SHALL render inside the shared public-auth container and SHALL NOT require an authenticated session or render the authenticated sidebar shell.
 
 #### Scenario: Unauthenticated user opens login route
 - **WHEN** an unauthenticated user navigates to `/login`
-- **THEN** the system renders the login screen without the authenticated product sidebar
+- **THEN** the system renders the login screen inside the `_auth` public container
+- **AND** the authenticated product sidebar is not rendered
 
 #### Scenario: Unauthenticated user opens password-reset route
 - **WHEN** an unauthenticated user navigates to `/recuperar-senha`
-- **THEN** the system renders the password-reset flow without requiring prior authentication
+- **THEN** the system renders the password-reset flow inside the `_auth` public container
+- **AND** no prior authenticated session is required
 
 ### Requirement: Users authenticate with email or OAB number plus password
 The system SHALL allow a user to sign in by submitting one identifier field containing either email or OAB number together with a password, using the documented OAB semantics and safe pt-BR error feedback.
@@ -41,11 +43,12 @@ The system SHALL create authenticated sessions with a default duration of 24 hou
 - **THEN** the system issues an authenticated session with a 7-day duration
 
 ### Requirement: Protected routes require authenticated session
-The system SHALL block unauthenticated access to authenticated product routes and SHALL redirect authenticated users away from public login and password-reset screens to the dashboard.
+The system SHALL group authenticated product routes under a TanStack Router pathless layout route at `_app/route.tsx`, and that layout SHALL enforce the authenticated-session requirement before rendering child routes. The system SHALL continue to redirect authenticated users away from public login and password-reset screens to the dashboard.
 
 #### Scenario: Unauthenticated user hits protected route
 - **WHEN** an unauthenticated user navigates to `/clientes`
-- **THEN** the system redirects the user to `/login`
+- **THEN** the `_app` authenticated layout blocks access before rendering the child route
+- **AND** the system redirects the user to `/login`
 
 #### Scenario: Authenticated user revisits login route
 - **WHEN** an authenticated user navigates to `/login`
@@ -96,4 +99,3 @@ The system SHALL render the `/login` and `/recuperar-senha` screens with the rep
 - **WHEN** an unauthenticated user opens `/recuperar-senha`
 - **THEN** the system shows the same request and reset-completion flows, token-driven mode switching, and safe user feedback
 - **AND** the screen uses the shared product UI language instead of a one-off custom visual system
-
