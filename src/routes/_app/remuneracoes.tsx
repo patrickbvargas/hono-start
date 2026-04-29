@@ -14,7 +14,6 @@ import {
 	useRemunerationExport,
 	useRemunerations,
 } from "@/features/remunerations";
-import { RouteError } from "@/shared/components/route-error";
 import { RouteLoading } from "@/shared/components/route-loading";
 import {
 	Wrapper,
@@ -35,7 +34,6 @@ export const Route = createFileRoute("/_app/remuneracoes")({
 	loader: async ({ context: { queryClient }, deps: { search } }) => {
 		await queryClient.ensureQueryData(getRemunerationsQueryOptions(search));
 	},
-	errorComponent: ({ error }) => <RouteError error={error} />,
 	component: RouteComponent,
 });
 

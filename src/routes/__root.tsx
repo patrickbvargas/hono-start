@@ -9,6 +9,8 @@ import {
 	Scripts,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
+import { RouteError } from "@/shared/components/route-error";
+import { RouteNotFound } from "@/shared/components/route-not-found";
 import { ThemeProvider } from "@/shared/components/theme-provider";
 import { Toaster } from "@/shared/components/ui";
 import appCss from "@/styles/global.css?url";
@@ -52,6 +54,8 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 		],
 	}),
 	shellComponent: RootDocument,
+	errorComponent: ({ error }) => <RouteError error={error} />,
+	notFoundComponent: RouteNotFound,
 	component: RootLayout,
 });
 

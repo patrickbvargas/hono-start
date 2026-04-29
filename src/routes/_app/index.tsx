@@ -8,7 +8,6 @@ import {
 	getDashboardSummaryQueryOptions,
 	useDashboardData,
 } from "@/features/dashboard";
-import { RouteError } from "@/shared/components/route-error";
 import { RouteLoading } from "@/shared/components/route-loading";
 import {
 	Wrapper,
@@ -27,7 +26,6 @@ export const Route = createFileRoute("/_app/")({
 		await queryClient.ensureQueryData(getDashboardSummaryQueryOptions(search));
 	},
 	pendingComponent: () => <RouteLoading />,
-	errorComponent: ({ error }) => <RouteError error={error} />,
 	component: RouteComponent,
 });
 

@@ -13,7 +13,6 @@ import {
 	getClientsQueryOptions,
 	useClients,
 } from "@/features/clients";
-import { RouteError } from "@/shared/components/route-error";
 import { RouteLoading } from "@/shared/components/route-loading";
 import { Button } from "@/shared/components/ui";
 import {
@@ -35,7 +34,6 @@ export const Route = createFileRoute("/_app/clientes")({
 	loader: async ({ context: { queryClient }, deps: { search } }) => {
 		await queryClient.ensureQueryData(getClientsQueryOptions(search));
 	},
-	errorComponent: ({ error }) => <RouteError error={error} />,
 	component: RouteComponent,
 });
 

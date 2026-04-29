@@ -2,7 +2,6 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import * as z from "zod";
 import { AuthenticationScreen, LoginForm } from "@/features/authentication";
-import { RouteError } from "@/shared/components/route-error";
 import { getRouteSession } from "@/shared/session";
 
 const loginSearchSchema = z.object({
@@ -20,7 +19,6 @@ export const Route = createFileRoute("/_auth/login")({
 			});
 		}
 	},
-	errorComponent: ({ error }) => <RouteError error={error} />,
 	component: RouteComponent,
 });
 

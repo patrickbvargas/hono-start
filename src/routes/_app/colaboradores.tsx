@@ -13,7 +13,6 @@ import {
 	getEmployeesQueryOptions,
 	useEmployees,
 } from "@/features/employees";
-import { RouteError } from "@/shared/components/route-error";
 import { RouteLoading } from "@/shared/components/route-loading";
 import { Button } from "@/shared/components/ui";
 import {
@@ -36,7 +35,6 @@ export const Route = createFileRoute("/_app/colaboradores")({
 		assertCan(session, "employee.manage");
 		await queryClient.ensureQueryData(getEmployeesQueryOptions(search));
 	},
-	errorComponent: ({ error }) => <RouteError error={error} />,
 	component: RouteComponent,
 });
 

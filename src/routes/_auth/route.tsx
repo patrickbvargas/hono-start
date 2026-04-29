@@ -1,8 +1,6 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
-import { RouteError } from "@/shared/components/route-error";
 
 export const Route = createFileRoute("/_auth")({
-	errorComponent: ({ error }) => <RouteError error={error} />,
 	component: RouteComponent,
 });
 

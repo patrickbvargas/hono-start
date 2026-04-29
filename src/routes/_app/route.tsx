@@ -1,6 +1,5 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { AppSidebar } from "@/features/app-sidebar";
-import { RouteError } from "@/shared/components/route-error";
 import { SidebarInset, SidebarProvider } from "@/shared/components/ui";
 import {
 	LoggedUserSessionProvider,
@@ -12,7 +11,6 @@ export const Route = createFileRoute("/_app")({
 		const session = await requireRouteSession(queryClient, location.href);
 		return { session };
 	},
-	errorComponent: ({ error }) => <RouteError error={error} />,
 	component: RouteComponent,
 });
 

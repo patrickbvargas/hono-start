@@ -8,7 +8,6 @@ import {
 	getAuditLogsQueryOptions,
 	useAuditLogs,
 } from "@/features/audit-logs";
-import { RouteError } from "@/shared/components/route-error";
 import { RouteLoading } from "@/shared/components/route-loading";
 import {
 	Wrapper,
@@ -28,7 +27,6 @@ export const Route = createFileRoute("/_app/audit-log")({
 		assertCan(session, "audit-log.view");
 		await queryClient.ensureQueryData(getAuditLogsQueryOptions(search));
 	},
-	errorComponent: ({ error }) => <RouteError error={error} />,
 	component: RouteComponent,
 });
 

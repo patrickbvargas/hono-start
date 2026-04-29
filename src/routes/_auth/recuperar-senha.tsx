@@ -6,7 +6,6 @@ import {
 	PasswordResetCompleteForm,
 	PasswordResetRequestForm,
 } from "@/features/authentication";
-import { RouteError } from "@/shared/components/route-error";
 import { getRouteSession } from "@/shared/session";
 
 const passwordResetSearchSchema = z.object({
@@ -24,7 +23,6 @@ export const Route = createFileRoute("/_auth/recuperar-senha")({
 			});
 		}
 	},
-	errorComponent: ({ error }) => <RouteError error={error} />,
 	component: RouteComponent,
 });
 
