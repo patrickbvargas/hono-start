@@ -1,5 +1,6 @@
 import type { ClientCreateInput, ClientUpdateInput } from "../schemas/form";
 import type { ClientDetail } from "../schemas/model";
+import type { ClientSearch } from "../schemas/search";
 
 export const defaultClientCreateValues = (): ClientCreateInput => ({
 	fullName: "",
@@ -21,3 +22,14 @@ export const defaultClientUpdateValues = (
 	type: initialValue.typeValue,
 	isActive: initialValue.isActive,
 });
+
+export const clientSearchDefaults: ClientSearch = {
+	page: 1,
+	limit: 25,
+	column: "fullName",
+	direction: "asc",
+	query: "",
+	type: [],
+	active: "all",
+	status: "active",
+};

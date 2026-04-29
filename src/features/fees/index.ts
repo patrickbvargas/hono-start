@@ -8,3 +8,4 @@ export * from "./components/table";
 export { useFees } from "./hooks/use-data";
 export type { FeeSummary } from "./schemas/model";
 export * from "./schemas/search";
+export { feeSearchDefaults } from "./utils/default";

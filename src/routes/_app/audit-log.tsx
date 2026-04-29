@@ -1,8 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, stripSearchParams } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import {
 	AuditLogFilter,
 	AuditLogTable,
+	auditLogSearchDefaults,
 	auditLogSearchSchema,
 	getAuditLogsQueryOptions,
 	useAuditLogs,
@@ -19,6 +20,9 @@ import { assertCan } from "@/shared/session";
 
 export const Route = createFileRoute("/_app/audit-log")({
 	validateSearch: zodValidator(auditLogSearchSchema),
+	search: {
+		middlewares: [stripSearchParams(auditLogSearchDefaults)],
+	},
 	loaderDeps: ({ search }) => ({ search }),
 	loader: async ({ context: { queryClient, session }, deps: { search } }) => {
 		assertCan(session, "audit-log.view");

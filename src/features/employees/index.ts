@@ -8,3 +8,4 @@ export * from "./components/table";
 export { useEmployees } from "./hooks/use-data";
 export type { EmployeeSummary } from "./schemas/model";
 export * from "./schemas/search";
+export { employeeSearchDefaults } from "./utils/default";

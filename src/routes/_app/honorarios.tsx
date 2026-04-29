@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, stripSearchParams } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import { PlusIcon } from "lucide-react";
 import {
@@ -8,6 +8,7 @@ import {
 	FeeForm,
 	FeeRestore,
 	FeeTable,
+	feeSearchDefaults,
 	feeSearchSchema,
 	getFeesQueryOptions,
 	useFees,
@@ -27,6 +28,9 @@ import { isAdminSession, useLoggedUserSessionStore } from "@/shared/session";
 
 export const Route = createFileRoute("/_app/honorarios")({
 	validateSearch: zodValidator(feeSearchSchema),
+	search: {
+		middlewares: [stripSearchParams(feeSearchDefaults)],
+	},
 	loaderDeps: ({ search }) => ({ search }),
 	loader: async ({ context: { queryClient }, deps: { search } }) => {
 		await queryClient.ensureQueryData(getFeesQueryOptions(search));

@@ -5,6 +5,7 @@ import type {
 	ContractUpdateInput,
 } from "../schemas/form";
 import type { ContractDetail } from "../schemas/model";
+import type { ContractSearch } from "../schemas/search";
 
 export const defaultContractAssignmentValues = (): ContractAssignmentInput => ({
 	employeeId: "",
@@ -62,3 +63,15 @@ export const defaultContractUpdateValues = (
 		isActive: revenue.isActive,
 	})),
 });
+
+export const contractSearchDefaults: ContractSearch = {
+	page: 1,
+	limit: 25,
+	column: "createdAt",
+	direction: "desc",
+	clientId: "",
+	legalArea: [],
+	contractStatus: [],
+	active: "all",
+	status: "active",
+};

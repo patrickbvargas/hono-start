@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, stripSearchParams } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import { PlusIcon } from "lucide-react";
 import {
@@ -8,6 +8,7 @@ import {
 	ContractForm,
 	ContractRestore,
 	ContractTable,
+	contractSearchDefaults,
 	contractSearchSchema,
 	getContractsQueryOptions,
 	useContracts,
@@ -27,6 +28,9 @@ import { isAdminSession, useLoggedUserSessionStore } from "@/shared/session";
 
 export const Route = createFileRoute("/_app/contratos")({
 	validateSearch: zodValidator(contractSearchSchema),
+	search: {
+		middlewares: [stripSearchParams(contractSearchDefaults)],
+	},
 	loaderDeps: ({ search }) => ({ search }),
 	loader: async ({ context: { queryClient }, deps: { search } }) => {
 		await queryClient.ensureQueryData(getContractsQueryOptions(search));

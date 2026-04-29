@@ -1,26 +1,35 @@
+import { stripSearchParams } from "@tanstack/react-router";
 import { describe, expect, it } from "vitest";
 import { auditLogSearchSchema } from "@/features/audit-logs/schemas/search";
+import { auditLogSearchDefaults } from "@/features/audit-logs/utils/default";
 import { clientSearchSchema } from "@/features/clients/schemas/search";
+import { clientSearchDefaults } from "@/features/clients/utils/default";
 import { contractSearchSchema } from "@/features/contracts/schemas/search";
+import { contractSearchDefaults } from "@/features/contracts/utils/default";
 import { dashboardSearchSchema } from "@/features/dashboard/schemas/search";
+import { dashboardSearchDefaults } from "@/features/dashboard/utils/default";
 import { employeeSearchSchema } from "@/features/employees/schemas/search";
+import { employeeSearchDefaults } from "@/features/employees/utils/default";
 import { feeSearchSchema } from "@/features/fees/schemas/search";
+import { feeSearchDefaults } from "@/features/fees/utils/default";
 import { remunerationSearchSchema } from "@/features/remunerations/schemas/search";
+import { remunerationSearchDefaults } from "@/features/remunerations/utils/default";
+
+function applyStripSearchParams<T extends Record<string, unknown>>(
+	defaults: T,
+	search: T,
+) {
+	return stripSearchParams(defaults)({
+		search,
+		next: () => search,
+	});
+}
 
 const entitySearchCases = [
 	{
 		name: "clients",
 		schema: clientSearchSchema,
-		defaults: {
-			page: 1,
-			limit: 25,
-			column: "fullName",
-			direction: "asc",
-			query: "",
-			type: [],
-			active: "all",
-			status: "active",
-		},
+		defaults: clientSearchDefaults,
 		validColumn: "document",
 		validFilters: {
 			query: "  Maria  ",
@@ -29,21 +38,28 @@ const entitySearchCases = [
 			status: "deleted",
 		},
 		trimmedQuery: "Maria",
+		nonDefaultSearch: {
+			...clientSearchDefaults,
+			page: 3,
+			column: "document",
+			direction: "desc",
+			query: "Maria",
+			type: ["INDIVIDUAL"],
+			active: "true",
+		},
+		expectedCanonicalSearch: {
+			page: 3,
+			column: "document",
+			direction: "desc",
+			query: "Maria",
+			type: ["INDIVIDUAL"],
+			active: "true",
+		},
 	},
 	{
 		name: "employees",
 		schema: employeeSearchSchema,
-		defaults: {
-			page: 1,
-			limit: 25,
-			column: "fullName",
-			direction: "asc",
-			query: "",
-			type: [],
-			role: [],
-			active: "all",
-			status: "active",
-		},
+		defaults: employeeSearchDefaults,
 		validColumn: "oabNumber",
 		validFilters: {
 			query: "  OAB  ",
@@ -53,21 +69,28 @@ const entitySearchCases = [
 			status: "all",
 		},
 		trimmedQuery: "OAB",
+		nonDefaultSearch: {
+			...employeeSearchDefaults,
+			page: 2,
+			column: "oabNumber",
+			direction: "desc",
+			query: "OAB",
+			type: ["LAWYER"],
+			role: ["ADMIN"],
+		},
+		expectedCanonicalSearch: {
+			page: 2,
+			column: "oabNumber",
+			direction: "desc",
+			query: "OAB",
+			type: ["LAWYER"],
+			role: ["ADMIN"],
+		},
 	},
 	{
 		name: "contracts",
 		schema: contractSearchSchema,
-		defaults: {
-			page: 1,
-			limit: 25,
-			column: "createdAt",
-			direction: "desc",
-			clientId: "",
-			legalArea: [],
-			contractStatus: [],
-			active: "all",
-			status: "active",
-		},
+		defaults: contractSearchDefaults,
 		validColumn: "processNumber",
 		validFilters: {
 			clientId: "42",
@@ -76,22 +99,26 @@ const entitySearchCases = [
 			active: "true",
 			status: "deleted",
 		},
+		nonDefaultSearch: {
+			...contractSearchDefaults,
+			page: 2,
+			column: "processNumber",
+			direction: "asc",
+			clientId: "42",
+			contractStatus: ["ACTIVE"],
+		},
+		expectedCanonicalSearch: {
+			page: 2,
+			column: "processNumber",
+			direction: "asc",
+			clientId: "42",
+			contractStatus: ["ACTIVE"],
+		},
 	},
 	{
 		name: "fees",
 		schema: feeSearchSchema,
-		defaults: {
-			page: 1,
-			limit: 25,
-			column: "paymentDate",
-			direction: "desc",
-			contractId: "",
-			revenueId: "",
-			dateFrom: "",
-			dateTo: "",
-			active: "all",
-			status: "active",
-		},
+		defaults: feeSearchDefaults,
 		validColumn: "amount",
 		validFilters: {
 			contractId: "10",
@@ -101,22 +128,26 @@ const entitySearchCases = [
 			active: "false",
 			status: "all",
 		},
+		nonDefaultSearch: {
+			...feeSearchDefaults,
+			page: 4,
+			column: "amount",
+			direction: "asc",
+			contractId: "10",
+			dateFrom: "2026-01-01",
+		},
+		expectedCanonicalSearch: {
+			page: 4,
+			column: "amount",
+			direction: "asc",
+			contractId: "10",
+			dateFrom: "2026-01-01",
+		},
 	},
 	{
 		name: "remunerations",
 		schema: remunerationSearchSchema,
-		defaults: {
-			page: 1,
-			limit: 25,
-			column: "paymentDate",
-			direction: "desc",
-			employeeId: "",
-			contractId: "",
-			dateFrom: "",
-			dateTo: "",
-			active: "all",
-			status: "active",
-		},
+		defaults: remunerationSearchDefaults,
 		validColumn: "employeeName",
 		validFilters: {
 			employeeId: "11",
@@ -126,27 +157,49 @@ const entitySearchCases = [
 			active: "true",
 			status: "deleted",
 		},
+		nonDefaultSearch: {
+			...remunerationSearchDefaults,
+			page: 5,
+			column: "employeeName",
+			direction: "asc",
+			employeeId: "11",
+			dateTo: "2026-02-28",
+		},
+		expectedCanonicalSearch: {
+			page: 5,
+			column: "employeeName",
+			direction: "asc",
+			employeeId: "11",
+			dateTo: "2026-02-28",
+		},
 	},
 	{
 		name: "audit logs",
 		schema: auditLogSearchSchema,
-		defaults: {
-			page: 1,
-			limit: 25,
-			column: "occurredAt",
-			direction: "asc",
-			action: [],
-			entityType: [],
-			actorName: [],
-		},
+		defaults: auditLogSearchDefaults,
 		validColumn: "actorName",
 		validFilters: {
 			action: ["CREATE"],
 			entityType: ["Client"],
 			actorName: ["Maria"],
 		},
+		nonDefaultSearch: {
+			...auditLogSearchDefaults,
+			page: 2,
+			column: "actorName",
+			direction: "desc",
+			action: ["CREATE"],
+			entityType: ["Client"],
+		},
+		expectedCanonicalSearch: {
+			page: 2,
+			column: "actorName",
+			direction: "desc",
+			action: ["CREATE"],
+			entityType: ["Client"],
+		},
 	},
-] as const;
+];
 
 describe("feature search contracts", () => {
 	it.each(entitySearchCases)(
@@ -208,12 +261,41 @@ describe("feature search contracts", () => {
 		},
 	);
 
+	it.each(entitySearchCases)(
+		"strips default params and keeps non-default params for $name search",
+		({ defaults, expectedCanonicalSearch, nonDefaultSearch, schema }) => {
+			expect(applyStripSearchParams(defaults, defaults)).toEqual({});
+			expect(applyStripSearchParams(defaults, nonDefaultSearch)).toEqual(
+				expectedCanonicalSearch,
+			);
+			expect(schema.parse(expectedCanonicalSearch)).toEqual(nonDefaultSearch);
+		},
+	);
+
 	it("keeps dashboard search defaults safe and validates dates", () => {
-		expect(dashboardSearchSchema.parse({})).toEqual({
-			dateFrom: "",
-			dateTo: "",
-			employeeId: "",
+		expect(dashboardSearchSchema.parse({})).toEqual(dashboardSearchDefaults);
+		expect(
+			applyStripSearchParams(dashboardSearchDefaults, dashboardSearchDefaults),
+		).toEqual({});
+
+		const customDashboardSearch = {
+			...dashboardSearchDefaults,
+			dateFrom: "2026-04-01",
+			dateTo: "2026-04-30",
+		};
+
+		expect(
+			applyStripSearchParams(dashboardSearchDefaults, customDashboardSearch),
+		).toEqual({
+			dateFrom: "2026-04-01",
+			dateTo: "2026-04-30",
 		});
+		expect(
+			dashboardSearchSchema.parse({
+				dateFrom: "2026-04-01",
+				dateTo: "2026-04-30",
+			}),
+		).toEqual(customDashboardSearch);
 
 		expect(() =>
 			dashboardSearchSchema.parse({

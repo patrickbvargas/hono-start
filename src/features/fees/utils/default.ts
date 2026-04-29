@@ -1,5 +1,6 @@
 import type { FeeCreateInput, FeeUpdateInput } from "../schemas/form";
 import type { FeeDetail } from "../schemas/model";
+import type { FeeSearch } from "../schemas/search";
 
 export const defaultFeeCreateValues = (): FeeCreateInput => ({
 	contractId: "",
@@ -23,3 +24,16 @@ export const defaultFeeUpdateValues = (
 	generatesRemuneration: initialValue.generatesRemuneration,
 	isActive: initialValue.isActive,
 });
+
+export const feeSearchDefaults: FeeSearch = {
+	page: 1,
+	limit: 25,
+	column: "paymentDate",
+	direction: "desc",
+	contractId: "",
+	revenueId: "",
+	dateFrom: "",
+	dateTo: "",
+	active: "all",
+	status: "active",
+};

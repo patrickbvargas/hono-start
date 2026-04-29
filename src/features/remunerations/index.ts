@@ -9,3 +9,4 @@ export { useRemunerations } from "./hooks/use-data";
 export { useRemunerationExport } from "./hooks/use-export";
 export type { Remuneration } from "./schemas/model";
 export * from "./schemas/search";
+export { remunerationSearchDefaults } from "./utils/default";

@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, stripSearchParams } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import { PlusIcon } from "lucide-react";
 import {
@@ -8,6 +8,7 @@ import {
 	EmployeeForm,
 	EmployeeRestore,
 	EmployeeTable,
+	employeeSearchDefaults,
 	employeeSearchSchema,
 	getEmployeesQueryOptions,
 	useEmployees,
@@ -27,6 +28,9 @@ import { assertCan, can, useLoggedUserSessionStore } from "@/shared/session";
 
 export const Route = createFileRoute("/_app/colaboradores")({
 	validateSearch: zodValidator(employeeSearchSchema),
+	search: {
+		middlewares: [stripSearchParams(employeeSearchDefaults)],
+	},
 	loaderDeps: ({ search }) => ({ search }),
 	loader: async ({ context: { queryClient, session }, deps: { search } }) => {
 		assertCan(session, "employee.manage");

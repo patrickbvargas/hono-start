@@ -8,3 +8,4 @@ export * from "./components/table";
 export { useClients } from "./hooks/use-data";
 export type { ClientSummary } from "./schemas/model";
 export * from "./schemas/search";
+export { clientSearchDefaults } from "./utils/default";

@@ -8,3 +8,4 @@ export * from "./components/table";
 export { useContracts } from "./hooks/use-data";
 export type { ContractSummary } from "./schemas/model";
 export * from "./schemas/search";
+export { contractSearchDefaults } from "./utils/default";

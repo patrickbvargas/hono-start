@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, stripSearchParams } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import { PlusIcon } from "lucide-react";
 import {
@@ -8,6 +8,7 @@ import {
 	ClientForm,
 	ClientRestore,
 	ClientTable,
+	clientSearchDefaults,
 	clientSearchSchema,
 	getClientsQueryOptions,
 	useClients,
@@ -27,6 +28,9 @@ import { isAdminSession, useLoggedUserSessionStore } from "@/shared/session";
 
 export const Route = createFileRoute("/_app/clientes")({
 	validateSearch: zodValidator(clientSearchSchema),
+	search: {
+		middlewares: [stripSearchParams(clientSearchDefaults)],
+	},
 	loaderDeps: ({ search }) => ({ search }),
 	loader: async ({ context: { queryClient }, deps: { search } }) => {
 		await queryClient.ensureQueryData(getClientsQueryOptions(search));

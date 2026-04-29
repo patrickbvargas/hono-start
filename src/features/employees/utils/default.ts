@@ -1,5 +1,6 @@
 import type { EmployeeCreateInput, EmployeeUpdateInput } from "../schemas/form";
 import type { EmployeeDetail } from "../schemas/model";
+import type { EmployeeSearch } from "../schemas/search";
 
 export const defaultEmployeeCreateValues = (): EmployeeCreateInput => ({
 	fullName: "",
@@ -25,3 +26,15 @@ export const defaultEmployeeUpdateValues = (
 	role: initialValue.roleValue,
 	isActive: initialValue.isActive,
 });
+
+export const employeeSearchDefaults: EmployeeSearch = {
+	page: 1,
+	limit: 25,
+	column: "fullName",
+	direction: "asc",
+	query: "",
+	type: [],
+	role: [],
+	active: "all",
+	status: "active",
+};

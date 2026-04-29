@@ -1,8 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, stripSearchParams } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import {
 	Dashboard,
 	DashboardFilter,
+	dashboardSearchDefaults,
 	dashboardSearchSchema,
 	getDashboardSummaryQueryOptions,
 	useDashboardData,
@@ -18,6 +19,9 @@ import { isAdminSession, useLoggedUserSessionStore } from "@/shared/session";
 
 export const Route = createFileRoute("/_app/")({
 	validateSearch: zodValidator(dashboardSearchSchema),
+	search: {
+		middlewares: [stripSearchParams(dashboardSearchDefaults)],
+	},
 	loaderDeps: ({ search }) => ({ search }),
 	loader: async ({ context: { queryClient }, deps: { search } }) => {
 		await queryClient.ensureQueryData(getDashboardSummaryQueryOptions(search));
