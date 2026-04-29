@@ -12,7 +12,6 @@ import {
 	Table,
 	TableBody,
 	TableCell,
-	TableFooter,
 	TableHead,
 	TableHeader,
 	TableRow,
@@ -31,6 +30,7 @@ interface DataTableProps<TData, TValue> {
 export const DataTable = <TData, TValue>({
 	columns,
 	data,
+	className,
 	onRowAction,
 	footerContent,
 }: DataTableProps<TData, TValue>) => {
@@ -41,52 +41,56 @@ export const DataTable = <TData, TValue>({
 	});
 
 	return (
-		<Table>
-			<TableHeader>
-				<TableRow>
-					{table.getFlatHeaders().map((header) => (
-						<TableHead
-							key={header.id}
-							colSpan={header.colSpan}
-							className={header.column.columnDef.meta?.headerClassName}
-						>
-							{!header.isPlaceholder && <DataTableHeader header={header} />}
-						</TableHead>
-					))}
-				</TableRow>
-			</TableHeader>
-			<TableBody>
-				{table.getRowModel().rows?.length ? (
-					table.getRowModel().rows.map((row, index) => (
-						<TableRow
-							key={row.id}
-							onClick={() => onRowAction?.(index)}
-							className="cursor-pointer"
-							data-state={row.getIsSelected() && "selected"}
-						>
-							{row.getVisibleCells().map((cell) => (
-								<TableCell
-									key={cell.id}
-									className={cell.column.columnDef.meta?.cellClassName}
-								>
-									{flexRender(cell.column.columnDef.cell, cell.getContext())}
-								</TableCell>
-							))}
-						</TableRow>
-					))
-				) : (
+		<div className={cn("space-y-4", className)}>
+			<Table>
+				<TableHeader>
 					<TableRow>
-						<TableCell
-							colSpan={columns.length}
-							className="h-24 text-center text-muted-foreground"
-						>
-							Nenhum registro encontrado.
-						</TableCell>
+						{table.getFlatHeaders().map((header) => (
+							<TableHead
+								key={header.id}
+								colSpan={header.colSpan}
+								className={header.column.columnDef.meta?.headerClassName}
+							>
+								{!header.isPlaceholder && <DataTableHeader header={header} />}
+							</TableHead>
+						))}
 					</TableRow>
-				)}
-			</TableBody>
-			{footerContent && <TableFooter>{footerContent}</TableFooter>}
-		</Table>
+				</TableHeader>
+				<TableBody>
+					{table.getRowModel().rows?.length ? (
+						table.getRowModel().rows.map((row, index) => (
+							<TableRow
+								key={row.id}
+								onClick={() => onRowAction?.(index)}
+								className="cursor-pointer"
+								data-state={row.getIsSelected() && "selected"}
+							>
+								{row.getVisibleCells().map((cell) => (
+									<TableCell
+										key={cell.id}
+										className={cell.column.columnDef.meta?.cellClassName}
+									>
+										{flexRender(cell.column.columnDef.cell, cell.getContext())}
+									</TableCell>
+								))}
+							</TableRow>
+						))
+					) : (
+						<TableRow>
+							<TableCell
+								colSpan={columns.length}
+								className="h-24 text-center text-muted-foreground"
+							>
+								Nenhum registro encontrado.
+							</TableCell>
+						</TableRow>
+					)}
+				</TableBody>
+			</Table>
+			{footerContent && (
+				<div className="flex justify-end">{footerContent}</div>
+			)}
+		</div>
 	);
 };
 
