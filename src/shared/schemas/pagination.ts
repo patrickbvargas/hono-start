@@ -7,11 +7,11 @@ export const paginationSchema = z.object({
 	page: z.coerce
 		.number()
 		.catch(DEFAULT_PAGE)
-		.transform((page) => Math.max(DEFAULT_PAGE, page)),
+		.transform((page) => (page >= DEFAULT_PAGE ? page : DEFAULT_PAGE)),
 	limit: z.coerce
 		.number()
 		.catch(DEFAULT_LIMIT)
-		.transform((limit) => Math.max(DEFAULT_LIMIT, limit)),
+		.transform((limit) => (limit > 0 ? limit : DEFAULT_LIMIT)),
 });
 
 export type Pagination = z.infer<typeof paginationSchema>;

@@ -1,6 +1,13 @@
 import { cn } from "@/shared/lib/utils";
 import { usePagination } from "../hooks/use-pagination";
 import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "./ui";
+import {
 	PaginationContent,
 	PaginationFirst,
 	PaginationItem,
@@ -12,24 +19,40 @@ import {
 } from "./ui/pagination";
 
 const DEFAULT_SIBLING_COUNT = 1;
+const DEFAULT_PAGE_SIZE_OPTIONS = [10, 25, 50, 100] as const;
 
 interface PaginationProps extends React.ComponentProps<typeof PaginationRoot> {
 	totalRecords: number;
 	siblingCount?: number;
+	pageSizeOptions?: readonly number[];
 }
 
 export const Pagination = ({
 	totalRecords = 0,
 	siblingCount = DEFAULT_SIBLING_COUNT,
+	pageSizeOptions = DEFAULT_PAGE_SIZE_OPTIONS,
 	className,
 	...props
 }: PaginationProps) => {
-	const { page, limit, getPaginationSearch } = usePagination();
+	const {
+		page,
+		limit,
+		getPaginationSearch,
+		handlePageSizeChange,
+	} = usePagination();
 
 	if (totalRecords === 0) return null;
 
 	const totalPagesCount = Math.ceil(totalRecords / limit);
 	const totalDisplayPages = 1 + siblingCount * 2;
+	const displayedRecordsCount = Math.max(
+		0,
+		Math.min(limit, totalRecords - (page - 1) * limit),
+	);
+	const pageSizeValue = String(limit);
+	const normalizedPageSizeOptions = Array.from(
+		new Set([...pageSizeOptions, limit]),
+	).sort((a, b) => a - b);
 
 	const startPage = Math.max(
 		1,
@@ -55,12 +78,40 @@ export const Pagination = ({
 	return (
 		<PaginationRoot
 			className={cn(
-				"flex flex-col-reverse gap-3 sm:flex-row sm:justify-end",
+				"flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end",
 				className,
 			)}
 			{...props}
 		>
-			<PaginationContent>
+			<div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+				<p className="text-sm text-muted-foreground">
+					Exibindo {displayedRecordsCount} de {totalRecords} registros
+				</p>
+				<div className="flex items-center justify-end gap-2">
+					<span className="text-sm text-muted-foreground">Por página</span>
+					<Select
+						value={pageSizeValue}
+						onValueChange={(value) => {
+							handlePageSizeChange(Number(value));
+						}}
+					>
+						<SelectTrigger size="sm" className="min-w-20">
+							<SelectValue />
+						</SelectTrigger>
+						<SelectContent align="end">
+							{normalizedPageSizeOptions.map((pageSizeOption) => (
+								<SelectItem
+									key={pageSizeOption}
+									value={String(pageSizeOption)}
+								>
+									{pageSizeOption}
+								</SelectItem>
+							))}
+						</SelectContent>
+					</Select>
+				</div>
+			</div>
+			<PaginationContent className="justify-end">
 				<PaginationItem isDisabled={page === 1}>
 					<PaginationFirst search={getPaginationSearch(1)} />
 				</PaginationItem>
