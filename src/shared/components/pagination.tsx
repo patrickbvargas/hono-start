@@ -34,21 +34,15 @@ export const Pagination = ({
 	className,
 	...props
 }: PaginationProps) => {
-	const {
-		page,
-		limit,
-		getPaginationSearch,
-		handlePageSizeChange,
-	} = usePagination();
+	const { page, limit, getPaginationSearch, handlePageSizeChange } =
+		usePagination();
 
 	if (totalRecords === 0) return null;
 
 	const totalPagesCount = Math.ceil(totalRecords / limit);
 	const totalDisplayPages = 1 + siblingCount * 2;
-	const displayedRecordsCount = Math.max(
-		0,
-		Math.min(limit, totalRecords - (page - 1) * limit),
-	);
+	const displayedStartRecord = (page - 1) * limit + 1;
+	const displayedEndRecord = Math.min(page * limit, totalRecords);
 	const pageSizeValue = String(limit);
 	const normalizedPageSizeOptions = Array.from(
 		new Set([...pageSizeOptions, limit]),
@@ -85,7 +79,8 @@ export const Pagination = ({
 		>
 			<div className="flex flex-col gap-3 sm:flex-row sm:items-center">
 				<p className="text-sm text-muted-foreground">
-					Exibindo {displayedRecordsCount} de {totalRecords} registros
+					Exibindo {displayedStartRecord}-{displayedEndRecord} de {totalRecords}{" "}
+					registros
 				</p>
 				<div className="flex items-center justify-end gap-2">
 					<span className="text-sm text-muted-foreground">Por página</span>
@@ -100,10 +95,7 @@ export const Pagination = ({
 						</SelectTrigger>
 						<SelectContent align="end">
 							{normalizedPageSizeOptions.map((pageSizeOption) => (
-								<SelectItem
-									key={pageSizeOption}
-									value={String(pageSizeOption)}
-								>
+								<SelectItem key={pageSizeOption} value={String(pageSizeOption)}>
 									{pageSizeOption}
 								</SelectItem>
 							))}

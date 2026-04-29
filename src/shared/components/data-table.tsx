@@ -87,9 +87,7 @@ export const DataTable = <TData, TValue>({
 					)}
 				</TableBody>
 			</Table>
-			{footerContent && (
-				<div className="flex justify-end">{footerContent}</div>
-			)}
+			{footerContent && <div className="flex justify-end">{footerContent}</div>}
 		</div>
 	);
 };
