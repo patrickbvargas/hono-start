@@ -18,6 +18,16 @@ export const RemunerationDetails = ({
 	id,
 	state,
 }: RemunerationDetailsProps) => {
+	return (
+		<EntityDetail.Root key={id} state={state}>
+			<React.Suspense fallback={<RemunerationDetailsFallback />}>
+				<RemunerationDetailsContent id={id} />
+			</React.Suspense>
+		</EntityDetail.Root>
+	);
+};
+
+const RemunerationDetailsContent = ({ id }: { id: EntityId }) => {
 	const { remuneration } = useRemuneration(id);
 
 	const summaryInfo = React.useMemo<DetailFieldItem[]>(
@@ -84,19 +94,46 @@ export const RemunerationDetails = ({
 	);
 
 	return (
-		<EntityDetail
-			state={state}
-			title={`${remuneration.employeeName} • ${remuneration.contractProcessNumber}`}
-		>
-			<EntityDetail.Fields items={summaryInfo} />
+		<EntityDetail.Content>
+			<EntityDetail.Header>
+				<EntityDetail.Title>
+					{`${remuneration.employeeName} • ${remuneration.contractProcessNumber}`}
+				</EntityDetail.Title>
+			</EntityDetail.Header>
+			<EntityDetail.Body>
+				<EntityDetail.Fields items={summaryInfo} />
+				<EntityDetail.Separator />
+				<EntityDetail.Section title="Origem">
+					<EntityDetail.Fields items={sourceInfo} />
+				</EntityDetail.Section>
+				<EntityDetail.Separator className="mt-auto" />
+				<EntityDetail.Section title="Registro">
+					<EntityDetail.Fields items={registerInfo} />
+				</EntityDetail.Section>
+			</EntityDetail.Body>
+			<EntityDetail.Footer />
+		</EntityDetail.Content>
+	);
+};
+
+const RemunerationDetailsFallback = () => (
+	<EntityDetail.Content>
+		<EntityDetail.Header>
+			<EntityDetail.Title>
+				<EntityDetail.SkeletonTitle />
+			</EntityDetail.Title>
+		</EntityDetail.Header>
+		<EntityDetail.Body>
+			<EntityDetail.SkeletonFields rows={6} />
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Origem">
-				<EntityDetail.Fields items={sourceInfo} />
+				<EntityDetail.SkeletonFields rows={5} />
 			</EntityDetail.Section>
 			<EntityDetail.Separator className="mt-auto" />
 			<EntityDetail.Section title="Registro">
-				<EntityDetail.Fields items={registerInfo} />
+				<EntityDetail.SkeletonFields rows={3} />
 			</EntityDetail.Section>
-		</EntityDetail>
-	);
-};
+		</EntityDetail.Body>
+		<EntityDetail.Footer />
+	</EntityDetail.Content>
+);

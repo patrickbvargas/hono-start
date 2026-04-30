@@ -15,6 +15,16 @@ interface FeeDetailsProps {
 }
 
 export const FeeDetails = ({ id, state }: FeeDetailsProps) => {
+	return (
+		<EntityDetail.Root key={id} state={state}>
+			<React.Suspense fallback={<FeeDetailsFallback />}>
+				<FeeDetailsContent id={id} />
+			</React.Suspense>
+		</EntityDetail.Root>
+	);
+};
+
+const FeeDetailsContent = ({ id }: { id: EntityId }) => {
 	const { fee } = useFee(id);
 
 	const generalInfo = React.useMemo<DetailFieldItem[]>(
@@ -60,16 +70,44 @@ export const FeeDetails = ({ id, state }: FeeDetailsProps) => {
 	);
 
 	return (
-		<EntityDetail state={state} title={fee.contractProcessNumber}>
-			<EntityDetail.Fields items={generalInfo} />
+		<EntityDetail.Content>
+			<EntityDetail.Header>
+				<EntityDetail.Title>{fee.contractProcessNumber}</EntityDetail.Title>
+			</EntityDetail.Header>
+			<EntityDetail.Body>
+				<EntityDetail.Fields items={generalInfo} />
+				<EntityDetail.Separator />
+				<EntityDetail.Section title="Remuneração">
+					<EntityDetail.Fields items={remunerationInfo} />
+				</EntityDetail.Section>
+				<EntityDetail.Separator className="mt-auto" />
+				<EntityDetail.Section title="Registro">
+					<EntityDetail.Fields items={registerInfo} />
+				</EntityDetail.Section>
+			</EntityDetail.Body>
+			<EntityDetail.Footer />
+		</EntityDetail.Content>
+	);
+};
+
+const FeeDetailsFallback = () => (
+	<EntityDetail.Content>
+		<EntityDetail.Header>
+			<EntityDetail.Title>
+				<EntityDetail.SkeletonTitle />
+			</EntityDetail.Title>
+		</EntityDetail.Header>
+		<EntityDetail.Body>
+			<EntityDetail.SkeletonFields rows={6} />
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Remuneração">
-				<EntityDetail.Fields items={remunerationInfo} />
+				<EntityDetail.SkeletonFields rows={2} />
 			</EntityDetail.Section>
 			<EntityDetail.Separator className="mt-auto" />
 			<EntityDetail.Section title="Registro">
-				<EntityDetail.Fields items={registerInfo} />
+				<EntityDetail.SkeletonFields rows={2} />
 			</EntityDetail.Section>
-		</EntityDetail>
-	);
-};
+		</EntityDetail.Body>
+		<EntityDetail.Footer />
+	</EntityDetail.Content>
+);

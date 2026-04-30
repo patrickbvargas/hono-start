@@ -1,5 +1,4 @@
 import * as React from "react";
-import { AttachmentSection } from "@/features/attachments";
 import {
 	type DetailFieldItem,
 	EntityDetail,
@@ -16,6 +15,16 @@ interface EmployeeDetailsProps {
 }
 
 export const EmployeeDetails = ({ id, state }: EmployeeDetailsProps) => {
+	return (
+		<EntityDetail.Root key={id} state={state}>
+			<React.Suspense fallback={<EmployeeDetailsFallback />}>
+				<EmployeeDetailsContent id={id} />
+			</React.Suspense>
+		</EntityDetail.Root>
+	);
+};
+
+const EmployeeDetailsContent = ({ id }: { id: EntityId }) => {
 	const { employee } = useEmployee(id);
 
 	const generalInfo = React.useMemo<DetailFieldItem[]>(
@@ -60,26 +69,52 @@ export const EmployeeDetails = ({ id, state }: EmployeeDetailsProps) => {
 	);
 
 	return (
-		<EntityDetail state={state} title={employee.fullName}>
-			<EntityDetail.Fields items={generalInfo} />
+		<EntityDetail.Content>
+			<EntityDetail.Header>
+				<EntityDetail.Title>{employee.fullName}</EntityDetail.Title>
+			</EntityDetail.Header>
+			<EntityDetail.Body>
+				<EntityDetail.Fields items={generalInfo} />
+				<EntityDetail.Separator />
+				<EntityDetail.Section title="Contato">
+					<EntityDetail.Fields items={contactInfo} />
+				</EntityDetail.Section>
+				<EntityDetail.Separator />
+				<EntityDetail.Section title="Financeiro">
+					<EntityDetail.Fields items={financialInfo} />
+				</EntityDetail.Section>
+				<EntityDetail.Separator />
+				<EntityDetail.Section title="Registro">
+					<EntityDetail.Fields items={registerInfo} />
+				</EntityDetail.Section>
+			</EntityDetail.Body>
+			<EntityDetail.Footer />
+		</EntityDetail.Content>
+	);
+};
+
+const EmployeeDetailsFallback = () => (
+	<EntityDetail.Content>
+		<EntityDetail.Header>
+			<EntityDetail.Title>
+				<EntityDetail.SkeletonTitle />
+			</EntityDetail.Title>
+		</EntityDetail.Header>
+		<EntityDetail.Body>
+			<EntityDetail.SkeletonFields rows={4} />
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Contato">
-				<EntityDetail.Fields items={contactInfo} />
+				<EntityDetail.SkeletonFields rows={1} />
 			</EntityDetail.Section>
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Financeiro">
-				<EntityDetail.Fields items={financialInfo} />
+				<EntityDetail.SkeletonFields rows={1} />
 			</EntityDetail.Section>
-			<EntityDetail.Separator className="mt-auto" />
-			<AttachmentSection
-				ownerId={employee.id}
-				ownerKind="employee"
-				canUpload={!employee.isSoftDeleted}
-			/>
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Registro">
-				<EntityDetail.Fields items={registerInfo} />
+				<EntityDetail.SkeletonFields rows={2} />
 			</EntityDetail.Section>
-		</EntityDetail>
-	);
-};
+		</EntityDetail.Body>
+		<EntityDetail.Footer />
+	</EntityDetail.Content>
+);

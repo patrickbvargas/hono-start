@@ -1,5 +1,4 @@
 import * as React from "react";
-import { AttachmentSection } from "@/features/attachments";
 import {
 	type DetailFieldItem,
 	EntityDetail,
@@ -7,7 +6,6 @@ import {
 import { EntityStatus } from "@/shared/components/entity-status";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
-import { isContractReadOnly } from "@/shared/session";
 import type { OverlayState } from "@/shared/types/overlay";
 import { useContract } from "../../hooks/use-data";
 
@@ -17,6 +15,16 @@ interface ContractDetailsProps {
 }
 
 export const ContractDetails = ({ id, state }: ContractDetailsProps) => {
+	return (
+		<EntityDetail.Root key={id} state={state}>
+			<React.Suspense fallback={<ContractDetailsFallback />}>
+				<ContractDetailsContent id={id} />
+			</React.Suspense>
+		</EntityDetail.Root>
+	);
+};
+
+const ContractDetailsContent = ({ id }: { id: EntityId }) => {
 	const { contract } = useContract(id);
 
 	const generalInfo = React.useMemo<DetailFieldItem[]>(
@@ -76,33 +84,52 @@ export const ContractDetails = ({ id, state }: ContractDetailsProps) => {
 	);
 
 	return (
-		<EntityDetail state={state} title={contract.processNumber}>
-			<EntityDetail.Fields items={generalInfo} />
+		<EntityDetail.Content>
+			<EntityDetail.Header>
+				<EntityDetail.Title>{contract.processNumber}</EntityDetail.Title>
+			</EntityDetail.Header>
+			<EntityDetail.Body>
+				<EntityDetail.Fields items={generalInfo} />
+				<EntityDetail.Separator />
+				<EntityDetail.Section title="Equipe">
+					<EntityDetail.Fields items={assignmentInfo} />
+				</EntityDetail.Section>
+				<EntityDetail.Separator />
+				<EntityDetail.Section title="Receitas">
+					<EntityDetail.Fields items={revenueInfo} />
+				</EntityDetail.Section>
+				<EntityDetail.Separator />
+				<EntityDetail.Section title="Registro">
+					<EntityDetail.Fields items={registerInfo} />
+				</EntityDetail.Section>
+			</EntityDetail.Body>
+			<EntityDetail.Footer />
+		</EntityDetail.Content>
+	);
+};
+
+const ContractDetailsFallback = () => (
+	<EntityDetail.Content>
+		<EntityDetail.Header>
+			<EntityDetail.Title>
+				<EntityDetail.SkeletonTitle />
+			</EntityDetail.Title>
+		</EntityDetail.Header>
+		<EntityDetail.Body>
+			<EntityDetail.SkeletonFields rows={6} />
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Equipe">
-				<EntityDetail.Fields items={assignmentInfo} />
+				<EntityDetail.SkeletonFields rows={2} />
 			</EntityDetail.Section>
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Receitas">
-				<EntityDetail.Fields items={revenueInfo} />
+				<EntityDetail.SkeletonFields rows={2} />
 			</EntityDetail.Section>
-			<EntityDetail.Separator className="mt-auto" />
-			<AttachmentSection
-				ownerId={contract.id}
-				ownerKind="contract"
-				canUpload={
-					!contract.isSoftDeleted &&
-					contract.isAssignedToActor &&
-					!isContractReadOnly({
-						firmId: 0,
-						statusValue: contract.statusValue,
-					})
-				}
-			/>
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Registro">
-				<EntityDetail.Fields items={registerInfo} />
+				<EntityDetail.SkeletonFields rows={3} />
 			</EntityDetail.Section>
-		</EntityDetail>
-	);
-};
+		</EntityDetail.Body>
+		<EntityDetail.Footer />
+	</EntityDetail.Content>
+);

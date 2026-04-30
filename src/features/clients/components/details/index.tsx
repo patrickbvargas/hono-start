@@ -1,5 +1,4 @@
 import * as React from "react";
-import { AttachmentSection } from "@/features/attachments";
 import {
 	type DetailFieldItem,
 	EntityDetail,
@@ -17,6 +16,16 @@ interface ClientDetailsProps {
 }
 
 export const ClientDetails = ({ id, state }: ClientDetailsProps) => {
+	return (
+		<EntityDetail.Root key={id} state={state}>
+			<React.Suspense fallback={<ClientDetailsFallback />}>
+				<ClientDetailsContent id={id} />
+			</React.Suspense>
+		</EntityDetail.Root>
+	);
+};
+
+const ClientDetailsContent = ({ id }: { id: EntityId }) => {
 	const { client } = useClient(id);
 
 	const generalInfo = React.useMemo<DetailFieldItem[]>(
@@ -53,22 +62,44 @@ export const ClientDetails = ({ id, state }: ClientDetailsProps) => {
 	);
 
 	return (
-		<EntityDetail state={state} title={client.fullName}>
-			<EntityDetail.Fields items={generalInfo} />
-			<EntityDetail.Separator />
-			<EntityDetail.Section title="Contato">
-				<EntityDetail.Fields items={contactInfo} />
-			</EntityDetail.Section>
-			<EntityDetail.Separator className="mt-auto" />
-			<AttachmentSection
-				ownerId={client.id}
-				ownerKind="client"
-				canUpload={!client.isSoftDeleted}
-			/>
-			<EntityDetail.Separator />
-			<EntityDetail.Section title="Registro">
-				<EntityDetail.Fields items={registerInfo} />
-			</EntityDetail.Section>
-		</EntityDetail>
+		<EntityDetail.Content>
+			<EntityDetail.Header>
+				<EntityDetail.Title>{client.fullName}</EntityDetail.Title>
+			</EntityDetail.Header>
+			<EntityDetail.Body>
+				<EntityDetail.Fields items={generalInfo} />
+				<EntityDetail.Separator />
+				<EntityDetail.Section title="Contato">
+					<EntityDetail.Fields items={contactInfo} />
+				</EntityDetail.Section>
+				<EntityDetail.Separator />
+				<EntityDetail.Section title="Registro">
+					<EntityDetail.Fields items={registerInfo} />
+				</EntityDetail.Section>
+			</EntityDetail.Body>
+			<EntityDetail.Footer />
+		</EntityDetail.Content>
 	);
 };
+
+const ClientDetailsFallback = () => (
+	<EntityDetail.Content>
+		<EntityDetail.Header>
+			<EntityDetail.Title>
+				<EntityDetail.SkeletonTitle />
+			</EntityDetail.Title>
+		</EntityDetail.Header>
+		<EntityDetail.Body>
+			<EntityDetail.SkeletonFields rows={3} />
+			<EntityDetail.Separator />
+			<EntityDetail.Section title="Contato">
+				<EntityDetail.SkeletonFields rows={2} />
+			</EntityDetail.Section>
+			<EntityDetail.Separator />
+			<EntityDetail.Section title="Registro">
+				<EntityDetail.SkeletonFields rows={2} />
+			</EntityDetail.Section>
+		</EntityDetail.Body>
+		<EntityDetail.Footer />
+	</EntityDetail.Content>
+);

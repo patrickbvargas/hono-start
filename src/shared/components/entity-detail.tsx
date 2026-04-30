@@ -8,6 +8,7 @@ import {
 	DrawerHeader,
 	DrawerTitle,
 	Separator,
+	Skeleton,
 } from "@/shared/components/ui";
 import { cn } from "@/shared/lib/utils";
 import type { OverlayState } from "@/shared/types/overlay";
@@ -34,18 +35,12 @@ export interface DetailFieldItem {
 	classNames?: FieldClassNames;
 }
 
-interface WrapperProps {
-	title: string;
+interface RootProps {
 	state: OverlayState;
 	children: React.ReactNode;
 }
 
-export const EntityDetailDrawer = ({
-	title,
-	state,
-	children,
-	...props
-}: WrapperProps) => {
+function Root({ state, children, ...props }: RootProps) {
 	return (
 		<Drawer
 			direction="right"
@@ -53,24 +48,62 @@ export const EntityDetailDrawer = ({
 			onOpenChange={state.onOpenChange}
 			{...props}
 		>
-			<DrawerContent>
-				<DrawerHeader>
-					<DrawerTitle>{title}</DrawerTitle>
-				</DrawerHeader>
-				<div className="flex flex-col gap-4 overflow-y-auto px-4">
-					{children}
-				</div>
-				<DrawerFooter>
-					<DrawerClose asChild>
-						<Button variant="outline" className="w-full">
-							Fechar
-						</Button>
-					</DrawerClose>
-				</DrawerFooter>
-			</DrawerContent>
+			<DrawerContent>{children}</DrawerContent>
 		</Drawer>
 	);
-};
+}
+
+interface ContentProps {
+	children: React.ReactNode;
+}
+
+function Content({ children }: ContentProps) {
+	return <>{children}</>;
+}
+
+function Header({ children, ...props }: React.ComponentProps<"div">) {
+	return <DrawerHeader {...props}>{children}</DrawerHeader>;
+}
+
+interface TitleProps {
+	children: React.ReactNode;
+}
+
+function Title({
+	children,
+	...props
+}: TitleProps & React.ComponentProps<typeof DrawerTitle>) {
+	return <DrawerTitle {...props}>{children}</DrawerTitle>;
+}
+
+function Body({ children, className, ...props }: React.ComponentProps<"div">) {
+	return (
+		<div
+			className={cn("flex flex-col gap-4 overflow-y-auto px-4", className)}
+			{...props}
+		>
+			{children}
+		</div>
+	);
+}
+
+function Footer({ children, ...props }: React.ComponentProps<"div">) {
+	return (
+		<DrawerFooter {...props}>
+			{children ?? (
+				<DrawerClose asChild>
+					<Button variant="outline" className="w-full">
+						Fechar
+					</Button>
+				</DrawerClose>
+			)}
+		</DrawerFooter>
+	);
+}
+
+function SkeletonTitle({ className }: React.ComponentProps<"div">) {
+	return <Skeleton className={cn("h-6 w-40", className)} />;
+}
 
 interface SectionProps {
 	title: string;
@@ -170,8 +203,44 @@ const Fields = ({
 	</dl>
 );
 
-export const EntityDetail = Object.assign(EntityDetailDrawer, {
+interface SkeletonFieldsProps extends React.HTMLAttributes<HTMLDivElement> {
+	rows?: number;
+}
+
+function SkeletonFields({
+	rows = 3,
+	className,
+	...props
+}: SkeletonFieldsProps) {
+	const skeletonRows = Array.from({ length: rows }, (_, rowIndex) => ({
+		key: `row-${rows}-${rowIndex}-${rowIndex === rows - 1 ? "short" : "full"}`,
+		isShort: rowIndex === rows - 1,
+	}));
+
+	return (
+		<div className={cn("flex flex-col gap-4", className)} {...props}>
+			{skeletonRows.map((row) => (
+				<div key={row.key} className="flex flex-col gap-1.5">
+					<Skeleton className="h-3 w-20" />
+					<Skeleton
+						className={cn("h-4", row.isShort ? "w-24" : "w-full max-w-56")}
+					/>
+				</div>
+			))}
+		</div>
+	);
+}
+
+export const EntityDetail = {
+	Root,
+	Content,
+	Header,
+	Title,
+	Body,
+	Footer,
 	Section,
 	Fields,
+	SkeletonFields,
+	SkeletonTitle,
 	Separator,
-});
+};
