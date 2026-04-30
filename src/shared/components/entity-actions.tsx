@@ -57,16 +57,16 @@ export function EntityActions({
 				<EllipsisVerticalIcon size={16} />
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end">
-				{shouldShowEdit && (
-					<DropdownMenuItem onClick={onEdit}>
-						<PenLineIcon size={16} />
-						Editar
-					</DropdownMenuItem>
-				)}
 				{shouldShowView && (
 					<DropdownMenuItem onClick={onView}>
 						<EyeIcon size={16} />
 						Visualizar
+					</DropdownMenuItem>
+				)}
+				{shouldShowEdit && (
+					<DropdownMenuItem onClick={onEdit}>
+						<PenLineIcon size={16} />
+						Editar
 					</DropdownMenuItem>
 				)}
 				{shouldShowRestore && (
