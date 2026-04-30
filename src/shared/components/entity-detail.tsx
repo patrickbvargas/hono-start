@@ -41,8 +41,14 @@ interface RootProps {
 }
 
 function Root({ state, children, ...props }: RootProps) {
+	const container =
+		typeof document === "undefined"
+			? null
+			: document.querySelector<HTMLElement>('[data-slot="root-container"]');
+
 	return (
 		<Drawer
+			container={container}
 			direction="right"
 			open={state.isOpen}
 			onOpenChange={state.onOpenChange}

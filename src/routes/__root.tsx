@@ -61,7 +61,10 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 
 function RootLayout() {
 	return (
-		<div className="container mx-auto h-screen w-full overflow-hidden">
+		<div
+			data-slot="root-container"
+			className="container relative mx-auto h-screen w-full overflow-hidden"
+		>
 			<Outlet />
 		</div>
 	);
