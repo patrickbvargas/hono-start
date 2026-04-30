@@ -2,6 +2,7 @@ import { createColumnHelper } from "@tanstack/react-table";
 import * as React from "react";
 import { DataTable } from "@/shared/components/data-table";
 import { EntityActions } from "@/shared/components/entity-actions";
+import { EntityIdTrigger } from "@/shared/components/entity-id-trigger";
 import { EntityStatus } from "@/shared/components/entity-status";
 import { Pagination } from "@/shared/components/pagination";
 import { formatter } from "@/shared/lib/formatter";
@@ -31,6 +32,17 @@ export const EmployeeTable = ({
 		const c = createColumnHelper<EmployeeSummary>();
 
 		return [
+			c.accessor("id", {
+				header: "ID",
+				cell: ({ row }) => (
+					<EntityIdTrigger id={row.original.id} onView={onView} />
+				),
+				enableSorting: false,
+				meta: {
+					headerClassName: "w-18",
+					cellClassName: "whitespace-nowrap",
+				},
+			}),
 			c.accessor("fullName", {
 				header: "Nome",
 				enableSorting: EMPLOYEE_ALLOWED_SORT_COLUMNS.includes("fullName"),

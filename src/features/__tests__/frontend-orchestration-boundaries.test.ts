@@ -483,6 +483,10 @@ describe("frontend orchestration boundaries", () => {
 					message: "entity table does not expose canManageLifecycle",
 				},
 				{
+					passes: content.includes("EntityIdTrigger"),
+					message: "entity table does not use shared EntityIdTrigger",
+				},
+				{
 					passes: content.includes("EntityActions"),
 					message: "entity table does not use shared EntityActions",
 				},
