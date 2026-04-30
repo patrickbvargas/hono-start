@@ -8,6 +8,7 @@ import {
 	getAuditLogsQueryOptions,
 	useAuditLogs,
 } from "@/features/audit-logs";
+import { ListRouteSkeleton } from "@/shared/components/list-route-skeleton";
 import { RouteLoading } from "@/shared/components/route-loading";
 import {
 	Wrapper,
@@ -27,6 +28,8 @@ export const Route = createFileRoute("/_app/audit-log")({
 		assertCan(session, "audit-log.view");
 		await queryClient.ensureQueryData(getAuditLogsQueryOptions(search));
 	},
+	pendingMs: 0,
+	pendingComponent: () => <ListRouteSkeleton title={ROUTES.auditLog.title} />,
 	component: RouteComponent,
 });
 

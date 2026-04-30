@@ -13,6 +13,7 @@ import {
 	getEmployeesQueryOptions,
 	useEmployees,
 } from "@/features/employees";
+import { ListRouteSkeleton } from "@/shared/components/list-route-skeleton";
 import { RouteLoading } from "@/shared/components/route-loading";
 import { Button } from "@/shared/components/ui";
 import {
@@ -35,6 +36,10 @@ export const Route = createFileRoute("/_app/colaboradores")({
 		assertCan(session, "employee.manage");
 		await queryClient.ensureQueryData(getEmployeesQueryOptions(search));
 	},
+	pendingMs: 0,
+	pendingComponent: () => (
+		<ListRouteSkeleton title={ROUTES.employee.title} showActions />
+	),
 	component: RouteComponent,
 });
 

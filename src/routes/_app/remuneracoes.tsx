@@ -14,6 +14,7 @@ import {
 	useRemunerationExport,
 	useRemunerations,
 } from "@/features/remunerations";
+import { ListRouteSkeleton } from "@/shared/components/list-route-skeleton";
 import { RouteLoading } from "@/shared/components/route-loading";
 import {
 	Wrapper,
@@ -34,6 +35,10 @@ export const Route = createFileRoute("/_app/remuneracoes")({
 	loader: async ({ context: { queryClient }, deps: { search } }) => {
 		await queryClient.ensureQueryData(getRemunerationsQueryOptions(search));
 	},
+	pendingMs: 0,
+	pendingComponent: () => (
+		<ListRouteSkeleton title={ROUTES.remuneration.title} showActions />
+	),
 	component: RouteComponent,
 });
 

@@ -13,6 +13,7 @@ import {
 	getContractsQueryOptions,
 	useContracts,
 } from "@/features/contracts";
+import { ListRouteSkeleton } from "@/shared/components/list-route-skeleton";
 import { RouteLoading } from "@/shared/components/route-loading";
 import { Button } from "@/shared/components/ui";
 import {
@@ -34,6 +35,10 @@ export const Route = createFileRoute("/_app/contratos")({
 	loader: async ({ context: { queryClient }, deps: { search } }) => {
 		await queryClient.ensureQueryData(getContractsQueryOptions(search));
 	},
+	pendingMs: 0,
+	pendingComponent: () => (
+		<ListRouteSkeleton title={ROUTES.contract.title} showActions />
+	),
 	component: RouteComponent,
 });
 
