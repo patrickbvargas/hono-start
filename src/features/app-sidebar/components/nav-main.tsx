@@ -18,10 +18,16 @@ interface NavMainProps {
 	items: RouteSection[];
 }
 
+export function isSidebarRouteActive(pathname: string, url: string) {
+	if (url === "/") {
+		return pathname === "/";
+	}
+
+	return pathname === url || pathname.startsWith(`${url}/`);
+}
+
 export const NavMain = ({ items }: NavMainProps) => {
 	const location = useLocation();
-
-	const isActive = (url: string) => location.pathname.startsWith(url);
 
 	return (
 		<SidebarGroup>
@@ -44,7 +50,10 @@ export const NavMain = ({ items }: NavMainProps) => {
 									{item.items.map((subItem) => (
 										<SidebarMenuSubItem key={subItem.title}>
 											<SidebarMenuSubButton
-												isActive={isActive(subItem.url)}
+												isActive={isSidebarRouteActive(
+													location.pathname,
+													subItem.url,
+												)}
 												render={
 													<Link to={subItem.url}>
 														<span>{subItem.title}</span>
