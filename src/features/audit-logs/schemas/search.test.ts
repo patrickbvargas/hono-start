@@ -10,6 +10,7 @@ describe("auditLogSearchSchema", () => {
 			limit: 25,
 			column: "occurredAt",
 			direction: "asc",
+			query: "",
 			action: [],
 			entityType: [],
 			actorName: [],

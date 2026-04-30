@@ -200,6 +200,7 @@ describe("feature form contracts", () => {
 			limit: 50,
 			column: "amount",
 			direction: "desc",
+			query: "",
 			employeeId: "10",
 			contractId: "20",
 			dateFrom: "2026-01-01",

@@ -314,6 +314,120 @@ describe("fee data mutations", () => {
 		});
 	});
 
+	it("blocks reparenting when the fee has manual remuneration overrides", async () => {
+		await expect(
+			updateFee({
+				scope: { firmId: 1 },
+				access: {
+					id: 6,
+					resource: {
+						firmId: 1,
+						assignedEmployeeIds: [],
+						statusValue: "ACTIVE",
+						allowStatusChange: true,
+					},
+					contractId: 3,
+					revenueId: 4,
+					deletedAt: null,
+					generatesRemuneration: true,
+					manualRemunerationCount: 1,
+					remunerationCount: 1,
+				},
+				input: {
+					id: 6,
+					contractId: "3",
+					revenueId: "5",
+					paymentDate: "2026-01-15",
+					amount: 1000,
+					installmentNumber: 2,
+					generatesRemuneration: true,
+					isActive: true,
+				},
+			}),
+		).rejects.toThrow(FEE_ERRORS.FEE_REPARENT_MANUAL_OVERRIDE_BLOCKED);
+
+		expect(prismaMock.$transaction).not.toHaveBeenCalled();
+	});
+
+	it("blocks reparenting when remunerations must be preserved with generation disabled", async () => {
+		await expect(
+			updateFee({
+				scope: { firmId: 1 },
+				access: {
+					id: 6,
+					resource: {
+						firmId: 1,
+						assignedEmployeeIds: [],
+						statusValue: "ACTIVE",
+						allowStatusChange: true,
+					},
+					contractId: 3,
+					revenueId: 4,
+					deletedAt: null,
+					generatesRemuneration: true,
+					manualRemunerationCount: 0,
+					remunerationCount: 2,
+				},
+				input: {
+					id: 6,
+					contractId: "3",
+					revenueId: "5",
+					paymentDate: "2026-01-15",
+					amount: 1000,
+					installmentNumber: 2,
+					generatesRemuneration: false,
+					isActive: true,
+				},
+			}),
+		).rejects.toThrow(FEE_ERRORS.FEE_REPARENT_PRESERVE_BLOCKED);
+
+		expect(prismaMock.$transaction).not.toHaveBeenCalled();
+	});
+
+	it("keeps existing remunerations unchanged when generation is disabled on update", async () => {
+		await expect(
+			updateFee({
+				scope: { firmId: 1 },
+				access: {
+					id: 6,
+					resource: {
+						firmId: 1,
+						assignedEmployeeIds: [],
+						statusValue: "ACTIVE",
+						allowStatusChange: true,
+					},
+					contractId: 3,
+					revenueId: 5,
+					deletedAt: null,
+					generatesRemuneration: true,
+					manualRemunerationCount: 0,
+					remunerationCount: 2,
+				},
+				input: {
+					id: 6,
+					contractId: "3",
+					revenueId: "5",
+					paymentDate: "2026-01-20",
+					amount: 900,
+					installmentNumber: 2,
+					generatesRemuneration: false,
+					isActive: true,
+				},
+			}),
+		).resolves.toEqual({ success: true });
+
+		expect(prismaMock.remuneration.findMany).not.toHaveBeenCalled();
+		expect(prismaMock.remuneration.updateMany).not.toHaveBeenCalledWith(
+			expect.objectContaining({
+				where: expect.objectContaining({
+					feeId: 6,
+					isSystemGenerated: true,
+				}),
+			}),
+		);
+		expect(prismaMock.remuneration.createMany).not.toHaveBeenCalled();
+	});
+
 	it("soft-deletes and restores linked remunerations when fee lifecycle changes", async () => {
 		await expect(
 			deleteFee({
@@ -353,5 +467,71 @@ describe("fee data mutations", () => {
 			where: { feeId: 6 },
 			data: { deletedAt: null },
 		});
+	});
+
+	it("returns contracts to active status when delete or restore leaves them not fully paid", async () => {
+		prismaMock.contract.findUnique.mockResolvedValue({
+			id: 3,
+			allowStatusChange: true,
+			status: { value: "COMPLETED" },
+			revenues: [
+				{
+					totalValue: "2000",
+					downPaymentValue: "0",
+					fees: [{ amount: "1000" }],
+				},
+			],
+		});
+		prismaMock.contractStatus.findUnique.mockResolvedValue({ id: 10 });
+
+		await expect(
+			deleteFee({
+				firmId: 1,
+				id: 6,
+				contractId: 3,
+			}),
+		).resolves.toEqual({ success: true });
+
+		expect(prismaMock.contractStatus.findUnique).toHaveBeenCalledWith({
+			where: { value: "ACTIVE" },
+			select: { id: true },
+		});
+		expect(prismaMock.contract.update).toHaveBeenCalledWith({
+			where: { id: 3 },
+			data: { statusId: 10 },
+		});
+	});
+
+	it("does not auto-transition contract status when status changes are locked", async () => {
+		prismaMock.contract.findUnique.mockResolvedValue({
+			id: 3,
+			allowStatusChange: false,
+			status: { value: "ACTIVE" },
+			revenues: [
+				{
+					totalValue: "2000",
+					downPaymentValue: "0",
+					fees: [{ amount: "2000" }],
+				},
+			],
+		});
+
+		await expect(
+			createFee({
+				scope: { firmId: 1 },
+				input: {
+					contractId: "3",
+					revenueId: "5",
+					paymentDate: "2026-01-15",
+					amount: 1000,
+					installmentNumber: 2,
+					generatesRemuneration: false,
+					isActive: true,
+				},
+			}),
+		).resolves.toEqual({ success: true });
+
+		expect(prismaMock.contractStatus.findUnique).not.toHaveBeenCalled();
+		expect(prismaMock.contract.update).not.toHaveBeenCalled();
 	});
 });

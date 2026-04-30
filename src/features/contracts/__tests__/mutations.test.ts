@@ -192,6 +192,45 @@ describe("contract data mutations", () => {
 		});
 	});
 
+	it("creates contracts transactionally, normalizes text fields, and writes an audit log", async () => {
+		prismaMock.employee = {
+			findMany: vi.fn().mockResolvedValue([createEmployee()]),
+		};
+
+		await expect(
+			createContract({
+				actor: { id: 1, name: "Admin", email: "admin@example.com" },
+				scope: { firmId: 1 },
+				isAdmin: true,
+				input: createBaseInput(),
+			}),
+		).resolves.toEqual({ success: true });
+
+		expect(prismaMock.$transaction).toHaveBeenCalledOnce();
+		expect(prismaMock.contract.create).toHaveBeenCalledWith({
+			data: expect.objectContaining({
+				firmId: 1,
+				clientId: 5,
+				legalAreaId: 7,
+				statusId: 8,
+				processNumber: "PROC-001",
+				notes: "observacao",
+				allowStatusChange: true,
+			}),
+		});
+		expect(prismaMock.contractEmployee.createMany).toHaveBeenCalledOnce();
+		expect(prismaMock.revenue.createMany).toHaveBeenCalledOnce();
+		expect(createAuditLogMock).toHaveBeenCalledWith(
+			prismaMock,
+			expect.objectContaining({
+				firmId: 1,
+				action: "CREATE",
+				entityType: "Contract",
+				entityId: 99,
+			}),
+		);
+	});
+
 	it("rejects non-admin attempts to lock status on create", async () => {
 		await expect(
 			createContract({
@@ -202,6 +241,25 @@ describe("contract data mutations", () => {
 		).rejects.toThrow(CONTRACT_ERRORS.CONTRACT_STATUS_LOCK_FORBIDDEN);
 
 		expect(prismaMock.client.findFirst).not.toHaveBeenCalled();
+	});
+
+	it("rejects non-active initial statuses on create", async () => {
+		prismaMock.employee = {
+			findMany: vi.fn().mockResolvedValue([createEmployee()]),
+		};
+		getContractStatusByValueMock.mockResolvedValue(
+			createLookup({ id: 88, value: "COMPLETED", label: "Concluído" }),
+		);
+
+		await expect(
+			createContract({
+				scope: { firmId: 1 },
+				isAdmin: true,
+				input: { ...createBaseInput(), status: "COMPLETED" },
+			}),
+		).rejects.toThrow(CONTRACT_ERRORS.CONTRACT_NEW_STATUS_REQUIRED);
+
+		expect(prismaMock.$transaction).not.toHaveBeenCalled();
 	});
 
 	it("rejects inactive clients on create before transaction", async () => {
@@ -278,6 +336,25 @@ describe("contract data mutations", () => {
 				input: { ...createBaseInput(), id: 99, status: "COMPLETED" },
 			}),
 		).rejects.toThrow(CONTRACT_ERRORS.CONTRACT_STATUS_CHANGE_LOCKED);
+	});
+
+	it("rejects updates when the current contract is already read-only", async () => {
+		prismaMock.contract.findFirst.mockResolvedValue({
+			id: 99,
+			processNumber: "PROC-001",
+			legalAreaId: 7,
+			statusId: 8,
+			allowStatusChange: true,
+			status: { value: "COMPLETED" },
+		});
+
+		await expect(
+			updateContract({
+				scope: { firmId: 1 },
+				isAdmin: true,
+				input: { ...createBaseInput(), id: 99 },
+			}),
+		).rejects.toThrow(CONTRACT_ERRORS.CONTRACT_READ_ONLY);
 	});
 
 	it("syncs removed assignments and revenues during successful update", async () => {
@@ -383,5 +460,59 @@ describe("contract data mutations", () => {
 		);
 
 		expect(prismaMock.$transaction).not.toHaveBeenCalled();
+	});
+
+	it("soft-deletes writable contracts and writes an audit log", async () => {
+		getContractByIdMock.mockResolvedValue({
+			id: 99,
+			processNumber: "PROC-001",
+			isSoftDeleted: false,
+		});
+
+		await expect(
+			deleteContract({
+				actor: { id: 1, name: "Admin", email: "admin@example.com" },
+				firmId: 1,
+				id: 99,
+			}),
+		).resolves.toEqual({ success: true });
+
+		expect(prismaMock.contract.update).toHaveBeenCalledWith({
+			where: { id: 99 },
+			data: { deletedAt: expect.any(Date) },
+		});
+		expect(createAuditLogMock).toHaveBeenCalledWith(
+			prismaMock,
+			expect.objectContaining({
+				firmId: 1,
+				action: "DELETE",
+				entityType: "Contract",
+				entityId: 99,
+			}),
+		);
+	});
+
+	it("restores soft-deleted contracts and writes an audit log", async () => {
+		await expect(
+			restoreContract({
+				actor: { id: 1, name: "Admin", email: "admin@example.com" },
+				firmId: 1,
+				id: 99,
+			}),
+		).resolves.toEqual({ success: true });
+
+		expect(prismaMock.contract.update).toHaveBeenCalledWith({
+			where: { id: 99 },
+			data: { deletedAt: null },
+		});
+		expect(createAuditLogMock).toHaveBeenCalledWith(
+			prismaMock,
+			expect.objectContaining({
+				firmId: 1,
+				action: "RESTORE",
+				entityType: "Contract",
+				entityId: 99,
+			}),
+		);
 	});
 });

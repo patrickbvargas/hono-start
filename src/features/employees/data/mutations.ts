@@ -149,6 +149,23 @@ export async function deleteEmployee({
 		throw new Error(EMPLOYEE_ERRORS.NOT_FOUND);
 	}
 
+	const activeDependencyCount = await prisma.contractEmployee.count({
+		where: {
+			firmId,
+			employeeId: id,
+			deletedAt: null,
+			remunerations: {
+				some: {
+					deletedAt: null,
+				},
+			},
+		},
+	});
+
+	if (activeDependencyCount > 0) {
+		throw new Error(EMPLOYEE_ERRORS.DELETE_ACTIVE_DEPENDENCIES);
+	}
+
 	await prisma.$transaction(async (tx) => {
 		await tx.employee.update({
 			where: { id },

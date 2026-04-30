@@ -4,6 +4,8 @@ export const EMPLOYEE_ERRORS = {
 	CREATE_FAILED: "Erro ao criar funcionário",
 	DELETE_FORBIDDEN: "Apenas administradores podem excluir funcionários",
 	DELETE_FAILED: "Erro ao excluir funcionário",
+	DELETE_ACTIVE_DEPENDENCIES:
+		"Não é possível excluir funcionário com remunerações ativas",
 	EMAIL_ALREADY_IN_USE: "Este email já está em uso",
 	NOT_FOUND: "Funcionário não encontrado",
 	GET_FAILED: "Erro ao buscar funcionários",

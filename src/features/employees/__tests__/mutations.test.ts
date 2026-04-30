@@ -4,11 +4,13 @@ import { EMPLOYEE_ERRORS } from "../constants/errors";
 import type { EmployeeDetail } from "../schemas/model";
 
 const {
+	createAuditLogMock,
 	getEmployeeByIdMock,
 	getEmployeeTypeByValueMock,
 	getUserRoleByValueMock,
 	prismaMock,
 } = vi.hoisted(() => ({
+	createAuditLogMock: vi.fn(),
 	getEmployeeByIdMock: vi.fn(),
 	getEmployeeTypeByValueMock: vi.fn(),
 	getUserRoleByValueMock: vi.fn(),
@@ -17,11 +19,19 @@ const {
 			create: vi.fn(),
 			update: vi.fn(),
 		},
+		contractEmployee: {
+			count: vi.fn(),
+		},
+		$transaction: vi.fn(),
 	},
 }));
 
 vi.mock("@/shared/lib/prisma", () => ({
 	prisma: prismaMock,
+}));
+
+vi.mock("@/features/audit-logs/data/mutations", () => ({
+	createAuditLog: createAuditLogMock,
 }));
 
 vi.mock("../data/queries", () => ({
@@ -30,7 +40,12 @@ vi.mock("../data/queries", () => ({
 	getUserRoleByValue: getUserRoleByValueMock,
 }));
 
-import { createEmployee, updateEmployee } from "../data/mutations";
+import {
+	createEmployee,
+	deleteEmployee,
+	restoreEmployee,
+	updateEmployee,
+} from "../data/mutations";
 
 const baseType = (overrides: Partial<EmployeeType> = {}): EmployeeType => ({
 	id: 10,
@@ -76,6 +91,10 @@ describe("employee lookup-backed writes", () => {
 		vi.clearAllMocks();
 		prismaMock.employee.create.mockResolvedValue({});
 		prismaMock.employee.update.mockResolvedValue({});
+		prismaMock.contractEmployee.count.mockResolvedValue(0);
+		prismaMock.$transaction.mockImplementation(async (callback) =>
+			callback(prismaMock),
+		);
 	});
 
 	it("rejects unknown employee types on create", async () => {
@@ -151,5 +170,82 @@ describe("employee lookup-backed writes", () => {
 		).resolves.toEqual({ success: true });
 
 		expect(prismaMock.employee.update).toHaveBeenCalledOnce();
+	});
+
+	it("blocks delete when active remuneration dependencies exist", async () => {
+		getEmployeeByIdMock.mockResolvedValue(baseEmployee());
+		prismaMock.contractEmployee.count.mockResolvedValue(1);
+
+		await expect(deleteEmployee({ firmId: 1, id: 1 })).rejects.toThrow(
+			EMPLOYEE_ERRORS.DELETE_ACTIVE_DEPENDENCIES,
+		);
+
+		expect(prismaMock.$transaction).not.toHaveBeenCalled();
+		expect(prismaMock.employee.update).not.toHaveBeenCalled();
+	});
+
+	it("soft-deletes active employees and writes an audit log", async () => {
+		getEmployeeByIdMock.mockResolvedValue(baseEmployee());
+
+		await expect(
+			deleteEmployee({
+				actor: {
+					id: 9,
+					name: "Admin",
+					email: "admin@example.com",
+				},
+				firmId: 1,
+				id: 1,
+			}),
+		).resolves.toEqual({ success: true });
+
+		expect(prismaMock.employee.update).toHaveBeenCalledWith({
+			where: { id: 1 },
+			data: { deletedAt: expect.any(Date) },
+		});
+		expect(createAuditLogMock).toHaveBeenCalledWith(
+			prismaMock,
+			expect.objectContaining({
+				firmId: 1,
+				action: "DELETE",
+				entityType: "Employee",
+				entityId: 1,
+			}),
+		);
+	});
+
+	it("restores soft-deleted employees and writes an audit log", async () => {
+		getEmployeeByIdMock.mockResolvedValue(
+			baseEmployee({
+				isSoftDeleted: true,
+				updatedAt: "2026-01-03T00:00:00.000Z",
+			}),
+		);
+
+		await expect(
+			restoreEmployee({
+				actor: {
+					id: 9,
+					name: "Admin",
+					email: "admin@example.com",
+				},
+				firmId: 1,
+				id: 1,
+			}),
+		).resolves.toEqual({ success: true });
+
+		expect(prismaMock.employee.update).toHaveBeenCalledWith({
+			where: { id: 1 },
+			data: { deletedAt: null },
+		});
+		expect(createAuditLogMock).toHaveBeenCalledWith(
+			prismaMock,
+			expect.objectContaining({
+				firmId: 1,
+				action: "RESTORE",
+				entityType: "Employee",
+				entityId: 1,
+			}),
+		);
 	});
 });
