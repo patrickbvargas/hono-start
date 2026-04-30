@@ -5,6 +5,7 @@ import {
 } from "@/shared/schemas/filter";
 
 export const feeFilterSchema = z.object({
+	query: z.string().trim().catch(""),
 	contractId: z.string().catch("").default(""),
 	revenueId: z.string().catch("").default(""),
 	dateFrom: z.string().catch("").default(""),

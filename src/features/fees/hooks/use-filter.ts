@@ -3,7 +3,7 @@ import { useAppForm } from "@/shared/hooks/use-app-form";
 import { useFilter } from "@/shared/hooks/use-filter";
 import { type FeeFilter, feeFilterSchema } from "../schemas/filter";
 
-const DEBOUNCED_FIELDS = new Set<keyof FeeFilter>([]);
+const DEBOUNCED_FIELDS = new Set<keyof FeeFilter>(["query"]);
 
 export function useFeeFilter() {
 	const { filter, handleFilter } = useFilter(feeFilterSchema);

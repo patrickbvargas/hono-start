@@ -45,6 +45,7 @@ This file defines the canonical domain-facing behavior of filtering, sorting, li
 
 | Filter key | Meaning | Type / Default |
 |---|---|---|
+| `query` | process number or client name search | text |
 | `clientId` | client filter | entity id |
 | `legalArea` | legal area filter | lookup value |
 | `contractStatus` | contract status filter | lookup value |
@@ -55,6 +56,7 @@ This file defines the canonical domain-facing behavior of filtering, sorting, li
 
 | Filter key | Meaning | Type / Default |
 |---|---|---|
+| `query` | parent contract process-number search | text |
 | `contractId` | parent contract | entity id |
 | `revenueId` | parent revenue | entity id |
 | `dateFrom` | lower payment-date bound | date |
@@ -64,6 +66,7 @@ This file defines the canonical domain-facing behavior of filtering, sorting, li
 
 | Filter key | Meaning | Type / Default |
 |---|---|---|
+| `query` | parent contract process-number or employee-name search | text |
 | `employeeId` | employee filter | entity id |
 | `contractId` | contract filter | entity id |
 | `dateFrom` | lower payment-date bound | date |
@@ -73,6 +76,7 @@ This file defines the canonical domain-facing behavior of filtering, sorting, li
 
 | Filter key | Meaning | Type / Default |
 |---|---|---|
+| `query` | actor-name or entity-name search | text |
 | `userId` | acting user | entity id |
 | `action` | audit action | `CREATE`, `UPDATE`, `DELETE`, `RESTORE` |
 | `entityType` | entity kind | entity type string |

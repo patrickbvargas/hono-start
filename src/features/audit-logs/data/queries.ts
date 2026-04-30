@@ -20,6 +20,24 @@ function buildAuditLogWhere({
 }: EntityFilterParams<AuditLogFilter>): Prisma.AuditLogWhereInput {
 	return {
 		firmId,
+		...(filter.query
+			? {
+					OR: [
+						{
+							actorName: {
+								contains: filter.query,
+								mode: "insensitive" as const,
+							},
+						},
+						{
+							entityName: {
+								contains: filter.query,
+								mode: "insensitive" as const,
+							},
+						},
+					],
+				}
+			: {}),
 		...(filter.action.length > 0 ? { action: { in: filter.action } } : {}),
 		...(filter.entityType.length > 0
 			? { entityType: { in: filter.entityType } }

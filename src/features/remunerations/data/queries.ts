@@ -63,6 +63,32 @@ export function buildRemunerationWhere({
 		firmId,
 		...getEntityDeletedWhere(filter.status),
 		...getEntityActiveWhere(filter.active),
+		...(filter.query
+			? {
+					OR: [
+						{
+							contractEmployee: {
+								contract: {
+									processNumber: {
+										contains: filter.query,
+										mode: "insensitive" as const,
+									},
+								},
+							},
+						},
+						{
+							contractEmployee: {
+								employee: {
+									fullName: {
+										contains: filter.query,
+										mode: "insensitive" as const,
+									},
+								},
+							},
+						},
+					],
+				}
+			: {}),
 		...(filter.dateFrom || filter.dateTo ? { paymentDate: dateFilter } : {}),
 		contractEmployee: {
 			...(filter.contractId ? { contractId: Number(filter.contractId) } : {}),
@@ -229,6 +255,7 @@ export async function getRemunerationById({
 			...buildRemunerationWhere({
 				...scope,
 				filter: {
+					query: "",
 					employeeId: "",
 					contractId: "",
 					dateFrom: "",

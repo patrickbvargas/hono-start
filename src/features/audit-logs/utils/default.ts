@@ -5,6 +5,7 @@ export const auditLogSearchDefaults: AuditLogSearch = {
 	limit: 25,
 	column: "occurredAt",
 	direction: "asc",
+	query: "",
 	action: [],
 	entityType: [],
 	actorName: [],

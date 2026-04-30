@@ -20,6 +20,11 @@ The system SHALL display a paginated, sortable, filterable list of fees availabl
 - **WHEN** the fees list is loaded
 - **THEN** the table shows columns for contract, revenue type, payment date, amount, installment number, remuneration-generation state, active state, and created date
 
+#### Scenario: Query by parent contract number
+- **WHEN** a user enters a free-text query in the fees list
+- **THEN** the system matches fees whose parent contract process number contains the query text
+- **AND** the existing firm scope and allowed-contract visibility rules remain enforced
+
 #### Scenario: Filter by parent contract
 - **WHEN** a user applies a contract filter
 - **THEN** the list shows only fees linked to the selected contract in the authenticated user's scope

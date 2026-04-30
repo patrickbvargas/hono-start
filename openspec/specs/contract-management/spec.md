@@ -20,6 +20,12 @@ The system SHALL display a paginated, sortable, filterable list of contracts ava
 - **WHEN** the contracts list is loaded
 - **THEN** the table shows columns for process number, client, legal area, contract status, fee percentage, active state, and created date
 
+#### Scenario: Query by process number or client name
+- **WHEN** a user enters a free-text query in the contracts list
+- **THEN** the system matches contracts whose process number contains the query text
+- **AND** the system also matches contracts whose client name contains the query text
+- **AND** the existing firm scope and assignment visibility rules remain enforced
+
 #### Scenario: Filter by client
 - **WHEN** a user applies a client filter
 - **THEN** the list shows only contracts linked to the selected client in the authenticated user's firm

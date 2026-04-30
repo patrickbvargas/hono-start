@@ -131,6 +131,7 @@ describe("contract data queries", () => {
 			limit: 10,
 			column: "createdAt" as const,
 			direction: "desc" as const,
+			query: "PROC",
 			clientId: "9",
 			legalArea: ["SOCIAL_SECURITY"],
 			contractStatus: ["ACTIVE"],
@@ -147,6 +148,22 @@ describe("contract data queries", () => {
 			expect.objectContaining({
 				where: expect.objectContaining({
 					firmId: 1,
+					OR: [
+						{
+							processNumber: {
+								contains: "PROC",
+								mode: "insensitive",
+							},
+						},
+						{
+							client: {
+								fullName: {
+									contains: "PROC",
+									mode: "insensitive",
+								},
+							},
+						},
+					],
 					clientId: 9,
 					legalAreaId: { in: [7] },
 					statusId: { in: [8] },
@@ -167,6 +184,7 @@ describe("contract data queries", () => {
 		expect(prismaMock.contract.count).toHaveBeenCalledWith({
 			where: expect.objectContaining({
 				firmId: 1,
+				OR: expect.any(Array),
 				clientId: 9,
 			}),
 		});

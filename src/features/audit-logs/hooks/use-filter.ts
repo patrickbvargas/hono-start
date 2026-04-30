@@ -1,9 +1,17 @@
+import { useDebouncedCallback } from "use-debounce";
 import { useAppForm } from "@/shared/hooks/use-app-form";
 import { useFilter } from "@/shared/hooks/use-filter";
-import { auditLogFilterSchema } from "../schemas/filter";
+import { type AuditLogFilter, auditLogFilterSchema } from "../schemas/filter";
+
+const DEBOUNCED_FIELDS = new Set<keyof AuditLogFilter>(["query"]);
 
 export function useAuditLogFilter() {
 	const { filter, handleFilter } = useFilter(auditLogFilterSchema);
+
+	const debounceSubmit = useDebouncedCallback(
+		(submit: () => void | Promise<void>) => submit(),
+		300,
+	);
 
 	const form = useAppForm({
 		defaultValues: filter,
@@ -12,8 +20,19 @@ export function useAuditLogFilter() {
 			handleFilter(payload);
 		},
 		listeners: {
-			onChange: ({ formApi }) => {
+			onChange: ({ formApi, fieldApi }) => {
+				if (DEBOUNCED_FIELDS.has(fieldApi.name)) {
+					debounceSubmit(formApi.handleSubmit);
+					return;
+				}
+
+				debounceSubmit.cancel();
 				formApi.handleSubmit();
+			},
+			onBlur: ({ fieldApi }) => {
+				if (DEBOUNCED_FIELDS.has(fieldApi.name)) {
+					debounceSubmit.flush();
+				}
 			},
 		},
 	});

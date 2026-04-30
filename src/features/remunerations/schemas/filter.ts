@@ -5,6 +5,7 @@ import {
 } from "@/shared/schemas/filter";
 
 export const remunerationFilterSchema = z.object({
+	query: z.string().trim().catch(""),
 	employeeId: z.string().catch("").default(""),
 	contractId: z.string().catch("").default(""),
 	dateFrom: z.string().catch("").default(""),

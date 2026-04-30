@@ -69,6 +69,7 @@ export const contractSearchDefaults: ContractSearch = {
 	limit: 25,
 	column: "createdAt",
 	direction: "desc",
+	query: "",
 	clientId: "",
 	legalArea: [],
 	contractStatus: [],

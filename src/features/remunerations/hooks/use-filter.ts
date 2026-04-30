@@ -6,7 +6,7 @@ import {
 	remunerationFilterSchema,
 } from "../schemas/filter";
 
-const DEBOUNCED_FIELDS = new Set<keyof RemunerationFilter>([]);
+const DEBOUNCED_FIELDS = new Set<keyof RemunerationFilter>(["query"]);
 
 export function useRemunerationFilter() {
 	const { filter, handleFilter } = useFilter(remunerationFilterSchema);

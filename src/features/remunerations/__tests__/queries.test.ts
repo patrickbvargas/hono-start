@@ -35,6 +35,7 @@ const baseSearch = {
 	limit: 10,
 	column: "paymentDate" as const,
 	direction: "desc" as const,
+	query: "Maria",
 	employeeId: "99",
 	contractId: "55",
 	dateFrom: "2026-01-01",
@@ -110,6 +111,28 @@ describe("remuneration data queries", () => {
 		).toEqual({
 			firmId: 1,
 			deletedAt: null,
+			OR: [
+				{
+					contractEmployee: {
+						contract: {
+							processNumber: {
+								contains: "Maria",
+								mode: "insensitive",
+							},
+						},
+					},
+				},
+				{
+					contractEmployee: {
+						employee: {
+							fullName: {
+								contains: "Maria",
+								mode: "insensitive",
+							},
+						},
+					},
+				},
+			],
 			paymentDate: {
 				gte: new Date("2026-01-01T00:00:00.000Z"),
 				lte: new Date("2026-01-31T23:59:59.999Z"),
@@ -131,6 +154,7 @@ describe("remuneration data queries", () => {
 			expect.objectContaining({
 				where: expect.objectContaining({
 					firmId: 1,
+					OR: expect.any(Array),
 					contractEmployee: {
 						contractId: 55,
 						employeeId: 99,

@@ -14,7 +14,7 @@ interface FilterPopoverProps extends React.ComponentProps<typeof Popover> {
 export const FilterPopover = ({ children, ...props }: FilterPopoverProps) => {
 	return (
 		<Popover {...props}>
-			<PopoverTrigger render={<Button variant="ghost" />}>
+			<PopoverTrigger render={<Button variant="outline" />}>
 				<Settings2Icon size={16} />
 				Filtros
 			</PopoverTrigger>

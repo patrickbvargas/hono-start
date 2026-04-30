@@ -50,6 +50,7 @@ describe("audit-log data queries", () => {
 				limit: 10,
 				column: "actorName",
 				direction: "asc",
+				query: "PROC",
 				action: ["UPDATE"],
 				entityType: ["Contract"],
 				actorName: ["Admin"],
@@ -59,6 +60,20 @@ describe("audit-log data queries", () => {
 		expect(prismaMock.auditLog.findMany).toHaveBeenCalledWith({
 			where: {
 				firmId: 1,
+				OR: [
+					{
+						actorName: {
+							contains: "PROC",
+							mode: "insensitive",
+						},
+					},
+					{
+						entityName: {
+							contains: "PROC",
+							mode: "insensitive",
+						},
+					},
+				],
 				action: { in: ["UPDATE"] },
 				entityType: { in: ["Contract"] },
 				actorName: { in: ["Admin"] },

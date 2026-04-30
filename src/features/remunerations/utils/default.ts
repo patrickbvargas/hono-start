@@ -15,6 +15,7 @@ export const remunerationSearchDefaults: RemunerationSearch = {
 	limit: 25,
 	column: "paymentDate",
 	direction: "desc",
+	query: "",
 	employeeId: "",
 	contractId: "",
 	dateFrom: "",

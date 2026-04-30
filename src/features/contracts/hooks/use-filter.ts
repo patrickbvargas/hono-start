@@ -3,7 +3,7 @@ import { useAppForm } from "@/shared/hooks/use-app-form";
 import { useFilter } from "@/shared/hooks/use-filter";
 import { type ContractFilter, contractFilterSchema } from "../schemas/filter";
 
-const DEBOUNCED_FIELDS = new Set<keyof ContractFilter>([]);
+const DEBOUNCED_FIELDS = new Set<keyof ContractFilter>(["query"]);
 
 export function useContractFilter() {
 	const { filter, handleFilter } = useFilter(contractFilterSchema);

@@ -57,6 +57,26 @@ function buildContractWhere({
 		firmId,
 		...getEntityDeletedWhere(filter.status),
 		...getEntityActiveWhere(filter.active),
+		...(filter.query
+			? {
+					OR: [
+						{
+							processNumber: {
+								contains: filter.query,
+								mode: "insensitive" as const,
+							},
+						},
+						{
+							client: {
+								fullName: {
+									contains: filter.query,
+									mode: "insensitive" as const,
+								},
+							},
+						},
+					],
+				}
+			: {}),
 		...(clientId ? { clientId } : {}),
 		...(legalAreaIds.length > 0 ? { legalAreaId: { in: legalAreaIds } } : {}),
 		...(statusIds.length > 0 ? { statusId: { in: statusIds } } : {}),
@@ -384,6 +404,7 @@ export async function getContractById({
 				firmId: scope.firmId,
 				employeeId: scope.employeeId,
 				filter: {
+					query: "",
 					clientId: "",
 					legalArea: [],
 					contractStatus: [],

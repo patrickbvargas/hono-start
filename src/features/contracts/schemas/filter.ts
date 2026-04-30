@@ -5,6 +5,7 @@ import {
 } from "@/shared/schemas/filter";
 
 export const contractFilterSchema = z.object({
+	query: z.string().trim().catch(""),
 	clientId: z.string().catch("").default(""),
 	legalArea: z.array(z.string()).catch([]),
 	contractStatus: z.array(z.string()).catch([]),

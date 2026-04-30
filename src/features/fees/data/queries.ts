@@ -70,6 +70,22 @@ function buildFeeWhere({
 		firmId,
 		...getEntityDeletedWhere(filter.status),
 		...getEntityActiveWhere(filter.active),
+		...(filter.query
+			? {
+					OR: [
+						{
+							revenue: {
+								contract: {
+									processNumber: {
+										contains: filter.query,
+										mode: "insensitive" as const,
+									},
+								},
+							},
+						},
+					],
+				}
+			: {}),
 		...(filter.contractId
 			? {
 					revenue: {
@@ -244,6 +260,7 @@ export async function getFeeById({
 				firmId: scope.firmId,
 				employeeId: scope.employeeId,
 				filter: {
+					query: "",
 					contractId: "",
 					revenueId: "",
 					dateFrom: "",

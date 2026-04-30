@@ -1,6 +1,7 @@
 import * as z from "zod";
 
 export const auditLogFilterSchema = z.object({
+	query: z.string().trim().catch(""),
 	action: z.array(z.string()).catch([]),
 	entityType: z.array(z.string()).catch([]),
 	actorName: z.array(z.string()).catch([]),

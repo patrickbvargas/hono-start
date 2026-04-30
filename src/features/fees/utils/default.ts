@@ -30,6 +30,7 @@ export const feeSearchDefaults: FeeSearch = {
 	limit: 25,
 	column: "paymentDate",
 	direction: "desc",
+	query: "",
 	contractId: "",
 	revenueId: "",
 	dateFrom: "",
