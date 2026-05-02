@@ -33,7 +33,7 @@ export const ClientTable = ({
 
 		return [
 			c.accessor("id", {
-				header: "ID",
+				header: "#",
 				cell: ({ row }) => (
 					<EntityIdTrigger id={row.original.id} onView={onView} />
 				),
@@ -75,7 +75,6 @@ export const ClientTable = ({
 			}),
 			c.display({
 				id: "actions",
-				header: "Ações",
 				cell: ({ row }) => {
 					const client = row.original;
 
@@ -90,6 +89,9 @@ export const ClientTable = ({
 							onDelete={() => onDelete?.(client.id)}
 						/>
 					);
+				},
+				meta: {
+					cellClassName: "w-11",
 				},
 			}),
 		];

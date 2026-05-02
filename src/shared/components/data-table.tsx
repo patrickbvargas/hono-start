@@ -41,7 +41,12 @@ export const DataTable = <TData, TValue>({
 	});
 
 	return (
-		<div className={cn("space-y-4", className)}>
+		<div
+			className={cn(
+				"space-y-4 rounded-lg border border-input overflow-clip",
+				className,
+			)}
+		>
 			<Table>
 				<TableHeader>
 					<TableRow>
@@ -87,7 +92,9 @@ export const DataTable = <TData, TValue>({
 					)}
 				</TableBody>
 			</Table>
-			{footerContent && <div className="flex justify-end">{footerContent}</div>}
+			{footerContent && (
+				<div className="flex justify-end py-2 px-3">{footerContent}</div>
+			)}
 		</div>
 	);
 };

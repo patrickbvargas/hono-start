@@ -62,7 +62,7 @@ export const WrapperBody = ({
 			className={cn("h-full w-full overflow-hidden", className)}
 			{...props}
 		>
-			<div className={cn("flex flex-col px-4 gap-3", className)}>
+			<div className={cn("flex flex-col px-4 pb-4 gap-3", className)}>
 				{children}
 			</div>
 		</ScrollArea>

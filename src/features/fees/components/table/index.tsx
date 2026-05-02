@@ -37,7 +37,7 @@ export const FeeTable = ({
 
 		return [
 			c.accessor("id", {
-				header: "ID",
+				header: "#",
 				cell: ({ row }) => (
 					<EntityIdTrigger id={row.original.id} onView={onView} />
 				),
@@ -69,10 +69,6 @@ export const FeeTable = ({
 				header: "Parcela",
 				enableSorting: FEE_ALLOWED_SORT_COLUMNS.includes("installmentNumber"),
 			}),
-			c.accessor("generatesRemuneration", {
-				header: "Gera remuneração",
-				cell: ({ row }) => (row.original.generatesRemuneration ? "Sim" : "Não"),
-			}),
 			c.accessor("isActive", {
 				header: "Situação",
 				cell: ({ row }) => (
@@ -89,7 +85,6 @@ export const FeeTable = ({
 			}),
 			c.display({
 				id: "actions",
-				header: "Ações",
 				cell: ({ row }) => {
 					const fee = row.original;
 					const canEditFee =
@@ -112,6 +107,9 @@ export const FeeTable = ({
 							onDelete={() => onDelete?.(fee.id)}
 						/>
 					);
+				},
+				meta: {
+					cellClassName: "w-11",
 				},
 			}),
 		];

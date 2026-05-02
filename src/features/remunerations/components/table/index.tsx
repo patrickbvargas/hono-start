@@ -80,11 +80,6 @@ export const RemunerationTable = ({
 					"effectivePercentage",
 				),
 			}),
-			c.accessor("isManualOverride", {
-				header: "Origem",
-				cell: ({ row }) =>
-					row.original.isManualOverride ? "Manual" : "Automática",
-			}),
 			c.accessor("isActive", {
 				header: "Situação",
 				cell: ({ row }) => (
@@ -101,7 +96,6 @@ export const RemunerationTable = ({
 			}),
 			c.display({
 				id: "actions",
-				header: "Ações",
 				cell: ({ row }) => {
 					const remuneration = row.original;
 
@@ -116,6 +110,9 @@ export const RemunerationTable = ({
 							onDelete={() => onDelete?.(remuneration.id)}
 						/>
 					);
+				},
+				meta: {
+					cellClassName: "w-11",
 				},
 			}),
 		];

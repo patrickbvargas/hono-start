@@ -33,7 +33,7 @@ export const EmployeeTable = ({
 
 		return [
 			c.accessor("id", {
-				header: "ID",
+				header: "#",
 				cell: ({ row }) => (
 					<EntityIdTrigger id={row.original.id} onView={onView} />
 				),
@@ -86,7 +86,6 @@ export const EmployeeTable = ({
 			}),
 			c.display({
 				id: "actions",
-				header: "Ações",
 				cell: ({ row }) => {
 					const employee = row.original;
 
@@ -101,6 +100,9 @@ export const EmployeeTable = ({
 							onDelete={() => onDelete?.(employee.id)}
 						/>
 					);
+				},
+				meta: {
+					cellClassName: "w-11",
 				},
 			}),
 		];

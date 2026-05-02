@@ -19,7 +19,7 @@ function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
 	return (
 		<thead
 			data-slot="table-header"
-			className={cn("[&_tr]:border-b", className)}
+			className={cn("[&_tr]:border-b bg-sidebar", className)}
 			{...props}
 		/>
 	);
@@ -102,11 +102,11 @@ function TableCaption({
 
 export {
 	Table,
-	TableHeader,
 	TableBody,
+	TableCaption,
+	TableCell,
 	TableFooter,
 	TableHead,
+	TableHeader,
 	TableRow,
-	TableCell,
-	TableCaption,
 };

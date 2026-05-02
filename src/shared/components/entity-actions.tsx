@@ -1,10 +1,4 @@
-import {
-	EllipsisVerticalIcon,
-	EyeIcon,
-	PenLineIcon,
-	TrashIcon,
-	Undo2Icon,
-} from "lucide-react";
+import { EllipsisVerticalIcon } from "lucide-react";
 import type { ReactNode } from "react";
 import {
 	Button,
@@ -58,26 +52,16 @@ export function EntityActions({
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end">
 				{shouldShowView && (
-					<DropdownMenuItem onClick={onView}>
-						<EyeIcon size={16} />
-						Visualizar
-					</DropdownMenuItem>
+					<DropdownMenuItem onClick={onView}>Visualizar</DropdownMenuItem>
 				)}
 				{shouldShowEdit && (
-					<DropdownMenuItem onClick={onEdit}>
-						<PenLineIcon size={16} />
-						Editar
-					</DropdownMenuItem>
+					<DropdownMenuItem onClick={onEdit}>Editar</DropdownMenuItem>
 				)}
 				{shouldShowRestore && (
-					<DropdownMenuItem onClick={onRestore}>
-						<Undo2Icon size={16} />
-						Restaurar
-					</DropdownMenuItem>
+					<DropdownMenuItem onClick={onRestore}>Restaurar</DropdownMenuItem>
 				)}
 				{shouldShowDelete && (
 					<DropdownMenuItem variant="destructive" onClick={onDelete}>
-						<TrashIcon size={16} />
 						Excluir
 					</DropdownMenuItem>
 				)}

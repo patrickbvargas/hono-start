@@ -37,7 +37,7 @@ export const ContractTable = ({
 
 		return [
 			c.accessor("id", {
-				header: "ID",
+				header: "#",
 				cell: ({ row }) => (
 					<EntityIdTrigger id={row.original.id} onView={onView} />
 				),
@@ -62,7 +62,7 @@ export const ContractTable = ({
 				},
 			}),
 			c.accessor("legalArea", {
-				header: "Área jurídica",
+				header: "Área",
 				enableSorting: CONTRACT_ALLOWED_SORT_COLUMNS.includes("legalArea"),
 			}),
 			c.accessor("status", {
@@ -91,7 +91,6 @@ export const ContractTable = ({
 			}),
 			c.display({
 				id: "actions",
-				header: "Ações",
 				cell: ({ row }) => {
 					const contract = row.original;
 					const canEditContract =
@@ -114,6 +113,9 @@ export const ContractTable = ({
 							onDelete={() => onDelete?.(contract.id)}
 						/>
 					);
+				},
+				meta: {
+					cellClassName: "w-11",
 				},
 			}),
 		];

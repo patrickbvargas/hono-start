@@ -77,7 +77,7 @@ export const Pagination = ({
 			)}
 			{...props}
 		>
-			<div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+			<div className="w-full flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 				<p className="text-sm text-muted-foreground">
 					Exibindo {displayedStartRecord}-{displayedEndRecord} de {totalRecords}{" "}
 					registros
