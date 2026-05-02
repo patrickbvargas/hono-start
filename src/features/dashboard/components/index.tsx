@@ -1,21 +1,26 @@
 import {
 	ActivityIcon,
 	BadgeDollarSignIcon,
-	BriefcaseBusinessIcon,
+	InfoIcon,
 	ScaleIcon,
 	TrendingDownIcon,
 	TrendingUpIcon,
-	UsersIcon,
 } from "lucide-react";
 import {
 	Badge,
 	Card,
+	CardAction,
 	CardContent,
 	CardHeader,
 	CardTitle,
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
 } from "@/shared/components/ui";
 import { cn } from "@/shared/lib/utils";
 import type { DashboardSummary } from "../schemas/model";
+import { FinancialEvolutionChart } from "./financial-evolution";
 
 interface DashboardProps {
 	data: DashboardSummary;
@@ -25,7 +30,6 @@ const metricIcons = [
 	<BadgeDollarSignIcon key="revenue-total" className="size-4" />,
 	<TrendingUpIcon key="revenue-received" className="size-4" />,
 	<ScaleIcon key="remunerations" className="size-4" />,
-	<BriefcaseBusinessIcon key="contracts" className="size-4" />,
 ];
 
 const toneClassNames = {
@@ -69,11 +73,11 @@ function DashboardBreakdown({
 	emptyLabel: string;
 }) {
 	return (
-		<Card className="min-h-72">
-			<CardHeader>
+		<Card className="min-h-64">
+			<CardHeader className="pb-3">
 				<CardTitle>{title}</CardTitle>
 			</CardHeader>
-			<CardContent className="space-y-4">
+			<CardContent className="space-y-3 pt-0">
 				{items.length === 0 ? (
 					<p className="text-sm text-muted-foreground">{emptyLabel}</p>
 				) : (
@@ -89,7 +93,7 @@ function DashboardBreakdown({
 							</div>
 							<div className="h-2 overflow-hidden rounded-full bg-muted">
 								<div
-									className="h-full rounded-full bg-accent"
+									className="h-full rounded-full bg-primary"
 									style={{ width: `${Math.max(item.percentage, 2)}%` }}
 								/>
 							</div>
@@ -108,34 +112,65 @@ export function Dashboard({ data }: DashboardProps) {
 	return (
 		<div className="h-full overflow-auto pb-4">
 			<div className="flex flex-col gap-4">
-				<div className="flex flex-wrap items-center justify-between gap-3">
-					<div>
-						<p className="text-sm text-muted-foreground">
-							Resumo operacional e financeiro
-						</p>
-						<h2 className="text-2xl font-semibold">Dashboard</h2>
-					</div>
+				<div className="flex justify-end">
 					<Badge variant={data.isAdmin ? "default" : "secondary"}>
 						{data.scopeLabel}
 					</Badge>
 				</div>
 
-				<div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+				<div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
 					{data.metrics.map((metric, index) => (
 						<Card key={metric.label}>
-							<CardContent className="flex min-h-36 flex-col justify-between gap-4">
-								<div className="flex items-start justify-between gap-3">
-									<div>
-										<p className="text-sm text-muted-foreground">
-											{metric.label}
+							<CardHeader className="gap-0.5 pb-1.5">
+								<div className="space-y-0.5">
+									<p className="text-sm text-muted-foreground">
+										{metric.label}
+									</p>
+									<p className="text-2xl font-semibold">
+										{metric.formattedValue}
+									</p>
+								</div>
+								<CardAction className={toneClassNames[metric.tone]}>
+									{metricIcons[index]}
+								</CardAction>
+							</CardHeader>
+							<CardContent className="flex flex-col gap-2 pt-0">
+								<div className="flex items-center justify-between gap-3">
+									<Badge
+										variant="secondary"
+										className={cn(
+											badgeToneClassNames[getChangeTone(metric.changePercent)],
+										)}
+									>
+										{metric.changePercent < 0 ? (
+											<TrendingDownIcon className="size-3.5" />
+										) : (
+											<TrendingUpIcon className="size-3.5" />
+										)}
+										{formatChange(metric.changePercent)}
+									</Badge>
+									<div className="flex items-center gap-1.5 text-right text-sm text-muted-foreground">
+										<p>
+											{metric.previousLabel}: {metric.formattedPreviousValue}
 										</p>
-										<p className="mt-2 text-2xl font-semibold">
-											{metric.formattedValue}
-										</p>
+										<TooltipProvider>
+											<Tooltip>
+												<TooltipTrigger
+													render={
+														<button
+															type="button"
+															className="inline-flex text-muted-foreground transition-colors hover:text-foreground"
+														/>
+													}
+												>
+													<InfoIcon className="size-3.5" />
+												</TooltipTrigger>
+												<TooltipContent>
+													Refere-se a {metric.previousPeriodLabel}.
+												</TooltipContent>
+											</Tooltip>
+										</TooltipProvider>
 									</div>
-									<span className={toneClassNames[metric.tone]}>
-										{metricIcons[index]}
-									</span>
 								</div>
 								<p className="text-sm text-muted-foreground">
 									{metric.description}
@@ -145,40 +180,10 @@ export function Dashboard({ data }: DashboardProps) {
 					))}
 				</div>
 
-				<div className="grid gap-3 lg:grid-cols-2">
-					{data.comparisons.map((comparison) => {
-						const tone = getChangeTone(comparison.changePercent);
-						const TrendIcon =
-							comparison.changePercent < 0 ? TrendingDownIcon : TrendingUpIcon;
-
-						return (
-							<Card key={comparison.label}>
-								<CardContent className="flex min-h-40 flex-col justify-between gap-4">
-									<div className="flex items-start justify-between gap-3">
-										<div>
-											<p className="text-sm text-muted-foreground">
-												{comparison.label}
-											</p>
-											<p className="mt-2 text-3xl font-semibold">
-												{comparison.formattedCurrentValue}
-											</p>
-										</div>
-										<Badge
-											variant="secondary"
-											className={cn(badgeToneClassNames[tone])}
-										>
-											<TrendIcon className="size-3.5" />
-											{formatChange(comparison.changePercent)}
-										</Badge>
-									</div>
-									<p className="text-sm text-muted-foreground">
-										Mês anterior: {comparison.formattedPreviousValue}
-									</p>
-								</CardContent>
-							</Card>
-						);
-					})}
-				</div>
+				<FinancialEvolutionChart
+					description={data.financialEvolutionLabel}
+					items={data.financialEvolution}
+				/>
 
 				<div className="grid gap-3 xl:grid-cols-[1fr_1fr_1.15fr]">
 					<DashboardBreakdown
@@ -191,11 +196,11 @@ export function Dashboard({ data }: DashboardProps) {
 						items={data.revenueTypeRevenue}
 						emptyLabel="Nenhuma receita recebida por tipo."
 					/>
-					<Card className="min-h-72">
-						<CardHeader>
+					<Card className="min-h-64">
+						<CardHeader className="pb-3">
 							<CardTitle>Atividade recente</CardTitle>
 						</CardHeader>
-						<CardContent className="space-y-3">
+						<CardContent className="space-y-2.5 pt-0">
 							{data.recentActivity.length === 0 ? (
 								<p className="text-sm text-muted-foreground">
 									Nenhum evento recente.
@@ -203,7 +208,7 @@ export function Dashboard({ data }: DashboardProps) {
 							) : (
 								data.recentActivity.map((activity) => (
 									<div
-										className="flex items-start gap-3 rounded-md border border-border p-3"
+										className="flex items-start gap-3 rounded-md border border-border px-3 py-2.5"
 										key={activity.id}
 									>
 										<span className="mt-0.5 rounded-md bg-muted p-2 text-muted-foreground">
@@ -230,13 +235,6 @@ export function Dashboard({ data }: DashboardProps) {
 							)}
 						</CardContent>
 					</Card>
-				</div>
-
-				<div className="flex items-center gap-2 text-sm text-muted-foreground">
-					<UsersIcon className="size-4" />
-					<span>
-						Dados calculados conforme escopo da sessão e registros ativos.
-					</span>
 				</div>
 			</div>
 		</div>

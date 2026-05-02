@@ -1,4 +1,8 @@
-export { getContractsQueryOptions } from "./api/queries";
+export {
+	getContractLegalAreasQueryOptions,
+	getContractRevenueTypesQueryOptions,
+	getContractsQueryOptions,
+} from "./api/queries";
 export * from "./components/delete";
 export * from "./components/details";
 export * from "./components/filter";

@@ -7,10 +7,14 @@ import { dashboardSearchSchema } from "../schemas/search";
 
 describe("dashboard filtering", () => {
 	it("parses empty URL search with safe defaults", () => {
+		const currentYear = new Date().getUTCFullYear();
+
 		expect(dashboardSearchSchema.parse({})).toEqual({
-			dateFrom: "",
-			dateTo: "",
+			dateFrom: `${currentYear}-01-01`,
+			dateTo: `${currentYear}-12-31`,
 			employeeId: "",
+			legalArea: "",
+			revenueType: "",
 		});
 	});
 
@@ -20,6 +24,8 @@ describe("dashboard filtering", () => {
 				dateFrom: "2026-04-20",
 				dateTo: "2026-04-01",
 				employeeId: "",
+				legalArea: "",
+				revenueType: "",
 			}),
 		).toThrowError("A data inicial deve ser anterior à data final");
 	});

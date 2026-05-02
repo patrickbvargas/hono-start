@@ -1,10 +1,15 @@
 import { createFileRoute, stripSearchParams } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import {
+	getContractLegalAreasQueryOptions,
+	getContractRevenueTypesQueryOptions,
+} from "@/features/contracts";
+import {
 	Dashboard,
 	DashboardFilter,
 	dashboardSearchDefaults,
 	dashboardSearchSchema,
+	getDashboardEmployeeOptionsQueryOptions,
 	getDashboardSummaryQueryOptions,
 	useDashboardData,
 } from "@/features/dashboard";
@@ -23,7 +28,12 @@ export const Route = createFileRoute("/_app/")({
 	},
 	loaderDeps: ({ search }) => ({ search }),
 	loader: async ({ context: { queryClient }, deps: { search } }) => {
-		await queryClient.ensureQueryData(getDashboardSummaryQueryOptions(search));
+		await Promise.all([
+			queryClient.ensureQueryData(getDashboardSummaryQueryOptions(search)),
+			queryClient.ensureQueryData(getDashboardEmployeeOptionsQueryOptions()),
+			queryClient.ensureQueryData(getContractLegalAreasQueryOptions()),
+			queryClient.ensureQueryData(getContractRevenueTypesQueryOptions()),
+		]);
 	},
 	pendingComponent: () => <RouteLoading />,
 	component: RouteComponent,

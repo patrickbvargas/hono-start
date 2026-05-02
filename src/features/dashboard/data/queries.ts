@@ -32,7 +32,14 @@ interface RevenueRow {
 	};
 	fees: Array<{
 		amount: Prisma.Decimal;
+		paymentDate: Date;
 	}>;
+}
+
+interface DashboardFinancialEvolutionItem {
+	month: string;
+	revenue: number;
+	remuneration: number;
 }
 
 interface DashboardPeriod {
@@ -41,11 +48,19 @@ interface DashboardPeriod {
 	hasPeriod: boolean;
 }
 
+interface DashboardMonthRange {
+	endMonth: Date;
+	label: string;
+	startMonth: Date;
+}
+
 interface ComparisonBoundaries {
 	currentStart: Date;
 	nextStart: Date;
+	previousEndExclusive: Date;
+	previousPeriodLabel: string;
 	previousStart: Date;
-	currentLabel: string;
+	previousLabel: string;
 }
 
 interface GroupTotal {
@@ -60,6 +75,11 @@ interface EffectiveEmployeeParams {
 	sessionEmployeeId?: number;
 }
 
+interface DashboardDimensionFilters {
+	legalArea?: string;
+	revenueType?: string;
+}
+
 function parseOptionalEntityId(value: string): number | undefined {
 	if (!value) {
 		return undefined;
@@ -72,6 +92,23 @@ function parseOptionalEntityId(value: string): number | undefined {
 	}
 
 	return parsed;
+}
+
+function parseOptionalLookupValue(value: string): string | undefined {
+	if (!value) {
+		return undefined;
+	}
+
+	return value;
+}
+
+function getDashboardDimensionFilters(
+	search: DashboardSearch,
+): DashboardDimensionFilters {
+	return {
+		legalArea: parseOptionalLookupValue(search.legalArea),
+		revenueType: parseOptionalLookupValue(search.revenueType),
+	};
 }
 
 export function getEffectiveDashboardEmployeeId({
@@ -92,6 +129,108 @@ function getSelectedEmployeeId(scope: DashboardScope): number | undefined {
 		requestedEmployeeId: parseOptionalEntityId(scope.search.employeeId),
 		sessionEmployeeId: scope.employeeId,
 	});
+}
+
+function getDashboardContractDimensionWhere(
+	scope: DashboardScope,
+): Prisma.ContractWhereInput {
+	const { legalArea, revenueType } = getDashboardDimensionFilters(scope.search);
+
+	return {
+		...(legalArea ? { legalArea: { value: legalArea } } : {}),
+		...(revenueType
+			? {
+					revenues: {
+						some: {
+							firmId: scope.firmId,
+							deletedAt: null,
+							isActive: true,
+							type: {
+								value: revenueType,
+							},
+						},
+					},
+				}
+			: {}),
+	};
+}
+
+function getDashboardRevenueWhere(
+	scope: DashboardScope,
+): Prisma.RevenueWhereInput {
+	const { revenueType } = getDashboardDimensionFilters(scope.search);
+
+	return {
+		firmId: scope.firmId,
+		deletedAt: null,
+		isActive: true,
+		...(revenueType ? { type: { value: revenueType } } : {}),
+		contract: {
+			firmId: scope.firmId,
+			deletedAt: null,
+			isActive: true,
+			...getAssignedContractWhere(scope),
+			...getDashboardContractDimensionWhere(scope),
+		},
+	};
+}
+
+function getDashboardFeeRevenueWhere(
+	scope: DashboardScope,
+): Prisma.FeeWhereInput["revenue"] {
+	return {
+		firmId: scope.firmId,
+		deletedAt: null,
+		isActive: true,
+		...(() => {
+			const { revenueType } = getDashboardDimensionFilters(scope.search);
+
+			return revenueType ? { type: { value: revenueType } } : {};
+		})(),
+		contract: {
+			firmId: scope.firmId,
+			deletedAt: null,
+			isActive: true,
+			...getAssignedContractWhere(scope),
+			...getDashboardContractDimensionWhere(scope),
+		},
+	};
+}
+
+function getDashboardRemunerationWhere(
+	scope: DashboardScope,
+): Prisma.RemunerationWhereInput {
+	const employeeId = getSelectedEmployeeId(scope);
+	const { legalArea, revenueType } = getDashboardDimensionFilters(scope.search);
+
+	return {
+		firmId: scope.firmId,
+		deletedAt: null,
+		isActive: true,
+		...(revenueType
+			? {
+					fee: {
+						revenue: {
+							type: {
+								value: revenueType,
+							},
+						},
+					},
+				}
+			: {}),
+		contractEmployee: {
+			...(employeeId ? { employeeId } : {}),
+			...(legalArea
+				? {
+						contract: {
+							legalArea: {
+								value: legalArea,
+							},
+						},
+					}
+				: {}),
+		},
+	};
 }
 
 function getAssignedContractWhere(scope: DashboardScope) {
@@ -131,6 +270,76 @@ function addDays(value: Date, days: number): Date {
 	const next = new Date(value);
 	next.setUTCDate(next.getUTCDate() + days);
 	return next;
+}
+
+function createMonthStart(value: Date): Date {
+	return new Date(
+		Date.UTC(value.getUTCFullYear(), value.getUTCMonth(), 1, 0, 0, 0, 0),
+	);
+}
+
+function createMonthEnd(value: Date): Date {
+	return new Date(
+		Date.UTC(
+			value.getUTCFullYear(),
+			value.getUTCMonth() + 1,
+			0,
+			23,
+			59,
+			59,
+			999,
+		),
+	);
+}
+
+function addMonths(value: Date, months: number): Date {
+	return new Date(
+		Date.UTC(
+			value.getUTCFullYear(),
+			value.getUTCMonth() + months,
+			1,
+			0,
+			0,
+			0,
+			0,
+		),
+	);
+}
+
+function addYears(value: Date, years: number): Date {
+	const next = new Date(value);
+	next.setUTCFullYear(next.getUTCFullYear() + years);
+	return next;
+}
+
+function getMonthKey(value: Date): string {
+	return `${value.getUTCFullYear()}-${String(value.getUTCMonth() + 1).padStart(2, "0")}`;
+}
+
+function formatMonthYearLabel(value: Date): string {
+	const formatted = new Intl.DateTimeFormat("pt-BR", {
+		month: "short",
+		year: "numeric",
+		timeZone: "UTC",
+	})
+		.format(value)
+		.replace(".", "");
+
+	const [month, year] = formatted.split(" de ");
+
+	if (!month || !year) {
+		return formatted;
+	}
+
+	return `${month.charAt(0).toUpperCase()}${month.slice(1)}/${year}`;
+}
+
+function formatDateRangeLabel(start: Date, endInclusive: Date): string {
+	const dateFormatter = new Intl.DateTimeFormat("pt-BR", {
+		timeZone: "UTC",
+	});
+
+	return `${dateFormatter.format(start)} a ${dateFormatter.format(endInclusive)}`;
 }
 
 function getDashboardPeriod(search: DashboardSearch): DashboardPeriod {
@@ -175,6 +384,14 @@ function isDateInsidePeriod(value: Date, period: DashboardPeriod): boolean {
 	return true;
 }
 
+function isDateInsideRange(
+	value: Date,
+	start: Date,
+	endExclusive: Date,
+): boolean {
+	return value >= start && value < endExclusive;
+}
+
 function getComparisonBoundaries(
 	search: DashboardSearch,
 ): ComparisonBoundaries {
@@ -182,11 +399,21 @@ function getComparisonBoundaries(
 	const period = getDashboardPeriod(search);
 
 	if (!period.hasPeriod) {
+		const currentStart = new Date(now.getFullYear(), now.getMonth(), 1);
+		const nextStart = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+		const previousStart = addYears(currentStart, -1);
+		const previousEndExclusive = addYears(nextStart, -1);
+
 		return {
-			currentStart: new Date(now.getFullYear(), now.getMonth(), 1),
-			nextStart: new Date(now.getFullYear(), now.getMonth() + 1, 1),
-			previousStart: new Date(now.getFullYear(), now.getMonth() - 1, 1),
-			currentLabel: "do mês",
+			currentStart,
+			nextStart,
+			previousStart,
+			previousEndExclusive,
+			previousLabel: "Período anterior",
+			previousPeriodLabel: formatDateRangeLabel(
+				previousStart,
+				addDays(previousEndExclusive, -1),
+			),
 		};
 	}
 
@@ -203,19 +430,45 @@ function getComparisonBoundaries(
 		createDayStart(inclusiveEnd.toISOString().slice(0, 10)),
 		1,
 	);
-	const daySpan = Math.max(
-		1,
-		Math.round(
-			(nextStart.getTime() - currentStart.getTime()) / (24 * 60 * 60 * 1000),
-		),
-	);
-	const previousStart = addDays(currentStart, -daySpan);
+	const previousStart = addYears(currentStart, -1);
+	const previousEndExclusive = addYears(nextStart, -1);
 
 	return {
 		currentStart,
 		nextStart,
 		previousStart,
-		currentLabel: "do período",
+		previousEndExclusive,
+		previousLabel: "Período anterior",
+		previousPeriodLabel: formatDateRangeLabel(
+			previousStart,
+			addDays(previousEndExclusive, -1),
+		),
+	};
+}
+
+function getFinancialEvolutionMonthRange(
+	search: DashboardSearch,
+): DashboardMonthRange {
+	const period = getDashboardPeriod(search);
+	const referenceEnd = period.dateTo ?? new Date();
+
+	if (period.dateFrom && period.dateTo) {
+		return {
+			startMonth: createMonthStart(period.dateFrom),
+			endMonth: createMonthStart(period.dateTo),
+			label: `${formatMonthYearLabel(createMonthStart(period.dateFrom))} a ${formatMonthYearLabel(createMonthStart(period.dateTo))}`,
+		};
+	}
+
+	const fallbackStart = createMonthStart(
+		period.dateFrom ?? addMonths(referenceEnd, -5),
+	);
+	const fallbackEnd = createMonthStart(period.dateTo ?? referenceEnd);
+
+	return {
+		startMonth: fallbackStart,
+		endMonth: fallbackEnd,
+		label: `${formatMonthYearLabel(fallbackStart)} a ${formatMonthYearLabel(fallbackEnd)}`,
 	};
 }
 
@@ -282,53 +535,135 @@ function getRecentDate(value: Date): string {
 	return value.toISOString();
 }
 
+function buildMonthlyFinancialEvolution({
+	chartDownPayments,
+	chartFees,
+	chartRemunerations,
+	range,
+}: {
+	chartDownPayments: Array<{
+		downPaymentValue: Prisma.Decimal | null;
+		paymentStartDate: Date;
+	}>;
+	chartFees: Array<{
+		amount: Prisma.Decimal;
+		paymentDate: Date;
+	}>;
+	chartRemunerations: Array<{
+		amount: Prisma.Decimal;
+		paymentDate: Date;
+	}>;
+	range: DashboardMonthRange;
+}): DashboardFinancialEvolutionItem[] {
+	const buckets = new Map<string, DashboardFinancialEvolutionItem>();
+
+	for (
+		let current = range.startMonth;
+		current.getTime() <= range.endMonth.getTime();
+		current = addMonths(current, 1)
+	) {
+		buckets.set(getMonthKey(current), {
+			month: getMonthKey(current),
+			revenue: 0,
+			remuneration: 0,
+		});
+	}
+
+	for (const row of chartDownPayments) {
+		const month = getMonthKey(createMonthStart(row.paymentStartDate));
+		const bucket = buckets.get(month);
+
+		if (!bucket) {
+			continue;
+		}
+
+		bucket.revenue += Number(row.downPaymentValue?.toString() ?? 0);
+	}
+
+	for (const row of chartFees) {
+		const month = getMonthKey(createMonthStart(row.paymentDate));
+		const bucket = buckets.get(month);
+
+		if (!bucket) {
+			continue;
+		}
+
+		bucket.revenue += Number(row.amount);
+	}
+
+	for (const row of chartRemunerations) {
+		const month = getMonthKey(createMonthStart(row.paymentDate));
+		const bucket = buckets.get(month);
+
+		if (!bucket) {
+			continue;
+		}
+
+		bucket.remuneration += Number(row.amount);
+	}
+
+	return Array.from(buckets.values());
+}
+
 export async function getDashboardSummary(
 	scope: DashboardScope,
 ): Promise<DashboardSummary> {
-	const { currentStart, nextStart, previousStart, currentLabel } =
-		getComparisonBoundaries(scope.search);
+	const {
+		currentStart,
+		nextStart,
+		previousStart,
+		previousEndExclusive,
+		previousLabel,
+		previousPeriodLabel,
+	} = getComparisonBoundaries(scope.search);
 	const period = getDashboardPeriod(scope.search);
 	const paymentDateWhere = buildDashboardPaymentDateWhere(period);
-	const employeeId = getSelectedEmployeeId(scope);
-	const contractWhere = getAssignedContractWhere(scope);
+	const contractWhere = {
+		...getAssignedContractWhere(scope),
+		...getDashboardContractDimensionWhere(scope),
+	};
+	const revenueWhere = getDashboardRevenueWhere(scope);
+	const remunerationWhere = getDashboardRemunerationWhere(scope);
 	const firmWhere = {
 		firmId: scope.firmId,
 		deletedAt: null,
 		isActive: true,
 	};
+	const chartMonthRange = getFinancialEvolutionMonthRange(scope.search);
+	const chartWindowStart = period.dateFrom
+		? new Date(
+				Math.max(
+					period.dateFrom.getTime(),
+					chartMonthRange.startMonth.getTime(),
+				),
+			)
+		: chartMonthRange.startMonth;
+	const chartWindowEnd = period.dateTo
+		? new Date(
+				Math.min(
+					period.dateTo.getTime(),
+					createMonthEnd(chartMonthRange.endMonth).getTime(),
+				),
+			)
+		: createMonthEnd(chartMonthRange.endMonth);
 
 	const [
-		clientsCount,
-		activeContractsCount,
 		revenues,
 		currentFees,
 		previousFees,
 		allRemunerations,
 		currentRemunerations,
 		previousRemunerations,
+		chartDownPayments,
+		chartFees,
+		chartRemunerations,
 		recentClients,
 		recentContracts,
 		recentFees,
 		recentRemunerations,
 	] = await Promise.all([
-		prisma.client.count({ where: firmWhere }),
-		prisma.contract.count({
-			where: {
-				...firmWhere,
-				...contractWhere,
-				status: {
-					value: "ACTIVE",
-				},
-			},
-		}),
 		prisma.revenue.findMany({
-			where: {
-				...firmWhere,
-				contract: {
-					...firmWhere,
-					...contractWhere,
-				},
-			},
+			where: revenueWhere,
 			select: {
 				totalValue: true,
 				downPaymentValue: true,
@@ -357,6 +692,7 @@ export async function getDashboardSummary(
 					},
 					select: {
 						amount: true,
+						paymentDate: true,
 					},
 				},
 			},
@@ -368,12 +704,7 @@ export async function getDashboardSummary(
 					gte: currentStart,
 					lt: nextStart,
 				},
-				revenue: {
-					contract: {
-						...firmWhere,
-						...contractWhere,
-					},
-				},
+				revenue: getDashboardFeeRevenueWhere(scope),
 			},
 			select: {
 				amount: true,
@@ -384,14 +715,9 @@ export async function getDashboardSummary(
 				...firmWhere,
 				paymentDate: {
 					gte: previousStart,
-					lt: currentStart,
+					lt: previousEndExclusive,
 				},
-				revenue: {
-					contract: {
-						...firmWhere,
-						...contractWhere,
-					},
-				},
+				revenue: getDashboardFeeRevenueWhere(scope),
 			},
 			select: {
 				amount: true,
@@ -399,9 +725,8 @@ export async function getDashboardSummary(
 		}),
 		prisma.remuneration.findMany({
 			where: {
-				...firmWhere,
+				...remunerationWhere,
 				...(paymentDateWhere ? { paymentDate: paymentDateWhere } : {}),
-				contractEmployee: employeeId ? { employeeId } : {},
 			},
 			select: {
 				amount: true,
@@ -409,12 +734,11 @@ export async function getDashboardSummary(
 		}),
 		prisma.remuneration.findMany({
 			where: {
-				...firmWhere,
+				...remunerationWhere,
 				paymentDate: {
 					gte: currentStart,
 					lt: nextStart,
 				},
-				contractEmployee: employeeId ? { employeeId } : {},
 			},
 			select: {
 				amount: true,
@@ -422,15 +746,54 @@ export async function getDashboardSummary(
 		}),
 		prisma.remuneration.findMany({
 			where: {
-				...firmWhere,
+				...remunerationWhere,
 				paymentDate: {
 					gte: previousStart,
-					lt: currentStart,
+					lt: previousEndExclusive,
 				},
-				contractEmployee: employeeId ? { employeeId } : {},
 			},
 			select: {
 				amount: true,
+			},
+		}),
+		prisma.revenue.findMany({
+			where: {
+				...revenueWhere,
+				paymentStartDate: {
+					gte: chartWindowStart,
+					lte: chartWindowEnd,
+				},
+			},
+			select: {
+				downPaymentValue: true,
+				paymentStartDate: true,
+			},
+		}),
+		prisma.fee.findMany({
+			where: {
+				...firmWhere,
+				paymentDate: {
+					gte: chartWindowStart,
+					lte: chartWindowEnd,
+				},
+				revenue: getDashboardFeeRevenueWhere(scope),
+			},
+			select: {
+				amount: true,
+				paymentDate: true,
+			},
+		}),
+		prisma.remuneration.findMany({
+			where: {
+				...remunerationWhere,
+				paymentDate: {
+					gte: chartWindowStart,
+					lte: chartWindowEnd,
+				},
+			},
+			select: {
+				amount: true,
+				paymentDate: true,
 			},
 		}),
 		prisma.client.findMany({
@@ -465,12 +828,7 @@ export async function getDashboardSummary(
 			where: {
 				...firmWhere,
 				...(paymentDateWhere ? { paymentDate: paymentDateWhere } : {}),
-				revenue: {
-					contract: {
-						...firmWhere,
-						...contractWhere,
-					},
-				},
+				revenue: getDashboardFeeRevenueWhere(scope),
 			},
 			orderBy: { paymentDate: "desc" },
 			take: 5,
@@ -496,9 +854,8 @@ export async function getDashboardSummary(
 		}),
 		prisma.remuneration.findMany({
 			where: {
-				...firmWhere,
+				...remunerationWhere,
 				...(paymentDateWhere ? { paymentDate: paymentDateWhere } : {}),
-				contractEmployee: employeeId ? { employeeId } : {},
 			},
 			orderBy: { paymentDate: "desc" },
 			take: 5,
@@ -525,10 +882,30 @@ export async function getDashboardSummary(
 	]);
 
 	const revenueTotal = sumDecimal(
-		revenues.map((revenue) => revenue.totalValue),
+		revenues
+			.filter((revenue) => isDateInsidePeriod(revenue.paymentStartDate, period))
+			.map((revenue) => revenue.totalValue),
 	);
 	const revenueReceived = sumDecimal(
 		revenues.map((revenue) => getRevenueReceived(revenue, period)),
+	);
+	const currentPlannedRevenue = sumDecimal(
+		revenues
+			.filter((revenue) =>
+				isDateInsideRange(revenue.paymentStartDate, currentStart, nextStart),
+			)
+			.map((revenue) => revenue.totalValue),
+	);
+	const previousPlannedRevenue = sumDecimal(
+		revenues
+			.filter((revenue) =>
+				isDateInsideRange(
+					revenue.paymentStartDate,
+					previousStart,
+					previousEndExclusive,
+				),
+			)
+			.map((revenue) => revenue.totalValue),
 	);
 	const currentRevenue = sumDecimal(currentFees.map((fee) => fee.amount));
 	const previousRevenue = sumDecimal(previousFees.map((fee) => fee.amount));
@@ -541,6 +918,12 @@ export async function getDashboardSummary(
 	const remunerationTotal = sumDecimal(
 		allRemunerations.map((remuneration) => remuneration.amount),
 	);
+	const financialEvolution = buildMonthlyFinancialEvolution({
+		chartDownPayments,
+		chartFees,
+		chartRemunerations,
+		range: chartMonthRange,
+	});
 	const legalAreaGroups = new Map<string, GroupTotal>();
 	const revenueTypeGroups = new Map<string, GroupTotal>();
 
@@ -611,50 +994,51 @@ export async function getDashboardSummary(
 				label: "Receita prevista",
 				value: Number(revenueTotal),
 				formattedValue: formatter.currency(Number(revenueTotal)),
-				description: "Total planejado em receitas ativas",
+				description: "Total planejado para recebimento no período",
 				tone: "default",
+				previousLabel,
+				currentValue: Number(currentPlannedRevenue),
+				previousValue: Number(previousPlannedRevenue),
+				formattedCurrentValue: formatter.currency(
+					Number(currentPlannedRevenue),
+				),
+				formattedPreviousValue: formatter.currency(
+					Number(previousPlannedRevenue),
+				),
+				previousPeriodLabel,
+				changePercent: calculateChangePercent(
+					currentPlannedRevenue,
+					previousPlannedRevenue,
+				),
 			},
 			{
 				label: "Receita recebida",
 				value: Number(revenueReceived),
 				formattedValue: formatter.currency(Number(revenueReceived)),
-				description: "Entradas registradas e entradas iniciais",
+				description: "Entradas registradas no período",
 				tone: "success",
+				previousLabel,
+				currentValue: Number(currentRevenue),
+				previousValue: Number(previousRevenue),
+				formattedCurrentValue: formatter.currency(Number(currentRevenue)),
+				formattedPreviousValue: formatter.currency(Number(previousRevenue)),
+				previousPeriodLabel,
+				changePercent: calculateChangePercent(currentRevenue, previousRevenue),
 			},
 			{
 				label: "Remunerações",
 				value: Number(remunerationTotal),
 				formattedValue: formatter.currency(Number(remunerationTotal)),
-				description: period.hasPeriod
-					? "Pagamentos gerados no período filtrado"
-					: "Pagamentos gerados no escopo atual",
+				description: "Pagamentos gerados no período",
 				tone: "warning",
-			},
-			{
-				label: "Contratos ativos",
-				value: activeContractsCount,
-				formattedValue: String(activeContractsCount),
-				description: `${clientsCount} clientes ativos no escopo`,
-				tone: "default",
-			},
-		],
-		comparisons: [
-			{
-				label: `Receita ${currentLabel}`,
-				currentValue: Number(currentRevenue),
-				previousValue: Number(previousRevenue),
-				formattedCurrentValue: formatter.currency(Number(currentRevenue)),
-				formattedPreviousValue: formatter.currency(Number(previousRevenue)),
-				changePercent: calculateChangePercent(currentRevenue, previousRevenue),
-			},
-			{
-				label: `Remuneração ${currentLabel}`,
+				previousLabel,
 				currentValue: Number(currentRemuneration),
 				previousValue: Number(previousRemuneration),
 				formattedCurrentValue: formatter.currency(Number(currentRemuneration)),
 				formattedPreviousValue: formatter.currency(
 					Number(previousRemuneration),
 				),
+				previousPeriodLabel,
 				changePercent: calculateChangePercent(
 					currentRemuneration,
 					previousRemuneration,
@@ -663,6 +1047,8 @@ export async function getDashboardSummary(
 		],
 		legalAreaRevenue: mapBreakdown(legalAreaGroups, revenueReceived),
 		revenueTypeRevenue: mapBreakdown(revenueTypeGroups, revenueReceived),
+		financialEvolutionLabel: chartMonthRange.label,
+		financialEvolution,
 		recentActivity,
 	});
 }

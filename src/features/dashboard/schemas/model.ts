@@ -6,14 +6,12 @@ export const dashboardMetricSchema = z.object({
 	formattedValue: z.string(),
 	description: z.string(),
 	tone: z.enum(["default", "success", "warning", "danger"]),
-});
-
-export const dashboardComparisonSchema = z.object({
-	label: z.string(),
+	previousLabel: z.string(),
 	currentValue: z.number(),
 	previousValue: z.number(),
 	formattedCurrentValue: z.string(),
 	formattedPreviousValue: z.string(),
+	previousPeriodLabel: z.string(),
 	changePercent: z.number(),
 });
 
@@ -36,13 +34,20 @@ export const dashboardActivitySchema = z.object({
 	formattedAmount: z.string().nullable(),
 });
 
+export const dashboardFinancialEvolutionItemSchema = z.object({
+	month: z.string(),
+	revenue: z.number(),
+	remuneration: z.number(),
+});
+
 export const dashboardSummarySchema = z.object({
 	isAdmin: z.boolean(),
 	scopeLabel: z.string(),
 	metrics: dashboardMetricSchema.array(),
-	comparisons: dashboardComparisonSchema.array(),
 	legalAreaRevenue: dashboardBreakdownItemSchema.array(),
 	revenueTypeRevenue: dashboardBreakdownItemSchema.array(),
+	financialEvolutionLabel: z.string(),
+	financialEvolution: dashboardFinancialEvolutionItemSchema.array(),
 	recentActivity: dashboardActivitySchema.array(),
 });
 

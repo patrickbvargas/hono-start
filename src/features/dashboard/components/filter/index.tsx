@@ -8,7 +8,7 @@ interface DashboardFilterProps {
 
 export function DashboardFilter({ isAdmin = false }: DashboardFilterProps) {
 	const { form } = useDashboardFilter();
-	const { employees } = useDashboardOptions();
+	const { employees, legalAreas, revenueTypes } = useDashboardOptions();
 
 	return (
 		<form.Form
@@ -24,10 +24,23 @@ export function DashboardFilter({ isAdmin = false }: DashboardFilterProps) {
 					</form.AppField>
 				) : null}
 				<form.AppField name="dateFrom">
-					{(field) => <field.Input label="Período de" type="date" />}
+					{(field) => <field.DatePicker label="Período de" />}
 				</form.AppField>
 				<form.AppField name="dateTo">
-					{(field) => <field.Input label="Período até" type="date" />}
+					{(field) => <field.DatePicker label="Período até" />}
+				</form.AppField>
+				<form.AppField name="legalArea">
+					{(field) => (
+						<field.Autocomplete label="Área do contrato" options={legalAreas} />
+					)}
+				</form.AppField>
+				<form.AppField name="revenueType">
+					{(field) => (
+						<field.Autocomplete
+							label="Tipo de receita"
+							options={revenueTypes}
+						/>
+					)}
 				</form.AppField>
 			</FilterPopover>
 		</form.Form>
