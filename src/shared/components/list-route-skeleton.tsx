@@ -14,7 +14,7 @@ interface ListRouteSkeletonProps {
 export const ListRouteSkeleton = ({
 	title,
 	showActions = false,
-	rowCount = 8,
+	rowCount = 12,
 }: ListRouteSkeletonProps) => {
 	const rowKeys = Array.from(
 		{ length: rowCount },
@@ -35,9 +35,9 @@ export const ListRouteSkeleton = ({
 				</div>
 			</WrapperHeader>
 			<WrapperBody>
-				<div className="space-y-4">
-					<div className="overflow-hidden rounded-md border">
-						<div className="grid grid-cols-6 gap-4 border-b px-4 py-3">
+				<div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+					<div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border border-input">
+						<div className="grid h-10 grid-cols-6 items-center gap-4 border-b bg-sidebar px-4">
 							<Skeleton className="h-4 w-12" />
 							<Skeleton className="h-4 w-24" />
 							<Skeleton className="h-4 w-24" />
@@ -45,28 +45,38 @@ export const ListRouteSkeleton = ({
 							<Skeleton className="h-4 w-20" />
 							<Skeleton className="h-4 w-16 justify-self-end" />
 						</div>
-						<div>
+						<div className="flex min-h-0 flex-1 flex-col overflow-hidden">
 							{rowKeys.map((rowKey) => (
 								<div
 									key={rowKey}
-									className="grid grid-cols-6 gap-4 border-b px-4 py-4 last:border-b-0"
+									className="grid min-h-10 grid-cols-6 items-center gap-4 border-b px-4 py-2 last:flex-1 last:border-b-0"
 								>
 									<Skeleton className="h-4 w-14" />
 									<Skeleton className="h-4 w-full max-w-56" />
 									<Skeleton className="h-4 w-full max-w-36" />
 									<Skeleton className="h-4 w-full max-w-28" />
-									<Skeleton className="h-6 w-20 rounded-full" />
-									<Skeleton className="h-8 w-8 justify-self-end rounded-md" />
+									<Skeleton className="h-5 w-20 rounded-full" />
+									<Skeleton className="h-7 w-7 justify-self-end rounded-md" />
 								</div>
 							))}
 						</div>
-					</div>
-					<div className="flex items-center justify-between gap-3">
-						<Skeleton className="h-4 w-52" />
-						<div className="flex items-center gap-2">
-							<Skeleton className="h-9 w-16 rounded-md" />
-							<Skeleton className="h-9 w-24 rounded-md" />
-							<Skeleton className="h-9 w-16 rounded-md" />
+						<div className="border-t bg-background px-3 py-2">
+							<div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
+								<div className="flex w-full flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+									<Skeleton className="h-4 w-52" />
+									<div className="flex items-center justify-end gap-2">
+										<Skeleton className="h-4 w-18" />
+										<Skeleton className="h-7 w-20 rounded-[min(var(--radius-md),10px)]" />
+									</div>
+								</div>
+								<div className="flex items-center justify-end gap-2">
+									<Skeleton className="h-8 w-8 rounded-lg" />
+									<Skeleton className="h-8 w-8 rounded-lg" />
+									<Skeleton className="h-8 w-8 rounded-lg" />
+									<Skeleton className="h-8 w-8 rounded-lg" />
+									<Skeleton className="h-8 w-8 rounded-lg" />
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>

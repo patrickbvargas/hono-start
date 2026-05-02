@@ -9,6 +9,7 @@ import {
 } from "@tanstack/react-table";
 import { ChevronUpIcon } from "lucide-react";
 import {
+	ScrollArea,
 	Table,
 	TableBody,
 	TableCell,
@@ -43,57 +44,69 @@ export const DataTable = <TData, TValue>({
 	return (
 		<div
 			className={cn(
-				"space-y-4 rounded-lg border border-input overflow-clip",
+				"flex min-h-0 max-h-full flex-col overflow-hidden rounded-lg border border-input",
 				className,
 			)}
 		>
-			<Table>
-				<TableHeader>
-					<TableRow>
-						{table.getFlatHeaders().map((header) => (
-							<TableHead
-								key={header.id}
-								colSpan={header.colSpan}
-								className={header.column.columnDef.meta?.headerClassName}
-							>
-								{!header.isPlaceholder && <DataTableHeader header={header} />}
-							</TableHead>
-						))}
-					</TableRow>
-				</TableHeader>
-				<TableBody>
-					{table.getRowModel().rows?.length ? (
-						table.getRowModel().rows.map((row, index) => (
-							<TableRow
-								key={row.id}
-								onClick={() => onRowAction?.(index)}
-								className="cursor-pointer"
-								data-state={row.getIsSelected() && "selected"}
-							>
-								{row.getVisibleCells().map((cell) => (
-									<TableCell
-										key={cell.id}
-										className={cell.column.columnDef.meta?.cellClassName}
-									>
-										{flexRender(cell.column.columnDef.cell, cell.getContext())}
-									</TableCell>
-								))}
-							</TableRow>
-						))
-					) : (
+			<ScrollArea
+				className={cn(
+					"min-h-0 flex-1",
+					"data-has-overflow-y:**:data-[slot=scroll-area-viewport]:pr-2",
+				)}
+			>
+				<Table className="min-w-full w-max">
+					<TableHeader>
 						<TableRow>
-							<TableCell
-								colSpan={columns.length}
-								className="h-24 text-center text-muted-foreground"
-							>
-								Nenhum registro encontrado.
-							</TableCell>
+							{table.getFlatHeaders().map((header) => (
+								<TableHead
+									key={header.id}
+									colSpan={header.colSpan}
+									className={header.column.columnDef.meta?.headerClassName}
+								>
+									{!header.isPlaceholder && <DataTableHeader header={header} />}
+								</TableHead>
+							))}
 						</TableRow>
-					)}
-				</TableBody>
-			</Table>
+					</TableHeader>
+					<TableBody>
+						{table.getRowModel().rows?.length ? (
+							table.getRowModel().rows.map((row, index) => (
+								<TableRow
+									key={row.id}
+									onClick={() => onRowAction?.(index)}
+									className="cursor-pointer"
+									data-state={row.getIsSelected() && "selected"}
+								>
+									{row.getVisibleCells().map((cell) => (
+										<TableCell
+											key={cell.id}
+											className={cell.column.columnDef.meta?.cellClassName}
+										>
+											{flexRender(
+												cell.column.columnDef.cell,
+												cell.getContext(),
+											)}
+										</TableCell>
+									))}
+								</TableRow>
+							))
+						) : (
+							<TableRow>
+								<TableCell
+									colSpan={columns.length}
+									className="h-24 text-center text-muted-foreground"
+								>
+									Nenhum registro encontrado.
+								</TableCell>
+							</TableRow>
+						)}
+					</TableBody>
+				</Table>
+			</ScrollArea>
 			{footerContent && (
-				<div className="flex justify-end py-2 px-3">{footerContent}</div>
+				<div className="flex justify-end border-t bg-background px-3 py-2">
+					{footerContent}
+				</div>
 			)}
 		</div>
 	);
