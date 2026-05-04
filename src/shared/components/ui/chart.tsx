@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import {
 	Legend as RechartsLegend,
@@ -133,7 +131,7 @@ export function ChartContainer({
 			<div
 				data-chart={id}
 				className={cn(
-					"min-h-[200px] w-full text-xs [&_.recharts-responsive-container]:!h-full",
+					"`min-h-50 w-full text-xs [&_.recharts-responsive-container]:h-full!",
 					className,
 				)}
 				style={
@@ -230,7 +228,7 @@ export function ChartTooltipContent({
 	return (
 		<div
 			className={cn(
-				"grid min-w-[12rem] gap-2 rounded-lg border border-border/60 bg-popover px-3 py-2 text-xs shadow-md",
+				"grid min-w-48 gap-2 rounded-lg border border-border/60 bg-popover px-3 py-2 text-xs shadow-md",
 				className,
 			)}
 		>

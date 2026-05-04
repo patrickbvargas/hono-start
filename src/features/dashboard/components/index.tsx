@@ -20,6 +20,7 @@ import {
 } from "@/shared/components/ui";
 import { cn } from "@/shared/lib/utils";
 import type { DashboardSummary } from "../schemas/model";
+import { DashboardBreakdownChart } from "./breakdown-chart";
 import { FinancialEvolutionChart } from "./financial-evolution";
 
 interface DashboardProps {
@@ -61,51 +62,6 @@ function getChangeTone(value: number) {
 	}
 
 	return "default" as const;
-}
-
-function DashboardBreakdown({
-	title,
-	items,
-	emptyLabel,
-}: {
-	title: string;
-	items: DashboardSummary["legalAreaRevenue"];
-	emptyLabel: string;
-}) {
-	return (
-		<Card className="min-h-64">
-			<CardHeader className="pb-3">
-				<CardTitle>{title}</CardTitle>
-			</CardHeader>
-			<CardContent className="space-y-3 pt-0">
-				{items.length === 0 ? (
-					<p className="text-sm text-muted-foreground">{emptyLabel}</p>
-				) : (
-					items.map((item) => (
-						<div className="space-y-2" key={item.value}>
-							<div className="flex items-center justify-between gap-3 text-sm">
-								<span className="min-w-0 truncate font-medium">
-									{item.label}
-								</span>
-								<span className="shrink-0 text-muted-foreground">
-									{item.formattedTotal}
-								</span>
-							</div>
-							<div className="h-2 overflow-hidden rounded-full bg-muted">
-								<div
-									className="h-full rounded-full bg-primary"
-									style={{ width: `${Math.max(item.percentage, 2)}%` }}
-								/>
-							</div>
-							<p className="text-xs text-muted-foreground">
-								{item.percentage.toFixed(0)}% da receita recebida
-							</p>
-						</div>
-					))
-				)}
-			</CardContent>
-		</Card>
-	);
 }
 
 export function Dashboard({ data }: DashboardProps) {
@@ -186,15 +142,17 @@ export function Dashboard({ data }: DashboardProps) {
 				/>
 
 				<div className="grid gap-3 xl:grid-cols-[1fr_1fr_1.15fr]">
-					<DashboardBreakdown
+					<DashboardBreakdownChart
 						title="Receita por área"
 						items={data.legalAreaRevenue}
 						emptyLabel="Nenhuma receita recebida por área."
+						variant="bar"
 					/>
-					<DashboardBreakdown
+					<DashboardBreakdownChart
 						title="Receita por tipo"
 						items={data.revenueTypeRevenue}
 						emptyLabel="Nenhuma receita recebida por tipo."
+						variant="donut"
 					/>
 					<Card className="min-h-64">
 						<CardHeader className="pb-3">

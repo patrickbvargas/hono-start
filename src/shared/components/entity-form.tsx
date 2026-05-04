@@ -35,9 +35,7 @@ export const EntityForm = ({
 				<DialogHeader>
 					<DialogTitle>{title}</DialogTitle>
 				</DialogHeader>
-				<DialogBody
-					className={cn("flex flex-col gap-5", bodyClassName)}
-				>
+				<DialogBody className={cn("flex flex-col gap-5", bodyClassName)}>
 					{children}
 				</DialogBody>
 				{footer && <DialogFooter>{footer}</DialogFooter>}

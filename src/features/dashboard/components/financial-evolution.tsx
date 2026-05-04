@@ -78,7 +78,7 @@ export function FinancialEvolutionChart({
 				<CardDescription>{description}</CardDescription>
 			</CardHeader>
 			<CardContent className="space-y-3">
-				<ChartContainer config={chartConfig} className="h-[320px] w-full">
+				<ChartContainer config={chartConfig} className="h-80 w-full">
 					<BarChart accessibilityLayer data={items} barGap={8}>
 						<CartesianGrid horizontal={false} vertical={false} />
 						<XAxis
