@@ -23,15 +23,17 @@ export const dashboardBreakdownItemSchema = z.object({
 	percentage: z.number(),
 });
 
-export const dashboardActivitySchema = z.object({
-	id: z.string(),
-	type: z.enum(["client", "contract", "fee", "remuneration"]),
+export const dashboardRemunerationMonthSchema = z.object({
+	key: z.string(),
 	label: z.string(),
-	description: z.string(),
-	date: z.string(),
-	formattedDate: z.string(),
-	amount: z.number().nullable(),
-	formattedAmount: z.string().nullable(),
+});
+
+export const dashboardRemunerationRowSchema = z.object({
+	employeeId: z.number(),
+	employeeName: z.string(),
+	months: z.record(z.string(), z.number()),
+	total: z.number(),
+	formattedTotal: z.string(),
 });
 
 export const dashboardFinancialEvolutionItemSchema = z.object({
@@ -46,9 +48,10 @@ export const dashboardSummarySchema = z.object({
 	metrics: dashboardMetricSchema.array(),
 	legalAreaRevenue: dashboardBreakdownItemSchema.array(),
 	revenueTypeRevenue: dashboardBreakdownItemSchema.array(),
+	remunerationMonths: dashboardRemunerationMonthSchema.array(),
+	remunerationTable: dashboardRemunerationRowSchema.array(),
 	financialEvolutionLabel: z.string(),
 	financialEvolution: dashboardFinancialEvolutionItemSchema.array(),
-	recentActivity: dashboardActivitySchema.array(),
 });
 
 export type DashboardSummary = z.infer<typeof dashboardSummarySchema>;

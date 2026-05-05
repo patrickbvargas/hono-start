@@ -1,5 +1,4 @@
 import {
-	ActivityIcon,
 	BadgeDollarSignIcon,
 	InfoIcon,
 	ScaleIcon,
@@ -12,7 +11,6 @@ import {
 	CardAction,
 	CardContent,
 	CardHeader,
-	CardTitle,
 	Tooltip,
 	TooltipContent,
 	TooltipProvider,
@@ -22,6 +20,7 @@ import { cn } from "@/shared/lib/utils";
 import type { DashboardSummary } from "../schemas/model";
 import { DashboardBreakdownChart } from "./breakdown-chart";
 import { FinancialEvolutionChart } from "./financial-evolution";
+import { DashboardRemunerationTable } from "./remuneration-table";
 
 interface DashboardProps {
 	data: DashboardSummary;
@@ -141,7 +140,12 @@ export function Dashboard({ data }: DashboardProps) {
 					items={data.financialEvolution}
 				/>
 
-				<div className="grid gap-3 xl:grid-cols-[1fr_1fr_1.15fr]">
+				<DashboardRemunerationTable
+					months={data.remunerationMonths}
+					rows={data.remunerationTable}
+				/>
+
+				<div className="grid gap-3 xl:grid-cols-2">
 					<DashboardBreakdownChart
 						title="Receita por área"
 						items={data.legalAreaRevenue}
@@ -154,45 +158,6 @@ export function Dashboard({ data }: DashboardProps) {
 						emptyLabel="Nenhuma receita recebida por tipo."
 						variant="donut"
 					/>
-					<Card className="min-h-64">
-						<CardHeader className="pb-3">
-							<CardTitle>Atividade recente</CardTitle>
-						</CardHeader>
-						<CardContent className="space-y-2.5 pt-0">
-							{data.recentActivity.length === 0 ? (
-								<p className="text-sm text-muted-foreground">
-									Nenhum evento recente.
-								</p>
-							) : (
-								data.recentActivity.map((activity) => (
-									<div
-										className="flex items-start gap-3 rounded-md border border-border px-3 py-2.5"
-										key={activity.id}
-									>
-										<span className="mt-0.5 rounded-md bg-muted p-2 text-muted-foreground">
-											<ActivityIcon className="size-4" />
-										</span>
-										<div className="min-w-0 flex-1">
-											<div className="flex items-start justify-between gap-3">
-												<p className="font-medium">{activity.label}</p>
-												<span className="shrink-0 text-xs text-muted-foreground">
-													{activity.formattedDate}
-												</span>
-											</div>
-											<p className="truncate text-sm text-muted-foreground">
-												{activity.description}
-											</p>
-											{activity.formattedAmount ? (
-												<p className="mt-1 text-sm font-medium">
-													{activity.formattedAmount}
-												</p>
-											) : null}
-										</div>
-									</div>
-								))
-							)}
-						</CardContent>
-					</Card>
 				</div>
 			</div>
 		</div>

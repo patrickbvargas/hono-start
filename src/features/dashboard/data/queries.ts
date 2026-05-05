@@ -42,6 +42,14 @@ interface DashboardFinancialEvolutionItem {
 	remuneration: number;
 }
 
+interface DashboardRemunerationRow {
+	employeeId: number;
+	employeeName: string;
+	months: Record<string, number>;
+	total: number;
+	formattedTotal: string;
+}
+
 interface DashboardPeriod {
 	dateFrom?: Date;
 	dateTo?: Date;
@@ -531,10 +539,6 @@ function getRevenueReceived(
 	);
 }
 
-function getRecentDate(value: Date): string {
-	return value.toISOString();
-}
-
 function buildMonthlyFinancialEvolution({
 	chartDownPayments,
 	chartFees,
@@ -605,6 +609,107 @@ function buildMonthlyFinancialEvolution({
 	return Array.from(buckets.values());
 }
 
+function buildMonthlyRemunerationTable({
+	range,
+	rows,
+}: {
+	range: DashboardMonthRange;
+	rows: Array<{
+		amount: Prisma.Decimal;
+		paymentDate: Date;
+		contractEmployee: {
+			employee: {
+				id: number;
+				fullName: string;
+			};
+		};
+	}>;
+}): {
+	months: Array<{
+		key: string;
+		label: string;
+	}>;
+	table: DashboardRemunerationRow[];
+} {
+	const months: Array<{
+		key: string;
+		label: string;
+	}> = [];
+
+	for (
+		let current = range.startMonth;
+		current.getTime() <= range.endMonth.getTime();
+		current = addMonths(current, 1)
+	) {
+		months.push({
+			key: getMonthKey(current),
+			label: formatMonthYearLabel(current),
+		});
+	}
+
+	const rowsByEmployee = new Map<
+		number,
+		{
+			employeeId: number;
+			employeeName: string;
+			totals: Map<string, Prisma.Decimal>;
+		}
+	>();
+
+	for (const row of rows) {
+		const employee = row.contractEmployee.employee;
+		const monthKey = getMonthKey(createMonthStart(row.paymentDate));
+		const existing = rowsByEmployee.get(employee.id) ?? {
+			employeeId: employee.id,
+			employeeName: employee.fullName,
+			totals: new Map<string, Prisma.Decimal>(),
+		};
+		const currentValue = existing.totals.get(monthKey) ?? new Prisma.Decimal(0);
+
+		existing.totals.set(monthKey, currentValue.add(row.amount));
+		rowsByEmployee.set(employee.id, existing);
+	}
+
+	const table = Array.from(rowsByEmployee.values())
+		.sort((first, second) => {
+			const nameComparison = first.employeeName.localeCompare(
+				second.employeeName,
+				"pt-BR",
+			);
+
+			if (nameComparison !== 0) {
+				return nameComparison;
+			}
+
+			return first.employeeId - second.employeeId;
+		})
+		.map((row) => {
+			const monthValues = Object.fromEntries(
+				months.map((month) => [
+					month.key,
+					Number(row.totals.get(month.key) ?? new Prisma.Decimal(0)),
+				]),
+			);
+			const total = months.reduce(
+				(sum, month) => sum + (monthValues[month.key] ?? 0),
+				0,
+			);
+
+			return {
+				employeeId: row.employeeId,
+				employeeName: row.employeeName,
+				months: monthValues,
+				total,
+				formattedTotal: formatter.currency(total),
+			};
+		});
+
+	return {
+		months,
+		table,
+	};
+}
+
 export async function getDashboardSummary(
 	scope: DashboardScope,
 ): Promise<DashboardSummary> {
@@ -618,10 +723,6 @@ export async function getDashboardSummary(
 	} = getComparisonBoundaries(scope.search);
 	const period = getDashboardPeriod(scope.search);
 	const paymentDateWhere = buildDashboardPaymentDateWhere(period);
-	const contractWhere = {
-		...getAssignedContractWhere(scope),
-		...getDashboardContractDimensionWhere(scope),
-	};
 	const revenueWhere = getDashboardRevenueWhere(scope);
 	const remunerationWhere = getDashboardRemunerationWhere(scope);
 	const firmWhere = {
@@ -657,10 +758,7 @@ export async function getDashboardSummary(
 		chartDownPayments,
 		chartFees,
 		chartRemunerations,
-		recentClients,
-		recentContracts,
-		recentFees,
-		recentRemunerations,
+		tableRemunerations,
 	] = await Promise.all([
 		prisma.revenue.findMany({
 			where: revenueWhere,
@@ -796,83 +894,20 @@ export async function getDashboardSummary(
 				paymentDate: true,
 			},
 		}),
-		prisma.client.findMany({
-			where: firmWhere,
-			orderBy: { updatedAt: "desc" },
-			take: 5,
-			select: {
-				id: true,
-				fullName: true,
-				updatedAt: true,
-			},
-		}),
-		prisma.contract.findMany({
-			where: {
-				...firmWhere,
-				...contractWhere,
-			},
-			orderBy: { updatedAt: "desc" },
-			take: 5,
-			select: {
-				id: true,
-				processNumber: true,
-				updatedAt: true,
-				client: {
-					select: {
-						fullName: true,
-					},
-				},
-			},
-		}),
-		prisma.fee.findMany({
-			where: {
-				...firmWhere,
-				...(paymentDateWhere ? { paymentDate: paymentDateWhere } : {}),
-				revenue: getDashboardFeeRevenueWhere(scope),
-			},
-			orderBy: { paymentDate: "desc" },
-			take: 5,
-			select: {
-				id: true,
-				amount: true,
-				paymentDate: true,
-				revenue: {
-					select: {
-						contract: {
-							select: {
-								processNumber: true,
-								client: {
-									select: {
-										fullName: true,
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		}),
 		prisma.remuneration.findMany({
 			where: {
 				...remunerationWhere,
 				...(paymentDateWhere ? { paymentDate: paymentDateWhere } : {}),
 			},
-			orderBy: { paymentDate: "desc" },
-			take: 5,
 			select: {
-				id: true,
 				amount: true,
 				paymentDate: true,
 				contractEmployee: {
 					select: {
 						employee: {
 							select: {
+								id: true,
 								fullName: true,
-							},
-						},
-						contract: {
-							select: {
-								processNumber: true,
 							},
 						},
 					},
@@ -924,6 +959,10 @@ export async function getDashboardSummary(
 		chartRemunerations,
 		range: chartMonthRange,
 	});
+	const remunerationByCollaborator = buildMonthlyRemunerationTable({
+		range: chartMonthRange,
+		rows: tableRemunerations,
+	});
 	const legalAreaGroups = new Map<string, GroupTotal>();
 	const revenueTypeGroups = new Map<string, GroupTotal>();
 
@@ -940,51 +979,6 @@ export async function getDashboardSummary(
 			total: received,
 		});
 	}
-
-	const recentActivity = [
-		...recentClients.map((client) => ({
-			id: `client-${client.id}`,
-			type: "client" as const,
-			label: "Cliente atualizado",
-			description: client.fullName,
-			date: getRecentDate(client.updatedAt),
-			formattedDate: formatter.date(client.updatedAt.toISOString()),
-			amount: null,
-			formattedAmount: null,
-		})),
-		...recentContracts.map((contract) => ({
-			id: `contract-${contract.id}`,
-			type: "contract" as const,
-			label: "Contrato atualizado",
-			description: `${contract.processNumber} • ${contract.client.fullName}`,
-			date: getRecentDate(contract.updatedAt),
-			formattedDate: formatter.date(contract.updatedAt.toISOString()),
-			amount: null,
-			formattedAmount: null,
-		})),
-		...recentFees.map((fee) => ({
-			id: `fee-${fee.id}`,
-			type: "fee" as const,
-			label: "Honorário recebido",
-			description: `${fee.revenue.contract.processNumber} • ${fee.revenue.contract.client.fullName}`,
-			date: getRecentDate(fee.paymentDate),
-			formattedDate: formatter.date(fee.paymentDate.toISOString()),
-			amount: Number(fee.amount),
-			formattedAmount: formatter.currency(Number(fee.amount)),
-		})),
-		...recentRemunerations.map((remuneration) => ({
-			id: `remuneration-${remuneration.id}`,
-			type: "remuneration" as const,
-			label: "Remuneração gerada",
-			description: `${remuneration.contractEmployee.employee.fullName} • ${remuneration.contractEmployee.contract.processNumber}`,
-			date: getRecentDate(remuneration.paymentDate),
-			formattedDate: formatter.date(remuneration.paymentDate.toISOString()),
-			amount: Number(remuneration.amount),
-			formattedAmount: formatter.currency(Number(remuneration.amount)),
-		})),
-	]
-		.sort((first, second) => second.date.localeCompare(first.date))
-		.slice(0, 10);
 
 	return dashboardSummarySchema.parse({
 		isAdmin: scope.isAdmin,
@@ -1047,9 +1041,10 @@ export async function getDashboardSummary(
 		],
 		legalAreaRevenue: mapBreakdown(legalAreaGroups, revenueReceived),
 		revenueTypeRevenue: mapBreakdown(revenueTypeGroups, revenueReceived),
+		remunerationMonths: remunerationByCollaborator.months,
+		remunerationTable: remunerationByCollaborator.table,
 		financialEvolutionLabel: chartMonthRange.label,
 		financialEvolution,
-		recentActivity,
 	});
 }
 

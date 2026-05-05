@@ -72,12 +72,12 @@ export function FinancialEvolutionChart({
 	});
 
 	return (
-		<Card className="min-h-96">
+		<Card className="h-96">
 			<CardHeader>
 				<CardTitle>Evolução financeira</CardTitle>
 				<CardDescription>{description}</CardDescription>
 			</CardHeader>
-			<CardContent className="space-y-3">
+			<CardContent className="flex min-h-0 flex-1 flex-col gap-3">
 				<ChartContainer config={chartConfig} className="h-80 w-full">
 					<BarChart accessibilityLayer data={items} barGap={8}>
 						<CartesianGrid horizontal={false} vertical={false} />
