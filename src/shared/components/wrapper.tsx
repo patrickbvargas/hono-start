@@ -63,14 +63,12 @@ export const WrapperBody = ({
 		<div
 			data-slot="wrapper-content"
 			className={cn(
-				"flex flex-1 min-h-0 w-full flex-col overflow-hidden",
+				"flex flex-1 min-h-0 w-full flex-col px-4 pb-4 overflow-hidden",
 				className,
 			)}
 			{...props}
 		>
-			<div className="flex min-h-0 flex-1 flex-col gap-3 px-4 pb-4">
-				{children}
-			</div>
+			{children}
 		</div>
 	);
 };

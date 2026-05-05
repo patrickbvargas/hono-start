@@ -67,7 +67,7 @@ function getChangeTone(value: number) {
 export function Dashboard({ data }: DashboardProps) {
 	return (
 		<ScrollArea className="h-full min-h-0">
-			<div className="flex flex-col gap-4 pr-3 pb-4">
+			<div className="flex flex-col gap-4 p-0.5 pr-3">
 				<div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
 					{data.metrics.map((metric, index) => (
 						<Card key={metric.label}>
@@ -129,17 +129,14 @@ export function Dashboard({ data }: DashboardProps) {
 						</Card>
 					))}
 				</div>
-
 				<FinancialEvolutionChart
 					description={data.financialEvolutionLabel}
 					items={data.financialEvolution}
 				/>
-
 				<DashboardRemunerationTable
 					months={data.remunerationMonths}
 					rows={data.remunerationTable}
 				/>
-
 				<div className="grid gap-3 xl:grid-cols-2">
 					<DashboardBreakdownChart
 						title="Receita por área"
