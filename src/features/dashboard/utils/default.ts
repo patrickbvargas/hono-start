@@ -1,11 +1,11 @@
 import type { DashboardSearch } from "../schemas/search";
+import { getCurrentYearDateRange } from "./period-shortcuts";
 
-const now = new Date();
-const currentYear = now.getUTCFullYear();
+const currentYearDateRange = getCurrentYearDateRange();
 
 export const dashboardSearchDefaults: DashboardSearch = {
-	dateFrom: `${currentYear}-01-01`,
-	dateTo: `${currentYear}-12-31`,
+	dateFrom: currentYearDateRange.dateFrom,
+	dateTo: currentYearDateRange.dateTo,
 	employeeId: "",
 	legalArea: "",
 	revenueType: "",

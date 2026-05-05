@@ -1,9 +1,9 @@
 import * as z from "zod";
+import { getCurrentYearDateRange } from "../utils/period-shortcuts";
 
-const now = new Date();
-const currentYear = now.getUTCFullYear();
-const defaultDateFrom = `${currentYear}-01-01`;
-const defaultDateTo = `${currentYear}-12-31`;
+const currentYearDateRange = getCurrentYearDateRange();
+const defaultDateFrom = currentYearDateRange.dateFrom;
+const defaultDateTo = currentYearDateRange.dateTo;
 
 function isValidDate(value: string): boolean {
 	if (!value) {

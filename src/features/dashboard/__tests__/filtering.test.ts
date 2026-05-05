@@ -4,6 +4,10 @@ import {
 	getEffectiveDashboardEmployeeId,
 } from "../data/queries";
 import { dashboardSearchSchema } from "../schemas/search";
+import {
+	getDashboardActivePeriodShortcut,
+	getDashboardPeriodShortcutById,
+} from "../utils/period-shortcuts";
 
 describe("dashboard filtering", () => {
 	it("parses empty URL search with safe defaults", () => {
@@ -16,6 +20,56 @@ describe("dashboard filtering", () => {
 			legalArea: "",
 			revenueType: "",
 		});
+	});
+
+	it("marks the current-year shortcut as active for default search values", () => {
+		const currentYear = new Date().getUTCFullYear();
+
+		expect(
+			getDashboardActivePeriodShortcut({
+				dateFrom: `${currentYear}-01-01`,
+				dateTo: `${currentYear}-12-31`,
+			}),
+		).toBe("currentYear");
+	});
+
+	it("uses the canonical last-6-month shortcut range", () => {
+		const shortcut = getDashboardPeriodShortcutById(
+			"last6Months",
+			new Date("2026-05-05T12:00:00.000Z"),
+		);
+
+		expect(shortcut).toMatchObject({
+			id: "last6Months",
+			label: "6 meses",
+			dateFrom: "2025-12-05",
+			dateTo: "2026-05-05",
+		});
+		expect(getDashboardActivePeriodShortcut(shortcut)).toBe("last6Months");
+	});
+
+	it("uses the canonical last-12-month shortcut range", () => {
+		const shortcut = getDashboardPeriodShortcutById(
+			"last12Months",
+			new Date("2026-05-05T12:00:00.000Z"),
+		);
+
+		expect(shortcut).toMatchObject({
+			id: "last12Months",
+			label: "12 meses",
+			dateFrom: "2025-06-05",
+			dateTo: "2026-05-05",
+		});
+		expect(getDashboardActivePeriodShortcut(shortcut)).toBe("last12Months");
+	});
+
+	it("clears shortcut selection for custom manual ranges", () => {
+		expect(
+			getDashboardActivePeriodShortcut({
+				dateFrom: "2026-02-01",
+				dateTo: "2026-04-15",
+			}),
+		).toBeNull();
 	});
 
 	it("rejects inverted date ranges", () => {

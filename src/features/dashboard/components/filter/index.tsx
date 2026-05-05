@@ -1,13 +1,15 @@
 import { FilterPopover } from "@/shared/components/filter-popover";
+import { Button } from "@/shared/components/ui";
 import { useDashboardOptions } from "../../hooks/use-data";
 import { useDashboardFilter } from "../../hooks/use-filter";
+import { getDashboardActivePeriodShortcut } from "../../utils/period-shortcuts";
 
 interface DashboardFilterProps {
 	isAdmin?: boolean;
 }
 
 export function DashboardFilter({ isAdmin = false }: DashboardFilterProps) {
-	const { form } = useDashboardFilter();
+	const { form, handlePeriodShortcut, periodShortcuts } = useDashboardFilter();
 	const { employees, legalAreas, revenueTypes } = useDashboardOptions();
 
 	return (
@@ -30,6 +32,32 @@ export function DashboardFilter({ isAdmin = false }: DashboardFilterProps) {
 						)}
 					</form.AppField>
 				) : null}
+				<form.Subscribe
+					selector={(state) =>
+						getDashboardActivePeriodShortcut({
+							dateFrom: state.values.dateFrom,
+							dateTo: state.values.dateTo,
+						})
+					}
+				>
+					{(activeShortcut) => (
+						<div className="flex items-center gap-2">
+							{periodShortcuts.map((shortcut) => (
+								<Button
+									key={shortcut.id}
+									type="button"
+									variant={
+										activeShortcut === shortcut.id ? "secondary" : "outline"
+									}
+									aria-pressed={activeShortcut === shortcut.id}
+									onClick={() => handlePeriodShortcut(shortcut.id)}
+								>
+									{shortcut.label}
+								</Button>
+							))}
+						</div>
+					)}
+				</form.Subscribe>
 				<FilterPopover>
 					<form.AppField name="dateFrom">
 						{(field) => <field.DatePicker label="Período de" />}
