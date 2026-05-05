@@ -7,6 +7,7 @@ import {
 	DrawerFooter,
 	DrawerHeader,
 	DrawerTitle,
+	ScrollArea,
 	Separator,
 	Skeleton,
 } from "@/shared/components/ui";
@@ -82,14 +83,15 @@ function Title({
 	return <DrawerTitle {...props}>{children}</DrawerTitle>;
 }
 
-function Body({ children, className, ...props }: React.ComponentProps<"div">) {
+function Body({
+	children,
+	className,
+	...props
+}: React.ComponentProps<typeof ScrollArea>) {
 	return (
-		<div
-			className={cn("flex flex-col gap-4 overflow-y-auto px-4", className)}
-			{...props}
-		>
-			{children}
-		</div>
+		<ScrollArea className={cn("min-h-0 flex-1 px-4", className)} {...props}>
+			<div className="flex flex-col gap-4">{children}</div>
+		</ScrollArea>
 	);
 }
 
