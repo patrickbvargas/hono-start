@@ -8,7 +8,7 @@ import {
 	CardTitle,
 } from "@/shared/components/ui";
 import { formatter } from "@/shared/lib/formatter";
-import type { DashboardSummary } from "../schemas/model";
+import type { DashboardSummary } from "../../schemas/model";
 
 interface DashboardRemunerationTableProps {
 	months: DashboardSummary["remunerationMonths"];
@@ -68,7 +68,11 @@ export function DashboardRemunerationTable({
 						<p className="text-sm text-muted-foreground">{EMPTY_LABEL}</p>
 					</div>
 				) : (
-					<DataTable className="h-full" columns={columns} data={rows} />
+					<DataTable
+						className="h-full rounded-none border-0"
+						columns={columns}
+						data={rows}
+					/>
 				)}
 			</CardContent>
 		</Card>

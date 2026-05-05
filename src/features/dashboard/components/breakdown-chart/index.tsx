@@ -22,7 +22,7 @@ import {
 	ChartTooltipContent,
 } from "@/shared/components/ui";
 import { formatter } from "@/shared/lib/formatter";
-import type { DashboardSummary } from "../schemas/model";
+import type { DashboardSummary } from "../../schemas/model";
 
 interface DashboardBreakdownChartProps {
 	title: string;
@@ -92,7 +92,7 @@ function renderBreakdownList(items: DashboardSummary["legalAreaRevenue"]) {
 						<div className="min-w-0">
 							<p className="truncate font-medium">{item.label}</p>
 							<p className="text-xs text-muted-foreground">
-								{item.percentage.toFixed(0)}% da receita recebida
+								{item.percentage.toFixed(0)}%
 							</p>
 						</div>
 					</div>

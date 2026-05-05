@@ -11,16 +11,17 @@ import {
 	CardAction,
 	CardContent,
 	CardHeader,
+	ScrollArea,
 	Tooltip,
 	TooltipContent,
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/shared/components/ui";
 import { cn } from "@/shared/lib/utils";
-import type { DashboardSummary } from "../schemas/model";
-import { DashboardBreakdownChart } from "./breakdown-chart";
-import { FinancialEvolutionChart } from "./financial-evolution";
-import { DashboardRemunerationTable } from "./remuneration-table";
+import type { DashboardSummary } from "../../schemas/model";
+import { DashboardBreakdownChart } from "../breakdown-chart";
+import { FinancialEvolutionChart } from "../financial-evolution";
+import { DashboardRemunerationTable } from "../remuneration-table";
 
 interface DashboardProps {
 	data: DashboardSummary;
@@ -65,14 +66,8 @@ function getChangeTone(value: number) {
 
 export function Dashboard({ data }: DashboardProps) {
 	return (
-		<div className="h-full overflow-auto pb-4">
-			<div className="flex flex-col gap-4">
-				<div className="flex justify-end">
-					<Badge variant={data.isAdmin ? "default" : "secondary"}>
-						{data.scopeLabel}
-					</Badge>
-				</div>
-
+		<ScrollArea className="h-full min-h-0">
+			<div className="flex flex-col gap-4 pr-3 pb-4">
 				<div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
 					{data.metrics.map((metric, index) => (
 						<Card key={metric.label}>
@@ -160,6 +155,6 @@ export function Dashboard({ data }: DashboardProps) {
 					/>
 				</div>
 			</div>
-		</div>
+		</ScrollArea>
 	);
 }

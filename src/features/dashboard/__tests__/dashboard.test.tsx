@@ -10,6 +10,7 @@ vi.mock("@/shared/components/ui", () => ({
 	CardAction: ({ children }: { children: ReactNode }) => <div>{children}</div>,
 	CardContent: ({ children }: { children: ReactNode }) => <div>{children}</div>,
 	CardHeader: ({ children }: { children: ReactNode }) => <div>{children}</div>,
+	ScrollArea: ({ children }: { children: ReactNode }) => <div>{children}</div>,
 	Tooltip: ({ children }: { children: ReactNode }) => <div>{children}</div>,
 	TooltipContent: ({ children }: { children: ReactNode }) => (
 		<div>{children}</div>
@@ -44,7 +45,7 @@ vi.mock("../components/remuneration-table", () => ({
 	),
 }));
 
-import { Dashboard } from "../components";
+import { Dashboard } from "../components/dashboard";
 
 describe("Dashboard", () => {
 	afterEach(() => {

@@ -13,7 +13,7 @@ import {
 	ChartTooltipContent,
 } from "@/shared/components/ui";
 import { formatter } from "@/shared/lib/formatter";
-import type { DashboardSummary } from "../schemas/model";
+import type { DashboardSummary } from "../../schemas/model";
 
 interface FinancialEvolutionChartProps {
 	description: string;

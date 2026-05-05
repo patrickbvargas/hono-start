@@ -56,7 +56,7 @@ describe("DashboardBreakdownChart", () => {
 		expect(screen.getByText("Receita por área")).toBeTruthy();
 		expect(screen.getAllByText("Previdenciário").length).toBeGreaterThan(0);
 		expect(screen.getAllByText("Cível").length).toBeGreaterThan(0);
-		expect(screen.getByText("75% da receita recebida")).toBeTruthy();
+		expect(screen.getByText("75%")).toBeTruthy();
 		expect(screen.getByText("R$ 300,00")).toBeTruthy();
 	});
 
@@ -88,7 +88,7 @@ describe("DashboardBreakdownChart", () => {
 		expect(screen.getByText("Receita por tipo")).toBeTruthy();
 		expect(screen.getAllByText("Mensal").length).toBeGreaterThan(0);
 		expect(screen.getAllByText("Êxito").length).toBeGreaterThan(0);
-		expect(screen.getAllByText("25% da receita recebida").length).toBe(1);
+		expect(screen.getAllByText("25%").length).toBe(1);
 	});
 
 	it("renders empty state instead of chart when no breakdown data exists", () => {

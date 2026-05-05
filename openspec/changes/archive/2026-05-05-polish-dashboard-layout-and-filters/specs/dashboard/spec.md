@@ -1,15 +1,4 @@
-# dashboard Specification
-
-## Purpose
-Dashboard defines the authenticated landing experience and summary data shown to firm users after sign-in.
-
-## Requirements
-### Requirement: Authenticated Dashboard Landing
-The system SHALL render the dashboard on the authenticated home route instead of demo-only content.
-
-#### Scenario: User opens home route
-- **WHEN** an authenticated user opens `/`
-- **THEN** the system displays dashboard content and does not display the demo form or fake demo pagination
+## MODIFIED Requirements
 
 ### Requirement: Dashboard Filters
 The system SHALL provide URL-driven dashboard filters for period, employee scope, contract legal area, and revenue type while preserving Matrix OS permissions. For administrators, the employee filter SHALL stay visible inline in the dashboard header next to the advanced filters trigger, while secondary dashboard filters remain grouped in the popover.
@@ -45,25 +34,6 @@ The system SHALL provide URL-driven dashboard filters for period, employee scope
 #### Scenario: Invalid dashboard lookup filters are submitted
 - **WHEN** a dashboard request includes unknown or cross-firm filter values for employee, legal area, or revenue type
 - **THEN** the system does not expose cross-firm or invalid data outside the authenticated session scope
-
-### Requirement: Role-Scoped Dashboard Data
-Dashboard data MUST respect firm isolation, the session role visibility model, and validated dashboard filters.
-
-#### Scenario: Administrator views dashboard
-- **WHEN** an administrator opens the dashboard without an employee filter
-- **THEN** the system shows firm-wide operational and financial summaries for the administrator's firm
-
-#### Scenario: Administrator views filtered employee dashboard
-- **WHEN** an administrator opens the dashboard with an employee filter for an employee in the same firm
-- **THEN** the system shows summaries narrowed to that employee while keeping all data inside the administrator's firm
-
-#### Scenario: Regular user views dashboard
-- **WHEN** a regular user opens the dashboard
-- **THEN** the system shows only summaries from contracts, fees, revenues, and remunerations visible to that user
-
-#### Scenario: Cross-firm employee filter is submitted
-- **WHEN** a dashboard request includes an employee filter for an employee outside the authenticated user's firm
-- **THEN** the system does not expose cross-firm data
 
 ### Requirement: Dashboard Summaries
 The dashboard SHALL show revenue totals, remuneration totals, monthly comparison information, revenue grouping by legal area and revenue type, a monthly financial evolution chart, and a monthly remuneration table by collaborator, with supported summaries reflecting the active dashboard period and employee filters. The main dashboard content SHALL scroll inside a shared scroll container without clipping card borders, and the breakdown legend SHALL present concise participation percentages without redundant phrasing. The dashboard SHALL NOT render the "Visão da firma" badge.
