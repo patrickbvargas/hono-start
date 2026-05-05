@@ -1,37 +1,4 @@
-# shared-overlay-orchestration Specification
-
-## Purpose
-
-Define the shared route-local overlay orchestration contract used by entity routes and nested entity sections.
-
-## Requirements
-
-### Requirement: Shared overlay hook controls one route-local overlay at a time
-The system SHALL provide a shared overlay hook for entity route composition that controls create, edit, details, delete, and restore overlays within the hook instance that opened them.
-
-#### Scenario: Create overlay opens without entity data
-- **WHEN** route code opens the create overlay
-- **THEN** only the create overlay SHALL be active
-- **AND** create rendering SHALL receive overlay state without requiring entity data
-
-#### Scenario: Entity overlay opens with selected data
-- **WHEN** route code opens edit, details, delete, or restore with selected entity data
-- **THEN** only that overlay SHALL be active
-- **AND** rendering for that overlay SHALL receive the selected entity data and overlay state
-
-#### Scenario: Opening another overlay replaces the active overlay
-- **WHEN** one overlay is active and route code opens another overlay in the same hook instance
-- **THEN** the previous overlay SHALL no longer render
-- **AND** the newly opened overlay SHALL become the only active overlay
-
-#### Scenario: Closing active overlay clears state
-- **WHEN** the active overlay is closed through its close function or `onOpenChange(false)`
-- **THEN** no overlay SHALL remain active
-- **AND** render callbacks for all overlay scopes SHALL return no content
-
-#### Scenario: Unrelated close signal is ignored
-- **WHEN** an inactive overlay receives `onOpenChange(false)`
-- **THEN** the currently active overlay SHALL remain active
+## MODIFIED Requirements
 
 ### Requirement: Shared overlay hook preserves entity route API compatibility
 The shared overlay hook SHALL keep the existing route-facing API shape so entity routes and feature components can continue using the documented overlay composition pattern, and detail drawers SHALL preserve visible list context while their entity data is still loading. Detail drawers SHALL anchor their overlay and sliding panel to the root authenticated app container instead of the global viewport.

@@ -24,8 +24,14 @@ describe("list-route skeleton contract", () => {
 		expect(content).toContain("const rowKeys = Array.from(");
 		expect(content).toContain("{ length: rowCount }");
 		expect(content).toContain(
-			'className="grid grid-cols-6 gap-4 border-b px-4 py-3"',
+			'className="grid h-10 grid-cols-6 items-center gap-4 bg-sidebar px-4"',
 		);
+		expect(content).toContain(
+			'className="grid min-h-10 grid-cols-6 items-center gap-4 px-4 py-2 last:flex-1"',
+		);
+		expect(content).not.toContain("border-input");
+		expect(content).not.toContain("border-b");
+		expect(content).not.toContain("border-t");
 	});
 
 	it("wires canonical list routes to immediate route-level pending skeletons", () => {

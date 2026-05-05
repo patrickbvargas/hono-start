@@ -227,7 +227,7 @@ function SkeletonFields({
 		<div className={cn("flex flex-col gap-4", className)} {...props}>
 			{skeletonRows.map((row) => (
 				<div key={row.key} className="flex flex-col gap-1.5">
-					<Skeleton className="h-3 w-20" />
+					<Skeleton className="h-4 w-20" />
 					<Skeleton
 						className={cn("h-4", row.isShort ? "w-24" : "w-full max-w-56")}
 					/>
