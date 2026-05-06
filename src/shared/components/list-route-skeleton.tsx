@@ -28,7 +28,7 @@ export const ListRouteSkeleton = ({
 				showActions ? <Skeleton className="h-9 w-36 rounded-md" /> : undefined
 			}
 		>
-			<WrapperHeader>
+			<WrapperHeader className="justify-start gap-3">
 				<Skeleton className="h-8 w-full max-w-80 rounded-md" />
 				<Skeleton className="h-8 w-20 rounded-md" />
 			</WrapperHeader>

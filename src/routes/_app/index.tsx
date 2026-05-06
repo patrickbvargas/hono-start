@@ -7,6 +7,7 @@ import {
 import {
 	Dashboard,
 	DashboardFilter,
+	DashboardPendingSkeleton,
 	dashboardSearchDefaults,
 	dashboardSearchSchema,
 	getDashboardEmployeeOptionsQueryOptions,
@@ -35,7 +36,8 @@ export const Route = createFileRoute("/_app/")({
 			queryClient.ensureQueryData(getContractRevenueTypesQueryOptions()),
 		]);
 	},
-	pendingComponent: () => <RouteLoading />,
+	pendingMs: 0,
+	pendingComponent: () => <DashboardPendingSkeleton />,
 	component: RouteComponent,
 });
 
