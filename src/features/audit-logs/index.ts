@@ -1,4 +1,9 @@
-export { getAuditLogsQueryOptions } from "./api/queries";
+export {
+	getAuditLogActionsQueryOptions,
+	getAuditLogActorsQueryOptions,
+	getAuditLogEntityTypesQueryOptions,
+	getAuditLogsQueryOptions,
+} from "./api/queries";
 export { AuditLogFilter } from "./components/filter";
 export { AuditLogTable } from "./components/table";
 export { useAuditLogs } from "./hooks/use-data";

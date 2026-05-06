@@ -11,9 +11,9 @@ import {
 	clientSearchDefaults,
 	clientSearchSchema,
 	getClientsQueryOptions,
+	getClientTypesQueryOptions,
 	useClients,
 } from "@/features/clients";
-import { ListRouteSkeleton } from "@/shared/components/list-route-skeleton";
 import { RouteLoading } from "@/shared/components/route-loading";
 import { Button } from "@/shared/components/ui";
 import {
@@ -33,12 +33,11 @@ export const Route = createFileRoute("/_app/clientes")({
 	},
 	loaderDeps: ({ search }) => ({ search }),
 	loader: async ({ context: { queryClient }, deps: { search } }) => {
-		await queryClient.ensureQueryData(getClientsQueryOptions(search));
+		await Promise.all([
+			queryClient.ensureQueryData(getClientsQueryOptions(search)),
+			queryClient.ensureQueryData(getClientTypesQueryOptions()),
+		]);
 	},
-	pendingMs: 0,
-	pendingComponent: () => (
-		<ListRouteSkeleton title={ROUTES.client.title} showActions />
-	),
 	component: RouteComponent,
 });
 

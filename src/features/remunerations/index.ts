@@ -1,4 +1,8 @@
-export { getRemunerationsQueryOptions } from "./api/queries";
+export {
+	getRemunerationsQueryOptions,
+	getSelectableRemunerationContractsQueryOptions,
+	getSelectableRemunerationEmployeesQueryOptions,
+} from "./api/queries";
 export * from "./components/delete";
 export * from "./components/details";
 export * from "./components/filter";

@@ -10,10 +10,11 @@ import {
 	EmployeeTable,
 	employeeSearchDefaults,
 	employeeSearchSchema,
+	getEmployeeRolesQueryOptions,
 	getEmployeesQueryOptions,
+	getEmployeeTypesQueryOptions,
 	useEmployees,
 } from "@/features/employees";
-import { ListRouteSkeleton } from "@/shared/components/list-route-skeleton";
 import { RouteLoading } from "@/shared/components/route-loading";
 import { Button } from "@/shared/components/ui";
 import {
@@ -34,12 +35,12 @@ export const Route = createFileRoute("/_app/colaboradores")({
 	loaderDeps: ({ search }) => ({ search }),
 	loader: async ({ context: { queryClient, session }, deps: { search } }) => {
 		assertCan(session, "employee.manage");
-		await queryClient.ensureQueryData(getEmployeesQueryOptions(search));
+		await Promise.all([
+			queryClient.ensureQueryData(getEmployeesQueryOptions(search)),
+			queryClient.ensureQueryData(getEmployeeTypesQueryOptions()),
+			queryClient.ensureQueryData(getEmployeeRolesQueryOptions()),
+		]);
 	},
-	pendingMs: 0,
-	pendingComponent: () => (
-		<ListRouteSkeleton title={ROUTES.employee.title} showActions />
-	),
 	component: RouteComponent,
 });
 

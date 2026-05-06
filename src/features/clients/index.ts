@@ -1,4 +1,7 @@
-export { getClientsQueryOptions } from "./api/queries";
+export {
+	getClientsQueryOptions,
+	getClientTypesQueryOptions,
+} from "./api/queries";
 export * from "./components/delete";
 export * from "./components/details";
 export * from "./components/filter";

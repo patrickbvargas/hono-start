@@ -10,10 +10,12 @@ import {
 	ContractTable,
 	contractSearchDefaults,
 	contractSearchSchema,
+	getContractLegalAreasQueryOptions,
+	getContractStatusesQueryOptions,
 	getContractsQueryOptions,
+	getSelectableContractClientsQueryOptions,
 	useContracts,
 } from "@/features/contracts";
-import { ListRouteSkeleton } from "@/shared/components/list-route-skeleton";
 import { RouteLoading } from "@/shared/components/route-loading";
 import { Button } from "@/shared/components/ui";
 import {
@@ -33,12 +35,13 @@ export const Route = createFileRoute("/_app/contratos")({
 	},
 	loaderDeps: ({ search }) => ({ search }),
 	loader: async ({ context: { queryClient }, deps: { search } }) => {
-		await queryClient.ensureQueryData(getContractsQueryOptions(search));
+		await Promise.all([
+			queryClient.ensureQueryData(getContractsQueryOptions(search)),
+			queryClient.ensureQueryData(getSelectableContractClientsQueryOptions()),
+			queryClient.ensureQueryData(getContractLegalAreasQueryOptions()),
+			queryClient.ensureQueryData(getContractStatusesQueryOptions()),
+		]);
 	},
-	pendingMs: 0,
-	pendingComponent: () => (
-		<ListRouteSkeleton title={ROUTES.contract.title} showActions />
-	),
 	component: RouteComponent,
 });
 

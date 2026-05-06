@@ -54,3 +54,20 @@ export function useContractOptions() {
 		revenueTypes,
 	};
 }
+
+export function useContractFilterOptions() {
+	const [{ data: clients }, { data: legalAreas }, { data: statuses }] =
+		useSuspenseQueries({
+			queries: [
+				getSelectableContractClientsQueryOptions(),
+				getContractLegalAreasQueryOptions(),
+				getContractStatusesQueryOptions(),
+			],
+		});
+
+	return {
+		clients,
+		legalAreas,
+		statuses,
+	};
+}

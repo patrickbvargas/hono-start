@@ -5,10 +5,12 @@ import {
 	AuditLogTable,
 	auditLogSearchDefaults,
 	auditLogSearchSchema,
+	getAuditLogActionsQueryOptions,
+	getAuditLogActorsQueryOptions,
+	getAuditLogEntityTypesQueryOptions,
 	getAuditLogsQueryOptions,
 	useAuditLogs,
 } from "@/features/audit-logs";
-import { ListRouteSkeleton } from "@/shared/components/list-route-skeleton";
 import { RouteLoading } from "@/shared/components/route-loading";
 import {
 	Wrapper,
@@ -26,10 +28,13 @@ export const Route = createFileRoute("/_app/audit-log")({
 	loaderDeps: ({ search }) => ({ search }),
 	loader: async ({ context: { queryClient, session }, deps: { search } }) => {
 		assertCan(session, "audit-log.view");
-		await queryClient.ensureQueryData(getAuditLogsQueryOptions(search));
+		await Promise.all([
+			queryClient.ensureQueryData(getAuditLogsQueryOptions(search)),
+			queryClient.ensureQueryData(getAuditLogActionsQueryOptions()),
+			queryClient.ensureQueryData(getAuditLogEntityTypesQueryOptions()),
+			queryClient.ensureQueryData(getAuditLogActorsQueryOptions()),
+		]);
 	},
-	pendingMs: 0,
-	pendingComponent: () => <ListRouteSkeleton title={ROUTES.auditLog.title} />,
 	component: RouteComponent,
 });
 

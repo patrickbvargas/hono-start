@@ -8,13 +8,17 @@ import {
 	UsersIcon,
 } from "lucide-react";
 import { ClientForm } from "@/features/clients";
-import { ContractForm } from "@/features/contracts";
+import {
+	ContractForm,
+	getContractLegalAreasQueryOptions,
+	getContractRevenueTypesQueryOptions,
+} from "@/features/contracts";
 import {
 	Dashboard,
 	DashboardFilter,
-	DashboardPendingSkeleton,
 	dashboardSearchDefaults,
 	dashboardSearchSchema,
+	getDashboardEmployeeOptionsQueryOptions,
 	getDashboardSummaryQueryOptions,
 	useDashboardData,
 } from "@/features/dashboard";
@@ -44,10 +48,13 @@ export const Route = createFileRoute("/_app/")({
 	},
 	loaderDeps: ({ search }) => ({ search }),
 	loader: async ({ context: { queryClient }, deps: { search } }) => {
-		await queryClient.ensureQueryData(getDashboardSummaryQueryOptions(search));
+		await Promise.all([
+			queryClient.ensureQueryData(getDashboardSummaryQueryOptions(search)),
+			queryClient.ensureQueryData(getDashboardEmployeeOptionsQueryOptions()),
+			queryClient.ensureQueryData(getContractLegalAreasQueryOptions()),
+			queryClient.ensureQueryData(getContractRevenueTypesQueryOptions()),
+		]);
 	},
-	pendingMs: 0,
-	pendingComponent: () => <DashboardPendingSkeleton />,
 	component: RouteComponent,
 });
 

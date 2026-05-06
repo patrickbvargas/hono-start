@@ -11,9 +11,10 @@ import {
 	feeSearchDefaults,
 	feeSearchSchema,
 	getFeesQueryOptions,
+	getSelectableFeeContractsQueryOptions,
+	getSelectableFeeRevenuesQueryOptions,
 	useFees,
 } from "@/features/fees";
-import { ListRouteSkeleton } from "@/shared/components/list-route-skeleton";
 import { RouteLoading } from "@/shared/components/route-loading";
 import { Button } from "@/shared/components/ui";
 import {
@@ -33,12 +34,12 @@ export const Route = createFileRoute("/_app/honorarios")({
 	},
 	loaderDeps: ({ search }) => ({ search }),
 	loader: async ({ context: { queryClient }, deps: { search } }) => {
-		await queryClient.ensureQueryData(getFeesQueryOptions(search));
+		await Promise.all([
+			queryClient.ensureQueryData(getFeesQueryOptions(search)),
+			queryClient.ensureQueryData(getSelectableFeeContractsQueryOptions()),
+			queryClient.ensureQueryData(getSelectableFeeRevenuesQueryOptions()),
+		]);
 	},
-	pendingMs: 0,
-	pendingComponent: () => (
-		<ListRouteSkeleton title={ROUTES.fee.title} showActions />
-	),
 	component: RouteComponent,
 });
 
