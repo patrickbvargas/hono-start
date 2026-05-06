@@ -64,18 +64,13 @@ export function DashboardMetricCards({ metrics }: DashboardMetricCardsProps) {
 	return (
 		<div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
 			{metrics.map((metric, index) => (
-				<Card key={metric.label}>
-					<CardHeader className="gap-0.5 pb-1.5">
-						<div className="space-y-0.5">
+				<Card key={metric.label} className="gap-2">
+					<CardHeader>
+						<div className="flex items-center gap-2">
+							{metricIcons[index]}
 							<p className="text-sm text-muted-foreground">{metric.label}</p>
-							<p className="text-2xl font-semibold">{metric.formattedValue}</p>
 						</div>
 						<CardAction className={toneClassNames[metric.tone]}>
-							{metricIcons[index]}
-						</CardAction>
-					</CardHeader>
-					<CardContent className="flex flex-col gap-2 pt-0">
-						<div className="flex items-center justify-between gap-3">
 							<Badge
 								variant="secondary"
 								className={cn(
@@ -89,28 +84,31 @@ export function DashboardMetricCards({ metrics }: DashboardMetricCardsProps) {
 								)}
 								{formatChange(metric.changePercent)}
 							</Badge>
-							<div className="flex items-center gap-1.5 text-right text-sm text-muted-foreground">
-								<p>
-									{metric.previousLabel}: {metric.formattedPreviousValue}
-								</p>
-								<TooltipProvider>
-									<Tooltip>
-										<TooltipTrigger
-											render={
-												<button
-													type="button"
-													className="inline-flex text-muted-foreground transition-colors hover:text-foreground"
-												/>
-											}
-										>
-											<InfoIcon className="size-3.5" />
-										</TooltipTrigger>
-										<TooltipContent>
-											Refere-se a {metric.previousPeriodLabel}.
-										</TooltipContent>
-									</Tooltip>
-								</TooltipProvider>
-							</div>
+						</CardAction>
+					</CardHeader>
+					<CardContent className="flex flex-col gap-2 pt-0">
+						<p className="text-2xl font-semibold">{metric.formattedValue}</p>
+						<div className="flex items-center gap-1.5 text-right text-sm text-muted-foreground">
+							<p>
+								{metric.previousLabel}: {metric.formattedPreviousValue}
+							</p>
+							<TooltipProvider>
+								<Tooltip>
+									<TooltipTrigger
+										render={
+											<button
+												type="button"
+												className="inline-flex text-muted-foreground transition-colors hover:text-foreground"
+											/>
+										}
+									>
+										<InfoIcon className="size-3.5" />
+									</TooltipTrigger>
+									<TooltipContent>
+										Refere-se a {metric.previousPeriodLabel}.
+									</TooltipContent>
+								</Tooltip>
+							</TooltipProvider>
 						</div>
 						<p className="sr-only text-sm text-muted-foreground">
 							{metric.description}

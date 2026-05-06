@@ -109,7 +109,7 @@ function BreakdownBarChart({
 	items,
 }: Pick<DashboardBreakdownChartProps, "items">) {
 	return (
-		<ChartContainer config={barChartConfig} className="h-[280px] w-full">
+		<ChartContainer config={barChartConfig} className="h-70 w-full">
 			<BarChart
 				accessibilityLayer
 				data={items}

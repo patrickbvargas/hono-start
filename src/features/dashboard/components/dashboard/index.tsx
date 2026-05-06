@@ -12,7 +12,7 @@ interface DashboardProps {
 export function Dashboard({ data }: DashboardProps) {
 	return (
 		<ScrollArea className="h-full min-h-0">
-			<div className="flex flex-col gap-4 p-0.5 pr-3">
+			<div className="flex flex-col gap-4 p-0.5 pr-3 pb-4">
 				<DashboardMetricCards metrics={data.metrics} />
 				<FinancialEvolutionChart
 					description={data.financialEvolutionLabel}

@@ -23,6 +23,7 @@ import { cn } from "@/shared/lib/utils";
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[] | TableOptions<TData>["columns"];
 	data: TData[];
+	emptyMessage?: string;
 	className?: string;
 	onRowAction?: (index: number) => void;
 	footerContent?: React.ReactNode;
@@ -31,6 +32,7 @@ interface DataTableProps<TData, TValue> {
 export const DataTable = <TData, TValue>({
 	columns,
 	data,
+	emptyMessage = "Nenhum registro encontrado.",
 	className,
 	onRowAction,
 	footerContent,
@@ -96,7 +98,7 @@ export const DataTable = <TData, TValue>({
 									colSpan={columns.length}
 									className="h-24 text-center text-muted-foreground"
 								>
-									Nenhum registro encontrado.
+									{emptyMessage}
 								</TableCell>
 							</TableRow>
 						)}

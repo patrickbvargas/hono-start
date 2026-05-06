@@ -59,13 +59,7 @@ export function DashboardRemunerationTable({
 				<CardTitle>Remunerações</CardTitle>
 			</CardHeader>
 			<CardContent className="flex min-h-0 flex-1 flex-col pt-0">
-				{rows.length === 0 ? (
-					<div className="flex min-h-0 flex-1 items-center justify-center">
-						<p className="text-sm text-muted-foreground">{EMPTY_LABEL}</p>
-					</div>
-				) : (
-					<DataTable columns={columns} data={rows} />
-				)}
+				<DataTable columns={columns} data={rows} emptyMessage={EMPTY_LABEL} />
 			</CardContent>
 		</Card>
 	);

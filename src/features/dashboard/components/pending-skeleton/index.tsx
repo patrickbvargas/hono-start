@@ -1,5 +1,6 @@
 import {
 	Card,
+	CardAction,
 	CardContent,
 	CardHeader,
 	ScrollArea,
@@ -41,20 +42,22 @@ const breakdownItemKeys = [
 
 function DashboardMetricCardSkeleton() {
 	return (
-		<Card data-testid="dashboard-pending-metric-card" aria-hidden="true">
-			<CardHeader className="gap-0.5 pb-1.5">
-				<div className="space-y-2">
-					<Skeleton className="h-4 w-28" />
-					<Skeleton className="h-8 w-36" />
-				</div>
+		<Card
+			data-testid="dashboard-pending-metric-card"
+			aria-hidden="true"
+			className="gap-2"
+		>
+			<CardHeader className="flex items-center justify-between">
+				<Skeleton className="h-5 w-32" />
+				<CardAction>
+					<Skeleton className="h-5 w-14" />
+				</CardAction>
 			</CardHeader>
 			<CardContent className="flex flex-col gap-2 pt-0">
-				<div className="flex items-center justify-between gap-3">
-					<Skeleton className="h-6 w-20 rounded-full" />
-					<div className="flex items-center gap-1.5">
-						<Skeleton className="h-4 w-32" />
-						<Skeleton className="size-3.5 rounded-sm" />
-					</div>
+				<Skeleton className="h-8 w-36" />
+				<div className="flex items-center gap-1.5">
+					<Skeleton className="h-5 w-48" />
+					<Skeleton className="size-4 rounded-full" />
 				</div>
 			</CardContent>
 		</Card>
