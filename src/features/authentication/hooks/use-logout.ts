@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { toast } from "@/shared/lib/toast";
-import { sessionKeys } from "@/shared/session/api";
+import { clearAuthenticatedQueryCache } from "@/shared/session";
 import { logoutMutationOptions } from "../api/mutations";
 
 export function useLogout() {
@@ -12,10 +12,7 @@ export function useLogout() {
 	async function handleLogout() {
 		try {
 			await mutation.mutateAsync({});
-			queryClient.setQueryData(sessionKeys.current(), null);
-			queryClient.removeQueries({
-				queryKey: sessionKeys.all,
-			});
+			clearAuthenticatedQueryCache(queryClient);
 			await navigate({ to: "/login" });
 		} catch (error) {
 			toast.danger(

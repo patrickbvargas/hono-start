@@ -11,8 +11,8 @@ let capturedFormConfig: {
 } | null = null;
 
 const {
+	clearAuthenticatedQueryCacheMock,
 	fetchQueryMock,
-	invalidadeQueriesMock,
 	mutateAsyncMock,
 	navigateMock,
 	toastDangerMock,
@@ -21,8 +21,8 @@ const {
 	useNavigateMock,
 	useQueryClientMock,
 } = vi.hoisted(() => ({
+	clearAuthenticatedQueryCacheMock: vi.fn(),
 	fetchQueryMock: vi.fn(),
-	invalidadeQueriesMock: vi.fn(),
 	mutateAsyncMock: vi.fn(),
 	navigateMock: vi.fn(),
 	toastDangerMock: vi.fn(),
@@ -51,13 +51,25 @@ vi.mock("@/shared/lib/toast", () => ({
 	},
 }));
 
+vi.mock("@/shared/session", () => ({
+	clearAuthenticatedQueryCache: clearAuthenticatedQueryCacheMock,
+	getSafeInternalRedirectPath: (redirectTo?: string) => {
+		if (!redirectTo) {
+			return undefined;
+		}
+
+		if (!redirectTo.startsWith("/") || redirectTo.startsWith("//")) {
+			return undefined;
+		}
+
+		return redirectTo;
+	},
+}));
+
 vi.mock("@/shared/session/api", () => ({
 	getCurrentSessionQueryOptions: () => ({
 		queryKey: ["session", "current"],
 	}),
-	sessionKeys: {
-		all: ["session"],
-	},
 }));
 
 vi.mock("../api/mutations", () => ({
@@ -74,7 +86,6 @@ describe("useLoginForm", () => {
 		useNavigateMock.mockReturnValue(navigateMock);
 		useQueryClientMock.mockReturnValue({
 			fetchQuery: fetchQueryMock,
-			invalidateQueries: invalidadeQueriesMock,
 		});
 		useMutationMock.mockReturnValue({
 			isPending: false,
@@ -106,9 +117,12 @@ describe("useLoginForm", () => {
 				rememberMe: false,
 			},
 		});
-		expect(invalidadeQueriesMock).toHaveBeenCalledWith({
-			queryKey: ["session"],
-		});
+		expect(clearAuthenticatedQueryCacheMock).toHaveBeenCalledTimes(1);
+		expect(clearAuthenticatedQueryCacheMock).toHaveBeenCalledWith(
+			expect.objectContaining({
+				fetchQuery: fetchQueryMock,
+			}),
+		);
 		expect(fetchQueryMock).toHaveBeenCalledWith({
 			queryKey: ["session", "current"],
 		});

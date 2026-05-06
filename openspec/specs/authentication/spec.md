@@ -17,17 +17,19 @@ The system SHALL expose `/login` and `/recuperar-senha` as public routes grouped
 - **AND** no prior authenticated session is required
 
 ### Requirement: Users authenticate with email or OAB number plus password
-The system SHALL allow a user to sign in by submitting one identifier field containing either email or OAB number together with a password, using the documented OAB semantics and safe pt-BR error feedback. A successful login MUST refresh the shared frontend session query before the user enters protected product routes.
+The system SHALL allow a user to sign in by submitting one identifier field containing either email or OAB number together with a password, using the documented OAB semantics and safe pt-BR error feedback. A successful login MUST clear protected frontend query caches from any previous authenticated actor, refresh the shared frontend session query with the resolved logged-user actor, and only then allow the user to enter protected product routes.
 
 #### Scenario: User logs in with email
 - **WHEN** a user submits a valid email and correct password
 - **THEN** the system authenticates the user
+- **AND** clears protected frontend query caches from any previous authenticated actor
 - **AND** refreshes the shared frontend session query with the resolved logged-user actor
 - **AND** redirects the user to `/`
 
 #### Scenario: User logs in with OAB number
 - **WHEN** a user submits a valid OAB identifier in the documented format and the correct password
 - **THEN** the system authenticates the user
+- **AND** clears protected frontend query caches from any previous authenticated actor
 - **AND** refreshes the shared frontend session query with the resolved logged-user actor
 - **AND** redirects the user to `/`
 
@@ -99,12 +101,13 @@ The system SHALL temporarily block additional authentication attempts after 5 fa
 - **THEN** the system allows authentication normally
 
 ### Requirement: Logout ends authenticated access
-The system SHALL provide a logout action that invalidates the current authenticated session and removes access to protected routes until the user signs in again. The logout flow MUST clear the shared frontend session query so no browser-side authenticated snapshot keeps protected access alive.
+The system SHALL provide a logout action that invalidates the current authenticated session and removes access to protected routes until the user signs in again. The logout flow MUST clear the shared frontend session query and all protected frontend query caches so no browser-side snapshot from the previous actor keeps protected access or protected data alive.
 
 #### Scenario: User logs out
 - **WHEN** an authenticated user triggers the logout action
 - **THEN** the system invalidates the active session
 - **AND** clears the shared frontend session query
+- **AND** clears protected frontend query caches
 - **AND** redirects the user to `/login`
 
 #### Scenario: Logged-out user revisits protected page

@@ -2,11 +2,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { useAppForm } from "@/shared/hooks/use-app-form";
 import { toast } from "@/shared/lib/toast";
-import { getSafeInternalRedirectPath } from "@/shared/session";
 import {
-	getCurrentSessionQueryOptions,
-	sessionKeys,
-} from "@/shared/session/api";
+	clearAuthenticatedQueryCache,
+	getSafeInternalRedirectPath,
+} from "@/shared/session";
+import { getCurrentSessionQueryOptions } from "@/shared/session/api";
 import { loginMutationOptions } from "../api/mutations";
 import { loginInputSchema } from "../schemas/form";
 
@@ -32,9 +32,7 @@ export function useLoginForm({ redirectTo }: UseLoginFormOptions = {}) {
 			try {
 				const parsed = loginInputSchema.parse(value);
 				await loginMutation.mutateAsync({ data: parsed });
-				await queryClient.invalidateQueries({
-					queryKey: sessionKeys.all,
-				});
+				clearAuthenticatedQueryCache(queryClient);
 				const session = await queryClient.fetchQuery(
 					getCurrentSessionQueryOptions(),
 				);

@@ -54,7 +54,7 @@ export function DashboardRemunerationTable({
 	];
 
 	return (
-		<Card className="h-80">
+		<Card>
 			<CardHeader>
 				<CardTitle>Remunerações</CardTitle>
 			</CardHeader>

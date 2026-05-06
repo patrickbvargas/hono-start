@@ -1,4 +1,5 @@
 export { getCurrentSessionQueryOptions } from "./api";
+export { clearAuthenticatedQueryCache } from "./cache";
 export {
 	getRouteSession,
 	getSafeInternalRedirectPath,
