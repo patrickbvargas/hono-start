@@ -3,7 +3,6 @@ import { DataTable } from "@/shared/components/data-table";
 import {
 	Card,
 	CardContent,
-	CardDescription,
 	CardHeader,
 	CardTitle,
 } from "@/shared/components/ui";
@@ -57,10 +56,7 @@ export function DashboardRemunerationTable({
 	return (
 		<Card className="h-96">
 			<CardHeader>
-				<CardTitle>Remunerações por colaborador</CardTitle>
-				<CardDescription>
-					Valores mensais consolidados no período selecionado.
-				</CardDescription>
+				<CardTitle>Remunerações</CardTitle>
 			</CardHeader>
 			<CardContent className="flex min-h-0 flex-1 flex-col pt-0">
 				{rows.length === 0 ? (
@@ -69,7 +65,7 @@ export function DashboardRemunerationTable({
 					</div>
 				) : (
 					<DataTable
-						className="h-full rounded-none border-0"
+						className="h-full border-0"
 						columns={columns}
 						data={rows}
 					/>

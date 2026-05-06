@@ -63,7 +63,7 @@ function RootLayout() {
 	return (
 		<div
 			data-slot="root-container"
-			className="container relative mx-auto h-screen w-full overflow-hidden"
+			className="relative mx-auto h-screen w-full overflow-hidden"
 		>
 			<Outlet />
 		</div>

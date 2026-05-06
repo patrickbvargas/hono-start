@@ -101,7 +101,7 @@ Dashboard data MUST respect firm isolation, the session role visibility model, a
 - **THEN** the system does not expose cross-firm data
 
 ### Requirement: Dashboard Summaries
-The dashboard SHALL show revenue totals, remuneration totals, monthly comparison information, revenue grouping by legal area and revenue type, a monthly financial evolution chart, and a monthly remuneration table by collaborator, with supported summaries reflecting the active dashboard period and employee filters. The main dashboard content SHALL scroll inside a shared scroll container without clipping card borders, and the breakdown legend SHALL present concise participation percentages without redundant phrasing. The dashboard SHALL NOT render the "Visão da firma" badge.
+The dashboard SHALL show revenue totals, remuneration totals, monthly comparison information, revenue grouping by legal area and revenue type, a monthly financial evolution chart, and a monthly remuneration table by collaborator, with supported summaries reflecting the active dashboard period and employee filters. The main dashboard content SHALL scroll inside a shared scroll container without clipping card borders, and the breakdown legend SHALL present concise participation percentages without redundant phrasing. The dashboard SHALL NOT render the "Visão da firma" badge. The root dashboard component SHALL compose dedicated analytical surface components for metric cards, charts, and remuneration tables instead of concentrating all surface implementations inline.
 
 #### Scenario: Dashboard loads summaries
 - **WHEN** dashboard data is available
@@ -147,6 +147,11 @@ The dashboard SHALL show revenue totals, remuneration totals, monthly comparison
 #### Scenario: Dashboard analytical surfaces use shared card wrapper
 - **WHEN** the dashboard renders metric cards, charts, or the monthly remuneration table
 - **THEN** each analytical surface uses the shared shadcn/ui `Card` component as its outer visual wrapper
+
+#### Scenario: Dashboard analytical surfaces stay componentized
+- **WHEN** the dashboard renders metric cards, charts, and the monthly remuneration table
+- **THEN** the root dashboard component composes dedicated child components for those analytical surfaces
+- **AND** metric-card rendering details remain inside the metric-cards component
 
 #### Scenario: Dashboard scroll stays inside content region
 - **WHEN** dashboard content exceeds the available wrapper body height

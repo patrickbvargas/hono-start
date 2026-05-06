@@ -27,6 +27,14 @@ vi.mock("../components/breakdown-chart", () => ({
 	DashboardBreakdownChart: ({ title }: { title: string }) => <div>{title}</div>,
 }));
 
+vi.mock("../components/metric-cards", () => ({
+	DashboardMetricCards: ({
+		metrics,
+	}: {
+		metrics: Array<{ label: string }>;
+	}) => <div data-testid="dashboard-metric-cards">{metrics.length} cards</div>,
+}));
+
 vi.mock("../components/financial-evolution", () => ({
 	FinancialEvolutionChart: () => <div>Evolução financeira</div>,
 }));
@@ -99,6 +107,9 @@ describe("Dashboard", () => {
 		);
 
 		expect(screen.queryByText("Atividade recente")).toBeNull();
+		expect(screen.getByTestId("dashboard-metric-cards").textContent).toContain(
+			"1 cards",
+		);
 		expect(
 			screen.getByTestId("dashboard-remuneration-table").textContent,
 		).toContain("1 meses / 1 linhas");
