@@ -1,4 +1,5 @@
 import type * as React from "react";
+import { SectionTitle } from "@/shared/components/section-title";
 import {
 	Button,
 	Drawer,
@@ -123,14 +124,7 @@ interface SectionProps {
 const Section = ({ title, children, classNames, className }: SectionProps) => {
 	return (
 		<section className={cn("flex flex-col gap-2", classNames?.root, className)}>
-			<h3
-				className={cn(
-					"text-sm font-semibold uppercase tracking-wider text-foreground",
-					classNames?.title,
-				)}
-			>
-				{title}
-			</h3>
+			<SectionTitle className={cn(classNames?.title)}>{title}</SectionTitle>
 			<div className={cn(classNames?.content)}>{children}</div>
 		</section>
 	);

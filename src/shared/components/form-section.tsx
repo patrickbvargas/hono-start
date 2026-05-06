@@ -1,4 +1,5 @@
 import type * as React from "react";
+import { SectionTitle } from "@/shared/components/section-title";
 import { FieldGroup } from "@/shared/components/ui";
 import { cn } from "@/shared/lib/utils";
 
@@ -23,9 +24,7 @@ export const FormSection = ({
 				<div className="flex flex-col gap-1.5 sm:flex-row sm:items-start sm:justify-between sm:gap-3">
 					<div className="space-y-1">
 						{title ? (
-							<h2 className="font-medium text-foreground text-sm leading-none">
-								{title}
-							</h2>
+							<SectionTitle className="leading-none">{title}</SectionTitle>
 						) : null}
 						{description ? (
 							<p className="text-muted-foreground text-sm">{description}</p>
