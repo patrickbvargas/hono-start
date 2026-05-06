@@ -11,12 +11,14 @@ export const FormRoot = ({
 	form,
 	children,
 	showDebug = false,
+	method = "post",
 	...props
 }: FormRootProps) => {
 	return (
 		<formContext.Provider value={form}>
 			<form
 				id={form.formId}
+				method={method}
 				noValidate
 				onSubmit={(e) => {
 					e.preventDefault();

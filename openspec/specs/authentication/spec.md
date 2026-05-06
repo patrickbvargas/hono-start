@@ -74,6 +74,19 @@ The system SHALL support password-reset request and reset-completion behavior fo
 - **WHEN** a user opens a valid password-reset verification link and submits a new password that satisfies policy
 - **THEN** the system updates the password and allows the user to authenticate with the new credential
 
+### Requirement: Public credential forms keep secrets out of the browser URL
+The system SHALL ensure that public authentication forms containing password-bearing fields submit through a transport that does not serialize those credential values into the browser URL, including when native browser submission occurs before client hydration or when JavaScript is unavailable.
+
+#### Scenario: Login submission does not place password in URL
+- **WHEN** a user submits the `/login` form with an identifier and password
+- **THEN** the browser URL does not gain the submitted password value
+- **AND** the form fallback behavior remains compatible with the existing login mutation flow
+
+#### Scenario: Password reset completion does not place new password in URL
+- **WHEN** a user submits the password reset completion form on `/recuperar-senha` with a reset token and new password values
+- **THEN** the browser URL does not gain the submitted password values
+- **AND** the reset-completion flow remains compatible with the existing reset mutation flow
+
 ### Requirement: Failed-login protection enforces documented threshold
 The system SHALL temporarily block additional authentication attempts after 5 failed attempts within 1 minute for the same normalized identifier.
 
