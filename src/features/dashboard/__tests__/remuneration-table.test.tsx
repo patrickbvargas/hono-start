@@ -50,8 +50,8 @@ describe("DashboardRemunerationTable", () => {
 		render(
 			<DashboardRemunerationTable
 				months={[
-					{ key: "2026-01", label: "Jan/2026" },
-					{ key: "2026-02", label: "Fev/2026" },
+					{ key: "2026-01", label: "Jan/26" },
+					{ key: "2026-02", label: "Fev/26" },
 				]}
 				rows={[
 					{
@@ -68,14 +68,14 @@ describe("DashboardRemunerationTable", () => {
 			/>,
 		);
 
-		expect(screen.getByText("Remunerações por colaborador")).toBeTruthy();
+		expect(screen.getByText("Remunerações")).toBeTruthy();
 		expect(
 			screen
-				.getByText("Remunerações por colaborador")
+				.getByText("Remunerações")
 				.closest('[data-slot="card"]'),
 		).toBeTruthy();
 		expect(screen.getByTestId("data-table").textContent).toContain(
-			"Colaborador | Jan/2026 | Fev/2026 | Total no período",
+			"Colaborador | Jan/26 | Fev/26 | Total no período",
 		);
 	});
 

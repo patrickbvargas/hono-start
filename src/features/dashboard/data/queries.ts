@@ -342,6 +342,24 @@ function formatMonthYearLabel(value: Date): string {
 	return `${month.charAt(0).toUpperCase()}${month.slice(1)}/${year}`;
 }
 
+function formatMonthShortYearLabel(value: Date): string {
+	const formatted = new Intl.DateTimeFormat("pt-BR", {
+		month: "short",
+		year: "2-digit",
+		timeZone: "UTC",
+	})
+		.format(value)
+		.replace(".", "");
+
+	const [month, year] = formatted.split(" de ");
+
+	if (!month || !year) {
+		return formatted;
+	}
+
+	return `${month.charAt(0).toUpperCase()}${month.slice(1)}/${year}`;
+}
+
 function formatDateRangeLabel(start: Date, endInclusive: Date): string {
 	const dateFormatter = new Intl.DateTimeFormat("pt-BR", {
 		timeZone: "UTC",
@@ -643,7 +661,7 @@ function buildMonthlyRemunerationTable({
 	) {
 		months.push({
 			key: getMonthKey(current),
-			label: formatMonthYearLabel(current),
+			label: formatMonthShortYearLabel(current),
 		});
 	}
 

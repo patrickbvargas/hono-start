@@ -193,9 +193,9 @@ describe("dashboard data queries", () => {
 			},
 		]);
 		expect(result.remunerationMonths).toEqual([
-			{ key: "2026-01", label: "Jan/2026" },
-			{ key: "2026-02", label: "Fev/2026" },
-			{ key: "2026-03", label: "Mar/2026" },
+			{ key: "2026-01", label: "Jan/26" },
+			{ key: "2026-02", label: "Fev/26" },
+			{ key: "2026-03", label: "Mar/26" },
 		]);
 		expect(result.remunerationTable).toEqual([
 			expect.objectContaining({

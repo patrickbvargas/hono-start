@@ -125,6 +125,7 @@ The dashboard SHALL show revenue totals, remuneration totals, monthly comparison
 - **WHEN** dashboard data is loaded for a period spanning multiple months
 - **THEN** the system groups remuneration values by collaborator and by ano e mes
 - **AND** the table exposes one row per collaborator and one column per month in the selected range
+- **AND** each month column label uses the short `Mes/aa` format, such as `Jan/26`
 
 #### Scenario: Filtered period contains months without movement
 - **WHEN** the selected dashboard period includes one or more months without matching receitas or remuneracoes

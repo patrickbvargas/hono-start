@@ -2,99 +2,99 @@ import { Separator, SidebarTrigger } from "@/shared/components/ui";
 import { cn } from "@/shared/lib/utils";
 
 interface WrapperProps extends React.HTMLAttributes<HTMLDivElement> {
-	title?: string;
-	actions?: React.ReactNode;
+  title?: string;
+  actions?: React.ReactNode;
 }
 
 export const Wrapper = ({
-	title,
-	actions,
-	children,
-	className,
-	...props
+  title,
+  actions,
+  children,
+  className,
+  ...props
 }: WrapperProps) => {
-	return (
-		<div
-			data-slot="wrapper"
-			className={cn(
-				"flex h-full min-h-0 flex-col gap-3 overflow-hidden",
-				className,
-			)}
-			{...props}
-		>
-			<div className="h-12 flex items-center justify-between px-4 pt-1.5">
-				<div className="flex items-center gap-0.5">
-					<SidebarTrigger />
-					<Separator
-						orientation="vertical"
-						className="mx-2 my-auto data-[orientation=vertical]:h-4"
-					/>
-					{title && <WrapperTitle title={title} />}
-				</div>
-				{actions}
-			</div>
-			{children}
-		</div>
-	);
+  return (
+    <div
+      data-slot="wrapper"
+      className={cn(
+        "flex h-full min-h-0 flex-col gap-3 overflow-hidden",
+        className,
+      )}
+      {...props}
+    >
+      <div className="h-12 flex items-center justify-between px-4 pt-1.5">
+        <div className="flex items-center gap-0.5">
+          <SidebarTrigger />
+          <Separator
+            orientation="vertical"
+            className="mx-2 my-auto data-[orientation=vertical]:h-4"
+          />
+          {title && <WrapperTitle title={title} />}
+        </div>
+        {actions}
+      </div>
+      {children}
+    </div>
+  );
 };
 
 export const WrapperHeader = ({
-	children,
-	className,
-	...props
+  children,
+  className,
+  ...props
 }: React.HTMLAttributes<HTMLDivElement>) => {
-	return (
-		<div
-			data-slot="wrapper-header"
-			className={cn("flex items-center justify-between px-4", className)}
-			{...props}
-		>
-			{children}
-		</div>
-	);
+  return (
+    <div
+      data-slot="wrapper-header"
+      className={cn("flex items-center justify-between px-4", className)}
+      {...props}
+    >
+      {children}
+    </div>
+  );
 };
 
 export const WrapperBody = ({
-	children,
-	className,
-	...props
+  children,
+  className,
+  ...props
 }: React.HTMLAttributes<HTMLDivElement>) => {
-	return (
-		<div
-			data-slot="wrapper-content"
-			className={cn(
-				"flex flex-1 min-h-0 w-full flex-col px-4 pb-4 overflow-hidden",
-				className,
-			)}
-			{...props}
-		>
-			{children}
-		</div>
-	);
+  return (
+    <div
+      data-slot="wrapper-content"
+      className={cn(
+        "flex flex-1 min-h-0 w-full flex-col px-4 pb-1 overflow-hidden",
+        className,
+      )}
+      {...props}
+    >
+      {children}
+    </div>
+  );
 };
 
 export const WrapperFooter = ({
-	className,
-	...props
+  className,
+  ...props
 }: React.HTMLAttributes<HTMLDivElement>) => {
-	return (
-		<div
-			data-slot="wrapper-footer"
-			className={cn("flex justify-end items-center gap-3 px-4 pb-4", className)}
-			{...props}
-		/>
-	);
+  return (
+    <div
+      data-slot="wrapper-footer"
+      className={cn("flex justify-end items-center gap-3 px-4 pb-4", className)}
+      {...props}
+    />
+  );
 };
 
 interface WrapperTitleProps extends React.HTMLAttributes<HTMLHeadingElement> {
-	title: string;
+  title: string;
 }
 export const WrapperTitle = ({
-	title,
-	className,
-	...props
+  title,
+  className,
+  ...props
 }: WrapperTitleProps) => (
-	<h1 className={cn("text-base font-medium", className)} {...props}>
-		{title}
-	</h1>
+  <h1 className={cn("text-base font-medium", className)} {...props}>
+    {title}
+  </h1>
 );

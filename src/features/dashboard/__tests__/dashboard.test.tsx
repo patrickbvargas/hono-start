@@ -84,7 +84,7 @@ describe("Dashboard", () => {
 					],
 					legalAreaRevenue: [],
 					revenueTypeRevenue: [],
-					remunerationMonths: [{ key: "2026-01", label: "Jan/2026" }],
+					remunerationMonths: [{ key: "2026-01", label: "Jan/26" }],
 					remunerationTable: [
 						{
 							employeeId: 10,
