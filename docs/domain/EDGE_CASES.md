@@ -16,7 +16,7 @@ This file preserves canonical edge-case expectations for the product domain.
 |---|---|
 | Two clients share the same CPF or CNPJ in one firm | The system rejects the duplicate |
 | Deleting a client with active contracts | The system blocks deletion with a clear explanation |
-| Trying to change client type after creation | The system does not allow it |
+| Changing client type after creation with a mismatched document | The system rejects the update with the type-specific CPF or CNPJ validation message |
 
 ## Contract And Team
 

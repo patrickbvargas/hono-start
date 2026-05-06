@@ -6,11 +6,7 @@ import {
 } from "../constants/values";
 import { assertCanBeDeleted } from "../rules/delete";
 import { assertDocumentMatchesType } from "../rules/document";
-import {
-	assertTypeCanBeSelected,
-	assertTypeExists,
-	assertTypeImmutableOnUpdate,
-} from "../rules/lookups";
+import { assertTypeCanBeSelected, assertTypeExists } from "../rules/lookups";
 
 const activeType = {
 	id: 1,
@@ -71,7 +67,7 @@ describe("client rule assertions", () => {
 		).not.toThrow();
 	});
 
-	it("validates lookup existence, activity, and immutability", () => {
+	it("validates lookup existence and activity", () => {
 		expect(() => assertTypeExists(null)).toThrow(CLIENT_ERRORS.TYPE_NOT_FOUND);
 		expect(() => assertTypeExists(activeType)).not.toThrow();
 
@@ -80,13 +76,6 @@ describe("client rule assertions", () => {
 		);
 		expect(() =>
 			assertTypeCanBeSelected(inactiveType, inactiveType.id),
-		).not.toThrow();
-
-		expect(() => assertTypeImmutableOnUpdate(activeType, 2)).toThrow(
-			CLIENT_ERRORS.TYPE_NOT_MUTABLE,
-		);
-		expect(() =>
-			assertTypeImmutableOnUpdate(activeType, activeType.id),
 		).not.toThrow();
 	});
 });

@@ -179,14 +179,20 @@ describe("client lookup-backed writes", () => {
 	it("updates clients with audit data when actor context is present", async () => {
 		const before = baseClient();
 		getClientByIdMock.mockResolvedValue(before);
-		getClientTypeByValueMock.mockResolvedValue(baseType({ id: 30 }));
+		getClientTypeByValueMock.mockResolvedValue(
+			baseType({
+				id: 31,
+				value: "COMPANY",
+				label: "Pessoa Jurídica",
+			}),
+		);
 		const input = {
 			id: 1,
 			fullName: "Cliente Atualizado",
-			document: "52998224725",
+			document: "11222333000181",
 			email: "cliente@example.com",
 			phone: "11999999999",
-			type: "INDIVIDUAL",
+			type: "COMPANY",
 			isActive: true,
 		};
 
@@ -206,6 +212,7 @@ describe("client lookup-backed writes", () => {
 		expect(prismaMock.client.update).toHaveBeenCalledWith({
 			where: { id: 1 },
 			data: {
+				typeId: 31,
 				fullName: input.fullName,
 				document: input.document,
 				email: input.email,

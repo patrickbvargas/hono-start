@@ -41,12 +41,6 @@ export const ClientForm = ({ id, state, onSuccess }: ClientFormProps) => {
 												label="Tipo"
 												options={types}
 												isRequired
-												isDisabled={!!id}
-												description={
-													id
-														? "O tipo do cliente não pode ser alterado."
-														: undefined
-												}
 											/>
 										)}
 									</form.AppField>

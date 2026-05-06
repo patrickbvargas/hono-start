@@ -79,17 +79,17 @@ The system SHALL allow authenticated users to create a client in their own firm 
 - **AND** the form shows a Portuguese validation message indicating the document is already registered
 
 ### Requirement: Edit client
-The system SHALL allow authenticated users to update client profile fields except for the immutable client type.
+The system SHALL allow authenticated users to update client profile fields, including the client type.
 
 #### Scenario: Open edit form
 - **WHEN** an authenticated user clicks the edit action on a client row
 - **THEN** a modal overlay opens pre-populated with the client's current data
 - **AND** the "Ativo" checkbox reflects the client's current `isActive` value
 
-#### Scenario: Client type remains fixed
+#### Scenario: Client type remains editable
 - **WHEN** a user edits an existing client
-- **THEN** the client type is shown as read-only or otherwise non-editable
-- **AND** the update flow does not allow changing the persisted client type
+- **THEN** the client type remains editable in the form
+- **AND** changing the selected type updates the form labels and CPF or CNPJ expectations before submission
 
 #### Scenario: Successful edit
 - **WHEN** an authenticated user submits a valid edit form
@@ -99,7 +99,7 @@ The system SHALL allow authenticated users to update client profile fields excep
 - **AND** the list row and details drawer reflect the updated data
 
 #### Scenario: Edit enforces type-specific document validation
-- **WHEN** a user submits an edited client with an invalid CPF or CNPJ for the persisted client type
+- **WHEN** a user submits an edited client with an invalid CPF or CNPJ for the selected client type
 - **THEN** the system rejects the submission with a Portuguese validation message
 
 ### Requirement: Soft-delete and restore client

@@ -10,7 +10,6 @@ export const CLIENT_ERRORS = {
 	RESTORE_FAILED: "Erro ao restaurar cliente",
 	TYPE_INACTIVE: "Selecione um tipo de cliente ativo",
 	TYPE_NOT_FOUND: "Tipo de cliente não encontrado",
-	TYPE_NOT_MUTABLE: "O tipo do cliente não pode ser alterado",
 	UPDATE_FORBIDDEN: "Você não tem permissão para editar clientes",
 	UPDATE_FAILED: "Erro ao atualizar cliente",
 	DOCUMENT_REQUIRED: "Documento é obrigatório",

@@ -28,7 +28,8 @@
 - A client is either an individual or a company.
 - Individual clients use CPF semantics.
 - Company clients use CNPJ semantics.
-- Client type is fixed after creation.
+- Client type may be changed after creation.
+- Editing client type requires the submitted document to match the selected type semantics.
 - Inactive or deleted clients must not appear in contract creation options.
 - Client document uniqueness is firm-scoped.
 - Client forms expose `isActive` as an `Ativo` checkbox.

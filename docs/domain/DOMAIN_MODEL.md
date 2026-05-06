@@ -43,7 +43,7 @@
 ### Client
 
 - Belongs to exactly one firm.
-- Has fixed type after creation.
+- Carries a client type that may be changed later.
 - Carries a firm-scoped unique document.
 - Supports optional contact fields and active or deleted lifecycle state.
 
