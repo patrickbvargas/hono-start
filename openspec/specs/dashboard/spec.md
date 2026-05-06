@@ -26,6 +26,8 @@ The system SHALL provide URL-driven dashboard filters for period, employee scope
 #### Scenario: Current-year shortcut is the default state
 - **WHEN** an authenticated user opens the dashboard without overriding `dateFrom` or `dateTo`
 - **THEN** the system loads the current-year period by default
+- **AND** the active current-year range starts on `01/01` of the current environment year
+- **AND** the active current-year range ends on the current environment date instead of `31/12`
 - **AND** the `2026` shortcut appears active in the current environment year
 
 #### Scenario: User applies last 6 months shortcut
@@ -40,7 +42,8 @@ The system SHALL provide URL-driven dashboard filters for period, employee scope
 
 #### Scenario: User returns to current year shortcut
 - **WHEN** an authenticated user clicks the `2026` shortcut
-- **THEN** the system updates `dateFrom` and `dateTo` to the current-year range
+- **THEN** the system updates `dateFrom` to the first day of the current year
+- **AND** the system updates `dateTo` to the current environment date for the current year
 - **AND** the dashboard reloads data for that selected period
 
 #### Scenario: Manual popover period remains available
@@ -179,6 +182,11 @@ The dashboard SHALL show revenue totals, remuneration totals, monthly comparison
 #### Scenario: No business records exist
 - **WHEN** the dashboard has no matching business records
 - **THEN** the system displays zero-value summaries, zeroed chart buckets, and empty-state copy in pt-BR
+
+#### Scenario: Current-year dashboard omits future months
+- **WHEN** an authenticated user applies the current-year shortcut during an in-progress calendar year
+- **THEN** the dashboard summaries, monthly financial evolution, and monthly remuneration table use only months from January through the current month
+- **AND** the system does not append future months from the same year as zero-value buckets
 
 ### Requirement: Dashboard pending skeleton
 The system SHALL render a dedicated structural skeleton while the authenticated dashboard route is pending before summary data finishes loading.

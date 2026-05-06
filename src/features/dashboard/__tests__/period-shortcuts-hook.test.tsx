@@ -23,7 +23,7 @@ describe("useDashboardFilter", () => {
 		useFilterMock.mockReturnValue({
 			filter: {
 				dateFrom: "2026-01-01",
-				dateTo: "2026-12-31",
+				dateTo: "2026-05-06",
 				employeeId: "",
 				legalArea: "",
 				revenueType: "",

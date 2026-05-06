@@ -127,6 +127,63 @@ function decimal(value: Prisma.Decimal | string | number) {
   return new Prisma.Decimal(value);
 }
 
+function formatCurrency(value: Prisma.Decimal) {
+  return value.toFixed(2);
+}
+
+function scaleCurrency(value: string | null, multiplier: Prisma.Decimal) {
+  if (value === null) {
+    return null;
+  }
+
+  return formatCurrency(decimal(value).mul(multiplier));
+}
+
+function getDeterministicYearMultiplier(year: number, contractIndex: number) {
+  if (year === 2026) {
+    return decimal(1);
+  }
+
+  const yearBaseline =
+    year === 2025 ? decimal("0.992") : decimal("0.984");
+  const centeredIndex = (contractIndex % 9) - 4;
+
+  return yearBaseline.add(decimal(centeredIndex).mul(decimal("0.004")));
+}
+
+function transformRevenueSeedForYear(
+  revenue: RevenueSeedInput,
+  year: number,
+  multiplier: Prisma.Decimal,
+): RevenueSeedInput {
+  const scaledDownPayment = scaleCurrency(revenue.downPaymentValue, multiplier);
+  const scaledFees = revenue.fees.map((fee) => ({
+    ...fee,
+    amount: formatCurrency(decimal(fee.amount).mul(multiplier)),
+    paymentDate: replaceIsoYear(fee.paymentDate, year),
+  }));
+  const paidValue = decimal(scaledDownPayment ?? 0).add(
+    scaledFees.reduce((total, fee) => total.add(decimal(fee.amount)), decimal(0)),
+  );
+  const originalPaidValue = decimal(revenue.downPaymentValue ?? 0).add(
+    revenue.fees.reduce((total, fee) => total.add(decimal(fee.amount)), decimal(0)),
+  );
+  const originalRemainingValue = Prisma.Decimal.max(
+    decimal(revenue.totalValue).minus(originalPaidValue),
+    decimal(0),
+  );
+  const scaledRemainingValue = originalRemainingValue.mul(multiplier);
+  const scaledTotalValue = formatCurrency(paidValue.add(scaledRemainingValue));
+
+  return {
+    ...revenue,
+    totalValue: scaledTotalValue,
+    downPaymentValue: scaledDownPayment,
+    paymentStartDate: replaceIsoYear(revenue.paymentStartDate, year),
+    fees: scaledFees,
+  };
+}
+
 function calculateCpfDigit(baseDigits: string) {
   const weightStart = baseDigits.length + 1;
   const sum = baseDigits.split("").reduce((total, digit, index) => {
@@ -305,8 +362,85 @@ function getRotatedValue<T>(items: T[], index: number, offset = 0) {
   return item;
 }
 
-function createContractProcessNumber(index: number) {
-  return `PROC-SEED-2026-${padNumeric(index + 1, 4)}`;
+function createContractProcessNumber(index: number, year: number) {
+  return `PROC-SEED-${year}-${padNumeric(index + 1, 4)}`;
+}
+
+function replaceIsoYear(value: string, year: number) {
+  return `${year}${value.slice(4)}`;
+}
+
+function getMonthOffsetForYear(year: number, contractIndex: number) {
+  const stableOffsetPattern = [
+    0, 1, 2, 3, 4, 5, 6, 7, 8, 0,
+    1, 2, 3, 4, 5, 6, 7, 8, 4, 8,
+  ];
+
+  const offset = stableOffsetPattern[contractIndex];
+
+  if (offset === undefined) {
+    throw new Error(
+      `Missing stable month offset for year ${year} contract index ${contractIndex}`,
+    );
+  }
+
+  return offset;
+}
+
+function shiftIsoDateByMonths(value: string, months: number) {
+  if (months === 0) {
+    return value;
+  }
+
+  const reference = new Date(value);
+  const shiftedYear = reference.getUTCFullYear();
+  const shiftedMonth = reference.getUTCMonth() + months;
+  const shiftedDay = reference.getUTCDate();
+  const lastDayOfTargetMonth = new Date(
+    Date.UTC(shiftedYear, shiftedMonth + 1, 0),
+  ).getUTCDate();
+  const safeDay = Math.min(shiftedDay, lastDayOfTargetMonth);
+  const shifted = new Date(
+    Date.UTC(
+      shiftedYear,
+      shiftedMonth,
+      safeDay,
+      reference.getUTCHours(),
+      reference.getUTCMinutes(),
+      reference.getUTCSeconds(),
+      reference.getUTCMilliseconds(),
+    ),
+  );
+
+  return shifted.toISOString();
+}
+
+function mapContractSeedToYear(
+  contractSeed: ContractSeedInput,
+  year: number,
+  contractIndex: number,
+): ContractSeedInput {
+  const multiplier = getDeterministicYearMultiplier(year, contractIndex);
+  const monthOffset = getMonthOffsetForYear(year, contractIndex);
+
+  return {
+    ...contractSeed,
+    revenues: contractSeed.revenues.map((revenue) => ({
+      ...transformRevenueSeedForYear(revenue, year, multiplier),
+      paymentStartDate: shiftIsoDateByMonths(
+        replaceIsoYear(revenue.paymentStartDate, year),
+        monthOffset,
+      ),
+      fees: revenue.fees.map((fee) => ({
+        ...fee,
+        amount: formatCurrency(decimal(fee.amount).mul(multiplier)),
+        paymentDate: shiftIsoDateByMonths(
+          replaceIsoYear(fee.paymentDate, year),
+          monthOffset,
+        ),
+      })),
+    })),
+  };
 }
 
 function createContractSeeds(
@@ -341,330 +475,344 @@ function createContractSeeds(
     "OTHER",
   ];
 
-  return clients.slice(0, MINIMUM_CONTRACT_COUNT).map((client, index) => {
-    const scenarioIndex = index % 6;
-    const responsibleEmail = getRotatedValue(activeLawyerEmails, index);
-    const recommendingEmail = getRotatedValue(activeLawyerEmails, index, 1);
-    const recommendedEmail = getRotatedValue(activeLawyerEmails, index, 2);
-    const assistantEmail = getRotatedValue(activeAssistantEmails, index);
-    const legalAreaValue = getRotatedValue(legalAreas, index);
-    const processNumber = createContractProcessNumber(index);
+  const fixtureYears = [2024, 2025, 2026];
 
-    switch (scenarioIndex) {
-      case 0:
-        return {
-          processNumber,
-          clientDocument: client.document,
-          legalAreaValue,
-          statusValue: "ACTIVE",
-          feePercentage: "0.3000",
-          notes:
-            "Contrato seed padrao com advogado responsavel e pagamento parcial.",
-          allowStatusChange: true,
-          isActive: true,
-          assignments: [
-            {
-              employeeEmail: responsibleEmail,
-              assignmentTypeValue: "RESPONSIBLE",
-            },
-          ],
-          revenues: [
-            {
-              typeValue: "ADMINISTRATIVE",
-              totalValue: "15000.00",
-              downPaymentValue: "3000.00",
-              paymentStartDate: "2026-01-10T00:00:00.000Z",
-              totalInstallments: 4,
-              isActive: true,
-              fees: [
-                {
-                  amount: "2000.00",
-                  installmentNumber: 1,
-                  paymentDate: "2026-02-10T00:00:00.000Z",
-                  generatesRemuneration: true,
-                  isActive: true,
-                },
-                {
-                  amount: "2000.00",
-                  installmentNumber: 2,
-                  paymentDate: "2026-03-10T00:00:00.000Z",
-                  generatesRemuneration: true,
-                  isActive: true,
-                },
-              ],
-            },
-          ],
-        };
-      case 1:
-        return {
-          processNumber,
-          clientDocument: client.document,
-          legalAreaValue,
-          statusValue: "ACTIVE",
-          feePercentage: "0.3000",
-          notes:
-            "Contrato seed com assistente administrativo e honorarios ativos.",
-          allowStatusChange: true,
-          isActive: index % 12 !== 1,
-          assignments: [
-            {
-              employeeEmail: responsibleEmail,
-              assignmentTypeValue: "RESPONSIBLE",
-            },
-            {
-              employeeEmail: assistantEmail,
-              assignmentTypeValue: "ADMIN_ASSISTANT",
-            },
-          ],
-          revenues: [
-            {
-              typeValue: "JUDICIAL",
-              totalValue: "18000.00",
-              downPaymentValue: "2000.00",
-              paymentStartDate: "2026-01-15T00:00:00.000Z",
-              totalInstallments: 4,
-              isActive: true,
-              fees: [
-                {
-                  amount: "4000.00",
-                  installmentNumber: 1,
-                  paymentDate: "2026-02-15T00:00:00.000Z",
-                  generatesRemuneration: true,
-                  isActive: true,
-                },
-                {
-                  amount: "4000.00",
-                  installmentNumber: 2,
-                  paymentDate: "2026-03-15T00:00:00.000Z",
-                  generatesRemuneration: true,
-                  isActive: true,
-                },
-              ],
-            },
-          ],
-        };
-      case 2:
-        return {
-          processNumber,
-          clientDocument: client.document,
-          legalAreaValue,
-          statusValue: "ACTIVE",
-          feePercentage: "0.3500",
-          notes:
-            "Contrato seed de indicacao com responsavel, indicante e indicado.",
-          allowStatusChange: true,
-          isActive: true,
-          assignments: [
-            {
-              employeeEmail: responsibleEmail,
-              assignmentTypeValue: "RESPONSIBLE",
-            },
-            {
-              employeeEmail: recommendingEmail,
-              assignmentTypeValue: "RECOMMENDING",
-            },
-            {
-              employeeEmail: recommendedEmail,
-              assignmentTypeValue: "RECOMMENDED",
-            },
-          ],
-          revenues: [
-            {
-              typeValue: "ADMINISTRATIVE",
-              totalValue: "22000.00",
-              downPaymentValue: "5000.00",
-              paymentStartDate: "2026-01-20T00:00:00.000Z",
-              totalInstallments: 4,
-              isActive: true,
-              fees: [
-                {
-                  amount: "4000.00",
-                  installmentNumber: 1,
-                  paymentDate: "2026-02-20T00:00:00.000Z",
-                  generatesRemuneration: true,
-                  isActive: true,
-                },
-              ],
-            },
-          ],
-        };
-      case 3:
-        return {
-          processNumber,
-          clientDocument: client.document,
-          legalAreaValue,
-          statusValue: "ACTIVE",
-          feePercentage: "0.2500",
-          notes: "Contrato seed com honorario sem geracao de remuneracao.",
-          allowStatusChange: true,
-          isActive: true,
-          assignments: [
-            {
-              employeeEmail: responsibleEmail,
-              assignmentTypeValue: "RESPONSIBLE",
-            },
-            {
-              employeeEmail: assistantEmail,
-              assignmentTypeValue: "ADMIN_ASSISTANT",
-            },
-          ],
-          revenues: [
-            {
-              typeValue: "SUCCUMBENCY",
-              totalValue: "12000.00",
-              downPaymentValue: "1000.00",
-              paymentStartDate: "2026-01-05T00:00:00.000Z",
-              totalInstallments: 3,
-              isActive: true,
-              fees: [
-                {
-                  amount: "2000.00",
-                  installmentNumber: 1,
-                  paymentDate: "2026-02-05T00:00:00.000Z",
-                  generatesRemuneration: false,
-                  isActive: true,
-                },
-              ],
-            },
-          ],
-        };
-      case 4:
-        return {
-          processNumber,
-          clientDocument: client.document,
-          legalAreaValue,
-          statusValue: "COMPLETED",
-          feePercentage: "0.3000",
-          notes:
-            "Contrato seed quitado para validar fechamento automatico e historico.",
-          allowStatusChange: true,
-          isActive: true,
-          assignments: [
-            {
-              employeeEmail: responsibleEmail,
-              assignmentTypeValue: "RESPONSIBLE",
-            },
-            {
-              employeeEmail: assistantEmail,
-              assignmentTypeValue: "ADMIN_ASSISTANT",
-            },
-          ],
-          revenues: [
-            {
-              typeValue: "JUDICIAL",
-              totalValue: "14000.00",
-              downPaymentValue: "2000.00",
-              paymentStartDate: "2026-01-12T00:00:00.000Z",
-              totalInstallments: 3,
-              isActive: true,
-              fees: [
-                {
-                  amount: "4000.00",
-                  installmentNumber: 1,
-                  paymentDate: "2026-02-12T00:00:00.000Z",
-                  generatesRemuneration: true,
-                  isActive: true,
-                },
-                {
-                  amount: "4000.00",
-                  installmentNumber: 2,
-                  paymentDate: "2026-03-12T00:00:00.000Z",
-                  generatesRemuneration: true,
-                  isActive: true,
-                },
-                {
-                  amount: "4000.00",
-                  installmentNumber: 3,
-                  paymentDate: "2026-04-12T00:00:00.000Z",
-                  generatesRemuneration: true,
-                  isActive: true,
-                },
-              ],
-            },
-          ],
-        };
-      default:
-        return {
-          processNumber,
-          clientDocument: client.document,
-          legalAreaValue,
-          statusValue: "ACTIVE",
-          feePercentage: "0.3500",
-          notes:
-            "Contrato seed com multiplas receitas para validar progresso parcial e combinado.",
-          allowStatusChange: false,
-          isActive: true,
-          assignments: [
-            {
-              employeeEmail: responsibleEmail,
-              assignmentTypeValue: "RESPONSIBLE",
-            },
-            {
-              employeeEmail: recommendingEmail,
-              assignmentTypeValue: "RECOMMENDING",
-            },
-            {
-              employeeEmail: recommendedEmail,
-              assignmentTypeValue: "RECOMMENDED",
-            },
-            {
-              employeeEmail: assistantEmail,
-              assignmentTypeValue: "ADMIN_ASSISTANT",
-            },
-          ],
-          revenues: [
-            {
-              typeValue: "ADMINISTRATIVE",
-              totalValue: "16000.00",
-              downPaymentValue: "4000.00",
-              paymentStartDate: "2026-01-08T00:00:00.000Z",
-              totalInstallments: 4,
-              isActive: true,
-              fees: [
-                {
-                  amount: "3000.00",
-                  installmentNumber: 1,
-                  paymentDate: "2026-02-08T00:00:00.000Z",
-                  generatesRemuneration: true,
-                  isActive: true,
-                },
-                {
-                  amount: "3000.00",
-                  installmentNumber: 2,
-                  paymentDate: "2026-03-08T00:00:00.000Z",
-                  generatesRemuneration: true,
-                  isActive: true,
-                },
-              ],
-            },
-            {
-              typeValue: "SUCCUMBENCY",
-              totalValue: "6000.00",
-              downPaymentValue: null,
-              paymentStartDate: "2026-01-18T00:00:00.000Z",
-              totalInstallments: 2,
-              isActive: true,
-              fees: [
-                {
-                  amount: "3000.00",
-                  installmentNumber: 1,
-                  paymentDate: "2026-02-18T00:00:00.000Z",
-                  generatesRemuneration: true,
-                  isActive: true,
-                },
-                {
-                  amount: "3000.00",
-                  installmentNumber: 2,
-                  paymentDate: "2026-03-18T00:00:00.000Z",
-                  generatesRemuneration: true,
-                  isActive: true,
-                },
-              ],
-            },
-          ],
-        };
-    }
-  });
+  return fixtureYears.flatMap((year) =>
+    clients.slice(0, MINIMUM_CONTRACT_COUNT).map((client, index) => {
+      const scenarioIndex = index % 6;
+      const responsibleEmail = getRotatedValue(activeLawyerEmails, index);
+      const recommendingEmail = getRotatedValue(activeLawyerEmails, index, 1);
+      const recommendedEmail = getRotatedValue(activeLawyerEmails, index, 2);
+      const assistantEmail = getRotatedValue(activeAssistantEmails, index);
+      const legalAreaValue = getRotatedValue(legalAreas, index);
+      const processNumber = createContractProcessNumber(index, year);
+
+      let contractSeed: ContractSeedInput;
+
+      switch (scenarioIndex) {
+        case 0:
+          contractSeed = {
+            processNumber,
+            clientDocument: client.document,
+            legalAreaValue,
+            statusValue: "ACTIVE",
+            feePercentage: "0.3000",
+            notes:
+              "Contrato seed padrao com advogado responsavel e pagamento parcial.",
+            allowStatusChange: true,
+            isActive: true,
+            assignments: [
+              {
+                employeeEmail: responsibleEmail,
+                assignmentTypeValue: "RESPONSIBLE",
+              },
+            ],
+            revenues: [
+              {
+                typeValue: "ADMINISTRATIVE",
+                totalValue: "15000.00",
+                downPaymentValue: "3000.00",
+                paymentStartDate: "2026-01-10T00:00:00.000Z",
+                totalInstallments: 4,
+                isActive: true,
+                fees: [
+                  {
+                    amount: "2000.00",
+                    installmentNumber: 1,
+                    paymentDate: "2026-02-10T00:00:00.000Z",
+                    generatesRemuneration: true,
+                    isActive: true,
+                  },
+                  {
+                    amount: "2000.00",
+                    installmentNumber: 2,
+                    paymentDate: "2026-03-10T00:00:00.000Z",
+                    generatesRemuneration: true,
+                    isActive: true,
+                  },
+                ],
+              },
+            ],
+          };
+          break;
+        case 1:
+          contractSeed = {
+            processNumber,
+            clientDocument: client.document,
+            legalAreaValue,
+            statusValue: "ACTIVE",
+            feePercentage: "0.3000",
+            notes:
+              "Contrato seed com assistente administrativo e honorarios ativos.",
+            allowStatusChange: true,
+            isActive: index % 12 !== 1,
+            assignments: [
+              {
+                employeeEmail: responsibleEmail,
+                assignmentTypeValue: "RESPONSIBLE",
+              },
+              {
+                employeeEmail: assistantEmail,
+                assignmentTypeValue: "ADMIN_ASSISTANT",
+              },
+            ],
+            revenues: [
+              {
+                typeValue: "JUDICIAL",
+                totalValue: "18000.00",
+                downPaymentValue: "2000.00",
+                paymentStartDate: "2026-01-15T00:00:00.000Z",
+                totalInstallments: 4,
+                isActive: true,
+                fees: [
+                  {
+                    amount: "4000.00",
+                    installmentNumber: 1,
+                    paymentDate: "2026-02-15T00:00:00.000Z",
+                    generatesRemuneration: true,
+                    isActive: true,
+                  },
+                  {
+                    amount: "4000.00",
+                    installmentNumber: 2,
+                    paymentDate: "2026-03-15T00:00:00.000Z",
+                    generatesRemuneration: true,
+                    isActive: true,
+                  },
+                ],
+              },
+            ],
+          };
+          break;
+        case 2:
+          contractSeed = {
+            processNumber,
+            clientDocument: client.document,
+            legalAreaValue,
+            statusValue: "ACTIVE",
+            feePercentage: "0.3500",
+            notes:
+              "Contrato seed de indicacao com responsavel, indicante e indicado.",
+            allowStatusChange: true,
+            isActive: true,
+            assignments: [
+              {
+                employeeEmail: responsibleEmail,
+                assignmentTypeValue: "RESPONSIBLE",
+              },
+              {
+                employeeEmail: recommendingEmail,
+                assignmentTypeValue: "RECOMMENDING",
+              },
+              {
+                employeeEmail: recommendedEmail,
+                assignmentTypeValue: "RECOMMENDED",
+              },
+            ],
+            revenues: [
+              {
+                typeValue: "ADMINISTRATIVE",
+                totalValue: "22000.00",
+                downPaymentValue: "5000.00",
+                paymentStartDate: "2026-01-20T00:00:00.000Z",
+                totalInstallments: 4,
+                isActive: true,
+                fees: [
+                  {
+                    amount: "4000.00",
+                    installmentNumber: 1,
+                    paymentDate: "2026-02-20T00:00:00.000Z",
+                    generatesRemuneration: true,
+                    isActive: true,
+                  },
+                ],
+              },
+            ],
+          };
+          break;
+        case 3:
+          contractSeed = {
+            processNumber,
+            clientDocument: client.document,
+            legalAreaValue,
+            statusValue: "ACTIVE",
+            feePercentage: "0.2500",
+            notes: "Contrato seed com honorario sem geracao de remuneracao.",
+            allowStatusChange: true,
+            isActive: true,
+            assignments: [
+              {
+                employeeEmail: responsibleEmail,
+                assignmentTypeValue: "RESPONSIBLE",
+              },
+              {
+                employeeEmail: assistantEmail,
+                assignmentTypeValue: "ADMIN_ASSISTANT",
+              },
+            ],
+            revenues: [
+              {
+                typeValue: "SUCCUMBENCY",
+                totalValue: "12000.00",
+                downPaymentValue: "1000.00",
+                paymentStartDate: "2026-01-05T00:00:00.000Z",
+                totalInstallments: 3,
+                isActive: true,
+                fees: [
+                  {
+                    amount: "2000.00",
+                    installmentNumber: 1,
+                    paymentDate: "2026-02-05T00:00:00.000Z",
+                    generatesRemuneration: false,
+                    isActive: true,
+                  },
+                ],
+              },
+            ],
+          };
+          break;
+        case 4:
+          contractSeed = {
+            processNumber,
+            clientDocument: client.document,
+            legalAreaValue,
+            statusValue: "COMPLETED",
+            feePercentage: "0.3000",
+            notes:
+              "Contrato seed quitado para validar fechamento automatico e historico.",
+            allowStatusChange: true,
+            isActive: true,
+            assignments: [
+              {
+                employeeEmail: responsibleEmail,
+                assignmentTypeValue: "RESPONSIBLE",
+              },
+              {
+                employeeEmail: assistantEmail,
+                assignmentTypeValue: "ADMIN_ASSISTANT",
+              },
+            ],
+            revenues: [
+              {
+                typeValue: "JUDICIAL",
+                totalValue: "14000.00",
+                downPaymentValue: "2000.00",
+                paymentStartDate: "2026-01-12T00:00:00.000Z",
+                totalInstallments: 3,
+                isActive: true,
+                fees: [
+                  {
+                    amount: "4000.00",
+                    installmentNumber: 1,
+                    paymentDate: "2026-02-12T00:00:00.000Z",
+                    generatesRemuneration: true,
+                    isActive: true,
+                  },
+                  {
+                    amount: "4000.00",
+                    installmentNumber: 2,
+                    paymentDate: "2026-03-12T00:00:00.000Z",
+                    generatesRemuneration: true,
+                    isActive: true,
+                  },
+                  {
+                    amount: "4000.00",
+                    installmentNumber: 3,
+                    paymentDate: "2026-04-12T00:00:00.000Z",
+                    generatesRemuneration: true,
+                    isActive: true,
+                  },
+                ],
+              },
+            ],
+          };
+          break;
+        default:
+          contractSeed = {
+            processNumber,
+            clientDocument: client.document,
+            legalAreaValue,
+            statusValue: "ACTIVE",
+            feePercentage: "0.3500",
+            notes:
+              "Contrato seed com multiplas receitas para validar progresso parcial e combinado.",
+            allowStatusChange: false,
+            isActive: true,
+            assignments: [
+              {
+                employeeEmail: responsibleEmail,
+                assignmentTypeValue: "RESPONSIBLE",
+              },
+              {
+                employeeEmail: recommendingEmail,
+                assignmentTypeValue: "RECOMMENDING",
+              },
+              {
+                employeeEmail: recommendedEmail,
+                assignmentTypeValue: "RECOMMENDED",
+              },
+              {
+                employeeEmail: assistantEmail,
+                assignmentTypeValue: "ADMIN_ASSISTANT",
+              },
+            ],
+            revenues: [
+              {
+                typeValue: "ADMINISTRATIVE",
+                totalValue: "16000.00",
+                downPaymentValue: "4000.00",
+                paymentStartDate: "2026-01-08T00:00:00.000Z",
+                totalInstallments: 4,
+                isActive: true,
+                fees: [
+                  {
+                    amount: "3000.00",
+                    installmentNumber: 1,
+                    paymentDate: "2026-02-08T00:00:00.000Z",
+                    generatesRemuneration: true,
+                    isActive: true,
+                  },
+                  {
+                    amount: "3000.00",
+                    installmentNumber: 2,
+                    paymentDate: "2026-03-08T00:00:00.000Z",
+                    generatesRemuneration: true,
+                    isActive: true,
+                  },
+                ],
+              },
+              {
+                typeValue: "SUCCUMBENCY",
+                totalValue: "6000.00",
+                downPaymentValue: null,
+                paymentStartDate: "2026-01-18T00:00:00.000Z",
+                totalInstallments: 2,
+                isActive: true,
+                fees: [
+                  {
+                    amount: "3000.00",
+                    installmentNumber: 1,
+                    paymentDate: "2026-02-18T00:00:00.000Z",
+                    generatesRemuneration: true,
+                    isActive: true,
+                  },
+                  {
+                    amount: "3000.00",
+                    installmentNumber: 2,
+                    paymentDate: "2026-03-18T00:00:00.000Z",
+                    generatesRemuneration: true,
+                    isActive: true,
+                  },
+                ],
+              },
+            ],
+          };
+          break;
+      }
+
+      return mapContractSeedToYear(contractSeed, year, index);
+    }),
+  );
 }
 
 function mapByKey<TKey, TValue>(

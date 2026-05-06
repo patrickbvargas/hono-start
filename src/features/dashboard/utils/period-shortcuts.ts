@@ -43,10 +43,11 @@ export function getCurrentYearDateRange(
 	referenceDate = new Date(),
 ): Pick<DashboardPeriodShortcut, "dateFrom" | "dateTo"> {
 	const currentYear = referenceDate.getUTCFullYear();
+	const today = getUtcDateOnly(referenceDate);
 
 	return {
 		dateFrom: `${currentYear}-01-01`,
-		dateTo: `${currentYear}-12-31`,
+		dateTo: formatUtcDate(today),
 	};
 }
 

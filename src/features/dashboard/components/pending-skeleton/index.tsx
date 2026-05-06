@@ -47,7 +47,6 @@ function DashboardMetricCardSkeleton() {
 					<Skeleton className="h-4 w-28" />
 					<Skeleton className="h-8 w-36" />
 				</div>
-				<Skeleton className="size-4 rounded-sm" />
 			</CardHeader>
 			<CardContent className="flex flex-col gap-2 pt-0">
 				<div className="flex items-center justify-between gap-3">

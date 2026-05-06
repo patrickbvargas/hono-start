@@ -8,6 +8,12 @@ The system SHALL populate deterministic contract financial fixtures for the defa
 - **THEN** the seed creates contracts, contract assignments, revenues, fees, and remunerations linked to the default firm
 - **AND** those records use valid foreign-key relationships across the aggregate
 
+#### Scenario: Seed creates multi-year contract financial aggregate records
+- **WHEN** `prisma db seed` runs against a reset local database
+- **THEN** the seed creates deterministic historical financial fixtures for 2024 and 2025
+- **AND** the seed creates current-year fixtures for 2026
+- **AND** all three yearly datasets remain linked to the default firm with valid foreign-key relationships
+
 #### Scenario: Seed provides at least twenty contracts
 - **WHEN** the seed completes successfully
 - **THEN** the default firm has at least 20 seeded contracts available for local development use
@@ -36,6 +42,17 @@ The system SHALL provide seeded financial fixtures that represent the business s
 - **WHEN** the seed finishes creating revenues and fees
 - **THEN** the dataset includes at least one contract with remaining unpaid value
 - **AND** the dataset includes at least one fully paid contract whose active revenues have no remaining value
+
+#### Scenario: Seed includes full-year historical monthly launches
+- **WHEN** the seed finishes creating fee fixtures
+- **THEN** the 2024 dataset includes fee launches in every month from January through December
+- **AND** the 2025 dataset includes fee launches in every month from January through December
+- **AND** the 2026 dataset includes fee launches in every month from January through April
+
+#### Scenario: Seed keeps annual financial behavior stable
+- **WHEN** the seed finishes creating 2024, 2025, and 2026 financial fixtures
+- **THEN** monthly revenue and remuneration totals remain within a similar business band across the three years
+- **AND** year-over-year comparison reflects small operational variation rather than extreme swings caused by the fixtures themselves
 
 ### Requirement: Seeded remuneration records reflect documented fee formulas
 The system SHALL create seeded remuneration records according to the same documented assignment-type formulas used by fee behavior.
@@ -68,6 +85,11 @@ The system SHALL allow repeated seed execution to converge to one stable contrac
 - **WHEN** `prisma db seed` is run multiple times against the same database state
 - **THEN** seeded assignments, revenues, fees, and remunerations converge to one deterministic set per seeded contract
 - **AND** reruns do not append duplicate child rows for the same fixture scenario
+
+#### Scenario: Re-running seed preserves multi-year fixture identities
+- **WHEN** `prisma db seed` is run multiple times against the same database state
+- **THEN** seeded contracts from 2024, 2025, and 2026 are identified by deterministic fixture keys that do not collide across years
+- **AND** reruns do not append duplicate child rows for any seeded year
 
 ### Requirement: Seeded fixtures support role-aware contract and fee visibility
 The system SHALL distribute seeded assignments so both administrators and regular users have meaningful seeded financial records within their allowed visibility scope.
