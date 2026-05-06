@@ -11,6 +11,7 @@ It is meant to survive domain changes as long as the project keeps the same UI a
 - Route search state is the canonical home for list filters, sorting, and pagination.
 - Route files use `createFileRoute` with validated search state and loader prefetching for list screens.
 - Route loaders must ensure query data ahead of render rather than letting the page fetch ad hoc.
+- Filter-heavy routes prefetch both the primary list query and every unconditional header/filter option query required at first render.
 - The canonical list route shape is the `src/routes/clientes.tsx` flow backed by `src/features/clients`.
 
 ## Layout Rules
@@ -78,6 +79,7 @@ It is meant to survive domain changes as long as the project keeps the same UI a
 - Routes stay declarative: they validate search state, prefetch list data, mount feature UI, and wire overlays, but they do not take over feature mutation or persistence orchestration.
 - Feature-owned components consume feature query data through feature-local hooks in `src/features/<feature>/hooks/use-data.ts` instead of calling TanStack Query hooks directly in render files.
 - Feature `api/queries.ts` option factories remain the reusable query boundary for loaders, tests, mutations, and imperative cache access.
+- List routes use `RouteLoading` as the in-place navigation signal during search, pagination, and sorting changes instead of swapping the whole route tree with route-level pending skeletons.
 
 ## Data Hook Rules
 
@@ -87,3 +89,5 @@ It is meant to survive domain changes as long as the project keeps the same UI a
 - Option hooks live in `hooks/use-data.ts` and return named fields rather than raw React Query result objects.
 - Option hooks that require multiple unconditional queries use one `useSuspenseQueries` call.
 - If a feature has both unconditional and conditional option concerns, split the hook concerns instead of collapsing the whole feature into an ad hoc query-consumption pattern.
+- If a filter/header uses only a subset of a larger option hook, create a narrower hook for that surface rather than prefetching unrelated queries in the route loader.
+- Route loaders and first-render suspense hooks must stay aligned: a route that mounts a suspending filter/header on first paint must prefetch the same unconditional queries that the mounted hook consumes.
