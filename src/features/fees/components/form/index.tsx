@@ -1,6 +1,11 @@
+import { Suspense } from "react";
 import { EntityForm } from "@/shared/components/entity-form";
+import {
+	FormCheckboxSkeleton,
+	FormFieldSkeleton,
+} from "@/shared/components/form-field-skeleton";
 import { FormSection } from "@/shared/components/form-section";
-import { FieldGroup } from "@/shared/components/ui";
+import { FieldGroup, Skeleton } from "@/shared/components/ui";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
 import { useFeeOptions } from "../../hooks/use-data";
@@ -13,6 +18,16 @@ interface FeeFormProps {
 }
 
 export const FeeForm = ({ id, state, onSuccess }: FeeFormProps) => {
+	const title = id ? "Editar honorário" : "Novo honorário";
+
+	return (
+		<Suspense fallback={<FeeFormSkeleton state={state} title={title} />}>
+			<FeeFormContent id={id} state={state} onSuccess={onSuccess} />
+		</Suspense>
+	);
+};
+
+function FeeFormContent({ id, state, onSuccess }: FeeFormProps) {
 	const { form } = useFeeForm({
 		id,
 		onSuccess,
@@ -32,7 +47,7 @@ export const FeeForm = ({ id, state, onSuccess }: FeeFormProps) => {
 			</form.Subscribe>
 		</form.Form>
 	);
-};
+}
 
 interface FeeFormFieldsProps {
 	contractId: string;
@@ -103,6 +118,35 @@ function FeeFormFields({ contractId, form, state, title }: FeeFormFieldsProps) {
 					<form.AppField name="isActive">
 						{(field) => <field.Checkbox label="Ativo" />}
 					</form.AppField>
+				</FieldGroup>
+			</FormSection>
+		</EntityForm>
+	);
+}
+
+function FeeFormSkeleton({
+	state,
+	title,
+}: Pick<FeeFormProps, "state"> & { title: string }) {
+	return (
+		<EntityForm
+			state={state}
+			title={title}
+			footer={<Skeleton className="h-9 w-28 rounded-md" />}
+		>
+			<FormSection>
+				<FieldGroup className="grid gap-5 sm:grid-cols-2">
+					<FormFieldSkeleton labelWidth="w-16" className="sm:col-span-2" />
+					<FormFieldSkeleton labelWidth="w-14" />
+					<FormFieldSkeleton labelWidth="w-32" />
+					<FormFieldSkeleton labelWidth="w-14" />
+					<FormFieldSkeleton labelWidth="w-10" />
+				</FieldGroup>
+			</FormSection>
+			<FormSection>
+				<FieldGroup className="grid gap-5 sm:grid-cols-2">
+					<FormCheckboxSkeleton labelWidth="w-32" />
+					<FormCheckboxSkeleton labelWidth="w-10" />
 				</FieldGroup>
 			</FormSection>
 		</EntityForm>

@@ -1,9 +1,19 @@
 import { PlusIcon, Trash2Icon } from "lucide-react";
-import { useRef } from "react";
+import { Suspense, useRef } from "react";
 import { EntityForm } from "@/shared/components/entity-form";
 import { EntityFormList } from "@/shared/components/entity-form-list";
+import {
+	FormCheckboxSkeleton,
+	FormFieldSkeleton,
+	FormTextAreaSkeleton,
+} from "@/shared/components/form-field-skeleton";
 import { FormSection } from "@/shared/components/form-section";
-import { Button, FieldError, FieldGroup } from "@/shared/components/ui";
+import {
+	Button,
+	FieldError,
+	FieldGroup,
+	Skeleton,
+} from "@/shared/components/ui";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { Option } from "@/shared/schemas/option";
@@ -67,6 +77,16 @@ function getRevenueSummary(
 }
 
 export const ContractForm = ({ id, state, onSuccess }: ContractFormProps) => {
+	const title = id ? "Editar contrato" : "Novo contrato";
+
+	return (
+		<Suspense fallback={<ContractFormSkeleton state={state} title={title} />}>
+			<ContractFormContent id={id} state={state} onSuccess={onSuccess} />
+		</Suspense>
+	);
+};
+
+function ContractFormContent({ id, state, onSuccess }: ContractFormProps) {
 	const rowKeysRef = useRef(new WeakMap<object, string>());
 	const rowKeyCountRef = useRef(0);
 	const {
@@ -376,4 +396,74 @@ export const ContractForm = ({ id, state, onSuccess }: ContractFormProps) => {
 			</EntityForm>
 		</form.Form>
 	);
-};
+}
+
+function ContractFormSkeleton({
+	state,
+	title,
+}: Pick<ContractFormProps, "state"> & { title: string }) {
+	return (
+		<EntityForm
+			state={state}
+			title={title}
+			footer={<Skeleton className="h-9 w-28 rounded-md" />}
+		>
+			<FormSection>
+				<FieldGroup>
+					<FormFieldSkeleton labelWidth="w-14" />
+				</FieldGroup>
+				<FieldGroup className="grid gap-5 sm:grid-cols-2">
+					<FormFieldSkeleton labelWidth="w-18" />
+					<FormFieldSkeleton labelWidth="w-12" />
+					<FormFieldSkeleton labelWidth="w-14" />
+					<FormFieldSkeleton labelWidth="w-22" />
+				</FieldGroup>
+				<FieldGroup>
+					<FormTextAreaSkeleton labelWidth="w-22" />
+				</FieldGroup>
+				<FieldGroup className="grid gap-5 sm:grid-cols-2">
+					<FormCheckboxSkeleton labelWidth="w-10" />
+					<FormCheckboxSkeleton labelWidth="w-34" />
+				</FieldGroup>
+			</FormSection>
+			<FormSection title="Equipe">
+				<Skeleton className="h-8 w-40 rounded-md" />
+				<div className="rounded-lg border">
+					<div className="flex flex-col gap-1 px-4 py-3 pr-10">
+						<Skeleton className="h-4 w-36 rounded-sm" />
+						<Skeleton className="h-3 w-52 rounded-sm" />
+					</div>
+					<div className="px-4 pb-4">
+						<FieldGroup className="grid gap-5 sm:grid-cols-[repeat(2,1fr)_auto]">
+							<FormFieldSkeleton labelWidth="w-22" />
+							<FormFieldSkeleton labelWidth="w-20" />
+							<Skeleton className="h-8 w-8 place-self-end rounded-md" />
+						</FieldGroup>
+					</div>
+				</div>
+			</FormSection>
+			<FormSection title="Receitas">
+				<Skeleton className="h-8 w-36 rounded-md" />
+				<div className="rounded-lg border">
+					<div className="flex flex-col gap-1 px-4 py-3 pr-10">
+						<Skeleton className="h-4 w-28 rounded-sm" />
+						<Skeleton className="h-3 w-44 rounded-sm" />
+					</div>
+					<div className="px-4 pb-4">
+						<FieldGroup className="grid items-end gap-5 sm:grid-cols-[1fr_1fr_auto]">
+							<FormFieldSkeleton labelWidth="w-24" />
+							<FormFieldSkeleton labelWidth="w-28" />
+							<Skeleton className="h-8 w-8 place-self-end rounded-md" />
+						</FieldGroup>
+						<FieldGroup className="grid gap-5 sm:grid-cols-3">
+							<FormFieldSkeleton labelWidth="w-20" />
+							<FormFieldSkeleton labelWidth="w-14" />
+							<FormFieldSkeleton labelWidth="w-16" />
+						</FieldGroup>
+						<FormCheckboxSkeleton labelWidth="w-24" />
+					</div>
+				</div>
+			</FormSection>
+		</EntityForm>
+	);
+}

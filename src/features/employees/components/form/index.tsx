@@ -1,6 +1,11 @@
+import { Suspense } from "react";
 import { EntityForm } from "@/shared/components/entity-form";
+import {
+	FormCheckboxSkeleton,
+	FormFieldSkeleton,
+} from "@/shared/components/form-field-skeleton";
 import { FormSection } from "@/shared/components/form-section";
-import { FieldGroup } from "@/shared/components/ui";
+import { FieldGroup, Skeleton } from "@/shared/components/ui";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
 import { LAWYER_TYPE_VALUE } from "../../constants/values";
@@ -14,6 +19,16 @@ interface EmployeeFormProps {
 }
 
 export const EmployeeForm = ({ id, state, onSuccess }: EmployeeFormProps) => {
+	const title = id ? "Editar funcionário" : "Novo funcionário";
+
+	return (
+		<Suspense fallback={<EmployeeFormSkeleton state={state} title={title} />}>
+			<EmployeeFormContent id={id} state={state} onSuccess={onSuccess} />
+		</Suspense>
+	);
+};
+
+function EmployeeFormContent({ id, state, onSuccess }: EmployeeFormProps) {
 	const { roles, types } = useEmployeeOptions();
 	const { form } = useEmployeeForm({ id, onSuccess });
 
@@ -107,4 +122,37 @@ export const EmployeeForm = ({ id, state, onSuccess }: EmployeeFormProps) => {
 			</EntityForm>
 		</form.Form>
 	);
-};
+}
+
+function EmployeeFormSkeleton({
+	state,
+	title,
+}: Pick<EmployeeFormProps, "state"> & { title: string }) {
+	return (
+		<EntityForm
+			state={state}
+			title={title}
+			footer={<Skeleton className="h-9 w-28 rounded-md" />}
+		>
+			<FormSection>
+				<FieldGroup>
+					<FormFieldSkeleton labelWidth="w-12" />
+					<FormFieldSkeleton labelWidth="w-12" />
+				</FieldGroup>
+				<FieldGroup className="grid gap-5 sm:grid-cols-2">
+					<FormFieldSkeleton labelWidth="w-14" />
+					<FormFieldSkeleton labelWidth="w-12" />
+				</FieldGroup>
+			</FormSection>
+			<FormSection title="Financeiro">
+				<FieldGroup className="grid gap-5 sm:grid-cols-2">
+					<FormFieldSkeleton labelWidth="w-26" />
+					<FormFieldSkeleton labelWidth="w-18" />
+				</FieldGroup>
+				<FieldGroup>
+					<FormCheckboxSkeleton labelWidth="w-10" />
+				</FieldGroup>
+			</FormSection>
+		</EntityForm>
+	);
+}

@@ -1,6 +1,11 @@
+import { Suspense } from "react";
 import { EntityForm } from "@/shared/components/entity-form";
+import {
+	FormCheckboxSkeleton,
+	FormFieldSkeleton,
+} from "@/shared/components/form-field-skeleton";
 import { FormSection } from "@/shared/components/form-section";
-import { FieldGroup } from "@/shared/components/ui";
+import { FieldGroup, Skeleton } from "@/shared/components/ui";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
 import { useClientOptions } from "../../hooks/use-data";
@@ -18,6 +23,16 @@ interface ClientFormProps {
 }
 
 export const ClientForm = ({ id, state, onSuccess }: ClientFormProps) => {
+	const title = id ? "Editar cliente" : "Novo cliente";
+
+	return (
+		<Suspense fallback={<ClientFormSkeleton state={state} title={title} />}>
+			<ClientFormContent id={id} state={state} onSuccess={onSuccess} />
+		</Suspense>
+	);
+};
+
+function ClientFormContent({ id, state, onSuccess }: ClientFormProps) {
 	const { types } = useClientOptions();
 	const { form } = useClientForm({ id, onSuccess });
 
@@ -79,4 +94,34 @@ export const ClientForm = ({ id, state, onSuccess }: ClientFormProps) => {
 			</EntityForm>
 		</form.Form>
 	);
-};
+}
+
+function ClientFormSkeleton({
+	state,
+	title,
+}: Pick<ClientFormProps, "state"> & { title: string }) {
+	return (
+		<EntityForm
+			state={state}
+			title={title}
+			footer={<Skeleton className="h-9 w-28 rounded-md" />}
+		>
+			<FormSection>
+				<FieldGroup className="grid gap-5 sm:grid-cols-2">
+					<FormFieldSkeleton labelWidth="w-10" />
+					<FormFieldSkeleton labelWidth="w-16" />
+				</FieldGroup>
+				<FieldGroup>
+					<FormFieldSkeleton labelWidth="w-14" />
+				</FieldGroup>
+				<FieldGroup className="grid gap-5 sm:grid-cols-2">
+					<FormFieldSkeleton labelWidth="w-12" />
+					<FormFieldSkeleton labelWidth="w-16" />
+				</FieldGroup>
+				<FieldGroup>
+					<FormCheckboxSkeleton labelWidth="w-10" />
+				</FieldGroup>
+			</FormSection>
+		</EntityForm>
+	);
+}
