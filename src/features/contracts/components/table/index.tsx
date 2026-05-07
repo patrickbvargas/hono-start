@@ -9,11 +9,8 @@ import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { QueryPaginatedReturnType } from "@/shared/types/api";
 import { CONTRACT_ALLOWED_SORT_COLUMNS } from "../../constants/sorting";
-import {
-	CONTRACT_STATUS_CANCELLED_VALUE,
-	CONTRACT_STATUS_COMPLETED_VALUE,
-} from "../../constants/values";
 import type { ContractSummary } from "../../schemas/model";
+import { getContractLifecycleActions } from "../../utils/lifecycle-actions";
 
 interface ContractTableProps {
 	canManageLifecycle?: boolean;
@@ -93,20 +90,17 @@ export const ContractTable = ({
 				id: "actions",
 				cell: ({ row }) => {
 					const contract = row.original;
-					const canEditContract =
-						!contract.isSoftDeleted &&
-						!(
-							[
-								CONTRACT_STATUS_CANCELLED_VALUE,
-								CONTRACT_STATUS_COMPLETED_VALUE,
-							] as string[]
-						).includes(contract.statusValue);
+					const actions = getContractLifecycleActions({
+						canManageLifecycle,
+						isSoftDeleted: contract.isSoftDeleted,
+						statusValue: contract.statusValue,
+					});
 
 					return (
 						<EntityActions
-							canEdit={canEditContract}
-							canRestore={canManageLifecycle && contract.isSoftDeleted}
-							canDelete={canManageLifecycle && !contract.isSoftDeleted}
+							canEdit={actions.canEdit}
+							canRestore={actions.canRestore}
+							canDelete={actions.canDelete}
 							onView={() => onView?.(contract.id)}
 							onEdit={() => onEdit?.(contract.id)}
 							onRestore={() => onRestore?.(contract.id)}

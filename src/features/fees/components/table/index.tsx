@@ -7,13 +7,10 @@ import { EntityStatus } from "@/shared/components/entity-status";
 import { Pagination } from "@/shared/components/pagination";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
-import {
-	CONTRACT_STATUS_CANCELLED_VALUE,
-	CONTRACT_STATUS_COMPLETED_VALUE,
-} from "@/shared/session";
 import type { QueryPaginatedReturnType } from "@/shared/types/api";
 import { FEE_ALLOWED_SORT_COLUMNS } from "../../constants/sorting";
 import type { FeeSummary } from "../../schemas/model";
+import { getFeeLifecycleActions } from "../../utils/lifecycle-actions";
 
 interface FeeTableProps {
 	canManageLifecycle?: boolean;
@@ -87,20 +84,17 @@ export const FeeTable = ({
 				id: "actions",
 				cell: ({ row }) => {
 					const fee = row.original;
-					const canEditFee =
-						!fee.isSoftDeleted &&
-						!(
-							[
-								CONTRACT_STATUS_CANCELLED_VALUE,
-								CONTRACT_STATUS_COMPLETED_VALUE,
-							] as string[]
-						).includes(fee.contractStatusValue);
+					const actions = getFeeLifecycleActions({
+						canManageLifecycle,
+						contractStatusValue: fee.contractStatusValue,
+						isSoftDeleted: fee.isSoftDeleted,
+					});
 
 					return (
 						<EntityActions
-							canEdit={canEditFee}
-							canRestore={canManageLifecycle && fee.isSoftDeleted}
-							canDelete={canManageLifecycle && !fee.isSoftDeleted}
+							canEdit={actions.canEdit}
+							canRestore={actions.canRestore}
+							canDelete={actions.canDelete}
 							onView={() => onView?.(fee.id)}
 							onEdit={() => onEdit?.(fee.id)}
 							onRestore={() => onRestore?.(fee.id)}

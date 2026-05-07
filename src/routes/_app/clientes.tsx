@@ -70,6 +70,16 @@ function RouteComponent() {
 					onRestore={overlay.restore.open}
 					canManageLifecycle={isAdmin}
 				/>
+				{overlay.details.render((id, state) => (
+					<ClientDetails
+						id={id}
+						state={state}
+						onEdit={overlay.edit.open}
+						onDelete={overlay.delete.open}
+						onRestore={overlay.restore.open}
+						canManageLifecycle={isAdmin}
+					/>
+				))}
 				{overlay.create.render((state) => (
 					<ClientForm state={state} onSuccess={state.close} />
 				))}
@@ -81,9 +91,6 @@ function RouteComponent() {
 				))}
 				{overlay.restore.render((id, state) => (
 					<ClientRestore id={id} state={state} onSuccess={state.close} />
-				))}
-				{overlay.details.render((id, state) => (
-					<ClientDetails id={id} state={state} />
 				))}
 			</WrapperBody>
 		</Wrapper>

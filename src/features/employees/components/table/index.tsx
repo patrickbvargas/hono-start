@@ -10,6 +10,7 @@ import type { EntityId } from "@/shared/schemas/entity";
 import type { QueryPaginatedReturnType } from "@/shared/types/api";
 import { EMPLOYEE_ALLOWED_SORT_COLUMNS } from "../../constants/sorting";
 import type { EmployeeSummary } from "../../schemas/model";
+import { getEmployeeLifecycleActions } from "../../utils/lifecycle-actions";
 
 interface EmployeeTableProps {
 	canManageLifecycle?: boolean;
@@ -88,12 +89,16 @@ export const EmployeeTable = ({
 				id: "actions",
 				cell: ({ row }) => {
 					const employee = row.original;
+					const actions = getEmployeeLifecycleActions({
+						canManageLifecycle,
+						isSoftDeleted: employee.isSoftDeleted,
+					});
 
 					return (
 						<EntityActions
-							canEdit={canManageLifecycle && !employee.isSoftDeleted}
-							canRestore={canManageLifecycle && employee.isSoftDeleted}
-							canDelete={canManageLifecycle && !employee.isSoftDeleted}
+							canEdit={actions.canEdit}
+							canRestore={actions.canRestore}
+							canDelete={actions.canDelete}
 							onView={() => onView?.(employee.id)}
 							onEdit={() => onEdit?.(employee.id)}
 							onRestore={() => onRestore?.(employee.id)}

@@ -90,7 +90,14 @@ function RouteComponent() {
 					<EmployeeRestore id={id} state={state} onSuccess={state.close} />
 				))}
 				{overlay.details.render((id, state) => (
-					<EmployeeDetails id={id} state={state} />
+					<EmployeeDetails
+						id={id}
+						state={state}
+						onEdit={overlay.edit.open}
+						onDelete={overlay.delete.open}
+						onRestore={overlay.restore.open}
+						canManageLifecycle={canManage}
+					/>
 				))}
 			</WrapperBody>
 		</Wrapper>

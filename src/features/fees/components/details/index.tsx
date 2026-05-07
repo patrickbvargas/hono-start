@@ -1,4 +1,5 @@
 import * as React from "react";
+import { EntityActions } from "@/shared/components/entity-actions";
 import {
 	type DetailFieldItem,
 	EntityDetail,
@@ -8,24 +9,61 @@ import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
 import { useFee } from "../../hooks/use-data";
+import { getFeeLifecycleActions } from "../../utils/lifecycle-actions";
 
 interface FeeDetailsProps {
+	canManageLifecycle?: boolean;
 	id: EntityId;
+	onDelete?: (id: EntityId) => void;
+	onEdit?: (id: EntityId) => void;
+	onRestore?: (id: EntityId) => void;
 	state: OverlayState;
 }
 
-export const FeeDetails = ({ id, state }: FeeDetailsProps) => {
+export const FeeDetails = ({
+	canManageLifecycle = false,
+	id,
+	onDelete,
+	onEdit,
+	onRestore,
+	state,
+}: FeeDetailsProps) => {
 	return (
 		<EntityDetail.Root key={id} state={state}>
 			<React.Suspense fallback={<FeeDetailsFallback />}>
-				<FeeDetailsContent id={id} />
+				<FeeDetailsContent
+					canManageLifecycle={canManageLifecycle}
+					id={id}
+					onDelete={onDelete}
+					onEdit={onEdit}
+					onRestore={onRestore}
+				/>
 			</React.Suspense>
 		</EntityDetail.Root>
 	);
 };
 
-const FeeDetailsContent = ({ id }: { id: EntityId }) => {
+interface FeeDetailsContentProps {
+	canManageLifecycle: boolean;
+	id: EntityId;
+	onDelete?: (id: EntityId) => void;
+	onEdit?: (id: EntityId) => void;
+	onRestore?: (id: EntityId) => void;
+}
+
+const FeeDetailsContent = ({
+	canManageLifecycle,
+	id,
+	onDelete,
+	onEdit,
+	onRestore,
+}: FeeDetailsContentProps) => {
 	const { fee } = useFee(id);
+	const actions = getFeeLifecycleActions({
+		canManageLifecycle,
+		contractStatusValue: fee.contractStatusValue,
+		isSoftDeleted: fee.isSoftDeleted,
+	});
 
 	const generalInfo = React.useMemo<DetailFieldItem[]>(
 		() => [
@@ -71,8 +109,17 @@ const FeeDetailsContent = ({ id }: { id: EntityId }) => {
 
 	return (
 		<EntityDetail.Content>
-			<EntityDetail.Header>
+			<EntityDetail.Header className="flex-row items-center justify-between gap-3">
 				<EntityDetail.Title>{fee.contractProcessNumber}</EntityDetail.Title>
+				<EntityActions
+					canView={false}
+					canEdit={actions.canEdit}
+					canRestore={actions.canRestore}
+					canDelete={actions.canDelete}
+					onEdit={onEdit ? () => onEdit(id) : undefined}
+					onRestore={onRestore ? () => onRestore(id) : undefined}
+					onDelete={onDelete ? () => onDelete(id) : undefined}
+				/>
 			</EntityDetail.Header>
 			<EntityDetail.Body>
 				<EntityDetail.Fields items={generalInfo} />

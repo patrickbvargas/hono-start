@@ -10,6 +10,7 @@ import type { QueryPaginatedReturnType } from "@/shared/types/api";
 import { CLIENT_ALLOWED_SORT_COLUMNS } from "../../constants/sorting";
 import type { ClientSummary } from "../../schemas/model";
 import { formatClientDocument } from "../../utils/format";
+import { getClientLifecycleActions } from "../../utils/lifecycle-actions";
 
 interface ClientTableProps {
 	canManageLifecycle?: boolean;
@@ -77,12 +78,16 @@ export const ClientTable = ({
 				id: "actions",
 				cell: ({ row }) => {
 					const client = row.original;
+					const actions = getClientLifecycleActions({
+						canManageLifecycle,
+						isSoftDeleted: client.isSoftDeleted,
+					});
 
 					return (
 						<EntityActions
-							canEdit={!client.isSoftDeleted}
-							canRestore={canManageLifecycle && client.isSoftDeleted}
-							canDelete={canManageLifecycle && !client.isSoftDeleted}
+							canEdit={actions.canEdit}
+							canRestore={actions.canRestore}
+							canDelete={actions.canDelete}
 							onView={() => onView?.(client.id)}
 							onEdit={() => onEdit?.(client.id)}
 							onRestore={() => onRestore?.(client.id)}

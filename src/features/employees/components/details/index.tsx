@@ -1,5 +1,6 @@
 import { CopyIcon } from "lucide-react";
 import * as React from "react";
+import { EntityActions } from "@/shared/components/entity-actions";
 import {
 	type DetailFieldItem,
 	EntityDetail,
@@ -23,24 +24,60 @@ import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
 import { useEmployee } from "../../hooks/use-data";
 import { useEmployeeResetPassword } from "../../hooks/use-reset-password";
+import { getEmployeeLifecycleActions } from "../../utils/lifecycle-actions";
 
 interface EmployeeDetailsProps {
+	canManageLifecycle?: boolean;
 	id: EntityId;
+	onDelete?: (id: EntityId) => void;
+	onEdit?: (id: EntityId) => void;
+	onRestore?: (id: EntityId) => void;
 	state: OverlayState;
 }
 
-export const EmployeeDetails = ({ id, state }: EmployeeDetailsProps) => {
+export const EmployeeDetails = ({
+	canManageLifecycle = false,
+	id,
+	onDelete,
+	onEdit,
+	onRestore,
+	state,
+}: EmployeeDetailsProps) => {
 	return (
 		<EntityDetail.Root key={id} state={state}>
 			<React.Suspense fallback={<EmployeeDetailsFallback />}>
-				<EmployeeDetailsContent id={id} />
+				<EmployeeDetailsContent
+					canManageLifecycle={canManageLifecycle}
+					id={id}
+					onDelete={onDelete}
+					onEdit={onEdit}
+					onRestore={onRestore}
+				/>
 			</React.Suspense>
 		</EntityDetail.Root>
 	);
 };
 
-const EmployeeDetailsContent = ({ id }: { id: EntityId }) => {
+interface EmployeeDetailsContentProps {
+	canManageLifecycle: boolean;
+	id: EntityId;
+	onDelete?: (id: EntityId) => void;
+	onEdit?: (id: EntityId) => void;
+	onRestore?: (id: EntityId) => void;
+}
+
+const EmployeeDetailsContent = ({
+	canManageLifecycle,
+	id,
+	onDelete,
+	onEdit,
+	onRestore,
+}: EmployeeDetailsContentProps) => {
 	const { employee } = useEmployee(id);
+	const actions = getEmployeeLifecycleActions({
+		canManageLifecycle,
+		isSoftDeleted: employee.isSoftDeleted,
+	});
 	const [isResetDialogOpen, setIsResetDialogOpen] = React.useState(false);
 	const [temporaryPassword, setTemporaryPassword] = React.useState<
 		string | null
@@ -131,8 +168,17 @@ const EmployeeDetailsContent = ({ id }: { id: EntityId }) => {
 
 	return (
 		<EntityDetail.Content>
-			<EntityDetail.Header>
+			<EntityDetail.Header className="flex-row items-center justify-between gap-3">
 				<EntityDetail.Title>{employee.fullName}</EntityDetail.Title>
+				<EntityActions
+					canView={false}
+					canEdit={actions.canEdit}
+					canRestore={actions.canRestore}
+					canDelete={actions.canDelete}
+					onEdit={onEdit ? () => onEdit(id) : undefined}
+					onRestore={onRestore ? () => onRestore(id) : undefined}
+					onDelete={onDelete ? () => onDelete(id) : undefined}
+				/>
 			</EntityDetail.Header>
 			<EntityDetail.Body>
 				<EntityDetail.Fields items={generalInfo} />

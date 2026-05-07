@@ -19,6 +19,7 @@ import type { EntityId } from "@/shared/schemas/entity";
 import type { QueryPaginatedReturnType } from "@/shared/types/api";
 import { REMUNERATION_ALLOWED_SORT_COLUMNS } from "../../constants/sorting";
 import type { Remuneration } from "../../schemas/model";
+import { getRemunerationLifecycleActions } from "../../utils/lifecycle-actions";
 
 interface RemunerationTableProps {
 	canManageLifecycle?: boolean;
@@ -98,12 +99,16 @@ export const RemunerationTable = ({
 				id: "actions",
 				cell: ({ row }) => {
 					const remuneration = row.original;
+					const actions = getRemunerationLifecycleActions({
+						canManageLifecycle,
+						isSoftDeleted: remuneration.isSoftDeleted,
+					});
 
 					return (
 						<EntityActions
-							canEdit={canManageLifecycle && !remuneration.isSoftDeleted}
-							canRestore={canManageLifecycle && remuneration.isSoftDeleted}
-							canDelete={canManageLifecycle && !remuneration.isSoftDeleted}
+							canEdit={actions.canEdit}
+							canRestore={actions.canRestore}
+							canDelete={actions.canDelete}
 							onView={() => onView?.(remuneration.id)}
 							onEdit={() => onEdit?.(remuneration.id)}
 							onRestore={() => onRestore?.(remuneration.id)}
