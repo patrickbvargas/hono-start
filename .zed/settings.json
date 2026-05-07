@@ -5,7 +5,7 @@
     "**/dist",
     "**/.next",
     "**/build",
-    "**/.env",
+    // "**/.env",
     "**/package*",
     "**/pnpm-lock*",
     "**/.gitignore",

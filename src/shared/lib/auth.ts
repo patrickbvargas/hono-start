@@ -4,13 +4,10 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
 import { prisma } from "@/shared/lib/prisma";
 import { env } from "../config/env";
+import { sendPasswordResetEmail } from "./password-reset-email";
 
 export const AUTH_DEFAULT_SESSION_MAX_AGE_SECONDS = 60 * 60 * 24;
 export const AUTH_REMEMBERED_SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 7;
-
-function logPasswordResetUrl(email: string, url: string) {
-	console.info(`[auth:password-reset] ${email} -> ${url}`);
-}
 
 export const auth = betterAuth({
 	appName: "Hono",
@@ -26,7 +23,12 @@ export const auth = betterAuth({
 		resetPasswordTokenExpiresIn: 60 * 60,
 		revokeSessionsOnPasswordReset: true,
 		sendResetPassword: async ({ user, url }) => {
-			logPasswordResetUrl(user.email, url);
+			void sendPasswordResetEmail({
+				email: user.email,
+				resetUrl: url,
+			}).catch((error) => {
+				console.error("[auth:password-reset]", error);
+			});
 		},
 	},
 	session: {

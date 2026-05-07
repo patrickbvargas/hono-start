@@ -1,4 +1,3 @@
-import { Link } from "@tanstack/react-router";
 import { FieldGroup } from "@/shared/components/ui";
 import { useLoginForm } from "../../hooks/use-login-form";
 
@@ -34,12 +33,6 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
 					<form.AppField name="rememberMe">
 						{(field) => <field.Checkbox label="Manter conectado por 7 dias" />}
 					</form.AppField>
-					<Link
-						to="/recuperar-senha"
-						className="text-sm font-medium text-foreground underline underline-offset-4"
-					>
-						Esqueci minha senha
-					</Link>
 				</div>
 				<form.Submit disabled={isPending} className="w-full">
 					{isPending ? "Entrando..." : "Entrar"}
