@@ -1,10 +1,4 @@
-# shared-overlay-orchestration Specification
-
-## Purpose
-
-Define the shared route-local overlay orchestration contract used by entity routes and nested entity sections.
-
-## Requirements
+## MODIFIED Requirements
 
 ### Requirement: Shared overlay hook controls route-local named overlays independently
 The system SHALL provide a shared overlay hook for entity route composition that controls create, edit, details, delete, and restore overlays within the hook instance that opened them. Each named overlay scope SHALL keep its own open state, and opening one scope MUST NOT implicitly close another scope in the same hook instance.
@@ -20,7 +14,7 @@ The system SHALL provide a shared overlay hook for entity route composition that
 - **AND** rendering for that overlay SHALL receive the selected entity data and overlay state
 
 #### Scenario: Opening another overlay keeps existing overlays mounted
-- **WHEN** one overlay is active and route code opens another overlay in the same hook instance
+- **WHEN** one overlay is already open and route code opens another overlay in the same hook instance
 - **THEN** the previously open overlay SHALL remain renderable until it is explicitly closed
 - **AND** the newly opened overlay SHALL also become renderable
 

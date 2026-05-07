@@ -1,78 +1,114 @@
-import { useCallback, useMemo, useReducer, useRef } from "react";
+import { useCallback, useMemo, useReducer } from "react";
 import type { OverlayState } from "@/shared/types/overlay";
 
-// "create" carries no data — it always opens a blank form
 type VoidKey = "create";
-// All other keys require an entity to operate on
 type DataKey = "edit" | "delete" | "details" | "restore";
 type OverlayKey = VoidKey | DataKey;
 
-// Internal discriminated union — enforces only one overlay active at a time.
-// VoidKey has no `selected` field; all DataKeys always have one.
-type InternalState<T> =
-	| { key: VoidKey }
-	| { key: DataKey; selected: T }
-	| { key: null };
+interface VoidOverlayValue {
+	isOpen: boolean;
+}
+
+type DataOverlayValue<T> = { isOpen: false } | { isOpen: true; selected: T };
+
+interface InternalState<T> {
+	create: VoidOverlayValue;
+	edit: DataOverlayValue<T>;
+	details: DataOverlayValue<T>;
+	delete: DataOverlayValue<T>;
+	restore: DataOverlayValue<T>;
+}
 
 type OverlayAction<T> =
-	| { type: "close" }
+	| { type: "close-all" }
+	| { type: "close-one"; key: OverlayKey }
 	| { type: "open-create" }
 	| { type: "open-data"; key: DataKey; selected: T };
 
+const overlayKeys: OverlayKey[] = [
+	"create",
+	"edit",
+	"details",
+	"delete",
+	"restore",
+];
+
+function createInitialState<T>(): InternalState<T> {
+	return {
+		create: { isOpen: false },
+		edit: { isOpen: false },
+		details: { isOpen: false },
+		delete: { isOpen: false },
+		restore: { isOpen: false },
+	};
+}
+
 function overlayReducer<T>(
-	_state: InternalState<T>,
+	state: InternalState<T>,
 	action: OverlayAction<T>,
 ): InternalState<T> {
 	switch (action.type) {
-		case "close":
-			return { key: null };
+		case "close-all":
+			return createInitialState<T>();
+		case "close-one":
+			if (action.key === "create") {
+				return {
+					...state,
+					create: { isOpen: false },
+				};
+			}
+
+			return {
+				...state,
+				[action.key]: { isOpen: false },
+			};
 		case "open-create":
-			return { key: "create" };
+			return {
+				...state,
+				create: { isOpen: true },
+			};
 		case "open-data":
-			return { key: action.key, selected: action.selected };
+			return {
+				...state,
+				[action.key]: {
+					isOpen: true,
+					selected: action.selected,
+				},
+			};
 	}
 }
 
-function isDataState<T>(
-	state: InternalState<T>,
-	key: DataKey,
-): state is { key: DataKey; selected: T } {
-	return state.key === key;
+function isDataOverlayOpen<T>(
+	state: DataOverlayValue<T>,
+): state is { isOpen: true; selected: T } {
+	return state.isOpen;
 }
 
 export function useOverlay<T>() {
 	const [state, dispatch] = useReducer(
-		(current: InternalState<T>, action: OverlayAction<T>) =>
-			overlayReducer(current, action),
-		{ key: null } as InternalState<T>,
+		overlayReducer<T>,
+		createInitialState<T>(),
 	);
-	const activeKeyRef = useRef<InternalState<T>["key"]>(state.key);
-	activeKeyRef.current = state.key;
 
-	const close = useCallback(() => dispatch({ type: "close" }), []);
+	const close = useCallback(() => dispatch({ type: "close-all" }), []);
 
 	const overlay = useMemo(() => {
 		const makeState = (key: OverlayKey): OverlayState => ({
-			isOpen: state.key === key,
+			isOpen: state[key].isOpen,
 			onOpenChange: (isOpen: boolean) => {
-				if (!isOpen && activeKeyRef.current === key) {
-					close();
+				if (!isOpen) {
+					dispatch({ type: "close-one", key });
 				}
 			},
-			close,
+			close: () => dispatch({ type: "close-one", key }),
 		});
 
-		/**
-		 * Scope for overlays that carry no data.
-		 * - `open()` takes no arguments.
-		 * - `render(fn)` callback receives only `ctx`.
-		 */
 		const createVoidScope = (key: VoidKey) => ({
-			isOpen: state.key === key,
+			isOpen: state[key].isOpen,
 			open: () => dispatch({ type: "open-create" }),
-			close,
-			render: <R>(fn: (state: OverlayState) => R): R | null => {
-				if (state.key !== key) {
+			close: () => dispatch({ type: "close-one", key }),
+			render: <R>(fn: (overlayState: OverlayState) => R): R | null => {
+				if (!state[key].isOpen) {
 					return null;
 				}
 
@@ -80,21 +116,18 @@ export function useOverlay<T>() {
 			},
 		});
 
-		/**
-		 * Scope for overlays that require an entity.
-		 * - `open(data)` is required — TypeScript will enforce data is provided.
-		 * - `render(fn)` callback receives `(data: T, ctx)`.
-		 */
 		const createDataScope = <K extends DataKey>(key: K) => ({
-			isOpen: state.key === key,
+			isOpen: state[key].isOpen,
 			open: (data: T) => dispatch({ type: "open-data", key, selected: data }),
-			close,
-			render: <R>(fn: (data: T, state: OverlayState) => R): R | null => {
-				if (!isDataState(state, key)) {
+			close: () => dispatch({ type: "close-one", key }),
+			render: <R>(
+				fn: (selected: T, overlayState: OverlayState) => R,
+			): R | null => {
+				if (!isDataOverlayOpen(state[key])) {
 					return null;
 				}
 
-				return fn(state.selected, makeState(key));
+				return fn(state[key].selected, makeState(key));
 			},
 		});
 
@@ -105,11 +138,11 @@ export function useOverlay<T>() {
 			delete: createDataScope("delete"),
 			restore: createDataScope("restore"),
 		};
-	}, [state, close]);
+	}, [state]);
 
 	return {
-		/** The key of the currently active overlay, or null if none. */
-		activeKey: state.key,
+		/** The keys of the currently open overlays. */
+		openKeys: overlayKeys.filter((key) => state[key].isOpen),
 		close,
 		overlay,
 	};

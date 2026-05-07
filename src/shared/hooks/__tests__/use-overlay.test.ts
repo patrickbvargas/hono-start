@@ -3,17 +3,11 @@ import type { OverlayState } from "@/shared/types/overlay";
 
 const hookRuntime = vi.hoisted(() => {
 	let reducerState: unknown;
-	let refs: Array<{ current: unknown }> = [];
-	let refIndex = 0;
 
 	return {
-		beginRender: () => {
-			refIndex = 0;
-		},
+		beginRender: () => {},
 		reset: () => {
 			reducerState = undefined;
-			refs = [];
-			refIndex = 0;
 		},
 		module: {
 			useCallback: <T extends (...args: never[]) => unknown>(callback: T) =>
@@ -33,16 +27,6 @@ const hookRuntime = vi.hoisted(() => {
 						reducerState = reducer(reducerState as S, action);
 					},
 				];
-			},
-			useRef: <T>(initialValue: T): { current: T } => {
-				const currentIndex = refIndex;
-				refIndex += 1;
-
-				if (!refs[currentIndex]) {
-					refs[currentIndex] = { current: initialValue };
-				}
-
-				return refs[currentIndex] as { current: T };
 			},
 		},
 	};
@@ -65,7 +49,7 @@ describe("useOverlay", () => {
 	it("starts closed with named overlay scopes", () => {
 		const current = renderOverlay<number>();
 
-		expect(current.activeKey).toBeNull();
+		expect(current.openKeys).toEqual([]);
 		expect(current.overlay.create.isOpen).toBe(false);
 		expect(current.overlay.edit.isOpen).toBe(false);
 		expect(current.overlay.details.isOpen).toBe(false);
@@ -83,7 +67,7 @@ describe("useOverlay", () => {
 		current.overlay.create.open();
 		current = renderOverlay<number>();
 
-		expect(current.activeKey).toBe("create");
+		expect(current.openKeys).toEqual(["create"]);
 		expect(current.overlay.create.isOpen).toBe(true);
 		expect(current.overlay.create.render(renderCreate)).toBe(true);
 		expect(renderCreate).toHaveBeenCalledWith(
@@ -97,7 +81,7 @@ describe("useOverlay", () => {
 		current.overlay.create.close();
 		current = renderOverlay<number>();
 
-		expect(current.activeKey).toBeNull();
+		expect(current.openKeys).toEqual([]);
 		expect(current.overlay.create.render(renderCreate)).toBeNull();
 	});
 
@@ -108,7 +92,7 @@ describe("useOverlay", () => {
 		current.overlay.edit.open(123);
 		current = renderOverlay<number>();
 
-		expect(current.activeKey).toBe("edit");
+		expect(current.openKeys).toEqual(["edit"]);
 		expect(current.overlay.edit.isOpen).toBe(true);
 		expect(current.overlay.edit.render(renderEdit)).toBe(123);
 		expect(renderEdit).toHaveBeenCalledWith(
@@ -121,51 +105,70 @@ describe("useOverlay", () => {
 		);
 	});
 
-	it("keeps only one active overlay in the same hook instance", () => {
+	it("keeps multiple overlays open in the same hook instance", () => {
 		let current = renderOverlay<number>();
-		const renderCreate = vi.fn(() => "create");
+		const renderDetails = vi.fn((id: number) => `details-${id}`);
 		const renderDelete = vi.fn((id: number) => `delete-${id}`);
 
-		current.overlay.create.open();
-		current = renderOverlay<number>();
-
-		expect(current.overlay.create.render(renderCreate)).toBe("create");
-
+		current.overlay.details.open(123);
 		current.overlay.delete.open(456);
 		current = renderOverlay<number>();
 
-		expect(current.activeKey).toBe("delete");
-		expect(current.overlay.create.isOpen).toBe(false);
+		expect(current.openKeys).toEqual(["details", "delete"]);
+		expect(current.overlay.details.isOpen).toBe(true);
 		expect(current.overlay.delete.isOpen).toBe(true);
-		expect(current.overlay.create.render(renderCreate)).toBeNull();
+		expect(current.overlay.details.render(renderDetails)).toBe("details-123");
 		expect(current.overlay.delete.render(renderDelete)).toBe("delete-456");
 	});
 
-	it("closes only when onOpenChange(false) belongs to the active overlay", () => {
+	it("closes only the overlay that receives onOpenChange(false)", () => {
 		let current = renderOverlay<number>();
 		const capturedStates: OverlayState[] = [];
 
 		current.overlay.edit.open(123);
+		current.overlay.delete.open(456);
 		current = renderOverlay<number>();
+
 		current.overlay.edit.render((_id, state) => {
 			capturedStates.push(state);
 			return null;
 		});
+		current.overlay.delete.render((_id, state) => {
+			capturedStates.push(state);
+			return null;
+		});
 
-		current.overlay.delete.open(456);
+		capturedStates[0]?.onOpenChange(false);
+		current = renderOverlay<number>();
+
+		expect(current.openKeys).toEqual(["delete"]);
+		expect(current.overlay.edit.isOpen).toBe(false);
+		expect(current.overlay.delete.isOpen).toBe(true);
+
+		capturedStates[1]?.onOpenChange(false);
+		current = renderOverlay<number>();
+
+		expect(current.openKeys).toEqual([]);
+		expect(current.overlay.delete.isOpen).toBe(false);
+	});
+
+	it("ignores close signals for already closed overlays", () => {
+		let current = renderOverlay<number>();
+		const capturedStates: OverlayState[] = [];
+
+		current.overlay.details.open(123);
+		current = renderOverlay<number>();
+		current.overlay.details.render((_id, state) => {
+			capturedStates.push(state);
+			return null;
+		});
+
+		capturedStates[0]?.onOpenChange(false);
 		current = renderOverlay<number>();
 		capturedStates[0]?.onOpenChange(false);
 		current = renderOverlay<number>();
 
-		expect(current.activeKey).toBe("delete");
-
-		current.overlay.delete.render((_id, state) => {
-			state.onOpenChange(false);
-			return null;
-		});
-		current = renderOverlay<number>();
-
-		expect(current.activeKey).toBeNull();
-		expect(current.overlay.edit.isOpen).toBe(false);
+		expect(current.openKeys).toEqual([]);
+		expect(current.overlay.details.isOpen).toBe(false);
 	});
 });
