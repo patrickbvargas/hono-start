@@ -1,3 +1,5 @@
+import { randomInt } from "node:crypto";
+import { hashPassword } from "better-auth/crypto";
 import type { AuditLogActor } from "@/features/audit-logs/data/mutations";
 import { createAuditLog } from "@/features/audit-logs/data/mutations";
 import { prisma } from "@/shared/lib/prisma";
@@ -19,6 +21,46 @@ import {
 	getEmployeeTypeByValue,
 	getUserRoleByValue,
 } from "./queries";
+
+interface ResetEmployeePasswordReturnType extends MutationReturnType {
+	temporaryPassword: string;
+}
+
+const TEMPORARY_PASSWORD_WORDS = [
+	"MANGA",
+	"BRISA",
+	"FARO",
+	"LIVRO",
+	"TRAMA",
+	"PRADO",
+	"VELOZ",
+	"PORTA",
+];
+
+const TEMPORARY_PASSWORD_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ2346789";
+
+function randomIndex(max: number) {
+	return randomInt(max);
+}
+
+function randomCharacters(length: number) {
+	return Array.from({ length }, () => {
+		return TEMPORARY_PASSWORD_ALPHABET[
+			randomIndex(TEMPORARY_PASSWORD_ALPHABET.length)
+		];
+	}).join("");
+}
+
+function createTemporaryPassword() {
+	if (randomInt(2) === 1) {
+		const word =
+			TEMPORARY_PASSWORD_WORDS[randomIndex(TEMPORARY_PASSWORD_WORDS.length)];
+		const suffix = Array.from({ length: 4 }, () => randomIndex(10)).join("");
+		return `${word}-${suffix}`;
+	}
+
+	return `${randomCharacters(4)}-${randomCharacters(4)}`;
+}
 
 export async function createEmployee({
 	actor,
@@ -218,4 +260,96 @@ export async function restoreEmployee({
 	});
 
 	return { success: true };
+}
+
+export async function resetEmployeePassword({
+	actor,
+	firmId,
+	id,
+}: EntityUniqueParams & {
+	actor?: AuditLogActor;
+}): Promise<ResetEmployeePasswordReturnType> {
+	const employee = await getEmployeeById({ firmId, id });
+
+	if (employee.isSoftDeleted) {
+		throw new Error(EMPLOYEE_ERRORS.NOT_FOUND);
+	}
+
+	const authUser = await prisma.user.findFirst({
+		where: {
+			employeeId: id,
+			employee: {
+				firmId,
+			},
+			accounts: {
+				some: {
+					providerId: "credential",
+				},
+			},
+		},
+		select: {
+			id: true,
+			accounts: {
+				where: {
+					providerId: "credential",
+				},
+				select: {
+					id: true,
+				},
+				take: 1,
+			},
+		},
+	});
+
+	if (!authUser?.accounts[0]) {
+		throw new Error(EMPLOYEE_ERRORS.RESET_PASSWORD_UNAVAILABLE);
+	}
+
+	const temporaryPassword = createTemporaryPassword();
+	const passwordHash = await hashPassword(temporaryPassword);
+
+	await prisma.$transaction(async (tx) => {
+		await tx.account.update({
+			where: {
+				id: authUser.accounts[0].id,
+			},
+			data: {
+				password: passwordHash,
+			},
+		});
+
+		await tx.user.update({
+			where: {
+				id: authUser.id,
+			},
+			data: {
+				mustChangePassword: true,
+			},
+		});
+
+		await tx.session.deleteMany({
+			where: {
+				userId: authUser.id,
+			},
+		});
+
+		await createAuditLog(tx, {
+			firmId,
+			actor,
+			action: "UPDATE",
+			entityType: "Employee",
+			entityId: id,
+			entityName: employee.fullName,
+			changeData: {
+				action: "RESET_PASSWORD",
+				mustChangePassword: true,
+			},
+			description: `Reset password for employee ${employee.fullName}.`,
+		});
+	});
+
+	return {
+		success: true,
+		temporaryPassword,
+	};
 }

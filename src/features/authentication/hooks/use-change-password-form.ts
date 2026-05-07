@@ -5,6 +5,7 @@ import { sessionKeys } from "@/shared/session/api";
 import { changePasswordMutationOptions } from "../api/mutations";
 import { AUTHENTICATION_ERRORS } from "../constants/errors";
 import { changePasswordInputSchema } from "../schemas/form";
+import { defaultChangePasswordValues } from "../utils/default";
 
 interface UseChangePasswordFormOptions {
 	onSuccess?: () => void;
@@ -17,12 +18,7 @@ export function useChangePasswordForm({
 	const mutation = useMutation(changePasswordMutationOptions());
 
 	const form = useAppForm({
-		defaultValues: {
-			currentPassword: "",
-			newPassword: "",
-			confirmPassword: "",
-			revokeOtherSessions: true,
-		},
+		defaultValues: defaultChangePasswordValues(),
 		validators: {
 			onSubmit: changePasswordInputSchema,
 		},
@@ -34,7 +30,7 @@ export function useChangePasswordForm({
 					queryKey: sessionKeys.all,
 				});
 				toast.success("Senha alterada com sucesso.");
-				form.reset();
+				form.reset(defaultChangePasswordValues());
 				onSuccess?.();
 			} catch (error) {
 				toast.danger(

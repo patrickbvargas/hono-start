@@ -3,6 +3,7 @@ import { useAppForm } from "@/shared/hooks/use-app-form";
 import { toast } from "@/shared/lib/toast";
 import { requestPasswordResetMutationOptions } from "../api/mutations";
 import { passwordResetRequestInputSchema } from "../schemas/form";
+import { defaultPasswordResetRequestValues } from "../utils/default";
 
 const SAFE_RESET_MESSAGE =
 	"Se a conta existir, você receberá um link de redefinição de senha.";
@@ -11,9 +12,7 @@ export function usePasswordResetRequestForm() {
 	const mutation = useMutation(requestPasswordResetMutationOptions());
 
 	const form = useAppForm({
-		defaultValues: {
-			identifier: "",
-		},
+		defaultValues: defaultPasswordResetRequestValues(),
 		validators: {
 			onSubmit: passwordResetRequestInputSchema,
 		},

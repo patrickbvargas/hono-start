@@ -20,6 +20,7 @@ import { Route as AppContratosRouteImport } from './routes/_app/contratos'
 import { Route as AppColaboradoresRouteImport } from './routes/_app/colaboradores'
 import { Route as AppClientesRouteImport } from './routes/_app/clientes'
 import { Route as AppAuditLogRouteImport } from './routes/_app/audit-log'
+import { Route as AppAlterarSenhaObrigatoriaRouteImport } from './routes/_app/alterar-senha-obrigatoria'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
 const AuthRouteRoute = AuthRouteRouteImport.update({
@@ -75,6 +76,12 @@ const AppAuditLogRoute = AppAuditLogRouteImport.update({
   path: '/audit-log',
   getParentRoute: () => AppRouteRoute,
 } as any)
+const AppAlterarSenhaObrigatoriaRoute =
+  AppAlterarSenhaObrigatoriaRouteImport.update({
+    id: '/alterar-senha-obrigatoria',
+    path: '/alterar-senha-obrigatoria',
+    getParentRoute: () => AppRouteRoute,
+  } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -83,6 +90,7 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
+  '/alterar-senha-obrigatoria': typeof AppAlterarSenhaObrigatoriaRoute
   '/audit-log': typeof AppAuditLogRoute
   '/clientes': typeof AppClientesRoute
   '/colaboradores': typeof AppColaboradoresRoute
@@ -95,6 +103,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof AppIndexRoute
+  '/alterar-senha-obrigatoria': typeof AppAlterarSenhaObrigatoriaRoute
   '/audit-log': typeof AppAuditLogRoute
   '/clientes': typeof AppClientesRoute
   '/colaboradores': typeof AppColaboradoresRoute
@@ -109,6 +118,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_app': typeof AppRouteRouteWithChildren
   '/_auth': typeof AuthRouteRouteWithChildren
+  '/_app/alterar-senha-obrigatoria': typeof AppAlterarSenhaObrigatoriaRoute
   '/_app/audit-log': typeof AppAuditLogRoute
   '/_app/clientes': typeof AppClientesRoute
   '/_app/colaboradores': typeof AppColaboradoresRoute
@@ -124,6 +134,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/alterar-senha-obrigatoria'
     | '/audit-log'
     | '/clientes'
     | '/colaboradores'
@@ -136,6 +147,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/alterar-senha-obrigatoria'
     | '/audit-log'
     | '/clientes'
     | '/colaboradores'
@@ -149,6 +161,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_app'
     | '/_auth'
+    | '/_app/alterar-senha-obrigatoria'
     | '/_app/audit-log'
     | '/_app/clientes'
     | '/_app/colaboradores'
@@ -246,6 +259,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAuditLogRouteImport
       parentRoute: typeof AppRouteRoute
     }
+    '/_app/alterar-senha-obrigatoria': {
+      id: '/_app/alterar-senha-obrigatoria'
+      path: '/alterar-senha-obrigatoria'
+      fullPath: '/alterar-senha-obrigatoria'
+      preLoaderRoute: typeof AppAlterarSenhaObrigatoriaRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
@@ -257,6 +277,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AppRouteRouteChildren {
+  AppAlterarSenhaObrigatoriaRoute: typeof AppAlterarSenhaObrigatoriaRoute
   AppAuditLogRoute: typeof AppAuditLogRoute
   AppClientesRoute: typeof AppClientesRoute
   AppColaboradoresRoute: typeof AppColaboradoresRoute
@@ -267,6 +288,7 @@ interface AppRouteRouteChildren {
 }
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
+  AppAlterarSenhaObrigatoriaRoute: AppAlterarSenhaObrigatoriaRoute,
   AppAuditLogRoute: AppAuditLogRoute,
   AppClientesRoute: AppClientesRoute,
   AppColaboradoresRoute: AppColaboradoresRoute,

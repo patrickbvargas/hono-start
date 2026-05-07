@@ -13,6 +13,7 @@ const {
 	authMock: {
 		api: {
 			changePassword: vi.fn(),
+			getSession: vi.fn(),
 			requestPasswordReset: vi.fn(),
 			resetPassword: vi.fn(),
 			signInEmail: vi.fn(),
@@ -23,7 +24,16 @@ const {
 	countRecentFailedLoginAttemptsMock: vi.fn(),
 	getRequestHeadersMock: vi.fn(),
 	prismaMock: {
+		$transaction: vi.fn(),
+		account: {
+			updateMany: vi.fn(),
+		},
 		session: {
+			deleteMany: vi.fn(),
+			update: vi.fn(),
+		},
+		user: {
+			findUnique: vi.fn(),
 			update: vi.fn(),
 		},
 	},
@@ -83,6 +93,7 @@ vi.mock("../data/mutations", () => ({
 
 import {
 	changePasswordMutationHandler,
+	forcedChangePasswordMutationHandler,
 	loginMutationHandler,
 	requestPasswordResetMutationHandler,
 	resetPasswordMutationHandler,
@@ -105,7 +116,24 @@ describe("authentication server mutations", () => {
 			},
 		});
 		authMock.api.changePassword.mockResolvedValue({});
+		authMock.api.getSession.mockResolvedValue({
+			session: {
+				id: "session-id",
+			},
+			user: {
+				id: "auth-user-1",
+			},
+		});
 		prismaMock.session.update.mockResolvedValue({});
+		prismaMock.session.deleteMany.mockResolvedValue({});
+		prismaMock.user.findUnique.mockResolvedValue({
+			mustChangePassword: true,
+		});
+		prismaMock.user.update.mockResolvedValue({});
+		prismaMock.account.updateMany.mockResolvedValue({});
+		prismaMock.$transaction.mockImplementation(async (callback) =>
+			callback(prismaMock),
+		);
 		authMock.api.requestPasswordReset.mockResolvedValue({});
 		authMock.api.resetPassword.mockResolvedValue({});
 		authMock.api.signOut.mockResolvedValue({});
@@ -257,5 +285,59 @@ describe("authentication server mutations", () => {
 				},
 			}),
 		).rejects.toThrow(AUTHENTICATION_ERRORS.CHANGE_PASSWORD_INVALID_CURRENT);
+	});
+
+	it("forces a flagged authenticated user to set a new password and may revoke other sessions", async () => {
+		await expect(
+			forcedChangePasswordMutationHandler({
+				data: {
+					newPassword: "SenhaNova123!",
+					confirmPassword: "SenhaNova123!",
+					revokeOtherSessions: true,
+				},
+			}),
+		).resolves.toEqual({ success: true });
+
+		expect(prismaMock.account.updateMany).toHaveBeenCalledWith({
+			where: {
+				userId: "auth-user-1",
+				providerId: "credential",
+			},
+			data: {
+				password: expect.any(String),
+			},
+		});
+		expect(prismaMock.user.update).toHaveBeenCalledWith({
+			where: {
+				id: "auth-user-1",
+			},
+			data: {
+				mustChangePassword: false,
+			},
+		});
+		expect(prismaMock.session.deleteMany).toHaveBeenCalledWith({
+			where: {
+				userId: "auth-user-1",
+				id: {
+					not: "session-id",
+				},
+			},
+		});
+	});
+
+	it("rejects forced password change when the account is not flagged", async () => {
+		prismaMock.user.findUnique.mockResolvedValueOnce({
+			mustChangePassword: false,
+		});
+
+		await expect(
+			forcedChangePasswordMutationHandler({
+				data: {
+					newPassword: "SenhaNova123!",
+					confirmPassword: "SenhaNova123!",
+					revokeOtherSessions: false,
+				},
+			}),
+		).rejects.toThrow(AUTHENTICATION_ERRORS.FORCED_CHANGE_PASSWORD_FORBIDDEN);
 	});
 });

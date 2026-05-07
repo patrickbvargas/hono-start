@@ -53,6 +53,7 @@ vi.mock("@/shared/lib/toast", () => ({
 
 vi.mock("@/shared/session", () => ({
 	clearAuthenticatedQueryCache: clearAuthenticatedQueryCacheMock,
+	FORCED_PASSWORD_CHANGE_PATH: "/alterar-senha-obrigatoria",
 	getSafeInternalRedirectPath: (redirectTo?: string) => {
 		if (!redirectTo) {
 			return undefined;
@@ -145,6 +146,27 @@ describe("useLoginForm", () => {
 
 		expect(navigateMock).toHaveBeenCalledWith({
 			to: "/",
+		});
+	});
+
+	it("redirects to the forced password-change route when the session requires it", async () => {
+		fetchQueryMock.mockResolvedValueOnce({
+			user: { id: 1 },
+			mustChangePassword: true,
+		});
+
+		useLoginForm({ redirectTo: "/clientes?page=2" });
+
+		await capturedFormConfig?.onSubmit({
+			value: {
+				identifier: "carlos@example.com",
+				password: "Senha123!",
+				rememberMe: false,
+			},
+		});
+
+		expect(navigateMock).toHaveBeenCalledWith({
+			to: "/alterar-senha-obrigatoria",
 		});
 	});
 });

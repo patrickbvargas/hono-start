@@ -8,19 +8,31 @@ const {
 	getEmployeeByIdMock,
 	getEmployeeTypeByValueMock,
 	getUserRoleByValueMock,
+	hashPasswordMock,
 	prismaMock,
 } = vi.hoisted(() => ({
 	createAuditLogMock: vi.fn(),
 	getEmployeeByIdMock: vi.fn(),
 	getEmployeeTypeByValueMock: vi.fn(),
 	getUserRoleByValueMock: vi.fn(),
+	hashPasswordMock: vi.fn(),
 	prismaMock: {
+		account: {
+			update: vi.fn(),
+		},
 		employee: {
 			create: vi.fn(),
 			update: vi.fn(),
 		},
 		contractEmployee: {
 			count: vi.fn(),
+		},
+		session: {
+			deleteMany: vi.fn(),
+		},
+		user: {
+			findFirst: vi.fn(),
+			update: vi.fn(),
 		},
 		$transaction: vi.fn(),
 	},
@@ -34,6 +46,10 @@ vi.mock("@/features/audit-logs/data/mutations", () => ({
 	createAuditLog: createAuditLogMock,
 }));
 
+vi.mock("better-auth/crypto", () => ({
+	hashPassword: hashPasswordMock,
+}));
+
 vi.mock("../data/queries", () => ({
 	getEmployeeById: getEmployeeByIdMock,
 	getEmployeeTypeByValue: getEmployeeTypeByValueMock,
@@ -43,6 +59,7 @@ vi.mock("../data/queries", () => ({
 import {
 	createEmployee,
 	deleteEmployee,
+	resetEmployeePassword,
 	restoreEmployee,
 	updateEmployee,
 } from "../data/mutations";
@@ -79,6 +96,8 @@ const baseEmployee = (
 	role: "Usuário",
 	roleValue: "USER",
 	contractCount: 0,
+	hasCredentialAccount: true,
+	mustChangePassword: false,
 	isActive: true,
 	isSoftDeleted: false,
 	createdAt: "2026-01-01T00:00:00.000Z",
@@ -91,7 +110,15 @@ describe("employee lookup-backed writes", () => {
 		vi.clearAllMocks();
 		prismaMock.employee.create.mockResolvedValue({});
 		prismaMock.employee.update.mockResolvedValue({});
+		prismaMock.account.update.mockResolvedValue({});
 		prismaMock.contractEmployee.count.mockResolvedValue(0);
+		prismaMock.session.deleteMany.mockResolvedValue({});
+		prismaMock.user.findFirst.mockResolvedValue({
+			id: "auth-user-1",
+			accounts: [{ id: "credential-account-1" }],
+		});
+		prismaMock.user.update.mockResolvedValue({});
+		hashPasswordMock.mockResolvedValue("hashed-password");
 		prismaMock.$transaction.mockImplementation(async (callback) =>
 			callback(prismaMock),
 		);
@@ -247,5 +274,79 @@ describe("employee lookup-backed writes", () => {
 				entityId: 1,
 			}),
 		);
+	});
+
+	it("resets an employee password, revokes sessions, and avoids storing plaintext in audit logs", async () => {
+		getEmployeeByIdMock.mockResolvedValue(baseEmployee());
+
+		const result = await resetEmployeePassword({
+			actor: {
+				id: 9,
+				name: "Admin",
+				email: "admin@example.com",
+			},
+			firmId: 1,
+			id: 1,
+		});
+
+		expect(result.success).toBe(true);
+		expect(result.temporaryPassword).toMatch(
+			/^([A-Z]{4,6}-\d{4}|[A-Z0-9]{4}-[A-Z0-9]{4})$/,
+		);
+		expect(hashPasswordMock).toHaveBeenCalledWith(result.temporaryPassword);
+		expect(prismaMock.account.update).toHaveBeenCalledWith({
+			where: {
+				id: "credential-account-1",
+			},
+			data: {
+				password: "hashed-password",
+			},
+		});
+		expect(prismaMock.user.update).toHaveBeenCalledWith({
+			where: {
+				id: "auth-user-1",
+			},
+			data: {
+				mustChangePassword: true,
+			},
+		});
+		expect(prismaMock.session.deleteMany).toHaveBeenCalledWith({
+			where: {
+				userId: "auth-user-1",
+			},
+		});
+		expect(createAuditLogMock).toHaveBeenCalledWith(
+			prismaMock,
+			expect.objectContaining({
+				changeData: {
+					action: "RESET_PASSWORD",
+					mustChangePassword: true,
+				},
+			}),
+		);
+		expect(createAuditLogMock).not.toHaveBeenCalledWith(
+			prismaMock,
+			expect.objectContaining({
+				changeData: expect.objectContaining({
+					temporaryPassword: expect.any(String),
+				}),
+			}),
+		);
+	});
+
+	it("rejects employee password reset when no credential account exists", async () => {
+		getEmployeeByIdMock.mockResolvedValue(
+			baseEmployee({
+				hasCredentialAccount: false,
+			}),
+		);
+		prismaMock.user.findFirst.mockResolvedValueOnce(null);
+
+		await expect(
+			resetEmployeePassword({
+				firmId: 1,
+				id: 1,
+			}),
+		).rejects.toThrow(EMPLOYEE_ERRORS.RESET_PASSWORD_UNAVAILABLE);
 	});
 });

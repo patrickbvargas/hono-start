@@ -31,6 +31,7 @@ export interface LoggedUserSession {
 	firm: SessionFirm;
 	employeeType: SessionOption;
 	role: SessionOption;
+	mustChangePassword: boolean;
 }
 
 export type SessionAction =

@@ -14,6 +14,7 @@ import { EMPLOYEE_ERRORS } from "../constants/errors";
 import {
 	createEmployee,
 	deleteEmployee,
+	resetEmployeePassword,
 	restoreEmployee,
 	updateEmployee,
 } from "../data/mutations";
@@ -143,6 +144,42 @@ const restoreEmployeeFn = createServerFn({ method: "POST" })
 		}
 	});
 
+const resetEmployeePasswordFn = createServerFn({ method: "POST" })
+	.middleware([authMiddleware])
+	.inputValidator(employeeIdInputSchema)
+	.handler(
+		async ({
+			data,
+		}): Promise<
+			MutationReturnType & {
+				temporaryPassword: string;
+			}
+		> => {
+			try {
+				const session = await getRequiredServerLoggedUserSession();
+				assertCan(session, "employee.manage");
+				const { firmId } = await getServerScope("employee");
+
+				return await resetEmployeePassword({
+					actor: {
+						id: session.employee.id,
+						name: session.user.fullName,
+						email: session.user.email,
+					},
+					firmId,
+					id: data.id,
+				});
+			} catch (error) {
+				console.error("[resetEmployeePassword]", error);
+				if (hasExactErrorMessage(error, EMPLOYEE_ERRORS)) {
+					throw error;
+				}
+
+				throw new Error(EMPLOYEE_ERRORS.RESET_PASSWORD_FAILED);
+			}
+		},
+	);
+
 export const createEmployeeMutationOptions = () =>
 	mutationOptions({ mutationFn: createEmployeeFn });
 
@@ -154,3 +191,6 @@ export const deleteEmployeeMutationOptions = () =>
 
 export const restoreEmployeeMutationOptions = () =>
 	mutationOptions({ mutationFn: restoreEmployeeFn });
+
+export const resetEmployeePasswordMutationOptions = () =>
+	mutationOptions({ mutationFn: resetEmployeePasswordFn });

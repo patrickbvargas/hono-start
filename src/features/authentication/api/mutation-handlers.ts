@@ -1,5 +1,6 @@
 import "dotenv/config";
 import { getRequestHeaders } from "@tanstack/react-start/server";
+import { hashPassword } from "better-auth/crypto";
 import { env } from "@/shared/config/env";
 import { auth } from "@/shared/lib/auth";
 import { prisma } from "@/shared/lib/prisma";
@@ -10,7 +11,11 @@ import {
 	recordFailedLoginAttempt,
 	resolveAuthenticationEmail,
 } from "../data/mutations";
-import type { ChangePasswordInput, LoginInput } from "../schemas/form";
+import type {
+	ChangePasswordInput,
+	ForcedChangePasswordInput,
+	LoginInput,
+} from "../schemas/form";
 import { normalizeAuthenticationIdentifier } from "../utils/normalization";
 
 const LOCKOUT_THRESHOLD = 5;
@@ -138,6 +143,83 @@ export async function changePasswordMutationHandler({
 
 		if (includesSerializedError(error, "INVALID_PASSWORD")) {
 			createSafeFailure(AUTHENTICATION_ERRORS.CHANGE_PASSWORD_INVALID_CURRENT);
+		}
+
+		createSafeFailure(AUTHENTICATION_ERRORS.CHANGE_PASSWORD_FAILED);
+	}
+}
+
+export async function forcedChangePasswordMutationHandler({
+	data,
+}: {
+	data: ForcedChangePasswordInput;
+}): Promise<MutationStatus> {
+	try {
+		const headers = getRequestHeaders();
+		const authSession = await auth.api.getSession({
+			headers,
+		});
+
+		if (!authSession?.session?.id || !authSession.user?.id) {
+			createSafeFailure(AUTHENTICATION_ERRORS.CHANGE_PASSWORD_FAILED);
+		}
+
+		const authUser = await prisma.user.findUnique({
+			where: {
+				id: authSession.user.id,
+			},
+			select: {
+				mustChangePassword: true,
+			},
+		});
+
+		if (!authUser?.mustChangePassword) {
+			createSafeFailure(AUTHENTICATION_ERRORS.FORCED_CHANGE_PASSWORD_FORBIDDEN);
+		}
+
+		const passwordHash = await hashPassword(data.newPassword);
+
+		await prisma.$transaction(async (tx) => {
+			await tx.account.updateMany({
+				where: {
+					userId: authSession.user.id,
+					providerId: "credential",
+				},
+				data: {
+					password: passwordHash,
+				},
+			});
+
+			await tx.user.update({
+				where: {
+					id: authSession.user.id,
+				},
+				data: {
+					mustChangePassword: false,
+				},
+			});
+
+			if (data.revokeOtherSessions) {
+				await tx.session.deleteMany({
+					where: {
+						userId: authSession.user.id,
+						id: {
+							not: authSession.session.id,
+						},
+					},
+				});
+			}
+		});
+
+		return { success: true };
+	} catch (error) {
+		console.error("[authentication:forced-change-password]", error);
+
+		if (
+			error instanceof Error &&
+			error.message === AUTHENTICATION_ERRORS.FORCED_CHANGE_PASSWORD_FORBIDDEN
+		) {
+			createSafeFailure(AUTHENTICATION_ERRORS.FORCED_CHANGE_PASSWORD_FORBIDDEN);
 		}
 
 		createSafeFailure(AUTHENTICATION_ERRORS.CHANGE_PASSWORD_FAILED);

@@ -3,6 +3,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { authMiddleware } from "@/shared/session";
 import {
 	changePasswordInputSchema,
+	forcedChangePasswordInputSchema,
 	loginInputSchema,
 	passwordResetCompleteInputSchema,
 	passwordResetRequestInputSchema,
@@ -30,6 +31,16 @@ const changePasswordFn = createServerFn({ method: "POST" })
 			"./mutation-handlers"
 		);
 		return changePasswordMutationHandler(ctx);
+	});
+
+const forcedChangePasswordFn = createServerFn({ method: "POST" })
+	.middleware([authMiddleware])
+	.inputValidator(forcedChangePasswordInputSchema)
+	.handler(async (ctx) => {
+		const { forcedChangePasswordMutationHandler } = await import(
+			"./mutation-handlers"
+		);
+		return forcedChangePasswordMutationHandler(ctx);
 	});
 
 const requestPasswordResetFn = createServerFn({ method: "POST" })
@@ -63,6 +74,11 @@ export const logoutMutationOptions = () =>
 export const changePasswordMutationOptions = () =>
 	mutationOptions({
 		mutationFn: changePasswordFn,
+	});
+
+export const forcedChangePasswordMutationOptions = () =>
+	mutationOptions({
+		mutationFn: forcedChangePasswordFn,
 	});
 
 export const requestPasswordResetMutationOptions = () =>

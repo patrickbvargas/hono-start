@@ -1,13 +1,17 @@
+import { CopyIcon } from "lucide-react";
 import * as React from "react";
 import {
 	type DetailFieldItem,
 	EntityDetail,
 } from "@/shared/components/entity-detail";
 import { EntityStatus } from "@/shared/components/entity-status";
+import { Button, DrawerClose } from "@/shared/components/ui";
 import { formatter } from "@/shared/lib/formatter";
+import { toast } from "@/shared/lib/toast";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
 import { useEmployee } from "../../hooks/use-data";
+import { useEmployeeResetPassword } from "../../hooks/use-reset-password";
 
 interface EmployeeDetailsProps {
 	id: EntityId;
@@ -26,6 +30,11 @@ export const EmployeeDetails = ({ id, state }: EmployeeDetailsProps) => {
 
 const EmployeeDetailsContent = ({ id }: { id: EntityId }) => {
 	const { employee } = useEmployee(id);
+	const [isConfirmingReset, setIsConfirmingReset] = React.useState(false);
+	const [temporaryPassword, setTemporaryPassword] = React.useState<
+		string | null
+	>(null);
+	const { handleConfirm, isPending } = useEmployeeResetPassword();
 
 	const generalInfo = React.useMemo<DetailFieldItem[]>(
 		() => [
@@ -39,6 +48,22 @@ const EmployeeDetailsContent = ({ id }: { id: EntityId }) => {
 
 	const contactInfo = React.useMemo<DetailFieldItem[]>(
 		() => [{ term: "Email", definition: employee.email }],
+		[employee],
+	);
+
+	const accessInfo = React.useMemo<DetailFieldItem[]>(
+		() => [
+			{
+				term: "Acesso ao sistema",
+				definition: employee.hasCredentialAccount
+					? "Disponível"
+					: "Não disponível",
+			},
+			{
+				term: "Troca obrigatória",
+				definition: employee.mustChangePassword ? "Pendente" : "Não",
+			},
+		],
 		[employee],
 	);
 
@@ -68,6 +93,24 @@ const EmployeeDetailsContent = ({ id }: { id: EntityId }) => {
 		[employee],
 	);
 
+	const handleResetPassword = async () => {
+		const password = await handleConfirm(id);
+
+		if (password) {
+			setTemporaryPassword(password);
+			setIsConfirmingReset(false);
+		}
+	};
+
+	const handleCopyPassword = async () => {
+		if (!temporaryPassword || !navigator.clipboard) {
+			return;
+		}
+
+		await navigator.clipboard.writeText(temporaryPassword);
+		toast.success("Senha temporária copiada.");
+	};
+
 	return (
 		<EntityDetail.Content>
 			<EntityDetail.Header>
@@ -80,6 +123,10 @@ const EmployeeDetailsContent = ({ id }: { id: EntityId }) => {
 					<EntityDetail.Fields items={contactInfo} />
 				</EntityDetail.Section>
 				<EntityDetail.Separator />
+				<EntityDetail.Section title="Acesso">
+					<EntityDetail.Fields items={accessInfo} />
+				</EntityDetail.Section>
+				<EntityDetail.Separator />
 				<EntityDetail.Section title="Financeiro">
 					<EntityDetail.Fields items={financialInfo} />
 				</EntityDetail.Section>
@@ -87,8 +134,76 @@ const EmployeeDetailsContent = ({ id }: { id: EntityId }) => {
 				<EntityDetail.Section title="Registro">
 					<EntityDetail.Fields items={registerInfo} />
 				</EntityDetail.Section>
+				{temporaryPassword ? (
+					<>
+						<EntityDetail.Separator />
+						<EntityDetail.Section title="Senha temporária">
+							<div className="space-y-3 rounded-md border bg-muted/40 p-4">
+								<p className="text-sm text-muted-foreground">
+									Compartilhe esta senha com {employee.fullName}. Ela será
+									exigida no próximo login e deverá ser trocada antes de
+									continuar.
+								</p>
+								<div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+									<div className="break-all font-mono text-lg font-semibold tracking-[0.2em]">
+										{temporaryPassword}
+									</div>
+									<Button
+										type="button"
+										variant="outline"
+										size="sm"
+										onClick={handleCopyPassword}
+									>
+										<CopyIcon size={16} />
+										Copiar
+									</Button>
+								</div>
+							</div>
+						</EntityDetail.Section>
+					</>
+				) : null}
 			</EntityDetail.Body>
-			<EntityDetail.Footer />
+			<EntityDetail.Footer>
+				<div className="flex w-full flex-col gap-2">
+					{employee.hasCredentialAccount && !employee.isSoftDeleted ? (
+						isConfirmingReset ? (
+							<>
+								<Button
+									type="button"
+									variant="outline"
+									className="w-full"
+									disabled={isPending}
+									onClick={() => setIsConfirmingReset(false)}
+								>
+									Cancelar
+								</Button>
+								<Button
+									type="button"
+									className="w-full"
+									disabled={isPending}
+									onClick={handleResetPassword}
+								>
+									{isPending ? "Gerando..." : "Gerar senha temporária"}
+								</Button>
+							</>
+						) : (
+							<Button
+								type="button"
+								variant="secondary"
+								className="w-full"
+								onClick={() => setIsConfirmingReset(true)}
+							>
+								Resetar senha
+							</Button>
+						)
+					) : null}
+					<DrawerClose asChild>
+						<Button type="button" variant="outline" className="w-full">
+							Fechar
+						</Button>
+					</DrawerClose>
+				</div>
+			</EntityDetail.Footer>
 		</EntityDetail.Content>
 	);
 };
@@ -105,6 +220,10 @@ const EmployeeDetailsFallback = () => (
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Contato">
 				<EntityDetail.SkeletonFields rows={1} />
+			</EntityDetail.Section>
+			<EntityDetail.Separator />
+			<EntityDetail.Section title="Acesso">
+				<EntityDetail.SkeletonFields rows={2} />
 			</EntityDetail.Section>
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Financeiro">

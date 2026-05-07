@@ -75,6 +75,11 @@ async function resolveDomainSession(): Promise<LoggedUserSession | null> {
 					label: true,
 				},
 			},
+			authUser: {
+				select: {
+					mustChangePassword: true,
+				},
+			},
 		},
 	});
 
@@ -97,6 +102,7 @@ async function resolveDomainSession(): Promise<LoggedUserSession | null> {
 		firm: employee.firm,
 		employeeType: employee.type,
 		role: employee.role,
+		mustChangePassword: employee.authUser?.mustChangePassword ?? false,
 	};
 }
 

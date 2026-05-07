@@ -24,6 +24,16 @@ This file preserves the canonical user workflows of the product. These flows des
 6. On success, the system confirms the password change and keeps the current session usable.
 7. On failure, the user sees a safe pt-BR error message.
 
+## Forced Password Change After Administrator Reset
+
+1. An administrator resets a collaborator password from the collaborator details flow.
+2. The system generates a temporary password, invalidates the collaborator's active sessions, and marks the account for mandatory password change.
+3. The administrator shares the temporary password with the collaborator.
+4. The collaborator logs in with the temporary password.
+5. The system redirects the collaborator to the mandatory password-change screen.
+6. The collaborator enters and confirms a new password that satisfies policy.
+7. On success, the system clears the mandatory-reset flag and allows access to the dashboard.
+
 ## Register A Client
 
 1. The user opens the clients list.

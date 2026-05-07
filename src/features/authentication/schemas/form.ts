@@ -72,3 +72,18 @@ export const changePasswordInputSchema = z
 	});
 
 export type ChangePasswordInput = z.infer<typeof changePasswordInputSchema>;
+
+export const forcedChangePasswordInputSchema = z
+	.object({
+		newPassword: passwordSchema,
+		confirmPassword: passwordSchema,
+		revokeOtherSessions: z.boolean(),
+	})
+	.refine((value) => value.newPassword === value.confirmPassword, {
+		message: "As senhas devem ser iguais.",
+		path: ["confirmPassword"],
+	});
+
+export type ForcedChangePasswordInput = z.infer<
+	typeof forcedChangePasswordInputSchema
+>;

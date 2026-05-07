@@ -41,6 +41,9 @@ const activeEmployee = {
 	id: 7,
 	fullName: "Carlos Mendes",
 	email: "carlos@example.com",
+	authUser: {
+		mustChangePassword: false,
+	},
 	firm: {
 		id: 1,
 		name: "Matriz",
@@ -123,6 +126,7 @@ describe("server session helpers", () => {
 			firm: activeEmployee.firm,
 			employeeType: activeEmployee.type,
 			role: activeEmployee.role,
+			mustChangePassword: false,
 		});
 
 		expect(prismaMock.employee.findFirst).toHaveBeenCalledOnce();

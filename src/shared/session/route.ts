@@ -1,6 +1,10 @@
 import type { QueryClient } from "@tanstack/react-query";
 import { redirect } from "@tanstack/react-router";
 import { getCurrentSessionQueryOptions, sessionKeys } from "./api";
+import type { LoggedUserSession } from "./model";
+
+export const FORCED_PASSWORD_CHANGE_PATH =
+	"/alterar-senha-obrigatoria" as const;
 
 function clearCurrentSession(queryClient: QueryClient) {
 	queryClient.setQueryData(sessionKeys.current(), null);
@@ -27,6 +31,14 @@ export function getSafeInternalRedirectPath(
 	}
 
 	return redirectPath;
+}
+
+export function getAuthenticatedHomePath(session: LoggedUserSession) {
+	if (session.mustChangePassword) {
+		return FORCED_PASSWORD_CHANGE_PATH;
+	}
+
+	return "/";
 }
 
 export async function requireRouteSession(

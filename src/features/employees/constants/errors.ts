@@ -12,6 +12,9 @@ export const EMPLOYEE_ERRORS = {
 	ROLES_GET_FAILED: "Erro ao buscar cargos de funcionário",
 	RESTORE_FORBIDDEN: "Apenas administradores podem restaurar funcionários",
 	RESTORE_FAILED: "Erro ao restaurar funcionário",
+	RESET_PASSWORD_FAILED: "Não foi possível resetar a senha do colaborador",
+	RESET_PASSWORD_UNAVAILABLE:
+		"Este colaborador ainda não possui acesso ao sistema",
 	TYPES_GET_FAILED: "Erro ao buscar tipos de funcionário",
 	TYPE_INACTIVE: "Selecione uma função ativa",
 	TYPE_NOT_FOUND: "Função não encontrada",

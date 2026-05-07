@@ -59,6 +59,10 @@ describe("employee data queries", () => {
 			roleId: 3,
 			type: { label: "Advogado", value: "LAWYER" },
 			role: { label: "Administrador", value: "ADMIN" },
+			authUser: {
+				mustChangePassword: true,
+				accounts: [{ id: "credential-account" }],
+			},
 			isActive: true,
 			deletedAt: null,
 			createdAt: new Date("2026-01-01T00:00:00.000Z"),
@@ -125,6 +129,8 @@ describe("employee data queries", () => {
 				typeValue: "LAWYER",
 				roleValue: "ADMIN",
 				contractCount: 2,
+				hasCredentialAccount: true,
+				mustChangePassword: true,
 			}),
 		);
 

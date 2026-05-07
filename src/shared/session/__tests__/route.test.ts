@@ -16,6 +16,8 @@ vi.mock("../api", () => ({
 }));
 
 import {
+	FORCED_PASSWORD_CHANGE_PATH,
+	getAuthenticatedHomePath,
 	getRouteSession,
 	getSafeInternalRedirectPath,
 	requireRouteSession,
@@ -104,5 +106,18 @@ describe("route session helpers", () => {
 		expect(getSafeInternalRedirectPath("https://evil.test")).toBeUndefined();
 		expect(getSafeInternalRedirectPath("//evil.test")).toBeUndefined();
 		expect(getSafeInternalRedirectPath(undefined)).toBeUndefined();
+	});
+
+	it("derives the authenticated home path from forced password-change state", () => {
+		expect(
+			getAuthenticatedHomePath({
+				user: { id: 1, fullName: "Carlos", email: "carlos@example.com" },
+				employee: { id: 1 },
+				firm: { id: 1, name: "Matriz" },
+				employeeType: { id: 1, value: "LAWYER", label: "Advogado" },
+				role: { id: 1, value: "USER", label: "Usuário" },
+				mustChangePassword: true,
+			}),
+		).toBe(FORCED_PASSWORD_CHANGE_PATH);
 	});
 });

@@ -31,11 +31,13 @@
 | Delete attachments | Yes | No |
 | View audit log | Yes | No |
 | Manage employee accounts | Yes | No |
+| Reset collaborator password | Yes | No |
 
 ## Permission Baseline
 
 - All authenticated users may access the application shell.
 - Administrators manage employee accounts, full financial visibility, audit logs, and restore/delete operations.
+- Administrators also manage collaborator credential resets when email-based recovery is unavailable.
 - Regular users must not access administrative account management or firm-wide confidential financial views.
 
 ## Visibility Rules

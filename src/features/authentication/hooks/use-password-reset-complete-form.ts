@@ -5,6 +5,7 @@ import { toast } from "@/shared/lib/toast";
 import { sessionKeys } from "@/shared/session/api";
 import { resetPasswordMutationOptions } from "../api/mutations";
 import { passwordResetCompleteInputSchema } from "../schemas/form";
+import { defaultPasswordResetCompleteValues } from "../utils/default";
 
 export function usePasswordResetCompleteForm(token: string) {
 	const navigate = useNavigate();
@@ -12,11 +13,7 @@ export function usePasswordResetCompleteForm(token: string) {
 	const mutation = useMutation(resetPasswordMutationOptions());
 
 	const form = useAppForm({
-		defaultValues: {
-			token,
-			newPassword: "",
-			confirmPassword: "",
-		},
+		defaultValues: defaultPasswordResetCompleteValues(token),
 		validators: {
 			onSubmit: passwordResetCompleteInputSchema,
 		},

@@ -6,7 +6,10 @@ import {
 	PasswordResetCompleteForm,
 	PasswordResetRequestForm,
 } from "@/features/authentication";
-import { getRouteSession } from "@/shared/session";
+import {
+	getAuthenticatedHomePath,
+	getRouteSession,
+} from "@/shared/session/route";
 
 const passwordResetSearchSchema = z.object({
 	token: z.string().optional().catch(undefined),
@@ -19,7 +22,7 @@ export const Route = createFileRoute("/_auth/recuperar-senha")({
 
 		if (session) {
 			throw redirect({
-				to: "/",
+				to: getAuthenticatedHomePath(session),
 			});
 		}
 	},

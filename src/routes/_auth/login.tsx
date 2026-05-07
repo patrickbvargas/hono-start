@@ -2,7 +2,10 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import * as z from "zod";
 import { AuthenticationScreen, LoginForm } from "@/features/authentication";
-import { getRouteSession } from "@/shared/session";
+import {
+	getAuthenticatedHomePath,
+	getRouteSession,
+} from "@/shared/session/route";
 
 const loginSearchSchema = z.object({
 	redirect: z.string().optional().catch(undefined),
@@ -15,7 +18,7 @@ export const Route = createFileRoute("/_auth/login")({
 
 		if (session) {
 			throw redirect({
-				to: "/",
+				to: getAuthenticatedHomePath(session),
 			});
 		}
 	},

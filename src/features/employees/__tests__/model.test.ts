@@ -17,6 +17,8 @@ describe("employee model schemas", () => {
 			role: "Usuário",
 			roleValue: "USER",
 			contractCount: 3,
+			hasCredentialAccount: true,
+			mustChangePassword: false,
 			isActive: true,
 			isSoftDeleted: false,
 			createdAt: "2026-04-17T00:00:00.000Z",

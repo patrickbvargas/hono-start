@@ -15,6 +15,8 @@
 - Passwords require a minimum length of 8 characters.
 - Authenticated users may change their own password by confirming the current password.
 - The product must support password reset.
+- Administrators may reset a collaborator password by issuing a temporary password from the employee details flow.
+- An administrator-issued temporary password must force the target user to choose a new password on the next login before accessing other protected areas.
 - Protected pages require an authenticated session.
 - Session-derived role and firm scope are authoritative.
 - Repeated failed authentication attempts must trigger protective behavior rather than unlimited retries.

@@ -1,6 +1,8 @@
 export { getCurrentSessionQueryOptions } from "./api";
 export { clearAuthenticatedQueryCache } from "./cache";
 export {
+	FORCED_PASSWORD_CHANGE_PATH,
+	getAuthenticatedHomePath,
 	getRouteSession,
 	getSafeInternalRedirectPath,
 	requireRouteSession,
