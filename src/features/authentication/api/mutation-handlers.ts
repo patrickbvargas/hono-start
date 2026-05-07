@@ -10,7 +10,7 @@ import {
 	recordFailedLoginAttempt,
 	resolveAuthenticationEmail,
 } from "../data/mutations";
-import type { LoginInput } from "../schemas/form";
+import type { ChangePasswordInput, LoginInput } from "../schemas/form";
 import { normalizeAuthenticationIdentifier } from "../utils/normalization";
 
 const LOCKOUT_THRESHOLD = 5;
@@ -23,6 +23,27 @@ interface MutationStatus {
 
 function createSafeFailure(errorMessage: string): never {
 	throw new Error(errorMessage);
+}
+
+function includesSerializedError(error: unknown, code: string) {
+	if (typeof error === "string") {
+		return error.includes(code);
+	}
+
+	if (error instanceof Error) {
+		const ownProperties = Object.getOwnPropertyNames(error);
+		const serializedError = JSON.stringify(error, ownProperties);
+		return (
+			error.message.includes(code) ||
+			(serializedError ? serializedError.includes(code) : false)
+		);
+	}
+
+	if (!error || typeof error !== "object") {
+		return false;
+	}
+
+	return JSON.stringify(error).includes(code);
 }
 
 async function authenticateWithEmail(input: LoginInput, email: string) {
@@ -93,6 +114,33 @@ export async function logoutMutationHandler(): Promise<MutationStatus> {
 	} catch (error) {
 		console.error("[authentication:logout]", error);
 		createSafeFailure(AUTHENTICATION_ERRORS.LOGOUT_FAILED);
+	}
+}
+
+export async function changePasswordMutationHandler({
+	data,
+}: {
+	data: ChangePasswordInput;
+}): Promise<MutationStatus> {
+	try {
+		await auth.api.changePassword({
+			headers: getRequestHeaders(),
+			body: {
+				currentPassword: data.currentPassword,
+				newPassword: data.newPassword,
+				revokeOtherSessions: data.revokeOtherSessions,
+			},
+		});
+
+		return { success: true };
+	} catch (error) {
+		console.error("[authentication:change-password]", error);
+
+		if (includesSerializedError(error, "INVALID_PASSWORD")) {
+			createSafeFailure(AUTHENTICATION_ERRORS.CHANGE_PASSWORD_INVALID_CURRENT);
+		}
+
+		createSafeFailure(AUTHENTICATION_ERRORS.CHANGE_PASSWORD_FAILED);
 	}
 }
 

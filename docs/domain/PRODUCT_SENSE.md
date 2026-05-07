@@ -51,6 +51,7 @@ The software core includes:
 
 - Users authenticate with email or OAB number plus password.
 - Password reset is part of the product surface.
+- Authenticated users can change their password from inside the product shell.
 - The product includes protected-session behavior and remembered-session behavior.
 
 ## Product Invariants

@@ -6,7 +6,7 @@ function read(path: string) {
 }
 
 describe("authentication public screen contracts", () => {
-	it("keeps the authentication feature barrel route-facing", () => {
+	it("keeps the authentication feature barrel top-level-consumer facing", () => {
 		const content = read("src/features/authentication/index.ts");
 
 		expect(content).toContain(
@@ -20,6 +20,9 @@ describe("authentication public screen contracts", () => {
 		);
 		expect(content).toContain(
 			'export { PasswordResetCompleteForm } from "./components/password-reset-complete-form";',
+		);
+		expect(content).toContain(
+			'export { ChangePasswordDialog } from "./components/change-password-dialog";',
 		);
 		expect(content).toContain(
 			'export { useLogout } from "./hooks/use-logout";',
@@ -45,6 +48,11 @@ describe("authentication public screen contracts", () => {
 				"src/features/authentication/components/password-reset-complete-form/index.tsx",
 			),
 		).toContain("export function PasswordResetCompleteForm");
+		expect(
+			read(
+				"src/features/authentication/components/change-password-dialog/index.tsx",
+			),
+		).toContain("export function ChangePasswordDialog");
 	});
 
 	it("keeps public routes declarative and feature-barrel based", () => {

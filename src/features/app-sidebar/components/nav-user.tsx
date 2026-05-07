@@ -1,14 +1,15 @@
 import {
-	BadgeCheckIcon,
 	BellIcon,
 	EllipsisVerticalIcon,
+	KeyRoundIcon,
 	LogOutIcon,
 	MonitorCogIcon,
 	MoonIcon,
 	SunIcon,
 } from "lucide-react";
 import { useTheme } from "next-themes";
-import { useLogout } from "@/features/authentication";
+import { useState } from "react";
+import { ChangePasswordDialog, useLogout } from "@/features/authentication";
 import {
 	Avatar,
 	AvatarFallback,
@@ -37,6 +38,7 @@ export const NavUser = () => {
 	const session = useLoggedUserSession();
 	const { handleLogout, isPending } = useLogout();
 	const { theme, setTheme } = useTheme();
+	const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
 	const userInitials = session.user.fullName
 		.split(" ")
 		.filter(Boolean)
@@ -47,6 +49,10 @@ export const NavUser = () => {
 	return (
 		<SidebarMenu>
 			<SidebarMenuItem>
+				<ChangePasswordDialog
+					open={isChangePasswordOpen}
+					onOpenChange={setIsChangePasswordOpen}
+				/>
 				<DropdownMenu>
 					<DropdownMenuTrigger
 						render={
@@ -98,9 +104,13 @@ export const NavUser = () => {
 						</DropdownMenuGroup>
 						<DropdownMenuSeparator />
 						<DropdownMenuGroup>
-							<DropdownMenuItem>
-								<BadgeCheckIcon size={16} />
-								Conta
+							<DropdownMenuItem
+								onClick={() => {
+									setIsChangePasswordOpen(true);
+								}}
+							>
+								<KeyRoundIcon size={16} />
+								Alterar senha
 							</DropdownMenuItem>
 							<DropdownMenuItem>
 								<BellIcon size={16} />

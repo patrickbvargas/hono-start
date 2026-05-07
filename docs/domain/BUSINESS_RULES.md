@@ -13,6 +13,7 @@
 - Users authenticate with email or OAB number plus password.
 - OAB login accepts the format of two uppercase letters followed by six digits.
 - Passwords require a minimum length of 8 characters.
+- Authenticated users may change their own password by confirming the current password.
 - The product must support password reset.
 - Protected pages require an authenticated session.
 - Session-derived role and firm scope are authoritative.

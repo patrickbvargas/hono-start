@@ -12,6 +12,7 @@ const {
 } = vi.hoisted(() => ({
 	authMock: {
 		api: {
+			changePassword: vi.fn(),
 			requestPasswordReset: vi.fn(),
 			resetPassword: vi.fn(),
 			signInEmail: vi.fn(),
@@ -81,6 +82,7 @@ vi.mock("../data/mutations", () => ({
 }));
 
 import {
+	changePasswordMutationHandler,
 	loginMutationHandler,
 	requestPasswordResetMutationHandler,
 	resetPasswordMutationHandler,
@@ -102,6 +104,7 @@ describe("authentication server mutations", () => {
 				employeeId: 7,
 			},
 		});
+		authMock.api.changePassword.mockResolvedValue({});
 		prismaMock.session.update.mockResolvedValue({});
 		authMock.api.requestPasswordReset.mockResolvedValue({});
 		authMock.api.resetPassword.mockResolvedValue({});
@@ -215,5 +218,44 @@ describe("authentication server mutations", () => {
 				},
 			}),
 		).rejects.toThrow(AUTHENTICATION_ERRORS.RESET_INVALID_TOKEN);
+	});
+
+	it("changes password for the authenticated user and preserves revoke-other-sessions choice", async () => {
+		await expect(
+			changePasswordMutationHandler({
+				data: {
+					currentPassword: "Senha123!",
+					newPassword: "SenhaNova123!",
+					confirmPassword: "SenhaNova123!",
+					revokeOtherSessions: true,
+				},
+			}),
+		).resolves.toEqual({ success: true });
+
+		expect(authMock.api.changePassword).toHaveBeenCalledWith({
+			headers: requestHeaders,
+			body: {
+				currentPassword: "Senha123!",
+				newPassword: "SenhaNova123!",
+				revokeOtherSessions: true,
+			},
+		});
+	});
+
+	it("maps invalid current-password failures to the safe pt-BR message", async () => {
+		authMock.api.changePassword.mockRejectedValue(
+			new Error("INVALID_PASSWORD"),
+		);
+
+		await expect(
+			changePasswordMutationHandler({
+				data: {
+					currentPassword: "SenhaErrada123!",
+					newPassword: "SenhaNova123!",
+					confirmPassword: "SenhaNova123!",
+					revokeOtherSessions: false,
+				},
+			}),
+		).rejects.toThrow(AUTHENTICATION_ERRORS.CHANGE_PASSWORD_INVALID_CURRENT);
 	});
 });

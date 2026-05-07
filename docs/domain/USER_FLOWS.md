@@ -14,6 +14,16 @@ This file preserves the canonical user workflows of the product. These flows des
 8. The login flow is the only public entrypoint besides password reset.
 9. No authenticated product screen is reachable without a valid session.
 
+## Change Password
+
+1. The authenticated user opens the account password-change flow from the product shell.
+2. The user enters the current password.
+3. The user enters and confirms a new password that satisfies policy.
+4. The user may choose to revoke other active sessions.
+5. The user submits the form.
+6. On success, the system confirms the password change and keeps the current session usable.
+7. On failure, the user sees a safe pt-BR error message.
+
 ## Register A Client
 
 1. The user opens the clients list.

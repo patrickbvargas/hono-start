@@ -10,8 +10,9 @@ import * as fees from "@/features/fees";
 import * as remunerations from "@/features/remunerations";
 
 describe("feature public barrels", () => {
-	it("keeps the authentication barrel limited to public screens and route hooks", () => {
+	it("keeps the authentication barrel limited to top-level auth surfaces and route hooks", () => {
 		expect(authentication).toHaveProperty("AuthenticationScreen");
+		expect(authentication).toHaveProperty("ChangePasswordDialog");
 		expect(authentication).toHaveProperty("LoginForm");
 		expect(authentication).toHaveProperty("PasswordResetRequestForm");
 		expect(authentication).toHaveProperty("PasswordResetCompleteForm");
@@ -59,14 +60,12 @@ describe("feature public barrels", () => {
 		expect(attachments).not.toHaveProperty("attachmentUploadInputSchema");
 
 		expect(auditLogs).toHaveProperty("getAuditLogsQueryOptions");
+		expect(auditLogs).toHaveProperty("getAuditLogActionsQueryOptions");
+		expect(auditLogs).toHaveProperty("getAuditLogActorsQueryOptions");
 		expect(auditLogs).toHaveProperty("AuditLogFilter");
-		expect(auditLogs).not.toHaveProperty("getAuditLogActionsQueryOptions");
-		expect(auditLogs).not.toHaveProperty("getAuditLogActorsQueryOptions");
 
 		expect(dashboard).toHaveProperty("getDashboardSummaryQueryOptions");
+		expect(dashboard).toHaveProperty("getDashboardEmployeeOptionsQueryOptions");
 		expect(dashboard).toHaveProperty("DashboardFilter");
-		expect(dashboard).not.toHaveProperty(
-			"getDashboardEmployeeOptionsQueryOptions",
-		);
 	});
 });

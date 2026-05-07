@@ -54,3 +54,21 @@ export const passwordResetCompleteInputSchema = z
 export type PasswordResetCompleteInput = z.infer<
 	typeof passwordResetCompleteInputSchema
 >;
+
+export const changePasswordInputSchema = z
+	.object({
+		currentPassword: passwordSchema,
+		newPassword: passwordSchema,
+		confirmPassword: passwordSchema,
+		revokeOtherSessions: z.boolean(),
+	})
+	.refine((value) => value.newPassword === value.confirmPassword, {
+		message: "As senhas devem ser iguais.",
+		path: ["confirmPassword"],
+	})
+	.refine((value) => value.currentPassword !== value.newPassword, {
+		message: "A nova senha deve ser diferente da senha atual.",
+		path: ["newPassword"],
+	});
+
+export type ChangePasswordInput = z.infer<typeof changePasswordInputSchema>;

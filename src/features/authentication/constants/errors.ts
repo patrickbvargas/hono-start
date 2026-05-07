@@ -4,6 +4,8 @@ export const AUTHENTICATION_ERRORS = {
 		"Muitas tentativas em pouco tempo. Tente novamente em instantes.",
 	LOGIN_FAILED: "Não foi possível concluir o login.",
 	LOGOUT_FAILED: "Não foi possível encerrar a sessão.",
+	CHANGE_PASSWORD_INVALID_CURRENT: "A senha atual informada é inválida.",
+	CHANGE_PASSWORD_FAILED: "Não foi possível alterar a senha.",
 	RESET_REQUEST_FAILED:
 		"Não foi possível iniciar a recuperação de senha neste momento.",
 	RESET_INVALID_TOKEN: "O link de redefinição é inválido ou expirou.",

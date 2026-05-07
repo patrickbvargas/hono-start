@@ -31,6 +31,7 @@ The software core includes these feature areas:
 ### Authentication And Session Management
 
 - Provides login with email or OAB number plus password.
+- Provides authenticated password-change behavior for signed-in users who know the current password.
 - Provides password-reset entry and recovery behavior.
 - Protects authenticated areas of the application.
 - Establishes the authoritative session context for tenant and role decisions.
@@ -184,6 +185,7 @@ The software core includes these feature areas:
 ### Authentication
 
 - As a user, I can log in with email or OAB number and password.
+- As a user, I can change my password while authenticated by confirming my current password.
 - As a user, I can recover access through password reset.
 - As a user, I can access only authenticated areas after login.
 
