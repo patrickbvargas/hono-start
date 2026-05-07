@@ -5,7 +5,18 @@ import {
 	EntityDetail,
 } from "@/shared/components/entity-detail";
 import { EntityStatus } from "@/shared/components/entity-status";
-import { Button, DrawerClose } from "@/shared/components/ui";
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+	Button,
+	DrawerClose,
+} from "@/shared/components/ui";
 import { formatter } from "@/shared/lib/formatter";
 import { toast } from "@/shared/lib/toast";
 import type { EntityId } from "@/shared/schemas/entity";
@@ -30,7 +41,7 @@ export const EmployeeDetails = ({ id, state }: EmployeeDetailsProps) => {
 
 const EmployeeDetailsContent = ({ id }: { id: EntityId }) => {
 	const { employee } = useEmployee(id);
-	const [isConfirmingReset, setIsConfirmingReset] = React.useState(false);
+	const [isResetDialogOpen, setIsResetDialogOpen] = React.useState(false);
 	const [temporaryPassword, setTemporaryPassword] = React.useState<
 		string | null
 	>(null);
@@ -98,7 +109,14 @@ const EmployeeDetailsContent = ({ id }: { id: EntityId }) => {
 
 		if (password) {
 			setTemporaryPassword(password);
-			setIsConfirmingReset(false);
+		}
+	};
+
+	const handleResetDialogChange = (isOpen: boolean) => {
+		setIsResetDialogOpen(isOpen);
+
+		if (!isOpen) {
+			setTemporaryPassword(null);
 		}
 	};
 
@@ -166,36 +184,63 @@ const EmployeeDetailsContent = ({ id }: { id: EntityId }) => {
 			<EntityDetail.Footer>
 				<div className="flex w-full flex-col gap-2">
 					{employee.hasCredentialAccount && !employee.isSoftDeleted ? (
-						isConfirmingReset ? (
-							<>
-								<Button
-									type="button"
-									variant="outline"
-									className="w-full"
-									disabled={isPending}
-									onClick={() => setIsConfirmingReset(false)}
-								>
-									Cancelar
-								</Button>
-								<Button
-									type="button"
-									className="w-full"
-									disabled={isPending}
-									onClick={handleResetPassword}
-								>
-									{isPending ? "Gerando..." : "Gerar senha temporária"}
-								</Button>
-							</>
-						) : (
+						<AlertDialog
+							open={isResetDialogOpen}
+							onOpenChange={handleResetDialogChange}
+						>
 							<Button
 								type="button"
 								variant="secondary"
 								className="w-full"
-								onClick={() => setIsConfirmingReset(true)}
+								onClick={() => setIsResetDialogOpen(true)}
 							>
 								Resetar senha
 							</Button>
-						)
+							<AlertDialogContent>
+								<AlertDialogHeader>
+									<AlertDialogTitle>
+										{temporaryPassword
+											? "Senha temporária gerada"
+											: "Resetar senha"}
+									</AlertDialogTitle>
+									<AlertDialogDescription>
+										{temporaryPassword
+											? `Compartilhe esta senha com ${employee.fullName}.`
+											: `Gerar nova senha temporária para ${employee.fullName}.`}
+									</AlertDialogDescription>
+								</AlertDialogHeader>
+								{temporaryPassword ? (
+									<div className="rounded-md border bg-muted/40 p-4">
+										<div className="break-all font-mono text-center text-lg font-semibold tracking-[0.2em]">
+											{temporaryPassword}
+										</div>
+									</div>
+								) : null}
+								<AlertDialogFooter>
+									{temporaryPassword ? (
+										<>
+											<AlertDialogCancel>Fechar</AlertDialogCancel>
+											<AlertDialogAction onClick={handleCopyPassword}>
+												<CopyIcon size={16} />
+												Copiar senha
+											</AlertDialogAction>
+										</>
+									) : (
+										<>
+											<AlertDialogCancel disabled={isPending}>
+												Cancelar
+											</AlertDialogCancel>
+											<AlertDialogAction
+												onClick={handleResetPassword}
+												disabled={isPending}
+											>
+												{isPending ? "Gerando..." : "Gerar senha temporária"}
+											</AlertDialogAction>
+										</>
+									)}
+								</AlertDialogFooter>
+							</AlertDialogContent>
+						</AlertDialog>
 					) : null}
 					<DrawerClose asChild>
 						<Button type="button" variant="outline" className="w-full">

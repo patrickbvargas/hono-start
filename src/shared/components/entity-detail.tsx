@@ -54,6 +54,7 @@ function Root({ state, children, ...props }: RootProps) {
 			direction="right"
 			open={state.isOpen}
 			onOpenChange={state.onOpenChange}
+			modal={false}
 			{...props}
 		>
 			<DrawerContent>{children}</DrawerContent>
