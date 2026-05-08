@@ -8,7 +8,7 @@ vi.mock("@tanstack/react-router", () => ({
 	redirect: redirectMock,
 }));
 
-vi.mock("../api", () => ({
+vi.mock("../query", () => ({
 	sessionKeys: {
 		current: () => ["session", "current"],
 	},

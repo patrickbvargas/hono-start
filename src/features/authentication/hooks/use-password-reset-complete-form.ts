@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { useAppForm } from "@/shared/hooks/use-app-form";
 import { toast } from "@/shared/lib/toast";
-import { sessionKeys } from "@/shared/session/api";
+import { sessionKeys } from "@/shared/session";
 import { resetPasswordMutationOptions } from "../api/mutations";
 import { passwordResetCompleteInputSchema } from "../schemas/form";
 import { defaultPasswordResetCompleteValues } from "../utils/default";

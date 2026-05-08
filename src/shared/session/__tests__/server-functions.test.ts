@@ -14,7 +14,7 @@ vi.mock("@/shared/session/server", () => ({
 	getRequiredServerLoggedUserSession: getRequiredServerLoggedUserSessionMock,
 }));
 
-import { authMiddleware } from "../server-functions";
+import { authMiddleware } from "../middleware";
 
 function createSession(
 	overrides: Partial<LoggedUserSession> = {},

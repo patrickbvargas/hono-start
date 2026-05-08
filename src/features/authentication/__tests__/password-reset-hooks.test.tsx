@@ -61,7 +61,7 @@ vi.mock("@/shared/lib/toast", () => ({
 	},
 }));
 
-vi.mock("@/shared/session/api", () => ({
+vi.mock("@/shared/session", () => ({
 	sessionKeys: {
 		all: ["session"],
 	},

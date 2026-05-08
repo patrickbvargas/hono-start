@@ -1,13 +1,13 @@
-import type {
-	LoggedUserSession,
-	SessionScope,
-	SessionScopeSubject,
-} from "./model";
 import {
 	getCurrentEmployeeId,
 	getCurrentFirmId,
 	isAdminSession,
 } from "./selectors";
+import type {
+	LoggedUserSession,
+	SessionScope,
+	SessionScopeSubject,
+} from "./types";
 
 export function getScope(
 	session: LoggedUserSession,

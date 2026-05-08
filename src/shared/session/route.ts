@@ -1,7 +1,7 @@
 import type { QueryClient } from "@tanstack/react-query";
 import { redirect } from "@tanstack/react-router";
-import { getCurrentSessionQueryOptions, sessionKeys } from "./api";
-import type { LoggedUserSession } from "./model";
+import { getCurrentSessionQueryOptions, sessionKeys } from "./query";
+import type { LoggedUserSession } from "./types";
 
 export const FORCED_PASSWORD_CHANGE_PATH =
 	"/alterar-senha-obrigatoria" as const;

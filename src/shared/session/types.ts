@@ -34,34 +34,6 @@ export interface LoggedUserSession {
 	mustChangePassword: boolean;
 }
 
-export type SessionAction =
-	| "employee.manage"
-	| "client.create"
-	| "client.update"
-	| "client.delete"
-	| "client.restore"
-	| "contract.view"
-	| "contract.create"
-	| "contract.update"
-	| "contract.delete"
-	| "contract.restore"
-	| "contract.assign-employee"
-	| "fee.create"
-	| "fee.update"
-	| "fee.view"
-	| "fee.delete"
-	| "fee.restore"
-	| "remuneration.view"
-	| "remuneration.update"
-	| "remuneration.delete"
-	| "remuneration.restore"
-	| "remuneration.export"
-	| "attachment.view"
-	| "attachment.upload"
-	| "attachment.delete"
-	| "dashboard.view"
-	| "audit-log.view";
-
 export type SessionScopeSubject =
 	| "employee"
 	| "client"

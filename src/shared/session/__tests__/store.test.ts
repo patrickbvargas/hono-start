@@ -9,7 +9,7 @@ vi.mock("react", () => ({
 	useContext: useContextMock,
 }));
 
-import { useLoggedUserSession, useLoggedUserSessionStore } from "../store";
+import { useLoggedUserSession, useLoggedUserSessionStore } from "../provider";
 
 describe("shared session hooks", () => {
 	beforeEach(() => {

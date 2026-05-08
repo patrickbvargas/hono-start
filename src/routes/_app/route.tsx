@@ -3,9 +3,9 @@ import { AppSidebar } from "@/features/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/shared/components/ui";
 import {
 	FORCED_PASSWORD_CHANGE_PATH,
+	LoggedUserSessionProvider,
 	requireRouteSession,
-} from "@/shared/session/route";
-import { LoggedUserSessionProvider } from "@/shared/session/store";
+} from "@/shared/session";
 
 export const Route = createFileRoute("/_app")({
 	beforeLoad: async ({ context: { queryClient }, location }) => {

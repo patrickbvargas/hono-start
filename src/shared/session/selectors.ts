@@ -1,4 +1,4 @@
-import { type LoggedUserSession, SESSION_ADMIN_ROLE_VALUE } from "./model";
+import { type LoggedUserSession, SESSION_ADMIN_ROLE_VALUE } from "./types";
 
 export function isAdminSession(session: LoggedUserSession) {
 	return session.role.value === SESSION_ADMIN_ROLE_VALUE;

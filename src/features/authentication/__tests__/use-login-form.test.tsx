@@ -54,6 +54,9 @@ vi.mock("@/shared/lib/toast", () => ({
 vi.mock("@/shared/session", () => ({
 	clearAuthenticatedQueryCache: clearAuthenticatedQueryCacheMock,
 	FORCED_PASSWORD_CHANGE_PATH: "/alterar-senha-obrigatoria",
+	getCurrentSessionQueryOptions: () => ({
+		queryKey: ["session", "current"],
+	}),
 	getSafeInternalRedirectPath: (redirectTo?: string) => {
 		if (!redirectTo) {
 			return undefined;
@@ -65,12 +68,6 @@ vi.mock("@/shared/session", () => ({
 
 		return redirectTo;
 	},
-}));
-
-vi.mock("@/shared/session/api", () => ({
-	getCurrentSessionQueryOptions: () => ({
-		queryKey: ["session", "current"],
-	}),
 }));
 
 vi.mock("../api/mutations", () => ({

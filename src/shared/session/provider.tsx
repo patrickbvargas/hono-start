@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import type { LoggedUserSession } from "./model";
+import type { LoggedUserSession } from "./types";
 
 const LoggedUserSessionContext = createContext<LoggedUserSession | null>(null);
 

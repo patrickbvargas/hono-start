@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAppForm } from "@/shared/hooks/use-app-form";
 import { toast } from "@/shared/lib/toast";
-import { sessionKeys } from "@/shared/session/api";
+import { sessionKeys } from "@/shared/session";
 import { changePasswordMutationOptions } from "../api/mutations";
 import { AUTHENTICATION_ERRORS } from "../constants/errors";
 import { changePasswordInputSchema } from "../schemas/form";

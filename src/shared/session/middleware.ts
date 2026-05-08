@@ -1,6 +1,6 @@
 import { createMiddleware } from "@tanstack/react-start";
-import type { LoggedUserSession } from "./model";
 import { getRequiredServerLoggedUserSession } from "./server";
+import type { LoggedUserSession } from "./types";
 
 export interface AuthenticatedServerFunctionContext {
 	session: LoggedUserSession;

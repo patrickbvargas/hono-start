@@ -1,12 +1,12 @@
 import { getRequestHeaders } from "@tanstack/react-start/server";
 import { AUTH_DEFAULT_SESSION_MAX_AGE_SECONDS, auth } from "@/shared/lib/auth";
 import { prisma } from "@/shared/lib/prisma";
+import { getScope } from "./scope";
 import type {
 	LoggedUserSession,
 	SessionScope,
 	SessionScopeSubject,
-} from "./model";
-import { getScope } from "./scope";
+} from "./types";
 
 const UNAUTHENTICATED_ERROR_MESSAGE =
 	"Sua sessão expirou. Faça login novamente.";
