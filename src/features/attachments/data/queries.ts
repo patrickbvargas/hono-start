@@ -1,6 +1,5 @@
 import { createAttachmentSignedUrl } from "@/shared/lib/attachment-storage";
 import { prisma } from "@/shared/lib/prisma";
-import { type Option, optionSchema } from "@/shared/schemas/option";
 import type { ContractAccessResource } from "@/shared/session";
 import type {
 	QueryManyReturnType,
@@ -29,16 +28,6 @@ interface AttachmentEmployeeOwnerResource extends AttachmentOwnerResource {
 
 interface AttachmentContractOwnerResource extends AttachmentOwnerResource {
 	resource: ContractAccessResource;
-}
-
-export async function getAttachmentTypes(): Promise<
-	QueryManyReturnType<Option>
-> {
-	const rows = await prisma.attachmentType.findMany({
-		orderBy: { label: "asc" },
-	});
-
-	return optionSchema.array().parse(rows);
 }
 
 export async function getAttachmentTypeByValue(value: string) {

@@ -16,6 +16,7 @@ import {
 	assertAttachmentOwnerExists,
 	getAttachmentAccessById,
 } from "../data/queries";
+import { assertAttachmentOwnerCanReceiveUpload } from "../rules/owner";
 import {
 	attachmentIdInputSchema,
 	attachmentUploadInputSchema,
@@ -25,9 +26,14 @@ function assertAttachmentOwnerUploadAccess(
 	session: Awaited<ReturnType<typeof getRequiredServerLoggedUserSession>>,
 	owner: Awaited<ReturnType<typeof assertAttachmentOwnerExists>>,
 ) {
-	if (owner.access.deletedAt) {
-		throw new Error(ATTACHMENT_ERRORS.OWNER_NOT_FOUND);
-	}
+	assertAttachmentOwnerCanReceiveUpload({
+		deletedAt: owner.access.deletedAt,
+		ownerKind: owner.owner.ownerKind,
+		isWritableContract:
+			owner.owner.ownerKind === "contract"
+				? isContractWritable(owner.access.resource)
+				: undefined,
+	});
 
 	assertCan(session, "attachment.upload", owner.access.resource);
 
@@ -36,10 +42,6 @@ function assertAttachmentOwnerUploadAccess(
 	}
 
 	if (owner.owner.ownerKind === "contract") {
-		if (!isContractWritable(owner.access.resource)) {
-			throw new Error("Contrato não permite novos anexos.");
-		}
-
 		assertCan(session, "contract.update", owner.access.resource);
 	}
 }

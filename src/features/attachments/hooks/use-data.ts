@@ -1,8 +1,5 @@
-import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
-import {
-	getAttachmentsByOwnerQueryOptions,
-	getAttachmentTypesQueryOptions,
-} from "../api/queries";
+import { useQuery } from "@tanstack/react-query";
+import { getAttachmentsByOwnerQueryOptions } from "../api/queries";
 import type { AttachmentOwnerInput } from "../schemas/form";
 
 export function useAttachments(owner: AttachmentOwnerInput) {
@@ -17,10 +14,4 @@ export function useAttachments(owner: AttachmentOwnerInput) {
 		error,
 		isPending,
 	};
-}
-
-export function useAttachmentOptions() {
-	const { data: types } = useSuspenseQuery(getAttachmentTypesQueryOptions());
-
-	return { types };
 }

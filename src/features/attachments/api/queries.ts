@@ -1,6 +1,5 @@
 import { queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
-import type { Option } from "@/shared/schemas/option";
 import { assertCan, authMiddleware } from "@/shared/session";
 import {
 	getRequiredServerLoggedUserSession,
@@ -11,7 +10,6 @@ import { ATTACHMENT_ERRORS } from "../constants/errors";
 import {
 	assertAttachmentOwnerExists,
 	getAttachmentsByOwner,
-	getAttachmentTypes,
 } from "../data/queries";
 import {
 	type AttachmentListInput,
@@ -30,7 +28,6 @@ export const attachmentKeys = {
 
 		return [...attachmentKeys.all, "list", owner, input] as const;
 	},
-	types: () => [...attachmentKeys.all, "types"] as const,
 };
 
 function assertAttachmentOwnerReadAccess(
@@ -78,18 +75,6 @@ const getAttachmentsByOwnerFn = createServerFn({ method: "GET" })
 		},
 	);
 
-const getAttachmentTypesFn = createServerFn({ method: "GET" })
-	.middleware([authMiddleware])
-	.handler(async (): Promise<QueryManyReturnType<Option>> => {
-		try {
-			await getRequiredServerLoggedUserSession();
-			return await getAttachmentTypes();
-		} catch (error) {
-			console.error("[getAttachmentTypes]", error);
-			throw new Error(ATTACHMENT_ERRORS.LOOKUP_GET_FAILED);
-		}
-	});
-
 export const getAttachmentsByOwnerQueryOptions = (
 	input: AttachmentListInput,
 ) => {
@@ -98,10 +83,3 @@ export const getAttachmentsByOwnerQueryOptions = (
 		queryFn: () => getAttachmentsByOwnerFn({ data: input }),
 	});
 };
-
-export const getAttachmentTypesQueryOptions = () =>
-	queryOptions({
-		queryKey: attachmentKeys.types(),
-		queryFn: getAttachmentTypesFn,
-		staleTime: "static",
-	});

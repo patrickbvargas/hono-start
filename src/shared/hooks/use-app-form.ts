@@ -7,6 +7,7 @@ import {
 	FormCheckbox,
 	FormCheckboxGroup,
 	FormDatePicker,
+	FormFile,
 	FormInput,
 	FormInputOTP,
 	FormMultiselect,
@@ -38,6 +39,7 @@ export const { useAppForm } = createFormHook({
 		RadioGroup: FormRadioGroup,
 		Switch: FormSwitch,
 		DatePicker: FormDatePicker,
+		File: FormFile,
 		Search: FormSearch,
 	},
 	formComponents: {

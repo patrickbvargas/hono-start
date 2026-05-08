@@ -2,6 +2,7 @@ export * from "./autocomplete";
 export * from "./checkbox";
 export * from "./checkbox-group";
 export * from "./date-picker";
+export * from "./file";
 export * from "./form";
 export * from "./input";
 export * from "./input-otp";

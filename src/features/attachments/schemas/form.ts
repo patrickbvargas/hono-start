@@ -1,23 +1,18 @@
 import * as z from "zod";
 import { entityIdSchema } from "@/shared/schemas/entity";
 import { ATTACHMENT_ERRORS } from "../constants/errors";
+import { ATTACHMENT_OWNER_KINDS } from "../constants/values";
 import {
-	ATTACHMENT_ALLOWED_MIME_TYPE_BY_VALUE,
-	ATTACHMENT_MAX_FILE_SIZE_BYTES,
-	ATTACHMENT_OWNER_KINDS,
-} from "../constants/values";
+	assertAttachmentFileAccepted,
+	assertAttachmentTypeMatchesFile,
+} from "../rules/file";
+import { assertSingleAttachmentOwnerContext } from "../rules/owner";
 
 const attachmentOwnerBaseInputSchema = z.object({
 	clientId: entityIdSchema.shape.id.optional(),
 	employeeId: entityIdSchema.shape.id.optional(),
 	contractId: entityIdSchema.shape.id.optional(),
 });
-
-function getAttachmentOwnerCount(data: AttachmentOwnerInput) {
-	return [data.clientId, data.employeeId, data.contractId].filter(
-		(value) => value !== undefined,
-	).length;
-}
 
 function addOwnerContextError(ctx: z.RefinementCtx) {
 	ctx.addIssue({
@@ -27,41 +22,35 @@ function addOwnerContextError(ctx: z.RefinementCtx) {
 	});
 }
 
-function getAttachmentTypeFromFile(params: {
+export function inferAttachmentTypeFromFile(params: {
 	fileName: string;
 	mimeType: string;
 }) {
-	const normalizedMimeType = params.mimeType.trim().toLowerCase();
-	const extension = params.fileName.split(".").pop()?.trim().toLowerCase();
-
-	for (const [type, mimeTypes] of Object.entries(
-		ATTACHMENT_ALLOWED_MIME_TYPE_BY_VALUE,
-	)) {
-		if (mimeTypes.includes(normalizedMimeType as never)) {
-			return type;
+	try {
+		return assertAttachmentFileAccepted({
+			fileName: params.fileName,
+			mimeType: params.mimeType,
+			fileSize: 0,
+		});
+	} catch (error) {
+		if (
+			error instanceof Error &&
+			error.message === ATTACHMENT_ERRORS.INVALID_FILE_TYPE
+		) {
+			return null;
 		}
-	}
 
-	if (extension === "pdf") {
-		return "PDF";
+		throw error;
 	}
-
-	if (extension === "jpg" || extension === "jpeg") {
-		return "JPG";
-	}
-
-	if (extension === "png") {
-		return "PNG";
-	}
-
-	return null;
 }
 
 function attachmentOwnerRefinement(
 	data: AttachmentOwnerInput,
 	ctx: z.RefinementCtx,
 ) {
-	if (getAttachmentOwnerCount(data) !== 1) {
+	try {
+		assertSingleAttachmentOwnerContext(data);
+	} catch {
 		addOwnerContextError(ctx);
 	}
 }
@@ -72,39 +61,83 @@ const attachmentFileBaseInputSchema = z.object({
 	mimeType: z.string().trim().min(1, "Tipo do arquivo é obrigatório"),
 	fileSize: z.number().int().positive("Arquivo é obrigatório"),
 	fileBase64: z.string().trim().min(1, "Arquivo é obrigatório"),
-	isActive: z.boolean(),
 });
+
+const attachmentFormFileSchema = z.custom<File | null>(
+	(value) => value === null || value instanceof File,
+	"Arquivo é obrigatório",
+);
+
+const attachmentFormBaseInputSchema = attachmentOwnerBaseInputSchema.safeExtend(
+	{
+		file: attachmentFormFileSchema,
+	},
+);
 
 function attachmentFileRefinement(
 	data: AttachmentUploadInput,
 	ctx: z.RefinementCtx,
 ) {
-	const inferredType = getAttachmentTypeFromFile({
-		fileName: data.fileName,
-		mimeType: data.mimeType,
-	});
+	try {
+		assertAttachmentFileAccepted(data);
+	} catch (error) {
+		if (!(error instanceof Error)) {
+			throw error;
+		}
 
-	if (!inferredType) {
 		ctx.addIssue({
 			code: "custom",
-			path: ["fileName"],
-			message: ATTACHMENT_ERRORS.INVALID_FILE_TYPE,
+			path:
+				error.message === ATTACHMENT_ERRORS.FILE_TOO_LARGE
+					? ["fileSize"]
+					: ["fileName"],
+			message: error.message,
 		});
 	}
 
-	if (data.fileSize > ATTACHMENT_MAX_FILE_SIZE_BYTES) {
-		ctx.addIssue({
-			code: "custom",
-			path: ["fileSize"],
-			message: ATTACHMENT_ERRORS.FILE_TOO_LARGE,
-		});
-	}
+	try {
+		assertAttachmentTypeMatchesFile(data);
+	} catch (error) {
+		if (!(error instanceof Error)) {
+			throw error;
+		}
 
-	if (inferredType && data.type !== inferredType) {
 		ctx.addIssue({
 			code: "custom",
 			path: ["type"],
-			message: ATTACHMENT_ERRORS.TYPE_MISMATCH,
+			message: error.message,
+		});
+	}
+}
+
+function attachmentFormFileRefinement(
+	data: AttachmentFormInput,
+	ctx: z.RefinementCtx,
+) {
+	if (!data.file) {
+		ctx.addIssue({
+			code: "custom",
+			path: ["file"],
+			message: "Arquivo é obrigatório",
+		});
+		return;
+	}
+
+	try {
+		assertAttachmentFileAccepted({
+			fileName: data.file.name,
+			mimeType: data.file.type,
+			fileSize: data.file.size,
+		});
+	} catch (error) {
+		if (!(error instanceof Error)) {
+			throw error;
+		}
+
+		ctx.addIssue({
+			code: "custom",
+			path: ["file"],
+			message: error.message,
 		});
 	}
 }
@@ -113,6 +146,12 @@ export const attachmentOwnerInputSchema =
 	attachmentOwnerBaseInputSchema.superRefine(attachmentOwnerRefinement);
 
 export const attachmentListInputSchema = attachmentOwnerInputSchema;
+
+export const attachmentFormInputSchema =
+	attachmentFormBaseInputSchema.superRefine((data, ctx) => {
+		attachmentOwnerRefinement(data, ctx);
+		attachmentFormFileRefinement(data, ctx);
+	});
 
 export const attachmentUploadInputSchema = attachmentOwnerBaseInputSchema
 	.safeExtend(attachmentFileBaseInputSchema.shape)
@@ -127,6 +166,7 @@ export const attachmentOwnerKindSchema = z.enum(ATTACHMENT_OWNER_KINDS);
 
 export type AttachmentOwnerInput = z.infer<typeof attachmentOwnerInputSchema>;
 export type AttachmentListInput = z.infer<typeof attachmentListInputSchema>;
+export type AttachmentFormInput = z.infer<typeof attachmentFormInputSchema>;
 export type AttachmentUploadInput = z.infer<typeof attachmentUploadInputSchema>;
 export type AttachmentIdInput = z.infer<typeof attachmentIdInputSchema>;
 export type AttachmentOwnerKind = z.infer<typeof attachmentOwnerKindSchema>;

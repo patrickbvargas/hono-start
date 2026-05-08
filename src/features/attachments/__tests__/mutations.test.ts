@@ -84,7 +84,6 @@ describe("attachment data mutations", () => {
 					mimeType: "application/pdf",
 					fileSize: 1024,
 					fileBase64: "dGVzdA==",
-					isActive: true,
 				},
 			}),
 		).resolves.toEqual({ success: true });
@@ -122,7 +121,6 @@ describe("attachment data mutations", () => {
 					mimeType: "application/pdf",
 					fileSize: 1024,
 					fileBase64: "dGVzdA==",
-					isActive: true,
 				},
 			}),
 		).rejects.toThrow(ATTACHMENT_ERRORS.TYPE_NOT_FOUND);
@@ -144,7 +142,6 @@ describe("attachment data mutations", () => {
 					mimeType: "application/pdf",
 					fileSize: 1024,
 					fileBase64: "dGVzdA==",
-					isActive: true,
 				},
 			}),
 		).rejects.toThrow(ATTACHMENT_ERRORS.TYPE_INACTIVE);
@@ -165,7 +162,6 @@ describe("attachment data mutations", () => {
 					mimeType: "application/pdf",
 					fileSize: 1024,
 					fileBase64: "dGVzdA==",
-					isActive: true,
 				},
 			}),
 		).rejects.toThrow(ATTACHMENT_ERRORS.STORAGE_UPLOAD_FAILED);
@@ -187,7 +183,6 @@ describe("attachment data mutations", () => {
 					mimeType: "application/pdf",
 					fileSize: 1024,
 					fileBase64: "dGVzdA==",
-					isActive: true,
 				},
 			}),
 		).rejects.toThrow(ATTACHMENT_ERRORS.PERSISTENCE_FAILED);

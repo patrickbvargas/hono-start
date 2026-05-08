@@ -9,6 +9,10 @@ import { prisma } from "@/shared/lib/prisma";
 import type { MutationReturnType } from "@/shared/types/api";
 import { ATTACHMENT_ERRORS } from "../constants/errors";
 import {
+	assertAttachmentTypeCanBeSelected,
+	assertAttachmentTypeExists,
+} from "../rules/lookups";
+import {
 	type AttachmentUploadInput,
 	getAttachmentOwnerContext,
 } from "../schemas/form";
@@ -21,13 +25,8 @@ export async function createAttachment(params: {
 }): Promise<MutationReturnType> {
 	const type = await getAttachmentTypeByValue(params.input.type);
 
-	if (!type) {
-		throw new Error(ATTACHMENT_ERRORS.TYPE_NOT_FOUND);
-	}
-
-	if (!type.isActive) {
-		throw new Error(ATTACHMENT_ERRORS.TYPE_INACTIVE);
-	}
+	assertAttachmentTypeExists(type);
+	assertAttachmentTypeCanBeSelected(type);
 
 	const owner = getAttachmentOwnerContext(params.input);
 	const storagePath = createAttachmentStoragePath({
@@ -59,7 +58,7 @@ export async function createAttachment(params: {
 					storagePath,
 					mimeType: params.input.mimeType,
 					fileSize: params.input.fileSize,
-					isActive: params.input.isActive,
+					isActive: true,
 					...(owner.ownerKind === "client" ? { clientId: owner.ownerId } : {}),
 					...(owner.ownerKind === "employee"
 						? { employeeId: owner.ownerId }

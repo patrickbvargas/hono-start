@@ -1,18 +1,15 @@
 import type {
+	AttachmentFormInput,
 	AttachmentOwnerInput,
-	AttachmentUploadInput,
 } from "../schemas/form";
+
+export type AttachmentFormValues = AttachmentFormInput;
 
 export function defaultAttachmentCreateValues(
 	owner: AttachmentOwnerInput,
-): AttachmentUploadInput {
+): AttachmentFormValues {
 	return {
 		...owner,
-		type: "",
-		fileName: "",
-		mimeType: "",
-		fileSize: 0,
-		fileBase64: "",
-		isActive: true,
+		file: null,
 	};
 }

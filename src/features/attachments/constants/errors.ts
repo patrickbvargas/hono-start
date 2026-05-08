@@ -1,11 +1,11 @@
 export const ATTACHMENT_ERRORS = {
 	DELETE_FAILED: "Não foi possível excluir anexo.",
 	DETAIL_NOT_FOUND: "Anexo não encontrado.",
+	CONTRACT_NOT_WRITABLE: "Contrato não permite novos anexos.",
 	EMPLOYEE_ACCESS_DENIED:
 		"Você não tem permissão para acessar anexos deste colaborador.",
 	FILE_TOO_LARGE: "Arquivo deve ter no máximo 10 MB.",
 	INVALID_FILE_TYPE: "Formato de arquivo inválido. Use PDF, JPG ou PNG.",
-	LOOKUP_GET_FAILED: "Não foi possível carregar tipos de anexo.",
 	LIST_FAILED: "Não foi possível carregar anexos.",
 	OWNER_NOT_FOUND: "Contexto do anexo não encontrado.",
 	PERSISTENCE_FAILED: "Não foi possível salvar metadados do anexo.",

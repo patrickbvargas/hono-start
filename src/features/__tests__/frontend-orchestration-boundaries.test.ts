@@ -42,10 +42,6 @@ describe("frontend orchestration boundaries", () => {
 	it("keeps feature query consumption hooks consolidated in use-data files", () => {
 		const optionHooks = [
 			{
-				hookFile: "src/features/attachments/hooks/use-data.ts",
-				hookName: "useAttachmentOptions",
-			},
-			{
 				hookFile: "src/features/audit-logs/hooks/use-data.ts",
 				hookName: "useAuditLogOptions",
 			},
@@ -140,11 +136,6 @@ describe("frontend orchestration boundaries", () => {
 
 	it("keeps option hooks on suspense-first feature data consumption", () => {
 		const optionHooks = [
-			{
-				hookFile: "src/features/attachments/hooks/use-data.ts",
-				hookName: "useAttachmentOptions",
-				expectedQueryHook: "useSuspenseQuery(",
-			},
 			{
 				hookFile: "src/features/dashboard/hooks/use-data.ts",
 				hookName: "useDashboardOptions",
