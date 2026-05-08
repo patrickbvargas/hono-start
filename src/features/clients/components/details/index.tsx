@@ -1,4 +1,5 @@
 import * as React from "react";
+import { AttachmentSection } from "@/features/attachments";
 import { EntityActions } from "@/shared/components/entity-actions";
 import {
 	type DetailFieldItem,
@@ -119,6 +120,10 @@ const ClientDetailsContent = ({
 					<EntityDetail.Fields items={contactInfo} />
 				</EntityDetail.Section>
 				<EntityDetail.Separator />
+				<EntityDetail.Section title="Anexos">
+					<AttachmentSection canUpload ownerId={id} ownerKind="client" />
+				</EntityDetail.Section>
+				<EntityDetail.Separator />
 				<EntityDetail.Section title="Registro">
 					<EntityDetail.Fields items={registerInfo} />
 				</EntityDetail.Section>
@@ -142,6 +147,14 @@ const ClientDetailsFallback = () => (
 				<EntityDetail.SkeletonFields rows={2} />
 			</EntityDetail.Section>
 			<EntityDetail.Separator />
+			<EntityDetail.Section title="Anexos">
+				<AttachmentSection
+					canUpload
+					ownerId={idPlaceholder}
+					ownerKind="client"
+				/>
+			</EntityDetail.Section>
+			<EntityDetail.Separator />
 			<EntityDetail.Section title="Registro">
 				<EntityDetail.SkeletonFields rows={2} />
 			</EntityDetail.Section>
@@ -149,3 +162,5 @@ const ClientDetailsFallback = () => (
 		<EntityDetail.Footer />
 	</EntityDetail.Content>
 );
+
+const idPlaceholder = 0 as EntityId;

@@ -1,7 +1,8 @@
 import { FileIcon, PlusIcon, Trash2Icon } from "lucide-react";
-import { Button, Separator, Spinner } from "@/shared/components/ui";
+import { Button, Separator, Skeleton } from "@/shared/components/ui";
 import { useOverlay } from "@/shared/hooks/use-overlay";
 import { formatter } from "@/shared/lib/formatter";
+import { cn } from "@/shared/lib/utils";
 import type { EntityId } from "@/shared/schemas/entity";
 import { isAdminSession, useLoggedUserSessionStore } from "@/shared/session";
 import { useAttachments } from "../../hooks/use-data";
@@ -14,6 +15,7 @@ import { AttachmentForm } from "../form";
 
 interface AttachmentSectionProps {
 	canUpload?: boolean;
+	className?: string;
 	ownerId: EntityId;
 	ownerKind: AttachmentOwnerKind;
 }
@@ -32,6 +34,7 @@ function formatFileSize(bytes: number) {
 
 export const AttachmentSection = ({
 	canUpload = true,
+	className,
 	ownerId,
 	ownerKind,
 }: AttachmentSectionProps) => {
@@ -41,23 +44,19 @@ export const AttachmentSection = ({
 	const { overlay } = useOverlay<EntityId>();
 
 	return (
-		<section className="flex flex-col gap-3">
-			<div className="flex items-center justify-between gap-2">
-				<h3 className="text-sm font-semibold uppercase tracking-wider text-foreground">
-					Anexos
-				</h3>
-				{canUpload ? (
+		<section className={cn("flex flex-col gap-3", className)}>
+			{canUpload ? (
+				<div className="flex justify-end">
 					<Button size="sm" onClick={() => overlay.create.open()}>
 						<PlusIcon size={16} />
 						Novo anexo
 					</Button>
-				) : null}
-			</div>
+				</div>
+			) : null}
 
 			{isPending ? (
-				<div className="flex items-center gap-2 rounded-md border px-3 py-3 text-sm text-muted-foreground">
-					<Spinner />
-					Carregando anexos...
+				<div className="rounded-md border">
+					<AttachmentSectionSkeleton />
 				</div>
 			) : null}
 
@@ -135,3 +134,45 @@ export const AttachmentSection = ({
 		</section>
 	);
 };
+
+function AttachmentSectionSkeleton() {
+	const skeletonRows = [
+		{
+			key: "attachment-skeleton-primary",
+			fileWidth: "w-40",
+			metaWidth: "w-52",
+			showSeparator: true,
+		},
+		{
+			key: "attachment-skeleton-secondary",
+			fileWidth: "w-32",
+			metaWidth: "w-44",
+			showSeparator: false,
+		},
+	];
+
+	return (
+		<div className="px-3 py-3">
+			<div className="flex flex-col gap-3">
+				{skeletonRows.map((row) => (
+					<div key={row.key}>
+						<div className="flex items-start justify-between gap-3">
+							<div className="min-w-0 flex-1 space-y-2">
+								<div className="flex items-center gap-2">
+									<Skeleton className="h-4 w-4 rounded-sm" />
+									<Skeleton className={cn("h-4 rounded-sm", row.fileWidth)} />
+								</div>
+								<Skeleton className={cn("h-3 rounded-sm", row.metaWidth)} />
+							</div>
+							<div className="flex shrink-0 items-center gap-2">
+								<Skeleton className="h-8 w-16 rounded-md" />
+								<Skeleton className="h-8 w-8 rounded-md" />
+							</div>
+						</div>
+						{row.showSeparator ? <Separator className="mt-3" /> : null}
+					</div>
+				))}
+			</div>
+		</div>
+	);
+}

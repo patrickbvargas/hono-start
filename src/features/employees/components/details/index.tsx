@@ -1,5 +1,6 @@
 import { CopyIcon } from "lucide-react";
 import * as React from "react";
+import { AttachmentSection } from "@/features/attachments";
 import { EntityActions } from "@/shared/components/entity-actions";
 import {
 	type DetailFieldItem,
@@ -195,6 +196,10 @@ const EmployeeDetailsContent = ({
 					<EntityDetail.Fields items={financialInfo} />
 				</EntityDetail.Section>
 				<EntityDetail.Separator />
+				<EntityDetail.Section title="Anexos">
+					<AttachmentSection canUpload ownerId={id} ownerKind="employee" />
+				</EntityDetail.Section>
+				<EntityDetail.Separator />
 				<EntityDetail.Section title="Registro">
 					<EntityDetail.Fields items={registerInfo} />
 				</EntityDetail.Section>
@@ -321,6 +326,14 @@ const EmployeeDetailsFallback = () => (
 				<EntityDetail.SkeletonFields rows={1} />
 			</EntityDetail.Section>
 			<EntityDetail.Separator />
+			<EntityDetail.Section title="Anexos">
+				<AttachmentSection
+					canUpload
+					ownerId={idPlaceholder}
+					ownerKind="employee"
+				/>
+			</EntityDetail.Section>
+			<EntityDetail.Separator />
 			<EntityDetail.Section title="Registro">
 				<EntityDetail.SkeletonFields rows={2} />
 			</EntityDetail.Section>
@@ -328,3 +341,5 @@ const EmployeeDetailsFallback = () => (
 		<EntityDetail.Footer />
 	</EntityDetail.Content>
 );
+
+const idPlaceholder = 0 as EntityId;

@@ -112,7 +112,7 @@ function Footer({ children, ...props }: React.ComponentProps<"div">) {
 }
 
 function SkeletonTitle({ className }: React.ComponentProps<"div">) {
-	return <Skeleton className={cn("h-6 w-40", className)} />;
+	return <Skeleton className={cn("h-7 w-40", className)} />;
 }
 
 interface SectionProps {
