@@ -1,7 +1,7 @@
 # client-management Specification
 
 ## Purpose
-TBD - created by archiving change add-client-feature. Update Purpose after archive.
+Define the client-management contract for firm-scoped list, detail, create, update, delete, restore, lookup-option, and validation behavior within the shared entity-management workflow.
 ## Requirements
 ### Requirement: List clients
 The system SHALL display a paginated, sortable, filterable list of clients belonging to the authenticated user's firm, following the shared entity-management list contract.

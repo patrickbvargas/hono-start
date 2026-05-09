@@ -1,7 +1,7 @@
 # shared-ui-vendor-boundary Specification
 
 ## Purpose
-TBD - created by archiving change remove-heroui-from-project. Update Purpose after archive.
+Define the shared UI vendor boundary so live application code uses the shared shadcn-based UI layer, avoids legacy HeroUI compatibility imports, and preserves existing workflows during UI infrastructure changes.
 ## Requirements
 ### Requirement: Live UI code uses shared shadcn UI boundary
 The application SHALL consume reusable UI components from `@/shared/components/ui` or existing shared composites instead of the HeroUI compatibility layer.

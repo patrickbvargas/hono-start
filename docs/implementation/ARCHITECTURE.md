@@ -120,8 +120,8 @@ re-export barrel. The only feature barrel is the top-level
 
 Feature-specific extensions are allowed when they represent real product
 responsibility. For example, `remunerations` owns export orchestration because
-the remuneration route exposes report export behavior; that does not require
-unrelated slices to add export files.
+the remuneration route exposes remuneration export behavior; that does not
+require unrelated slices to add export files.
 
 ## Architectural Rules
 

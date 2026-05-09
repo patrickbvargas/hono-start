@@ -45,7 +45,7 @@ The software core includes:
 - remuneration calculation and review
 - attachment handling
 - audit history
-- report export
+- remuneration export
 
 ## Authentication Experience
 

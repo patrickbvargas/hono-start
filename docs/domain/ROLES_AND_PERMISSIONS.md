@@ -26,7 +26,7 @@
 | Edit remunerations | Yes | No |
 | Delete or restore remunerations | Yes | No |
 | View dashboard | Yes, firm-wide | Yes, scoped |
-| Export reports | Yes, firm-wide | Yes, scoped |
+| Export remunerations | Yes, firm-wide | Yes, scoped |
 | Upload and view attachments | Yes | Yes |
 | Delete attachments | Yes | No |
 | View audit log | Yes | No |

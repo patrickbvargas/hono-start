@@ -1,7 +1,7 @@
 # session-authorization Specification
 
 ## Purpose
-TBD - created by archiving change refactor-shared-session-boundaries. Update Purpose after archive.
+Define the shared session and authorization contract so authenticated actor shape, permission evaluation, tenant scope enforcement, and protected route gating remain consistent across client and server boundaries.
 ## Requirements
 ### Requirement: Shared logged-user session contract
 The system SHALL expose a shared session contract that represents the authenticated actor consistently across client and server session consumers, while allowing unauthenticated session reads to return no actor before route or server guards assert access. On the frontend, the authenticated actor MUST have exactly one browser-side source of truth so protected consumers do not depend on divergent client session caches.

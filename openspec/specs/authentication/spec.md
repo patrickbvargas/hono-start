@@ -1,7 +1,7 @@
 # authentication Specification
 
 ## Purpose
-TBD - created by archiving change implement-authentication-feature. Update Purpose after archive.
+Define the authentication feature contract for public credential flows, protected session gating, password reset, remembered sessions, authenticated password change, forced password rotation, and logout behavior.
 ## Requirements
 ### Requirement: Public authentication routes exist outside the authenticated shell
 The system SHALL expose `/login` and `/recuperar-senha` as public routes grouped under a TanStack Router pathless layout route at `_auth/route.tsx`. These routes SHALL render inside the shared public-auth container and SHALL NOT require an authenticated session or render the authenticated sidebar shell.

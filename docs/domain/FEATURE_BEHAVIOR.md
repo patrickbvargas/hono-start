@@ -98,7 +98,7 @@ The software core includes these feature areas:
 
 ### Export
 
-- Produces filtered report output for supported financial datasets.
+- Produces filtered remuneration report output.
 - Preserves the same scope restrictions applied in on-screen views.
 
 ## Route Inventory
@@ -116,8 +116,6 @@ The software core includes these feature areas:
 - `/contratos`
 - `/honorarios`
 - `/remuneracoes`
-- `/configuracoes`
-- `/suporte`
 
 ## Canonical Screen Behavior
 
@@ -181,7 +179,7 @@ The software core includes these feature areas:
 
 ### Export Expectations
 
-- Export supports remuneration, revenue, or fee data.
+- Export supports remuneration data.
 - Export supports PDF and spreadsheet output.
 - Export supports date-range filtering.
 - Export scope follows the role model.
@@ -225,7 +223,7 @@ The software core includes these feature areas:
 
 - As a user, I can see scoped dashboard and remuneration information relevant to me.
 - As an administrator, I can review firm-wide financial information.
-- As an administrator or authorized user, I can export scoped operational data.
+- As an administrator or authorized user, I can export scoped remuneration data.
 
 ### Administration And Audit
 
