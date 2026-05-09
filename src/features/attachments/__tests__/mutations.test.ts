@@ -2,17 +2,28 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ATTACHMENT_ERRORS } from "../constants/errors";
 
 const {
+	AttachmentStorageCapacityErrorMock,
 	createAuditLogMock,
 	getAttachmentTypeByValueMock,
+	isAttachmentStorageCapacityErrorMock,
 	prismaMock,
 	removeAttachmentFileMock,
 	uploadAttachmentFileMock,
 } = vi.hoisted(() => ({
+	AttachmentStorageCapacityErrorMock: class AttachmentStorageCapacityErrorMock extends Error {
+		code = "capacity_exceeded" as const;
+	},
 	createAuditLogMock: vi.fn(),
 	getAttachmentTypeByValueMock: vi.fn(),
+	isAttachmentStorageCapacityErrorMock: vi.fn(
+		(error: unknown) =>
+			error instanceof AttachmentStorageCapacityErrorMock &&
+			error.code === "capacity_exceeded",
+	),
 	prismaMock: {
 		attachment: {
 			create: vi.fn(),
+			delete: vi.fn(),
 			findFirst: vi.fn(),
 			update: vi.fn(),
 		},
@@ -32,6 +43,7 @@ vi.mock("@/features/audit-logs/data/mutations", () => ({
 
 vi.mock("@/shared/lib/attachment-storage", () => ({
 	createAttachmentStoragePath: vi.fn(() => "firms/1/client/9/test.pdf"),
+	isAttachmentStorageCapacityError: isAttachmentStorageCapacityErrorMock,
 	removeAttachmentFile: removeAttachmentFileMock,
 	uploadAttachmentFile: uploadAttachmentFileMock,
 }));
@@ -58,14 +70,21 @@ describe("attachment data mutations", () => {
 		prismaMock.attachment.findFirst.mockResolvedValue({
 			id: 50,
 			fileName: "contrato.pdf",
-			deletedAt: null,
+			firmId: 1,
+			storagePath: "firms/1/client/9/test.pdf",
 		});
+		prismaMock.attachment.delete.mockResolvedValue({});
 		prismaMock.attachment.update.mockResolvedValue({});
 		prismaMock.$transaction.mockImplementation(async (callback) =>
 			callback(prismaMock),
 		);
 		uploadAttachmentFileMock.mockResolvedValue({});
 		removeAttachmentFileMock.mockResolvedValue({});
+		isAttachmentStorageCapacityErrorMock.mockImplementation(
+			(error: unknown) =>
+				error instanceof AttachmentStorageCapacityErrorMock &&
+				error.code === "capacity_exceeded",
+		);
 	});
 
 	it("uploads storage object before persisting metadata and audits the write", async () => {
@@ -170,6 +189,29 @@ describe("attachment data mutations", () => {
 		expect(removeAttachmentFileMock).not.toHaveBeenCalled();
 	});
 
+	it("maps storage capacity failures to a clear attachment error", async () => {
+		uploadAttachmentFileMock.mockRejectedValue(
+			new AttachmentStorageCapacityErrorMock("quota exceeded"),
+		);
+
+		await expect(
+			createAttachment({
+				firmId: 1,
+				input: {
+					clientId: 9,
+					type: "PDF",
+					fileName: "contrato.pdf",
+					mimeType: "application/pdf",
+					fileSize: 1024,
+					fileBase64: "dGVzdA==",
+				},
+			}),
+		).rejects.toThrow(ATTACHMENT_ERRORS.STORAGE_CAPACITY_EXCEEDED);
+
+		expect(prismaMock.$transaction).not.toHaveBeenCalled();
+		expect(removeAttachmentFileMock).not.toHaveBeenCalled();
+	});
+
 	it("cleans up uploaded storage object when metadata persistence fails", async () => {
 		prismaMock.$transaction.mockRejectedValue(new Error("db failed"));
 
@@ -193,7 +235,7 @@ describe("attachment data mutations", () => {
 		});
 	});
 
-	it("soft-deletes attachments transactionally", async () => {
+	it("deletes attachment storage object before removing database metadata", async () => {
 		await expect(
 			deleteAttachment({
 				firmId: 1,
@@ -201,10 +243,26 @@ describe("attachment data mutations", () => {
 			}),
 		).resolves.toEqual({ success: true });
 
-		expect(prismaMock.attachment.update).toHaveBeenCalledWith({
-			where: { id: 50 },
-			data: { deletedAt: expect.any(Date) },
+		expect(removeAttachmentFileMock).toHaveBeenCalledWith({
+			path: "firms/1/client/9/test.pdf",
 		});
+		expect(prismaMock.attachment.delete).toHaveBeenCalledWith({
+			where: { id: 50 },
+		});
+	});
+
+	it("blocks database deletion when attachment storage removal fails", async () => {
+		removeAttachmentFileMock.mockRejectedValueOnce(new Error("storage down"));
+
+		await expect(
+			deleteAttachment({
+				firmId: 1,
+				id: 50,
+			}),
+		).rejects.toThrow(ATTACHMENT_ERRORS.STORAGE_DELETE_FAILED);
+
+		expect(prismaMock.attachment.delete).not.toHaveBeenCalled();
+		expect(prismaMock.$transaction).not.toHaveBeenCalled();
 	});
 
 	it("rejects delete when the attachment does not exist in firm scope", async () => {

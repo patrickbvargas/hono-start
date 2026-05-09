@@ -81,7 +81,8 @@
 ### Attachment
 
 - Belongs to one firm and exactly one owner context among client, employee, or contract.
-- Carries file name, file URL or path, attachment type, file size, and lifecycle state.
+- Carries file name, file URL or path, attachment type, and file size.
+- Attachment deletion permanently removes both the stored file and its database record.
 
 ### AuditLog
 

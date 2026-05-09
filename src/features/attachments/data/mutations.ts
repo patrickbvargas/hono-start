@@ -2,6 +2,7 @@ import type { AuditLogActor } from "@/features/audit-logs/data/mutations";
 import { createAuditLog } from "@/features/audit-logs/data/mutations";
 import {
 	createAttachmentStoragePath,
+	isAttachmentStorageCapacityError,
 	removeAttachmentFile,
 	uploadAttachmentFile,
 } from "@/shared/lib/attachment-storage";
@@ -45,7 +46,11 @@ export async function createAttachment(params: {
 		});
 	} catch (error) {
 		console.error("[createAttachment:upload]", error);
-		throw new Error(ATTACHMENT_ERRORS.STORAGE_UPLOAD_FAILED);
+		throw new Error(
+			isAttachmentStorageCapacityError(error)
+				? ATTACHMENT_ERRORS.STORAGE_CAPACITY_EXCEEDED
+				: ATTACHMENT_ERRORS.STORAGE_UPLOAD_FAILED,
+		);
 	}
 
 	try {
@@ -112,7 +117,8 @@ export async function deleteAttachment(params: {
 		select: {
 			id: true,
 			fileName: true,
-			deletedAt: true,
+			firmId: true,
+			storagePath: true,
 		},
 	});
 
@@ -120,10 +126,16 @@ export async function deleteAttachment(params: {
 		throw new Error(ATTACHMENT_ERRORS.DETAIL_NOT_FOUND);
 	}
 
+	try {
+		await removeAttachmentFile({ path: attachment.storagePath });
+	} catch (error) {
+		console.error("[deleteAttachment:storage]", error);
+		throw new Error(ATTACHMENT_ERRORS.STORAGE_DELETE_FAILED);
+	}
+
 	await prisma.$transaction(async (tx) => {
-		await tx.attachment.update({
+		await tx.attachment.delete({
 			where: { id: params.id },
-			data: { deletedAt: new Date() },
 		});
 
 		await createAuditLog(tx, {

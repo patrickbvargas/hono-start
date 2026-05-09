@@ -49,6 +49,7 @@ This file preserves canonical edge-case expectations for the product domain.
 |---|---|
 | File exceeds allowed size | The system rejects the upload |
 | File type is unsupported | The system rejects the upload |
+| Attachment storage object cannot be removed during delete | The system keeps the attachment record and shows a clear delete failure |
 
 ## Multi-Tenancy
 

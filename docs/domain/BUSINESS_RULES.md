@@ -142,6 +142,7 @@
 - Maximum attachment size is `10 MB`.
 - Exactly one attachment owner context is set per file: client, employee, or contract.
 - Attachment storage uses a persistent file-storage backend and retains file path or URL in the record.
+- Attachment deletion permanently removes both the storage object and the attachment record.
 
 ## Deletion and Restore Rules
 
@@ -150,6 +151,7 @@
 - Deletion must be blocked when active dependents would violate business consistency.
 - Cascading delete and restore behavior must preserve contract, fee, and remuneration consistency.
 - Attachments are retained rather than cascaded away with parent entity deletion.
+- Attachment deletion is a permanent removal exception and does not use soft delete.
 
 ## Deletion Protection Matrix
 

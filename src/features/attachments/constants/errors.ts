@@ -9,6 +9,8 @@ export const ATTACHMENT_ERRORS = {
 	LIST_FAILED: "Não foi possível carregar anexos.",
 	OWNER_NOT_FOUND: "Contexto do anexo não encontrado.",
 	PERSISTENCE_FAILED: "Não foi possível salvar metadados do anexo.",
+	STORAGE_CAPACITY_EXCEEDED:
+		"Armazenamento de anexos sem espaço disponível. Libere espaço e tente novamente.",
 	STORAGE_DELETE_FAILED: "Não foi possível excluir arquivo do anexo.",
 	STORAGE_UNAVAILABLE: "Armazenamento de anexos não está configurado.",
 	STORAGE_UPLOAD_FAILED: "Não foi possível enviar arquivo do anexo.",

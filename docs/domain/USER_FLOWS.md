@@ -103,3 +103,11 @@ This file preserves the canonical user workflows of the product. These flows des
 3. The user selects a supported file within the allowed size limit.
 4. On success, the file appears in the attachment list.
 5. On failure, the user sees a clear pt-BR error.
+
+## Delete An Attachment
+
+1. An administrator chooses the delete action for an attachment.
+2. The system removes the stored file from attachment storage.
+3. The system removes the attachment record.
+4. On success, the attachment no longer appears in the list.
+5. On failure, the system keeps the record unchanged and shows a clear pt-BR error.

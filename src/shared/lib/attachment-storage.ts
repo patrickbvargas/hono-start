@@ -2,6 +2,16 @@ import { env } from "@/shared/config/env";
 
 const STORAGE_ERROR = "Configuração de armazenamento de anexos indisponível";
 const SIGNED_URL_TTL_SECONDS = 60 * 60;
+const STORAGE_CAPACITY_ERROR_PATTERNS = [
+	"quota",
+	"capacity",
+	"limit exceeded",
+	"insufficient storage",
+	"storage full",
+	"out of space",
+] as const;
+
+type AttachmentStorageErrorCode = "capacity_exceeded" | "unknown";
 
 interface AttachmentStorageConfig {
 	baseUrl: string;
@@ -21,6 +31,22 @@ interface RemoveAttachmentFileParams {
 
 interface CreateAttachmentSignedUrlParams {
 	path: string;
+}
+
+class AttachmentStorageError extends Error {
+	code: AttachmentStorageErrorCode;
+	status?: number;
+
+	constructor(params: {
+		code: AttachmentStorageErrorCode;
+		message: string;
+		status?: number;
+	}) {
+		super(params.message);
+		this.name = "AttachmentStorageError";
+		this.code = params.code;
+		this.status = params.status;
+	}
 }
 
 function getAttachmentStorageConfig(): AttachmentStorageConfig {
@@ -52,6 +78,38 @@ async function readErrorMessage(response: Response) {
 	} catch {
 		return response.statusText;
 	}
+}
+
+function isStorageCapacityError(params: { message: string; status: number }) {
+	if ([413, 507, 509].includes(params.status)) {
+		return true;
+	}
+
+	const normalizedMessage = params.message.trim().toLowerCase();
+
+	return STORAGE_CAPACITY_ERROR_PATTERNS.some((pattern) =>
+		normalizedMessage.includes(pattern),
+	);
+}
+
+function createAttachmentStorageError(response: Response, message: string) {
+	return new AttachmentStorageError({
+		code: isStorageCapacityError({
+			message,
+			status: response.status,
+		})
+			? "capacity_exceeded"
+			: "unknown",
+		message,
+		status: response.status,
+	});
+}
+
+export function isAttachmentStorageCapacityError(error: unknown) {
+	return (
+		error instanceof AttachmentStorageError &&
+		error.code === "capacity_exceeded"
+	);
 }
 
 export function createAttachmentStoragePath(params: {
@@ -97,7 +155,8 @@ export async function uploadAttachmentFile({
 	);
 
 	if (!response.ok) {
-		throw new Error(await readErrorMessage(response));
+		const message = await readErrorMessage(response);
+		throw createAttachmentStorageError(response, message);
 	}
 }
 
@@ -114,7 +173,8 @@ export async function removeAttachmentFile({
 	);
 
 	if (!response.ok && response.status !== 404) {
-		throw new Error(await readErrorMessage(response));
+		const message = await readErrorMessage(response);
+		throw createAttachmentStorageError(response, message);
 	}
 }
 
@@ -136,7 +196,8 @@ export async function createAttachmentSignedUrl({
 		);
 
 		if (!response.ok) {
-			throw new Error(await readErrorMessage(response));
+			const message = await readErrorMessage(response);
+			throw createAttachmentStorageError(response, message);
 		}
 
 		const payload = (await response.json()) as {
