@@ -184,6 +184,10 @@ describe("employee lookup-backed writes", () => {
 
 	it("allows unchanged inactive persisted selections on update", async () => {
 		getEmployeeByIdMock.mockResolvedValue(baseEmployee());
+		prismaMock.user.findFirst.mockResolvedValue({
+			id: "auth-user-1",
+			isAccessEnabled: true,
+		});
 		getEmployeeTypeByValueMock.mockResolvedValue(
 			baseType({ id: 10, isActive: false }),
 		);
@@ -209,6 +213,63 @@ describe("employee lookup-backed writes", () => {
 		).resolves.toEqual({ success: true });
 
 		expect(prismaMock.employee.update).toHaveBeenCalledOnce();
+	});
+
+	it("syncs auth profile and revokes access when employee email changes", async () => {
+		getEmployeeByIdMock.mockResolvedValue(baseEmployee());
+		prismaMock.user.findFirst.mockResolvedValue({
+			id: "auth-user-1",
+			isAccessEnabled: true,
+		});
+		getEmployeeTypeByValueMock.mockResolvedValue(baseType());
+		getUserRoleByValueMock.mockResolvedValue(baseRole());
+
+		await expect(
+			updateEmployee({
+				actor: {
+					id: 9,
+					name: "Admin",
+					email: "admin@example.com",
+				},
+				firmId: 1,
+				input: {
+					id: 1,
+					fullName: "Maria Souza",
+					email: "maria.souza@example.com",
+					oabNumber: "RS123456",
+					remunerationPercent: 0.4,
+					referrerPercent: 0.2,
+					type: "LAWYER",
+					role: "USER",
+					isActive: true,
+				},
+			}),
+		).resolves.toEqual({ success: true });
+
+		expect(prismaMock.user.update).toHaveBeenCalledWith({
+			where: {
+				id: "auth-user-1",
+			},
+			data: {
+				name: "Maria Souza",
+				email: "maria.souza@example.com",
+				isAccessEnabled: false,
+			},
+		});
+		expect(prismaMock.session.deleteMany).toHaveBeenCalledWith({
+			where: {
+				userId: "auth-user-1",
+			},
+		});
+		expect(createAuditLogMock).toHaveBeenCalledWith(
+			prismaMock,
+			expect.objectContaining({
+				changeData: expect.objectContaining({
+					authAccessRevoked: true,
+					loginIdentifierChanged: true,
+				}),
+			}),
+		);
 	});
 
 	it("blocks delete when active remuneration dependencies exist", async () => {

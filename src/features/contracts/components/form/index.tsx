@@ -360,9 +360,8 @@ function ContractFormContent({
 														name={`revenues[${i}].paymentStartDate`}
 													>
 														{(field) => (
-															<field.Input
+															<field.DatePicker
 																label="Início do pagamento"
-																type="date"
 																isRequired
 															/>
 														)}

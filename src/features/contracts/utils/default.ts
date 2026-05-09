@@ -16,7 +16,7 @@ export const defaultContractAssignmentValues = (): ContractAssignmentInput => ({
 export const defaultContractRevenueValues = (): ContractRevenueInput => ({
 	type: "",
 	totalValue: 0,
-	downPaymentValue: null,
+	downPaymentValue: 0,
 	paymentStartDate: "",
 	totalInstallments: 1,
 	isActive: true,
@@ -57,7 +57,7 @@ export const defaultContractUpdateValues = (
 		id: revenue.id,
 		type: revenue.typeValue,
 		totalValue: revenue.totalValue,
-		downPaymentValue: revenue.downPaymentValue,
+		downPaymentValue: revenue.downPaymentValue ?? 0,
 		paymentStartDate: revenue.paymentStartDate.slice(0, 10),
 		totalInstallments: revenue.totalInstallments,
 		isActive: revenue.isActive,

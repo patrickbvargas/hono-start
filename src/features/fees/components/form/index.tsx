@@ -113,7 +113,14 @@ function FeeFormFields({
 		<EntityForm state={state} title={title} footer={<form.Submit />}>
 			<FormSection>
 				<FieldGroup className="grid gap-5 sm:grid-cols-2">
-					<form.AppField name="contractId">
+					<form.AppField
+						name="contractId"
+						listeners={{
+							onChange: () => {
+								form.setFieldValue("revenueId", "");
+							},
+						}}
+					>
 						{(field) => (
 							<field.Autocomplete
 								label="Contrato"
@@ -131,6 +138,12 @@ function FeeFormFields({
 								label="Receita"
 								options={revenues}
 								isRequired
+								isDisabled={!contractId}
+								placeholder={
+									contractId
+										? "Selecionar item..."
+										: "Selecione contrato primeiro"
+								}
 							/>
 						)}
 					</form.AppField>

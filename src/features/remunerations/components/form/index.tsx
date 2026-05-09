@@ -1,7 +1,10 @@
+import { Suspense } from "react";
 import { EntityForm } from "@/shared/components/entity-form";
-import { FieldGroup } from "@/shared/components/ui";
+import { FormFieldSkeleton } from "@/shared/components/form-field-skeleton";
+import { FieldGroup, Skeleton } from "@/shared/components/ui";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
+import { useRemuneration } from "../../hooks/use-data";
 import { useRemunerationForm } from "../../hooks/use-form";
 
 interface RemunerationFormProps {
@@ -15,8 +18,22 @@ export const RemunerationForm = ({
 	state,
 	onSuccess,
 }: RemunerationFormProps) => {
+	return (
+		<Suspense fallback={<RemunerationFormSkeleton state={state} />}>
+			<RemunerationFormContent id={id} state={state} onSuccess={onSuccess} />
+		</Suspense>
+	);
+};
+
+function RemunerationFormContent({
+	id,
+	state,
+	onSuccess,
+}: RemunerationFormProps) {
+	const { remuneration } = useRemuneration(id);
 	const { form } = useRemunerationForm({
 		id,
+		initialValue: remuneration,
 		onSuccess,
 	});
 
@@ -58,4 +75,21 @@ export const RemunerationForm = ({
 			</EntityForm>
 		</form.Form>
 	);
-};
+}
+
+function RemunerationFormSkeleton({
+	state,
+}: Pick<RemunerationFormProps, "state">) {
+	return (
+		<EntityForm
+			state={state}
+			title="Editar remuneração"
+			footer={<Skeleton className="h-9 w-28 rounded-md" />}
+		>
+			<FieldGroup className="grid gap-5 sm:grid-cols-2">
+				<FormFieldSkeleton labelWidth="w-10" />
+				<FormFieldSkeleton labelWidth="w-28" />
+			</FieldGroup>
+		</EntityForm>
+	);
+}

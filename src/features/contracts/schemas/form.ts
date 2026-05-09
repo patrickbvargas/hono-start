@@ -44,8 +44,12 @@ const contractBaseInputSchema = z.object({
 	notes: z.string().trim().optional().or(z.literal("")),
 	allowStatusChange: z.boolean(),
 	isActive: z.boolean(),
-	assignments: z.array(contractAssignmentInputSchema),
-	revenues: z.array(contractRevenueInputSchema),
+	assignments: z
+		.array(contractAssignmentInputSchema)
+		.min(1, "Informe pelo menos um colaborador"),
+	revenues: z
+		.array(contractRevenueInputSchema)
+		.min(1, "Informe pelo menos uma receita"),
 });
 
 type ContractBaseInput = z.output<typeof contractBaseInputSchema>;

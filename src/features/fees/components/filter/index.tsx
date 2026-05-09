@@ -32,10 +32,10 @@ export const FeeFilter = () => {
 					{(field) => <field.Autocomplete label="Receita" options={revenues} />}
 				</form.AppField>
 				<form.AppField name="dateFrom">
-					{(field) => <field.Input label="Pagamento de" type="date" />}
+					{(field) => <field.DatePicker label="Pagamento de" />}
 				</form.AppField>
 				<form.AppField name="dateTo">
-					{(field) => <field.Input label="Pagamento até" type="date" />}
+					{(field) => <field.DatePicker label="Pagamento até" />}
 				</form.AppField>
 				<form.AppField name="active">
 					{(field) => (

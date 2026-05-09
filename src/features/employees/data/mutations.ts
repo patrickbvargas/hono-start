@@ -96,6 +96,10 @@ async function createOrUpdateCredentialAccount(params: {
 	});
 }
 
+function normalizeNullableString(value: string | null | undefined) {
+	return value?.trim() || null;
+}
+
 export async function createEmployee({
 	actor,
 	firmId,
@@ -166,6 +170,8 @@ export async function updateEmployee({
 	assertRoleCanBeSelected(role, employee.roleId);
 
 	if (!actor) {
+		const nextOabNumber = normalizeNullableString(input.oabNumber);
+
 		await prisma.employee.update({
 			where: { id: input.id },
 			data: {
@@ -173,7 +179,7 @@ export async function updateEmployee({
 				email: input.email,
 				typeId: type.id,
 				roleId: role.id,
-				oabNumber: input.oabNumber || null,
+				oabNumber: nextOabNumber,
 				remunerationPercentage: input.remunerationPercent,
 				referralPercentage: input.referrerPercent,
 				isActive: input.isActive,
@@ -184,6 +190,21 @@ export async function updateEmployee({
 	}
 
 	await prisma.$transaction(async (tx) => {
+		const authUser = await tx.user.findFirst({
+			where: {
+				employeeId: input.id,
+			},
+			select: {
+				id: true,
+				isAccessEnabled: true,
+			},
+		});
+		const emailChanged = employee.email !== input.email;
+		const nextOabNumber = normalizeNullableString(input.oabNumber);
+		const oabChanged =
+			normalizeNullableString(employee.oabNumber) !== nextOabNumber;
+		const shouldRevokeAccess = emailChanged;
+
 		await tx.employee.update({
 			where: { id: input.id },
 			data: {
@@ -191,12 +212,35 @@ export async function updateEmployee({
 				email: input.email,
 				typeId: type.id,
 				roleId: role.id,
-				oabNumber: input.oabNumber || null,
+				oabNumber: nextOabNumber,
 				remunerationPercentage: input.remunerationPercent,
 				referralPercentage: input.referrerPercent,
 				isActive: input.isActive,
 			},
 		});
+
+		if (authUser) {
+			await tx.user.update({
+				where: {
+					id: authUser.id,
+				},
+				data: {
+					name: input.fullName,
+					email: input.email,
+					isAccessEnabled: shouldRevokeAccess
+						? false
+						: authUser.isAccessEnabled,
+				},
+			});
+
+			if (shouldRevokeAccess) {
+				await tx.session.deleteMany({
+					where: {
+						userId: authUser.id,
+					},
+				});
+			}
+		}
 
 		await createAuditLog(tx, {
 			firmId,
@@ -205,7 +249,12 @@ export async function updateEmployee({
 			entityType: "Employee",
 			entityId: input.id,
 			entityName: input.fullName,
-			changeData: { before: employee, after: input },
+			changeData: {
+				before: employee,
+				after: input,
+				authAccessRevoked: shouldRevokeAccess,
+				loginIdentifierChanged: emailChanged || oabChanged,
+			},
 			description: `Updated employee ${input.fullName}.`,
 		});
 	});

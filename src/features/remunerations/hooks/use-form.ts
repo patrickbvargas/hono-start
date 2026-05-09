@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as React from "react";
 import { useAppForm } from "@/shared/hooks/use-app-form";
 import {
@@ -8,31 +8,29 @@ import {
 import { toast } from "@/shared/lib/toast";
 import type { EntityId } from "@/shared/schemas/entity";
 import { updateRemunerationMutationOptions } from "../api/mutations";
-import {
-	getRemunerationByIdQueryOptions,
-	remunerationKeys,
-} from "../api/queries";
+import { remunerationKeys } from "../api/queries";
 import { remunerationUpdateInputSchema } from "../schemas/form";
-import { defaultRemunerationUpdateValues } from "../utils/default";
+import type { Remuneration } from "../schemas/model";
 
 interface UseRemunerationFormOptions {
 	id: EntityId;
+	initialValue?: Remuneration;
 	onSuccess?: () => void;
 }
 
 export function useRemunerationForm({
 	id,
+	initialValue,
 	onSuccess,
 }: UseRemunerationFormOptions) {
 	const queryClient = useQueryClient();
 	const updateMutation = useMutation(updateRemunerationMutationOptions());
-	const { data } = useQuery(getRemunerationByIdQueryOptions(id));
 
 	const form = useAppForm({
 		defaultValues: {
-			id,
-			amount: 0,
-			effectivePercentage: 0,
+			id: initialValue?.id ?? id,
+			amount: initialValue?.amount ?? 0,
+			effectivePercentage: initialValue?.effectivePercentage ?? 0,
 		},
 		validators: {
 			onSubmit: remunerationUpdateInputSchema,
@@ -51,10 +49,14 @@ export function useRemunerationForm({
 	});
 
 	React.useEffect(() => {
-		if (data) {
-			form.reset(defaultRemunerationUpdateValues(data));
+		if (initialValue) {
+			form.reset({
+				id: initialValue.id,
+				amount: initialValue.amount,
+				effectivePercentage: initialValue.effectivePercentage,
+			});
 		}
-	}, [data, form]);
+	}, [form, initialValue]);
 
 	return { form };
 }

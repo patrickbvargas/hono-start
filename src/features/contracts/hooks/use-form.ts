@@ -50,6 +50,9 @@ export function useContractForm({
 				? contractUpdateInputSchema
 				: contractCreateInputSchema,
 		},
+		onSubmitInvalid: () => {
+			toast.danger("Revise os campos obrigatórios do contrato.");
+		},
 		onSubmit: async ({ value }) => {
 			try {
 				if (isEditing) {
