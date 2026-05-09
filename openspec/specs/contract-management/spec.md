@@ -18,7 +18,8 @@ The system SHALL display a paginated, sortable, filterable list of contracts ava
 
 #### Scenario: Contract list columns reflect the aggregate summary
 - **WHEN** the contracts list is loaded
-- **THEN** the table shows columns for process number, client, legal area, contract status, fee percentage, active state, and created date
+- **THEN** the table shows the internal contract id in the first column
+- **AND** the table also shows columns for process number, client, legal area, contract status, fee percentage, active state, and created date
 
 #### Scenario: Query by process number or client name
 - **WHEN** a user enters a free-text query in the contracts list
@@ -41,6 +42,11 @@ The system SHALL display a paginated, sortable, filterable list of contracts ava
 #### Scenario: Deleted-state and active-state filters remain independent
 - **WHEN** a user changes the deleted-state filter or the active-state filter
 - **THEN** the system applies the selected filter independently from the other state filter
+
+#### Scenario: Sort by internal id
+- **WHEN** a user clicks the sortable `#` header in the contracts list
+- **THEN** the list reloads sorted by contract id in ascending order
+- **AND** clicking again toggles to descending order
 
 #### Scenario: Sort and pagination state persist in the URL
 - **WHEN** a user changes sorting, filtering, or page

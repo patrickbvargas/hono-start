@@ -43,11 +43,11 @@ export const RemunerationTable = ({
 
 		return [
 			c.accessor("id", {
-				header: "ID",
+				header: "#",
 				cell: ({ row }) => (
 					<EntityIdTrigger id={row.original.id} onView={onView} />
 				),
-				enableSorting: false,
+				enableSorting: REMUNERATION_ALLOWED_SORT_COLUMNS.includes("id"),
 				meta: {
 					headerClassName: "w-18",
 					cellClassName: "whitespace-nowrap",

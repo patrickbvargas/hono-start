@@ -6,5 +6,6 @@ export const REMUNERATION_ALLOWED_SORT_COLUMNS: NonEmptyKeys<Remuneration> = [
 	"createdAt",
 	"effectivePercentage",
 	"employeeName",
+	"id",
 	"paymentDate",
 ] as const;

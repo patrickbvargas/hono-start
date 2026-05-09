@@ -5,6 +5,7 @@ export const CONTRACT_ALLOWED_SORT_COLUMNS: NonEmptyKeys<ContractSummary> = [
 	"client",
 	"createdAt",
 	"feePercentage",
+	"id",
 	"legalArea",
 	"processNumber",
 	"status",

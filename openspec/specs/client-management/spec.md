@@ -8,7 +8,8 @@ The system SHALL display a paginated, sortable, filterable list of clients belon
 
 #### Scenario: Default list view
 - **WHEN** an authenticated user navigates to the clients route
-- **THEN** the system displays a table with columns for client name, document, type, active status, and created date
+- **THEN** the system displays a table whose first column shows the internal client id
+- **AND** the table also shows columns for client name, document, type, active status, and created date
 - **AND** the list is paginated with the default page size
 
 #### Scenario: Filter by name or document
@@ -26,6 +27,11 @@ The system SHALL display a paginated, sortable, filterable list of clients belon
 #### Scenario: Filter by active state
 - **WHEN** a user applies an active or inactive client filter
 - **THEN** the table applies the `isActive` constraint independently from the deleted-state filter
+
+#### Scenario: Sort by internal id
+- **WHEN** a user clicks the sortable `#` header in the clients list
+- **THEN** the list reloads sorted by client id in ascending order
+- **AND** clicking again toggles to descending order
 
 #### Scenario: Sort and pagination state persist in the URL
 - **WHEN** a user changes sorting, filters, or page

@@ -78,6 +78,7 @@ export async function getClients({
 
 	const sortMap: Record<string, object> = {
 		fullName: { fullName: search.direction },
+		id: { id: search.direction },
 		document: { document: search.direction },
 		type: { type: { label: search.direction } },
 		isActive: { isActive: search.direction },

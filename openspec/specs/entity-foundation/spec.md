@@ -48,6 +48,12 @@ The system SHALL keep clear ownership boundaries between feature slices, routes,
 - **AND** activating that id SHALL open the same details drawer flow used by the row-level view action
 - **AND** the row actions menu SHALL preserve a details fallback action for the same record
 
+#### Scenario: Equivalent entity tables expose sortable id headers without losing the details entrypoint
+- **WHEN** a principal entity table uses the first column to display the row's internal id
+- **THEN** the first-column header SHALL support the same sortable behavior as other sortable list columns when the feature allows `id` ordering
+- **AND** changing that header sort SHALL update the route's URL-driven sort state
+- **AND** the row-level id value SHALL remain dedicated to opening details rather than toggling sort
+
 #### Scenario: Feature control flow uses braced if statements
 - **WHEN** feature code uses an `if` statement
 - **THEN** the `if` body SHALL use braces

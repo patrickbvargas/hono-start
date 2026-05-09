@@ -115,6 +115,7 @@ export function getRemunerationOrderBy(search: RemunerationSearch) {
 				},
 			},
 		},
+		id: { id: search.direction },
 		paymentDate: { paymentDate: search.direction },
 	};
 

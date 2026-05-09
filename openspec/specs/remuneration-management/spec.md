@@ -87,6 +87,11 @@ The system SHALL display a paginated, sortable, filterable list of remunerations
 - **WHEN** a regular authenticated user navigates to the remunerations route
 - **THEN** the system displays only remunerations in the same firm that belong to that user's employee identity
 
+#### Scenario: Remuneration list columns include internal id
+- **WHEN** the remunerations list is loaded
+- **THEN** the table shows the internal remuneration id in the first column
+- **AND** the table also shows the remaining remuneration summary columns defined by the route
+
 #### Scenario: Query by parent contract number or collaborator name
 - **WHEN** a user enters a free-text query in the remunerations list
 - **THEN** the system matches remunerations whose parent contract process number contains the query text
@@ -96,6 +101,11 @@ The system SHALL display a paginated, sortable, filterable list of remunerations
 #### Scenario: Filter by employee, contract, and payment date
 - **WHEN** a user applies supported structured filters such as employee, contract, or payment date range
 - **THEN** the system combines those filters with the free-text query deterministically
+
+#### Scenario: Sort by internal id
+- **WHEN** a user clicks the sortable `#` header in the remunerations list
+- **THEN** the list reloads sorted by remuneration id in ascending order
+- **AND** clicking again toggles to descending order
 
 #### Scenario: Sort and pagination state persist in the URL
 - **WHEN** a user changes sorting, filtering, or page

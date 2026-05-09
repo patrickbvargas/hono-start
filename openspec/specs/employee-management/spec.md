@@ -7,7 +7,8 @@ The system SHALL display a paginated, sortable, filterable list of employees bel
 
 #### Scenario: Default list view
 - **WHEN** an administrator navigates to the employees route
-- **THEN** the system displays a table with columns: full name, OAB number, type (Função), remuneration percentage, contract count, role (Perfil), and status
+- **THEN** the system displays a table whose first column shows the internal employee id
+- **AND** the table also shows columns: full name, OAB number, type (Função), remuneration percentage, contract count, role (Perfil), and status
 - **AND** the list is paginated with a default page size of 25
 
 #### Scenario: Filter by name or OAB number
@@ -29,6 +30,11 @@ The system SHALL display a paginated, sortable, filterable list of employees bel
 #### Scenario: Sort by column
 - **WHEN** a user clicks a sortable column header
 - **THEN** the list reloads sorted by that column in ascending order
+- **AND** clicking again toggles to descending order
+
+#### Scenario: Sort by internal id
+- **WHEN** a user clicks the sortable `#` header in the employees list
+- **THEN** the list reloads sorted by employee id in ascending order
 - **AND** clicking again toggles to descending order
 
 #### Scenario: Pagination

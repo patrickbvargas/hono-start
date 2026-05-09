@@ -223,6 +223,7 @@ export async function getFees({
 	const sortMap: Record<string, Prisma.FeeOrderByWithRelationInput> = {
 		amount: { amount: search.direction },
 		createdAt: { createdAt: search.direction },
+		id: { id: search.direction },
 		installmentNumber: { installmentNumber: search.direction },
 		paymentDate: { paymentDate: search.direction },
 	};

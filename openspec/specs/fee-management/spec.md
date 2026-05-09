@@ -18,7 +18,8 @@ The system SHALL display a paginated, sortable, filterable list of fees availabl
 
 #### Scenario: Fee list columns reflect the financial summary
 - **WHEN** the fees list is loaded
-- **THEN** the table shows columns for contract, revenue type, payment date, amount, installment number, remuneration-generation state, active state, and created date
+- **THEN** the table shows the internal fee id in the first column
+- **AND** the table also shows columns for contract, revenue type, payment date, amount, installment number, remuneration-generation state, active state, and created date
 
 #### Scenario: Query by parent contract number
 - **WHEN** a user enters a free-text query in the fees list
@@ -36,6 +37,11 @@ The system SHALL display a paginated, sortable, filterable list of fees availabl
 #### Scenario: Filter by payment date range
 - **WHEN** a user applies `dateFrom` and `dateTo` filters
 - **THEN** the list shows only fees whose payment date falls inside the selected range
+
+#### Scenario: Sort by internal id
+- **WHEN** a user clicks the sortable `#` header in the fees list
+- **THEN** the list reloads sorted by fee id in ascending order
+- **AND** clicking again toggles to descending order
 
 #### Scenario: Sort and pagination state persist in the URL
 - **WHEN** a user changes sorting, filtering, or page

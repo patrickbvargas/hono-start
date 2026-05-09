@@ -38,7 +38,7 @@ export const EmployeeTable = ({
 				cell: ({ row }) => (
 					<EntityIdTrigger id={row.original.id} onView={onView} />
 				),
-				enableSorting: false,
+				enableSorting: EMPLOYEE_ALLOWED_SORT_COLUMNS.includes("id"),
 				meta: {
 					headerClassName: "w-18",
 					cellClassName: "whitespace-nowrap",

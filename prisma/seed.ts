@@ -144,8 +144,7 @@ function getDeterministicYearMultiplier(year: number, contractIndex: number) {
     return decimal(1);
   }
 
-  const yearBaseline =
-    year === 2025 ? decimal("0.992") : decimal("0.984");
+  const yearBaseline = year === 2025 ? decimal("0.992") : decimal("0.984");
   const centeredIndex = (contractIndex % 9) - 4;
 
   return yearBaseline.add(decimal(centeredIndex).mul(decimal("0.004")));
@@ -163,10 +162,16 @@ function transformRevenueSeedForYear(
     paymentDate: replaceIsoYear(fee.paymentDate, year),
   }));
   const paidValue = decimal(scaledDownPayment ?? 0).add(
-    scaledFees.reduce((total, fee) => total.add(decimal(fee.amount)), decimal(0)),
+    scaledFees.reduce(
+      (total, fee) => total.add(decimal(fee.amount)),
+      decimal(0),
+    ),
   );
   const originalPaidValue = decimal(revenue.downPaymentValue ?? 0).add(
-    revenue.fees.reduce((total, fee) => total.add(decimal(fee.amount)), decimal(0)),
+    revenue.fees.reduce(
+      (total, fee) => total.add(decimal(fee.amount)),
+      decimal(0),
+    ),
   );
   const originalRemainingValue = Prisma.Decimal.max(
     decimal(revenue.totalValue).minus(originalPaidValue),
@@ -349,6 +354,12 @@ function createAuthUserSeeds(): AuthUserSeedInput[] {
       employeeEmail: "carlos.mendes@matriz.test",
       password: "SenhaUsuario123!",
     },
+    {
+      userId: "auth-user-admin",
+      accountId: "auth-account-admin",
+      employeeEmail: "admin@admin.com",
+      password: "admin123",
+    },
   ];
 }
 
@@ -372,8 +383,7 @@ function replaceIsoYear(value: string, year: number) {
 
 function getMonthOffsetForYear(year: number, contractIndex: number) {
   const stableOffsetPattern = [
-    0, 1, 2, 3, 4, 5, 6, 7, 8, 0,
-    1, 2, 3, 4, 5, 6, 7, 8, 4, 8,
+    0, 1, 2, 3, 4, 5, 6, 7, 8, 0, 1, 2, 3, 4, 5, 6, 7, 8, 4, 8,
   ];
 
   const offset = stableOffsetPattern[contractIndex];

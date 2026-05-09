@@ -116,6 +116,7 @@ export async function getEmployees({
 
 	const sortMap: Record<string, object> = {
 		fullName: { fullName: search.direction },
+		id: { id: search.direction },
 		oabNumber: { oabNumber: search.direction },
 		remunerationPercent: { remunerationPercentage: search.direction },
 		type: { type: { label: search.direction } },

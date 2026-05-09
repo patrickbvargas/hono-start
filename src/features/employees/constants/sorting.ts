@@ -3,6 +3,7 @@ import type { EmployeeSummary } from "../schemas/model";
 
 export const EMPLOYEE_ALLOWED_SORT_COLUMNS: NonEmptyKeys<EmployeeSummary> = [
 	"fullName",
+	"id",
 	"isActive",
 	"oabNumber",
 	"remunerationPercent",

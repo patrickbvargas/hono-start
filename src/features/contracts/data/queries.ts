@@ -362,6 +362,7 @@ export async function getContracts({
 	});
 
 	const sortMap: Record<string, object> = {
+		id: { id: search.direction },
 		processNumber: { processNumber: search.direction },
 		client: { client: { fullName: search.direction } },
 		legalArea: { legalArea: { label: search.direction } },
