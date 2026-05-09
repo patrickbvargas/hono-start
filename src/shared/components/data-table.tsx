@@ -13,6 +13,7 @@ import {
 	Table,
 	TableBody,
 	TableCell,
+	TableFooter,
 	TableHead,
 	TableHeader,
 	TableRow,
@@ -27,6 +28,7 @@ interface DataTableProps<TData, TValue> {
 	className?: string;
 	onRowAction?: (index: number) => void;
 	footerContent?: React.ReactNode;
+	tableFooterContent?: React.ReactNode;
 }
 
 export const DataTable = <TData, TValue>({
@@ -36,6 +38,7 @@ export const DataTable = <TData, TValue>({
 	className,
 	onRowAction,
 	footerContent,
+	tableFooterContent,
 }: DataTableProps<TData, TValue>) => {
 	const table = useReactTable({
 		data,
@@ -103,6 +106,9 @@ export const DataTable = <TData, TValue>({
 							</TableRow>
 						)}
 					</TableBody>
+					{tableFooterContent ? (
+						<TableFooter>{tableFooterContent}</TableFooter>
+					) : null}
 				</Table>
 			</ScrollArea>
 			{footerContent && (

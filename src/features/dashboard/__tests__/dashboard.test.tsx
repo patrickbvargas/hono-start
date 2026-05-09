@@ -43,12 +43,15 @@ vi.mock("../components/remuneration-table", () => ({
 	DashboardRemunerationTable: ({
 		months,
 		rows,
+		subtotal,
 	}: {
 		months: Array<{ key: string; label: string }>;
 		rows: Array<{ employeeId: number }>;
+		subtotal: { total: number } | null;
 	}) => (
 		<div data-testid="dashboard-remuneration-table">
-			{months.length} meses / {rows.length} linhas
+			{months.length} meses / {rows.length} linhas / subtotal{" "}
+			{subtotal?.total ?? 0}
 		</div>
 	),
 }));
@@ -94,6 +97,12 @@ describe("Dashboard", () => {
 							formattedTotal: "R$ 60,00",
 						},
 					],
+					remunerationSubtotal: {
+						label: "Subtotal",
+						months: { "2026-01": 60 },
+						total: 60,
+						formattedTotal: "R$ 60,00",
+					},
 					financialEvolutionLabel: "Jan/2026 a Jan/2026",
 					financialEvolution: [
 						{
@@ -112,6 +121,6 @@ describe("Dashboard", () => {
 		);
 		expect(
 			screen.getByTestId("dashboard-remuneration-table").textContent,
-		).toContain("1 meses / 1 linhas");
+		).toContain("1 meses / 1 linhas / subtotal 60");
 	});
 });

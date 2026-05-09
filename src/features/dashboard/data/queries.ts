@@ -50,6 +50,13 @@ interface DashboardRemunerationRow {
 	formattedTotal: string;
 }
 
+interface DashboardRemunerationSubtotal {
+	label: string;
+	months: Record<string, number>;
+	total: number;
+	formattedTotal: string;
+}
+
 interface DashboardPeriod {
 	dateFrom?: Date;
 	dateTo?: Date;
@@ -648,6 +655,7 @@ function buildMonthlyRemunerationTable({
 		label: string;
 	}>;
 	table: DashboardRemunerationRow[];
+	subtotal: DashboardRemunerationSubtotal | null;
 } {
 	const months: Array<{
 		key: string;
@@ -722,9 +730,29 @@ function buildMonthlyRemunerationTable({
 			};
 		});
 
+	const subtotalMonths = Object.fromEntries(
+		months.map((month) => [
+			month.key,
+			table.reduce((sum, row) => sum + (row.months[month.key] ?? 0), 0),
+		]),
+	);
+	const subtotalTotal = months.reduce(
+		(sum, month) => sum + (subtotalMonths[month.key] ?? 0),
+		0,
+	);
+
 	return {
 		months,
 		table,
+		subtotal:
+			table.length > 0
+				? {
+						label: "Subtotal",
+						months: subtotalMonths,
+						total: subtotalTotal,
+						formattedTotal: formatter.currency(subtotalTotal),
+					}
+				: null,
 	};
 }
 
@@ -1061,6 +1089,7 @@ export async function getDashboardSummary(
 		revenueTypeRevenue: mapBreakdown(revenueTypeGroups, revenueReceived),
 		remunerationMonths: remunerationByCollaborator.months,
 		remunerationTable: remunerationByCollaborator.table,
+		remunerationSubtotal: remunerationByCollaborator.subtotal,
 		financialEvolutionLabel: chartMonthRange.label,
 		financialEvolution,
 	});

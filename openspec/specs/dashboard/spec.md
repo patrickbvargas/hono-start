@@ -141,7 +141,7 @@ Dashboard data MUST respect firm isolation, the session role visibility model, a
 - **THEN** the system does not expose cross-firm data
 
 ### Requirement: Dashboard Summaries
-The dashboard SHALL show revenue totals, remuneration totals, monthly comparison information, revenue grouping by legal area and revenue type, a monthly financial evolution chart, and a monthly remuneration table by collaborator, with supported summaries reflecting the active dashboard period and employee filters. The main dashboard content SHALL scroll inside a shared scroll container without clipping card borders, and the breakdown legend SHALL present concise participation percentages without redundant phrasing. The dashboard SHALL NOT render the "Visão da firma" badge. The root dashboard component SHALL compose dedicated analytical surface components for metric cards, charts, and remuneration tables instead of concentrating all surface implementations inline.
+The dashboard SHALL show revenue totals, remuneration totals, monthly comparison information, revenue grouping by legal area and revenue type, a monthly financial evolution chart, and a monthly remuneration table by collaborator, with supported summaries reflecting the active dashboard period and employee filters. The monthly remuneration table SHALL also expose a subtotal row for the visible monthly buckets, derived from the same filtered and role-scoped remuneration set shown in the table. The main dashboard content SHALL scroll inside a shared scroll container without clipping card borders, and the breakdown legend SHALL present concise participation percentages without redundant phrasing. The dashboard SHALL NOT render the "Visão da firma" badge. The root dashboard component SHALL compose dedicated analytical surface components for metric cards, charts, and remuneration tables instead of concentrating all surface implementations inline.
 
 #### Scenario: Dashboard loads summaries
 - **WHEN** dashboard data is available
@@ -180,6 +180,12 @@ The dashboard SHALL show revenue totals, remuneration totals, monthly comparison
 - **WHEN** the monthly remuneration table is displayed
 - **THEN** the system shows a total-in-period value for each collaborator based on the visible monthly buckets
 
+#### Scenario: Dashboard remuneration table includes monthly subtotals
+- **WHEN** the monthly remuneration table is displayed with one or more visible collaborator rows
+- **THEN** the system shows one subtotal value for each visible month column
+- **AND** each subtotal equals the sum of that month's visible collaborator values after role and filter scoping
+- **AND** the subtotal row also shows a total-in-period equal to the sum of the visible monthly subtotals
+
 #### Scenario: Breakdown charts preserve values
 - **WHEN** the dashboard renders legal-area or revenue-type breakdowns
 - **THEN** each visualization reflects the same formatted totals and participation percentages returned by the active dashboard summary payload
@@ -202,6 +208,7 @@ The dashboard SHALL show revenue totals, remuneration totals, monthly comparison
 #### Scenario: Regular user opens dashboard
 - **WHEN** a regular user opens the dashboard
 - **THEN** the monthly remuneration table shows only the authenticated user's own scoped remuneration data
+- **AND** the subtotal row reflects only that same scoped data
 
 #### Scenario: No business records match filters
 - **WHEN** the dashboard has no matching business records for the active filters
@@ -211,6 +218,7 @@ The dashboard SHALL show revenue totals, remuneration totals, monthly comparison
 - **WHEN** the dashboard has no matching remuneration records for the active filters
 - **THEN** the system displays zero-value summaries as applicable
 - **AND** the monthly remuneration table shows an empty-state message in pt-BR
+- **AND** the system does not render a subtotal row without visible collaborator rows
 
 #### Scenario: No breakdown values exist
 - **WHEN** the dashboard summary contains no received revenue for legal-area and revenue-type breakdowns

@@ -21,6 +21,7 @@ export function Dashboard({ data }: DashboardProps) {
 				<DashboardRemunerationTable
 					months={data.remunerationMonths}
 					rows={data.remunerationTable}
+					subtotal={data.remunerationSubtotal}
 				/>
 				<div className="grid gap-3 xl:grid-cols-2">
 					<DashboardBreakdownChart

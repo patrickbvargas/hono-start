@@ -8,17 +8,25 @@ vi.mock("@/shared/components/data-table", () => ({
 	DataTable: ({
 		columns,
 		data,
+		emptyMessage,
+		tableFooterContent,
 	}: {
 		columns: Array<{ id?: string; header?: string }>;
 		data: Array<unknown>;
-	}) => (
-		<div data-testid="data-table">
-			<div>
-				{columns.map((column) => column.header ?? column.id).join(" | ")}
+		emptyMessage?: string;
+		tableFooterContent?: ReactNode;
+	}) =>
+		data.length > 0 ? (
+			<div data-testid="data-table">
+				<div>
+					{columns.map((column) => column.header ?? column.id).join(" | ")}
+				</div>
+				<div>{data.length} linhas</div>
+				<div>{tableFooterContent}</div>
 			</div>
-			<div>{data.length} linhas</div>
-		</div>
-	),
+		) : (
+			<div>{emptyMessage}</div>
+		),
 }));
 
 vi.mock("@/shared/components/ui", () => ({
@@ -37,6 +45,8 @@ vi.mock("@/shared/components/ui", () => ({
 	CardTitle: ({ children }: { children: ReactNode }) => (
 		<div data-slot="card-title">{children}</div>
 	),
+	TableCell: ({ children }: { children: ReactNode }) => <div>{children}</div>,
+	TableRow: ({ children }: { children: ReactNode }) => <div>{children}</div>,
 }));
 
 import { DashboardRemunerationTable } from "../components/remuneration-table";
@@ -65,6 +75,15 @@ describe("DashboardRemunerationTable", () => {
 						formattedTotal: "R$ 60,00",
 					},
 				]}
+				subtotal={{
+					label: "Subtotal",
+					months: {
+						"2026-01": 60,
+						"2026-02": 0,
+					},
+					total: 60,
+					formattedTotal: "R$ 60,00",
+				}}
 			/>,
 		);
 
@@ -75,10 +94,13 @@ describe("DashboardRemunerationTable", () => {
 		expect(screen.getByTestId("data-table").textContent).toContain(
 			"Colaborador | Jan/26 | Fev/26 | Total no período",
 		);
+		expect(screen.getByTestId("data-table").textContent).toContain("Subtotal");
 	});
 
 	it("renders explicit empty state in pt-BR when no rows exist", () => {
-		render(<DashboardRemunerationTable months={[]} rows={[]} />);
+		render(
+			<DashboardRemunerationTable months={[]} rows={[]} subtotal={null} />,
+		);
 
 		expect(
 			screen.getByText(

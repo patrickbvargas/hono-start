@@ -221,6 +221,16 @@ describe("dashboard data queries", () => {
 				formattedTotal: expect.stringContaining("60,00"),
 			}),
 		]);
+		expect(result.remunerationSubtotal).toEqual({
+			label: "Subtotal",
+			months: {
+				"2026-01": 60,
+				"2026-02": 0,
+				"2026-03": 40,
+			},
+			total: 100,
+			formattedTotal: expect.stringContaining("100,00"),
+		});
 	});
 
 	it("keeps regular users scoped to assigned-contract and own-remuneration data", async () => {
@@ -275,6 +285,7 @@ describe("dashboard data queries", () => {
 			}),
 		);
 		expect(result.scopeLabel).toBe("Minha visão");
+		expect(result.remunerationSubtotal).toBeNull();
 	});
 
 	it("applies legal-area and revenue-type filters to remuneration aggregation", async () => {

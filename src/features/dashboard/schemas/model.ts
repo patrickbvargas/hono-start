@@ -36,6 +36,13 @@ export const dashboardRemunerationRowSchema = z.object({
 	formattedTotal: z.string(),
 });
 
+export const dashboardRemunerationSubtotalSchema = z.object({
+	label: z.string(),
+	months: z.record(z.string(), z.number()),
+	total: z.number(),
+	formattedTotal: z.string(),
+});
+
 export const dashboardFinancialEvolutionItemSchema = z.object({
 	month: z.string(),
 	revenue: z.number(),
@@ -50,6 +57,7 @@ export const dashboardSummarySchema = z.object({
 	revenueTypeRevenue: dashboardBreakdownItemSchema.array(),
 	remunerationMonths: dashboardRemunerationMonthSchema.array(),
 	remunerationTable: dashboardRemunerationRowSchema.array(),
+	remunerationSubtotal: dashboardRemunerationSubtotalSchema.nullable(),
 	financialEvolutionLabel: z.string(),
 	financialEvolution: dashboardFinancialEvolutionItemSchema.array(),
 });
