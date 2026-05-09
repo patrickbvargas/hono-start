@@ -14,7 +14,7 @@ interface RemunerationFilterProps {
 export const RemunerationFilter = ({
 	isAdmin = false,
 }: RemunerationFilterProps) => {
-	const { form } = useRemunerationFilter();
+	const { form, hasNonDefaultFilter } = useRemunerationFilter();
 	const { contracts, employees } = useRemunerationOptions();
 
 	return (
@@ -28,7 +28,17 @@ export const RemunerationFilter = ({
 					/>
 				)}
 			</form.AppField>
-			<FilterPopover>
+			<FilterPopover
+				showActiveIndicator
+				hasActiveIndicator={hasNonDefaultFilter([
+					"employeeId",
+					"contractId",
+					"dateFrom",
+					"dateTo",
+					"active",
+					"status",
+				])}
+			>
 				{isAdmin ? (
 					<form.AppField name="employeeId">
 						{(field) => (

@@ -6,7 +6,8 @@ import { type FeeFilter, feeFilterSchema } from "../schemas/filter";
 const DEBOUNCED_FIELDS = new Set<keyof FeeFilter>(["query"]);
 
 export function useFeeFilter() {
-	const { filter, handleFilter } = useFilter(feeFilterSchema);
+	const { filter, handleFilter, hasNonDefaultFilter } =
+		useFilter(feeFilterSchema);
 
 	const debounceSubmit = useDebouncedCallback(
 		(submit: () => void | Promise<void>) => submit(),
@@ -37,5 +38,5 @@ export function useFeeFilter() {
 		},
 	});
 
-	return { form };
+	return { form, hasNonDefaultFilter };
 }

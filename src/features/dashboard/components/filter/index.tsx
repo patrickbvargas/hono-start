@@ -9,7 +9,8 @@ interface DashboardFilterProps {
 }
 
 export function DashboardFilter({ isAdmin = false }: DashboardFilterProps) {
-	const { form, handlePeriodShortcut, periodShortcuts } = useDashboardFilter();
+	const { form, handlePeriodShortcut, periodShortcuts, hasNonDefaultFilter } =
+		useDashboardFilter();
 	const { employees, legalAreas, revenueTypes } = useDashboardOptions();
 
 	return (
@@ -58,7 +59,15 @@ export function DashboardFilter({ isAdmin = false }: DashboardFilterProps) {
 						</div>
 					)}
 				</form.Subscribe>
-				<FilterPopover>
+				<FilterPopover
+					showActiveIndicator
+					hasActiveIndicator={hasNonDefaultFilter([
+						"dateFrom",
+						"dateTo",
+						"legalArea",
+						"revenueType",
+					])}
+				>
 					<form.AppField name="dateFrom">
 						{(field) => <field.DatePicker label="Período de" />}
 					</form.AppField>

@@ -8,7 +8,7 @@ import { useClientOptions } from "../../hooks/use-data";
 import { useClientFilter } from "../../hooks/use-filter";
 
 export const ClientFilter = () => {
-	const { form } = useClientFilter();
+	const { form, hasNonDefaultFilter } = useClientFilter();
 	const { types } = useClientOptions();
 
 	return (
@@ -22,7 +22,10 @@ export const ClientFilter = () => {
 					/>
 				)}
 			</form.AppField>
-			<FilterPopover>
+			<FilterPopover
+				showActiveIndicator
+				hasActiveIndicator={hasNonDefaultFilter(["type", "active", "status"])}
+			>
 				<form.AppField name="type">
 					{(field) => <field.CheckboxGroup label="Tipo" options={types} />}
 				</form.AppField>

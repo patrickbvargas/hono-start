@@ -9,7 +9,9 @@ import {
 const DEBOUNCED_FIELDS = new Set<keyof RemunerationFilter>(["query"]);
 
 export function useRemunerationFilter() {
-	const { filter, handleFilter } = useFilter(remunerationFilterSchema);
+	const { filter, handleFilter, hasNonDefaultFilter } = useFilter(
+		remunerationFilterSchema,
+	);
 
 	const debounceSubmit = useDebouncedCallback(
 		(submit: () => void | Promise<void>) => submit(),
@@ -40,5 +42,5 @@ export function useRemunerationFilter() {
 		},
 	});
 
-	return { form };
+	return { form, hasNonDefaultFilter };
 }

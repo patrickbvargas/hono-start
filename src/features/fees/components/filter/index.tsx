@@ -8,7 +8,7 @@ import { useFeeOptions } from "../../hooks/use-data";
 import { useFeeFilter } from "../../hooks/use-filter";
 
 export const FeeFilter = () => {
-	const { form } = useFeeFilter();
+	const { form, hasNonDefaultFilter } = useFeeFilter();
 	const { contracts, revenues } = useFeeOptions();
 
 	return (
@@ -22,7 +22,17 @@ export const FeeFilter = () => {
 					/>
 				)}
 			</form.AppField>
-			<FilterPopover>
+			<FilterPopover
+				showActiveIndicator
+				hasActiveIndicator={hasNonDefaultFilter([
+					"contractId",
+					"revenueId",
+					"dateFrom",
+					"dateTo",
+					"active",
+					"status",
+				])}
+			>
 				<form.AppField name="contractId">
 					{(field) => (
 						<field.Autocomplete label="Contrato" options={contracts} />

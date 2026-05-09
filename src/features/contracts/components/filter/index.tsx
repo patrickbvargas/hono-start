@@ -8,7 +8,7 @@ import { useContractFilterOptions } from "../../hooks/use-data";
 import { useContractFilter } from "../../hooks/use-filter";
 
 export const ContractFilter = () => {
-	const { form } = useContractFilter();
+	const { form, hasNonDefaultFilter } = useContractFilter();
 	const { clients, legalAreas, statuses } = useContractFilterOptions();
 
 	return (
@@ -22,7 +22,16 @@ export const ContractFilter = () => {
 					/>
 				)}
 			</form.AppField>
-			<FilterPopover>
+			<FilterPopover
+				showActiveIndicator
+				hasActiveIndicator={hasNonDefaultFilter([
+					"clientId",
+					"legalArea",
+					"contractStatus",
+					"active",
+					"status",
+				])}
+			>
 				<form.AppField name="clientId">
 					{(field) => <field.Autocomplete label="Cliente" options={clients} />}
 				</form.AppField>

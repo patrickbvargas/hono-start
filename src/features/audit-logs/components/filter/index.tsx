@@ -3,7 +3,7 @@ import { useAuditLogOptions } from "../../hooks/use-data";
 import { useAuditLogFilter } from "../../hooks/use-filter";
 
 export const AuditLogFilter = () => {
-	const { form } = useAuditLogFilter();
+	const { form, hasNonDefaultFilter } = useAuditLogFilter();
 	const { actions, entityTypes, actors } = useAuditLogOptions();
 
 	return (
@@ -17,7 +17,14 @@ export const AuditLogFilter = () => {
 					/>
 				)}
 			</form.AppField>
-			<FilterPopover>
+			<FilterPopover
+				showActiveIndicator
+				hasActiveIndicator={hasNonDefaultFilter([
+					"action",
+					"entityType",
+					"actorName",
+				])}
+			>
 				<form.AppField name="action">
 					{(field) => <field.CheckboxGroup label="Ação" options={actions} />}
 				</form.AppField>

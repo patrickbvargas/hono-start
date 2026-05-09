@@ -8,7 +8,7 @@ import { useEmployeeOptions } from "../../hooks/use-data";
 import { useEmployeeFilter } from "../../hooks/use-filter";
 
 export const EmployeeFilter = () => {
-	const { form } = useEmployeeFilter();
+	const { form, hasNonDefaultFilter } = useEmployeeFilter();
 	const { types, roles } = useEmployeeOptions();
 
 	return (
@@ -22,7 +22,15 @@ export const EmployeeFilter = () => {
 					/>
 				)}
 			</form.AppField>
-			<FilterPopover>
+			<FilterPopover
+				showActiveIndicator
+				hasActiveIndicator={hasNonDefaultFilter([
+					"type",
+					"role",
+					"active",
+					"status",
+				])}
+			>
 				<form.AppField name="type">
 					{(field) => <field.CheckboxGroup label="Função" options={types} />}
 				</form.AppField>

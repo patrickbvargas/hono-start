@@ -15,7 +15,9 @@ const SHORTCUT_FIELD_UPDATE_OPTIONS = {
 } as const;
 
 export function useDashboardFilter() {
-	const { filter, handleFilter } = useFilter(dashboardFilterSchema);
+	const { filter, handleFilter, hasNonDefaultFilter } = useFilter(
+		dashboardFilterSchema,
+	);
 	const periodShortcuts = getDashboardPeriodShortcuts();
 
 	const debounceSubmit = useDebouncedCallback(
@@ -66,5 +68,5 @@ export function useDashboardFilter() {
 		void form.handleSubmit();
 	};
 
-	return { form, handlePeriodShortcut, periodShortcuts };
+	return { form, handlePeriodShortcut, periodShortcuts, hasNonDefaultFilter };
 }

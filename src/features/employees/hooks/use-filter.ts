@@ -6,7 +6,8 @@ import { type EmployeeFilter, employeeFilterSchema } from "../schemas/filter";
 const DEBOUNCED_FIELDS = new Set<keyof EmployeeFilter>(["query"]);
 
 export function useEmployeeFilter() {
-	const { filter, handleFilter } = useFilter(employeeFilterSchema);
+	const { filter, handleFilter, hasNonDefaultFilter } =
+		useFilter(employeeFilterSchema);
 
 	const debounceSubmit = useDebouncedCallback(
 		(submit: () => void | Promise<void>) => submit(),
@@ -37,5 +38,5 @@ export function useEmployeeFilter() {
 		},
 	});
 
-	return { form };
+	return { form, hasNonDefaultFilter };
 }

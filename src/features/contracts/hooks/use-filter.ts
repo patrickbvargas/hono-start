@@ -6,7 +6,8 @@ import { type ContractFilter, contractFilterSchema } from "../schemas/filter";
 const DEBOUNCED_FIELDS = new Set<keyof ContractFilter>(["query"]);
 
 export function useContractFilter() {
-	const { filter, handleFilter } = useFilter(contractFilterSchema);
+	const { filter, handleFilter, hasNonDefaultFilter } =
+		useFilter(contractFilterSchema);
 
 	const debounceSubmit = useDebouncedCallback(
 		(submit: () => void | Promise<void>) => submit(),
@@ -37,5 +38,5 @@ export function useContractFilter() {
 		},
 	});
 
-	return { form };
+	return { form, hasNonDefaultFilter };
 }
