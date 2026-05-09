@@ -1,4 +1,4 @@
-import { PlusIcon, Trash2Icon } from "lucide-react";
+import { PlusIcon, TrashIcon } from "lucide-react";
 import { Suspense, useRef } from "react";
 import { EntityForm } from "@/shared/components/entity-form";
 import { EntityFormList } from "@/shared/components/entity-form-list";
@@ -220,11 +220,8 @@ function ContractFormContent({ id, state, onSuccess }: ContractFormProps) {
 												assignmentTypes,
 											)
 										}
-										getDescription={() =>
-											"Defina colaborador e atribuição para manter o contrato editável."
-										}
 										renderContent={(_, i) => (
-											<FieldGroup className="grid gap-5 sm:grid-cols-[repeat(2,1fr)_auto]">
+											<FieldGroup className="grid gap-3 sm:grid-cols-[repeat(2,1fr)_auto]">
 												<form.AppField name={`assignments[${i}].employeeId`}>
 													{(field) => (
 														<field.Autocomplete
@@ -247,13 +244,13 @@ function ContractFormContent({ id, state, onSuccess }: ContractFormProps) {
 												</form.AppField>
 												<Button
 													type="button"
-													size="icon-sm"
+													size="icon"
 													variant="destructive"
 													className="place-self-end"
 													aria-label={`Remover colaborador ${i + 1}`}
 													onClick={() => subField.removeValue(i)}
 												>
-													<Trash2Icon size={16} />
+													<TrashIcon size={16} />
 												</Button>
 											</FieldGroup>
 										)}
@@ -296,18 +293,13 @@ function ContractFormContent({ id, state, onSuccess }: ContractFormProps) {
 										getSummary={(revenue, index) =>
 											getRevenueSummary(revenue, index, revenueTypes)
 										}
-										getDescription={(revenue) =>
-											revenue.paymentStartDate
-												? `Início ${formatter.date(revenue.paymentStartDate)}`
-												: "Defina tipo, valor e cronograma de pagamento."
-										}
 										renderContent={(_, i) => (
-											<>
-												<FieldGroup className="grid items-end gap-5 sm:grid-cols-[1fr_1fr_auto]">
+											<div className="space-y-3">
+												<FieldGroup className="grid items-end gap-3 sm:grid-cols-[1fr_1fr_auto]">
 													<form.AppField name={`revenues[${i}].type`}>
 														{(field) => (
 															<field.Autocomplete
-																label="Tipo de receita"
+																label="Tipo"
 																options={revenueTypes}
 																isRequired
 															/>
@@ -326,16 +318,16 @@ function ContractFormContent({ id, state, onSuccess }: ContractFormProps) {
 													</form.AppField>
 													<Button
 														type="button"
-														size="icon-sm"
+														size="icon"
 														variant="destructive"
 														className="place-self-end"
 														aria-label={`Remover receita ${i + 1}`}
 														onClick={() => subField.removeValue(i)}
 													>
-														<Trash2Icon size={16} />
+														<TrashIcon size={16} />
 													</Button>
 												</FieldGroup>
-												<FieldGroup className="grid gap-5 sm:grid-cols-3">
+												<FieldGroup className="grid gap-3 sm:grid-cols-2">
 													<form.AppField name={`revenues[${i}].totalValue`}>
 														{(field) => (
 															<field.Number
@@ -365,6 +357,8 @@ function ContractFormContent({ id, state, onSuccess }: ContractFormProps) {
 															/>
 														)}
 													</form.AppField>
+												</FieldGroup>
+												<FieldGroup className="grid gap-3 sm:grid-cols-2">
 													<form.AppField
 														name={`revenues[${i}].totalInstallments`}
 													>
@@ -385,7 +379,7 @@ function ContractFormContent({ id, state, onSuccess }: ContractFormProps) {
 														)}
 													</form.AppField>
 												</FieldGroup>
-											</>
+											</div>
 										)}
 									/>
 								)}

@@ -80,6 +80,10 @@ const ContractDetailsContent = ({
 				term: "Bloqueio de status",
 				definition: contract.allowStatusChange ? "Desbloqueado" : "Bloqueado",
 			},
+			{
+				term: "Observações",
+				definition: contract.notes?.trim() ? contract.notes : "—",
+			},
 		],
 		[contract],
 	);
@@ -88,7 +92,7 @@ const ContractDetailsContent = ({
 		() =>
 			contract.assignments.map((assignment) => ({
 				term: assignment.assignmentType,
-				definition: `${assignment.employeeName} • ${assignment.employeeType}`,
+				definition: assignment.employeeName,
 			})),
 		[contract],
 	);
@@ -114,10 +118,6 @@ const ContractDetailsContent = ({
 				),
 			},
 			{ term: "Criado em", definition: formatter.date(contract.createdAt) },
-			{
-				term: "Observações",
-				definition: contract.notes?.trim() ? contract.notes : "—",
-			},
 		],
 		[contract],
 	);

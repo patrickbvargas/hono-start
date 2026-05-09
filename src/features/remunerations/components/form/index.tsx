@@ -50,6 +50,7 @@ export const RemunerationForm = ({
 								maxValue={1}
 								step={0.01}
 								isRequired
+								formatOptions={{ style: "percent" }}
 							/>
 						)}
 					</form.AppField>

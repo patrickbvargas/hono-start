@@ -379,7 +379,7 @@ export async function getSelectableFeeRevenues({
 	return revenues.map((revenue) => ({
 		id: revenue.id,
 		value: String(revenue.id),
-		label: `${revenue.contract.processNumber} • ${revenue.type.label}`,
+		label: revenue.type.label,
 		isDisabled: false,
 	}));
 }

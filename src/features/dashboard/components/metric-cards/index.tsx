@@ -1,9 +1,9 @@
 import {
 	BadgeDollarSignIcon,
 	InfoIcon,
-	ScaleIcon,
 	TrendingDownIcon,
 	TrendingUpIcon,
+	WalletMinimalIcon,
 } from "lucide-react";
 import {
 	Badge,
@@ -26,7 +26,7 @@ interface DashboardMetricCardsProps {
 const metricIcons = [
 	<BadgeDollarSignIcon key="revenue-total" className="size-4" />,
 	<TrendingUpIcon key="revenue-received" className="size-4" />,
-	<ScaleIcon key="remunerations" className="size-4" />,
+	<WalletMinimalIcon key="remunerations" className="size-4" />,
 ];
 
 const toneClassNames = {

@@ -109,7 +109,7 @@ function BreakdownBarChart({
 	items,
 }: Pick<DashboardBreakdownChartProps, "items">) {
 	return (
-		<ChartContainer config={barChartConfig} className="h-70 w-full">
+		<ChartContainer config={barChartConfig} className="h-64 w-full">
 			<BarChart
 				accessibilityLayer
 				data={items}
@@ -154,7 +154,7 @@ function BreakdownDonutChart({
 	const chartConfig = buildDonutChartConfig(items);
 
 	return (
-		<ChartContainer config={chartConfig} className="h-70 w-full">
+		<ChartContainer config={chartConfig} className="h-64 w-full">
 			<PieChart accessibilityLayer>
 				<ChartTooltip
 					cursor={false}

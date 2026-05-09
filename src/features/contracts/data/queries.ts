@@ -538,7 +538,7 @@ export async function getSelectableContractEmployees(
 	return employees.map((employee) => ({
 		id: employee.id,
 		value: String(employee.id),
-		label: `${employee.fullName} • ${employee.type.label}`,
+		label: employee.fullName,
 		isDisabled: false,
 	}));
 }

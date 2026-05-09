@@ -27,9 +27,7 @@ export const ContractFilter = () => {
 					{(field) => <field.Autocomplete label="Cliente" options={clients} />}
 				</form.AppField>
 				<form.AppField name="legalArea">
-					{(field) => (
-						<field.CheckboxGroup label="Área jurídica" options={legalAreas} />
-					)}
+					{(field) => <field.CheckboxGroup label="Área" options={legalAreas} />}
 				</form.AppField>
 				<form.AppField name="contractStatus">
 					{(field) => (

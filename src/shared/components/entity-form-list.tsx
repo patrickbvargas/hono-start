@@ -12,7 +12,7 @@ interface WrapperProps<T> {
 	getKey: (item: T, index: number) => string;
 	getTitle: (item: T, index: number) => string;
 	getSummary: (item: T, index: number) => string;
-	getDescription: (item: T, index: number) => string;
+	getDescription?: (item: T, index: number) => string;
 	renderContent: (item: T, index: number) => React.ReactNode;
 	openDescription?: string;
 	className?: string;
@@ -62,7 +62,7 @@ function Wrapper<T>({
 								isOpen={isOpen}
 								title={getTitle(item, index)}
 								summary={getSummary(item, index)}
-								description={getDescription(item, index)}
+								description={getDescription?.(item, index)}
 								openDescription={openDescription}
 							/>
 						</AccordionTrigger>
@@ -80,8 +80,8 @@ interface HeaderProps {
 	isOpen: boolean;
 	title: string;
 	summary: string;
-	description: string;
-	openDescription: string;
+	description?: string;
+	openDescription?: string;
 }
 
 function Header({
@@ -94,9 +94,12 @@ function Header({
 	return (
 		<div className="flex flex-col gap-1 pr-4 text-left">
 			<span className="font-medium text-sm">{isOpen ? title : summary}</span>
-			<span className="text-muted-foreground text-xs">
-				{isOpen ? openDescription : description}
-			</span>
+			{description && !isOpen && (
+				<span className="text-muted-foreground text-xs">{description}</span>
+			)}
+			{openDescription && isOpen && (
+				<span className="text-muted-foreground text-xs">{openDescription}</span>
+			)}
 		</div>
 	);
 }
