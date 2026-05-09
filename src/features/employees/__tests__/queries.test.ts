@@ -60,6 +60,7 @@ describe("employee data queries", () => {
 			type: { label: "Advogado", value: "LAWYER" },
 			role: { label: "Administrador", value: "ADMIN" },
 			authUser: {
+				isAccessEnabled: true,
 				mustChangePassword: true,
 				accounts: [{ id: "credential-account" }],
 			},
@@ -130,6 +131,7 @@ describe("employee data queries", () => {
 				roleValue: "ADMIN",
 				contractCount: 2,
 				hasCredentialAccount: true,
+				isAccessEnabled: true,
 				mustChangePassword: true,
 			}),
 		);

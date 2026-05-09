@@ -50,6 +50,12 @@ export const auth = betterAuth({
 				required: false,
 				input: false,
 			},
+			isAccessEnabled: {
+				type: "boolean",
+				required: false,
+				defaultValue: true,
+				input: false,
+			},
 			mustChangePassword: {
 				type: "boolean",
 				required: false,

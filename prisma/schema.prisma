@@ -28,6 +28,7 @@ model User {
   name          String
   email         String    @unique
   emailVerified Boolean   @default(false)
+  isAccessEnabled Boolean @default(true)
   mustChangePassword Boolean @default(false)
   image         String?
   createdAt     DateTime  @default(now())

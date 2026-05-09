@@ -33,6 +33,7 @@ The software core includes these feature areas:
 - Provides login with email or OAB number plus password.
 - Provides authenticated password-change behavior for signed-in users who know the current password.
 - Provides password-reset entry and recovery behavior.
+- Provides administrator-managed access grant and access revoke behavior for collaborators.
 - Provides administrator-issued temporary password reset for collaborators with credential accounts.
 - Forces temporary-password users into an in-product password-change step before they can continue into the protected shell.
 - Protects authenticated areas of the application.
@@ -56,6 +57,7 @@ The software core includes these feature areas:
 
 - Provides administrative employee-account management.
 - Supports role, employee-type, and remuneration-related configuration.
+- Supports granting, revoking, and resetting collaborator system access from the employee details surface.
 - Supplies collaborator options to contract-team workflows.
 
 ### Contracts
@@ -150,6 +152,7 @@ The software core includes these feature areas:
 
 - Administrators can create and maintain employee accounts.
 - Administrators can manage employee role, type, and remuneration-related settings.
+- Administrators can grant or revoke collaborator access to the system.
 - Administrators can reset collaborator passwords from the employee details surface when the collaborator already has system access.
 
 ### Contract Expectations
@@ -203,6 +206,7 @@ The software core includes these feature areas:
 
 - As an administrator, I can create and maintain employee accounts.
 - As an administrator, I can control employee role, type, and remuneration-related fields.
+- As an administrator, I can grant or revoke collaborator access.
 - As an administrator, I can issue a temporary password to a collaborator who needs access recovery.
 
 ### Contract Management

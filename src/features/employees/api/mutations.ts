@@ -14,8 +14,10 @@ import { EMPLOYEE_ERRORS } from "../constants/errors";
 import {
 	createEmployee,
 	deleteEmployee,
+	grantEmployeeAccess,
 	resetEmployeePassword,
 	restoreEmployee,
+	revokeEmployeeAccess,
 	updateEmployee,
 } from "../data/mutations";
 import {
@@ -180,6 +182,70 @@ const resetEmployeePasswordFn = createServerFn({ method: "POST" })
 		},
 	);
 
+const grantEmployeeAccessFn = createServerFn({ method: "POST" })
+	.middleware([authMiddleware])
+	.inputValidator(employeeIdInputSchema)
+	.handler(
+		async ({
+			data,
+		}): Promise<
+			MutationReturnType & {
+				temporaryPassword: string;
+			}
+		> => {
+			try {
+				const session = await getRequiredServerLoggedUserSession();
+				assertCan(session, "employee.manage");
+				const { firmId } = await getServerScope("employee");
+
+				return await grantEmployeeAccess({
+					actor: {
+						id: session.employee.id,
+						name: session.user.fullName,
+						email: session.user.email,
+					},
+					firmId,
+					id: data.id,
+				});
+			} catch (error) {
+				console.error("[grantEmployeeAccess]", error);
+				if (hasExactErrorMessage(error, EMPLOYEE_ERRORS)) {
+					throw error;
+				}
+
+				throw new Error(EMPLOYEE_ERRORS.GRANT_ACCESS_FAILED);
+			}
+		},
+	);
+
+const revokeEmployeeAccessFn = createServerFn({ method: "POST" })
+	.middleware([authMiddleware])
+	.inputValidator(employeeIdInputSchema)
+	.handler(async ({ data }): Promise<MutationReturnType> => {
+		try {
+			const session = await getRequiredServerLoggedUserSession();
+			assertCan(session, "employee.manage");
+			const { firmId } = await getServerScope("employee");
+
+			return await revokeEmployeeAccess({
+				actor: {
+					id: session.employee.id,
+					name: session.user.fullName,
+					email: session.user.email,
+				},
+				firmId,
+				id: data.id,
+			});
+		} catch (error) {
+			console.error("[revokeEmployeeAccess]", error);
+			if (hasExactErrorMessage(error, EMPLOYEE_ERRORS)) {
+				throw error;
+			}
+
+			throw new Error(EMPLOYEE_ERRORS.REVOKE_ACCESS_FAILED);
+		}
+	});
+
 export const createEmployeeMutationOptions = () =>
 	mutationOptions({ mutationFn: createEmployeeFn });
 
@@ -194,3 +260,9 @@ export const restoreEmployeeMutationOptions = () =>
 
 export const resetEmployeePasswordMutationOptions = () =>
 	mutationOptions({ mutationFn: resetEmployeePasswordFn });
+
+export const grantEmployeeAccessMutationOptions = () =>
+	mutationOptions({ mutationFn: grantEmployeeAccessFn });
+
+export const revokeEmployeeAccessMutationOptions = () =>
+	mutationOptions({ mutationFn: revokeEmployeeAccessFn });

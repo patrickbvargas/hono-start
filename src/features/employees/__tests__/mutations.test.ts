@@ -18,6 +18,7 @@ const {
 	hashPasswordMock: vi.fn(),
 	prismaMock: {
 		account: {
+			create: vi.fn(),
 			update: vi.fn(),
 		},
 		employee: {
@@ -31,6 +32,7 @@ const {
 			deleteMany: vi.fn(),
 		},
 		user: {
+			create: vi.fn(),
 			findFirst: vi.fn(),
 			update: vi.fn(),
 		},
@@ -59,8 +61,10 @@ vi.mock("../data/queries", () => ({
 import {
 	createEmployee,
 	deleteEmployee,
+	grantEmployeeAccess,
 	resetEmployeePassword,
 	restoreEmployee,
+	revokeEmployeeAccess,
 	updateEmployee,
 } from "../data/mutations";
 
@@ -97,6 +101,7 @@ const baseEmployee = (
 	roleValue: "USER",
 	contractCount: 0,
 	hasCredentialAccount: true,
+	isAccessEnabled: true,
 	mustChangePassword: false,
 	isActive: true,
 	isSoftDeleted: false,
@@ -110,14 +115,21 @@ describe("employee lookup-backed writes", () => {
 		vi.clearAllMocks();
 		prismaMock.employee.create.mockResolvedValue({});
 		prismaMock.employee.update.mockResolvedValue({});
+		prismaMock.account.create.mockResolvedValue({});
 		prismaMock.account.update.mockResolvedValue({});
 		prismaMock.contractEmployee.count.mockResolvedValue(0);
 		prismaMock.session.deleteMany.mockResolvedValue({});
 		prismaMock.user.findFirst.mockResolvedValue({
 			id: "auth-user-1",
+			isAccessEnabled: true,
 			accounts: [{ id: "credential-account-1" }],
 		});
-		prismaMock.user.update.mockResolvedValue({});
+		prismaMock.user.create.mockResolvedValue({
+			id: "auth-user-1",
+		});
+		prismaMock.user.update.mockResolvedValue({
+			id: "auth-user-1",
+		});
 		hashPasswordMock.mockResolvedValue("hashed-password");
 		prismaMock.$transaction.mockImplementation(async (callback) =>
 			callback(prismaMock),
@@ -338,6 +350,7 @@ describe("employee lookup-backed writes", () => {
 		getEmployeeByIdMock.mockResolvedValue(
 			baseEmployee({
 				hasCredentialAccount: false,
+				isAccessEnabled: false,
 			}),
 		);
 		prismaMock.user.findFirst.mockResolvedValueOnce(null);
@@ -348,5 +361,131 @@ describe("employee lookup-backed writes", () => {
 				id: 1,
 			}),
 		).rejects.toThrow(EMPLOYEE_ERRORS.RESET_PASSWORD_UNAVAILABLE);
+	});
+
+	it("grants access by creating or re-enabling auth records with a temporary password", async () => {
+		getEmployeeByIdMock.mockResolvedValue(
+			baseEmployee({
+				hasCredentialAccount: false,
+				isAccessEnabled: false,
+				mustChangePassword: false,
+			}),
+		);
+		prismaMock.user.findFirst.mockResolvedValueOnce({
+			id: "auth-user-1",
+			isAccessEnabled: false,
+			accounts: [],
+		});
+
+		const result = await grantEmployeeAccess({
+			actor: {
+				id: 9,
+				name: "Admin",
+				email: "admin@example.com",
+			},
+			firmId: 1,
+			id: 1,
+		});
+
+		expect(result.success).toBe(true);
+		expect(hashPasswordMock).toHaveBeenCalledWith(result.temporaryPassword);
+		expect(prismaMock.user.update).toHaveBeenCalledWith({
+			where: {
+				id: "auth-user-1",
+			},
+			data: {
+				name: "Maria Silva",
+				email: "maria@example.com",
+				emailVerified: true,
+				employeeId: 1,
+				isAccessEnabled: true,
+				mustChangePassword: true,
+			},
+			select: {
+				id: true,
+			},
+		});
+		expect(prismaMock.account.create).toHaveBeenCalledWith({
+			data: expect.objectContaining({
+				accountId: "auth-user-1",
+				providerId: "credential",
+				userId: "auth-user-1",
+				password: "hashed-password",
+			}),
+		});
+		expect(prismaMock.session.deleteMany).toHaveBeenCalledWith({
+			where: {
+				userId: "auth-user-1",
+			},
+		});
+		expect(createAuditLogMock).toHaveBeenCalledWith(
+			prismaMock,
+			expect.objectContaining({
+				changeData: {
+					action: "GRANT_ACCESS",
+					isAccessEnabled: true,
+					mustChangePassword: true,
+				},
+			}),
+		);
+	});
+
+	it("rejects access grant for inactive employees", async () => {
+		getEmployeeByIdMock.mockResolvedValue(
+			baseEmployee({
+				isActive: false,
+				hasCredentialAccount: false,
+				isAccessEnabled: false,
+			}),
+		);
+
+		await expect(
+			grantEmployeeAccess({
+				firmId: 1,
+				id: 1,
+			}),
+		).rejects.toThrow(EMPLOYEE_ERRORS.GRANT_ACCESS_INACTIVE_EMPLOYEE);
+	});
+
+	it("revokes enabled access without deleting auth records", async () => {
+		getEmployeeByIdMock.mockResolvedValue(baseEmployee());
+		prismaMock.user.findFirst.mockResolvedValueOnce({
+			id: "auth-user-1",
+		});
+
+		await expect(
+			revokeEmployeeAccess({
+				actor: {
+					id: 9,
+					name: "Admin",
+					email: "admin@example.com",
+				},
+				firmId: 1,
+				id: 1,
+			}),
+		).resolves.toEqual({ success: true });
+
+		expect(prismaMock.user.update).toHaveBeenCalledWith({
+			where: {
+				id: "auth-user-1",
+			},
+			data: {
+				isAccessEnabled: false,
+			},
+		});
+		expect(prismaMock.session.deleteMany).toHaveBeenCalledWith({
+			where: {
+				userId: "auth-user-1",
+			},
+		});
+		expect(createAuditLogMock).toHaveBeenCalledWith(
+			prismaMock,
+			expect.objectContaining({
+				changeData: {
+					action: "REVOKE_ACCESS",
+					isAccessEnabled: false,
+				},
+			}),
+		);
 	});
 });

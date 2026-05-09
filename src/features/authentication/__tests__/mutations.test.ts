@@ -204,6 +204,33 @@ describe("authentication server mutations", () => {
 		expect(clearFailedLoginAttemptsMock).not.toHaveBeenCalled();
 	});
 
+	it("treats revoked or unavailable access as invalid credentials", async () => {
+		resolveAuthenticationEmailMock.mockResolvedValueOnce(null);
+		authMock.api.signInEmail.mockRejectedValueOnce(new Error("blocked"));
+
+		await expect(
+			loginMutationHandler({
+				data: {
+					identifier: "carlos@example.com",
+					password: "Senha123!",
+					rememberMe: false,
+				},
+			}),
+		).rejects.toThrow(AUTHENTICATION_ERRORS.INVALID_CREDENTIALS);
+
+		expect(authMock.api.signInEmail).toHaveBeenCalledWith({
+			headers: requestHeaders,
+			body: {
+				email: "desconhecido@example.invalid",
+				password: "Senha123!",
+				rememberMe: false,
+			},
+		});
+		expect(recordFailedLoginAttemptMock).toHaveBeenCalledWith(
+			"carlos@example.com",
+		);
+	});
+
 	it("starts password reset with the public reset route and does not enumerate missing accounts", async () => {
 		await expect(
 			requestPasswordResetMutationHandler({

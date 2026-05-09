@@ -2180,6 +2180,7 @@ export const UserScalarFieldEnum = {
   name: 'name',
   email: 'email',
   emailVerified: 'emailVerified',
+  isAccessEnabled: 'isAccessEnabled',
   mustChangePassword: 'mustChangePassword',
   image: 'image',
   createdAt: 'createdAt',

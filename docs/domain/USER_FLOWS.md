@@ -34,6 +34,23 @@ This file preserves the canonical user workflows of the product. These flows des
 6. The collaborator enters and confirms a new password that satisfies policy.
 7. On success, the system clears the mandatory-reset flag and allows access to the dashboard.
 
+## Grant Collaborator Access
+
+1. An administrator opens the collaborator details flow.
+2. The administrator chooses the grant-access action.
+3. The system creates or re-enables the collaborator's credential access.
+4. The system generates a temporary password, invalidates old sessions, and marks the account for mandatory password change.
+5. The administrator shares the temporary password with the collaborator.
+6. The collaborator logs in and is redirected to the mandatory password-change screen before using the rest of the product.
+
+## Revoke Collaborator Access
+
+1. An administrator opens the collaborator details flow.
+2. The administrator chooses the revoke-access action.
+3. The system disables future credential login for that collaborator.
+4. The system invalidates the collaborator's active sessions immediately.
+5. The collaborator can only return after an administrator grants access again.
+
 ## Register A Client
 
 1. The user opens the clients list.

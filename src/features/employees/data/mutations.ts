@@ -1,7 +1,8 @@
-import { randomInt } from "node:crypto";
+import { randomInt, randomUUID } from "node:crypto";
 import { hashPassword } from "better-auth/crypto";
 import type { AuditLogActor } from "@/features/audit-logs/data/mutations";
 import { createAuditLog } from "@/features/audit-logs/data/mutations";
+import type { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/shared/lib/prisma";
 import type { MutationReturnType } from "@/shared/types/api";
 import type {
@@ -23,6 +24,10 @@ import {
 } from "./queries";
 
 interface ResetEmployeePasswordReturnType extends MutationReturnType {
+	temporaryPassword: string;
+}
+
+interface GrantEmployeeAccessReturnType extends MutationReturnType {
 	temporaryPassword: string;
 }
 
@@ -60,6 +65,35 @@ function createTemporaryPassword() {
 	}
 
 	return `${randomCharacters(4)}-${randomCharacters(4)}`;
+}
+
+async function createOrUpdateCredentialAccount(params: {
+	tx: Prisma.TransactionClient;
+	authUserId: string;
+	accountId?: string;
+	passwordHash: string;
+}) {
+	if (params.accountId) {
+		await params.tx.account.update({
+			where: {
+				id: params.accountId,
+			},
+			data: {
+				password: params.passwordHash,
+			},
+		});
+		return;
+	}
+
+	await params.tx.account.create({
+		data: {
+			id: randomUUID(),
+			accountId: params.authUserId,
+			providerId: "credential",
+			userId: params.authUserId,
+			password: params.passwordHash,
+		},
+	});
 }
 
 export async function createEmployee({
@@ -278,6 +312,7 @@ export async function resetEmployeePassword({
 	const authUser = await prisma.user.findFirst({
 		where: {
 			employeeId: id,
+			isAccessEnabled: true,
 			employee: {
 				firmId,
 			},
@@ -352,4 +387,171 @@ export async function resetEmployeePassword({
 		success: true,
 		temporaryPassword,
 	};
+}
+
+export async function grantEmployeeAccess({
+	actor,
+	firmId,
+	id,
+}: EntityUniqueParams & {
+	actor?: AuditLogActor;
+}): Promise<GrantEmployeeAccessReturnType> {
+	const employee = await getEmployeeById({ firmId, id });
+
+	if (employee.isSoftDeleted || !employee.isActive) {
+		throw new Error(EMPLOYEE_ERRORS.GRANT_ACCESS_INACTIVE_EMPLOYEE);
+	}
+
+	const authUser = await prisma.user.findFirst({
+		where: {
+			OR: [{ employeeId: id }, { email: employee.email }],
+		},
+		select: {
+			id: true,
+			isAccessEnabled: true,
+			accounts: {
+				where: {
+					providerId: "credential",
+				},
+				select: {
+					id: true,
+				},
+				take: 1,
+			},
+		},
+	});
+
+	if (authUser?.isAccessEnabled && authUser.accounts[0]) {
+		throw new Error(EMPLOYEE_ERRORS.GRANT_ACCESS_ALREADY_ENABLED);
+	}
+
+	const temporaryPassword = createTemporaryPassword();
+	const passwordHash = await hashPassword(temporaryPassword);
+
+	await prisma.$transaction(async (tx) => {
+		const ensuredAuthUser = authUser
+			? await tx.user.update({
+					where: {
+						id: authUser.id,
+					},
+					data: {
+						name: employee.fullName,
+						email: employee.email,
+						emailVerified: true,
+						employeeId: id,
+						isAccessEnabled: true,
+						mustChangePassword: true,
+					},
+					select: {
+						id: true,
+					},
+				})
+			: await tx.user.create({
+					data: {
+						id: randomUUID(),
+						name: employee.fullName,
+						email: employee.email,
+						emailVerified: true,
+						employeeId: id,
+						isAccessEnabled: true,
+						mustChangePassword: true,
+					},
+					select: {
+						id: true,
+					},
+				});
+
+		await createOrUpdateCredentialAccount({
+			tx,
+			authUserId: ensuredAuthUser.id,
+			accountId: authUser?.accounts[0]?.id,
+			passwordHash,
+		});
+
+		await tx.session.deleteMany({
+			where: {
+				userId: ensuredAuthUser.id,
+			},
+		});
+
+		await createAuditLog(tx, {
+			firmId,
+			actor,
+			action: "UPDATE",
+			entityType: "Employee",
+			entityId: id,
+			entityName: employee.fullName,
+			changeData: {
+				action: "GRANT_ACCESS",
+				isAccessEnabled: true,
+				mustChangePassword: true,
+			},
+			description: `Granted system access to employee ${employee.fullName}.`,
+		});
+	});
+
+	return {
+		success: true,
+		temporaryPassword,
+	};
+}
+
+export async function revokeEmployeeAccess({
+	actor,
+	firmId,
+	id,
+}: EntityUniqueParams & {
+	actor?: AuditLogActor;
+}): Promise<MutationReturnType> {
+	const employee = await getEmployeeById({ firmId, id });
+
+	const authUser = await prisma.user.findFirst({
+		where: {
+			employeeId: id,
+			employee: {
+				firmId,
+			},
+			isAccessEnabled: true,
+		},
+		select: {
+			id: true,
+		},
+	});
+
+	if (!authUser) {
+		throw new Error(EMPLOYEE_ERRORS.REVOKE_ACCESS_UNAVAILABLE);
+	}
+
+	await prisma.$transaction(async (tx) => {
+		await tx.user.update({
+			where: {
+				id: authUser.id,
+			},
+			data: {
+				isAccessEnabled: false,
+			},
+		});
+
+		await tx.session.deleteMany({
+			where: {
+				userId: authUser.id,
+			},
+		});
+
+		await createAuditLog(tx, {
+			firmId,
+			actor,
+			action: "UPDATE",
+			entityType: "Employee",
+			entityId: id,
+			entityName: employee.fullName,
+			changeData: {
+				action: "REVOKE_ACCESS",
+				isAccessEnabled: false,
+			},
+			description: `Revoked system access from employee ${employee.fullName}.`,
+		});
+	});
+
+	return { success: true };
 }

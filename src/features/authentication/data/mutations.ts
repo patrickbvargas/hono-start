@@ -49,8 +49,26 @@ export async function resolveAuthenticationEmail(identifier: string) {
 		},
 		select: {
 			email: true,
+			authUser: {
+				select: {
+					isAccessEnabled: true,
+					accounts: {
+						where: {
+							providerId: "credential",
+						},
+						select: {
+							id: true,
+						},
+						take: 1,
+					},
+				},
+			},
 		},
 	});
+
+	if (!employee?.authUser?.isAccessEnabled || !employee.authUser.accounts[0]) {
+		return null;
+	}
 
 	return employee?.email.toLowerCase() ?? null;
 }

@@ -174,6 +174,7 @@ export async function getEmployeeById({
 			role: true,
 			authUser: {
 				select: {
+					isAccessEnabled: true,
 					mustChangePassword: true,
 					accounts: {
 						where: {
@@ -213,6 +214,7 @@ export async function getEmployeeById({
 		hasCredentialAccount: rawData.authUser
 			? rawData.authUser.accounts.length > 0
 			: false,
+		isAccessEnabled: rawData.authUser?.isAccessEnabled ?? false,
 		mustChangePassword: rawData.authUser?.mustChangePassword ?? false,
 		isActive: rawData.isActive,
 		isSoftDeleted: Boolean(rawData.deletedAt),

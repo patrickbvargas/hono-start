@@ -5,23 +5,23 @@ import {
 } from "@/shared/lib/entity-management";
 import { toast } from "@/shared/lib/toast";
 import type { EntityId } from "@/shared/schemas/entity";
-import { resetEmployeePasswordMutationOptions } from "../api/mutations";
+import { grantEmployeeAccessMutationOptions } from "../api/mutations";
 import { employeeKeys } from "../api/queries";
 
-interface UseEmployeeResetPasswordOptions {
+interface UseEmployeeGrantAccessOptions {
 	onSuccess?: () => void;
 }
 
-export function useEmployeeResetPassword({
+export function useEmployeeGrantAccess({
 	onSuccess,
-}: UseEmployeeResetPasswordOptions = {}) {
+}: UseEmployeeGrantAccessOptions = {}) {
 	const queryClient = useQueryClient();
-	const mutation = useMutation(resetEmployeePasswordMutationOptions());
+	const mutation = useMutation(grantEmployeeAccessMutationOptions());
 
 	const handleConfirm = async (id: EntityId) => {
 		try {
 			const result = await mutation.mutateAsync({ data: { id } });
-			toast.success("Senha temporária gerada com sucesso.");
+			toast.success("Acesso concedido com sucesso.");
 			await refreshEntityQueries(queryClient, employeeKeys.all);
 			onSuccess?.();
 			return result.temporaryPassword;

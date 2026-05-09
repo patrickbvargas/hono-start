@@ -5,29 +5,29 @@ import {
 } from "@/shared/lib/entity-management";
 import { toast } from "@/shared/lib/toast";
 import type { EntityId } from "@/shared/schemas/entity";
-import { resetEmployeePasswordMutationOptions } from "../api/mutations";
+import { revokeEmployeeAccessMutationOptions } from "../api/mutations";
 import { employeeKeys } from "../api/queries";
 
-interface UseEmployeeResetPasswordOptions {
+interface UseEmployeeRevokeAccessOptions {
 	onSuccess?: () => void;
 }
 
-export function useEmployeeResetPassword({
+export function useEmployeeRevokeAccess({
 	onSuccess,
-}: UseEmployeeResetPasswordOptions = {}) {
+}: UseEmployeeRevokeAccessOptions = {}) {
 	const queryClient = useQueryClient();
-	const mutation = useMutation(resetEmployeePasswordMutationOptions());
+	const mutation = useMutation(revokeEmployeeAccessMutationOptions());
 
 	const handleConfirm = async (id: EntityId) => {
 		try {
-			const result = await mutation.mutateAsync({ data: { id } });
-			toast.success("Senha temporária gerada com sucesso.");
+			await mutation.mutateAsync({ data: { id } });
+			toast.success("Acesso revogado com sucesso.");
 			await refreshEntityQueries(queryClient, employeeKeys.all);
 			onSuccess?.();
-			return result.temporaryPassword;
+			return true;
 		} catch (error) {
 			toast.danger(getMutationErrorMessage(error));
-			return null;
+			return false;
 		}
 	};
 
