@@ -114,7 +114,7 @@ function BreakdownBarChart({
 				accessibilityLayer
 				data={items}
 				layout="vertical"
-				margin={{ left: 12, right: 24 }}
+				margin={{ left: 12, right: 70 }}
 			>
 				<CartesianGrid horizontal={false} vertical={false} />
 				<XAxis type="number" hide tickFormatter={formatCompactCurrency} />

@@ -168,7 +168,7 @@ const ContractDetailsFallback = () => (
 			</EntityDetail.Title>
 		</EntityDetail.Header>
 		<EntityDetail.Body>
-			<EntityDetail.SkeletonFields rows={6} />
+			<EntityDetail.SkeletonFields rows={7} />
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Equipe">
 				<EntityDetail.SkeletonFields rows={2} />
@@ -187,7 +187,7 @@ const ContractDetailsFallback = () => (
 			</EntityDetail.Section>
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Registro">
-				<EntityDetail.SkeletonFields rows={3} />
+				<EntityDetail.SkeletonFields rows={2} />
 			</EntityDetail.Section>
 		</EntityDetail.Body>
 		<EntityDetail.Footer />
