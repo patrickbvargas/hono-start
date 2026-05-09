@@ -225,6 +225,12 @@ The system SHALL expose option queries needed by the contract form while preserv
 - **WHEN** the contract form loads employee options for team assignment
 - **THEN** the option query returns only employees in the authenticated user's firm where `deletedAt = null` and `isActive = true`
 
+#### Scenario: Edit form preserves current inactive business entity selections
+- **WHEN** a user opens the contract edit form for a record that already references an inactive or otherwise no-longer-selectable client or collaborator
+- **THEN** the edit form still shows each persisted current selection
+- **AND** each preserved legacy selection is rendered as disabled rather than omitted
+- **AND** the create flow continues to offer only selectable active business entities for new choices
+
 #### Scenario: Lookup options bind by stable value
 - **WHEN** the contract form or filters load legal area, contract status, assignment type, or revenue type options
 - **THEN** the option query returns lookup rows ordered by `label`

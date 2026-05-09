@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as React from "react";
 import { useAppForm } from "@/shared/hooks/use-app-form";
 import {
@@ -11,11 +11,12 @@ import {
 	createEmployeeMutationOptions,
 	updateEmployeeMutationOptions,
 } from "../api/mutations";
-import { employeeKeys, getEmployeeByIdQueryOptions } from "../api/queries";
+import { employeeKeys } from "../api/queries";
 import {
 	employeeCreateInputSchema,
 	employeeUpdateInputSchema,
 } from "../schemas/form";
+import type { EmployeeDetail } from "../schemas/model";
 import {
 	defaultEmployeeCreateValues,
 	defaultEmployeeUpdateValues,
@@ -23,23 +24,27 @@ import {
 
 interface UseEmployeeFormOptions {
 	id?: EntityId;
+	initialValue?: EmployeeDetail;
 	onSuccess?: () => void;
 }
 
-export function useEmployeeForm({ id, onSuccess }: UseEmployeeFormOptions) {
+export function useEmployeeForm({
+	id,
+	initialValue,
+	onSuccess,
+}: UseEmployeeFormOptions) {
 	const queryClient = useQueryClient();
 	const createMutation = useMutation(createEmployeeMutationOptions());
 	const updateMutation = useMutation(updateEmployeeMutationOptions());
 
 	const isEditing = !!id;
-
-	const { data } = useQuery({
-		...getEmployeeByIdQueryOptions(id ?? 0),
-		enabled: isEditing,
-	});
+	const defaultValues =
+		isEditing && initialValue
+			? defaultEmployeeUpdateValues(initialValue)
+			: defaultEmployeeCreateValues();
 
 	const form = useAppForm({
-		defaultValues: defaultEmployeeCreateValues(),
+		defaultValues,
 		validators: {
 			onSubmit: isEditing
 				? employeeUpdateInputSchema
@@ -65,10 +70,10 @@ export function useEmployeeForm({ id, onSuccess }: UseEmployeeFormOptions) {
 	});
 
 	React.useEffect(() => {
-		if (isEditing && data) {
-			form.reset(defaultEmployeeUpdateValues(data));
+		if (isEditing && initialValue) {
+			form.reset(defaultEmployeeUpdateValues(initialValue));
 		}
-	}, [data, form, isEditing]);
+	}, [form, initialValue, isEditing]);
 
 	return { form };
 }

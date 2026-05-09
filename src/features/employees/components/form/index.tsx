@@ -9,7 +9,7 @@ import { FieldGroup, Skeleton } from "@/shared/components/ui";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
 import { LAWYER_TYPE_VALUE } from "../../constants/values";
-import { useEmployeeOptions } from "../../hooks/use-data";
+import { useEmployee, useEmployeeOptions } from "../../hooks/use-data";
 import { useEmployeeForm } from "../../hooks/use-form";
 
 interface EmployeeFormProps {
@@ -23,17 +23,72 @@ export const EmployeeForm = ({ id, state, onSuccess }: EmployeeFormProps) => {
 
 	return (
 		<Suspense fallback={<EmployeeFormSkeleton state={state} title={title} />}>
-			<EmployeeFormContent id={id} state={state} onSuccess={onSuccess} />
+			{id ? (
+				<EditEmployeeFormContent id={id} state={state} onSuccess={onSuccess} />
+			) : (
+				<CreateEmployeeFormContent state={state} onSuccess={onSuccess} />
+			)}
 		</Suspense>
 	);
 };
 
-function EmployeeFormContent({ id, state, onSuccess }: EmployeeFormProps) {
+function CreateEmployeeFormContent({
+	state,
+	onSuccess,
+}: Omit<EmployeeFormProps, "id">) {
 	const { roles, types } = useEmployeeOptions();
-	const { form } = useEmployeeForm({ id, onSuccess });
+	const { form } = useEmployeeForm({ onSuccess });
 
-	const title = id ? "Editar funcionário" : "Novo funcionário";
+	return (
+		<EmployeeFormContent
+			form={form}
+			state={state}
+			title="Novo funcionário"
+			roles={roles}
+			types={types}
+		/>
+	);
+}
 
+function EditEmployeeFormContent({
+	id,
+	state,
+	onSuccess,
+}: Required<Pick<EmployeeFormProps, "id">> & Omit<EmployeeFormProps, "id">) {
+	const { employee } = useEmployee(id);
+	const { roles, types } = useEmployeeOptions();
+	const { form } = useEmployeeForm({
+		id,
+		initialValue: employee,
+		onSuccess,
+	});
+
+	return (
+		<EmployeeFormContent
+			form={form}
+			state={state}
+			title="Editar funcionário"
+			roles={roles}
+			types={types}
+		/>
+	);
+}
+
+interface EmployeeFormContentProps {
+	form: ReturnType<typeof useEmployeeForm>["form"];
+	state: OverlayState;
+	title: string;
+	roles: ReturnType<typeof useEmployeeOptions>["roles"];
+	types: ReturnType<typeof useEmployeeOptions>["types"];
+}
+
+function EmployeeFormContent({
+	form,
+	state,
+	title,
+	roles,
+	types,
+}: EmployeeFormContentProps) {
 	return (
 		<form.Form form={form}>
 			<EntityForm state={state} title={title} footer={<form.Submit />}>

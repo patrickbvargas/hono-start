@@ -1,6 +1,6 @@
 import {
+	DollarSignIcon,
 	LayoutDashboardIcon,
-	PiggyBankIcon,
 	ScrollTextIcon,
 } from "lucide-react";
 import {
@@ -26,7 +26,7 @@ const items: RouteSection[] = [
 		title: "Financeiro",
 		url: "#",
 		isActive: true,
-		icon: PiggyBankIcon,
+		icon: DollarSignIcon,
 		items: [ROUTES.fee, ROUTES.remuneration],
 	},
 	{

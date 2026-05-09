@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as React from "react";
 import { useAppForm } from "@/shared/hooks/use-app-form";
 import {
@@ -11,8 +11,9 @@ import {
 	createFeeMutationOptions,
 	updateFeeMutationOptions,
 } from "../api/mutations";
-import { feeKeys, getFeeByIdQueryOptions } from "../api/queries";
+import { feeKeys } from "../api/queries";
 import { feeCreateInputSchema, feeUpdateInputSchema } from "../schemas/form";
+import type { FeeDetail } from "../schemas/model";
 import {
 	defaultFeeCreateValues,
 	defaultFeeUpdateValues,
@@ -20,22 +21,23 @@ import {
 
 interface UseFeeFormOptions {
 	id?: EntityId;
+	initialValue?: FeeDetail;
 	onSuccess?: () => void;
 }
 
-export function useFeeForm({ id, onSuccess }: UseFeeFormOptions) {
+export function useFeeForm({ id, initialValue, onSuccess }: UseFeeFormOptions) {
 	const queryClient = useQueryClient();
 	const createMutation = useMutation(createFeeMutationOptions());
 	const updateMutation = useMutation(updateFeeMutationOptions());
 
 	const isEditing = !!id;
-	const { data } = useQuery({
-		...getFeeByIdQueryOptions(id ?? 0),
-		enabled: isEditing,
-	});
+	const defaultValues =
+		isEditing && initialValue
+			? defaultFeeUpdateValues(initialValue)
+			: defaultFeeCreateValues();
 
 	const form = useAppForm({
-		defaultValues: defaultFeeCreateValues(),
+		defaultValues,
 		validators: {
 			onSubmit: isEditing ? feeUpdateInputSchema : feeCreateInputSchema,
 		},
@@ -60,10 +62,10 @@ export function useFeeForm({ id, onSuccess }: UseFeeFormOptions) {
 	});
 
 	React.useEffect(() => {
-		if (isEditing && data) {
-			form.reset(defaultFeeUpdateValues(data));
+		if (isEditing && initialValue) {
+			form.reset(defaultFeeUpdateValues(initialValue));
 		}
-	}, [data, form, isEditing]);
+	}, [form, initialValue, isEditing]);
 
 	return { form };
 }

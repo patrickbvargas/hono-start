@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as React from "react";
 import { useAppForm } from "@/shared/hooks/use-app-form";
 import {
@@ -11,11 +11,12 @@ import {
 	createClientMutationOptions,
 	updateClientMutationOptions,
 } from "../api/mutations";
-import { clientKeys, getClientByIdQueryOptions } from "../api/queries";
+import { clientKeys } from "../api/queries";
 import {
 	clientCreateInputSchema,
 	clientUpdateInputSchema,
 } from "../schemas/form";
+import type { ClientDetail } from "../schemas/model";
 import {
 	defaultClientCreateValues,
 	defaultClientUpdateValues,
@@ -23,23 +24,27 @@ import {
 
 interface UseClientFormOptions {
 	id?: EntityId;
+	initialValue?: ClientDetail;
 	onSuccess?: () => void;
 }
 
-export function useClientForm({ id, onSuccess }: UseClientFormOptions) {
+export function useClientForm({
+	id,
+	initialValue,
+	onSuccess,
+}: UseClientFormOptions) {
 	const queryClient = useQueryClient();
 	const createMutation = useMutation(createClientMutationOptions());
 	const updateMutation = useMutation(updateClientMutationOptions());
 
 	const isEditing = !!id;
-
-	const { data } = useQuery({
-		...getClientByIdQueryOptions(id ?? 0),
-		enabled: isEditing,
-	});
+	const defaultValues =
+		isEditing && initialValue
+			? defaultClientUpdateValues(initialValue)
+			: defaultClientCreateValues();
 
 	const form = useAppForm({
-		defaultValues: defaultClientCreateValues(),
+		defaultValues,
 		validators: {
 			onSubmit: isEditing ? clientUpdateInputSchema : clientCreateInputSchema,
 		},
@@ -63,10 +68,10 @@ export function useClientForm({ id, onSuccess }: UseClientFormOptions) {
 	});
 
 	React.useEffect(() => {
-		if (isEditing && data) {
-			form.reset(defaultClientUpdateValues(data));
+		if (isEditing && initialValue) {
+			form.reset(defaultClientUpdateValues(initialValue));
 		}
-	}, [isEditing, data, form]);
+	}, [form, initialValue, isEditing]);
 
 	return { form };
 }

@@ -23,7 +23,7 @@ import {
 	CONTRACT_MAX_EMPLOYEES,
 	CONTRACT_MAX_REVENUES,
 } from "../../constants/values";
-import { useContractOptions } from "../../hooks/use-data";
+import { useContract, useContractOptions } from "../../hooks/use-data";
 import { useContractForm } from "../../hooks/use-form";
 import type {
 	ContractAssignmentInput,
@@ -33,6 +33,7 @@ import {
 	defaultContractAssignmentValues,
 	defaultContractRevenueValues,
 } from "../../utils/default";
+import { getContractEditOptionDefaults } from "../../utils/edit-options";
 
 interface ContractFormProps {
 	id?: EntityId;
@@ -81,23 +82,75 @@ export const ContractForm = ({ id, state, onSuccess }: ContractFormProps) => {
 
 	return (
 		<Suspense fallback={<ContractFormSkeleton state={state} title={title} />}>
-			<ContractFormContent id={id} state={state} onSuccess={onSuccess} />
+			{id ? (
+				<EditContractFormContent id={id} state={state} onSuccess={onSuccess} />
+			) : (
+				<CreateContractFormContent state={state} onSuccess={onSuccess} />
+			)}
 		</Suspense>
 	);
 };
 
-function ContractFormContent({ id, state, onSuccess }: ContractFormProps) {
+function CreateContractFormContent({
+	state,
+	onSuccess,
+}: Omit<ContractFormProps, "id">) {
+	const options = useContractOptions();
+	const { form } = useContractForm({ onSuccess });
+
+	return (
+		<ContractFormContent
+			form={form}
+			state={state}
+			title="Novo contrato"
+			{...options}
+		/>
+	);
+}
+
+function EditContractFormContent({
+	id,
+	state,
+	onSuccess,
+}: Required<Pick<ContractFormProps, "id">> & Omit<ContractFormProps, "id">) {
+	const { contract } = useContract(id);
+	const options = useContractOptions(getContractEditOptionDefaults(contract));
+	const { form } = useContractForm({
+		id,
+		initialValue: contract,
+		onSuccess,
+	});
+
+	return (
+		<ContractFormContent
+			form={form}
+			state={state}
+			title="Editar contrato"
+			{...options}
+		/>
+	);
+}
+
+interface ContractFormContentProps
+	extends Pick<ContractFormProps, "state">,
+		ReturnType<typeof useContractOptions> {
+	form: ReturnType<typeof useContractForm>["form"];
+	title: string;
+}
+
+function ContractFormContent({
+	state,
+	form,
+	title,
+	clients,
+	legalAreas,
+	statuses,
+	assignmentTypes,
+	revenueTypes,
+	employees,
+}: ContractFormContentProps) {
 	const rowKeysRef = useRef(new WeakMap<object, string>());
 	const rowKeyCountRef = useRef(0);
-	const {
-		clients,
-		legalAreas,
-		statuses,
-		assignmentTypes,
-		revenueTypes,
-		employees,
-	} = useContractOptions();
-	const { form } = useContractForm({ id, onSuccess });
 	const isAdmin = useLoggedUserSessionStore(isAdminSession);
 
 	const getRowKey = (value: object) => {
@@ -111,8 +164,6 @@ function ContractFormContent({ id, state, onSuccess }: ContractFormProps) {
 		rowKeysRef.current.set(value, nextKey);
 		return nextKey;
 	};
-
-	const title = id ? "Editar contrato" : "Novo contrato";
 
 	return (
 		<form.Form form={form}>

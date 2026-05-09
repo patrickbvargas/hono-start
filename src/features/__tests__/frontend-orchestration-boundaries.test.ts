@@ -438,6 +438,51 @@ describe("frontend orchestration boundaries", () => {
 		expect(violations).toEqual([]);
 	});
 
+	it("keeps edit-form hydration behind suspense-first feature data hooks", () => {
+		const formHydrationContracts = [
+			{
+				formHook: "src/features/clients/hooks/use-form.ts",
+				formComponent: "src/features/clients/components/form/index.tsx",
+				entityHook: "useClient(",
+			},
+			{
+				formHook: "src/features/employees/hooks/use-form.ts",
+				formComponent: "src/features/employees/components/form/index.tsx",
+				entityHook: "useEmployee(",
+			},
+			{
+				formHook: "src/features/contracts/hooks/use-form.ts",
+				formComponent: "src/features/contracts/components/form/index.tsx",
+				entityHook: "useContract(",
+			},
+			{
+				formHook: "src/features/fees/hooks/use-form.ts",
+				formComponent: "src/features/fees/components/form/index.tsx",
+				entityHook: "useFee(",
+			},
+		];
+		const violations = formHydrationContracts.flatMap(
+			({ formHook, formComponent, entityHook }) => {
+				const formHookContent = readFileSync(formHook, "utf8");
+				const formComponentContent = readFileSync(formComponent, "utf8");
+				const checks = [
+					{
+						passes: !formHookContent.includes("useQuery("),
+						message: `${formHook}:1:edit hydration must not call useQuery directly inside use-form.ts`,
+					},
+					{
+						passes: formComponentContent.includes(entityHook),
+						message: `${formComponent}:1:edit form must hydrate persisted detail through ${entityHook.replace("(", "")}`,
+					},
+				];
+
+				return checks.flatMap((check) => (check.passes ? [] : [check.message]));
+			},
+		);
+
+		expect(violations).toEqual([]);
+	});
+
 	it("keeps filter hooks URL-driven through shared filter orchestration", () => {
 		const filterHooks = listFiles("src/features")
 			.map(normalizePath)

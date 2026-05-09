@@ -218,3 +218,9 @@ The system SHALL derive tenant scope and role-aware fee access from the authenti
 - **WHEN** the fee form loads contract and revenue options
 - **THEN** contract options follow the authenticated user's allowed contract boundaries
 - **AND** revenue options return only active, non-deleted revenues in the authenticated user's firm whose parent contracts remain writable
+
+#### Scenario: Edit form preserves current inactive parent selections
+- **WHEN** a user opens the fee edit form for a record that already references an inactive or otherwise no-longer-selectable contract or revenue
+- **THEN** the edit form still shows the persisted contract and revenue selections
+- **AND** each preserved legacy selection is rendered as disabled rather than omitted
+- **AND** the create flow continues to offer only selectable parent records for new choices

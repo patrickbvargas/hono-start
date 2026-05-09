@@ -11,6 +11,12 @@ import {
 	getSelectableContractEmployeesQueryOptions,
 } from "../api/queries";
 import type { ContractSearch } from "../schemas/search";
+import {
+	type ContractEditOptions,
+	mergeLegacyContractOption,
+} from "../utils/edit-options";
+
+interface UseContractOptionsParams extends Partial<ContractEditOptions> {}
 
 export function useContracts(search: ContractSearch) {
 	const { data: contracts } = useSuspenseQuery(
@@ -26,7 +32,10 @@ export function useContract(id: EntityId) {
 	return { contract };
 }
 
-export function useContractOptions() {
+export function useContractOptions({
+	currentClient,
+	currentEmployees = [],
+}: UseContractOptionsParams = {}) {
 	const [
 		{ data: clients },
 		{ data: employees },
@@ -44,10 +53,16 @@ export function useContractOptions() {
 			getContractRevenueTypesQueryOptions(),
 		],
 	});
+	const mergedClients = mergeLegacyContractOption(clients, currentClient);
+	const mergedEmployees = currentEmployees.reduce(
+		(accumulator, legacyOption) =>
+			mergeLegacyContractOption(accumulator, legacyOption),
+		employees,
+	);
 
 	return {
-		clients,
-		employees,
+		clients: mergedClients,
+		employees: mergedEmployees,
 		legalAreas,
 		statuses,
 		assignmentTypes,

@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as React from "react";
 import { useAppForm } from "@/shared/hooks/use-app-form";
 import {
@@ -11,11 +11,12 @@ import {
 	createContractMutationOptions,
 	updateContractMutationOptions,
 } from "../api/mutations";
-import { contractKeys, getContractByIdQueryOptions } from "../api/queries";
+import { contractKeys } from "../api/queries";
 import {
 	contractCreateInputSchema,
 	contractUpdateInputSchema,
 } from "../schemas/form";
+import type { ContractDetail } from "../schemas/model";
 import {
 	defaultContractCreateValues,
 	defaultContractUpdateValues,
@@ -23,22 +24,27 @@ import {
 
 interface UseContractFormOptions {
 	id?: EntityId;
+	initialValue?: ContractDetail;
 	onSuccess?: () => void;
 }
 
-export function useContractForm({ id, onSuccess }: UseContractFormOptions) {
+export function useContractForm({
+	id,
+	initialValue,
+	onSuccess,
+}: UseContractFormOptions) {
 	const queryClient = useQueryClient();
 	const createMutation = useMutation(createContractMutationOptions());
 	const updateMutation = useMutation(updateContractMutationOptions());
 
 	const isEditing = !!id;
-	const { data } = useQuery({
-		...getContractByIdQueryOptions(id ?? 0),
-		enabled: isEditing,
-	});
+	const defaultValues =
+		isEditing && initialValue
+			? defaultContractUpdateValues(initialValue)
+			: defaultContractCreateValues();
 
 	const form = useAppForm({
-		defaultValues: defaultContractCreateValues(),
+		defaultValues,
 		validators: {
 			onSubmit: isEditing
 				? contractUpdateInputSchema
@@ -64,10 +70,10 @@ export function useContractForm({ id, onSuccess }: UseContractFormOptions) {
 	});
 
 	React.useEffect(() => {
-		if (isEditing && data) {
-			form.reset(defaultContractUpdateValues(data));
+		if (isEditing && initialValue) {
+			form.reset(defaultContractUpdateValues(initialValue));
 		}
-	}, [data, form, isEditing]);
+	}, [form, initialValue, isEditing]);
 
 	return { form };
 }

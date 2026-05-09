@@ -8,8 +8,9 @@ import { FormSection } from "@/shared/components/form-section";
 import { FieldGroup, Skeleton } from "@/shared/components/ui";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
-import { useFeeOptions } from "../../hooks/use-data";
+import { useFee, useFeeOptions } from "../../hooks/use-data";
 import { useFeeForm } from "../../hooks/use-form";
+import { getFeeEditOptionDefaults } from "../../utils/edit-options";
 
 interface FeeFormProps {
 	id?: EntityId;
@@ -22,16 +23,17 @@ export const FeeForm = ({ id, state, onSuccess }: FeeFormProps) => {
 
 	return (
 		<Suspense fallback={<FeeFormSkeleton state={state} title={title} />}>
-			<FeeFormContent id={id} state={state} onSuccess={onSuccess} />
+			{id ? (
+				<EditFeeFormContent id={id} state={state} onSuccess={onSuccess} />
+			) : (
+				<CreateFeeFormContent state={state} onSuccess={onSuccess} />
+			)}
 		</Suspense>
 	);
 };
 
-function FeeFormContent({ id, state, onSuccess }: FeeFormProps) {
-	const { form } = useFeeForm({
-		id,
-		onSuccess,
-	});
+function CreateFeeFormContent({ state, onSuccess }: Omit<FeeFormProps, "id">) {
+	const { form } = useFeeForm({ onSuccess });
 
 	return (
 		<form.Form form={form} showDebug>
@@ -41,7 +43,38 @@ function FeeFormContent({ id, state, onSuccess }: FeeFormProps) {
 						contractId={contractId}
 						form={form}
 						state={state}
-						title={id ? "Editar honorário" : "Novo honorário"}
+						title="Novo honorário"
+					/>
+				)}
+			</form.Subscribe>
+		</form.Form>
+	);
+}
+
+function EditFeeFormContent({
+	id,
+	state,
+	onSuccess,
+}: Required<Pick<FeeFormProps, "id">> & Omit<FeeFormProps, "id">) {
+	const { fee } = useFee(id);
+	const { currentContract, currentRevenue } = getFeeEditOptionDefaults(fee);
+	const { form } = useFeeForm({
+		id,
+		initialValue: fee,
+		onSuccess,
+	});
+
+	return (
+		<form.Form form={form} showDebug>
+			<form.Subscribe selector={(current) => current.values.contractId}>
+				{(contractId) => (
+					<FeeFormFields
+						contractId={contractId}
+						currentContract={currentContract}
+						currentRevenue={currentRevenue}
+						form={form}
+						state={state}
+						title="Editar honorário"
 					/>
 				)}
 			</form.Subscribe>
@@ -51,13 +84,30 @@ function FeeFormContent({ id, state, onSuccess }: FeeFormProps) {
 
 interface FeeFormFieldsProps {
 	contractId: string;
+	currentContract?: ReturnType<
+		typeof getFeeEditOptionDefaults
+	>["currentContract"];
+	currentRevenue?: ReturnType<
+		typeof getFeeEditOptionDefaults
+	>["currentRevenue"];
 	form: ReturnType<typeof useFeeForm>["form"];
 	state: OverlayState;
 	title: string;
 }
 
-function FeeFormFields({ contractId, form, state, title }: FeeFormFieldsProps) {
-	const { contracts, revenues } = useFeeOptions(contractId);
+function FeeFormFields({
+	contractId,
+	currentContract,
+	currentRevenue,
+	form,
+	state,
+	title,
+}: FeeFormFieldsProps) {
+	const { contracts, revenues } = useFeeOptions({
+		contractId,
+		currentContract,
+		currentRevenue,
+	});
 
 	return (
 		<EntityForm state={state} title={title} footer={<form.Submit />}>

@@ -8,7 +8,7 @@ import { FormSection } from "@/shared/components/form-section";
 import { FieldGroup, Skeleton } from "@/shared/components/ui";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
-import { useClientOptions } from "../../hooks/use-data";
+import { useClient, useClientOptions } from "../../hooks/use-data";
 import { useClientForm } from "../../hooks/use-form";
 import {
 	getClientDocumentLabel,
@@ -27,17 +27,68 @@ export const ClientForm = ({ id, state, onSuccess }: ClientFormProps) => {
 
 	return (
 		<Suspense fallback={<ClientFormSkeleton state={state} title={title} />}>
-			<ClientFormContent id={id} state={state} onSuccess={onSuccess} />
+			{id ? (
+				<EditClientFormContent id={id} state={state} onSuccess={onSuccess} />
+			) : (
+				<CreateClientFormContent state={state} onSuccess={onSuccess} />
+			)}
 		</Suspense>
 	);
 };
 
-function ClientFormContent({ id, state, onSuccess }: ClientFormProps) {
+function CreateClientFormContent({
+	state,
+	onSuccess,
+}: Omit<ClientFormProps, "id">) {
 	const { types } = useClientOptions();
-	const { form } = useClientForm({ id, onSuccess });
+	const { form } = useClientForm({ onSuccess });
 
-	const title = id ? "Editar cliente" : "Novo cliente";
+	return (
+		<ClientFormContent
+			form={form}
+			state={state}
+			title="Novo cliente"
+			types={types}
+		/>
+	);
+}
 
+function EditClientFormContent({
+	id,
+	state,
+	onSuccess,
+}: Required<Pick<ClientFormProps, "id">> & Omit<ClientFormProps, "id">) {
+	const { client } = useClient(id);
+	const { types } = useClientOptions();
+	const { form } = useClientForm({
+		id,
+		initialValue: client,
+		onSuccess,
+	});
+
+	return (
+		<ClientFormContent
+			form={form}
+			state={state}
+			title="Editar cliente"
+			types={types}
+		/>
+	);
+}
+
+interface ClientFormContentProps {
+	form: ReturnType<typeof useClientForm>["form"];
+	state: OverlayState;
+	title: string;
+	types: ReturnType<typeof useClientOptions>["types"];
+}
+
+function ClientFormContent({
+	form,
+	state,
+	title,
+	types,
+}: ClientFormContentProps) {
 	return (
 		<form.Form form={form}>
 			<EntityForm state={state} title={title} footer={<form.Submit />}>
