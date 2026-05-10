@@ -30,7 +30,7 @@ function RouteComponent() {
 
 	return (
 		<LoggedUserSessionProvider session={session}>
-			<SidebarProvider className="h-full w-full">
+			<SidebarProvider className="size-full">
 				<AppSidebar />
 				<SidebarInset>
 					<Outlet />
