@@ -10,6 +10,7 @@ import {
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { RouteError } from "@/shared/components/route-error";
+import { RouteLoading } from "@/shared/components/route-loading";
 import { RouteNotFound } from "@/shared/components/route-not-found";
 import { ThemeProvider } from "@/shared/components/theme-provider";
 import { Toaster } from "@/shared/components/ui";
@@ -79,6 +80,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 			<body>
 				<ThemeProvider>
 					{children}
+					<RouteLoading />
 					<Toaster />
 					<TanStackDevtools
 						plugins={[
