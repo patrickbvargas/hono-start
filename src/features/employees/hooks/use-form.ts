@@ -55,11 +55,11 @@ export function useEmployeeForm({
 				if (isEditing) {
 					const parsed = employeeUpdateInputSchema.parse(value);
 					await updateMutation.mutateAsync({ data: parsed });
-					toast.success("Funcionário atualizado com sucesso.");
+					toast.success("Colaborador atualizado com sucesso.");
 				} else {
 					const parsed = employeeCreateInputSchema.parse(value);
 					await createMutation.mutateAsync({ data: parsed });
-					toast.success("Funcionário criado com sucesso.");
+					toast.success("Colaborador criado com sucesso.");
 				}
 				await refreshEntityQueries(queryClient, employeeKeys.all);
 				onSuccess?.();

@@ -19,7 +19,7 @@ interface EmployeeFormProps {
 }
 
 export const EmployeeForm = ({ id, state, onSuccess }: EmployeeFormProps) => {
-	const title = id ? "Editar funcionário" : "Novo funcionário";
+	const title = id ? "Editar colaborador" : "Novo colaborador";
 
 	return (
 		<Suspense fallback={<EmployeeFormSkeleton state={state} title={title} />}>
@@ -43,7 +43,7 @@ function CreateEmployeeFormContent({
 		<EmployeeFormContent
 			form={form}
 			state={state}
-			title="Novo funcionário"
+			title="Novo colaborador"
 			roles={roles}
 			types={types}
 		/>
@@ -67,7 +67,7 @@ function EditEmployeeFormContent({
 		<EmployeeFormContent
 			form={form}
 			state={state}
-			title="Editar funcionário"
+			title="Editar colaborador"
 			roles={roles}
 			types={types}
 		/>

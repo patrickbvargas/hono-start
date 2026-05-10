@@ -18,13 +18,16 @@ export const RemunerationFilter = ({
 	const { contracts, employees } = useRemunerationOptions();
 
 	return (
-		<form.Form form={form} className="flex items-center justify-between gap-3">
+		<form.Form
+			form={form}
+			className="w-full md:w-fit flex items-center justify-between gap-3"
+		>
 			<form.AppField name="query">
 				{(field) => (
 					<field.Search
 						aria-label="Número do contrato ou colaborador"
 						placeholder="Buscar por contrato ou colaborador..."
-						className="md:min-w-80"
+						className="md:w-80"
 					/>
 				)}
 			</form.AppField>

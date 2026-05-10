@@ -137,7 +137,7 @@ export const sessionActionPolicies: Record<
 		kind: "authenticated",
 	},
 	"employee.manage": {
-		deniedMessage: "Apenas administradores podem gerenciar funcionários",
+		deniedMessage: "Apenas administradores podem gerenciar colaboradores",
 		kind: "admin-only",
 	},
 	"fee.create": {

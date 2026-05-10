@@ -30,7 +30,7 @@ const items: RouteSection[] = [
 		items: [ROUTES.fee, ROUTES.remuneration],
 	},
 	{
-		title: "Auditoria",
+		title: "Outro",
 		url: "#",
 		isActive: true,
 		icon: ScrollTextIcon,

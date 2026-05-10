@@ -73,6 +73,9 @@ export const RemunerationTable = ({
 				header: "Valor",
 				cell: ({ row }) => formatter.currency(row.original.amount),
 				enableSorting: REMUNERATION_ALLOWED_SORT_COLUMNS.includes("amount"),
+				meta: {
+					cellClassName: "text-right",
+				},
 			}),
 			c.accessor("effectivePercentage", {
 				header: "Percentual",

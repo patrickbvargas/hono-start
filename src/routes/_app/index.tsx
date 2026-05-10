@@ -24,7 +24,6 @@ import {
 } from "@/features/dashboard";
 import { EmployeeForm } from "@/features/employees";
 import { FeeForm } from "@/features/fees";
-import { RouteLoading } from "@/shared/components/route-loading";
 import {
 	Button,
 	DropdownMenu,
@@ -107,7 +106,6 @@ function RouteComponent() {
 		>
 			<WrapperHeader>
 				<DashboardFilter isAdmin={isAdmin} />
-				<RouteLoading />
 			</WrapperHeader>
 			<WrapperBody>
 				<Dashboard data={summary} />

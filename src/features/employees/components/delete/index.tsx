@@ -20,7 +20,7 @@ export const EmployeeDelete = ({
 
 	return (
 		<EntityDeleteConfirm
-			title="Excluir funcionário"
+			title="Excluir colaborador"
 			description={`Tem certeza que deseja excluir ${employee.fullName}?`}
 			onConfirm={() => handleConfirm(id)}
 			isPending={isPending}

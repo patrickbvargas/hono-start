@@ -20,7 +20,7 @@ export const EmployeeRestore = ({
 
 	return (
 		<EntityRestoreConfirm
-			title="Restaurar funcionário"
+			title="Restaurar colaborador"
 			description={`Tem certeza que deseja restaurar ${employee.fullName}?`}
 			onConfirm={() => handleConfirm(id)}
 			isPending={isPending}

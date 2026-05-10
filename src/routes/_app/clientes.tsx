@@ -1,6 +1,5 @@
 import { createFileRoute, stripSearchParams } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
-import { PlusIcon } from "lucide-react";
 import {
 	ClientDelete,
 	ClientDetails,
@@ -14,8 +13,7 @@ import {
 	getClientTypesQueryOptions,
 	useClients,
 } from "@/features/clients";
-import { RouteLoading } from "@/shared/components/route-loading";
-import { Button } from "@/shared/components/ui";
+import { ButtonNew } from "@/shared/components/button-new";
 import {
 	Wrapper,
 	WrapperBody,
@@ -50,16 +48,10 @@ function RouteComponent() {
 	return (
 		<Wrapper
 			title={ROUTES.client.title}
-			actions={
-				<Button size="sm" onClick={() => overlay.create.open()}>
-					<PlusIcon size={16} />
-					Novo Cliente
-				</Button>
-			}
+			actions={<ButtonNew onClick={() => overlay.create.open()} />}
 		>
 			<WrapperHeader>
 				<ClientFilter />
-				<RouteLoading />
 			</WrapperHeader>
 			<WrapperBody>
 				<ClientTable

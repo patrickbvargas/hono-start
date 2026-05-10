@@ -11,7 +11,6 @@ import {
 	getAuditLogsQueryOptions,
 	useAuditLogs,
 } from "@/features/audit-logs";
-import { RouteLoading } from "@/shared/components/route-loading";
 import {
 	Wrapper,
 	WrapperBody,
@@ -46,7 +45,6 @@ function RouteComponent() {
 		<Wrapper title={ROUTES.auditLog.title}>
 			<WrapperHeader>
 				<AuditLogFilter />
-				<RouteLoading />
 			</WrapperHeader>
 			<WrapperBody>
 				<AuditLogTable data={auditLogs} />

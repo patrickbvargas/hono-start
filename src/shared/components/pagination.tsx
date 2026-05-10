@@ -72,17 +72,17 @@ export const Pagination = ({
 	return (
 		<PaginationRoot
 			className={cn(
-				"flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end",
+				"flex flex-col items-center gap-3 sm:flex-row sm:justify-end",
 				className,
 			)}
 			{...props}
 		>
-			<div className="w-full flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+			<div className="w-full flex flex-col items-center gap-3 sm:flex-row sm:justify-between">
 				<p className="text-sm text-muted-foreground">
 					Exibindo {displayedStartRecord}-{displayedEndRecord} de {totalRecords}{" "}
 					registros
 				</p>
-				<div className="flex items-center justify-end gap-2">
+				<div className="sr-only sm:not-sr-only flex items-center justify-end gap-2">
 					<span className="text-sm text-muted-foreground">Por página</span>
 					<Select
 						value={pageSizeValue}

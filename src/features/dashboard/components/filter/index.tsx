@@ -16,9 +16,9 @@ export function DashboardFilter({ isAdmin = false }: DashboardFilterProps) {
 	return (
 		<form.Form
 			form={form}
-			className="flex flex-wrap items-center justify-between gap-3"
+			className="w-full md:w-fit flex items-center justify-between gap-3"
 		>
-			<div className="flex items-start gap-3">
+			<div className="w-full flex flex-col md:flex-row items-start gap-3">
 				{isAdmin ? (
 					<form.AppField name="employeeId">
 						{(field) => (
@@ -33,64 +33,66 @@ export function DashboardFilter({ isAdmin = false }: DashboardFilterProps) {
 						)}
 					</form.AppField>
 				) : null}
-				<form.Subscribe
-					selector={(state) =>
-						getDashboardActivePeriodShortcut({
-							dateFrom: state.values.dateFrom,
-							dateTo: state.values.dateTo,
-						})
-					}
-				>
-					{(activeShortcut) => (
-						<div className="flex items-center gap-2">
-							{periodShortcuts.map((shortcut) => (
-								<Button
-									key={shortcut.id}
-									type="button"
-									variant={
-										activeShortcut === shortcut.id ? "secondary" : "outline"
-									}
-									aria-pressed={activeShortcut === shortcut.id}
-									onClick={() => handlePeriodShortcut(shortcut.id)}
-								>
-									{shortcut.label}
-								</Button>
-							))}
-						</div>
-					)}
-				</form.Subscribe>
-				<FilterPopover
-					showActiveIndicator
-					hasActiveIndicator={hasNonDefaultFilter([
-						"dateFrom",
-						"dateTo",
-						"legalArea",
-						"revenueType",
-					])}
-				>
-					<form.AppField name="dateFrom">
-						{(field) => <field.DatePicker label="Período de" />}
-					</form.AppField>
-					<form.AppField name="dateTo">
-						{(field) => <field.DatePicker label="Período até" />}
-					</form.AppField>
-					<form.AppField name="legalArea">
-						{(field) => (
-							<field.Autocomplete
-								label="Área do contrato"
-								options={legalAreas}
-							/>
+				<div className="w-full flex items-center gap-3 justify-between md:justify-start">
+					<form.Subscribe
+						selector={(state) =>
+							getDashboardActivePeriodShortcut({
+								dateFrom: state.values.dateFrom,
+								dateTo: state.values.dateTo,
+							})
+						}
+					>
+						{(activeShortcut) => (
+							<div className="flex items-center gap-2">
+								{periodShortcuts.map((shortcut) => (
+									<Button
+										key={shortcut.id}
+										type="button"
+										variant={
+											activeShortcut === shortcut.id ? "secondary" : "outline"
+										}
+										aria-pressed={activeShortcut === shortcut.id}
+										onClick={() => handlePeriodShortcut(shortcut.id)}
+									>
+										{shortcut.label}
+									</Button>
+								))}
+							</div>
 						)}
-					</form.AppField>
-					<form.AppField name="revenueType">
-						{(field) => (
-							<field.Autocomplete
-								label="Tipo de receita"
-								options={revenueTypes}
-							/>
-						)}
-					</form.AppField>
-				</FilterPopover>
+					</form.Subscribe>
+					<FilterPopover
+						showActiveIndicator
+						hasActiveIndicator={hasNonDefaultFilter([
+							"dateFrom",
+							"dateTo",
+							"legalArea",
+							"revenueType",
+						])}
+					>
+						<form.AppField name="dateFrom">
+							{(field) => <field.DatePicker label="Período de" />}
+						</form.AppField>
+						<form.AppField name="dateTo">
+							{(field) => <field.DatePicker label="Período até" />}
+						</form.AppField>
+						<form.AppField name="legalArea">
+							{(field) => (
+								<field.Autocomplete
+									label="Área do contrato"
+									options={legalAreas}
+								/>
+							)}
+						</form.AppField>
+						<form.AppField name="revenueType">
+							{(field) => (
+								<field.Autocomplete
+									label="Tipo de receita"
+									options={revenueTypes}
+								/>
+							)}
+						</form.AppField>
+					</FilterPopover>
+				</div>
 			</div>
 		</form.Form>
 	);

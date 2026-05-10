@@ -1,6 +1,5 @@
 import { createFileRoute, stripSearchParams } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
-import { PlusIcon } from "lucide-react";
 import {
 	FeeDelete,
 	FeeDetails,
@@ -15,8 +14,7 @@ import {
 	getSelectableFeeRevenuesQueryOptions,
 	useFees,
 } from "@/features/fees";
-import { RouteLoading } from "@/shared/components/route-loading";
-import { Button } from "@/shared/components/ui";
+import { ButtonNew } from "@/shared/components/button-new";
 import {
 	Wrapper,
 	WrapperBody,
@@ -52,16 +50,10 @@ function RouteComponent() {
 	return (
 		<Wrapper
 			title={ROUTES.fee.title}
-			actions={
-				<Button size="sm" onClick={() => overlay.create.open()}>
-					<PlusIcon size={16} />
-					Novo Honorário
-				</Button>
-			}
+			actions={<ButtonNew onClick={() => overlay.create.open()} />}
 		>
 			<WrapperHeader>
 				<FeeFilter />
-				<RouteLoading />
 			</WrapperHeader>
 			<WrapperBody>
 				<FeeTable

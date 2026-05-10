@@ -32,7 +32,7 @@ export function DashboardRemunerationTable({
 			id: "employeeName",
 			header: "Colaborador",
 			meta: {
-				headerClassName: "min-w-56",
+				headerClassName: "min-w-40",
 				cellClassName: "whitespace-nowrap font-medium",
 			},
 		}),
@@ -58,7 +58,7 @@ export function DashboardRemunerationTable({
 	];
 
 	return (
-		<Card>
+		<Card className="hidden sm:block">
 			<CardHeader>
 				<CardTitle>Remunerações</CardTitle>
 			</CardHeader>

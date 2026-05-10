@@ -19,7 +19,7 @@ export function useEmployeeRestore({ onSuccess }: UseEmployeeRestoreOptions) {
 	const handleConfirm = async (id: EntityId) => {
 		try {
 			await mutation.mutateAsync({ data: { id } });
-			toast.success("Funcionário restaurado com sucesso.");
+			toast.success("Colaborador restaurado com sucesso.");
 			await refreshEntityQueries(queryClient, employeeKeys.all);
 			onSuccess?.();
 		} catch (error) {

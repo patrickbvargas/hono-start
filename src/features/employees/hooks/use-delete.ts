@@ -19,7 +19,7 @@ export function useEmployeeDelete({ onSuccess }: UseEmployeeDeleteOptions) {
 	const handleConfirm = async (id: EntityId) => {
 		try {
 			await mutation.mutateAsync({ data: { id } });
-			toast.success("Funcionário excluído com sucesso.");
+			toast.success("Colaborador excluído com sucesso.");
 			await refreshEntityQueries(queryClient, employeeKeys.all);
 			onSuccess?.();
 		} catch (error) {

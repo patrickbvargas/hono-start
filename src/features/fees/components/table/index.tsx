@@ -61,6 +61,9 @@ export const FeeTable = ({
 				header: "Valor",
 				cell: ({ row }) => formatter.currency(row.original.amount),
 				enableSorting: FEE_ALLOWED_SORT_COLUMNS.includes("amount"),
+				meta: {
+					cellClassName: "text-right",
+				},
 			}),
 			c.accessor("installmentNumber", {
 				header: "Parcela",

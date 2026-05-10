@@ -16,7 +16,6 @@ import {
 	useRemunerationExport,
 	useRemunerations,
 } from "@/features/remunerations";
-import { RouteLoading } from "@/shared/components/route-loading";
 import {
 	Wrapper,
 	WrapperBody,
@@ -68,7 +67,6 @@ function RouteComponent() {
 		>
 			<WrapperHeader>
 				<RemunerationFilter isAdmin={isAdmin} />
-				<RouteLoading />
 			</WrapperHeader>
 			<WrapperBody>
 				<RemunerationTable

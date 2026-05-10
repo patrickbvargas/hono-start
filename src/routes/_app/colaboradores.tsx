@@ -1,6 +1,5 @@
 import { createFileRoute, stripSearchParams } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
-import { PlusIcon } from "lucide-react";
 import {
 	EmployeeDelete,
 	EmployeeDetails,
@@ -15,8 +14,7 @@ import {
 	getEmployeeTypesQueryOptions,
 	useEmployees,
 } from "@/features/employees";
-import { RouteLoading } from "@/shared/components/route-loading";
-import { Button } from "@/shared/components/ui";
+import { ButtonNew } from "@/shared/components/button-new";
 import {
 	Wrapper,
 	WrapperBody,
@@ -55,18 +53,10 @@ function RouteComponent() {
 	return (
 		<Wrapper
 			title={ROUTES.employee.title}
-			actions={
-				canManage ? (
-					<Button size="sm" onClick={() => overlay.create.open()}>
-						<PlusIcon size={16} />
-						Novo Funcionário
-					</Button>
-				) : null
-			}
+			actions={canManage && <ButtonNew onClick={() => overlay.create.open()} />}
 		>
 			<WrapperHeader>
 				<EmployeeFilter />
-				<RouteLoading />
 			</WrapperHeader>
 			<WrapperBody>
 				<EmployeeTable

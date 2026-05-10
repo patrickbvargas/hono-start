@@ -1,16 +1,10 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { ChevronRight } from "lucide-react";
 import {
-	Collapsible,
-	CollapsibleContent,
-	CollapsibleTrigger,
 	SidebarGroup,
+	SidebarGroupLabel,
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
-	SidebarMenuSub,
-	SidebarMenuSubButton,
-	SidebarMenuSubItem,
 } from "@/shared/components/ui";
 import type { RouteSection } from "@/shared/config/routes";
 
@@ -29,45 +23,27 @@ export function isSidebarRouteActive(pathname: string, url: string) {
 export const NavMain = ({ items }: NavMainProps) => {
 	const location = useLocation();
 
-	return (
-		<SidebarGroup>
-			<SidebarMenu>
-				{items.map((item) => (
-					<Collapsible key={item.title} defaultOpen={item.isActive}>
-						<SidebarMenuItem key={item.title}>
-							<CollapsibleTrigger
-								className="group/collapsible-trigger"
-								render={
-									<SidebarMenuButton tooltip={item.title}>
-										{item.icon && <item.icon />}
-										<span>{item.title}</span>
-										<ChevronRight className="ml-auto transition-transform duration-200 group-aria-expanded/collapsible-trigger:rotate-90" />
-									</SidebarMenuButton>
-								}
-							/>
-							<CollapsibleContent>
-								<SidebarMenuSub>
-									{item.items.map((subItem) => (
-										<SidebarMenuSubItem key={subItem.title}>
-											<SidebarMenuSubButton
-												isActive={isSidebarRouteActive(
-													location.pathname,
-													subItem.url,
-												)}
-												render={
-													<Link to={subItem.url}>
-														<span>{subItem.title}</span>
-													</Link>
-												}
-											/>
-										</SidebarMenuSubItem>
-									))}
-								</SidebarMenuSub>
-							</CollapsibleContent>
-						</SidebarMenuItem>
-					</Collapsible>
+	return items.map((item) => (
+		<SidebarGroup
+			key={item.title}
+			className="group-data-[collapsible=icon]:hidden"
+		>
+			<SidebarGroupLabel>{item.title}</SidebarGroupLabel>
+			<SidebarMenu className="gap-1">
+				{item.items.map((subItem) => (
+					<SidebarMenuItem key={subItem.title}>
+						<SidebarMenuButton
+							isActive={isSidebarRouteActive(location.pathname, subItem.url)}
+							render={
+								<Link to={subItem.url}>
+									{subItem.icon && <subItem.icon />}
+									<span>{subItem.title}</span>
+								</Link>
+							}
+						/>
+					</SidebarMenuItem>
 				))}
 			</SidebarMenu>
 		</SidebarGroup>
-	);
+	));
 };

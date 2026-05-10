@@ -1,6 +1,5 @@
 import { createFileRoute, stripSearchParams } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
-import { PlusIcon } from "lucide-react";
 import {
 	ContractDelete,
 	ContractDetails,
@@ -16,8 +15,7 @@ import {
 	getSelectableContractClientsQueryOptions,
 	useContracts,
 } from "@/features/contracts";
-import { RouteLoading } from "@/shared/components/route-loading";
-import { Button } from "@/shared/components/ui";
+import { ButtonNew } from "@/shared/components/button-new";
 import {
 	Wrapper,
 	WrapperBody,
@@ -54,16 +52,10 @@ function RouteComponent() {
 	return (
 		<Wrapper
 			title={ROUTES.contract.title}
-			actions={
-				<Button size="sm" onClick={() => overlay.create.open()}>
-					<PlusIcon size={16} />
-					Novo Contrato
-				</Button>
-			}
+			actions={<ButtonNew onClick={() => overlay.create.open()} />}
 		>
 			<WrapperHeader>
 				<ContractFilter />
-				<RouteLoading />
 			</WrapperHeader>
 			<WrapperBody>
 				<ContractTable

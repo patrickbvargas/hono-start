@@ -13,7 +13,7 @@ export const AuditLogFilter = () => {
 					<field.Search
 						aria-label="Usuário ou registro"
 						placeholder="Buscar por usuário ou registro..."
-						className="md:min-w-80"
+						className="md:w-80"
 					/>
 				)}
 			</form.AppField>

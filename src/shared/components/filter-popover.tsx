@@ -24,7 +24,7 @@ export const FilterPopover = ({
 			<PopoverTrigger render={<Button variant="outline" />}>
 				<span className="relative inline-flex items-center gap-2">
 					<Settings2Icon size={16} />
-					Filtros
+					<span className="sr-only md:not-sr-only">Filtros</span>
 					{showActiveIndicator && hasActiveIndicator ? (
 						<span
 							data-slot="filter-popover-indicator"

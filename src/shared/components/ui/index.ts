@@ -22,6 +22,7 @@ export * from "./input-otp";
 export * from "./label";
 export * from "./pagination";
 export * from "./popover";
+export * from "./progress";
 export * from "./radio-group";
 export * from "./scroll-area";
 export * from "./select";

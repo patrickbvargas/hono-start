@@ -1,5 +1,6 @@
 import { Separator, SidebarTrigger } from "@/shared/components/ui";
 import { cn } from "@/shared/lib/utils";
+import { RouteLoading } from "./route-loading";
 
 interface WrapperProps extends React.HTMLAttributes<HTMLDivElement> {
 	title?: string;
@@ -17,18 +18,16 @@ export const Wrapper = ({
 		<div
 			data-slot="wrapper"
 			className={cn(
-				"flex h-full min-h-0 flex-col gap-3 overflow-hidden",
+				"relative flex h-full min-h-0 flex-col gap-3 overflow-clip",
 				className,
 			)}
 			{...props}
 		>
+			<RouteLoading />
 			<div className="h-12 flex items-center justify-between px-4 pt-1.5">
-				<div className="flex items-center gap-0.5">
+				<div className="flex items-center gap-2">
 					<SidebarTrigger />
-					<Separator
-						orientation="vertical"
-						className="mx-2 my-auto data-[orientation=vertical]:h-4"
-					/>
+					<Separator orientation="vertical" className="my-auto h-4" />
 					{title && <WrapperTitle title={title} />}
 				</div>
 				{actions}

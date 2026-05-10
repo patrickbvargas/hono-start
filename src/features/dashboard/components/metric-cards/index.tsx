@@ -98,7 +98,7 @@ export function DashboardMetricCards({ metrics }: DashboardMetricCardsProps) {
 										render={
 											<button
 												type="button"
-												className="inline-flex text-muted-foreground transition-colors hover:text-foreground"
+												className="sr-only md:not-sr-only inline-flex text-muted-foreground transition-colors hover:text-foreground"
 											/>
 										}
 									>
