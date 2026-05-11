@@ -141,7 +141,7 @@ describe("route prefetch and loading checklist", () => {
 				],
 			},
 			{
-				file: ["src", "routes", "_app", "audit-log.tsx"],
+				file: ["src", "routes", "_app", "auditoria.tsx"],
 				filterFile: [
 					"src",
 					"features",

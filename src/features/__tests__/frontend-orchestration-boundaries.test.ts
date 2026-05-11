@@ -275,7 +275,7 @@ describe("frontend orchestration boundaries", () => {
 				dataField: "remunerations",
 			},
 			{
-				route: "src/routes/_app/audit-log.tsx",
+				route: "src/routes/_app/auditoria.tsx",
 				hookFile: "src/features/audit-logs/hooks/use-data.ts",
 				hookName: "useAuditLogs",
 				queryFactoryName: "getAuditLogsQueryOptions",

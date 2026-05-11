@@ -47,6 +47,9 @@ const employeeDetail = {
 	role: "Administrador",
 	roleValue: "ADMIN",
 	contractCount: 4,
+	hasCredentialAccount: true,
+	isAccessEnabled: true,
+	mustChangePassword: false,
 	isActive: true,
 	isSoftDeleted: false,
 	createdAt: timestamp,
@@ -150,15 +153,17 @@ const remuneration = {
 const auditLog = {
 	id: 8,
 	occurredAt: timestamp,
+	occurredAtLabel: "01/01/2026, 00:00",
 	actorName: "João Advogado",
 	actorEmail: "joao@example.com",
 	action: "CREATE",
 	entityType: "Client",
+	entityTypeLabel: "Cliente",
 	entityName: "Maria Cliente",
 	entityId: "1",
 	ipAddress: null,
 	userAgent: null,
-	description: "Created client Maria Cliente.",
+	description: "criou cliente Maria Cliente.",
 };
 
 describe("feature model contracts", () => {

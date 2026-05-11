@@ -39,6 +39,7 @@ describe("audit-log data queries", () => {
 				entityId: "99",
 				ipAddress: "127.0.0.1",
 				userAgent: "Vitest",
+				changeData: { before: { id: 99 } },
 				description: "Updated contract PROC-001.",
 			},
 		]);
@@ -88,6 +89,8 @@ describe("audit-log data queries", () => {
 					id: 1,
 					actorName: "Admin",
 					entityType: "Contract",
+					entityTypeLabel: "Contrato",
+					description: "atualizou contrato PROC-001.",
 				}),
 			],
 			total: 1,
@@ -114,8 +117,8 @@ describe("audit-log data queries", () => {
 		});
 
 		await expect(getAuditLogEntityTypes(1)).resolves.toEqual([
-			{ id: 1, value: "Client", label: "Client", isDisabled: false },
-			{ id: 2, value: "Fee", label: "Fee", isDisabled: false },
+			{ id: 1, value: "Client", label: "Cliente", isDisabled: false },
+			{ id: 2, value: "Fee", label: "Honorário", isDisabled: false },
 		]);
 
 		await expect(getAuditLogActors(1)).resolves.toEqual([

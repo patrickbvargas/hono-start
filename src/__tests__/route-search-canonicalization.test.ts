@@ -24,7 +24,7 @@ const routeCases = [
 		middleware: "stripSearchParams(remunerationSearchDefaults)",
 	},
 	{
-		file: resolve(import.meta.dirname, "../routes/_app/audit-log.tsx"),
+		file: resolve(import.meta.dirname, "../routes/_app/auditoria.tsx"),
 		middleware: "stripSearchParams(auditLogSearchDefaults)",
 	},
 	{

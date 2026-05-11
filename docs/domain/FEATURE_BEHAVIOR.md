@@ -116,6 +116,7 @@ The software core includes these feature areas:
 - `/contratos`
 - `/honorarios`
 - `/remuneracoes`
+- `/auditoria`
 
 ## Canonical Screen Behavior
 

@@ -45,6 +45,6 @@ Review these files first when this pattern changes:
 - `src/routes/_app/contratos.tsx`
 - `src/routes/_app/honorarios.tsx`
 - `src/routes/_app/remuneracoes.tsx`
-- `src/routes/_app/audit-log.tsx`
+- `src/routes/_app/auditoria.tsx`
 - `src/features/__tests__/frontend-orchestration-boundaries.test.ts`
 - `src/features/remunerations/__tests__/route-contract.test.ts`

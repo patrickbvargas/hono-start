@@ -2,6 +2,7 @@ import { createFileRoute, stripSearchParams } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import {
 	AuditLogFilter,
+	AuditLogList,
 	AuditLogTable,
 	auditLogSearchDefaults,
 	auditLogSearchSchema,
@@ -11,6 +12,7 @@ import {
 	getAuditLogsQueryOptions,
 	useAuditLogs,
 } from "@/features/audit-logs";
+import { EntityView } from "@/shared/components/entity-view";
 import {
 	Wrapper,
 	WrapperBody,
@@ -19,7 +21,7 @@ import {
 import { ROUTES } from "@/shared/config/routes";
 import { assertCan } from "@/shared/session";
 
-export const Route = createFileRoute("/_app/audit-log")({
+export const Route = createFileRoute("/_app/auditoria")({
 	validateSearch: zodValidator(auditLogSearchSchema),
 	search: {
 		middlewares: [stripSearchParams(auditLogSearchDefaults)],
@@ -45,9 +47,14 @@ function RouteComponent() {
 		<Wrapper title={ROUTES.auditLog.title}>
 			<WrapperHeader>
 				<AuditLogFilter />
+				<EntityView.Toggle />
 			</WrapperHeader>
 			<WrapperBody>
-				<AuditLogTable data={auditLogs} />
+				<EntityView
+					className="min-h-0 flex-1"
+					list={<AuditLogList data={auditLogs} />}
+					table={<AuditLogTable data={auditLogs} />}
+				/>
 			</WrapperBody>
 		</Wrapper>
 	);

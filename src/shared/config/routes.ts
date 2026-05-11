@@ -63,7 +63,7 @@ export const ROUTES: Record<RouteName, RouteItem> = {
 	},
 	auditLog: {
 		title: "Auditoria",
-		url: "/audit-log",
+		url: "/auditoria",
 		icon: ScrollTextIcon,
 	},
 } as const;

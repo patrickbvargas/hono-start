@@ -13,6 +13,12 @@ import type {
 import type { AuditLogFilter } from "../schemas/filter";
 import { type AuditLog, auditLogSchema } from "../schemas/model";
 import type { AuditLogSearch } from "../schemas/search";
+import { getAuditDescription, getAuditEntityTypeLabel } from "../utils/display";
+
+const dateTimeFormatter = new Intl.DateTimeFormat("pt-BR", {
+	dateStyle: "short",
+	timeStyle: "short",
+});
 
 function buildAuditLogWhere({
 	firmId,
@@ -59,20 +65,29 @@ function mapAuditLog(row: {
 	entityId: string | null;
 	ipAddress: string | null;
 	userAgent: string | null;
+	changeData: unknown;
 	description: string;
 }): AuditLog {
 	return auditLogSchema.parse({
 		id: row.id,
 		occurredAt: row.createdAt.toISOString(),
+		occurredAtLabel: dateTimeFormatter.format(row.createdAt),
 		actorName: row.actorName,
 		actorEmail: row.actorEmail,
 		action: row.action,
 		entityType: row.entityType,
+		entityTypeLabel: getAuditEntityTypeLabel(row.entityType),
 		entityName: row.entityName,
 		entityId: row.entityId,
 		ipAddress: row.ipAddress,
 		userAgent: row.userAgent,
-		description: row.description,
+		description: getAuditDescription({
+			action: row.action,
+			entityType: row.entityType,
+			entityName: row.entityName,
+			changeData: row.changeData,
+			fallbackDescription: row.description,
+		}),
 	});
 }
 
@@ -116,11 +131,18 @@ export async function getAuditLogs({
 }
 
 function mapDistinctOptions(rows: Array<{ value: string }>) {
+	return mapDistinctOptionsWithLabel(rows, ({ value }) => value);
+}
+
+function mapDistinctOptionsWithLabel(
+	rows: Array<{ value: string }>,
+	getLabel: (row: { value: string }) => string,
+) {
 	return optionSchema.array().parse(
 		rows.map((row, index) => ({
 			id: index + 1,
 			value: row.value,
-			label: row.value,
+			label: getLabel(row),
 			isActive: true,
 		})),
 	);
@@ -149,8 +171,9 @@ export async function getAuditLogEntityTypes(
 		orderBy: { entityType: "asc" },
 	});
 
-	return mapDistinctOptions(
+	return mapDistinctOptionsWithLabel(
 		entityTypes.map((row) => ({ value: row.entityType })),
+		({ value }) => getAuditEntityTypeLabel(value),
 	);
 }
 
