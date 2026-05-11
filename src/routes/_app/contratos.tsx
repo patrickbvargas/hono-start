@@ -5,6 +5,7 @@ import {
 	ContractDetails,
 	ContractFilter,
 	ContractForm,
+	ContractList,
 	ContractRestore,
 	ContractTable,
 	contractSearchDefaults,
@@ -16,6 +17,7 @@ import {
 	useContracts,
 } from "@/features/contracts";
 import { ButtonNew } from "@/shared/components/button-new";
+import { EntityView } from "@/shared/components/entity-view";
 import {
 	Wrapper,
 	WrapperBody,
@@ -56,15 +58,30 @@ function RouteComponent() {
 		>
 			<WrapperHeader>
 				<ContractFilter />
+				<EntityView.Toggle />
 			</WrapperHeader>
 			<WrapperBody>
-				<ContractTable
-					data={contracts}
-					onEdit={overlay.edit.open}
-					onView={overlay.details.open}
-					onDelete={overlay.delete.open}
-					onRestore={overlay.restore.open}
-					canManageLifecycle={isAdmin}
+				<EntityView
+					list={
+						<ContractList
+							data={contracts}
+							onEdit={overlay.edit.open}
+							onView={overlay.details.open}
+							onDelete={overlay.delete.open}
+							onRestore={overlay.restore.open}
+							canManageLifecycle={isAdmin}
+						/>
+					}
+					table={
+						<ContractTable
+							data={contracts}
+							onEdit={overlay.edit.open}
+							onView={overlay.details.open}
+							onDelete={overlay.delete.open}
+							onRestore={overlay.restore.open}
+							canManageLifecycle={isAdmin}
+						/>
+					}
 				/>
 				{overlay.create.render((state) => (
 					<ContractForm state={state} onSuccess={state.close} />

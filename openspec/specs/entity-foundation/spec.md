@@ -172,6 +172,11 @@ The system SHALL expose a shared entity-view controller that lets routes render 
 - **THEN** the controller SHALL render the configured mobile surface regardless of the saved desktop preference
 - **AND** the desktop preference SHALL remain preserved for later desktop visits
 
+#### Scenario: Principal entity routes reuse the same shared entity-view controller
+- **WHEN** an authenticated user navigates between principal entity routes that expose both table and card surfaces
+- **THEN** the routes for clients, contracts, employees, fees, and remunerations SHALL all reuse the same shared entity-view controller pattern
+- **AND** each route SHALL keep the active surface selection in shared view-mode state rather than introducing a route-local preference mechanism
+
 ### Requirement: Equivalent shared entity sections use a unified title style
 The system SHALL render the default title of equivalent shared entity sections through one shared title treatment so entity forms and entity detail drawers present the same section-heading typography.
 

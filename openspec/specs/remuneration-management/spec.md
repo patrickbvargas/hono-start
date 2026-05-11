@@ -87,10 +87,21 @@ The system SHALL display a paginated, sortable, filterable list of remunerations
 - **WHEN** a regular authenticated user navigates to the remunerations route
 - **THEN** the system displays only remunerations in the same firm that belong to that user's employee identity
 
-#### Scenario: Remuneration list columns include internal id
-- **WHEN** the remunerations list is loaded
-- **THEN** the table shows the internal remuneration id in the first column
+#### Scenario: Default desktop remunerations view
+- **WHEN** an authenticated user navigates to the remunerations route on a desktop-width viewport
+- **THEN** the system displays a table whose first column shows the internal remuneration id
 - **AND** the table also shows the remaining remuneration summary columns defined by the route
+
+#### Scenario: Default mobile remunerations view
+- **WHEN** an authenticated user navigates to the remunerations route on a mobile-width viewport
+- **THEN** the system displays a paginated list of remuneration cards instead of the table
+- **AND** each card shows the remuneration id plus the same remuneration summary fields surfaced by the route list
+- **AND** the list uses the same URL-driven pagination state as the desktop table
+
+#### Scenario: Card opens remuneration details
+- **WHEN** a user activates a remuneration card in the list surface
+- **THEN** the system opens the same remuneration details drawer used by the table actions
+- **AND** the current filters, sorting, and pagination state remain preserved behind the drawer
 
 #### Scenario: Query by parent contract number or collaborator name
 - **WHEN** a user enters a free-text query in the remunerations list

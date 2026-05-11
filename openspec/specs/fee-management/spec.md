@@ -16,10 +16,21 @@ The system SHALL display a paginated, sortable, filterable list of fees availabl
 - **WHEN** a regular authenticated user navigates to the fees route
 - **THEN** the system displays only fees in the same firm whose parent contracts are visible to that user through assignment-based access
 
-#### Scenario: Fee list columns reflect the financial summary
-- **WHEN** the fees list is loaded
-- **THEN** the table shows the internal fee id in the first column
+#### Scenario: Default desktop fees view
+- **WHEN** an authenticated user navigates to the fees route on a desktop-width viewport
+- **THEN** the system displays a table whose first column shows the internal fee id
 - **AND** the table also shows columns for contract, revenue type, payment date, amount, installment number, remuneration-generation state, active state, and created date
+
+#### Scenario: Default mobile fees view
+- **WHEN** an authenticated user navigates to the fees route on a mobile-width viewport
+- **THEN** the system displays a paginated list of fee cards instead of the table
+- **AND** each card shows the fee summary fields surfaced by the route list
+- **AND** the list uses the same URL-driven pagination state as the desktop table
+
+#### Scenario: Card opens fee details
+- **WHEN** a user activates a fee card in the list surface
+- **THEN** the system opens the same fee details drawer used by the table actions
+- **AND** the current filters, sorting, and pagination state remain preserved behind the drawer
 
 #### Scenario: Query by parent contract number
 - **WHEN** a user enters a free-text query in the fees list

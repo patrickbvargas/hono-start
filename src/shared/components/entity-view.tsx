@@ -37,7 +37,9 @@ function EntityViewRoot({
 	});
 
 	return (
-		<div className={className}>{activeViewMode === "list" ? list : table}</div>
+		<div className={cn("min-h-0 flex-1", className)}>
+			{activeViewMode === "list" ? list : table}
+		</div>
 	);
 }
 

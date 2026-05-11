@@ -9,6 +9,7 @@ import {
 	RemunerationExportMenu,
 	RemunerationFilter,
 	RemunerationForm,
+	RemunerationList,
 	RemunerationRestore,
 	RemunerationTable,
 	remunerationSearchDefaults,
@@ -16,6 +17,7 @@ import {
 	useRemunerationExport,
 	useRemunerations,
 } from "@/features/remunerations";
+import { EntityView } from "@/shared/components/entity-view";
 import {
 	Wrapper,
 	WrapperBody,
@@ -67,15 +69,30 @@ function RouteComponent() {
 		>
 			<WrapperHeader>
 				<RemunerationFilter isAdmin={isAdmin} />
+				<EntityView.Toggle />
 			</WrapperHeader>
 			<WrapperBody>
-				<RemunerationTable
-					data={remunerations}
-					onEdit={overlay.edit.open}
-					onView={overlay.details.open}
-					onDelete={overlay.delete.open}
-					onRestore={overlay.restore.open}
-					canManageLifecycle={isAdmin}
+				<EntityView
+					list={
+						<RemunerationList
+							data={remunerations}
+							onEdit={overlay.edit.open}
+							onView={overlay.details.open}
+							onDelete={overlay.delete.open}
+							onRestore={overlay.restore.open}
+							canManageLifecycle={isAdmin}
+						/>
+					}
+					table={
+						<RemunerationTable
+							data={remunerations}
+							onEdit={overlay.edit.open}
+							onView={overlay.details.open}
+							onDelete={overlay.delete.open}
+							onRestore={overlay.restore.open}
+							canManageLifecycle={isAdmin}
+						/>
+					}
 				/>
 				{overlay.edit.render((id, state) => (
 					<RemunerationForm id={id} state={state} onSuccess={state.close} />

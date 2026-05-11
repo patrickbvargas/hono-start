@@ -5,6 +5,7 @@ import {
 	EmployeeDetails,
 	EmployeeFilter,
 	EmployeeForm,
+	EmployeeList,
 	EmployeeRestore,
 	EmployeeTable,
 	employeeSearchDefaults,
@@ -15,6 +16,7 @@ import {
 	useEmployees,
 } from "@/features/employees";
 import { ButtonNew } from "@/shared/components/button-new";
+import { EntityView } from "@/shared/components/entity-view";
 import {
 	Wrapper,
 	WrapperBody,
@@ -57,15 +59,30 @@ function RouteComponent() {
 		>
 			<WrapperHeader>
 				<EmployeeFilter />
+				<EntityView.Toggle />
 			</WrapperHeader>
 			<WrapperBody>
-				<EmployeeTable
-					data={employees}
-					onEdit={overlay.edit.open}
-					onView={overlay.details.open}
-					onDelete={overlay.delete.open}
-					onRestore={overlay.restore.open}
-					canManageLifecycle={canManage}
+				<EntityView
+					list={
+						<EmployeeList
+							data={employees}
+							onEdit={overlay.edit.open}
+							onView={overlay.details.open}
+							onDelete={overlay.delete.open}
+							onRestore={overlay.restore.open}
+							canManageLifecycle={canManage}
+						/>
+					}
+					table={
+						<EmployeeTable
+							data={employees}
+							onEdit={overlay.edit.open}
+							onView={overlay.details.open}
+							onDelete={overlay.delete.open}
+							onRestore={overlay.restore.open}
+							canManageLifecycle={canManage}
+						/>
+					}
 				/>
 				{overlay.create.render((state) => (
 					<EmployeeForm state={state} onSuccess={state.close} />

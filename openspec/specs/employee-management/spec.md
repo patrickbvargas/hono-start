@@ -5,11 +5,22 @@ Define the employee-management capability for firm-scoped employee listing, life
 ### Requirement: List employees
 The system SHALL display a paginated, sortable, filterable list of employees belonging to the authenticated administrator's firm, following the shared entity-management list contract.
 
-#### Scenario: Default list view
-- **WHEN** an administrator navigates to the employees route
+#### Scenario: Default desktop employees view
+- **WHEN** an administrator navigates to the employees route on a desktop-width viewport
 - **THEN** the system displays a table whose first column shows the internal employee id
 - **AND** the table also shows columns: full name, OAB number, type (Função), remuneration percentage, contract count, role (Perfil), and status
 - **AND** the list is paginated with a default page size of 25
+
+#### Scenario: Default mobile employees view
+- **WHEN** an administrator navigates to the employees route on a mobile-width viewport
+- **THEN** the system displays a paginated list of employee cards instead of the table
+- **AND** each card shows the employee id, full name, OAB number, type (Função), remuneration percentage, contract count, role (Perfil), and status
+- **AND** the list uses the same URL-driven pagination state as the desktop table
+
+#### Scenario: Card opens employee details
+- **WHEN** an administrator activates an employee card in the list surface
+- **THEN** the system opens the same employee details drawer used by the table actions
+- **AND** the current filters, sorting, and pagination state remain preserved behind the drawer
 
 #### Scenario: Filter by name or OAB number
 - **WHEN** a user types a value in the name/OAB search field

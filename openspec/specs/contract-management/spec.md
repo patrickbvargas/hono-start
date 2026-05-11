@@ -16,10 +16,21 @@ The system SHALL display a paginated, sortable, filterable list of contracts ava
 - **WHEN** a regular authenticated user navigates to the contracts route
 - **THEN** the system displays only contracts in the same firm where that user is actively assigned
 
-#### Scenario: Contract list columns reflect the aggregate summary
-- **WHEN** the contracts list is loaded
-- **THEN** the table shows the internal contract id in the first column
+#### Scenario: Default desktop contracts view
+- **WHEN** an authenticated user navigates to the contracts route on a desktop-width viewport
+- **THEN** the system displays a table whose first column shows the internal contract id
 - **AND** the table also shows columns for process number, client, legal area, contract status, fee percentage, active state, and created date
+
+#### Scenario: Default mobile contracts view
+- **WHEN** an authenticated user navigates to the contracts route on a mobile-width viewport
+- **THEN** the system displays a paginated list of contract cards instead of the table
+- **AND** each card shows the contract id, process number, client, legal area, contract status, fee percentage, active state, and created date
+- **AND** the list uses the same URL-driven pagination state as the desktop table
+
+#### Scenario: Card opens contract details
+- **WHEN** a user activates a contract card in the list surface
+- **THEN** the system opens the same contract details drawer used by the table actions
+- **AND** the current filters, sorting, and pagination state remain preserved behind the drawer
 
 #### Scenario: Query by process number or client name
 - **WHEN** a user enters a free-text query in the contracts list

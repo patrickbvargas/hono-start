@@ -5,6 +5,7 @@ import {
 	FeeDetails,
 	FeeFilter,
 	FeeForm,
+	FeeList,
 	FeeRestore,
 	FeeTable,
 	feeSearchDefaults,
@@ -15,6 +16,7 @@ import {
 	useFees,
 } from "@/features/fees";
 import { ButtonNew } from "@/shared/components/button-new";
+import { EntityView } from "@/shared/components/entity-view";
 import {
 	Wrapper,
 	WrapperBody,
@@ -54,15 +56,30 @@ function RouteComponent() {
 		>
 			<WrapperHeader>
 				<FeeFilter />
+				<EntityView.Toggle />
 			</WrapperHeader>
 			<WrapperBody>
-				<FeeTable
-					data={fees}
-					onEdit={overlay.edit.open}
-					onView={overlay.details.open}
-					onDelete={overlay.delete.open}
-					onRestore={overlay.restore.open}
-					canManageLifecycle={isAdmin}
+				<EntityView
+					list={
+						<FeeList
+							data={fees}
+							onEdit={overlay.edit.open}
+							onView={overlay.details.open}
+							onDelete={overlay.delete.open}
+							onRestore={overlay.restore.open}
+							canManageLifecycle={isAdmin}
+						/>
+					}
+					table={
+						<FeeTable
+							data={fees}
+							onEdit={overlay.edit.open}
+							onView={overlay.details.open}
+							onDelete={overlay.delete.open}
+							onRestore={overlay.restore.open}
+							canManageLifecycle={isAdmin}
+						/>
+					}
 				/>
 				{overlay.create.render((state) => (
 					<FeeForm state={state} onSuccess={state.close} />
