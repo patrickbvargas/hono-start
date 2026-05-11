@@ -5,6 +5,7 @@ import {
 	ClientDetails,
 	ClientFilter,
 	ClientForm,
+	ClientList,
 	ClientRestore,
 	ClientTable,
 	clientSearchDefaults,
@@ -14,6 +15,7 @@ import {
 	useClients,
 } from "@/features/clients";
 import { ButtonNew } from "@/shared/components/button-new";
+import { EntityView } from "@/shared/components/entity-view";
 import {
 	Wrapper,
 	WrapperBody,
@@ -52,15 +54,31 @@ function RouteComponent() {
 		>
 			<WrapperHeader>
 				<ClientFilter />
+				<EntityView.Toggle />
 			</WrapperHeader>
 			<WrapperBody>
-				<ClientTable
-					data={clients}
-					onEdit={overlay.edit.open}
-					onView={overlay.details.open}
-					onDelete={overlay.delete.open}
-					onRestore={overlay.restore.open}
-					canManageLifecycle={isAdmin}
+				<EntityView
+					className="min-h-0 flex-1"
+					list={
+						<ClientList
+							data={clients}
+							onEdit={overlay.edit.open}
+							onView={overlay.details.open}
+							onDelete={overlay.delete.open}
+							onRestore={overlay.restore.open}
+							canManageLifecycle={isAdmin}
+						/>
+					}
+					table={
+						<ClientTable
+							data={clients}
+							onEdit={overlay.edit.open}
+							onView={overlay.details.open}
+							onDelete={overlay.delete.open}
+							onRestore={overlay.restore.open}
+							canManageLifecycle={isAdmin}
+						/>
+					}
 				/>
 				{overlay.details.render((id, state) => (
 					<ClientDetails

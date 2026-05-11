@@ -2,10 +2,11 @@ import {
 	Bar,
 	BarChart,
 	CartesianGrid,
-	Cell,
 	LabelList,
 	Pie,
 	PieChart,
+	type PieSectorShapeProps,
+	Sector,
 	XAxis,
 	YAxis,
 } from "recharts";
@@ -148,6 +149,10 @@ function BreakdownBarChart({
 	);
 }
 
+const CustomDonutSector = (props: PieSectorShapeProps) => {
+	return <Sector {...props} fill={getBreakdownColor(props.index)} />;
+};
+
 function BreakdownDonutChart({
 	items,
 }: Pick<DashboardBreakdownChartProps, "items">) {
@@ -177,11 +182,8 @@ function BreakdownDonutChart({
 					outerRadius={88}
 					paddingAngle={2}
 					strokeWidth={0}
-				>
-					{items.map((item, index) => (
-						<Cell key={item.value} fill={getBreakdownColor(index)} />
-					))}
-				</Pie>
+					shape={CustomDonutSector}
+				/>
 			</PieChart>
 		</ChartContainer>
 	);

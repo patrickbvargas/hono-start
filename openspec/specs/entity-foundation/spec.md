@@ -124,6 +124,54 @@ The system SHALL prefer local feature implementation over premature generic abst
 - **THEN** the team MAY extract a shared abstraction after comparing the repeated usage
 - **AND** the abstraction SHALL reflect the stable common contract rather than one feature's accidental details
 
+### Requirement: Shared entity card lists remain independent from shared entity tables
+The system SHALL provide card-based entity list surfaces through shared components that do not depend on `TanStack Table` columns or table internals.
+
+#### Scenario: Shared card list uses an explicit card contract
+- **WHEN** contributors implement a shared entity card-list surface
+- **THEN** the surface SHALL accept explicit card-rendering inputs such as title, field items, and actions
+- **AND** it SHALL NOT require `ColumnDef`, table headers, or row models from `TanStack Table`
+
+#### Scenario: Shared card list preserves list footer composition
+- **WHEN** a feature composes a shared card-list surface for a paginated entity route
+- **THEN** the shared card list SHALL allow the same shared pagination footer composition used by `DataTable`
+- **AND** the route's URL-driven pagination state SHALL remain authoritative
+
+### Requirement: Shared entity fields are reusable across detail and list surfaces
+The system SHALL expose one shared field-pair presentation contract that can be reused by entity detail drawers and entity card lists without duplicating layout logic.
+
+#### Scenario: Shared detail drawer uses extracted entity fields
+- **WHEN** a detail drawer renders labeled entity data
+- **THEN** it SHALL consume the shared entity-fields contract rather than a private drawer-only implementation
+
+#### Scenario: Shared card list uses the same entity fields contract
+- **WHEN** a card-based entity list renders labeled entity data
+- **THEN** it SHALL consume the same shared entity-fields contract used by detail drawers
+- **AND** labels and values SHALL keep a consistent visual rhythm between list and detail surfaces
+
+### Requirement: Shared entity view controllers persist a global desktop surface preference
+The system SHALL expose a shared entity-view controller that lets routes render table and card surfaces separately while reusing one global desktop preference across features.
+
+#### Scenario: Shared entity view renders separate table and list surfaces
+- **WHEN** a route composes a shared entity view for one entity-management screen
+- **THEN** it SHALL provide separate table and list render surfaces to the shared controller
+- **AND** the shared controller SHALL decide which surface to render without requiring the feature table component to embed card logic
+
+#### Scenario: Shared entity view toggle can live outside the rendered surface
+- **WHEN** a route places the shared entity-view toggle in a different layout slot from the rendered entity surface
+- **THEN** the toggle SHALL stay synchronized with the rendered surface through the shared entity-view mode state
+- **AND** the route SHALL not need ad hoc prop drilling between the toggle location and the rendered entity list
+
+#### Scenario: Desktop entity-view preference is global across features
+- **WHEN** a user selects the table or card surface through the shared entity-view toggle on a desktop-width viewport
+- **THEN** the shared controller SHALL persist that preference under one global entity-view storage key
+- **AND** another route reusing the same shared controller SHALL default to the same saved desktop surface unless it explicitly overrides the storage key
+
+#### Scenario: Mobile viewport forces the configured mobile surface
+- **WHEN** a route composes the shared entity-view controller with a mobile surface mode
+- **THEN** the controller SHALL render the configured mobile surface regardless of the saved desktop preference
+- **AND** the desktop preference SHALL remain preserved for later desktop visits
+
 ### Requirement: Equivalent shared entity sections use a unified title style
 The system SHALL render the default title of equivalent shared entity sections through one shared title treatment so entity forms and entity detail drawers present the same section-heading typography.
 
