@@ -7,7 +7,10 @@ export const AuditLogFilter = () => {
 	const { actions, entityTypes, actors } = useAuditLogOptions();
 
 	return (
-		<form.Form form={form} className="flex items-center justify-end gap-3">
+		<form.Form
+			form={form}
+			className="w-full md:w-fit flex items-center justify-end gap-3"
+		>
 			<form.AppField name="query">
 				{(field) => (
 					<field.Search
