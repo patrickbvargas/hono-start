@@ -31,7 +31,7 @@ import {
 } from "../schemas/search";
 import {
 	buildRemunerationPdf,
-	buildRemunerationSpreadsheet,
+	buildRemunerationSpreadsheetBuffer,
 	createRemunerationExportFileName,
 } from "../utils/export";
 
@@ -145,20 +145,20 @@ const exportRemunerationsFn = createServerFn({ method: "POST" })
 			const fileName = createRemunerationExportFileName(data.format);
 
 			if (data.format === "pdf") {
+				const pdfBuffer = await buildRemunerationPdf(remunerations);
+
 				return {
 					fileName,
 					mimeType: "application/pdf",
-					contentBase64: buildRemunerationPdf(remunerations).toString("base64"),
+					contentBase64: pdfBuffer.toString("base64"),
 				};
 			}
 
 			return {
 				fileName,
-				mimeType: "text/csv;charset=utf-8",
-				contentBase64: Buffer.from(
-					buildRemunerationSpreadsheet(remunerations),
-					"utf8",
-				).toString("base64"),
+				mimeType: "text/csv;charset=utf-16le",
+				contentBase64:
+					buildRemunerationSpreadsheetBuffer(remunerations).toString("base64"),
 			};
 		} catch (error) {
 			console.error("[exportRemunerations]", error);

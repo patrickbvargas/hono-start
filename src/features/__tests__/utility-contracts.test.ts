@@ -25,7 +25,9 @@ import {
 import { defaultRemunerationUpdateValues } from "@/features/remunerations/utils/default";
 import {
 	buildRemunerationPdf,
+	buildRemunerationPdfDefinition,
 	buildRemunerationSpreadsheet,
+	buildRemunerationSpreadsheetBuffer,
 	createRemunerationExportFileName,
 } from "@/features/remunerations/utils/export";
 
@@ -240,21 +242,67 @@ describe("feature utility contracts", () => {
 		expect(normalizeFeeDateFilter("  2026-01-15  ")).toBe("2026-01-15");
 	});
 
-	it("builds escaped remuneration spreadsheet and PDF exports", () => {
+	it("builds remuneration spreadsheet output with UTF-16LE BOM support", () => {
 		const csv = buildRemunerationSpreadsheet([remuneration]);
+		const csvBuffer = buildRemunerationSpreadsheetBuffer([remuneration]);
 
-		expect(csv).toContain('"Colaborador","Contrato","Pagamento"');
-		expect(csv).toContain('"João ""Teste"" (Advogado) \\ Silva"');
+		expect(csv).toContain('"sep=;"');
+		expect(csv).toContain(
+			'"Colaborador";"Cliente";"Contrato";"Parcela";"Pagamento";"%";"Origem";"Situação";"Valor"',
+		);
+		expect(csv).toContain(
+			'"João ""Teste"" (Advogado) \\ Silva";"Maria Cliente"',
+		);
 		expect(csv).toContain('"R$');
 		expect(csv).toContain('"30%"');
 		expect(csv).toContain('"Automática"');
 		expect(csv).toContain('"Ativa"');
+		expect(csvBuffer.subarray(0, 2)).toEqual(Buffer.from([0xff, 0xfe]));
+		expect(csvBuffer.subarray(2).toString("utf16le")).toBe(csv);
+	});
 
-		const pdf = buildRemunerationPdf([remuneration]).toString("utf8");
+	it("builds structured remuneration PDF definitions with totals", async () => {
+		const pdfDefinition = buildRemunerationPdfDefinition([remuneration], {
+			generatedAt: new Date("2026-01-15T12:00:00.000Z"),
+		});
+		const pdf = await buildRemunerationPdf([remuneration]);
 
-		expect(pdf).toContain("%PDF-1.4");
-		expect(pdf).toContain("Relatório de remunerações");
-		expect(pdf).toContain('João "Teste" \\(Advogado\\) \\\\ Silva');
+		expect(pdf.subarray(0, 8).toString()).toBe("%PDF-1.3");
+		expect(pdf.length).toBeGreaterThan(1000);
+		expect(pdfDefinition.info?.title).toBe("Relatório de remunerações");
+		expect(pdfDefinition.content).toEqual(
+			expect.arrayContaining([
+				expect.objectContaining({
+					text: "Relatório de remunerações",
+				}),
+				expect.objectContaining({
+					text: "Remunerações",
+				}),
+				expect.objectContaining({
+					text: "Totais por colaborador",
+				}),
+			]),
+		);
+		expect(pdfDefinition.content).toEqual(
+			expect.arrayContaining([
+				expect.objectContaining({
+					stack: expect.arrayContaining([
+						expect.objectContaining({
+							text: "Registros exportados: 1",
+						}),
+						expect.objectContaining({
+							text: "Total do período: R$ 370,37",
+						}),
+					]),
+				}),
+			]),
+		);
+		expect(JSON.stringify(pdfDefinition)).toContain('"Subtotal"');
+		expect(JSON.stringify(pdfDefinition)).toContain("R$ 370,37");
+		expect(JSON.stringify(pdfDefinition)).toContain(
+			'João \\"Teste\\" (Advogado) \\\\ Silva',
+		);
+		expect(JSON.stringify(pdfDefinition)).toContain("Maria Cliente");
 	});
 
 	it("creates dated remuneration export filenames", () => {
