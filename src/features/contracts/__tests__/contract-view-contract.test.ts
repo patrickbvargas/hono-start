@@ -9,6 +9,7 @@ describe("Contract entity view composition contract", () => {
 		const listContent = readFileSync(contractListPath, "utf8");
 
 		expect(listContent).toContain("import { DataCardList }");
+		expect(listContent).toContain('term: "Advogado"');
 		expect(listContent).not.toContain("useIsMobile");
 		expect(listContent).not.toContain("useLocalStorage");
 		expect(listContent).not.toContain("ContractTable");
@@ -26,5 +27,16 @@ describe("Contract entity view composition contract", () => {
 		expect(routeContent).toContain("<ContractList");
 		expect(routeContent).toContain("table={");
 		expect(routeContent).toContain("<ContractTable");
+	});
+
+	it("keeps table and list showing lawyer ownership field", () => {
+		const listContent = readFileSync(contractListPath, "utf8");
+		const tableContent = readFileSync(
+			"src/features/contracts/components/table/index.tsx",
+			"utf8",
+		);
+
+		expect(listContent).toContain('term: "Advogado"');
+		expect(tableContent).toContain('header: "Advogado"');
 	});
 });

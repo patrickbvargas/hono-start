@@ -52,6 +52,7 @@ const contractDetail = {
 	processNumber: "0001234-56.2026.8.26.0001",
 	clientId: 1,
 	client: "Maria Cliente",
+	lawyer: "João Advogado",
 	legalAreaId: 40,
 	legalArea: "Previdenciário",
 	legalAreaValue: "SOCIAL_SECURITY",

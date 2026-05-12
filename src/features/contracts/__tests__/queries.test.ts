@@ -58,6 +58,7 @@ describe("contract data queries", () => {
 					{
 						employeeId: 10,
 						employee: {
+							fullName: "Maria Silva",
 							type: { value: "LAWYER" },
 						},
 						assignmentType: { value: "RESPONSIBLE" },
@@ -210,6 +211,7 @@ describe("contract data queries", () => {
 			data: [
 				expect.objectContaining({
 					id: 5,
+					lawyer: "Maria Silva",
 					assignedEmployeeIds: [10],
 					isAssignedToActor: true,
 				}),
@@ -252,6 +254,7 @@ describe("contract data queries", () => {
 			}),
 		);
 		expect(result.assignedEmployeeIds).toEqual([10]);
+		expect(result.lawyer).toBe("Maria Silva");
 		expect(result.revenues).toEqual([
 			expect.objectContaining({
 				id: 20,
@@ -261,6 +264,68 @@ describe("contract data queries", () => {
 				isFullyPaid: false,
 			}),
 		]);
+	});
+
+	it("prefers responsible lawyer over recommended lawyer when invalid duplicate handling roles exist", async () => {
+		prismaMock.contract.findMany.mockResolvedValue([
+			{
+				id: 5,
+				processNumber: "PROC-001",
+				clientId: 9,
+				legalAreaId: 7,
+				statusId: 8,
+				feePercentage: "0.3",
+				isActive: true,
+				deletedAt: null,
+				createdAt: new Date("2026-01-05T00:00:00.000Z"),
+				updatedAt: new Date("2026-01-10T00:00:00.000Z"),
+				client: { fullName: "Cliente A" },
+				legalArea: { label: "Previdenciário", value: "SOCIAL_SECURITY" },
+				status: { label: "Ativo", value: "ACTIVE" },
+				assignments: [
+					{
+						employeeId: 11,
+						employee: {
+							fullName: "João Indicado",
+							type: { value: "LAWYER" },
+						},
+						assignmentType: { value: "RECOMMENDED" },
+					},
+					{
+						employeeId: 10,
+						employee: {
+							fullName: "Maria Responsável",
+							type: { value: "LAWYER" },
+						},
+						assignmentType: { value: "RESPONSIBLE" },
+					},
+				],
+				revenues: [{ id: 20 }],
+			},
+		]);
+
+		const result = await getContracts({
+			scope: {
+				firmId: 1,
+				employeeId: 10,
+				employeeTypeValue: "LAWYER",
+				isAdmin: false,
+			},
+			search: {
+				page: 1,
+				limit: 10,
+				column: "createdAt",
+				direction: "desc",
+				query: "",
+				clientId: "",
+				legalArea: [],
+				contractStatus: [],
+				active: "all",
+				status: "active",
+			},
+		});
+
+		expect(result.data[0]?.lawyer).toBe("Maria Responsável");
 	});
 
 	it("keeps admin-assistant users scoped to admin-assistant assignments", async () => {

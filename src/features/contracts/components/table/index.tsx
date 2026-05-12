@@ -58,6 +58,12 @@ export const ContractTable = ({
 					minColumnWidth: 240,
 				},
 			}),
+			c.accessor("lawyer", {
+				header: "Advogado",
+				meta: {
+					minColumnWidth: 240,
+				},
+			}),
 			c.accessor("legalArea", {
 				header: "Área",
 				enableSorting: CONTRACT_ALLOWED_SORT_COLUMNS.includes("legalArea"),

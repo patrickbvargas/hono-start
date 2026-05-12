@@ -12,6 +12,7 @@ describe("contract edit options", () => {
 			processNumber: "PROC-10",
 			clientId: 3,
 			client: "Cliente legado",
+			lawyer: "Colaborador legado",
 			legalAreaId: 1,
 			legalArea: "Previdenciario",
 			legalAreaValue: "SOCIAL_SECURITY",

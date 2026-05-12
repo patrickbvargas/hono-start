@@ -32,6 +32,7 @@ export const contractSummarySchema = entityIdSchema.safeExtend({
 	processNumber: z.string(),
 	clientId: z.number(),
 	client: z.string(),
+	lawyer: z.string(),
 	legalAreaId: z.number(),
 	legalArea: z.string(),
 	legalAreaValue: z.string(),

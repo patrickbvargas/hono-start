@@ -19,6 +19,10 @@ import type {
 	QueryPaginatedReturnType,
 } from "@/shared/types/api";
 import { CONTRACT_ERRORS } from "../constants/errors";
+import {
+	ASSIGNMENT_TYPE_RECOMMENDED_VALUE,
+	ASSIGNMENT_TYPE_RESPONSIBLE_VALUE,
+} from "../constants/values";
 import type { ContractFilter } from "../schemas/filter";
 import {
 	type ContractDetail,
@@ -101,6 +105,38 @@ function mapAssignmentSummaries(
 		employeeTypeValue: assignment.employee.type.value,
 		assignmentTypeValue: assignment.assignmentType.value,
 	}));
+}
+
+function getHandlingLawyerName(
+	assignments: Array<{
+		employeeId: number;
+		employee: {
+			fullName: string;
+		};
+		assignmentType: {
+			value: string;
+		};
+	}>,
+) {
+	const responsibleAssignment = assignments.find(
+		(assignment) =>
+			assignment.assignmentType.value === ASSIGNMENT_TYPE_RESPONSIBLE_VALUE,
+	);
+
+	if (responsibleAssignment) {
+		return responsibleAssignment.employee.fullName;
+	}
+
+	const recommendedAssignment = assignments.find(
+		(assignment) =>
+			assignment.assignmentType.value === ASSIGNMENT_TYPE_RECOMMENDED_VALUE,
+	);
+
+	if (recommendedAssignment) {
+		return recommendedAssignment.employee.fullName;
+	}
+
+	return "—";
 }
 
 function buildContractWhere({
@@ -190,7 +226,10 @@ function mapContractSummary(
 		status: { label: string; value: string };
 		assignments: Array<{
 			employeeId: number;
-			employee: { type: { value: string } };
+			employee: {
+				fullName: string;
+				type: { value: string };
+			};
 			assignmentType: { value: string };
 		}>;
 		revenues: Array<{ id: number }>;
@@ -208,6 +247,7 @@ function mapContractSummary(
 				processNumber: contract.processNumber,
 				clientId: contract.clientId,
 				client: contract.client.fullName,
+				lawyer: getHandlingLawyerName(contract.assignments),
 				legalAreaId: contract.legalAreaId,
 				legalArea: contract.legalArea.label,
 				legalAreaValue: contract.legalArea.value,
@@ -288,6 +328,15 @@ function mapContractDetail(
 		processNumber: contract.processNumber,
 		clientId: contract.clientId,
 		client: contract.client.fullName,
+		lawyer: getHandlingLawyerName(
+			contract.assignments
+				.filter((assignment) => assignment.isActive && !assignment.deletedAt)
+				.map((assignment) => ({
+					employeeId: assignment.employeeId,
+					employee: { fullName: assignment.employee.fullName },
+					assignmentType: { value: assignment.assignmentType.value },
+				})),
+		),
 		legalAreaId: contract.legalAreaId,
 		legalArea: contract.legalArea.label,
 		legalAreaValue: contract.legalArea.value,
@@ -350,7 +399,12 @@ const contractSummaryInclude = {
 		},
 		select: {
 			employeeId: true,
-			employee: { select: { type: { select: { value: true } } } },
+			employee: {
+				select: {
+					fullName: true,
+					type: { select: { value: true } },
+				},
+			},
 			assignmentType: { select: { value: true } },
 		},
 	},

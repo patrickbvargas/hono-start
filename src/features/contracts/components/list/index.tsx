@@ -36,6 +36,10 @@ export const ContractList = ({
 				definition: contract.client,
 			},
 			{
+				term: "Advogado",
+				definition: contract.lawyer,
+			},
+			{
 				term: "Área",
 				definition: contract.legalArea,
 			},
