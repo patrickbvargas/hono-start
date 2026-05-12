@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
+import * as React from "react";
 import { useAppForm } from "@/shared/hooks/use-app-form";
 import { toast } from "@/shared/lib/toast";
 import {
@@ -20,6 +21,7 @@ export function useLoginForm({ redirectTo }: UseLoginFormOptions = {}) {
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();
 	const loginMutation = useMutation(loginMutationOptions());
+	const [isCompletingLogin, setIsCompletingLogin] = React.useState(false);
 
 	const form = useAppForm({
 		defaultValues: defaultLoginValues(),
@@ -28,6 +30,7 @@ export function useLoginForm({ redirectTo }: UseLoginFormOptions = {}) {
 		},
 		onSubmit: async ({ value }) => {
 			try {
+				setIsCompletingLogin(true);
 				const parsed = loginInputSchema.parse(value);
 				await loginMutation.mutateAsync({ data: parsed });
 				clearAuthenticatedQueryCache(queryClient);
@@ -45,6 +48,7 @@ export function useLoginForm({ redirectTo }: UseLoginFormOptions = {}) {
 						: (getSafeInternalRedirectPath(redirectTo) ?? "/"),
 				});
 			} catch (error) {
+				setIsCompletingLogin(false);
 				toast.danger(
 					error instanceof Error
 						? error.message
@@ -56,6 +60,6 @@ export function useLoginForm({ redirectTo }: UseLoginFormOptions = {}) {
 
 	return {
 		form,
-		isPending: loginMutation.isPending,
+		isPending: loginMutation.isPending || isCompletingLogin,
 	};
 }

@@ -10,6 +10,8 @@ let capturedFormConfig: {
 	}) => Promise<void>;
 } | null = null;
 
+let mockedIsCompletingLoginState = false;
+
 const {
 	clearAuthenticatedQueryCacheMock,
 	fetchQueryMock,
@@ -20,6 +22,7 @@ const {
 	useMutationMock,
 	useNavigateMock,
 	useQueryClientMock,
+	useStateMock,
 } = vi.hoisted(() => ({
 	clearAuthenticatedQueryCacheMock: vi.fn(),
 	fetchQueryMock: vi.fn(),
@@ -30,7 +33,17 @@ const {
 	useMutationMock: vi.fn(),
 	useNavigateMock: vi.fn(),
 	useQueryClientMock: vi.fn(),
+	useStateMock: vi.fn(),
 }));
+
+vi.mock("react", async () => {
+	const actual = await vi.importActual<typeof import("react")>("react");
+
+	return {
+		...actual,
+		useState: useStateMock,
+	};
+});
 
 vi.mock("@tanstack/react-router", () => ({
 	useNavigate: useNavigateMock,
@@ -81,6 +94,8 @@ import { useLoginForm } from "../hooks/use-login-form";
 describe("useLoginForm", () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
+		capturedFormConfig = null;
+		mockedIsCompletingLoginState = false;
 		useNavigateMock.mockReturnValue(navigateMock);
 		useQueryClientMock.mockReturnValue({
 			fetchQuery: fetchQueryMock,
@@ -93,6 +108,15 @@ describe("useLoginForm", () => {
 			capturedFormConfig = config;
 			return config;
 		});
+		useStateMock.mockImplementation((initialValue) => [
+			mockedIsCompletingLoginState || initialValue,
+			(nextValue: boolean | ((currentValue: boolean) => boolean)) => {
+				mockedIsCompletingLoginState =
+					typeof nextValue === "function"
+						? nextValue(mockedIsCompletingLoginState)
+						: nextValue;
+			},
+		]);
 		mutateAsyncMock.mockResolvedValue({ success: true });
 		fetchQueryMock.mockResolvedValue({ user: { id: 1 } });
 	});
@@ -165,5 +189,65 @@ describe("useLoginForm", () => {
 		expect(navigateMock).toHaveBeenCalledWith({
 			to: "/alterar-senha-obrigatoria",
 		});
+	});
+
+	it("keeps the login state busy until navigation finishes after mutation success", async () => {
+		let resolveMutation: ((value: { success: true }) => void) | undefined;
+		let resolveSession:
+			| ((value: {
+					user: { id: number };
+					mustChangePassword?: boolean;
+			  }) => void)
+			| undefined;
+		let resolveNavigate: (() => void) | undefined;
+
+		mutateAsyncMock.mockImplementation(
+			() =>
+				new Promise((resolve) => {
+					resolveMutation = resolve;
+				}),
+		);
+		fetchQueryMock.mockImplementation(
+			() =>
+				new Promise((resolve) => {
+					resolveSession = resolve;
+				}),
+		);
+		navigateMock.mockImplementation(
+			() =>
+				new Promise<void>((resolve) => {
+					resolveNavigate = resolve;
+				}),
+		);
+
+		expect(useLoginForm().isPending).toBe(false);
+
+		useLoginForm();
+
+		const submitPromise = capturedFormConfig?.onSubmit({
+			value: {
+				identifier: "carlos@example.com",
+				password: "Senha123!",
+				rememberMe: false,
+			},
+		});
+
+		expect(useLoginForm().isPending).toBe(true);
+
+		resolveMutation?.({ success: true });
+		await Promise.resolve();
+
+		expect(useLoginForm().isPending).toBe(true);
+
+		resolveSession?.({
+			user: { id: 1 },
+			mustChangePassword: false,
+		});
+		await Promise.resolve();
+
+		expect(useLoginForm().isPending).toBe(true);
+
+		resolveNavigate?.();
+		await submitPromise;
 	});
 });
