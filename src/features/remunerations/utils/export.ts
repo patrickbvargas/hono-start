@@ -75,15 +75,16 @@ interface PdfDocumentDefinition {
 }
 
 const UTF16LE_BOM = Buffer.from([0xff, 0xfe]);
+const PDFMAKE_FONT_DIR = resolve("node_modules", "pdfmake", "fonts", "Roboto");
 const PDF_FONT_FILES = {
-	normal: "C:/Windows/Fonts/arial.ttf",
-	bold: "C:/Windows/Fonts/arialbd.ttf",
-	italics: "C:/Windows/Fonts/ariali.ttf",
-	bolditalics: "C:/Windows/Fonts/arialbi.ttf",
+	normal: resolve(PDFMAKE_FONT_DIR, "Roboto-Regular.ttf"),
+	bold: resolve(PDFMAKE_FONT_DIR, "Roboto-Medium.ttf"),
+	italics: resolve(PDFMAKE_FONT_DIR, "Roboto-Italic.ttf"),
+	bolditalics: resolve(PDFMAKE_FONT_DIR, "Roboto-MediumItalic.ttf"),
 } as const;
 
 pdfmake.addFonts({
-	Arial: {
+	Roboto: {
 		normal: PDF_FONT_FILES.normal,
 		bold: PDF_FONT_FILES.bold,
 		italics: PDF_FONT_FILES.italics,
@@ -276,7 +277,7 @@ export function buildRemunerationPdfDefinition(
 			subject: "Exportação de remunerações",
 		},
 		defaultStyle: {
-			font: "Arial",
+			font: "Roboto",
 			fontSize: 8,
 		},
 		styles: {
