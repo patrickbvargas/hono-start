@@ -45,6 +45,7 @@ const getFeesFn = createServerFn({ method: "GET" })
 				scope: {
 					firmId: scope.firmId,
 					employeeId: scope.employeeId,
+					employeeTypeValue: session.employeeType.value,
 					isAdmin: isAdminSession(session),
 				},
 				search: data,
@@ -67,6 +68,7 @@ const getFeeByIdFn = createServerFn({ method: "GET" })
 				scope: {
 					firmId: scope.firmId,
 					employeeId: scope.employeeId,
+					employeeTypeValue: session.employeeType.value,
 					isAdmin: isAdminSession(session),
 				},
 				id: data.id,
@@ -91,6 +93,7 @@ const getSelectableFeeContractsFn = createServerFn({ method: "GET" })
 			return await getSelectableFeeContracts({
 				firmId: scope.firmId,
 				employeeId: scope.employeeId,
+				employeeTypeValue: session.employeeType.value,
 				isAdmin: isAdminSession(session),
 			});
 		} catch (error) {
@@ -115,6 +118,7 @@ const getSelectableFeeRevenuesFn = createServerFn({ method: "GET" })
 				scope: {
 					firmId: scope.firmId,
 					employeeId: scope.employeeId,
+					employeeTypeValue: session.employeeType.value,
 					isAdmin: isAdminSession(session),
 				},
 				contractId: data.contractId,

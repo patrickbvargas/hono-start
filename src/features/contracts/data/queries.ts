@@ -6,6 +6,13 @@ import {
 } from "@/shared/lib/entity-management";
 import { prisma } from "@/shared/lib/prisma";
 import { type Option, optionSchema } from "@/shared/schemas/option";
+import {
+	SESSION_ASSIGNMENT_TYPE_ADMIN_ASSISTANT_VALUE,
+	SESSION_ASSIGNMENT_TYPE_RECOMMENDED_VALUE,
+	SESSION_ASSIGNMENT_TYPE_RESPONSIBLE_VALUE,
+	SESSION_EMPLOYEE_TYPE_ADMIN_ASSISTANT_VALUE,
+	type SessionAssignmentSummary,
+} from "@/shared/session";
 import type {
 	QueryManyReturnType,
 	QueryOneReturnType,
@@ -24,6 +31,7 @@ import type { ContractSearch } from "../schemas/search";
 interface ContractAccessParams {
 	firmId: number;
 	employeeId?: number;
+	employeeTypeValue?: string;
 	isAdmin: boolean;
 }
 
@@ -44,9 +52,61 @@ interface GetContractByIdParams {
 	id: number;
 }
 
+function getVisibleAssignmentTypeValues(employeeTypeValue?: string) {
+	if (employeeTypeValue === SESSION_EMPLOYEE_TYPE_ADMIN_ASSISTANT_VALUE) {
+		return [SESSION_ASSIGNMENT_TYPE_ADMIN_ASSISTANT_VALUE];
+	}
+
+	return [
+		SESSION_ASSIGNMENT_TYPE_RESPONSIBLE_VALUE,
+		SESSION_ASSIGNMENT_TYPE_RECOMMENDED_VALUE,
+	];
+}
+
+function buildVisibleAssignmentWhere(
+	employeeId?: number,
+	employeeTypeValue?: string,
+) {
+	if (!employeeId) {
+		return undefined;
+	}
+
+	return {
+		employeeId,
+		deletedAt: null,
+		isActive: true,
+		assignmentType: {
+			value: {
+				in: getVisibleAssignmentTypeValues(employeeTypeValue),
+			},
+		},
+	};
+}
+
+function mapAssignmentSummaries(
+	assignments: Array<{
+		employeeId: number;
+		employee: {
+			type: {
+				value: string;
+			};
+		};
+		assignmentType: {
+			value: string;
+		};
+	}>,
+): SessionAssignmentSummary[] {
+	return assignments.map((assignment) => ({
+		employeeId: assignment.employeeId,
+		employeeTypeValue: assignment.employee.type.value,
+		assignmentTypeValue: assignment.assignmentType.value,
+	}));
+}
+
 function buildContractWhere({
 	firmId,
 	employeeId,
+	employeeTypeValue,
 	filter,
 	clientId,
 	legalAreaIds,
@@ -83,11 +143,7 @@ function buildContractWhere({
 		...(!isAdmin && employeeId
 			? {
 					assignments: {
-						some: {
-							employeeId,
-							deletedAt: null,
-							isActive: true,
-						},
+						some: buildVisibleAssignmentWhere(employeeId, employeeTypeValue),
 					},
 				}
 			: {}),
@@ -132,12 +188,17 @@ function mapContractSummary(
 		client: { fullName: string };
 		legalArea: { label: string; value: string };
 		status: { label: string; value: string };
-		assignments: Array<{ employeeId: number }>;
+		assignments: Array<{
+			employeeId: number;
+			employee: { type: { value: string } };
+			assignmentType: { value: string };
+		}>;
 		revenues: Array<{ id: number }>;
 	}>,
 ) {
 	return contractSummarySchema.array().parse(
 		contracts.map((contract) => {
+			const assignmentSummaries = mapAssignmentSummaries(contract.assignments);
 			const assignedEmployeeIds = contract.assignments.map(
 				(assignment) => assignment.employeeId,
 			);
@@ -159,7 +220,9 @@ function mapContractSummary(
 				assignedEmployeeIds,
 				isAssignedToActor: scope.isAdmin
 					? true
-					: assignedEmployeeIds.includes(scope.employeeId ?? 0),
+					: assignmentSummaries.some(
+							(assignment) => assignment.employeeId === scope.employeeId,
+						),
 				isActive: contract.isActive,
 				isSoftDeleted: Boolean(contract.deletedAt),
 				createdAt: contract.createdAt.toISOString(),
@@ -212,9 +275,13 @@ function mapContractDetail(
 		}>;
 	},
 ): ContractDetail {
-	const assignedEmployeeIds = contract.assignments
-		.filter((assignment) => assignment.isActive && !assignment.deletedAt)
-		.map((assignment) => assignment.employeeId);
+	const activeAssignments = contract.assignments.filter(
+		(assignment) => assignment.isActive && !assignment.deletedAt,
+	);
+	const assignedEmployeeIds = activeAssignments.map(
+		(assignment) => assignment.employeeId,
+	);
+	const assignmentSummaries = mapAssignmentSummaries(activeAssignments);
 
 	return contractDetailSchema.parse({
 		id: contract.id,
@@ -262,7 +329,9 @@ function mapContractDetail(
 		assignedEmployeeIds,
 		isAssignedToActor: scope.isAdmin
 			? true
-			: assignedEmployeeIds.includes(scope.employeeId ?? 0),
+			: assignmentSummaries.some(
+					(assignment) => assignment.employeeId === scope.employeeId,
+				),
 		isActive: contract.isActive,
 		isSoftDeleted: Boolean(contract.deletedAt),
 		createdAt: contract.createdAt.toISOString(),
@@ -281,6 +350,8 @@ const contractSummaryInclude = {
 		},
 		select: {
 			employeeId: true,
+			employee: { select: { type: { select: { value: true } } } },
+			assignmentType: { select: { value: true } },
 		},
 	},
 	revenues: {
@@ -354,6 +425,7 @@ export async function getContracts({
 	const where = buildContractWhere({
 		firmId: scope.firmId,
 		employeeId: scope.employeeId,
+		employeeTypeValue: scope.employeeTypeValue,
 		filter: search,
 		clientId,
 		legalAreaIds: resolvedLegalAreas.map((item) => item.id),
@@ -404,6 +476,7 @@ export async function getContractById({
 			...buildContractWhere({
 				firmId: scope.firmId,
 				employeeId: scope.employeeId,
+				employeeTypeValue: scope.employeeTypeValue,
 				filter: {
 					query: "",
 					clientId: "",
@@ -435,7 +508,11 @@ export async function getContractAccessResourceById(id: number) {
 			status: { select: { value: true } },
 			assignments: {
 				where: { deletedAt: null, isActive: true },
-				select: { employeeId: true },
+				select: {
+					employeeId: true,
+					employee: { select: { type: { select: { value: true } } } },
+					assignmentType: { select: { value: true } },
+				},
 			},
 			revenues: {
 				where: { deletedAt: null, isActive: true },
@@ -455,6 +532,7 @@ export async function getContractAccessResourceById(id: number) {
 			firmId: contract.firmId,
 			statusValue: contract.status.value,
 			allowStatusChange: contract.allowStatusChange,
+			assignments: mapAssignmentSummaries(contract.assignments),
 			assignedEmployeeIds: contract.assignments.map(
 				(assignment) => assignment.employeeId,
 			),

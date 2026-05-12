@@ -11,6 +11,11 @@ import {
 	type FeeAccessResource,
 	type LoggedUserSession,
 	type RemunerationAccessResource,
+	SESSION_ASSIGNMENT_TYPE_ADMIN_ASSISTANT_VALUE,
+	SESSION_ASSIGNMENT_TYPE_RECOMMENDED_VALUE,
+	SESSION_ASSIGNMENT_TYPE_RESPONSIBLE_VALUE,
+	SESSION_EMPLOYEE_TYPE_ADMIN_ASSISTANT_VALUE,
+	SESSION_EMPLOYEE_TYPE_LAWYER_VALUE,
 	type SessionResource,
 } from "./types";
 
@@ -35,6 +40,40 @@ function isAssignedToActor(
 
 	if (typeof resource.isAssignedToActor === "boolean") {
 		return resource.isAssignedToActor;
+	}
+
+	if (resource.assignments) {
+		return resource.assignments.some((assignment) => {
+			if (assignment.employeeId !== getCurrentEmployeeId(session)) {
+				return false;
+			}
+
+			if (
+				session.employeeType.value ===
+				SESSION_EMPLOYEE_TYPE_ADMIN_ASSISTANT_VALUE
+			) {
+				return (
+					assignment.employeeTypeValue ===
+						SESSION_EMPLOYEE_TYPE_ADMIN_ASSISTANT_VALUE &&
+					assignment.assignmentTypeValue ===
+						SESSION_ASSIGNMENT_TYPE_ADMIN_ASSISTANT_VALUE
+				);
+			}
+
+			if (session.employeeType.value === SESSION_EMPLOYEE_TYPE_LAWYER_VALUE) {
+				const visibleLawyerAssignmentTypes: string[] = [
+					SESSION_ASSIGNMENT_TYPE_RESPONSIBLE_VALUE,
+					SESSION_ASSIGNMENT_TYPE_RECOMMENDED_VALUE,
+				];
+
+				return (
+					assignment.employeeTypeValue === SESSION_EMPLOYEE_TYPE_LAWYER_VALUE &&
+					visibleLawyerAssignmentTypes.includes(assignment.assignmentTypeValue)
+				);
+			}
+
+			return false;
+		});
 	}
 
 	return (

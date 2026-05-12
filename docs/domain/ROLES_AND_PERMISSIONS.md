@@ -13,12 +13,12 @@
 | View all clients | Yes | Yes |
 | Create or update clients | Yes | Yes |
 | Delete or restore clients | Yes | No |
-| View all contracts | Yes | No, only assigned contracts |
+| View all contracts | Yes | No, only contracts visible by assignment role |
 | Create contracts | Yes | Yes |
 | Update assigned writable contracts | Yes | Yes, when assigned and writable |
 | Assign or remove employees from a contract | Yes | Yes, when assigned and writable |
 | Delete or restore contracts | Yes | No |
-| View revenues and fees | Yes | No, only on allowed contracts |
+| View revenues and fees | Yes | No, only fees on allowed contracts |
 | Create or update revenues and fees | Yes | Yes, within allowed contract boundaries |
 | Delete or restore revenues and fees | Yes | No |
 | View own remunerations | Yes | Yes |
@@ -43,7 +43,10 @@
 ## Visibility Rules
 
 - Administrators see firm-wide clients, contracts, fees, revenues, and remunerations.
-- Regular users see all clients but only the contracts, fees, and revenues allowed by their assignment-based visibility rules.
+- Regular users see all clients but only the contracts and fees allowed by their assignment-based visibility rules.
+- Regular lawyers see contracts only when actively assigned as responsible or recommended.
+- Regular lawyers do not gain contract visibility from recommending assignments alone.
+- Regular administrative assistants continue seeing contracts where they are actively assigned as admin assistants.
 - Regular users only see their own remunerations and own dashboard-scoped financial data.
 - "Allowed contract boundaries" means the actor is inside the same firm, is assigned where assignment-based visibility is required, and the target resource remains writable by lifecycle rules.
 

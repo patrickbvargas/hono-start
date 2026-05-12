@@ -261,6 +261,7 @@ describe("fee data mutations", () => {
 					id: 6,
 					resource: {
 						firmId: 1,
+						assignments: [],
 						assignedEmployeeIds: [],
 						statusValue: "ACTIVE",
 						allowStatusChange: true,
@@ -322,6 +323,7 @@ describe("fee data mutations", () => {
 					id: 6,
 					resource: {
 						firmId: 1,
+						assignments: [],
 						assignedEmployeeIds: [],
 						statusValue: "ACTIVE",
 						allowStatusChange: true,
@@ -357,6 +359,7 @@ describe("fee data mutations", () => {
 					id: 6,
 					resource: {
 						firmId: 1,
+						assignments: [],
 						assignedEmployeeIds: [],
 						statusValue: "ACTIVE",
 						allowStatusChange: true,
@@ -392,6 +395,7 @@ describe("fee data mutations", () => {
 					id: 6,
 					resource: {
 						firmId: 1,
+						assignments: [],
 						assignedEmployeeIds: [],
 						statusValue: "ACTIVE",
 						allowStatusChange: true,

@@ -8,6 +8,11 @@ import {
 	type FeeAccessResource,
 	type LoggedUserSession,
 	SESSION_ADMIN_ROLE_VALUE,
+	SESSION_ASSIGNMENT_TYPE_ADMIN_ASSISTANT_VALUE,
+	SESSION_ASSIGNMENT_TYPE_RECOMMENDED_VALUE,
+	SESSION_ASSIGNMENT_TYPE_RECOMMENDING_VALUE,
+	SESSION_ASSIGNMENT_TYPE_RESPONSIBLE_VALUE,
+	SESSION_EMPLOYEE_TYPE_ADMIN_ASSISTANT_VALUE,
 	SESSION_USER_ROLE_VALUE,
 	type SessionAction,
 } from "@/shared/session";
@@ -115,6 +120,13 @@ function createContractResource(
 ): ContractAccessResource {
 	return {
 		firmId: 100,
+		assignments: [
+			{
+				employeeId: 10,
+				employeeTypeValue: "LAWYER",
+				assignmentTypeValue: SESSION_ASSIGNMENT_TYPE_RESPONSIBLE_VALUE,
+			},
+		],
 		assignedEmployeeIds: [10],
 		statusValue: CONTRACT_STATUS_ACTIVE_VALUE,
 		...overrides,
@@ -126,6 +138,13 @@ function createFeeResource(
 ): FeeAccessResource {
 	return {
 		firmId: 100,
+		assignments: [
+			{
+				employeeId: 10,
+				employeeTypeValue: "LAWYER",
+				assignmentTypeValue: SESSION_ASSIGNMENT_TYPE_RESPONSIBLE_VALUE,
+			},
+		],
 		assignedEmployeeIds: [10],
 		statusValue: CONTRACT_STATUS_ACTIVE_VALUE,
 		...overrides,
@@ -180,7 +199,16 @@ describe("session authorization policy", () => {
 			can(
 				userSession,
 				"contract.view",
-				createContractResource({ assignedEmployeeIds: [11] }),
+				createContractResource({
+					assignments: [
+						{
+							employeeId: 10,
+							employeeTypeValue: "LAWYER",
+							assignmentTypeValue: SESSION_ASSIGNMENT_TYPE_RECOMMENDING_VALUE,
+						},
+					],
+					assignedEmployeeIds: [11],
+				}),
 			),
 		).toBe(false);
 		expect(
@@ -190,6 +218,54 @@ describe("session authorization policy", () => {
 				createFeeResource({ isAssignedToActor: false }),
 			),
 		).toBe(false);
+	});
+
+	it("grants contract access by assignment role and employee type", () => {
+		expect(
+			can(
+				userSession,
+				"contract.view",
+				createContractResource({
+					assignments: [
+						{
+							employeeId: 10,
+							employeeTypeValue: "LAWYER",
+							assignmentTypeValue: SESSION_ASSIGNMENT_TYPE_RECOMMENDED_VALUE,
+						},
+					],
+				}),
+			),
+		).toBe(true);
+
+		const adminAssistantSession = createSession({
+			role: {
+				id: 2,
+				value: SESSION_USER_ROLE_VALUE,
+				label: "Usuário",
+			},
+			employeeType: {
+				id: 2,
+				value: SESSION_EMPLOYEE_TYPE_ADMIN_ASSISTANT_VALUE,
+				label: "Assistente Administrativo",
+			},
+		});
+
+		expect(
+			can(
+				adminAssistantSession,
+				"contract.view",
+				createContractResource({
+					assignments: [
+						{
+							employeeId: 10,
+							employeeTypeValue: SESSION_EMPLOYEE_TYPE_ADMIN_ASSISTANT_VALUE,
+							assignmentTypeValue:
+								SESSION_ASSIGNMENT_TYPE_ADMIN_ASSISTANT_VALUE,
+						},
+					],
+				}),
+			),
+		).toBe(true);
 	});
 
 	it("allows regular users to access only their own remunerations", () => {

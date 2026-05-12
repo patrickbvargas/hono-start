@@ -76,6 +76,11 @@ The system SHALL preserve existing remuneration product behavior while changing 
 - **WHEN** a user exports remunerations with filters and sorting
 - **THEN** the exported data SHALL use the same session-derived firm, role, employee scope, filters, and ordering as the on-screen remuneration list
 
+#### Scenario: Own remuneration visibility survives hidden referral contract
+- **WHEN** a regular authenticated user loads remunerations that belong to that user's employee identity
+- **THEN** the system returns those remunerations even if the linked contract is not visible to that user because the user participates only as `RECOMMENDING`
+- **AND** the remuneration list remains scoped only by authenticated firm and employee ownership
+
 ### Requirement: List remunerations
 The system SHALL display a paginated, sortable, filterable list of remunerations available to the authenticated user, following the shared entity-management list contract and the remuneration visibility rules defined by role and employee scope.
 

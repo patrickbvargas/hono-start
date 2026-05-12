@@ -9,6 +9,11 @@ import type { Option } from "@/shared/schemas/option";
 import {
 	CONTRACT_STATUS_ACTIVE_VALUE,
 	type FeeAccessResource,
+	SESSION_ASSIGNMENT_TYPE_ADMIN_ASSISTANT_VALUE,
+	SESSION_ASSIGNMENT_TYPE_RECOMMENDED_VALUE,
+	SESSION_ASSIGNMENT_TYPE_RESPONSIBLE_VALUE,
+	SESSION_EMPLOYEE_TYPE_ADMIN_ASSISTANT_VALUE,
+	type SessionAssignmentSummary,
 } from "@/shared/session";
 import type {
 	QueryManyReturnType,
@@ -28,6 +33,7 @@ import type { FeeSearch } from "../schemas/search";
 interface FeeAccessParams {
 	firmId: number;
 	employeeId?: number;
+	employeeTypeValue?: string;
 	isAdmin: boolean;
 }
 
@@ -50,9 +56,61 @@ interface GetSelectableFeeRevenuesParams {
 	contractId?: string;
 }
 
+function getVisibleAssignmentTypeValues(employeeTypeValue?: string) {
+	if (employeeTypeValue === SESSION_EMPLOYEE_TYPE_ADMIN_ASSISTANT_VALUE) {
+		return [SESSION_ASSIGNMENT_TYPE_ADMIN_ASSISTANT_VALUE];
+	}
+
+	return [
+		SESSION_ASSIGNMENT_TYPE_RESPONSIBLE_VALUE,
+		SESSION_ASSIGNMENT_TYPE_RECOMMENDED_VALUE,
+	];
+}
+
+function buildVisibleAssignmentWhere(
+	employeeId?: number,
+	employeeTypeValue?: string,
+) {
+	if (!employeeId) {
+		return undefined;
+	}
+
+	return {
+		employeeId,
+		deletedAt: null,
+		isActive: true,
+		assignmentType: {
+			value: {
+				in: getVisibleAssignmentTypeValues(employeeTypeValue),
+			},
+		},
+	};
+}
+
+function mapAssignmentSummaries(
+	assignments: Array<{
+		employeeId: number;
+		employee: {
+			type: {
+				value: string;
+			};
+		};
+		assignmentType: {
+			value: string;
+		};
+	}>,
+): SessionAssignmentSummary[] {
+	return assignments.map((assignment) => ({
+		employeeId: assignment.employeeId,
+		employeeTypeValue: assignment.employee.type.value,
+		assignmentTypeValue: assignment.assignmentType.value,
+	}));
+}
+
 function buildFeeWhere({
 	firmId,
 	employeeId,
+	employeeTypeValue,
 	filter,
 	isAdmin,
 }: BuildFeeWhereParams): Prisma.FeeWhereInput {
@@ -105,11 +163,10 @@ function buildFeeWhere({
 							: {}),
 						contract: {
 							assignments: {
-								some: {
+								some: buildVisibleAssignmentWhere(
 									employeeId,
-									deletedAt: null,
-									isActive: true,
-								},
+									employeeTypeValue,
+								),
 							},
 						},
 					},
@@ -216,6 +273,7 @@ export async function getFees({
 	const where = buildFeeWhere({
 		firmId: scope.firmId,
 		employeeId: scope.employeeId,
+		employeeTypeValue: scope.employeeTypeValue,
 		filter: search,
 		isAdmin: scope.isAdmin,
 	});
@@ -260,6 +318,7 @@ export async function getFeeById({
 			...buildFeeWhere({
 				firmId: scope.firmId,
 				employeeId: scope.employeeId,
+				employeeTypeValue: scope.employeeTypeValue,
 				filter: {
 					query: "",
 					contractId: "",
@@ -286,6 +345,7 @@ export async function getFeeById({
 export async function getSelectableFeeContracts({
 	firmId,
 	employeeId,
+	employeeTypeValue,
 	isAdmin,
 }: FeeAccessParams): Promise<QueryManyReturnType<Option>> {
 	const contracts = await prisma.contract.findMany({
@@ -299,11 +359,7 @@ export async function getSelectableFeeContracts({
 			...(!isAdmin && employeeId
 				? {
 						assignments: {
-							some: {
-								employeeId,
-								deletedAt: null,
-								isActive: true,
-							},
+							some: buildVisibleAssignmentWhere(employeeId, employeeTypeValue),
 						},
 					}
 				: {}),
@@ -351,11 +407,10 @@ export async function getSelectableFeeRevenues({
 				...(!scope.isAdmin && scope.employeeId
 					? {
 							assignments: {
-								some: {
-									employeeId: scope.employeeId,
-									deletedAt: null,
-									isActive: true,
-								},
+								some: buildVisibleAssignmentWhere(
+									scope.employeeId,
+									scope.employeeTypeValue,
+								),
 							},
 						}
 					: {}),
@@ -414,6 +469,8 @@ export async function getFeeRevenueAccessResourceById(
 						},
 						select: {
 							employeeId: true,
+							employee: { select: { type: { select: { value: true } } } },
+							assignmentType: { select: { value: true } },
 						},
 					},
 				},
@@ -432,6 +489,7 @@ export async function getFeeRevenueAccessResourceById(
 			firmId: revenue.firmId,
 			statusValue: revenue.contract.status.value,
 			allowStatusChange: revenue.contract.allowStatusChange,
+			assignments: mapAssignmentSummaries(revenue.contract.assignments),
 			assignedEmployeeIds: revenue.contract.assignments.map(
 				(assignment) => assignment.employeeId,
 			),
@@ -467,6 +525,16 @@ export async function getFeeAccessResourceById(firmId: number, id: number) {
 								select: {
 									id: true,
 									employeeId: true,
+									employee: {
+										select: {
+											type: {
+												select: {
+													value: true,
+												},
+											},
+										},
+									},
+									assignmentType: { select: { value: true } },
 								},
 							},
 						},
@@ -504,6 +572,7 @@ export async function getFeeAccessResourceById(firmId: number, id: number) {
 			firmId: fee.firmId,
 			statusValue: fee.revenue.contract.status.value,
 			allowStatusChange: fee.revenue.contract.allowStatusChange,
+			assignments: mapAssignmentSummaries(fee.revenue.contract.assignments),
 			assignedEmployeeIds: fee.revenue.contract.assignments.map(
 				(assignment) => assignment.employeeId,
 			),

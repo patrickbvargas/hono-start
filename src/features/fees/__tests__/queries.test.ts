@@ -51,7 +51,12 @@ describe("fee data queries", () => {
 
 	it("filters fee lists by contract query and allowed contract scope", async () => {
 		const result = await getFees({
-			scope: { firmId: 1, employeeId: 10, isAdmin: false },
+			scope: {
+				firmId: 1,
+				employeeId: 10,
+				employeeTypeValue: "LAWYER",
+				isAdmin: false,
+			},
 			search: {
 				page: 2,
 				limit: 10,
@@ -92,6 +97,11 @@ describe("fee data queries", () => {
 									employeeId: 10,
 									deletedAt: null,
 									isActive: true,
+									assignmentType: {
+										value: {
+											in: ["RESPONSIBLE", "RECOMMENDED"],
+										},
+									},
 								},
 							},
 						},
@@ -113,7 +123,12 @@ describe("fee data queries", () => {
 	it("keeps detail lookups compatible with the query-enabled filter defaults", async () => {
 		await expect(
 			getFeeById({
-				scope: { firmId: 1, employeeId: 10, isAdmin: false },
+				scope: {
+					firmId: 1,
+					employeeId: 10,
+					employeeTypeValue: "LAWYER",
+					isAdmin: false,
+				},
 				id: 7,
 			}),
 		).resolves.toEqual(
@@ -134,6 +149,11 @@ describe("fee data queries", () => {
 									employeeId: 10,
 									deletedAt: null,
 									isActive: true,
+									assignmentType: {
+										value: {
+											in: ["RESPONSIBLE", "RECOMMENDED"],
+										},
+									},
 								},
 							},
 						},

@@ -5,16 +5,25 @@ Define the contract-management capability for firm-scoped contract listing, aggr
 ## Requirements
 
 ### Requirement: List contracts
-The system SHALL display a paginated, sortable, filterable list of contracts available to the authenticated user, following the shared entity-management list contract and the contract visibility rules defined by role and assignment.
+The system SHALL display a paginated, sortable, filterable list of contracts available to the authenticated user, following the shared entity-management list contract and the contract visibility rules defined by role, employee type, and assignment role.
 
 #### Scenario: Administrator sees firm-wide contracts
 - **WHEN** an administrator navigates to the contracts route
 - **THEN** the system displays contracts belonging to the administrator's firm
 - **AND** the list includes contracts regardless of whether the administrator is assigned to them
 
-#### Scenario: Regular user sees only assigned contracts
-- **WHEN** a regular authenticated user navigates to the contracts route
-- **THEN** the system displays only contracts in the same firm where that user is actively assigned
+#### Scenario: Regular lawyer sees only owned contract assignments
+- **WHEN** a regular authenticated lawyer navigates to the contracts route
+- **THEN** the system displays only contracts in the same firm where that user is actively assigned as `RESPONSIBLE` or `RECOMMENDED`
+- **AND** contracts where that user is assigned only as `RECOMMENDING` are excluded
+
+#### Scenario: Regular admin assistant still sees assigned contracts
+- **WHEN** a regular authenticated administrative assistant navigates to the contracts route
+- **THEN** the system displays contracts in the same firm where that user is actively assigned as `ADMIN_ASSISTANT`
+
+#### Scenario: Referral-only lawyer does not gain contract visibility
+- **WHEN** a regular authenticated lawyer is assigned to a contract only as `RECOMMENDING`
+- **THEN** that contract does not appear in the contracts list
 
 #### Scenario: Default desktop contracts view
 - **WHEN** an authenticated user navigates to the contracts route on a desktop-width viewport
@@ -74,6 +83,10 @@ The system SHALL allow authenticated users with access to a contract to inspect 
 
 #### Scenario: Detail access respects assignment visibility
 - **WHEN** a regular user requests details for a contract they are not assigned to
+- **THEN** the server rejects the request before contract data is returned
+
+#### Scenario: Referral-only lawyer cannot open hidden contract details
+- **WHEN** a regular authenticated lawyer requests details for a contract where that user participates only as `RECOMMENDING`
 - **THEN** the server rejects the request before contract data is returned
 
 #### Scenario: Contract details and edit hydration use feature-owned detail queries

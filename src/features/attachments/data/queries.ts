@@ -96,7 +96,11 @@ export async function getAttachmentContractOwnerResource(
 			},
 			assignments: {
 				where: { deletedAt: null, isActive: true },
-				select: { employeeId: true },
+				select: {
+					employeeId: true,
+					employee: { select: { type: { select: { value: true } } } },
+					assignmentType: { select: { value: true } },
+				},
 			},
 		},
 	});
@@ -113,6 +117,11 @@ export async function getAttachmentContractOwnerResource(
 			firmId: contract.firmId,
 			statusValue: contract.status.value,
 			allowStatusChange: contract.allowStatusChange,
+			assignments: contract.assignments.map((assignment) => ({
+				employeeId: assignment.employeeId,
+				employeeTypeValue: assignment.employee.type.value,
+				assignmentTypeValue: assignment.assignmentType.value,
+			})),
 			assignedEmployeeIds: contract.assignments.map(
 				(assignment) => assignment.employeeId,
 			),

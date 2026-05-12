@@ -16,7 +16,8 @@ function ScrollArea({
 			data-slot="scroll-area"
 			className={cn(
 				"relative",
-				"data-has-overflow-y:**:data-[slot=scroll-area-viewport]:pr-2",
+				!hideScrollbar &&
+					"md:data-has-overflow-y:**:data-[slot=scroll-area-viewport]:pr-2",
 				className,
 			)}
 			{...props}
@@ -46,6 +47,7 @@ function ScrollBar({
 			orientation={orientation}
 			className={cn(
 				"flex touch-none p-px transition-colors select-none data-horizontal:h-2.5 data-horizontal:flex-col data-horizontal:border-t data-horizontal:border-t-transparent data-vertical:h-full data-vertical:w-2.5 data-vertical:border-l data-vertical:border-l-transparent",
+				"hidden md:block",
 				className,
 			)}
 			{...props}

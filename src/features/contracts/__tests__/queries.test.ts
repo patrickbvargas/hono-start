@@ -54,7 +54,15 @@ describe("contract data queries", () => {
 				client: { fullName: "Cliente A" },
 				legalArea: { label: "Previdenciário", value: "SOCIAL_SECURITY" },
 				status: { label: "Ativo", value: "ACTIVE" },
-				assignments: [{ employeeId: 10 }],
+				assignments: [
+					{
+						employeeId: 10,
+						employee: {
+							type: { value: "LAWYER" },
+						},
+						assignmentType: { value: "RESPONSIBLE" },
+					},
+				],
 				revenues: [{ id: 20 }],
 			},
 		]);
@@ -140,7 +148,12 @@ describe("contract data queries", () => {
 		};
 
 		const result = await getContracts({
-			scope: { firmId: 1, employeeId: 10, isAdmin: false },
+			scope: {
+				firmId: 1,
+				employeeId: 10,
+				employeeTypeValue: "LAWYER",
+				isAdmin: false,
+			},
 			search,
 		});
 
@@ -173,6 +186,11 @@ describe("contract data queries", () => {
 							employeeId: 10,
 							deletedAt: null,
 							isActive: true,
+							assignmentType: {
+								value: {
+									in: ["RESPONSIBLE", "RECOMMENDED"],
+								},
+							},
 						},
 					},
 				}),
@@ -204,7 +222,12 @@ describe("contract data queries", () => {
 
 	it("maps detail queries into UI-ready aggregates with derived revenue payment state", async () => {
 		const result = await getContractById({
-			scope: { firmId: 1, employeeId: 10, isAdmin: false },
+			scope: {
+				firmId: 1,
+				employeeId: 10,
+				employeeTypeValue: "LAWYER",
+				isAdmin: false,
+			},
 			id: 5,
 		});
 
@@ -218,6 +241,11 @@ describe("contract data queries", () => {
 							employeeId: 10,
 							deletedAt: null,
 							isActive: true,
+							assignmentType: {
+								value: {
+									in: ["RESPONSIBLE", "RECOMMENDED"],
+								},
+							},
 						},
 					},
 				}),
@@ -233,6 +261,48 @@ describe("contract data queries", () => {
 				isFullyPaid: false,
 			}),
 		]);
+	});
+
+	it("keeps admin-assistant users scoped to admin-assistant assignments", async () => {
+		await getContracts({
+			scope: {
+				firmId: 1,
+				employeeId: 10,
+				employeeTypeValue: "ADMIN_ASSISTANT",
+				isAdmin: false,
+			},
+			search: {
+				page: 1,
+				limit: 10,
+				column: "createdAt",
+				direction: "desc",
+				query: "",
+				clientId: "",
+				legalArea: [],
+				contractStatus: [],
+				active: "all",
+				status: "active",
+			},
+		});
+
+		expect(prismaMock.contract.findMany).toHaveBeenCalledWith(
+			expect.objectContaining({
+				where: expect.objectContaining({
+					assignments: {
+						some: {
+							employeeId: 10,
+							deletedAt: null,
+							isActive: true,
+							assignmentType: {
+								value: {
+									in: ["ADMIN_ASSISTANT"],
+								},
+							},
+						},
+					},
+				}),
+			}),
+		);
 	});
 
 	it("loads selectable clients and employees from active non-deleted business entities only", async () => {
@@ -257,7 +327,7 @@ describe("contract data queries", () => {
 			{
 				id: 10,
 				value: "10",
-				label: "Maria Silva • Advogado",
+				label: "Maria Silva",
 				isDisabled: false,
 			},
 		]);

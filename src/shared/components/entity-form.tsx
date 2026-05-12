@@ -37,7 +37,7 @@ export const EntityForm = ({
 				</DialogHeader>
 				<DialogBody
 					className={cn(
-						"flex flex-col gap-5 -mx-4 no-scrollbar max-h-[60dvh] overflow-y-auto px-4",
+						"flex flex-col gap-5 -mx-4 no-scrollbar max-h-[80dvh] overflow-y-auto px-4 py-2",
 						bodyClassName,
 					)}
 				>

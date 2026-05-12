@@ -1,5 +1,14 @@
 export const SESSION_ADMIN_ROLE_VALUE = "ADMIN" as const;
 export const SESSION_USER_ROLE_VALUE = "USER" as const;
+export const SESSION_EMPLOYEE_TYPE_LAWYER_VALUE = "LAWYER" as const;
+export const SESSION_EMPLOYEE_TYPE_ADMIN_ASSISTANT_VALUE =
+	"ADMIN_ASSISTANT" as const;
+export const SESSION_ASSIGNMENT_TYPE_RESPONSIBLE_VALUE = "RESPONSIBLE" as const;
+export const SESSION_ASSIGNMENT_TYPE_RECOMMENDING_VALUE =
+	"RECOMMENDING" as const;
+export const SESSION_ASSIGNMENT_TYPE_RECOMMENDED_VALUE = "RECOMMENDED" as const;
+export const SESSION_ASSIGNMENT_TYPE_ADMIN_ASSISTANT_VALUE =
+	"ADMIN_ASSISTANT" as const;
 export const CONTRACT_STATUS_ACTIVE_VALUE = "ACTIVE" as const;
 export const CONTRACT_STATUS_CANCELLED_VALUE = "CANCELLED" as const;
 export const CONTRACT_STATUS_COMPLETED_VALUE = "COMPLETED" as const;
@@ -48,8 +57,15 @@ interface SessionFirmResource {
 	firmId: number;
 }
 
+export interface SessionAssignmentSummary {
+	assignmentTypeValue: string;
+	employeeId: number;
+	employeeTypeValue: string;
+}
+
 export interface ContractAccessResource extends SessionFirmResource {
 	assignedEmployeeIds?: number[];
+	assignments?: SessionAssignmentSummary[];
 	isAssignedToActor?: boolean;
 	statusValue?: string;
 	allowStatusChange?: boolean;
@@ -57,6 +73,7 @@ export interface ContractAccessResource extends SessionFirmResource {
 
 export interface FeeAccessResource extends SessionFirmResource {
 	assignedEmployeeIds?: number[];
+	assignments?: SessionAssignmentSummary[];
 	isAssignedToActor?: boolean;
 	statusValue?: string;
 	allowStatusChange?: boolean;

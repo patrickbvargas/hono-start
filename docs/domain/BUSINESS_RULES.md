@@ -54,7 +54,7 @@
 - Completed and cancelled contracts are read-only except for restore by an administrator.
 - Contract status changes may be locked by administrators.
 - Process number is unique per firm.
-- Contract visibility for non-admin users depends on assignment to that contract.
+- Contract visibility for non-admin users depends on an active assignment to that contract that grants visibility.
 - Contract forms expose `isActive` as an `Ativo` checkbox.
 - Contract status values are `ACTIVE`, `COMPLETED`, and `CANCELLED`.
 - Administrators may manually cancel a contract when status changes are not locked.
@@ -70,6 +70,9 @@
 - Lawyers may hold responsible, recommending, or recommended assignments.
 - Administrative assistants may hold only the admin-assistant assignment.
 - Assignment changes are blocked when active remunerations would invalidate the applied formula.
+- Recommending assignments grant remuneration participation but do not grant contract visibility by themselves to regular users.
+- Responsible and recommended lawyer assignments grant contract visibility to regular lawyers.
+- Admin-assistant assignments grant contract visibility to regular administrative assistants.
 
 ## Team Composition Rules
 
