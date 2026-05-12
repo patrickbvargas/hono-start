@@ -1,7 +1,7 @@
 import { PlusIcon, TrashIcon } from "lucide-react";
 import { Suspense, useRef } from "react";
 import { EntityForm } from "@/shared/components/entity-form";
-import { EntityFormList } from "@/shared/components/entity-form-list";
+import { EntityListAccordion } from "@/shared/components/entity-list-accordion";
 import {
 	FormCheckboxSkeleton,
 	FormFieldSkeleton,
@@ -259,7 +259,7 @@ function ContractFormContent({
 										Adicione pelo menos um colaborador.
 									</p>
 								) : (
-									<EntityFormList
+									<EntityListAccordion
 										items={subField.state.value}
 										getKey={(assignment) => getRowKey(assignment)}
 										getTitle={(_, index) => `Colaborador ${index + 1}`}
@@ -271,9 +271,11 @@ function ContractFormContent({
 												assignmentTypes,
 											)
 										}
-										renderContent={(_, i) => (
+										renderContent={(_, index) => (
 											<FieldGroup className="grid gap-3 sm:grid-cols-[repeat(2,1fr)_auto]">
-												<form.AppField name={`assignments[${i}].employeeId`}>
+												<form.AppField
+													name={`assignments[${index}].employeeId`}
+												>
 													{(field) => (
 														<field.Autocomplete
 															label="Colaborador"
@@ -283,7 +285,7 @@ function ContractFormContent({
 													)}
 												</form.AppField>
 												<form.AppField
-													name={`assignments[${i}].assignmentType`}
+													name={`assignments[${index}].assignmentType`}
 												>
 													{(field) => (
 														<field.Autocomplete
@@ -298,8 +300,8 @@ function ContractFormContent({
 													size="icon"
 													variant="destructive"
 													className="place-self-end"
-													aria-label={`Remover colaborador ${i + 1}`}
-													onClick={() => subField.removeValue(i)}
+													aria-label={`Remover colaborador ${index + 1}`}
+													onClick={() => subField.removeValue(index)}
 												>
 													<TrashIcon size={16} />
 												</Button>
@@ -337,17 +339,17 @@ function ContractFormContent({
 										Adicione pelo menos uma receita.
 									</p>
 								) : (
-									<EntityFormList
+									<EntityListAccordion
 										items={subField.state.value}
 										getKey={(revenue) => getRowKey(revenue)}
 										getTitle={(_, index) => `Receita ${index + 1}`}
 										getSummary={(revenue, index) =>
 											getRevenueSummary(revenue, index, revenueTypes)
 										}
-										renderContent={(_, i) => (
+										renderContent={(_, index) => (
 											<div className="space-y-3">
 												<FieldGroup className="grid items-end gap-3 sm:grid-cols-[1fr_1fr_auto]">
-													<form.AppField name={`revenues[${i}].type`}>
+													<form.AppField name={`revenues[${index}].type`}>
 														{(field) => (
 															<field.Autocomplete
 																label="Tipo"
@@ -357,7 +359,7 @@ function ContractFormContent({
 														)}
 													</form.AppField>
 													<form.AppField
-														name={`revenues[${i}].paymentStartDate`}
+														name={`revenues[${index}].paymentStartDate`}
 													>
 														{(field) => (
 															<field.DatePicker
@@ -371,14 +373,14 @@ function ContractFormContent({
 														size="icon"
 														variant="destructive"
 														className="place-self-end"
-														aria-label={`Remover receita ${i + 1}`}
-														onClick={() => subField.removeValue(i)}
+														aria-label={`Remover receita ${index + 1}`}
+														onClick={() => subField.removeValue(index)}
 													>
 														<TrashIcon size={16} />
 													</Button>
 												</FieldGroup>
 												<FieldGroup className="grid gap-3 sm:grid-cols-2">
-													<form.AppField name={`revenues[${i}].totalValue`}>
+													<form.AppField name={`revenues[${index}].totalValue`}>
 														{(field) => (
 															<field.Number
 																label="Valor total"
@@ -393,7 +395,7 @@ function ContractFormContent({
 														)}
 													</form.AppField>
 													<form.AppField
-														name={`revenues[${i}].downPaymentValue`}
+														name={`revenues[${index}].downPaymentValue`}
 													>
 														{(field) => (
 															<field.Number
@@ -410,7 +412,7 @@ function ContractFormContent({
 												</FieldGroup>
 												<FieldGroup className="grid gap-3 sm:grid-cols-2">
 													<form.AppField
-														name={`revenues[${i}].totalInstallments`}
+														name={`revenues[${index}].totalInstallments`}
 													>
 														{(field) => (
 															<field.Number
@@ -423,7 +425,7 @@ function ContractFormContent({
 													</form.AppField>
 												</FieldGroup>
 												<FieldGroup>
-													<form.AppField name={`revenues[${i}].isActive`}>
+													<form.AppField name={`revenues[${index}].isActive`}>
 														{(field) => (
 															<field.Checkbox label="Receita ativa" />
 														)}

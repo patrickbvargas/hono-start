@@ -48,7 +48,7 @@ export const DataCardList = <TData,>({
 		>
 			<ScrollArea className="min-h-0 flex-1">
 				{data.length ? (
-					<div className="grid grid-cols-1 gap-3 pb-3 lg:grid-cols-3 2xl:grid-cols-4">
+					<div className="grid grid-cols-1 gap-3 pb-3 px-0.5 -mx-0.5 lg:grid-cols-3 2xl:grid-cols-4">
 						{data.map((item, index) => {
 							const title = renderTitle(item);
 							const description = renderDescription?.(item);

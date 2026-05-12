@@ -1,4 +1,6 @@
-import { DownloadIcon, FileIcon, PlusIcon, TrashIcon } from "lucide-react";
+import { DownloadIcon, PlusIcon, TrashIcon } from "lucide-react";
+import { EntityFields } from "@/shared/components/entity-fields";
+import { EntityListAccordion } from "@/shared/components/entity-list-accordion";
 import { Button, Separator, Skeleton } from "@/shared/components/ui";
 import { useOverlay } from "@/shared/hooks/use-overlay";
 import { formatter } from "@/shared/lib/formatter";
@@ -75,56 +77,61 @@ export const AttachmentSection = ({
 			) : null}
 
 			{!isPending && !error && attachments.length > 0 ? (
-				<div className="rounded-md border">
-					{attachments.map((attachment, index) => (
-						<div key={attachment.id} className="px-3 py-3">
-							<div className="flex items-start justify-between gap-3">
-								<div className="min-w-0 space-y-1">
-									<div className="flex items-center gap-2 text-sm font-medium">
-										<FileIcon className="size-4 min-h-4 min-w-4 shrink-0" />
-										<span className="truncate">{attachment.fileName}</span>
-									</div>
-									<p className="text-muted-foreground text-xs">
-										{attachment.type} • {formatFileSize(attachment.fileSize)} •{" "}
-										{formatter.date(attachment.createdAt)}
-									</p>
-								</div>
-								<div className="flex shrink-0 items-center gap-2">
+				<EntityListAccordion
+					items={attachments}
+					getKey={(attachment) => String(attachment.id)}
+					getTitle={(attachment) => attachment.fileName}
+					getSummary={(attachment) => attachment.fileName}
+					openDescription={undefined}
+					renderContent={(attachment) => (
+						<div className="flex items-center justify-between gap-3">
+							<EntityFields
+								items={[
+									{
+										term: "Tamanho",
+										definition: formatFileSize(attachment.fileSize),
+									},
+									{
+										term: "Anexado em",
+										definition: formatter.date(attachment.createdAt),
+									},
+								]}
+								columns={2}
+							/>
+							<div className="flex justify-end gap-2">
+								<Button
+									size="icon-sm"
+									variant="outline"
+									disabled={!attachment.downloadUrl}
+									onClick={() => {
+										if (attachment.downloadUrl) {
+											window.open(
+												attachment.downloadUrl,
+												"_blank",
+												"noopener,noreferrer",
+											);
+										}
+									}}
+									aria-label={`Baixar ${attachment.fileName}`}
+									title={`Baixar ${attachment.fileName}`}
+								>
+									<DownloadIcon size={16} />
+								</Button>
+								{isAdmin ? (
 									<Button
 										size="icon-sm"
-										variant="outline"
-										disabled={!attachment.downloadUrl}
-										onClick={() => {
-											if (attachment.downloadUrl) {
-												window.open(
-													attachment.downloadUrl,
-													"_blank",
-													"noopener,noreferrer",
-												);
-											}
-										}}
-										aria-label={`Baixar ${attachment.fileName}`}
-										title={`Baixar ${attachment.fileName}`}
+										variant="destructive"
+										onClick={() => overlay.delete.open(attachment.id)}
+										aria-label={`Excluir ${attachment.fileName}`}
+										title={`Excluir ${attachment.fileName}`}
 									>
-										<DownloadIcon size={16} />
+										<TrashIcon size={16} />
 									</Button>
-									{isAdmin ? (
-										<Button
-											size="icon-sm"
-											variant="destructive"
-											onClick={() => overlay.delete.open(attachment.id)}
-										>
-											<TrashIcon size={16} />
-										</Button>
-									) : null}
-								</div>
+								) : null}
 							</div>
-							{index < attachments.length - 1 ? (
-								<Separator className="mt-3" />
-							) : null}
 						</div>
-					))}
-				</div>
+					)}
+				/>
 			) : null}
 
 			{overlay.create.render((state) => (
@@ -142,13 +149,11 @@ function AttachmentSectionSkeleton() {
 		{
 			key: "attachment-skeleton-primary",
 			fileWidth: "w-40",
-			metaWidth: "w-52",
 			showSeparator: true,
 		},
 		{
 			key: "attachment-skeleton-secondary",
 			fileWidth: "w-32",
-			metaWidth: "w-44",
 			showSeparator: false,
 		},
 	];
@@ -158,18 +163,9 @@ function AttachmentSectionSkeleton() {
 			<div className="flex flex-col gap-3">
 				{skeletonRows.map((row) => (
 					<div key={row.key}>
-						<div className="flex items-start justify-between gap-3">
-							<div className="min-w-0 flex-1 space-y-2">
-								<div className="flex items-center gap-2">
-									<Skeleton className="h-4 w-4 rounded-sm" />
-									<Skeleton className={cn("h-4 rounded-sm", row.fileWidth)} />
-								</div>
-								<Skeleton className={cn("h-3 rounded-sm", row.metaWidth)} />
-							</div>
-							<div className="flex shrink-0 items-center gap-2">
-								<Skeleton className="h-8 w-16 rounded-md" />
-								<Skeleton className="h-8 w-8 rounded-md" />
-							</div>
+						<div className="flex items-center justify-between gap-3 py-1">
+							<Skeleton className={cn("h-4 rounded-sm", row.fileWidth)} />
+							<Skeleton className="h-4 w-4 rounded-sm" />
 						</div>
 						{row.showSeparator ? <Separator className="mt-3" /> : null}
 					</div>
