@@ -1,15 +1,24 @@
 import { ScrollArea as ScrollAreaPrimitive } from "@base-ui/react/scroll-area";
 import { cn } from "@/shared/lib/utils";
 
+interface ScrollAreaProps extends ScrollAreaPrimitive.Root.Props {
+	hideScrollbar?: boolean;
+}
+
 function ScrollArea({
 	className,
 	children,
+	hideScrollbar = false,
 	...props
-}: ScrollAreaPrimitive.Root.Props) {
+}: ScrollAreaProps) {
 	return (
 		<ScrollAreaPrimitive.Root
 			data-slot="scroll-area"
-			className={cn("relative", className)}
+			className={cn(
+				"relative",
+				"data-has-overflow-y:**:data-[slot=scroll-area-viewport]:pr-2",
+				className,
+			)}
 			{...props}
 		>
 			<ScrollAreaPrimitive.Viewport
@@ -18,8 +27,8 @@ function ScrollArea({
 			>
 				{children}
 			</ScrollAreaPrimitive.Viewport>
-			<ScrollBar />
-			<ScrollBar orientation="horizontal" />
+			{!hideScrollbar && <ScrollBar />}
+			{!hideScrollbar && <ScrollBar orientation="horizontal" />}
 			<ScrollAreaPrimitive.Corner />
 		</ScrollAreaPrimitive.Root>
 	);

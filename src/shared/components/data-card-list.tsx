@@ -42,16 +42,11 @@ export const DataCardList = <TData,>({
 	return (
 		<div
 			className={cn(
-				"flex h-full min-h-0 max-h-full flex-col overflow-hidden rounded-lg",
+				"flex min-h-0 max-h-full flex-col overflow-hidden rounded-lg",
 				className,
 			)}
 		>
-			<ScrollArea
-				className={cn(
-					"h-full min-h-0 flex-1 overflow-hidden",
-					"data-has-overflow-y:**:data-[slot=scroll-area-viewport]:pr-2",
-				)}
-			>
+			<ScrollArea className="min-h-0 flex-1">
 				{data.length ? (
 					<div className="grid grid-cols-1 gap-3 pb-3 lg:grid-cols-3 2xl:grid-cols-4">
 						{data.map((item, index) => {

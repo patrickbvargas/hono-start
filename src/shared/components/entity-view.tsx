@@ -16,14 +16,12 @@ interface EntityViewProps {
 
 interface EntityViewToggleProps
 	extends React.ComponentPropsWithoutRef<typeof ButtonGroup> {
-	className?: string;
 	defaultMode?: EntityViewMode;
 	mobileMode?: EntityViewMode;
 	storageKey?: string;
 }
 
 function EntityViewRoot({
-	className,
 	defaultMode,
 	list,
 	mobileMode,
@@ -36,11 +34,7 @@ function EntityViewRoot({
 		storageKey,
 	});
 
-	return (
-		<div className={cn("min-h-0 flex-1", className)}>
-			{activeViewMode === "list" ? list : table}
-		</div>
-	);
+	return activeViewMode === "list" ? list : table;
 }
 
 function EntityViewToggle({

@@ -53,12 +53,7 @@ export const DataTable = <TData, TValue>({
 				className,
 			)}
 		>
-			<ScrollArea
-				className={cn(
-					"min-h-0 flex-1",
-					"data-has-overflow-y:**:data-[slot=scroll-area-viewport]:pr-2",
-				)}
-			>
+			<ScrollArea className="min-h-0 flex-1">
 				<Table className="min-w-full w-max">
 					<TableHeader>
 						<TableRow>
