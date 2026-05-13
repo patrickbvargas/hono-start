@@ -5,6 +5,7 @@ export * from "./date-picker";
 export * from "./file";
 export * from "./form";
 export * from "./input";
+export * from "./input-mask";
 export * from "./input-otp";
 export * from "./multiselect";
 export * from "./number";

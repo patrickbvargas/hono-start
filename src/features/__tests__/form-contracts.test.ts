@@ -102,7 +102,11 @@ const createSchemaCases = [
 		name: "client",
 		schema: clientCreateInputSchema,
 		input: clientCreateInput,
-		expected: { ...clientCreateInput, document: "52998224725" },
+		expected: {
+			...clientCreateInput,
+			document: "52998224725",
+			phone: "11999999999",
+		},
 	},
 	{
 		name: "employee",
@@ -129,7 +133,12 @@ const updateSchemaCases = [
 		name: "client",
 		schema: clientUpdateInputSchema,
 		input: { id: 1, ...clientCreateInput },
-		expected: { id: 1, ...clientCreateInput, document: "52998224725" },
+		expected: {
+			id: 1,
+			...clientCreateInput,
+			document: "52998224725",
+			phone: "11999999999",
+		},
 	},
 	{
 		name: "employee",

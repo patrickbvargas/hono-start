@@ -9,6 +9,7 @@ import {
 	FormDatePicker,
 	FormFile,
 	FormInput,
+	FormInputMask,
 	FormInputOTP,
 	FormMultiselect,
 	FormNumber,
@@ -29,6 +30,7 @@ export const { useAppForm } = createFormHook({
 	formContext,
 	fieldComponents: {
 		Input: FormInput,
+		InputMask: FormInputMask,
 		InputOTP: FormInputOTP,
 		Number: FormNumber,
 		Textarea: FormTextArea,

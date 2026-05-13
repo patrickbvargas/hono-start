@@ -1,7 +1,10 @@
 import * as z from "zod";
 import { entityIdSchema } from "@/shared/schemas/entity";
-import { CLIENT_DOCUMENT_REGEX } from "../constants/values";
 import { assertDocumentMatchesType } from "../rules/document";
+import {
+	normalizeClientDocument,
+	normalizeClientPhone,
+} from "../utils/normalization";
 
 const clientBaseInputSchema = z.object({
 	fullName: z.string().trim().min(1, "Nome é obrigatório"),
@@ -9,9 +12,9 @@ const clientBaseInputSchema = z.object({
 		.string()
 		.trim()
 		.min(1, "Documento é obrigatório")
-		.transform((value) => value.replace(CLIENT_DOCUMENT_REGEX, "")),
+		.transform(normalizeClientDocument),
 	email: z.union([z.email("Email inválido"), z.literal("")]),
-	phone: z.string().trim(),
+	phone: z.string().transform(normalizeClientPhone),
 	type: z.string().trim().min(1, "Tipo de cliente é obrigatório"),
 	isActive: z.boolean(),
 });

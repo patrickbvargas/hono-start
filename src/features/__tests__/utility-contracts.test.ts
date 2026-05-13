@@ -11,6 +11,10 @@ import {
 	getClientNameLabel,
 } from "@/features/clients/utils/format";
 import {
+	normalizeClientDocument,
+	normalizeClientPhone,
+} from "@/features/clients/utils/normalization";
+import {
 	defaultContractCreateValues,
 	defaultContractUpdateValues,
 } from "@/features/contracts/utils/default";
@@ -31,6 +35,7 @@ import {
 	buildRemunerationSpreadsheetBuffer,
 	createRemunerationExportFileName,
 } from "@/features/remunerations/utils/export";
+import { getBuiltInInputMaskDefinition } from "@/shared/lib/input-mask";
 
 const timestamp = "2026-01-15T12:00:00.000Z";
 
@@ -235,12 +240,29 @@ describe("feature utility contracts", () => {
 		expect(getClientDocumentLabel("INDIVIDUAL")).toBe("CPF");
 	});
 
-	it("normalizes optional text and fee references without business validation", () => {
+	it("normalizes optional text, client values, and fee references without business validation", () => {
 		expect(normalizeOptionalText("  observação  ")).toBe("observação");
 		expect(normalizeOptionalText("   ")).toBeNull();
 		expect(normalizeOptionalText(null)).toBeNull();
+		expect(normalizeClientDocument(" 529.982.247-25 ")).toBe("52998224725");
+		expect(normalizeClientPhone(" (11) 99999-9999 ")).toBe("11999999999");
 		expect(normalizeFeeReference("  123  ")).toBe("123");
 		expect(normalizeFeeDateFilter("  2026-01-15  ")).toBe("2026-01-15");
+	});
+
+	it("exposes built-in input mask definitions with aligned max lengths", () => {
+		expect(getBuiltInInputMaskDefinition("cpf")).toEqual({
+			mask: "999.999.999-99",
+			maxLength: 14,
+		});
+		expect(getBuiltInInputMaskDefinition("cnpj")).toEqual({
+			mask: "99.999.999/9999-99",
+			maxLength: 18,
+		});
+		expect(getBuiltInInputMaskDefinition("phoneBr")).toEqual({
+			mask: ["(99) 9999-9999", "(99) 99999-9999"],
+			maxLength: 15,
+		});
 	});
 
 	it("builds remuneration spreadsheet output with UTF-16LE BOM support", () => {

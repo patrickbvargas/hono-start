@@ -8,6 +8,7 @@ import { FormSection } from "@/shared/components/form-section";
 import { FieldGroup, Skeleton } from "@/shared/components/ui";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
+import { CLIENT_TYPE_COMPANY_VALUE } from "../../constants/values";
 import { useClient, useClientOptions } from "../../hooks/use-data";
 import { useClientForm } from "../../hooks/use-form";
 import {
@@ -112,8 +113,13 @@ function ClientFormContent({
 									</form.AppField>
 									<form.AppField name="document">
 										{(field) => (
-											<field.Input
+											<field.InputMask
 												label={documentLabel}
+												maskKind={
+													typeValue === CLIENT_TYPE_COMPANY_VALUE
+														? "cnpj"
+														: "cpf"
+												}
 												placeholder={documentPlaceholder}
 												isRequired
 											/>
@@ -130,7 +136,15 @@ function ClientFormContent({
 										{(field) => <field.Input label="Email" type="email" />}
 									</form.AppField>
 									<form.AppField name="phone">
-										{(field) => <field.Input label="Telefone" />}
+										{(field) => (
+											<field.InputMask
+												label="Telefone"
+												maskKind="phoneBr"
+												placeholder="(00) 00000-0000"
+												type="tel"
+												inputMode="numeric"
+											/>
+										)}
 									</form.AppField>
 								</FieldGroup>
 								<FieldGroup>
