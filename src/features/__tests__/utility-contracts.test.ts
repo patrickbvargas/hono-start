@@ -1,3 +1,4 @@
+import pdfmake from "pdfmake";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
 	defaultClientCreateValues,
@@ -269,6 +270,8 @@ describe("feature utility contracts", () => {
 
 		expect(pdf.subarray(0, 8).toString()).toBe("%PDF-1.3");
 		expect(pdf.length).toBeGreaterThan(1000);
+		expect(pdfmake.virtualfs.existsSync("Roboto-Regular.ttf")).toBe(true);
+		expect(pdfmake.virtualfs.existsSync("Roboto-Medium.ttf")).toBe(true);
 		expect(pdfDefinition.info?.title).toBe("Relatório de remunerações");
 		expect(pdfDefinition.content).toEqual(
 			expect.arrayContaining([

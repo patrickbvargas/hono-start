@@ -1,5 +1,8 @@
-import { resolve } from "node:path";
 import pdfmake from "pdfmake";
+import robotoItalicFont from "@/shared/assets/fonts/roboto/Roboto-Italic.ttf?inline";
+import robotoMediumFont from "@/shared/assets/fonts/roboto/Roboto-Medium.ttf?inline";
+import robotoMediumItalicFont from "@/shared/assets/fonts/roboto/Roboto-MediumItalic.ttf?inline";
+import robotoRegularFont from "@/shared/assets/fonts/roboto/Roboto-Regular.ttf?inline";
 import { formatter } from "@/shared/lib/formatter";
 import type { Remuneration } from "../schemas/model";
 
@@ -75,13 +78,38 @@ interface PdfDocumentDefinition {
 }
 
 const UTF16LE_BOM = Buffer.from([0xff, 0xfe]);
-const PDFMAKE_FONT_DIR = resolve("node_modules", "pdfmake", "fonts", "Roboto");
 const PDF_FONT_FILES = {
-	normal: resolve(PDFMAKE_FONT_DIR, "Roboto-Regular.ttf"),
-	bold: resolve(PDFMAKE_FONT_DIR, "Roboto-Medium.ttf"),
-	italics: resolve(PDFMAKE_FONT_DIR, "Roboto-Italic.ttf"),
-	bolditalics: resolve(PDFMAKE_FONT_DIR, "Roboto-MediumItalic.ttf"),
+	normal: "Roboto-Regular.ttf",
+	bold: "Roboto-Medium.ttf",
+	italics: "Roboto-Italic.ttf",
+	bolditalics: "Roboto-MediumItalic.ttf",
 } as const;
+const PDF_FONT_SOURCES = {
+	[PDF_FONT_FILES.normal]: robotoRegularFont,
+	[PDF_FONT_FILES.bold]: robotoMediumFont,
+	[PDF_FONT_FILES.italics]: robotoItalicFont,
+	[PDF_FONT_FILES.bolditalics]: robotoMediumItalicFont,
+} as const;
+
+function decodeInlineFont(dataUrl: string) {
+	const base64Marker = "base64,";
+	const base64MarkerIndex = dataUrl.indexOf(base64Marker);
+
+	if (base64MarkerIndex < 0) {
+		throw new Error("Embedded Roboto font asset must be a base64 data URL.");
+	}
+
+	return Buffer.from(
+		dataUrl.slice(base64MarkerIndex + base64Marker.length),
+		"base64",
+	);
+}
+
+for (const [fontFileName, fontSource] of Object.entries(PDF_FONT_SOURCES)) {
+	if (!pdfmake.virtualfs.existsSync(fontFileName)) {
+		pdfmake.virtualfs.writeFileSync(fontFileName, decodeInlineFont(fontSource));
+	}
+}
 
 pdfmake.addFonts({
 	Roboto: {
@@ -94,12 +122,8 @@ pdfmake.addFonts({
 pdfmake.setUrlAccessPolicy(() => {
 	return false;
 });
-pdfmake.setLocalAccessPolicy((targetPath) => {
-	const resolvedTargetPath = resolve(targetPath).toLowerCase();
-
-	return Object.values(PDF_FONT_FILES).some((fontPath) => {
-		return resolve(fontPath).toLowerCase() === resolvedTargetPath;
-	});
+pdfmake.setLocalAccessPolicy(() => {
+	return false;
 });
 
 function escapeCsvValue(value: string) {
