@@ -254,14 +254,29 @@ describe("feature utility contracts", () => {
 		expect(getBuiltInInputMaskDefinition("cpf")).toEqual({
 			mask: "999.999.999-99",
 			maxLength: 14,
+			options: {
+				placeholder: "_",
+				showMaskOnHover: false,
+				showMaskOnFocus: true,
+			},
 		});
 		expect(getBuiltInInputMaskDefinition("cnpj")).toEqual({
 			mask: "99.999.999/9999-99",
 			maxLength: 18,
+			options: {
+				placeholder: "_",
+				showMaskOnHover: false,
+				showMaskOnFocus: true,
+			},
 		});
 		expect(getBuiltInInputMaskDefinition("phoneBr")).toEqual({
 			mask: ["(99) 9999-9999", "(99) 99999-9999"],
 			maxLength: 15,
+			options: {
+				placeholder: "_",
+				showMaskOnHover: false,
+				showMaskOnFocus: true,
+			},
 		});
 	});
 
