@@ -2,14 +2,16 @@ import * as React from "react";
 import { DataCardList } from "@/shared/components/data-card-list";
 import type { DetailFieldItem } from "@/shared/components/entity-fields";
 import { Pagination } from "@/shared/components/pagination";
+import type { EntityId } from "@/shared/schemas/entity";
 import type { QueryPaginatedReturnType } from "@/shared/types/api";
 import type { AuditLog } from "../../schemas/model";
 
 interface AuditLogListProps {
 	data: QueryPaginatedReturnType<AuditLog>;
+	onView?: (id: EntityId) => void;
 }
 
-export const AuditLogList = ({ data }: AuditLogListProps) => {
+export const AuditLogList = ({ data, onView }: AuditLogListProps) => {
 	const { data: items, total } = data;
 
 	const renderCardFields = React.useCallback(
@@ -65,6 +67,7 @@ export const AuditLogList = ({ data }: AuditLogListProps) => {
 		<DataCardList
 			data={items}
 			getRowKey={(auditLog) => auditLog.id}
+			onCardAction={onView ? (auditLog) => onView(auditLog.id) : undefined}
 			renderTitle={(auditLog) =>
 				auditLog.entityName ||
 				auditLog.entityTypeLabel ||

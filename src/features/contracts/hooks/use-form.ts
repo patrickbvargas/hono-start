@@ -1,10 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as React from "react";
+import { refreshAuditedEntityQueries } from "@/features/audit-logs";
 import { useAppForm } from "@/shared/hooks/use-app-form";
-import {
-	getMutationErrorMessage,
-	refreshEntityQueries,
-} from "@/shared/lib/entity-management";
+import { getMutationErrorMessage } from "@/shared/lib/entity-management";
 import { toast } from "@/shared/lib/toast";
 import type { EntityId } from "@/shared/schemas/entity";
 import {
@@ -64,7 +62,7 @@ export function useContractForm({
 					await createMutation.mutateAsync({ data: parsed });
 					toast.success("Contrato criado com sucesso.");
 				}
-				await refreshEntityQueries(queryClient, contractKeys.all);
+				await refreshAuditedEntityQueries(queryClient, contractKeys.all);
 				onSuccess?.();
 			} catch (error) {
 				toast.danger(getMutationErrorMessage(error));

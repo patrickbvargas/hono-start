@@ -1,14 +1,17 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const { createAuditLogMock, prismaMock } = vi.hoisted(() => ({
-	createAuditLogMock: vi.fn(),
-	prismaMock: {
-		remuneration: {
-			update: vi.fn(),
+const { createAuditLogMock, getRemunerationByIdMock, prismaMock } = vi.hoisted(
+	() => ({
+		createAuditLogMock: vi.fn(),
+		getRemunerationByIdMock: vi.fn(),
+		prismaMock: {
+			remuneration: {
+				update: vi.fn(),
+			},
+			$transaction: vi.fn(),
 		},
-		$transaction: vi.fn(),
-	},
-}));
+	}),
+);
 
 vi.mock("@/shared/lib/prisma", () => ({
 	prisma: prismaMock,
@@ -16,6 +19,20 @@ vi.mock("@/shared/lib/prisma", () => ({
 
 vi.mock("@/features/audit-logs/data/mutations", () => ({
 	createAuditLog: createAuditLogMock,
+	buildAuditUpdateChangeData: ({
+		before,
+		after,
+	}: {
+		before: unknown;
+		after: unknown;
+	}) => ({
+		before,
+		after,
+	}),
+}));
+
+vi.mock("../data/queries", async () => ({
+	getRemunerationById: getRemunerationByIdMock,
 }));
 
 import { REMUNERATION_ERRORS } from "../constants/errors";
@@ -39,6 +56,28 @@ const baseAccess = {
 describe("remuneration data mutations", () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
+		getRemunerationByIdMock.mockResolvedValue({
+			id: 1,
+			contractEmployeeId: 11,
+			employeeId: 10,
+			employeeName: "Colaborador Teste",
+			client: "Cliente Teste",
+			contractId: 3,
+			contractProcessNumber: "PROC-001",
+			feeId: 6,
+			feeAmount: 1000,
+			feeInstallmentNumber: 2,
+			paymentDate: "2026-01-10T00:00:00.000Z",
+			amount: 300,
+			effectivePercentage: 0.3,
+			isManualOverride: false,
+			isSystemGenerated: true,
+			isActive: true,
+			isSoftDeleted: false,
+			parentFeeIsSoftDeleted: false,
+			createdAt: "2026-01-10T00:00:00.000Z",
+			updatedAt: "2026-01-10T00:00:00.000Z",
+		});
 		prismaMock.$transaction.mockImplementation(async (callback) =>
 			callback(prismaMock),
 		);

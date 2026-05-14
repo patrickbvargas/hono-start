@@ -1,10 +1,16 @@
-import type { AuditLogActor } from "@/features/audit-logs/data/mutations";
-import { createAuditLog } from "@/features/audit-logs/data/mutations";
+import {
+	type AuditLogActor,
+	buildAuditUpdateChangeData,
+	createAuditLog,
+} from "@/features/audit-logs/data/mutations";
 import { prisma } from "@/shared/lib/prisma";
 import type { MutationReturnType } from "@/shared/types/api";
 import { REMUNERATION_ERRORS } from "../constants/errors";
 import type { RemunerationUpdateInput } from "../schemas/form";
-import type { getRemunerationAccessResourceById } from "./queries";
+import {
+	type getRemunerationAccessResourceById,
+	getRemunerationById,
+} from "./queries";
 
 type RemunerationAccess = NonNullable<
 	Awaited<ReturnType<typeof getRemunerationAccessResourceById>>
@@ -27,6 +33,14 @@ export async function updateRemuneration({
 		throw new Error(REMUNERATION_ERRORS.REMUNERATION_EDIT_PARENT_DELETED);
 	}
 
+	const before = await getRemunerationById({
+		scope: {
+			firmId: access.resource.firmId,
+			isAdmin: true,
+		},
+		id: input.id,
+	});
+
 	await prisma.$transaction(async (tx) => {
 		await tx.remuneration.update({
 			where: { id: input.id },
@@ -44,7 +58,10 @@ export async function updateRemuneration({
 			entityType: "Remuneration",
 			entityId: input.id,
 			entityName: `Remuneration ${input.id}`,
-			changeData: input,
+			changeData: buildAuditUpdateChangeData({
+				before,
+				after: input,
+			}),
 			description: `Updated remuneration ${input.id}.`,
 		});
 	});
@@ -61,6 +78,14 @@ export async function deleteRemuneration({
 	access: RemunerationAccess;
 	id: number;
 }): Promise<MutationReturnType> {
+	const before = await getRemunerationById({
+		scope: {
+			firmId: access.resource.firmId,
+			isAdmin: true,
+		},
+		id,
+	});
+
 	await prisma.$transaction(async (tx) => {
 		await tx.remuneration.update({
 			where: { id },
@@ -76,7 +101,7 @@ export async function deleteRemuneration({
 			entityType: "Remuneration",
 			entityId: id,
 			entityName: `Remuneration ${id}`,
-			changeData: { id },
+			changeData: { before },
 			description: `Deleted remuneration ${id}.`,
 		});
 	});
@@ -97,6 +122,14 @@ export async function restoreRemuneration({
 		throw new Error(REMUNERATION_ERRORS.REMUNERATION_RESTORE_PARENT_DELETED);
 	}
 
+	const before = await getRemunerationById({
+		scope: {
+			firmId: access.resource.firmId,
+			isAdmin: true,
+		},
+		id,
+	});
+
 	await prisma.$transaction(async (tx) => {
 		await tx.remuneration.update({
 			where: { id },
@@ -112,7 +145,7 @@ export async function restoreRemuneration({
 			entityType: "Remuneration",
 			entityId: id,
 			entityName: `Remuneration ${id}`,
-			changeData: { id },
+			changeData: { before },
 			description: `Restored remuneration ${id}.`,
 		});
 	});

@@ -1,10 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as React from "react";
+import { refreshAuditedEntityQueries } from "@/features/audit-logs";
 import { useAppForm } from "@/shared/hooks/use-app-form";
-import {
-	getMutationErrorMessage,
-	refreshEntityQueries,
-} from "@/shared/lib/entity-management";
+import { getMutationErrorMessage } from "@/shared/lib/entity-management";
 import { toast } from "@/shared/lib/toast";
 import type { EntityId } from "@/shared/schemas/entity";
 import {
@@ -53,7 +51,7 @@ export function useFeeForm({ id, initialValue, onSuccess }: UseFeeFormOptions) {
 					toast.success("Honorário criado com sucesso.");
 				}
 
-				await refreshEntityQueries(queryClient, feeKeys.all);
+				await refreshAuditedEntityQueries(queryClient, feeKeys.all);
 				onSuccess?.();
 			} catch (error) {
 				toast.danger(getMutationErrorMessage(error));

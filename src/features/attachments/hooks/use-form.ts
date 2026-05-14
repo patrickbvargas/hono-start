@@ -1,10 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
+import { refreshAuditedEntityQueries } from "@/features/audit-logs";
 import { useAppForm } from "@/shared/hooks/use-app-form";
-import {
-	getMutationErrorMessage,
-	refreshEntityQueries,
-} from "@/shared/lib/entity-management";
+import { getMutationErrorMessage } from "@/shared/lib/entity-management";
 import { toast } from "@/shared/lib/toast";
 import { createAttachmentMutationOptions } from "../api/mutations";
 import { attachmentKeys } from "../api/queries";
@@ -50,7 +48,7 @@ export function useAttachmentForm({
 				);
 				await mutation.mutateAsync({ data: parsed });
 				toast.success("Anexo enviado com sucesso.");
-				await refreshEntityQueries(queryClient, attachmentKeys.all);
+				await refreshAuditedEntityQueries(queryClient, attachmentKeys.all);
 				onSuccess?.();
 			} catch (error) {
 				toast.danger(getMutationErrorMessage(error));

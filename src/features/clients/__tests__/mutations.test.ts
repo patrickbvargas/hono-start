@@ -28,6 +28,16 @@ vi.mock("@/shared/lib/prisma", () => ({
 
 vi.mock("@/features/audit-logs/data/mutations", () => ({
 	createAuditLog: createAuditLogMock,
+	buildAuditUpdateChangeData: ({
+		before,
+		after,
+	}: {
+		before: unknown;
+		after: unknown;
+	}) => ({
+		before,
+		after,
+	}),
 }));
 
 vi.mock("../data/queries", () => ({

@@ -1,5 +1,7 @@
 import { queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
+import type { EntityId } from "@/shared/schemas/entity";
+import { entityIdSchema } from "@/shared/schemas/entity";
 import type { Option } from "@/shared/schemas/option";
 import { assertCan, authMiddleware } from "@/shared/session";
 import {
@@ -8,21 +10,24 @@ import {
 } from "@/shared/session/server";
 import type {
 	QueryManyReturnType,
+	QueryOneReturnType,
 	QueryPaginatedReturnType,
 } from "@/shared/types/api";
 import { AUDIT_LOG_ERRORS } from "../constants/errors";
 import {
 	getAuditLogActions,
 	getAuditLogActors,
+	getAuditLogById,
 	getAuditLogEntityTypes,
 	getAuditLogs,
 } from "../data/queries";
-import type { AuditLog } from "../schemas/model";
+import type { AuditLog, AuditLogDetail } from "../schemas/model";
 import { type AuditLogSearch, auditLogSearchSchema } from "../schemas/search";
 
 export const auditLogKeys = {
 	all: ["audit-log"] as const,
 	list: (search: AuditLogSearch) => [...auditLogKeys.all, search] as const,
+	detail: (id: EntityId) => [...auditLogKeys.all, "detail", id] as const,
 	actions: () => [...auditLogKeys.all, "actions"] as const,
 	entityTypes: () => [...auditLogKeys.all, "entity-types"] as const,
 	actors: () => [...auditLogKeys.all, "actors"] as const,
@@ -41,6 +46,22 @@ const getAuditLogsFn = createServerFn({ method: "GET" })
 		} catch (error) {
 			console.error("[getAuditLogs]", error);
 			throw new Error(AUDIT_LOG_ERRORS.GET_FAILED);
+		}
+	});
+
+const getAuditLogByIdFn = createServerFn({ method: "GET" })
+	.middleware([authMiddleware])
+	.inputValidator(entityIdSchema)
+	.handler(async ({ data }): Promise<QueryOneReturnType<AuditLogDetail>> => {
+		try {
+			const session = await getRequiredServerLoggedUserSession();
+			assertCan(session, "audit-log.view");
+			const { firmId } = await getServerScope("audit-log");
+
+			return await getAuditLogById({ firmId, id: data.id });
+		} catch (error) {
+			console.error("[getAuditLogById]", error);
+			throw new Error(AUDIT_LOG_ERRORS.DETAIL_FAILED);
 		}
 	});
 
@@ -93,6 +114,13 @@ export const getAuditLogsQueryOptions = (search: AuditLogSearch) =>
 	queryOptions({
 		queryKey: auditLogKeys.list(search),
 		queryFn: () => getAuditLogsFn({ data: search }),
+		staleTime: 5 * 60 * 1000,
+	});
+
+export const getAuditLogByIdQueryOptions = (id: EntityId) =>
+	queryOptions({
+		queryKey: auditLogKeys.detail(id),
+		queryFn: () => getAuditLogByIdFn({ data: { id } }),
 		staleTime: 5 * 60 * 1000,
 	});
 

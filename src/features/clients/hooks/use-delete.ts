@@ -1,8 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-	getMutationErrorMessage,
-	refreshEntityQueries,
-} from "@/shared/lib/entity-management";
+import { refreshAuditedEntityQueries } from "@/features/audit-logs";
+import { getMutationErrorMessage } from "@/shared/lib/entity-management";
 import { toast } from "@/shared/lib/toast";
 import type { EntityId } from "@/shared/schemas/entity";
 import { deleteClientMutationOptions } from "../api/mutations";
@@ -20,7 +18,7 @@ export function useClientDelete({ onSuccess }: UseClientDeleteOptions) {
 		try {
 			await mutation.mutateAsync({ data: { id } });
 			toast.success("Cliente excluído com sucesso.");
-			await refreshEntityQueries(queryClient, clientKeys.all);
+			await refreshAuditedEntityQueries(queryClient, clientKeys.all);
 			onSuccess?.();
 		} catch (error) {
 			toast.danger(getMutationErrorMessage(error));

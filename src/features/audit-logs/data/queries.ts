@@ -4,14 +4,21 @@ import { prisma } from "@/shared/lib/prisma";
 import { type Option, optionSchema } from "@/shared/schemas/option";
 import type {
 	QueryManyReturnType,
+	QueryOneReturnType,
 	QueryPaginatedReturnType,
 } from "@/shared/types/api";
 import type {
 	EntityFilterParams,
 	EntitySearchParams,
+	EntityUniqueParams,
 } from "@/shared/types/entity";
 import type { AuditLogFilter } from "../schemas/filter";
-import { type AuditLog, auditLogSchema } from "../schemas/model";
+import {
+	type AuditLog,
+	type AuditLogDetail,
+	auditLogDetailSchema,
+	auditLogSchema,
+} from "../schemas/model";
 import type { AuditLogSearch } from "../schemas/search";
 import { getAuditDescription, getAuditEntityTypeLabel } from "../utils/display";
 
@@ -111,6 +118,26 @@ function mapAuditLog(row: {
 	});
 }
 
+function mapAuditLogDetail(row: {
+	id: number;
+	createdAt: Date;
+	actorName: string;
+	actorEmail: string | null;
+	action: string;
+	entityType: string;
+	entityName: string;
+	entityId: string | null;
+	ipAddress: string | null;
+	userAgent: string | null;
+	changeData: unknown;
+	description: string;
+}): AuditLogDetail {
+	return auditLogDetailSchema.parse({
+		...mapAuditLog(row),
+		changeData: row.changeData,
+	});
+}
+
 export async function getAuditLogs({
 	firmId,
 	search,
@@ -148,6 +175,24 @@ export async function getAuditLogs({
 		page: search.page,
 		pageSize: search.limit,
 	};
+}
+
+export async function getAuditLogById({
+	firmId,
+	id,
+}: EntityUniqueParams): Promise<QueryOneReturnType<AuditLogDetail>> {
+	const auditLog = await prisma.auditLog.findFirst({
+		where: {
+			id,
+			firmId,
+		},
+	});
+
+	if (!auditLog) {
+		throw new Error("Log de auditoria não encontrado.");
+	}
+
+	return mapAuditLogDetail(auditLog);
 }
 
 function mapDistinctOptions(rows: Array<{ value: string }>) {

@@ -1,6 +1,25 @@
 import * as z from "zod";
 import { entityIdSchema } from "@/shared/schemas/entity";
 
+export type AuditJsonValue =
+	| null
+	| string
+	| number
+	| boolean
+	| AuditJsonValue[]
+	| { [key: string]: AuditJsonValue };
+
+const auditJsonValueSchema: z.ZodType<AuditJsonValue> = z.lazy(() =>
+	z.union([
+		z.null(),
+		z.string(),
+		z.number(),
+		z.boolean(),
+		z.array(auditJsonValueSchema),
+		z.record(z.string(), auditJsonValueSchema),
+	]),
+);
+
 export const auditLogSchema = entityIdSchema.safeExtend({
 	occurredAt: z.iso.datetime(),
 	occurredAtLabel: z.string(),
@@ -16,4 +35,9 @@ export const auditLogSchema = entityIdSchema.safeExtend({
 	description: z.string(),
 });
 
+export const auditLogDetailSchema = auditLogSchema.safeExtend({
+	changeData: auditJsonValueSchema,
+});
+
 export type AuditLog = z.infer<typeof auditLogSchema>;
+export type AuditLogDetail = z.infer<typeof auditLogDetailSchema>;

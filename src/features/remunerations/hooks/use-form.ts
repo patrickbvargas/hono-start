@@ -1,10 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as React from "react";
+import { refreshAuditedEntityQueries } from "@/features/audit-logs";
 import { useAppForm } from "@/shared/hooks/use-app-form";
-import {
-	getMutationErrorMessage,
-	refreshEntityQueries,
-} from "@/shared/lib/entity-management";
+import { getMutationErrorMessage } from "@/shared/lib/entity-management";
 import { toast } from "@/shared/lib/toast";
 import type { EntityId } from "@/shared/schemas/entity";
 import { updateRemunerationMutationOptions } from "../api/mutations";
@@ -40,7 +38,7 @@ export function useRemunerationForm({
 				const parsed = remunerationUpdateInputSchema.parse(value);
 				await updateMutation.mutateAsync({ data: parsed });
 				toast.success("Remuneração atualizada com sucesso.");
-				await refreshEntityQueries(queryClient, remunerationKeys.all);
+				await refreshAuditedEntityQueries(queryClient, remunerationKeys.all);
 				onSuccess?.();
 			} catch (error) {
 				toast.danger(getMutationErrorMessage(error));

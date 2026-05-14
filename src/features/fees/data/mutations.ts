@@ -1,5 +1,8 @@
-import type { AuditLogActor } from "@/features/audit-logs/data/mutations";
-import { createAuditLog } from "@/features/audit-logs/data/mutations";
+import {
+	type AuditLogActor,
+	buildAuditUpdateChangeData,
+	createAuditLog,
+} from "@/features/audit-logs/data/mutations";
 import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/shared/lib/prisma";
 import {
@@ -15,7 +18,7 @@ import {
 } from "../rules/write";
 import type { FeeCreateInput, FeeUpdateInput } from "../schemas/form";
 import { normalizeFeeReference } from "../utils/normalization";
-import type { getFeeAccessResourceById } from "./queries";
+import { type getFeeAccessResourceById, getFeeById } from "./queries";
 
 const ASSIGNMENT_TYPE_RESPONSIBLE_VALUE = "RESPONSIBLE";
 const ASSIGNMENT_TYPE_RECOMMENDING_VALUE = "RECOMMENDING";
@@ -415,6 +418,14 @@ export async function updateFee({
 		throw new Error(FEE_ERRORS.FEE_REPARENT_PRESERVE_BLOCKED);
 	}
 
+	const before = await getFeeById({
+		scope: {
+			firmId: scope.firmId,
+			isAdmin: true,
+		},
+		id: input.id,
+	});
+
 	await prisma.$transaction(async (tx) => {
 		await tx.fee.update({
 			where: { id: input.id },
@@ -453,7 +464,10 @@ export async function updateFee({
 			entityType: "Fee",
 			entityId: input.id,
 			entityName: `Installment ${input.installmentNumber}`,
-			changeData: input,
+			changeData: buildAuditUpdateChangeData({
+				before,
+				after: input,
+			}),
 			description: `Updated fee installment ${input.installmentNumber}.`,
 		});
 	});
@@ -473,6 +487,13 @@ export async function deleteFee({
 	contractId: number;
 }): Promise<MutationReturnType> {
 	const deletedAt = new Date();
+	const before = await getFeeById({
+		scope: {
+			firmId,
+			isAdmin: true,
+		},
+		id,
+	});
 
 	await prisma.$transaction(async (tx) => {
 		await tx.fee.update({
@@ -490,7 +511,7 @@ export async function deleteFee({
 			entityType: "Fee",
 			entityId: id,
 			entityName: `Fee ${id}`,
-			changeData: { id, contractId },
+			changeData: { before },
 			description: `Deleted fee ${id}.`,
 		});
 	});
@@ -509,6 +530,14 @@ export async function restoreFee({
 	id: number;
 	contractId: number;
 }): Promise<MutationReturnType> {
+	const before = await getFeeById({
+		scope: {
+			firmId,
+			isAdmin: true,
+		},
+		id,
+	});
+
 	await prisma.$transaction(async (tx) => {
 		await tx.fee.update({
 			where: { id },
@@ -525,7 +554,7 @@ export async function restoreFee({
 			entityType: "Fee",
 			entityId: id,
 			entityName: `Fee ${id}`,
-			changeData: { id, contractId },
+			changeData: { before },
 			description: `Restored fee ${id}.`,
 		});
 	});

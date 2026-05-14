@@ -1,8 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-	getMutationErrorMessage,
-	refreshEntityQueries,
-} from "@/shared/lib/entity-management";
+import { refreshAuditedEntityQueries } from "@/features/audit-logs";
+import { getMutationErrorMessage } from "@/shared/lib/entity-management";
 import { toast } from "@/shared/lib/toast";
 import type { EntityId } from "@/shared/schemas/entity";
 import { deleteAttachmentMutationOptions } from "../api/mutations";
@@ -20,7 +18,7 @@ export function useAttachmentDelete({ onSuccess }: UseAttachmentDeleteOptions) {
 		try {
 			await mutation.mutateAsync({ data: { id } });
 			toast.success("Anexo excluído com sucesso.");
-			await refreshEntityQueries(queryClient, attachmentKeys.all);
+			await refreshAuditedEntityQueries(queryClient, attachmentKeys.all);
 			onSuccess?.();
 		} catch (error) {
 			toast.danger(getMutationErrorMessage(error));

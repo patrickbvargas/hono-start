@@ -1,5 +1,8 @@
-import type { AuditLogActor } from "@/features/audit-logs/data/mutations";
-import { createAuditLog } from "@/features/audit-logs/data/mutations";
+import {
+	type AuditLogActor,
+	buildAuditUpdateChangeData,
+	createAuditLog,
+} from "@/features/audit-logs/data/mutations";
 import type {
 	AssignmentType,
 	ContractStatus,
@@ -458,6 +461,14 @@ export async function updateContract({
 		throw new Error(CONTRACT_ERRORS.CONTRACT_READ_ONLY);
 	}
 
+	const before = await getContractById({
+		scope: {
+			firmId: scope.firmId,
+			isAdmin: true,
+		},
+		id: input.id,
+	});
+
 	const clientId = Number(input.clientId);
 	const client = await prisma.client.findFirst({
 		where: {
@@ -517,16 +528,10 @@ export async function updateContract({
 			entityType: "Contract",
 			entityId: input.id,
 			entityName: input.processNumber,
-			changeData: {
-				before: {
-					id: existing.id,
-					processNumber: existing.processNumber,
-					legalAreaId: existing.legalAreaId,
-					statusId: existing.statusId,
-					allowStatusChange: existing.allowStatusChange,
-				},
+			changeData: buildAuditUpdateChangeData({
+				before,
 				after: input,
-			},
+			}),
 			description: `Updated contract ${input.processNumber}.`,
 		});
 	});

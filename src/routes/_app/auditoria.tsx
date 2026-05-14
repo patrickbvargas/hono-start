@@ -1,6 +1,7 @@
 import { createFileRoute, stripSearchParams } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import {
+	AuditLogDetails,
 	AuditLogFilter,
 	AuditLogList,
 	AuditLogTable,
@@ -19,6 +20,8 @@ import {
 	WrapperHeader,
 } from "@/shared/components/wrapper";
 import { ROUTES } from "@/shared/config/routes";
+import { useOverlay } from "@/shared/hooks/use-overlay";
+import type { EntityId } from "@/shared/schemas/entity";
 import { assertCan } from "@/shared/session";
 
 export const Route = createFileRoute("/_app/auditoria")({
@@ -42,6 +45,7 @@ export const Route = createFileRoute("/_app/auditoria")({
 function RouteComponent() {
 	const search = Route.useSearch();
 	const { auditLogs } = useAuditLogs(search);
+	const { overlay } = useOverlay<EntityId>();
 
 	return (
 		<Wrapper title={ROUTES.auditLog.title}>
@@ -52,9 +56,14 @@ function RouteComponent() {
 			<WrapperBody>
 				<EntityView
 					className="min-h-0 flex-1"
-					list={<AuditLogList data={auditLogs} />}
-					table={<AuditLogTable data={auditLogs} />}
+					list={<AuditLogList data={auditLogs} onView={overlay.details.open} />}
+					table={
+						<AuditLogTable data={auditLogs} onView={overlay.details.open} />
+					}
 				/>
+				{overlay.details.render((id, state) => (
+					<AuditLogDetails id={id} state={state} />
+				))}
 			</WrapperBody>
 		</Wrapper>
 	);

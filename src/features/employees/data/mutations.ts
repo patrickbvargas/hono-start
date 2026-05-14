@@ -1,7 +1,10 @@
 import { randomInt, randomUUID } from "node:crypto";
 import { hashPassword } from "better-auth/crypto";
-import type { AuditLogActor } from "@/features/audit-logs/data/mutations";
-import { createAuditLog } from "@/features/audit-logs/data/mutations";
+import {
+	type AuditLogActor,
+	buildAuditUpdateChangeData,
+	createAuditLog,
+} from "@/features/audit-logs/data/mutations";
 import type { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/shared/lib/prisma";
 import type { MutationReturnType } from "@/shared/types/api";
@@ -249,12 +252,14 @@ export async function updateEmployee({
 			entityType: "Employee",
 			entityId: input.id,
 			entityName: input.fullName,
-			changeData: {
+			changeData: buildAuditUpdateChangeData({
 				before: employee,
-				after: input,
-				authAccessRevoked: shouldRevokeAccess,
-				loginIdentifierChanged: emailChanged || oabChanged,
-			},
+				after: {
+					...input,
+					authAccessRevoked: shouldRevokeAccess,
+					loginIdentifierChanged: emailChanged || oabChanged,
+				},
+			}),
 			description: `Updated employee ${input.fullName}.`,
 		});
 	});

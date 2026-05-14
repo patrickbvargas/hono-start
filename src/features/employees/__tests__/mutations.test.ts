@@ -46,6 +46,16 @@ vi.mock("@/shared/lib/prisma", () => ({
 
 vi.mock("@/features/audit-logs/data/mutations", () => ({
 	createAuditLog: createAuditLogMock,
+	buildAuditUpdateChangeData: ({
+		before,
+		after,
+	}: {
+		before: unknown;
+		after: unknown;
+	}) => ({
+		before,
+		after,
+	}),
 }));
 
 vi.mock("better-auth/crypto", () => ({
@@ -265,8 +275,10 @@ describe("employee lookup-backed writes", () => {
 			prismaMock,
 			expect.objectContaining({
 				changeData: expect.objectContaining({
-					authAccessRevoked: true,
-					loginIdentifierChanged: true,
+					after: expect.objectContaining({
+						authAccessRevoked: true,
+						loginIdentifierChanged: true,
+					}),
 				}),
 			}),
 		);

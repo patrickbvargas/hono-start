@@ -5,7 +5,7 @@ const {
 	getMutationErrorMessageMock,
 	mutateAsyncMock,
 	queryClientMock,
-	refreshEntityQueriesMock,
+	refreshAuditedEntityQueriesMock,
 	restoreClientMutationOptionsMock,
 	toastDangerMock,
 	toastSuccessMock,
@@ -16,7 +16,7 @@ const {
 	getMutationErrorMessageMock: vi.fn(() => "Erro seguro"),
 	mutateAsyncMock: vi.fn(),
 	queryClientMock: {},
-	refreshEntityQueriesMock: vi.fn(),
+	refreshAuditedEntityQueriesMock: vi.fn(),
 	restoreClientMutationOptionsMock: vi.fn(() => ({ mutationFn: "restore" })),
 	toastDangerMock: vi.fn(),
 	toastSuccessMock: vi.fn(),
@@ -29,9 +29,12 @@ vi.mock("@tanstack/react-query", () => ({
 	useQueryClient: useQueryClientMock,
 }));
 
+vi.mock("@/features/audit-logs", () => ({
+	refreshAuditedEntityQueries: refreshAuditedEntityQueriesMock,
+}));
+
 vi.mock("@/shared/lib/entity-management", () => ({
 	getMutationErrorMessage: getMutationErrorMessageMock,
-	refreshEntityQueries: refreshEntityQueriesMock,
 }));
 
 vi.mock("@/shared/lib/toast", () => ({
@@ -58,7 +61,7 @@ describe("client lifecycle hooks", () => {
 			mutateAsync: mutateAsyncMock,
 			isPending: false,
 		});
-		refreshEntityQueriesMock.mockResolvedValue(undefined);
+		refreshAuditedEntityQueriesMock.mockResolvedValue(undefined);
 		mutateAsyncMock.mockResolvedValue({ success: true });
 	});
 
@@ -74,7 +77,7 @@ describe("client lifecycle hooks", () => {
 		expect(toastSuccessMock).toHaveBeenCalledWith(
 			"Cliente excluído com sucesso.",
 		);
-		expect(refreshEntityQueriesMock).toHaveBeenCalledWith(
+		expect(refreshAuditedEntityQueriesMock).toHaveBeenCalledWith(
 			queryClientMock,
 			clientKeys.all,
 		);
@@ -92,7 +95,7 @@ describe("client lifecycle hooks", () => {
 		expect(toastSuccessMock).toHaveBeenCalledWith(
 			"Cliente restaurado com sucesso.",
 		);
-		expect(refreshEntityQueriesMock).toHaveBeenCalledWith(
+		expect(refreshAuditedEntityQueriesMock).toHaveBeenCalledWith(
 			queryClientMock,
 			clientKeys.all,
 		);
@@ -110,6 +113,6 @@ describe("client lifecycle hooks", () => {
 			new Error("internal detail"),
 		);
 		expect(toastDangerMock).toHaveBeenCalledWith("Erro seguro");
-		expect(refreshEntityQueriesMock).not.toHaveBeenCalled();
+		expect(refreshAuditedEntityQueriesMock).not.toHaveBeenCalled();
 	});
 });

@@ -1,8 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { Prisma } from "@/generated/prisma/client";
 
-const { createAuditLogMock, prismaMock } = vi.hoisted(() => ({
+const { createAuditLogMock, getFeeByIdMock, prismaMock } = vi.hoisted(() => ({
 	createAuditLogMock: vi.fn(),
+	getFeeByIdMock: vi.fn(),
 	prismaMock: {
 		revenue: {
 			findFirst: vi.fn(),
@@ -33,6 +34,20 @@ vi.mock("@/shared/lib/prisma", () => ({
 
 vi.mock("@/features/audit-logs/data/mutations", () => ({
 	createAuditLog: createAuditLogMock,
+	buildAuditUpdateChangeData: ({
+		before,
+		after,
+	}: {
+		before: unknown;
+		after: unknown;
+	}) => ({
+		before,
+		after,
+	}),
+}));
+
+vi.mock("../data/queries", async () => ({
+	getFeeById: getFeeByIdMock,
 }));
 
 import { FEE_ERRORS } from "../constants/errors";
@@ -99,6 +114,25 @@ const writableRevenue = {
 describe("fee data mutations", () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
+		getFeeByIdMock.mockResolvedValue({
+			id: 6,
+			contractId: 3,
+			contractProcessNumber: "PROC-001",
+			client: "Cliente Teste",
+			contractStatusValue: "ACTIVE",
+			revenueId: 5,
+			revenueType: "Administrativo",
+			revenueTypeValue: "ADMINISTRATIVE",
+			paymentDate: "2026-01-10T00:00:00.000Z",
+			amount: 1000,
+			installmentNumber: 2,
+			generatesRemuneration: true,
+			remunerationCount: 2,
+			isActive: true,
+			isSoftDeleted: false,
+			createdAt: "2026-01-10T00:00:00.000Z",
+			updatedAt: "2026-01-10T00:00:00.000Z",
+		});
 		prismaMock.revenue.findFirst.mockResolvedValue(writableRevenue);
 		prismaMock.$transaction.mockImplementation(async (callback) =>
 			callback(prismaMock),

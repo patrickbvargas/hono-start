@@ -1,8 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-	getMutationErrorMessage,
-	refreshEntityQueries,
-} from "@/shared/lib/entity-management";
+import { refreshAuditedEntityQueries } from "@/features/audit-logs";
+import { getMutationErrorMessage } from "@/shared/lib/entity-management";
 import { toast } from "@/shared/lib/toast";
 import type { EntityId } from "@/shared/schemas/entity";
 import { revokeEmployeeAccessMutationOptions } from "../api/mutations";
@@ -22,7 +20,7 @@ export function useEmployeeRevokeAccess({
 		try {
 			await mutation.mutateAsync({ data: { id } });
 			toast.success("Acesso revogado com sucesso.");
-			await refreshEntityQueries(queryClient, employeeKeys.all);
+			await refreshAuditedEntityQueries(queryClient, employeeKeys.all);
 			onSuccess?.();
 			return true;
 		} catch (error) {

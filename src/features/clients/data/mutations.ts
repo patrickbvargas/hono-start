@@ -1,5 +1,8 @@
-import type { AuditLogActor } from "@/features/audit-logs/data/mutations";
-import { createAuditLog } from "@/features/audit-logs/data/mutations";
+import {
+	type AuditLogActor,
+	buildAuditUpdateChangeData,
+	createAuditLog,
+} from "@/features/audit-logs/data/mutations";
 import { prisma } from "@/shared/lib/prisma";
 import type { MutationReturnType } from "@/shared/types/api";
 import type {
@@ -104,7 +107,10 @@ export async function updateClient({
 			entityType: "Client",
 			entityId: input.id,
 			entityName: input.fullName,
-			changeData: { before: client, after: input },
+			changeData: buildAuditUpdateChangeData({
+				before: client,
+				after: input,
+			}),
 			description: `Updated client ${input.fullName}.`,
 		});
 	});
