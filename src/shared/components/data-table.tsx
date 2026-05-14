@@ -74,7 +74,7 @@ export const DataTable = <TData, TValue>({
 								<TableRow
 									key={row.id}
 									onClick={() => onRowAction?.(index)}
-									className="cursor-pointer"
+									className="cursor-pointer border-0"
 									data-state={row.getIsSelected() && "selected"}
 								>
 									{row.getVisibleCells().map((cell) => (
@@ -102,7 +102,7 @@ export const DataTable = <TData, TValue>({
 						)}
 					</TableBody>
 					{tableFooterContent ? (
-						<TableFooter>{tableFooterContent}</TableFooter>
+						<TableFooter className="border-0">{tableFooterContent}</TableFooter>
 					) : null}
 				</Table>
 			</ScrollArea>

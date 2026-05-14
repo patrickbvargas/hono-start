@@ -87,6 +87,7 @@ export function DashboardRemunerationTable({
 							</TableRow>
 						) : null
 					}
+					className="border-0"
 				/>
 			</CardContent>
 		</Card>
