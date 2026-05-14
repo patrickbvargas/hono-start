@@ -235,7 +235,7 @@ const EmployeeDetailsContent = ({
 	return (
 		<EntityDetail.Content>
 			<EntityDetail.Header className="flex-row items-center justify-between gap-3">
-				<EntityDetail.Title>{`#${employee.id} • ${employee.fullName}`}</EntityDetail.Title>
+				<EntityDetail.Title>{employee.fullName}</EntityDetail.Title>
 				<EntityActions
 					canView={false}
 					canEdit={actions.canEdit}

@@ -96,7 +96,6 @@ export const ContractList = ({
 			data={items}
 			getRowKey={(contract) => contract.id}
 			renderTitle={(contract) => contract.processNumber}
-			renderDescription={(contract) => `#${contract.id}`}
 			renderFields={renderCardFields}
 			renderActions={renderCardActions}
 			onCardAction={(contract) => onView?.(contract.id)}

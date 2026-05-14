@@ -95,8 +95,9 @@ export const FeeList = ({
 		<DataCardList
 			data={items}
 			getRowKey={(fee) => fee.id}
-			renderTitle={(fee) => fee.contractProcessNumber}
-			renderDescription={(fee) => `#${fee.id}`}
+			renderTitle={(fee) =>
+				`${fee.contractProcessNumber} • Parcela ${fee.installmentNumber}`
+			}
 			renderFields={renderCardFields}
 			renderActions={renderCardActions}
 			onCardAction={(fee) => onView?.(fee.id)}

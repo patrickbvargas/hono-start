@@ -90,8 +90,9 @@ export const RemunerationList = ({
 		<DataCardList
 			data={items}
 			getRowKey={(remuneration) => remuneration.id}
-			renderTitle={(remuneration) => remuneration.employeeName}
-			renderDescription={(remuneration) => `#${remuneration.id}`}
+			renderTitle={(remuneration) =>
+				`${remuneration.employeeName} • Parcela ${remuneration.feeInstallmentNumber}`
+			}
 			renderFields={renderCardFields}
 			renderActions={renderCardActions}
 			onCardAction={(remuneration) => onView?.(remuneration.id)}

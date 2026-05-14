@@ -131,7 +131,7 @@ const ContractDetailsContent = ({
 	return (
 		<EntityDetail.Content>
 			<EntityDetail.Header className="flex-row items-center justify-between gap-3">
-				<EntityDetail.Title>{`#${contract.id} • ${contract.processNumber}`}</EntityDetail.Title>
+				<EntityDetail.Title>{contract.processNumber}</EntityDetail.Title>
 				<EntityActions
 					canView={false}
 					canEdit={actions.canEdit}

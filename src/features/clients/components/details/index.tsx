@@ -106,7 +106,7 @@ const ClientDetailsContent = ({
 	return (
 		<EntityDetail.Content>
 			<EntityDetail.Header className="flex-row items-center justify-between gap-3">
-				<EntityDetail.Title>{`#${client.id} • ${client.fullName}`}</EntityDetail.Title>
+				<EntityDetail.Title>{client.fullName}</EntityDetail.Title>
 				<EntityActions
 					canView={false}
 					canEdit={actions.canEdit}

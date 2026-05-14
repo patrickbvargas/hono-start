@@ -91,7 +91,6 @@ export const EmployeeList = ({
 			data={items}
 			getRowKey={(employee) => employee.id}
 			renderTitle={(employee) => employee.fullName}
-			renderDescription={(employee) => `#${employee.id}`}
 			renderFields={renderCardFields}
 			renderActions={renderCardActions}
 			onCardAction={(employee) => onView?.(employee.id)}

@@ -12,6 +12,27 @@ import {
 	buildAuditChangePresentation,
 } from "../../utils/change-details";
 
+const AUDIT_ACTION_LABELS: Record<string, string> = {
+	CREATE: "Criar",
+	UPDATE: "Atualizar",
+	DELETE: "Excluir",
+	RESTORE: "Restaurar",
+	GRANT_ACCESS: "Conceder acesso",
+	REVOKE_ACCESS: "Revogar acesso",
+	RESET_PASSWORD: "Redefinir senha",
+};
+
+function getAuditLogTitle(params: {
+	action: string;
+	entityName: string;
+	entityTypeLabel: string;
+}) {
+	const actionLabel = AUDIT_ACTION_LABELS[params.action] ?? params.action;
+	const entityLabel = params.entityName || params.entityTypeLabel || "Sistema";
+
+	return `${actionLabel} • ${entityLabel}`;
+}
+
 interface AuditLogDetailsProps {
 	id: EntityId;
 	state: OverlayState;
@@ -61,7 +82,13 @@ const AuditLogDetailsContent = ({ id }: AuditLogDetailsContentProps) => {
 	return (
 		<EntityDetail.Content>
 			<EntityDetail.Header>
-				<EntityDetail.Title>{`#${auditLog.id} • ${auditLog.description || "Log de auditoria"}`}</EntityDetail.Title>
+				<EntityDetail.Title>
+					{getAuditLogTitle({
+						action: auditLog.action,
+						entityName: auditLog.entityName,
+						entityTypeLabel: auditLog.entityTypeLabel,
+					})}
+				</EntityDetail.Title>
 			</EntityDetail.Header>
 			<EntityDetail.Body>
 				<EntityDetail.Fields items={summaryInfo} />

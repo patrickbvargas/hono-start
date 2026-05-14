@@ -6,6 +6,24 @@ import type { EntityId } from "@/shared/schemas/entity";
 import type { QueryPaginatedReturnType } from "@/shared/types/api";
 import type { AuditLog } from "../../schemas/model";
 
+const AUDIT_ACTION_LABELS: Record<string, string> = {
+	CREATE: "Criar",
+	UPDATE: "Atualizar",
+	DELETE: "Excluir",
+	RESTORE: "Restaurar",
+	GRANT_ACCESS: "Conceder acesso",
+	REVOKE_ACCESS: "Revogar acesso",
+	RESET_PASSWORD: "Redefinir senha",
+};
+
+function getAuditLogTitle(auditLog: AuditLog) {
+	const actionLabel = AUDIT_ACTION_LABELS[auditLog.action] ?? auditLog.action;
+	const entityLabel =
+		auditLog.entityName || auditLog.entityTypeLabel || "Sistema";
+
+	return `${actionLabel} • ${entityLabel}`;
+}
+
 interface AuditLogListProps {
 	data: QueryPaginatedReturnType<AuditLog>;
 	onView?: (id: EntityId) => void;
@@ -68,14 +86,7 @@ export const AuditLogList = ({ data, onView }: AuditLogListProps) => {
 			data={items}
 			getRowKey={(auditLog) => auditLog.id}
 			onCardAction={onView ? (auditLog) => onView(auditLog.id) : undefined}
-			renderTitle={(auditLog) =>
-				auditLog.entityName ||
-				auditLog.entityTypeLabel ||
-				(!auditLog.actorName ? "Sistema" : "—")
-			}
-			renderDescription={(auditLog) =>
-				auditLog.action || (!auditLog.actorName ? "Sistema" : "—")
-			}
+			renderTitle={getAuditLogTitle}
 			renderFields={renderCardFields}
 			footerContent={<Pagination totalRecords={total} />}
 		/>
