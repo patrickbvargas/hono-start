@@ -62,7 +62,7 @@ function RemunerationFormContent({
 					<form.AppField name="effectivePercentage">
 						{(field) => (
 							<field.Number
-								label="Percentual efetivo"
+								label="% Efetivo"
 								minValue={0}
 								maxValue={1}
 								step={0.01}

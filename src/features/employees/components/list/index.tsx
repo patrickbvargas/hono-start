@@ -40,7 +40,7 @@ export const EmployeeList = ({
 				definition: employee.type,
 			},
 			{
-				term: "Remuneração",
+				term: "% Remuneração",
 				definition: formatter.percent(employee.remunerationPercent),
 			},
 			{
@@ -52,7 +52,7 @@ export const EmployeeList = ({
 				definition: employee.role,
 			},
 			{
-				term: "Status",
+				term: "Situação",
 				definition: (
 					<EntityStatus
 						isActive={employee.isActive}
@@ -91,6 +91,7 @@ export const EmployeeList = ({
 			data={items}
 			getRowKey={(employee) => employee.id}
 			renderTitle={(employee) => employee.fullName}
+			renderDescription={(employee) => `#${employee.id}`}
 			renderFields={renderCardFields}
 			renderActions={renderCardActions}
 			onCardAction={(employee) => onView?.(employee.id)}

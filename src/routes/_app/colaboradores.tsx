@@ -55,7 +55,14 @@ function RouteComponent() {
 	return (
 		<Wrapper
 			title={ROUTES.employee.title}
-			actions={canManage && <ButtonNew onClick={() => overlay.create.open()} />}
+			actions={
+				canManage && (
+					<ButtonNew
+						label="Novo colaborador"
+						onClick={() => overlay.create.open()}
+					/>
+				)
+			}
 		>
 			<WrapperHeader>
 				<EmployeeFilter />

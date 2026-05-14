@@ -47,7 +47,7 @@ export const ROUTES: Record<RouteName, RouteItem> = {
 		icon: BriefcaseIcon,
 	},
 	fee: {
-		title: "Honorários",
+		title: "Honorários",
 		url: "/honorarios",
 		icon: DollarSignIcon,
 	},

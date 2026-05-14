@@ -67,15 +67,15 @@ const RemunerationDetailsContent = ({
 	const summaryInfo = React.useMemo<DetailFieldItem[]>(
 		() => [
 			{ term: "Colaborador", definition: remuneration.employeeName },
+			{ term: "Processo", definition: remuneration.contractProcessNumber },
 			{ term: "Cliente", definition: remuneration.client },
-			{ term: "Contrato", definition: remuneration.contractProcessNumber },
 			{
-				term: "Pagamento",
+				term: "Competência",
 				definition: formatter.date(remuneration.paymentDate),
 			},
 			{ term: "Valor", definition: formatter.currency(remuneration.amount) },
 			{
-				term: "Percentual efetivo",
+				term: "% Efetivo",
 				definition: formatter.percent(remuneration.effectivePercentage),
 			},
 		],
@@ -84,9 +84,9 @@ const RemunerationDetailsContent = ({
 
 	const sourceInfo = React.useMemo<DetailFieldItem[]>(
 		() => [
-			{ term: "Honorário", definition: `#${remuneration.feeId}` },
+			{ term: "Honorário", definition: String(remuneration.feeId) },
 			{
-				term: "Parcela",
+				term: "Nº da parcela",
 				definition: String(remuneration.feeInstallmentNumber),
 			},
 			{
@@ -100,7 +100,7 @@ const RemunerationDetailsContent = ({
 					: "Gerada automaticamente",
 			},
 			{
-				term: "Honorário de origem",
+				term: "Situação do honorário",
 				definition: remuneration.parentFeeIsSoftDeleted ? "Excluído" : "Ativo",
 			},
 		],
@@ -131,7 +131,7 @@ const RemunerationDetailsContent = ({
 		<EntityDetail.Content>
 			<EntityDetail.Header className="flex-row items-center justify-between gap-3">
 				<EntityDetail.Title>
-					{`${remuneration.employeeName} • ${remuneration.contractProcessNumber}`}
+					{`#${remuneration.id} • ${remuneration.employeeName} • ${remuneration.contractProcessNumber}`}
 				</EntityDetail.Title>
 				<EntityActions
 					canView={false}
@@ -149,7 +149,7 @@ const RemunerationDetailsContent = ({
 				<EntityDetail.Section title="Origem">
 					<EntityDetail.Fields items={sourceInfo} />
 				</EntityDetail.Section>
-				<EntityDetail.Separator className="mt-auto" />
+				<EntityDetail.Separator />
 				<EntityDetail.Section title="Registro">
 					<EntityDetail.Fields items={registerInfo} />
 				</EntityDetail.Section>
@@ -172,7 +172,7 @@ const RemunerationDetailsFallback = () => (
 			<EntityDetail.Section title="Origem">
 				<EntityDetail.SkeletonFields rows={5} />
 			</EntityDetail.Section>
-			<EntityDetail.Separator className="mt-auto" />
+			<EntityDetail.Separator />
 			<EntityDetail.Section title="Registro">
 				<EntityDetail.SkeletonFields rows={3} />
 			</EntityDetail.Section>

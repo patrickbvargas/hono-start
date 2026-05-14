@@ -13,39 +13,51 @@ export const AuditLogList = ({ data }: AuditLogListProps) => {
 	const { data: items, total } = data;
 
 	const renderCardFields = React.useCallback(
-		(auditLog: AuditLog): DetailFieldItem[] => [
-			{
-				term: "Data",
-				definition: auditLog.occurredAtLabel,
-			},
-			{
-				term: "Usuário",
-				definition: auditLog.actorName,
-			},
-			{
-				term: "Ação",
-				definition: auditLog.action,
-			},
-			{
-				term: "Tipo",
-				definition: auditLog.entityTypeLabel,
-			},
-			{
-				term: "Registro",
-				definition: auditLog.entityName,
-			},
-			{
-				term: "IP",
-				definition: auditLog.ipAddress ?? "-",
-			},
-			{
-				term: "Descrição",
-				definition: auditLog.description,
-				classNames: {
-					item: "col-span-2",
+		(auditLog: AuditLog): DetailFieldItem[] => {
+			const isSystemEvent =
+				!auditLog.entityName &&
+				!auditLog.entityTypeLabel &&
+				!auditLog.actorName;
+			const isTypeUsedAsTitle =
+				!auditLog.entityName && Boolean(auditLog.entityTypeLabel);
+
+			return [
+				{
+					term: "Ocorrido em",
+					definition: auditLog.occurredAtLabel || "—",
 				},
-			},
-		],
+				...(!isSystemEvent
+					? [
+							{
+								term: "Usuário",
+								definition: auditLog.actorName || "Sistema",
+							},
+						]
+					: []),
+				...(!isTypeUsedAsTitle
+					? [
+							{
+								term: "Tipo",
+								definition:
+									auditLog.entityTypeLabel || (isSystemEvent ? "Sistema" : "—"),
+							},
+						]
+					: []),
+				{
+					term: "Detalhes",
+					definition: auditLog.description || "—",
+					classNames: auditLog.description
+						? {
+								item: "col-span-2",
+							}
+						: undefined,
+				},
+				{
+					term: "Endereço IP",
+					definition: auditLog.ipAddress ?? "—",
+				},
+			];
+		},
 		[],
 	);
 
@@ -53,8 +65,14 @@ export const AuditLogList = ({ data }: AuditLogListProps) => {
 		<DataCardList
 			data={items}
 			getRowKey={(auditLog) => auditLog.id}
-			renderTitle={(auditLog) => `#${auditLog.id}`}
-			renderDescription={(auditLog) => auditLog.entityTypeLabel}
+			renderTitle={(auditLog) =>
+				auditLog.entityName ||
+				auditLog.entityTypeLabel ||
+				(!auditLog.actorName ? "Sistema" : "—")
+			}
+			renderDescription={(auditLog) =>
+				auditLog.action || (!auditLog.actorName ? "Sistema" : "—")
+			}
 			renderFields={renderCardFields}
 			footerContent={<Pagination totalRecords={total} />}
 		/>

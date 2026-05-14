@@ -65,7 +65,7 @@ export const ClientTable = ({
 				enableSorting: false,
 			}),
 			c.accessor("isActive", {
-				header: "Status",
+				header: "Situação",
 				cell: ({ row }) => (
 					<EntityStatus
 						isActive={row.original.isActive}

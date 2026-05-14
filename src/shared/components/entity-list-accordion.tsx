@@ -9,7 +9,7 @@ import { cn } from "@/shared/lib/utils";
 
 const TRIGGER_ICON_POSITION_CLASS =
 	"[&_[data-slot=accordion-trigger-icon]]:absolute [&_[data-slot=accordion-trigger-icon]]:right-0 [&_[data-slot=accordion-trigger-icon]]:top-1/2 [&_[data-slot=accordion-trigger-icon]]:-translate-y-1/2";
-const TRIGGER_PADDING_WITH_ACTIONS_CLASS = "pr-28";
+const TRIGGER_PADDING_WITH_ACTIONS_CLASS = "pr-32";
 const TRIGGER_PADDING_WITHOUT_ACTIONS_CLASS = "pr-7";
 const ACTIONS_CONTAINER_CLASS =
 	"absolute top-1/2 right-7 flex -translate-y-1/2 items-center gap-2";
@@ -110,7 +110,7 @@ export function EntityListAccordionHeader({
 	openDescription,
 }: HeaderProps) {
 	return (
-		<div className="flex min-w-0 flex-col gap-1 pr-4 text-left">
+		<div className="min-w-0 flex-1 pr-4 text-left">
 			<span className="truncate font-medium text-sm group-aria-expanded/accordion-trigger:hidden">
 				{summary}
 			</span>

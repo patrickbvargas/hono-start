@@ -286,7 +286,7 @@ describe("feature utility contracts", () => {
 
 		expect(csv).toContain('"sep=;"');
 		expect(csv).toContain(
-			'"Colaborador";"Cliente";"Contrato";"Parcela";"Pagamento";"%";"Origem";"Situação";"Valor"',
+			'"Colaborador";"Cliente";"Processo";"Nº da parcela";"Competência";"% Efetivo";"Origem";"Situação";"Valor"',
 		);
 		expect(csv).toContain(
 			'"João ""Teste"" (Advogado) \\ Silva";"Maria Cliente"',
@@ -331,7 +331,7 @@ describe("feature utility contracts", () => {
 							text: "Registros exportados: 1",
 						}),
 						expect.objectContaining({
-							text: "Total do período: R$ 370,37",
+							text: "Valor total do período: R$ 370,37",
 						}),
 					]),
 				}),

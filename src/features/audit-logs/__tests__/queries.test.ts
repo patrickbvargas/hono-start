@@ -99,11 +99,92 @@ describe("audit-log data queries", () => {
 		});
 	});
 
+	it("normalizes system actor search and filters for audit log queries", async () => {
+		prismaMock.auditLog.findMany.mockResolvedValueOnce([
+			{
+				id: 2,
+				createdAt: new Date("2026-01-21T00:00:00.000Z"),
+				actorName: "",
+				actorEmail: null,
+				action: "",
+				entityType: "",
+				entityName: "",
+				entityId: null,
+				ipAddress: null,
+				userAgent: null,
+				changeData: null,
+				description: "",
+			},
+		]);
+
+		const result = await getAuditLogs({
+			firmId: 1,
+			search: {
+				page: 1,
+				limit: 20,
+				column: "occurredAt",
+				direction: "desc",
+				query: "Sistema",
+				action: [],
+				entityType: [],
+				actorName: ["Sistema"],
+			},
+		});
+
+		expect(prismaMock.auditLog.findMany).toHaveBeenCalledWith({
+			where: {
+				firmId: 1,
+				OR: [
+					{
+						actorName: {
+							contains: "Sistema",
+							mode: "insensitive",
+						},
+					},
+					{
+						entityName: {
+							contains: "Sistema",
+							mode: "insensitive",
+						},
+					},
+					{
+						actorName: {
+							in: ["Sistema", ""],
+						},
+					},
+				],
+				actorName: { in: ["Sistema", ""] },
+			},
+			orderBy: [{ createdAt: "desc" }, { id: "asc" }],
+			skip: 0,
+			take: 20,
+		});
+		expect(result).toEqual({
+			data: [
+				expect.objectContaining({
+					id: 2,
+					actorName: "",
+					entityType: "",
+					entityTypeLabel: "",
+					description: "",
+				}),
+			],
+			total: 1,
+			page: 1,
+			pageSize: 20,
+		});
+	});
+
 	it("builds distinct action, entity-type, and actor options inside tenant scope", async () => {
 		prismaMock.auditLog.findMany
 			.mockResolvedValueOnce([{ action: "CREATE" }, { action: "UPDATE" }])
 			.mockResolvedValueOnce([{ entityType: "Client" }, { entityType: "Fee" }])
-			.mockResolvedValueOnce([{ actorName: "Admin" }, { actorName: "User" }]);
+			.mockResolvedValueOnce([
+				{ actorName: "" },
+				{ actorName: "Admin" },
+				{ actorName: "Sistema" },
+				{ actorName: "User" },
+			]);
 
 		await expect(getAuditLogActions(1)).resolves.toEqual([
 			{ id: 1, value: "CREATE", label: "CREATE", isDisabled: false },
@@ -122,8 +203,9 @@ describe("audit-log data queries", () => {
 		]);
 
 		await expect(getAuditLogActors(1)).resolves.toEqual([
-			{ id: 1, value: "Admin", label: "Admin", isDisabled: false },
-			{ id: 2, value: "User", label: "User", isDisabled: false },
+			{ id: 1, value: "Sistema", label: "Sistema", isDisabled: false },
+			{ id: 2, value: "Admin", label: "Admin", isDisabled: false },
+			{ id: 3, value: "User", label: "User", isDisabled: false },
 		]);
 	});
 });

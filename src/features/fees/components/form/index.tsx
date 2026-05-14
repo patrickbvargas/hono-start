@@ -154,7 +154,12 @@ function FeeFormFields({
 					</form.AppField>
 					<form.AppField name="installmentNumber">
 						{(field) => (
-							<field.Number label="Parcela" minValue={1} step={1} isRequired />
+							<field.Number
+								label="Nº da parcela"
+								minValue={1}
+								step={1}
+								isRequired
+							/>
 						)}
 					</form.AppField>
 					<form.AppField name="amount">

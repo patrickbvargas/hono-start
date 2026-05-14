@@ -133,7 +133,7 @@ function ClientFormContent({
 								</FieldGroup>
 								<FieldGroup className="grid gap-5 sm:grid-cols-2">
 									<form.AppField name="email">
-										{(field) => <field.Input label="Email" type="email" />}
+										{(field) => <field.Input label="E-mail" type="email" />}
 									</form.AppField>
 									<form.AppField name="phone">
 										{(field) => (

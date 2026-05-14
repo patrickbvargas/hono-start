@@ -40,7 +40,7 @@ export const FormAutocomplete = ({
 	options,
 	isClearable = true,
 	placeholder = "Selecionar item...",
-	emptyMessage = "Nenhum item encontrado",
+	emptyMessage = "Nenhum item encontrado.",
 	classNames,
 	...props
 }: FormAutocompleteProps) => {

@@ -50,7 +50,9 @@ function RouteComponent() {
 	return (
 		<Wrapper
 			title={ROUTES.client.title}
-			actions={<ButtonNew onClick={() => overlay.create.open()} />}
+			actions={
+				<ButtonNew label="Novo cliente" onClick={() => overlay.create.open()} />
+			}
 		>
 			<WrapperHeader>
 				<ClientFilter />

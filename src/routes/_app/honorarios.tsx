@@ -52,7 +52,12 @@ function RouteComponent() {
 	return (
 		<Wrapper
 			title={ROUTES.fee.title}
-			actions={<ButtonNew onClick={() => overlay.create.open()} />}
+			actions={
+				<ButtonNew
+					label="Novo honorário"
+					onClick={() => overlay.create.open()}
+				/>
+			}
 		>
 			<WrapperHeader>
 				<FeeFilter />

@@ -54,7 +54,12 @@ function RouteComponent() {
 	return (
 		<Wrapper
 			title={ROUTES.contract.title}
-			actions={<ButtonNew onClick={() => overlay.create.open()} />}
+			actions={
+				<ButtonNew
+					label="Novo contrato"
+					onClick={() => overlay.create.open()}
+				/>
+			}
 		>
 			<WrapperHeader>
 				<ContractFilter />

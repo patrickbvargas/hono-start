@@ -195,10 +195,10 @@ export function buildRemunerationSpreadsheet(remunerations: Remuneration[]) {
 	const header = [
 		"Colaborador",
 		"Cliente",
-		"Contrato",
-		"Parcela",
-		"Pagamento",
-		"%",
+		"Processo",
+		"Nº da parcela",
+		"Competência",
+		"% Efetivo",
 		"Origem",
 		"Situação",
 		"Valor",
@@ -243,10 +243,10 @@ export function buildRemunerationPdfDefinition(
 		[
 			{ text: "Colaborador", style: "tableHeader" },
 			{ text: "Cliente", style: "tableHeader" },
-			{ text: "Contrato", style: "tableHeader" },
-			{ text: "Parcela", style: "tableHeader", alignment: "center" },
-			{ text: "Pagamento", style: "tableHeader" },
-			{ text: "%", style: "tableHeader", alignment: "center" },
+			{ text: "Processo", style: "tableHeader" },
+			{ text: "Nº da parcela", style: "tableHeader", alignment: "center" },
+			{ text: "Competência", style: "tableHeader" },
+			{ text: "% Efetivo", style: "tableHeader", alignment: "center" },
 			{ text: "Origem", style: "tableHeader" },
 			{ text: "Situação", style: "tableHeader" },
 			{ text: "Valor", style: "tableHeader" },
@@ -271,7 +271,7 @@ export function buildRemunerationPdfDefinition(
 	const employeeTotalsBody: TableNode["table"]["body"] = [
 		[
 			{ text: "Colaborador", style: "tableHeader" },
-			{ text: "Subtotal", style: "tableHeader", alignment: "right" },
+			{ text: "Valor total", style: "tableHeader", alignment: "right" },
 		],
 		...summary.employeeTotals.map((employeeTotal) => [
 			{ text: employeeTotal.employee, style: "tableCell" },
@@ -282,7 +282,7 @@ export function buildRemunerationPdfDefinition(
 			},
 		]),
 		[
-			{ text: "Subtotal", style: "tableHeader" },
+			{ text: "Valor total", style: "tableHeader" },
 			{
 				text: summary.formattedTotalAmount,
 				style: "tableHeader",
@@ -357,7 +357,7 @@ export function buildRemunerationPdfDefinition(
 						margin: [0, 0, 0, 4],
 					},
 					{
-						text: `Total do período: ${summary.formattedTotalAmount}`,
+						text: `Valor total do período: ${summary.formattedTotalAmount}`,
 						style: "metaLabel",
 					},
 				],

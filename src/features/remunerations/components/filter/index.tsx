@@ -25,8 +25,8 @@ export const RemunerationFilter = ({
 			<form.AppField name="query">
 				{(field) => (
 					<field.Search
-						aria-label="Número do contrato ou colaborador"
-						placeholder="Buscar por contrato ou colaborador..."
+						aria-label="Número do processo ou colaborador"
+						placeholder="Buscar por processo ou colaborador..."
 						className="md:w-80"
 					/>
 				)}
@@ -55,15 +55,15 @@ export const RemunerationFilter = ({
 					)}
 				</form.AppField>
 				<form.AppField name="dateFrom">
-					{(field) => <field.DatePicker label="Pagamento de" />}
+					{(field) => <field.DatePicker label="Competência de" />}
 				</form.AppField>
 				<form.AppField name="dateTo">
-					{(field) => <field.DatePicker label="Pagamento até" />}
+					{(field) => <field.DatePicker label="Competência até" />}
 				</form.AppField>
 				<form.AppField name="active">
 					{(field) => (
 						<field.RadioGroup
-							label="Ativo"
+							label="Situação ativa"
 							options={ENTITY_ACTIVE_FILTER_OPTIONS}
 						/>
 					)}
@@ -72,7 +72,7 @@ export const RemunerationFilter = ({
 				<form.AppField name="status">
 					{(field) => (
 						<field.RadioGroup
-							label="Exclusão"
+							label="Situação do registro"
 							options={ENTITY_DELETED_FILTER_OPTIONS}
 						/>
 					)}

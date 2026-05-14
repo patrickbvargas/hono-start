@@ -73,7 +73,7 @@ export const ContractTable = ({
 				enableSorting: CONTRACT_ALLOWED_SORT_COLUMNS.includes("status"),
 			}),
 			c.accessor("feePercentage", {
-				header: "Percentual",
+				header: "% Honorários",
 				cell: ({ row }) => formatter.percent(row.original.feePercentage),
 				enableSorting: CONTRACT_ALLOWED_SORT_COLUMNS.includes("feePercentage"),
 			}),
@@ -88,7 +88,7 @@ export const ContractTable = ({
 				enableSorting: CONTRACT_ALLOWED_SORT_COLUMNS.includes("isActive"),
 			}),
 			c.accessor("createdAt", {
-				header: "Criado em",
+				header: "Registro em",
 				cell: ({ row }) => formatter.date(row.original.createdAt),
 				enableSorting: CONTRACT_ALLOWED_SORT_COLUMNS.includes("createdAt"),
 			}),

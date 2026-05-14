@@ -60,11 +60,11 @@ export const RemunerationTable = ({
 					REMUNERATION_ALLOWED_SORT_COLUMNS.includes("employeeName"),
 			}),
 			c.accessor("contractProcessNumber", {
-				header: "Contrato",
+				header: "Processo",
 				meta: { minColumnWidth: 180 },
 			}),
 			c.accessor("paymentDate", {
-				header: "Pagamento",
+				header: "Competência",
 				cell: ({ row }) => formatter.date(row.original.paymentDate),
 				enableSorting:
 					REMUNERATION_ALLOWED_SORT_COLUMNS.includes("paymentDate"),
@@ -78,7 +78,7 @@ export const RemunerationTable = ({
 				},
 			}),
 			c.accessor("effectivePercentage", {
-				header: "Percentual",
+				header: "% Efetivo",
 				cell: ({ row }) => formatter.percent(row.original.effectivePercentage),
 				enableSorting: REMUNERATION_ALLOWED_SORT_COLUMNS.includes(
 					"effectivePercentage",
@@ -94,7 +94,7 @@ export const RemunerationTable = ({
 				),
 			}),
 			c.accessor("createdAt", {
-				header: "Criado em",
+				header: "Registro em",
 				cell: ({ row }) => formatter.date(row.original.createdAt),
 				enableSorting: REMUNERATION_ALLOWED_SORT_COLUMNS.includes("createdAt"),
 			}),

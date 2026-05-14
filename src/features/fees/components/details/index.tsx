@@ -67,12 +67,12 @@ const FeeDetailsContent = ({
 
 	const generalInfo = React.useMemo<DetailFieldItem[]>(
 		() => [
-			{ term: "Contrato", definition: fee.contractProcessNumber },
+			{ term: "Processo", definition: fee.contractProcessNumber },
 			{ term: "Cliente", definition: fee.client },
 			{ term: "Receita", definition: fee.revenueType },
-			{ term: "Pagamento", definition: formatter.date(fee.paymentDate) },
+			{ term: "Competência", definition: formatter.date(fee.paymentDate) },
 			{ term: "Valor", definition: formatter.currency(fee.amount) },
-			{ term: "Parcela", definition: String(fee.installmentNumber) },
+			{ term: "Nº da parcela", definition: String(fee.installmentNumber) },
 		],
 		[fee],
 	);
@@ -80,7 +80,7 @@ const FeeDetailsContent = ({
 	const remunerationInfo = React.useMemo<DetailFieldItem[]>(
 		() => [
 			{
-				term: "Gera remuneração",
+				term: "Remuneração automática",
 				definition: fee.generatesRemuneration ? "Sim" : "Não",
 			},
 			{
@@ -103,6 +103,10 @@ const FeeDetailsContent = ({
 				),
 			},
 			{ term: "Criado em", definition: formatter.date(fee.createdAt) },
+			{
+				term: "Atualizado em",
+				definition: fee.updatedAt ? formatter.date(fee.updatedAt) : "—",
+			},
 		],
 		[fee],
 	);
@@ -110,7 +114,7 @@ const FeeDetailsContent = ({
 	return (
 		<EntityDetail.Content>
 			<EntityDetail.Header className="flex-row items-center justify-between gap-3">
-				<EntityDetail.Title>{fee.contractProcessNumber}</EntityDetail.Title>
+				<EntityDetail.Title>{`#${fee.id} • ${fee.contractProcessNumber}`}</EntityDetail.Title>
 				<EntityActions
 					canView={false}
 					canEdit={actions.canEdit}
@@ -127,7 +131,7 @@ const FeeDetailsContent = ({
 				<EntityDetail.Section title="Remuneração">
 					<EntityDetail.Fields items={remunerationInfo} />
 				</EntityDetail.Section>
-				<EntityDetail.Separator className="mt-auto" />
+				<EntityDetail.Separator />
 				<EntityDetail.Section title="Registro">
 					<EntityDetail.Fields items={registerInfo} />
 				</EntityDetail.Section>
@@ -150,9 +154,9 @@ const FeeDetailsFallback = () => (
 			<EntityDetail.Section title="Remuneração">
 				<EntityDetail.SkeletonFields rows={2} />
 			</EntityDetail.Section>
-			<EntityDetail.Separator className="mt-auto" />
+			<EntityDetail.Separator />
 			<EntityDetail.Section title="Registro">
-				<EntityDetail.SkeletonFields rows={2} />
+				<EntityDetail.SkeletonFields rows={3} />
 			</EntityDetail.Section>
 		</EntityDetail.Body>
 		<EntityDetail.Footer />

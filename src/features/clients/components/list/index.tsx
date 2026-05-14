@@ -40,11 +40,11 @@ export const ClientList = ({
 				definition: client.type,
 			},
 			{
-				term: "Contratos",
+				term: "Contratos vinculados",
 				definition: client.contractCount,
 			},
 			{
-				term: "Status",
+				term: "Situação",
 				definition: (
 					<EntityStatus
 						isActive={client.isActive}
@@ -83,6 +83,7 @@ export const ClientList = ({
 			data={items}
 			getRowKey={(client) => client.id}
 			renderTitle={(client) => client.fullName}
+			renderDescription={(client) => `#${client.id}`}
 			renderFields={renderCardFields}
 			renderActions={renderCardActions}
 			onCardAction={(client) => onView?.(client.id)}

@@ -61,7 +61,7 @@ export const EmployeeTable = ({
 				enableSorting: EMPLOYEE_ALLOWED_SORT_COLUMNS.includes("type"),
 			}),
 			c.accessor("remunerationPercent", {
-				header: "Remuneração",
+				header: "% Remuneração",
 				cell: ({ row }) => formatter.percent(row.original.remunerationPercent),
 				enableSorting: EMPLOYEE_ALLOWED_SORT_COLUMNS.includes(
 					"remunerationPercent",
@@ -76,7 +76,7 @@ export const EmployeeTable = ({
 				enableSorting: EMPLOYEE_ALLOWED_SORT_COLUMNS.includes("role"),
 			}),
 			c.accessor("isActive", {
-				header: "Status",
+				header: "Situação",
 				cell: ({ row }) => (
 					<EntityStatus
 						isActive={row.original.isActive}

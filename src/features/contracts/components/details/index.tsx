@@ -73,7 +73,7 @@ const ContractDetailsContent = ({
 			{ term: "Área", definition: contract.legalArea },
 			{ term: "Status do contrato", definition: contract.status },
 			{
-				term: "Percentual",
+				term: "% Honorários",
 				definition: formatter.percent(contract.feePercentage),
 			},
 			{
@@ -118,6 +118,12 @@ const ContractDetailsContent = ({
 				),
 			},
 			{ term: "Criado em", definition: formatter.date(contract.createdAt) },
+			{
+				term: "Atualizado em",
+				definition: contract.updatedAt
+					? formatter.date(contract.updatedAt)
+					: "—",
+			},
 		],
 		[contract],
 	);
@@ -125,7 +131,7 @@ const ContractDetailsContent = ({
 	return (
 		<EntityDetail.Content>
 			<EntityDetail.Header className="flex-row items-center justify-between gap-3">
-				<EntityDetail.Title>{contract.processNumber}</EntityDetail.Title>
+				<EntityDetail.Title>{`#${contract.id} • ${contract.processNumber}`}</EntityDetail.Title>
 				<EntityActions
 					canView={false}
 					canEdit={actions.canEdit}
@@ -187,7 +193,7 @@ const ContractDetailsFallback = () => (
 			</EntityDetail.Section>
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Registro">
-				<EntityDetail.SkeletonFields rows={2} />
+				<EntityDetail.SkeletonFields rows={3} />
 			</EntityDetail.Section>
 		</EntityDetail.Body>
 		<EntityDetail.Footer />

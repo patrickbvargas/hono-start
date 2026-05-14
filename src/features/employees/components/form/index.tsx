@@ -98,7 +98,7 @@ function EmployeeFormContent({
 							{(field) => <field.Input label="Nome" isRequired />}
 						</form.AppField>
 						<form.AppField name="email">
-							{(field) => <field.Input label="Email" isRequired />}
+							{(field) => <field.Input label="E-mail" isRequired />}
 						</form.AppField>
 					</FieldGroup>
 					<FieldGroup className="grid gap-5 sm:grid-cols-2">
@@ -197,6 +197,7 @@ function EmployeeFormSkeleton({
 				<FieldGroup className="grid gap-5 sm:grid-cols-2">
 					<FormFieldSkeleton labelWidth="w-14" />
 					<FormFieldSkeleton labelWidth="w-12" />
+					<FormFieldSkeleton labelWidth="w-10" />
 				</FieldGroup>
 			</FormSection>
 			<FormSection title="Financeiro">

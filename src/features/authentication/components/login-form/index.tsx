@@ -15,7 +15,7 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
 					<form.AppField name="identifier">
 						{(field) => (
 							<field.Input
-								label="Email ou OAB"
+								label="E-mail ou OAB"
 								placeholder="nome@firma.com.br ou RS123456"
 								isRequired
 							/>

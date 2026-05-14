@@ -501,12 +501,16 @@ function ContractFormSkeleton({
 							<FormFieldSkeleton labelWidth="w-28" />
 							<Skeleton className="h-8 w-8 place-self-end rounded-md" />
 						</FieldGroup>
-						<FieldGroup className="grid gap-5 sm:grid-cols-3">
+						<FieldGroup className="grid gap-5 sm:grid-cols-2">
 							<FormFieldSkeleton labelWidth="w-20" />
 							<FormFieldSkeleton labelWidth="w-14" />
+						</FieldGroup>
+						<FieldGroup className="grid gap-5 sm:grid-cols-2">
 							<FormFieldSkeleton labelWidth="w-16" />
 						</FieldGroup>
-						<FormCheckboxSkeleton labelWidth="w-24" />
+						<FieldGroup>
+							<FormCheckboxSkeleton labelWidth="w-24" />
+						</FieldGroup>
 					</div>
 				</div>
 			</FormSection>

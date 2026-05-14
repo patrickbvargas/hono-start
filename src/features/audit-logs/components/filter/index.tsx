@@ -14,8 +14,8 @@ export const AuditLogFilter = () => {
 			<form.AppField name="query">
 				{(field) => (
 					<field.Search
-						aria-label="Usuário ou registro"
-						placeholder="Buscar por usuário ou registro..."
+						aria-label="Usuário ou entidade"
+						placeholder="Buscar por usuário ou entidade..."
 						className="md:w-80"
 					/>
 				)}

@@ -36,10 +36,14 @@ export function getAuditDescription(params: {
 	changeData: unknown;
 	fallbackDescription: string;
 }) {
-	const entityTypeLabel = getAuditEntityTypeLabel(
-		params.entityType,
-	).toLowerCase();
-	const entityName = normalizeEntityName(params.entityName);
+	const isSystemEvent =
+		params.entityType.trim() === "" && params.entityName.trim() === "";
+	const entityTypeLabel = isSystemEvent
+		? "sistema"
+		: getAuditEntityTypeLabel(params.entityType).toLowerCase();
+	const entityName = isSystemEvent
+		? "sistema"
+		: normalizeEntityName(params.entityName);
 
 	if (
 		params.changeData &&
@@ -49,13 +53,17 @@ export function getAuditDescription(params: {
 	) {
 		const specialAction = SPECIAL_DESCRIPTION_LABELS[params.changeData.action];
 		if (specialAction) {
-			return `${specialAction} de ${entityTypeLabel} ${entityName}.`;
+			return isSystemEvent
+				? `${specialAction}.`
+				: `${specialAction} de ${entityTypeLabel} ${entityName}.`;
 		}
 	}
 
 	const actionLabel = ACTION_LABELS[params.action];
 	if (actionLabel) {
-		return `${actionLabel} ${entityTypeLabel} ${entityName}.`;
+		return isSystemEvent
+			? `${actionLabel} ${entityTypeLabel}.`
+			: `${actionLabel} ${entityTypeLabel} ${entityName}.`;
 	}
 
 	return params.fallbackDescription;

@@ -39,7 +39,7 @@ export const FormMultiselect = ({
 	options,
 	placeholder = "Selecionar item...",
 	searchPlaceholder = "Buscar...",
-	emptyMessage = "Nenhum item encontrado",
+	emptyMessage = "Nenhum item encontrado.",
 	classNames,
 	...props
 }: FormMultiselectProps) => {

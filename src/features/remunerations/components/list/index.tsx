@@ -32,11 +32,11 @@ export const RemunerationList = ({
 	const renderCardFields = React.useCallback(
 		(remuneration: Remuneration): DetailFieldItem[] => [
 			{
-				term: "Contrato",
+				term: "Processo",
 				definition: remuneration.contractProcessNumber,
 			},
 			{
-				term: "Pagamento",
+				term: "Competência",
 				definition: formatter.date(remuneration.paymentDate),
 			},
 			{
@@ -44,7 +44,7 @@ export const RemunerationList = ({
 				definition: formatter.currency(remuneration.amount),
 			},
 			{
-				term: "Percentual",
+				term: "% Efetivo",
 				definition: formatter.percent(remuneration.effectivePercentage),
 			},
 			{
@@ -57,7 +57,7 @@ export const RemunerationList = ({
 				),
 			},
 			{
-				term: "Criado em",
+				term: "Registro em",
 				definition: formatter.date(remuneration.createdAt),
 			},
 		],
@@ -91,6 +91,7 @@ export const RemunerationList = ({
 			data={items}
 			getRowKey={(remuneration) => remuneration.id}
 			renderTitle={(remuneration) => remuneration.employeeName}
+			renderDescription={(remuneration) => `#${remuneration.id}`}
 			renderFields={renderCardFields}
 			renderActions={renderCardActions}
 			onCardAction={(remuneration) => onView?.(remuneration.id)}

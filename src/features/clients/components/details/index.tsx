@@ -70,14 +70,14 @@ const ClientDetailsContent = ({
 		() => [
 			{ term: "Documento", definition: formatClientDocument(client.document) },
 			{ term: "Tipo", definition: client.type },
-			{ term: "Contratos", definition: client.contractCount },
+			{ term: "Contratos vinculados", definition: client.contractCount },
 		],
 		[client],
 	);
 
 	const contactInfo = React.useMemo<DetailFieldItem[]>(
 		() => [
-			{ term: "Email", definition: client.email ?? "—" },
+			{ term: "E-mail", definition: client.email ?? "—" },
 			{ term: "Telefone", definition: client.phone ?? "—" },
 		],
 		[client],
@@ -86,7 +86,7 @@ const ClientDetailsContent = ({
 	const registerInfo = React.useMemo<DetailFieldItem[]>(
 		() => [
 			{
-				term: "Status",
+				term: "Situação",
 				definition: (
 					<EntityStatus
 						isActive={client.isActive}
@@ -95,6 +95,10 @@ const ClientDetailsContent = ({
 				),
 			},
 			{ term: "Criado em", definition: formatter.date(client.createdAt) },
+			{
+				term: "Atualizado em",
+				definition: client.updatedAt ? formatter.date(client.updatedAt) : "—",
+			},
 		],
 		[client],
 	);
@@ -102,7 +106,7 @@ const ClientDetailsContent = ({
 	return (
 		<EntityDetail.Content>
 			<EntityDetail.Header className="flex-row items-center justify-between gap-3">
-				<EntityDetail.Title>{client.fullName}</EntityDetail.Title>
+				<EntityDetail.Title>{`#${client.id} • ${client.fullName}`}</EntityDetail.Title>
 				<EntityActions
 					canView={false}
 					canEdit={actions.canEdit}
@@ -156,7 +160,7 @@ const ClientDetailsFallback = () => (
 			</EntityDetail.Section>
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Registro">
-				<EntityDetail.SkeletonFields rows={2} />
+				<EntityDetail.SkeletonFields rows={3} />
 			</EntityDetail.Section>
 		</EntityDetail.Body>
 		<EntityDetail.Footer />

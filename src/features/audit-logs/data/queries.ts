@@ -20,10 +20,21 @@ const dateTimeFormatter = new Intl.DateTimeFormat("pt-BR", {
 	timeStyle: "short",
 });
 
+function isSystemActorName(actorName: string) {
+	return actorName.trim() === "" || actorName === "Sistema";
+}
+
 function buildAuditLogWhere({
 	firmId,
 	filter,
 }: EntityFilterParams<AuditLogFilter>): Prisma.AuditLogWhereInput {
+	const actorFilterValues = filter.actorName.flatMap((value) =>
+		value === "Sistema" ? ["Sistema", ""] : [value],
+	);
+	const searchIncludesSystem = filter.query
+		? filter.query.trim().toLocaleLowerCase("pt-BR").includes("sistema")
+		: false;
+
 	return {
 		firmId,
 		...(filter.query
@@ -41,6 +52,15 @@ function buildAuditLogWhere({
 								mode: "insensitive" as const,
 							},
 						},
+						...(searchIncludesSystem
+							? [
+									{
+										actorName: {
+											in: ["Sistema", ""],
+										},
+									},
+								]
+							: []),
 					],
 				}
 			: {}),
@@ -48,8 +68,8 @@ function buildAuditLogWhere({
 		...(filter.entityType.length > 0
 			? { entityType: { in: filter.entityType } }
 			: {}),
-		...(filter.actorName.length > 0
-			? { actorName: { in: filter.actorName } }
+		...(actorFilterValues.length > 0
+			? { actorName: { in: actorFilterValues } }
 			: {}),
 	};
 }
@@ -187,5 +207,17 @@ export async function getAuditLogActors(
 		orderBy: { actorName: "asc" },
 	});
 
-	return mapDistinctOptions(actors.map((row) => ({ value: row.actorName })));
+	const normalizedActors = Array.from(
+		new Map(
+			actors.map((row) => {
+				const value = isSystemActorName(row.actorName)
+					? "Sistema"
+					: row.actorName;
+
+				return [value, { value }];
+			}),
+		).values(),
+	);
+
+	return mapDistinctOptions(normalizedActors);
 }

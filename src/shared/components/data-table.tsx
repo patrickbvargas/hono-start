@@ -49,7 +49,7 @@ export const DataTable = <TData, TValue>({
 	return (
 		<div
 			className={cn(
-				"flex min-h-0 max-h-full flex-col overflow-hidden rounded-lg",
+				"border flex min-h-0 max-h-full flex-col overflow-hidden rounded-lg",
 				className,
 			)}
 		>

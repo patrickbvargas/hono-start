@@ -92,7 +92,7 @@ describe("DashboardRemunerationTable", () => {
 			screen.getByText("Remunerações").closest('[data-slot="card"]'),
 		).toBeTruthy();
 		expect(screen.getByTestId("data-table").textContent).toContain(
-			"Colaborador | Jan/26 | Fev/26 | Total no período",
+			"Colaborador | Jan/26 | Fev/26 | Valor total no período",
 		);
 		expect(screen.getByTestId("data-table").textContent).toContain("Subtotal");
 	});

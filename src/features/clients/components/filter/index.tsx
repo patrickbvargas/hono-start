@@ -35,7 +35,7 @@ export const ClientFilter = () => {
 				<form.AppField name="active">
 					{(field) => (
 						<field.RadioGroup
-							label="Ativo"
+							label="Situação ativa"
 							options={ENTITY_ACTIVE_FILTER_OPTIONS}
 						/>
 					)}
@@ -44,7 +44,7 @@ export const ClientFilter = () => {
 				<form.AppField name="status">
 					{(field) => (
 						<field.RadioGroup
-							label="Exclusão"
+							label="Situação do registro"
 							options={ENTITY_DELETED_FILTER_OPTIONS}
 						/>
 					)}

@@ -80,10 +80,14 @@ export const DataCardList = <TData,>({
 									)}
 								>
 									<CardHeader className="flex items-center justify-between gap-3">
-										<CardTitle>{title}</CardTitle>
-										{description ? (
-											<CardDescription>{description}</CardDescription>
-										) : null}
+										<div className="min-w-0 flex-1">
+											<CardTitle className="truncate">{title}</CardTitle>
+											{description ? (
+												<CardDescription className="truncate">
+													{description}
+												</CardDescription>
+											) : null}
+										</div>
 										{actions ? (
 											<CardAction
 												onClick={(event) => {

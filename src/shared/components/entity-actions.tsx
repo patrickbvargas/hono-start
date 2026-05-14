@@ -52,7 +52,7 @@ export function EntityActions({
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end">
 				{shouldShowView && (
-					<DropdownMenuItem onClick={onView}>Visualizar</DropdownMenuItem>
+					<DropdownMenuItem onClick={onView}>Ver detalhes</DropdownMenuItem>
 				)}
 				{shouldShowEdit && (
 					<DropdownMenuItem onClick={onEdit}>Editar</DropdownMenuItem>

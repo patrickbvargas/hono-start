@@ -32,7 +32,7 @@ export const FeeList = ({
 	const renderCardFields = React.useCallback(
 		(fee: FeeSummary): DetailFieldItem[] => [
 			{
-				term: "Contrato",
+				term: "Processo",
 				definition: fee.contractProcessNumber,
 			},
 			{
@@ -40,7 +40,7 @@ export const FeeList = ({
 				definition: fee.revenueType,
 			},
 			{
-				term: "Pagamento",
+				term: "Competência",
 				definition: formatter.date(fee.paymentDate),
 			},
 			{
@@ -48,7 +48,7 @@ export const FeeList = ({
 				definition: formatter.currency(fee.amount),
 			},
 			{
-				term: "Parcela",
+				term: "Nº da parcela",
 				definition: fee.installmentNumber,
 			},
 			{
@@ -59,6 +59,10 @@ export const FeeList = ({
 						isSoftDeleted={fee.isSoftDeleted}
 					/>
 				),
+			},
+			{
+				term: "Registro em",
+				definition: formatter.date(fee.createdAt),
 			},
 		],
 		[],
@@ -91,7 +95,8 @@ export const FeeList = ({
 		<DataCardList
 			data={items}
 			getRowKey={(fee) => fee.id}
-			renderTitle={(fee) => `#${fee.id}`}
+			renderTitle={(fee) => fee.contractProcessNumber}
+			renderDescription={(fee) => `#${fee.id}`}
 			renderFields={renderCardFields}
 			renderActions={renderCardActions}
 			onCardAction={(fee) => onView?.(fee.id)}

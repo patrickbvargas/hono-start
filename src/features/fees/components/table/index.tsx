@@ -45,7 +45,7 @@ export const FeeTable = ({
 				},
 			}),
 			c.accessor("contractProcessNumber", {
-				header: "Contrato",
+				header: "Processo",
 				meta: { minColumnWidth: 180 },
 			}),
 			c.accessor("revenueType", {
@@ -53,7 +53,7 @@ export const FeeTable = ({
 				meta: { minColumnWidth: 160 },
 			}),
 			c.accessor("paymentDate", {
-				header: "Pagamento",
+				header: "Competência",
 				cell: ({ row }) => formatter.date(row.original.paymentDate),
 				enableSorting: FEE_ALLOWED_SORT_COLUMNS.includes("paymentDate"),
 			}),
@@ -66,7 +66,7 @@ export const FeeTable = ({
 				},
 			}),
 			c.accessor("installmentNumber", {
-				header: "Parcela",
+				header: "Nº da parcela",
 				enableSorting: FEE_ALLOWED_SORT_COLUMNS.includes("installmentNumber"),
 			}),
 			c.accessor("isActive", {
@@ -79,7 +79,7 @@ export const FeeTable = ({
 				),
 			}),
 			c.accessor("createdAt", {
-				header: "Criado em",
+				header: "Registro em",
 				cell: ({ row }) => formatter.date(row.original.createdAt),
 				enableSorting: FEE_ALLOWED_SORT_COLUMNS.includes("createdAt"),
 			}),

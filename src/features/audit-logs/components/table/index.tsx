@@ -36,45 +36,65 @@ export const AuditLogTable = ({
 					cellClassName: "whitespace-nowrap",
 				},
 			}),
+			c.accessor("action", {
+				header: "Ação",
+				cell: ({ getValue }) => getValue() || "—",
+				enableSorting: AUDIT_LOG_ALLOWED_SORT_COLUMNS.includes("action"),
+			}),
 			c.accessor("occurredAt", {
-				header: "Data",
-				cell: ({ row }) => row.original.occurredAtLabel,
+				header: "Ocorrido em",
+				cell: ({ row }) => row.original.occurredAtLabel || "—",
 				enableSorting: AUDIT_LOG_ALLOWED_SORT_COLUMNS.includes("occurredAt"),
 			}),
 			c.accessor("actorName", {
 				header: "Usuário",
+				cell: ({ getValue }) => getValue() || "Sistema",
 				enableSorting: AUDIT_LOG_ALLOWED_SORT_COLUMNS.includes("actorName"),
 				meta: {
 					minColumnWidth: 220,
 				},
 			}),
-			c.accessor("action", {
-				header: "Ação",
-				enableSorting: AUDIT_LOG_ALLOWED_SORT_COLUMNS.includes("action"),
-			}),
 			c.accessor("entityType", {
 				header: "Tipo",
-				cell: ({ row }) => row.original.entityTypeLabel,
+				cell: ({ row }) => {
+					const isSystemEvent =
+						!row.original.entityName &&
+						!row.original.entityTypeLabel &&
+						!row.original.actorName;
+
+					return (
+						row.original.entityTypeLabel || (isSystemEvent ? "Sistema" : "—")
+					);
+				},
 				enableSorting: AUDIT_LOG_ALLOWED_SORT_COLUMNS.includes("entityType"),
 			}),
 			c.accessor("entityName", {
-				header: "Registro",
+				header: "Entidade",
+				cell: ({ row }) => {
+					const isSystemEvent =
+						!row.original.entityName &&
+						!row.original.entityTypeLabel &&
+						!row.original.actorName;
+
+					return row.original.entityName || (isSystemEvent ? "Sistema" : "—");
+				},
 				enableSorting: AUDIT_LOG_ALLOWED_SORT_COLUMNS.includes("entityName"),
 				meta: {
 					minColumnWidth: 240,
 				},
 			}),
-			c.accessor("ipAddress", {
-				header: "IP",
-				cell: ({ getValue }) => getValue() ?? "-",
-				enableSorting: false,
-			}),
 			c.accessor("description", {
-				header: "Descrição",
+				header: "Detalhes",
+				cell: ({ getValue }) => getValue() || "—",
 				enableSorting: false,
 				meta: {
 					minColumnWidth: 360,
 				},
+			}),
+			c.accessor("ipAddress", {
+				header: "Endereço IP",
+				cell: ({ getValue }) => getValue() ?? "—",
+				enableSorting: false,
 			}),
 		];
 	}, [onView]);

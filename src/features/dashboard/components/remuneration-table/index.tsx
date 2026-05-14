@@ -49,7 +49,7 @@ export function DashboardRemunerationTable({
 		),
 		columnHelper.accessor("formattedTotal", {
 			id: "total",
-			header: "Total no período",
+			header: "Valor total no período",
 			meta: {
 				headerClassName: "min-w-40 text-right",
 				cellClassName: "whitespace-nowrap text-right font-semibold",

@@ -120,15 +120,15 @@ const EmployeeDetailsContent = ({
 	const generalInfo = React.useMemo<DetailFieldItem[]>(
 		() => [
 			{ term: "OAB", definition: formatter.oab(employee.oabNumber) },
-			{ term: "Cargo", definition: employee.type },
+			{ term: "Função", definition: employee.type },
 			{ term: "Perfil", definition: employee.role },
-			{ term: "Contratos", definition: employee.contractCount },
+			{ term: "Contratos vinculados", definition: employee.contractCount },
 		],
 		[employee],
 	);
 
 	const contactInfo = React.useMemo<DetailFieldItem[]>(
-		() => [{ term: "Email", definition: employee.email }],
+		() => [{ term: "E-mail", definition: employee.email }],
 		[employee],
 	);
 
@@ -153,8 +153,12 @@ const EmployeeDetailsContent = ({
 	const financialInfo = React.useMemo<DetailFieldItem[]>(
 		() => [
 			{
-				term: "Remuneração",
+				term: "% Remuneração",
 				definition: formatter.percent(employee.remunerationPercent),
+			},
+			{
+				term: "% Indicação",
+				definition: formatter.percent(employee.referrerPercent),
 			},
 		],
 		[employee],
@@ -163,7 +167,7 @@ const EmployeeDetailsContent = ({
 	const registerInfo = React.useMemo<DetailFieldItem[]>(
 		() => [
 			{
-				term: "Status",
+				term: "Situação",
 				definition: (
 					<EntityStatus
 						isActive={employee.isActive}
@@ -172,6 +176,12 @@ const EmployeeDetailsContent = ({
 				),
 			},
 			{ term: "Criado em", definition: formatter.date(employee.createdAt) },
+			{
+				term: "Atualizado em",
+				definition: employee.updatedAt
+					? formatter.date(employee.updatedAt)
+					: "—",
+			},
 		],
 		[employee],
 	);
@@ -225,7 +235,7 @@ const EmployeeDetailsContent = ({
 	return (
 		<EntityDetail.Content>
 			<EntityDetail.Header className="flex-row items-center justify-between gap-3">
-				<EntityDetail.Title>{employee.fullName}</EntityDetail.Title>
+				<EntityDetail.Title>{`#${employee.id} • ${employee.fullName}`}</EntityDetail.Title>
 				<EntityActions
 					canView={false}
 					canEdit={actions.canEdit}
@@ -345,7 +355,7 @@ const EmployeeDetailsContent = ({
 								className="w-full"
 								onClick={() => setIsResetDialogOpen(true)}
 							>
-								Resetar senha
+								Redefinir senha
 							</Button>
 							<TemporaryPasswordDialog
 								description={
@@ -353,7 +363,7 @@ const EmployeeDetailsContent = ({
 										? `Compartilhe esta senha com ${employee.fullName}.`
 										: `Gerar nova senha temporária para ${employee.fullName}.`
 								}
-								generateLabel="Resetar senha"
+								generateLabel="Redefinir senha"
 								isPending={isResetPending}
 								onCopy={handleCopyPassword}
 								onGenerate={handleResetPassword}
@@ -390,12 +400,8 @@ const EmployeeDetailsFallback = () => (
 				<EntityDetail.SkeletonFields rows={1} />
 			</EntityDetail.Section>
 			<EntityDetail.Separator />
-			<EntityDetail.Section title="Acesso">
-				<EntityDetail.SkeletonFields rows={2} />
-			</EntityDetail.Section>
-			<EntityDetail.Separator />
 			<EntityDetail.Section title="Financeiro">
-				<EntityDetail.SkeletonFields rows={1} />
+				<EntityDetail.SkeletonFields rows={2} />
 			</EntityDetail.Section>
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Anexos">
@@ -406,8 +412,12 @@ const EmployeeDetailsFallback = () => (
 				/>
 			</EntityDetail.Section>
 			<EntityDetail.Separator />
-			<EntityDetail.Section title="Registro">
+			<EntityDetail.Section title="Acesso">
 				<EntityDetail.SkeletonFields rows={2} />
+			</EntityDetail.Section>
+			<EntityDetail.Separator />
+			<EntityDetail.Section title="Registro">
+				<EntityDetail.SkeletonFields rows={3} />
 			</EntityDetail.Section>
 		</EntityDetail.Body>
 		<EntityDetail.Footer />
