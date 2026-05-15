@@ -115,7 +115,7 @@ const FeeDetailsContent = ({
 		<EntityDetail.Content>
 			<EntityDetail.Header className="flex-row items-center justify-between gap-3">
 				<EntityDetail.Title>
-					{`${fee.contractProcessNumber} • Parcela ${fee.installmentNumber}`}
+					{`${fee.contractProcessNumber} • ${fee.revenueType}`}
 				</EntityDetail.Title>
 				<EntityActions
 					canView={false}

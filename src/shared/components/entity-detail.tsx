@@ -81,7 +81,7 @@ function Body({
 }: React.ComponentProps<typeof ScrollArea>) {
 	return (
 		<ScrollArea className={cn("min-h-0 flex-1 px-4", className)} {...props}>
-			<div className="flex flex-col gap-4">{children}</div>
+			<div className="flex flex-col gap-3">{children}</div>
 		</ScrollArea>
 	);
 }

@@ -48,7 +48,7 @@ export const DataCardList = <TData,>({
 		>
 			<ScrollArea className="min-h-0 flex-1">
 				{data.length ? (
-					<div className="grid grid-cols-1 gap-3 pb-3 px-0.5 -mx-0.5 lg:grid-cols-3 2xl:grid-cols-4">
+					<div className="grid grid-cols-1 gap-3 pb-3 p-0.5 lg:grid-cols-3 2xl:grid-cols-4">
 						{data.map((item, index) => {
 							const title = renderTitle(item);
 							const description = renderDescription?.(item);
@@ -73,11 +73,7 @@ export const DataCardList = <TData,>({
 											onCardAction?.(item);
 										}
 									}}
-									className={cn(
-										"border border-border/60 bg-card text-left",
-										isInteractive &&
-											"cursor-pointer transition-colors hover:bg-accent/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-									)}
+									className="box-border cursor-pointer hover:bg-accent/30"
 								>
 									<CardHeader className="flex items-center justify-between gap-3">
 										<div className="min-w-0 flex-1">

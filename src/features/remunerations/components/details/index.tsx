@@ -131,7 +131,7 @@ const RemunerationDetailsContent = ({
 		<EntityDetail.Content>
 			<EntityDetail.Header className="flex-row items-center justify-between gap-3">
 				<EntityDetail.Title>
-					{`${remuneration.employeeName} • Parcela ${remuneration.feeInstallmentNumber}`}
+					{`${remuneration.employeeName} • ${remuneration.contractProcessNumber}`}
 				</EntityDetail.Title>
 				<EntityActions
 					canView={false}

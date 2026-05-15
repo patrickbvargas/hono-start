@@ -7,13 +7,6 @@ import {
 } from "@/shared/components/ui";
 import { cn } from "@/shared/lib/utils";
 
-const TRIGGER_ICON_POSITION_CLASS =
-	"[&_[data-slot=accordion-trigger-icon]]:absolute [&_[data-slot=accordion-trigger-icon]]:right-0 [&_[data-slot=accordion-trigger-icon]]:top-1/2 [&_[data-slot=accordion-trigger-icon]]:-translate-y-1/2";
-const TRIGGER_PADDING_WITH_ACTIONS_CLASS = "pr-32";
-const TRIGGER_PADDING_WITHOUT_ACTIONS_CLASS = "pr-7";
-const ACTIONS_CONTAINER_CLASS =
-	"absolute top-1/2 right-7 flex -translate-y-1/2 items-center gap-2";
-
 interface EntityListAccordionProps<T> {
 	items: T[];
 	getKey: (item: T, index: number) => string;
@@ -58,10 +51,8 @@ export function EntityListAccordion<T>({
 							<AccordionTrigger
 								className={cn(
 									"py-3 hover:no-underline",
-									TRIGGER_ICON_POSITION_CLASS,
-									itemActions
-										? TRIGGER_PADDING_WITH_ACTIONS_CLASS
-										: TRIGGER_PADDING_WITHOUT_ACTIONS_CLASS,
+									"**:data-[slot=accordion-trigger-icon]:absolute **:data-[slot=accordion-trigger-icon]:right-0 **:data-[slot=accordion-trigger-icon]:top-1/2 **:data-[slot=accordion-trigger-icon]:-translate-y-1/2",
+									itemActions ? "pr-32" : "pr-7",
 								)}
 								aria-label={summary}
 							>
@@ -74,13 +65,13 @@ export function EntityListAccordion<T>({
 							</AccordionTrigger>
 							{itemActions ? (
 								<div
-									className={ACTIONS_CONTAINER_CLASS}
 									onClick={(event) => {
 										event.stopPropagation();
 									}}
 									onKeyDown={(event) => {
 										event.stopPropagation();
 									}}
+									className="absolute top-1/2 right-7 flex -translate-y-1/2 items-center gap-2"
 								>
 									{itemActions}
 								</div>

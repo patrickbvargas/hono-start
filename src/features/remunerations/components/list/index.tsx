@@ -91,7 +91,7 @@ export const RemunerationList = ({
 			data={items}
 			getRowKey={(remuneration) => remuneration.id}
 			renderTitle={(remuneration) =>
-				`${remuneration.employeeName} • Parcela ${remuneration.feeInstallmentNumber}`
+				`${remuneration.employeeName} • ${remuneration.contractProcessNumber}`
 			}
 			renderFields={renderCardFields}
 			renderActions={renderCardActions}
