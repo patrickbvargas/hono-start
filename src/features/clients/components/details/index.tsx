@@ -70,7 +70,7 @@ const ClientDetailsContent = ({
 		() => [
 			{ term: "Documento", definition: formatClientDocument(client.document) },
 			{ term: "Tipo", definition: client.type },
-			{ term: "Contratos vinculados", definition: client.contractCount },
+			{ term: "Contratos", definition: client.contractCount },
 		],
 		[client],
 	);

@@ -40,7 +40,7 @@ export const ClientList = ({
 				definition: client.type,
 			},
 			{
-				term: "Contratos vinculados",
+				term: "Contratos",
 				definition: client.contractCount,
 			},
 			{

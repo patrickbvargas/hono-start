@@ -122,7 +122,7 @@ const EmployeeDetailsContent = ({
 			{ term: "OAB", definition: formatter.oab(employee.oabNumber) },
 			{ term: "Função", definition: employee.type },
 			{ term: "Perfil", definition: employee.role },
-			{ term: "Contratos vinculados", definition: employee.contractCount },
+			{ term: "Contratos", definition: employee.contractCount },
 		],
 		[employee],
 	);
