@@ -54,7 +54,7 @@ export const DataTable = <TData, TValue>({
 			)}
 		>
 			<ScrollArea className="min-h-0 flex-1">
-				<Table className="min-w-full w-max">
+				<Table>
 					<TableHeader>
 						<TableRow>
 							{table.getFlatHeaders().map((header) => (

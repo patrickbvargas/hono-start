@@ -14,14 +14,13 @@ export const ContractFilter = () => {
 	return (
 		<form.Form
 			form={form}
-			className="w-full md:w-fit flex items-center justify-between gap-3"
+			className="w-full md:max-w-100 flex items-center justify-between gap-3"
 		>
 			<form.AppField name="query">
 				{(field) => (
 					<field.Search
 						aria-label="Número do processo ou cliente"
 						placeholder="Buscar por processo ou cliente..."
-						className="md:w-80"
 					/>
 				)}
 			</form.AppField>

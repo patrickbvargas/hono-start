@@ -43,7 +43,7 @@ export const WrapperHeader = ({
 	return (
 		<div
 			data-slot="wrapper-header"
-			className={cn("flex items-center justify-between px-4", className)}
+			className={cn("flex items-center justify-between px-4 gap-3", className)}
 			{...props}
 		>
 			{children}

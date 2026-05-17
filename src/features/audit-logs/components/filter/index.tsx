@@ -9,14 +9,13 @@ export const AuditLogFilter = () => {
 	return (
 		<form.Form
 			form={form}
-			className="w-full md:w-fit flex items-center justify-end gap-3"
+			className="w-full md:max-w-100 flex items-center justify-end gap-3"
 		>
 			<form.AppField name="query">
 				{(field) => (
 					<field.Search
 						aria-label="Usuário ou entidade"
 						placeholder="Buscar por usuário ou entidade..."
-						className="md:w-80"
 					/>
 				)}
 			</form.AppField>
