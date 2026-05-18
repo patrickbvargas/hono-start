@@ -1,5 +1,5 @@
 import { FilterPopover } from "@/shared/components/filter-popover";
-import { Separator } from "@/shared/components/ui";
+import { Button, Separator } from "@/shared/components/ui";
 import {
 	ENTITY_ACTIVE_FILTER_OPTIONS,
 	ENTITY_DELETED_FILTER_OPTIONS,
@@ -14,7 +14,8 @@ interface RemunerationFilterProps {
 export const RemunerationFilter = ({
 	isAdmin = false,
 }: RemunerationFilterProps) => {
-	const { form, hasNonDefaultFilter } = useRemunerationFilter();
+	const { form, hasNonDefaultFilter, canClearFilters, handleClearFilters } =
+		useRemunerationFilter();
 	const { contracts, employees } = useRemunerationOptions();
 
 	return (
@@ -76,6 +77,16 @@ export const RemunerationFilter = ({
 						/>
 					)}
 				</form.AppField>
+				<Separator />
+				<Button
+					type="button"
+					variant="ghost"
+					size="sm"
+					disabled={!canClearFilters}
+					onClick={handleClearFilters}
+				>
+					Limpar filtros
+				</Button>
 			</FilterPopover>
 		</form.Form>
 	);

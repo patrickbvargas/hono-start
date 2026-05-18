@@ -6,8 +6,13 @@ import { type ClientFilter, clientFilterSchema } from "../schemas/filter";
 const DEBOUNCED_FIELDS = new Set<keyof ClientFilter>(["query"]);
 
 export function useClientFilter() {
-	const { filter, handleFilter, hasNonDefaultFilter } =
-		useFilter(clientFilterSchema);
+	const {
+		filter,
+		defaultFilter,
+		handleFilter,
+		handleResetFilter,
+		hasNonDefaultFilter,
+	} = useFilter(clientFilterSchema);
 
 	const debounceSubmit = useDebouncedCallback(
 		(submit: () => void | Promise<void>) => submit(),
@@ -38,5 +43,16 @@ export function useClientFilter() {
 		},
 	});
 
-	return { form, hasNonDefaultFilter };
+	const handleClearFilters = () => {
+		debounceSubmit.cancel();
+		form.reset(defaultFilter);
+		handleResetFilter();
+	};
+
+	return {
+		form,
+		hasNonDefaultFilter,
+		canClearFilters: hasNonDefaultFilter(),
+		handleClearFilters,
+	};
 }

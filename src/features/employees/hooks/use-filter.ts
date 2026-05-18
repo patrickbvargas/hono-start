@@ -6,8 +6,13 @@ import { type EmployeeFilter, employeeFilterSchema } from "../schemas/filter";
 const DEBOUNCED_FIELDS = new Set<keyof EmployeeFilter>(["query"]);
 
 export function useEmployeeFilter() {
-	const { filter, handleFilter, hasNonDefaultFilter } =
-		useFilter(employeeFilterSchema);
+	const {
+		filter,
+		defaultFilter,
+		handleFilter,
+		handleResetFilter,
+		hasNonDefaultFilter,
+	} = useFilter(employeeFilterSchema);
 
 	const debounceSubmit = useDebouncedCallback(
 		(submit: () => void | Promise<void>) => submit(),
@@ -38,5 +43,16 @@ export function useEmployeeFilter() {
 		},
 	});
 
-	return { form, hasNonDefaultFilter };
+	const handleClearFilters = () => {
+		debounceSubmit.cancel();
+		form.reset(defaultFilter);
+		handleResetFilter();
+	};
+
+	return {
+		form,
+		hasNonDefaultFilter,
+		canClearFilters: hasNonDefaultFilter(),
+		handleClearFilters,
+	};
 }

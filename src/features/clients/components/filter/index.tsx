@@ -1,5 +1,5 @@
 import { FilterPopover } from "@/shared/components/filter-popover";
-import { Separator } from "@/shared/components/ui";
+import { Button, Separator } from "@/shared/components/ui";
 import {
 	ENTITY_ACTIVE_FILTER_OPTIONS,
 	ENTITY_DELETED_FILTER_OPTIONS,
@@ -8,7 +8,8 @@ import { useClientOptions } from "../../hooks/use-data";
 import { useClientFilter } from "../../hooks/use-filter";
 
 export const ClientFilter = () => {
-	const { form, hasNonDefaultFilter } = useClientFilter();
+	const { form, hasNonDefaultFilter, canClearFilters, handleClearFilters } =
+		useClientFilter();
 	const { types } = useClientOptions();
 
 	return (
@@ -48,6 +49,16 @@ export const ClientFilter = () => {
 						/>
 					)}
 				</form.AppField>
+				<Separator />
+				<Button
+					type="button"
+					variant="ghost"
+					size="sm"
+					disabled={!canClearFilters}
+					onClick={handleClearFilters}
+				>
+					Limpar filtros
+				</Button>
 			</FilterPopover>
 		</form.Form>
 	);

@@ -9,9 +9,13 @@ import {
 const DEBOUNCED_FIELDS = new Set<keyof RemunerationFilter>(["query"]);
 
 export function useRemunerationFilter() {
-	const { filter, handleFilter, hasNonDefaultFilter } = useFilter(
-		remunerationFilterSchema,
-	);
+	const {
+		filter,
+		defaultFilter,
+		handleFilter,
+		handleResetFilter,
+		hasNonDefaultFilter,
+	} = useFilter(remunerationFilterSchema);
 
 	const debounceSubmit = useDebouncedCallback(
 		(submit: () => void | Promise<void>) => submit(),
@@ -42,5 +46,16 @@ export function useRemunerationFilter() {
 		},
 	});
 
-	return { form, hasNonDefaultFilter };
+	const handleClearFilters = () => {
+		debounceSubmit.cancel();
+		form.reset(defaultFilter);
+		handleResetFilter();
+	};
+
+	return {
+		form,
+		hasNonDefaultFilter,
+		canClearFilters: hasNonDefaultFilter(),
+		handleClearFilters,
+	};
 }

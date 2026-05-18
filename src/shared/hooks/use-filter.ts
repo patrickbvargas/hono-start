@@ -47,6 +47,18 @@ export function hasNonDefaultFilterValue<
 	);
 }
 
+export function getFilterSearchUpdater<Filter extends Record<string, unknown>>(
+	value: Filter,
+) {
+	return (prev: Record<string, unknown>): never => {
+		return {
+			...prev,
+			...value,
+			page: 1,
+		} as never; // necessary for react-router (agnostic)
+	};
+}
+
 export function useFilter<Schema extends ZodType<Record<string, unknown>>>(
 	schema: Schema,
 ) {
@@ -57,16 +69,7 @@ export function useFilter<Schema extends ZodType<Record<string, unknown>>>(
 
 	const filter: Filter = schema.parse(search);
 	const defaultFilter: Filter = schema.parse({});
-
-	const getFilterSearch = (value: Filter) => {
-		return (prev: Record<string, unknown>): never => {
-			return {
-				...prev,
-				...value,
-				page: 1,
-			} as never; // necessary for react-router (agnostic)
-		};
-	};
+	const getFilterSearch = (value: Filter) => getFilterSearchUpdater(value);
 
 	const handleFilter = (value: Filter) => {
 		navigate({
@@ -74,9 +77,22 @@ export function useFilter<Schema extends ZodType<Record<string, unknown>>>(
 		});
 	};
 
+	const handleResetFilter = () => {
+		navigate({
+			search: getFilterSearch(defaultFilter),
+		});
+	};
+
 	const hasNonDefaultFilter = (keys?: (keyof Filter)[]) => {
 		return hasNonDefaultFilterValue(filter, defaultFilter, keys);
 	};
 
-	return { filter, getFilterSearch, handleFilter, hasNonDefaultFilter };
+	return {
+		filter,
+		defaultFilter,
+		getFilterSearch,
+		handleFilter,
+		handleResetFilter,
+		hasNonDefaultFilter,
+	};
 }

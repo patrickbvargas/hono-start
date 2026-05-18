@@ -1,5 +1,5 @@
 import { FilterPopover } from "@/shared/components/filter-popover";
-import { Separator } from "@/shared/components/ui";
+import { Button, Separator } from "@/shared/components/ui";
 import {
 	ENTITY_ACTIVE_FILTER_OPTIONS,
 	ENTITY_DELETED_FILTER_OPTIONS,
@@ -8,7 +8,8 @@ import { useEmployeeOptions } from "../../hooks/use-data";
 import { useEmployeeFilter } from "../../hooks/use-filter";
 
 export const EmployeeFilter = () => {
-	const { form, hasNonDefaultFilter } = useEmployeeFilter();
+	const { form, hasNonDefaultFilter, canClearFilters, handleClearFilters } =
+		useEmployeeFilter();
 	const { types, roles } = useEmployeeOptions();
 
 	return (
@@ -56,6 +57,16 @@ export const EmployeeFilter = () => {
 						/>
 					)}
 				</form.AppField>
+				<Separator />
+				<Button
+					type="button"
+					variant="ghost"
+					size="sm"
+					disabled={!canClearFilters}
+					onClick={handleClearFilters}
+				>
+					Limpar filtros
+				</Button>
 			</FilterPopover>
 		</form.Form>
 	);

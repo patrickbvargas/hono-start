@@ -6,8 +6,13 @@ import { type AuditLogFilter, auditLogFilterSchema } from "../schemas/filter";
 const DEBOUNCED_FIELDS = new Set<keyof AuditLogFilter>(["query"]);
 
 export function useAuditLogFilter() {
-	const { filter, handleFilter, hasNonDefaultFilter } =
-		useFilter(auditLogFilterSchema);
+	const {
+		filter,
+		defaultFilter,
+		handleFilter,
+		handleResetFilter,
+		hasNonDefaultFilter,
+	} = useFilter(auditLogFilterSchema);
 
 	const debounceSubmit = useDebouncedCallback(
 		(submit: () => void | Promise<void>) => submit(),
@@ -38,5 +43,16 @@ export function useAuditLogFilter() {
 		},
 	});
 
-	return { form, hasNonDefaultFilter };
+	const handleClearFilters = () => {
+		debounceSubmit.cancel();
+		form.reset(defaultFilter);
+		handleResetFilter();
+	};
+
+	return {
+		form,
+		hasNonDefaultFilter,
+		canClearFilters: hasNonDefaultFilter(),
+		handleClearFilters,
+	};
 }

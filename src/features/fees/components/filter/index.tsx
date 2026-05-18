@@ -1,5 +1,5 @@
 import { FilterPopover } from "@/shared/components/filter-popover";
-import { Separator } from "@/shared/components/ui";
+import { Button, Separator } from "@/shared/components/ui";
 import {
 	ENTITY_ACTIVE_FILTER_OPTIONS,
 	ENTITY_DELETED_FILTER_OPTIONS,
@@ -8,7 +8,8 @@ import { useFeeOptions } from "../../hooks/use-data";
 import { useFeeFilter } from "../../hooks/use-filter";
 
 export const FeeFilter = () => {
-	const { form, hasNonDefaultFilter } = useFeeFilter();
+	const { form, hasNonDefaultFilter, canClearFilters, handleClearFilters } =
+		useFeeFilter();
 	const { contracts, revenues } = useFeeOptions();
 
 	return (
@@ -66,6 +67,16 @@ export const FeeFilter = () => {
 						/>
 					)}
 				</form.AppField>
+				<Separator />
+				<Button
+					type="button"
+					variant="ghost"
+					size="sm"
+					disabled={!canClearFilters}
+					onClick={handleClearFilters}
+				>
+					Limpar filtros
+				</Button>
 			</FilterPopover>
 		</form.Form>
 	);

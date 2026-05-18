@@ -1,9 +1,11 @@
 import { FilterPopover } from "@/shared/components/filter-popover";
+import { Button, Separator } from "@/shared/components/ui";
 import { useAuditLogOptions } from "../../hooks/use-data";
 import { useAuditLogFilter } from "../../hooks/use-filter";
 
 export const AuditLogFilter = () => {
-	const { form, hasNonDefaultFilter } = useAuditLogFilter();
+	const { form, hasNonDefaultFilter, canClearFilters, handleClearFilters } =
+		useAuditLogFilter();
 	const { actions, entityTypes, actors } = useAuditLogOptions();
 
 	return (
@@ -38,6 +40,16 @@ export const AuditLogFilter = () => {
 				<form.AppField name="actorName">
 					{(field) => <field.CheckboxGroup label="Usuário" options={actors} />}
 				</form.AppField>
+				<Separator />
+				<Button
+					type="button"
+					variant="ghost"
+					size="sm"
+					disabled={!canClearFilters}
+					onClick={handleClearFilters}
+				>
+					Limpar filtros
+				</Button>
 			</FilterPopover>
 		</form.Form>
 	);
