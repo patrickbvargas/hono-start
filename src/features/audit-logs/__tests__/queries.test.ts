@@ -208,4 +208,45 @@ describe("audit-log data queries", () => {
 			{ id: 3, value: "User", label: "User", isDisabled: false },
 		]);
 	});
+
+	it("translates english entity names before returning audit-log cards", async () => {
+		prismaMock.auditLog.findMany.mockResolvedValueOnce([
+			{
+				id: 3,
+				createdAt: new Date("2026-01-22T00:00:00.000Z"),
+				actorName: "Admin",
+				actorEmail: "admin@example.com",
+				action: "UPDATE",
+				entityType: "Remuneration",
+				entityName: "Remuneration 594",
+				entityId: "594",
+				ipAddress: "127.0.0.1",
+				userAgent: "Vitest",
+				changeData: { before: { id: 594 } },
+				description: "Updated remuneration 594.",
+			},
+		]);
+
+		const result = await getAuditLogs({
+			firmId: 1,
+			search: {
+				page: 1,
+				limit: 10,
+				column: "occurredAt",
+				direction: "desc",
+				query: "",
+				action: [],
+				entityType: [],
+				actorName: [],
+			},
+		});
+
+		expect(result.data).toEqual([
+			expect.objectContaining({
+				entityTypeLabel: "Remuneração",
+				entityName: "Remuneração 594",
+				description: "atualizou remuneração Remuneração 594.",
+			}),
+		]);
+	});
 });

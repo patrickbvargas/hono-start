@@ -20,7 +20,11 @@ import {
 	auditLogSchema,
 } from "../schemas/model";
 import type { AuditLogSearch } from "../schemas/search";
-import { getAuditDescription, getAuditEntityTypeLabel } from "../utils/display";
+import {
+	getAuditDescription,
+	getAuditEntityNameLabel,
+	getAuditEntityTypeLabel,
+} from "../utils/display";
 
 const dateTimeFormatter = new Intl.DateTimeFormat("pt-BR", {
 	dateStyle: "short",
@@ -104,7 +108,7 @@ function mapAuditLog(row: {
 		action: row.action,
 		entityType: row.entityType,
 		entityTypeLabel: getAuditEntityTypeLabel(row.entityType),
-		entityName: row.entityName,
+		entityName: getAuditEntityNameLabel(row.entityName),
 		entityId: row.entityId,
 		ipAddress: row.ipAddress,
 		userAgent: row.userAgent,

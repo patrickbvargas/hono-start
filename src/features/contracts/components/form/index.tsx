@@ -1,5 +1,6 @@
-import { PlusIcon, TrashIcon } from "lucide-react";
+import { TrashIcon } from "lucide-react";
 import { Suspense, useRef } from "react";
+import { ButtonNew } from "@/shared/components/button-new";
 import { EntityForm } from "@/shared/components/entity-form";
 import { EntityListAccordion } from "@/shared/components/entity-list-accordion";
 import {
@@ -74,7 +75,7 @@ function getRevenueSummary(
 			? formatter.currency(revenue.totalValue)
 			: "Valor pendente";
 
-	return `${typeLabel} • ${totalValue} • ${revenue.totalInstallments} parcela(s)`;
+	return `${typeLabel} • ${totalValue}`;
 }
 
 export const ContractForm = ({ id, state, onSuccess }: ContractFormProps) => {
@@ -237,20 +238,17 @@ function ContractFormContent({
 					<form.AppField name="assignments" mode="array">
 						{(subField) => (
 							<>
-								<Button
+								<ButtonNew
 									type="button"
-									size="sm"
 									className="w-fit"
+									label="Adicionar colaborador"
 									onClick={() =>
 										subField.pushValue(defaultContractAssignmentValues())
 									}
 									disabled={
 										subField.state.value.length >= CONTRACT_MAX_EMPLOYEES
 									}
-								>
-									<PlusIcon size={16} />
-									Adicionar colaborador
-								</Button>
+								/>
 								{subField.state.meta.errors.length > 0 ? (
 									<FieldError errors={subField.state.meta.errors} />
 								) : null}
@@ -317,20 +315,17 @@ function ContractFormContent({
 					<form.AppField name="revenues" mode="array">
 						{(subField) => (
 							<>
-								<Button
+								<ButtonNew
 									type="button"
-									size="sm"
 									className="w-fit"
+									label="Adicionar receita"
 									onClick={() =>
 										subField.pushValue(defaultContractRevenueValues())
 									}
 									disabled={
 										subField.state.value.length >= CONTRACT_MAX_REVENUES
 									}
-								>
-									<PlusIcon size={16} />
-									Adicionar receita
-								</Button>
+								/>
 								{subField.state.meta.errors.length > 0 ? (
 									<FieldError errors={subField.state.meta.errors} />
 								) : null}
@@ -348,7 +343,7 @@ function ContractFormContent({
 										}
 										renderContent={(_, index) => (
 											<div className="space-y-3">
-												<FieldGroup className="grid items-end gap-3 sm:grid-cols-[1fr_1fr_auto]">
+												<FieldGroup className="grid gap-3 sm:grid-cols-2">
 													<form.AppField name={`revenues[${index}].type`}>
 														{(field) => (
 															<field.Autocomplete
@@ -368,16 +363,6 @@ function ContractFormContent({
 															/>
 														)}
 													</form.AppField>
-													<Button
-														type="button"
-														size="icon"
-														variant="destructive"
-														className="place-self-end"
-														aria-label={`Remover receita ${index + 1}`}
-														onClick={() => subField.removeValue(index)}
-													>
-														<TrashIcon size={16} />
-													</Button>
 												</FieldGroup>
 												<FieldGroup className="grid gap-3 sm:grid-cols-2">
 													<form.AppField name={`revenues[${index}].totalValue`}>
@@ -423,13 +408,16 @@ function ContractFormContent({
 															/>
 														)}
 													</form.AppField>
-												</FieldGroup>
-												<FieldGroup>
-													<form.AppField name={`revenues[${index}].isActive`}>
-														{(field) => (
-															<field.Checkbox label="Receita ativa" />
-														)}
-													</form.AppField>
+													<Button
+														type="button"
+														size="icon"
+														variant="destructive"
+														className="place-self-end"
+														aria-label={`Remover receita ${index + 1}`}
+														onClick={() => subField.removeValue(index)}
+													>
+														<TrashIcon size={16} />
+													</Button>
 												</FieldGroup>
 											</div>
 										)}

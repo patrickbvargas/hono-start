@@ -13,8 +13,7 @@ export const ButtonNew = ({
 	return (
 		<Button size="sm" {...props}>
 			<PlusIcon size={16} />
-			<span className="sm:hidden">Novo</span>
-			<span className="hidden sm:inline">{label}</span>
+			<span>{label}</span>
 		</Button>
 	);
 };

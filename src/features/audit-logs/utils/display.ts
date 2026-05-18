@@ -25,8 +25,28 @@ export function getAuditEntityTypeLabel(entityType: string) {
 	return ENTITY_TYPE_LABELS[entityType] ?? entityType;
 }
 
+export function getAuditEntityNameLabel(entityName: string) {
+	const trimmedName = entityName.trim();
+
+	if (trimmedName.length === 0) {
+		return "registro";
+	}
+
+	for (const [entityType, entityLabel] of Object.entries(ENTITY_TYPE_LABELS)) {
+		if (trimmedName === entityType) {
+			return entityLabel;
+		}
+
+		if (trimmedName.startsWith(`${entityType} `)) {
+			return `${entityLabel}${trimmedName.slice(entityType.length)}`;
+		}
+	}
+
+	return trimmedName;
+}
+
 function normalizeEntityName(entityName: string) {
-	return entityName.trim() || "registro";
+	return getAuditEntityNameLabel(entityName);
 }
 
 export function getAuditDescription(params: {

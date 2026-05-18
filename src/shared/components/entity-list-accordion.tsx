@@ -101,20 +101,20 @@ export function EntityListAccordionHeader({
 	openDescription,
 }: HeaderProps) {
 	return (
-		<div className="min-w-0 flex-1 pr-4 text-left">
-			<span className="truncate font-medium text-sm group-aria-expanded/accordion-trigger:hidden">
+		<div className="min-w-0 flex-1 overflow-hidden pr-4 text-left">
+			<span className="block truncate font-medium text-sm group-aria-expanded/accordion-trigger:hidden">
 				{summary}
 			</span>
 			<span className="hidden truncate font-medium text-sm group-aria-expanded/accordion-trigger:block">
 				{title}
 			</span>
 			{description ? (
-				<span className="text-muted-foreground text-xs group-aria-expanded/accordion-trigger:hidden">
+				<span className="text-muted-foreground block truncate text-xs group-aria-expanded/accordion-trigger:hidden">
 					{description}
 				</span>
 			) : null}
 			{openDescription ? (
-				<span className="hidden text-muted-foreground text-xs group-aria-expanded/accordion-trigger:block">
+				<span className="text-muted-foreground hidden truncate text-xs group-aria-expanded/accordion-trigger:block">
 					{openDescription}
 				</span>
 			) : null}

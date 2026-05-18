@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getAuditDescription } from "../utils/display";
+import { getAuditDescription, getAuditEntityNameLabel } from "../utils/display";
 
 describe("audit-log display helpers", () => {
 	it("uses system wording instead of generic registro for system events", () => {
@@ -36,5 +36,10 @@ describe("audit-log display helpers", () => {
 				fallbackDescription: "",
 			}),
 		).toBe("atualizou contrato registro.");
+	});
+
+	it("translates english entity-name prefixes to pt-BR labels", () => {
+		expect(getAuditEntityNameLabel("Remuneration 594")).toBe("Remuneração 594");
+		expect(getAuditEntityNameLabel("Fee 10")).toBe("Honorário 10");
 	});
 });

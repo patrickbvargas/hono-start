@@ -1,4 +1,5 @@
-import { DownloadIcon, PlusIcon, TrashIcon } from "lucide-react";
+import { DownloadIcon, TrashIcon } from "lucide-react";
+import { ButtonNew } from "@/shared/components/button-new";
 import { EntityFields } from "@/shared/components/entity-fields";
 import { EntityListAccordion } from "@/shared/components/entity-list-accordion";
 import { Button, Separator, Skeleton } from "@/shared/components/ui";
@@ -48,11 +49,12 @@ export const AttachmentSection = ({
 	return (
 		<section className={cn("flex flex-col gap-3", className)}>
 			{canUpload ? (
-				<div className="flex justify-end">
-					<Button size="sm" onClick={() => overlay.create.open()}>
-						<PlusIcon size={16} />
-						Novo anexo
-					</Button>
+				<div className="flex">
+					<ButtonNew
+						className="w-fit"
+						label="Novo anexo"
+						onClick={() => overlay.create.open()}
+					/>
 				</div>
 			) : null}
 

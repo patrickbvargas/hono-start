@@ -68,7 +68,6 @@ const ContractDetailsContent = ({
 
 	const generalInfo = React.useMemo<DetailFieldItem[]>(
 		() => [
-			{ term: "Processo", definition: contract.processNumber },
 			{ term: "Cliente", definition: contract.client },
 			{ term: "Área", definition: contract.legalArea },
 			{ term: "Status do contrato", definition: contract.status },
@@ -174,7 +173,7 @@ const ContractDetailsFallback = () => (
 			</EntityDetail.Title>
 		</EntityDetail.Header>
 		<EntityDetail.Body>
-			<EntityDetail.SkeletonFields rows={7} />
+			<EntityDetail.SkeletonFields rows={6} />
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Equipe">
 				<EntityDetail.SkeletonFields rows={2} />
