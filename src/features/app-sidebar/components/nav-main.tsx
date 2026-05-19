@@ -24,20 +24,20 @@ export const NavMain = ({ items }: NavMainProps) => {
 	const location = useLocation();
 
 	return items.map((item) => (
-		<SidebarGroup
-			key={item.title}
-			className="group-data-[collapsible=icon]:hidden"
-		>
+		<SidebarGroup key={item.title}>
 			<SidebarGroupLabel>{item.title}</SidebarGroupLabel>
 			<SidebarMenu className="gap-1">
 				{item.items.map((subItem) => (
 					<SidebarMenuItem key={subItem.title}>
 						<SidebarMenuButton
 							isActive={isSidebarRouteActive(location.pathname, subItem.url)}
+							tooltip={subItem.title}
 							render={
 								<Link to={subItem.url}>
 									{subItem.icon && <subItem.icon />}
-									<span>{subItem.title}</span>
+									<span className="group-data-[collapsible=icon]:hidden">
+										{subItem.title}
+									</span>
 								</Link>
 							}
 						/>

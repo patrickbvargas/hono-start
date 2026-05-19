@@ -59,7 +59,7 @@ export const NavUser = () => {
 								<Avatar>
 									<AvatarFallback>{userInitials}</AvatarFallback>
 								</Avatar>
-								<div className="grid flex-1 text-left text-sm leading-tight">
+								<div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
 									<span className="truncate font-medium">
 										{session.user.fullName}
 									</span>
@@ -67,7 +67,10 @@ export const NavUser = () => {
 										{session.user.email}
 									</span>
 								</div>
-								<EllipsisVerticalIcon size={16} />
+								<EllipsisVerticalIcon
+									size={16}
+									className="group-data-[collapsible=icon]:hidden"
+								/>
 							</SidebarMenuButton>
 						}
 					/>

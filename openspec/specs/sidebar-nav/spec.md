@@ -38,14 +38,19 @@ Each `ListBox.Item` SHALL use TanStack Router's `Link` component to navigate to 
 - **THEN** TanStack Router navigates to the corresponding route without a full page reload
 
 ### Requirement: Collapsed mode shows icons only
-When `SidebarNav` receives `isCollapsed={true}`, route labels SHALL be hidden and only icons SHALL be visible. Icons SHALL remain visible at all times.
+When sidebar navigation enters collapsed desktop mode, route labels SHALL be hidden and only route icons SHALL be visible for primary navigation items. Icons SHALL remain visible, aligned, and interactive at all times, while non-essential group text may be hidden.
 
 #### Scenario: Labels hidden in collapsed mode
-- **WHEN** `isCollapsed` is `true`
-- **THEN** route title text is not visible but icons remain visible
+- **WHEN** the sidebar is in collapsed desktop mode
+- **THEN** route title text is not visible
+- **AND** each primary navigation item still shows its icon
+
+#### Scenario: Icons remain interactive in collapsed mode
+- **WHEN** the sidebar is in collapsed desktop mode
+- **THEN** a user can click or focus a route icon to navigate to its route
 
 #### Scenario: Labels visible in expanded mode
-- **WHEN** `isCollapsed` is `false`
+- **WHEN** the sidebar is in expanded mode
 - **THEN** both icon and title text are displayed for each route item
 
 ### Requirement: Keyboard navigation supported

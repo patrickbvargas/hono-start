@@ -42,7 +42,7 @@ export const AppSidebar = ({
 	...props
 }: React.ComponentProps<typeof Sidebar>) => {
 	return (
-		<Sidebar variant="inset" {...props}>
+		<Sidebar variant="inset" collapsible="icon" {...props}>
 			<SidebarHeader>
 				<NavHeader />
 			</SidebarHeader>

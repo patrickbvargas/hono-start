@@ -16,7 +16,7 @@ export const NavHeader = () => {
 					<div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
 						<BoxIcon size={16} />
 					</div>
-					<div className="grid flex-1 text-left text-sm leading-tight">
+					<div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
 						<span className="truncate font-medium">Hono</span>
 						<span className="truncate text-xs">v0.0.0</span>
 					</div>
