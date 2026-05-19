@@ -239,6 +239,17 @@ function createPhone(seed: number) {
 }
 
 function createEmployeeSeeds(): EmployeeSeedInput[] {
+  const seededAdminEmployee: EmployeeSeedInput = {
+    fullName: "Admin Sistema",
+    email: "admin@admin.com",
+    typeValue: "LAWYER",
+    roleValue: "ADMIN",
+    remunerationPercentage: "0.3500",
+    referralPercentage: "0.1000",
+    isActive: true,
+    oabNumber: createOabNumber(0),
+  };
+
   const lawyerNames = [
     "Amanda Admin",
     "Bruna Farias",
@@ -289,7 +300,7 @@ function createEmployeeSeeds(): EmployeeSeedInput[] {
     isActive: index !== 6,
   }));
 
-  return [...lawyers, ...assistants];
+  return [seededAdminEmployee, ...lawyers, ...assistants];
 }
 
 function createClientSeeds(): ClientSeedInput[] {
@@ -353,12 +364,6 @@ function createAuthUserSeeds(): AuthUserSeedInput[] {
       accountId: "auth-account-carlos-mendes",
       employeeEmail: "carlos.mendes@matriz.test",
       password: "SenhaUsuario123!",
-    },
-    {
-      userId: "auth-user-admin",
-      accountId: "auth-account-admin",
-      employeeEmail: "admin@admin.com",
-      password: "admin123",
     },
   ];
 }
