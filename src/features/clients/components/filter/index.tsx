@@ -1,4 +1,5 @@
 import { ListFilters } from "@/shared/components/list-filters";
+import { useIsMobile } from "@/shared/hooks/use-mobile";
 import {
 	ENTITY_ACTIVE_FILTER_OPTIONS,
 	ENTITY_DELETED_FILTER_OPTIONS,
@@ -16,6 +17,7 @@ export const ClientFilter = () => {
 		handleClearFilters,
 	} = useClientFilter();
 	const { types } = useClientOptions();
+	const isMobile = useIsMobile();
 
 	const typeLabels = new Map(
 		types.map((option) => [option.value, option.label]),
@@ -32,54 +34,76 @@ export const ClientFilter = () => {
 		filter.active !== defaultFilter.active ||
 		filter.status !== defaultFilter.status;
 
+	const mobileFilters = (
+		<ListFilters.Drawer
+			title="Filtros"
+			label="Filtros"
+			ariaLabel="Abrir filtros"
+			iconOnly
+		>
+			<form.AppField name="type">
+				{(field) => <field.CheckboxGroup label="Tipo" options={types} />}
+			</form.AppField>
+			<form.AppField name="active">
+				{(field) => (
+					<field.RadioGroup
+						label="Situação"
+						options={ENTITY_ACTIVE_FILTER_OPTIONS}
+					/>
+				)}
+			</form.AppField>
+			<form.AppField name="status">
+				{(field) => (
+					<field.RadioGroup
+						label="Registro"
+						options={ENTITY_DELETED_FILTER_OPTIONS}
+					/>
+				)}
+			</form.AppField>
+		</ListFilters.Drawer>
+	);
+
+	const desktopFilters = (
+		<ListFilters.Actions>
+			<ListFilters.Popover label="Tipo">
+				<form.AppField name="type">
+					{(field) => <field.CheckboxGroup options={types} />}
+				</form.AppField>
+			</ListFilters.Popover>
+			<ListFilters.Popover label="Situação">
+				<form.AppField name="active">
+					{(field) => (
+						<field.RadioGroup options={ENTITY_ACTIVE_FILTER_OPTIONS} />
+					)}
+				</form.AppField>
+			</ListFilters.Popover>
+			<ListFilters.Popover label="Registro">
+				<form.AppField name="status">
+					{(field) => (
+						<field.RadioGroup options={ENTITY_DELETED_FILTER_OPTIONS} />
+					)}
+				</form.AppField>
+			</ListFilters.Popover>
+		</ListFilters.Actions>
+	);
+
 	return (
-		<form.Form form={form}>
+		<form.Form form={form} className="w-full">
 			<ListFilters>
 				<ListFilters.Bar>
-					<form.AppField name="query">
-						{(field) => (
-							<field.Search
-								className="w-full md:max-w-80"
-								aria-label="Nome ou documento"
-								placeholder="Buscar por nome ou documento..."
-							/>
-						)}
-					</form.AppField>
-					<ListFilters.Actions>
-						<ListFilters.Popover label="Tipo">
-							<form.AppField name="type">
-								{(field) => (
-									<field.CheckboxGroup
-										options={types}
-										classNames={{
-											wrapper: "gap-2",
-											list: "overflow-y-auto pr-1",
-										}}
-									/>
-								)}
-							</form.AppField>
-						</ListFilters.Popover>
-						<ListFilters.Popover label="Situação">
-							<form.AppField name="active">
-								{(field) => (
-									<field.RadioGroup
-										options={ENTITY_ACTIVE_FILTER_OPTIONS}
-										classNames={{ wrapper: "gap-2" }}
-									/>
-								)}
-							</form.AppField>
-						</ListFilters.Popover>
-						<ListFilters.Popover label="Registro">
-							<form.AppField name="status">
-								{(field) => (
-									<field.RadioGroup
-										options={ENTITY_DELETED_FILTER_OPTIONS}
-										classNames={{ wrapper: "gap-2" }}
-									/>
-								)}
-							</form.AppField>
-						</ListFilters.Popover>
-					</ListFilters.Actions>
+					<div className="min-w-0 flex-1">
+						<form.AppField name="query">
+							{(field) => (
+								<field.Search
+									classNames={{ wrapper: "w-full" }}
+									className="w-full md:max-w-80"
+									aria-label="Nome ou documento"
+									placeholder="Buscar por nome ou documento..."
+								/>
+							)}
+						</form.AppField>
+					</div>
+					{isMobile ? mobileFilters : desktopFilters}
 				</ListFilters.Bar>
 				{(filter.query || hasAdvancedFilters) && (
 					<ListFilters.Active>
