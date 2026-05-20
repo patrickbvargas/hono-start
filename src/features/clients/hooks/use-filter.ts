@@ -43,6 +43,12 @@ export function useClientFilter() {
 		},
 	});
 
+	const handleApplyFilter = (value: ClientFilter) => {
+		debounceSubmit.cancel();
+		form.reset(value);
+		handleFilter(value);
+	};
+
 	const handleClearFilters = () => {
 		debounceSubmit.cancel();
 		form.reset(defaultFilter);
@@ -50,9 +56,12 @@ export function useClientFilter() {
 	};
 
 	return {
+		filter,
+		defaultFilter,
 		form,
 		hasNonDefaultFilter,
 		canClearFilters: hasNonDefaultFilter(),
+		handleApplyFilter,
 		handleClearFilters,
 	};
 }

@@ -1,5 +1,4 @@
-import { FilterPopover } from "@/shared/components/filter-popover";
-import { Button, Separator } from "@/shared/components/ui";
+import { ListFilters } from "@/shared/components/list-filters";
 import {
 	ENTITY_ACTIVE_FILTER_OPTIONS,
 	ENTITY_DELETED_FILTER_OPTIONS,
@@ -8,58 +7,141 @@ import { useClientOptions } from "../../hooks/use-data";
 import { useClientFilter } from "../../hooks/use-filter";
 
 export const ClientFilter = () => {
-	const { form, hasNonDefaultFilter, canClearFilters, handleClearFilters } =
-		useClientFilter();
+	const {
+		filter,
+		defaultFilter,
+		form,
+		canClearFilters,
+		handleApplyFilter,
+		handleClearFilters,
+	} = useClientFilter();
 	const { types } = useClientOptions();
 
+	const typeLabels = new Map(
+		types.map((option) => [option.value, option.label]),
+	);
+	const activeLabels = new Map(
+		ENTITY_ACTIVE_FILTER_OPTIONS.map((option) => [option.value, option.label]),
+	);
+	const statusLabels = new Map(
+		ENTITY_DELETED_FILTER_OPTIONS.map((option) => [option.value, option.label]),
+	);
+
+	const hasAdvancedFilters =
+		filter.type.length > 0 ||
+		filter.active !== defaultFilter.active ||
+		filter.status !== defaultFilter.status;
+
 	return (
-		<form.Form
-			form={form}
-			className="w-full md:max-w-100 flex items-center justify-between gap-3"
-		>
-			<form.AppField name="query">
-				{(field) => (
-					<field.Search
-						aria-label="Nome ou documento"
-						placeholder="Buscar por nome ou documento..."
-					/>
+		<form.Form form={form}>
+			<ListFilters>
+				<ListFilters.Bar>
+					<form.AppField name="query">
+						{(field) => (
+							<field.Search
+								className="w-full md:max-w-80"
+								aria-label="Nome ou documento"
+								placeholder="Buscar por nome ou documento..."
+							/>
+						)}
+					</form.AppField>
+					<ListFilters.Actions>
+						<ListFilters.Popover label="Tipo">
+							<form.AppField name="type">
+								{(field) => (
+									<field.CheckboxGroup
+										options={types}
+										classNames={{
+											wrapper: "gap-2",
+											list: "overflow-y-auto pr-1",
+										}}
+									/>
+								)}
+							</form.AppField>
+						</ListFilters.Popover>
+						<ListFilters.Popover label="Situação">
+							<form.AppField name="active">
+								{(field) => (
+									<field.RadioGroup
+										options={ENTITY_ACTIVE_FILTER_OPTIONS}
+										classNames={{ wrapper: "gap-2" }}
+									/>
+								)}
+							</form.AppField>
+						</ListFilters.Popover>
+						<ListFilters.Popover label="Registro">
+							<form.AppField name="status">
+								{(field) => (
+									<field.RadioGroup
+										options={ENTITY_DELETED_FILTER_OPTIONS}
+										classNames={{ wrapper: "gap-2" }}
+									/>
+								)}
+							</form.AppField>
+						</ListFilters.Popover>
+					</ListFilters.Actions>
+				</ListFilters.Bar>
+				{(filter.query || hasAdvancedFilters) && (
+					<ListFilters.Active>
+						{filter.query ? (
+							<ListFilters.Chip
+								onRemove={() =>
+									handleApplyFilter({
+										...filter,
+										query: defaultFilter.query,
+									})
+								}
+								removeLabel={`Remover busca ${filter.query}`}
+							>
+								{filter.query}
+							</ListFilters.Chip>
+						) : null}
+						{filter.type.map((value) => (
+							<ListFilters.Chip
+								key={value}
+								onRemove={() =>
+									handleApplyFilter({
+										...filter,
+										type: filter.type.filter((item) => item !== value),
+									})
+								}
+								removeLabel={`Remover filtro de tipo ${typeLabels.get(value) ?? value}`}
+							>
+								{typeLabels.get(value) ?? value}
+							</ListFilters.Chip>
+						))}
+						{filter.active !== defaultFilter.active ? (
+							<ListFilters.Chip
+								onRemove={() =>
+									handleApplyFilter({
+										...filter,
+										active: defaultFilter.active,
+									})
+								}
+								removeLabel={`Remover filtro de situação ativa ${activeLabels.get(filter.active) ?? filter.active}`}
+							>
+								{activeLabels.get(filter.active) ?? filter.active}
+							</ListFilters.Chip>
+						) : null}
+						{filter.status !== defaultFilter.status ? (
+							<ListFilters.Chip
+								onRemove={() =>
+									handleApplyFilter({
+										...filter,
+										status: defaultFilter.status,
+									})
+								}
+								removeLabel={`Remover filtro de situação do registro ${statusLabels.get(filter.status) ?? filter.status}`}
+							>
+								{statusLabels.get(filter.status) ?? filter.status}
+							</ListFilters.Chip>
+						) : null}
+						{canClearFilters ? (
+							<ListFilters.Clear onClick={handleClearFilters} />
+						) : null}
+					</ListFilters.Active>
 				)}
-			</form.AppField>
-			<FilterPopover
-				showActiveIndicator
-				hasActiveIndicator={hasNonDefaultFilter(["type", "active", "status"])}
-			>
-				<form.AppField name="type">
-					{(field) => <field.CheckboxGroup label="Tipo" options={types} />}
-				</form.AppField>
-				<form.AppField name="active">
-					{(field) => (
-						<field.RadioGroup
-							label="Situação ativa"
-							options={ENTITY_ACTIVE_FILTER_OPTIONS}
-						/>
-					)}
-				</form.AppField>
-				<Separator />
-				<form.AppField name="status">
-					{(field) => (
-						<field.RadioGroup
-							label="Situação do registro"
-							options={ENTITY_DELETED_FILTER_OPTIONS}
-						/>
-					)}
-				</form.AppField>
-				<Separator />
-				<Button
-					type="button"
-					variant="ghost"
-					size="sm"
-					disabled={!canClearFilters}
-					onClick={handleClearFilters}
-				>
-					Limpar filtros
-				</Button>
-			</FilterPopover>
+			</ListFilters>
 		</form.Form>
 	);
 };

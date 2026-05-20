@@ -41,6 +41,48 @@ vi.mock("@/shared/hooks/use-filter", () => ({
 }));
 
 describe("useClientFilter", () => {
+	it("applies explicit filter payloads through shared search orchestration", () => {
+		cancelMock.mockReset();
+		handleResetFilterMock.mockReset();
+		resetMock.mockReset();
+		handleFilterMock.mockReset();
+		hasNonDefaultFilterMock.mockReset();
+		useAppFormMock.mockReset();
+		debounceFactoryMock.mockReset();
+
+		hasNonDefaultFilterMock.mockReturnValue(true);
+		debounceFactoryMock.mockReturnValue({
+			cancel: cancelMock,
+			flush: vi.fn(),
+		});
+		useAppFormMock.mockReturnValue({
+			reset: resetMock,
+		});
+
+		const { result } = renderHook(() => useClientFilter());
+
+		result.current.handleApplyFilter({
+			query: "",
+			type: [],
+			active: "all",
+			status: "active",
+		});
+
+		expect(cancelMock).toHaveBeenCalledTimes(1);
+		expect(resetMock).toHaveBeenCalledWith({
+			query: "",
+			type: [],
+			active: "all",
+			status: "active",
+		});
+		expect(handleFilterMock).toHaveBeenCalledWith({
+			query: "",
+			type: [],
+			active: "all",
+			status: "active",
+		});
+	});
+
 	it("exposes clear behavior using shared default filters", () => {
 		cancelMock.mockReset();
 		handleResetFilterMock.mockReset();
