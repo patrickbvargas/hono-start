@@ -354,6 +354,12 @@ function createClientSeeds(): ClientSeedInput[] {
 function createAuthUserSeeds(): AuthUserSeedInput[] {
   return [
     {
+      userId: "auth-user-admin-sistema",
+      accountId: "auth-account-admin-sistema",
+      employeeEmail: "admin@admin.com",
+      password: "admin123",
+    },
+    {
       userId: "auth-user-amanda-admin",
       accountId: "auth-account-amanda-admin",
       employeeEmail: "amanda.admin@matriz.test",
