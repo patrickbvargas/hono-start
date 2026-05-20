@@ -63,7 +63,6 @@ function RouteComponent() {
 		>
 			<WrapperHeader>
 				<ContractFilter />
-				<EntityView.Toggle />
 			</WrapperHeader>
 			<WrapperBody>
 				<EntityView

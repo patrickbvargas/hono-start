@@ -327,19 +327,33 @@ The system SHALL apply the shared form-validation boundary to contract create an
 - **AND** the contract write continues to enforce aggregate business constraints with user-friendly Portuguese errors
 
 ### Requirement: Contract advanced filters indicate active non-default state
-The system SHALL visually indicate on the advanced filters trigger when one or more contract filters rendered inside the popover differ from the validated default route search state.
+The system SHALL render the contract list filter surface with the shared list-filters pattern so advanced filters remain visually discoverable, responsive, and clearly indicate when non-default values are active.
 
-#### Scenario: Contract popover trigger shows active indicator
-- **WHEN** a user applies client, legal-area, contract-status, active-state, or deletion-visibility filters through the advanced filters popover
-- **THEN** the advanced filters trigger shows an active indicator
+#### Scenario: Desktop route uses shared advanced filter popovers
+- **WHEN** an authenticated user opens the contracts route on a desktop-width viewport
+- **THEN** the contracts filter surface renders the inline query field beside shared advanced-filter popovers
+- **AND** the popovers expose legal-area, contract-status, active-state, and deletion-visibility filters
+- **AND** the client filter is rendered inline in the filter bar instead of inside an advanced-filter popover
 
-#### Scenario: Inline query does not activate popover indicator
-- **WHEN** a user changes only the inline contract query field
-- **THEN** the advanced filters trigger remains in its default visual state
+#### Scenario: Mobile route uses shared advanced filter drawer
+- **WHEN** an authenticated user opens the contracts route on a mobile-width viewport
+- **THEN** the contracts filter surface renders the inline query field beside a shared filter drawer trigger
+- **AND** the drawer exposes client, legal-area, contract-status, active-state, and deletion-visibility filters
 
-#### Scenario: Clearing contract popover filters removes active indicator
-- **WHEN** all contract filters controlled by the popover return to their validated default values
-- **THEN** the advanced filters trigger removes the active indicator
+#### Scenario: Non-default advanced filters appear as removable chips
+- **WHEN** a user applies client, legal-area, contract-status, active-state, or deletion-visibility filters through the contracts filter surface
+- **THEN** each non-default filter is summarized as a removable chip below the filter bar
+- **AND** removing a chip reapplies the remaining filter state without mutating unrelated sort fields
+
+#### Scenario: Inline query appears as removable chip
+- **WHEN** a user enters a non-empty query in the inline contract search field
+- **THEN** the query appears as a removable chip in the active-filters area
+- **AND** removing that chip restores the query field to its validated default value
+
+#### Scenario: Clear action appears only when filters differ from defaults
+- **WHEN** one or more contract filter fields differ from the validated default route search state
+- **THEN** the active-filters area exposes a clear action
+- **AND** when every field matches the default route search state the clear action is hidden
 
 ### Requirement: Reset contract list filters
 The system SHALL provide a clear-filters action on the contracts list filter surface that restores all contract filter fields to the validated default route search state without changing the current sorting fields.

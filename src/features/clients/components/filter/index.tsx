@@ -34,13 +34,8 @@ export const ClientFilter = () => {
 		filter.active !== defaultFilter.active ||
 		filter.status !== defaultFilter.status;
 
-	const mobileFilters = (
-		<ListFilters.Drawer
-			title="Filtros"
-			label="Filtros"
-			ariaLabel="Abrir filtros"
-			iconOnly
-		>
+	const sharedFields = (
+		<>
 			<form.AppField name="type">
 				{(field) => <field.CheckboxGroup label="Tipo" options={types} />}
 			</form.AppField>
@@ -60,6 +55,17 @@ export const ClientFilter = () => {
 					/>
 				)}
 			</form.AppField>
+		</>
+	);
+
+	const mobileFilters = (
+		<ListFilters.Drawer
+			title="Filtros"
+			label="Filtros"
+			ariaLabel="Abrir filtros"
+			iconOnly
+		>
+			{sharedFields}
 		</ListFilters.Drawer>
 	);
 
