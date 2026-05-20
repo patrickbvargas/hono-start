@@ -43,6 +43,12 @@ export function useEmployeeFilter() {
 		},
 	});
 
+	const handleApplyFilter = (value: EmployeeFilter) => {
+		debounceSubmit.cancel();
+		form.reset(value);
+		handleFilter(value);
+	};
+
 	const handleClearFilters = () => {
 		debounceSubmit.cancel();
 		form.reset(defaultFilter);
@@ -50,9 +56,12 @@ export function useEmployeeFilter() {
 	};
 
 	return {
+		filter,
+		defaultFilter,
 		form,
 		hasNonDefaultFilter,
 		canClearFilters: hasNonDefaultFilter(),
+		handleApplyFilter,
 		handleClearFilters,
 	};
 }

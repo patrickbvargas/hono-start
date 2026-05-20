@@ -66,7 +66,6 @@ function RouteComponent() {
 		>
 			<WrapperHeader>
 				<EmployeeFilter />
-				<EntityView.Toggle />
 			</WrapperHeader>
 			<WrapperBody>
 				<EntityView
