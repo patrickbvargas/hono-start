@@ -1,4 +1,7 @@
+import { ChevronDownIcon } from "lucide-react";
+import * as React from "react";
 import { ListFilters } from "@/shared/components/list-filters";
+import { Collapsible, CollapsibleContent } from "@/shared/components/ui";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
 import { useAuditLogOptions } from "../../hooks/use-data";
 import { useAuditLogFilter } from "../../hooks/use-filter";
@@ -29,6 +32,14 @@ export const AuditLogFilter = () => {
 		filter.action.length > 0 ||
 		filter.entityType.length > 0 ||
 		filter.actorName.length > 0;
+	const [isDesktopPanelOpen, setIsDesktopPanelOpen] =
+		React.useState(hasAdvancedFilters);
+
+	React.useEffect(() => {
+		if (hasAdvancedFilters) {
+			setIsDesktopPanelOpen(true);
+		}
+	}, [hasAdvancedFilters]);
 
 	const sharedFields = (
 		<>
@@ -55,24 +66,43 @@ export const AuditLogFilter = () => {
 		</ListFilters.Drawer>
 	);
 
-	const desktopFilters = (
-		<ListFilters.Actions>
-			<ListFilters.Popover label="Ação">
-				<form.AppField name="action">
-					{(field) => <field.CheckboxGroup options={actions} />}
-				</form.AppField>
-			</ListFilters.Popover>
-			<ListFilters.Popover label="Tipo">
-				<form.AppField name="entityType">
-					{(field) => <field.CheckboxGroup options={entityTypes} />}
-				</form.AppField>
-			</ListFilters.Popover>
-			<ListFilters.Popover label="Usuário">
-				<form.AppField name="actorName">
-					{(field) => <field.CheckboxGroup options={actors} />}
-				</form.AppField>
-			</ListFilters.Popover>
+	const desktopFilterActions = (
+		<ListFilters.Actions className="w-full md:w-auto">
+			<ListFilters.Button
+				type="button"
+				onClick={() => setIsDesktopPanelOpen((open) => !open)}
+				aria-expanded={isDesktopPanelOpen}
+				className="md:min-w-28"
+			>
+				Mais filtros
+				<ChevronDownIcon
+					size={16}
+					className={isDesktopPanelOpen ? "rotate-180" : undefined}
+				/>
+			</ListFilters.Button>
 		</ListFilters.Actions>
+	);
+
+	const desktopFilterPanel = (
+		<Collapsible open={isDesktopPanelOpen} onOpenChange={setIsDesktopPanelOpen}>
+			<CollapsibleContent>
+				<ListFilters.Panel>
+					<form.AppField name="action">
+						{(field) => <field.CheckboxGroup label="Ação" options={actions} />}
+					</form.AppField>
+					<form.AppField name="entityType">
+						{(field) => (
+							<field.CheckboxGroup label="Tipo" options={entityTypes} />
+						)}
+					</form.AppField>
+					<form.AppField name="actorName">
+						{(field) => (
+							<field.CheckboxGroup label="Usuário" options={actors} />
+						)}
+					</form.AppField>
+				</ListFilters.Panel>
+			</CollapsibleContent>
+		</Collapsible>
 	);
 
 	return (
@@ -91,8 +121,9 @@ export const AuditLogFilter = () => {
 							)}
 						</form.AppField>
 					</div>
-					{isMobile ? mobileFilters : desktopFilters}
+					{isMobile ? mobileFilters : desktopFilterActions}
 				</ListFilters.Bar>
+				{isMobile ? null : desktopFilterPanel}
 				{(filter.query || hasAdvancedFilters) && (
 					<ListFilters.Active>
 						{filter.query ? (

@@ -1,4 +1,7 @@
+import { ChevronDownIcon } from "lucide-react";
+import * as React from "react";
 import { ListFilters } from "@/shared/components/list-filters";
+import { Collapsible, CollapsibleContent } from "@/shared/components/ui";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
 import {
 	ENTITY_ACTIVE_FILTER_OPTIONS,
@@ -46,6 +49,21 @@ export const RemunerationFilter = ({
 		filter.dateTo !== defaultFilter.dateTo ||
 		filter.active !== defaultFilter.active ||
 		filter.status !== defaultFilter.status;
+	const hasDesktopPanelFilters =
+		(isAdmin && filter.employeeId !== defaultFilter.employeeId) ||
+		filter.contractId !== defaultFilter.contractId ||
+		filter.dateFrom !== defaultFilter.dateFrom ||
+		filter.dateTo !== defaultFilter.dateTo;
+
+	const [isDesktopPanelOpen, setIsDesktopPanelOpen] = React.useState(
+		hasDesktopPanelFilters,
+	);
+
+	React.useEffect(() => {
+		if (hasDesktopPanelFilters) {
+			setIsDesktopPanelOpen(true);
+		}
+	}, [hasDesktopPanelFilters]);
 
 	const formatDateChip = (value: string) => {
 		return formatter.date(`${value}T12:00:00.000Z`);
@@ -99,45 +117,64 @@ export const RemunerationFilter = ({
 		</ListFilters.Drawer>
 	);
 
-	const desktopFilters = (
-		<ListFilters.Actions>
-			{isAdmin ? (
-				<ListFilters.Popover label="Colaborador">
-					<form.AppField name="employeeId">
-						{(field) => <field.Autocomplete options={employees} />}
+	const desktopFilterActions = (
+		<ListFilters.Actions className="w-full md:w-auto">
+			<ListFilters.Button
+				type="button"
+				onClick={() => setIsDesktopPanelOpen((open) => !open)}
+				aria-expanded={isDesktopPanelOpen}
+				className="md:min-w-28"
+			>
+				Mais filtros
+				<ChevronDownIcon
+					size={16}
+					className={isDesktopPanelOpen ? "rotate-180" : undefined}
+				/>
+			</ListFilters.Button>
+		</ListFilters.Actions>
+	);
+
+	const desktopFilterPanel = (
+		<Collapsible open={isDesktopPanelOpen} onOpenChange={setIsDesktopPanelOpen}>
+			<CollapsibleContent>
+				<ListFilters.Panel>
+					{isAdmin ? (
+						<form.AppField name="employeeId">
+							{(field) => (
+								<field.Autocomplete label="Colaborador" options={employees} />
+							)}
+						</form.AppField>
+					) : null}
+					<form.AppField name="contractId">
+						{(field) => (
+							<field.Autocomplete label="Contrato" options={contracts} />
+						)}
 					</form.AppField>
-				</ListFilters.Popover>
-			) : null}
-			<ListFilters.Popover label="Contrato">
-				<form.AppField name="contractId">
-					{(field) => <field.Autocomplete options={contracts} />}
-				</form.AppField>
-			</ListFilters.Popover>
-			<ListFilters.Popover label="Competência">
-				<div className="flex flex-col gap-4">
 					<form.AppField name="dateFrom">
-						{(field) => <field.DatePicker label="De" />}
+						{(field) => <field.DatePicker label="Competência de" />}
 					</form.AppField>
 					<form.AppField name="dateTo">
-						{(field) => <field.DatePicker label="Até" />}
+						{(field) => <field.DatePicker label="Competência até" />}
 					</form.AppField>
-				</div>
-			</ListFilters.Popover>
-			<ListFilters.Popover label="Situação">
-				<form.AppField name="active">
-					{(field) => (
-						<field.RadioGroup options={ENTITY_ACTIVE_FILTER_OPTIONS} />
-					)}
-				</form.AppField>
-			</ListFilters.Popover>
-			<ListFilters.Popover label="Registro">
-				<form.AppField name="status">
-					{(field) => (
-						<field.RadioGroup options={ENTITY_DELETED_FILTER_OPTIONS} />
-					)}
-				</form.AppField>
-			</ListFilters.Popover>
-		</ListFilters.Actions>
+					<form.AppField name="active">
+						{(field) => (
+							<field.RadioGroup
+								label="Situação"
+								options={ENTITY_ACTIVE_FILTER_OPTIONS}
+							/>
+						)}
+					</form.AppField>
+					<form.AppField name="status">
+						{(field) => (
+							<field.RadioGroup
+								label="Registro"
+								options={ENTITY_DELETED_FILTER_OPTIONS}
+							/>
+						)}
+					</form.AppField>
+				</ListFilters.Panel>
+			</CollapsibleContent>
+		</Collapsible>
 	);
 
 	return (
@@ -156,8 +193,9 @@ export const RemunerationFilter = ({
 							)}
 						</form.AppField>
 					</div>
-					{isMobile ? mobileFilters : desktopFilters}
+					{isMobile ? mobileFilters : desktopFilterActions}
 				</ListFilters.Bar>
+				{isMobile ? null : desktopFilterPanel}
 				{(filter.query || hasAdvancedFilters) && (
 					<ListFilters.Active>
 						{filter.query ? (

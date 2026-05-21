@@ -1,5 +1,11 @@
+import { ChevronDownIcon } from "lucide-react";
+import * as React from "react";
 import { ListFilters } from "@/shared/components/list-filters";
-import { Button } from "@/shared/components/ui";
+import {
+	Button,
+	Collapsible,
+	CollapsibleContent,
+} from "@/shared/components/ui";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
 import { formatter } from "@/shared/lib/formatter";
 import { useDashboardOptions } from "../../hooks/use-data";
@@ -37,6 +43,15 @@ export function DashboardFilter({ isAdmin = false }: DashboardFilterProps) {
 		return `${formatter.date(`${filter.dateFrom}T12:00:00.000Z`)} - ${formatter.date(`${filter.dateTo}T12:00:00.000Z`)}`;
 	};
 
+	const [isDesktopPanelOpen, setIsDesktopPanelOpen] =
+		React.useState(hasManualPeriod);
+
+	React.useEffect(() => {
+		if (hasManualPeriod) {
+			setIsDesktopPanelOpen(true);
+		}
+	}, [hasManualPeriod]);
+
 	const sharedFields = (
 		<>
 			<form.AppField name="dateFrom">
@@ -67,18 +82,8 @@ export function DashboardFilter({ isAdmin = false }: DashboardFilterProps) {
 		</ListFilters.Drawer>
 	);
 
-	const desktopFilters = (
-		<ListFilters.Actions>
-			<ListFilters.Popover label="Período">
-				<div className="flex flex-col gap-4">
-					<form.AppField name="dateFrom">
-						{(field) => <field.DatePicker label="Período de" />}
-					</form.AppField>
-					<form.AppField name="dateTo">
-						{(field) => <field.DatePicker label="Período até" />}
-					</form.AppField>
-				</div>
-			</ListFilters.Popover>
+	const desktopFilterActions = (
+		<ListFilters.Actions className="w-full md:w-auto">
 			<ListFilters.Popover label="Área">
 				<form.AppField name="legalArea">
 					{(field) => <field.CheckboxGroup options={legalAreas} />}
@@ -89,7 +94,34 @@ export function DashboardFilter({ isAdmin = false }: DashboardFilterProps) {
 					{(field) => <field.CheckboxGroup options={revenueTypes} />}
 				</form.AppField>
 			</ListFilters.Popover>
+			<ListFilters.Button
+				type="button"
+				onClick={() => setIsDesktopPanelOpen((open) => !open)}
+				aria-expanded={isDesktopPanelOpen}
+				className="md:min-w-28"
+			>
+				Mais filtros
+				<ChevronDownIcon
+					size={16}
+					className={isDesktopPanelOpen ? "rotate-180" : undefined}
+				/>
+			</ListFilters.Button>
 		</ListFilters.Actions>
+	);
+
+	const desktopFilterPanel = (
+		<Collapsible open={isDesktopPanelOpen} onOpenChange={setIsDesktopPanelOpen}>
+			<CollapsibleContent>
+				<ListFilters.Panel>
+					<form.AppField name="dateFrom">
+						{(field) => <field.DatePicker label="Período de" />}
+					</form.AppField>
+					<form.AppField name="dateTo">
+						{(field) => <field.DatePicker label="Período até" />}
+					</form.AppField>
+				</ListFilters.Panel>
+			</CollapsibleContent>
+		</Collapsible>
 	);
 
 	return (
@@ -139,8 +171,9 @@ export function DashboardFilter({ isAdmin = false }: DashboardFilterProps) {
 							)}
 						</form.Subscribe>
 					</div>
-					{isMobile ? mobileFilters : desktopFilters}
+					{isMobile ? mobileFilters : desktopFilterActions}
 				</ListFilters.Bar>
+				{isMobile ? null : desktopFilterPanel}
 				{hasAdvancedFilters ? (
 					<ListFilters.Active>
 						{hasManualPeriod ? (

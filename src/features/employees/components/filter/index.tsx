@@ -1,4 +1,7 @@
+import { ChevronDownIcon } from "lucide-react";
+import * as React from "react";
 import { ListFilters } from "@/shared/components/list-filters";
+import { Collapsible, CollapsibleContent } from "@/shared/components/ui";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
 import {
 	ENTITY_ACTIVE_FILTER_OPTIONS,
@@ -37,6 +40,19 @@ export const EmployeeFilter = () => {
 		filter.role.length > 0 ||
 		filter.active !== defaultFilter.active ||
 		filter.status !== defaultFilter.status;
+	const hasDesktopPanelFilters =
+		filter.active !== defaultFilter.active ||
+		filter.status !== defaultFilter.status;
+
+	const [isDesktopPanelOpen, setIsDesktopPanelOpen] = React.useState(
+		hasDesktopPanelFilters,
+	);
+
+	React.useEffect(() => {
+		if (hasDesktopPanelFilters) {
+			setIsDesktopPanelOpen(true);
+		}
+	}, [hasDesktopPanelFilters]);
 
 	const sharedFields = (
 		<>
@@ -76,8 +92,8 @@ export const EmployeeFilter = () => {
 		</ListFilters.Drawer>
 	);
 
-	const desktopFilters = (
-		<ListFilters.Actions>
+	const desktopFilterActions = (
+		<ListFilters.Actions className="w-full md:w-auto">
 			<ListFilters.Popover label="Função">
 				<form.AppField name="type">
 					{(field) => <field.CheckboxGroup options={types} />}
@@ -88,21 +104,44 @@ export const EmployeeFilter = () => {
 					{(field) => <field.CheckboxGroup options={roles} />}
 				</form.AppField>
 			</ListFilters.Popover>
-			<ListFilters.Popover label="Situação">
-				<form.AppField name="active">
-					{(field) => (
-						<field.RadioGroup options={ENTITY_ACTIVE_FILTER_OPTIONS} />
-					)}
-				</form.AppField>
-			</ListFilters.Popover>
-			<ListFilters.Popover label="Registro">
-				<form.AppField name="status">
-					{(field) => (
-						<field.RadioGroup options={ENTITY_DELETED_FILTER_OPTIONS} />
-					)}
-				</form.AppField>
-			</ListFilters.Popover>
+			<ListFilters.Button
+				type="button"
+				onClick={() => setIsDesktopPanelOpen((open) => !open)}
+				aria-expanded={isDesktopPanelOpen}
+				className="md:min-w-28"
+			>
+				Mais filtros
+				<ChevronDownIcon
+					size={16}
+					className={isDesktopPanelOpen ? "rotate-180" : undefined}
+				/>
+			</ListFilters.Button>
 		</ListFilters.Actions>
+	);
+
+	const desktopFilterPanel = (
+		<Collapsible open={isDesktopPanelOpen} onOpenChange={setIsDesktopPanelOpen}>
+			<CollapsibleContent>
+				<ListFilters.Panel>
+					<form.AppField name="active">
+						{(field) => (
+							<field.RadioGroup
+								label="Situação"
+								options={ENTITY_ACTIVE_FILTER_OPTIONS}
+							/>
+						)}
+					</form.AppField>
+					<form.AppField name="status">
+						{(field) => (
+							<field.RadioGroup
+								label="Registro"
+								options={ENTITY_DELETED_FILTER_OPTIONS}
+							/>
+						)}
+					</form.AppField>
+				</ListFilters.Panel>
+			</CollapsibleContent>
+		</Collapsible>
 	);
 
 	return (
@@ -121,8 +160,9 @@ export const EmployeeFilter = () => {
 							)}
 						</form.AppField>
 					</div>
-					{isMobile ? mobileFilters : desktopFilters}
+					{isMobile ? mobileFilters : desktopFilterActions}
 				</ListFilters.Bar>
+				{isMobile ? null : desktopFilterPanel}
 				{(filter.query || hasAdvancedFilters) && (
 					<ListFilters.Active>
 						{filter.query ? (

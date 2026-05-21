@@ -61,7 +61,6 @@ function RouteComponent() {
 		>
 			<WrapperHeader>
 				<FeeFilter />
-				<EntityView.Toggle />
 			</WrapperHeader>
 			<WrapperBody>
 				<EntityView

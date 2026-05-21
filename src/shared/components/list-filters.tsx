@@ -31,6 +31,11 @@ interface ListFiltersPopoverProps {
 	title?: string;
 }
 
+interface ListFiltersButtonProps
+	extends React.ComponentPropsWithoutRef<typeof Button> {}
+
+interface ListFiltersPanelProps extends React.ComponentPropsWithoutRef<"div"> {}
+
 interface ListFiltersDrawerProps {
 	ariaLabel?: string;
 	children: React.ReactNode;
@@ -79,6 +84,34 @@ function ListFiltersActions({ className, ...props }: ListFiltersActionsProps) {
 		<div
 			className={cn(
 				"flex flex-wrap items-center gap-2 md:flex-nowrap",
+				className,
+			)}
+			{...props}
+		/>
+	);
+}
+
+function ListFiltersButton({
+	className,
+	size = "default",
+	variant = "outline",
+	...props
+}: ListFiltersButtonProps) {
+	return (
+		<Button
+			size={size}
+			variant={variant}
+			className={cn(className)}
+			{...props}
+		/>
+	);
+}
+
+function ListFiltersPanel({ className, ...props }: ListFiltersPanelProps) {
+	return (
+		<div
+			className={cn(
+				"flex flex-wrap items-start gap-4 rounded-xl border border-border/60 bg-muted/20 p-4 *:min-w-0 *:w-full md:*:w-60",
 				className,
 			)}
 			{...props}
@@ -136,7 +169,7 @@ function ListFiltersPopover({
 }: ListFiltersPopoverProps) {
 	return (
 		<Popover>
-			<PopoverTrigger render={<Button variant="outline" size="sm" />}>
+			<PopoverTrigger render={<ListFiltersButton />}>
 				{label}
 				<ChevronDownIcon size={16} />
 			</PopoverTrigger>
@@ -201,7 +234,9 @@ function ListFiltersClear({
 export const ListFilters = Object.assign(ListFiltersRoot, {
 	Bar: ListFiltersBar,
 	Actions: ListFiltersActions,
+	Button: ListFiltersButton,
 	Drawer: ListFiltersDrawer,
+	Panel: ListFiltersPanel,
 	Popover: ListFiltersPopover,
 	Active: ListFiltersActive,
 	Chip: ListFiltersChip,

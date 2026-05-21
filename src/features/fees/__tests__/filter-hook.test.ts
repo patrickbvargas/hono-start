@@ -43,6 +43,7 @@ vi.mock("@/shared/hooks/use-filter", () => ({
 		handleFilter: handleFilterMock,
 		handleResetFilter: handleResetFilterMock,
 		hasNonDefaultFilter: hasNonDefaultFilterMock,
+		canClearFilters: hasNonDefaultFilterMock,
 	}),
 }));
 
