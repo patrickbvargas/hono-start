@@ -69,7 +69,6 @@ function RouteComponent() {
 		>
 			<WrapperHeader>
 				<RemunerationFilter isAdmin={isAdmin} />
-				<EntityView.Toggle />
 			</WrapperHeader>
 			<WrapperBody>
 				<EntityView

@@ -149,26 +149,28 @@ The system SHALL display a paginated, sortable, filterable list of remunerations
 - **AND** refreshing the page preserves the same remunerations view
 
 ### Requirement: Remuneration advanced filters indicate active non-default state
-The system SHALL visually indicate on the advanced filters trigger when one or more remuneration filters rendered inside the popover differ from the validated default route search state.
+The system SHALL render the remuneration list filter surface with the shared list-filters pattern so advanced filters remain visually discoverable, responsive, and clearly summarize non-default state for both administrators and regular users.
 
-#### Scenario: Remuneration popover trigger shows active indicator
-- **WHEN** a user applies employee, contract, or payment-date filters through the advanced filters popover
-- **THEN** the advanced filters trigger shows an active indicator
+#### Scenario: Desktop route uses shared advanced filter surfaces
+- **WHEN** an authenticated user opens the remunerations route on a desktop-width viewport
+- **THEN** the remuneration filter surface renders the inline query field beside shared advanced-filter controls
+- **AND** the advanced surface exposes contract and payment-date filters
+- **AND** for administrators, the advanced surface also exposes the employee filter
 
-#### Scenario: Inline query does not activate popover indicator
-- **WHEN** a user changes only the inline remuneration query field
-- **THEN** the advanced filters trigger remains in its default visual state
+#### Scenario: Mobile route uses shared filter drawer
+- **WHEN** an authenticated user opens the remunerations route on a mobile-width viewport
+- **THEN** the remuneration filter surface renders the inline query field beside a shared filter drawer trigger
+- **AND** the drawer exposes every filter available to that actor, including the administrator-only employee filter when applicable
 
-#### Scenario: Clearing remuneration popover filters removes active indicator
-- **WHEN** all remuneration filters controlled by the popover return to their validated default values
-- **THEN** the advanced filters trigger removes the active indicator
+#### Scenario: Non-default remuneration filters appear as removable chips
+- **WHEN** a user applies employee, contract, or payment-date filters through the remuneration filter surface
+- **THEN** each non-default filter is summarized as a removable chip below the filter bar
+- **AND** removing a chip reapplies the remaining filter state without mutating unrelated sort fields
 
-### Requirement: Reset remuneration list filters
-The system SHALL provide a clear-filters action on the remunerations list filter surface that restores all remuneration filter fields to the validated default route search state without changing the current sorting fields.
-
-#### Scenario: Clear action becomes available for non-default remuneration filters
-- **WHEN** a user changes the inline remuneration query field or any supported advanced remuneration filter away from its validated default value
-- **THEN** the remunerations filter surface exposes an enabled `Limpar filtros` action
+#### Scenario: Inline query appears as removable chip
+- **WHEN** a user enters a non-empty query in the inline remuneration search field
+- **THEN** the query appears as a removable chip in the active-filters area
+- **AND** removing that chip restores the query field to its validated default value
 
 #### Scenario: Clear action resets remuneration filters and first page
 - **WHEN** a user activates `Limpar filtros` on the remunerations list
@@ -177,6 +179,7 @@ The system SHALL provide a clear-filters action on the remunerations list filter
 - **AND** the list reloads from page `1`
 - **AND** the current remuneration sorting fields remain unchanged
 
-#### Scenario: Clear action is inactive at default state
-- **WHEN** all remuneration filters already match their validated default route values
-- **THEN** the `Limpar filtros` action does not trigger a list-state change
+#### Scenario: Clear action appears only when filters differ from defaults
+- **WHEN** one or more remuneration filter fields differ from the validated default route search state
+- **THEN** the active-filters area exposes a clear action
+- **AND** when every field matches the default route search state the clear action is hidden

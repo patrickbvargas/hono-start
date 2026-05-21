@@ -46,6 +46,12 @@ export function useRemunerationFilter() {
 		},
 	});
 
+	const handleApplyFilter = (value: RemunerationFilter) => {
+		debounceSubmit.cancel();
+		form.reset(value);
+		handleFilter(value);
+	};
+
 	const handleClearFilters = () => {
 		debounceSubmit.cancel();
 		form.reset(defaultFilter);
@@ -53,9 +59,12 @@ export function useRemunerationFilter() {
 	};
 
 	return {
+		filter,
+		defaultFilter,
 		form,
 		hasNonDefaultFilter,
 		canClearFilters: hasNonDefaultFilter(),
+		handleApplyFilter,
 		handleClearFilters,
 	};
 }
