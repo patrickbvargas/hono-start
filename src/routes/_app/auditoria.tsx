@@ -51,7 +51,6 @@ function RouteComponent() {
 		<Wrapper title={ROUTES.auditLog.title}>
 			<WrapperHeader>
 				<AuditLogFilter />
-				<EntityView.Toggle />
 			</WrapperHeader>
 			<WrapperBody>
 				<EntityView
