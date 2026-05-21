@@ -9,7 +9,6 @@ import {
 	getDashboardPeriodShortcuts,
 } from "../utils/period-shortcuts";
 
-const DEBOUNCED_FIELDS = new Set<keyof DashboardFilter>([]);
 const SHORTCUT_FIELD_UPDATE_OPTIONS = {
 	dontRunListeners: true,
 	dontValidate: true,
@@ -21,6 +20,7 @@ export function useDashboardFilter() {
 		defaultFilter,
 		handleFilter,
 		handleResetFilter,
+		canClearFilters,
 		hasNonDefaultFilter,
 	} = useFilter(dashboardFilterSchema);
 	const periodShortcuts = getDashboardPeriodShortcuts();
@@ -37,6 +37,7 @@ export function useDashboardFilter() {
 		filter.legalArea.length > 0 ||
 		filter.revenueType.length > 0;
 
+	const DEBOUNCED_FIELDS = new Set<keyof DashboardFilter>([]);
 	const debounceSubmit = useDebouncedCallback(
 		(submit: () => void | Promise<void>) => submit(),
 		300,
@@ -125,7 +126,7 @@ export function useDashboardFilter() {
 		hasManualPeriod,
 		hasAdvancedFilters,
 		hasNonDefaultFilter,
-		canClearFilters: hasNonDefaultFilter(),
+		canClearFilters: canClearFilters(),
 		canClearAdvancedFilters: hasAdvancedFilters,
 		handleApplyFilter,
 		handleClearAdvancedFilters,

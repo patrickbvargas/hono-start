@@ -11,6 +11,7 @@ export function useClientFilter() {
 		defaultFilter,
 		handleFilter,
 		handleResetFilter,
+		canClearFilters,
 		hasNonDefaultFilter,
 	} = useFilter(clientFilterSchema);
 
@@ -60,7 +61,7 @@ export function useClientFilter() {
 		defaultFilter,
 		form,
 		hasNonDefaultFilter,
-		canClearFilters: hasNonDefaultFilter(),
+		canClearFilters: canClearFilters(),
 		handleApplyFilter,
 		handleClearFilters,
 	};

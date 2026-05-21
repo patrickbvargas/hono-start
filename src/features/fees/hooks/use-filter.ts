@@ -11,6 +11,7 @@ export function useFeeFilter() {
 		defaultFilter,
 		handleFilter,
 		handleResetFilter,
+		canClearFilters,
 		hasNonDefaultFilter,
 	} = useFilter(feeFilterSchema);
 
@@ -60,7 +61,7 @@ export function useFeeFilter() {
 		defaultFilter,
 		form,
 		hasNonDefaultFilter,
-		canClearFilters: hasNonDefaultFilter(),
+		canClearFilters: canClearFilters(),
 		handleApplyFilter,
 		handleClearFilters,
 	};

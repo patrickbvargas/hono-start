@@ -11,6 +11,7 @@ export function useAuditLogFilter() {
 		defaultFilter,
 		handleFilter,
 		handleResetFilter,
+		canClearFilters,
 		hasNonDefaultFilter,
 	} = useFilter(auditLogFilterSchema);
 
@@ -60,7 +61,7 @@ export function useAuditLogFilter() {
 		defaultFilter,
 		form,
 		hasNonDefaultFilter,
-		canClearFilters: hasNonDefaultFilter(),
+		canClearFilters: canClearFilters(),
 		handleApplyFilter,
 		handleClearFilters,
 	};

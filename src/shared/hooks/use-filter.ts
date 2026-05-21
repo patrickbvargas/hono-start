@@ -87,12 +87,27 @@ export function useFilter<Schema extends ZodType<Record<string, unknown>>>(
 		return hasNonDefaultFilterValue(filter, defaultFilter, keys);
 	};
 
+	const canClearFilters = (keys?: (keyof Filter)[]) => {
+		return hasNonDefaultFilter(keys);
+	};
+
+	const handleApplyFilter = (value: Filter) => {
+		handleFilter(value);
+	};
+
+	const handleClearFilters = () => {
+		handleResetFilter();
+	};
+
 	return {
 		filter,
 		defaultFilter,
 		getFilterSearch,
+		handleApplyFilter,
+		handleClearFilters,
 		handleFilter,
 		handleResetFilter,
+		canClearFilters,
 		hasNonDefaultFilter,
 	};
 }

@@ -11,6 +11,7 @@ export function useContractFilter() {
 		defaultFilter,
 		handleFilter,
 		handleResetFilter,
+		canClearFilters,
 		hasNonDefaultFilter,
 	} = useFilter(contractFilterSchema);
 
@@ -60,7 +61,7 @@ export function useContractFilter() {
 		defaultFilter,
 		form,
 		hasNonDefaultFilter,
-		canClearFilters: hasNonDefaultFilter(),
+		canClearFilters: canClearFilters(),
 		handleApplyFilter,
 		handleClearFilters,
 	};

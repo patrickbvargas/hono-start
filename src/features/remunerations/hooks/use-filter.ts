@@ -14,6 +14,7 @@ export function useRemunerationFilter() {
 		defaultFilter,
 		handleFilter,
 		handleResetFilter,
+		canClearFilters,
 		hasNonDefaultFilter,
 	} = useFilter(remunerationFilterSchema);
 
@@ -63,7 +64,7 @@ export function useRemunerationFilter() {
 		defaultFilter,
 		form,
 		hasNonDefaultFilter,
-		canClearFilters: hasNonDefaultFilter(),
+		canClearFilters: canClearFilters(),
 		handleApplyFilter,
 		handleClearFilters,
 	};
