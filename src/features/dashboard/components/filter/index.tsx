@@ -1,5 +1,7 @@
-import { FilterPopover } from "@/shared/components/filter-popover";
+import { ListFilters } from "@/shared/components/list-filters";
 import { Button } from "@/shared/components/ui";
+import { useIsMobile } from "@/shared/hooks/use-mobile";
+import { formatter } from "@/shared/lib/formatter";
 import { useDashboardOptions } from "../../hooks/use-data";
 import { useDashboardFilter } from "../../hooks/use-filter";
 import { getDashboardActivePeriodShortcut } from "../../utils/period-shortcuts";
@@ -9,91 +11,190 @@ interface DashboardFilterProps {
 }
 
 export function DashboardFilter({ isAdmin = false }: DashboardFilterProps) {
-	const { form, handlePeriodShortcut, periodShortcuts, hasNonDefaultFilter } =
-		useDashboardFilter();
+	const {
+		filter,
+		defaultFilter,
+		form,
+		hasManualPeriod,
+		hasAdvancedFilters,
+		canClearAdvancedFilters,
+		handleApplyFilter,
+		handleClearAdvancedFilters,
+		handlePeriodShortcut,
+		periodShortcuts,
+	} = useDashboardFilter();
 	const { employees, legalAreas, revenueTypes } = useDashboardOptions();
+	const isMobile = useIsMobile();
+
+	const legalAreaLabels = new Map(
+		legalAreas.map((option) => [option.value, option.label]),
+	);
+	const revenueTypeLabels = new Map(
+		revenueTypes.map((option) => [option.value, option.label]),
+	);
+
+	const formatDateRangeChip = () => {
+		return `${formatter.date(`${filter.dateFrom}T12:00:00.000Z`)} - ${formatter.date(`${filter.dateTo}T12:00:00.000Z`)}`;
+	};
+
+	const sharedFields = (
+		<>
+			<form.AppField name="dateFrom">
+				{(field) => <field.DatePicker label="Período de" />}
+			</form.AppField>
+			<form.AppField name="dateTo">
+				{(field) => <field.DatePicker label="Período até" />}
+			</form.AppField>
+			<form.AppField name="legalArea">
+				{(field) => <field.CheckboxGroup label="Área" options={legalAreas} />}
+			</form.AppField>
+			<form.AppField name="revenueType">
+				{(field) => (
+					<field.CheckboxGroup label="Tipo de receita" options={revenueTypes} />
+				)}
+			</form.AppField>
+		</>
+	);
+
+	const mobileFilters = (
+		<ListFilters.Drawer
+			title="Filtros"
+			label="Filtros"
+			ariaLabel="Abrir filtros"
+			iconOnly
+		>
+			{sharedFields}
+		</ListFilters.Drawer>
+	);
+
+	const desktopFilters = (
+		<ListFilters.Actions>
+			<ListFilters.Popover label="Período">
+				<div className="flex flex-col gap-4">
+					<form.AppField name="dateFrom">
+						{(field) => <field.DatePicker label="Período de" />}
+					</form.AppField>
+					<form.AppField name="dateTo">
+						{(field) => <field.DatePicker label="Período até" />}
+					</form.AppField>
+				</div>
+			</ListFilters.Popover>
+			<ListFilters.Popover label="Área">
+				<form.AppField name="legalArea">
+					{(field) => <field.CheckboxGroup options={legalAreas} />}
+				</form.AppField>
+			</ListFilters.Popover>
+			<ListFilters.Popover label="Tipo de receita">
+				<form.AppField name="revenueType">
+					{(field) => <field.CheckboxGroup options={revenueTypes} />}
+				</form.AppField>
+			</ListFilters.Popover>
+		</ListFilters.Actions>
+	);
 
 	return (
-		<form.Form
-			form={form}
-			className="w-full md:w-fit flex items-center justify-between gap-3"
-		>
-			<div className="w-full flex flex-col md:flex-row items-start gap-3">
-				{isAdmin ? (
-					<form.AppField name="employeeId">
-						{(field) => (
-							<field.Autocomplete
-								label="Colaborador"
-								options={employees}
-								placeholder="Selecionar colaborador..."
-								classNames={{
-									wrapper: "md:min-w-80 [&_[data-slot=field-label]]:sr-only",
-								}}
-							/>
-						)}
-					</form.AppField>
+		<form.Form form={form} className="w-full">
+			<ListFilters>
+				<ListFilters.Bar className="w-full flex-col items-stretch md:flex-row md:items-center md:justify-between">
+					<div className="flex w-full flex-col gap-3 md:flex-row md:items-center">
+						{isAdmin ? (
+							<form.AppField name="employeeId">
+								{(field) => (
+									<field.Autocomplete
+										label="Colaborador"
+										options={employees}
+										placeholder="Selecionar colaborador..."
+										classNames={{
+											wrapper:
+												"md:min-w-80 [&_[data-slot=field-label]]:sr-only",
+										}}
+									/>
+								)}
+							</form.AppField>
+						) : null}
+						<form.Subscribe
+							selector={(state) =>
+								getDashboardActivePeriodShortcut({
+									dateFrom: state.values.dateFrom,
+									dateTo: state.values.dateTo,
+								})
+							}
+						>
+							{(activeShortcut) => (
+								<div className="flex items-center gap-2">
+									{periodShortcuts.map((shortcut) => (
+										<Button
+											key={shortcut.id}
+											type="button"
+											variant={
+												activeShortcut === shortcut.id ? "secondary" : "outline"
+											}
+											aria-pressed={activeShortcut === shortcut.id}
+											onClick={() => handlePeriodShortcut(shortcut.id)}
+										>
+											{shortcut.label}
+										</Button>
+									))}
+								</div>
+							)}
+						</form.Subscribe>
+					</div>
+					{isMobile ? mobileFilters : desktopFilters}
+				</ListFilters.Bar>
+				{hasAdvancedFilters ? (
+					<ListFilters.Active>
+						{hasManualPeriod ? (
+							<ListFilters.Chip
+								onRemove={() =>
+									handleApplyFilter({
+										...filter,
+										dateFrom: defaultFilter.dateFrom,
+										dateTo: defaultFilter.dateTo,
+									})
+								}
+								removeLabel={`Remover filtro de período ${formatDateRangeChip()}`}
+							>
+								{formatDateRangeChip()}
+							</ListFilters.Chip>
+						) : null}
+						{filter.legalArea.map((value) => (
+							<ListFilters.Chip
+								key={value}
+								onRemove={() =>
+									handleApplyFilter({
+										...filter,
+										legalArea: filter.legalArea.filter(
+											(item) => item !== value,
+										),
+									})
+								}
+								removeLabel={`Remover filtro de área do contrato ${legalAreaLabels.get(value) ?? value}`}
+							>
+								{legalAreaLabels.get(value) ?? value}
+							</ListFilters.Chip>
+						))}
+						{filter.revenueType.map((value) => (
+							<ListFilters.Chip
+								key={value}
+								onRemove={() =>
+									handleApplyFilter({
+										...filter,
+										revenueType: filter.revenueType.filter(
+											(item) => item !== value,
+										),
+									})
+								}
+								removeLabel={`Remover filtro de tipo de receita ${revenueTypeLabels.get(value) ?? value}`}
+							>
+								{revenueTypeLabels.get(value) ?? value}
+							</ListFilters.Chip>
+						))}
+						{canClearAdvancedFilters ? (
+							<ListFilters.Clear onClick={handleClearAdvancedFilters} />
+						) : null}
+					</ListFilters.Active>
 				) : null}
-				<div className="w-full flex items-center gap-3 justify-between md:justify-start">
-					<form.Subscribe
-						selector={(state) =>
-							getDashboardActivePeriodShortcut({
-								dateFrom: state.values.dateFrom,
-								dateTo: state.values.dateTo,
-							})
-						}
-					>
-						{(activeShortcut) => (
-							<div className="flex items-center gap-2">
-								{periodShortcuts.map((shortcut) => (
-									<Button
-										key={shortcut.id}
-										type="button"
-										variant={
-											activeShortcut === shortcut.id ? "secondary" : "outline"
-										}
-										aria-pressed={activeShortcut === shortcut.id}
-										onClick={() => handlePeriodShortcut(shortcut.id)}
-									>
-										{shortcut.label}
-									</Button>
-								))}
-							</div>
-						)}
-					</form.Subscribe>
-					<FilterPopover
-						showActiveIndicator
-						hasActiveIndicator={hasNonDefaultFilter([
-							"dateFrom",
-							"dateTo",
-							"legalArea",
-							"revenueType",
-						])}
-					>
-						<form.AppField name="dateFrom">
-							{(field) => <field.DatePicker label="Período de" />}
-						</form.AppField>
-						<form.AppField name="dateTo">
-							{(field) => <field.DatePicker label="Período até" />}
-						</form.AppField>
-						<form.AppField name="legalArea">
-							{(field) => (
-								<field.Autocomplete
-									label="Área do contrato"
-									options={legalAreas}
-								/>
-							)}
-						</form.AppField>
-						<form.AppField name="revenueType">
-							{(field) => (
-								<field.Autocomplete
-									label="Tipo de receita"
-									options={revenueTypes}
-								/>
-							)}
-						</form.AppField>
-					</FilterPopover>
-				</div>
-			</div>
+			</ListFilters>
 		</form.Form>
 	);
 }

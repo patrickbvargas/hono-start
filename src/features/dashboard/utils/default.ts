@@ -7,6 +7,6 @@ export const dashboardSearchDefaults: DashboardSearch = {
 	dateFrom: currentYearDateRange.dateFrom,
 	dateTo: currentYearDateRange.dateTo,
 	employeeId: "",
-	legalArea: "",
-	revenueType: "",
+	legalArea: [],
+	revenueType: [],
 };

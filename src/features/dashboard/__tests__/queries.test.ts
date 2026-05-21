@@ -128,8 +128,8 @@ describe("dashboard data queries", () => {
 				dateFrom: "2026-01-01",
 				dateTo: "2026-03-31",
 				employeeId: "",
-				legalArea: "",
-				revenueType: "",
+				legalArea: [],
+				revenueType: [],
 			},
 		});
 
@@ -254,8 +254,8 @@ describe("dashboard data queries", () => {
 				dateFrom: "2026-01-01",
 				dateTo: "2026-12-31",
 				employeeId: "999",
-				legalArea: "",
-				revenueType: "",
+				legalArea: [],
+				revenueType: [],
 			},
 		});
 
@@ -308,8 +308,8 @@ describe("dashboard data queries", () => {
 				dateFrom: "2026-01-01",
 				dateTo: "2026-12-31",
 				employeeId: "",
-				legalArea: "SOCIAL_SECURITY",
-				revenueType: "MONTHLY",
+				legalArea: ["SOCIAL_SECURITY", "CIVIL"],
+				revenueType: ["MONTHLY", "SUCCESS"],
 			},
 		});
 
@@ -317,9 +317,9 @@ describe("dashboard data queries", () => {
 			1,
 			expect.objectContaining({
 				where: expect.objectContaining({
-					type: { value: "MONTHLY" },
+					type: { value: { in: ["MONTHLY", "SUCCESS"] } },
 					contract: expect.objectContaining({
-						legalArea: { value: "SOCIAL_SECURITY" },
+						legalArea: { value: { in: ["SOCIAL_SECURITY", "CIVIL"] } },
 					}),
 				}),
 			}),
@@ -331,14 +331,14 @@ describe("dashboard data queries", () => {
 					fee: {
 						revenue: {
 							type: {
-								value: "MONTHLY",
+								value: { in: ["MONTHLY", "SUCCESS"] },
 							},
 						},
 					},
 					contractEmployee: {
 						contract: {
 							legalArea: {
-								value: "SOCIAL_SECURITY",
+								value: { in: ["SOCIAL_SECURITY", "CIVIL"] },
 							},
 						},
 					},

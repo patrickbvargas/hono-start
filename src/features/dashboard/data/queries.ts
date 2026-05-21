@@ -91,8 +91,8 @@ interface EffectiveEmployeeParams {
 }
 
 interface DashboardDimensionFilters {
-	legalArea?: string;
-	revenueType?: string;
+	legalArea: string[];
+	revenueType: string[];
 }
 
 function parseOptionalEntityId(value: string): number | undefined {
@@ -109,20 +109,16 @@ function parseOptionalEntityId(value: string): number | undefined {
 	return parsed;
 }
 
-function parseOptionalLookupValue(value: string): string | undefined {
-	if (!value) {
-		return undefined;
-	}
-
-	return value;
+function parseLookupValues(values: string[]): string[] {
+	return values.filter((value) => value.length > 0);
 }
 
 function getDashboardDimensionFilters(
 	search: DashboardSearch,
 ): DashboardDimensionFilters {
 	return {
-		legalArea: parseOptionalLookupValue(search.legalArea),
-		revenueType: parseOptionalLookupValue(search.revenueType),
+		legalArea: parseLookupValues(search.legalArea),
+		revenueType: parseLookupValues(search.revenueType),
 	};
 }
 
@@ -152,8 +148,10 @@ function getDashboardContractDimensionWhere(
 	const { legalArea, revenueType } = getDashboardDimensionFilters(scope.search);
 
 	return {
-		...(legalArea ? { legalArea: { value: legalArea } } : {}),
-		...(revenueType
+		...(legalArea.length > 0
+			? { legalArea: { value: { in: legalArea } } }
+			: {}),
+		...(revenueType.length > 0
 			? {
 					revenues: {
 						some: {
@@ -161,7 +159,7 @@ function getDashboardContractDimensionWhere(
 							deletedAt: null,
 							isActive: true,
 							type: {
-								value: revenueType,
+								value: { in: revenueType },
 							},
 						},
 					},
@@ -179,7 +177,7 @@ function getDashboardRevenueWhere(
 		firmId: scope.firmId,
 		deletedAt: null,
 		isActive: true,
-		...(revenueType ? { type: { value: revenueType } } : {}),
+		...(revenueType.length > 0 ? { type: { value: { in: revenueType } } } : {}),
 		contract: {
 			firmId: scope.firmId,
 			deletedAt: null,
@@ -200,7 +198,9 @@ function getDashboardFeeRevenueWhere(
 		...(() => {
 			const { revenueType } = getDashboardDimensionFilters(scope.search);
 
-			return revenueType ? { type: { value: revenueType } } : {};
+			return revenueType.length > 0
+				? { type: { value: { in: revenueType } } }
+				: {};
 		})(),
 		contract: {
 			firmId: scope.firmId,
@@ -222,12 +222,12 @@ function getDashboardRemunerationWhere(
 		firmId: scope.firmId,
 		deletedAt: null,
 		isActive: true,
-		...(revenueType
+		...(revenueType.length > 0
 			? {
 					fee: {
 						revenue: {
 							type: {
-								value: revenueType,
+								value: { in: revenueType },
 							},
 						},
 					},
@@ -235,11 +235,11 @@ function getDashboardRemunerationWhere(
 			: {}),
 		contractEmployee: {
 			...(employeeId ? { employeeId } : {}),
-			...(legalArea
+			...(legalArea.length > 0
 				? {
 						contract: {
 							legalArea: {
-								value: legalArea,
+								value: { in: legalArea },
 							},
 						},
 					}

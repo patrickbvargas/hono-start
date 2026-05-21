@@ -5,21 +5,21 @@ import {
 } from "../data/queries";
 import { dashboardSearchSchema } from "../schemas/search";
 import {
+	getCurrentYearDateRange,
 	getDashboardActivePeriodShortcut,
 	getDashboardPeriodShortcutById,
 } from "../utils/period-shortcuts";
 
 describe("dashboard filtering", () => {
 	it("parses empty URL search with safe defaults", () => {
-		const referenceDate = new Date("2026-05-06T12:00:00.000Z");
-		const currentYear = referenceDate.getUTCFullYear();
+		const currentYearRange = getCurrentYearDateRange();
 
 		expect(dashboardSearchSchema.parse({})).toEqual({
-			dateFrom: `${currentYear}-01-01`,
-			dateTo: formatDate(referenceDate),
+			dateFrom: currentYearRange.dateFrom,
+			dateTo: currentYearRange.dateTo,
 			employeeId: "",
-			legalArea: "",
-			revenueType: "",
+			legalArea: [],
+			revenueType: [],
 		});
 	});
 
@@ -104,8 +104,8 @@ describe("dashboard filtering", () => {
 				dateFrom: "2026-04-20",
 				dateTo: "2026-04-01",
 				employeeId: "",
-				legalArea: "",
-				revenueType: "",
+				legalArea: [],
+				revenueType: [],
 			}),
 		).toThrowError("A data inicial deve ser anterior à data final");
 	});

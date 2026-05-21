@@ -49,7 +49,7 @@ The system SHALL provide a quick-create action in the dashboard header so authen
 - **THEN** the menu does not expose direct-create entries for remuneration, attachment, or standalone revenue creation
 
 ### Requirement: Dashboard Filters
-The system SHALL provide URL-driven dashboard filters for period, employee scope, contract legal area, and revenue type while preserving Matrix OS permissions. For administrators, the employee filter SHALL stay visible inline in the dashboard header next to the advanced filters trigger, while secondary dashboard filters remain grouped in the popover.
+The system SHALL provide URL-driven dashboard filters for period, employee scope, contract legal area, and revenue type while preserving Matrix OS permissions. For administrators, the employee filter SHALL stay visible inline in the dashboard header next to the period shortcut area, while period shortcuts SHALL remain visible inline exactly as they are today and secondary dashboard filters SHALL move to the shared list-filters advanced surface.
 
 #### Scenario: Administrator filters dashboard by period
 - **WHEN** an administrator opens the dashboard with `dateFrom` and/or `dateTo`
@@ -83,25 +83,37 @@ The system SHALL provide URL-driven dashboard filters for period, employee scope
 - **AND** the system updates `dateTo` to the current environment date for the current year
 - **AND** the dashboard reloads data for that selected period
 
-#### Scenario: Manual popover period remains available
-- **WHEN** an authenticated user opens the advanced filters popover
+#### Scenario: Period shortcuts remain inline after filter-surface migration
+- **WHEN** the dashboard advanced filters adopt the shared list-filters pattern
+- **THEN** the period shortcut buttons remain inline in the dashboard header
+- **AND** the shortcuts do not move into popovers or drawers
+- **AND** their current click behavior and active-state semantics remain unchanged
+
+#### Scenario: Manual period edit remains available in the advanced filter surface
+- **WHEN** an authenticated user opens the dashboard advanced filters surface
 - **THEN** the manual `Período de` and `Período até` inputs remain available for free date selection
+- **AND** legal-area and revenue-type filters remain available in that same advanced surface
 
 #### Scenario: Manual period edit clears unmatched shortcut state
 - **WHEN** an authenticated user changes the dashboard period manually to a range that does not exactly match any shortcut
 - **THEN** the system keeps the selected manual dates in the URL
 - **AND** the dashboard does not show any shortcut as active
 
+#### Scenario: Administrator employee filter remains inline
+- **WHEN** an administrator opens the dashboard header
+- **THEN** the collaborator filter remains visible inline outside the advanced filters surface
+- **AND** changing only the collaborator filter does not move the control into popovers or drawers
+
 #### Scenario: Administrator filters dashboard by employee
 - **WHEN** an administrator selects an active employee from the visible inline dashboard employee filter
 - **THEN** the system narrows employee-sensitive dashboard summaries and monthly financial evolution to data associated with that employee inside the administrator's firm
 
-#### Scenario: Authenticated user filters dashboard by legal area
-- **WHEN** an authenticated user selects a valid contract legal area in the dashboard filters
+#### Scenario: Authenticated user filters dashboard by one or more legal areas
+- **WHEN** an authenticated user selects one or more valid contract legal areas in the dashboard advanced filters
 - **THEN** the system limits dashboard revenue-sensitive summaries and monthly financial evolution to matching contracts within the user's allowed firm and role scope
 
-#### Scenario: Authenticated user filters dashboard by revenue type
-- **WHEN** an authenticated user selects a valid revenue type in the dashboard filters
+#### Scenario: Authenticated user filters dashboard by one or more revenue types
+- **WHEN** an authenticated user selects one or more valid revenue types in the dashboard advanced filters
 - **THEN** the system limits dashboard revenue-sensitive summaries and monthly financial evolution to matching revenues within the user's allowed firm and role scope
 
 #### Scenario: Regular user opens dashboard filters
@@ -257,16 +269,17 @@ The system SHALL render a dedicated structural skeleton while the authenticated 
 - **AND** role-scoped data differences only appear after the real dashboard data resolves
 
 ### Requirement: Dashboard advanced filters indicate active non-default state
-The system SHALL visually indicate on the advanced filters trigger when one or more dashboard filters rendered inside the advanced filters popover differ from the validated default route search state.
+The system SHALL use the shared list-filters active-filters pattern for dashboard advanced filters while preserving the documented distinction between inline controls and advanced filters.
 
-#### Scenario: Dashboard popover trigger shows active indicator
-- **WHEN** an authenticated user applies a manual period, legal-area, or revenue-type filter through the dashboard advanced filters popover
-- **THEN** the advanced filters trigger shows an active indicator
+#### Scenario: Advanced dashboard filters appear as removable chips
+- **WHEN** an authenticated user applies a manual period, legal-area, or revenue-type filter through the dashboard advanced filters surface
+- **THEN** each non-default advanced filter is summarized as a removable chip below the filter bar
 
-#### Scenario: Inline controls do not activate popover indicator
-- **WHEN** the authenticated user changes only inline dashboard controls outside the popover, such as employee scope or period shortcut buttons
-- **THEN** the advanced filters trigger remains in its default visual state unless a popover-controlled filter is also non-default
+#### Scenario: Inline controls do not become active chips by default
+- **WHEN** the authenticated user changes only inline dashboard controls outside the advanced filters surface, such as employee scope or period shortcut buttons
+- **THEN** the dashboard does not summarize those inline controls as advanced-filter chips unless a popover- or drawer-controlled filter is also non-default
 
-#### Scenario: Returning dashboard popover filters to defaults removes indicator
-- **WHEN** all dashboard filters controlled by the popover return to their validated default values
-- **THEN** the advanced filters trigger removes the active indicator
+#### Scenario: Clearing advanced dashboard chips does not alter period shortcuts
+- **WHEN** a user removes advanced dashboard filter chips or clears the advanced filter surface
+- **THEN** only manual advanced-filter values return to their validated default state
+- **AND** the inline shortcut controls remain available in their current position and behavior model

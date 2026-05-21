@@ -18,8 +18,8 @@ export const dashboardFilterSchema = z
 		dateFrom: z.string().catch(defaultDateFrom).default(defaultDateFrom),
 		dateTo: z.string().catch(defaultDateTo).default(defaultDateTo),
 		employeeId: z.string().catch("").default(""),
-		legalArea: z.string().catch("").default(""),
-		revenueType: z.string().catch("").default(""),
+		legalArea: z.array(z.string()).catch([]).default([]),
+		revenueType: z.array(z.string()).catch([]).default([]),
 	})
 	.refine((value) => isValidDate(value.dateFrom), {
 		message: "Data inicial inválida",

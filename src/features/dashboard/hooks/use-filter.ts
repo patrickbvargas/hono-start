@@ -4,6 +4,7 @@ import { useFilter } from "@/shared/hooks/use-filter";
 import { type DashboardFilter, dashboardFilterSchema } from "../schemas/filter";
 import {
 	type DashboardPeriodShortcutId,
+	getDashboardActivePeriodShortcut,
 	getDashboardPeriodShortcutById,
 	getDashboardPeriodShortcuts,
 } from "../utils/period-shortcuts";
@@ -15,10 +16,26 @@ const SHORTCUT_FIELD_UPDATE_OPTIONS = {
 } as const;
 
 export function useDashboardFilter() {
-	const { filter, handleFilter, hasNonDefaultFilter } = useFilter(
-		dashboardFilterSchema,
-	);
+	const {
+		filter,
+		defaultFilter,
+		handleFilter,
+		handleResetFilter,
+		hasNonDefaultFilter,
+	} = useFilter(dashboardFilterSchema);
 	const periodShortcuts = getDashboardPeriodShortcuts();
+	const activePeriodShortcut = getDashboardActivePeriodShortcut({
+		dateFrom: filter.dateFrom,
+		dateTo: filter.dateTo,
+	});
+	const hasManualPeriod =
+		activePeriodShortcut === null &&
+		(filter.dateFrom !== defaultFilter.dateFrom ||
+			filter.dateTo !== defaultFilter.dateTo);
+	const hasAdvancedFilters =
+		hasManualPeriod ||
+		filter.legalArea.length > 0 ||
+		filter.revenueType.length > 0;
 
 	const debounceSubmit = useDebouncedCallback(
 		(submit: () => void | Promise<void>) => submit(),
@@ -68,5 +85,51 @@ export function useDashboardFilter() {
 		void form.handleSubmit();
 	};
 
-	return { form, handlePeriodShortcut, periodShortcuts, hasNonDefaultFilter };
+	const handleApplyFilter = (value: DashboardFilter) => {
+		debounceSubmit.cancel();
+		form.reset(value);
+		handleFilter(value);
+	};
+
+	const handleClearAdvancedFilters = () => {
+		debounceSubmit.cancel();
+
+		const nextFilter: DashboardFilter = {
+			...filter,
+			legalArea: defaultFilter.legalArea,
+			revenueType: defaultFilter.revenueType,
+			...(activePeriodShortcut === null
+				? {
+						dateFrom: defaultFilter.dateFrom,
+						dateTo: defaultFilter.dateTo,
+					}
+				: {}),
+		};
+
+		form.reset(nextFilter);
+		handleFilter(nextFilter);
+	};
+
+	const handleClearFilters = () => {
+		debounceSubmit.cancel();
+		form.reset(defaultFilter);
+		handleResetFilter();
+	};
+
+	return {
+		filter,
+		defaultFilter,
+		form,
+		periodShortcuts,
+		activePeriodShortcut,
+		hasManualPeriod,
+		hasAdvancedFilters,
+		hasNonDefaultFilter,
+		canClearFilters: hasNonDefaultFilter(),
+		canClearAdvancedFilters: hasAdvancedFilters,
+		handleApplyFilter,
+		handleClearAdvancedFilters,
+		handleClearFilters,
+		handlePeriodShortcut,
+	};
 }
