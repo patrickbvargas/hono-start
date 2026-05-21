@@ -87,6 +87,11 @@ export const ContractFilter = () => {
 
 	const desktopFilters = (
 		<ListFilters.Actions>
+			<ListFilters.Popover label="Cliente">
+				<form.AppField name="clientId">
+					{(field) => <field.Autocomplete options={clients} />}
+				</form.AppField>
+			</ListFilters.Popover>
 			<ListFilters.Popover label="Área">
 				<form.AppField name="legalArea">
 					{(field) => <field.CheckboxGroup options={legalAreas} />}
@@ -130,19 +135,6 @@ export const ContractFilter = () => {
 							)}
 						</form.AppField>
 					</div>
-					{isMobile ? null : (
-						<div className="hidden md:block md:w-64">
-							<form.AppField name="clientId">
-								{(field) => (
-									<field.Autocomplete
-										aria-label="Cliente"
-										options={clients}
-										placeholder="Selecionar cliente..."
-									/>
-								)}
-							</form.AppField>
-						</div>
-					)}
 					{isMobile ? mobileFilters : desktopFilters}
 				</ListFilters.Bar>
 				{(filter.query || hasAdvancedFilters) && (
