@@ -36,6 +36,7 @@ import {
 	getSelectableFeeContractsQueryOptions,
 	getSelectableFeeRevenuesQueryOptions,
 } from "@/features/fees";
+import { RouteError } from "@/shared/components/route-error";
 import {
 	Button,
 	DropdownMenu,
@@ -83,6 +84,7 @@ export const Route = createFileRoute("/_app/")({
 		await Promise.all(prefetches);
 	},
 	component: RouteComponent,
+	errorComponent: ({ error }) => <RouteError title="Dashboard" error={error} />,
 });
 
 function RouteComponent() {

@@ -16,6 +16,7 @@ import {
 } from "@/features/clients";
 import { ButtonNew } from "@/shared/components/button-new";
 import { EntityView } from "@/shared/components/entity-view";
+import { RouteError } from "@/shared/components/route-error";
 import {
 	Wrapper,
 	WrapperBody,
@@ -39,6 +40,9 @@ export const Route = createFileRoute("/_app/clientes")({
 		]);
 	},
 	component: RouteComponent,
+	errorComponent: ({ error }) => (
+		<RouteError title={ROUTES.client.title} error={error} />
+	),
 });
 
 function RouteComponent() {

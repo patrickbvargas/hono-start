@@ -3,6 +3,7 @@ import {
 	AuthenticationScreen,
 	ForcedChangePasswordForm,
 } from "@/features/authentication";
+import { RouteError } from "@/shared/components/route-error";
 
 export const Route = createFileRoute("/_app/alterar-senha-obrigatoria")({
 	beforeLoad: async ({ context: { session } }) => {
@@ -13,6 +14,9 @@ export const Route = createFileRoute("/_app/alterar-senha-obrigatoria")({
 		}
 	},
 	component: RouteComponent,
+	errorComponent: ({ error }) => (
+		<RouteError title="Alterar senha" error={error} />
+	),
 });
 
 function RouteComponent() {

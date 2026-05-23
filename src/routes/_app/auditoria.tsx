@@ -14,6 +14,7 @@ import {
 	useAuditLogs,
 } from "@/features/audit-logs";
 import { EntityView } from "@/shared/components/entity-view";
+import { RouteError } from "@/shared/components/route-error";
 import {
 	Wrapper,
 	WrapperBody,
@@ -38,6 +39,9 @@ export const Route = createFileRoute("/_app/auditoria")({
 		await queryClient.fetchQuery(getAuditLogActorsQueryOptions());
 	},
 	component: RouteComponent,
+	errorComponent: ({ error }) => (
+		<RouteError title={ROUTES.auditLog.title} error={error} />
+	),
 });
 
 function RouteComponent() {

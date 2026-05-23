@@ -18,6 +18,7 @@ import {
 	useRemunerations,
 } from "@/features/remunerations";
 import { EntityView } from "@/shared/components/entity-view";
+import { RouteError } from "@/shared/components/route-error";
 import {
 	Wrapper,
 	WrapperBody,
@@ -46,6 +47,9 @@ export const Route = createFileRoute("/_app/remuneracoes")({
 		]);
 	},
 	component: RouteComponent,
+	errorComponent: ({ error }) => (
+		<RouteError title={ROUTES.remuneration.title} error={error} />
+	),
 });
 
 function RouteComponent() {

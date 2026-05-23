@@ -17,6 +17,7 @@ import {
 } from "@/features/fees";
 import { ButtonNew } from "@/shared/components/button-new";
 import { EntityView } from "@/shared/components/entity-view";
+import { RouteError } from "@/shared/components/route-error";
 import {
 	Wrapper,
 	WrapperBody,
@@ -41,6 +42,9 @@ export const Route = createFileRoute("/_app/honorarios")({
 		]);
 	},
 	component: RouteComponent,
+	errorComponent: ({ error }) => (
+		<RouteError title={ROUTES.fee.title} error={error} />
+	),
 });
 
 function RouteComponent() {
