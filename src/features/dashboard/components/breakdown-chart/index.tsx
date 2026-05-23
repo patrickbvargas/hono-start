@@ -21,6 +21,7 @@ import {
 	ChartLegendContent,
 	ChartTooltip,
 	ChartTooltipContent,
+	Separator,
 } from "@/shared/components/ui";
 import { formatter } from "@/shared/lib/formatter";
 import type { DashboardSummary } from "../../schemas/model";
@@ -79,7 +80,7 @@ function formatCompactCurrency(value: number) {
 
 function renderBreakdownList(items: DashboardSummary["legalAreaRevenue"]) {
 	return (
-		<div className="sr-only sm:not-sr-only space-y-2.5 border-t border-border/60 pt-3">
+		<div className="sr-only sm:not-sr-only space-y-2.5">
 			{items.map((item, index) => (
 				<div
 					className="flex items-start justify-between gap-3 text-sm"
@@ -115,7 +116,7 @@ function BreakdownBarChart({
 				accessibilityLayer
 				data={items}
 				layout="vertical"
-				margin={{ left: 0, right: 80 }}
+				margin={{ left: 0, right: 100 }}
 			>
 				<CartesianGrid horizontal={false} vertical={false} />
 				<XAxis type="number" hide tickFormatter={formatCompactCurrency} />
@@ -210,6 +211,7 @@ export function DashboardBreakdownChart({
 						) : (
 							<BreakdownDonutChart items={items} />
 						)}
+						<Separator />
 						{renderBreakdownList(items)}
 					</>
 				)}

@@ -69,9 +69,7 @@ export const ContractFilter = () => {
 				{(field) => <field.CheckboxGroup label="Área" options={legalAreas} />}
 			</form.AppField>
 			<form.AppField name="contractStatus">
-				{(field) => (
-					<field.CheckboxGroup label="Status do contrato" options={statuses} />
-				)}
+				{(field) => <field.CheckboxGroup label="Status" options={statuses} />}
 			</form.AppField>
 			<form.AppField name="active">
 				{(field) => (
@@ -136,10 +134,7 @@ export const ContractFilter = () => {
 					</form.AppField>
 					<form.AppField name="contractStatus">
 						{(field) => (
-							<field.CheckboxGroup
-								label="Status do contrato"
-								options={statuses}
-							/>
+							<field.CheckboxGroup label="Status" options={statuses} />
 						)}
 					</form.AppField>
 					<form.AppField name="active">

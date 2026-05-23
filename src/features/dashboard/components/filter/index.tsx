@@ -144,34 +144,39 @@ export function DashboardFilter({ isAdmin = false }: DashboardFilterProps) {
 								)}
 							</form.AppField>
 						) : null}
-						<form.Subscribe
-							selector={(state) =>
-								getDashboardActivePeriodShortcut({
-									dateFrom: state.values.dateFrom,
-									dateTo: state.values.dateTo,
-								})
-							}
-						>
-							{(activeShortcut) => (
-								<div className="flex items-center gap-2">
-									{periodShortcuts.map((shortcut) => (
-										<Button
-											key={shortcut.id}
-											type="button"
-											variant={
-												activeShortcut === shortcut.id ? "secondary" : "outline"
-											}
-											aria-pressed={activeShortcut === shortcut.id}
-											onClick={() => handlePeriodShortcut(shortcut.id)}
-										>
-											{shortcut.label}
-										</Button>
-									))}
-								</div>
-							)}
-						</form.Subscribe>
+						<div className="flex items-center gap-2 justify-between">
+							<form.Subscribe
+								selector={(state) =>
+									getDashboardActivePeriodShortcut({
+										dateFrom: state.values.dateFrom,
+										dateTo: state.values.dateTo,
+									})
+								}
+							>
+								{(activeShortcut) => (
+									<div className="flex items-center gap-2">
+										{periodShortcuts.map((shortcut) => (
+											<Button
+												key={shortcut.id}
+												type="button"
+												variant={
+													activeShortcut === shortcut.id
+														? "secondary"
+														: "outline"
+												}
+												aria-pressed={activeShortcut === shortcut.id}
+												onClick={() => handlePeriodShortcut(shortcut.id)}
+											>
+												{shortcut.label}
+											</Button>
+										))}
+									</div>
+								)}
+							</form.Subscribe>
+							{isMobile ? mobileFilters : null}
+						</div>
 					</div>
-					{isMobile ? mobileFilters : desktopFilterActions}
+					{!isMobile ? desktopFilterActions : null}
 				</ListFilters.Bar>
 				{isMobile ? null : desktopFilterPanel}
 				{hasAdvancedFilters ? (

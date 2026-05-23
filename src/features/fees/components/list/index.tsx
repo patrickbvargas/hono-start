@@ -32,14 +32,6 @@ export const FeeList = ({
 	const renderCardFields = React.useCallback(
 		(fee: FeeSummary): DetailFieldItem[] => [
 			{
-				term: "Processo",
-				definition: fee.contractProcessNumber,
-			},
-			{
-				term: "Receita",
-				definition: fee.revenueType,
-			},
-			{
 				term: "Competência",
 				definition: formatter.date(fee.paymentDate),
 			},
@@ -59,10 +51,6 @@ export const FeeList = ({
 						isSoftDeleted={fee.isSoftDeleted}
 					/>
 				),
-			},
-			{
-				term: "Registro em",
-				definition: formatter.date(fee.createdAt),
 			},
 		],
 		[],
