@@ -21,7 +21,7 @@ const employeeBaseInputSchema = z.object({
 		.min(0, "Percentual deve ser maior ou igual a 0%")
 		.max(1, "Percentual não pode exceder 100%"),
 	type: z.string().min(1, "Função é obrigatória"),
-	role: z.string().min(1, "Cargo é obrigatório"),
+	role: z.string().min(1, "Perfil é obrigatório"),
 	isActive: z.boolean(),
 });
 

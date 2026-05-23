@@ -32,12 +32,10 @@ export const Route = createFileRoute("/_app/auditoria")({
 	loaderDeps: ({ search }) => ({ search }),
 	loader: async ({ context: { queryClient, session }, deps: { search } }) => {
 		assertCan(session, "audit-log.view");
-		await Promise.all([
-			queryClient.ensureQueryData(getAuditLogsQueryOptions(search)),
-			queryClient.ensureQueryData(getAuditLogActionsQueryOptions()),
-			queryClient.ensureQueryData(getAuditLogEntityTypesQueryOptions()),
-			queryClient.ensureQueryData(getAuditLogActorsQueryOptions()),
-		]);
+		await queryClient.ensureQueryData(getAuditLogsQueryOptions(search));
+		await queryClient.fetchQuery(getAuditLogActionsQueryOptions());
+		await queryClient.fetchQuery(getAuditLogEntityTypesQueryOptions());
+		await queryClient.fetchQuery(getAuditLogActorsQueryOptions());
 	},
 	component: RouteComponent,
 });

@@ -15,7 +15,7 @@ const clientBaseInputSchema = z.object({
 		.transform(normalizeClientDocument),
 	email: z.union([z.email("Email inválido"), z.literal("")]),
 	phone: z.string().transform(normalizeClientPhone),
-	type: z.string().trim().min(1, "Tipo de cliente é obrigatório"),
+	type: z.string().trim().min(1, "Tipo é obrigatório"),
 	isActive: z.boolean(),
 });
 

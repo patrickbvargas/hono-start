@@ -10,10 +10,13 @@ import {
 	ContractTable,
 	contractSearchDefaults,
 	contractSearchSchema,
+	getContractAssignmentTypesQueryOptions,
 	getContractLegalAreasQueryOptions,
+	getContractRevenueTypesQueryOptions,
 	getContractStatusesQueryOptions,
 	getContractsQueryOptions,
 	getSelectableContractClientsQueryOptions,
+	getSelectableContractEmployeesQueryOptions,
 	useContracts,
 } from "@/features/contracts";
 import { ButtonNew } from "@/shared/components/button-new";
@@ -38,8 +41,11 @@ export const Route = createFileRoute("/_app/contratos")({
 		await Promise.all([
 			queryClient.ensureQueryData(getContractsQueryOptions(search)),
 			queryClient.ensureQueryData(getSelectableContractClientsQueryOptions()),
+			queryClient.ensureQueryData(getSelectableContractEmployeesQueryOptions()),
 			queryClient.ensureQueryData(getContractLegalAreasQueryOptions()),
 			queryClient.ensureQueryData(getContractStatusesQueryOptions()),
+			queryClient.ensureQueryData(getContractAssignmentTypesQueryOptions()),
+			queryClient.ensureQueryData(getContractRevenueTypesQueryOptions()),
 		]);
 	},
 	component: RouteComponent,

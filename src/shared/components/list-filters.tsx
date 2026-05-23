@@ -71,7 +71,7 @@ function ListFiltersBar({ className, ...props }: ListFiltersBarProps) {
 	return (
 		<div
 			className={cn(
-				"flex flex-row items-center w-full gap-3 md:w-fit",
+				"flex flex-row items-center justify-start w-full gap-3",
 				className,
 			)}
 			{...props}

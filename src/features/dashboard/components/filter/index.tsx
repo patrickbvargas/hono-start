@@ -138,7 +138,7 @@ export function DashboardFilter({ isAdmin = false }: DashboardFilterProps) {
 										placeholder="Selecionar colaborador..."
 										classNames={{
 											wrapper:
-												"md:min-w-80 [&_[data-slot=field-label]]:sr-only",
+												"w-full md:max-w-80 [&_[data-slot=field-label]]:sr-only",
 										}}
 									/>
 								)}
@@ -175,8 +175,8 @@ export function DashboardFilter({ isAdmin = false }: DashboardFilterProps) {
 							</form.Subscribe>
 							{isMobile ? mobileFilters : null}
 						</div>
+						{!isMobile ? desktopFilterActions : null}
 					</div>
-					{!isMobile ? desktopFilterActions : null}
 				</ListFilters.Bar>
 				{isMobile ? null : desktopFilterPanel}
 				{hasAdvancedFilters ? (

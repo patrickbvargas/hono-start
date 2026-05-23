@@ -136,18 +136,15 @@ export const ClientFilter = () => {
 		<form.Form form={form} className="w-full">
 			<ListFilters>
 				<ListFilters.Bar>
-					<div className="min-w-0 flex-1">
-						<form.AppField name="query">
-							{(field) => (
-								<field.Search
-									classNames={{ wrapper: "w-full" }}
-									className="w-full md:max-w-80"
-									aria-label="Nome ou documento"
-									placeholder="Buscar por nome ou documento..."
-								/>
-							)}
-						</form.AppField>
-					</div>
+					<form.AppField name="query">
+						{(field) => (
+							<field.Search
+								aria-label="Nome ou documento"
+								placeholder="Buscar por nome ou documento..."
+								classNames={{ wrapper: "w-full md:max-w-80" }}
+							/>
+						)}
+					</form.AppField>
 					{isMobile ? mobileFilters : desktopFilterActions}
 				</ListFilters.Bar>
 				{isMobile ? null : desktopFilterPanel}

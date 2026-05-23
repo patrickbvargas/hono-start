@@ -1,9 +1,11 @@
 export {
+	getContractAssignmentTypesQueryOptions,
 	getContractLegalAreasQueryOptions,
 	getContractRevenueTypesQueryOptions,
 	getContractStatusesQueryOptions,
 	getContractsQueryOptions,
 	getSelectableContractClientsQueryOptions,
+	getSelectableContractEmployeesQueryOptions,
 } from "./api/queries";
 export * from "./components/delete";
 export * from "./components/details";
