@@ -31,7 +31,6 @@ const getClientsFn = createServerFn({ method: "GET" })
 			context,
 		}): Promise<QueryPaginatedReturnType<ClientSummary>> => {
 			try {
-				throw new Error("deu caca");
 				const { firmId } = getScope(context.session, "client");
 
 				return await getClients({ firmId, search: data });
