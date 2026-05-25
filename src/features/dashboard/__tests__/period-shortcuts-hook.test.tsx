@@ -41,6 +41,7 @@ describe("useDashboardFilter", () => {
 			},
 			handleFilter,
 			handleResetFilter,
+			canClearFilters: vi.fn(() => false),
 			hasNonDefaultFilter: vi.fn(() => false),
 		});
 
@@ -115,6 +116,7 @@ describe("useDashboardFilter", () => {
 			},
 			handleFilter,
 			handleResetFilter: vi.fn(),
+			canClearFilters: vi.fn(() => true),
 			hasNonDefaultFilter: vi.fn(() => true),
 		});
 		useAppFormMock.mockReturnValue(form);
@@ -166,6 +168,7 @@ describe("useDashboardFilter", () => {
 			},
 			handleFilter,
 			handleResetFilter: vi.fn(),
+			canClearFilters: vi.fn(() => true),
 			hasNonDefaultFilter: vi.fn(() => true),
 		});
 		useAppFormMock.mockReturnValue(form);

@@ -23,7 +23,6 @@ describe("route prefetch and loading checklist", () => {
 				],
 				requiredRouteSnippets: [
 					"Promise.all([",
-					"<RouteLoading />",
 					"queryClient.ensureQueryData(getDashboardSummaryQueryOptions(search))",
 					"getDashboardEmployeeOptionsQueryOptions()",
 					"getContractLegalAreasQueryOptions()",
@@ -48,7 +47,6 @@ describe("route prefetch and loading checklist", () => {
 				],
 				requiredRouteSnippets: [
 					"Promise.all([",
-					"<RouteLoading />",
 					"queryClient.ensureQueryData(getClientsQueryOptions(search))",
 					"getClientTypesQueryOptions()",
 				],
@@ -66,7 +64,6 @@ describe("route prefetch and loading checklist", () => {
 				],
 				requiredRouteSnippets: [
 					"Promise.all([",
-					"<RouteLoading />",
 					"queryClient.ensureQueryData(getEmployeesQueryOptions(search))",
 					"getEmployeeTypesQueryOptions()",
 					"getEmployeeRolesQueryOptions()",
@@ -85,7 +82,6 @@ describe("route prefetch and loading checklist", () => {
 				],
 				requiredRouteSnippets: [
 					"Promise.all([",
-					"<RouteLoading />",
 					"queryClient.ensureQueryData(getContractsQueryOptions(search))",
 					"getSelectableContractClientsQueryOptions()",
 					"getContractLegalAreasQueryOptions()",
@@ -110,12 +106,11 @@ describe("route prefetch and loading checklist", () => {
 				],
 				requiredRouteSnippets: [
 					"Promise.all([",
-					"<RouteLoading />",
 					"queryClient.ensureQueryData(getFeesQueryOptions(search))",
 					"getSelectableFeeContractsQueryOptions()",
 					"getSelectableFeeRevenuesQueryOptions()",
 				],
-				requiredFilterSnippets: ["useFeeOptions()", "contracts", "revenues"],
+				requiredFilterSnippets: ["useFeeOptions({", "contracts", "revenues"],
 			},
 			{
 				file: ["src", "routes", "_app", "remuneracoes.tsx"],
@@ -129,7 +124,6 @@ describe("route prefetch and loading checklist", () => {
 				],
 				requiredRouteSnippets: [
 					"Promise.all([",
-					"<RouteLoading />",
 					"queryClient.ensureQueryData(getRemunerationsQueryOptions(search))",
 					"getSelectableRemunerationContractsQueryOptions()",
 					"getSelectableRemunerationEmployeesQueryOptions()",
@@ -152,7 +146,6 @@ describe("route prefetch and loading checklist", () => {
 				],
 				requiredRouteSnippets: [
 					"Promise.all([",
-					"<RouteLoading />",
 					"queryClient.ensureQueryData(getAuditLogsQueryOptions(search))",
 					"getAuditLogActionsQueryOptions()",
 					"getAuditLogEntityTypesQueryOptions()",

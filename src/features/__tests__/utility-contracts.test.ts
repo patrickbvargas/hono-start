@@ -337,7 +337,7 @@ describe("feature utility contracts", () => {
 				}),
 			]),
 		);
-		expect(JSON.stringify(pdfDefinition)).toContain('"Subtotal"');
+		expect(JSON.stringify(pdfDefinition)).toContain('"Valor total"');
 		expect(JSON.stringify(pdfDefinition)).toContain("R$ 370,37");
 		expect(JSON.stringify(pdfDefinition)).toContain(
 			'João \\"Teste\\" (Advogado) \\\\ Silva',

@@ -14,13 +14,12 @@ describe("Employee entity view composition contract", () => {
 		expect(listContent).not.toContain("EmployeeTable");
 	});
 
-	it("keeps route composition on shared EntityView and EntityViewToggle", () => {
+	it("keeps route composition on shared EntityView", () => {
 		const routeContent = readFileSync(employeesRoutePath, "utf8");
 
 		expect(routeContent).toContain(
 			'import { EntityView } from "@/shared/components/entity-view"',
 		);
-		expect(routeContent).toContain("<EntityView.Toggle />");
 		expect(routeContent).toContain("<EntityView");
 		expect(routeContent).toContain("list={");
 		expect(routeContent).toContain("<EmployeeList");

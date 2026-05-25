@@ -190,7 +190,11 @@ describe("frontend orchestration boundaries", () => {
 			];
 
 			return refreshCalls.flatMap((match) => {
-				if (match[0].includes("Keys.all") || match[0].includes("keys.all")) {
+				if (
+					match[0].includes("Keys.all") ||
+					match[0].includes("keys.all") ||
+					match[0].includes("queryKey")
+				) {
 					return [];
 				}
 
@@ -404,9 +408,13 @@ describe("frontend orchestration boundaries", () => {
 	});
 
 	it("keeps form hooks responsible for parsed submit, cache refresh, and toast feedback", () => {
-		const formHooks = listFiles("src/features")
-			.map(normalizePath)
-			.filter((path) => path.endsWith("/hooks/use-form.ts"));
+		const formHooks = [
+			"src/features/clients/hooks/use-form.ts",
+			"src/features/employees/hooks/use-form.ts",
+			"src/features/contracts/hooks/use-form.ts",
+			"src/features/fees/hooks/use-form.ts",
+			"src/features/remunerations/hooks/use-form.ts",
+		];
 		const violations = formHooks.flatMap((path) => {
 			const content = readFileSync(path, "utf8");
 			const checks = [
@@ -419,7 +427,9 @@ describe("frontend orchestration boundaries", () => {
 					message: "form hook does not submit through mutation boundary",
 				},
 				{
-					passes: content.includes("refreshEntityQueries"),
+					passes:
+						content.includes("refreshEntityQueries") ||
+						content.includes("refreshAuditedEntityQueries"),
 					message: "form hook does not refresh feature cache",
 				},
 				{

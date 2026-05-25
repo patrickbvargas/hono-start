@@ -9,7 +9,7 @@ function readWorkspaceFile(...segments: string[]) {
 }
 
 describe("dashboard quick-create loading contract", () => {
-	it("keeps dashboard route loader scoped to dashboard summary only", () => {
+	it("keeps dashboard route loader aligned with first-render filter dependencies", () => {
 		const routeContent = readWorkspaceFile(
 			"src",
 			"routes",
@@ -20,11 +20,15 @@ describe("dashboard quick-create loading contract", () => {
 		expect(routeContent).toContain(
 			"queryClient.ensureQueryData(getDashboardSummaryQueryOptions(search))",
 		);
-		expect(routeContent).not.toContain(
-			"getDashboardEmployeeOptionsQueryOptions",
+		expect(routeContent).toContain(
+			"queryClient.ensureQueryData(getDashboardEmployeeOptionsQueryOptions())",
 		);
-		expect(routeContent).not.toContain("getContractLegalAreasQueryOptions");
-		expect(routeContent).not.toContain("getContractRevenueTypesQueryOptions");
+		expect(routeContent).toContain(
+			"queryClient.ensureQueryData(getContractLegalAreasQueryOptions())",
+		);
+		expect(routeContent).toContain(
+			"queryClient.ensureQueryData(getContractRevenueTypesQueryOptions())",
+		);
 	});
 
 	it("gives each quick-create form its own suspense fallback", () => {

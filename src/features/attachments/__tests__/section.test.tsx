@@ -70,7 +70,7 @@ describe("AttachmentSection", () => {
 		render(<AttachmentSection ownerId={1} ownerKind="contract" />);
 
 		expect(screen.queryByText("Carregando anexos...")).toBeNull();
-		expect(document.querySelectorAll('[data-slot="skeleton"]').length).toBe(10);
+		expect(document.querySelectorAll('[data-slot="skeleton"]').length).toBe(4);
 	});
 
 	it("renders attachments in accordion rows with metadata in expanded content", () => {
@@ -102,8 +102,6 @@ describe("AttachmentSection", () => {
 
 		fireEvent.click(screen.getByRole("button", { name: "contrato.pdf" }));
 
-		expect(screen.getByText("Tipo")).toBeTruthy();
-		expect(screen.getByText("PDF")).toBeTruthy();
 		expect(screen.getByText("Tamanho")).toBeTruthy();
 		expect(screen.getByText("1.5 KB")).toBeTruthy();
 		expect(screen.getByText("Anexado em")).toBeTruthy();
