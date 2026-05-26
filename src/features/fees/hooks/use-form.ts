@@ -1,5 +1,4 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import * as React from "react";
 import { refreshAuditedEntityQueries } from "@/features/audit-logs";
 import { useAppForm } from "@/shared/hooks/use-app-form";
 import { getMutationErrorMessage } from "@/shared/lib/entity-management";
@@ -58,12 +57,6 @@ export function useFeeForm({ id, initialValue, onSuccess }: UseFeeFormOptions) {
 			}
 		},
 	});
-
-	React.useEffect(() => {
-		if (isEditing && initialValue) {
-			form.reset(defaultFeeUpdateValues(initialValue));
-		}
-	}, [form, initialValue, isEditing]);
 
 	return { form };
 }

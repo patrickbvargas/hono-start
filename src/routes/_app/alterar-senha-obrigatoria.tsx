@@ -4,6 +4,7 @@ import {
 	ForcedChangePasswordForm,
 } from "@/features/authentication";
 import { RouteError } from "@/shared/components/route-error";
+import { getPageTitle } from "@/shared/config/routes";
 
 export const Route = createFileRoute("/_app/alterar-senha-obrigatoria")({
 	head: () => ({

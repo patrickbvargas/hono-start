@@ -1,5 +1,4 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import * as React from "react";
 import { refreshAuditedEntityQueries } from "@/features/audit-logs";
 import { useAppForm } from "@/shared/hooks/use-app-form";
 import { getMutationErrorMessage } from "@/shared/lib/entity-management";
@@ -66,12 +65,6 @@ export function useEmployeeForm({
 			}
 		},
 	});
-
-	React.useEffect(() => {
-		if (isEditing && initialValue) {
-			form.reset(defaultEmployeeUpdateValues(initialValue));
-		}
-	}, [form, initialValue, isEditing]);
 
 	return { form };
 }

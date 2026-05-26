@@ -1,5 +1,4 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import * as React from "react";
 import { refreshAuditedEntityQueries } from "@/features/audit-logs";
 import { useAppForm } from "@/shared/hooks/use-app-form";
 import { getMutationErrorMessage } from "@/shared/lib/entity-management";
@@ -23,13 +22,20 @@ export function useRemunerationForm({
 }: UseRemunerationFormOptions) {
 	const queryClient = useQueryClient();
 	const updateMutation = useMutation(updateRemunerationMutationOptions());
+	const defaultValues = initialValue
+		? {
+				id: initialValue.id,
+				amount: initialValue.amount,
+				effectivePercentage: initialValue.effectivePercentage,
+			}
+		: {
+				id,
+				amount: 0,
+				effectivePercentage: 0,
+			};
 
 	const form = useAppForm({
-		defaultValues: {
-			id: initialValue?.id ?? id,
-			amount: initialValue?.amount ?? 0,
-			effectivePercentage: initialValue?.effectivePercentage ?? 0,
-		},
+		defaultValues,
 		validators: {
 			onSubmit: remunerationUpdateInputSchema,
 		},
@@ -45,16 +51,6 @@ export function useRemunerationForm({
 			}
 		},
 	});
-
-	React.useEffect(() => {
-		if (initialValue) {
-			form.reset({
-				id: initialValue.id,
-				amount: initialValue.amount,
-				effectivePercentage: initialValue.effectivePercentage,
-			});
-		}
-	}, [form, initialValue]);
 
 	return { form };
 }

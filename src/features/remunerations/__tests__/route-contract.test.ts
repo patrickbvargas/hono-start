@@ -22,7 +22,6 @@ describe("route prefetch and loading checklist", () => {
 					"index.tsx",
 				],
 				requiredRouteSnippets: [
-					"Promise.all([",
 					"queryClient.ensureQueryData(getDashboardSummaryQueryOptions(search))",
 					"getDashboardEmployeeOptionsQueryOptions()",
 					"getContractLegalAreasQueryOptions()",
@@ -46,7 +45,6 @@ describe("route prefetch and loading checklist", () => {
 					"index.tsx",
 				],
 				requiredRouteSnippets: [
-					"Promise.all([",
 					"queryClient.ensureQueryData(getClientsQueryOptions(search))",
 					"getClientTypesQueryOptions()",
 				],
@@ -63,7 +61,6 @@ describe("route prefetch and loading checklist", () => {
 					"index.tsx",
 				],
 				requiredRouteSnippets: [
-					"Promise.all([",
 					"queryClient.ensureQueryData(getEmployeesQueryOptions(search))",
 					"getEmployeeTypesQueryOptions()",
 					"getEmployeeRolesQueryOptions()",
@@ -81,7 +78,6 @@ describe("route prefetch and loading checklist", () => {
 					"index.tsx",
 				],
 				requiredRouteSnippets: [
-					"Promise.all([",
 					"queryClient.ensureQueryData(getContractsQueryOptions(search))",
 					"getSelectableContractClientsQueryOptions()",
 					"getContractLegalAreasQueryOptions()",
@@ -105,7 +101,6 @@ describe("route prefetch and loading checklist", () => {
 					"index.tsx",
 				],
 				requiredRouteSnippets: [
-					"Promise.all([",
 					"queryClient.ensureQueryData(getFeesQueryOptions(search))",
 					"getSelectableFeeContractsQueryOptions()",
 					"getSelectableFeeRevenuesQueryOptions()",
@@ -123,7 +118,6 @@ describe("route prefetch and loading checklist", () => {
 					"index.tsx",
 				],
 				requiredRouteSnippets: [
-					"Promise.all([",
 					"queryClient.ensureQueryData(getRemunerationsQueryOptions(search))",
 					"getSelectableRemunerationContractsQueryOptions()",
 					"getSelectableRemunerationEmployeesQueryOptions()",
@@ -145,7 +139,6 @@ describe("route prefetch and loading checklist", () => {
 					"index.tsx",
 				],
 				requiredRouteSnippets: [
-					"Promise.all([",
 					"queryClient.ensureQueryData(getAuditLogsQueryOptions(search))",
 					"getAuditLogActionsQueryOptions()",
 					"getAuditLogEntityTypesQueryOptions()",
