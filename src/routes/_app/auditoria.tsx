@@ -19,12 +19,15 @@ import {
 	WrapperBody,
 	WrapperHeader,
 } from "@/shared/components/wrapper";
-import { ROUTES } from "@/shared/config/routes";
+import { getPageTitle, ROUTES } from "@/shared/config/routes";
 import { useOverlay } from "@/shared/hooks/use-overlay";
 import type { EntityId } from "@/shared/schemas/entity";
 import { assertCan } from "@/shared/session";
 
 export const Route = createFileRoute("/_app/auditoria")({
+	head: () => ({
+		meta: [{ title: getPageTitle(ROUTES.auditLog.title) }],
+	}),
 	validateSearch: zodValidator(auditLogSearchSchema),
 	search: {
 		middlewares: [stripSearchParams(auditLogSearchDefaults)],

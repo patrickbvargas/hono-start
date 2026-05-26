@@ -12,7 +12,7 @@ import { cn } from "@/shared/lib/utils";
 function PaginationRoot({ className, ...props }: React.ComponentProps<"nav">) {
 	return (
 		<nav
-			aria-label="pagination"
+			aria-label="Paginação"
 			data-slot="pagination"
 			className={cn("mx-auto flex w-full justify-center", className)}
 			{...props}
@@ -82,11 +82,11 @@ function PaginationLink({
 
 function PaginationPrevious({
 	className,
-	text = "Previous",
+	text = "Página anterior",
 	...props
 }: React.ComponentProps<typeof PaginationLink> & { text?: string }) {
 	return (
-		<PaginationLink aria-label="Go to previous page" {...props}>
+		<PaginationLink aria-label="Ir para a página anterior" {...props}>
 			<ChevronLeftIcon data-icon="inline-start" />
 			<span className="sr-only">{text}</span>
 		</PaginationLink>
@@ -95,11 +95,11 @@ function PaginationPrevious({
 
 function PaginationNext({
 	className,
-	text = "Next",
+	text = "Próxima página",
 	...props
 }: React.ComponentProps<typeof PaginationLink> & { text?: string }) {
 	return (
-		<PaginationLink aria-label="Go to next page" {...props}>
+		<PaginationLink aria-label="Ir para a próxima página" {...props}>
 			<span className="sr-only">{text}</span>
 			<ChevronRightIcon data-icon="inline-end" />
 		</PaginationLink>
@@ -108,11 +108,11 @@ function PaginationNext({
 
 function PaginationFirst({
 	className,
-	text = "First",
+	text = "Primeira página",
 	...props
 }: React.ComponentProps<typeof PaginationLink> & { text?: string }) {
 	return (
-		<PaginationLink aria-label="Go to first page" {...props}>
+		<PaginationLink aria-label="Ir para a primeira página" {...props}>
 			<span className="sr-only">{text}</span>
 			<ChevronFirstIcon data-icon="inline-end" />
 		</PaginationLink>
@@ -121,11 +121,11 @@ function PaginationFirst({
 
 function PaginationLast({
 	className,
-	text = "Last",
+	text = "Última página",
 	...props
 }: React.ComponentProps<typeof PaginationLink> & { text?: string }) {
 	return (
-		<PaginationLink aria-label="Go to last page" {...props}>
+		<PaginationLink aria-label="Ir para a última página" {...props}>
 			<span className="sr-only">{text}</span>
 			<ChevronLastIcon data-icon="inline-end" />
 		</PaginationLink>
@@ -147,7 +147,7 @@ function PaginationEllipsis({
 			{...props}
 		>
 			<MoreHorizontalIcon />
-			<span className="sr-only">More pages</span>
+			<span className="sr-only">Mais páginas</span>
 		</span>
 	);
 }

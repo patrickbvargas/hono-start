@@ -57,7 +57,7 @@ export const RemunerationList = ({
 				),
 			},
 			{
-				term: "Registro em",
+				term: "Criado em",
 				definition: formatter.date(remuneration.createdAt),
 			},
 		],

@@ -24,13 +24,13 @@ export function RouteNotFound() {
 						className={buttonVariants({ size: "lg" })}
 					>
 						<HomeIcon />
-						Ir para o início
+						Voltar para o início
 					</Link>
 					<Link
 						to="/login"
 						className={buttonVariants({ variant: "outline", size: "lg" })}
 					>
-						Fazer login
+						Voltar para o login
 					</Link>
 				</div>
 			</div>

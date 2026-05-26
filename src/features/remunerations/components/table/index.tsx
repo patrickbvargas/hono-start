@@ -94,7 +94,7 @@ export const RemunerationTable = ({
 				),
 			}),
 			c.accessor("createdAt", {
-				header: "Registro em",
+				header: "Criado em",
 				cell: ({ row }) => formatter.date(row.original.createdAt),
 				enableSorting: REMUNERATION_ALLOWED_SORT_COLUMNS.includes("createdAt"),
 			}),

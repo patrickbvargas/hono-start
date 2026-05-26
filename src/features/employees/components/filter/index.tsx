@@ -173,7 +173,7 @@ export const EmployeeFilter = () => {
 										query: defaultFilter.query,
 									})
 								}
-								removeLabel={`Remover busca ${filter.query}`}
+								removeLabel={`Remover busca: ${filter.query}`}
 							>
 								{filter.query}
 							</ListFilters.Chip>
@@ -187,7 +187,7 @@ export const EmployeeFilter = () => {
 										type: filter.type.filter((item) => item !== value),
 									})
 								}
-								removeLabel={`Remover filtro de função ${typeLabels.get(value) ?? value}`}
+								removeLabel={`Remover filtro de função: ${typeLabels.get(value) ?? value}`}
 							>
 								{typeLabels.get(value) ?? value}
 							</ListFilters.Chip>
@@ -201,7 +201,7 @@ export const EmployeeFilter = () => {
 										role: filter.role.filter((item) => item !== value),
 									})
 								}
-								removeLabel={`Remover filtro de perfil ${roleLabels.get(value) ?? value}`}
+								removeLabel={`Remover filtro de perfil: ${roleLabels.get(value) ?? value}`}
 							>
 								{roleLabels.get(value) ?? value}
 							</ListFilters.Chip>
@@ -214,7 +214,7 @@ export const EmployeeFilter = () => {
 										active: defaultFilter.active,
 									})
 								}
-								removeLabel={`Remover filtro de situação ${activeLabels.get(filter.active) ?? filter.active}`}
+								removeLabel={`Remover filtro de situação: ${activeLabels.get(filter.active) ?? filter.active}`}
 							>
 								{activeLabels.get(filter.active) ?? filter.active}
 							</ListFilters.Chip>
@@ -227,7 +227,7 @@ export const EmployeeFilter = () => {
 										status: defaultFilter.status,
 									})
 								}
-								removeLabel={`Remover filtro de registro ${statusLabels.get(filter.status) ?? filter.status}`}
+								removeLabel={`Remover filtro de registro: ${statusLabels.get(filter.status) ?? filter.status}`}
 							>
 								{statusLabels.get(filter.status) ?? filter.status}
 							</ListFilters.Chip>

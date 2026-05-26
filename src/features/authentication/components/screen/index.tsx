@@ -40,7 +40,7 @@ export function AuthenticationScreen({
 				{showBackToLoginLink ? (
 					<p className="text-center text-sm text-muted-foreground">
 						<Link to="/login" className="underline underline-offset-4">
-							Voltar ao login
+							Voltar para o login
 						</Link>
 					</p>
 				) : null}

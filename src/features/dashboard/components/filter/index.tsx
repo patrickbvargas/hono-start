@@ -185,7 +185,7 @@ export function DashboardFilter({ isAdmin = false }: DashboardFilterProps) {
 										dateTo: defaultFilter.dateTo,
 									})
 								}
-								removeLabel={`Remover filtro de período ${formatDateRangeChip()}`}
+								removeLabel={`Remover filtro de período: ${formatDateRangeChip()}`}
 							>
 								{formatDateRangeChip()}
 							</ListFilters.Chip>
@@ -201,7 +201,7 @@ export function DashboardFilter({ isAdmin = false }: DashboardFilterProps) {
 										),
 									})
 								}
-								removeLabel={`Remover filtro de área do contrato ${legalAreaLabels.get(value) ?? value}`}
+								removeLabel={`Remover filtro de área: ${legalAreaLabels.get(value) ?? value}`}
 							>
 								{legalAreaLabels.get(value) ?? value}
 							</ListFilters.Chip>
@@ -217,7 +217,7 @@ export function DashboardFilter({ isAdmin = false }: DashboardFilterProps) {
 										),
 									})
 								}
-								removeLabel={`Remover filtro de tipo de receita ${revenueTypeLabels.get(value) ?? value}`}
+								removeLabel={`Remover filtro de tipo de receita: ${revenueTypeLabels.get(value) ?? value}`}
 							>
 								{revenueTypeLabels.get(value) ?? value}
 							</ListFilters.Chip>

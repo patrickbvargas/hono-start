@@ -20,7 +20,7 @@ export const EMPLOYEE_ERRORS = {
 	REVOKE_ACCESS_FAILED: "Não foi possível revogar o acesso do colaborador",
 	REVOKE_ACCESS_UNAVAILABLE:
 		"Este colaborador não possui acesso ativo ao sistema",
-	RESET_PASSWORD_FAILED: "Não foi possível resetar a senha do colaborador",
+	RESET_PASSWORD_FAILED: "Não foi possível redefinir a senha do colaborador",
 	RESET_PASSWORD_UNAVAILABLE:
 		"Este colaborador ainda não possui acesso ao sistema",
 	TYPES_GET_FAILED: "Erro ao buscar tipos de colaborador",

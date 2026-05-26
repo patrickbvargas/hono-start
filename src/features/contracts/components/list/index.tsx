@@ -61,7 +61,7 @@ export const ContractList = ({
 				),
 			},
 			{
-				term: "Registro em",
+				term: "Criado em",
 				definition: formatter.date(contract.createdAt),
 			},
 		],

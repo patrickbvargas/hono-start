@@ -21,6 +21,10 @@ export interface RouteSection extends RouteItem {
 	items: RouteItem[];
 }
 
+export function getPageTitle(title?: string) {
+	return title ? `${title} | Hono` : "Hono";
+}
+
 type RouteName =
 	| "dashboard"
 	| "client"

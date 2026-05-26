@@ -70,14 +70,14 @@ const ContractDetailsContent = ({
 		() => [
 			{ term: "Cliente", definition: contract.client },
 			{ term: "Área", definition: contract.legalArea },
-			{ term: "Status do contrato", definition: contract.status },
+			{ term: "Status", definition: contract.status },
 			{
 				term: "% Honorários",
 				definition: formatter.percent(contract.feePercentage),
 			},
 			{
-				term: "Bloqueio de status",
-				definition: contract.allowStatusChange ? "Desbloqueado" : "Bloqueado",
+				term: "Alteração de status",
+				definition: contract.allowStatusChange ? "Permitida" : "Bloqueada",
 			},
 			{
 				term: "Observações",

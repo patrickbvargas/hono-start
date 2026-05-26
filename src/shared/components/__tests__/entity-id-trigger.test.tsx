@@ -11,7 +11,7 @@ describe("EntityIdTrigger", () => {
 		render(<EntityIdTrigger id={12} onView={onView} />);
 
 		const trigger = screen.getByRole("button", {
-			name: "Visualizar detalhes do registro #12",
+			name: "Ver detalhes do registro #12",
 		});
 
 		expect(trigger.textContent).toBe("#12");

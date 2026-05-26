@@ -21,12 +21,15 @@ import {
 	WrapperBody,
 	WrapperHeader,
 } from "@/shared/components/wrapper";
-import { ROUTES } from "@/shared/config/routes";
+import { getPageTitle, ROUTES } from "@/shared/config/routes";
 import { useOverlay } from "@/shared/hooks/use-overlay";
 import type { EntityId } from "@/shared/schemas/entity";
 import { isAdminSession, useLoggedUserSessionStore } from "@/shared/session";
 
 export const Route = createFileRoute("/_app/clientes")({
+	head: () => ({
+		meta: [{ title: getPageTitle(ROUTES.client.title) }],
+	}),
 	validateSearch: zodValidator(clientSearchSchema),
 	search: {
 		middlewares: [stripSearchParams(clientSearchDefaults)],

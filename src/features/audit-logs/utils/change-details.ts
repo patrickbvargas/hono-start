@@ -28,7 +28,7 @@ export interface AuditChangePresentation {
 const FIELD_LABELS: Record<string, string> = {
 	action: "Ação",
 	actorName: "Usuário",
-	allowStatusChange: "Permite mudança de status",
+	allowStatusChange: "Alteração de status",
 	amount: "Valor",
 	assignments: "Equipe",
 	assignmentType: "Tipo de vínculo",
@@ -37,8 +37,8 @@ const FIELD_LABELS: Record<string, string> = {
 	clientId: "Cliente",
 	contractEmployeeId: "Vínculo",
 	contractId: "Contrato",
-	contractStatus: "Status do contrato",
-	contractStatusValue: "Status do contrato",
+	contractStatus: "Status",
+	contractStatusValue: "Status",
 	createdAt: "Criado em",
 	dateFrom: "Data inicial",
 	dateTo: "Data final",
@@ -227,6 +227,10 @@ function formatValue(key: string | undefined, value: unknown): string {
 	}
 
 	if (typeof value === "boolean") {
+		if (key === "allowStatusChange") {
+			return value ? "Permitida" : "Bloqueada";
+		}
+
 		return value ? "Sim" : "Não";
 	}
 

@@ -69,9 +69,7 @@ export const ContractFilter = () => {
 				{(field) => <field.CheckboxGroup label="Área" options={legalAreas} />}
 			</form.AppField>
 			<form.AppField name="contractStatus">
-				{(field) => (
-					<field.CheckboxGroup label="Status do contrato" options={statuses} />
-				)}
+				{(field) => <field.CheckboxGroup label="Status" options={statuses} />}
 			</form.AppField>
 			<form.AppField name="active">
 				{(field) => (
@@ -136,10 +134,7 @@ export const ContractFilter = () => {
 					</form.AppField>
 					<form.AppField name="contractStatus">
 						{(field) => (
-							<field.CheckboxGroup
-								label="Status do contrato"
-								options={statuses}
-							/>
+							<field.CheckboxGroup label="Status" options={statuses} />
 						)}
 					</form.AppField>
 					<form.AppField name="active">
@@ -192,7 +187,7 @@ export const ContractFilter = () => {
 										query: defaultFilter.query,
 									})
 								}
-								removeLabel={`Remover busca ${filter.query}`}
+								removeLabel={`Remover busca: ${filter.query}`}
 							>
 								{filter.query}
 							</ListFilters.Chip>
@@ -205,7 +200,7 @@ export const ContractFilter = () => {
 										clientId: defaultFilter.clientId,
 									})
 								}
-								removeLabel={`Remover filtro de cliente ${clientLabels.get(filter.clientId) ?? filter.clientId}`}
+								removeLabel={`Remover filtro de cliente: ${clientLabels.get(filter.clientId) ?? filter.clientId}`}
 							>
 								{clientLabels.get(filter.clientId) ?? filter.clientId}
 							</ListFilters.Chip>
@@ -221,7 +216,7 @@ export const ContractFilter = () => {
 										),
 									})
 								}
-								removeLabel={`Remover filtro de área ${legalAreaLabels.get(value) ?? value}`}
+								removeLabel={`Remover filtro de área: ${legalAreaLabels.get(value) ?? value}`}
 							>
 								{legalAreaLabels.get(value) ?? value}
 							</ListFilters.Chip>
@@ -237,7 +232,7 @@ export const ContractFilter = () => {
 										),
 									})
 								}
-								removeLabel={`Remover filtro de status do contrato ${contractStatusLabels.get(value) ?? value}`}
+								removeLabel={`Remover filtro de status: ${contractStatusLabels.get(value) ?? value}`}
 							>
 								{contractStatusLabels.get(value) ?? value}
 							</ListFilters.Chip>
@@ -250,7 +245,7 @@ export const ContractFilter = () => {
 										active: defaultFilter.active,
 									})
 								}
-								removeLabel={`Remover filtro de situação ativa ${activeLabels.get(filter.active) ?? filter.active}`}
+								removeLabel={`Remover filtro de situação: ${activeLabels.get(filter.active) ?? filter.active}`}
 							>
 								{activeLabels.get(filter.active) ?? filter.active}
 							</ListFilters.Chip>
@@ -263,7 +258,7 @@ export const ContractFilter = () => {
 										status: defaultFilter.status,
 									})
 								}
-								removeLabel={`Remover filtro de situação do registro ${deletedLabels.get(filter.status) ?? filter.status}`}
+								removeLabel={`Remover filtro de registro: ${deletedLabels.get(filter.status) ?? filter.status}`}
 							>
 								{deletedLabels.get(filter.status) ?? filter.status}
 							</ListFilters.Chip>

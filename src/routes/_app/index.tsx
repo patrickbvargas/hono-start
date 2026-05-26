@@ -36,11 +36,15 @@ import {
 	WrapperBody,
 	WrapperHeader,
 } from "@/shared/components/wrapper";
+import { getPageTitle, ROUTES } from "@/shared/config/routes";
 import { useOverlay } from "@/shared/hooks/use-overlay";
 import type { EntityId } from "@/shared/schemas/entity";
 import { isAdminSession, useLoggedUserSessionStore } from "@/shared/session";
 
 export const Route = createFileRoute("/_app/")({
+	head: () => ({
+		meta: [{ title: getPageTitle(ROUTES.dashboard.title) }],
+	}),
 	validateSearch: zodValidator(dashboardSearchSchema),
 	search: {
 		middlewares: [stripSearchParams(dashboardSearchDefaults)],
@@ -68,7 +72,7 @@ function RouteComponent() {
 
 	return (
 		<Wrapper
-			title="Dashboard"
+			title={ROUTES.dashboard.title}
 			actions={
 				<DropdownMenu>
 					<DropdownMenuTrigger render={<Button size="sm" />}>

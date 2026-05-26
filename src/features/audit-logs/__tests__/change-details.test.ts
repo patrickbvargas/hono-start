@@ -65,4 +65,28 @@ describe("audit-log change details", () => {
 			},
 		]);
 	});
+
+	it("uses contract language for status change permission", () => {
+		const result = buildAuditChangePresentation({
+			action: "UPDATE",
+			changeData: {
+				before: {
+					allowStatusChange: false,
+				},
+				after: {
+					allowStatusChange: true,
+				},
+			},
+		});
+
+		expect(result.mode).toBe("diff");
+		expect(result.entries).toEqual([
+			{
+				label: "Alteração de status",
+				path: "allowStatusChange",
+				before: "Bloqueada",
+				after: "Permitida",
+			},
+		]);
+	});
 });

@@ -16,7 +16,7 @@ export function EntityIdTrigger({
 			variant="link"
 			size="sm"
 			className="h-auto cursor-pointer px-0 font-mono text-muted-foreground no-underline underline-offset-4 hover:text-foreground hover:underline"
-			aria-label={`Visualizar detalhes do registro #${id}`}
+			aria-label={`Ver detalhes do registro #${id}`}
 			onClick={(event: MouseEvent<HTMLButtonElement>) => {
 				event.stopPropagation();
 				onView?.(id);

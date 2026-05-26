@@ -79,7 +79,7 @@ export const FeeTable = ({
 				),
 			}),
 			c.accessor("createdAt", {
-				header: "Registro em",
+				header: "Criado em",
 				cell: ({ row }) => formatter.date(row.original.createdAt),
 				enableSorting: FEE_ALLOWED_SORT_COLUMNS.includes("createdAt"),
 			}),

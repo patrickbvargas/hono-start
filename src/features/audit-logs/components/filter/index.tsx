@@ -134,7 +134,7 @@ export const AuditLogFilter = () => {
 										query: defaultFilter.query,
 									})
 								}
-								removeLabel={`Remover busca ${filter.query}`}
+								removeLabel={`Remover busca: ${filter.query}`}
 							>
 								{filter.query}
 							</ListFilters.Chip>
@@ -148,7 +148,7 @@ export const AuditLogFilter = () => {
 										action: filter.action.filter((item) => item !== value),
 									})
 								}
-								removeLabel={`Remover filtro de ação ${actionLabels.get(value) ?? value}`}
+								removeLabel={`Remover filtro de ação: ${actionLabels.get(value) ?? value}`}
 							>
 								{actionLabels.get(value) ?? value}
 							</ListFilters.Chip>
@@ -164,7 +164,7 @@ export const AuditLogFilter = () => {
 										),
 									})
 								}
-								removeLabel={`Remover filtro de tipo ${entityTypeLabels.get(value) ?? value}`}
+								removeLabel={`Remover filtro de tipo: ${entityTypeLabels.get(value) ?? value}`}
 							>
 								{entityTypeLabels.get(value) ?? value}
 							</ListFilters.Chip>
@@ -180,7 +180,7 @@ export const AuditLogFilter = () => {
 										),
 									})
 								}
-								removeLabel={`Remover filtro de usuário ${actorLabels.get(value) ?? value}`}
+								removeLabel={`Remover filtro de usuário: ${actorLabels.get(value) ?? value}`}
 							>
 								{actorLabels.get(value) ?? value}
 							</ListFilters.Chip>

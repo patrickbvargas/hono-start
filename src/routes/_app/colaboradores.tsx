@@ -22,12 +22,15 @@ import {
 	WrapperBody,
 	WrapperHeader,
 } from "@/shared/components/wrapper";
-import { ROUTES } from "@/shared/config/routes";
+import { getPageTitle, ROUTES } from "@/shared/config/routes";
 import { useOverlay } from "@/shared/hooks/use-overlay";
 import type { EntityId } from "@/shared/schemas/entity";
 import { assertCan, can, useLoggedUserSessionStore } from "@/shared/session";
 
 export const Route = createFileRoute("/_app/colaboradores")({
+	head: () => ({
+		meta: [{ title: getPageTitle(ROUTES.employee.title) }],
+	}),
 	validateSearch: zodValidator(employeeSearchSchema),
 	search: {
 		middlewares: [stripSearchParams(employeeSearchDefaults)],

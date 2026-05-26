@@ -196,7 +196,7 @@ export const FeeFilter = () => {
 										query: defaultFilter.query,
 									})
 								}
-								removeLabel={`Remover busca ${filter.query}`}
+								removeLabel={`Remover busca: ${filter.query}`}
 							>
 								{filter.query}
 							</ListFilters.Chip>
@@ -209,7 +209,7 @@ export const FeeFilter = () => {
 										contractId: defaultFilter.contractId,
 									})
 								}
-								removeLabel={`Remover filtro de contrato ${contractLabels.get(filter.contractId) ?? filter.contractId}`}
+								removeLabel={`Remover filtro de contrato: ${contractLabels.get(filter.contractId) ?? filter.contractId}`}
 							>
 								{contractLabels.get(filter.contractId) ?? filter.contractId}
 							</ListFilters.Chip>
@@ -222,7 +222,7 @@ export const FeeFilter = () => {
 										revenueId: defaultFilter.revenueId,
 									})
 								}
-								removeLabel={`Remover filtro de receita ${revenueLabels.get(filter.revenueId) ?? filter.revenueId}`}
+								removeLabel={`Remover filtro de receita: ${revenueLabels.get(filter.revenueId) ?? filter.revenueId}`}
 							>
 								{revenueLabels.get(filter.revenueId) ?? filter.revenueId}
 							</ListFilters.Chip>
@@ -235,7 +235,7 @@ export const FeeFilter = () => {
 										dateFrom: defaultFilter.dateFrom,
 									})
 								}
-								removeLabel={`Remover filtro de competência inicial ${formatDateChip(filter.dateFrom)}`}
+								removeLabel={`Remover filtro de competência inicial: ${formatDateChip(filter.dateFrom)}`}
 							>
 								{`De ${formatDateChip(filter.dateFrom)}`}
 							</ListFilters.Chip>
@@ -248,7 +248,7 @@ export const FeeFilter = () => {
 										dateTo: defaultFilter.dateTo,
 									})
 								}
-								removeLabel={`Remover filtro de competência final ${formatDateChip(filter.dateTo)}`}
+								removeLabel={`Remover filtro de competência final: ${formatDateChip(filter.dateTo)}`}
 							>
 								{`Até ${formatDateChip(filter.dateTo)}`}
 							</ListFilters.Chip>
@@ -261,7 +261,7 @@ export const FeeFilter = () => {
 										active: defaultFilter.active,
 									})
 								}
-								removeLabel={`Remover filtro de situação ${activeLabels.get(filter.active) ?? filter.active}`}
+								removeLabel={`Remover filtro de situação: ${activeLabels.get(filter.active) ?? filter.active}`}
 							>
 								{activeLabels.get(filter.active) ?? filter.active}
 							</ListFilters.Chip>
@@ -274,7 +274,7 @@ export const FeeFilter = () => {
 										status: defaultFilter.status,
 									})
 								}
-								removeLabel={`Remover filtro de registro ${statusLabels.get(filter.status) ?? filter.status}`}
+								removeLabel={`Remover filtro de registro: ${statusLabels.get(filter.status) ?? filter.status}`}
 							>
 								{statusLabels.get(filter.status) ?? filter.status}
 							</ListFilters.Chip>

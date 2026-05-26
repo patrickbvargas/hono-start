@@ -34,7 +34,7 @@ export const RouteError = ({ error }: RouteErrorProps) => {
 						className={buttonVariants({ variant: "outline", size: "lg" })}
 					>
 						<HomeIcon />
-						Voltar ao início
+						Voltar para o início
 					</Link>
 				</div>
 			</div>

@@ -161,7 +161,7 @@ export const ClientFilter = () => {
 										query: defaultFilter.query,
 									})
 								}
-								removeLabel={`Remover busca ${filter.query}`}
+								removeLabel={`Remover busca: ${filter.query}`}
 							>
 								{filter.query}
 							</ListFilters.Chip>
@@ -175,7 +175,7 @@ export const ClientFilter = () => {
 										type: filter.type.filter((item) => item !== value),
 									})
 								}
-								removeLabel={`Remover filtro de tipo ${typeLabels.get(value) ?? value}`}
+								removeLabel={`Remover filtro de tipo: ${typeLabels.get(value) ?? value}`}
 							>
 								{typeLabels.get(value) ?? value}
 							</ListFilters.Chip>
@@ -188,7 +188,7 @@ export const ClientFilter = () => {
 										active: defaultFilter.active,
 									})
 								}
-								removeLabel={`Remover filtro de situação ativa ${activeLabels.get(filter.active) ?? filter.active}`}
+								removeLabel={`Remover filtro de situação: ${activeLabels.get(filter.active) ?? filter.active}`}
 							>
 								{activeLabels.get(filter.active) ?? filter.active}
 							</ListFilters.Chip>
@@ -201,7 +201,7 @@ export const ClientFilter = () => {
 										status: defaultFilter.status,
 									})
 								}
-								removeLabel={`Remover filtro de situação do registro ${statusLabels.get(filter.status) ?? filter.status}`}
+								removeLabel={`Remover filtro de registro: ${statusLabels.get(filter.status) ?? filter.status}`}
 							>
 								{statusLabels.get(filter.status) ?? filter.status}
 							</ListFilters.Chip>

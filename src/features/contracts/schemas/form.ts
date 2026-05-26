@@ -36,7 +36,7 @@ const contractBaseInputSchema = z.object({
 	clientId: z.string().trim().min(1, "Cliente é obrigatório"),
 	processNumber: z.string().trim().min(1, "Número do processo é obrigatório"),
 	legalArea: z.string().trim().min(1, "Área jurídica é obrigatória"),
-	status: z.string().trim().min(1, "Status do contrato é obrigatório"),
+	status: z.string().trim().min(1, "Status é obrigatório"),
 	feePercentage: z
 		.number()
 		.min(0, "Percentual não pode ser negativo")

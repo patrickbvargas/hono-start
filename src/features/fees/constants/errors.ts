@@ -20,7 +20,7 @@ export const FEE_ERRORS = {
 		"Não é possível trocar o contrato ou a receita de um honorário com remunerações manuais",
 	FEE_REPARENT_PRESERVE_BLOCKED:
 		"Não é possível trocar o contrato ou a receita ao preservar remunerações existentes",
-	FEE_CONTRACT_STATUS_NOT_FOUND: "Status do contrato não encontrado",
+	FEE_CONTRACT_STATUS_NOT_FOUND: "Status não encontrado",
 	FEE_GET_FAILED: "Erro ao buscar honorários",
 	FEE_DETAIL_NOT_FOUND: "Honorário não encontrado",
 	FEE_DETAIL_FAILED: "Erro ao buscar honorário",

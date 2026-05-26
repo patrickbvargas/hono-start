@@ -2,7 +2,15 @@ import { DownloadIcon, TrashIcon } from "lucide-react";
 import { ButtonNew } from "@/shared/components/button-new";
 import { EntityFields } from "@/shared/components/entity-fields";
 import { EntityListAccordion } from "@/shared/components/entity-list-accordion";
-import { Button, Separator, Skeleton } from "@/shared/components/ui";
+import {
+	Button,
+	Separator,
+	Skeleton,
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from "@/shared/components/ui";
 import { useOverlay } from "@/shared/hooks/use-overlay";
 import { formatter } from "@/shared/lib/formatter";
 import { cn } from "@/shared/lib/utils";
@@ -100,37 +108,53 @@ export const AttachmentSection = ({
 								]}
 								columns={2}
 							/>
-							<div className="flex justify-end gap-2">
-								<Button
-									size="icon-sm"
-									variant="outline"
-									disabled={!attachment.downloadUrl}
-									onClick={() => {
-										if (attachment.downloadUrl) {
-											window.open(
-												attachment.downloadUrl,
-												"_blank",
-												"noopener,noreferrer",
-											);
-										}
-									}}
-									aria-label={`Baixar ${attachment.fileName}`}
-									title={`Baixar ${attachment.fileName}`}
-								>
-									<DownloadIcon size={16} />
-								</Button>
-								{isAdmin ? (
-									<Button
-										size="icon-sm"
-										variant="destructive"
-										onClick={() => overlay.delete.open(attachment.id)}
-										aria-label={`Excluir ${attachment.fileName}`}
-										title={`Excluir ${attachment.fileName}`}
-									>
-										<TrashIcon size={16} />
-									</Button>
-								) : null}
-							</div>
+							<TooltipProvider>
+								<div className="flex justify-end gap-2">
+									<Tooltip>
+										<TooltipTrigger
+											render={
+												<Button
+													size="icon-sm"
+													variant="outline"
+													disabled={!attachment.downloadUrl}
+													onClick={() => {
+														if (attachment.downloadUrl) {
+															window.open(
+																attachment.downloadUrl,
+																"_blank",
+																"noopener,noreferrer",
+															);
+														}
+													}}
+													aria-label={`Baixar ${attachment.fileName}`}
+													title={`Baixar ${attachment.fileName}`}
+												/>
+											}
+										>
+											<DownloadIcon size={16} />
+										</TooltipTrigger>
+										<TooltipContent>Baixar</TooltipContent>
+									</Tooltip>
+									{isAdmin ? (
+										<Tooltip>
+											<TooltipTrigger
+												render={
+													<Button
+														size="icon-sm"
+														variant="destructive"
+														onClick={() => overlay.delete.open(attachment.id)}
+														aria-label={`Excluir ${attachment.fileName}`}
+														title={`Excluir ${attachment.fileName}`}
+													/>
+												}
+											>
+												<TrashIcon size={16} />
+											</TooltipTrigger>
+											<TooltipContent>Excluir</TooltipContent>
+										</Tooltip>
+									) : null}
+								</div>
+							</TooltipProvider>
 						</div>
 					)}
 				/>

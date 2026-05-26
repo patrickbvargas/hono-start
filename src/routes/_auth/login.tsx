@@ -2,6 +2,7 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import * as z from "zod";
 import { AuthenticationScreen, LoginForm } from "@/features/authentication";
+import { getPageTitle } from "@/shared/config/routes";
 import {
 	getAuthenticatedHomePath,
 	getRouteSession,
@@ -12,6 +13,9 @@ const loginSearchSchema = z.object({
 });
 
 export const Route = createFileRoute("/_auth/login")({
+	head: () => ({
+		meta: [{ title: getPageTitle("Entrar") }],
+	}),
 	validateSearch: zodValidator(loginSearchSchema),
 	beforeLoad: async ({ context: { queryClient } }) => {
 		const session = await getRouteSession(queryClient);
@@ -30,8 +34,8 @@ function RouteComponent() {
 
 	return (
 		<AuthenticationScreen
-			title="Entrar na plataforma"
-			description="Use seu email ou número da OAB para acessar os módulos protegidos do sistema."
+			title="Entrar"
+			description="Use seu e-mail ou número da OAB para acessar o sistema."
 			showBackToLoginLink={false}
 		>
 			<LoginForm redirectTo={redirect} />

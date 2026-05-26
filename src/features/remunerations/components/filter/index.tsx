@@ -206,7 +206,7 @@ export const RemunerationFilter = ({
 										query: defaultFilter.query,
 									})
 								}
-								removeLabel={`Remover busca ${filter.query}`}
+								removeLabel={`Remover busca: ${filter.query}`}
 							>
 								{filter.query}
 							</ListFilters.Chip>
@@ -219,7 +219,7 @@ export const RemunerationFilter = ({
 										employeeId: defaultFilter.employeeId,
 									})
 								}
-								removeLabel={`Remover filtro de colaborador ${employeeLabels.get(filter.employeeId) ?? filter.employeeId}`}
+								removeLabel={`Remover filtro de colaborador: ${employeeLabels.get(filter.employeeId) ?? filter.employeeId}`}
 							>
 								{employeeLabels.get(filter.employeeId) ?? filter.employeeId}
 							</ListFilters.Chip>
@@ -232,7 +232,7 @@ export const RemunerationFilter = ({
 										contractId: defaultFilter.contractId,
 									})
 								}
-								removeLabel={`Remover filtro de contrato ${contractLabels.get(filter.contractId) ?? filter.contractId}`}
+								removeLabel={`Remover filtro de contrato: ${contractLabels.get(filter.contractId) ?? filter.contractId}`}
 							>
 								{contractLabels.get(filter.contractId) ?? filter.contractId}
 							</ListFilters.Chip>
@@ -245,7 +245,7 @@ export const RemunerationFilter = ({
 										dateFrom: defaultFilter.dateFrom,
 									})
 								}
-								removeLabel={`Remover filtro de competência inicial ${formatDateChip(filter.dateFrom)}`}
+								removeLabel={`Remover filtro de competência inicial: ${formatDateChip(filter.dateFrom)}`}
 							>
 								{`De ${formatDateChip(filter.dateFrom)}`}
 							</ListFilters.Chip>
@@ -258,7 +258,7 @@ export const RemunerationFilter = ({
 										dateTo: defaultFilter.dateTo,
 									})
 								}
-								removeLabel={`Remover filtro de competência final ${formatDateChip(filter.dateTo)}`}
+								removeLabel={`Remover filtro de competência final: ${formatDateChip(filter.dateTo)}`}
 							>
 								{`Até ${formatDateChip(filter.dateTo)}`}
 							</ListFilters.Chip>
@@ -271,7 +271,7 @@ export const RemunerationFilter = ({
 										active: defaultFilter.active,
 									})
 								}
-								removeLabel={`Remover filtro de situação ${activeLabels.get(filter.active) ?? filter.active}`}
+								removeLabel={`Remover filtro de situação: ${activeLabels.get(filter.active) ?? filter.active}`}
 							>
 								{activeLabels.get(filter.active) ?? filter.active}
 							</ListFilters.Chip>
@@ -284,7 +284,7 @@ export const RemunerationFilter = ({
 										status: defaultFilter.status,
 									})
 								}
-								removeLabel={`Remover filtro de registro ${statusLabels.get(filter.status) ?? filter.status}`}
+								removeLabel={`Remover filtro de registro: ${statusLabels.get(filter.status) ?? filter.status}`}
 							>
 								{statusLabels.get(filter.status) ?? filter.status}
 							</ListFilters.Chip>
