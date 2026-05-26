@@ -252,61 +252,53 @@ function ContractFormContent({
 								{subField.state.meta.errors.length > 0 ? (
 									<FieldError errors={subField.state.meta.errors} />
 								) : null}
-								{subField.state.value.length === 0 ? (
-									<p className="text-muted-foreground text-sm">
-										Adicione pelo menos um colaborador.
-									</p>
-								) : (
-									<EntityListAccordion
-										items={subField.state.value}
-										getKey={(assignment) => getRowKey(assignment)}
-										getTitle={(_, index) => `Colaborador ${index + 1}`}
-										getSummary={(assignment, index) =>
-											getAssignmentSummary(
-												assignment,
-												index,
-												employees,
-												assignmentTypes,
-											)
-										}
-										renderContent={(_, index) => (
-											<FieldGroup className="grid gap-3 sm:grid-cols-[repeat(2,1fr)_auto]">
-												<form.AppField
-													name={`assignments[${index}].employeeId`}
-												>
-													{(field) => (
-														<field.Autocomplete
-															label="Colaborador"
-															options={employees}
-															isRequired
-														/>
-													)}
-												</form.AppField>
-												<form.AppField
-													name={`assignments[${index}].assignmentType`}
-												>
-													{(field) => (
-														<field.Autocomplete
-															label="Atribuição"
-															options={assignmentTypes}
-															isRequired
-														/>
-													)}
-												</form.AppField>
-												<Button
-													type="button"
-													size="icon"
-													variant="destructive"
-													className="place-self-end"
-													aria-label={`Remover colaborador ${index + 1}`}
-													onClick={() => subField.removeValue(index)}
-												>
-													<TrashIcon size={16} />
-												</Button>
-											</FieldGroup>
-										)}
-									/>
-								)}
+								<EntityListAccordion
+									items={subField.state.value}
+									getKey={(assignment) => getRowKey(assignment)}
+									getTitle={(_, index) => `Colaborador ${index + 1}`}
+									getSummary={(assignment, index) =>
+										getAssignmentSummary(
+											assignment,
+											index,
+											employees,
+											assignmentTypes,
+										)
+									}
+									renderContent={(_, index) => (
+										<FieldGroup className="grid gap-3 sm:grid-cols-[repeat(2,1fr)_auto]">
+											<form.AppField name={`assignments[${index}].employeeId`}>
+												{(field) => (
+													<field.Autocomplete
+														label="Colaborador"
+														options={employees}
+														isRequired
+													/>
+												)}
+											</form.AppField>
+											<form.AppField
+												name={`assignments[${index}].assignmentType`}
+											>
+												{(field) => (
+													<field.Autocomplete
+														label="Atribuição"
+														options={assignmentTypes}
+														isRequired
+													/>
+												)}
+											</form.AppField>
+											<Button
+												type="button"
+												size="icon"
+												variant="destructive"
+												className="place-self-end"
+												aria-label={`Remover colaborador ${index + 1}`}
+												onClick={() => subField.removeValue(index)}
+											>
+												<TrashIcon size={16} />
+											</Button>
+										</FieldGroup>
+									)}
+								/>
 							</>
 						)}
 					</form.AppField>
@@ -329,100 +321,94 @@ function ContractFormContent({
 								{subField.state.meta.errors.length > 0 ? (
 									<FieldError errors={subField.state.meta.errors} />
 								) : null}
-								{subField.state.value.length === 0 ? (
-									<p className="text-muted-foreground text-sm">
-										Adicione pelo menos uma receita.
-									</p>
-								) : (
-									<EntityListAccordion
-										items={subField.state.value}
-										getKey={(revenue) => getRowKey(revenue)}
-										getTitle={(_, index) => `Receita ${index + 1}`}
-										getSummary={(revenue, index) =>
-											getRevenueSummary(revenue, index, revenueTypes)
-										}
-										renderContent={(_, index) => (
-											<div className="space-y-3">
-												<FieldGroup className="grid gap-3 sm:grid-cols-2">
-													<form.AppField name={`revenues[${index}].type`}>
-														{(field) => (
-															<field.Autocomplete
-																label="Tipo"
-																options={revenueTypes}
-																isRequired
-															/>
-														)}
-													</form.AppField>
-													<form.AppField
-														name={`revenues[${index}].paymentStartDate`}
-													>
-														{(field) => (
-															<field.DatePicker
-																label="Início do pagamento"
-																isRequired
-															/>
-														)}
-													</form.AppField>
-												</FieldGroup>
-												<FieldGroup className="grid gap-3 sm:grid-cols-2">
-													<form.AppField name={`revenues[${index}].totalValue`}>
-														{(field) => (
-															<field.Number
-																label="Valor total"
-																minValue={0}
-																step={100}
-																isRequired
-																formatOptions={{
-																	style: "currency",
-																	currency: "BRL",
-																}}
-															/>
-														)}
-													</form.AppField>
-													<form.AppField
-														name={`revenues[${index}].downPaymentValue`}
-													>
-														{(field) => (
-															<field.Number
-																label="Entrada"
-																minValue={0}
-																step={100}
-																formatOptions={{
-																	style: "currency",
-																	currency: "BRL",
-																}}
-															/>
-														)}
-													</form.AppField>
-												</FieldGroup>
-												<FieldGroup className="grid gap-3 sm:grid-cols-2">
-													<form.AppField
-														name={`revenues[${index}].totalInstallments`}
-													>
-														{(field) => (
-															<field.Number
-																label="Parcelas"
-																minValue={1}
-																step={1}
-																isRequired
-															/>
-														)}
-													</form.AppField>
-													<Button
-														type="button"
-														size="icon"
-														variant="destructive"
-														className="place-self-end"
-														aria-label={`Remover receita ${index + 1}`}
-														onClick={() => subField.removeValue(index)}
-													>
-														<TrashIcon size={16} />
-													</Button>
-												</FieldGroup>
-											</div>
-										)}
-									/>
-								)}
+								<EntityListAccordion
+									items={subField.state.value}
+									getKey={(revenue) => getRowKey(revenue)}
+									getTitle={(_, index) => `Receita ${index + 1}`}
+									getSummary={(revenue, index) =>
+										getRevenueSummary(revenue, index, revenueTypes)
+									}
+									renderContent={(_, index) => (
+										<div className="space-y-3">
+											<FieldGroup className="grid gap-3 sm:grid-cols-2">
+												<form.AppField name={`revenues[${index}].type`}>
+													{(field) => (
+														<field.Autocomplete
+															label="Tipo"
+															options={revenueTypes}
+															isRequired
+														/>
+													)}
+												</form.AppField>
+												<form.AppField
+													name={`revenues[${index}].paymentStartDate`}
+												>
+													{(field) => (
+														<field.DatePicker
+															label="Início do pagamento"
+															isRequired
+														/>
+													)}
+												</form.AppField>
+											</FieldGroup>
+											<FieldGroup className="grid gap-3 sm:grid-cols-2">
+												<form.AppField name={`revenues[${index}].totalValue`}>
+													{(field) => (
+														<field.Number
+															label="Valor total"
+															minValue={0}
+															step={100}
+															isRequired
+															formatOptions={{
+																style: "currency",
+																currency: "BRL",
+															}}
+														/>
+													)}
+												</form.AppField>
+												<form.AppField
+													name={`revenues[${index}].downPaymentValue`}
+												>
+													{(field) => (
+														<field.Number
+															label="Entrada"
+															minValue={0}
+															step={100}
+															formatOptions={{
+																style: "currency",
+																currency: "BRL",
+															}}
+														/>
+													)}
+												</form.AppField>
+											</FieldGroup>
+											<FieldGroup className="grid gap-3 sm:grid-cols-2">
+												<form.AppField
+													name={`revenues[${index}].totalInstallments`}
+												>
+													{(field) => (
+														<field.Number
+															label="Parcelas"
+															minValue={1}
+															step={1}
+															isRequired
+														/>
+													)}
+												</form.AppField>
+												<Button
+													type="button"
+													size="icon"
+													variant="destructive"
+													className="place-self-end"
+													aria-label={`Remover receita ${index + 1}`}
+													onClick={() => subField.removeValue(index)}
+												>
+													<TrashIcon size={16} />
+												</Button>
+											</FieldGroup>
+										</div>
+									)}
+								/>
 							</>
 						)}
 					</form.AppField>

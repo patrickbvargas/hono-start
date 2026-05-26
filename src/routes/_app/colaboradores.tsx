@@ -17,6 +17,7 @@ import {
 } from "@/features/employees";
 import { ButtonNew } from "@/shared/components/button-new";
 import { EntityView } from "@/shared/components/entity-view";
+import { RouteError } from "@/shared/components/route-error";
 import {
 	Wrapper,
 	WrapperBody,
@@ -45,6 +46,9 @@ export const Route = createFileRoute("/_app/colaboradores")({
 		]);
 	},
 	component: RouteComponent,
+	errorComponent: ({ error }) => (
+		<RouteError title={ROUTES.employee.title} error={error} />
+	),
 });
 
 function RouteComponent() {

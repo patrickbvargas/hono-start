@@ -12,7 +12,6 @@ import { ChangePasswordDialog, useLogout } from "@/features/authentication";
 import {
 	Avatar,
 	AvatarFallback,
-	Badge,
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuGroup,
@@ -93,11 +92,6 @@ export const NavUser = () => {
 										<span className="text-muted-foreground truncate text-xs">
 											{session.user.email}
 										</span>
-										<div className="mt-1">
-											<Badge variant="secondary" className="text-[10px]">
-												{session.role.label}
-											</Badge>
-										</div>
 									</div>
 								</div>
 							</DropdownMenuLabel>

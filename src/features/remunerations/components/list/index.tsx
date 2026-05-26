@@ -32,10 +32,6 @@ export const RemunerationList = ({
 	const renderCardFields = React.useCallback(
 		(remuneration: Remuneration): DetailFieldItem[] => [
 			{
-				term: "Processo",
-				definition: remuneration.contractProcessNumber,
-			},
-			{
 				term: "Competência",
 				definition: formatter.date(remuneration.paymentDate),
 			},
@@ -55,10 +51,6 @@ export const RemunerationList = ({
 						isSoftDeleted={remuneration.isSoftDeleted}
 					/>
 				),
-			},
-			{
-				term: "Criado em",
-				definition: formatter.date(remuneration.createdAt),
 			},
 		],
 		[],

@@ -12,7 +12,7 @@ import {
 export const contractAssignmentInputSchema = z.object({
 	id: z.number().optional(),
 	employeeId: z.string().trim().min(1, "Colaborador é obrigatório"),
-	assignmentType: z.string().trim().min(1, "Tipo de atribuição é obrigatório"),
+	assignmentType: z.string().trim().min(1, "Atribuição é obrigatório"),
 	isActive: z.boolean(),
 });
 
@@ -34,8 +34,8 @@ export const contractRevenueInputSchema = z.object({
 
 const contractBaseInputSchema = z.object({
 	clientId: z.string().trim().min(1, "Cliente é obrigatório"),
-	processNumber: z.string().trim().min(1, "Número do processo é obrigatório"),
-	legalArea: z.string().trim().min(1, "Área jurídica é obrigatória"),
+	processNumber: z.string().trim().min(1, "Processo é obrigatório"),
+	legalArea: z.string().trim().min(1, "Área é obrigatória"),
 	status: z.string().trim().min(1, "Status é obrigatório"),
 	feePercentage: z
 		.number()

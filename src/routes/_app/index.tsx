@@ -7,11 +7,15 @@ import {
 	UserIcon,
 	UsersIcon,
 } from "lucide-react";
-import { ClientForm } from "@/features/clients";
+import { ClientForm, getClientTypesQueryOptions } from "@/features/clients";
 import {
 	ContractForm,
+	getContractAssignmentTypesQueryOptions,
 	getContractLegalAreasQueryOptions,
 	getContractRevenueTypesQueryOptions,
+	getContractStatusesQueryOptions,
+	getSelectableContractClientsQueryOptions,
+	getSelectableContractEmployeesQueryOptions,
 } from "@/features/contracts";
 import {
 	Dashboard,
@@ -22,8 +26,17 @@ import {
 	getDashboardSummaryQueryOptions,
 	useDashboardData,
 } from "@/features/dashboard";
-import { EmployeeForm } from "@/features/employees";
-import { FeeForm } from "@/features/fees";
+import {
+	EmployeeForm,
+	getEmployeeRolesQueryOptions,
+	getEmployeeTypesQueryOptions,
+} from "@/features/employees";
+import {
+	FeeForm,
+	getSelectableFeeContractsQueryOptions,
+	getSelectableFeeRevenuesQueryOptions,
+} from "@/features/fees";
+import { RouteError } from "@/shared/components/route-error";
 import {
 	Button,
 	DropdownMenu,
@@ -50,15 +63,32 @@ export const Route = createFileRoute("/_app/")({
 		middlewares: [stripSearchParams(dashboardSearchDefaults)],
 	},
 	loaderDeps: ({ search }) => ({ search }),
-	loader: async ({ context: { queryClient }, deps: { search } }) => {
-		await Promise.all([
+	loader: async ({ context: { queryClient, session }, deps: { search } }) => {
+		const prefetches = [
 			queryClient.ensureQueryData(getDashboardSummaryQueryOptions(search)),
 			queryClient.ensureQueryData(getDashboardEmployeeOptionsQueryOptions()),
+			queryClient.ensureQueryData(getClientTypesQueryOptions()),
+			queryClient.ensureQueryData(getSelectableContractClientsQueryOptions()),
+			queryClient.ensureQueryData(getSelectableContractEmployeesQueryOptions()),
 			queryClient.ensureQueryData(getContractLegalAreasQueryOptions()),
+			queryClient.ensureQueryData(getContractStatusesQueryOptions()),
+			queryClient.ensureQueryData(getContractAssignmentTypesQueryOptions()),
 			queryClient.ensureQueryData(getContractRevenueTypesQueryOptions()),
-		]);
+			queryClient.ensureQueryData(getSelectableFeeContractsQueryOptions()),
+			queryClient.ensureQueryData(getSelectableFeeRevenuesQueryOptions()),
+		];
+
+		if (isAdminSession(session)) {
+			prefetches.push(
+				queryClient.ensureQueryData(getEmployeeTypesQueryOptions()),
+				queryClient.ensureQueryData(getEmployeeRolesQueryOptions()),
+			);
+		}
+
+		await Promise.all(prefetches);
 	},
 	component: RouteComponent,
+	errorComponent: ({ error }) => <RouteError title="Dashboard" error={error} />,
 });
 
 function RouteComponent() {

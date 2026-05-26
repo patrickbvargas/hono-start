@@ -59,6 +59,31 @@ describe("dashboard quick-create route contract", () => {
 		);
 	});
 
+	it("prefetches unconditional option queries for quick-create forms", () => {
+		const routeContent = readWorkspaceFile(
+			"src",
+			"routes",
+			"_app",
+			"index.tsx",
+		);
+
+		expect(routeContent).toContain("getClientTypesQueryOptions()");
+		expect(routeContent).toContain(
+			"getSelectableContractClientsQueryOptions()",
+		);
+		expect(routeContent).toContain(
+			"getSelectableContractEmployeesQueryOptions()",
+		);
+		expect(routeContent).toContain("getContractLegalAreasQueryOptions()");
+		expect(routeContent).toContain("getContractStatusesQueryOptions()");
+		expect(routeContent).toContain("getContractAssignmentTypesQueryOptions()");
+		expect(routeContent).toContain("getContractRevenueTypesQueryOptions()");
+		expect(routeContent).toContain("getSelectableFeeContractsQueryOptions()");
+		expect(routeContent).toContain("getSelectableFeeRevenuesQueryOptions()");
+		expect(routeContent).toContain("getEmployeeTypesQueryOptions()");
+		expect(routeContent).toContain("getEmployeeRolesQueryOptions()");
+	});
+
 	it("keeps collaborator quick-create gated by administrator visibility", () => {
 		const routeContent = readWorkspaceFile(
 			"src",

@@ -138,40 +138,45 @@ export function DashboardFilter({ isAdmin = false }: DashboardFilterProps) {
 										placeholder="Selecionar colaborador..."
 										classNames={{
 											wrapper:
-												"md:min-w-80 [&_[data-slot=field-label]]:sr-only",
+												"w-full md:max-w-80 [&_[data-slot=field-label]]:sr-only",
 										}}
 									/>
 								)}
 							</form.AppField>
 						) : null}
-						<form.Subscribe
-							selector={(state) =>
-								getDashboardActivePeriodShortcut({
-									dateFrom: state.values.dateFrom,
-									dateTo: state.values.dateTo,
-								})
-							}
-						>
-							{(activeShortcut) => (
-								<div className="flex items-center gap-2">
-									{periodShortcuts.map((shortcut) => (
-										<Button
-											key={shortcut.id}
-											type="button"
-											variant={
-												activeShortcut === shortcut.id ? "secondary" : "outline"
-											}
-											aria-pressed={activeShortcut === shortcut.id}
-											onClick={() => handlePeriodShortcut(shortcut.id)}
-										>
-											{shortcut.label}
-										</Button>
-									))}
-								</div>
-							)}
-						</form.Subscribe>
+						<div className="flex items-center gap-2 justify-between">
+							<form.Subscribe
+								selector={(state) =>
+									getDashboardActivePeriodShortcut({
+										dateFrom: state.values.dateFrom,
+										dateTo: state.values.dateTo,
+									})
+								}
+							>
+								{(activeShortcut) => (
+									<div className="flex items-center gap-2">
+										{periodShortcuts.map((shortcut) => (
+											<Button
+												key={shortcut.id}
+												type="button"
+												variant={
+													activeShortcut === shortcut.id
+														? "secondary"
+														: "outline"
+												}
+												aria-pressed={activeShortcut === shortcut.id}
+												onClick={() => handlePeriodShortcut(shortcut.id)}
+											>
+												{shortcut.label}
+											</Button>
+										))}
+									</div>
+								)}
+							</form.Subscribe>
+							{isMobile ? mobileFilters : null}
+						</div>
+						{!isMobile ? desktopFilterActions : null}
 					</div>
-					{isMobile ? mobileFilters : desktopFilterActions}
 				</ListFilters.Bar>
 				{isMobile ? null : desktopFilterPanel}
 				{hasAdvancedFilters ? (
