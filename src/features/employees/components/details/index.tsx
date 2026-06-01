@@ -375,10 +375,12 @@ const EmployeeDetailsContent = ({
 							/>
 						</AlertDialog>
 					) : null}
-					<DrawerClose asChild>
-						<Button type="button" variant="outline" className="w-full">
-							Fechar
-						</Button>
+					<DrawerClose
+						render={
+							<Button type="button" variant="outline" className="w-full" />
+						}
+					>
+						Fechar
 					</DrawerClose>
 				</div>
 			</EntityDetail.Footer>

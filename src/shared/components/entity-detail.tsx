@@ -39,14 +39,15 @@ function Root({ state, children, ...props }: RootProps) {
 
 	return (
 		<Drawer
-			container={container}
-			direction="right"
 			open={state.isOpen}
 			onOpenChange={state.onOpenChange}
+			disablePointerDismissal
 			modal={false}
 			{...props}
 		>
-			<DrawerContent>{children}</DrawerContent>
+			<DrawerContent container={container ?? undefined} direction="right">
+				{children}
+			</DrawerContent>
 		</Drawer>
 	);
 }
@@ -90,10 +91,8 @@ function Footer({ children, ...props }: React.ComponentProps<"div">) {
 	return (
 		<DrawerFooter {...props}>
 			{children ?? (
-				<DrawerClose asChild>
-					<Button variant="outline" className="w-full">
-						Fechar
-					</Button>
+				<DrawerClose render={<Button variant="outline" className="w-full" />}>
+					Fechar
 				</DrawerClose>
 			)}
 		</DrawerFooter>

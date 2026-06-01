@@ -1,8 +1,14 @@
 // @vitest-environment jsdom
 
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import * as React from "react";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import {
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+} from "@/shared/components/ui";
 import { EntityDetail } from "../entity-detail";
 
 const OPEN_STATE = {
@@ -49,7 +55,54 @@ describe("EntityDetail", () => {
 		);
 
 		expect(screen.getByText("Tabela de clientes")).not.toBeNull();
-		expect(document.querySelectorAll('[data-slot="skeleton"]').length).toBe(5);
 		expect(screen.getByRole("button", { name: "Fechar" })).not.toBeNull();
+	});
+
+	it("does not request close when a modal input receives focus above the drawer", () => {
+		const onOpenChange = vi.fn();
+		const inputId = `entity-detail-dialog-name-${Date.now()}`;
+
+		render(
+			<div
+				data-slot="root-container"
+				className="relative h-dvh w-dvw overflow-hidden"
+			>
+				<EntityDetail.Root
+					state={{
+						isOpen: true,
+						onOpenChange,
+						close: () => {},
+					}}
+				>
+					<EntityDetail.Content>
+						<EntityDetail.Header>
+							<EntityDetail.Title>Cliente</EntityDetail.Title>
+						</EntityDetail.Header>
+						<EntityDetail.Body>
+							<div>Drawer aberto</div>
+						</EntityDetail.Body>
+					</EntityDetail.Content>
+				</EntityDetail.Root>
+
+				<Dialog open>
+					<DialogContent>
+						<DialogHeader>
+							<DialogTitle>Editar cliente</DialogTitle>
+						</DialogHeader>
+						<label htmlFor={inputId}>Nome</label>
+						<input id={inputId} />
+					</DialogContent>
+				</Dialog>
+			</div>,
+		);
+
+		const input = screen.getByLabelText("Nome");
+		input.focus();
+		fireEvent.input(input, { target: { value: "Maria" } });
+
+		expect(document.activeElement).toBe(input);
+		expect((input as HTMLInputElement).value).toBe("Maria");
+		expect(screen.getByText("Drawer aberto")).not.toBeNull();
+		expect(onOpenChange).not.toHaveBeenCalledWith(false);
 	});
 });

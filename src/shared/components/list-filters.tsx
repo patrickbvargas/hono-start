@@ -130,18 +130,23 @@ function ListFiltersDrawer({
 }: ListFiltersDrawerProps) {
 	return (
 		<Drawer>
-			<DrawerTrigger asChild>
-				<Button
-					variant="outline"
-					size={iconOnly ? "default" : "sm"}
-					aria-label={ariaLabel ?? label}
-					className={cn(iconOnly && "shrink-0")}
-				>
-					<Settings2Icon size={16} />
-					{iconOnly ? <span className="sr-only">{label}</span> : label}
-				</Button>
+			<DrawerTrigger
+				render={
+					<Button
+						variant="outline"
+						size={iconOnly ? "default" : "sm"}
+						aria-label={ariaLabel ?? label}
+						className={cn(iconOnly && "shrink-0")}
+					/>
+				}
+			>
+				<Settings2Icon size={16} />
+				{iconOnly ? <span className="sr-only">{label}</span> : label}
 			</DrawerTrigger>
-			<DrawerContent className={cn("max-h-[85vh]", className)}>
+			<DrawerContent
+				direction="bottom"
+				className={cn("max-h-[85vh]", className)}
+			>
 				<DrawerHeader>
 					<DrawerTitle>{title ?? label}</DrawerTitle>
 				</DrawerHeader>
@@ -150,10 +155,8 @@ function ListFiltersDrawer({
 				</div>
 				<DrawerFooter>
 					{footer}
-					<DrawerClose asChild>
-						<Button variant="outline" className="w-full">
-							Fechar
-						</Button>
+					<DrawerClose render={<Button variant="outline" className="w-full" />}>
+						Fechar
 					</DrawerClose>
 				</DrawerFooter>
 			</DrawerContent>
