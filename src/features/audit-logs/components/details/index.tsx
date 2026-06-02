@@ -3,6 +3,7 @@ import {
 	type DetailFieldItem,
 	EntityDetail,
 } from "@/shared/components/entity-detail";
+import { Skeleton } from "@/shared/components/ui";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
 import { useAuditLog } from "../../hooks/use-data";
@@ -154,7 +155,7 @@ const AuditDiffList = ({ entries }: AuditDiffListProps) => {
 							<p className="text-[11px] uppercase tracking-wide text-foreground/60 md:hidden">
 								Campo
 							</p>
-							<p className="break-words text-sm font-medium text-foreground">
+							<p className="wrap-break-word text-sm font-medium text-foreground">
 								{entry.label}
 							</p>
 						</div>
@@ -162,7 +163,7 @@ const AuditDiffList = ({ entries }: AuditDiffListProps) => {
 							<p className="text-[11px] uppercase tracking-wide text-foreground/60 md:hidden">
 								Antes
 							</p>
-							<p className="break-words text-sm text-foreground">
+							<p className="wrap-break-word text-sm text-foreground">
 								{entry.before}
 							</p>
 						</div>
@@ -170,7 +171,7 @@ const AuditDiffList = ({ entries }: AuditDiffListProps) => {
 							<p className="text-[11px] uppercase tracking-wide text-foreground/60 md:hidden">
 								Depois
 							</p>
-							<p className="break-words text-sm text-foreground">
+							<p className="wrap-break-word text-sm text-foreground">
 								{entry.after}
 							</p>
 						</div>
@@ -212,11 +213,24 @@ const AuditLogDetailsFallback = () => (
 			</EntityDetail.Title>
 		</EntityDetail.Header>
 		<EntityDetail.Body>
-			<EntityDetail.SkeletonFields rows={6} />
+			<EntityDetail.SkeletonFields rows={10} />
 			<EntityDetail.Separator />
-			<EntityDetail.Section title="Mudanças realizadas">
+			<section className="flex flex-col gap-2">
+				<Skeleton className="h-3 w-28" />
 				<EntityDetail.SkeletonFields rows={4} />
-			</EntityDetail.Section>
+			</section>
+			<EntityDetail.Separator />
+			<section className="flex flex-col gap-2">
+				<Skeleton className="h-3 w-28" />
+				<div className="rounded-md border bg-muted/30 p-3">
+					<div className="flex flex-col gap-2">
+						<Skeleton className="h-3 w-full" />
+						<Skeleton className="h-3 w-full" />
+						<Skeleton className="h-3 w-5/6" />
+						<Skeleton className="h-3 w-2/3" />
+					</div>
+				</div>
+			</section>
 		</EntityDetail.Body>
 		<EntityDetail.Footer />
 	</EntityDetail.Content>
