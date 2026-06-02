@@ -8,7 +8,7 @@ let capturedRequestFormConfig: {
 let capturedCompleteFormConfig: {
 	onSubmit: (args: {
 		value: {
-			token: string;
+			code: string;
 			newPassword: string;
 			confirmPassword: string;
 		};
@@ -93,7 +93,7 @@ describe("password reset hooks", () => {
 			mutateAsync: mutateAsyncMock,
 		});
 		useAppFormMock.mockImplementation((config) => {
-			if ("token" in config.defaultValues) {
+			if ("code" in config.defaultValues) {
 				capturedCompleteFormConfig = config;
 				return {
 					...config,
@@ -132,11 +132,11 @@ describe("password reset hooks", () => {
 	});
 
 	it("invalidates session state and redirects to login after successful password reset", async () => {
-		usePasswordResetCompleteForm("token-123");
+		usePasswordResetCompleteForm("code-123");
 
 		await capturedCompleteFormConfig?.onSubmit({
 			value: {
-				token: "token-123",
+				code: "code-123",
 				newPassword: "SenhaNova123!",
 				confirmPassword: "SenhaNova123!",
 			},
@@ -144,7 +144,7 @@ describe("password reset hooks", () => {
 
 		expect(mutateAsyncMock).toHaveBeenCalledWith({
 			data: {
-				token: "token-123",
+				code: "code-123",
 				newPassword: "SenhaNova123!",
 				confirmPassword: "SenhaNova123!",
 			},
@@ -165,11 +165,11 @@ describe("password reset hooks", () => {
 			new Error(AUTHENTICATION_ERRORS.RESET_INVALID_TOKEN),
 		);
 
-		usePasswordResetCompleteForm("expired-token");
+		usePasswordResetCompleteForm("expired-code");
 
 		await capturedCompleteFormConfig?.onSubmit({
 			value: {
-				token: "expired-token",
+				code: "expired-code",
 				newPassword: "SenhaNova123!",
 				confirmPassword: "SenhaNova123!",
 			},

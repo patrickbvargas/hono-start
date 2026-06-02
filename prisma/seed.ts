@@ -1,6 +1,7 @@
+import "dotenv/config";
 import { Prisma, PrismaClient } from "../src/generated/prisma/client.js";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { hashPassword } from "better-auth/crypto";
+import { createClient } from "@supabase/supabase-js";
 
 const adapter = new PrismaPg({
   connectionString: process.env.DATABASE_URL!,
@@ -9,6 +10,20 @@ const adapter = new PrismaPg({
 const prisma = new PrismaClient({ adapter });
 const DEFAULT_FIRM_ID = 1;
 const MINIMUM_CONTRACT_COUNT = 20;
+const devAuthFixtures = [
+  {
+    email: "admin@admin.com",
+    password: "admin123",
+  },
+  {
+    email: "amanda.admin@matriz.test",
+    password: "SenhaAdmin123!",
+  },
+  {
+    email: "carlos.mendes@matriz.test",
+    password: "SenhaUsuario123!",
+  },
+] as const;
 
 type EmployeeTypeValue = "LAWYER" | "ADMIN_ASSISTANT";
 type UserRoleValue = "ADMIN" | "USER";
@@ -93,13 +108,6 @@ interface EmployeeRecord {
   referralPercentage: Prisma.Decimal;
 }
 
-interface AuthUserSeedInput {
-  userId: string;
-  accountId: string;
-  employeeEmail: string;
-  password: string;
-}
-
 interface ClientRecord {
   id: number;
   document: string;
@@ -117,6 +125,33 @@ interface CreatedContractAssignment {
     remunerationPercentage: Prisma.Decimal;
     referralPercentage: Prisma.Decimal;
   };
+}
+
+function getRequiredEnv(name: "SUPABASE_URL" | "SUPABASE_SERVICE_ROLE_KEY") {
+  const value =
+    name === "SUPABASE_SERVICE_ROLE_KEY"
+      ? process.env.SUPABASE_SERVICE_ROLE_KEY ??
+        process.env.SUPABASE_STORAGE_SERVICE_KEY
+      : process.env[name];
+
+  if (!value) {
+    throw new Error(`Missing required environment variable: ${name}`);
+  }
+
+  return value;
+}
+
+function createSupabaseAdminClient() {
+  return createClient(
+    getRequiredEnv("SUPABASE_URL"),
+    getRequiredEnv("SUPABASE_SERVICE_ROLE_KEY"),
+    {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
+      },
+    },
+  );
 }
 
 function padNumeric(value: number, size: number) {
@@ -349,29 +384,6 @@ function createClientSeeds(): ClientSeedInput[] {
   }));
 
   return [...individuals, ...companies];
-}
-
-function createAuthUserSeeds(): AuthUserSeedInput[] {
-  return [
-    {
-      userId: "auth-user-admin-sistema",
-      accountId: "auth-account-admin-sistema",
-      employeeEmail: "admin@admin.com",
-      password: "admin123",
-    },
-    {
-      userId: "auth-user-amanda-admin",
-      accountId: "auth-account-amanda-admin",
-      employeeEmail: "amanda.admin@matriz.test",
-      password: "SenhaAdmin123!",
-    },
-    {
-      userId: "auth-user-carlos-mendes",
-      accountId: "auth-account-carlos-mendes",
-      employeeEmail: "carlos.mendes@matriz.test",
-      password: "SenhaUsuario123!",
-    },
-  ];
 }
 
 function getRotatedValue<T>(items: T[], index: number, offset = 0) {
@@ -857,6 +869,121 @@ function getRequiredMapValue<TKey, TValue>(
   return item;
 }
 
+async function findSupabaseUserByEmail(
+  supabase: ReturnType<typeof createSupabaseAdminClient>,
+  email: string,
+) {
+  let page = 1;
+
+  while (true) {
+    const { data, error } = await supabase.auth.admin.listUsers({
+      page,
+      perPage: 200,
+    });
+
+    if (error) {
+      throw error;
+    }
+
+    const matchedUser = data.users.find((user) => user.email === email);
+
+    if (matchedUser) {
+      return matchedUser;
+    }
+
+    if (!data.nextPage) {
+      return null;
+    }
+
+    page = data.nextPage;
+  }
+}
+
+async function reconcileSupabaseAuthFixtures() {
+  const supabase = createSupabaseAdminClient();
+
+  for (const fixture of devAuthFixtures) {
+    const employee = await prisma.employee.findUniqueOrThrow({
+      where: {
+        email: fixture.email,
+      },
+      select: {
+        email: true,
+        fullName: true,
+        id: true,
+        supabaseAuthUserId: true,
+      },
+    });
+
+    let authUserId = employee.supabaseAuthUserId;
+
+    if (authUserId) {
+      const { data, error } = await supabase.auth.admin.updateUserById(
+        authUserId,
+        {
+          email: employee.email,
+          email_confirm: true,
+          password: fixture.password,
+          user_metadata: {
+            fullName: employee.fullName,
+          },
+        },
+      );
+
+      if (error || !data.user) {
+        throw error ?? new Error("Failed to update Supabase Auth user.");
+      }
+    } else {
+      const existingUser = await findSupabaseUserByEmail(supabase, fixture.email);
+
+      if (existingUser) {
+        authUserId = existingUser.id;
+        const { data, error } = await supabase.auth.admin.updateUserById(
+          existingUser.id,
+          {
+            email: employee.email,
+            email_confirm: true,
+            password: fixture.password,
+            user_metadata: {
+              fullName: employee.fullName,
+            },
+          },
+        );
+
+        if (error || !data.user) {
+          throw error ?? new Error("Failed to relink Supabase Auth user.");
+        }
+      } else {
+        const { data, error } = await supabase.auth.admin.createUser({
+          email: employee.email,
+          email_confirm: true,
+          password: fixture.password,
+          user_metadata: {
+            fullName: employee.fullName,
+          },
+        });
+
+        if (error || !data.user) {
+          throw error ?? new Error("Failed to create Supabase Auth user.");
+        }
+
+        authUserId = data.user.id;
+      }
+    }
+
+    await prisma.employee.update({
+      where: {
+        id: employee.id,
+      },
+      data: {
+        isAccessEnabled: true,
+        mustChangePassword: false,
+        supabaseAuthUserId: authUserId,
+      },
+    });
+  }
+}
+
 function getRecommendingReferralPercentage(
   assignments: CreatedContractAssignment[],
 ) {
@@ -1118,58 +1245,6 @@ async function reconcileContractFinancialFixture(params: {
   }
 }
 
-async function reconcileAuthUserFixture(params: {
-  userSeed: AuthUserSeedInput;
-  employeeByEmail: Map<string, EmployeeRecord>;
-}) {
-  const employee = getRequiredMapValue(
-    params.employeeByEmail,
-    params.userSeed.employeeEmail,
-    `employee ${params.userSeed.employeeEmail}`,
-  );
-  const passwordHash = await hashPassword(params.userSeed.password);
-
-  await prisma.user.upsert({
-    where: {
-      id: params.userSeed.userId,
-    },
-    update: {
-      name: employee.fullName,
-      email: employee.email,
-      emailVerified: true,
-      image: null,
-      employeeId: employee.id,
-    },
-    create: {
-      id: params.userSeed.userId,
-      name: employee.fullName,
-      email: employee.email,
-      emailVerified: true,
-      image: null,
-      employeeId: employee.id,
-    },
-  });
-
-  await prisma.account.upsert({
-    where: {
-      id: params.userSeed.accountId,
-    },
-    update: {
-      accountId: params.userSeed.userId,
-      providerId: "credential",
-      userId: params.userSeed.userId,
-      password: passwordHash,
-    },
-    create: {
-      id: params.userSeed.accountId,
-      accountId: params.userSeed.userId,
-      providerId: "credential",
-      userId: params.userSeed.userId,
-      password: passwordHash,
-    },
-  });
-}
-
 async function main() {
   console.log("🌱 Seeding database...");
 
@@ -1332,7 +1407,10 @@ async function main() {
           remunerationPercentage: employee.remunerationPercentage,
           referralPercentage: employee.referralPercentage,
           avatarUrl: null,
+          isAccessEnabled: false,
           isActive: employee.isActive,
+          mustChangePassword: false,
+          supabaseAuthUserId: null,
           deletedAt: null,
         },
         create: {
@@ -1346,7 +1424,10 @@ async function main() {
           remunerationPercentage: employee.remunerationPercentage,
           referralPercentage: employee.referralPercentage,
           avatarUrl: null,
+          isAccessEnabled: false,
           isActive: employee.isActive,
+          mustChangePassword: false,
+          supabaseAuthUserId: null,
         },
       }),
     ),
@@ -1441,7 +1522,6 @@ async function main() {
   ]);
 
   const contractSeeds = createContractSeeds(clientSeeds, employeeSeeds);
-  const authUserSeeds = createAuthUserSeeds();
   const employeeByEmail = mapByKey(
     employeeRecords as EmployeeRecord[],
     (employee) => employee.email,
@@ -1483,12 +1563,9 @@ async function main() {
     });
   }
 
-  for (const authUserSeed of authUserSeeds) {
-    await reconcileAuthUserFixture({
-      userSeed: authUserSeed,
-      employeeByEmail,
-    });
-  }
+  await reconcileSupabaseAuthFixtures();
+
+  console.log("Supabase Auth bootstrap complete.");
 }
 
 main()

@@ -1,70 +1,48 @@
-import { betterAuth } from "better-auth";
-import "dotenv/config";
-import { prismaAdapter } from "better-auth/adapters/prisma";
-import { tanstackStartCookies } from "better-auth/tanstack-start";
-import { prisma } from "@/shared/lib/prisma";
-import { env } from "../config/env";
-import { sendPasswordResetEmail } from "./password-reset-email";
+import { env } from "@/shared/config/env";
 
 export const AUTH_DEFAULT_SESSION_MAX_AGE_SECONDS = 60 * 60 * 24;
 export const AUTH_REMEMBERED_SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 7;
+export const SUPABASE_AUTH_STORAGE_KEY = "hono-auth-token";
+export const SUPABASE_REMEMBER_ME_COOKIE_NAME = "hono-remember-me";
 
-export const auth = betterAuth({
-	appName: "Hono",
-	baseURL: env.BETTER_AUTH_URL,
-	secret: env.BETTER_AUTH_SECRET,
-	database: prismaAdapter(prisma, {
-		provider: "postgresql",
-	}),
-	emailAndPassword: {
-		enabled: true,
-		disableSignUp: true,
-		minPasswordLength: 8,
-		resetPasswordTokenExpiresIn: 60 * 60,
-		revokeSessionsOnPasswordReset: true,
-		sendResetPassword: async ({ user, url }) => {
-			void sendPasswordResetEmail({
-				email: user.email,
-				resetUrl: url,
-			}).catch((error) => {
-				console.error("[auth:password-reset]", error);
-			});
-		},
-	},
-	session: {
-		expiresIn: AUTH_REMEMBERED_SESSION_MAX_AGE_SECONDS,
-		updateAge: AUTH_DEFAULT_SESSION_MAX_AGE_SECONDS,
-		additionalFields: {
-			rememberMe: {
-				type: "boolean",
-				required: false,
-				defaultValue: false,
-				input: false,
-			},
-		},
-	},
-	user: {
-		additionalFields: {
-			employeeId: {
-				type: "number",
-				required: false,
-				input: false,
-			},
-			isAccessEnabled: {
-				type: "boolean",
-				required: false,
-				defaultValue: true,
-				input: false,
-			},
-			mustChangePassword: {
-				type: "boolean",
-				required: false,
-				defaultValue: false,
-				input: false,
-			},
-		},
-	},
-	plugins: [tanstackStartCookies()],
-});
+function getRequiredEnvValue(
+	value: string | undefined,
+	name:
+		| "SUPABASE_URL"
+		| "SUPABASE_PUBLISHABLE_KEY"
+		| "SUPABASE_SERVICE_ROLE_KEY",
+) {
+	if (!value) {
+		throw new Error(`Variável de ambiente ${name} não configurada.`);
+	}
 
-export type AuthSession = typeof auth.$Infer.Session;
+	return value;
+}
+
+export function getSupabaseUrl() {
+	return getRequiredEnvValue(env.SUPABASE_URL, "SUPABASE_URL");
+}
+
+export function getSupabasePublishableKey() {
+	return getRequiredEnvValue(
+		env.SUPABASE_PUBLISHABLE_KEY,
+		"SUPABASE_PUBLISHABLE_KEY",
+	);
+}
+
+export function getSupabaseServiceRoleKey() {
+	return getRequiredEnvValue(
+		env.SUPABASE_SERVICE_ROLE_KEY ?? env.SUPABASE_STORAGE_SERVICE_KEY,
+		"SUPABASE_SERVICE_ROLE_KEY",
+	);
+}
+
+export function getAuthCookieMaxAge(rememberMe: boolean) {
+	return rememberMe
+		? AUTH_REMEMBERED_SESSION_MAX_AGE_SECONDS
+		: AUTH_DEFAULT_SESSION_MAX_AGE_SECONDS;
+}
+
+export function isProductionEnvironment() {
+	return process.env.NODE_ENV === "production";
+}

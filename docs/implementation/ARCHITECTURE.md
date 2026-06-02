@@ -16,7 +16,7 @@ These technical choices are mandatory for this repository:
 - ORM: Prisma
 - Database: PostgreSQL
 - File storage: Supabase Storage
-- Authentication: BetterAuth
+- Authentication: Supabase Auth
 - UI components: shadcn/ui via shared re-exports only
 - Validation: Zod
 - Linting and formatting: Biome

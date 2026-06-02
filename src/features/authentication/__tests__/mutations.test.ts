@@ -267,7 +267,7 @@ describe("authentication server mutations", () => {
 		await expect(
 			resetPasswordMutationHandler({
 				data: {
-					token: "expired-token",
+					code: "expired-code",
 					newPassword: "SenhaNova123!",
 					confirmPassword: "SenhaNova123!",
 				},

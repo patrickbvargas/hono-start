@@ -2,13 +2,13 @@ import { FieldGroup } from "@/shared/components/ui";
 import { usePasswordResetCompleteForm } from "../../hooks/use-password-reset-complete-form";
 
 interface PasswordResetCompleteFormProps {
-	token: string;
+	code: string;
 }
 
 export function PasswordResetCompleteForm({
-	token,
+	code,
 }: PasswordResetCompleteFormProps) {
-	const { form, isPending } = usePasswordResetCompleteForm(token);
+	const { form, isPending } = usePasswordResetCompleteForm(code);
 
 	return (
 		<form.Form form={form}>

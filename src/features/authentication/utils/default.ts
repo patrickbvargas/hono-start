@@ -18,9 +18,9 @@ export const defaultPasswordResetRequestValues =
 	});
 
 export const defaultPasswordResetCompleteValues = (
-	token: string,
+	code: string,
 ): PasswordResetCompleteInput => ({
-	token,
+	code,
 	newPassword: "",
 	confirmPassword: "",
 });

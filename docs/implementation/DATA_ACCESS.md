@@ -18,7 +18,7 @@ The goal of this document is to define reusable persistence patterns that can su
 - Business tables use `Int` auto-increment primary keys.
 - Business foreign keys use `Int`.
 - IDs are internal identifiers rather than public business meaning.
-- BetterAuth tables are the explicit exception and may use string identifiers by library convention.
+- Supabase Auth tables in the provider-managed `auth` schema are the explicit exception and may use UUID/string identifiers by provider convention.
 
 ## Timestamp Strategy
 
@@ -105,9 +105,9 @@ Prisma schema cannot represent PostgreSQL filtered unique indexes directly. When
 
 ## Authentication Tables
 
-- BetterAuth manages session, account, and verification tables.
-- The authentication provider owns those schemas by library convention.
-- Session and account identifiers use string IDs by BetterAuth convention.
+- Supabase Auth manages identity and session tables in the provider-owned `auth` schema.
+- The authentication provider owns those schemas by platform convention.
+- Domain-owned access flags such as `isAccessEnabled` and `mustChangePassword` remain on `Employee`.
 
 ## Derived State
 

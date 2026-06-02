@@ -1,6 +1,5 @@
-import { getRequestHeaders } from "@tanstack/react-start/server";
-import { AUTH_DEFAULT_SESSION_MAX_AGE_SECONDS, auth } from "@/shared/lib/auth";
 import { prisma } from "@/shared/lib/prisma";
+import { createSupabaseServerClient } from "@/shared/lib/supabase-server";
 import { getScope } from "./scope";
 import type {
 	LoggedUserSession,
@@ -11,50 +10,31 @@ import type {
 const UNAUTHENTICATED_ERROR_MESSAGE =
 	"Sua sessão expirou. Faça login novamente.";
 
-function getAuthenticationExpiresAt(session: {
-	createdAt: Date;
-	rememberMe?: boolean | null;
-	expiresAt: Date;
-}) {
-	if (session.rememberMe) {
-		return session.expiresAt;
-	}
-
-	return new Date(
-		session.createdAt.getTime() + AUTH_DEFAULT_SESSION_MAX_AGE_SECONDS * 1000,
-	);
-}
-
 async function resolveDomainSession(): Promise<LoggedUserSession | null> {
-	const headers = getRequestHeaders();
-	const authSession = await auth.api.getSession({
-		headers,
-	});
+	const { client, flushResponseCookies } = createSupabaseServerClient();
+	const {
+		data: { user: authUser },
+		error,
+	} = await client.auth.getUser();
 
-	if (!authSession?.session || !authSession.user?.employeeId) {
-		return null;
-	}
+	flushResponseCookies();
 
-	const authenticationExpiresAt = getAuthenticationExpiresAt(
-		authSession.session,
-	);
-	if (authenticationExpiresAt.getTime() <= Date.now()) {
-		await auth.api.signOut({
-			headers,
-		});
+	if (error || !authUser?.id) {
 		return null;
 	}
 
 	const employee = await prisma.employee.findFirst({
 		where: {
-			id: authSession.user.employeeId,
+			supabaseAuthUserId: authUser.id,
 			deletedAt: null,
 			isActive: true,
+			isAccessEnabled: true,
 		},
 		select: {
 			id: true,
 			fullName: true,
 			email: true,
+			mustChangePassword: true,
 			firm: {
 				select: {
 					id: true,
@@ -75,18 +55,16 @@ async function resolveDomainSession(): Promise<LoggedUserSession | null> {
 					label: true,
 				},
 			},
-			authUser: {
-				select: {
-					mustChangePassword: true,
-				},
-			},
 		},
 	});
 
 	if (!employee) {
-		await auth.api.signOut({
-			headers,
+		const { client: signOutClient, flushResponseCookies: flushSignOutCookies } =
+			createSupabaseServerClient();
+		await signOutClient.auth.signOut({
+			scope: "local",
 		});
+		flushSignOutCookies();
 		return null;
 	}
 
@@ -102,7 +80,7 @@ async function resolveDomainSession(): Promise<LoggedUserSession | null> {
 		firm: employee.firm,
 		employeeType: employee.type,
 		role: employee.role,
-		mustChangePassword: employee.authUser?.mustChangePassword ?? false,
+		mustChangePassword: employee.mustChangePassword,
 	};
 }
 

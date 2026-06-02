@@ -42,7 +42,7 @@ export type PasswordResetRequestInput = z.infer<
 
 export const passwordResetCompleteInputSchema = z
 	.object({
-		token: z.string().trim().min(1, AUTHENTICATION_ERRORS.RESET_INVALID_TOKEN),
+		code: z.string().trim().min(1, AUTHENTICATION_ERRORS.RESET_INVALID_TOKEN),
 		newPassword: passwordSchema,
 		confirmPassword: passwordSchema,
 	})
