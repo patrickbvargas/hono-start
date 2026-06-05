@@ -5,6 +5,7 @@ import {
 	withDeterministicTieBreaker,
 } from "@/shared/lib/entity-management";
 import { prisma } from "@/shared/lib/prisma";
+import { getSupabaseCredentialAccessState } from "@/shared/lib/supabase-admin";
 import { type Option, optionSchema } from "@/shared/schemas/option";
 import type {
 	QueryManyReturnType,
@@ -183,6 +184,9 @@ export async function getEmployeeById({
 	const contractCounts = await getActiveContractCountByEmployeeIds([
 		rawData.id,
 	]);
+	const accessState = await getSupabaseCredentialAccessState(
+		rawData.authUserId,
+	);
 
 	return employeeDetailSchema.parse({
 		id: rawData.id,
@@ -198,8 +202,9 @@ export async function getEmployeeById({
 		role: rawData.role.label,
 		roleValue: rawData.role.value,
 		contractCount: contractCounts.get(rawData.id) ?? 0,
-		hasCredentialAccount: Boolean(rawData.authUserId),
-		isAccessEnabled: rawData.isAccessEnabled,
+		hasCredentialAccount: accessState.hasCredentialAccount,
+		credentialAccessStatus: accessState.status,
+		hasActiveCredentialAccess: accessState.isAccessActive,
 		mustChangePassword: rawData.mustChangePassword,
 		authUserId: rawData.authUserId,
 		isActive: rawData.isActive,

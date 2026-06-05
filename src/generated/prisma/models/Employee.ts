@@ -56,7 +56,6 @@ export type EmployeeMinAggregateOutputType = {
   remunerationPercentage: runtime.Decimal | null
   referralPercentage: runtime.Decimal | null
   avatarUrl: string | null
-  isAccessEnabled: boolean | null
   mustChangePassword: boolean | null
   isActive: boolean | null
   createdAt: Date | null
@@ -76,7 +75,6 @@ export type EmployeeMaxAggregateOutputType = {
   remunerationPercentage: runtime.Decimal | null
   referralPercentage: runtime.Decimal | null
   avatarUrl: string | null
-  isAccessEnabled: boolean | null
   mustChangePassword: boolean | null
   isActive: boolean | null
   createdAt: Date | null
@@ -96,7 +94,6 @@ export type EmployeeCountAggregateOutputType = {
   remunerationPercentage: number
   referralPercentage: number
   avatarUrl: number
-  isAccessEnabled: number
   mustChangePassword: number
   isActive: number
   createdAt: number
@@ -136,7 +133,6 @@ export type EmployeeMinAggregateInputType = {
   remunerationPercentage?: true
   referralPercentage?: true
   avatarUrl?: true
-  isAccessEnabled?: true
   mustChangePassword?: true
   isActive?: true
   createdAt?: true
@@ -156,7 +152,6 @@ export type EmployeeMaxAggregateInputType = {
   remunerationPercentage?: true
   referralPercentage?: true
   avatarUrl?: true
-  isAccessEnabled?: true
   mustChangePassword?: true
   isActive?: true
   createdAt?: true
@@ -176,7 +171,6 @@ export type EmployeeCountAggregateInputType = {
   remunerationPercentage?: true
   referralPercentage?: true
   avatarUrl?: true
-  isAccessEnabled?: true
   mustChangePassword?: true
   isActive?: true
   createdAt?: true
@@ -283,7 +277,6 @@ export type EmployeeGroupByOutputType = {
   remunerationPercentage: runtime.Decimal
   referralPercentage: runtime.Decimal
   avatarUrl: string | null
-  isAccessEnabled: boolean
   mustChangePassword: boolean
   isActive: boolean
   createdAt: Date
@@ -326,7 +319,6 @@ export type EmployeeWhereInput = {
   remunerationPercentage?: Prisma.DecimalFilter<"Employee"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFilter<"Employee"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   avatarUrl?: Prisma.StringNullableFilter<"Employee"> | string | null
-  isAccessEnabled?: Prisma.BoolFilter<"Employee"> | boolean
   mustChangePassword?: Prisma.BoolFilter<"Employee"> | boolean
   isActive?: Prisma.BoolFilter<"Employee"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Employee"> | Date | string
@@ -352,7 +344,6 @@ export type EmployeeOrderByWithRelationInput = {
   remunerationPercentage?: Prisma.SortOrder
   referralPercentage?: Prisma.SortOrder
   avatarUrl?: Prisma.SortOrderInput | Prisma.SortOrder
-  isAccessEnabled?: Prisma.SortOrder
   mustChangePassword?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -382,7 +373,6 @@ export type EmployeeWhereUniqueInput = Prisma.AtLeast<{
   remunerationPercentage?: Prisma.DecimalFilter<"Employee"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFilter<"Employee"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   avatarUrl?: Prisma.StringNullableFilter<"Employee"> | string | null
-  isAccessEnabled?: Prisma.BoolFilter<"Employee"> | boolean
   mustChangePassword?: Prisma.BoolFilter<"Employee"> | boolean
   isActive?: Prisma.BoolFilter<"Employee"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Employee"> | Date | string
@@ -408,7 +398,6 @@ export type EmployeeOrderByWithAggregationInput = {
   remunerationPercentage?: Prisma.SortOrder
   referralPercentage?: Prisma.SortOrder
   avatarUrl?: Prisma.SortOrderInput | Prisma.SortOrder
-  isAccessEnabled?: Prisma.SortOrder
   mustChangePassword?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -436,7 +425,6 @@ export type EmployeeScalarWhereWithAggregatesInput = {
   remunerationPercentage?: Prisma.DecimalWithAggregatesFilter<"Employee"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalWithAggregatesFilter<"Employee"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   avatarUrl?: Prisma.StringNullableWithAggregatesFilter<"Employee"> | string | null
-  isAccessEnabled?: Prisma.BoolWithAggregatesFilter<"Employee"> | boolean
   mustChangePassword?: Prisma.BoolWithAggregatesFilter<"Employee"> | boolean
   isActive?: Prisma.BoolWithAggregatesFilter<"Employee"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Employee"> | Date | string
@@ -452,7 +440,6 @@ export type EmployeeCreateInput = {
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   avatarUrl?: string | null
-  isAccessEnabled?: boolean
   mustChangePassword?: boolean
   isActive?: boolean
   createdAt?: Date | string
@@ -478,7 +465,6 @@ export type EmployeeUncheckedCreateInput = {
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   avatarUrl?: string | null
-  isAccessEnabled?: boolean
   mustChangePassword?: boolean
   isActive?: boolean
   createdAt?: Date | string
@@ -497,7 +483,6 @@ export type EmployeeUpdateInput = {
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -523,7 +508,6 @@ export type EmployeeUncheckedUpdateInput = {
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -546,7 +530,6 @@ export type EmployeeCreateManyInput = {
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   avatarUrl?: string | null
-  isAccessEnabled?: boolean
   mustChangePassword?: boolean
   isActive?: boolean
   createdAt?: Date | string
@@ -562,7 +545,6 @@ export type EmployeeUpdateManyMutationInput = {
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -582,7 +564,6 @@ export type EmployeeUncheckedUpdateManyInput = {
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -617,7 +598,6 @@ export type EmployeeCountOrderByAggregateInput = {
   remunerationPercentage?: Prisma.SortOrder
   referralPercentage?: Prisma.SortOrder
   avatarUrl?: Prisma.SortOrder
-  isAccessEnabled?: Prisma.SortOrder
   mustChangePassword?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -646,7 +626,6 @@ export type EmployeeMaxOrderByAggregateInput = {
   remunerationPercentage?: Prisma.SortOrder
   referralPercentage?: Prisma.SortOrder
   avatarUrl?: Prisma.SortOrder
-  isAccessEnabled?: Prisma.SortOrder
   mustChangePassword?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -666,7 +645,6 @@ export type EmployeeMinOrderByAggregateInput = {
   remunerationPercentage?: Prisma.SortOrder
   referralPercentage?: Prisma.SortOrder
   avatarUrl?: Prisma.SortOrder
-  isAccessEnabled?: Prisma.SortOrder
   mustChangePassword?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -893,7 +871,6 @@ export type EmployeeCreateWithoutFirmInput = {
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   avatarUrl?: string | null
-  isAccessEnabled?: boolean
   mustChangePassword?: boolean
   isActive?: boolean
   createdAt?: Date | string
@@ -917,7 +894,6 @@ export type EmployeeUncheckedCreateWithoutFirmInput = {
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   avatarUrl?: string | null
-  isAccessEnabled?: boolean
   mustChangePassword?: boolean
   isActive?: boolean
   createdAt?: Date | string
@@ -969,7 +945,6 @@ export type EmployeeScalarWhereInput = {
   remunerationPercentage?: Prisma.DecimalFilter<"Employee"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFilter<"Employee"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   avatarUrl?: Prisma.StringNullableFilter<"Employee"> | string | null
-  isAccessEnabled?: Prisma.BoolFilter<"Employee"> | boolean
   mustChangePassword?: Prisma.BoolFilter<"Employee"> | boolean
   isActive?: Prisma.BoolFilter<"Employee"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Employee"> | Date | string
@@ -985,7 +960,6 @@ export type EmployeeCreateWithoutTypeInput = {
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   avatarUrl?: string | null
-  isAccessEnabled?: boolean
   mustChangePassword?: boolean
   isActive?: boolean
   createdAt?: Date | string
@@ -1009,7 +983,6 @@ export type EmployeeUncheckedCreateWithoutTypeInput = {
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   avatarUrl?: string | null
-  isAccessEnabled?: boolean
   mustChangePassword?: boolean
   isActive?: boolean
   createdAt?: Date | string
@@ -1054,7 +1027,6 @@ export type EmployeeCreateWithoutRoleInput = {
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   avatarUrl?: string | null
-  isAccessEnabled?: boolean
   mustChangePassword?: boolean
   isActive?: boolean
   createdAt?: Date | string
@@ -1078,7 +1050,6 @@ export type EmployeeUncheckedCreateWithoutRoleInput = {
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   avatarUrl?: string | null
-  isAccessEnabled?: boolean
   mustChangePassword?: boolean
   isActive?: boolean
   createdAt?: Date | string
@@ -1123,7 +1094,6 @@ export type EmployeeCreateWithoutAuditLogsInput = {
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   avatarUrl?: string | null
-  isAccessEnabled?: boolean
   mustChangePassword?: boolean
   isActive?: boolean
   createdAt?: Date | string
@@ -1148,7 +1118,6 @@ export type EmployeeUncheckedCreateWithoutAuditLogsInput = {
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   avatarUrl?: string | null
-  isAccessEnabled?: boolean
   mustChangePassword?: boolean
   isActive?: boolean
   createdAt?: Date | string
@@ -1182,7 +1151,6 @@ export type EmployeeUpdateWithoutAuditLogsInput = {
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1207,7 +1175,6 @@ export type EmployeeUncheckedUpdateWithoutAuditLogsInput = {
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1225,7 +1192,6 @@ export type EmployeeCreateWithoutContractAssignmentsInput = {
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   avatarUrl?: string | null
-  isAccessEnabled?: boolean
   mustChangePassword?: boolean
   isActive?: boolean
   createdAt?: Date | string
@@ -1250,7 +1216,6 @@ export type EmployeeUncheckedCreateWithoutContractAssignmentsInput = {
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   avatarUrl?: string | null
-  isAccessEnabled?: boolean
   mustChangePassword?: boolean
   isActive?: boolean
   createdAt?: Date | string
@@ -1284,7 +1249,6 @@ export type EmployeeUpdateWithoutContractAssignmentsInput = {
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1309,7 +1273,6 @@ export type EmployeeUncheckedUpdateWithoutContractAssignmentsInput = {
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1327,7 +1290,6 @@ export type EmployeeCreateWithoutAttachmentsInput = {
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   avatarUrl?: string | null
-  isAccessEnabled?: boolean
   mustChangePassword?: boolean
   isActive?: boolean
   createdAt?: Date | string
@@ -1352,7 +1314,6 @@ export type EmployeeUncheckedCreateWithoutAttachmentsInput = {
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   avatarUrl?: string | null
-  isAccessEnabled?: boolean
   mustChangePassword?: boolean
   isActive?: boolean
   createdAt?: Date | string
@@ -1386,7 +1347,6 @@ export type EmployeeUpdateWithoutAttachmentsInput = {
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1411,7 +1371,6 @@ export type EmployeeUncheckedUpdateWithoutAttachmentsInput = {
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1432,7 +1391,6 @@ export type EmployeeCreateManyFirmInput = {
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   avatarUrl?: string | null
-  isAccessEnabled?: boolean
   mustChangePassword?: boolean
   isActive?: boolean
   createdAt?: Date | string
@@ -1448,7 +1406,6 @@ export type EmployeeUpdateWithoutFirmInput = {
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1472,7 +1429,6 @@ export type EmployeeUncheckedUpdateWithoutFirmInput = {
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1494,7 +1450,6 @@ export type EmployeeUncheckedUpdateManyWithoutFirmInput = {
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1513,7 +1468,6 @@ export type EmployeeCreateManyTypeInput = {
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   avatarUrl?: string | null
-  isAccessEnabled?: boolean
   mustChangePassword?: boolean
   isActive?: boolean
   createdAt?: Date | string
@@ -1529,7 +1483,6 @@ export type EmployeeUpdateWithoutTypeInput = {
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1553,7 +1506,6 @@ export type EmployeeUncheckedUpdateWithoutTypeInput = {
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1575,7 +1527,6 @@ export type EmployeeUncheckedUpdateManyWithoutTypeInput = {
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1594,7 +1545,6 @@ export type EmployeeCreateManyRoleInput = {
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   avatarUrl?: string | null
-  isAccessEnabled?: boolean
   mustChangePassword?: boolean
   isActive?: boolean
   createdAt?: Date | string
@@ -1610,7 +1560,6 @@ export type EmployeeUpdateWithoutRoleInput = {
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1634,7 +1583,6 @@ export type EmployeeUncheckedUpdateWithoutRoleInput = {
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1656,7 +1604,6 @@ export type EmployeeUncheckedUpdateManyWithoutRoleInput = {
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1725,7 +1672,6 @@ export type EmployeeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   remunerationPercentage?: boolean
   referralPercentage?: boolean
   avatarUrl?: boolean
-  isAccessEnabled?: boolean
   mustChangePassword?: boolean
   isActive?: boolean
   createdAt?: boolean
@@ -1752,7 +1698,6 @@ export type EmployeeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   remunerationPercentage?: boolean
   referralPercentage?: boolean
   avatarUrl?: boolean
-  isAccessEnabled?: boolean
   mustChangePassword?: boolean
   isActive?: boolean
   createdAt?: boolean
@@ -1775,7 +1720,6 @@ export type EmployeeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   remunerationPercentage?: boolean
   referralPercentage?: boolean
   avatarUrl?: boolean
-  isAccessEnabled?: boolean
   mustChangePassword?: boolean
   isActive?: boolean
   createdAt?: boolean
@@ -1798,7 +1742,6 @@ export type EmployeeSelectScalar = {
   remunerationPercentage?: boolean
   referralPercentage?: boolean
   avatarUrl?: boolean
-  isAccessEnabled?: boolean
   mustChangePassword?: boolean
   isActive?: boolean
   createdAt?: boolean
@@ -1806,7 +1749,7 @@ export type EmployeeSelectScalar = {
   deletedAt?: boolean
 }
 
-export type EmployeeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "firmId" | "fullName" | "email" | "authUserId" | "typeId" | "roleId" | "oabNumber" | "remunerationPercentage" | "referralPercentage" | "avatarUrl" | "isAccessEnabled" | "mustChangePassword" | "isActive" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["employee"]>
+export type EmployeeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "firmId" | "fullName" | "email" | "authUserId" | "typeId" | "roleId" | "oabNumber" | "remunerationPercentage" | "referralPercentage" | "avatarUrl" | "mustChangePassword" | "isActive" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["employee"]>
 export type EmployeeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
   type?: boolean | Prisma.EmployeeTypeDefaultArgs<ExtArgs>
@@ -1849,7 +1792,6 @@ export type $EmployeePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     remunerationPercentage: runtime.Decimal
     referralPercentage: runtime.Decimal
     avatarUrl: string | null
-    isAccessEnabled: boolean
     mustChangePassword: boolean
     isActive: boolean
     createdAt: Date
@@ -2295,7 +2237,6 @@ export interface EmployeeFieldRefs {
   readonly remunerationPercentage: Prisma.FieldRef<"Employee", 'Decimal'>
   readonly referralPercentage: Prisma.FieldRef<"Employee", 'Decimal'>
   readonly avatarUrl: Prisma.FieldRef<"Employee", 'String'>
-  readonly isAccessEnabled: Prisma.FieldRef<"Employee", 'Boolean'>
   readonly mustChangePassword: Prisma.FieldRef<"Employee", 'Boolean'>
   readonly isActive: Prisma.FieldRef<"Employee", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Employee", 'DateTime'>

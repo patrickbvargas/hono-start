@@ -2,6 +2,10 @@ import "dotenv/config";
 import { getRequest } from "@tanstack/react-start/server";
 import { prisma } from "@/shared/lib/prisma";
 import {
+	getSupabaseCredentialAccessState,
+	isSupabaseAuthUserBannedError,
+} from "@/shared/lib/supabase-admin";
+import {
 	createClearedRememberMeCookie,
 	createRememberMeCookie,
 	createSupabaseServerClient,
@@ -59,6 +63,7 @@ function includesSerializedError(error: unknown, code: string) {
 async function authenticateWithEmail(
 	input: LoginInput,
 	email: string,
+	hasKnownIdentity: boolean,
 ): Promise<LoginMutationStatus> {
 	const { client, flushResponseCookies } = createSupabaseServerClient({
 		rememberMe: input.rememberMe,
@@ -69,6 +74,10 @@ async function authenticateWithEmail(
 	});
 
 	if (error || !data.user?.id) {
+		if (error && hasKnownIdentity && isSupabaseAuthUserBannedError(error)) {
+			throw new AuthenticationAccessRevokedError();
+		}
+
 		createSafeFailure(AUTHENTICATION_ERRORS.INVALID_CREDENTIALS);
 	}
 
@@ -81,7 +90,6 @@ async function authenticateWithEmail(
 		},
 		select: {
 			id: true,
-			isAccessEnabled: true,
 			mustChangePassword: true,
 		},
 	});
@@ -92,14 +100,6 @@ async function authenticateWithEmail(
 		});
 		flushResponseCookies([createClearedRememberMeCookie()]);
 		createSafeFailure(AUTHENTICATION_ERRORS.INVALID_CREDENTIALS);
-	}
-
-	if (!employee.isAccessEnabled) {
-		await client.auth.signOut({
-			scope: "local",
-		});
-		flushResponseCookies([createClearedRememberMeCookie()]);
-		throw new AuthenticationAccessRevokedError();
 	}
 
 	flushResponseCookies([createRememberMeCookie(input.rememberMe)]);
@@ -119,7 +119,11 @@ export async function loginMutationHandler({
 		const resolvedIdentity = await resolveAuthenticationEmail(data.identifier);
 		const email = resolvedIdentity?.email ?? UNKNOWN_LOGIN_EMAIL;
 
-		const loginResult = await authenticateWithEmail(data, email);
+		const loginResult = await authenticateWithEmail(
+			data,
+			email,
+			Boolean(resolvedIdentity),
+		);
 
 		return loginResult;
 	} catch (error) {
@@ -279,9 +283,13 @@ export async function requestPasswordResetMutationHandler({
 }): Promise<MutationStatus> {
 	try {
 		const resolvedIdentity = await resolveAuthenticationEmail(data.identifier);
-		const email = resolvedIdentity?.isAccessEnabled
-			? resolvedIdentity.email
+		const accessState = resolvedIdentity
+			? await getSupabaseCredentialAccessState(resolvedIdentity.authUserId)
 			: null;
+		const email =
+			resolvedIdentity && accessState?.isAccessActive
+				? resolvedIdentity.email
+				: null;
 
 		if (email) {
 			const requestUrl = new URL(getRequest().url);

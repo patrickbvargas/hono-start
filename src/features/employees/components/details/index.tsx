@@ -25,6 +25,7 @@ import type { OverlayState } from "@/shared/types/overlay";
 import { useEmployee } from "../../hooks/use-data";
 import { useEmployeeGrantAccess } from "../../hooks/use-grant-access";
 import { useEmployeeResetPassword } from "../../hooks/use-reset-password";
+import { useEmployeeRestoreAccess } from "../../hooks/use-restore-access";
 import { useEmployeeRevokeAccess } from "../../hooks/use-revoke-access";
 import { getEmployeeLifecycleActions } from "../../utils/lifecycle-actions";
 import { TemporaryPasswordDialog } from "../temporary-password";
@@ -114,11 +115,14 @@ const EmployeeDetailsContent = ({
 		isSoftDeleted: employee.isSoftDeleted,
 	});
 	const [isGrantDialogOpen, setIsGrantDialogOpen] = React.useState(false);
+	const [isRestoreDialogOpen, setIsRestoreDialogOpen] = React.useState(false);
 	const [isRevokeDialogOpen, setIsRevokeDialogOpen] = React.useState(false);
 	const [isResetDialogOpen, setIsResetDialogOpen] = React.useState(false);
 
 	const { handleConfirm: handleGrantAccess, isPending: isGrantPending } =
 		useEmployeeGrantAccess();
+	const { handleConfirm: handleRestoreAccess, isPending: isRestorePending } =
+		useEmployeeRestoreAccess();
 	const { handleConfirm: handleRevokeAccess, isPending: isRevokePending } =
 		useEmployeeRevokeAccess();
 	const {
@@ -127,11 +131,16 @@ const EmployeeDetailsContent = ({
 	} = useEmployeeResetPassword();
 
 	const canManageAccess = !employee.isSoftDeleted && canManageLifecycle;
-	const hasEnabledAccess =
-		employee.hasCredentialAccount && employee.isAccessEnabled;
+	const hasEnabledAccess = employee.hasActiveCredentialAccess;
 	const canGrantAccess =
-		canManageAccess && employee.isActive && !hasEnabledAccess;
-	const canResetPassword = canManageAccess && hasEnabledAccess;
+		canManageAccess &&
+		employee.isActive &&
+		employee.credentialAccessStatus === "NOT_GRANTED";
+	const canRestoreAccess =
+		canManageAccess &&
+		employee.isActive &&
+		employee.credentialAccessStatus === "REVOKED";
+	const canResetPassword = canManageAccess && employee.hasCredentialAccount;
 	const canRevokeAccess = canManageAccess && hasEnabledAccess;
 	const isGrantPasswordVisible = temporaryPassword?.context === "grant";
 
@@ -154,18 +163,19 @@ const EmployeeDetailsContent = ({
 		() => [
 			{
 				term: "Acesso ao sistema",
-				definition: hasEnabledAccess
-					? "Ativo"
-					: employee.hasCredentialAccount
-						? "Revogado"
-						: "Não concedido",
+				definition:
+					employee.credentialAccessStatus === "ACTIVE"
+						? "Ativo"
+						: employee.credentialAccessStatus === "REVOKED"
+							? "Revogado"
+							: "Não concedido",
 			},
 			{
 				term: "Troca obrigatória senha",
 				definition: employee.mustChangePassword ? "Pendente" : "Não",
 			},
 		],
-		[employee, hasEnabledAccess],
+		[employee],
 	);
 
 	const financialInfo = React.useMemo<DetailFieldItem[]>(
@@ -232,6 +242,14 @@ const EmployeeDetailsContent = ({
 		if (success) {
 			setIsRevokeDialogOpen(false);
 			onTemporaryPasswordChange(null);
+		}
+	};
+
+	const handleRestoreAccessClick = async () => {
+		const success = await handleRestoreAccess(id);
+
+		if (success) {
+			setIsRestoreDialogOpen(false);
 		}
 	};
 
@@ -343,6 +361,41 @@ const EmployeeDetailsContent = ({
 									isGrantPasswordVisible ? temporaryPassword.value : null
 								}
 							/>
+						</AlertDialog>
+					) : null}
+					{canRestoreAccess ? (
+						<AlertDialog
+							open={isRestoreDialogOpen}
+							onOpenChange={setIsRestoreDialogOpen}
+						>
+							<Button
+								type="button"
+								variant="secondary"
+								className="w-full"
+								onClick={() => setIsRestoreDialogOpen(true)}
+							>
+								Restaurar acesso
+							</Button>
+							<AlertDialogContent>
+								<AlertDialogHeader>
+									<AlertDialogTitle>Restaurar acesso</AlertDialogTitle>
+									<AlertDialogDescription>
+										Restaurar o acesso ao sistema para {employee.fullName} sem
+										alterar a senha atual?
+									</AlertDialogDescription>
+								</AlertDialogHeader>
+								<AlertDialogFooter>
+									<AlertDialogCancel disabled={isRestorePending}>
+										Cancelar
+									</AlertDialogCancel>
+									<AlertDialogAction
+										onClick={handleRestoreAccessClick}
+										disabled={isRestorePending}
+									>
+										{isRestorePending ? "Restaurando..." : "Restaurar acesso"}
+									</AlertDialogAction>
+								</AlertDialogFooter>
+							</AlertDialogContent>
 						</AlertDialog>
 					) : null}
 					{canRevokeAccess ? (

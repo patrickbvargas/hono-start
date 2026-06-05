@@ -924,6 +924,7 @@ async function reconcileSupabaseAuthFixtures() {
       const { data, error } = await supabase.auth.admin.updateUserById(
         authUserId,
         {
+          ban_duration: "none",
           email: employee.email,
           email_confirm: true,
           password: fixture.password,
@@ -944,6 +945,7 @@ async function reconcileSupabaseAuthFixtures() {
         const { data, error } = await supabase.auth.admin.updateUserById(
           existingUser.id,
           {
+            ban_duration: "none",
             email: employee.email,
             email_confirm: true,
             password: fixture.password,
@@ -961,6 +963,7 @@ async function reconcileSupabaseAuthFixtures() {
           email: employee.email,
           email_confirm: true,
           password: fixture.password,
+          ban_duration: "none",
           user_metadata: {
             fullName: employee.fullName,
           },
@@ -979,7 +982,6 @@ async function reconcileSupabaseAuthFixtures() {
         id: employee.id,
       },
       data: {
-        isAccessEnabled: true,
         mustChangePassword: false,
         authUserId,
       },
@@ -1423,7 +1425,6 @@ async function main() {
       remunerationPercentage: employee.remunerationPercentage,
       referralPercentage: employee.referralPercentage,
       avatarUrl: null,
-      isAccessEnabled: false,
       isActive: employee.isActive,
       mustChangePassword: false,
       authUserId: null,

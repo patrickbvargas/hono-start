@@ -214,24 +214,22 @@ The system SHALL allow administrators to inspect employee details without leavin
 - **WHEN** a regular user attempts to access employee detail data or UI directly
 - **THEN** the route and server authorization boundaries SHALL reject the operation before employee detail content is returned
 
-### Requirement: Administrators can grant collaborator access from employee details
-The system SHALL allow administrators to grant system access from the employee details drawer for a collaborator who does not currently have enabled credential access. Granting access MUST create or reactivate the linked Supabase Auth user, generate a temporary password, require a password change on next login, and reveal the temporary password once in pt-BR UI copy.
+### Requirement: Administrators can grant initial collaborator access from employee details
+The system SHALL allow administrators to grant system access from the employee details drawer only for a collaborator who does not yet have a linked credential account. Granting access MUST create the linked Supabase Auth user, generate a temporary password, require a password change on next login, and reveal the temporary password once in pt-BR UI copy.
 
 #### Scenario: Grant access for collaborator without auth user
 - **WHEN** an administrator grants access for an active, non-deleted employee who has no linked Supabase Auth user
 - **THEN** the system creates a linked Supabase Auth user for that employee
-- **AND** enables access for that employee
+- **AND** enables provider-side access for that employee
 - **AND** generates a temporary password
 - **AND** stores the credential only through the auth provider
 - **AND** marks the account to require a password change on next login
 - **AND** reveals the temporary password once to the administrator
 
-#### Scenario: Grant access for collaborator with revoked account
-- **WHEN** an administrator grants access for an employee whose linked Supabase Auth user already exists with `isAccessEnabled = false`
-- **THEN** the system re-enables access for that employee
-- **AND** creates or refreshes the credential password with a new temporary password
-- **AND** revokes any active sessions for that auth user
-- **AND** requires a password change on next login
+#### Scenario: Grant access is unavailable for collaborator with revoked account
+- **WHEN** an administrator attempts to grant access for an employee whose linked Supabase Auth user already exists but is banned
+- **THEN** the system rejects the action
+- **AND** instructs the administrator to restore access instead
 
 #### Scenario: Grant access is blocked for inactive or deleted employee
 - **WHEN** an administrator attempts to grant access for an employee who is inactive or soft-deleted
@@ -244,22 +242,30 @@ The system SHALL allow administrators to grant system access from the employee d
 - **AND** does not store the plaintext temporary password in audit payloads or logs
 
 ### Requirement: Administrators can revoke collaborator access from employee details
-The system SHALL allow administrators to revoke collaborator access from the employee details drawer without deleting the linked Supabase Auth user. Revoking access MUST disable future logins and revoke active sessions immediately.
+The system SHALL allow administrators to revoke collaborator access from the employee details drawer without deleting the linked Supabase Auth user. Revoking access MUST disable future logins through a provider ban while preserving the linked identity for later re-enable.
 
 #### Scenario: Revoke enabled access
-- **WHEN** an administrator revokes access for an employee whose linked Supabase Auth user has enabled access
-- **THEN** the system sets `isAccessEnabled = false`
-- **AND** revokes the collaborator's active sessions
+- **WHEN** an administrator revokes access for an employee whose linked Supabase Auth user currently has active access
+- **THEN** the system bans that Supabase Auth account
 - **AND** keeps the linked auth identity for later re-enable
 
 #### Scenario: Revoked collaborator no longer appears as access-enabled
 - **WHEN** the administrator reloads the employee details drawer after revoking access
-- **THEN** the access section shows that the collaborator no longer has enabled access
-- **AND** the UI exposes `Conceder acesso` instead of `Revogar acesso`
+- **THEN** the access section shows that the collaborator has revoked access
+- **AND** the UI exposes `Restaurar acesso` instead of `Revogar acesso`
 
 #### Scenario: Regular user cannot grant or revoke collaborator access
 - **WHEN** a regular user attempts to trigger grant-access or revoke-access behavior directly
 - **THEN** the route and server authorization boundaries reject the operation
+
+### Requirement: Administrators can restore collaborator access without resetting the password
+The system SHALL allow administrators to restore a revoked collaborator access from the employee details drawer without changing the stored password.
+
+#### Scenario: Restore revoked access
+- **WHEN** an administrator restores access for an employee whose linked Supabase Auth user is banned
+- **THEN** the system unbans that auth account
+- **AND** keeps the existing password unchanged
+- **AND** keeps the linked auth identity for future logins
 
 ---
 
@@ -358,7 +364,7 @@ The employee-management capability SHALL use the shared session authorization he
 - **AND** the employee-management capability does not rely on hardcoded tenant placeholders
 
 ### Requirement: Administrators can reset a collaborator password from the employee details screen
-The system SHALL allow administrators to reset the password of a collaborator who already has a credential account by using an action in the employee details drawer. The reset flow SHALL generate a simple temporary password, persist only its hash, revoke the target user's active sessions, and require the collaborator to change that password on the next login.
+The system SHALL allow administrators to reset the password of a collaborator who already has a credential account by using an action in the employee details drawer. The reset flow SHALL generate a simple temporary password, persist only its hash, and require the collaborator to change that password on the next login.
 
 #### Scenario: Administrator resets a collaborator password successfully
 - **WHEN** an administrator opens an employee details drawer for a collaborator with a credential account and confirms the `Resetar senha` action
@@ -371,6 +377,10 @@ The system SHALL allow administrators to reset the password of a collaborator wh
 #### Scenario: Employee details shows reset action only for accounts that can authenticate
 - **WHEN** an administrator opens an employee details drawer for a collaborator without a credential account
 - **THEN** the system does not expose the `Resetar senha` action for that collaborator
+
+#### Scenario: Revoked account can still have the password reset
+- **WHEN** an administrator opens an employee details drawer for a collaborator with revoked access but an existing credential account
+- **THEN** the system still exposes the `Resetar senha` action for that collaborator
 
 #### Scenario: Regular user cannot reset collaborator password
 - **WHEN** a regular user attempts to access employee details or trigger the reset action directly

@@ -110,7 +110,6 @@ function createResolvedAssignment(options: {
 			roleId: 1,
 			typeId: 1,
 			avatarUrl: null,
-			isAccessEnabled: true,
 			isActive: true,
 			mustChangePassword: false,
 			authUserId: null,

@@ -6,7 +6,12 @@ import {
 } from "@/features/audit-logs/data/mutations";
 import type { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/shared/lib/prisma";
-import { getSupabaseAdminClient } from "@/shared/lib/supabase-admin";
+import {
+	getSupabaseAdminClient,
+	getSupabaseCredentialAccessState,
+	isSupabaseAuthUserMissingError,
+	SUPABASE_AUTH_BAN_FOREVER,
+} from "@/shared/lib/supabase-admin";
 import type { MutationReturnType } from "@/shared/types/api";
 import type {
 	EntityInputParams,
@@ -123,11 +128,13 @@ async function ensureSupabaseAuthUser(params: {
 			},
 		);
 
-		if (error || !data.user) {
-			throw error ?? new Error("Supabase Auth user update failed.");
+		if (!error && data.user) {
+			return data.user.id;
 		}
 
-		return data.user.id;
+		if (error && !isSupabaseAuthUserMissingError(error)) {
+			throw error ?? new Error("Supabase Auth user update failed.");
+		}
 	}
 
 	const existingUser = await findSupabaseAuthUserByEmail(params.email);
@@ -249,12 +256,28 @@ export async function updateEmployee({
 	const emailChanged = employee.email !== input.email;
 	const oabChanged =
 		normalizeNullableString(employee.oabNumber) !== nextOabNumber;
-	const shouldRevokeAccess = emailChanged && employee.isAccessEnabled;
+	const accessState = await getSupabaseCredentialAccessState(
+		employee.authUserId,
+	);
+	const shouldRevokeAccess = emailChanged && accessState.isAccessActive;
+
+	if (shouldRevokeAccess && employee.authUserId) {
+		const admin = getSupabaseAdminClient();
+		const { error } = await admin.auth.admin.updateUserById(
+			employee.authUserId,
+			{
+				ban_duration: SUPABASE_AUTH_BAN_FOREVER,
+			},
+		);
+
+		if (error) {
+			throw error;
+		}
+	}
 
 	const updateData = {
 		email: input.email,
 		fullName: input.fullName,
-		isAccessEnabled: shouldRevokeAccess ? false : employee.isAccessEnabled,
 		isActive: input.isActive,
 		mustChangePassword: shouldRevokeAccess ? true : employee.mustChangePassword,
 		oabNumber: nextOabNumber,
@@ -403,7 +426,11 @@ export async function resetEmployeePassword({
 		throw new Error(EMPLOYEE_ERRORS.NOT_FOUND);
 	}
 
-	if (!employee.hasCredentialAccount || !employee.isAccessEnabled) {
+	const accessState = await getSupabaseCredentialAccessState(
+		employee.authUserId,
+	);
+
+	if (!accessState.hasCredentialAccount) {
 		throw new Error(EMPLOYEE_ERRORS.RESET_PASSWORD_UNAVAILABLE);
 	}
 
@@ -467,8 +494,16 @@ export async function grantEmployeeAccess({
 		throw new Error(EMPLOYEE_ERRORS.GRANT_ACCESS_INACTIVE_EMPLOYEE);
 	}
 
-	if (employee.hasCredentialAccount && employee.isAccessEnabled) {
+	const accessState = await getSupabaseCredentialAccessState(
+		employee.authUserId,
+	);
+
+	if (accessState.isAccessActive) {
 		throw new Error(EMPLOYEE_ERRORS.GRANT_ACCESS_ALREADY_ENABLED);
+	}
+
+	if (accessState.status === "REVOKED") {
+		throw new Error(EMPLOYEE_ERRORS.GRANT_ACCESS_RESTORE_REQUIRED);
 	}
 
 	const temporaryPassword = createTemporaryPassword();
@@ -485,7 +520,6 @@ export async function grantEmployeeAccess({
 				id,
 			},
 			data: {
-				isAccessEnabled: true,
 				mustChangePassword: true,
 				authUserId,
 			},
@@ -500,7 +534,7 @@ export async function grantEmployeeAccess({
 			entityName: employee.fullName,
 			changeData: {
 				action: "GRANT_ACCESS",
-				isAccessEnabled: true,
+				credentialAccessStatus: "ACTIVE",
 				mustChangePassword: true,
 			},
 			description: `Granted system access to employee ${employee.fullName}.`,
@@ -522,20 +556,28 @@ export async function revokeEmployeeAccess({
 }): Promise<MutationReturnType> {
 	const employee = await getEmployeeById({ firmId, id });
 
-	if (!employee.hasCredentialAccount || !employee.isAccessEnabled) {
+	const accessState = await getSupabaseCredentialAccessState(
+		employee.authUserId,
+	);
+
+	if (!accessState.hasCredentialAccount || !accessState.isAccessActive) {
 		throw new Error(EMPLOYEE_ERRORS.REVOKE_ACCESS_UNAVAILABLE);
 	}
 
-	await prisma.$transaction(async (tx) => {
-		await tx.employee.update({
-			where: {
-				id,
-			},
-			data: {
-				isAccessEnabled: false,
-			},
-		});
+	if (!employee.authUserId) {
+		throw new Error(EMPLOYEE_ERRORS.REVOKE_ACCESS_UNAVAILABLE);
+	}
 
+	const admin = getSupabaseAdminClient();
+	const { error } = await admin.auth.admin.updateUserById(employee.authUserId, {
+		ban_duration: SUPABASE_AUTH_BAN_FOREVER,
+	});
+
+	if (error) {
+		throw error;
+	}
+
+	await prisma.$transaction(async (tx) => {
 		await createEmployeeAuditLog(tx, {
 			firmId,
 			actor,
@@ -545,9 +587,62 @@ export async function revokeEmployeeAccess({
 			entityName: employee.fullName,
 			changeData: {
 				action: "REVOKE_ACCESS",
-				isAccessEnabled: false,
+				credentialAccessStatus: "REVOKED",
 			},
 			description: `Revoked system access from employee ${employee.fullName}.`,
+		});
+	});
+
+	return { success: true };
+}
+
+export async function restoreEmployeeAccess({
+	actor,
+	firmId,
+	id,
+}: EntityUniqueParams & {
+	actor?: AuditLogActor;
+}): Promise<MutationReturnType> {
+	const employee = await getEmployeeById({ firmId, id });
+
+	if (employee.isSoftDeleted || !employee.isActive) {
+		throw new Error(EMPLOYEE_ERRORS.GRANT_ACCESS_INACTIVE_EMPLOYEE);
+	}
+
+	const accessState = await getSupabaseCredentialAccessState(
+		employee.authUserId,
+	);
+
+	if (!accessState.hasCredentialAccount || accessState.status !== "REVOKED") {
+		throw new Error(EMPLOYEE_ERRORS.RESTORE_ACCESS_UNAVAILABLE);
+	}
+
+	if (!employee.authUserId) {
+		throw new Error(EMPLOYEE_ERRORS.RESTORE_ACCESS_UNAVAILABLE);
+	}
+
+	const admin = getSupabaseAdminClient();
+	const { error } = await admin.auth.admin.updateUserById(employee.authUserId, {
+		ban_duration: "none",
+	});
+
+	if (error) {
+		throw error;
+	}
+
+	await prisma.$transaction(async (tx) => {
+		await createEmployeeAuditLog(tx, {
+			firmId,
+			actor,
+			action: "UPDATE",
+			entityType: "Employee",
+			entityId: id,
+			entityName: employee.fullName,
+			changeData: {
+				action: "RESTORE_ACCESS",
+				credentialAccessStatus: "ACTIVE",
+			},
+			description: `Restored system access for employee ${employee.fullName}.`,
 		});
 	});
 

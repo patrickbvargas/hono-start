@@ -17,6 +17,7 @@ import {
 	grantEmployeeAccess,
 	resetEmployeePassword,
 	restoreEmployee,
+	restoreEmployeeAccess,
 	revokeEmployeeAccess,
 	updateEmployee,
 } from "../data/mutations";
@@ -246,6 +247,34 @@ const revokeEmployeeAccessFn = createServerFn({ method: "POST" })
 		}
 	});
 
+const restoreEmployeeAccessFn = createServerFn({ method: "POST" })
+	.middleware([authMiddleware])
+	.inputValidator(employeeIdInputSchema)
+	.handler(async ({ data }): Promise<MutationReturnType> => {
+		try {
+			const session = await getRequiredServerLoggedUserSession();
+			assertCan(session, "employee.manage");
+			const { firmId } = await getServerScope("employee");
+
+			return await restoreEmployeeAccess({
+				actor: {
+					id: session.employee.id,
+					name: session.user.fullName,
+					email: session.user.email,
+				},
+				firmId,
+				id: data.id,
+			});
+		} catch (error) {
+			console.error("[restoreEmployeeAccess]", error);
+			if (hasExactErrorMessage(error, EMPLOYEE_ERRORS)) {
+				throw error;
+			}
+
+			throw new Error(EMPLOYEE_ERRORS.RESTORE_ACCESS_FAILED);
+		}
+	});
+
 export const createEmployeeMutationOptions = () =>
 	mutationOptions({ mutationFn: createEmployeeFn });
 
@@ -266,3 +295,6 @@ export const grantEmployeeAccessMutationOptions = () =>
 
 export const revokeEmployeeAccessMutationOptions = () =>
 	mutationOptions({ mutationFn: revokeEmployeeAccessFn });
+
+export const restoreEmployeeAccessMutationOptions = () =>
+	mutationOptions({ mutationFn: restoreEmployeeAccessFn });

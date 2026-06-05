@@ -1,4 +1,5 @@
 import { prisma } from "@/shared/lib/prisma";
+import { isSupabaseAuthUserBanned } from "@/shared/lib/supabase-admin";
 import { createSupabaseServerClient } from "@/shared/lib/supabase-server";
 import { getScope } from "./scope";
 import type {
@@ -23,12 +24,19 @@ async function resolveDomainSession(): Promise<LoggedUserSession | null> {
 		return null;
 	}
 
+	if (isSupabaseAuthUserBanned(authUser)) {
+		await client.auth.signOut({
+			scope: "local",
+		});
+		flushResponseCookies();
+		return null;
+	}
+
 	const employee = await prisma.employee.findFirst({
 		where: {
 			authUserId: authUser.id,
 			deletedAt: null,
 			isActive: true,
-			isAccessEnabled: true,
 		},
 		select: {
 			id: true,

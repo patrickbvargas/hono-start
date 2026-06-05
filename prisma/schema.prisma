@@ -115,7 +115,6 @@ model Employee {
   remunerationPercentage Decimal      @db.Decimal(5, 4)
   referralPercentage     Decimal      @db.Decimal(5, 4)
   avatarUrl              String?
-  isAccessEnabled        Boolean      @default(false)
   mustChangePassword     Boolean      @default(false)
   isActive               Boolean      @default(true)
   createdAt              DateTime     @default(now())

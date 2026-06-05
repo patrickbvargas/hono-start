@@ -1,4 +1,5 @@
 import { prisma } from "@/shared/lib/prisma";
+import { getSupabaseCredentialAccessState } from "@/shared/lib/supabase-admin";
 import {
 	isEmailIdentifier,
 	normalizeAuthenticationIdentifier,
@@ -20,8 +21,8 @@ export async function resolveAuthenticationEmail(identifier: string) {
 			},
 		},
 		select: {
+			authUserId: true,
 			email: true,
-			isAccessEnabled: true,
 		},
 	});
 
@@ -29,8 +30,13 @@ export async function resolveAuthenticationEmail(identifier: string) {
 		return null;
 	}
 
+	const accessState = await getSupabaseCredentialAccessState(
+		employee.authUserId,
+	);
+
 	return {
+		authUserId: employee.authUserId,
 		email: employee.email.toLowerCase(),
-		isAccessEnabled: employee.isAccessEnabled,
+		isAccessActive: accessState.isAccessActive,
 	};
 }

@@ -1,7 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { EMPLOYEE_ERRORS } from "../constants/errors";
 
-const { prismaMock } = vi.hoisted(() => ({
+const { getSupabaseCredentialAccessStateMock, prismaMock } = vi.hoisted(() => ({
+	getSupabaseCredentialAccessStateMock: vi.fn(),
 	prismaMock: {
 		employee: {
 			count: vi.fn(),
@@ -20,6 +21,10 @@ const { prismaMock } = vi.hoisted(() => ({
 
 vi.mock("@/shared/lib/prisma", () => ({
 	prisma: prismaMock,
+}));
+
+vi.mock("@/shared/lib/supabase-admin", () => ({
+	getSupabaseCredentialAccessState: getSupabaseCredentialAccessStateMock,
 }));
 
 import {
@@ -48,6 +53,14 @@ describe("employee data queries", () => {
 			},
 		]);
 		prismaMock.$queryRaw.mockResolvedValue([{ employeeId: 10, total: 2 }]);
+		getSupabaseCredentialAccessStateMock.mockResolvedValue({
+			hasCredentialAccount: true,
+			isAccessActive: true,
+			status: "ACTIVE",
+			user: {
+				id: "11111111-1111-1111-1111-111111111111",
+			},
+		});
 		prismaMock.employee.findFirst.mockResolvedValue({
 			id: 10,
 			fullName: "Maria Silva",
@@ -60,7 +73,6 @@ describe("employee data queries", () => {
 			roleId: 3,
 			type: { label: "Advogado", value: "LAWYER" },
 			role: { label: "Administrador", value: "ADMIN" },
-			isAccessEnabled: true,
 			mustChangePassword: true,
 			isActive: true,
 			deletedAt: null,
@@ -129,7 +141,8 @@ describe("employee data queries", () => {
 				roleValue: "ADMIN",
 				contractCount: 2,
 				hasCredentialAccount: true,
-				isAccessEnabled: true,
+				credentialAccessStatus: "ACTIVE",
+				hasActiveCredentialAccess: true,
 				mustChangePassword: true,
 			}),
 		);

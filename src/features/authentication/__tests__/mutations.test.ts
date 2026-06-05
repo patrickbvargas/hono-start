@@ -5,6 +5,7 @@ const {
 	createSupabaseServerClientMock,
 	employeeFindFirstMock,
 	flushResponseCookiesMock,
+	getSupabaseCredentialAccessStateMock,
 	getRequestMock,
 	resolveAuthenticationEmailMock,
 	signOutMock,
@@ -15,6 +16,7 @@ const {
 	createSupabaseServerClientMock: vi.fn(),
 	employeeFindFirstMock: vi.fn(),
 	flushResponseCookiesMock: vi.fn(),
+	getSupabaseCredentialAccessStateMock: vi.fn(),
 	getRequestMock: vi.fn(),
 	resolveAuthenticationEmailMock: vi.fn(),
 	signOutMock: vi.fn(),
@@ -69,6 +71,12 @@ vi.mock("@/shared/lib/prisma", () => ({
 			update: updateEmployeeMock,
 		},
 	},
+}));
+
+vi.mock("@/shared/lib/supabase-admin", () => ({
+	getSupabaseCredentialAccessState: getSupabaseCredentialAccessStateMock,
+	isSupabaseAuthUserBannedError: (error: { code?: string } | null) =>
+		error?.code === "user_banned",
 }));
 
 vi.mock("@/shared/lib/supabase-server", () => ({
@@ -144,11 +152,19 @@ describe("authentication server mutations", () => {
 
 		resolveAuthenticationEmailMock.mockResolvedValue({
 			email: "carlos@example.com",
-			isAccessEnabled: true,
+			authUserId: "11111111-1111-1111-1111-111111111111",
+			isAccessActive: true,
+		});
+		getSupabaseCredentialAccessStateMock.mockResolvedValue({
+			hasCredentialAccount: true,
+			isAccessActive: true,
+			status: "ACTIVE",
+			user: {
+				id: "11111111-1111-1111-1111-111111111111",
+			},
 		});
 		employeeFindFirstMock.mockResolvedValue({
 			id: 7,
-			isAccessEnabled: true,
 			mustChangePassword: true,
 		});
 		updateEmployeeMock.mockResolvedValue({});
@@ -187,7 +203,7 @@ describe("authentication server mutations", () => {
 		]);
 	});
 
-	it("records a failed attempt and returns the safe invalid-credentials message", async () => {
+	it("returns the safe invalid-credentials message when Supabase rejects the password flow", async () => {
 		supabaseClientMock.auth.signInWithPassword.mockResolvedValue({
 			data: {
 				user: null,
@@ -231,15 +247,20 @@ describe("authentication server mutations", () => {
 		});
 	});
 
-	it("returns a dedicated message when a valid user has revoked access", async () => {
+	it("returns a dedicated message when Supabase reports a banned user", async () => {
 		resolveAuthenticationEmailMock.mockResolvedValueOnce({
 			email: "carlos@example.com",
-			isAccessEnabled: false,
+			authUserId: "11111111-1111-1111-1111-111111111111",
+			isAccessActive: false,
 		});
-		employeeFindFirstMock.mockResolvedValueOnce({
-			id: 7,
-			isAccessEnabled: false,
-			mustChangePassword: false,
+		supabaseClientMock.auth.signInWithPassword.mockResolvedValueOnce({
+			data: {
+				user: null,
+			},
+			error: {
+				code: "user_banned",
+				message: "User is banned",
+			},
 		});
 
 		await expect(
@@ -252,15 +273,7 @@ describe("authentication server mutations", () => {
 			}),
 		).rejects.toThrow(AUTHENTICATION_ERRORS.ACCESS_REVOKED);
 
-		expect(signOutMock).toHaveBeenCalledWith({
-			scope: "local",
-		});
-		expect(flushResponseCookiesMock).toHaveBeenCalledWith([
-			expect.objectContaining({
-				name: "hono-remember-me",
-				value: "",
-			}),
-		]);
+		expect(employeeFindFirstMock).toHaveBeenCalledTimes(0);
 	});
 
 	it("starts password reset with Supabase recovery flow and does not enumerate missing accounts", async () => {

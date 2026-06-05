@@ -39,17 +39,17 @@ The system SHALL allow a user to sign in by submitting one identifier field cont
 - **WHEN** a user submits an unknown identifier or incorrect password
 - **THEN** the system denies access and shows a safe pt-BR authentication error without exposing whether the identifier exists
 
-### Requirement: Credential login requires granted access and an active linked employee
-The system SHALL allow credential login only when the submitted email or OAB resolves to an employee that is active, not soft-deleted, linked to a Supabase Auth user, and currently marked with administrator-granted access. The system MUST continue to return the same safe pt-BR invalid-credentials response when any of those conditions fail.
+### Requirement: Credential login requires an active linked employee and an unbanned Supabase Auth account
+The system SHALL allow credential login only when the submitted email or OAB resolves to an employee that is active, not soft-deleted, linked to a Supabase Auth user, and not currently banned by Supabase Auth. The system MUST continue to return the same safe pt-BR invalid-credentials response when the identifier is unknown or the password is invalid.
 
-#### Scenario: Employee with granted access logs in successfully
-- **WHEN** a collaborator whose employee is active, not deleted, linked to a Supabase Auth user, has `isAccessEnabled = true`, and has a valid credential submits valid credentials
+#### Scenario: Employee with active provider access logs in successfully
+- **WHEN** a collaborator whose employee is active, not deleted, linked to a Supabase Auth user, is not banned by the provider, and submits valid credentials
 - **THEN** the system authenticates the collaborator normally
 
-#### Scenario: Revoked collaborator access is denied safely
-- **WHEN** a collaborator whose linked employee access state has `isAccessEnabled = false` submits the correct password
+#### Scenario: Revoked collaborator access is denied with revoked-access feedback
+- **WHEN** a collaborator whose linked Supabase Auth account is banned submits the correct password
 - **THEN** the system denies login
-- **AND** shows the same safe invalid-credentials feedback used for unknown identifiers or wrong passwords
+- **AND** shows the dedicated revoked-access feedback in pt-BR
 
 #### Scenario: Inactive or deleted employee cannot authenticate
 - **WHEN** a collaborator submits valid credentials for a linked employee that is inactive or soft-deleted
@@ -57,7 +57,7 @@ The system SHALL allow credential login only when the submitted email or OAB res
 - **AND** shows the same safe invalid-credentials feedback
 
 #### Scenario: Linked auth user without credential account cannot authenticate
-- **WHEN** a collaborator has a linked Supabase Auth user but no valid employee access linkage or granted-access state
+- **WHEN** a collaborator has no valid linked employee record for the resolved Supabase Auth identity
 - **THEN** the system denies credential login
 - **AND** shows the same safe invalid-credentials feedback
 

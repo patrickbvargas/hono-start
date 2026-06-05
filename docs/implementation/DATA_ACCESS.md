@@ -107,7 +107,9 @@ Prisma schema cannot represent PostgreSQL filtered unique indexes directly. When
 
 - Supabase Auth manages identity and session tables in the provider-owned `auth` schema.
 - The authentication provider owns those schemas by platform convention.
-- Domain-owned access flags such as `isAccessEnabled` and `mustChangePassword` remain on `Employee`.
+- The employee domain stores `authUserId` to link a collaborator to `auth.users`.
+- Credential access enablement is derived from Supabase Auth provider state rather than a mirrored application flag.
+- Domain-owned workflow flags such as `mustChangePassword` remain on `Employee`.
 
 ## Derived State
 
