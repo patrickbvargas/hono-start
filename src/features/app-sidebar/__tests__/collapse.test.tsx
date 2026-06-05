@@ -57,6 +57,16 @@ vi.mock("@/shared/components/ui", () => ({
 	),
 }));
 
+vi.mock("@/shared/session", () => ({
+	can: (
+		_session: unknown,
+		action: "employee.manage" | "audit-log.view" | string,
+	) => action !== "employee.manage",
+	useLoggedUserSessionStore: (
+		selector: (session: { role: { value: string } }) => unknown,
+	) => selector({ role: { value: "USER" } }),
+}));
+
 import { NavMain } from "../components/nav-main";
 
 describe("app sidebar collapse behavior", () => {
@@ -110,5 +120,58 @@ describe("app sidebar collapse behavior", () => {
 
 		expect(navHeaderSource).toContain("group-data-[collapsible=icon]:hidden");
 		expect(navUserSource).toContain("group-data-[collapsible=icon]:hidden");
+	});
+
+	it("hides admin-only items for non-admin sessions", () => {
+		render(
+			<NavMain
+				items={[
+					{
+						title: "Geral",
+						url: "#",
+						items: [
+							{
+								title: "Dashboard",
+								url: "/",
+								icon: UserIcon,
+							},
+							{
+								title: "Colaboradores",
+								url: "/colaboradores",
+								icon: UserIcon,
+								permission: "employee.manage",
+							},
+						],
+					},
+				]}
+			/>,
+		);
+
+		expect(screen.getByText("Dashboard")).not.toBeNull();
+		expect(screen.queryByText("Colaboradores")).toBeNull();
+	});
+
+	it("hides empty groups when all routes inside are forbidden", () => {
+		render(
+			<NavMain
+				items={[
+					{
+						title: "Outro",
+						url: "#",
+						items: [
+							{
+								title: "Colaboradores",
+								url: "/colaboradores",
+								icon: UserIcon,
+								permission: "employee.manage",
+							},
+						],
+					},
+				]}
+			/>,
+		);
+
+		expect(screen.queryByText("Outro")).toBeNull();
+		expect(screen.queryByTestId("sidebar-group")).toBeNull();
 	});
 });

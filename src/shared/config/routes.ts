@@ -9,12 +9,14 @@ import {
 	UsersIcon,
 	WalletIcon,
 } from "lucide-react";
+import type { SessionAction } from "@/shared/session";
 
 export interface RouteItem {
 	title: string;
 	url: ToPathOption;
 	icon?: LucideIcon;
 	isActive?: boolean;
+	permission?: SessionAction;
 }
 
 export interface RouteSection extends RouteItem {
@@ -64,10 +66,12 @@ export const ROUTES: Record<RouteName, RouteItem> = {
 		title: "Colaboradores",
 		url: "/colaboradores",
 		icon: UsersIcon,
+		permission: "employee.manage",
 	},
 	auditLog: {
 		title: "Auditoria",
 		url: "/auditoria",
 		icon: ScrollTextIcon,
+		permission: "audit-log.view",
 	},
 } as const;
