@@ -47,6 +47,7 @@ export function EntityActions({
 		<DropdownMenu>
 			<DropdownMenuTrigger
 				render={<Button size="icon-sm" variant="ghost" aria-label="Ações" />}
+				className="cursor-pointer"
 			>
 				<EllipsisVerticalIcon size={16} />
 			</DropdownMenuTrigger>

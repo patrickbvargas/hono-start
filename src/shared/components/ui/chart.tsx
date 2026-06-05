@@ -81,12 +81,30 @@ function getPayloadLabel(
 	return configItem?.label ?? item.value ?? "";
 }
 
-function getPayloadColor(
+export function getPayloadColor(
+	config: ChartConfig,
 	item: Payload<ValueType, NameType> | LegendPayload,
 	key: string,
 ): string {
+	const configuredColor = config[key]?.color ?? config[key]?.theme?.light;
+
+	if (configuredColor) {
+		return configuredColor;
+	}
+
 	if ("color" in item && typeof item.color === "string" && item.color) {
 		return item.color;
+	}
+
+	if (
+		"payload" in item &&
+		item.payload &&
+		typeof item.payload === "object" &&
+		"fill" in item.payload &&
+		typeof item.payload.fill === "string" &&
+		item.payload.fill
+	) {
+		return item.payload.fill;
 	}
 
 	return `var(--color-${key})`;
@@ -242,7 +260,7 @@ export function ChartTooltipContent({
 					.filter((item) => !item.hide)
 					.map((item, index) => {
 						const key = getPayloadKey(item, nameKey);
-						const color = getPayloadColor(item, key);
+						const color = getPayloadColor(config, item, key);
 						const formattedValue = formatter
 							? formatter(item.value, item.name, item, index, payload)
 							: valueFormatter
@@ -308,7 +326,7 @@ export function ChartLegendContent({
 		>
 			{payload.map((item) => {
 				const key = getPayloadKey(item, nameKey);
-				const color = getPayloadColor(item, key);
+				const color = getPayloadColor(config, item, key);
 				const Icon = config[key]?.icon;
 
 				return (

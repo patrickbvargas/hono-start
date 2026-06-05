@@ -1,4 +1,6 @@
+import { Link } from "@tanstack/react-router";
 import { BoxIcon } from "lucide-react";
+import { ROUTES } from "@/shared/config/routes";
 import {
 	SidebarMenu,
 	SidebarMenuButton,
@@ -12,14 +14,18 @@ export const NavHeader = () => {
 				<SidebarMenuButton
 					size="lg"
 					className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+					render={
+						<Link to={ROUTES.dashboard.url}>
+							<div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+								<BoxIcon size={16} />
+							</div>
+							<div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
+								<span className="truncate font-medium">Hono</span>
+								<span className="truncate text-xs">v0.0.0</span>
+							</div>
+						</Link>
+					}
 				>
-					<div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-						<BoxIcon size={16} />
-					</div>
-					<div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
-						<span className="truncate font-medium">Hono</span>
-						<span className="truncate text-xs">v0.0.0</span>
-					</div>
 				</SidebarMenuButton>
 			</SidebarMenuItem>
 		</SidebarMenu>
