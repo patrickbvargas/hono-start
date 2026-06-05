@@ -13,7 +13,7 @@ O projeto já usa `createServerFn` extensivamente, mas ainda não tem uma camada
 
 - Não migrar imediatamente toda server function do projeto para middleware.
 - Não mover regras de negócio, validação de domínio ou mensagens pt-BR das features para camada genérica.
-- Não substituir BetterAuth, Prisma, nem os helpers atuais de sessão protegida no servidor.
+- Não substituir provedor legado de auth, Prisma, nem os helpers atuais de sessão protegida no servidor.
 
 ## Capabilities
 

@@ -109,7 +109,7 @@ const baseEmployee = (
 	hasCredentialAccount: true,
 	isAccessEnabled: true,
 	mustChangePassword: false,
-	supabaseAuthUserId: "auth-user-1",
+	authUserId: "auth-user-1",
 	isActive: true,
 	isSoftDeleted: false,
 	createdAt: "2026-01-01T00:00:00.000Z",
@@ -316,7 +316,7 @@ describe("employee lookup-backed writes", () => {
 				hasCredentialAccount: false,
 				isAccessEnabled: false,
 				mustChangePassword: false,
-				supabaseAuthUserId: null,
+				authUserId: null,
 			}),
 		);
 		supabaseAdminClientMock.auth.admin.listUsers.mockResolvedValueOnce({
@@ -359,7 +359,7 @@ describe("employee lookup-backed writes", () => {
 			data: {
 				isAccessEnabled: true,
 				mustChangePassword: true,
-				supabaseAuthUserId: "auth-user-1",
+				authUserId: "auth-user-1",
 			},
 		});
 	});

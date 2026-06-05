@@ -25,5 +25,5 @@ Public authentication forms currently rely on client-side JavaScript to prevent 
 ## Non-goals
 
 - No redesign of the authentication UI or route structure.
-- No changes to login identifiers, password policy, or BetterAuth session semantics.
+- No changes to login identifiers, password policy, or provedor legado de auth session semantics.
 - No changes to protected-route redirect behavior beyond preventing credential leakage in auth forms.

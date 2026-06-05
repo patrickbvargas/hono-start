@@ -4,37 +4,6 @@ import {
 	normalizeAuthenticationIdentifier,
 } from "../utils/normalization";
 
-const FAILED_LOGIN_WINDOW_MS = 60 * 1000;
-
-export async function countRecentFailedLoginAttempts(identifier: string) {
-	const since = new Date(Date.now() - FAILED_LOGIN_WINDOW_MS);
-
-	return prisma.failedLoginAttempt.count({
-		where: {
-			normalizedIdentifier: identifier,
-			attemptedAt: {
-				gte: since,
-			},
-		},
-	});
-}
-
-export async function recordFailedLoginAttempt(identifier: string) {
-	return prisma.failedLoginAttempt.create({
-		data: {
-			normalizedIdentifier: identifier,
-		},
-	});
-}
-
-export async function clearFailedLoginAttempts(identifier: string) {
-	return prisma.failedLoginAttempt.deleteMany({
-		where: {
-			normalizedIdentifier: identifier,
-		},
-	});
-}
-
 export async function resolveAuthenticationEmail(identifier: string) {
 	const normalizedIdentifier = normalizeAuthenticationIdentifier(identifier);
 	const where = isEmailIdentifier(normalizedIdentifier)
@@ -46,13 +15,13 @@ export async function resolveAuthenticationEmail(identifier: string) {
 			...where,
 			deletedAt: null,
 			isActive: true,
-			isAccessEnabled: true,
-			supabaseAuthUserId: {
+			authUserId: {
 				not: null,
 			},
 		},
 		select: {
 			email: true,
+			isAccessEnabled: true,
 		},
 	});
 
@@ -60,5 +29,8 @@ export async function resolveAuthenticationEmail(identifier: string) {
 		return null;
 	}
 
-	return employee?.email.toLowerCase() ?? null;
+	return {
+		email: employee.email.toLowerCase(),
+		isAccessEnabled: employee.isAccessEnabled,
+	};
 }

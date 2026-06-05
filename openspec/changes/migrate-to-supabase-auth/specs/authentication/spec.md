@@ -105,17 +105,6 @@ The system SHALL allow any authenticated user with a credential-based Supabase A
 - **THEN** the system invalidates the user's other active sessions
 - **AND** preserves the current session so the user remains in the authenticated shell
 
-### Requirement: Failed-login protection enforces the configured credential protection policy
-The system SHALL enforce a credential-attempt protection policy for repeated failed logins against the same normalized identifier without exposing whether the account exists.
-
-#### Scenario: Failed-attempt threshold is reached
-- **WHEN** the same identifier accumulates repeated failed login attempts within the active protection window
-- **THEN** the system blocks further login attempts for that identifier during the active protection window
-
-#### Scenario: Valid login after the protection window succeeds
-- **WHEN** the protection window has expired and the user submits valid credentials
-- **THEN** the system allows authentication normally
-
 ### Requirement: Logout ends authenticated access
 The system SHALL provide a logout action that invalidates the current authenticated session and removes access to protected routes until the user signs in again. The logout flow MUST clear the shared frontend session query and all protected frontend query caches so no browser-side snapshot from the previous actor keeps protected access or protected data alive.
 

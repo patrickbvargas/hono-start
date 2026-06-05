@@ -105,14 +105,14 @@ async function findSupabaseAuthUserByEmail(email: string) {
 async function ensureSupabaseAuthUser(params: {
 	email: string;
 	fullName: string;
-	supabaseAuthUserId: string | null;
+	authUserId: string | null;
 	temporaryPassword: string;
 }) {
 	const admin = getSupabaseAdminClient();
 
-	if (params.supabaseAuthUserId) {
+	if (params.authUserId) {
 		const { data, error } = await admin.auth.admin.updateUserById(
-			params.supabaseAuthUserId,
+			params.authUserId,
 			{
 				email: params.email,
 				email_confirm: true,
@@ -407,20 +407,17 @@ export async function resetEmployeePassword({
 		throw new Error(EMPLOYEE_ERRORS.RESET_PASSWORD_UNAVAILABLE);
 	}
 
-	if (!employee.supabaseAuthUserId) {
+	if (!employee.authUserId) {
 		throw new Error(EMPLOYEE_ERRORS.RESET_PASSWORD_UNAVAILABLE);
 	}
 
 	const temporaryPassword = createTemporaryPassword();
 	const admin = getSupabaseAdminClient();
-	const { error } = await admin.auth.admin.updateUserById(
-		employee.supabaseAuthUserId,
-		{
-			email: employee.email,
-			email_confirm: true,
-			password: temporaryPassword,
-		},
-	);
+	const { error } = await admin.auth.admin.updateUserById(employee.authUserId, {
+		email: employee.email,
+		email_confirm: true,
+		password: temporaryPassword,
+	});
 
 	if (error) {
 		throw error;
@@ -475,10 +472,10 @@ export async function grantEmployeeAccess({
 	}
 
 	const temporaryPassword = createTemporaryPassword();
-	const supabaseAuthUserId = await ensureSupabaseAuthUser({
+	const authUserId = await ensureSupabaseAuthUser({
 		email: employee.email,
 		fullName: employee.fullName,
-		supabaseAuthUserId: employee.supabaseAuthUserId,
+		authUserId: employee.authUserId,
 		temporaryPassword,
 	});
 
@@ -490,7 +487,7 @@ export async function grantEmployeeAccess({
 			data: {
 				isAccessEnabled: true,
 				mustChangePassword: true,
-				supabaseAuthUserId,
+				authUserId,
 			},
 		});
 

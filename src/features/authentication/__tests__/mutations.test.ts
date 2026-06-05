@@ -2,43 +2,34 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { AUTHENTICATION_ERRORS } from "../constants/errors";
 
 const {
-	authMock,
-	clearFailedLoginAttemptsMock,
-	countRecentFailedLoginAttemptsMock,
-	getRequestHeadersMock,
-	prismaMock,
-	recordFailedLoginAttemptMock,
+	createSupabaseServerClientMock,
+	employeeFindFirstMock,
+	flushResponseCookiesMock,
+	getRequestMock,
 	resolveAuthenticationEmailMock,
+	signOutMock,
+	supabaseClientMock,
+	transactionMock,
+	updateEmployeeMock,
 } = vi.hoisted(() => ({
-	authMock: {
-		api: {
-			changePassword: vi.fn(),
-			getSession: vi.fn(),
-			requestPasswordReset: vi.fn(),
-			resetPassword: vi.fn(),
-			signInEmail: vi.fn(),
-			signOut: vi.fn(),
-		},
-	},
-	clearFailedLoginAttemptsMock: vi.fn(),
-	countRecentFailedLoginAttemptsMock: vi.fn(),
-	getRequestHeadersMock: vi.fn(),
-	prismaMock: {
-		$transaction: vi.fn(),
-		account: {
-			updateMany: vi.fn(),
-		},
-		session: {
-			deleteMany: vi.fn(),
-			update: vi.fn(),
-		},
-		user: {
-			findUnique: vi.fn(),
-			update: vi.fn(),
-		},
-	},
-	recordFailedLoginAttemptMock: vi.fn(),
+	createSupabaseServerClientMock: vi.fn(),
+	employeeFindFirstMock: vi.fn(),
+	flushResponseCookiesMock: vi.fn(),
+	getRequestMock: vi.fn(),
 	resolveAuthenticationEmailMock: vi.fn(),
+	signOutMock: vi.fn(),
+	supabaseClientMock: {
+		auth: {
+			exchangeCodeForSession: vi.fn(),
+			getUser: vi.fn(),
+			resetPasswordForEmail: vi.fn(),
+			signInWithPassword: vi.fn(),
+			signOut: vi.fn(),
+			updateUser: vi.fn(),
+		},
+	},
+	transactionMock: vi.fn(),
+	updateEmployeeMock: vi.fn(),
 }));
 
 function createServerFnMock() {
@@ -67,27 +58,46 @@ vi.mock("@tanstack/start-client-core", () => ({
 }));
 
 vi.mock("@tanstack/react-start/server", () => ({
-	getRequestHeaders: getRequestHeadersMock,
-}));
-
-vi.mock("@/shared/config/env", () => ({
-	env: {
-		BETTER_AUTH_URL: "http://localhost:3000",
-	},
-}));
-
-vi.mock("@/shared/lib/auth", () => ({
-	auth: authMock,
+	getRequest: getRequestMock,
 }));
 
 vi.mock("@/shared/lib/prisma", () => ({
-	prisma: prismaMock,
+	prisma: {
+		$transaction: transactionMock,
+		employee: {
+			findFirst: employeeFindFirstMock,
+			update: updateEmployeeMock,
+		},
+	},
+}));
+
+vi.mock("@/shared/lib/supabase-server", () => ({
+	createClearedRememberMeCookie: () => ({
+		name: "hono-remember-me",
+		options: {
+			httpOnly: true,
+			maxAge: 0,
+			path: "/",
+			sameSite: "lax",
+			secure: false,
+		},
+		value: "",
+	}),
+	createRememberMeCookie: (rememberMe: boolean) => ({
+		name: "hono-remember-me",
+		options: {
+			httpOnly: true,
+			maxAge: rememberMe ? 604800 : 86400,
+			path: "/",
+			sameSite: "lax",
+			secure: false,
+		},
+		value: rememberMe ? "1" : "0",
+	}),
+	createSupabaseServerClient: createSupabaseServerClientMock,
 }));
 
 vi.mock("../data/mutations", () => ({
-	clearFailedLoginAttempts: clearFailedLoginAttemptsMock,
-	countRecentFailedLoginAttempts: countRecentFailedLoginAttemptsMock,
-	recordFailedLoginAttempt: recordFailedLoginAttemptMock,
 	resolveAuthenticationEmail: resolveAuthenticationEmailMock,
 }));
 
@@ -95,68 +105,66 @@ import {
 	changePasswordMutationHandler,
 	forcedChangePasswordMutationHandler,
 	loginMutationHandler,
+	logoutMutationHandler,
 	requestPasswordResetMutationHandler,
 	resetPasswordMutationHandler,
 } from "../api/mutation-handlers";
 
-const requestHeaders = new Headers({
-	cookie: "session=token",
-});
-
 describe("authentication server mutations", () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
-		getRequestHeadersMock.mockReturnValue(requestHeaders);
-		countRecentFailedLoginAttemptsMock.mockResolvedValue(0);
-		resolveAuthenticationEmailMock.mockResolvedValue("carlos@example.com");
-		authMock.api.signInEmail.mockResolvedValue({
-			token: "session-token",
-			user: {
-				employeeId: 7,
+
+		supabaseClientMock.auth.signInWithPassword.mockResolvedValue({
+			data: {
+				user: { id: "11111111-1111-1111-1111-111111111111" },
 			},
+			error: null,
 		});
-		authMock.api.changePassword.mockResolvedValue({});
-		authMock.api.getSession.mockResolvedValue({
-			session: {
-				id: "session-id",
+		supabaseClientMock.auth.updateUser.mockResolvedValue({ error: null });
+		supabaseClientMock.auth.getUser.mockResolvedValue({
+			data: {
+				user: { id: "11111111-1111-1111-1111-111111111111" },
 			},
-			user: {
-				id: "auth-user-1",
-			},
+			error: null,
 		});
-		prismaMock.session.update.mockResolvedValue({});
-		prismaMock.session.deleteMany.mockResolvedValue({});
-		prismaMock.user.findUnique.mockResolvedValue({
+		supabaseClientMock.auth.resetPasswordForEmail.mockResolvedValue({
+			error: null,
+		});
+		supabaseClientMock.auth.exchangeCodeForSession.mockResolvedValue({
+			error: null,
+		});
+		signOutMock.mockResolvedValue({ error: null });
+		supabaseClientMock.auth.signOut = signOutMock;
+
+		createSupabaseServerClientMock.mockReturnValue({
+			client: supabaseClientMock,
+			flushResponseCookies: flushResponseCookiesMock,
+			rememberMe: false,
+		});
+
+		resolveAuthenticationEmailMock.mockResolvedValue({
+			email: "carlos@example.com",
+			isAccessEnabled: true,
+		});
+		employeeFindFirstMock.mockResolvedValue({
+			id: 7,
+			isAccessEnabled: true,
 			mustChangePassword: true,
 		});
-		prismaMock.user.update.mockResolvedValue({});
-		prismaMock.account.updateMany.mockResolvedValue({});
-		prismaMock.$transaction.mockImplementation(async (callback) =>
-			callback(prismaMock),
-		);
-		authMock.api.requestPasswordReset.mockResolvedValue({});
-		authMock.api.resetPassword.mockResolvedValue({});
-		authMock.api.signOut.mockResolvedValue({});
-	});
-
-	it("blocks login after five failed attempts within one minute", async () => {
-		countRecentFailedLoginAttemptsMock.mockResolvedValue(5);
-
-		await expect(
-			loginMutationHandler({
-				data: {
-					identifier: "carlos@example.com",
-					password: "Senha123!",
-					rememberMe: false,
+		updateEmployeeMock.mockResolvedValue({});
+		transactionMock.mockImplementation(async (callback) =>
+			callback({
+				employee: {
+					update: updateEmployeeMock,
 				},
 			}),
-		).rejects.toThrow(AUTHENTICATION_ERRORS.TOO_MANY_ATTEMPTS);
-
-		expect(authMock.api.signInEmail).not.toHaveBeenCalled();
-		expect(recordFailedLoginAttemptMock).not.toHaveBeenCalled();
+		);
+		getRequestMock.mockReturnValue({
+			url: "http://localhost:3000/recuperar-senha",
+		});
 	});
 
-	it("persists the remember-me flag on successful login and clears lockout history", async () => {
+	it("authenticates with Supabase password flow and persists remember-me intent", async () => {
 		await expect(
 			loginMutationHandler({
 				data: {
@@ -165,30 +173,27 @@ describe("authentication server mutations", () => {
 					rememberMe: true,
 				},
 			}),
-		).resolves.toEqual({ success: true });
+		).resolves.toEqual({ success: true, mustChangePassword: true });
 
-		expect(authMock.api.signInEmail).toHaveBeenCalledWith({
-			headers: requestHeaders,
-			body: {
-				email: "carlos@example.com",
-				password: "Senha123!",
-				rememberMe: true,
-			},
+		expect(supabaseClientMock.auth.signInWithPassword).toHaveBeenCalledWith({
+			email: "carlos@example.com",
+			password: "Senha123!",
 		});
-		expect(prismaMock.session.update).toHaveBeenCalledWith({
-			where: {
-				token: "session-token",
-			},
-			data: {
-				rememberMe: true,
-			},
-		});
-		expect(clearFailedLoginAttemptsMock).toHaveBeenCalledWith("123456");
-		expect(recordFailedLoginAttemptMock).not.toHaveBeenCalled();
+		expect(flushResponseCookiesMock).toHaveBeenCalledWith([
+			expect.objectContaining({
+				name: "hono-remember-me",
+				value: "1",
+			}),
+		]);
 	});
 
 	it("records a failed attempt and returns the safe invalid-credentials message", async () => {
-		authMock.api.signInEmail.mockRejectedValue(new Error("boom"));
+		supabaseClientMock.auth.signInWithPassword.mockResolvedValue({
+			data: {
+				user: null,
+			},
+			error: new Error("boom"),
+		});
 
 		await expect(
 			loginMutationHandler({
@@ -199,14 +204,16 @@ describe("authentication server mutations", () => {
 				},
 			}),
 		).rejects.toThrow(AUTHENTICATION_ERRORS.INVALID_CREDENTIALS);
-
-		expect(recordFailedLoginAttemptMock).toHaveBeenCalledWith("RS123456");
-		expect(clearFailedLoginAttemptsMock).not.toHaveBeenCalled();
 	});
 
-	it("treats revoked or unavailable access as invalid credentials", async () => {
+	it("treats unavailable access as invalid credentials", async () => {
 		resolveAuthenticationEmailMock.mockResolvedValueOnce(null);
-		authMock.api.signInEmail.mockRejectedValueOnce(new Error("blocked"));
+		supabaseClientMock.auth.signInWithPassword.mockResolvedValueOnce({
+			data: {
+				user: null,
+			},
+			error: new Error("blocked"),
+		});
 
 		await expect(
 			loginMutationHandler({
@@ -218,20 +225,45 @@ describe("authentication server mutations", () => {
 			}),
 		).rejects.toThrow(AUTHENTICATION_ERRORS.INVALID_CREDENTIALS);
 
-		expect(authMock.api.signInEmail).toHaveBeenCalledWith({
-			headers: requestHeaders,
-			body: {
-				email: "desconhecido@example.invalid",
-				password: "Senha123!",
-				rememberMe: false,
-			},
+		expect(supabaseClientMock.auth.signInWithPassword).toHaveBeenCalledWith({
+			email: "desconhecido@example.invalid",
+			password: "Senha123!",
 		});
-		expect(recordFailedLoginAttemptMock).toHaveBeenCalledWith(
-			"carlos@example.com",
-		);
 	});
 
-	it("starts password reset with the public reset route and does not enumerate missing accounts", async () => {
+	it("returns a dedicated message when a valid user has revoked access", async () => {
+		resolveAuthenticationEmailMock.mockResolvedValueOnce({
+			email: "carlos@example.com",
+			isAccessEnabled: false,
+		});
+		employeeFindFirstMock.mockResolvedValueOnce({
+			id: 7,
+			isAccessEnabled: false,
+			mustChangePassword: false,
+		});
+
+		await expect(
+			loginMutationHandler({
+				data: {
+					identifier: "carlos@example.com",
+					password: "Senha123!",
+					rememberMe: false,
+				},
+			}),
+		).rejects.toThrow(AUTHENTICATION_ERRORS.ACCESS_REVOKED);
+
+		expect(signOutMock).toHaveBeenCalledWith({
+			scope: "local",
+		});
+		expect(flushResponseCookiesMock).toHaveBeenCalledWith([
+			expect.objectContaining({
+				name: "hono-remember-me",
+				value: "",
+			}),
+		]);
+	});
+
+	it("starts password reset with Supabase recovery flow and does not enumerate missing accounts", async () => {
 		await expect(
 			requestPasswordResetMutationHandler({
 				data: {
@@ -240,13 +272,12 @@ describe("authentication server mutations", () => {
 			}),
 		).resolves.toEqual({ success: true });
 
-		expect(authMock.api.requestPasswordReset).toHaveBeenCalledWith({
-			headers: requestHeaders,
-			body: {
-				email: "carlos@example.com",
+		expect(supabaseClientMock.auth.resetPasswordForEmail).toHaveBeenCalledWith(
+			"carlos@example.com",
+			{
 				redirectTo: "http://localhost:3000/recuperar-senha",
 			},
-		});
+		);
 
 		resolveAuthenticationEmailMock.mockResolvedValueOnce(null);
 
@@ -258,11 +289,15 @@ describe("authentication server mutations", () => {
 			}),
 		).resolves.toEqual({ success: true });
 
-		expect(authMock.api.requestPasswordReset).toHaveBeenCalledTimes(1);
+		expect(supabaseClientMock.auth.resetPasswordForEmail).toHaveBeenCalledTimes(
+			1,
+		);
 	});
 
 	it("maps reset-password failures to the safe invalid-token message", async () => {
-		authMock.api.resetPassword.mockRejectedValue(new Error("expired"));
+		supabaseClientMock.auth.exchangeCodeForSession.mockResolvedValue({
+			error: new Error("expired"),
+		});
 
 		await expect(
 			resetPasswordMutationHandler({
@@ -275,7 +310,7 @@ describe("authentication server mutations", () => {
 		).rejects.toThrow(AUTHENTICATION_ERRORS.RESET_INVALID_TOKEN);
 	});
 
-	it("changes password for the authenticated user and preserves revoke-other-sessions choice", async () => {
+	it("changes password for the authenticated user using Supabase updateUser", async () => {
 		await expect(
 			changePasswordMutationHandler({
 				data: {
@@ -287,20 +322,19 @@ describe("authentication server mutations", () => {
 			}),
 		).resolves.toEqual({ success: true });
 
-		expect(authMock.api.changePassword).toHaveBeenCalledWith({
-			headers: requestHeaders,
-			body: {
-				currentPassword: "Senha123!",
-				newPassword: "SenhaNova123!",
-				revokeOtherSessions: true,
-			},
+		expect(supabaseClientMock.auth.updateUser).toHaveBeenCalledWith({
+			current_password: "Senha123!",
+			password: "SenhaNova123!",
+		});
+		expect(signOutMock).toHaveBeenCalledWith({
+			scope: "others",
 		});
 	});
 
 	it("maps invalid current-password failures to the safe pt-BR message", async () => {
-		authMock.api.changePassword.mockRejectedValue(
-			new Error("INVALID_PASSWORD"),
-		);
+		supabaseClientMock.auth.updateUser.mockResolvedValue({
+			error: new Error("Current password is incorrect"),
+		});
 
 		await expect(
 			changePasswordMutationHandler({
@@ -314,7 +348,7 @@ describe("authentication server mutations", () => {
 		).rejects.toThrow(AUTHENTICATION_ERRORS.CHANGE_PASSWORD_INVALID_CURRENT);
 	});
 
-	it("forces a flagged authenticated user to set a new password and may revoke other sessions", async () => {
+	it("forces a flagged authenticated user to set a new password and clears the employee flag", async () => {
 		await expect(
 			forcedChangePasswordMutationHandler({
 				data: {
@@ -325,35 +359,25 @@ describe("authentication server mutations", () => {
 			}),
 		).resolves.toEqual({ success: true });
 
-		expect(prismaMock.account.updateMany).toHaveBeenCalledWith({
-			where: {
-				userId: "auth-user-1",
-				providerId: "credential",
-			},
-			data: {
-				password: expect.any(String),
-			},
+		expect(supabaseClientMock.auth.updateUser).toHaveBeenCalledWith({
+			password: "SenhaNova123!",
 		});
-		expect(prismaMock.user.update).toHaveBeenCalledWith({
+		expect(updateEmployeeMock).toHaveBeenCalledWith({
 			where: {
-				id: "auth-user-1",
+				id: 7,
 			},
 			data: {
 				mustChangePassword: false,
 			},
 		});
-		expect(prismaMock.session.deleteMany).toHaveBeenCalledWith({
-			where: {
-				userId: "auth-user-1",
-				id: {
-					not: "session-id",
-				},
-			},
+		expect(signOutMock).toHaveBeenCalledWith({
+			scope: "others",
 		});
 	});
 
-	it("rejects forced password change when the account is not flagged", async () => {
-		prismaMock.user.findUnique.mockResolvedValueOnce({
+	it("rejects forced password change when the employee is not flagged", async () => {
+		employeeFindFirstMock.mockResolvedValueOnce({
+			id: 7,
 			mustChangePassword: false,
 		});
 
@@ -366,5 +390,19 @@ describe("authentication server mutations", () => {
 				},
 			}),
 		).rejects.toThrow(AUTHENTICATION_ERRORS.FORCED_CHANGE_PASSWORD_FORBIDDEN);
+	});
+
+	it("logs out using Supabase signOut and clears the remember-me cookie", async () => {
+		await expect(logoutMutationHandler()).resolves.toEqual({ success: true });
+
+		expect(signOutMock).toHaveBeenCalledWith({
+			scope: "local",
+		});
+		expect(flushResponseCookiesMock).toHaveBeenCalledWith([
+			expect.objectContaining({
+				name: "hono-remember-me",
+				value: "",
+			}),
+		]);
 	});
 });

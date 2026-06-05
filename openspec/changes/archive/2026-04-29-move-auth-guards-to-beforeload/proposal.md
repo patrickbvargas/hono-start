@@ -13,7 +13,7 @@ As rotas protegidas e públicas de autenticação ainda usam `loader` para decid
 ## Non-goals
 
 - Não alterar regras de autorização, papéis, permissões, nem isolamento multi-tenant.
-- Não substituir BetterAuth, TanStack Query, nem o modelo atual de sessão no servidor.
+- Não substituir provedor legado de auth, TanStack Query, nem o modelo atual de sessão no servidor.
 - Não redesenhar telas de login, recuperação de senha, sidebar, ou overlays.
 - Não migrar outros comportamentos de rota que não estejam diretamente ligados ao gate de autenticação.
 

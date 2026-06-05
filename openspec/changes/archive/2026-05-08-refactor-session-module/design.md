@@ -23,7 +23,7 @@ This refactor must preserve the current role model, tenant isolation, pt-BR deni
 **Non-Goals:**
 
 - No change to who can access what.
-- No change to BetterAuth, Prisma, or route composition behavior.
+- No change to provedor legado de auth, Prisma, or route composition behavior.
 - No new permission wrappers per feature.
 - No new shared abstraction outside `src/shared/session`.
 

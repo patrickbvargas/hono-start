@@ -286,7 +286,7 @@ describe("feature utility contracts", () => {
 
 		expect(csv).toContain('"sep=;"');
 		expect(csv).toContain(
-			'"Colaborador";"Cliente";"Processo";"Nº da parcela";"Competência";"% Efetivo";"Origem";"Situação";"Valor"',
+			'"Colaborador";"Cliente";"Processo";"Nº parcela";"Competência";"%";"Origem";"Situação";"Valor"',
 		);
 		expect(csv).toContain(
 			'"João ""Teste"" (Advogado) \\ Silva";"Maria Cliente"',

@@ -23,5 +23,5 @@ Administrators can already manage employee records and reset passwords for colla
 ## Impact
 
 - Affected code in `src/features/authentication`, `src/features/employees`, `src/shared/lib/auth`, and shared session/auth enforcement paths.
-- Affected persistence in BetterAuth-backed `user`, `account`, and `session` tables, without introducing a new external dependency.
+- Affected persistence in provedor legado de auth-backed `user`, `account`, and `session` tables, without introducing a new external dependency.
 - Affected product contract in employee/account management behavior and authentication eligibility rules.

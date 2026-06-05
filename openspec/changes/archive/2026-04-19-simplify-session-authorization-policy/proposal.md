@@ -15,7 +15,7 @@ Session authorization policy has grown hard to read because each feature has sug
 - Do not change the role model, permission matrix, tenant isolation rules, or validation behavior.
 - Do not add new actions, screens, roles, or resource types.
 - Do not move feature business validation into session policy.
-- Do not change BetterAuth session storage or logged-user session shape unless needed for type-only cleanup.
+- Do not change provedor legado de auth session storage or logged-user session shape unless needed for type-only cleanup.
 
 ## Capabilities
 

@@ -10,18 +10,19 @@ const adapter = new PrismaPg({
 const prisma = new PrismaClient({ adapter });
 const DEFAULT_FIRM_ID = 1;
 const MINIMUM_CONTRACT_COUNT = 20;
+
 const devAuthFixtures = [
   {
-    email: "admin@admin.com",
+    email: "admin@hono.com",
     password: "admin123",
   },
   {
-    email: "amanda.admin@matriz.test",
-    password: "SenhaAdmin123!",
+    email: "amanda@hono.com",
+    password: "amanda123",
   },
   {
-    email: "carlos.mendes@matriz.test",
-    password: "SenhaUsuario123!",
+    email: "carlos@hono.com",
+    password: "carlos123",
   },
 ] as const;
 
@@ -276,7 +277,7 @@ function createPhone(seed: number) {
 function createEmployeeSeeds(): EmployeeSeedInput[] {
   const seededAdminEmployee: EmployeeSeedInput = {
     fullName: "Admin Sistema",
-    email: "admin@admin.com",
+    email: "admin@hono.com",
     typeValue: "LAWYER",
     roleValue: "ADMIN",
     remunerationPercentage: "0.3500",
@@ -315,8 +316,10 @@ function createEmployeeSeeds(): EmployeeSeedInput[] {
     fullName,
     email:
       index === 0
-        ? "amanda.admin@matriz.test"
-        : `${fullName.toLowerCase().replaceAll(" ", ".")}@matriz.test`,
+        ? "amanda@hono.com"
+        : index === 2
+          ? "carlos@hono.com"
+        : `${fullName.toLowerCase().replaceAll(" ", ".")}@hono.com`,
     typeValue: "LAWYER" as const,
     roleValue: index < 2 ? ("ADMIN" as const) : ("USER" as const),
     remunerationPercentage: index < 4 ? "0.3500" : "0.3000",
@@ -327,7 +330,7 @@ function createEmployeeSeeds(): EmployeeSeedInput[] {
 
   const assistants = assistantNames.map((fullName, index) => ({
     fullName,
-    email: `${fullName.toLowerCase().replaceAll(" ", ".")}@matriz.test`,
+    email: `${fullName.toLowerCase().replaceAll(" ", ".")}@hono.com`,
     typeValue: "ADMIN_ASSISTANT" as const,
     roleValue: "USER" as const,
     remunerationPercentage: index < 4 ? "0.1200" : "0.1500",
@@ -369,7 +372,7 @@ function createClientSeeds(): ClientSeedInput[] {
     fullName,
     document: createCpf(index + 1),
     typeValue: "INDIVIDUAL" as const,
-    email: `cliente${index + 1}@matriz.test`,
+    email: `cliente${index + 1}@hono.com`,
     phone: createPhone(index + 1),
     isActive: index !== 10,
   }));
@@ -378,7 +381,7 @@ function createClientSeeds(): ClientSeedInput[] {
     fullName,
     document: createCnpj(index + 1),
     typeValue: "COMPANY" as const,
-    email: `contato${index + 1}@empresa.matriz.test`,
+    email: `contato${index + 1}@empresa.hono.com`,
     phone: createPhone(index + 21),
     isActive: index !== 6,
   }));
@@ -911,11 +914,11 @@ async function reconcileSupabaseAuthFixtures() {
         email: true,
         fullName: true,
         id: true,
-        supabaseAuthUserId: true,
+        authUserId: true,
       },
     });
 
-    let authUserId = employee.supabaseAuthUserId;
+    let authUserId = employee.authUserId;
 
     if (authUserId) {
       const { data, error } = await supabase.auth.admin.updateUserById(
@@ -978,7 +981,7 @@ async function reconcileSupabaseAuthFixtures() {
       data: {
         isAccessEnabled: true,
         mustChangePassword: false,
-        supabaseAuthUserId: authUserId,
+        authUserId,
       },
     });
   }
@@ -1393,45 +1396,54 @@ async function main() {
     prisma.clientType.findUniqueOrThrow({ where: { value: "COMPANY" } }),
   ]);
 
-  await Promise.all(
-    employeeSeeds.map((employee) =>
-      prisma.employee.upsert({
-        where: { email: employee.email },
-        update: {
-          firmId: DEFAULT_FIRM_ID,
-          fullName: employee.fullName,
-          typeId:
-            employee.typeValue === "LAWYER" ? lawyerType.id : assistantType.id,
-          roleId: employee.roleValue === "ADMIN" ? adminRole.id : userRole.id,
-          oabNumber: employee.oabNumber ?? null,
-          remunerationPercentage: employee.remunerationPercentage,
-          referralPercentage: employee.referralPercentage,
-          avatarUrl: null,
-          isAccessEnabled: false,
-          isActive: employee.isActive,
-          mustChangePassword: false,
-          supabaseAuthUserId: null,
-          deletedAt: null,
+  for (const employee of employeeSeeds) {
+    const existingEmployee = await prisma.employee.findFirst({
+      where: {
+        firmId: DEFAULT_FIRM_ID,
+        OR: [
+          { email: employee.email },
+          ...(employee.oabNumber
+            ? [{ oabNumber: employee.oabNumber }]
+            : []),
+        ],
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    const employeeData = {
+      firmId: DEFAULT_FIRM_ID,
+      fullName: employee.fullName,
+      email: employee.email,
+      typeId:
+        employee.typeValue === "LAWYER" ? lawyerType.id : assistantType.id,
+      roleId: employee.roleValue === "ADMIN" ? adminRole.id : userRole.id,
+      oabNumber: employee.oabNumber ?? null,
+      remunerationPercentage: employee.remunerationPercentage,
+      referralPercentage: employee.referralPercentage,
+      avatarUrl: null,
+      isAccessEnabled: false,
+      isActive: employee.isActive,
+      mustChangePassword: false,
+      authUserId: null,
+      deletedAt: null,
+    };
+
+    if (existingEmployee) {
+      await prisma.employee.update({
+        where: {
+          id: existingEmployee.id,
         },
-        create: {
-          firmId: DEFAULT_FIRM_ID,
-          fullName: employee.fullName,
-          email: employee.email,
-          typeId:
-            employee.typeValue === "LAWYER" ? lawyerType.id : assistantType.id,
-          roleId: employee.roleValue === "ADMIN" ? adminRole.id : userRole.id,
-          oabNumber: employee.oabNumber ?? null,
-          remunerationPercentage: employee.remunerationPercentage,
-          referralPercentage: employee.referralPercentage,
-          avatarUrl: null,
-          isAccessEnabled: false,
-          isActive: employee.isActive,
-          mustChangePassword: false,
-          supabaseAuthUserId: null,
-        },
-      }),
-    ),
-  );
+        data: employeeData,
+      });
+      continue;
+    }
+
+    await prisma.employee.create({
+      data: employeeData,
+    });
+  }
 
   await Promise.all(
     clientSeeds.map((client) =>

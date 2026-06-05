@@ -23,81 +23,6 @@ model Firm {
   @@map("firms")
 }
 
-model User {
-  id            String    @id
-  name          String
-  email         String    @unique
-  emailVerified Boolean   @default(false)
-  isAccessEnabled Boolean @default(true)
-  mustChangePassword Boolean @default(false)
-  image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  employeeId    Int?      @unique
-  accounts      Account[]
-  employee      Employee? @relation(fields: [employeeId], references: [id], onDelete: SetNull)
-  sessions      Session[]
-
-  @@map("user")
-}
-
-model Session {
-  id         String   @id
-  expiresAt  DateTime
-  token      String   @unique
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  ipAddress  String?
-  userAgent  String?
-  userId     String
-  rememberMe Boolean? @default(false)
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@map("session")
-}
-
-model Account {
-  id                    String    @id
-  accountId             String
-  providerId            String
-  userId                String
-  accessToken           String?
-  refreshToken          String?
-  idToken               String?
-  accessTokenExpiresAt  DateTime?
-  refreshTokenExpiresAt DateTime?
-  scope                 String?
-  password              String?
-  createdAt             DateTime  @default(now())
-  updatedAt             DateTime  @updatedAt
-  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@map("account")
-}
-
-model Verification {
-  id         String   @id
-  identifier String
-  value      String
-  expiresAt  DateTime
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  @@index([identifier])
-  @@map("verification")
-}
-
-model FailedLoginAttempt {
-  id                   Int      @id @default(autoincrement())
-  normalizedIdentifier String
-  attemptedAt          DateTime @default(now())
-
-  @@index([normalizedIdentifier, attemptedAt])
-  @@map("failed_login_attempts")
-}
-
 model ClientType {
   id       Int      @id @default(autoincrement())
   value    String   @unique
@@ -183,7 +108,7 @@ model Employee {
   firmId                 Int
   fullName               String
   email                  String       @unique
-  supabaseAuthUserId     String?      @unique @db.Uuid
+  authUserId             String?      @unique @db.Uuid
   typeId                 Int
   roleId                 Int
   oabNumber              String?
@@ -199,7 +124,6 @@ model Employee {
   firm                   Firm         @relation(fields: [firmId], references: [id])
   type                   EmployeeType @relation(fields: [typeId], references: [id])
   role                   UserRole     @relation(fields: [roleId], references: [id])
-  authUser               User?
   auditLogs              AuditLog[]
   attachments            Attachment[]
   contractAssignments    ContractEmployee[]
@@ -309,9 +233,6 @@ model ContractEmployee {
   firm             Firm           @relation(fields: [firmId], references: [id])
   remunerations    Remuneration[]
 
-  /// Database migration-managed partial unique index:
-  /// contract_employees_contractId_employeeId_active_key
-  /// UNIQUE ("contractId", "employeeId") WHERE "deletedAt" IS NULL AND "isActive" = true
   @@index([firmId])
   @@index([contractId])
   @@index([employeeId])
@@ -340,9 +261,6 @@ model Revenue {
   type              RevenueType @relation(fields: [typeId], references: [id])
   fees              Fee[]
 
-  /// Database migration-managed partial unique index:
-  /// revenues_contractId_typeId_active_key
-  /// UNIQUE ("contractId", "typeId") WHERE "deletedAt" IS NULL AND "isActive" = true
   @@index([firmId])
   @@index([contractId])
   @@index([typeId])
@@ -368,9 +286,6 @@ model Fee {
   revenue               Revenue        @relation(fields: [revenueId], references: [id])
   remunerations         Remuneration[]
 
-  /// Database migration-managed partial unique index:
-  /// fees_revenueId_installmentNumber_active_key
-  /// UNIQUE ("revenueId", "installmentNumber") WHERE "deletedAt" IS NULL AND "isActive" = true
   @@index([firmId])
   @@index([revenueId])
   @@index([paymentDate])
@@ -397,9 +312,6 @@ model Remuneration {
   fee                Fee              @relation(fields: [feeId], references: [id])
   firm               Firm             @relation(fields: [firmId], references: [id])
 
-  /// Database migration-managed partial unique index:
-  /// remunerations_feeId_contractEmployeeId_active_key
-  /// UNIQUE ("feeId", "contractEmployeeId") WHERE "deletedAt" IS NULL
   @@index([firmId])
   @@index([feeId])
   @@index([contractEmployeeId])

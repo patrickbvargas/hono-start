@@ -50,6 +50,7 @@ const employeeDetail = {
 	hasCredentialAccount: true,
 	isAccessEnabled: true,
 	mustChangePassword: false,
+	authUserId: "11111111-1111-1111-1111-111111111111",
 	isActive: true,
 	isSoftDeleted: false,
 	createdAt: timestamp,

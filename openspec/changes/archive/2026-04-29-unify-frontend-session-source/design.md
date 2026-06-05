@@ -13,7 +13,7 @@ The user-facing direction is clear: the frontend must keep only one source of tr
 - Preserve the existing shared session model and authorization helpers so role and tenant decisions remain centralized.
 
 **Non-Goals:**
-- Replacing BetterAuth or changing the server-side session resolution contract.
+- Replacing provedor legado de auth or changing the server-side session resolution contract.
 - Moving authorization authority from the server to the browser store.
 - Changing the permission matrix, protected route inventory, or tenant rules defined by the docs.
 - Introducing a second frontend session abstraction beside TanStack Query.

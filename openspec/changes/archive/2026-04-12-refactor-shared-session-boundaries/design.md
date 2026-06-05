@@ -13,7 +13,7 @@ This refactor is cross-cutting even though the initial consumer is employee mana
 - Make employee-management server functions and route-level admin gating depend on the shared authorization helpers as the system of record.
 
 **Non-Goals:**
-- Implementing BetterAuth or replacing the current mocked session flow.
+- Implementing provedor legado de auth or replacing the current mocked session flow.
 - Changing the PRD permission matrix, role names, or multi-tenant rules.
 - Introducing a generic policy engine, DSL, or database-driven permissions system.
 - Refactoring unrelated features that do not currently consume `src/shared/session`.
@@ -40,7 +40,7 @@ Alternative considered: expose permission booleans from the store and let featur
 
 The Zustand store remains the client-side transport for the current mock session, but server functions must read session data through a dedicated server helper that returns the same shared session model.
 
-This preserves the current mock behavior while making the client/server split explicit. When BetterAuth lands, the server helper and client bootstrap can change independently without forcing a policy rewrite.
+This preserves the current mock behavior while making the client/server split explicit. When provedor legado de auth lands, the server helper and client bootstrap can change independently without forcing a policy rewrite.
 
 Alternative considered: import store helpers directly in server functions. Rejected because TanStack Start server functions execute outside the browser, and authorization must not depend on client state.
 
@@ -80,4 +80,4 @@ Rollback is straightforward: restore the previous single-file session module and
 ## Open Questions
 
 - Should future feature slices import fine-grained session modules directly, or should the barrel remain the enforced import path for consistency?
-- When BetterAuth is introduced, should the session boundary expose only raw auth data, or continue to include mapped domain-friendly role and firm objects?
+- When provedor legado de auth is introduced, should the session boundary expose only raw auth data, or continue to include mapped domain-friendly role and firm objects?

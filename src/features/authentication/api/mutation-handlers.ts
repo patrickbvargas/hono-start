@@ -7,20 +7,13 @@ import {
 	createSupabaseServerClient,
 } from "@/shared/lib/supabase-server";
 import { AUTHENTICATION_ERRORS } from "../constants/errors";
-import {
-	clearFailedLoginAttempts,
-	countRecentFailedLoginAttempts,
-	recordFailedLoginAttempt,
-	resolveAuthenticationEmail,
-} from "../data/mutations";
+import { resolveAuthenticationEmail } from "../data/mutations";
 import type {
 	ChangePasswordInput,
 	ForcedChangePasswordInput,
 	LoginInput,
 } from "../schemas/form";
-import { normalizeAuthenticationIdentifier } from "../utils/normalization";
 
-const LOCKOUT_THRESHOLD = 5;
 const UNKNOWN_LOGIN_EMAIL = "desconhecido@example.invalid";
 
 interface MutationStatus {
@@ -29,6 +22,13 @@ interface MutationStatus {
 
 interface LoginMutationStatus extends MutationStatus {
 	mustChangePassword: boolean;
+}
+
+class AuthenticationAccessRevokedError extends Error {
+	constructor() {
+		super(AUTHENTICATION_ERRORS.ACCESS_REVOKED);
+		this.name = "AuthenticationAccessRevokedError";
+	}
 }
 
 function createSafeFailure(errorMessage: string): never {
@@ -75,13 +75,13 @@ async function authenticateWithEmail(
 	const employee = await prisma.employee.findFirst({
 		where: {
 			email,
-			supabaseAuthUserId: data.user.id,
+			authUserId: data.user.id,
 			deletedAt: null,
 			isActive: true,
-			isAccessEnabled: true,
 		},
 		select: {
 			id: true,
+			isAccessEnabled: true,
 			mustChangePassword: true,
 		},
 	});
@@ -92,6 +92,14 @@ async function authenticateWithEmail(
 		});
 		flushResponseCookies([createClearedRememberMeCookie()]);
 		createSafeFailure(AUTHENTICATION_ERRORS.INVALID_CREDENTIALS);
+	}
+
+	if (!employee.isAccessEnabled) {
+		await client.auth.signOut({
+			scope: "local",
+		});
+		flushResponseCookies([createClearedRememberMeCookie()]);
+		throw new AuthenticationAccessRevokedError();
 	}
 
 	flushResponseCookies([createRememberMeCookie(input.rememberMe)]);
@@ -107,28 +115,20 @@ export async function loginMutationHandler({
 }: {
 	data: LoginInput;
 }): Promise<LoginMutationStatus> {
-	const normalizedIdentifier = normalizeAuthenticationIdentifier(
-		data.identifier,
-	);
-	const failedAttempts =
-		await countRecentFailedLoginAttempts(normalizedIdentifier);
-
-	if (failedAttempts >= LOCKOUT_THRESHOLD) {
-		createSafeFailure(AUTHENTICATION_ERRORS.TOO_MANY_ATTEMPTS);
-	}
-
 	try {
-		const email =
-			(await resolveAuthenticationEmail(data.identifier)) ??
-			UNKNOWN_LOGIN_EMAIL;
+		const resolvedIdentity = await resolveAuthenticationEmail(data.identifier);
+		const email = resolvedIdentity?.email ?? UNKNOWN_LOGIN_EMAIL;
 
 		const loginResult = await authenticateWithEmail(data, email);
-		await clearFailedLoginAttempts(normalizedIdentifier);
 
 		return loginResult;
 	} catch (error) {
-		await recordFailedLoginAttempt(normalizedIdentifier);
 		console.error("[authentication:login]", error);
+
+		if (error instanceof AuthenticationAccessRevokedError) {
+			createSafeFailure(AUTHENTICATION_ERRORS.ACCESS_REVOKED);
+		}
+
 		createSafeFailure(AUTHENTICATION_ERRORS.INVALID_CREDENTIALS);
 	}
 }
@@ -213,7 +213,7 @@ export async function forcedChangePasswordMutationHandler({
 
 		const employee = await prisma.employee.findFirst({
 			where: {
-				supabaseAuthUserId: user.id,
+				authUserId: user.id,
 			},
 			select: {
 				id: true,
@@ -278,7 +278,10 @@ export async function requestPasswordResetMutationHandler({
 	};
 }): Promise<MutationStatus> {
 	try {
-		const email = await resolveAuthenticationEmail(data.identifier);
+		const resolvedIdentity = await resolveAuthenticationEmail(data.identifier);
+		const email = resolvedIdentity?.isAccessEnabled
+			? resolvedIdentity.email
+			: null;
 
 		if (email) {
 			const requestUrl = new URL(getRequest().url);

@@ -25,7 +25,7 @@ async function resolveDomainSession(): Promise<LoggedUserSession | null> {
 
 	const employee = await prisma.employee.findFirst({
 		where: {
-			supabaseAuthUserId: authUser.id,
+			authUserId: authUser.id,
 			deletedAt: null,
 			isActive: true,
 			isAccessEnabled: true,

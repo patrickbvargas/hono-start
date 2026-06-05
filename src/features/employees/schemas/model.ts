@@ -17,7 +17,7 @@ export const employeeDetailSchema = entityIdSchema.safeExtend({
 	hasCredentialAccount: z.boolean(),
 	isAccessEnabled: z.boolean(),
 	mustChangePassword: z.boolean(),
-	supabaseAuthUserId: z.string().nullable(),
+	authUserId: z.string().nullable(),
 	isActive: z.boolean(),
 	isSoftDeleted: z.boolean(),
 	createdAt: z.iso.datetime(),

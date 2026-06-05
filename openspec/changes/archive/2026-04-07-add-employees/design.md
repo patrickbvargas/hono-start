@@ -2,7 +2,7 @@
 
 The `employees` feature is partially scaffolded: route, form component, table component, and API functions all exist but are non-functional. Server functions return mock data and use `alert()` for feedback. The route renders raw JSON. The goal is to replace the scaffold with a working Prisma-backed CRUD screen that follows established conventions.
 
-The data model for `Employee` is fully defined in `DATA_MODEL.md §4.2`. Lookup tables `EmployeeType` and `UserRole` already exist in the schema. Authentication (BetterAuth account/password creation) is handled separately and is NOT part of this change.
+The data model for `Employee` is fully defined in `DATA_MODEL.md §4.2`. Lookup tables `EmployeeType` and `UserRole` already exist in the schema. Authentication (provedor legado de auth account/password creation) is handled separately and is NOT part of this change.
 
 ## Goals / Non-Goals
 
@@ -17,7 +17,7 @@ The data model for `Employee` is fully defined in `DATA_MODEL.md §4.2`. Lookup 
 - Seed `EmployeeType` and `UserRole` lookup values
 
 **Non-Goals:**
-- BetterAuth account creation / password hashing (a future auth change)
+- provedor legado de auth account creation / password hashing (a future auth change)
 - Avatar upload (file attachment change)
 - Employee detail drawer
 - Any remuneration or contract data on the employee record
@@ -29,9 +29,9 @@ The data model for `Employee` is fully defined in `DATA_MODEL.md §4.2`. Lookup 
 
 **Decision:** The create-employee form will NOT include a password field in this change.
 
-**Rationale:** BetterAuth account creation involves credential storage in a separate `Account` table with its own hashing flow. Including it here would mix auth concerns into employee management. Administrators will set passwords when auth is implemented.
+**Rationale:** provedor legado de auth account creation involves credential storage in a separate `Account` table with its own hashing flow. Including it here would mix auth concerns into employee management. Administrators will set passwords when auth is implemented.
 
-**Alternative considered:** Include a password field now and call a BetterAuth utility directly. Rejected because BetterAuth is not yet installed or configured — this change should not create a partial auth setup.
+**Alternative considered:** Include a password field now and call a provedor legado de auth utility directly. Rejected because provedor legado de auth is not yet installed or configured — this change should not create a partial auth setup.
 
 ### D2 — Modal overlays for create and edit
 
@@ -67,7 +67,7 @@ The data model for `Employee` is fully defined in `DATA_MODEL.md §4.2`. Lookup 
 
 - **No password on create** → New employees cannot log in until the auth change is implemented. Acceptable because authentication is not a dependency for other features in this change.
 - **OAB format locked to 2-letter prefix** → The current regex `^RS\d{6}$` only accepts RS state codes. Should be expanded to `^[A-Z]{2}\d{6}$` to support all Brazilian state OABs. This is a schema correction needed in this change.
-- **Session not yet implemented** → `firmId` from session is a placeholder until BetterAuth is wired. Server functions may use a hardcoded seed `firmId` for development and must be guarded against production use.
+- **Session not yet implemented** → `firmId` from session is a placeholder until provedor legado de auth is wired. Server functions may use a hardcoded seed `firmId` for development and must be guarded against production use.
 
 ## Migration Plan
 

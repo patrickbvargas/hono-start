@@ -5,7 +5,7 @@ The repository already supports:
 - public password reset by email token
 - authenticated self-service password change with current-password confirmation
 - administrator-only employee detail access
-- BetterAuth-backed credential storage in provider-owned `user`, `account`, and `session` tables
+- provedor legado de auth-backed credential storage in provider-owned `user`, `account`, and `session` tables
 
 The missing capability is an operational recovery path when email reset is unavailable. The requested product behavior is:
 
@@ -31,12 +31,12 @@ The missing capability is an operational recovery path when email reset is unava
 
 ## Decisions
 
-1. Store a `mustChangePassword` boolean on BetterAuth `User`.
+1. Store a `mustChangePassword` boolean on provedor legado de auth `User`.
 Why: the requirement belongs to the authenticated account state, not to the employee business entity. Persisting the flag on the auth user keeps session resolution authoritative and lets route guards enforce the experience consistently across devices.
 Alternative considered: storing the flag on `Employee`. Rejected because not every employee necessarily has a credential account and because the forced-password state belongs to auth lifecycle rather than employee business data.
 
-2. Implement admin reset by directly updating the BetterAuth credential account password hash and the owning user's `mustChangePassword` flag.
-Why: this flow is not the same as public token reset or authenticated self-service change. The repository already uses `better-auth/crypto` hashing in seed code, so reusing that hash primitive is consistent while keeping provider-owned password storage semantics intact.
+2. Implement admin reset by directly updating the provedor legado de auth credential account password hash and the owning user's `mustChangePassword` flag.
+Why: this flow is not the same as public token reset or authenticated self-service change. The repository already uses `provedor-legado-auth/crypto` hashing in seed code, so reusing that hash primitive is consistent while keeping provider-owned password storage semantics intact.
 Alternative considered: trying to repurpose `auth.api.resetPassword` or `auth.api.changePassword`. Rejected because those APIs require user-owned token/current-password semantics that do not match administrator-issued resets.
 
 3. Generate temporary passwords with a simple segmented format and an ambiguity-safe alphabet.
@@ -64,7 +64,7 @@ Alternative considered: table row action. Rejected because the requirement expli
 
 ## Migration Plan
 
-1. Add `mustChangePassword` to the BetterAuth `User` model and generate a Prisma migration.
+1. Add `mustChangePassword` to the provedor legado de auth `User` model and generate a Prisma migration.
 2. Extend shared server session resolution to expose the flag.
 3. Add the admin reset mutation and temporary-password generator.
 4. Add forced-password route enforcement and authenticated forced-change form.

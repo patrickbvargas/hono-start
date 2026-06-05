@@ -1,7 +1,7 @@
 ## 1. OpenSpec And Data Setup
 
 - [x] 1.1 Add the OpenSpec proposal, design, and spec deltas for admin-managed collaborator access.
-- [x] 1.2 Add the BetterAuth user access flag to the Prisma schema and migration, then regenerate affected auth typing/configuration.
+- [x] 1.2 Add the provedor legado de auth user access flag to the Prisma schema and migration, then regenerate affected auth typing/configuration.
 
 ## 2. Backend Access Management
 

@@ -12,7 +12,7 @@ The frontend currently reads authenticated session state from more than one clie
 ## Non-goals
 
 - Changing the product permission matrix, user roles, or tenant-isolation rules.
-- Replacing BetterAuth, Prisma session resolution, or the existing server-side session model.
+- Replacing provedor legado de auth, Prisma session resolution, or the existing server-side session model.
 - Moving authorization decisions out of the shared session policy helpers.
 - Reworking unrelated feature UI beyond the session-consumption changes required to stabilize protected routes.
 
@@ -30,6 +30,6 @@ The frontend currently reads authenticated session state from more than one clie
 ## Impact
 
 - Affected code: `src/shared/session/**`, authentication hooks, authenticated route loaders/layouts, and protected admin routes such as collaborators and audit log.
-- Systems: BetterAuth-backed server session resolution, TanStack Router protected-route gating, and TanStack Query session fetching/invalidation.
+- Systems: provedor legado de auth-backed server session resolution, TanStack Router protected-route gating, and TanStack Query session fetching/invalidation.
 - User roles: all authenticated users are affected by login/logout/session-expiry transitions; administrators are directly affected by the protected-route failure being fixed.
 - Multi-tenancy: firm isolation and role enforcement remain derived from the authenticated session and are unchanged by this proposal.

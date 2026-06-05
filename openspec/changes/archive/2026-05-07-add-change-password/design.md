@@ -2,7 +2,7 @@
 
 The repository already supports login, logout, password reset request, and password reset completion through the `authentication` feature slice. The authenticated shell also already renders a user dropdown with a placeholder `Conta` entry, which is the lowest-friction place to surface a routine account-security action without introducing a new route or route-owned orchestration.
 
-The underlying auth provider is BetterAuth and the installed version already exposes an authenticated `changePassword` endpoint that requires the current password and can revoke other sessions. That allows this feature to stay inside the existing auth boundary without custom password hashing or direct persistence writes.
+The underlying auth provider is provedor legado de auth and the installed version already exposes an authenticated `changePassword` endpoint that requires the current password and can revoke other sessions. That allows this feature to stay inside the existing auth boundary without custom password hashing or direct persistence writes.
 
 ## Goals / Non-Goals
 
@@ -25,11 +25,11 @@ Alternative considered: a `/configuracoes` or `/configuracoes/seguranca` route. 
 
 2. Implement the server boundary as an authenticated mutation inside `src/features/authentication/api/mutations.ts`.
 Why: the repository contract keeps server functions in feature `api/` files, validation in `schemas/form.ts`, and user-safe error mapping in feature constants. This also keeps password-change logic beside existing login/reset mutations.
-Alternative considered: calling BetterAuth directly from a route or shared helper. Rejected because it would bypass feature ownership boundaries and create a second auth orchestration pattern.
+Alternative considered: calling provedor legado de auth directly from a route or shared helper. Rejected because it would bypass feature ownership boundaries and create a second auth orchestration pattern.
 
-3. Use BetterAuth `auth.api.changePassword` instead of custom account-table writes.
+3. Use provedor legado de auth `auth.api.changePassword` instead of custom account-table writes.
 Why: the provider already validates the current password, updates the credential account, and supports revoking other sessions. Reusing provider behavior reduces security risk and keeps provider-owned schemas provider-owned.
-Alternative considered: direct Prisma write to auth tables. Rejected because BetterAuth owns those tables by documented convention and custom writes would duplicate security-sensitive logic.
+Alternative considered: direct Prisma write to auth tables. Rejected because provedor legado de auth owns those tables by documented convention and custom writes would duplicate security-sensitive logic.
 
 4. Add a dedicated authenticated form hook and component under the `authentication` feature.
 Why: existing auth flows already use feature-local hooks and components for form orchestration. Following that pattern keeps mutations pure and puts toast, cache/session refresh, modal close, and submission branching in the hook layer.
@@ -37,7 +37,7 @@ Alternative considered: inline mutation handling inside the sidebar component. R
 
 5. Keep success behavior in-session and optionally revoke other sessions only.
 Why: the current session can remain valid after password change, so the least disruptive UX is to keep the actor signed in, show success feedback, and close the modal. The optional revoke-others control improves account security without forcing an unnecessary logout of the current device.
-Alternative considered: always signing the user out after password change. Rejected because BetterAuth already supports targeted revocation and the user already proved possession of the current password.
+Alternative considered: always signing the user out after password change. Rejected because provedor legado de auth already supports targeted revocation and the user already proved possession of the current password.
 
 ## Risks / Trade-offs
 

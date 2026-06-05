@@ -20,6 +20,7 @@ describe("employee model schemas", () => {
 			hasCredentialAccount: true,
 			isAccessEnabled: true,
 			mustChangePassword: false,
+			authUserId: "11111111-1111-1111-1111-111111111111",
 			isActive: true,
 			isSoftDeleted: false,
 			createdAt: "2026-04-17T00:00:00.000Z",

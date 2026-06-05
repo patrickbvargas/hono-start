@@ -1,16 +1,16 @@
 ## Context
 
-The repository contract already treats authentication as a core product surface, but the current application still boots directly into the authenticated shell and all session consumers read from a mock in-memory session store. Protected server functions already depend on `src/shared/session`, so implementing authentication is a cross-cutting change: route composition, shared session utilities, Prisma schema, environment wiring, and user-facing public flows all need to converge on a real BetterAuth session source.
+The repository contract already treats authentication as a core product surface, but the current application still boots directly into the authenticated shell and all session consumers read from a mock in-memory session store. Protected server functions already depend on `src/shared/session`, so implementing authentication is a cross-cutting change: route composition, shared session utilities, Prisma schema, environment wiring, and user-facing public flows all need to converge on a real provedor legado de auth session source.
 
-The current Prisma schema models business employees, roles, and firms, but it does not yet contain BetterAuth-managed account, session, or verification persistence. The root route also always renders the authenticated sidebar shell, which does not fit the documented public `/login` and `/recuperar-senha` routes.
+The current Prisma schema models business employees, roles, and firms, but it does not yet contain provedor legado de auth-managed account, session, or verification persistence. The root route also always renders the authenticated sidebar shell, which does not fit the documented public `/login` and `/recuperar-senha` routes.
 
 ## Goals / Non-Goals
 
 **Goals:**
 - Add a real authentication feature slice for login, logout, and password-reset flows.
-- Replace mock session reads with a shared authenticated-session adapter backed by BetterAuth on both server and client consumers.
+- Replace mock session reads with a shared authenticated-session adapter backed by provedor legado de auth on both server and client consumers.
 - Split public and protected route behavior so unauthenticated users can reach `/login` and `/recuperar-senha` without rendering the authenticated shell.
-- Preserve the current role, tenant, and feature authorization model by mapping BetterAuth identities onto the existing employee/firm/role session shape.
+- Preserve the current role, tenant, and feature authorization model by mapping provedor legado de auth identities onto the existing employee/firm/role session shape.
 - Enforce the documented session durations and failed-login threshold.
 
 **Non-Goals:**
@@ -26,22 +26,22 @@ Authentication is user-facing product behavior, not generic infrastructure. The 
 
 Alternative considered: place auth forms directly under `src/routes` because they are public pages. Rejected because route files in this repository own composition and guards only; auth validation, server calls, and UI behavior would become a route-local second implementation layer.
 
-### D2. Replace the mock session store with a shared BetterAuth-to-domain session adapter
-Existing business features already depend on the `LoggedUserSession` shape. Instead of rewriting the permission system around raw BetterAuth types, the implementation should keep the documented shared session contract and populate it from the authenticated BetterAuth session plus employee, role, employee-type, and firm joins. This minimizes churn in feature code and keeps authorization rules stable.
+### D2. Replace the mock session store with a shared provedor legado de auth-to-domain session adapter
+Existing business features already depend on the `LoggedUserSession` shape. Instead of rewriting the permission system around raw provedor legado de auth types, the implementation should keep the documented shared session contract and populate it from the authenticated provedor legado de auth session plus employee, role, employee-type, and firm joins. This minimizes churn in feature code and keeps authorization rules stable.
 
 The shared session surface should become explicitly nullable at the boundary where no user is authenticated, while preserving a strong authenticated actor shape after guards pass. Server helpers should expose one permissive reader for optional session lookup and one asserting reader for protected routes/server functions.
 
-Alternative considered: expose raw BetterAuth session objects across the codebase. Rejected because it would leak vendor-specific auth structures into feature slices and force widespread permission and scope refactors unrelated to product behavior.
+Alternative considered: expose raw provedor legado de auth session objects across the codebase. Rejected because it would leak vendor-specific auth structures into feature slices and force widespread permission and scope refactors unrelated to product behavior.
 
 ### D3. Split public and protected shells at the router boundary
 `src/routes/__root.tsx` currently always renders `AppSidebar` and `SidebarInset`, which is correct only for authenticated product screens. Public auth routes should render in a minimal shell without sidebar/navigation, while product routes should remain under the current authenticated shell. The cleanest repository-aligned approach is to keep the document shell in the root route and introduce an authenticated layout route or equivalent wrapper that applies `AppSidebar` only after session enforcement succeeds.
 
 Alternative considered: hide the sidebar conditionally inside the root shell based on pathname. Rejected because pathname-based UI branching weakens route clarity and mixes public/protected concerns in the document shell.
 
-### D4. Use BetterAuth persistence tables plus a password-reset verification flow
-The fixed stack already names BetterAuth as the mandatory authentication library. The implementation should add BetterAuth-managed persistence to Prisma for users/accounts/sessions/verifications as required by the library, then relate authenticated identities back to existing `Employee` records. Password reset should use BetterAuth-supported verification tokens instead of bespoke reset-token tables unless the library integration forces an adapter-specific exception.
+### D4. Use provedor legado de auth persistence tables plus a password-reset verification flow
+The fixed stack already names provedor legado de auth as the mandatory authentication library. The implementation should add provedor legado de auth-managed persistence to Prisma for users/accounts/sessions/verifications as required by the library, then relate authenticated identities back to existing `Employee` records. Password reset should use provedor legado de auth-supported verification tokens instead of bespoke reset-token tables unless the library integration forces an adapter-specific exception.
 
-Alternative considered: store passwords and reset tokens directly on `Employee`. Rejected because it bypasses the repository's fixed authentication stack and would create a second auth system beside BetterAuth.
+Alternative considered: store passwords and reset tokens directly on `Employee`. Rejected because it bypasses the repository's fixed authentication stack and would create a second auth system beside provedor legado de auth.
 
 ### D5. Authenticate by email or normalized OAB identifier through one login flow
 The product contract allows login with email or OAB number plus password. The login API should accept one identifier field, normalize the input, and resolve it to the authoritative employee-linked account before authentication. OAB matching should enforce the documented uppercase-two-letters-plus-six-digits semantics after normalization so users can enter masked or unmasked variants without changing business meaning.
@@ -56,14 +56,14 @@ Alternative considered: in-memory throttling only. Rejected because it would res
 ## Risks / Trade-offs
 
 - [Auth rollout touches every protected feature] → Mitigation: keep the `LoggedUserSession` business shape stable and convert the session source behind shared helpers first so downstream features need minimal changes.
-- [BetterAuth schema may introduce migration churn] → Mitigation: isolate auth persistence additions in one migration and keep relations between auth identity and `Employee` explicit and documented.
+- [provedor legado de auth schema may introduce migration churn] → Mitigation: isolate auth persistence additions in one migration and keep relations between auth identity and `Employee` explicit and documented.
 - [Password-reset delivery remains partially environment-specific] → Mitigation: define a narrow delivery interface and support development-safe behavior first, while keeping provider choice outside this change's product scope.
 - [Lockout logic can create accidental user frustration] → Mitigation: normalize identifiers consistently, return safe pt-BR errors, and test threshold/window boundaries directly.
 - [Public/protected shell split can regress navigation] → Mitigation: add route-level tests for public screens, authenticated screens, and redirect behavior after session expiry or logout.
 
 ## Migration Plan
 
-1. Add BetterAuth dependency and required Prisma/auth persistence models.
+1. Add provedor legado de auth dependency and required Prisma/auth persistence models.
 2. Introduce auth bootstrap, validated env wiring, and shared session adapter utilities.
 3. Add public auth routes and protected-layout gating while preserving current product routes.
 4. Migrate existing protected routes and server functions from mock session readers to authenticated session helpers.
@@ -75,5 +75,5 @@ Rollback: revert auth route wiring and migration together, then temporarily rest
 ## Open Questions
 
 - Which delivery mechanism should send password-reset messages in non-development environments?
-- Should OAB login map to the employee record directly, or to a BetterAuth user alias that is synchronized from employee data?
+- Should OAB login map to the employee record directly, or to a provedor legado de auth user alias that is synchronized from employee data?
 - Should inactive or soft-deleted employee accounts fail login with a generic auth error or a more specific safe pt-BR message?

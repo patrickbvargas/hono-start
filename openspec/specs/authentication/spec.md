@@ -40,14 +40,14 @@ The system SHALL allow a user to sign in by submitting one identifier field cont
 - **THEN** the system denies access and shows a safe pt-BR authentication error without exposing whether the identifier exists
 
 ### Requirement: Credential login requires granted access and an active linked employee
-The system SHALL allow credential login only when the submitted email or OAB resolves to an employee that is active, not soft-deleted, linked to a BetterAuth user, and currently marked with administrator-granted access. The system MUST continue to return the same safe pt-BR invalid-credentials response when any of those conditions fail.
+The system SHALL allow credential login only when the submitted email or OAB resolves to an employee that is active, not soft-deleted, linked to a Supabase Auth user, and currently marked with administrator-granted access. The system MUST continue to return the same safe pt-BR invalid-credentials response when any of those conditions fail.
 
 #### Scenario: Employee with granted access logs in successfully
-- **WHEN** a collaborator whose employee is active, not deleted, linked to a BetterAuth user, has `isAccessEnabled = true`, and has a credential account submits valid credentials
+- **WHEN** a collaborator whose employee is active, not deleted, linked to a Supabase Auth user, has `isAccessEnabled = true`, and has a valid credential submits valid credentials
 - **THEN** the system authenticates the collaborator normally
 
 #### Scenario: Revoked collaborator access is denied safely
-- **WHEN** a collaborator whose linked BetterAuth user has `isAccessEnabled = false` submits the correct password
+- **WHEN** a collaborator whose linked employee access state has `isAccessEnabled = false` submits the correct password
 - **THEN** the system denies login
 - **AND** shows the same safe invalid-credentials feedback used for unknown identifiers or wrong passwords
 
@@ -57,7 +57,7 @@ The system SHALL allow credential login only when the submitted email or OAB res
 - **AND** shows the same safe invalid-credentials feedback
 
 #### Scenario: Linked auth user without credential account cannot authenticate
-- **WHEN** a collaborator has a linked BetterAuth user but no credential account
+- **WHEN** a collaborator has a linked Supabase Auth user but no valid employee access linkage or granted-access state
 - **THEN** the system denies credential login
 - **AND** shows the same safe invalid-credentials feedback
 
@@ -167,17 +167,6 @@ The system SHALL ensure that public authentication forms containing password-bea
 - **WHEN** a user submits the password reset completion form on `/recuperar-senha` with a reset token and new password values
 - **THEN** the browser URL does not gain the submitted password values
 - **AND** the reset-completion flow remains compatible with the existing reset mutation flow
-
-### Requirement: Failed-login protection enforces documented threshold
-The system SHALL temporarily block additional authentication attempts after 5 failed attempts within 1 minute for the same normalized identifier.
-
-#### Scenario: Threshold reached within one minute
-- **WHEN** the same identifier accumulates 5 failed login attempts within 1 minute
-- **THEN** the system blocks further login attempts for that identifier during the active protection window
-
-#### Scenario: Successful login after protection window
-- **WHEN** the protection window has expired and the user submits valid credentials
-- **THEN** the system allows authentication normally
 
 ### Requirement: Logout ends authenticated access
 The system SHALL provide a logout action that invalidates the current authenticated session and removes access to protected routes until the user signs in again. The logout flow MUST clear the shared frontend session query and all protected frontend query caches so no browser-side snapshot from the previous actor keeps protected access or protected data alive.

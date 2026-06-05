@@ -11,7 +11,7 @@ The current shared session module mixes actor data, mock session seeding, client
 
 ## Non-goals
 
-- Implementing real authentication, BetterAuth integration, login screens, or session persistence.
+- Implementing real authentication, provedor legado de auth integration, login screens, or session persistence.
 - Changing the product permission matrix defined in the PRD.
 - Expanding permissions to unrelated features beyond the shared boundaries and the existing employee-management integration points.
 - Reworking employee UI or data modeling beyond the session and authorization integration required by this refactor.

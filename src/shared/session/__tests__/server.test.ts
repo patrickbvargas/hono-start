@@ -1,31 +1,27 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const { authMock, getRequestHeadersMock, prismaMock } = vi.hoisted(() => ({
-	authMock: {
-		api: {
-			getSession: vi.fn(),
-			signOut: vi.fn(),
-		},
-	},
-	getRequestHeadersMock: vi.fn(),
+const {
+	createSupabaseServerClientMock,
+	flushResponseCookiesMock,
+	prismaMock,
+	signOutMock,
+} = vi.hoisted(() => ({
+	createSupabaseServerClientMock: vi.fn(),
+	flushResponseCookiesMock: vi.fn(),
 	prismaMock: {
 		employee: {
 			findFirst: vi.fn(),
 		},
 	},
-}));
-
-vi.mock("@tanstack/react-start/server", () => ({
-	getRequestHeaders: getRequestHeadersMock,
-}));
-
-vi.mock("@/shared/lib/auth", () => ({
-	AUTH_DEFAULT_SESSION_MAX_AGE_SECONDS: 60 * 60 * 24,
-	auth: authMock,
+	signOutMock: vi.fn(),
 }));
 
 vi.mock("@/shared/lib/prisma", () => ({
 	prisma: prismaMock,
+}));
+
+vi.mock("@/shared/lib/supabase-server", () => ({
+	createSupabaseServerClient: createSupabaseServerClientMock,
 }));
 
 import {
@@ -33,17 +29,11 @@ import {
 	getRequiredServerLoggedUserSession,
 } from "../server";
 
-const requestHeaders = new Headers({
-	cookie: "session=token",
-});
-
 const activeEmployee = {
 	id: 7,
 	fullName: "Carlos Mendes",
 	email: "carlos@example.com",
-	authUser: {
-		mustChangePassword: false,
-	},
+	mustChangePassword: false,
 	firm: {
 		id: 1,
 		name: "Matriz",
@@ -60,59 +50,40 @@ const activeEmployee = {
 	},
 };
 
+function mockSupabaseUser(userId: string | null) {
+	createSupabaseServerClientMock.mockReturnValue({
+		client: {
+			auth: {
+				getUser: vi.fn().mockResolvedValue({
+					data: {
+						user: userId ? { id: userId } : null,
+					},
+					error: null,
+				}),
+				signOut: signOutMock,
+			},
+		},
+		flushResponseCookies: flushResponseCookiesMock,
+		rememberMe: false,
+	});
+}
+
 describe("server session helpers", () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
-		getRequestHeadersMock.mockReturnValue(requestHeaders);
-		authMock.api.signOut.mockResolvedValue(undefined);
-		authMock.api.getSession.mockResolvedValue(null);
+		signOutMock.mockResolvedValue({ error: null });
 		prismaMock.employee.findFirst.mockResolvedValue(activeEmployee);
+		mockSupabaseUser(null);
 	});
 
-	it("returns null when there is no authenticated BetterAuth session", async () => {
+	it("returns null when there is no authenticated Supabase session", async () => {
 		await expect(getOptionalServerLoggedUserSession()).resolves.toBeNull();
 		expect(prismaMock.employee.findFirst).not.toHaveBeenCalled();
+		expect(flushResponseCookiesMock).toHaveBeenCalledOnce();
 	});
 
-	it("expires non-remembered sessions after the default 24h window", async () => {
-		authMock.api.getSession.mockResolvedValue({
-			session: {
-				createdAt: new Date("2026-04-25T00:00:00.000Z"),
-				expiresAt: new Date("2026-05-02T00:00:00.000Z"),
-				rememberMe: false,
-			},
-			user: {
-				employeeId: 7,
-			},
-		});
-
-		vi.useFakeTimers();
-		vi.setSystemTime(new Date("2026-04-27T12:00:00.000Z"));
-
-		await expect(getOptionalServerLoggedUserSession()).resolves.toBeNull();
-
-		expect(authMock.api.signOut).toHaveBeenCalledWith({
-			headers: requestHeaders,
-		});
-		expect(prismaMock.employee.findFirst).not.toHaveBeenCalled();
-
-		vi.useRealTimers();
-	});
-
-	it("keeps remembered sessions valid until the stored BetterAuth expiration", async () => {
-		authMock.api.getSession.mockResolvedValue({
-			session: {
-				createdAt: new Date("2026-04-25T00:00:00.000Z"),
-				expiresAt: new Date("2026-04-30T00:00:00.000Z"),
-				rememberMe: true,
-			},
-			user: {
-				employeeId: 7,
-			},
-		});
-
-		vi.useFakeTimers();
-		vi.setSystemTime(new Date("2026-04-27T12:00:00.000Z"));
+	it("maps the authenticated Supabase user to the domain session actor", async () => {
+		mockSupabaseUser("11111111-1111-1111-1111-111111111111");
 
 		await expect(getOptionalServerLoggedUserSession()).resolves.toEqual({
 			user: {
@@ -129,30 +100,52 @@ describe("server session helpers", () => {
 			mustChangePassword: false,
 		});
 
-		expect(prismaMock.employee.findFirst).toHaveBeenCalledOnce();
-		expect(authMock.api.signOut).not.toHaveBeenCalled();
-
-		vi.useRealTimers();
+		expect(prismaMock.employee.findFirst).toHaveBeenCalledWith({
+			where: {
+				authUserId: "11111111-1111-1111-1111-111111111111",
+				deletedAt: null,
+				isActive: true,
+				isAccessEnabled: true,
+			},
+			select: expect.any(Object),
+		});
 	});
 
-	it("signs out orphaned auth sessions that no longer map to an active employee", async () => {
-		authMock.api.getSession.mockResolvedValue({
-			session: {
-				createdAt: new Date("2026-04-27T00:00:00.000Z"),
-				expiresAt: new Date("2026-04-30T00:00:00.000Z"),
-				rememberMe: true,
-			},
-			user: {
-				employeeId: 999,
-			},
-		});
+	it("signs out orphaned Supabase sessions that no longer map to an active employee", async () => {
+		createSupabaseServerClientMock
+			.mockReturnValueOnce({
+				client: {
+					auth: {
+						getUser: vi.fn().mockResolvedValue({
+							data: {
+								user: { id: "11111111-1111-1111-1111-111111111111" },
+							},
+							error: null,
+						}),
+						signOut: signOutMock,
+					},
+				},
+				flushResponseCookies: flushResponseCookiesMock,
+				rememberMe: false,
+			})
+			.mockReturnValueOnce({
+				client: {
+					auth: {
+						getUser: vi.fn(),
+						signOut: signOutMock,
+					},
+				},
+				flushResponseCookies: flushResponseCookiesMock,
+				rememberMe: false,
+			});
 		prismaMock.employee.findFirst.mockResolvedValue(null);
 
 		await expect(getOptionalServerLoggedUserSession()).resolves.toBeNull();
 
-		expect(authMock.api.signOut).toHaveBeenCalledWith({
-			headers: requestHeaders,
+		expect(signOutMock).toHaveBeenCalledWith({
+			scope: "local",
 		});
+		expect(createSupabaseServerClientMock).toHaveBeenCalledTimes(2);
 	});
 
 	it("throws the pt-BR unauthenticated message for required sessions", async () => {

@@ -1,14 +1,14 @@
 ## 1. Schema and environment preparation
 
-- [x] 1.1 Add Supabase Auth environment variables to the validated env layer and remove Better Auth-only runtime requirements that are no longer needed.
-- [x] 1.2 Create the Prisma migration that adds `supabaseAuthUserId`, `isAccessEnabled`, and `mustChangePassword` to `Employee` and update generated Prisma types.
+- [x] 1.1 Add Supabase Auth environment variables to the validated env layer and remove legacy-provider-only runtime requirements that are no longer needed.
+- [x] 1.2 Create the Prisma migration that adds `authUserId`, `isAccessEnabled`, and `mustChangePassword` to `Employee` and update generated Prisma types.
 - [x] 1.3 Update seed and bootstrap data so development employees can be linked to or recreated in Supabase Auth.
 
 ## 2. Supabase auth infrastructure
 
 - [x] 2.1 Add the Supabase Auth browser, server, and admin client modules using repository-safe configuration boundaries.
-- [x] 2.2 Replace the shared auth runtime surface so authentication flows depend on Supabase-native operations instead of Better Auth APIs.
-- [x] 2.3 Remove Better Auth-specific dependency wiring from shared auth modules once Supabase clients are in place.
+- [x] 2.2 Replace the shared auth runtime surface so authentication flows depend on Supabase-native operations instead of legacy-provider APIs.
+- [x] 2.3 Remove legacy-provider-specific dependency wiring from shared auth modules once Supabase clients are in place.
 
 ## 3. Shared session and route enforcement
 
@@ -22,7 +22,7 @@
 - [x] 4.2 Replace logout flow internals with Supabase Auth sign-out while preserving protected-query cache clearing and redirect behavior.
 - [x] 4.3 Replace password reset request and reset completion flows with Supabase-native recovery operations and preserve non-enumerating feedback.
 - [x] 4.4 Replace authenticated password change and forced password change flows with Supabase-native password updates plus employee access-flag orchestration.
-- [ ] 4.5 Rework auth-focused tests to assert documented behavior instead of Better Auth-specific method calls or table shapes.
+- [x] 4.5 Rework auth-focused tests to assert documented Supabase-backed behavior instead of legacy-provider-specific method calls or table shapes.
 
 ## 5. Employee access lifecycle migration
 
@@ -33,6 +33,6 @@
 
 ## 6. Legacy removal and verification
 
-- [ ] 6.1 Remove Better Auth dependencies, runtime code paths, and dead schema references after Supabase flows pass locally.
-- [x] 6.2 Review docs touched by the implementation contract, especially architecture and data-access references that still name Better Auth.
+- [x] 6.1 Remove legacy-provider dependencies, runtime code paths, Prisma auth models/tables, dead generated schema references, and stale docs after Supabase flows pass locally.
+- [x] 6.2 Review docs touched by the implementation contract, especially architecture and data-access references that still name the legacy provider.
 - [x] 6.3 Run `pnpm check` and `npx tsc --noEmit`, fix any issues, and verify the OpenSpec change is ready for `/opsx:apply`.

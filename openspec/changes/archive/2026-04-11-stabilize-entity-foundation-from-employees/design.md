@@ -24,7 +24,7 @@ This change deliberately treats employees as the reference slice and stabilizes 
 **Non-Goals:**
 - Implementing any new business entity beyond employees.
 - Moving all employee code into `shared/` preemptively.
-- Introducing BetterAuth or changing the permission matrix.
+- Introducing provedor legado de auth or changing the permission matrix.
 - Expanding the Prisma schema to the full PRD surface in this change.
 
 ## Decisions

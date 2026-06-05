@@ -1,7 +1,7 @@
 export const AUTHENTICATION_ERRORS = {
 	INVALID_CREDENTIALS: "Email, OAB ou senha inválidos.",
-	TOO_MANY_ATTEMPTS:
-		"Muitas tentativas em pouco tempo. Tente novamente em instantes.",
+	ACCESS_REVOKED:
+		"Seu acesso ao sistema foi revogado. Entre em contato com um administrador.",
 	LOGIN_FAILED: "Não foi possível concluir o login.",
 	LOGOUT_FAILED: "Não foi possível encerrar a sessão.",
 	CHANGE_PASSWORD_INVALID_CURRENT: "A senha atual informada é inválida.",

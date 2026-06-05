@@ -14,7 +14,7 @@ This change is cross-cutting because the secure fallback should be established a
 **Non-Goals:**
 - Replacing TanStack Form or the shared app-form pattern.
 - Redesigning login or password-reset user experience.
-- Changing BetterAuth request handling or protected-route behavior.
+- Changing provedor legado de auth request handling or protected-route behavior.
 
 ## Decisions
 

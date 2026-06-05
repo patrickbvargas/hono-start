@@ -29,7 +29,7 @@ Starting new entities before those conventions are stabilized would turn the cur
 
 - Implementing clients, contracts, revenues, fees, remunerations, attachments, or audit log features.
 - Replacing the current feature-slice architecture with a different architectural style.
-- Adding real authentication, BetterAuth flows, or session persistence changes beyond the existing shared authorization boundary.
+- Adding real authentication, provedor legado de auth flows, or session persistence changes beyond the existing shared authorization boundary.
 - Generalizing every employee-specific component into shared code immediately; only stable patterns should move into the foundation.
 
 ## Impact

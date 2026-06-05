@@ -20,7 +20,7 @@ The change must preserve the current `/login` and `/recuperar-senha` behavior, i
 **Non-Goals:**
 
 - Changing any authentication business rule, permission rule, or session policy.
-- Replacing Better Auth, TanStack Start server functions, or Prisma persistence.
+- Replacing provedor legado de auth, TanStack Start server functions, or Prisma persistence.
 - Converting public auth pages into the authenticated wrapper layout or introducing a new global auth design system.
 
 ## Decisions

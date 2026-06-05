@@ -23,8 +23,8 @@ None.
 ## Impact
 
 - Affected code: `src/features/authentication`, `src/features/app-sidebar`, shared authenticated-shell UI wiring, and focused authentication tests.
-- Affected APIs: authenticated authentication mutation boundary gains a change-password server function backed by BetterAuth.
-- Dependencies: reuse the existing `better-auth` password-management API; no new runtime dependency or database migration.
+- Affected APIs: authenticated authentication mutation boundary gains a change-password server function backed by provedor legado de auth.
+- Dependencies: reuse the existing `provedor-legado-auth` password-management API; no new runtime dependency or database migration.
 - Roles and tenancy: available to all authenticated users and enforced from authenticated session context only.
 
 ## Non-goals

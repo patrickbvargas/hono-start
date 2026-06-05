@@ -336,6 +336,10 @@ export type ClientTypeScalarRelationFilter = {
   isNot?: Prisma.ClientTypeWhereInput
 }
 
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
+}
+
 export type ClientTypeCreateNestedOneWithoutClientsInput = {
   create?: Prisma.XOR<Prisma.ClientTypeCreateWithoutClientsInput, Prisma.ClientTypeUncheckedCreateWithoutClientsInput>
   connectOrCreate?: Prisma.ClientTypeCreateOrConnectWithoutClientsInput

@@ -3,34 +3,34 @@
 The repository already has three adjacent behaviors:
 
 - employee management is administrator-only and already exposes employee details, create/edit, delete/restore, and temporary-password reset for collaborators with credential accounts.
-- authentication uses BetterAuth with `disableSignUp: true`, so only pre-created credential accounts can sign in.
+- authentication uses provedor legado de auth with `disableSignUp: true`, so only pre-created credential accounts can sign in.
 - the shared server session helper already rejects protected access when the linked employee is deleted or inactive, but there is no administrator-facing way to grant or revoke access in the first place.
 
-This creates a product gap: employee records exist independently of credential access, yet only seeded BetterAuth rows can log in. The requested change keeps BetterAuth as the current auth provider and adds explicit administrator-managed access provisioning without waiting for the separate auth-migration change.
+This creates a product gap: employee records exist independently of credential access, yet only seeded provedor legado de auth rows can log in. The requested change keeps provedor legado de auth as the current auth provider and adds explicit administrator-managed access provisioning without waiting for the separate auth-migration change.
 
 ## Goals / Non-Goals
 
 **Goals:**
 - Let administrators grant system access to an employee from the employee details flow.
-- Let administrators revoke access without deleting the BetterAuth user row, so access can be granted again later.
+- Let administrators revoke access without deleting the provedor legado de auth user row, so access can be granted again later.
 - Force a password change the first time a newly granted collaborator signs in.
 - Block login for revoked, inactive, or soft-deleted employees.
 - Revoke active sessions when access is revoked.
 - Keep audit history for access-management actions without persisting plaintext passwords.
 
 **Non-Goals:**
-- Replacing BetterAuth or changing the login identifier contract.
+- Replacing provedor legado de auth or changing the login identifier contract.
 - Building self-signup, invite emails, or non-admin access-management flows.
 - Introducing a new domain table just to mirror auth access state.
 - Changing the one-employee-to-one-login assumption.
 
 ## Decisions
 
-### 1. Access state will be derived from BetterAuth credential-account presence plus an explicit account flag
+### 1. Access state will be derived from provedor legado de auth credential-account presence plus an explicit account flag
 
 Decision:
-- Reuse the existing BetterAuth `user` row linked by `employeeId`.
-- Extend the BetterAuth `user` table with an `isAccessEnabled` boolean.
+- Reuse the existing provedor legado de auth `user` row linked by `employeeId`.
+- Extend the provedor legado de auth `user` table with an `isAccessEnabled` boolean.
 - Treat a collaborator as able to authenticate only when:
   - a linked `user` row exists,
   - `isAccessEnabled = true`,
@@ -44,13 +44,13 @@ Rationale:
 
 Alternatives considered:
 - Delete the credential account on revoke: simpler to reason about, but makes re-enable act like reprovisioning and discards the current auth linkage.
-- Add a feature-local access table: more explicit, but duplicates a one-to-one relationship already anchored by BetterAuth `user`.
+- Add a feature-local access table: more explicit, but duplicates a one-to-one relationship already anchored by provedor legado de auth `user`.
 
-### 2. Grant access will create or reactivate BetterAuth rows and issue a temporary password
+### 2. Grant access will create or reactivate provedor legado de auth rows and issue a temporary password
 
 Decision:
 - Add a server-side employee mutation that:
-  - finds or creates the BetterAuth `user` row for the employee,
+  - finds or creates the provedor legado de auth `user` row for the employee,
   - finds or creates the `credential` account,
   - hashes a generated temporary password,
   - sets `mustChangePassword = true`,
@@ -82,7 +82,7 @@ Alternatives considered:
 - Delete sessions only: insufficient, because the next login would still work.
 - Null out the password hash: possible, but less explicit than an access-enabled flag and complicates restore semantics.
 
-### 4. Login blocking will happen before BetterAuth sign-in
+### 4. Login blocking will happen before provedor legado de auth sign-in
 
 Decision:
 - Extend the authentication data layer so login first resolves the employee by email/OAB and loads access-eligibility data.
@@ -94,11 +94,11 @@ Decision:
 
 Rationale:
 - Keeps safe non-enumerating feedback.
-- Avoids depending on undocumented BetterAuth middleware for this repository-specific rule.
+- Avoids depending on undocumented provedor legado de auth middleware for this repository-specific rule.
 - Aligns with existing pre-sign-in failed-attempt protection.
 
 Alternatives considered:
-- BetterAuth request hook for `/sign-in/email`: viable, but adds auth-library coupling where the repository already owns login orchestration in feature code.
+- provedor legado de auth request hook for `/sign-in/email`: viable, but adds auth-library coupling where the repository already owns login orchestration in feature code.
 
 ### 5. Employee details will remain the admin control center for access
 
@@ -123,12 +123,12 @@ Alternatives considered:
 
 - Revoked account still keeps hashed credential history -> acceptable because `isAccessEnabled` and session revocation remain authoritative blockers.
 - Existing data could contain a linked `user` without a credential account -> grant-access mutation must handle both create and repair paths.
-- Login denial for inactive employees now happens before BetterAuth -> mitigation: keep the same safe invalid-credentials message and reuse failed-attempt tracking.
+- Login denial for inactive employees now happens before provedor legado de auth -> mitigation: keep the same safe invalid-credentials message and reuse failed-attempt tracking.
 - New auth-table flag requires a Prisma migration -> mitigation: default `true` for existing seeded users so current access is preserved after migration.
 
 ## Migration Plan
 
-1. Add `isAccessEnabled` to the BetterAuth `user` table with default `true`.
+1. Add `isAccessEnabled` to the provedor legado de auth `user` table with default `true`.
 2. Regenerate Prisma client.
 3. Update auth configuration additional fields and login resolution.
 4. Add employee access-management mutations and UI.

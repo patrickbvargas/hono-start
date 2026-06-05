@@ -25,7 +25,7 @@ The employee management screen (Funcionários) is scaffolded but non-functional 
 
 ## Non-goals
 
-- Authentication / BetterAuth account creation (password hashing, credential storage) — handled as part of a future auth change
+- Authentication / provedor legado de auth account creation (password hashing, credential storage) — handled as part of a future auth change
 - Avatar upload — file attachment capability is out of scope for this change
 - Employee detail view / side panel
 - Any remuneration or contract data displayed on the employee record

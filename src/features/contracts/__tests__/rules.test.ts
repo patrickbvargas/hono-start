@@ -113,7 +113,7 @@ function createResolvedAssignment(options: {
 			isAccessEnabled: true,
 			isActive: true,
 			mustChangePassword: false,
-			supabaseAuthUserId: null,
+			authUserId: null,
 			createdAt: new Date(),
 			updatedAt: new Date(),
 			deletedAt: null,

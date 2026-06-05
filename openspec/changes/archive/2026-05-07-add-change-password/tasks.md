@@ -1,6 +1,6 @@
 ## 1. Authenticated password-change boundary
 
-- [x] 1.1 Add authenticated change-password input schema, safe error catalog entries, and BetterAuth-backed mutation handling in the authentication feature.
+- [x] 1.1 Add authenticated change-password input schema, safe error catalog entries, and provedor legado de auth-backed mutation handling in the authentication feature.
 - [x] 1.2 Add focused server-side tests covering success, invalid current password, and revoke-other-sessions behavior for the new authenticated mutation.
 
 ## 2. Authenticated shell UI

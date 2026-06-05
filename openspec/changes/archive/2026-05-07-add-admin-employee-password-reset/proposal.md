@@ -26,8 +26,8 @@ None.
 
 - Affected code: `src/features/authentication`, `src/features/employees`, `src/shared/session`, authenticated route guards, Prisma auth schema wiring, and focused auth/employee tests.
 - Affected APIs: authentication gains an authenticated forced-change mutation; employee management gains an admin-only reset-password mutation.
-- Dependencies: reuse existing BetterAuth credential hashing plus provider-owned auth tables; no new runtime dependency.
-- Data model: add a persisted `mustChangePassword` flag to BetterAuth `User`.
+- Dependencies: reuse existing provedor legado de auth credential hashing plus provider-owned auth tables; no new runtime dependency.
+- Data model: add a persisted `mustChangePassword` flag to provedor legado de auth `User`.
 - Roles and tenancy: only administrators can reset another collaborator password; forced password change applies only to the authenticated flagged user.
 
 ## Non-goals

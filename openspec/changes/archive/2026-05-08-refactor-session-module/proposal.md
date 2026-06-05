@@ -16,7 +16,7 @@ This refactor is needed now because session-derived tenant and role scope is a r
 
 - No changes to the product role model or permission matrix.
 - No changes to route URLs, UI copy, or authenticated user flows.
-- No changes to BetterAuth session storage, Prisma schema, or feature-specific business rules.
+- No changes to provedor legado de auth session storage, Prisma schema, or feature-specific business rules.
 
 ## Capabilities
 
