@@ -7,13 +7,13 @@ import { resetPasswordMutationOptions } from "../api/mutations";
 import { passwordResetCompleteInputSchema } from "../schemas/form";
 import { defaultPasswordResetCompleteValues } from "../utils/default";
 
-export function usePasswordResetCompleteForm(token: string) {
+export function usePasswordResetCompleteForm(code: string) {
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();
 	const mutation = useMutation(resetPasswordMutationOptions());
 
 	const form = useAppForm({
-		defaultValues: defaultPasswordResetCompleteValues(token),
+		defaultValues: defaultPasswordResetCompleteValues(code),
 		validators: {
 			onSubmit: passwordResetCompleteInputSchema,
 		},

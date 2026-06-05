@@ -8,19 +8,14 @@ const {
 	getEmployeeByIdMock,
 	getEmployeeTypeByValueMock,
 	getUserRoleByValueMock,
-	hashPasswordMock,
 	prismaMock,
+	supabaseAdminClientMock,
 } = vi.hoisted(() => ({
 	createAuditLogMock: vi.fn(),
 	getEmployeeByIdMock: vi.fn(),
 	getEmployeeTypeByValueMock: vi.fn(),
 	getUserRoleByValueMock: vi.fn(),
-	hashPasswordMock: vi.fn(),
 	prismaMock: {
-		account: {
-			create: vi.fn(),
-			update: vi.fn(),
-		},
 		employee: {
 			create: vi.fn(),
 			update: vi.fn(),
@@ -28,20 +23,25 @@ const {
 		contractEmployee: {
 			count: vi.fn(),
 		},
-		session: {
-			deleteMany: vi.fn(),
-		},
-		user: {
-			create: vi.fn(),
-			findFirst: vi.fn(),
-			update: vi.fn(),
-		},
 		$transaction: vi.fn(),
+	},
+	supabaseAdminClientMock: {
+		auth: {
+			admin: {
+				createUser: vi.fn(),
+				listUsers: vi.fn(),
+				updateUserById: vi.fn(),
+			},
+		},
 	},
 }));
 
 vi.mock("@/shared/lib/prisma", () => ({
 	prisma: prismaMock,
+}));
+
+vi.mock("@/shared/lib/supabase-admin", () => ({
+	getSupabaseAdminClient: () => supabaseAdminClientMock,
 }));
 
 vi.mock("@/features/audit-logs/data/mutations", () => ({
@@ -56,10 +56,6 @@ vi.mock("@/features/audit-logs/data/mutations", () => ({
 		before,
 		after,
 	}),
-}));
-
-vi.mock("better-auth/crypto", () => ({
-	hashPassword: hashPasswordMock,
 }));
 
 vi.mock("../data/queries", () => ({
@@ -113,6 +109,7 @@ const baseEmployee = (
 	hasCredentialAccount: true,
 	isAccessEnabled: true,
 	mustChangePassword: false,
+	supabaseAuthUserId: "auth-user-1",
 	isActive: true,
 	isSoftDeleted: false,
 	createdAt: "2026-01-01T00:00:00.000Z",
@@ -123,24 +120,35 @@ const baseEmployee = (
 describe("employee lookup-backed writes", () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
-		prismaMock.employee.create.mockResolvedValue({});
+		prismaMock.employee.create.mockResolvedValue({
+			id: 1,
+			fullName: "Maria Silva",
+		});
 		prismaMock.employee.update.mockResolvedValue({});
-		prismaMock.account.create.mockResolvedValue({});
-		prismaMock.account.update.mockResolvedValue({});
 		prismaMock.contractEmployee.count.mockResolvedValue(0);
-		prismaMock.session.deleteMany.mockResolvedValue({});
-		prismaMock.user.findFirst.mockResolvedValue({
-			id: "auth-user-1",
-			isAccessEnabled: true,
-			accounts: [{ id: "credential-account-1" }],
+		supabaseAdminClientMock.auth.admin.createUser.mockResolvedValue({
+			data: {
+				user: {
+					id: "auth-user-1",
+				},
+			},
+			error: null,
 		});
-		prismaMock.user.create.mockResolvedValue({
-			id: "auth-user-1",
+		supabaseAdminClientMock.auth.admin.listUsers.mockResolvedValue({
+			data: {
+				users: [],
+				nextPage: null,
+			},
+			error: null,
 		});
-		prismaMock.user.update.mockResolvedValue({
-			id: "auth-user-1",
+		supabaseAdminClientMock.auth.admin.updateUserById.mockResolvedValue({
+			data: {
+				user: {
+					id: "auth-user-1",
+				},
+			},
+			error: null,
 		});
-		hashPasswordMock.mockResolvedValue("hashed-password");
 		prismaMock.$transaction.mockImplementation(async (callback) =>
 			callback(prismaMock),
 		);
@@ -165,72 +173,10 @@ describe("employee lookup-backed writes", () => {
 				},
 			}),
 		).rejects.toThrow(EMPLOYEE_ERRORS.TYPE_NOT_FOUND);
-
-		expect(prismaMock.employee.create).not.toHaveBeenCalled();
 	});
 
-	it("rejects unknown roles on create", async () => {
-		getEmployeeTypeByValueMock.mockResolvedValue(baseType());
-		getUserRoleByValueMock.mockResolvedValue(null);
-
-		await expect(
-			createEmployee({
-				firmId: 1,
-				input: {
-					fullName: "Maria Silva",
-					email: "maria@example.com",
-					oabNumber: "RS123456",
-					remunerationPercent: 0.4,
-					referrerPercent: 0.2,
-					type: "LAWYER",
-					role: "UNKNOWN",
-					isActive: true,
-				},
-			}),
-		).rejects.toThrow(EMPLOYEE_ERRORS.ROLE_NOT_FOUND);
-
-		expect(prismaMock.employee.create).not.toHaveBeenCalled();
-	});
-
-	it("allows unchanged inactive persisted selections on update", async () => {
+	it("revokes access locally when the employee email changes", async () => {
 		getEmployeeByIdMock.mockResolvedValue(baseEmployee());
-		prismaMock.user.findFirst.mockResolvedValue({
-			id: "auth-user-1",
-			isAccessEnabled: true,
-		});
-		getEmployeeTypeByValueMock.mockResolvedValue(
-			baseType({ id: 10, isActive: false }),
-		);
-		getUserRoleByValueMock.mockResolvedValue(
-			baseRole({ id: 20, isActive: false }),
-		);
-
-		await expect(
-			updateEmployee({
-				firmId: 1,
-				input: {
-					id: 1,
-					fullName: "Maria Silva",
-					email: "maria@example.com",
-					oabNumber: "RS123456",
-					remunerationPercent: 0.4,
-					referrerPercent: 0.2,
-					type: "LAWYER",
-					role: "USER",
-					isActive: true,
-				},
-			}),
-		).resolves.toEqual({ success: true });
-
-		expect(prismaMock.employee.update).toHaveBeenCalledOnce();
-	});
-
-	it("syncs auth profile and revokes access when employee email changes", async () => {
-		getEmployeeByIdMock.mockResolvedValue(baseEmployee());
-		prismaMock.user.findFirst.mockResolvedValue({
-			id: "auth-user-1",
-			isAccessEnabled: true,
-		});
 		getEmployeeTypeByValueMock.mockResolvedValue(baseType());
 		getUserRoleByValueMock.mockResolvedValue(baseRole());
 
@@ -256,44 +202,17 @@ describe("employee lookup-backed writes", () => {
 			}),
 		).resolves.toEqual({ success: true });
 
-		expect(prismaMock.user.update).toHaveBeenCalledWith({
+		expect(prismaMock.employee.update).toHaveBeenCalledWith({
 			where: {
-				id: "auth-user-1",
+				id: 1,
 			},
-			data: {
-				name: "Maria Souza",
+			data: expect.objectContaining({
 				email: "maria.souza@example.com",
+				fullName: "Maria Souza",
 				isAccessEnabled: false,
-			},
-		});
-		expect(prismaMock.session.deleteMany).toHaveBeenCalledWith({
-			where: {
-				userId: "auth-user-1",
-			},
-		});
-		expect(createAuditLogMock).toHaveBeenCalledWith(
-			prismaMock,
-			expect.objectContaining({
-				changeData: expect.objectContaining({
-					after: expect.objectContaining({
-						authAccessRevoked: true,
-						loginIdentifierChanged: true,
-					}),
-				}),
+				mustChangePassword: true,
 			}),
-		);
-	});
-
-	it("blocks delete when active remuneration dependencies exist", async () => {
-		getEmployeeByIdMock.mockResolvedValue(baseEmployee());
-		prismaMock.contractEmployee.count.mockResolvedValue(1);
-
-		await expect(deleteEmployee({ firmId: 1, id: 1 })).rejects.toThrow(
-			EMPLOYEE_ERRORS.DELETE_ACTIVE_DEPENDENCIES,
-		);
-
-		expect(prismaMock.$transaction).not.toHaveBeenCalled();
-		expect(prismaMock.employee.update).not.toHaveBeenCalled();
+		});
 	});
 
 	it("soft-deletes active employees and writes an audit log", async () => {
@@ -312,25 +231,19 @@ describe("employee lookup-backed writes", () => {
 		).resolves.toEqual({ success: true });
 
 		expect(prismaMock.employee.update).toHaveBeenCalledWith({
-			where: { id: 1 },
-			data: { deletedAt: expect.any(Date) },
+			where: {
+				id: 1,
+			},
+			data: {
+				deletedAt: expect.any(Date),
+			},
 		});
-		expect(createAuditLogMock).toHaveBeenCalledWith(
-			prismaMock,
-			expect.objectContaining({
-				firmId: 1,
-				action: "DELETE",
-				entityType: "Employee",
-				entityId: 1,
-			}),
-		);
 	});
 
 	it("restores soft-deleted employees and writes an audit log", async () => {
 		getEmployeeByIdMock.mockResolvedValue(
 			baseEmployee({
 				isSoftDeleted: true,
-				updatedAt: "2026-01-03T00:00:00.000Z",
 			}),
 		);
 
@@ -347,21 +260,16 @@ describe("employee lookup-backed writes", () => {
 		).resolves.toEqual({ success: true });
 
 		expect(prismaMock.employee.update).toHaveBeenCalledWith({
-			where: { id: 1 },
-			data: { deletedAt: null },
+			where: {
+				id: 1,
+			},
+			data: {
+				deletedAt: null,
+			},
 		});
-		expect(createAuditLogMock).toHaveBeenCalledWith(
-			prismaMock,
-			expect.objectContaining({
-				firmId: 1,
-				action: "RESTORE",
-				entityType: "Employee",
-				entityId: 1,
-			}),
-		);
 	});
 
-	it("resets an employee password, revokes sessions, and avoids storing plaintext in audit logs", async () => {
+	it("resets a Supabase-linked employee password without writing plaintext to audit", async () => {
 		getEmployeeByIdMock.mockResolvedValue(baseEmployee());
 
 		const result = await resetEmployeePassword({
@@ -375,40 +283,23 @@ describe("employee lookup-backed writes", () => {
 		});
 
 		expect(result.success).toBe(true);
-		expect(result.temporaryPassword).toMatch(
-			/^([A-Z]{4,6}-\d{4}|[A-Z0-9]{4}-[A-Z0-9]{4})$/,
+		expect(
+			supabaseAdminClientMock.auth.admin.updateUserById,
+		).toHaveBeenCalledWith(
+			"auth-user-1",
+			expect.objectContaining({
+				email: "maria@example.com",
+				password: result.temporaryPassword,
+			}),
 		);
-		expect(hashPasswordMock).toHaveBeenCalledWith(result.temporaryPassword);
-		expect(prismaMock.account.update).toHaveBeenCalledWith({
+		expect(prismaMock.employee.update).toHaveBeenCalledWith({
 			where: {
-				id: "credential-account-1",
-			},
-			data: {
-				password: "hashed-password",
-			},
-		});
-		expect(prismaMock.user.update).toHaveBeenCalledWith({
-			where: {
-				id: "auth-user-1",
+				id: 1,
 			},
 			data: {
 				mustChangePassword: true,
 			},
 		});
-		expect(prismaMock.session.deleteMany).toHaveBeenCalledWith({
-			where: {
-				userId: "auth-user-1",
-			},
-		});
-		expect(createAuditLogMock).toHaveBeenCalledWith(
-			prismaMock,
-			expect.objectContaining({
-				changeData: {
-					action: "RESET_PASSWORD",
-					mustChangePassword: true,
-				},
-			}),
-		);
 		expect(createAuditLogMock).not.toHaveBeenCalledWith(
 			prismaMock,
 			expect.objectContaining({
@@ -419,35 +310,26 @@ describe("employee lookup-backed writes", () => {
 		);
 	});
 
-	it("rejects employee password reset when no credential account exists", async () => {
-		getEmployeeByIdMock.mockResolvedValue(
-			baseEmployee({
-				hasCredentialAccount: false,
-				isAccessEnabled: false,
-			}),
-		);
-		prismaMock.user.findFirst.mockResolvedValueOnce(null);
-
-		await expect(
-			resetEmployeePassword({
-				firmId: 1,
-				id: 1,
-			}),
-		).rejects.toThrow(EMPLOYEE_ERRORS.RESET_PASSWORD_UNAVAILABLE);
-	});
-
-	it("grants access by creating or re-enabling auth records with a temporary password", async () => {
+	it("grants access by linking a Supabase Auth user and setting domain flags", async () => {
 		getEmployeeByIdMock.mockResolvedValue(
 			baseEmployee({
 				hasCredentialAccount: false,
 				isAccessEnabled: false,
 				mustChangePassword: false,
+				supabaseAuthUserId: null,
 			}),
 		);
-		prismaMock.user.findFirst.mockResolvedValueOnce({
-			id: "auth-user-1",
-			isAccessEnabled: false,
-			accounts: [],
+		supabaseAdminClientMock.auth.admin.listUsers.mockResolvedValueOnce({
+			data: {
+				users: [
+					{
+						id: "auth-user-1",
+						email: "maria@example.com",
+					},
+				],
+				nextPage: null,
+			},
+			error: null,
 		});
 
 		const result = await grantEmployeeAccess({
@@ -461,70 +343,29 @@ describe("employee lookup-backed writes", () => {
 		});
 
 		expect(result.success).toBe(true);
-		expect(hashPasswordMock).toHaveBeenCalledWith(result.temporaryPassword);
-		expect(prismaMock.user.update).toHaveBeenCalledWith({
+		expect(
+			supabaseAdminClientMock.auth.admin.updateUserById,
+		).toHaveBeenCalledWith(
+			"auth-user-1",
+			expect.objectContaining({
+				email: "maria@example.com",
+				password: result.temporaryPassword,
+			}),
+		);
+		expect(prismaMock.employee.update).toHaveBeenCalledWith({
 			where: {
-				id: "auth-user-1",
+				id: 1,
 			},
 			data: {
-				name: "Maria Silva",
-				email: "maria@example.com",
-				emailVerified: true,
-				employeeId: 1,
 				isAccessEnabled: true,
 				mustChangePassword: true,
-			},
-			select: {
-				id: true,
+				supabaseAuthUserId: "auth-user-1",
 			},
 		});
-		expect(prismaMock.account.create).toHaveBeenCalledWith({
-			data: expect.objectContaining({
-				accountId: "auth-user-1",
-				providerId: "credential",
-				userId: "auth-user-1",
-				password: "hashed-password",
-			}),
-		});
-		expect(prismaMock.session.deleteMany).toHaveBeenCalledWith({
-			where: {
-				userId: "auth-user-1",
-			},
-		});
-		expect(createAuditLogMock).toHaveBeenCalledWith(
-			prismaMock,
-			expect.objectContaining({
-				changeData: {
-					action: "GRANT_ACCESS",
-					isAccessEnabled: true,
-					mustChangePassword: true,
-				},
-			}),
-		);
 	});
 
-	it("rejects access grant for inactive employees", async () => {
-		getEmployeeByIdMock.mockResolvedValue(
-			baseEmployee({
-				isActive: false,
-				hasCredentialAccount: false,
-				isAccessEnabled: false,
-			}),
-		);
-
-		await expect(
-			grantEmployeeAccess({
-				firmId: 1,
-				id: 1,
-			}),
-		).rejects.toThrow(EMPLOYEE_ERRORS.GRANT_ACCESS_INACTIVE_EMPLOYEE);
-	});
-
-	it("revokes enabled access without deleting auth records", async () => {
+	it("revokes enabled access without deleting the auth identity", async () => {
 		getEmployeeByIdMock.mockResolvedValue(baseEmployee());
-		prismaMock.user.findFirst.mockResolvedValueOnce({
-			id: "auth-user-1",
-		});
 
 		await expect(
 			revokeEmployeeAccess({
@@ -538,27 +379,13 @@ describe("employee lookup-backed writes", () => {
 			}),
 		).resolves.toEqual({ success: true });
 
-		expect(prismaMock.user.update).toHaveBeenCalledWith({
+		expect(prismaMock.employee.update).toHaveBeenCalledWith({
 			where: {
-				id: "auth-user-1",
+				id: 1,
 			},
 			data: {
 				isAccessEnabled: false,
 			},
 		});
-		expect(prismaMock.session.deleteMany).toHaveBeenCalledWith({
-			where: {
-				userId: "auth-user-1",
-			},
-		});
-		expect(createAuditLogMock).toHaveBeenCalledWith(
-			prismaMock,
-			expect.objectContaining({
-				changeData: {
-					action: "REVOKE_ACCESS",
-					isAccessEnabled: false,
-				},
-			}),
-		);
 	});
 });

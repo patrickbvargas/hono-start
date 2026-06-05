@@ -21,7 +21,6 @@ import { Route as AppColaboradoresRouteImport } from './routes/_app/colaboradore
 import { Route as AppClientesRouteImport } from './routes/_app/clientes'
 import { Route as AppAuditoriaRouteImport } from './routes/_app/auditoria'
 import { Route as AppAlterarSenhaObrigatoriaRouteImport } from './routes/_app/alterar-senha-obrigatoria'
-import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
 const AuthRouteRoute = AuthRouteRouteImport.update({
   id: '/_auth',
@@ -82,11 +81,6 @@ const AppAlterarSenhaObrigatoriaRoute =
     path: '/alterar-senha-obrigatoria',
     getParentRoute: () => AppRouteRoute,
   } as any)
-const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
-  id: '/api/auth/$',
-  path: '/api/auth/$',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
@@ -99,7 +93,6 @@ export interface FileRoutesByFullPath {
   '/remuneracoes': typeof AppRemuneracoesRoute
   '/login': typeof AuthLoginRoute
   '/recuperar-senha': typeof AuthRecuperarSenhaRoute
-  '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof AppIndexRoute
@@ -112,7 +105,6 @@ export interface FileRoutesByTo {
   '/remuneracoes': typeof AppRemuneracoesRoute
   '/login': typeof AuthLoginRoute
   '/recuperar-senha': typeof AuthRecuperarSenhaRoute
-  '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -128,7 +120,6 @@ export interface FileRoutesById {
   '/_auth/login': typeof AuthLoginRoute
   '/_auth/recuperar-senha': typeof AuthRecuperarSenhaRoute
   '/_app/': typeof AppIndexRoute
-  '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -143,7 +134,6 @@ export interface FileRouteTypes {
     | '/remuneracoes'
     | '/login'
     | '/recuperar-senha'
-    | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -156,7 +146,6 @@ export interface FileRouteTypes {
     | '/remuneracoes'
     | '/login'
     | '/recuperar-senha'
-    | '/api/auth/$'
   id:
     | '__root__'
     | '/_app'
@@ -171,13 +160,11 @@ export interface FileRouteTypes {
     | '/_auth/login'
     | '/_auth/recuperar-senha'
     | '/_app/'
-    | '/api/auth/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   AppRouteRoute: typeof AppRouteRouteWithChildren
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
-  ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -266,13 +253,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAlterarSenhaObrigatoriaRouteImport
       parentRoute: typeof AppRouteRoute
     }
-    '/api/auth/$': {
-      id: '/api/auth/$'
-      path: '/api/auth/$'
-      fullPath: '/api/auth/$'
-      preLoaderRoute: typeof ApiAuthSplatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
@@ -319,7 +299,6 @@ const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   AppRouteRoute: AppRouteRouteWithChildren,
   AuthRouteRoute: AuthRouteRouteWithChildren,
-  ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

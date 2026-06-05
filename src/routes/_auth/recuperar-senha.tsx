@@ -14,7 +14,7 @@ import {
 } from "@/shared/session/route";
 
 const passwordResetSearchSchema = z.object({
-	token: z.string().optional().catch(undefined),
+	code: z.string().optional().catch(undefined),
 });
 
 export const Route = createFileRoute("/_auth/recuperar-senha")({
@@ -35,8 +35,8 @@ export const Route = createFileRoute("/_auth/recuperar-senha")({
 });
 
 function RouteComponent() {
-	const { token } = Route.useSearch();
-	const isCompletingReset = !!token;
+	const { code } = Route.useSearch();
+	const isCompletingReset = !!code;
 
 	React.useEffect(() => {
 		document.title = getPageTitle(
@@ -54,8 +54,8 @@ function RouteComponent() {
 			}
 			footer={null}
 		>
-			{isCompletingReset && token ? (
-				<PasswordResetCompleteForm token={token} />
+			{isCompletingReset && code ? (
+				<PasswordResetCompleteForm code={code} />
 			) : (
 				<PasswordResetRequestForm />
 			)}

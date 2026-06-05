@@ -46,27 +46,17 @@ export async function resolveAuthenticationEmail(identifier: string) {
 			...where,
 			deletedAt: null,
 			isActive: true,
+			isAccessEnabled: true,
+			supabaseAuthUserId: {
+				not: null,
+			},
 		},
 		select: {
 			email: true,
-			authUser: {
-				select: {
-					isAccessEnabled: true,
-					accounts: {
-						where: {
-							providerId: "credential",
-						},
-						select: {
-							id: true,
-						},
-						take: 1,
-					},
-				},
-			},
 		},
 	});
 
-	if (!employee?.authUser?.isAccessEnabled || !employee.authUser.accounts[0]) {
+	if (!employee) {
 		return null;
 	}
 

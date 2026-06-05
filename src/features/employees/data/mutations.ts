@@ -1,5 +1,4 @@
-import { randomInt, randomUUID } from "node:crypto";
-import { hashPassword } from "better-auth/crypto";
+import { randomInt } from "node:crypto";
 import {
 	type AuditLogActor,
 	buildAuditUpdateChangeData,
@@ -7,6 +6,7 @@ import {
 } from "@/features/audit-logs/data/mutations";
 import type { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/shared/lib/prisma";
+import { getSupabaseAdminClient } from "@/shared/lib/supabase-admin";
 import type { MutationReturnType } from "@/shared/types/api";
 import type {
 	EntityInputParams,
@@ -70,37 +70,109 @@ function createTemporaryPassword() {
 	return `${randomCharacters(4)}-${randomCharacters(4)}`;
 }
 
-async function createOrUpdateCredentialAccount(params: {
-	tx: Prisma.TransactionClient;
-	authUserId: string;
-	accountId?: string;
-	passwordHash: string;
-}) {
-	if (params.accountId) {
-		await params.tx.account.update({
-			where: {
-				id: params.accountId,
-			},
-			data: {
-				password: params.passwordHash,
-			},
-		});
-		return;
-	}
-
-	await params.tx.account.create({
-		data: {
-			id: randomUUID(),
-			accountId: params.authUserId,
-			providerId: "credential",
-			userId: params.authUserId,
-			password: params.passwordHash,
-		},
-	});
-}
-
 function normalizeNullableString(value: string | null | undefined) {
 	return value?.trim() || null;
+}
+
+async function findSupabaseAuthUserByEmail(email: string) {
+	const admin = getSupabaseAdminClient();
+	let page = 1;
+
+	while (true) {
+		const { data, error } = await admin.auth.admin.listUsers({
+			page,
+			perPage: 200,
+		});
+
+		if (error) {
+			throw error;
+		}
+
+		const matchedUser = data.users.find((user) => user.email === email);
+
+		if (matchedUser) {
+			return matchedUser;
+		}
+
+		if (!data.nextPage) {
+			return null;
+		}
+
+		page = data.nextPage;
+	}
+}
+
+async function ensureSupabaseAuthUser(params: {
+	email: string;
+	fullName: string;
+	supabaseAuthUserId: string | null;
+	temporaryPassword: string;
+}) {
+	const admin = getSupabaseAdminClient();
+
+	if (params.supabaseAuthUserId) {
+		const { data, error } = await admin.auth.admin.updateUserById(
+			params.supabaseAuthUserId,
+			{
+				email: params.email,
+				email_confirm: true,
+				password: params.temporaryPassword,
+				user_metadata: {
+					fullName: params.fullName,
+				},
+			},
+		);
+
+		if (error || !data.user) {
+			throw error ?? new Error("Supabase Auth user update failed.");
+		}
+
+		return data.user.id;
+	}
+
+	const existingUser = await findSupabaseAuthUserByEmail(params.email);
+
+	if (existingUser) {
+		const { data, error } = await admin.auth.admin.updateUserById(
+			existingUser.id,
+			{
+				email: params.email,
+				email_confirm: true,
+				password: params.temporaryPassword,
+				user_metadata: {
+					fullName: params.fullName,
+				},
+			},
+		);
+
+		if (error || !data.user) {
+			throw error ?? new Error("Supabase Auth user relink failed.");
+		}
+
+		return data.user.id;
+	}
+
+	const { data, error } = await admin.auth.admin.createUser({
+		email: params.email,
+		email_confirm: true,
+		password: params.temporaryPassword,
+		user_metadata: {
+			fullName: params.fullName,
+		},
+	});
+
+	if (error || !data.user) {
+		throw error ?? new Error("Supabase Auth user creation failed.");
+	}
+
+	return data.user.id;
+}
+
+async function createEmployeeAuditLog(
+	tx: Prisma.TransactionClient,
+	params: Parameters<typeof createAuditLog>[1],
+) {
+	await createAuditLog(tx, params);
 }
 
 export async function createEmployee({
@@ -135,7 +207,7 @@ export async function createEmployee({
 			},
 		});
 
-		await createAuditLog(tx, {
+		await createEmployeeAuditLog(tx, {
 			firmId,
 			actor,
 			action: "CREATE",
@@ -158,6 +230,7 @@ export async function updateEmployee({
 	actor?: AuditLogActor;
 }): Promise<MutationReturnType> {
 	const employee = await getEmployeeById({ firmId, id: input.id });
+
 	if (employee.isSoftDeleted) {
 		throw new Error(EMPLOYEE_ERRORS.NOT_FOUND);
 	}
@@ -172,80 +245,45 @@ export async function updateEmployee({
 	assertTypeCanBeSelected(type, employee.typeId);
 	assertRoleCanBeSelected(role, employee.roleId);
 
-	if (!actor) {
-		const nextOabNumber = normalizeNullableString(input.oabNumber);
+	const nextOabNumber = normalizeNullableString(input.oabNumber);
+	const emailChanged = employee.email !== input.email;
+	const oabChanged =
+		normalizeNullableString(employee.oabNumber) !== nextOabNumber;
+	const shouldRevokeAccess = emailChanged && employee.isAccessEnabled;
 
+	const updateData = {
+		email: input.email,
+		fullName: input.fullName,
+		isAccessEnabled: shouldRevokeAccess ? false : employee.isAccessEnabled,
+		isActive: input.isActive,
+		mustChangePassword: shouldRevokeAccess ? true : employee.mustChangePassword,
+		oabNumber: nextOabNumber,
+		referralPercentage: input.referrerPercent,
+		remunerationPercentage: input.remunerationPercent,
+		roleId: role.id,
+		typeId: type.id,
+	};
+
+	if (!actor) {
 		await prisma.employee.update({
-			where: { id: input.id },
-			data: {
-				fullName: input.fullName,
-				email: input.email,
-				typeId: type.id,
-				roleId: role.id,
-				oabNumber: nextOabNumber,
-				remunerationPercentage: input.remunerationPercent,
-				referralPercentage: input.referrerPercent,
-				isActive: input.isActive,
+			where: {
+				id: input.id,
 			},
+			data: updateData,
 		});
 
 		return { success: true };
 	}
 
 	await prisma.$transaction(async (tx) => {
-		const authUser = await tx.user.findFirst({
-			where: {
-				employeeId: input.id,
-			},
-			select: {
-				id: true,
-				isAccessEnabled: true,
-			},
-		});
-		const emailChanged = employee.email !== input.email;
-		const nextOabNumber = normalizeNullableString(input.oabNumber);
-		const oabChanged =
-			normalizeNullableString(employee.oabNumber) !== nextOabNumber;
-		const shouldRevokeAccess = emailChanged;
-
 		await tx.employee.update({
-			where: { id: input.id },
-			data: {
-				fullName: input.fullName,
-				email: input.email,
-				typeId: type.id,
-				roleId: role.id,
-				oabNumber: nextOabNumber,
-				remunerationPercentage: input.remunerationPercent,
-				referralPercentage: input.referrerPercent,
-				isActive: input.isActive,
+			where: {
+				id: input.id,
 			},
+			data: updateData,
 		});
 
-		if (authUser) {
-			await tx.user.update({
-				where: {
-					id: authUser.id,
-				},
-				data: {
-					name: input.fullName,
-					email: input.email,
-					isAccessEnabled: shouldRevokeAccess
-						? false
-						: authUser.isAccessEnabled,
-				},
-			});
-
-			if (shouldRevokeAccess) {
-				await tx.session.deleteMany({
-					where: {
-						userId: authUser.id,
-					},
-				});
-			}
-		}
-
-		await createAuditLog(tx, {
+		await createEmployeeAuditLog(tx, {
 			firmId,
 			actor,
 			action: "UPDATE",
@@ -275,15 +313,16 @@ export async function deleteEmployee({
 	actor?: AuditLogActor;
 }): Promise<MutationReturnType> {
 	const employee = await getEmployeeById({ firmId, id });
+
 	if (employee.isSoftDeleted) {
 		throw new Error(EMPLOYEE_ERRORS.NOT_FOUND);
 	}
 
 	const activeDependencyCount = await prisma.contractEmployee.count({
 		where: {
-			firmId,
-			employeeId: id,
 			deletedAt: null,
+			employeeId: id,
+			firmId,
 			remunerations: {
 				some: {
 					deletedAt: null,
@@ -302,7 +341,7 @@ export async function deleteEmployee({
 			data: { deletedAt: new Date() },
 		});
 
-		await createAuditLog(tx, {
+		await createEmployeeAuditLog(tx, {
 			firmId,
 			actor,
 			action: "DELETE",
@@ -325,6 +364,7 @@ export async function restoreEmployee({
 	actor?: AuditLogActor;
 }): Promise<MutationReturnType> {
 	const employee = await getEmployeeById({ firmId, id });
+
 	if (!employee.isSoftDeleted) {
 		throw new Error(EMPLOYEE_ERRORS.NOT_FOUND);
 	}
@@ -335,7 +375,7 @@ export async function restoreEmployee({
 			data: { deletedAt: null },
 		});
 
-		await createAuditLog(tx, {
+		await createEmployeeAuditLog(tx, {
 			firmId,
 			actor,
 			action: "RESTORE",
@@ -363,66 +403,40 @@ export async function resetEmployeePassword({
 		throw new Error(EMPLOYEE_ERRORS.NOT_FOUND);
 	}
 
-	const authUser = await prisma.user.findFirst({
-		where: {
-			employeeId: id,
-			isAccessEnabled: true,
-			employee: {
-				firmId,
-			},
-			accounts: {
-				some: {
-					providerId: "credential",
-				},
-			},
-		},
-		select: {
-			id: true,
-			accounts: {
-				where: {
-					providerId: "credential",
-				},
-				select: {
-					id: true,
-				},
-				take: 1,
-			},
-		},
-	});
+	if (!employee.hasCredentialAccount || !employee.isAccessEnabled) {
+		throw new Error(EMPLOYEE_ERRORS.RESET_PASSWORD_UNAVAILABLE);
+	}
 
-	if (!authUser?.accounts[0]) {
+	if (!employee.supabaseAuthUserId) {
 		throw new Error(EMPLOYEE_ERRORS.RESET_PASSWORD_UNAVAILABLE);
 	}
 
 	const temporaryPassword = createTemporaryPassword();
-	const passwordHash = await hashPassword(temporaryPassword);
+	const admin = getSupabaseAdminClient();
+	const { error } = await admin.auth.admin.updateUserById(
+		employee.supabaseAuthUserId,
+		{
+			email: employee.email,
+			email_confirm: true,
+			password: temporaryPassword,
+		},
+	);
+
+	if (error) {
+		throw error;
+	}
 
 	await prisma.$transaction(async (tx) => {
-		await tx.account.update({
+		await tx.employee.update({
 			where: {
-				id: authUser.accounts[0].id,
-			},
-			data: {
-				password: passwordHash,
-			},
-		});
-
-		await tx.user.update({
-			where: {
-				id: authUser.id,
+				id,
 			},
 			data: {
 				mustChangePassword: true,
 			},
 		});
 
-		await tx.session.deleteMany({
-			where: {
-				userId: authUser.id,
-			},
-		});
-
-		await createAuditLog(tx, {
+		await createEmployeeAuditLog(tx, {
 			firmId,
 			actor,
 			action: "UPDATE",
@@ -456,79 +470,31 @@ export async function grantEmployeeAccess({
 		throw new Error(EMPLOYEE_ERRORS.GRANT_ACCESS_INACTIVE_EMPLOYEE);
 	}
 
-	const authUser = await prisma.user.findFirst({
-		where: {
-			OR: [{ employeeId: id }, { email: employee.email }],
-		},
-		select: {
-			id: true,
-			isAccessEnabled: true,
-			accounts: {
-				where: {
-					providerId: "credential",
-				},
-				select: {
-					id: true,
-				},
-				take: 1,
-			},
-		},
-	});
-
-	if (authUser?.isAccessEnabled && authUser.accounts[0]) {
+	if (employee.hasCredentialAccount && employee.isAccessEnabled) {
 		throw new Error(EMPLOYEE_ERRORS.GRANT_ACCESS_ALREADY_ENABLED);
 	}
 
 	const temporaryPassword = createTemporaryPassword();
-	const passwordHash = await hashPassword(temporaryPassword);
+	const supabaseAuthUserId = await ensureSupabaseAuthUser({
+		email: employee.email,
+		fullName: employee.fullName,
+		supabaseAuthUserId: employee.supabaseAuthUserId,
+		temporaryPassword,
+	});
 
 	await prisma.$transaction(async (tx) => {
-		const ensuredAuthUser = authUser
-			? await tx.user.update({
-					where: {
-						id: authUser.id,
-					},
-					data: {
-						name: employee.fullName,
-						email: employee.email,
-						emailVerified: true,
-						employeeId: id,
-						isAccessEnabled: true,
-						mustChangePassword: true,
-					},
-					select: {
-						id: true,
-					},
-				})
-			: await tx.user.create({
-					data: {
-						id: randomUUID(),
-						name: employee.fullName,
-						email: employee.email,
-						emailVerified: true,
-						employeeId: id,
-						isAccessEnabled: true,
-						mustChangePassword: true,
-					},
-					select: {
-						id: true,
-					},
-				});
-
-		await createOrUpdateCredentialAccount({
-			tx,
-			authUserId: ensuredAuthUser.id,
-			accountId: authUser?.accounts[0]?.id,
-			passwordHash,
-		});
-
-		await tx.session.deleteMany({
+		await tx.employee.update({
 			where: {
-				userId: ensuredAuthUser.id,
+				id,
+			},
+			data: {
+				isAccessEnabled: true,
+				mustChangePassword: true,
+				supabaseAuthUserId,
 			},
 		});
 
-		await createAuditLog(tx, {
+		await createEmployeeAuditLog(tx, {
 			firmId,
 			actor,
 			action: "UPDATE",
@@ -559,40 +525,21 @@ export async function revokeEmployeeAccess({
 }): Promise<MutationReturnType> {
 	const employee = await getEmployeeById({ firmId, id });
 
-	const authUser = await prisma.user.findFirst({
-		where: {
-			employeeId: id,
-			employee: {
-				firmId,
-			},
-			isAccessEnabled: true,
-		},
-		select: {
-			id: true,
-		},
-	});
-
-	if (!authUser) {
+	if (!employee.hasCredentialAccount || !employee.isAccessEnabled) {
 		throw new Error(EMPLOYEE_ERRORS.REVOKE_ACCESS_UNAVAILABLE);
 	}
 
 	await prisma.$transaction(async (tx) => {
-		await tx.user.update({
+		await tx.employee.update({
 			where: {
-				id: authUser.id,
+				id,
 			},
 			data: {
 				isAccessEnabled: false,
 			},
 		});
 
-		await tx.session.deleteMany({
-			where: {
-				userId: authUser.id,
-			},
-		});
-
-		await createAuditLog(tx, {
+		await createEmployeeAuditLog(tx, {
 			firmId,
 			actor,
 			action: "UPDATE",

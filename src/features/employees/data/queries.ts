@@ -173,20 +173,6 @@ export async function getEmployeeById({
 		include: {
 			type: true,
 			role: true,
-			authUser: {
-				select: {
-					isAccessEnabled: true,
-					mustChangePassword: true,
-					accounts: {
-						where: {
-							providerId: "credential",
-						},
-						select: {
-							id: true,
-						},
-					},
-				},
-			},
 		},
 	});
 
@@ -212,11 +198,10 @@ export async function getEmployeeById({
 		role: rawData.role.label,
 		roleValue: rawData.role.value,
 		contractCount: contractCounts.get(rawData.id) ?? 0,
-		hasCredentialAccount: rawData.authUser
-			? rawData.authUser.accounts.length > 0
-			: false,
-		isAccessEnabled: rawData.authUser?.isAccessEnabled ?? false,
-		mustChangePassword: rawData.authUser?.mustChangePassword ?? false,
+		hasCredentialAccount: Boolean(rawData.supabaseAuthUserId),
+		isAccessEnabled: rawData.isAccessEnabled,
+		mustChangePassword: rawData.mustChangePassword,
+		supabaseAuthUserId: rawData.supabaseAuthUserId,
 		isActive: rawData.isActive,
 		isSoftDeleted: Boolean(rawData.deletedAt),
 		createdAt: rawData.createdAt.toISOString(),

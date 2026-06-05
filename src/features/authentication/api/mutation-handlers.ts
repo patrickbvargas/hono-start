@@ -1,9 +1,11 @@
 import "dotenv/config";
-import { getRequestHeaders } from "@tanstack/react-start/server";
-import { hashPassword } from "better-auth/crypto";
-import { env } from "@/shared/config/env";
-import { auth } from "@/shared/lib/auth";
+import { getRequest } from "@tanstack/react-start/server";
 import { prisma } from "@/shared/lib/prisma";
+import {
+	createClearedRememberMeCookie,
+	createRememberMeCookie,
+	createSupabaseServerClient,
+} from "@/shared/lib/supabase-server";
 import { AUTHENTICATION_ERRORS } from "../constants/errors";
 import {
 	clearFailedLoginAttempts,
@@ -20,10 +22,13 @@ import { normalizeAuthenticationIdentifier } from "../utils/normalization";
 
 const LOCKOUT_THRESHOLD = 5;
 const UNKNOWN_LOGIN_EMAIL = "desconhecido@example.invalid";
-const PASSWORD_RESET_REDIRECT_URL = `${env.BETTER_AUTH_URL}/recuperar-senha`;
 
 interface MutationStatus {
 	success: true;
+}
+
+interface LoginMutationStatus extends MutationStatus {
+	mustChangePassword: boolean;
 }
 
 function createSafeFailure(errorMessage: string): never {
@@ -51,38 +56,57 @@ function includesSerializedError(error: unknown, code: string) {
 	return JSON.stringify(error).includes(code);
 }
 
-async function authenticateWithEmail(input: LoginInput, email: string) {
-	const result = await auth.api.signInEmail({
-		headers: getRequestHeaders(),
-		body: {
-			email,
-			password: input.password,
-			rememberMe: input.rememberMe,
-		},
+async function authenticateWithEmail(
+	input: LoginInput,
+	email: string,
+): Promise<LoginMutationStatus> {
+	const { client, flushResponseCookies } = createSupabaseServerClient({
+		rememberMe: input.rememberMe,
+	});
+	const { data, error } = await client.auth.signInWithPassword({
+		email,
+		password: input.password,
 	});
 
-	if (!result.user.employeeId) {
-		await auth.api.signOut({
-			headers: getRequestHeaders(),
-		});
+	if (error || !data.user?.id) {
 		createSafeFailure(AUTHENTICATION_ERRORS.INVALID_CREDENTIALS);
 	}
 
-	await prisma.session.update({
+	const employee = await prisma.employee.findFirst({
 		where: {
-			token: result.token,
+			email,
+			supabaseAuthUserId: data.user.id,
+			deletedAt: null,
+			isActive: true,
+			isAccessEnabled: true,
 		},
-		data: {
-			rememberMe: input.rememberMe,
+		select: {
+			id: true,
+			mustChangePassword: true,
 		},
 	});
+
+	if (!employee) {
+		await client.auth.signOut({
+			scope: "local",
+		});
+		flushResponseCookies([createClearedRememberMeCookie()]);
+		createSafeFailure(AUTHENTICATION_ERRORS.INVALID_CREDENTIALS);
+	}
+
+	flushResponseCookies([createRememberMeCookie(input.rememberMe)]);
+
+	return {
+		success: true,
+		mustChangePassword: employee.mustChangePassword,
+	};
 }
 
 export async function loginMutationHandler({
 	data,
 }: {
 	data: LoginInput;
-}): Promise<MutationStatus> {
+}): Promise<LoginMutationStatus> {
 	const normalizedIdentifier = normalizeAuthenticationIdentifier(
 		data.identifier,
 	);
@@ -98,10 +122,10 @@ export async function loginMutationHandler({
 			(await resolveAuthenticationEmail(data.identifier)) ??
 			UNKNOWN_LOGIN_EMAIL;
 
-		await authenticateWithEmail(data, email);
+		const loginResult = await authenticateWithEmail(data, email);
 		await clearFailedLoginAttempts(normalizedIdentifier);
 
-		return { success: true };
+		return loginResult;
 	} catch (error) {
 		await recordFailedLoginAttempt(normalizedIdentifier);
 		console.error("[authentication:login]", error);
@@ -111,9 +135,16 @@ export async function loginMutationHandler({
 
 export async function logoutMutationHandler(): Promise<MutationStatus> {
 	try {
-		await auth.api.signOut({
-			headers: getRequestHeaders(),
+		const { client, flushResponseCookies } = createSupabaseServerClient();
+		const { error } = await client.auth.signOut({
+			scope: "local",
 		});
+
+		if (error) {
+			throw error;
+		}
+
+		flushResponseCookies([createClearedRememberMeCookie()]);
 
 		return { success: true };
 	} catch (error) {
@@ -128,20 +159,35 @@ export async function changePasswordMutationHandler({
 	data: ChangePasswordInput;
 }): Promise<MutationStatus> {
 	try {
-		await auth.api.changePassword({
-			headers: getRequestHeaders(),
-			body: {
-				currentPassword: data.currentPassword,
-				newPassword: data.newPassword,
-				revokeOtherSessions: data.revokeOtherSessions,
-			},
+		const { client, flushResponseCookies } = createSupabaseServerClient();
+		const { error } = await client.auth.updateUser({
+			current_password: data.currentPassword,
+			password: data.newPassword,
 		});
 
+		if (error) {
+			throw error;
+		}
+
+		if (data.revokeOtherSessions) {
+			const { error: revokeError } = await client.auth.signOut({
+				scope: "others",
+			});
+
+			if (revokeError) {
+				throw revokeError;
+			}
+		}
+
+		flushResponseCookies();
 		return { success: true };
 	} catch (error) {
 		console.error("[authentication:change-password]", error);
 
-		if (includesSerializedError(error, "INVALID_PASSWORD")) {
+		if (
+			includesSerializedError(error, "current password") ||
+			includesSerializedError(error, "Current password")
+		) {
 			createSafeFailure(AUTHENTICATION_ERRORS.CHANGE_PASSWORD_INVALID_CURRENT);
 		}
 
@@ -155,44 +201,42 @@ export async function forcedChangePasswordMutationHandler({
 	data: ForcedChangePasswordInput;
 }): Promise<MutationStatus> {
 	try {
-		const headers = getRequestHeaders();
-		const authSession = await auth.api.getSession({
-			headers,
-		});
+		const { client, flushResponseCookies } = createSupabaseServerClient();
+		const {
+			data: { user },
+			error: userError,
+		} = await client.auth.getUser();
 
-		if (!authSession?.session?.id || !authSession.user?.id) {
+		if (userError || !user?.id) {
 			createSafeFailure(AUTHENTICATION_ERRORS.CHANGE_PASSWORD_FAILED);
 		}
 
-		const authUser = await prisma.user.findUnique({
+		const employee = await prisma.employee.findFirst({
 			where: {
-				id: authSession.user.id,
+				supabaseAuthUserId: user.id,
 			},
 			select: {
+				id: true,
 				mustChangePassword: true,
 			},
 		});
 
-		if (!authUser?.mustChangePassword) {
+		if (!employee?.mustChangePassword) {
 			createSafeFailure(AUTHENTICATION_ERRORS.FORCED_CHANGE_PASSWORD_FORBIDDEN);
 		}
 
-		const passwordHash = await hashPassword(data.newPassword);
+		const { error: updateError } = await client.auth.updateUser({
+			password: data.newPassword,
+		});
+
+		if (updateError) {
+			throw updateError;
+		}
 
 		await prisma.$transaction(async (tx) => {
-			await tx.account.updateMany({
+			await tx.employee.update({
 				where: {
-					userId: authSession.user.id,
-					providerId: "credential",
-				},
-				data: {
-					password: passwordHash,
-				},
-			});
-
-			await tx.user.update({
-				where: {
-					id: authSession.user.id,
+					id: employee.id,
 				},
 				data: {
 					mustChangePassword: false,
@@ -200,17 +244,17 @@ export async function forcedChangePasswordMutationHandler({
 			});
 
 			if (data.revokeOtherSessions) {
-				await tx.session.deleteMany({
-					where: {
-						userId: authSession.user.id,
-						id: {
-							not: authSession.session.id,
-						},
-					},
+				const { error: revokeError } = await client.auth.signOut({
+					scope: "others",
 				});
+
+				if (revokeError) {
+					throw revokeError;
+				}
 			}
 		});
 
+		flushResponseCookies();
 		return { success: true };
 	} catch (error) {
 		console.error("[authentication:forced-change-password]", error);
@@ -237,13 +281,17 @@ export async function requestPasswordResetMutationHandler({
 		const email = await resolveAuthenticationEmail(data.identifier);
 
 		if (email) {
-			await auth.api.requestPasswordReset({
-				headers: getRequestHeaders(),
-				body: {
-					email,
-					redirectTo: PASSWORD_RESET_REDIRECT_URL,
-				},
+			const requestUrl = new URL(getRequest().url);
+			const { client, flushResponseCookies } = createSupabaseServerClient();
+			const { error } = await client.auth.resetPasswordForEmail(email, {
+				redirectTo: `${requestUrl.origin}/recuperar-senha`,
 			});
+
+			if (error) {
+				throw error;
+			}
+
+			flushResponseCookies();
 		}
 
 		return { success: true };
@@ -257,19 +305,33 @@ export async function resetPasswordMutationHandler({
 	data,
 }: {
 	data: {
-		token: string;
+		code: string;
 		newPassword: string;
 		confirmPassword: string;
 	};
 }): Promise<MutationStatus> {
 	try {
-		await auth.api.resetPassword({
-			headers: getRequestHeaders(),
-			body: {
-				token: data.token,
-				newPassword: data.newPassword,
-			},
+		const { client, flushResponseCookies } = createSupabaseServerClient();
+		const { error: exchangeError } = await client.auth.exchangeCodeForSession(
+			data.code,
+		);
+
+		if (exchangeError) {
+			throw exchangeError;
+		}
+
+		const { error: updateError } = await client.auth.updateUser({
+			password: data.newPassword,
 		});
+
+		if (updateError) {
+			throw updateError;
+		}
+
+		await client.auth.signOut({
+			scope: "local",
+		});
+		flushResponseCookies([createClearedRememberMeCookie()]);
 
 		return { success: true };
 	} catch (error) {

@@ -14,24 +14,18 @@ let mockedIsCompletingLoginState = false;
 
 const {
 	clearAuthenticatedQueryCacheMock,
-	fetchQueryMock,
 	mutateAsyncMock,
-	navigateMock,
 	toastDangerMock,
 	useAppFormMock,
 	useMutationMock,
-	useNavigateMock,
 	useQueryClientMock,
 	useStateMock,
 } = vi.hoisted(() => ({
 	clearAuthenticatedQueryCacheMock: vi.fn(),
-	fetchQueryMock: vi.fn(),
 	mutateAsyncMock: vi.fn(),
-	navigateMock: vi.fn(),
 	toastDangerMock: vi.fn(),
 	useAppFormMock: vi.fn(),
 	useMutationMock: vi.fn(),
-	useNavigateMock: vi.fn(),
 	useQueryClientMock: vi.fn(),
 	useStateMock: vi.fn(),
 }));
@@ -44,10 +38,6 @@ vi.mock("react", async () => {
 		useState: useStateMock,
 	};
 });
-
-vi.mock("@tanstack/react-router", () => ({
-	useNavigate: useNavigateMock,
-}));
 
 vi.mock("@tanstack/react-query", () => ({
 	useMutation: useMutationMock,
@@ -67,9 +57,6 @@ vi.mock("@/shared/lib/toast", () => ({
 vi.mock("@/shared/session", () => ({
 	clearAuthenticatedQueryCache: clearAuthenticatedQueryCacheMock,
 	FORCED_PASSWORD_CHANGE_PATH: "/alterar-senha-obrigatoria",
-	getCurrentSessionQueryOptions: () => ({
-		queryKey: ["session", "current"],
-	}),
 	getSafeInternalRedirectPath: (redirectTo?: string) => {
 		if (!redirectTo) {
 			return undefined;
@@ -92,14 +79,13 @@ vi.mock("../api/mutations", () => ({
 import { useLoginForm } from "../hooks/use-login-form";
 
 describe("useLoginForm", () => {
+	const assignMock = vi.fn();
+
 	beforeEach(() => {
 		vi.clearAllMocks();
 		capturedFormConfig = null;
 		mockedIsCompletingLoginState = false;
-		useNavigateMock.mockReturnValue(navigateMock);
-		useQueryClientMock.mockReturnValue({
-			fetchQuery: fetchQueryMock,
-		});
+		useQueryClientMock.mockReturnValue({});
 		useMutationMock.mockReturnValue({
 			isPending: false,
 			mutateAsync: mutateAsyncMock,
@@ -117,8 +103,16 @@ describe("useLoginForm", () => {
 						: nextValue;
 			},
 		]);
-		mutateAsyncMock.mockResolvedValue({ success: true });
-		fetchQueryMock.mockResolvedValue({ user: { id: 1 } });
+		mutateAsyncMock.mockResolvedValue({
+			success: true,
+			mustChangePassword: false,
+		});
+		Object.defineProperty(globalThis, "location", {
+			configurable: true,
+			value: {
+				assign: assignMock,
+			},
+		});
 	});
 
 	it("navigates to preserved redirect after successful login", async () => {
@@ -141,16 +135,9 @@ describe("useLoginForm", () => {
 		});
 		expect(clearAuthenticatedQueryCacheMock).toHaveBeenCalledTimes(1);
 		expect(clearAuthenticatedQueryCacheMock).toHaveBeenCalledWith(
-			expect.objectContaining({
-				fetchQuery: fetchQueryMock,
-			}),
+			expect.any(Object),
 		);
-		expect(fetchQueryMock).toHaveBeenCalledWith({
-			queryKey: ["session", "current"],
-		});
-		expect(navigateMock).toHaveBeenCalledWith({
-			to: "/clientes?page=2",
-		});
+		expect(assignMock).toHaveBeenCalledWith("/clientes?page=2");
 		expect(toastDangerMock).not.toHaveBeenCalled();
 	});
 
@@ -165,14 +152,12 @@ describe("useLoginForm", () => {
 			},
 		});
 
-		expect(navigateMock).toHaveBeenCalledWith({
-			to: "/",
-		});
+		expect(assignMock).toHaveBeenCalledWith("/");
 	});
 
 	it("redirects to the forced password-change route when the session requires it", async () => {
-		fetchQueryMock.mockResolvedValueOnce({
-			user: { id: 1 },
+		mutateAsyncMock.mockResolvedValueOnce({
+			success: true,
 			mustChangePassword: true,
 		});
 
@@ -186,37 +171,18 @@ describe("useLoginForm", () => {
 			},
 		});
 
-		expect(navigateMock).toHaveBeenCalledWith({
-			to: "/alterar-senha-obrigatoria",
-		});
+		expect(assignMock).toHaveBeenCalledWith("/alterar-senha-obrigatoria");
 	});
 
-	it("keeps the login state busy until navigation finishes after mutation success", async () => {
-		let resolveMutation: ((value: { success: true }) => void) | undefined;
-		let resolveSession:
-			| ((value: {
-					user: { id: number };
-					mustChangePassword?: boolean;
-			  }) => void)
+	it("keeps the login state busy until document navigation starts after mutation success", async () => {
+		let resolveMutation:
+			| ((value: { success: true; mustChangePassword: boolean }) => void)
 			| undefined;
-		let resolveNavigate: (() => void) | undefined;
 
 		mutateAsyncMock.mockImplementation(
 			() =>
 				new Promise((resolve) => {
 					resolveMutation = resolve;
-				}),
-		);
-		fetchQueryMock.mockImplementation(
-			() =>
-				new Promise((resolve) => {
-					resolveSession = resolve;
-				}),
-		);
-		navigateMock.mockImplementation(
-			() =>
-				new Promise<void>((resolve) => {
-					resolveNavigate = resolve;
 				}),
 		);
 
@@ -234,20 +200,12 @@ describe("useLoginForm", () => {
 
 		expect(useLoginForm().isPending).toBe(true);
 
-		resolveMutation?.({ success: true });
-		await Promise.resolve();
-
-		expect(useLoginForm().isPending).toBe(true);
-
-		resolveSession?.({
-			user: { id: 1 },
+		resolveMutation?.({
+			success: true,
 			mustChangePassword: false,
 		});
-		await Promise.resolve();
-
-		expect(useLoginForm().isPending).toBe(true);
-
-		resolveNavigate?.();
 		await submitPromise;
+
+		expect(assignMock).toHaveBeenCalledWith("/");
 	});
 });
