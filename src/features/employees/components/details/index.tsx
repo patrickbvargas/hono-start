@@ -43,6 +43,24 @@ interface TemporaryPasswordState {
 	value: string;
 }
 
+function copyTextWithDocumentFallback(value: string) {
+	const textarea = document.createElement("textarea");
+	textarea.value = value;
+	textarea.setAttribute("readonly", "");
+	textarea.style.position = "fixed";
+	textarea.style.opacity = "0";
+	textarea.style.pointerEvents = "none";
+	document.body.appendChild(textarea);
+	textarea.focus();
+	textarea.select();
+
+	try {
+		return document.execCommand("copy");
+	} finally {
+		document.body.removeChild(textarea);
+	}
+}
+
 export const EmployeeDetails = ({
 	canManageLifecycle = false,
 	id,
@@ -224,12 +242,34 @@ const EmployeeDetailsContent = ({
 	};
 
 	const handleCopyPassword = async () => {
-		if (!temporaryPassword?.value || !navigator.clipboard) {
+		if (!temporaryPassword?.value) {
 			return;
 		}
 
-		await navigator.clipboard.writeText(temporaryPassword.value);
-		toast.success("Senha temporária copiada.");
+		if (!navigator.clipboard) {
+			const copied = copyTextWithDocumentFallback(temporaryPassword.value);
+
+			if (copied) {
+				toast.success("Senha temporária copiada.");
+			} else {
+				toast.danger("Não foi possível copiar a senha temporária.");
+			}
+
+			return;
+		}
+
+		try {
+			await navigator.clipboard.writeText(temporaryPassword.value);
+			toast.success("Senha temporária copiada.");
+		} catch {
+			const copied = copyTextWithDocumentFallback(temporaryPassword.value);
+
+			if (copied) {
+				toast.success("Senha temporária copiada.");
+			} else {
+				toast.danger("Não foi possível copiar a senha temporária.");
+			}
+		}
 	};
 
 	return (

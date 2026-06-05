@@ -27,6 +27,10 @@ interface MutationStatus {
 	success: true;
 }
 
+interface LoginMutationStatus extends MutationStatus {
+	mustChangePassword: boolean;
+}
+
 function createSafeFailure(errorMessage: string): never {
 	throw new Error(errorMessage);
 }
@@ -52,7 +56,10 @@ function includesSerializedError(error: unknown, code: string) {
 	return JSON.stringify(error).includes(code);
 }
 
-async function authenticateWithEmail(input: LoginInput, email: string) {
+async function authenticateWithEmail(
+	input: LoginInput,
+	email: string,
+): Promise<LoginMutationStatus> {
 	const { client, flushResponseCookies } = createSupabaseServerClient({
 		rememberMe: input.rememberMe,
 	});
@@ -75,6 +82,7 @@ async function authenticateWithEmail(input: LoginInput, email: string) {
 		},
 		select: {
 			id: true,
+			mustChangePassword: true,
 		},
 	});
 
@@ -87,13 +95,18 @@ async function authenticateWithEmail(input: LoginInput, email: string) {
 	}
 
 	flushResponseCookies([createRememberMeCookie(input.rememberMe)]);
+
+	return {
+		success: true,
+		mustChangePassword: employee.mustChangePassword,
+	};
 }
 
 export async function loginMutationHandler({
 	data,
 }: {
 	data: LoginInput;
-}): Promise<MutationStatus> {
+}): Promise<LoginMutationStatus> {
 	const normalizedIdentifier = normalizeAuthenticationIdentifier(
 		data.identifier,
 	);
@@ -109,10 +122,10 @@ export async function loginMutationHandler({
 			(await resolveAuthenticationEmail(data.identifier)) ??
 			UNKNOWN_LOGIN_EMAIL;
 
-		await authenticateWithEmail(data, email);
+		const loginResult = await authenticateWithEmail(data, email);
 		await clearFailedLoginAttempts(normalizedIdentifier);
 
-		return { success: true };
+		return loginResult;
 	} catch (error) {
 		await recordFailedLoginAttempt(normalizedIdentifier);
 		console.error("[authentication:login]", error);

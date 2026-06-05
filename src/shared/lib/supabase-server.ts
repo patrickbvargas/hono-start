@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import {
 	getRequestHeaders,
-	setResponseHeaders,
+	setResponseHeader,
 } from "@tanstack/react-start/server";
 import {
 	getAuthCookieMaxAge,
@@ -105,7 +105,7 @@ export function createSupabaseServerClient(
 	options: CreateSupabaseServerClientOptions = {},
 ) {
 	const pendingCookies: PendingCookie[] = [];
-	const pendingHeaders = new Headers();
+	const pendingHeaders = new Map<string, string>();
 	const rememberMe = options.rememberMe ?? getRememberMePreferenceFromRequest();
 	const requestHeaders = getRequestHeaders();
 
@@ -145,15 +145,17 @@ export function createSupabaseServerClient(
 	);
 
 	function flushResponseCookies(extraCookies: PendingCookie[] = []) {
-		const responseHeaders = new Headers(pendingHeaders);
 		const cookiesToWrite = [...pendingCookies, ...extraCookies];
+		const serializedCookies = cookiesToWrite.map((cookie) => {
+			return serializeCookie(cookie);
+		});
 
-		for (const cookie of cookiesToWrite) {
-			responseHeaders.append("set-cookie", serializeCookie(cookie));
+		for (const [name, value] of pendingHeaders.entries()) {
+			setResponseHeader(name, value);
 		}
 
-		if (Array.from(responseHeaders.keys()).length > 0) {
-			setResponseHeaders(responseHeaders);
+		if (serializedCookies.length > 0) {
+			setResponseHeader("set-cookie", serializedCookies);
 		}
 	}
 
