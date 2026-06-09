@@ -27,7 +27,7 @@ const items: RouteSection[] = [
 		url: "#",
 		isActive: true,
 		icon: DollarSignIcon,
-		items: [ROUTES.fee, ROUTES.remuneration],
+		items: [ROUTES.fee, ROUTES.expense, ROUTES.remuneration],
 	},
 	{
 		title: "Outro",

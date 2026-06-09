@@ -48,6 +48,7 @@ export type SessionScopeSubject =
 	| "client"
 	| "contract"
 	| "fee"
+	| "expense"
 	| "remuneration"
 	| "attachment"
 	| "dashboard"
@@ -83,6 +84,8 @@ export interface RemunerationAccessResource extends SessionFirmResource {
 	employeeId: number;
 }
 
+export interface ExpenseAccessResource extends SessionFirmResource {}
+
 export interface AttachmentAccessResource extends SessionFirmResource {}
 
 export interface DashboardAccessResource extends SessionFirmResource {}
@@ -94,6 +97,7 @@ export type SessionResource =
 	| AuditLogAccessResource
 	| ContractAccessResource
 	| DashboardAccessResource
+	| ExpenseAccessResource
 	| FeeAccessResource
 	| RemunerationAccessResource
 	| null

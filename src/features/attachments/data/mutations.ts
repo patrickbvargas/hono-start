@@ -71,6 +71,9 @@ export async function createAttachment(params: {
 					...(owner.ownerKind === "contract"
 						? { contractId: owner.ownerId }
 						: {}),
+					...(owner.ownerKind === "expense"
+						? { expenseId: owner.ownerId }
+						: {}),
 				},
 			});
 

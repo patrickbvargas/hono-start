@@ -57,6 +57,18 @@ describe("attachment form schema", () => {
 		expect(multipleOwners.success).toBe(false);
 	});
 
+	it("accepts expense owner context", () => {
+		expect(
+			attachmentUploadInputSchema.parse({
+				...baseInput,
+				clientId: undefined,
+				expenseId: 9,
+			}),
+		).toMatchObject({
+			expenseId: 9,
+		});
+	});
+
 	it("rejects unsupported types and oversized files", () => {
 		const invalidType = attachmentUploadInputSchema.safeParse({
 			...baseInput,

@@ -73,3 +73,28 @@ Lookup values are domain truth:
 | `PDF` | PDF |
 | `JPG` | JPG |
 | `PNG` | PNG |
+
+## Expense Categories
+
+| Value | Label |
+|---|---|
+| `PAYROLL_LAWYERS` | Folha Advogados |
+| `PAYROLL_INTERNS` | Folha Estagiários |
+| `PAYROLL_STAFF` | Folha Funcionários |
+| `TAX_PIS` | PIS |
+| `TAX_IRPJ` | IRPJ |
+| `TAX_COFINS` | COFINS |
+| `TAX_ISSQN` | ISSQN |
+| `TAX_CSLL` | CSLL |
+| `TAX_OTHER` | Outros Impostos |
+| `PHONE` | Telefone |
+| `MEDIA` | Mídia |
+| `POSTAGE` | Correio |
+| `CONDOMINIUM` | Condomínio |
+| `ELECTRICITY` | RGE |
+| `MEALS` | Refeitório |
+| `ASSETS` | Patrimônio |
+| `SUPPLIES` | Insumos |
+| `NOTARY` | Tabelionato |
+| `COURT_COSTS` | Custos Judiciais |
+| `OTHER` | Outros |

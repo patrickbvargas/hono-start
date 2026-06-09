@@ -65,6 +65,7 @@ export const ModelName = {
   AssignmentType: 'AssignmentType',
   RevenueType: 'RevenueType',
   AttachmentType: 'AttachmentType',
+  ExpenseCategory: 'ExpenseCategory',
   Employee: 'Employee',
   AuditLog: 'AuditLog',
   Client: 'Client',
@@ -72,6 +73,7 @@ export const ModelName = {
   ContractEmployee: 'ContractEmployee',
   Revenue: 'Revenue',
   Fee: 'Fee',
+  Expense: 'Expense',
   Remuneration: 'Remuneration',
   Attachment: 'Attachment'
 } as const
@@ -251,6 +253,16 @@ export const AttachmentTypeScalarFieldEnum = {
 export type AttachmentTypeScalarFieldEnum = (typeof AttachmentTypeScalarFieldEnum)[keyof typeof AttachmentTypeScalarFieldEnum]
 
 
+export const ExpenseCategoryScalarFieldEnum = {
+  id: 'id',
+  value: 'value',
+  label: 'label',
+  isActive: 'isActive'
+} as const
+
+export type ExpenseCategoryScalarFieldEnum = (typeof ExpenseCategoryScalarFieldEnum)[keyof typeof ExpenseCategoryScalarFieldEnum]
+
+
 export const EmployeeScalarFieldEnum = {
   id: 'id',
   firmId: 'firmId',
@@ -380,6 +392,22 @@ export const FeeScalarFieldEnum = {
 export type FeeScalarFieldEnum = (typeof FeeScalarFieldEnum)[keyof typeof FeeScalarFieldEnum]
 
 
+export const ExpenseScalarFieldEnum = {
+  id: 'id',
+  firmId: 'firmId',
+  categoryId: 'categoryId',
+  expenseDate: 'expenseDate',
+  amount: 'amount',
+  notes: 'notes',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+} as const
+
+export type ExpenseScalarFieldEnum = (typeof ExpenseScalarFieldEnum)[keyof typeof ExpenseScalarFieldEnum]
+
+
 export const RemunerationScalarFieldEnum = {
   id: 'id',
   firmId: 'firmId',
@@ -404,6 +432,7 @@ export const AttachmentScalarFieldEnum = {
   clientId: 'clientId',
   employeeId: 'employeeId',
   contractId: 'contractId',
+  expenseId: 'expenseId',
   typeId: 'typeId',
   fileName: 'fileName',
   storagePath: 'storagePath',

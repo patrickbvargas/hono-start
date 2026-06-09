@@ -63,6 +63,9 @@ describe("attachment rule assertions", () => {
 		expect(() =>
 			assertSingleAttachmentOwnerContext({ clientId: 1 }),
 		).not.toThrow();
+		expect(() =>
+			assertSingleAttachmentOwnerContext({ expenseId: 3 }),
+		).not.toThrow();
 		expect(() => assertSingleAttachmentOwnerContext({})).toThrow(
 			"Selecione exatamente um contexto para o anexo.",
 		);

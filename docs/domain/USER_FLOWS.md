@@ -81,6 +81,15 @@ This file preserves the canonical user workflows of the product. These flows des
 6. The system creates the fee, updates payment progress, and generates remunerations when enabled.
 7. The system re-evaluates contract completion after the new payment state.
 
+## Register An Expense
+
+1. An administrator opens the expenses list.
+2. The administrator starts the new-expense flow.
+3. The administrator selects a category, enters date and amount, and optionally fills observation.
+4. The administrator saves the expense.
+5. On success, the system confirms via toast, closes the overlay, and refreshes the list.
+6. The administrator may open the details drawer to inspect observation, attachments, and audit-oriented metadata.
+
 ## View And Export Remunerations
 
 1. The user opens the remunerations surface.
@@ -98,7 +107,7 @@ This file preserves the canonical user workflows of the product. These flows des
 
 ## Upload An Attachment
 
-1. The user opens a client, employee, or contract detail context.
+1. The user opens a client, employee, contract, or expense detail context.
 2. The user starts the upload flow.
 3. The user selects a supported file within the allowed size limit.
 4. On success, the file appears in the attachment list.

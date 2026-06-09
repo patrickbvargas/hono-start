@@ -115,7 +115,7 @@ export function isAttachmentStorageCapacityError(error: unknown) {
 export function createAttachmentStoragePath(params: {
 	firmId: number;
 	ownerId: number;
-	ownerKind: "client" | "contract" | "employee";
+	ownerKind: "client" | "contract" | "employee" | "expense";
 	fileName: string;
 }) {
 	const sanitizedName = params.fileName

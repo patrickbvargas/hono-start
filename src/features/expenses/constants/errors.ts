@@ -1,0 +1,17 @@
+export const EXPENSE_ERRORS = {
+	CREATE_FORBIDDEN: "Apenas administradores podem criar despesas",
+	CREATE_FAILED: "Erro ao criar despesa",
+	DELETE_FORBIDDEN: "Apenas administradores podem excluir despesas",
+	DELETE_FAILED: "Erro ao excluir despesa",
+	DETAIL_FAILED: "Erro ao buscar despesa",
+	DETAIL_NOT_FOUND: "Despesa não encontrada",
+	GET_FAILED: "Erro ao buscar despesas",
+	RESTORE_FORBIDDEN: "Apenas administradores podem restaurar despesas",
+	RESTORE_FAILED: "Erro ao restaurar despesa",
+	UPDATE_FORBIDDEN: "Apenas administradores podem editar despesas",
+	UPDATE_FAILED: "Erro ao atualizar despesa",
+	CATEGORY_NOT_FOUND: "Categoria de despesa não encontrada",
+	CATEGORY_INACTIVE: "Categoria de despesa inativa",
+	CATEGORY_OPTIONS_FAILED: "Erro ao buscar categorias disponíveis",
+	AMOUNT_TOO_LOW: "Valor deve ser maior que zero",
+} as const;

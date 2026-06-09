@@ -44,6 +44,10 @@ function assertAttachmentOwnerUploadAccess(
 	if (owner.owner.ownerKind === "contract") {
 		assertCan(session, "contract.update", owner.access.resource);
 	}
+
+	if (owner.owner.ownerKind === "expense") {
+		assertCan(session, "expense.update", owner.access.resource);
+	}
 }
 
 const createAttachmentFn = createServerFn({ method: "POST" })

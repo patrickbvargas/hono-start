@@ -21,6 +21,7 @@ The software core includes these feature areas:
 - Contracts
 - Revenues
 - Fees
+- Expenses
 - Remunerations
 - Attachments
 - Audit log
@@ -79,6 +80,12 @@ The software core includes these feature areas:
 - Updates payment progress and downstream financial state.
 - Optionally triggers remuneration generation.
 
+### Expenses
+
+- Records concrete operational outflows for the firm.
+- Provides a standalone list route with create, edit, detail, delete, restore, and attachment flows.
+- Keeps observation content in form and detail only, not as a default list column.
+
 ### Remunerations
 
 - Provides the payout-review surface derived from fee events.
@@ -87,7 +94,7 @@ The software core includes these feature areas:
 
 ### Attachments
 
-- Provides file handling for client, employee, and contract contexts.
+- Provides file handling for client, employee, contract, and expense contexts.
 - Supports upload and view behavior within allowed contexts.
 - Keeps deletion behavior restricted according to permissions.
 
@@ -115,6 +122,7 @@ The software core includes these feature areas:
 - `/colaboradores`
 - `/contratos`
 - `/honorarios`
+- `/despesas`
 - `/remuneracoes`
 - `/auditoria`
 
@@ -168,6 +176,12 @@ The software core includes these feature areas:
 - Administrators can manually adjust remuneration records when policy allows it.
 - Remuneration review remains tied to the underlying fee and contract context.
 
+### Expense Expectations
+
+- Administrators can record expenses through a standalone `Despesas` route.
+- Expense list state is URL-driven and preserves filters, pagination, and sorting.
+- Expense details open in a drawer and include an `Anexos` section.
+
 ### Attachment Expectations
 
 - Authenticated users can upload and view attachments in supported contexts.
@@ -219,6 +233,11 @@ The software core includes these feature areas:
 - As a user, I can record a fee and generate remunerations automatically.
 - As a user, I can record a fee without remuneration generation for exceptional situations.
 - As an administrator, I can manually adjust remuneration records when business reality requires it.
+
+### Expense Management
+
+- As an administrator, I can register a firm expense with category, date, amount, and optional observation.
+- As an administrator, I can inspect expense details and manage attachments without losing list context.
 
 ### Reporting And Visibility
 

@@ -12,6 +12,7 @@ const attachmentOwnerBaseInputSchema = z.object({
 	clientId: entityIdSchema.shape.id.optional(),
 	employeeId: entityIdSchema.shape.id.optional(),
 	contractId: entityIdSchema.shape.id.optional(),
+	expenseId: entityIdSchema.shape.id.optional(),
 });
 
 function addOwnerContextError(ctx: z.RefinementCtx) {
@@ -183,7 +184,11 @@ export function getAttachmentOwnerContext(input: AttachmentOwnerInput): {
 		return { ownerKind: "employee", ownerId: input.employeeId };
 	}
 
-	return { ownerKind: "contract", ownerId: input.contractId as number };
+	if (input.contractId) {
+		return { ownerKind: "contract", ownerId: input.contractId };
+	}
+
+	return { ownerKind: "expense", ownerId: input.expenseId as number };
 }
 
 export function getAttachmentOwnerInput(params: {
@@ -197,5 +202,7 @@ export function getAttachmentOwnerInput(params: {
 			return { employeeId: params.ownerId };
 		case "contract":
 			return { contractId: params.ownerId };
+		case "expense":
+			return { expenseId: params.ownerId };
 	}
 }

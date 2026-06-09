@@ -43,6 +43,14 @@ This file preserves canonical edge-case expectations for the product domain.
 | Installment number duplicates an active installment in the same revenue | The system rejects the duplicate |
 | Installments paid would exceed total installments | The system prevents the invalid state |
 
+## Expenses
+
+| Scenario | Expected Behavior |
+|---|---|
+| Expense amount is zero or negative | The system rejects the value |
+| Expense references an inactive category already persisted on the record | The edit form keeps it visible but disabled |
+| Regular user attempts to access expenses or expense attachments | Access is denied |
+
 ## Attachments
 
 | Scenario | Expected Behavior |
@@ -50,6 +58,7 @@ This file preserves canonical edge-case expectations for the product domain.
 | File exceeds allowed size | The system rejects the upload |
 | File type is unsupported | The system rejects the upload |
 | Attachment storage object cannot be removed during delete | The system keeps the attachment record and shows a clear delete failure |
+| Attachment request carries multiple owner contexts including expense | The system rejects the request |
 
 ## Multi-Tenancy
 
