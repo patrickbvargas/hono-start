@@ -18,6 +18,7 @@ export function getScope(
 		case "audit-log":
 		case "client":
 		case "dashboard":
+		case "expense":
 		case "employee":
 			return { firmId: getCurrentFirmId(session) };
 		case "contract":

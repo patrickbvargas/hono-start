@@ -5,9 +5,12 @@ import type {
 } from "../schemas/form";
 
 function getAttachmentOwnerCount(data: AttachmentOwnerInput) {
-	return [data.clientId, data.employeeId, data.contractId].filter(
-		(value) => value !== undefined,
-	).length;
+	return [
+		data.clientId,
+		data.employeeId,
+		data.contractId,
+		data.expenseId,
+	].filter((value) => value !== undefined).length;
 }
 
 export function assertSingleAttachmentOwnerContext(data: AttachmentOwnerInput) {

@@ -21,6 +21,8 @@
 | View revenues and fees | Yes | No, only fees on allowed contracts |
 | Create or update revenues and fees | Yes | Yes, within allowed contract boundaries |
 | Delete or restore revenues and fees | Yes | No |
+| View expenses | Yes | No |
+| Create, update, delete, or restore expenses | Yes | No |
 | View own remunerations | Yes | Yes |
 | View all remunerations | Yes | No |
 | Edit remunerations | Yes | No |
@@ -43,7 +45,9 @@
 ## Visibility Rules
 
 - Administrators see firm-wide clients, contracts, fees, revenues, and remunerations.
+- Administrators see firm-wide expenses.
 - Regular users see all clients but only the contracts and fees allowed by their assignment-based visibility rules.
+- Regular users do not access the expenses route.
 - Regular lawyers see contracts only when actively assigned as responsible or recommended.
 - Regular lawyers do not gain contract visibility from recommending assignments alone.
 - Regular administrative assistants continue seeing contracts where they are actively assigned as admin assistants.
@@ -76,6 +80,7 @@
 | Clients | Authenticated |
 | Contracts | Authenticated and role-scoped |
 | Fees | Authenticated and role-scoped |
+| Expenses | Administrator only |
 | Remunerations | Authenticated and role-scoped |
 | User Management | Administrator only |
 | Audit Log | Administrator only |

@@ -120,6 +120,7 @@ async function buildAttachmentUploadInput(
 		clientId: value.clientId,
 		employeeId: value.employeeId,
 		contractId: value.contractId,
+		expenseId: value.expenseId,
 		type,
 		fileName: value.file.name,
 		mimeType: value.file.type,

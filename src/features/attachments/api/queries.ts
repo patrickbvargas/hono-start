@@ -43,6 +43,10 @@ function assertAttachmentOwnerReadAccess(
 	if (owner.owner.ownerKind === "contract") {
 		assertCan(session, "contract.view", owner.access.resource);
 	}
+
+	if (owner.owner.ownerKind === "expense") {
+		assertCan(session, "expense.view", owner.access.resource);
+	}
 }
 
 const getAttachmentsByOwnerFn = createServerFn({ method: "GET" })

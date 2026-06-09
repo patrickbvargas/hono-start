@@ -9,8 +9,9 @@
 - `ContractEmployee`: assignment of an employee to a contract with a specific role.
 - `Revenue`: a payment plan attached to a contract.
 - `Fee`: a concrete payment received against a revenue.
+- `Expense`: a concrete firm outflow recorded independently from contracts.
 - `Remuneration`: an amount owed to an employee as the result of a fee.
-- `Attachment`: a file associated with a client, employee, or contract.
+- `Attachment`: a file associated with a client, employee, contract, or expense.
 - `AuditLog`: immutable record of business changes.
 
 ## Entity Responsibilities
@@ -21,6 +22,7 @@
 - `Contract` is the main business aggregate linking client, team, revenue plans, and lifecycle status.
 - `Revenue` defines expected incoming value and payment schedule.
 - `Fee` records actual incoming payments.
+- `Expense` records actual outgoing payments or operational costs.
 - `Remuneration` records outgoing employee compensation derived from fee events.
 
 ## Entity Contracts
@@ -72,6 +74,12 @@
 - Carries payment date, amount, installment number, remuneration-generation flag, and active or deleted lifecycle state.
 - Active uniqueness is constrained by revenue and installment number.
 
+### Expense
+
+- Belongs to one firm and one expense category.
+- Carries expense date, amount, optional notes, and active or deleted lifecycle state.
+- Is intentionally standalone in the first version and does not require links to client, contract, revenue, or collaborator.
+
 ### Remuneration
 
 - Belongs to one fee, one contract assignment, and one firm.
@@ -80,7 +88,7 @@
 
 ### Attachment
 
-- Belongs to one firm and exactly one owner context among client, employee, or contract.
+- Belongs to one firm and exactly one owner context among client, employee, contract, or expense.
 - Carries file name, file URL or path, attachment type, and file size.
 - Attachment deletion permanently removes both the stored file and its database record.
 
@@ -102,6 +110,7 @@ The system uses lookup tables for categorical values rather than hard-coded enum
 - revenue type
 - assignment type
 - attachment type
+- expense category
 
 Lookup values are part of domain behavior and must remain stable by `value`.
 
@@ -115,12 +124,14 @@ Lookup values are part of domain behavior and must remain stable by `value`.
 - revenue type
 - assignment type
 - attachment type
+- expense category
 
 See `docs/domain/LOOKUP_VALUES.md` for the canonical allowed values and labels.
 
 ## Relationship Summary
 
 - One `Firm` owns many employees, clients, contracts, revenues, fees, remunerations, attachments, and audit logs.
+- One `Firm` owns many expenses.
 - One `Client` may own many contracts.
 - One `Contract` must belong to one client and may own many assignments, revenues, and attachments.
 - One `Revenue` belongs to one contract and may own many fees.
@@ -175,4 +186,4 @@ See `docs/domain/LOOKUP_VALUES.md` for the canonical allowed values and labels.
 ## Conceptual Boundaries
 
 - Client management, contract management, fee management, and remuneration calculation are separate concerns, but they are tightly linked by the contract lifecycle.
-- The domain is driven by fee collection and downstream remuneration correctness.
+- The domain is driven by fee collection, expense capture, and downstream remuneration correctness.

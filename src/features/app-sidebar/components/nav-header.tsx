@@ -1,11 +1,11 @@
 import { Link } from "@tanstack/react-router";
 import { BoxIcon } from "lucide-react";
-import { ROUTES } from "@/shared/config/routes";
 import {
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
 } from "@/shared/components/ui";
+import { ROUTES } from "@/shared/config/routes";
 
 export const NavHeader = () => {
 	return (
@@ -25,8 +25,7 @@ export const NavHeader = () => {
 							</div>
 						</Link>
 					}
-				>
-				</SidebarMenuButton>
+				></SidebarMenuButton>
 			</SidebarMenuItem>
 		</SidebarMenu>
 	);

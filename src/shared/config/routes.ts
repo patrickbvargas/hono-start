@@ -7,6 +7,7 @@ import {
 	ScrollTextIcon,
 	UserIcon,
 	UsersIcon,
+	WalletCardsIcon,
 	WalletIcon,
 } from "lucide-react";
 import type { SessionAction } from "@/shared/session";
@@ -32,6 +33,7 @@ type RouteName =
 	| "client"
 	| "contract"
 	| "fee"
+	| "expense"
 	| "remuneration"
 	| "employee"
 	| "auditLog";
@@ -56,6 +58,11 @@ export const ROUTES: Record<RouteName, RouteItem> = {
 		title: "Honorários",
 		url: "/honorarios",
 		icon: DollarSignIcon,
+	},
+	expense: {
+		title: "Despesas",
+		url: "/despesas",
+		icon: WalletCardsIcon,
 	},
 	remuneration: {
 		title: "Remunerações",

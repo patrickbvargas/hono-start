@@ -43,6 +43,27 @@ type AssignmentTypeValue =
   | "ADMIN_ASSISTANT";
 type RevenueTypeValue = "ADMINISTRATIVE" | "JUDICIAL" | "SUCCUMBENCY";
 type AttachmentTypeValue = "PDF" | "JPG" | "PNG";
+type ExpenseCategoryValue =
+	| "PAYROLL_LAWYERS"
+	| "PAYROLL_INTERNS"
+	| "PAYROLL_STAFF"
+	| "TAX_PIS"
+	| "TAX_IRPJ"
+	| "TAX_COFINS"
+	| "TAX_ISSQN"
+	| "TAX_CSLL"
+	| "TAX_OTHER"
+	| "PHONE"
+	| "MEDIA"
+	| "POSTAGE"
+	| "CONDOMINIUM"
+	| "ELECTRICITY"
+	| "MEALS"
+	| "ASSETS"
+	| "SUPPLIES"
+	| "NOTARY"
+	| "COURT_COSTS"
+	| "OTHER";
 
 interface EmployeeSeedInput {
   fullName: string;
@@ -1365,6 +1386,37 @@ async function main() {
     ].map((item) =>
       prisma.attachmentType.upsert({
         where: { value: item.value as AttachmentTypeValue },
+        update: { label: item.label, isActive: true },
+        create: { ...item, isActive: true },
+      }),
+    ),
+  );
+
+  await Promise.all(
+    [
+      { value: "PAYROLL_LAWYERS", label: "Folha Advogados" },
+      { value: "PAYROLL_INTERNS", label: "Folha Estagiários" },
+      { value: "PAYROLL_STAFF", label: "Folha Funcionários" },
+      { value: "TAX_PIS", label: "PIS" },
+      { value: "TAX_IRPJ", label: "IRPJ" },
+      { value: "TAX_COFINS", label: "COFINS" },
+      { value: "TAX_ISSQN", label: "ISSQN" },
+      { value: "TAX_CSLL", label: "CSLL" },
+      { value: "TAX_OTHER", label: "Outros Impostos" },
+      { value: "PHONE", label: "Telefone" },
+      { value: "MEDIA", label: "Mídia" },
+      { value: "POSTAGE", label: "Correio" },
+      { value: "CONDOMINIUM", label: "Condomínio" },
+      { value: "ELECTRICITY", label: "RGE" },
+      { value: "MEALS", label: "Refeitório" },
+      { value: "ASSETS", label: "Patrimônio" },
+      { value: "SUPPLIES", label: "Insumos" },
+      { value: "NOTARY", label: "Tabelionato" },
+      { value: "COURT_COSTS", label: "Custos Judiciais" },
+      { value: "OTHER", label: "Outros" },
+    ].map((item) =>
+      prisma.expenseCategory.upsert({
+        where: { value: item.value as ExpenseCategoryValue },
         update: { label: item.label, isActive: true },
         create: { ...item, isActive: true },
       }),

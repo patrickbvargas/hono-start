@@ -3,6 +3,7 @@ export const sessionPermissionEntities = [
 	"client",
 	"contract",
 	"fee",
+	"expense",
 	"remuneration",
 	"attachment",
 	"dashboard",
@@ -44,6 +45,11 @@ export const sessionPermissions = [
 	"fee.view",
 	"fee.delete",
 	"fee.restore",
+	"expense.create",
+	"expense.update",
+	"expense.view",
+	"expense.delete",
+	"expense.restore",
 	"remuneration.view",
 	"remuneration.update",
 	"remuneration.delete",
@@ -159,6 +165,26 @@ export const sessionActionPolicies: Record<
 	"fee.view": {
 		deniedMessage: "Você não tem permissão para visualizar estes honorários",
 		kind: "assigned-read",
+	},
+	"expense.create": {
+		deniedMessage: "Apenas administradores podem criar despesas",
+		kind: "admin-only",
+	},
+	"expense.delete": {
+		deniedMessage: "Apenas administradores podem excluir despesas",
+		kind: "admin-only",
+	},
+	"expense.restore": {
+		deniedMessage: "Apenas administradores podem restaurar despesas",
+		kind: "admin-only",
+	},
+	"expense.update": {
+		deniedMessage: "Apenas administradores podem editar despesas",
+		kind: "admin-only",
+	},
+	"expense.view": {
+		deniedMessage: "Apenas administradores podem visualizar despesas",
+		kind: "admin-only",
 	},
 	"remuneration.delete": {
 		deniedMessage: "Apenas administradores podem excluir remunerações",

@@ -63,6 +63,11 @@ export type RevenueType = Prisma.RevenueTypeModel
  */
 export type AttachmentType = Prisma.AttachmentTypeModel
 /**
+ * Model ExpenseCategory
+ * 
+ */
+export type ExpenseCategory = Prisma.ExpenseCategoryModel
+/**
  * Model Employee
  * 
  */
@@ -97,6 +102,11 @@ export type Revenue = Prisma.RevenueModel
  * 
  */
 export type Fee = Prisma.FeeModel
+/**
+ * Model Expense
+ * 
+ */
+export type Expense = Prisma.ExpenseModel
 /**
  * Model Remuneration
  * 

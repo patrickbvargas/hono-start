@@ -57,6 +57,18 @@ describe("attachment form schema", () => {
 		expect(multipleOwners.success).toBe(false);
 	});
 
+	it("accepts expense owner context", () => {
+		expect(
+			attachmentUploadInputSchema.parse({
+				...baseInput,
+				clientId: undefined,
+				expenseId: 9,
+			}),
+		).toMatchObject({
+			expenseId: 9,
+		});
+	});
+
 	it("rejects unsupported types and oversized files", () => {
 		const invalidType = attachmentUploadInputSchema.safeParse({
 			...baseInput,
@@ -118,5 +130,21 @@ describe("attachment form schema", () => {
 				ATTACHMENT_ERRORS.INVALID_FILE_TYPE,
 			);
 		}
+	});
+
+	it("keeps expense owner context in the client-side form schema", () => {
+		const validFile = new File(["test"], "recibo.pdf", {
+			type: "application/pdf",
+		});
+
+		expect(
+			attachmentFormInputSchema.parse({
+				expenseId: 9,
+				file: validFile,
+			}),
+		).toEqual({
+			expenseId: 9,
+			file: validFile,
+		});
 	});
 });

@@ -18,6 +18,7 @@ model Firm {
   contractEmployees ContractEmployee[]
   revenues          Revenue[]
   fees              Fee[]
+  expenses          Expense[]
   remunerations     Remuneration[]
 
   @@map("firms")
@@ -101,6 +102,16 @@ model AttachmentType {
   attachments Attachment[]
 
   @@map("attachment_types")
+}
+
+model ExpenseCategory {
+  id       Int       @id @default(autoincrement())
+  value    String    @unique
+  label    String
+  isActive Boolean   @default(true)
+  expenses Expense[]
+
+  @@map("expense_categories")
 }
 
 model Employee {
@@ -294,6 +305,30 @@ model Fee {
   @@map("fees")
 }
 
+model Expense {
+  id             Int             @id @default(autoincrement())
+  firmId         Int
+  categoryId     Int
+  expenseDate    DateTime
+  amount         Decimal         @db.Decimal(14, 2)
+  notes          String?
+  isActive       Boolean         @default(true)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  deletedAt      DateTime?
+  attachments    Attachment[]
+  category       ExpenseCategory @relation(fields: [categoryId], references: [id])
+  firm           Firm            @relation(fields: [firmId], references: [id])
+
+  @@index([firmId])
+  @@index([categoryId])
+  @@index([expenseDate])
+  @@index([deletedAt])
+  @@index([isActive])
+  @@index([createdAt])
+  @@map("expenses")
+}
+
 model Remuneration {
   id                 Int              @id @default(autoincrement())
   firmId             Int
@@ -327,6 +362,7 @@ model Attachment {
   clientId    Int?
   employeeId  Int?
   contractId  Int?
+  expenseId   Int?
   typeId      Int
   fileName    String
   storagePath String         @unique
@@ -339,6 +375,7 @@ model Attachment {
   client      Client?        @relation(fields: [clientId], references: [id])
   contract    Contract?      @relation(fields: [contractId], references: [id])
   employee    Employee?      @relation(fields: [employeeId], references: [id])
+  expense     Expense?       @relation(fields: [expenseId], references: [id])
   firm        Firm           @relation(fields: [firmId], references: [id])
   type        AttachmentType @relation(fields: [typeId], references: [id])
 
@@ -346,6 +383,7 @@ model Attachment {
   @@index([clientId])
   @@index([employeeId])
   @@index([contractId])
+  @@index([expenseId])
   @@index([typeId])
   @@index([deletedAt])
   @@index([isActive])

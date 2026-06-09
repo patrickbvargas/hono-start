@@ -107,6 +107,16 @@
 - A revenue is fully paid when `remainingValue = 0`.
 - Contract auto-completion depends on active revenues reaching the fully-paid state, not merely on the presence of a configured installment plan.
 
+## Expense Rules
+
+- Every expense belongs to exactly one firm-scoped expense category.
+- Expense category selection uses stable lookup values.
+- Expense amount must be positive.
+- Expense date is mandatory.
+- Expense notes are optional.
+- Expenses are firm-wide financial data and do not inherit contract-assignment visibility.
+- Expense forms expose `isActive` as an `Ativo` checkbox.
+
 ## Remuneration Rules
 
 - One remuneration may be created per eligible contract assignment when a fee generates remunerations.
@@ -138,12 +148,12 @@
 
 ## Attachment Rules
 
-- Attachments may belong to clients, employees, or contracts.
+- Attachments may belong to clients, employees, contracts, or expenses.
 - Supported file types and size limits are part of the product contract.
 - Upload and view permissions differ from delete permissions.
 - Supported attachment types are `PDF`, `JPG`, and `PNG`.
 - Maximum attachment size is `10 MB`.
-- Exactly one attachment owner context is set per file: client, employee, or contract.
+- Exactly one attachment owner context is set per file: client, employee, contract, or expense.
 - Attachment storage uses a persistent file-storage backend and retains file path or URL in the record.
 - Attachment deletion permanently removes both the storage object and the attachment record.
 

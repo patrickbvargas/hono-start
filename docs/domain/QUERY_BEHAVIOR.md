@@ -62,6 +62,17 @@ This file defines the canonical domain-facing behavior of filtering, sorting, li
 | `dateFrom` | lower payment-date bound | date |
 | `dateTo` | upper payment-date bound | date |
 
+### Expense
+
+| Filter key | Meaning | Type / Default |
+|---|---|---|
+| `query` | observation search | text |
+| `category` | expense category | lookup value |
+| `dateFrom` | lower expense-date bound | date |
+| `dateTo` | upper expense-date bound | date |
+| `status` | soft-delete status | `active`, `deleted`, or `all`; default `active` |
+| `active` | active flag | `true`, `false`, or `all`; default `all` |
+
 ### Remuneration
 
 | Filter key | Meaning | Type / Default |
@@ -144,6 +155,17 @@ Sortable columns:
 - `paymentDate`
 - `amount`
 - `installmentNumber`
+- `createdAt`
+
+### Expense
+
+Default sort: `expenseDate` descending
+
+Sortable columns:
+
+- `expenseDate`
+- `amount`
+- `category`
 - `createdAt`
 
 ### Remuneration

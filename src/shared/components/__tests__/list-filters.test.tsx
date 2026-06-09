@@ -8,6 +8,8 @@ describe("ListFilters", () => {
 	it("hides empty direct children to avoid layout gaps", () => {
 		const { container } = render(<ListFilters />);
 
-		expect(container.firstElementChild?.className).toContain("[&>*:empty]:hidden");
+		expect(container.firstElementChild?.className).toContain(
+			"[&>*:empty]:hidden",
+		);
 	});
 });

@@ -5,13 +5,9 @@ import type { ReactNode } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@tanstack/react-router", () => ({
-	Link: ({
-		children,
-		to,
-	}: {
-		children: ReactNode;
-		to: string;
-	}) => <a href={to}>{children}</a>,
+	Link: ({ children, to }: { children: ReactNode; to: string }) => (
+		<a href={to}>{children}</a>
+	),
 }));
 
 vi.mock("@/shared/components/ui", () => ({
@@ -23,7 +19,9 @@ vi.mock("@/shared/components/ui", () => ({
 		children?: ReactNode;
 		render?: ReactNode;
 	}) => <button type="button">{render ?? children}</button>,
-	SidebarMenuItem: ({ children }: { children: ReactNode }) => <div>{children}</div>,
+	SidebarMenuItem: ({ children }: { children: ReactNode }) => (
+		<div>{children}</div>
+	),
 }));
 
 import { ROUTES } from "@/shared/config/routes";

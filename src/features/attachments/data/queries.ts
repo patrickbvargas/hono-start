@@ -30,6 +30,10 @@ interface AttachmentContractOwnerResource extends AttachmentOwnerResource {
 	resource: ContractAccessResource;
 }
 
+interface AttachmentExpenseOwnerResource extends AttachmentOwnerResource {
+	resource: { firmId: number };
+}
+
 export async function getAttachmentTypeByValue(value: string) {
 	return prisma.attachmentType.findUnique({
 		where: { value },
@@ -129,6 +133,27 @@ export async function getAttachmentContractOwnerResource(
 	};
 }
 
+export async function getAttachmentExpenseOwnerResource(
+	firmId: number,
+	id: number,
+): Promise<AttachmentExpenseOwnerResource | null> {
+	const expense = await prisma.expense.findFirst({
+		where: { id, firmId },
+		select: { id: true, firmId: true, deletedAt: true },
+	});
+
+	if (!expense) {
+		return null;
+	}
+
+	return {
+		id: expense.id,
+		deletedAt: expense.deletedAt,
+		firmId: expense.firmId,
+		resource: { firmId: expense.firmId },
+	};
+}
+
 export async function getAttachmentsByOwner(params: {
 	firmId: number;
 	input: AttachmentOwnerInput;
@@ -141,6 +166,7 @@ export async function getAttachmentsByOwner(params: {
 			...(owner.ownerKind === "client" ? { clientId: owner.ownerId } : {}),
 			...(owner.ownerKind === "employee" ? { employeeId: owner.ownerId } : {}),
 			...(owner.ownerKind === "contract" ? { contractId: owner.ownerId } : {}),
+			...(owner.ownerKind === "expense" ? { expenseId: owner.ownerId } : {}),
 		},
 		include: {
 			type: {
@@ -252,6 +278,18 @@ export async function assertAttachmentOwnerExists(params: {
 			}
 
 			return { owner, access: contract };
+		}
+		case "expense": {
+			const expense = await getAttachmentExpenseOwnerResource(
+				params.firmId,
+				owner.ownerId,
+			);
+
+			if (!expense) {
+				throw new Error(ATTACHMENT_ERRORS.OWNER_NOT_FOUND);
+			}
+
+			return { owner, access: expense };
 		}
 	}
 }

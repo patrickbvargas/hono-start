@@ -2,14 +2,14 @@
 
 ## Purpose
 
-Define attachment upload, listing, owner-context binding, storage persistence, and permission behavior for client, employee, and contract contexts.
+Define attachment upload, listing, owner-context binding, storage persistence, and permission behavior for client, employee, contract, and expense contexts.
 
 ---
 
 ## Requirements
 
 ### Requirement: List attachments in supported owner contexts
-The system SHALL display attachments for a client, employee, or contract inside that entity's detail workflow without leaving the parent context. The attachment area SHALL render as a dedicated section aligned with the surrounding detail drawer sections, and its loading state SHALL use skeleton-style placeholders rather than spinner-only feedback. When attachments exist, the section SHALL render them through a shared accordion-style list so each item keeps a concise header and reveals metadata only when expanded.
+The system SHALL display attachments for a client, employee, contract, or expense inside that entity's detail workflow without leaving the parent context. The attachment area SHALL render as a dedicated section aligned with the surrounding detail drawer sections, and its loading state SHALL use skeleton-style placeholders rather than spinner-only feedback. When attachments exist, the section SHALL render them through a shared accordion-style list so each item keeps a concise header and reveals metadata only when expanded.
 
 #### Scenario: Client details show client attachments
 - **WHEN** a user opens a client detail view with attachment access
@@ -24,6 +24,11 @@ The system SHALL display attachments for a client, employee, or contract inside 
 #### Scenario: Contract details show contract attachments
 - **WHEN** a user opens a contract detail view with contract access
 - **THEN** the system lists attachments whose owner context is that contract
+- **AND** the list excludes attachments from other firms or other owner records
+
+#### Scenario: Expense details show expense attachments
+- **WHEN** an administrator opens an expense detail view
+- **THEN** the system lists attachments whose owner context is that expense
 - **AND** the list excludes attachments from other firms or other owner records
 
 #### Scenario: Attachment section uses shared detail heading treatment
@@ -52,7 +57,7 @@ The system SHALL display attachments for a client, employee, or contract inside 
 - **AND** the delete action SHALL remain subject to the same administrator-only permission rule
 
 ### Requirement: Attachment writes bind to exactly one owner context
-The system SHALL persist each attachment with exactly one owner context among client, employee, or contract.
+The system SHALL persist each attachment with exactly one owner context among client, employee, contract, or expense.
 
 #### Scenario: Valid single owner context
 - **WHEN** a user uploads an attachment with exactly one valid owner reference in the authenticated firm
@@ -65,6 +70,11 @@ The system SHALL persist each attachment with exactly one owner context among cl
 #### Scenario: Multiple owner contexts are rejected
 - **WHEN** an upload request provides more than one owner context
 - **THEN** the system rejects the request before the attachment metadata is persisted
+
+#### Scenario: Expense upload uses expense as the only owner context
+- **WHEN** an administrator uploads an attachment from an expense detail workflow
+- **THEN** the system persists the attachment metadata linked to that expense
+- **AND** no second owner context is accepted in the same request
 
 ### Requirement: Attachment uploads enforce file rules
 The system SHALL accept only supported attachment types and sizes defined by the domain contract. The upload flow SHALL let the user select the file directly, and the system SHALL identify the attachment type from the selected file rather than requiring a separate manual type selection.
@@ -116,6 +126,14 @@ The system SHALL enforce authenticated upload and view permissions and administr
 - **WHEN** an authenticated user requests attachment data for a parent context they are allowed to access
 - **THEN** the server returns only attachment records for that allowed context
 
+#### Scenario: Administrator can upload and view attachments for expenses
+- **WHEN** an administrator uploads or requests attachment data for an expense in the same firm
+- **THEN** the server accepts the request if the expense exists and the file and owner validations pass
+
+#### Scenario: Regular user cannot access expense attachments
+- **WHEN** a regular authenticated user requests expense attachment data or attempts an expense attachment upload
+- **THEN** the server rejects the request before attachment data is returned or persisted
+
 #### Scenario: Regular user cannot delete attachment
 - **WHEN** a regular user attempts to delete an attachment
 - **THEN** the server rejects the action before the attachment lifecycle changes
@@ -129,7 +147,7 @@ The system SHALL enforce authenticated upload and view permissions and administr
 The system SHALL derive attachment tenant scope from the authenticated session rather than from client-submitted authority claims.
 
 #### Scenario: Cross-firm owner reference is rejected
-- **WHEN** a user submits an attachment upload for a client, employee, or contract outside the authenticated firm
+- **WHEN** a user submits an attachment upload for a client, employee, contract, or expense outside the authenticated firm
 - **THEN** the system rejects the request before storage metadata is persisted
 
 #### Scenario: Cross-firm attachment list is never returned
@@ -137,7 +155,7 @@ The system SHALL derive attachment tenant scope from the authenticated session r
 - **THEN** the system returns only attachments belonging to the authenticated user's firm
 
 ### Requirement: Attachment sections preserve the current parent workflow
-The system SHALL integrate attachment actions into the existing client, employee, and contract detail flows using drawers and modals rather than standalone CRUD pages.
+The system SHALL integrate attachment actions into the existing client, employee, contract, and expense detail flows using drawers and modals rather than standalone CRUD pages.
 
 #### Scenario: Upload opens as an overlay from parent details
 - **WHEN** a user starts the attachment upload flow from a supported parent detail context
