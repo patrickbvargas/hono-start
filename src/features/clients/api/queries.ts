@@ -79,14 +79,12 @@ export const getClientsQueryOptions = (search: ClientSearch) =>
 	queryOptions({
 		queryKey: clientKeys.list(search),
 		queryFn: () => getClientsFn({ data: search }),
-		staleTime: 5 * 60 * 1000,
 	});
 
 export const getClientByIdQueryOptions = (id: EntityId) =>
 	queryOptions({
 		queryKey: clientKeys.detail(id),
 		queryFn: () => getClientByIdFn({ data: { id } }),
-		staleTime: 5 * 60 * 1000,
 	});
 
 export const getClientTypesQueryOptions = () =>

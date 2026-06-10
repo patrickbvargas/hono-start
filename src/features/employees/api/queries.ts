@@ -100,14 +100,12 @@ export const getEmployeesQueryOptions = (search: EmployeeSearch) =>
 	queryOptions({
 		queryKey: employeeKeys.list(search),
 		queryFn: () => getEmployeesFn({ data: search }),
-		staleTime: 5 * 60 * 1000,
 	});
 
 export const getEmployeeByIdQueryOptions = (id: EntityId) =>
 	queryOptions({
 		queryKey: employeeKeys.detail(id),
 		queryFn: () => getEmployeeByIdFn({ data: { id } }),
-		staleTime: 5 * 60 * 1000,
 	});
 
 export const getEmployeeTypesQueryOptions = () =>

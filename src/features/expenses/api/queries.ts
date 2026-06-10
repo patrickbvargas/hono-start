@@ -89,19 +89,16 @@ export const getExpensesQueryOptions = (search: ExpenseSearch) =>
 	queryOptions({
 		queryKey: expenseKeys.list(search),
 		queryFn: () => getExpensesFn({ data: search }),
-		staleTime: 5 * 60 * 1000,
 	});
 
 export const getExpenseByIdQueryOptions = (id: number) =>
 	queryOptions({
 		queryKey: expenseKeys.detail(id),
 		queryFn: () => getExpenseByIdFn({ data: { id } }),
-		staleTime: 5 * 60 * 1000,
 	});
 
 export const getExpenseCategoriesQueryOptions = () =>
 	queryOptions({
 		queryKey: expenseKeys.categoryOptions(),
 		queryFn: getExpenseCategoriesFn,
-		staleTime: 5 * 60 * 1000,
 	});

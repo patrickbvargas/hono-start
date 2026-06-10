@@ -174,14 +174,12 @@ export const getContractsQueryOptions = (search: ContractSearch) =>
 	queryOptions({
 		queryKey: contractKeys.list(search),
 		queryFn: () => getContractsFn({ data: search }),
-		staleTime: 5 * 60 * 1000,
 	});
 
 export const getContractByIdQueryOptions = (id: EntityId) =>
 	queryOptions({
 		queryKey: contractKeys.detail(id),
 		queryFn: () => getContractByIdFn({ data: { id } }),
-		staleTime: 5 * 60 * 1000,
 	});
 
 export const getContractLegalAreasQueryOptions = () =>
@@ -216,12 +214,10 @@ export const getSelectableContractClientsQueryOptions = () =>
 	queryOptions({
 		queryKey: contractKeys.clientOptions(),
 		queryFn: getSelectableContractClientsFn,
-		staleTime: 5 * 60 * 1000,
 	});
 
 export const getSelectableContractEmployeesQueryOptions = () =>
 	queryOptions({
 		queryKey: contractKeys.employeeOptions(),
 		queryFn: getSelectableContractEmployeesFn,
-		staleTime: 5 * 60 * 1000,
 	});

@@ -170,28 +170,24 @@ export const getRemunerationsQueryOptions = (search: RemunerationSearch) =>
 	queryOptions({
 		queryKey: remunerationKeys.list(search),
 		queryFn: () => getRemunerationsFn({ data: search }),
-		staleTime: 5 * 60 * 1000,
 	});
 
 export const getRemunerationByIdQueryOptions = (id: number) =>
 	queryOptions({
 		queryKey: remunerationKeys.detail(id),
 		queryFn: () => getRemunerationByIdFn({ data: { id } }),
-		staleTime: 5 * 60 * 1000,
 	});
 
 export const getSelectableRemunerationContractsQueryOptions = () =>
 	queryOptions({
 		queryKey: remunerationKeys.contractOptions(),
 		queryFn: getSelectableRemunerationContractsFn,
-		staleTime: 5 * 60 * 1000,
 	});
 
 export const getSelectableRemunerationEmployeesQueryOptions = () =>
 	queryOptions({
 		queryKey: remunerationKeys.employeeOptions(),
 		queryFn: getSelectableRemunerationEmployeesFn,
-		staleTime: 5 * 60 * 1000,
 	});
 
 export const exportRemunerationsMutationOptions = () =>

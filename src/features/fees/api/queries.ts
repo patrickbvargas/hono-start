@@ -133,26 +133,22 @@ export const getFeesQueryOptions = (search: FeeSearch) =>
 	queryOptions({
 		queryKey: feeKeys.list(search),
 		queryFn: () => getFeesFn({ data: search }),
-		staleTime: 5 * 60 * 1000,
 	});
 
 export const getFeeByIdQueryOptions = (id: number) =>
 	queryOptions({
 		queryKey: feeKeys.detail(id),
 		queryFn: () => getFeeByIdFn({ data: { id } }),
-		staleTime: 5 * 60 * 1000,
 	});
 
 export const getSelectableFeeContractsQueryOptions = () =>
 	queryOptions({
 		queryKey: feeKeys.contractOptions(),
 		queryFn: getSelectableFeeContractsFn,
-		staleTime: 5 * 60 * 1000,
 	});
 
 export const getSelectableFeeRevenuesQueryOptions = (contractId = "") =>
 	queryOptions({
 		queryKey: feeKeys.revenueOptions(contractId),
 		queryFn: () => getSelectableFeeRevenuesFn({ data: { contractId } }),
-		staleTime: 5 * 60 * 1000,
 	});

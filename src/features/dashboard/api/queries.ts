@@ -72,12 +72,10 @@ export const getDashboardSummaryQueryOptions = (search: DashboardSearch) =>
 	queryOptions({
 		queryKey: dashboardKeys.summary(search),
 		queryFn: () => getDashboardSummaryFn({ data: search }),
-		staleTime: 5 * 60 * 1000,
 	});
 
 export const getDashboardEmployeeOptionsQueryOptions = () =>
 	queryOptions({
 		queryKey: dashboardKeys.employeeOptions(),
 		queryFn: getDashboardEmployeeOptionsFn,
-		staleTime: 5 * 60 * 1000,
 	});

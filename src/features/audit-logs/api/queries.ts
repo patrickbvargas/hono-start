@@ -114,14 +114,12 @@ export const getAuditLogsQueryOptions = (search: AuditLogSearch) =>
 	queryOptions({
 		queryKey: auditLogKeys.list(search),
 		queryFn: () => getAuditLogsFn({ data: search }),
-		staleTime: 5 * 60 * 1000,
 	});
 
 export const getAuditLogByIdQueryOptions = (id: EntityId) =>
 	queryOptions({
 		queryKey: auditLogKeys.detail(id),
 		queryFn: () => getAuditLogByIdFn({ data: { id } }),
-		staleTime: 5 * 60 * 1000,
 	});
 
 export const getAuditLogActionsQueryOptions = () =>
