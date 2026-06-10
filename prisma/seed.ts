@@ -122,6 +122,14 @@ interface ContractSeedInput {
   revenues: RevenueSeedInput[];
 }
 
+interface ExpenseSeedInput {
+  categoryValue: ExpenseCategoryValue;
+  expenseDate: string;
+  amount: string;
+  notes: string | null;
+  isActive: boolean;
+}
+
 interface EmployeeRecord {
   id: number;
   email: string;
@@ -498,6 +506,62 @@ function mapContractSeedToYear(
       })),
     })),
   };
+}
+
+function createExpenseSeedNote(
+  label: string,
+  year: number,
+  contractIndex: number,
+) {
+  return `[seed-expense] ${label} ${year}-${padNumeric(contractIndex + 1, 4)}`;
+}
+
+function createExpenseSeeds(): ExpenseSeedInput[] {
+  const fixtureYears = [2024, 2025, 2026];
+  const categories: ExpenseCategoryValue[] = [
+    "PAYROLL_LAWYERS",
+    "PAYROLL_STAFF",
+    "PHONE",
+    "ELECTRICITY",
+    "SUPPLIES",
+    "COURT_COSTS",
+    "NOTARY",
+    "MEDIA",
+    "MEALS",
+    "CONDOMINIUM",
+    "TAX_ISSQN",
+    "OTHER",
+  ];
+  const baseExpenseTemplates = [
+    {
+      baseDate: "2026-02-06T12:00:00.000Z",
+      baseAmount: "780.00",
+      noteLabel: "Despesa operacional",
+    },
+    {
+      baseDate: "2026-03-14T12:00:00.000Z",
+      baseAmount: "1240.00",
+      noteLabel: "Custo administrativo",
+    },
+  ] as const;
+
+  return fixtureYears.flatMap((year) =>
+    Array.from({ length: MINIMUM_CONTRACT_COUNT }, (_, contractIndex) => {
+      const multiplier = getDeterministicYearMultiplier(year, contractIndex);
+      const monthOffset = getMonthOffsetForYear(year, contractIndex);
+
+      return baseExpenseTemplates.map((template, templateIndex) => ({
+        categoryValue: getRotatedValue(categories, contractIndex, templateIndex),
+        expenseDate: shiftIsoDateByMonths(
+          replaceIsoYear(template.baseDate, year),
+          monthOffset,
+        ),
+        amount: formatCurrency(decimal(template.baseAmount).mul(multiplier)),
+        notes: createExpenseSeedNote(template.noteLabel, year, contractIndex),
+        isActive: (contractIndex + templateIndex) % 11 !== 0,
+      }));
+    }).flat(),
+  );
 }
 
 function createContractSeeds(
@@ -1542,6 +1606,7 @@ async function main() {
     statuses,
     assignmentTypes,
     revenueTypes,
+    expenseCategories,
   ] = await Promise.all([
     prisma.employee.findMany({
       where: { firmId: DEFAULT_FIRM_ID, deletedAt: null },
@@ -1584,9 +1649,16 @@ async function main() {
         value: true,
       },
     }),
+    prisma.expenseCategory.findMany({
+      select: {
+        id: true,
+        value: true,
+      },
+    }),
   ]);
 
   const contractSeeds = createContractSeeds(clientSeeds, employeeSeeds);
+  const expenseSeeds = createExpenseSeeds();
   const employeeByEmail = mapByKey(
     employeeRecords as EmployeeRecord[],
     (employee) => employee.email,
@@ -1611,6 +1683,10 @@ async function main() {
     revenueTypes as LookupRecord<RevenueTypeValue>[],
     (item) => item.value,
   );
+  const expenseCategoryByValue = mapByKey(
+    expenseCategories as LookupRecord<ExpenseCategoryValue>[],
+    (item) => item.value,
+  );
 
   for (const contractSeed of contractSeeds) {
     await prisma.$transaction(async (tx) => {
@@ -1625,6 +1701,34 @@ async function main() {
         assignmentTypeByValue,
         revenueTypeByValue,
       });
+    });
+  }
+
+  await prisma.expense.deleteMany({
+    where: {
+      firmId: DEFAULT_FIRM_ID,
+      notes: {
+        startsWith: "[seed-expense]",
+      },
+    },
+  });
+
+  for (const expenseSeed of expenseSeeds) {
+    const category = getRequiredMapValue(
+      expenseCategoryByValue,
+      expenseSeed.categoryValue,
+      `expense category ${expenseSeed.categoryValue}`,
+    );
+
+    await prisma.expense.create({
+      data: {
+        firmId: DEFAULT_FIRM_ID,
+        categoryId: category.id,
+        expenseDate: new Date(expenseSeed.expenseDate),
+        amount: expenseSeed.amount,
+        notes: expenseSeed.notes,
+        isActive: expenseSeed.isActive,
+      },
     });
   }
 
