@@ -26,6 +26,7 @@
 - `assignment-scoped`: visible or actionable only when the current actor is assigned to the relevant contract context.
 - `allowed contract boundaries`: the actor is in the same firm, satisfies assignment-based visibility where required, and the target contract-side resource is still writable for the attempted action.
 - `own financial visibility`: a regular user can see only remuneration and dashboard financial data tied to that user's own employee identity unless another rule explicitly expands scope.
+- `cash flow`: read-only dashboard aggregation where `entrada` means received honorários, `saída` means `remunerações + despesas`, and `saldo` means `entrada - saída`.
 
 ## Documentation Terms
 

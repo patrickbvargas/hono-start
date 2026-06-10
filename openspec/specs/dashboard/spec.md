@@ -139,30 +139,49 @@ Dashboard data MUST respect firm isolation, the session role visibility model, a
 #### Scenario: Administrator views dashboard
 - **WHEN** an administrator opens the dashboard without an employee filter
 - **THEN** the system shows firm-wide operational and financial summaries for the administrator's firm
+- **AND** the system may include firm-wide cash-flow aggregates derived from honorários, remunerações, and despesas
 
 #### Scenario: Administrator views filtered employee dashboard
 - **WHEN** an administrator opens the dashboard with an employee filter for an employee in the same firm
 - **THEN** the system shows summaries narrowed to that employee while keeping all data inside the administrator's firm
+- **AND** employee-sensitive cash-flow datasets remain narrowed only where the underlying data model supports that relationship
 
 #### Scenario: Regular user views dashboard
 - **WHEN** a regular user opens the dashboard
 - **THEN** the system shows only summaries from contracts, fees, revenues, and remunerations visible to that user
+- **AND** the system does not expose the firm-wide cash-flow surfaces that depend on expense visibility
 
 #### Scenario: Cross-firm employee filter is submitted
 - **WHEN** a dashboard request includes an employee filter for an employee outside the authenticated user's firm
 - **THEN** the system does not expose cross-firm data
 
 ### Requirement: Dashboard Summaries
-The dashboard SHALL show revenue totals, remuneration totals, monthly comparison information, revenue grouping by legal area and revenue type, a monthly financial evolution chart, and a monthly remuneration table by collaborator, with supported summaries reflecting the active dashboard period and employee filters. The monthly remuneration table SHALL also expose a subtotal row for the visible monthly buckets, derived from the same filtered and role-scoped remuneration set shown in the table. The main dashboard content SHALL scroll inside a shared scroll container without clipping card borders, and the breakdown legend SHALL present concise participation percentages without redundant phrasing. The dashboard SHALL NOT render the "Visão da firma" badge. The root dashboard component SHALL compose dedicated analytical surface components for metric cards, charts, and remuneration tables instead of concentrating all surface implementations inline.
+The dashboard SHALL show revenue totals, remuneration totals, monthly comparison information, revenue grouping by legal area and revenue type, a monthly financial evolution chart, and a monthly remuneration table by collaborator, with supported summaries reflecting the active dashboard period and employee filters. The monthly remuneration table SHALL also expose a subtotal row for the visible monthly buckets, derived from the same filtered and role-scoped remuneration set shown in the table. For administrators, the dashboard SHALL also show a read-only cash-flow summary composed of saldo total, a monthly saldo chart, and a monthly cash-flow table derived from entradas, remunerações, and despesas. In this context, `entrada` means received honorários, `saída` means `remunerações + despesas`, and `saldo` means `entrada - saída`. The monthly cash-flow table SHALL break down entradas by the canonical revenue types `Administrativo`, `Judicial`, and `Sucumbência`, then show derived `Entrada`, `Remuneração`, `Despesa`, `Saída`, and `Saldo` columns for each visible month. The main dashboard content SHALL scroll inside a shared scroll container without clipping card borders, and the breakdown legend SHALL present concise participation percentages without redundant phrasing. The dashboard SHALL NOT render the "Visão da firma" badge. The root dashboard component SHALL compose dedicated analytical surface components for metric cards, charts, and remuneration tables instead of concentrating all surface implementations inline.
 
 #### Scenario: Dashboard loads summaries
 - **WHEN** dashboard data is available
 - **THEN** the system displays high-level totals, current month values, previous month comparisons, legal-area revenue grouping, revenue-type grouping, monthly financial evolution for receitas and remuneracoes, and a monthly remuneration table by collaborator
 - **AND** the dashboard does not display the recent activity list
 
+#### Scenario: Administrator loads cash-flow summaries
+- **WHEN** an administrator loads dashboard data
+- **THEN** the system displays a read-only saldo total card, a monthly saldo chart, and a monthly cash-flow table
+- **AND** those surfaces are derived from honorários recebidos, remunerações, and despesas inside the authenticated firm
+
+#### Scenario: Regular user does not receive cash-flow surfaces
+- **WHEN** a regular user loads dashboard data
+- **THEN** the system does not render the cash-flow card, cash-flow chart, or monthly cash-flow table
+- **AND** the user does not infer firm-wide despesas or saldo through derived dashboard values
+
 #### Scenario: Dashboard loads filtered summaries
 - **WHEN** dashboard filters are active
 - **THEN** the system applies the filters consistently to dashboard datasets whose dates, contract areas, revenue types, or employee relationships are relevant to the selected filter
+
+#### Scenario: Cash-flow filters apply only to relevant datasets
+- **WHEN** dashboard filters are active on the administrator cash-flow surfaces
+- **THEN** the selected period filters all cash-flow datasets by month
+- **AND** legal-area and revenue-type filters affect only entries and remunerations related to matching contract data
+- **AND** standalone despesas remain included by date even though they do not belong to a legal area or revenue type
 
 #### Scenario: Dashboard loads filtered remuneration table
 - **WHEN** dashboard filters are active
@@ -173,15 +192,30 @@ The dashboard SHALL show revenue totals, remuneration totals, monthly comparison
 - **THEN** the system groups the financial evolution chart by ano e mes
 - **AND** the chart exposes separate monthly values for receitas and remuneracoes
 
+#### Scenario: Dashboard cash-flow chart spans monthly buckets
+- **WHEN** administrator dashboard data is loaded for a period spanning multiple months
+- **THEN** the system groups the cash-flow chart by ano e mes
+- **AND** the chart exposes one monthly saldo value for each visible month in the selected range
+- **AND** months without movement remain present with zero saldo
+
 #### Scenario: Dashboard remuneration table spans monthly buckets
 - **WHEN** dashboard data is loaded for a period spanning multiple months
 - **THEN** the system groups remuneration values by collaborator and by ano e mes
 - **AND** the table exposes one row per collaborator and one column per month in the selected range
 - **AND** each month column label uses the short `Mes/aa` format, such as `Jan/26`
 
+#### Scenario: Dashboard cash-flow table spans monthly buckets
+- **WHEN** administrator dashboard data is loaded for a period spanning multiple months
+- **THEN** the monthly cash-flow table exposes one row per visible month in the selected range
+- **AND** each row shows `Administrativo`, `Judicial`, `Sucumbência`, `Entrada`, `Remuneração`, `Despesa`, `Saída`, and `Saldo`
+
 #### Scenario: Filtered period contains months without movement
 - **WHEN** the selected dashboard period includes one or more months without matching receitas or remuneracoes
 - **THEN** the system keeps those months in the financial evolution series with zero values
+
+#### Scenario: Cash-flow period contains months without movement
+- **WHEN** the selected dashboard period includes one or more months without matching entradas, remunerações, or despesas
+- **THEN** the system keeps those months in the cash-flow chart and table with zero values for every derived cash-flow field
 
 #### Scenario: Filtered period contains months without collaborator movement
 - **WHEN** the selected dashboard period includes one or more months without matching remunerations for a collaborator already present in the result
@@ -197,6 +231,12 @@ The dashboard SHALL show revenue totals, remuneration totals, monthly comparison
 - **THEN** the system shows one subtotal value for each visible month column
 - **AND** each subtotal equals the sum of that month's visible collaborator values after role and filter scoping
 - **AND** the subtotal row also shows a total-in-period equal to the sum of the visible monthly subtotals
+
+#### Scenario: Cash-flow totals remain arithmetically consistent
+- **WHEN** the administrator cash-flow table is displayed
+- **THEN** `Entrada` equals the sum of `Administrativo`, `Judicial`, and `Sucumbência` for the row month
+- **AND** `Saída` equals `Remuneração + Despesa`
+- **AND** `Saldo` equals `Entrada - Saída`
 
 #### Scenario: Breakdown charts preserve values
 - **WHEN** the dashboard renders legal-area or revenue-type breakdowns
@@ -231,6 +271,11 @@ The dashboard SHALL show revenue totals, remuneration totals, monthly comparison
 - **THEN** the system displays zero-value summaries as applicable
 - **AND** the monthly remuneration table shows an empty-state message in pt-BR
 - **AND** the system does not render a subtotal row without visible collaborator rows
+
+#### Scenario: No cash-flow records match filters
+- **WHEN** an administrator dashboard period has no matching entradas, remunerações, or despesas
+- **THEN** the system shows zero saldo in the cash-flow card
+- **AND** the chart and table remain structurally visible with zeroed monthly values
 
 #### Scenario: No breakdown values exist
 - **WHEN** the dashboard summary contains no received revenue for legal-area and revenue-type breakdowns

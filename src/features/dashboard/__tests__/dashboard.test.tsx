@@ -27,12 +27,27 @@ vi.mock("../components/breakdown-chart", () => ({
 	DashboardBreakdownChart: ({ title }: { title: string }) => <div>{title}</div>,
 }));
 
+vi.mock("../components/cash-flow-chart", () => ({
+	DashboardCashFlowChart: () => <div>Fluxo de caixa</div>,
+}));
+
+vi.mock("../components/cash-flow-table", () => ({
+	DashboardCashFlowTable: ({ rows }: { rows: Array<{ month: string }> }) => (
+		<div data-testid="dashboard-cash-flow-table">{rows.length} meses fluxo</div>
+	),
+}));
+
 vi.mock("../components/metric-cards", () => ({
 	DashboardMetricCards: ({
 		metrics,
 	}: {
 		metrics: Array<{ label: string }>;
-	}) => <div data-testid="dashboard-metric-cards">{metrics.length} cards</div>,
+	}) => (
+		<div data-testid="dashboard-metric-cards">
+			{metrics.map((metric) => metric.label).join(" | ")} / {metrics.length}{" "}
+			cards
+		</div>
+	),
 }));
 
 vi.mock("../components/financial-evolution", () => ({
@@ -64,12 +79,26 @@ describe("Dashboard", () => {
 	});
 
 	it("replaces recent activity with the remuneration table", () => {
-		render(
+		const { container } = render(
 			<Dashboard
 				data={{
 					isAdmin: true,
 					scopeLabel: "Visão da firma",
 					metrics: [
+						{
+							label: "Saldo total",
+							value: 240,
+							formattedValue: "R$ 240,00",
+							description: "Entradas menos saídas no período",
+							tone: "default",
+							previousLabel: "Período anterior",
+							currentValue: 240,
+							previousValue: 30,
+							formattedCurrentValue: "R$ 240,00",
+							formattedPreviousValue: "R$ 30,00",
+							previousPeriodLabel: "01/01/2025 a 31/01/2025",
+							changePercent: 700,
+						},
 						{
 							label: "Receita prevista",
 							value: 1000,
@@ -111,16 +140,71 @@ describe("Dashboard", () => {
 							remuneration: 60,
 						},
 					],
+					cashFlow: {
+						totalBalance: 240,
+						formattedTotalBalance: "R$ 240,00",
+						chartLabel: "Jan/2026 a Jan/2026",
+						chart: [{ month: "2026-01", entry: 300, output: 60, balance: 240 }],
+						table: [
+							{
+								month: "2026-01",
+								monthLabel: "Jan/26",
+								administrative: 300,
+								judicial: 0,
+								succumbency: 0,
+								entry: 300,
+								remuneration: 60,
+								expense: 0,
+								output: 60,
+								balance: 240,
+							},
+						],
+					},
 				}}
 			/>,
 		);
 
 		expect(screen.queryByText("Atividade recente")).toBeNull();
 		expect(screen.getByTestId("dashboard-metric-cards").textContent).toContain(
-			"1 cards",
+			"Saldo total | Receita prevista / 2 cards",
 		);
 		expect(
 			screen.getByTestId("dashboard-remuneration-table").textContent,
 		).toContain("1 meses / 1 linhas / subtotal 60");
+		expect(screen.getByTestId("dashboard-metric-cards").textContent).toContain(
+			"Saldo total",
+		);
+		expect(screen.getByText("Fluxo de caixa")).toBeTruthy();
+		expect(
+			screen.getByTestId("dashboard-cash-flow-table").textContent,
+		).toContain("1 meses fluxo");
+		expect(container.textContent?.indexOf("Saldo total")).toBeLessThan(
+			container.textContent?.indexOf("Receita prevista") ??
+				Number.POSITIVE_INFINITY,
+		);
+	});
+
+	it("hides cash-flow surfaces for regular users", () => {
+		render(
+			<Dashboard
+				data={{
+					isAdmin: false,
+					scopeLabel: "Minha visão",
+					metrics: [],
+					legalAreaRevenue: [],
+					revenueTypeRevenue: [],
+					remunerationMonths: [],
+					remunerationTable: [],
+					remunerationSubtotal: null,
+					financialEvolutionLabel: "Jan/2026 a Jan/2026",
+					financialEvolution: [],
+					cashFlow: null,
+				}}
+			/>,
+		);
+
+		expect(screen.queryByText("Saldo total")).toBeNull();
+		expect(screen.queryByText("Fluxo de caixa")).toBeNull();
+		expect(screen.queryByTestId("dashboard-cash-flow-table")).toBeNull();
 	});
 });

@@ -42,6 +42,26 @@ interface DashboardFinancialEvolutionItem {
 	remuneration: number;
 }
 
+interface DashboardCashFlowChartItem {
+	month: string;
+	entry: number;
+	output: number;
+	balance: number;
+}
+
+interface DashboardCashFlowRow {
+	month: string;
+	monthLabel: string;
+	administrative: number;
+	judicial: number;
+	succumbency: number;
+	entry: number;
+	remuneration: number;
+	expense: number;
+	output: number;
+	balance: number;
+}
+
 interface DashboardRemunerationRow {
 	employeeId: number;
 	employeeName: string;
@@ -82,6 +102,12 @@ interface GroupTotal {
 	label: string;
 	value: string;
 	total: Prisma.Decimal;
+}
+
+interface RevenueTypeAmountTotals {
+	administrative: Prisma.Decimal;
+	judicial: Prisma.Decimal;
+	succumbency: Prisma.Decimal;
 }
 
 interface EffectiveEmployeeParams {
@@ -245,6 +271,16 @@ function getDashboardRemunerationWhere(
 					}
 				: {}),
 		},
+	};
+}
+
+function getDashboardExpenseWhere(
+	scope: DashboardScope,
+): Prisma.ExpenseWhereInput {
+	return {
+		firmId: scope.firmId,
+		deletedAt: null,
+		isActive: true,
 	};
 }
 
@@ -634,6 +670,183 @@ function buildMonthlyFinancialEvolution({
 	return Array.from(buckets.values());
 }
 
+function createRevenueTypeAmountTotals(): RevenueTypeAmountTotals {
+	return {
+		administrative: new Prisma.Decimal(0),
+		judicial: new Prisma.Decimal(0),
+		succumbency: new Prisma.Decimal(0),
+	};
+}
+
+function pushRevenueTypeAmount(
+	totals: RevenueTypeAmountTotals,
+	revenueTypeValue: string,
+	amount: Prisma.Decimal,
+) {
+	if (revenueTypeValue === "ADMINISTRATIVE") {
+		totals.administrative = totals.administrative.add(amount);
+		return;
+	}
+
+	if (revenueTypeValue === "JUDICIAL") {
+		totals.judicial = totals.judicial.add(amount);
+		return;
+	}
+
+	if (revenueTypeValue === "SUCCUMBENCY") {
+		totals.succumbency = totals.succumbency.add(amount);
+	}
+}
+
+function buildMonthlyCashFlow({
+	chartDownPayments,
+	chartFees,
+	chartRemunerations,
+	chartExpenses,
+	range,
+}: {
+	chartDownPayments: Array<{
+		downPaymentValue: Prisma.Decimal | null;
+		paymentStartDate: Date;
+		type: {
+			value: string;
+		};
+	}>;
+	chartFees: Array<{
+		amount: Prisma.Decimal;
+		paymentDate: Date;
+		revenue: {
+			type: {
+				value: string;
+			};
+		};
+	}>;
+	chartRemunerations: Array<{
+		amount: Prisma.Decimal;
+		paymentDate: Date;
+	}>;
+	chartExpenses: Array<{
+		amount: Prisma.Decimal;
+		expenseDate: Date;
+	}>;
+	range: DashboardMonthRange;
+}): {
+	chart: DashboardCashFlowChartItem[];
+	table: DashboardCashFlowRow[];
+} {
+	const buckets = new Map<
+		string,
+		{
+			month: string;
+			monthLabel: string;
+			entryTypes: RevenueTypeAmountTotals;
+			remuneration: Prisma.Decimal;
+			expense: Prisma.Decimal;
+		}
+	>();
+
+	for (
+		let current = range.startMonth;
+		current.getTime() <= range.endMonth.getTime();
+		current = addMonths(current, 1)
+	) {
+		const monthKey = getMonthKey(current);
+		buckets.set(monthKey, {
+			month: monthKey,
+			monthLabel: formatMonthShortYearLabel(current),
+			entryTypes: createRevenueTypeAmountTotals(),
+			remuneration: new Prisma.Decimal(0),
+			expense: new Prisma.Decimal(0),
+		});
+	}
+
+	for (const row of chartDownPayments) {
+		const month = getMonthKey(createMonthStart(row.paymentStartDate));
+		const bucket = buckets.get(month);
+
+		if (!bucket) {
+			continue;
+		}
+
+		pushRevenueTypeAmount(
+			bucket.entryTypes,
+			row.type.value,
+			new Prisma.Decimal(row.downPaymentValue?.toString() ?? 0),
+		);
+	}
+
+	for (const row of chartFees) {
+		const month = getMonthKey(createMonthStart(row.paymentDate));
+		const bucket = buckets.get(month);
+
+		if (!bucket) {
+			continue;
+		}
+
+		pushRevenueTypeAmount(
+			bucket.entryTypes,
+			row.revenue.type.value,
+			row.amount,
+		);
+	}
+
+	for (const row of chartRemunerations) {
+		const month = getMonthKey(createMonthStart(row.paymentDate));
+		const bucket = buckets.get(month);
+
+		if (!bucket) {
+			continue;
+		}
+
+		bucket.remuneration = bucket.remuneration.add(row.amount);
+	}
+
+	for (const row of chartExpenses) {
+		const month = getMonthKey(createMonthStart(row.expenseDate));
+		const bucket = buckets.get(month);
+
+		if (!bucket) {
+			continue;
+		}
+
+		bucket.expense = bucket.expense.add(row.amount);
+	}
+
+	const table = Array.from(buckets.values()).map((bucket) => {
+		const administrative = Number(bucket.entryTypes.administrative);
+		const judicial = Number(bucket.entryTypes.judicial);
+		const succumbency = Number(bucket.entryTypes.succumbency);
+		const entry = administrative + judicial + succumbency;
+		const remuneration = Number(bucket.remuneration);
+		const expense = Number(bucket.expense);
+		const output = remuneration + expense;
+		const balance = entry - output;
+
+		return {
+			month: bucket.month,
+			monthLabel: bucket.monthLabel,
+			administrative,
+			judicial,
+			succumbency,
+			entry,
+			remuneration,
+			expense,
+			output,
+			balance,
+		};
+	});
+
+	return {
+		chart: table.map((row) => ({
+			month: row.month,
+			entry: row.entry,
+			output: row.output,
+			balance: row.balance,
+		})),
+		table,
+	};
+}
+
 function buildMonthlyRemunerationTable({
 	range,
 	rows,
@@ -771,6 +984,7 @@ export async function getDashboardSummary(
 	const paymentDateWhere = buildDashboardPaymentDateWhere(period);
 	const revenueWhere = getDashboardRevenueWhere(scope);
 	const remunerationWhere = getDashboardRemunerationWhere(scope);
+	const expenseWhere = getDashboardExpenseWhere(scope);
 	const firmWhere = {
 		firmId: scope.firmId,
 		deletedAt: null,
@@ -805,6 +1019,12 @@ export async function getDashboardSummary(
 		chartFees,
 		chartRemunerations,
 		tableRemunerations,
+		allExpenses,
+		currentExpenses,
+		previousExpenses,
+		chartCashFlowDownPayments,
+		chartCashFlowFees,
+		chartCashFlowExpenses,
 	] = await Promise.all([
 		prisma.revenue.findMany({
 			where: revenueWhere,
@@ -960,6 +1180,105 @@ export async function getDashboardSummary(
 				},
 			},
 		}),
+		scope.isAdmin
+			? prisma.expense.findMany({
+					where: {
+						...expenseWhere,
+						...(paymentDateWhere ? { expenseDate: paymentDateWhere } : {}),
+					},
+					select: {
+						amount: true,
+					},
+				})
+			: Promise.resolve([]),
+		scope.isAdmin
+			? prisma.expense.findMany({
+					where: {
+						...expenseWhere,
+						expenseDate: {
+							gte: currentStart,
+							lt: nextStart,
+						},
+					},
+					select: {
+						amount: true,
+					},
+				})
+			: Promise.resolve([]),
+		scope.isAdmin
+			? prisma.expense.findMany({
+					where: {
+						...expenseWhere,
+						expenseDate: {
+							gte: previousStart,
+							lt: previousEndExclusive,
+						},
+					},
+					select: {
+						amount: true,
+					},
+				})
+			: Promise.resolve([]),
+		scope.isAdmin
+			? prisma.revenue.findMany({
+					where: {
+						...revenueWhere,
+						paymentStartDate: {
+							gte: chartWindowStart,
+							lte: chartWindowEnd,
+						},
+					},
+					select: {
+						downPaymentValue: true,
+						paymentStartDate: true,
+						type: {
+							select: {
+								value: true,
+							},
+						},
+					},
+				})
+			: Promise.resolve([]),
+		scope.isAdmin
+			? prisma.fee.findMany({
+					where: {
+						...firmWhere,
+						paymentDate: {
+							gte: chartWindowStart,
+							lte: chartWindowEnd,
+						},
+						revenue: getDashboardFeeRevenueWhere(scope),
+					},
+					select: {
+						amount: true,
+						paymentDate: true,
+						revenue: {
+							select: {
+								type: {
+									select: {
+										value: true,
+									},
+								},
+							},
+						},
+					},
+				})
+			: Promise.resolve([]),
+		scope.isAdmin
+			? prisma.expense.findMany({
+					where: {
+						...expenseWhere,
+						expenseDate: {
+							gte: chartWindowStart,
+							lte: chartWindowEnd,
+						},
+					},
+					select: {
+						amount: true,
+						expenseDate: true,
+					},
+				})
+			: Promise.resolve([]),
 	]);
 
 	const revenueTotal = sumDecimal(
@@ -999,6 +1318,24 @@ export async function getDashboardSummary(
 	const remunerationTotal = sumDecimal(
 		allRemunerations.map((remuneration) => remuneration.amount),
 	);
+	const expenseTotal = sumDecimal(
+		allExpenses.map((expense) => new Prisma.Decimal(expense.amount)),
+	);
+	const currentExpense = sumDecimal(
+		currentExpenses.map((expense) => new Prisma.Decimal(expense.amount)),
+	);
+	const previousExpense = sumDecimal(
+		previousExpenses.map((expense) => new Prisma.Decimal(expense.amount)),
+	);
+	const totalBalance = revenueReceived
+		.minus(remunerationTotal)
+		.minus(expenseTotal);
+	const currentBalance = currentRevenue
+		.minus(currentRemuneration)
+		.minus(currentExpense);
+	const previousBalance = previousRevenue
+		.minus(previousRemuneration)
+		.minus(previousExpense);
 	const financialEvolution = buildMonthlyFinancialEvolution({
 		chartDownPayments,
 		chartFees,
@@ -1009,6 +1346,15 @@ export async function getDashboardSummary(
 		range: chartMonthRange,
 		rows: tableRemunerations,
 	});
+	const cashFlow = scope.isAdmin
+		? buildMonthlyCashFlow({
+				chartDownPayments: chartCashFlowDownPayments,
+				chartFees: chartCashFlowFees,
+				chartRemunerations,
+				chartExpenses: chartCashFlowExpenses,
+				range: chartMonthRange,
+			})
+		: null;
 	const legalAreaGroups = new Map<string, GroupTotal>();
 	const revenueTypeGroups = new Map<string, GroupTotal>();
 
@@ -1030,11 +1376,34 @@ export async function getDashboardSummary(
 		isAdmin: scope.isAdmin,
 		scopeLabel: scope.isAdmin ? "Visão da firma" : "Minha visão",
 		metrics: [
+			...(scope.isAdmin
+				? [
+						{
+							label: "Saldo total",
+							value: Number(totalBalance),
+							formattedValue: formatter.currency(Number(totalBalance)),
+							description: "Total de honorários recebidos menos remunerações e despesas.",
+							tone: Number(totalBalance) < 0 ? "danger" : "default",
+							previousLabel,
+							currentValue: Number(currentBalance),
+							previousValue: Number(previousBalance),
+							formattedCurrentValue: formatter.currency(Number(currentBalance)),
+							formattedPreviousValue: formatter.currency(
+								Number(previousBalance),
+							),
+							previousPeriodLabel,
+							changePercent: calculateChangePercent(
+								currentBalance,
+								previousBalance,
+							),
+						},
+					]
+				: []),
 			{
 				label: "Receita prevista",
 				value: Number(revenueTotal),
 				formattedValue: formatter.currency(Number(revenueTotal)),
-				description: "Total planejado para recebimento no período",
+				description: "Total de honorários previsto para recebimento no período.",
 				tone: "default",
 				previousLabel,
 				currentValue: Number(currentPlannedRevenue),
@@ -1055,7 +1424,7 @@ export async function getDashboardSummary(
 				label: "Receita recebida",
 				value: Number(revenueReceived),
 				formattedValue: formatter.currency(Number(revenueReceived)),
-				description: "Entradas registradas no período",
+				description: "Total de honorários recebido no período.",
 				tone: "success",
 				previousLabel,
 				currentValue: Number(currentRevenue),
@@ -1069,7 +1438,7 @@ export async function getDashboardSummary(
 				label: "Remunerações",
 				value: Number(remunerationTotal),
 				formattedValue: formatter.currency(Number(remunerationTotal)),
-				description: "Pagamentos gerados no período",
+				description: "Total gerado para colaboradores no período.",
 				tone: "warning",
 				previousLabel,
 				currentValue: Number(currentRemuneration),
@@ -1092,6 +1461,15 @@ export async function getDashboardSummary(
 		remunerationSubtotal: remunerationByCollaborator.subtotal,
 		financialEvolutionLabel: chartMonthRange.label,
 		financialEvolution,
+		cashFlow: cashFlow
+			? {
+					totalBalance: Number(totalBalance),
+					formattedTotalBalance: formatter.currency(Number(totalBalance)),
+					chartLabel: chartMonthRange.label,
+					chart: cashFlow.chart,
+					table: cashFlow.table,
+				}
+			: null,
 	});
 }
 

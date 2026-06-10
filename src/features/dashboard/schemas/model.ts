@@ -49,6 +49,34 @@ export const dashboardFinancialEvolutionItemSchema = z.object({
 	remuneration: z.number(),
 });
 
+export const dashboardCashFlowChartItemSchema = z.object({
+	month: z.string(),
+	entry: z.number(),
+	output: z.number(),
+	balance: z.number(),
+});
+
+export const dashboardCashFlowRowSchema = z.object({
+	month: z.string(),
+	monthLabel: z.string(),
+	administrative: z.number(),
+	judicial: z.number(),
+	succumbency: z.number(),
+	entry: z.number(),
+	remuneration: z.number(),
+	expense: z.number(),
+	output: z.number(),
+	balance: z.number(),
+});
+
+export const dashboardCashFlowSchema = z.object({
+	totalBalance: z.number(),
+	formattedTotalBalance: z.string(),
+	chartLabel: z.string(),
+	chart: dashboardCashFlowChartItemSchema.array(),
+	table: dashboardCashFlowRowSchema.array(),
+});
+
 export const dashboardSummarySchema = z.object({
 	isAdmin: z.boolean(),
 	scopeLabel: z.string(),
@@ -60,6 +88,7 @@ export const dashboardSummarySchema = z.object({
 	remunerationSubtotal: dashboardRemunerationSubtotalSchema.nullable(),
 	financialEvolutionLabel: z.string(),
 	financialEvolution: dashboardFinancialEvolutionItemSchema.array(),
+	cashFlow: dashboardCashFlowSchema.nullable(),
 });
 
 export type DashboardSummary = z.infer<typeof dashboardSummarySchema>;

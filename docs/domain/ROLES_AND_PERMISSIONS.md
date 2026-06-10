@@ -52,6 +52,7 @@
 - Regular lawyers do not gain contract visibility from recommending assignments alone.
 - Regular administrative assistants continue seeing contracts where they are actively assigned as admin assistants.
 - Regular users only see their own remunerations and own dashboard-scoped financial data.
+- Regular users must not see dashboard cash-flow surfaces that derive values from firm-wide expenses or consolidated firm balance.
 - "Allowed contract boundaries" means the actor is inside the same firm, is assigned where assignment-based visibility is required, and the target resource remains writable by lifecycle rules.
 
 ## Protected Actions
@@ -92,6 +93,7 @@
 - Non-admin contract edits are only valid while the contract is still writable and assigned to the actor.
 - Session policy must stay aligned with this matrix and with the domain business rules.
 - Dashboard and export scope must follow this matrix consistently.
+- Dashboard cash-flow summaries that combine honorários, remunerações, and despesas are administrator-only because expenses are firm-wide financial data.
 
 ## Permission Contract
 

@@ -14,6 +14,9 @@ const { prismaMock } = vi.hoisted(() => ({
 		fee: {
 			findMany: vi.fn(),
 		},
+		expense: {
+			findMany: vi.fn(),
+		},
 		remuneration: {
 			findMany: vi.fn(),
 		},
@@ -75,6 +78,14 @@ describe("dashboard data queries", () => {
 				{
 					downPaymentValue: "100",
 					paymentStartDate: new Date("2026-01-05T00:00:00.000Z"),
+					type: { value: "ADMINISTRATIVE" },
+				},
+			])
+			.mockResolvedValueOnce([
+				{
+					downPaymentValue: "100",
+					paymentStartDate: new Date("2026-01-05T00:00:00.000Z"),
+					type: { value: "ADMINISTRATIVE" },
 				},
 			]);
 		prismaMock.fee.findMany
@@ -88,6 +99,22 @@ describe("dashboard data queries", () => {
 				{
 					amount: "100",
 					paymentDate: new Date("2026-03-12T00:00:00.000Z"),
+				},
+			])
+			.mockResolvedValueOnce([
+				{
+					amount: "200",
+					paymentDate: new Date("2026-01-21T00:00:00.000Z"),
+					revenue: {
+						type: { value: "ADMINISTRATIVE" },
+					},
+				},
+				{
+					amount: "100",
+					paymentDate: new Date("2026-03-12T00:00:00.000Z"),
+					revenue: {
+						type: { value: "SUCCUMBENCY" },
+					},
 				},
 			]);
 		prismaMock.remuneration.findMany
@@ -120,6 +147,16 @@ describe("dashboard data queries", () => {
 					},
 				},
 			]);
+		prismaMock.expense.findMany
+			.mockResolvedValueOnce([{ amount: "80" }])
+			.mockResolvedValueOnce([{ amount: "80" }])
+			.mockResolvedValueOnce([])
+			.mockResolvedValueOnce([
+				{
+					amount: "80",
+					expenseDate: new Date("2026-02-07T00:00:00.000Z"),
+				},
+			]);
 
 		const result = await getDashboardSummary({
 			firmId: 1,
@@ -135,6 +172,13 @@ describe("dashboard data queries", () => {
 
 		expect(result.scopeLabel).toBe("Visão da firma");
 		expect(result.metrics).toEqual([
+			expect.objectContaining({
+				label: "Saldo total",
+				value: 220,
+				currentValue: 120,
+				previousValue: 30,
+				previousPeriodLabel: "01/01/2025 a 31/03/2025",
+			}),
 			expect.objectContaining({
 				label: "Receita prevista",
 				value: 1000,
@@ -231,6 +275,69 @@ describe("dashboard data queries", () => {
 			total: 100,
 			formattedTotal: expect.stringContaining("100,00"),
 		});
+		expect(result.cashFlow).toEqual({
+			totalBalance: 220,
+			formattedTotalBalance: expect.stringContaining("220,00"),
+			chartLabel: "Jan/2026 a Mar/2026",
+			chart: [
+				{
+					month: "2026-01",
+					entry: 300,
+					output: 60,
+					balance: 240,
+				},
+				{
+					month: "2026-02",
+					entry: 0,
+					output: 80,
+					balance: -80,
+				},
+				{
+					month: "2026-03",
+					entry: 100,
+					output: 40,
+					balance: 60,
+				},
+			],
+			table: [
+				{
+					month: "2026-01",
+					monthLabel: "Jan/26",
+					administrative: 300,
+					judicial: 0,
+					succumbency: 0,
+					entry: 300,
+					remuneration: 60,
+					expense: 0,
+					output: 60,
+					balance: 240,
+				},
+				{
+					month: "2026-02",
+					monthLabel: "Fev/26",
+					administrative: 0,
+					judicial: 0,
+					succumbency: 0,
+					entry: 0,
+					remuneration: 0,
+					expense: 80,
+					output: 80,
+					balance: -80,
+				},
+				{
+					month: "2026-03",
+					monthLabel: "Mar/26",
+					administrative: 0,
+					judicial: 0,
+					succumbency: 100,
+					entry: 100,
+					remuneration: 40,
+					expense: 0,
+					output: 40,
+					balance: 60,
+				},
+			],
+		});
 	});
 
 	it("keeps regular users scoped to assigned-contract and own-remuneration data", async () => {
@@ -286,11 +393,19 @@ describe("dashboard data queries", () => {
 		);
 		expect(result.scopeLabel).toBe("Minha visão");
 		expect(result.remunerationSubtotal).toBeNull();
+		expect(result.cashFlow).toBeNull();
+		expect(prismaMock.expense.findMany).not.toHaveBeenCalled();
 	});
 
 	it("applies legal-area and revenue-type filters to remuneration aggregation", async () => {
 		prismaMock.revenue.findMany.mockResolvedValue([]).mockResolvedValueOnce([]);
 		prismaMock.fee.findMany
+			.mockResolvedValueOnce([])
+			.mockResolvedValueOnce([])
+			.mockResolvedValueOnce([])
+			.mockResolvedValueOnce([]);
+		prismaMock.expense.findMany
+			.mockResolvedValueOnce([])
 			.mockResolvedValueOnce([])
 			.mockResolvedValueOnce([])
 			.mockResolvedValueOnce([]);
@@ -300,6 +415,7 @@ describe("dashboard data queries", () => {
 			.mockResolvedValueOnce([])
 			.mockResolvedValueOnce([])
 			.mockResolvedValueOnce([]);
+		prismaMock.revenue.findMany.mockResolvedValueOnce([]);
 
 		await getDashboardSummary({
 			firmId: 1,
@@ -341,6 +457,20 @@ describe("dashboard data queries", () => {
 								value: { in: ["SOCIAL_SECURITY", "CIVIL"] },
 							},
 						},
+					},
+				}),
+			}),
+		);
+		expect(prismaMock.expense.findMany).toHaveBeenNthCalledWith(
+			1,
+			expect.objectContaining({
+				where: expect.objectContaining({
+					firmId: 1,
+					deletedAt: null,
+					isActive: true,
+					expenseDate: {
+						gte: new Date("2026-01-01T00:00:00.000Z"),
+						lte: new Date("2026-12-31T23:59:59.999Z"),
 					},
 				}),
 			}),

@@ -45,6 +45,7 @@ The software core includes these feature areas:
 - Serves as the default authenticated landing area.
 - Summarizes operational and financial information relevant to the current user.
 - Surfaces recent business activity and high-level comparisons.
+- Exposes read-only analytical surfaces rather than operational mutation flows.
 - Adapts scope according to the role and visibility model.
 
 ### Clients
@@ -141,12 +142,15 @@ The software core includes these feature areas:
 ### Dashboard Expectations
 
 - Shows revenue totals and remuneration totals.
+- Shows read-only cash-flow summaries for administrators.
 - Shows recent business activity.
 - Shows monthly comparison information.
 - Shows the last 10 recent events across supported business entity types.
 - Shows firm-wide data for administrators.
 - Shows scoped data for regular users.
 - Includes revenue charts by legal area and revenue type.
+- Uses received fees as dashboard inflow and combines remunerations plus expenses as outflow where the summary requires firm cash-flow.
+- Does not expose firm-wide expense-derived cash-flow summaries to regular users.
 
 ### Client Expectations
 
@@ -243,6 +247,7 @@ The software core includes these feature areas:
 
 - As a user, I can see scoped dashboard and remuneration information relevant to me.
 - As an administrator, I can review firm-wide financial information.
+- As an administrator, I can see a read-only cash-flow view in the dashboard derived from honorários, remunerações, and despesas.
 - As an administrator or authorized user, I can export scoped remuneration data.
 
 ### Administration And Audit

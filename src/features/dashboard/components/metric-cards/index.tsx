@@ -1,6 +1,7 @@
 import {
 	BadgeDollarSignIcon,
 	InfoIcon,
+	LandmarkIcon,
 	TrendingDownIcon,
 	TrendingUpIcon,
 	WalletMinimalIcon,
@@ -23,11 +24,25 @@ interface DashboardMetricCardsProps {
 	metrics: DashboardSummary["metrics"];
 }
 
-const metricIcons = [
-	<BadgeDollarSignIcon key="revenue-total" className="size-4" />,
-	<TrendingUpIcon key="revenue-received" className="size-4" />,
-	<WalletMinimalIcon key="remunerations" className="size-4" />,
-];
+function getMetricIcon(label: string) {
+	if (label === "Saldo total") {
+		return <LandmarkIcon key={label} className="size-4" />;
+	}
+
+	if (label === "Receita prevista") {
+		return <BadgeDollarSignIcon key={label} className="size-4" />;
+	}
+
+	if (label === "Receita recebida") {
+		return <TrendingUpIcon key={label} className="size-4" />;
+	}
+
+	if (label === "Remunerações") {
+		return <WalletMinimalIcon key={label} className="size-4" />;
+	}
+
+	return <BadgeDollarSignIcon key={label} className="size-4" />;
+}
 
 const toneClassNames = {
 	default: "text-foreground",
@@ -62,13 +77,28 @@ function getChangeTone(value: number) {
 
 export function DashboardMetricCards({ metrics }: DashboardMetricCardsProps) {
 	return (
-		<div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-			{metrics.map((metric, index) => (
+		<div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+			{metrics.map((metric) => (
 				<Card key={metric.label} className="gap-2">
 					<CardHeader>
 						<div className="flex items-center gap-2">
-							{metricIcons[index]}
+							{getMetricIcon(metric.label)}
 							<p className="text-sm text-muted-foreground">{metric.label}</p>
+							<TooltipProvider>
+								<Tooltip>
+									<TooltipTrigger
+										render={
+											<button
+												type="button"
+												className="inline-flex text-muted-foreground transition-colors hover:text-foreground"
+											/>
+										}
+									>
+										<InfoIcon className="size-3.5" />
+									</TooltipTrigger>
+									<TooltipContent>{metric.description}</TooltipContent>
+								</Tooltip>
+							</TooltipProvider>
 						</div>
 						<CardAction className={toneClassNames[metric.tone]}>
 							<Badge
@@ -110,9 +140,6 @@ export function DashboardMetricCards({ metrics }: DashboardMetricCardsProps) {
 								</Tooltip>
 							</TooltipProvider>
 						</div>
-						<p className="sr-only text-sm text-muted-foreground">
-							{metric.description}
-						</p>
 					</CardContent>
 				</Card>
 			))}
