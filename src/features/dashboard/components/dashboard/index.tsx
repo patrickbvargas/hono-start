@@ -5,6 +5,7 @@ import { DashboardCashFlowChart } from "../cash-flow-chart";
 import { DashboardCashFlowTable } from "../cash-flow-table";
 import { FinancialEvolutionChart } from "../financial-evolution";
 import { DashboardMetricCards } from "../metric-cards";
+import { DashboardOverdueInstallmentsTable } from "../overdue-installments-table";
 import { DashboardRemunerationTable } from "../remuneration-table";
 
 interface DashboardProps {
@@ -34,6 +35,7 @@ export function Dashboard({ data }: DashboardProps) {
 					rows={data.remunerationTable}
 					subtotal={data.remunerationSubtotal}
 				/>
+				<DashboardOverdueInstallmentsTable rows={data.overdueInstallments} />
 				<div className="grid gap-3 xl:grid-cols-2">
 					<DashboardBreakdownChart
 						title="Receita por área"

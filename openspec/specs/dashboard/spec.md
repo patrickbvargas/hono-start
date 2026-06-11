@@ -156,11 +156,11 @@ Dashboard data MUST respect firm isolation, the session role visibility model, a
 - **THEN** the system does not expose cross-firm data
 
 ### Requirement: Dashboard Summaries
-The dashboard SHALL show revenue totals, remuneration totals, monthly comparison information, revenue grouping by legal area and revenue type, a monthly financial evolution chart, and a monthly remuneration table by collaborator, with supported summaries reflecting the active dashboard period and employee filters. The monthly remuneration table SHALL also expose a subtotal row for the visible monthly buckets, derived from the same filtered and role-scoped remuneration set shown in the table. For administrators, the dashboard SHALL also show a read-only cash-flow summary composed of saldo total, a monthly saldo chart, and a monthly cash-flow table derived from entradas, remunerações, and despesas. In this context, `entrada` means received honorários, `saída` means `remunerações + despesas`, and `saldo` means `entrada - saída`. The monthly cash-flow table SHALL break down entradas by the canonical revenue types `Administrativo`, `Judicial`, and `Sucumbência`, then show derived `Entrada`, `Remuneração`, `Despesa`, `Saída`, and `Saldo` columns for each visible month. The main dashboard content SHALL scroll inside a shared scroll container without clipping card borders, and the breakdown legend SHALL present concise participation percentages without redundant phrasing. The dashboard SHALL NOT render the "Visão da firma" badge. The root dashboard component SHALL compose dedicated analytical surface components for metric cards, charts, and remuneration tables instead of concentrating all surface implementations inline.
+The dashboard SHALL show revenue totals, remuneration totals, monthly comparison information, revenue grouping by legal area and revenue type, a monthly financial evolution chart, a monthly remuneration table by collaborator, and an overdue-installments table for revenues whose expected installment schedule is behind the recorded active fee installments, with supported summaries reflecting the active dashboard period and employee filters. The monthly remuneration table SHALL also expose a subtotal row for the visible monthly buckets, derived from the same filtered and role-scoped remuneration set shown in the table. For administrators, the dashboard SHALL also show a read-only cash-flow summary composed of saldo total, a monthly saldo chart, and a monthly cash-flow table derived from entradas, remunerações, and despesas. In this context, `entrada` means received honorários, `saída` means `remunerações + despesas`, and `saldo` means `entrada - saída`. The monthly cash-flow table SHALL break down entradas by the canonical revenue types `Administrativo`, `Judicial`, and `Sucumbência`, then show derived `Entrada`, `Remuneração`, `Despesa`, `Saída`, and `Saldo` columns for each visible month. The overdue-installments table SHALL derive each expected installment `n` from `paymentStartDate + n meses`, compare that expected schedule against active `Fee.installmentNumber` values for the same revenue, and list each installment that is already due but still has no active fee record. The main dashboard content SHALL scroll inside a shared scroll container without clipping card borders, and the breakdown legend SHALL present concise participation percentages without redundant phrasing. The dashboard SHALL NOT render the "Visão da firma" badge. The root dashboard component SHALL compose dedicated analytical surface components for metric cards, charts, and remuneration tables instead of concentrating all surface implementations inline.
 
 #### Scenario: Dashboard loads summaries
 - **WHEN** dashboard data is available
-- **THEN** the system displays high-level totals, current month values, previous month comparisons, legal-area revenue grouping, revenue-type grouping, monthly financial evolution for receitas and remuneracoes, and a monthly remuneration table by collaborator
+- **THEN** the system displays high-level totals, current month values, previous month comparisons, legal-area revenue grouping, revenue-type grouping, monthly financial evolution for receitas and remuneracoes, a monthly remuneration table by collaborator, and an overdue-installments table
 - **AND** the dashboard does not display the recent activity list
 
 #### Scenario: Administrator loads cash-flow summaries
@@ -209,6 +209,20 @@ The dashboard SHALL show revenue totals, remuneration totals, monthly comparison
 - **THEN** the monthly cash-flow table exposes one row per visible month in the selected range
 - **AND** each row shows `Administrativo`, `Judicial`, `Sucumbência`, `Entrada`, `Remuneração`, `Despesa`, `Saída`, and `Saldo`
 
+#### Scenario: Dashboard overdue-installments table lists due missing installments
+- **WHEN** dashboard data is loaded for a revenue whose expected installment count is greater than the active fee installment numbers already recorded
+- **THEN** the overdue-installments table lists one row for each due installment number that still has no active fee record
+- **AND** each row includes the contract, client, responsible collaborator context, revenue type, installment number, due date, and related revenue totals needed for review
+
+#### Scenario: Dashboard overdue-installments table respects role scope
+- **WHEN** a regular user loads the dashboard
+- **THEN** the overdue-installments table includes only revenues from contracts visible to that user
+- **AND** the table does not expose firm-wide contract data outside the authenticated scope
+
+#### Scenario: Dashboard overdue-installments table respects active filters
+- **WHEN** dashboard filters are active
+- **THEN** the overdue-installments table includes only due installments belonging to revenues and contracts that match the active period, legal-area, revenue-type, and role scope rules
+
 #### Scenario: Filtered period contains months without movement
 - **WHEN** the selected dashboard period includes one or more months without matching receitas or remuneracoes
 - **THEN** the system keeps those months in the financial evolution series with zero values
@@ -248,7 +262,7 @@ The dashboard SHALL show revenue totals, remuneration totals, monthly comparison
 - **THEN** each analytical surface uses the shared shadcn/ui `Card` component as its outer visual wrapper
 
 #### Scenario: Dashboard analytical surfaces stay componentized
-- **WHEN** the dashboard renders metric cards, charts, and the monthly remuneration table
+- **WHEN** the dashboard renders metric cards, charts, the monthly remuneration table, and the overdue-installments table
 - **THEN** the root dashboard component composes dedicated child components for those analytical surfaces
 - **AND** metric-card rendering details remain inside the metric-cards component
 
@@ -272,6 +286,11 @@ The dashboard SHALL show revenue totals, remuneration totals, monthly comparison
 - **AND** the monthly remuneration table shows an empty-state message in pt-BR
 - **AND** the system does not render a subtotal row without visible collaborator rows
 
+#### Scenario: No overdue installments match filters
+- **WHEN** no due installments remain without active fee records for the current dashboard scope
+- **THEN** the overdue-installments table shows an empty-state message in pt-BR
+- **AND** the system does not invent placeholder overdue rows
+
 #### Scenario: No cash-flow records match filters
 - **WHEN** an administrator dashboard period has no matching entradas, remunerações, or despesas
 - **THEN** the system shows zero saldo in the cash-flow card
@@ -287,7 +306,7 @@ The dashboard SHALL show revenue totals, remuneration totals, monthly comparison
 
 #### Scenario: Current-year dashboard omits future months
 - **WHEN** an authenticated user applies the current-year shortcut during an in-progress calendar year
-- **THEN** the dashboard summaries, monthly financial evolution, and monthly remuneration table use only months from January through the current month
+- **THEN** the dashboard summaries, monthly financial evolution, monthly remuneration table, and overdue-installments table use only months from January through the current month
 - **AND** the system does not append future months from the same year as zero-value buckets
 
 ### Requirement: Dashboard pending skeleton

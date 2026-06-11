@@ -43,6 +43,20 @@ export const dashboardRemunerationSubtotalSchema = z.object({
 	formattedTotal: z.string(),
 });
 
+export const dashboardOverdueInstallmentRowSchema = z.object({
+	contractProcessNumber: z.string(),
+	clientName: z.string(),
+	lawyerName: z.string(),
+	legalArea: z.string(),
+	revenueType: z.string(),
+	installmentNumber: z.number().int().positive(),
+	dueDate: z.iso.datetime(),
+	installmentAmount: z.number(),
+	formattedInstallmentAmount: z.string(),
+	totalValue: z.number(),
+	formattedTotalValue: z.string(),
+});
+
 export const dashboardFinancialEvolutionItemSchema = z.object({
 	month: z.string(),
 	revenue: z.number(),
@@ -86,6 +100,7 @@ export const dashboardSummarySchema = z.object({
 	remunerationMonths: dashboardRemunerationMonthSchema.array(),
 	remunerationTable: dashboardRemunerationRowSchema.array(),
 	remunerationSubtotal: dashboardRemunerationSubtotalSchema.nullable(),
+	overdueInstallments: dashboardOverdueInstallmentRowSchema.array(),
 	financialEvolutionLabel: z.string(),
 	financialEvolution: dashboardFinancialEvolutionItemSchema.array(),
 	cashFlow: dashboardCashFlowSchema.nullable(),

@@ -44,32 +44,58 @@ describe("dashboard data queries", () => {
 		prismaMock.revenue.findMany
 			.mockResolvedValueOnce([
 				{
+					id: 1,
 					totalValue: "1000",
 					downPaymentValue: "100",
 					paymentStartDate: new Date("2026-01-05T00:00:00.000Z"),
+					totalInstallments: 3,
 					type: { label: "Mensal", value: "MONTHLY" },
 					contract: {
+						processNumber: "PROC-1",
+						client: {
+							fullName: "Cliente A",
+						},
 						legalArea: { label: "Previdenciário", value: "SOCIAL_SECURITY" },
+						assignments: [
+							{
+								employee: { fullName: "Maria Silva" },
+								assignmentType: { value: "RESPONSIBLE" },
+							},
+						],
 					},
 					fees: [
 						{
 							amount: "200",
 							paymentDate: new Date("2026-01-21T00:00:00.000Z"),
+							installmentNumber: 1,
 						},
 					],
 				},
 				{
+					id: 2,
 					totalValue: "500",
 					downPaymentValue: "50",
 					paymentStartDate: new Date("2025-12-20T00:00:00.000Z"),
+					totalInstallments: 2,
 					type: { label: "Êxito", value: "SUCCESS" },
 					contract: {
+						processNumber: "PROC-2",
+						client: {
+							fullName: "Cliente B",
+						},
 						legalArea: { label: "Cível", value: "CIVIL" },
+						assignments: [
+							{
+								employee: { fullName: "Ana Souza" },
+								assignmentType: { value: "RECOMMENDED" },
+							},
+						],
 					},
 					fees: [
 						{
 							amount: "100",
 							paymentDate: new Date("2026-03-12T00:00:00.000Z"),
+							installmentNumber: 2,
 						},
 					],
 				},
@@ -275,6 +301,27 @@ describe("dashboard data queries", () => {
 			total: 100,
 			formattedTotal: expect.stringContaining("100,00"),
 		});
+		expect(result.overdueInstallments).toHaveLength(2);
+		expect(result.overdueInstallments).toEqual(
+			expect.arrayContaining([
+				expect.objectContaining({
+					contractProcessNumber: "PROC-1",
+					clientName: "Cliente A",
+					lawyerName: "Maria Silva",
+					legalArea: "Previdenciário",
+					revenueType: "Mensal",
+					installmentNumber: 2,
+				}),
+				expect.objectContaining({
+					contractProcessNumber: "PROC-2",
+					clientName: "Cliente B",
+					lawyerName: "Ana Souza",
+					legalArea: "Cível",
+					revenueType: "Êxito",
+					installmentNumber: 1,
+				}),
+			]),
+		);
 		expect(result.cashFlow).toEqual({
 			totalBalance: 220,
 			formattedTotalBalance: expect.stringContaining("220,00"),
@@ -393,6 +440,7 @@ describe("dashboard data queries", () => {
 		);
 		expect(result.scopeLabel).toBe("Minha visão");
 		expect(result.remunerationSubtotal).toBeNull();
+		expect(result.overdueInstallments).toEqual([]);
 		expect(result.cashFlow).toBeNull();
 		expect(prismaMock.expense.findMany).not.toHaveBeenCalled();
 	});
@@ -475,6 +523,77 @@ describe("dashboard data queries", () => {
 				}),
 			}),
 		);
+	});
+
+	it("returns an empty overdue-installments table when every due installment is recorded", async () => {
+		prismaMock.revenue.findMany
+			.mockResolvedValueOnce([
+				{
+					id: 1,
+					totalValue: "1200",
+					downPaymentValue: "0",
+					paymentStartDate: new Date("2026-01-10T00:00:00.000Z"),
+					totalInstallments: 2,
+					type: { label: "Administrativo", value: "ADMINISTRATIVE" },
+					contract: {
+						processNumber: "PROC-3",
+						client: {
+							fullName: "Cliente C",
+						},
+						legalArea: { label: "Família", value: "FAMILY" },
+						assignments: [
+							{
+								employee: { fullName: "João Souza" },
+								assignmentType: { value: "RESPONSIBLE" },
+							},
+						],
+					},
+					fees: [
+						{
+							amount: "600",
+							paymentDate: new Date("2026-02-10T00:00:00.000Z"),
+							installmentNumber: 1,
+						},
+						{
+							amount: "600",
+							paymentDate: new Date("2026-03-10T00:00:00.000Z"),
+							installmentNumber: 2,
+						},
+					],
+				},
+			])
+			.mockResolvedValueOnce([])
+			.mockResolvedValueOnce([]);
+		prismaMock.fee.findMany
+			.mockResolvedValueOnce([])
+			.mockResolvedValueOnce([])
+			.mockResolvedValueOnce([])
+			.mockResolvedValueOnce([]);
+		prismaMock.remuneration.findMany
+			.mockResolvedValueOnce([])
+			.mockResolvedValueOnce([])
+			.mockResolvedValueOnce([])
+			.mockResolvedValueOnce([])
+			.mockResolvedValueOnce([]);
+		prismaMock.expense.findMany
+			.mockResolvedValueOnce([])
+			.mockResolvedValueOnce([])
+			.mockResolvedValueOnce([])
+			.mockResolvedValueOnce([]);
+
+		const result = await getDashboardSummary({
+			firmId: 1,
+			isAdmin: true,
+			search: {
+				dateFrom: "2026-01-01",
+				dateTo: "2026-04-30",
+				employeeId: "",
+				legalArea: [],
+				revenueType: [],
+			},
+		});
+
+		expect(result.overdueInstallments).toEqual([]);
 	});
 
 	it("loads dashboard employee options from active non-deleted employees", async () => {

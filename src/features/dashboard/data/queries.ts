@@ -17,22 +17,37 @@ interface DashboardScope {
 }
 
 interface RevenueRow {
+	id: number;
 	totalValue: Prisma.Decimal;
 	downPaymentValue: Prisma.Decimal | null;
 	paymentStartDate: Date;
+	totalInstallments: number;
 	type: {
 		label: string;
 		value: string;
 	};
 	contract: {
+		processNumber: string;
+		client: {
+			fullName: string;
+		};
 		legalArea: {
 			label: string;
 			value: string;
 		};
+		assignments: Array<{
+			employee: {
+				fullName: string;
+			};
+			assignmentType: {
+				value: string;
+			};
+		}>;
 	};
 	fees: Array<{
 		amount: Prisma.Decimal;
 		paymentDate: Date;
+		installmentNumber: number;
 	}>;
 }
 
@@ -75,6 +90,20 @@ interface DashboardRemunerationSubtotal {
 	months: Record<string, number>;
 	total: number;
 	formattedTotal: string;
+}
+
+interface DashboardOverdueInstallmentRow {
+	contractProcessNumber: string;
+	clientName: string;
+	lawyerName: string;
+	legalArea: string;
+	revenueType: string;
+	installmentNumber: number;
+	dueDate: string;
+	installmentAmount: number;
+	formattedInstallmentAmount: string;
+	totalValue: number;
+	formattedTotalValue: string;
 }
 
 interface DashboardPeriod {
@@ -357,6 +386,28 @@ function addMonths(value: Date, months: number): Date {
 	);
 }
 
+function addMonthsPreservingDay(value: Date, months: number): Date {
+	const shiftedYear = value.getUTCFullYear();
+	const shiftedMonth = value.getUTCMonth() + months;
+	const shiftedDay = value.getUTCDate();
+	const lastDayOfTargetMonth = new Date(
+		Date.UTC(shiftedYear, shiftedMonth + 1, 0),
+	).getUTCDate();
+	const safeDay = Math.min(shiftedDay, lastDayOfTargetMonth);
+
+	return new Date(
+		Date.UTC(
+			shiftedYear,
+			shiftedMonth,
+			safeDay,
+			value.getUTCHours(),
+			value.getUTCMinutes(),
+			value.getUTCSeconds(),
+			value.getUTCMilliseconds(),
+		),
+	);
+}
+
 function addYears(value: Date, years: number): Date {
 	const next = new Date(value);
 	next.setUTCFullYear(next.getUTCFullYear() + years);
@@ -595,9 +646,143 @@ function getRevenueReceived(
 		: new Prisma.Decimal(0);
 
 	return revenue.fees.reduce(
-		(total, fee) => total.add(fee.amount),
+		(total, fee) =>
+			isDateInsidePeriod(fee.paymentDate, period)
+				? total.add(fee.amount)
+				: total,
 		downPayment,
 	);
+}
+
+function getHandlingLawyerName(
+	assignments: RevenueRow["contract"]["assignments"],
+): string {
+	const responsibleAssignment = assignments.find(
+		(assignment) => assignment.assignmentType.value === "RESPONSIBLE",
+	);
+
+	if (responsibleAssignment) {
+		return responsibleAssignment.employee.fullName;
+	}
+
+	const recommendedAssignment = assignments.find(
+		(assignment) => assignment.assignmentType.value === "RECOMMENDED",
+	);
+
+	if (recommendedAssignment) {
+		return recommendedAssignment.employee.fullName;
+	}
+
+	return "—";
+}
+
+function getCompletedMonthsElapsed(
+	startDate: Date,
+	referenceDate: Date,
+): number {
+	if (referenceDate < startDate) {
+		return 0;
+	}
+
+	let monthDifference =
+		(referenceDate.getUTCFullYear() - startDate.getUTCFullYear()) * 12 +
+		(referenceDate.getUTCMonth() - startDate.getUTCMonth());
+
+	if (referenceDate.getUTCDate() < startDate.getUTCDate()) {
+		monthDifference -= 1;
+	}
+
+	return Math.max(monthDifference, 0);
+}
+
+function getInstallmentAmount(revenue: RevenueRow): Prisma.Decimal {
+	return new Prisma.Decimal(revenue.totalValue.toString())
+		.minus(new Prisma.Decimal(revenue.downPaymentValue?.toString() ?? 0))
+		.div(revenue.totalInstallments);
+}
+
+function buildOverdueInstallmentRows({
+	period,
+	revenues,
+}: {
+	period: DashboardPeriod;
+	revenues: RevenueRow[];
+}): DashboardOverdueInstallmentRow[] {
+	const referenceDate = period.dateTo ?? new Date();
+
+	return revenues
+		.flatMap((revenue) => {
+			const expectedInstallments = Math.min(
+				revenue.totalInstallments,
+				getCompletedMonthsElapsed(revenue.paymentStartDate, referenceDate),
+			);
+
+			if (expectedInstallments <= 0) {
+				return [];
+			}
+
+			const activeInstallments = new Set(
+				revenue.fees.map((fee) => fee.installmentNumber),
+			);
+			const installmentAmount = getInstallmentAmount(revenue);
+			const lawyerName = getHandlingLawyerName(revenue.contract.assignments);
+			const rows: DashboardOverdueInstallmentRow[] = [];
+
+			for (
+				let installmentNumber = 1;
+				installmentNumber <= expectedInstallments;
+				installmentNumber += 1
+			) {
+				if (activeInstallments.has(installmentNumber)) {
+					continue;
+				}
+
+				const dueDate = addMonthsPreservingDay(
+					revenue.paymentStartDate,
+					installmentNumber,
+				);
+
+				if (!isDateInsidePeriod(dueDate, period)) {
+					continue;
+				}
+
+				rows.push({
+					contractProcessNumber: revenue.contract.processNumber,
+					clientName: revenue.contract.client.fullName,
+					lawyerName,
+					legalArea: revenue.contract.legalArea.label,
+					revenueType: revenue.type.label,
+					installmentNumber,
+					dueDate: dueDate.toISOString(),
+					installmentAmount: Number(installmentAmount),
+					formattedInstallmentAmount: formatter.currency(
+						Number(installmentAmount),
+					),
+					totalValue: Number(revenue.totalValue),
+					formattedTotalValue: formatter.currency(Number(revenue.totalValue)),
+				});
+			}
+
+			return rows;
+		})
+		.sort((first, second) => {
+			const dueDateComparison = first.dueDate.localeCompare(second.dueDate);
+
+			if (dueDateComparison !== 0) {
+				return dueDateComparison;
+			}
+
+			const contractComparison = first.contractProcessNumber.localeCompare(
+				second.contractProcessNumber,
+				"pt-BR",
+			);
+
+			if (contractComparison !== 0) {
+				return contractComparison;
+			}
+
+			return first.installmentNumber - second.installmentNumber;
+		});
 }
 
 function buildMonthlyFinancialEvolution({
@@ -1029,9 +1214,11 @@ export async function getDashboardSummary(
 		prisma.revenue.findMany({
 			where: revenueWhere,
 			select: {
+				id: true,
 				totalValue: true,
 				downPaymentValue: true,
 				paymentStartDate: true,
+				totalInstallments: true,
 				type: {
 					select: {
 						label: true,
@@ -1040,10 +1227,34 @@ export async function getDashboardSummary(
 				},
 				contract: {
 					select: {
+						processNumber: true,
+						client: {
+							select: {
+								fullName: true,
+							},
+						},
 						legalArea: {
 							select: {
 								label: true,
 								value: true,
+							},
+						},
+						assignments: {
+							where: {
+								deletedAt: null,
+								isActive: true,
+							},
+							select: {
+								employee: {
+									select: {
+										fullName: true,
+									},
+								},
+								assignmentType: {
+									select: {
+										value: true,
+									},
+								},
 							},
 						},
 					},
@@ -1052,11 +1263,11 @@ export async function getDashboardSummary(
 					where: {
 						deletedAt: null,
 						isActive: true,
-						...(paymentDateWhere ? { paymentDate: paymentDateWhere } : {}),
 					},
 					select: {
 						amount: true,
 						paymentDate: true,
+						installmentNumber: true,
 					},
 				},
 			},
@@ -1346,6 +1557,10 @@ export async function getDashboardSummary(
 		range: chartMonthRange,
 		rows: tableRemunerations,
 	});
+	const overdueInstallments = buildOverdueInstallmentRows({
+		period,
+		revenues,
+	});
 	const cashFlow = scope.isAdmin
 		? buildMonthlyCashFlow({
 				chartDownPayments: chartCashFlowDownPayments,
@@ -1382,7 +1597,8 @@ export async function getDashboardSummary(
 							label: "Saldo total",
 							value: Number(totalBalance),
 							formattedValue: formatter.currency(Number(totalBalance)),
-							description: "Total de honorários recebidos menos remunerações e despesas.",
+							description:
+								"Total de honorários recebidos menos remunerações e despesas.",
 							tone: Number(totalBalance) < 0 ? "danger" : "default",
 							previousLabel,
 							currentValue: Number(currentBalance),
@@ -1403,7 +1619,8 @@ export async function getDashboardSummary(
 				label: "Receita prevista",
 				value: Number(revenueTotal),
 				formattedValue: formatter.currency(Number(revenueTotal)),
-				description: "Total de honorários previsto para recebimento no período.",
+				description:
+					"Total de honorários previsto para recebimento no período.",
 				tone: "default",
 				previousLabel,
 				currentValue: Number(currentPlannedRevenue),
@@ -1459,6 +1676,7 @@ export async function getDashboardSummary(
 		remunerationMonths: remunerationByCollaborator.months,
 		remunerationTable: remunerationByCollaborator.table,
 		remunerationSubtotal: remunerationByCollaborator.subtotal,
+		overdueInstallments,
 		financialEvolutionLabel: chartMonthRange.label,
 		financialEvolution,
 		cashFlow: cashFlow

@@ -50,6 +50,18 @@ vi.mock("../components/metric-cards", () => ({
 	),
 }));
 
+vi.mock("../components/overdue-installments-table", () => ({
+	DashboardOverdueInstallmentsTable: ({
+		rows,
+	}: {
+		rows: Array<{ installmentNumber: number }>;
+	}) => (
+		<div data-testid="dashboard-overdue-installments-table">
+			{rows.length} linhas atraso
+		</div>
+	),
+}));
+
 vi.mock("../components/financial-evolution", () => ({
 	FinancialEvolutionChart: () => <div>Evolução financeira</div>,
 }));
@@ -132,6 +144,21 @@ describe("Dashboard", () => {
 						total: 60,
 						formattedTotal: "R$ 60,00",
 					},
+					overdueInstallments: [
+						{
+							contractProcessNumber: "PROC-1",
+							clientName: "Cliente 1",
+							lawyerName: "Maria Silva",
+							legalArea: "Previdenciário",
+							revenueType: "Administrativo",
+							installmentNumber: 3,
+							dueDate: "2026-04-10T00:00:00.000Z",
+							installmentAmount: 2000,
+							formattedInstallmentAmount: "R$ 2.000,00",
+							totalValue: 15000,
+							formattedTotalValue: "R$ 15.000,00",
+						},
+					],
 					financialEvolutionLabel: "Jan/2026 a Jan/2026",
 					financialEvolution: [
 						{
@@ -171,6 +198,9 @@ describe("Dashboard", () => {
 		expect(
 			screen.getByTestId("dashboard-remuneration-table").textContent,
 		).toContain("1 meses / 1 linhas / subtotal 60");
+		expect(
+			screen.getByTestId("dashboard-overdue-installments-table").textContent,
+		).toContain("1 linhas atraso");
 		expect(screen.getByTestId("dashboard-metric-cards").textContent).toContain(
 			"Saldo total",
 		);
@@ -196,6 +226,7 @@ describe("Dashboard", () => {
 					remunerationMonths: [],
 					remunerationTable: [],
 					remunerationSubtotal: null,
+					overdueInstallments: [],
 					financialEvolutionLabel: "Jan/2026 a Jan/2026",
 					financialEvolution: [],
 					cashFlow: null,

@@ -77,14 +77,20 @@ describe("DashboardCashFlowTable", () => {
 			screen.getByText("Fluxo de caixa mensal").closest('[data-slot="card"]'),
 		).toBeTruthy();
 		expect(screen.getByTestId("data-table").textContent).toContain("Mês");
-		expect(screen.getByText("Administrativo")).toBeTruthy();
-		expect(screen.getByText("Judicial")).toBeTruthy();
-		expect(screen.getByText("Sucumbência")).toBeTruthy();
-		expect(screen.getByText("Entrada")).toBeTruthy();
-		expect(screen.getByText("Remuneração")).toBeTruthy();
-		expect(screen.getByText("Despesa")).toBeTruthy();
-		expect(screen.getByText("Saída")).toBeTruthy();
-		expect(screen.getByText("Saldo")).toBeTruthy();
+		expect(screen.getByTestId("data-table").textContent).toContain(
+			"Administrativo",
+		);
+		expect(screen.getByTestId("data-table").textContent).toContain("Judicial");
+		expect(screen.getByTestId("data-table").textContent).toContain(
+			"Sucumbência",
+		);
+		expect(screen.getByTestId("data-table").textContent).toContain("Entrada");
+		expect(screen.getByTestId("data-table").textContent).toContain(
+			"Remuneração",
+		);
+		expect(screen.getByTestId("data-table").textContent).toContain("Despesa");
+		expect(screen.getByTestId("data-table").textContent).toContain("Saída");
+		expect(screen.getByTestId("data-table").textContent).toContain("Saldo");
 	});
 
 	it("renders explicit empty state in pt-BR when no rows exist", () => {
