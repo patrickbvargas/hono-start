@@ -7,6 +7,7 @@ import {
 	AlertDialogFooter,
 	AlertDialogHeader,
 	AlertDialogTitle,
+	Spinner,
 } from "@/shared/components/ui";
 
 interface TempPasswordDialogProps {
@@ -54,7 +55,8 @@ export function TemporaryPasswordDialog({
 					<>
 						<AlertDialogCancel disabled={isPending}>Cancelar</AlertDialogCancel>
 						<AlertDialogAction onClick={onGenerate} disabled={isPending}>
-							{isPending ? "Gerando..." : generateLabel}
+							{isPending && <Spinner className="size-4" aria-hidden="true" />}
+							{generateLabel}
 						</AlertDialogAction>
 					</>
 				)}

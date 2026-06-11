@@ -27,6 +27,7 @@ import {
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
+	Spinner,
 	useSidebar,
 } from "@/shared/components/ui";
 import { useLoggedUserSession } from "@/shared/session";
@@ -134,7 +135,11 @@ export const NavUser = () => {
 						</DropdownMenuGroup>
 						<DropdownMenuSeparator />
 						<DropdownMenuItem onClick={handleLogout} disabled={isPending}>
-							<LogOutIcon size={16} />
+							{isPending ? (
+								<Spinner className="size-4" aria-hidden="true" />
+							) : (
+								<LogOutIcon size={16} />
+							)}
 							Sair
 						</DropdownMenuItem>
 					</DropdownMenuContent>

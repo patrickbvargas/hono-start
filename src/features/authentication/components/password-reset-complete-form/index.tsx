@@ -31,8 +31,8 @@ export function PasswordResetCompleteForm({
 						)}
 					</form.AppField>
 				</FieldGroup>
-				<form.Submit disabled={isPending} className="w-full">
-					{isPending ? "Redefinindo..." : "Redefinir senha"}
+				<form.Submit isLoading={isPending} className="w-full">
+					Redefinir senha
 				</form.Submit>
 			</div>
 		</form.Form>

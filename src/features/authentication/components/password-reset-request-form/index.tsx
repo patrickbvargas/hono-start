@@ -18,8 +18,8 @@ export function PasswordResetRequestForm() {
 						)}
 					</form.AppField>
 				</FieldGroup>
-				<form.Submit disabled={isPending} className="w-full">
-					{isPending ? "Enviando..." : "Enviar link de redefinição"}
+				<form.Submit isLoading={isPending} className="w-full">
+					Enviar link de redefinição
 				</form.Submit>
 			</div>
 		</form.Form>

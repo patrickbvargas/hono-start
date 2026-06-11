@@ -81,9 +81,7 @@ export function ChangePasswordDialog({
 						>
 							Cancelar
 						</Button>
-						<form.Submit disabled={isPending}>
-							{isPending ? "Salvando..." : "Salvar nova senha"}
-						</form.Submit>
+						<form.Submit isLoading={isPending}>Salvar nova senha</form.Submit>
 					</DialogFooter>
 				</form.Form>
 			</DialogContent>

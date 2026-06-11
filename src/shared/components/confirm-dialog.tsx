@@ -10,6 +10,7 @@ import {
 	AlertDialogHeader,
 	AlertDialogTitle,
 	type buttonVariants,
+	Spinner,
 } from "@/shared/components/ui";
 import type { OverlayState } from "@/shared/types/overlay";
 
@@ -55,6 +56,7 @@ export const ConfirmDialog = ({
 						onClick={onConfirm}
 						disabled={isPending}
 					>
+						{isPending && <Spinner className="size-4" aria-hidden="true" />}
 						{showIcons && <CheckIcon size={20} />}
 						{confirmButtonLabel}
 					</AlertDialogAction>

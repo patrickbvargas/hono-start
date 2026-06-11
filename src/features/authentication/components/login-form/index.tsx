@@ -34,8 +34,8 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
 						{(field) => <field.Checkbox label="Manter conectado por 7 dias" />}
 					</form.AppField>
 				</div>
-				<form.Submit disabled={isPending} className="w-full">
-					{isPending ? "Entrando..." : "Entrar"}
+				<form.Submit isLoading={isPending} className="w-full">
+					Entrar
 				</form.Submit>
 			</div>
 		</form.Form>

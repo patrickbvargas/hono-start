@@ -17,6 +17,7 @@ import {
 	AlertDialogTitle,
 	Button,
 	DrawerClose,
+	Spinner,
 } from "@/shared/components/ui";
 import { formatter } from "@/shared/lib/formatter";
 import { toast } from "@/shared/lib/toast";
@@ -392,7 +393,10 @@ const EmployeeDetailsContent = ({
 										onClick={handleRestoreAccessClick}
 										disabled={isRestorePending}
 									>
-										{isRestorePending ? "Restaurando..." : "Restaurar acesso"}
+										{isRestorePending && (
+											<Spinner className="size-4" aria-hidden="true" />
+										)}
+										Restaurar acesso
 									</AlertDialogAction>
 								</AlertDialogFooter>
 							</AlertDialogContent>
@@ -428,7 +432,10 @@ const EmployeeDetailsContent = ({
 										disabled={isRevokePending}
 										variant="destructive"
 									>
-										{isRevokePending ? "Revogando..." : "Revogar acesso"}
+										{isRevokePending && (
+											<Spinner className="size-4" aria-hidden="true" />
+										)}
+										Revogar acesso
 									</AlertDialogAction>
 								</AlertDialogFooter>
 							</AlertDialogContent>

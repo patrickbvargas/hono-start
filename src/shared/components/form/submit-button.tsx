@@ -1,10 +1,17 @@
-import { Button } from "@/shared/components/ui";
+import { Button, Spinner } from "@/shared/components/ui";
 import { useFormContext } from "@/shared/hooks/use-app-form";
+
+interface FormSubmitButtonProps
+	extends React.ComponentPropsWithoutRef<typeof Button> {
+	isLoading?: boolean;
+}
 
 export const FormSubmitButton = ({
 	children,
+	disabled,
+	isLoading = false,
 	...props
-}: React.ComponentPropsWithoutRef<typeof Button>) => {
+}: FormSubmitButtonProps) => {
 	const form = useFormContext();
 
 	return (
@@ -13,10 +20,13 @@ export const FormSubmitButton = ({
 				<Button
 					type="submit"
 					onClick={form.handleSubmit}
-					disabled={isSubmitting}
+					disabled={disabled || isLoading || isSubmitting}
 					{...props}
 				>
-					{children || "Salvar"}
+					{(isLoading || isSubmitting) && (
+						<Spinner className="size-4" aria-hidden="true" />
+					)}
+					<span>{children || "Salvar"}</span>
 				</Button>
 			)}
 		</form.Subscribe>

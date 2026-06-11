@@ -28,8 +28,8 @@ export function ForcedChangePasswordForm() {
 				<form.AppField name="revokeOtherSessions">
 					{(field) => <field.Checkbox label="Encerrar outras sessões" />}
 				</form.AppField>
-				<form.Submit disabled={isPending} className="w-full">
-					{isPending ? "Salvando..." : "Salvar nova senha"}
+				<form.Submit isLoading={isPending} className="w-full">
+					Salvar nova senha
 				</form.Submit>
 			</div>
 		</form.Form>
