@@ -13,6 +13,7 @@ const allowedFeatureIndexes = new Set([
 	"contracts/index.ts",
 	"dashboard/index.ts",
 	"employees/index.ts",
+	"expenses/index.ts",
 	"fees/index.ts",
 	"remunerations/index.ts",
 ]);
