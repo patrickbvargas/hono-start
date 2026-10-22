@@ -11,13 +11,13 @@ const [roles, organizations, firms, employees, users, adminCandidates] = await P
 		prisma.firm.findMany({ select: { id: true, name: true } }),
 		prisma.employee.count(),
 client.users.getUserList({ limit: 100 }),
-prisma.employee.findMany({ where: { role: { value: "ADMIN" } }, select: { id: true, fullName: true, email: true } }),
+prisma.employee.findMany({ select: { id: true, fullName: true } }),
 	]);
 	console.info(JSON.stringify({
 		roles: roles.data.map((role) => ({ key: role.key, permissions: role.permissions.map((permission) => permission.key) })),
 		organizations: organizations.data.map((organization) => ({ id: organization.id, name: organization.name })),
 		firms, employeeCount: employees,
-clerkUsers: users.data.map((user) => ({ id: user.id, name: user.firstName, matchingAdminIds: adminCandidates.filter((employee) => user.emailAddresses.some((address) => address.emailAddress.toLowerCase() === employee.email.toLowerCase())).map((employee) => employee.id) })),
+clerkUsers: users.data.map((user) => ({ id: user.id, name: user.firstName, matchingAdminIds: adminCandidates.filter((employee) => employee.id === user.privateMetadata.employeeId).map((employee) => employee.id) })),
 adminCandidates: adminCandidates.map(({ id, fullName }) => ({ id, fullName })),
 		storageBucketStatus: storageStatus,
 webhookConfigured: Boolean(process.env.CLERK_WEBHOOK_SIGNING_SECRET),

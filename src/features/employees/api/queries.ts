@@ -17,7 +17,6 @@ import type {
 import { EMPLOYEE_ERRORS } from "../constants/errors";
 import {
 	getEmployeeById,
-	getEmployeeRoles,
 	getEmployees,
 	getEmployeeTypes,
 } from "../data/queries";
@@ -30,7 +29,6 @@ export const employeeKeys = {
 	list: (search: EmployeeSearch) => [...employeeKeys.all, search] as const,
 	detail: (id: EntityId) => [...employeeKeys.all, "detail", id] as const,
 	types: () => [...employeeKeys.all, "types"] as const,
-	roles: () => [...employeeKeys.all, "roles"] as const,
 };
 
 const getEmployeesFn = createServerFn({ method: "GET" })
@@ -86,17 +84,6 @@ const getEmployeeTypesFn = createServerFn({ method: "GET" })
 		}
 	});
 
-const getEmployeeRolesFn = createServerFn({ method: "GET" })
-	.middleware([authMiddleware])
-	.handler(async (): Promise<QueryManyReturnType<Option>> => {
-		try {
-			return await getEmployeeRoles();
-		} catch (error) {
-			console.error("[getEmployeeRoles]", error);
-			throw new Error(EMPLOYEE_ERRORS.ROLES_GET_FAILED);
-		}
-	});
-
 export const getEmployeesQueryOptions = (search: EmployeeSearch) =>
 	queryOptions({
 		queryKey: employeeKeys.list(search),
@@ -113,12 +100,5 @@ export const getEmployeeTypesQueryOptions = () =>
 	queryOptions({
 		queryKey: employeeKeys.types(),
 		queryFn: getEmployeeTypesFn,
-		staleTime: "static",
-	});
-
-export const getEmployeeRolesQueryOptions = () =>
-	queryOptions({
-		queryKey: employeeKeys.roles(),
-		queryFn: getEmployeeRolesFn,
 		staleTime: "static",
 	});

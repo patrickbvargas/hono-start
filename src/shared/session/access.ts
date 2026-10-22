@@ -49,7 +49,7 @@ function isAssignedToActor(
 			}
 
 			if (
-				session.employeeType.value ===
+				session.employeeType?.value ===
 				SESSION_EMPLOYEE_TYPE_ADMIN_ASSISTANT_VALUE
 			) {
 				return (
@@ -60,7 +60,7 @@ function isAssignedToActor(
 				);
 			}
 
-			if (session.employeeType.value === SESSION_EMPLOYEE_TYPE_LAWYER_VALUE) {
+			if (session.employeeType?.value === SESSION_EMPLOYEE_TYPE_LAWYER_VALUE) {
 				const visibleLawyerAssignmentTypes: string[] = [
 					SESSION_ASSIGNMENT_TYPE_RESPONSIBLE_VALUE,
 					SESSION_ASSIGNMENT_TYPE_RECOMMENDED_VALUE,
@@ -131,6 +131,12 @@ export function can(
 		return permission.some((key) => can(session, key, resource));
 	}
 	const key = permission;
+	if (
+		session.employee.id === null &&
+		(key.endsWith("_own") || key.endsWith("_assigned"))
+	) {
+		return false;
+	}
 	if (!hasPermission(session, key) || !isSameFirm(session, resource))
 		return false;
 	if (

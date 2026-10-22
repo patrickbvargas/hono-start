@@ -106,7 +106,7 @@ Prisma schema cannot represent PostgreSQL filtered unique indexes directly. When
 ## Authentication identity links
 
 - Clerk owns identity, sessions, Organization membership, roles and permission grants remotely.
-- Firm links to a unique Clerk Organization; Employee links to a unique Clerk User.
+- Firm and Employee contain only business data, with no provider identity columns. Clerk privateMetadata.employeeId optionally resolves the business actor for own/assigned scopes.
 - Legacy UUID, local role and forced-change fields are retained only during migration/rollback and never grant runtime authority after cutover.
 - Current membership and permission state must be verified with Clerk; domain lifecycle and assignment data remain in Prisma.
 - Generate schema changes on a disposable local DB using the documented workflow; never reset a production or unidentified existing DB.

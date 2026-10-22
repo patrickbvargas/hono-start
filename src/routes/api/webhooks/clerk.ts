@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { handleClerkEmployeeWebhook } from "@/features/employees";
+import { handleClerkWebhook } from "@/features/authentication";
 
 export const Route = createFileRoute("/api/webhooks/clerk")({
 	server: {
-		handlers: { POST: ({ request }) => handleClerkEmployeeWebhook(request) },
+		handlers: { POST: ({ request }) => handleClerkWebhook(request) },
 	},
 });

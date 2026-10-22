@@ -15,7 +15,6 @@ model ClerkWebhookReceipt {
 }
 
 model Firm {
-  clerkOrganizationId String? @unique
   id                Int                @id @default(autoincrement())
   name              String
   auditLogs         AuditLog[]
@@ -43,11 +42,11 @@ model ClientType {
 }
 
 model EmployeeType {
+ employees Employee[]
   id        Int        @id @default(autoincrement())
   value     String     @unique
   label     String
   isActive  Boolean    @default(true)
-  employees Employee[]
 
   @@map("employee_types")
 }
@@ -57,7 +56,6 @@ model UserRole {
   value     String     @unique
   label     String
   isActive  Boolean    @default(true)
-  employees Employee[]
 
   @@map("user_roles")
 }
@@ -125,24 +123,17 @@ model ExpenseCategory {
 model Employee {
   id                     Int          @id @default(autoincrement())
   firmId                 Int
-  fullName               String
-  email                  String       @unique
-  authUserId             String?      @unique @db.Uuid
-  clerkUserId            String?      @unique
   typeId                 Int
-  roleId                 Int
+  fullName               String
   oabNumber              String?
   remunerationPercentage Decimal      @db.Decimal(5, 4)
   referralPercentage     Decimal      @db.Decimal(5, 4)
-  avatarUrl              String?
-  mustChangePassword     Boolean      @default(false)
   isActive               Boolean      @default(true)
   createdAt              DateTime     @default(now())
   updatedAt              DateTime     @updatedAt
   deletedAt              DateTime?
   firm                   Firm         @relation(fields: [firmId], references: [id])
   type                   EmployeeType @relation(fields: [typeId], references: [id])
-  role                   UserRole     @relation(fields: [roleId], references: [id])
   auditLogs              AuditLog[]
   attachments            Attachment[]
   contractAssignments    ContractEmployee[]

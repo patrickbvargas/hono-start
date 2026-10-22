@@ -45,7 +45,7 @@ The Prisma schema includes the core tenant model, lookup catalogs, clients, empl
 - Prisma
 - PostgreSQL
 - Supabase Storage
-- Supabase Auth
+- Clerk Auth
 - shadcn/ui through shared UI re-exports
 - Zod
 - Biome

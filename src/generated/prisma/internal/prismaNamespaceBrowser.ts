@@ -99,7 +99,6 @@ export type ClerkWebhookReceiptScalarFieldEnum = (typeof ClerkWebhookReceiptScal
 
 
 export const FirmScalarFieldEnum = {
-  clerkOrganizationId: 'clerkOrganizationId',
   id: 'id',
   name: 'name'
 } as const
@@ -201,16 +200,10 @@ export const EmployeeScalarFieldEnum = {
   id: 'id',
   firmId: 'firmId',
   fullName: 'fullName',
-  email: 'email',
-  authUserId: 'authUserId',
-  clerkUserId: 'clerkUserId',
   typeId: 'typeId',
-  roleId: 'roleId',
   oabNumber: 'oabNumber',
   remunerationPercentage: 'remunerationPercentage',
   referralPercentage: 'referralPercentage',
-  avatarUrl: 'avatarUrl',
-  mustChangePassword: 'mustChangePassword',
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',

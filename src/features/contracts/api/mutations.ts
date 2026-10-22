@@ -36,7 +36,7 @@ const createContractFn = createServerFn({ method: "POST" })
 
 			return await createContract({
 				actor: {
-					id: session.employee.id,
+					id: session.employee.id ?? undefined,
 					name: session.user.fullName,
 					email: session.user.email,
 				},
@@ -79,7 +79,7 @@ const updateContractFn = createServerFn({ method: "POST" })
 
 			return await updateContract({
 				actor: {
-					id: session.employee.id,
+					id: session.employee.id ?? undefined,
 					name: session.user.fullName,
 					email: session.user.email,
 				},
@@ -118,7 +118,7 @@ const deleteContractFn = createServerFn({ method: "POST" })
 
 			return await deleteContract({
 				actor: {
-					id: session.employee.id,
+					id: session.employee.id ?? undefined,
 					name: session.user.fullName,
 					email: session.user.email,
 				},
@@ -152,7 +152,7 @@ const restoreContractFn = createServerFn({ method: "POST" })
 
 			return await restoreContract({
 				actor: {
-					id: session.employee.id,
+					id: session.employee.id ?? undefined,
 					name: session.user.fullName,
 					email: session.user.email,
 				},

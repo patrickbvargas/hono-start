@@ -48,10 +48,6 @@ export const EmployeeList = ({
 				definition: employee.contractCount,
 			},
 			{
-				term: "Perfil",
-				definition: employee.role,
-			},
-			{
 				term: "Situação",
 				definition: (
 					<EntityStatus

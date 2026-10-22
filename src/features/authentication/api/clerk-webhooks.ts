@@ -1,12 +1,10 @@
 import { createServerOnlyFn } from "@tanstack/react-start";
 
-export const handleClerkEmployeeWebhook = createServerOnlyFn(
+export const handleClerkWebhook = createServerOnlyFn(
 	async (request: Request): Promise<Response> => {
 		const { verifyWebhook } = await import("@clerk/backend/webhooks");
 		const { env } = await import("@/shared/config/env");
-		const { reconcileClerkEmployeeEvent } = await import(
-			"../data/clerk-lifecycle"
-		);
+		const { recordClerkEvent } = await import("../data/clerk-lifecycle");
 		if (!env.CLERK_WEBHOOK_SIGNING_SECRET) {
 			return new Response("Webhook unavailable", { status: 503 });
 		}
@@ -23,7 +21,7 @@ export const handleClerkEmployeeWebhook = createServerOnlyFn(
 			return new Response("Missing delivery ID", { status: 400 });
 		}
 		try {
-			await reconcileClerkEmployeeEvent(deliveryId, event);
+			await recordClerkEvent(deliveryId, event);
 			return new Response("OK");
 		} catch {
 			return new Response("Reconciliation unavailable", { status: 503 });

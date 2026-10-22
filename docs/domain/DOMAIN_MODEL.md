@@ -16,7 +16,7 @@
 
 ## Entity Responsibilities
 
-- `Firm` defines tenant ownership and firm-level defaults and links uniquely to a Clerk Organization.
+- `Firm` defines tenant ownership and firm-level defaults independently of Clerk Organizations.
 - `Employee` represents both staff identity and operational participation in contracts.
 - `Client` is the business party attached to legal work.
 - `Contract` is the main business aggregate linking client, team, revenue plans, and lifecycle status.
@@ -35,11 +35,11 @@
 
 ### Employee
 
-- Carries firm-scoped identity and user-account semantics.
-- Links optionally to a Clerk User; has employee type, legacy historical user role, optional OAB number, remuneration percentage, referral percentage, optional avatar, active state, and soft-delete state.
+- Carries professional collaborator identity and firm-scoped business data only.
+- Has employee type, optional OAB number, remuneration percentage, referral percentage, active state, and soft-delete state.
 - OAB number is required for lawyers.
 - OAB number is unique per firm.
-- Employee email is globally unique.
+- Employee stores a professional name and business attributes only. Account email, photo and access role are read from Clerk, not copied into Employee. Account creation and invitations are managed in Clerk.
 - `referralPercentage` must not exceed `remunerationPercentage`.
 
 ### Client
@@ -181,7 +181,7 @@ See `docs/domain/LOOKUP_VALUES.md` for the canonical allowed values and labels.
 ## Authentication Entity Relationship
 
 - `Employee` is the application user entity referenced by authentication records.
-- Session and account state are authentication concerns that point to the employee identity.
+- Session and account state belong to Clerk; optional privateMetadata.employeeId points to a business collaborator for own/assigned visibility.
 
 ## Conceptual Boundaries
 
@@ -190,4 +190,12 @@ See `docs/domain/LOOKUP_VALUES.md` for the canonical allowed values and labels.
 
 ## Provider authority
 
-Clerk exclusively owns authentication and permission grants. Legacy UserRole/auth UUID/forced-reset fields remain for migration/rollback only. They cannot grant runtime access. Integer Employee IDs remain audit actors.
+Clerk exclusively owns authentication and permission grants. Legacy UserRole remains historical business data only. Legacy auth UUID and forced-reset fields have been retired. They cannot grant runtime access. Integer Employee IDs remain audit actors.
+
+Employee profile photos are owned by Clerk; Employee does not persist an avatar URL.
+
+Firm is a business unit. Matriz is the default unit; future branches retain firmId ownership. Clerk Organizations group users and do not map to firms or grant firm access.
+
+## Business and authentication isolation
+
+Employee has no Clerk ID, account email, avatar or access role. Users and invitations are managed in Clerk. Server-validated Clerk privateMetadata.employeeId optionally resolves an active Employee for own and assigned capabilities; missing binding never widens scope. An explicit invalid, inactive or deleted binding denies the session. General capabilities do not require an Employee link. Audit actors without an Employee retain their Clerk account name and email with a null employee actor ID. Firm is an independent business unit: Matriz is the default context, independent of Organization membership. Metadata-based firm access is future work.

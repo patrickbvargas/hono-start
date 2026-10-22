@@ -36,7 +36,7 @@ function CreateEmployeeFormContent({
 	state,
 	onSuccess,
 }: Omit<EmployeeFormProps, "id">) {
-	const { roles, types } = useEmployeeOptions();
+	const { types } = useEmployeeOptions();
 	const { form } = useEmployeeForm({ onSuccess });
 
 	return (
@@ -44,7 +44,6 @@ function CreateEmployeeFormContent({
 			form={form}
 			state={state}
 			title="Novo colaborador"
-			roles={roles}
 			types={types}
 		/>
 	);
@@ -56,7 +55,7 @@ function EditEmployeeFormContent({
 	onSuccess,
 }: Required<Pick<EmployeeFormProps, "id">> & Omit<EmployeeFormProps, "id">) {
 	const { employee } = useEmployee(id);
-	const { roles, types } = useEmployeeOptions();
+	const { types } = useEmployeeOptions();
 	const { form } = useEmployeeForm({
 		id,
 		initialValue: employee,
@@ -68,7 +67,6 @@ function EditEmployeeFormContent({
 			form={form}
 			state={state}
 			title="Editar colaborador"
-			roles={roles}
 			types={types}
 		/>
 	);
@@ -78,7 +76,6 @@ interface EmployeeFormContentProps {
 	form: ReturnType<typeof useEmployeeForm>["form"];
 	state: OverlayState;
 	title: string;
-	roles: ReturnType<typeof useEmployeeOptions>["roles"];
 	types: ReturnType<typeof useEmployeeOptions>["types"];
 }
 
@@ -95,9 +92,6 @@ function EmployeeFormContent({
 					<FieldGroup>
 						<form.AppField name="fullName">
 							{(field) => <field.Input label="Nome" isRequired />}
-						</form.AppField>
-						<form.AppField name="email">
-							{(field) => <field.Input label="E-mail" isRequired />}
 						</form.AppField>
 					</FieldGroup>
 					<FieldGroup className="grid gap-5 sm:grid-cols-2">

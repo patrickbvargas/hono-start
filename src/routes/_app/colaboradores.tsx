@@ -9,7 +9,6 @@ import {
 	EmployeeTable,
 	employeeSearchDefaults,
 	employeeSearchSchema,
-	getEmployeeRolesQueryOptions,
 	getEmployeesQueryOptions,
 	getEmployeeTypesQueryOptions,
 	useEmployees,
@@ -45,7 +44,6 @@ export const Route = createFileRoute("/_app/colaboradores")({
 		await Promise.all([
 			queryClient.ensureQueryData(getEmployeesQueryOptions(search)),
 			queryClient.ensureQueryData(getEmployeeTypesQueryOptions()),
-			queryClient.ensureQueryData(getEmployeeRolesQueryOptions()),
 		]);
 	},
 	component: RouteComponent,

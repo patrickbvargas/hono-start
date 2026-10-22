@@ -30,7 +30,6 @@ export type EmployeeAvgAggregateOutputType = {
   id: number | null
   firmId: number | null
   typeId: number | null
-  roleId: number | null
   remunerationPercentage: runtime.Decimal | null
   referralPercentage: runtime.Decimal | null
 }
@@ -39,7 +38,6 @@ export type EmployeeSumAggregateOutputType = {
   id: number | null
   firmId: number | null
   typeId: number | null
-  roleId: number | null
   remunerationPercentage: runtime.Decimal | null
   referralPercentage: runtime.Decimal | null
 }
@@ -48,16 +46,10 @@ export type EmployeeMinAggregateOutputType = {
   id: number | null
   firmId: number | null
   fullName: string | null
-  email: string | null
-  authUserId: string | null
-  clerkUserId: string | null
   typeId: number | null
-  roleId: number | null
   oabNumber: string | null
   remunerationPercentage: runtime.Decimal | null
   referralPercentage: runtime.Decimal | null
-  avatarUrl: string | null
-  mustChangePassword: boolean | null
   isActive: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -68,16 +60,10 @@ export type EmployeeMaxAggregateOutputType = {
   id: number | null
   firmId: number | null
   fullName: string | null
-  email: string | null
-  authUserId: string | null
-  clerkUserId: string | null
   typeId: number | null
-  roleId: number | null
   oabNumber: string | null
   remunerationPercentage: runtime.Decimal | null
   referralPercentage: runtime.Decimal | null
-  avatarUrl: string | null
-  mustChangePassword: boolean | null
   isActive: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -88,16 +74,10 @@ export type EmployeeCountAggregateOutputType = {
   id: number
   firmId: number
   fullName: number
-  email: number
-  authUserId: number
-  clerkUserId: number
   typeId: number
-  roleId: number
   oabNumber: number
   remunerationPercentage: number
   referralPercentage: number
-  avatarUrl: number
-  mustChangePassword: number
   isActive: number
   createdAt: number
   updatedAt: number
@@ -110,7 +90,6 @@ export type EmployeeAvgAggregateInputType = {
   id?: true
   firmId?: true
   typeId?: true
-  roleId?: true
   remunerationPercentage?: true
   referralPercentage?: true
 }
@@ -119,7 +98,6 @@ export type EmployeeSumAggregateInputType = {
   id?: true
   firmId?: true
   typeId?: true
-  roleId?: true
   remunerationPercentage?: true
   referralPercentage?: true
 }
@@ -128,16 +106,10 @@ export type EmployeeMinAggregateInputType = {
   id?: true
   firmId?: true
   fullName?: true
-  email?: true
-  authUserId?: true
-  clerkUserId?: true
   typeId?: true
-  roleId?: true
   oabNumber?: true
   remunerationPercentage?: true
   referralPercentage?: true
-  avatarUrl?: true
-  mustChangePassword?: true
   isActive?: true
   createdAt?: true
   updatedAt?: true
@@ -148,16 +120,10 @@ export type EmployeeMaxAggregateInputType = {
   id?: true
   firmId?: true
   fullName?: true
-  email?: true
-  authUserId?: true
-  clerkUserId?: true
   typeId?: true
-  roleId?: true
   oabNumber?: true
   remunerationPercentage?: true
   referralPercentage?: true
-  avatarUrl?: true
-  mustChangePassword?: true
   isActive?: true
   createdAt?: true
   updatedAt?: true
@@ -168,16 +134,10 @@ export type EmployeeCountAggregateInputType = {
   id?: true
   firmId?: true
   fullName?: true
-  email?: true
-  authUserId?: true
-  clerkUserId?: true
   typeId?: true
-  roleId?: true
   oabNumber?: true
   remunerationPercentage?: true
   referralPercentage?: true
-  avatarUrl?: true
-  mustChangePassword?: true
   isActive?: true
   createdAt?: true
   updatedAt?: true
@@ -275,16 +235,10 @@ export type EmployeeGroupByOutputType = {
   id: number
   firmId: number
   fullName: string
-  email: string
-  authUserId: string | null
-  clerkUserId: string | null
   typeId: number
-  roleId: number
   oabNumber: string | null
   remunerationPercentage: runtime.Decimal
   referralPercentage: runtime.Decimal
-  avatarUrl: string | null
-  mustChangePassword: boolean
   isActive: boolean
   createdAt: Date
   updatedAt: Date
@@ -318,23 +272,16 @@ export type EmployeeWhereInput = {
   id?: Prisma.IntFilter<"Employee"> | number
   firmId?: Prisma.IntFilter<"Employee"> | number
   fullName?: Prisma.StringFilter<"Employee"> | string
-  email?: Prisma.StringFilter<"Employee"> | string
-  authUserId?: Prisma.UuidNullableFilter<"Employee"> | string | null
-  clerkUserId?: Prisma.StringNullableFilter<"Employee"> | string | null
   typeId?: Prisma.IntFilter<"Employee"> | number
-  roleId?: Prisma.IntFilter<"Employee"> | number
   oabNumber?: Prisma.StringNullableFilter<"Employee"> | string | null
   remunerationPercentage?: Prisma.DecimalFilter<"Employee"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFilter<"Employee"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  avatarUrl?: Prisma.StringNullableFilter<"Employee"> | string | null
-  mustChangePassword?: Prisma.BoolFilter<"Employee"> | boolean
   isActive?: Prisma.BoolFilter<"Employee"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Employee"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Employee"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Employee"> | Date | string | null
   firm?: Prisma.XOR<Prisma.FirmScalarRelationFilter, Prisma.FirmWhereInput>
   type?: Prisma.XOR<Prisma.EmployeeTypeScalarRelationFilter, Prisma.EmployeeTypeWhereInput>
-  role?: Prisma.XOR<Prisma.UserRoleScalarRelationFilter, Prisma.UserRoleWhereInput>
   auditLogs?: Prisma.AuditLogListRelationFilter
   attachments?: Prisma.AttachmentListRelationFilter
   contractAssignments?: Prisma.ContractEmployeeListRelationFilter
@@ -344,23 +291,16 @@ export type EmployeeOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   firmId?: Prisma.SortOrder
   fullName?: Prisma.SortOrder
-  email?: Prisma.SortOrder
-  authUserId?: Prisma.SortOrderInput | Prisma.SortOrder
-  clerkUserId?: Prisma.SortOrderInput | Prisma.SortOrder
   typeId?: Prisma.SortOrder
-  roleId?: Prisma.SortOrder
   oabNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   remunerationPercentage?: Prisma.SortOrder
   referralPercentage?: Prisma.SortOrder
-  avatarUrl?: Prisma.SortOrderInput | Prisma.SortOrder
-  mustChangePassword?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   firm?: Prisma.FirmOrderByWithRelationInput
   type?: Prisma.EmployeeTypeOrderByWithRelationInput
-  role?: Prisma.UserRoleOrderByWithRelationInput
   auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
   attachments?: Prisma.AttachmentOrderByRelationAggregateInput
   contractAssignments?: Prisma.ContractEmployeeOrderByRelationAggregateInput
@@ -368,9 +308,6 @@ export type EmployeeOrderByWithRelationInput = {
 
 export type EmployeeWhereUniqueInput = Prisma.AtLeast<{
   id?: number
-  email?: string
-  authUserId?: string
-  clerkUserId?: string
   firmId_oabNumber?: Prisma.EmployeeFirmIdOabNumberCompoundUniqueInput
   AND?: Prisma.EmployeeWhereInput | Prisma.EmployeeWhereInput[]
   OR?: Prisma.EmployeeWhereInput[]
@@ -378,38 +315,28 @@ export type EmployeeWhereUniqueInput = Prisma.AtLeast<{
   firmId?: Prisma.IntFilter<"Employee"> | number
   fullName?: Prisma.StringFilter<"Employee"> | string
   typeId?: Prisma.IntFilter<"Employee"> | number
-  roleId?: Prisma.IntFilter<"Employee"> | number
   oabNumber?: Prisma.StringNullableFilter<"Employee"> | string | null
   remunerationPercentage?: Prisma.DecimalFilter<"Employee"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFilter<"Employee"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  avatarUrl?: Prisma.StringNullableFilter<"Employee"> | string | null
-  mustChangePassword?: Prisma.BoolFilter<"Employee"> | boolean
   isActive?: Prisma.BoolFilter<"Employee"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Employee"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Employee"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Employee"> | Date | string | null
   firm?: Prisma.XOR<Prisma.FirmScalarRelationFilter, Prisma.FirmWhereInput>
   type?: Prisma.XOR<Prisma.EmployeeTypeScalarRelationFilter, Prisma.EmployeeTypeWhereInput>
-  role?: Prisma.XOR<Prisma.UserRoleScalarRelationFilter, Prisma.UserRoleWhereInput>
   auditLogs?: Prisma.AuditLogListRelationFilter
   attachments?: Prisma.AttachmentListRelationFilter
   contractAssignments?: Prisma.ContractEmployeeListRelationFilter
-}, "id" | "email" | "authUserId" | "clerkUserId" | "firmId_oabNumber">
+}, "id" | "firmId_oabNumber">
 
 export type EmployeeOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   firmId?: Prisma.SortOrder
   fullName?: Prisma.SortOrder
-  email?: Prisma.SortOrder
-  authUserId?: Prisma.SortOrderInput | Prisma.SortOrder
-  clerkUserId?: Prisma.SortOrderInput | Prisma.SortOrder
   typeId?: Prisma.SortOrder
-  roleId?: Prisma.SortOrder
   oabNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   remunerationPercentage?: Prisma.SortOrder
   referralPercentage?: Prisma.SortOrder
-  avatarUrl?: Prisma.SortOrderInput | Prisma.SortOrder
-  mustChangePassword?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -428,16 +355,10 @@ export type EmployeeScalarWhereWithAggregatesInput = {
   id?: Prisma.IntWithAggregatesFilter<"Employee"> | number
   firmId?: Prisma.IntWithAggregatesFilter<"Employee"> | number
   fullName?: Prisma.StringWithAggregatesFilter<"Employee"> | string
-  email?: Prisma.StringWithAggregatesFilter<"Employee"> | string
-  authUserId?: Prisma.UuidNullableWithAggregatesFilter<"Employee"> | string | null
-  clerkUserId?: Prisma.StringNullableWithAggregatesFilter<"Employee"> | string | null
   typeId?: Prisma.IntWithAggregatesFilter<"Employee"> | number
-  roleId?: Prisma.IntWithAggregatesFilter<"Employee"> | number
   oabNumber?: Prisma.StringNullableWithAggregatesFilter<"Employee"> | string | null
   remunerationPercentage?: Prisma.DecimalWithAggregatesFilter<"Employee"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalWithAggregatesFilter<"Employee"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  avatarUrl?: Prisma.StringNullableWithAggregatesFilter<"Employee"> | string | null
-  mustChangePassword?: Prisma.BoolWithAggregatesFilter<"Employee"> | boolean
   isActive?: Prisma.BoolWithAggregatesFilter<"Employee"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Employee"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Employee"> | Date | string
@@ -446,21 +367,15 @@ export type EmployeeScalarWhereWithAggregatesInput = {
 
 export type EmployeeCreateInput = {
   fullName: string
-  email: string
-  authUserId?: string | null
-  clerkUserId?: string | null
   oabNumber?: string | null
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
-  avatarUrl?: string | null
-  mustChangePassword?: boolean
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   firm: Prisma.FirmCreateNestedOneWithoutEmployeesInput
   type: Prisma.EmployeeTypeCreateNestedOneWithoutEmployeesInput
-  role: Prisma.UserRoleCreateNestedOneWithoutEmployeesInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutEmployeeInput
   contractAssignments?: Prisma.ContractEmployeeCreateNestedManyWithoutEmployeeInput
@@ -470,16 +385,10 @@ export type EmployeeUncheckedCreateInput = {
   id?: number
   firmId: number
   fullName: string
-  email: string
-  authUserId?: string | null
-  clerkUserId?: string | null
   typeId: number
-  roleId: number
   oabNumber?: string | null
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
-  avatarUrl?: string | null
-  mustChangePassword?: boolean
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -491,21 +400,15 @@ export type EmployeeUncheckedCreateInput = {
 
 export type EmployeeUpdateInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  authUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  clerkUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   firm?: Prisma.FirmUpdateOneRequiredWithoutEmployeesNestedInput
   type?: Prisma.EmployeeTypeUpdateOneRequiredWithoutEmployeesNestedInput
-  role?: Prisma.UserRoleUpdateOneRequiredWithoutEmployeesNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutEmployeeNestedInput
   contractAssignments?: Prisma.ContractEmployeeUpdateManyWithoutEmployeeNestedInput
@@ -515,16 +418,10 @@ export type EmployeeUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   firmId?: Prisma.IntFieldUpdateOperationsInput | number
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  authUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  clerkUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   typeId?: Prisma.IntFieldUpdateOperationsInput | number
-  roleId?: Prisma.IntFieldUpdateOperationsInput | number
   oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -538,16 +435,10 @@ export type EmployeeCreateManyInput = {
   id?: number
   firmId: number
   fullName: string
-  email: string
-  authUserId?: string | null
-  clerkUserId?: string | null
   typeId: number
-  roleId: number
   oabNumber?: string | null
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
-  avatarUrl?: string | null
-  mustChangePassword?: boolean
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -556,14 +447,9 @@ export type EmployeeCreateManyInput = {
 
 export type EmployeeUpdateManyMutationInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  authUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  clerkUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -574,16 +460,10 @@ export type EmployeeUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   firmId?: Prisma.IntFieldUpdateOperationsInput | number
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  authUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  clerkUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   typeId?: Prisma.IntFieldUpdateOperationsInput | number
-  roleId?: Prisma.IntFieldUpdateOperationsInput | number
   oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -609,16 +489,10 @@ export type EmployeeCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   firmId?: Prisma.SortOrder
   fullName?: Prisma.SortOrder
-  email?: Prisma.SortOrder
-  authUserId?: Prisma.SortOrder
-  clerkUserId?: Prisma.SortOrder
   typeId?: Prisma.SortOrder
-  roleId?: Prisma.SortOrder
   oabNumber?: Prisma.SortOrder
   remunerationPercentage?: Prisma.SortOrder
   referralPercentage?: Prisma.SortOrder
-  avatarUrl?: Prisma.SortOrder
-  mustChangePassword?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -629,7 +503,6 @@ export type EmployeeAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   firmId?: Prisma.SortOrder
   typeId?: Prisma.SortOrder
-  roleId?: Prisma.SortOrder
   remunerationPercentage?: Prisma.SortOrder
   referralPercentage?: Prisma.SortOrder
 }
@@ -638,16 +511,10 @@ export type EmployeeMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   firmId?: Prisma.SortOrder
   fullName?: Prisma.SortOrder
-  email?: Prisma.SortOrder
-  authUserId?: Prisma.SortOrder
-  clerkUserId?: Prisma.SortOrder
   typeId?: Prisma.SortOrder
-  roleId?: Prisma.SortOrder
   oabNumber?: Prisma.SortOrder
   remunerationPercentage?: Prisma.SortOrder
   referralPercentage?: Prisma.SortOrder
-  avatarUrl?: Prisma.SortOrder
-  mustChangePassword?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -658,16 +525,10 @@ export type EmployeeMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   firmId?: Prisma.SortOrder
   fullName?: Prisma.SortOrder
-  email?: Prisma.SortOrder
-  authUserId?: Prisma.SortOrder
-  clerkUserId?: Prisma.SortOrder
   typeId?: Prisma.SortOrder
-  roleId?: Prisma.SortOrder
   oabNumber?: Prisma.SortOrder
   remunerationPercentage?: Prisma.SortOrder
   referralPercentage?: Prisma.SortOrder
-  avatarUrl?: Prisma.SortOrder
-  mustChangePassword?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -678,7 +539,6 @@ export type EmployeeSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   firmId?: Prisma.SortOrder
   typeId?: Prisma.SortOrder
-  roleId?: Prisma.SortOrder
   remunerationPercentage?: Prisma.SortOrder
   referralPercentage?: Prisma.SortOrder
 }
@@ -777,46 +637,8 @@ export type EmployeeUncheckedUpdateManyWithoutTypeNestedInput = {
   deleteMany?: Prisma.EmployeeScalarWhereInput | Prisma.EmployeeScalarWhereInput[]
 }
 
-export type EmployeeCreateNestedManyWithoutRoleInput = {
-  create?: Prisma.XOR<Prisma.EmployeeCreateWithoutRoleInput, Prisma.EmployeeUncheckedCreateWithoutRoleInput> | Prisma.EmployeeCreateWithoutRoleInput[] | Prisma.EmployeeUncheckedCreateWithoutRoleInput[]
-  connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutRoleInput | Prisma.EmployeeCreateOrConnectWithoutRoleInput[]
-  createMany?: Prisma.EmployeeCreateManyRoleInputEnvelope
-  connect?: Prisma.EmployeeWhereUniqueInput | Prisma.EmployeeWhereUniqueInput[]
-}
-
-export type EmployeeUncheckedCreateNestedManyWithoutRoleInput = {
-  create?: Prisma.XOR<Prisma.EmployeeCreateWithoutRoleInput, Prisma.EmployeeUncheckedCreateWithoutRoleInput> | Prisma.EmployeeCreateWithoutRoleInput[] | Prisma.EmployeeUncheckedCreateWithoutRoleInput[]
-  connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutRoleInput | Prisma.EmployeeCreateOrConnectWithoutRoleInput[]
-  createMany?: Prisma.EmployeeCreateManyRoleInputEnvelope
-  connect?: Prisma.EmployeeWhereUniqueInput | Prisma.EmployeeWhereUniqueInput[]
-}
-
-export type EmployeeUpdateManyWithoutRoleNestedInput = {
-  create?: Prisma.XOR<Prisma.EmployeeCreateWithoutRoleInput, Prisma.EmployeeUncheckedCreateWithoutRoleInput> | Prisma.EmployeeCreateWithoutRoleInput[] | Prisma.EmployeeUncheckedCreateWithoutRoleInput[]
-  connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutRoleInput | Prisma.EmployeeCreateOrConnectWithoutRoleInput[]
-  upsert?: Prisma.EmployeeUpsertWithWhereUniqueWithoutRoleInput | Prisma.EmployeeUpsertWithWhereUniqueWithoutRoleInput[]
-  createMany?: Prisma.EmployeeCreateManyRoleInputEnvelope
-  set?: Prisma.EmployeeWhereUniqueInput | Prisma.EmployeeWhereUniqueInput[]
-  disconnect?: Prisma.EmployeeWhereUniqueInput | Prisma.EmployeeWhereUniqueInput[]
-  delete?: Prisma.EmployeeWhereUniqueInput | Prisma.EmployeeWhereUniqueInput[]
-  connect?: Prisma.EmployeeWhereUniqueInput | Prisma.EmployeeWhereUniqueInput[]
-  update?: Prisma.EmployeeUpdateWithWhereUniqueWithoutRoleInput | Prisma.EmployeeUpdateWithWhereUniqueWithoutRoleInput[]
-  updateMany?: Prisma.EmployeeUpdateManyWithWhereWithoutRoleInput | Prisma.EmployeeUpdateManyWithWhereWithoutRoleInput[]
-  deleteMany?: Prisma.EmployeeScalarWhereInput | Prisma.EmployeeScalarWhereInput[]
-}
-
-export type EmployeeUncheckedUpdateManyWithoutRoleNestedInput = {
-  create?: Prisma.XOR<Prisma.EmployeeCreateWithoutRoleInput, Prisma.EmployeeUncheckedCreateWithoutRoleInput> | Prisma.EmployeeCreateWithoutRoleInput[] | Prisma.EmployeeUncheckedCreateWithoutRoleInput[]
-  connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutRoleInput | Prisma.EmployeeCreateOrConnectWithoutRoleInput[]
-  upsert?: Prisma.EmployeeUpsertWithWhereUniqueWithoutRoleInput | Prisma.EmployeeUpsertWithWhereUniqueWithoutRoleInput[]
-  createMany?: Prisma.EmployeeCreateManyRoleInputEnvelope
-  set?: Prisma.EmployeeWhereUniqueInput | Prisma.EmployeeWhereUniqueInput[]
-  disconnect?: Prisma.EmployeeWhereUniqueInput | Prisma.EmployeeWhereUniqueInput[]
-  delete?: Prisma.EmployeeWhereUniqueInput | Prisma.EmployeeWhereUniqueInput[]
-  connect?: Prisma.EmployeeWhereUniqueInput | Prisma.EmployeeWhereUniqueInput[]
-  update?: Prisma.EmployeeUpdateWithWhereUniqueWithoutRoleInput | Prisma.EmployeeUpdateWithWhereUniqueWithoutRoleInput[]
-  updateMany?: Prisma.EmployeeUpdateManyWithWhereWithoutRoleInput | Prisma.EmployeeUpdateManyWithWhereWithoutRoleInput[]
-  deleteMany?: Prisma.EmployeeScalarWhereInput | Prisma.EmployeeScalarWhereInput[]
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
 }
 
 export type DecimalFieldUpdateOperationsInput = {
@@ -879,20 +701,14 @@ export type EmployeeUpdateOneWithoutAttachmentsNestedInput = {
 
 export type EmployeeCreateWithoutFirmInput = {
   fullName: string
-  email: string
-  authUserId?: string | null
-  clerkUserId?: string | null
   oabNumber?: string | null
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
-  avatarUrl?: string | null
-  mustChangePassword?: boolean
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   type: Prisma.EmployeeTypeCreateNestedOneWithoutEmployeesInput
-  role: Prisma.UserRoleCreateNestedOneWithoutEmployeesInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutEmployeeInput
   contractAssignments?: Prisma.ContractEmployeeCreateNestedManyWithoutEmployeeInput
@@ -901,16 +717,10 @@ export type EmployeeCreateWithoutFirmInput = {
 export type EmployeeUncheckedCreateWithoutFirmInput = {
   id?: number
   fullName: string
-  email: string
-  authUserId?: string | null
-  clerkUserId?: string | null
   typeId: number
-  roleId: number
   oabNumber?: string | null
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
-  avatarUrl?: string | null
-  mustChangePassword?: boolean
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -953,16 +763,10 @@ export type EmployeeScalarWhereInput = {
   id?: Prisma.IntFilter<"Employee"> | number
   firmId?: Prisma.IntFilter<"Employee"> | number
   fullName?: Prisma.StringFilter<"Employee"> | string
-  email?: Prisma.StringFilter<"Employee"> | string
-  authUserId?: Prisma.UuidNullableFilter<"Employee"> | string | null
-  clerkUserId?: Prisma.StringNullableFilter<"Employee"> | string | null
   typeId?: Prisma.IntFilter<"Employee"> | number
-  roleId?: Prisma.IntFilter<"Employee"> | number
   oabNumber?: Prisma.StringNullableFilter<"Employee"> | string | null
   remunerationPercentage?: Prisma.DecimalFilter<"Employee"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFilter<"Employee"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  avatarUrl?: Prisma.StringNullableFilter<"Employee"> | string | null
-  mustChangePassword?: Prisma.BoolFilter<"Employee"> | boolean
   isActive?: Prisma.BoolFilter<"Employee"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Employee"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Employee"> | Date | string
@@ -971,20 +775,14 @@ export type EmployeeScalarWhereInput = {
 
 export type EmployeeCreateWithoutTypeInput = {
   fullName: string
-  email: string
-  authUserId?: string | null
-  clerkUserId?: string | null
   oabNumber?: string | null
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
-  avatarUrl?: string | null
-  mustChangePassword?: boolean
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   firm: Prisma.FirmCreateNestedOneWithoutEmployeesInput
-  role: Prisma.UserRoleCreateNestedOneWithoutEmployeesInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutEmployeeInput
   contractAssignments?: Prisma.ContractEmployeeCreateNestedManyWithoutEmployeeInput
@@ -994,15 +792,9 @@ export type EmployeeUncheckedCreateWithoutTypeInput = {
   id?: number
   firmId: number
   fullName: string
-  email: string
-  authUserId?: string | null
-  clerkUserId?: string | null
-  roleId: number
   oabNumber?: string | null
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
-  avatarUrl?: string | null
-  mustChangePassword?: boolean
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1038,92 +830,17 @@ export type EmployeeUpdateManyWithWhereWithoutTypeInput = {
   data: Prisma.XOR<Prisma.EmployeeUpdateManyMutationInput, Prisma.EmployeeUncheckedUpdateManyWithoutTypeInput>
 }
 
-export type EmployeeCreateWithoutRoleInput = {
-  fullName: string
-  email: string
-  authUserId?: string | null
-  clerkUserId?: string | null
-  oabNumber?: string | null
-  remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
-  referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
-  avatarUrl?: string | null
-  mustChangePassword?: boolean
-  isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-  firm: Prisma.FirmCreateNestedOneWithoutEmployeesInput
-  type: Prisma.EmployeeTypeCreateNestedOneWithoutEmployeesInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
-  attachments?: Prisma.AttachmentCreateNestedManyWithoutEmployeeInput
-  contractAssignments?: Prisma.ContractEmployeeCreateNestedManyWithoutEmployeeInput
-}
-
-export type EmployeeUncheckedCreateWithoutRoleInput = {
-  id?: number
-  firmId: number
-  fullName: string
-  email: string
-  authUserId?: string | null
-  clerkUserId?: string | null
-  typeId: number
-  oabNumber?: string | null
-  remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
-  referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
-  avatarUrl?: string | null
-  mustChangePassword?: boolean
-  isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
-  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutEmployeeInput
-  contractAssignments?: Prisma.ContractEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
-}
-
-export type EmployeeCreateOrConnectWithoutRoleInput = {
-  where: Prisma.EmployeeWhereUniqueInput
-  create: Prisma.XOR<Prisma.EmployeeCreateWithoutRoleInput, Prisma.EmployeeUncheckedCreateWithoutRoleInput>
-}
-
-export type EmployeeCreateManyRoleInputEnvelope = {
-  data: Prisma.EmployeeCreateManyRoleInput | Prisma.EmployeeCreateManyRoleInput[]
-  skipDuplicates?: boolean
-}
-
-export type EmployeeUpsertWithWhereUniqueWithoutRoleInput = {
-  where: Prisma.EmployeeWhereUniqueInput
-  update: Prisma.XOR<Prisma.EmployeeUpdateWithoutRoleInput, Prisma.EmployeeUncheckedUpdateWithoutRoleInput>
-  create: Prisma.XOR<Prisma.EmployeeCreateWithoutRoleInput, Prisma.EmployeeUncheckedCreateWithoutRoleInput>
-}
-
-export type EmployeeUpdateWithWhereUniqueWithoutRoleInput = {
-  where: Prisma.EmployeeWhereUniqueInput
-  data: Prisma.XOR<Prisma.EmployeeUpdateWithoutRoleInput, Prisma.EmployeeUncheckedUpdateWithoutRoleInput>
-}
-
-export type EmployeeUpdateManyWithWhereWithoutRoleInput = {
-  where: Prisma.EmployeeScalarWhereInput
-  data: Prisma.XOR<Prisma.EmployeeUpdateManyMutationInput, Prisma.EmployeeUncheckedUpdateManyWithoutRoleInput>
-}
-
 export type EmployeeCreateWithoutAuditLogsInput = {
   fullName: string
-  email: string
-  authUserId?: string | null
-  clerkUserId?: string | null
   oabNumber?: string | null
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
-  avatarUrl?: string | null
-  mustChangePassword?: boolean
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   firm: Prisma.FirmCreateNestedOneWithoutEmployeesInput
   type: Prisma.EmployeeTypeCreateNestedOneWithoutEmployeesInput
-  role: Prisma.UserRoleCreateNestedOneWithoutEmployeesInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutEmployeeInput
   contractAssignments?: Prisma.ContractEmployeeCreateNestedManyWithoutEmployeeInput
 }
@@ -1132,16 +849,10 @@ export type EmployeeUncheckedCreateWithoutAuditLogsInput = {
   id?: number
   firmId: number
   fullName: string
-  email: string
-  authUserId?: string | null
-  clerkUserId?: string | null
   typeId: number
-  roleId: number
   oabNumber?: string | null
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
-  avatarUrl?: string | null
-  mustChangePassword?: boolean
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1168,21 +879,15 @@ export type EmployeeUpdateToOneWithWhereWithoutAuditLogsInput = {
 
 export type EmployeeUpdateWithoutAuditLogsInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  authUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  clerkUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   firm?: Prisma.FirmUpdateOneRequiredWithoutEmployeesNestedInput
   type?: Prisma.EmployeeTypeUpdateOneRequiredWithoutEmployeesNestedInput
-  role?: Prisma.UserRoleUpdateOneRequiredWithoutEmployeesNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutEmployeeNestedInput
   contractAssignments?: Prisma.ContractEmployeeUpdateManyWithoutEmployeeNestedInput
 }
@@ -1191,16 +896,10 @@ export type EmployeeUncheckedUpdateWithoutAuditLogsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   firmId?: Prisma.IntFieldUpdateOperationsInput | number
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  authUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  clerkUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   typeId?: Prisma.IntFieldUpdateOperationsInput | number
-  roleId?: Prisma.IntFieldUpdateOperationsInput | number
   oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1211,21 +910,15 @@ export type EmployeeUncheckedUpdateWithoutAuditLogsInput = {
 
 export type EmployeeCreateWithoutContractAssignmentsInput = {
   fullName: string
-  email: string
-  authUserId?: string | null
-  clerkUserId?: string | null
   oabNumber?: string | null
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
-  avatarUrl?: string | null
-  mustChangePassword?: boolean
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   firm: Prisma.FirmCreateNestedOneWithoutEmployeesInput
   type: Prisma.EmployeeTypeCreateNestedOneWithoutEmployeesInput
-  role: Prisma.UserRoleCreateNestedOneWithoutEmployeesInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutEmployeeInput
 }
@@ -1234,16 +927,10 @@ export type EmployeeUncheckedCreateWithoutContractAssignmentsInput = {
   id?: number
   firmId: number
   fullName: string
-  email: string
-  authUserId?: string | null
-  clerkUserId?: string | null
   typeId: number
-  roleId: number
   oabNumber?: string | null
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
-  avatarUrl?: string | null
-  mustChangePassword?: boolean
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1270,21 +957,15 @@ export type EmployeeUpdateToOneWithWhereWithoutContractAssignmentsInput = {
 
 export type EmployeeUpdateWithoutContractAssignmentsInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  authUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  clerkUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   firm?: Prisma.FirmUpdateOneRequiredWithoutEmployeesNestedInput
   type?: Prisma.EmployeeTypeUpdateOneRequiredWithoutEmployeesNestedInput
-  role?: Prisma.UserRoleUpdateOneRequiredWithoutEmployeesNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutEmployeeNestedInput
 }
@@ -1293,16 +974,10 @@ export type EmployeeUncheckedUpdateWithoutContractAssignmentsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   firmId?: Prisma.IntFieldUpdateOperationsInput | number
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  authUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  clerkUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   typeId?: Prisma.IntFieldUpdateOperationsInput | number
-  roleId?: Prisma.IntFieldUpdateOperationsInput | number
   oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1313,21 +988,15 @@ export type EmployeeUncheckedUpdateWithoutContractAssignmentsInput = {
 
 export type EmployeeCreateWithoutAttachmentsInput = {
   fullName: string
-  email: string
-  authUserId?: string | null
-  clerkUserId?: string | null
   oabNumber?: string | null
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
-  avatarUrl?: string | null
-  mustChangePassword?: boolean
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   firm: Prisma.FirmCreateNestedOneWithoutEmployeesInput
   type: Prisma.EmployeeTypeCreateNestedOneWithoutEmployeesInput
-  role: Prisma.UserRoleCreateNestedOneWithoutEmployeesInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
   contractAssignments?: Prisma.ContractEmployeeCreateNestedManyWithoutEmployeeInput
 }
@@ -1336,16 +1005,10 @@ export type EmployeeUncheckedCreateWithoutAttachmentsInput = {
   id?: number
   firmId: number
   fullName: string
-  email: string
-  authUserId?: string | null
-  clerkUserId?: string | null
   typeId: number
-  roleId: number
   oabNumber?: string | null
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
-  avatarUrl?: string | null
-  mustChangePassword?: boolean
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1372,21 +1035,15 @@ export type EmployeeUpdateToOneWithWhereWithoutAttachmentsInput = {
 
 export type EmployeeUpdateWithoutAttachmentsInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  authUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  clerkUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   firm?: Prisma.FirmUpdateOneRequiredWithoutEmployeesNestedInput
   type?: Prisma.EmployeeTypeUpdateOneRequiredWithoutEmployeesNestedInput
-  role?: Prisma.UserRoleUpdateOneRequiredWithoutEmployeesNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
   contractAssignments?: Prisma.ContractEmployeeUpdateManyWithoutEmployeeNestedInput
 }
@@ -1395,16 +1052,10 @@ export type EmployeeUncheckedUpdateWithoutAttachmentsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   firmId?: Prisma.IntFieldUpdateOperationsInput | number
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  authUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  clerkUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   typeId?: Prisma.IntFieldUpdateOperationsInput | number
-  roleId?: Prisma.IntFieldUpdateOperationsInput | number
   oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1416,16 +1067,10 @@ export type EmployeeUncheckedUpdateWithoutAttachmentsInput = {
 export type EmployeeCreateManyFirmInput = {
   id?: number
   fullName: string
-  email: string
-  authUserId?: string | null
-  clerkUserId?: string | null
   typeId: number
-  roleId: number
   oabNumber?: string | null
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
-  avatarUrl?: string | null
-  mustChangePassword?: boolean
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1434,20 +1079,14 @@ export type EmployeeCreateManyFirmInput = {
 
 export type EmployeeUpdateWithoutFirmInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  authUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  clerkUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   type?: Prisma.EmployeeTypeUpdateOneRequiredWithoutEmployeesNestedInput
-  role?: Prisma.UserRoleUpdateOneRequiredWithoutEmployeesNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutEmployeeNestedInput
   contractAssignments?: Prisma.ContractEmployeeUpdateManyWithoutEmployeeNestedInput
@@ -1456,16 +1095,10 @@ export type EmployeeUpdateWithoutFirmInput = {
 export type EmployeeUncheckedUpdateWithoutFirmInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  authUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  clerkUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   typeId?: Prisma.IntFieldUpdateOperationsInput | number
-  roleId?: Prisma.IntFieldUpdateOperationsInput | number
   oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1478,16 +1111,10 @@ export type EmployeeUncheckedUpdateWithoutFirmInput = {
 export type EmployeeUncheckedUpdateManyWithoutFirmInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  authUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  clerkUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   typeId?: Prisma.IntFieldUpdateOperationsInput | number
-  roleId?: Prisma.IntFieldUpdateOperationsInput | number
   oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1498,15 +1125,9 @@ export type EmployeeCreateManyTypeInput = {
   id?: number
   firmId: number
   fullName: string
-  email: string
-  authUserId?: string | null
-  clerkUserId?: string | null
-  roleId: number
   oabNumber?: string | null
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
-  avatarUrl?: string | null
-  mustChangePassword?: boolean
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1515,20 +1136,14 @@ export type EmployeeCreateManyTypeInput = {
 
 export type EmployeeUpdateWithoutTypeInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  authUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  clerkUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   firm?: Prisma.FirmUpdateOneRequiredWithoutEmployeesNestedInput
-  role?: Prisma.UserRoleUpdateOneRequiredWithoutEmployeesNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutEmployeeNestedInput
   contractAssignments?: Prisma.ContractEmployeeUpdateManyWithoutEmployeeNestedInput
@@ -1538,15 +1153,9 @@ export type EmployeeUncheckedUpdateWithoutTypeInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   firmId?: Prisma.IntFieldUpdateOperationsInput | number
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  authUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  clerkUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  roleId?: Prisma.IntFieldUpdateOperationsInput | number
   oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1560,96 +1169,9 @@ export type EmployeeUncheckedUpdateManyWithoutTypeInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   firmId?: Prisma.IntFieldUpdateOperationsInput | number
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  authUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  clerkUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  roleId?: Prisma.IntFieldUpdateOperationsInput | number
   oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-}
-
-export type EmployeeCreateManyRoleInput = {
-  id?: number
-  firmId: number
-  fullName: string
-  email: string
-  authUserId?: string | null
-  clerkUserId?: string | null
-  typeId: number
-  oabNumber?: string | null
-  remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
-  referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
-  avatarUrl?: string | null
-  mustChangePassword?: boolean
-  isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-}
-
-export type EmployeeUpdateWithoutRoleInput = {
-  fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  authUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  clerkUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  firm?: Prisma.FirmUpdateOneRequiredWithoutEmployeesNestedInput
-  type?: Prisma.EmployeeTypeUpdateOneRequiredWithoutEmployeesNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
-  attachments?: Prisma.AttachmentUpdateManyWithoutEmployeeNestedInput
-  contractAssignments?: Prisma.ContractEmployeeUpdateManyWithoutEmployeeNestedInput
-}
-
-export type EmployeeUncheckedUpdateWithoutRoleInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  firmId?: Prisma.IntFieldUpdateOperationsInput | number
-  fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  authUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  clerkUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  typeId?: Prisma.IntFieldUpdateOperationsInput | number
-  oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
-  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutEmployeeNestedInput
-  contractAssignments?: Prisma.ContractEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
-}
-
-export type EmployeeUncheckedUpdateManyWithoutRoleInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  firmId?: Prisma.IntFieldUpdateOperationsInput | number
-  fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  authUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  clerkUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  typeId?: Prisma.IntFieldUpdateOperationsInput | number
-  oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1709,23 +1231,16 @@ export type EmployeeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   id?: boolean
   firmId?: boolean
   fullName?: boolean
-  email?: boolean
-  authUserId?: boolean
-  clerkUserId?: boolean
   typeId?: boolean
-  roleId?: boolean
   oabNumber?: boolean
   remunerationPercentage?: boolean
   referralPercentage?: boolean
-  avatarUrl?: boolean
-  mustChangePassword?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
   type?: boolean | Prisma.EmployeeTypeDefaultArgs<ExtArgs>
-  role?: boolean | Prisma.UserRoleDefaultArgs<ExtArgs>
   auditLogs?: boolean | Prisma.Employee$auditLogsArgs<ExtArgs>
   attachments?: boolean | Prisma.Employee$attachmentsArgs<ExtArgs>
   contractAssignments?: boolean | Prisma.Employee$contractAssignmentsArgs<ExtArgs>
@@ -1736,73 +1251,52 @@ export type EmployeeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   id?: boolean
   firmId?: boolean
   fullName?: boolean
-  email?: boolean
-  authUserId?: boolean
-  clerkUserId?: boolean
   typeId?: boolean
-  roleId?: boolean
   oabNumber?: boolean
   remunerationPercentage?: boolean
   referralPercentage?: boolean
-  avatarUrl?: boolean
-  mustChangePassword?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
   type?: boolean | Prisma.EmployeeTypeDefaultArgs<ExtArgs>
-  role?: boolean | Prisma.UserRoleDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["employee"]>
 
 export type EmployeeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   firmId?: boolean
   fullName?: boolean
-  email?: boolean
-  authUserId?: boolean
-  clerkUserId?: boolean
   typeId?: boolean
-  roleId?: boolean
   oabNumber?: boolean
   remunerationPercentage?: boolean
   referralPercentage?: boolean
-  avatarUrl?: boolean
-  mustChangePassword?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
   type?: boolean | Prisma.EmployeeTypeDefaultArgs<ExtArgs>
-  role?: boolean | Prisma.UserRoleDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["employee"]>
 
 export type EmployeeSelectScalar = {
   id?: boolean
   firmId?: boolean
   fullName?: boolean
-  email?: boolean
-  authUserId?: boolean
-  clerkUserId?: boolean
   typeId?: boolean
-  roleId?: boolean
   oabNumber?: boolean
   remunerationPercentage?: boolean
   referralPercentage?: boolean
-  avatarUrl?: boolean
-  mustChangePassword?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
 }
 
-export type EmployeeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "firmId" | "fullName" | "email" | "authUserId" | "clerkUserId" | "typeId" | "roleId" | "oabNumber" | "remunerationPercentage" | "referralPercentage" | "avatarUrl" | "mustChangePassword" | "isActive" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["employee"]>
+export type EmployeeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "firmId" | "fullName" | "typeId" | "oabNumber" | "remunerationPercentage" | "referralPercentage" | "isActive" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["employee"]>
 export type EmployeeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
   type?: boolean | Prisma.EmployeeTypeDefaultArgs<ExtArgs>
-  role?: boolean | Prisma.UserRoleDefaultArgs<ExtArgs>
   auditLogs?: boolean | Prisma.Employee$auditLogsArgs<ExtArgs>
   attachments?: boolean | Prisma.Employee$attachmentsArgs<ExtArgs>
   contractAssignments?: boolean | Prisma.Employee$contractAssignmentsArgs<ExtArgs>
@@ -1811,12 +1305,10 @@ export type EmployeeInclude<ExtArgs extends runtime.Types.Extensions.InternalArg
 export type EmployeeIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
   type?: boolean | Prisma.EmployeeTypeDefaultArgs<ExtArgs>
-  role?: boolean | Prisma.UserRoleDefaultArgs<ExtArgs>
 }
 export type EmployeeIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
   type?: boolean | Prisma.EmployeeTypeDefaultArgs<ExtArgs>
-  role?: boolean | Prisma.UserRoleDefaultArgs<ExtArgs>
 }
 
 export type $EmployeePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1824,7 +1316,6 @@ export type $EmployeePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   objects: {
     firm: Prisma.$FirmPayload<ExtArgs>
     type: Prisma.$EmployeeTypePayload<ExtArgs>
-    role: Prisma.$UserRolePayload<ExtArgs>
     auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
     attachments: Prisma.$AttachmentPayload<ExtArgs>[]
     contractAssignments: Prisma.$ContractEmployeePayload<ExtArgs>[]
@@ -1833,16 +1324,10 @@ export type $EmployeePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     id: number
     firmId: number
     fullName: string
-    email: string
-    authUserId: string | null
-    clerkUserId: string | null
     typeId: number
-    roleId: number
     oabNumber: string | null
     remunerationPercentage: runtime.Decimal
     referralPercentage: runtime.Decimal
-    avatarUrl: string | null
-    mustChangePassword: boolean
     isActive: boolean
     createdAt: Date
     updatedAt: Date
@@ -2243,7 +1728,6 @@ export interface Prisma__EmployeeClient<T, Null = never, ExtArgs extends runtime
   readonly [Symbol.toStringTag]: "PrismaPromise"
   firm<T extends Prisma.FirmDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FirmDefaultArgs<ExtArgs>>): Prisma.Prisma__FirmClient<runtime.Types.Result.GetResult<Prisma.$FirmPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   type<T extends Prisma.EmployeeTypeDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmployeeTypeDefaultArgs<ExtArgs>>): Prisma.Prisma__EmployeeTypeClient<runtime.Types.Result.GetResult<Prisma.$EmployeeTypePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  role<T extends Prisma.UserRoleDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserRoleDefaultArgs<ExtArgs>>): Prisma.Prisma__UserRoleClient<runtime.Types.Result.GetResult<Prisma.$UserRolePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   auditLogs<T extends Prisma.Employee$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   attachments<T extends Prisma.Employee$attachmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   contractAssignments<T extends Prisma.Employee$contractAssignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$contractAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ContractEmployeePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2279,16 +1763,10 @@ export interface EmployeeFieldRefs {
   readonly id: Prisma.FieldRef<"Employee", 'Int'>
   readonly firmId: Prisma.FieldRef<"Employee", 'Int'>
   readonly fullName: Prisma.FieldRef<"Employee", 'String'>
-  readonly email: Prisma.FieldRef<"Employee", 'String'>
-  readonly authUserId: Prisma.FieldRef<"Employee", 'String'>
-  readonly clerkUserId: Prisma.FieldRef<"Employee", 'String'>
   readonly typeId: Prisma.FieldRef<"Employee", 'Int'>
-  readonly roleId: Prisma.FieldRef<"Employee", 'Int'>
   readonly oabNumber: Prisma.FieldRef<"Employee", 'String'>
   readonly remunerationPercentage: Prisma.FieldRef<"Employee", 'Decimal'>
   readonly referralPercentage: Prisma.FieldRef<"Employee", 'Decimal'>
-  readonly avatarUrl: Prisma.FieldRef<"Employee", 'String'>
-  readonly mustChangePassword: Prisma.FieldRef<"Employee", 'Boolean'>
   readonly isActive: Prisma.FieldRef<"Employee", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Employee", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Employee", 'DateTime'>

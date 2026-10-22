@@ -36,12 +36,10 @@ const clientCreateInput = {
 
 const employeeCreateInput = {
 	fullName: "João Advogado",
-	email: "joao@example.com",
 	oabNumber: "SP123456",
 	remunerationPercent: 0.3,
 	referrerPercent: 0.1,
 	type: "LAWYER",
-	role: "ADMIN",
 	isActive: true,
 };
 

@@ -100,7 +100,6 @@ function createEmployee(overrides: Record<string, unknown> = {}) {
 		firmId: 1,
 		roleId: 1,
 		typeId: 1,
-		avatarUrl: null,
 		isActive: true,
 		deletedAt: null,
 		createdAt: new Date("2026-01-01T00:00:00.000Z"),

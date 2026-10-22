@@ -1,9 +1,6 @@
 import { mutationOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
-import {
-	hasExactErrorMessage,
-	isPrismaUniqueConstraintError,
-} from "@/shared/lib/error-mapping";
+import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
 import { assertCan } from "@/shared/session";
 import { authMiddleware } from "@/shared/session/middleware";
 import {
@@ -15,14 +12,10 @@ import { EMPLOYEE_ERRORS } from "../constants/errors";
 import {
 	createEmployee,
 	deleteEmployee,
-	grantEmployeeAccess,
 	restoreEmployee,
-	restoreEmployeeAccess,
-	revokeEmployeeAccess,
 	updateEmployee,
 } from "../data/mutations";
 import {
-	employeeAccessInputSchema,
 	employeeCreateInputSchema,
 	employeeIdInputSchema,
 	employeeUpdateInputSchema,
@@ -39,7 +32,7 @@ const createEmployeeFn = createServerFn({ method: "POST" })
 
 			return await createEmployee({
 				actor: {
-					id: session.employee.id,
+					id: session.employee.id ?? undefined,
 					name: session.user.fullName,
 					email: session.user.email,
 				},
@@ -48,9 +41,6 @@ const createEmployeeFn = createServerFn({ method: "POST" })
 			});
 		} catch (error) {
 			console.error("[createEmployee]", error);
-			if (isPrismaUniqueConstraintError(error, ["email"])) {
-				throw new Error(EMPLOYEE_ERRORS.EMAIL_ALREADY_IN_USE);
-			}
 
 			if (hasExactErrorMessage(error, EMPLOYEE_ERRORS)) {
 				throw error;
@@ -71,7 +61,7 @@ const updateEmployeeFn = createServerFn({ method: "POST" })
 
 			return await updateEmployee({
 				actor: {
-					id: session.employee.id,
+					id: session.employee.id ?? undefined,
 					name: session.user.fullName,
 					email: session.user.email,
 				},
@@ -80,9 +70,6 @@ const updateEmployeeFn = createServerFn({ method: "POST" })
 			});
 		} catch (error) {
 			console.error("[updateEmployee]", error);
-			if (isPrismaUniqueConstraintError(error, ["email"])) {
-				throw new Error(EMPLOYEE_ERRORS.EMAIL_ALREADY_IN_USE);
-			}
 
 			if (hasExactErrorMessage(error, EMPLOYEE_ERRORS)) {
 				throw error;
@@ -103,7 +90,7 @@ const deleteEmployeeFn = createServerFn({ method: "POST" })
 
 			return await deleteEmployee({
 				actor: {
-					id: session.employee.id,
+					id: session.employee.id ?? undefined,
 					name: session.user.fullName,
 					email: session.user.email,
 				},
@@ -131,7 +118,7 @@ const restoreEmployeeFn = createServerFn({ method: "POST" })
 
 			return await restoreEmployee({
 				actor: {
-					id: session.employee.id,
+					id: session.employee.id ?? undefined,
 					name: session.user.fullName,
 					email: session.user.email,
 				},
@@ -148,92 +135,6 @@ const restoreEmployeeFn = createServerFn({ method: "POST" })
 		}
 	});
 
-const grantEmployeeAccessFn = createServerFn({ method: "POST" })
-	.middleware([authMiddleware])
-	.validator(employeeAccessInputSchema)
-	.handler(async ({ data }): Promise<MutationReturnType> => {
-		try {
-			const session = await getRequiredServerLoggedUserSession();
-			assertCan(session, "org:accounts:manage");
-			const { firmId } = await getServerScope("employee");
-
-			return await grantEmployeeAccess({
-				actor: {
-					id: session.employee.id,
-					name: session.user.fullName,
-					email: session.user.email,
-				},
-				firmId,
-				id: data.id,
-				role: data.role,
-			});
-		} catch (error) {
-			console.error("[grantEmployeeAccess]", error);
-			if (hasExactErrorMessage(error, EMPLOYEE_ERRORS)) {
-				throw error;
-			}
-
-			throw new Error(EMPLOYEE_ERRORS.GRANT_ACCESS_FAILED);
-		}
-	});
-
-const revokeEmployeeAccessFn = createServerFn({ method: "POST" })
-	.middleware([authMiddleware])
-	.validator(employeeIdInputSchema)
-	.handler(async ({ data }): Promise<MutationReturnType> => {
-		try {
-			const session = await getRequiredServerLoggedUserSession();
-			assertCan(session, "org:accounts:manage");
-			const { firmId } = await getServerScope("employee");
-
-			return await revokeEmployeeAccess({
-				actor: {
-					id: session.employee.id,
-					name: session.user.fullName,
-					email: session.user.email,
-				},
-				firmId,
-				id: data.id,
-			});
-		} catch (error) {
-			console.error("[revokeEmployeeAccess]", error);
-			if (hasExactErrorMessage(error, EMPLOYEE_ERRORS)) {
-				throw error;
-			}
-
-			throw new Error(EMPLOYEE_ERRORS.REVOKE_ACCESS_FAILED);
-		}
-	});
-
-const restoreEmployeeAccessFn = createServerFn({ method: "POST" })
-	.middleware([authMiddleware])
-	.validator(employeeAccessInputSchema)
-	.handler(async ({ data }): Promise<MutationReturnType> => {
-		try {
-			const session = await getRequiredServerLoggedUserSession();
-			assertCan(session, "org:accounts:manage");
-			const { firmId } = await getServerScope("employee");
-
-			return await restoreEmployeeAccess({
-				actor: {
-					id: session.employee.id,
-					name: session.user.fullName,
-					email: session.user.email,
-				},
-				firmId,
-				id: data.id,
-				role: data.role,
-			});
-		} catch (error) {
-			console.error("[restoreEmployeeAccess]", error);
-			if (hasExactErrorMessage(error, EMPLOYEE_ERRORS)) {
-				throw error;
-			}
-
-			throw new Error(EMPLOYEE_ERRORS.RESTORE_ACCESS_FAILED);
-		}
-	});
-
 export const createEmployeeMutationOptions = () =>
 	mutationOptions({ mutationFn: createEmployeeFn });
 
@@ -245,12 +146,3 @@ export const deleteEmployeeMutationOptions = () =>
 
 export const restoreEmployeeMutationOptions = () =>
 	mutationOptions({ mutationFn: restoreEmployeeFn });
-
-export const grantEmployeeAccessMutationOptions = () =>
-	mutationOptions({ mutationFn: grantEmployeeAccessFn });
-
-export const revokeEmployeeAccessMutationOptions = () =>
-	mutationOptions({ mutationFn: revokeEmployeeAccessFn });
-
-export const restoreEmployeeAccessMutationOptions = () =>
-	mutationOptions({ mutationFn: restoreEmployeeAccessFn });

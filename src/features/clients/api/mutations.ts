@@ -30,7 +30,7 @@ const createClientFn = createServerFn({ method: "POST" })
 
 			return await createClient({
 				actor: {
-					id: context.session.employee.id,
+					id: context.session.employee.id ?? undefined,
 					name: context.session.user.fullName,
 					email: context.session.user.email,
 				},
@@ -61,7 +61,7 @@ const updateClientFn = createServerFn({ method: "POST" })
 
 			return await updateClient({
 				actor: {
-					id: context.session.employee.id,
+					id: context.session.employee.id ?? undefined,
 					name: context.session.user.fullName,
 					email: context.session.user.email,
 				},
@@ -92,7 +92,7 @@ const deleteClientFn = createServerFn({ method: "POST" })
 
 			return await deleteClient({
 				actor: {
-					id: context.session.employee.id,
+					id: context.session.employee.id ?? undefined,
 					name: context.session.user.fullName,
 					email: context.session.user.email,
 				},
@@ -119,7 +119,7 @@ const restoreClientFn = createServerFn({ method: "POST" })
 
 			return await restoreClient({
 				actor: {
-					id: context.session.employee.id,
+					id: context.session.employee.id ?? undefined,
 					name: context.session.user.fullName,
 					email: context.session.user.email,
 				},

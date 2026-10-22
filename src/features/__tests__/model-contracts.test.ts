@@ -36,22 +36,13 @@ const clientDetail = {
 const employeeDetail = {
 	id: 2,
 	fullName: "João Advogado",
-	email: "joao@example.com",
 	oabNumber: "SP123456",
 	remunerationPercent: 0.3,
 	referrerPercent: 0.1,
 	typeId: 20,
-	roleId: 30,
 	type: "Advogado",
 	typeValue: "LAWYER",
-	role: "Administrador",
-	roleValue: "ADMIN",
 	contractCount: 4,
-	hasCredentialAccount: true,
-	credentialAccessStatus: "ACTIVE",
-	hasActiveCredentialAccess: true,
-	mustChangePassword: false,
-	authUserId: "11111111-1111-1111-1111-111111111111",
 	isActive: true,
 	isSoftDeleted: false,
 	createdAt: timestamp,
@@ -188,7 +179,6 @@ describe("feature model contracts", () => {
 			oabNumber: employeeDetail.oabNumber,
 			remunerationPercent: employeeDetail.remunerationPercent,
 			type: employeeDetail.type,
-			role: employeeDetail.role,
 			contractCount: employeeDetail.contractCount,
 			isActive: employeeDetail.isActive,
 			isSoftDeleted: employeeDetail.isSoftDeleted,
@@ -228,7 +218,7 @@ describe("feature model contracts", () => {
 		expect(() =>
 			employeeDetailSchema.parse({
 				...employeeDetail,
-				roleValue: undefined,
+				typeValue: undefined,
 			}),
 		).toThrow();
 

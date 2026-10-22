@@ -81,7 +81,6 @@ describe("dashboard quick-create route contract", () => {
 		expect(routeContent).toContain("getSelectableFeeContractsQueryOptions()");
 		expect(routeContent).toContain("getSelectableFeeRevenuesQueryOptions()");
 		expect(routeContent).toContain("getEmployeeTypesQueryOptions()");
-		expect(routeContent).toContain("getEmployeeRolesQueryOptions()");
 	});
 
 	it("gates collaborator quick-create with its independent permission", () => {

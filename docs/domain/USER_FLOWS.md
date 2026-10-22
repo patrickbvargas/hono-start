@@ -11,22 +11,14 @@ This file preserves the canonical user workflows of the product. These flows des
 5. Open account management from the shell to manage credentials through Clerk.
 6. Signing out cancels requests and removes protected cached data.
 
-## Grant or change collaborator access
+## Manage accounts in Clerk
 
-1. An actor with `org:accounts:manage` opens an active same-firm collaborator.
-2. Select an explicitly delegable Clerk role.
-3. The system links a Clerk identity and sends an Organization invitation, or updates an existing membership role.
-4. The collaborator completes Clerk email verification/setup and accepts the invitation.
-5. Partial operations show failure and support retry; unmatched identities never gain product access.
-6. No temporary password is generated or shared.
-
-## Revoke collaborator access
-
-1. An authorized account manager opens a same-firm collaborator.
-2. Revoke the current firm's membership and pending invitations.
-3. Subsequent protected requests fail immediately on current provider verification.
-4. Other Organization memberships and business/audit history remain intact.
-5. Restoring access requires an eligible employee and an explicitly selected role.
+1. Register business collaborators in the app independently of accounts.
+2. Create or invite users and assign Organization roles in Clerk Dashboard.
+3. Optionally set privateMetadata.employeeId to an active business Employee ID for own/assigned visibility.
+4. Sign-in validates current provider membership, permissions and any explicit business link.
+5. Missing employeeId disables own/assigned access while general granted operations remain available.
+6. Revoking or deleting a Clerk account leaves Employee and financial/audit history unchanged.
 
 ## Register A Client
 

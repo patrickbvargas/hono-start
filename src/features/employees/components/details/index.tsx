@@ -13,7 +13,6 @@ import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
 import { useEmployee } from "../../hooks/use-data";
 import { getEmployeeLifecycleActions } from "../../utils/lifecycle-actions";
-import { EmployeeAccountAccess } from "../account-access";
 
 interface EmployeeDetailsProps {
 	canManageLifecycle?: boolean;
@@ -72,30 +71,7 @@ const EmployeeDetailsContent = ({
 		() => [
 			{ term: "OAB", definition: formatter.oab(employee.oabNumber) },
 			{ term: "Função", definition: employee.type },
-			{ term: "Perfil", definition: employee.role },
 			{ term: "Contratos", definition: employee.contractCount },
-		],
-		[employee],
-	);
-
-	const contactInfo = React.useMemo<DetailFieldItem[]>(
-		() => [{ term: "E-mail", definition: employee.email }],
-		[employee],
-	);
-
-	const accessInfo = React.useMemo<DetailFieldItem[]>(
-		() => [
-			{
-				term: "Acesso ao sistema",
-				definition:
-					employee.credentialAccessStatus === "ACTIVE"
-						? "Ativo"
-						: employee.credentialAccessStatus === "PENDING"
-							? "Convite pendente"
-							: employee.credentialAccessStatus === "REVOKED"
-								? "Revogado"
-								: "Não concedido",
-			},
 		],
 		[employee],
 	);
@@ -157,9 +133,6 @@ const EmployeeDetailsContent = ({
 			<EntityDetail.Body>
 				<EntityDetail.Fields items={generalInfo} />
 				<EntityDetail.Separator />
-				<EntityDetail.Section title="Contato">
-					<EntityDetail.Fields items={contactInfo} />
-				</EntityDetail.Section>
 				<EntityDetail.Separator />
 				<EntityDetail.Section title="Financeiro">
 					<EntityDetail.Fields items={financialInfo} />
@@ -169,9 +142,6 @@ const EmployeeDetailsContent = ({
 					<AttachmentSection canUpload ownerId={id} ownerKind="employee" />
 				</EntityDetail.Section>
 				<EntityDetail.Separator />
-				<EntityDetail.Section title="Acesso">
-					<EntityDetail.Fields items={accessInfo} />
-				</EntityDetail.Section>
 				<EntityDetail.Separator />
 				<EntityDetail.Section title="Registro">
 					<EntityDetail.Fields items={registerInfo} />
@@ -179,7 +149,6 @@ const EmployeeDetailsContent = ({
 			</EntityDetail.Body>
 			<EntityDetail.Footer>
 				<div className="flex w-full flex-col gap-2">
-					<EmployeeAccountAccess employee={employee} />
 					<DrawerClose
 						render={
 							<Button type="button" variant="outline" className="w-full" />
@@ -203,9 +172,6 @@ const EmployeeDetailsFallback = () => (
 		<EntityDetail.Body>
 			<EntityDetail.SkeletonFields rows={4} />
 			<EntityDetail.Separator />
-			<EntityDetail.Section title="Contato">
-				<EntityDetail.SkeletonFields rows={1} />
-			</EntityDetail.Section>
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Financeiro">
 				<EntityDetail.SkeletonFields rows={2} />
@@ -219,9 +185,6 @@ const EmployeeDetailsFallback = () => (
 				/>
 			</EntityDetail.Section>
 			<EntityDetail.Separator />
-			<EntityDetail.Section title="Acesso">
-				<EntityDetail.SkeletonFields rows={2} />
-			</EntityDetail.Section>
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Registro">
 				<EntityDetail.SkeletonFields rows={3} />

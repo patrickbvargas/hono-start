@@ -97,7 +97,7 @@ webhook forwarding and production plan settings require actual Clerk access.
   Do not rerun `--apply` after intentionally customizing these initial roles.
 - At the user's explicit request, Clerk Patrick maps to Employee 1 (Admin Sistema)
   and Matriz maps to the existing Hono Organization. Other employees were not
-  automatically given access. Their historical Supabase identity IDs remain.
+  automatically given access. Legacy Supabase identity columns are retired by the post-cutover cleanup migration.
 - Complete Clerk keys are present in ignored local env. No webhook signing
   secret is configured; the webhook endpoint fails closed with 503 until configured.
 - Actual production plan entitlements, email delivery, two-firm user rehearsal,
@@ -109,21 +109,7 @@ webhook forwarding and production plan settings require actual Clerk access.
 - `pnpm exec tsx scripts/clerk-readiness.ts`: read-only provider/DB inventory.
 - `pnpm exec tsx scripts/clerk-setup.ts`: preview missing keys and initial presets.
 - `pnpm exec tsx scripts/clerk-setup.ts --apply`: development-only initial setup.
-- `pnpm exec tsx scripts/clerk-migration.ts --mapping <path>`: write a new,
-  restricted mapping file; refuses to overwrite an existing file. All access is
-  disabled by default and needs explicit review.
-- `pnpm exec tsx scripts/clerk-migration.ts --apply --mapping <path>`: reconcile
-  reviewed mappings. Existing revoked Supabase identities cannot be enabled
-  without passing the source revocation check. Inactive/deleted employees cannot
-  be enabled. No source password hashes are read or imported; provider email
-  verification/setup is the selected migration fallback.
-- `.clerk-migration/` is ignored; keep mapping backups access-restricted and copy
-  them to controlled backup storage before cutover. Never commit them.
-
-Operations are restartable after provider failures; stop and inspect current
-state on 429 or partial failure, respect provider Retry-After, then rerun the
-same reviewed mapping. IDs/external identifiers and existing membership checks
-prevent duplicate provisioning. Do not silently retry into broader grants.
+The one-time migration tooling has been retired after completed Clerk cutover.
 
 ## Local provider configuration
 
@@ -140,11 +126,10 @@ Provider grant/membership removal is enforced synchronously without webhooks.
 
 ## Legacy persistence retirement
 
-Keep `authUserId`, UserRole and `mustChangePassword` for historical mapping and the
-rollback window. They grant no runtime authority. Drop them only after all intended
-accounts are reconciled and the rollback window has closed, using a separate
-reviewed generated migration. The current change must not destroy unverified
-rollback data merely to remove unused columns.
+Clerk migration is complete. Legacy auth identity and forced-password fields are retired.
+The one-time clerk-migration script has been removed. Historical migrations remain.
+Apply the pending Prisma migration during deployment; application cleanup does not execute it.
+UserRole remains historical business data and grants no runtime authority.
 
 User decision: enable both email and globally unique Clerk username sign-in.
 This does not restore OAB login or application-owned identifier resolution.
@@ -165,3 +150,7 @@ destination for the next sign-in. The final production build also passed.
 Running the production build alongside Vite development invalidated development
 server-function manifests once; restarting Vite resolved the undefined data
 response. Keep build and interactive development verification sequential.
+
+## Current identity setup
+
+Manage accounts and grants in Clerk Dashboard. Set privateMetadata to {"employeeId": 123} only when an account represents that active Employee. Do not use unsafeMetadata. Employee CRUD does not create, invite, modify or delete Clerk users. Migrate existing Employee.clerkUserId mappings into Clerk privateMetadata before deploying the schema retirement migration; no automatic account grants or metadata changes are performed by application migrations. Configure privateMetadata per Clerk environment; IDs refer to the corresponding application database.

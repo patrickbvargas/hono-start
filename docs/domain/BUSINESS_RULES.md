@@ -2,7 +2,7 @@
 
 ## Core Invariants
 
-- Every business record must belong to the authenticated user's firm, except global lookup tables.
+- Every business record belongs to its business firm; Matriz is the current default unit. Firm is independent of authentication.
 - Soft delete and active/inactive status are independent concerns.
 - Lookup-backed selections use stable lookup `value` semantics, not environment-specific IDs.
 - Financial calculations must preserve decimal precision.
@@ -13,11 +13,11 @@
 - Clerk owns email or username sign-in, credential policy, recovery, account management, session lifetime and attack protection.
 - OAB remains business data; it is not a login identifier.
 - Clerk invitations/setup replace temporary passwords and app-owned forced password changes.
-- A protected request requires a verified active Clerk session, completed provider tasks, current active Organization membership and an active, non-deleted same-firm Employee mapping.
-- Firm identity is derived from the verified Organization mapping, never a submitted firm ID.
+- A protected request requires a verified active Clerk session, completed provider tasks, current active Organization membership and a valid active Employee if privateMetadata.employeeId is explicitly set.
+- Firm is a business context independent of Clerk Organizations. User-specific firm restrictions are future work.
 - Permission grants derive exclusively from current Clerk membership permissions, never local roles, UI visibility or client metadata.
 - Provider verification errors deny protected execution. Membership removal denies access without waiting for webhooks.
-- Account administration requires `org:accounts:manage`; revoke removes only the current firm's membership and preserves other Organizations and audit history.
+- Accounts and Organization membership are administered in Clerk Dashboard. Employee CRUD never performs provider account administration.
 - Session policy is configured in Clerk; the legacy custom remember-me duration and failed-attempt threshold no longer apply.
 - Public login/recovery and verified webhook entrypoints do not require a product session. All business entrypoints do.
 - Role presets and scope invariants are defined in ROLES_AND_PERMISSIONS.md.

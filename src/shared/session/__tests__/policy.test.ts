@@ -45,7 +45,6 @@ function createSession(
 			label: "Administrador",
 			...overrides.role,
 		},
-		mustChangePassword: false,
 		...overrides,
 	};
 }

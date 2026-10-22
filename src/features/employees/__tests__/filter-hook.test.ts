@@ -25,14 +25,12 @@ vi.mock("@/shared/hooks/use-filter", () => ({
 		filter: {
 			query: "maria",
 			type: ["LAWYER"],
-			role: ["ADMIN"],
 			active: "false",
 			status: "all",
 		},
 		defaultFilter: {
 			query: "",
 			type: [],
-			role: [],
 			active: "all",
 			status: "active",
 		},
@@ -67,7 +65,6 @@ describe("useEmployeeFilter", () => {
 		result.current.handleApplyFilter({
 			query: "",
 			type: [],
-			role: [],
 			active: "all",
 			status: "active",
 		});
@@ -76,14 +73,12 @@ describe("useEmployeeFilter", () => {
 		expect(resetMock).toHaveBeenCalledWith({
 			query: "",
 			type: [],
-			role: [],
 			active: "all",
 			status: "active",
 		});
 		expect(handleFilterMock).toHaveBeenCalledWith({
 			query: "",
 			type: [],
-			role: [],
 			active: "all",
 			status: "active",
 		});
@@ -119,7 +114,6 @@ describe("useEmployeeFilter", () => {
 		expect(resetMock).toHaveBeenCalledWith({
 			query: "",
 			type: [],
-			role: [],
 			active: "all",
 			status: "active",
 		});

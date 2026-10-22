@@ -2,7 +2,7 @@
 
 ## Clerk authority
 
-Clerk exclusively owns authentication, Organization memberships, roles and permission grants. Firm maps to a Clerk Organization; active Employee maps to a Clerk User. Missing membership or inactive/deleted/mismatched Employee denies product access. A role name never bypasses a permission check.
+Clerk exclusively owns authentication, Organization memberships, roles and permission grants. Firm is an independent business unit; Employee is a business entity; Clerk privateMetadata.employeeId optionally identifies an active collaborator. Organization membership does not define a firm access boundary. Missing membership denies product access. An explicit invalid or inactive/deleted employeeId binding denies the session; an absent binding disables own/assigned capabilities only. A role name never bypasses a permission check.
 
 Business permissions use `org:<feature>:<permission>`. See the approved catalog in `src/shared/session/catalog.ts` and deployment guidance in `docs/implementation/CLERK_MIGRATION.md`. Read, create, update, delete, restore and export grants are independent. `manage` is explicit only for account administration. Provider `sys_*` permissions retain their native purpose.
 
@@ -108,3 +108,7 @@ The following matrix describes initial role presets to configure in Clerk, not i
 - Clerk permission checks are mandatory; local UserRole values are not authorization authority.
 - UI affordances and server-side enforcement must agree.
 - Role or visibility decisions must derive from authenticated session context, never from client-submitted authority claims.
+
+## Business and authentication isolation
+
+See `DOMAIN_MODEL.md` for ownership. Own and assigned permissions require a valid optional Clerk privateMetadata.employeeId. Organization membership does not confer firm-specific access; metadata-based firm restrictions are future work. Account administration occurs in Clerk Dashboard.

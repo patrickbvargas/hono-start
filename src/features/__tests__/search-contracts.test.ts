@@ -64,7 +64,6 @@ const entitySearchCases = [
 		validFilters: {
 			query: "  OAB  ",
 			type: ["LAWYER"],
-			role: ["ADMIN"],
 			active: "false",
 			status: "all",
 		},
@@ -76,7 +75,6 @@ const entitySearchCases = [
 			direction: "desc",
 			query: "OAB",
 			type: ["LAWYER"],
-			role: ["ADMIN"],
 		},
 		expectedCanonicalSearch: {
 			page: 2,
@@ -84,7 +82,6 @@ const entitySearchCases = [
 			direction: "desc",
 			query: "OAB",
 			type: ["LAWYER"],
-			role: ["ADMIN"],
 		},
 	},
 	{

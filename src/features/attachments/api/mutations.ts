@@ -67,7 +67,7 @@ const createAttachmentFn = createServerFn({ method: "POST" })
 
 			return await createAttachment({
 				actor: {
-					id: session.employee.id,
+					id: session.employee.id ?? undefined,
 					name: session.user.fullName,
 					email: session.user.email,
 				},
@@ -126,7 +126,7 @@ const deleteAttachmentFn = createServerFn({ method: "POST" })
 
 			return await deleteAttachment({
 				actor: {
-					id: session.employee.id,
+					id: session.employee.id ?? undefined,
 					name: session.user.fullName,
 					email: session.user.email,
 				},

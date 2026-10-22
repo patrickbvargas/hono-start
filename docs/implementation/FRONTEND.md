@@ -111,3 +111,7 @@ server authorization remains mandatory even for hidden actions.
 - Table cell context methods must be called on the context object rather than detached from it.
 - Vite resolves TypeScript paths natively with `resolve.tsconfigPaths`.
 - The shared DataTable accepts heterogeneous accessor value types using TanStack column definitions. Its local `any` value slot follows the library column helper contract; row models remain explicitly typed.
+
+## Business and authentication isolation
+
+See `docs/domain/DOMAIN_MODEL.md` for ownership boundaries. Authentication resolves the optional business actor through server-validated Clerk privateMetadata.employeeId. Employee UI contains business fields only; account administration belongs to Clerk Dashboard.

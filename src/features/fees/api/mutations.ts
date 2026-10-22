@@ -39,7 +39,7 @@ const createFeeFn = createServerFn({ method: "POST" })
 
 			return await createFee({
 				actor: {
-					id: session.employee.id,
+					id: session.employee.id ?? undefined,
 					name: session.user.fullName,
 					email: session.user.email,
 				},
@@ -85,7 +85,7 @@ const updateFeeFn = createServerFn({ method: "POST" })
 
 			return await updateFee({
 				actor: {
-					id: session.employee.id,
+					id: session.employee.id ?? undefined,
 					name: session.user.fullName,
 					email: session.user.email,
 				},
@@ -120,7 +120,7 @@ const deleteFeeFn = createServerFn({ method: "POST" })
 
 			return await deleteFee({
 				actor: {
-					id: session.employee.id,
+					id: session.employee.id ?? undefined,
 					name: session.user.fullName,
 					email: session.user.email,
 				},
@@ -155,7 +155,7 @@ const restoreFeeFn = createServerFn({ method: "POST" })
 
 			return await restoreFee({
 				actor: {
-					id: session.employee.id,
+					id: session.employee.id ?? undefined,
 					name: session.user.fullName,
 					email: session.user.email,
 				},

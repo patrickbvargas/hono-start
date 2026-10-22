@@ -58,10 +58,6 @@ describe("frontend orchestration boundaries", () => {
 				hookName: "useDashboardOptions",
 			},
 			{
-				hookFile: "src/features/employees/hooks/use-data.ts",
-				hookName: "useEmployeeOptions",
-			},
-			{
 				hookFile: "src/features/fees/hooks/use-data.ts",
 				hookName: "useFeeOptions",
 			},
@@ -100,10 +96,6 @@ describe("frontend orchestration boundaries", () => {
 			{
 				hookFile: "src/features/contracts/hooks/use-data.ts",
 				hookName: "useContractOptions",
-			},
-			{
-				hookFile: "src/features/employees/hooks/use-data.ts",
-				hookName: "useEmployeeOptions",
 			},
 			{
 				hookFile: "src/features/fees/hooks/use-data.ts",

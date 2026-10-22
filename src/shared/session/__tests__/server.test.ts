@@ -20,7 +20,10 @@ vi.mock("@clerk/tanstack-react-start/server", () => ({
 	}),
 }));
 vi.mock("@/shared/lib/prisma", () => ({
-	prisma: { employee: { findFirst: mocks.employee } },
+	prisma: {
+		employee: { findFirst: mocks.employee },
+		firm: { findFirst: async () => ({ id: 1, name: "Matriz" }) },
+	},
 }));
 
 import {
@@ -35,7 +38,13 @@ describe("Clerk domain session", () => {
 			status: "active",
 			userId: "user_one",
 		});
-		mocks.user.mockResolvedValue({ banned: false, locked: false });
+		mocks.user.mockResolvedValue({
+			privateMetadata: { employeeId: 7 },
+			banned: false,
+			locked: false,
+			primaryEmailAddressId: "email_one",
+			emailAddresses: [{ id: "email_one", emailAddress: "carlos@example.com" }],
+		});
 		mocks.auth.mockResolvedValue({
 			userId: "user_one",
 			orgId: "org_one",
@@ -59,15 +68,14 @@ describe("Clerk domain session", () => {
 			type: { id: 2, value: "LAWYER", label: "Advogado" },
 		});
 	});
-	it("uses current grants and same-organization active mapping", async () => {
+	it("uses current grants and active employee mapping independently of firm organization", async () => {
 		const session = await getRequiredServerLoggedUserSession();
 		expect(session.permissions).toEqual(["org:clients:read"]);
 		expect(session.role.value).toBe("org:custom");
 		expect(mocks.employee).toHaveBeenCalledWith(
 			expect.objectContaining({
 				where: {
-					clerkUserId: "user_one",
-					firm: { clerkOrganizationId: "org_one" },
+					id: 7,
 					deletedAt: null,
 					isActive: true,
 				},
@@ -102,6 +110,41 @@ describe("Clerk domain session", () => {
 		expect(await getOptionalServerLoggedUserSession()).toBeNull();
 		expect(mocks.employee).not.toHaveBeenCalled();
 	});
+	it("allows an account without employee binding for general capabilities", async () => {
+		mocks.user.mockResolvedValue({
+			privateMetadata: {},
+			banned: false,
+			locked: false,
+			emailAddresses: [{ emailAddress: "admin@example.com" }],
+		});
+		mocks.memberships.mockResolvedValue({
+			data: [
+				{
+					publicUserData: { userId: "user_one" },
+					role: "org:custom",
+					permissions: [
+						"org:clients:read",
+						"org:remunerations:read_own",
+						"org:contracts:read_assigned",
+					],
+				},
+			],
+		});
+		const session = await getRequiredServerLoggedUserSession();
+		expect(session.employee.id).toBeNull();
+		expect(session.permissions).toEqual(["org:clients:read"]);
+		expect(mocks.employee).not.toHaveBeenCalled();
+	});
+	it.each(["7", -1, 0, 1.5])(
+		"rejects invalid metadata employeeId %s",
+		async (employeeId) => {
+			mocks.user.mockResolvedValue({
+				privateMetadata: { employeeId },
+				emailAddresses: [],
+			});
+			expect(await getOptionalServerLoggedUserSession()).toBeNull();
+		},
+	);
 	it("denies missing domain mapping", async () => {
 		mocks.employee.mockResolvedValue(null);
 		await expect(getRequiredServerLoggedUserSession()).rejects.toThrow(

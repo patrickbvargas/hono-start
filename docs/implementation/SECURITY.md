@@ -75,3 +75,7 @@ This document defines reusable trust-boundary and authorization rules for the re
 - Webhooks verify the raw request signature and deduplicate delivery IDs; reconciliation fetches current provider state rather than trusting delayed snapshots.
 - Public keys use the Vite public boundary. Secret/webhook keys use validated server env only.
 - See CLERK_MIGRATION.md for deployment, rate-limit and cutover prerequisites.
+
+## Business and authentication isolation
+
+See `docs/domain/DOMAIN_MODEL.md` for ownership boundaries. Authentication resolves the optional business actor through server-validated Clerk privateMetadata.employeeId. Employee UI contains business fields only; account administration belongs to Clerk Dashboard.

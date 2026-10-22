@@ -72,10 +72,6 @@ export const EmployeeTable = ({
 				header: "Contratos",
 				enableSorting: EMPLOYEE_ALLOWED_SORT_COLUMNS.includes("contractCount"),
 			}),
-			c.accessor("role", {
-				header: "Perfil",
-				enableSorting: EMPLOYEE_ALLOWED_SORT_COLUMNS.includes("role"),
-			}),
 			c.accessor("isActive", {
 				header: "Situação",
 				cell: ({ row }) => (

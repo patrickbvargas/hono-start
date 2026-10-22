@@ -115,7 +115,6 @@ describe("route session helpers", () => {
 				firm: { id: 1, name: "Matriz" },
 				employeeType: { id: 1, value: "LAWYER", label: "Advogado" },
 				role: { id: 1, value: "USER", label: "Usuário" },
-				mustChangePassword: false,
 				permissions: [],
 				clerk: {
 					userId: "user_test",

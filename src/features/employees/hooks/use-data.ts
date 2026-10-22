@@ -1,8 +1,7 @@
-import { useSuspenseQueries, useSuspenseQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import type { EntityId } from "@/shared/schemas/entity";
 import {
 	getEmployeeByIdQueryOptions,
-	getEmployeeRolesQueryOptions,
 	getEmployeesQueryOptions,
 	getEmployeeTypesQueryOptions,
 } from "../api/queries";
@@ -23,9 +22,6 @@ export function useEmployee(id: EntityId) {
 }
 
 export function useEmployeeOptions() {
-	const [{ data: types }, { data: roles }] = useSuspenseQueries({
-		queries: [getEmployeeTypesQueryOptions(), getEmployeeRolesQueryOptions()],
-	});
-
-	return { types, roles };
+	const { data: types } = useSuspenseQuery(getEmployeeTypesQueryOptions());
+	return { types };
 }

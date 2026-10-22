@@ -1339,8 +1339,8 @@ async function main() {
   const [
     lawyerType,
     assistantType,
-    adminRole,
-    userRole,
+    ,
+    ,
     individualType,
     companyType,
   ] = await Promise.all([
@@ -1359,7 +1359,7 @@ async function main() {
       where: {
         firmId: DEFAULT_FIRM_ID,
         OR: [
-          { email: employee.email },
+          { fullName: employee.fullName },
           ...(employee.oabNumber
             ? [{ oabNumber: employee.oabNumber }]
             : []),
@@ -1373,17 +1373,12 @@ async function main() {
     const employeeData = {
       firmId: DEFAULT_FIRM_ID,
       fullName: employee.fullName,
-      email: employee.email,
       typeId:
         employee.typeValue === "LAWYER" ? lawyerType.id : assistantType.id,
-      roleId: employee.roleValue === "ADMIN" ? adminRole.id : userRole.id,
       oabNumber: employee.oabNumber ?? null,
       remunerationPercentage: employee.remunerationPercentage,
       referralPercentage: employee.referralPercentage,
-      avatarUrl: null,
       isActive: employee.isActive,
-      mustChangePassword: false,
-      authUserId: null,
       deletedAt: null,
     };
 
@@ -1452,7 +1447,6 @@ async function main() {
       where: { firmId: DEFAULT_FIRM_ID, deletedAt: null },
       select: {
         id: true,
-        email: true,
         fullName: true,
         remunerationPercentage: true,
         referralPercentage: true,
@@ -1500,7 +1494,7 @@ async function main() {
   const contractSeeds = createContractSeeds(clientSeeds, employeeSeeds);
   const expenseSeeds = createExpenseSeeds();
   const employeeByEmail = mapByKey(
-    employeeRecords as EmployeeRecord[],
+    employeeRecords.map((employee) => ({ ...employee, email: employeeSeeds.find((seed) => seed.fullName === employee.fullName)?.email ?? "" })) as EmployeeRecord[],
     (employee) => employee.email,
   );
   const clientByDocument = mapByKey(
@@ -1574,7 +1568,7 @@ async function main() {
 
   // Clerk identities are provisioned separately after an explicit migration mapping.
 
-  console.log("Supabase Auth bootstrap complete.");
+  console.log("Clerk bootstrap complete.");
 }
 
 main()

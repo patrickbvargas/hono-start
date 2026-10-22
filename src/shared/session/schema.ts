@@ -15,15 +15,14 @@ export const clerkIdentitySchema = z.object({
 
 export const loggedUserSessionSchema = z.object({
 	user: z.object({
-		id: z.number().int(),
+		id: z.number().int().nullable(),
 		fullName: z.string(),
 		email: z.email(),
 	}),
-	employee: z.object({ id: z.number().int() }),
+	employee: z.object({ id: z.number().int().nullable() }),
 	firm: z.object({ id: z.number().int(), name: z.string() }),
-	employeeType: sessionOptionSchema,
+	employeeType: sessionOptionSchema.nullable(),
 	role: sessionOptionSchema,
-	mustChangePassword: z.literal(false),
 	clerk: clerkIdentitySchema,
 	permissions: z.array(clerkPermissionSchema),
 });

@@ -208,7 +208,6 @@ export type UserRoleWhereInput = {
   value?: Prisma.StringFilter<"UserRole"> | string
   label?: Prisma.StringFilter<"UserRole"> | string
   isActive?: Prisma.BoolFilter<"UserRole"> | boolean
-  employees?: Prisma.EmployeeListRelationFilter
 }
 
 export type UserRoleOrderByWithRelationInput = {
@@ -216,7 +215,6 @@ export type UserRoleOrderByWithRelationInput = {
   value?: Prisma.SortOrder
   label?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
-  employees?: Prisma.EmployeeOrderByRelationAggregateInput
 }
 
 export type UserRoleWhereUniqueInput = Prisma.AtLeast<{
@@ -227,7 +225,6 @@ export type UserRoleWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.UserRoleWhereInput | Prisma.UserRoleWhereInput[]
   label?: Prisma.StringFilter<"UserRole"> | string
   isActive?: Prisma.BoolFilter<"UserRole"> | boolean
-  employees?: Prisma.EmployeeListRelationFilter
 }, "id" | "value">
 
 export type UserRoleOrderByWithAggregationInput = {
@@ -256,7 +253,6 @@ export type UserRoleCreateInput = {
   value: string
   label: string
   isActive?: boolean
-  employees?: Prisma.EmployeeCreateNestedManyWithoutRoleInput
 }
 
 export type UserRoleUncheckedCreateInput = {
@@ -264,14 +260,12 @@ export type UserRoleUncheckedCreateInput = {
   value: string
   label: string
   isActive?: boolean
-  employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutRoleInput
 }
 
 export type UserRoleUpdateInput = {
   value?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  employees?: Prisma.EmployeeUpdateManyWithoutRoleNestedInput
 }
 
 export type UserRoleUncheckedUpdateInput = {
@@ -279,7 +273,6 @@ export type UserRoleUncheckedUpdateInput = {
   value?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  employees?: Prisma.EmployeeUncheckedUpdateManyWithoutRoleNestedInput
 }
 
 export type UserRoleCreateManyInput = {
@@ -331,96 +324,6 @@ export type UserRoleSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
 }
 
-export type UserRoleScalarRelationFilter = {
-  is?: Prisma.UserRoleWhereInput
-  isNot?: Prisma.UserRoleWhereInput
-}
-
-export type UserRoleCreateNestedOneWithoutEmployeesInput = {
-  create?: Prisma.XOR<Prisma.UserRoleCreateWithoutEmployeesInput, Prisma.UserRoleUncheckedCreateWithoutEmployeesInput>
-  connectOrCreate?: Prisma.UserRoleCreateOrConnectWithoutEmployeesInput
-  connect?: Prisma.UserRoleWhereUniqueInput
-}
-
-export type UserRoleUpdateOneRequiredWithoutEmployeesNestedInput = {
-  create?: Prisma.XOR<Prisma.UserRoleCreateWithoutEmployeesInput, Prisma.UserRoleUncheckedCreateWithoutEmployeesInput>
-  connectOrCreate?: Prisma.UserRoleCreateOrConnectWithoutEmployeesInput
-  upsert?: Prisma.UserRoleUpsertWithoutEmployeesInput
-  connect?: Prisma.UserRoleWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserRoleUpdateToOneWithWhereWithoutEmployeesInput, Prisma.UserRoleUpdateWithoutEmployeesInput>, Prisma.UserRoleUncheckedUpdateWithoutEmployeesInput>
-}
-
-export type UserRoleCreateWithoutEmployeesInput = {
-  value: string
-  label: string
-  isActive?: boolean
-}
-
-export type UserRoleUncheckedCreateWithoutEmployeesInput = {
-  id?: number
-  value: string
-  label: string
-  isActive?: boolean
-}
-
-export type UserRoleCreateOrConnectWithoutEmployeesInput = {
-  where: Prisma.UserRoleWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserRoleCreateWithoutEmployeesInput, Prisma.UserRoleUncheckedCreateWithoutEmployeesInput>
-}
-
-export type UserRoleUpsertWithoutEmployeesInput = {
-  update: Prisma.XOR<Prisma.UserRoleUpdateWithoutEmployeesInput, Prisma.UserRoleUncheckedUpdateWithoutEmployeesInput>
-  create: Prisma.XOR<Prisma.UserRoleCreateWithoutEmployeesInput, Prisma.UserRoleUncheckedCreateWithoutEmployeesInput>
-  where?: Prisma.UserRoleWhereInput
-}
-
-export type UserRoleUpdateToOneWithWhereWithoutEmployeesInput = {
-  where?: Prisma.UserRoleWhereInput
-  data: Prisma.XOR<Prisma.UserRoleUpdateWithoutEmployeesInput, Prisma.UserRoleUncheckedUpdateWithoutEmployeesInput>
-}
-
-export type UserRoleUpdateWithoutEmployeesInput = {
-  value?: Prisma.StringFieldUpdateOperationsInput | string
-  label?: Prisma.StringFieldUpdateOperationsInput | string
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-}
-
-export type UserRoleUncheckedUpdateWithoutEmployeesInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  value?: Prisma.StringFieldUpdateOperationsInput | string
-  label?: Prisma.StringFieldUpdateOperationsInput | string
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-}
-
-
-/**
- * Count Type UserRoleCountOutputType
- */
-
-export type UserRoleCountOutputType = {
-  employees: number
-}
-
-export type UserRoleCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  employees?: boolean | UserRoleCountOutputTypeCountEmployeesArgs
-}
-
-/**
- * UserRoleCountOutputType without action
- */
-export type UserRoleCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the UserRoleCountOutputType
-   */
-  select?: Prisma.UserRoleCountOutputTypeSelect<ExtArgs> | null
-}
-
-/**
- * UserRoleCountOutputType without action
- */
-export type UserRoleCountOutputTypeCountEmployeesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.EmployeeWhereInput
-}
 
 
 export type UserRoleSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -428,8 +331,6 @@ export type UserRoleSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   value?: boolean
   label?: boolean
   isActive?: boolean
-  employees?: boolean | Prisma.UserRole$employeesArgs<ExtArgs>
-  _count?: boolean | Prisma.UserRoleCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["userRole"]>
 
 export type UserRoleSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -454,18 +355,10 @@ export type UserRoleSelectScalar = {
 }
 
 export type UserRoleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "value" | "label" | "isActive", ExtArgs["result"]["userRole"]>
-export type UserRoleInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  employees?: boolean | Prisma.UserRole$employeesArgs<ExtArgs>
-  _count?: boolean | Prisma.UserRoleCountOutputTypeDefaultArgs<ExtArgs>
-}
-export type UserRoleIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
-export type UserRoleIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $UserRolePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "UserRole"
-  objects: {
-    employees: Prisma.$EmployeePayload<ExtArgs>[]
-  }
+  objects: {}
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     value: string
@@ -865,7 +758,6 @@ readonly fields: UserRoleFieldRefs;
  */
 export interface Prisma__UserRoleClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  employees<T extends Prisma.UserRole$employeesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserRole$employeesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -916,10 +808,6 @@ export type UserRoleFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.Inte
    */
   omit?: Prisma.UserRoleOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UserRoleInclude<ExtArgs> | null
-  /**
    * Filter, which UserRole to fetch.
    */
   where: Prisma.UserRoleWhereUniqueInput
@@ -938,10 +826,6 @@ export type UserRoleFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensio
    */
   omit?: Prisma.UserRoleOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UserRoleInclude<ExtArgs> | null
-  /**
    * Filter, which UserRole to fetch.
    */
   where: Prisma.UserRoleWhereUniqueInput
@@ -959,10 +843,6 @@ export type UserRoleFindFirstArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Omit specific fields from the UserRole
    */
   omit?: Prisma.UserRoleOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UserRoleInclude<ExtArgs> | null
   /**
    * Filter, which UserRole to fetch.
    */
@@ -1012,10 +892,6 @@ export type UserRoleFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extension
    */
   omit?: Prisma.UserRoleOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UserRoleInclude<ExtArgs> | null
-  /**
    * Filter, which UserRole to fetch.
    */
   where?: Prisma.UserRoleWhereInput
@@ -1063,10 +939,6 @@ export type UserRoleFindManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Omit specific fields from the UserRole
    */
   omit?: Prisma.UserRoleOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UserRoleInclude<ExtArgs> | null
   /**
    * Filter, which UserRoles to fetch.
    */
@@ -1116,10 +988,6 @@ export type UserRoleCreateArgs<ExtArgs extends runtime.Types.Extensions.Internal
    */
   omit?: Prisma.UserRoleOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UserRoleInclude<ExtArgs> | null
-  /**
    * The data needed to create a UserRole.
    */
   data: Prisma.XOR<Prisma.UserRoleCreateInput, Prisma.UserRoleUncheckedCreateInput>
@@ -1167,10 +1035,6 @@ export type UserRoleUpdateArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Omit specific fields from the UserRole
    */
   omit?: Prisma.UserRoleOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UserRoleInclude<ExtArgs> | null
   /**
    * The data needed to update a UserRole.
    */
@@ -1238,10 +1102,6 @@ export type UserRoleUpsertArgs<ExtArgs extends runtime.Types.Extensions.Internal
    */
   omit?: Prisma.UserRoleOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UserRoleInclude<ExtArgs> | null
-  /**
    * The filter to search for the UserRole to update in case it exists.
    */
   where: Prisma.UserRoleWhereUniqueInput
@@ -1268,10 +1128,6 @@ export type UserRoleDeleteArgs<ExtArgs extends runtime.Types.Extensions.Internal
    */
   omit?: Prisma.UserRoleOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UserRoleInclude<ExtArgs> | null
-  /**
    * Filter which UserRole to delete.
    */
   where: Prisma.UserRoleWhereUniqueInput
@@ -1292,30 +1148,6 @@ export type UserRoleDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
 }
 
 /**
- * UserRole.employees
- */
-export type UserRole$employeesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Employee
-   */
-  select?: Prisma.EmployeeSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Employee
-   */
-  omit?: Prisma.EmployeeOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.EmployeeInclude<ExtArgs> | null
-  where?: Prisma.EmployeeWhereInput
-  orderBy?: Prisma.EmployeeOrderByWithRelationInput | Prisma.EmployeeOrderByWithRelationInput[]
-  cursor?: Prisma.EmployeeWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.EmployeeScalarFieldEnum | Prisma.EmployeeScalarFieldEnum[]
-}
-
-/**
  * UserRole without action
  */
 export type UserRoleDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1327,8 +1159,4 @@ export type UserRoleDefaultArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Omit specific fields from the UserRole
    */
   omit?: Prisma.UserRoleOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UserRoleInclude<ExtArgs> | null
 }

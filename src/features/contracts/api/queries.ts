@@ -58,7 +58,7 @@ const getContractsFn = createServerFn({ method: "GET" })
 					scope: {
 						firmId: scope.firmId,
 						employeeId: scope.employeeId,
-						employeeTypeValue: session.employeeType.value,
+						employeeTypeValue: session.employeeType?.value,
 						isAdmin: hasPermission(session, "org:contracts:read_all"),
 					},
 					search: data,
@@ -86,7 +86,7 @@ const getContractByIdFn = createServerFn({ method: "GET" })
 				scope: {
 					firmId: scope.firmId,
 					employeeId: scope.employeeId,
-					employeeTypeValue: session.employeeType.value,
+					employeeTypeValue: session.employeeType?.value,
 					isAdmin: hasPermission(session, "org:contracts:read_all"),
 				},
 				id: data.id,

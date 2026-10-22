@@ -7,7 +7,6 @@ import {
 export const employeeFilterSchema = z.object({
 	query: z.string().trim().catch(""),
 	type: z.array(z.string()).catch([]),
-	role: z.array(z.string()).catch([]),
 	active: activeFilterSchema,
 	status: deletedFilterSchema,
 });

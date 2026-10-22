@@ -34,7 +34,7 @@ const createExpenseFn = createServerFn({ method: "POST" })
 
 			return await createExpense({
 				actor: {
-					id: session.employee.id,
+					id: session.employee.id ?? undefined,
 					name: session.user.fullName,
 					email: session.user.email,
 				},
@@ -68,7 +68,7 @@ const updateExpenseFn = createServerFn({ method: "POST" })
 
 			return await updateExpense({
 				actor: {
-					id: session.employee.id,
+					id: session.employee.id ?? undefined,
 					name: session.user.fullName,
 					email: session.user.email,
 				},
@@ -102,7 +102,7 @@ const deleteExpenseFn = createServerFn({ method: "POST" })
 
 			return await deleteExpense({
 				actor: {
-					id: session.employee.id,
+					id: session.employee.id ?? undefined,
 					name: session.user.fullName,
 					email: session.user.email,
 				},
@@ -136,7 +136,7 @@ const restoreExpenseFn = createServerFn({ method: "POST" })
 
 			return await restoreExpense({
 				actor: {
-					id: session.employee.id,
+					id: session.employee.id ?? undefined,
 					name: session.user.fullName,
 					email: session.user.email,
 				},

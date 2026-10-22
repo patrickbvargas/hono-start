@@ -1,4 +1,3 @@
-import { clerkClient } from "@clerk/tanstack-react-start/server";
 import { Prisma } from "@/generated/prisma/client";
 import {
 	getEntityActiveWhere,
@@ -7,7 +6,6 @@ import {
 } from "@/shared/lib/entity-management";
 import { prisma } from "@/shared/lib/prisma";
 import { type Option, optionSchema } from "@/shared/schemas/option";
-import { getRequiredServerLoggedUserSession } from "@/shared/session/server";
 import type {
 	QueryManyReturnType,
 	QueryOneReturnType,
@@ -27,21 +25,15 @@ import {
 	employeeSummarySchema,
 } from "../schemas/model";
 import type { EmployeeSearch } from "../schemas/search";
-import {
-	getAssignableClerkRoles,
-	getEmployeeClerkAccess,
-} from "./clerk-access";
 
 interface BuildEmployeeWhereParams extends EntityFilterParams<EmployeeFilter> {
 	typeIds: number[];
-	roleIds: number[];
 }
 
 function buildEmployeeWhere({
 	firmId,
 	filter,
 	typeIds,
-	roleIds,
 }: BuildEmployeeWhereParams): Prisma.EmployeeWhereInput {
 	return {
 		firmId,
@@ -66,7 +58,6 @@ function buildEmployeeWhere({
 				}
 			: {}),
 		...(typeIds.length > 0 ? { typeId: { in: typeIds } } : {}),
-		...(roleIds.length > 0 ? { roleId: { in: roleIds } } : {}),
 	};
 }
 
@@ -105,46 +96,11 @@ export async function getEmployees({
 					select: { id: true },
 				})
 			: [];
-	const firm = await prisma.firm.findUniqueOrThrow({ where: { id: firmId } });
-	const memberships = [];
-	if (firm.clerkOrganizationId) {
-		let offset = 0;
-		while (true) {
-			const page =
-				await clerkClient().organizations.getOrganizationMembershipList({
-					organizationId: firm.clerkOrganizationId,
-					limit: 100,
-					offset,
-				});
-			memberships.push(...page.data);
-			offset += page.data.length;
-			if (offset >= page.totalCount || page.data.length === 0) {
-				break;
-			}
-		}
-	}
-	const roleByUserId = new Map(
-		memberships.map((item) => [item.publicUserData?.userId, item.role]),
-	);
-	const where = {
-		...buildEmployeeWhere({
-			firmId,
-			filter: search,
-			typeIds: resolvedTypes.map((type) => type.id),
-			roleIds: [],
-		}),
-		...(search.role.length
-			? {
-					clerkUserId: {
-						in: memberships
-							.filter((item) => search.role.includes(item.role))
-							.flatMap((item) =>
-								item.publicUserData ? [item.publicUserData.userId] : [],
-							),
-					},
-				}
-			: {}),
-	};
+	const where = buildEmployeeWhere({
+		firmId,
+		filter: search,
+		typeIds: resolvedTypes.map((type) => type.id),
+	});
 
 	const sortMap: Record<string, object> = {
 		fullName: { fullName: search.direction },
@@ -152,7 +108,6 @@ export async function getEmployees({
 		oabNumber: { oabNumber: search.direction },
 		remunerationPercent: { remunerationPercentage: search.direction },
 		type: { type: { label: search.direction } },
-		role: { fullName: search.direction },
 		isActive: { isActive: search.direction },
 	};
 
@@ -164,7 +119,7 @@ export async function getEmployees({
 	const [rawData, total] = await Promise.all([
 		prisma.employee.findMany({
 			where,
-			include: { type: true, role: true },
+			include: { type: true },
 			orderBy,
 			skip: (search.page - 1) * search.limit,
 			take: search.limit,
@@ -182,9 +137,6 @@ export async function getEmployees({
 		oabNumber: employee.oabNumber,
 		remunerationPercent: Number(employee.remunerationPercentage),
 		type: employee.type.label,
-		role:
-			roleByUserId.get(employee.clerkUserId ?? undefined) ??
-			"Sem associação Clerk",
 		contractCount: contractCounts.get(employee.id) ?? 0,
 		isActive: employee.isActive,
 		isSoftDeleted: Boolean(employee.deletedAt),
@@ -206,7 +158,6 @@ export async function getEmployeeById({
 		where: { id, firmId },
 		include: {
 			type: true,
-			role: true,
 		},
 	});
 
@@ -217,27 +168,17 @@ export async function getEmployeeById({
 	const contractCounts = await getActiveContractCountByEmployeeIds([
 		rawData.id,
 	]);
-	const accessState = await getEmployeeClerkAccess(firmId, rawData.clerkUserId);
 
 	return employeeDetailSchema.parse({
 		id: rawData.id,
 		fullName: rawData.fullName,
-		email: rawData.email,
 		oabNumber: rawData.oabNumber,
 		remunerationPercent: Number(rawData.remunerationPercentage),
 		referrerPercent: Number(rawData.referralPercentage),
 		typeId: rawData.typeId,
 		type: rawData.type.label,
 		typeValue: rawData.type.value,
-		roleId: rawData.roleId,
-		role: accessState.role ?? "Sem associação Clerk",
-		roleValue: accessState.role ?? "",
 		contractCount: contractCounts.get(rawData.id) ?? 0,
-		hasCredentialAccount: accessState.hasCredentialAccount,
-		credentialAccessStatus: accessState.status,
-		hasActiveCredentialAccess: accessState.isAccessActive,
-		mustChangePassword: false,
-		authUserId: rawData.clerkUserId,
 		isActive: rawData.isActive,
 		isSoftDeleted: Boolean(rawData.deletedAt),
 		createdAt: rawData.createdAt.toISOString(),
@@ -253,26 +194,8 @@ export async function getEmployeeTypes(): Promise<QueryManyReturnType<Option>> {
 	return optionSchema.array().parse(types);
 }
 
-export async function getEmployeeRoles(): Promise<QueryManyReturnType<Option>> {
-	const roles = await getAssignableClerkRoles(
-		await getRequiredServerLoggedUserSession(),
-	);
-	return roles.map((role, index) => ({
-		id: index + 1,
-		value: role.key,
-		label: role.name,
-		isDisabled: false,
-	}));
-}
-
 export async function getEmployeeTypeByValue(value: string) {
 	return prisma.employeeType.findUnique({
-		where: { value },
-	});
-}
-
-export async function getUserRoleByValue(value: string) {
-	return prisma.userRole.findUnique({
 		where: { value },
 	});
 }

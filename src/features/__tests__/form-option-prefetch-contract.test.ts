@@ -34,11 +34,8 @@ describe("form option prefetch contract", () => {
 					"form",
 					"index.tsx",
 				],
-				requiredRouteSnippets: [
-					"getEmployeeTypesQueryOptions()",
-					"getEmployeeRolesQueryOptions()",
-				],
-				requiredFormSnippets: ["useEmployeeOptions()", "types", "roles"],
+				requiredRouteSnippets: ["getEmployeeTypesQueryOptions()"],
+				requiredFormSnippets: ["useEmployeeOptions()", "types"],
 			},
 			{
 				routeFile: ["src", "routes", "_app", "contratos.tsx"],
@@ -98,7 +95,6 @@ describe("form option prefetch contract", () => {
 					"getSelectableFeeContractsQueryOptions()",
 					"getSelectableFeeRevenuesQueryOptions()",
 					"getEmployeeTypesQueryOptions()",
-					"getEmployeeRolesQueryOptions()",
 				],
 				requiredFormSnippets: [
 					"<ClientForm state={state} onSuccess={state.close} />",

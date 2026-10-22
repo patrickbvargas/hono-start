@@ -27,7 +27,6 @@ import {
 } from "@/features/dashboard";
 import {
 	EmployeeForm,
-	getEmployeeRolesQueryOptions,
 	getEmployeeTypesQueryOptions,
 } from "@/features/employees";
 import {
@@ -106,7 +105,6 @@ export const Route = createFileRoute("/_app/")({
 		if (hasPermission(session, "org:employees:create")) {
 			await Promise.all([
 				queryClient.ensureQueryData(getEmployeeTypesQueryOptions()),
-				queryClient.ensureQueryData(getEmployeeRolesQueryOptions()),
 			]);
 		}
 

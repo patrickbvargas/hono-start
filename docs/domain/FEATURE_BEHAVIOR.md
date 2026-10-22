@@ -33,9 +33,8 @@ The software core includes these feature areas:
 
 - Clerk provides email or username sign-in, invitations/setup, recovery and account management in pt-BR.
 - Clerk owns credentials, pending-session tasks and security/session settings.
-- Account managers grant or revoke current-firm membership and select a delegable Clerk role.
 - The app never issues temporary passwords or authenticates by OAB.
-- Protected access requires a verified active session, current membership and active same-firm Employee mapping.
+- Protected access requires a verified active session, current membership and valid optional privateMetadata.employeeId binding when present.
 - Permission grants come exclusively from Clerk; persisted scope and lifecycle rules remain enforced in the app.
 
 ### Dashboard
@@ -55,9 +54,8 @@ The software core includes these feature areas:
 
 ### Employees / Collaborators
 
-- Provides administrative employee-account management.
-- Supports role, employee-type, and remuneration-related configuration.
-- Supports granting, revoking, and resetting collaborator system access from the employee details surface.
+- Provides business collaborator management.
+- Supports employee-type, and remuneration-related configuration.
 - Supplies collaborator options to contract-team workflows.
 
 ### Contracts
@@ -159,10 +157,7 @@ The software core includes these feature areas:
 
 ### Employee Expectations
 
-- Administrators can create and maintain employee accounts.
-- Administrators can manage employee role, type, and remuneration-related settings.
-- Administrators can grant or revoke collaborator access to the system.
-- Administrators can reset collaborator passwords from the employee details surface when the collaborator already has system access.
+- Administrators can create and maintain business collaborators.
 
 ### Contract Expectations
 
@@ -219,10 +214,7 @@ The software core includes these feature areas:
 
 ### Employee Management
 
-- As an administrator, I can create and maintain employee accounts.
-- As an administrator, I can control employee role, type, and remuneration-related fields.
-- As an administrator, I can grant or revoke collaborator access.
-- As an administrator, I can issue a temporary password to a collaborator who needs access recovery.
+- As an administrator, I can create and maintain business collaborators.
 
 ### Contract Management
 

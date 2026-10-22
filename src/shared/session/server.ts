@@ -1,5 +1,6 @@
 import { auth, clerkClient } from "@clerk/tanstack-react-start/server";
 import { getRequest } from "@tanstack/react-start/server";
+import * as z from "zod";
 import { prisma } from "@/shared/lib/prisma";
 import { clerkPermissionSchema } from "./catalog";
 import { loggedUserSessionSchema } from "./schema";
@@ -47,39 +48,58 @@ async function resolveDomainSession(): Promise<LoggedUserSession | null> {
 	if (!membership) {
 		return null;
 	}
-	const employee = await prisma.employee.findFirst({
-		where: {
-			clerkUserId: identity.userId,
-			firm: { clerkOrganizationId: identity.orgId },
-			deletedAt: null,
-			isActive: true,
-		},
-		select: {
-			id: true,
-			fullName: true,
-			email: true,
-			firm: { select: { id: true, name: true } },
-			type: { select: { id: true, value: true, label: true } },
-		},
+	const metadata = z
+		.object({ employeeId: z.number().int().positive().optional() })
+		.safeParse(user.privateMetadata ?? {});
+	if (!metadata.success) {
+		return null;
+	}
+	const employee = metadata.data.employeeId
+		? await prisma.employee.findFirst({
+				where: {
+					id: metadata.data.employeeId,
+					deletedAt: null,
+					isActive: true,
+				},
+				select: {
+					id: true,
+					type: { select: { id: true, value: true, label: true } },
+				},
+			})
+		: null;
+	if (metadata.data.employeeId && !employee) {
+		return null;
+	}
+	const firm = await prisma.firm.findFirst({
+		orderBy: { id: "asc" },
+		select: { id: true, name: true },
 	});
-	if (!employee) {
+	if (!firm) {
 		return null;
 	}
 	const permissions = membership.permissions.flatMap((value) => {
 		const result = clerkPermissionSchema.safeParse(value);
-		return result.success ? [result.data] : [];
+		return result.success &&
+			(employee || (!value.endsWith("_own") && !value.endsWith("_assigned")))
+			? [result.data]
+			: [];
 	});
 	return loggedUserSessionSchema.parse({
 		user: {
-			id: employee.id,
-			fullName: employee.fullName,
-			email: employee.email,
+			id: employee?.id ?? null,
+			fullName:
+				[user.firstName, user.lastName].filter(Boolean).join(" ") ||
+				user.username ||
+				"Usuário",
+			email:
+				user.emailAddresses.find(
+					(address) => address.id === user.primaryEmailAddressId,
+				)?.emailAddress ?? user.emailAddresses[0]?.emailAddress,
 		},
-		employee: { id: employee.id },
-		firm: employee.firm,
-		employeeType: employee.type,
+		employee: { id: employee?.id ?? null },
+		firm,
+		employeeType: employee?.type ?? null,
 		role: { id: 0, value: membership.role, label: membership.role },
-		mustChangePassword: false,
 		permissions,
 		clerk: {
 			userId: identity.userId,

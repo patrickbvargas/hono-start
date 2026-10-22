@@ -63,9 +63,8 @@ describe("route prefetch and loading checklist", () => {
 				requiredRouteSnippets: [
 					"queryClient.ensureQueryData(getEmployeesQueryOptions(search))",
 					"getEmployeeTypesQueryOptions()",
-					"getEmployeeRolesQueryOptions()",
 				],
-				requiredFilterSnippets: ["useEmployeeOptions()", "types", "roles"],
+				requiredFilterSnippets: ["useEmployeeOptions()", "types"],
 			},
 			{
 				file: ["src", "routes", "_app", "contratos.tsx"],

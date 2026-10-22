@@ -53,7 +53,7 @@ const updateRemunerationFn = createServerFn({ method: "POST" })
 
 			return await updateRemuneration({
 				actor: {
-					id: session.employee.id,
+					id: session.employee.id ?? undefined,
 					name: session.user.fullName,
 					email: session.user.email,
 				},
@@ -83,7 +83,7 @@ const deleteRemunerationFn = createServerFn({ method: "POST" })
 
 			return await deleteRemuneration({
 				actor: {
-					id: session.employee.id,
+					id: session.employee.id ?? undefined,
 					name: session.user.fullName,
 					email: session.user.email,
 				},
@@ -113,7 +113,7 @@ const restoreRemunerationFn = createServerFn({ method: "POST" })
 
 			return await restoreRemuneration({
 				actor: {
-					id: session.employee.id,
+					id: session.employee.id ?? undefined,
 					name: session.user.fullName,
 					email: session.user.email,
 				},

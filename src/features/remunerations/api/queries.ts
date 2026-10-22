@@ -2,7 +2,11 @@ import { mutationOptions, queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
 import type { Option } from "@/shared/schemas/option";
-import { assertCan, hasPermission } from "@/shared/session";
+import {
+	assertCan,
+	getCurrentEmployeeId,
+	hasPermission,
+} from "@/shared/session";
 import { authMiddleware } from "@/shared/session/middleware";
 import { getRequiredServerLoggedUserSession } from "@/shared/session/server";
 import type {
@@ -65,7 +69,7 @@ async function getRemunerationScope(exporting = false) {
 		session,
 		scope: {
 			firmId: session.firm.id,
-			employeeId: all ? undefined : session.employee.id,
+			employeeId: all ? undefined : getCurrentEmployeeId(session),
 			isAdmin: all,
 		},
 	};

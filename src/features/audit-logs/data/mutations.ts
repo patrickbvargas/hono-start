@@ -1,7 +1,7 @@
 import type { Prisma, PrismaClient } from "@/generated/prisma/client";
 
 export interface AuditLogActor {
-	id: number;
+	id?: number;
 	name: string;
 	email: string | null;
 }

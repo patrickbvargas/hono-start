@@ -6,6 +6,9 @@ export function getCurrentFirmId(session: LoggedUserSession) {
 }
 
 export function getCurrentEmployeeId(session: LoggedUserSession) {
+	if (session.employee.id === null) {
+		throw new Error("Conta sem colaborador vinculado para esta operação.");
+	}
 	return session.employee.id;
 }
 

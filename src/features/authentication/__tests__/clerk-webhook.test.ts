@@ -6,16 +6,16 @@ vi.mock("@/shared/config/env", () => ({
 	env: { CLERK_WEBHOOK_SIGNING_SECRET: "whsec_test" },
 }));
 vi.mock("../data/clerk-lifecycle", () => ({
-	reconcileClerkEmployeeEvent: mocks.reconcile,
+	recordClerkEvent: mocks.reconcile,
 }));
 
-import { handleClerkEmployeeWebhook } from "../api/webhooks";
+import { handleClerkWebhook } from "../api/clerk-webhooks";
 
 describe("Clerk webhook signature boundary", () => {
 	beforeEach(() => vi.resetAllMocks());
 	it("rejects invalid signatures before any domain reconciliation", async () => {
 		mocks.verify.mockRejectedValue(new Error("invalid"));
-		const response = await handleClerkEmployeeWebhook(
+		const response = await handleClerkWebhook(
 			new Request("http://localhost/api/webhooks/clerk", {
 				method: "POST",
 				body: "{}",
@@ -32,7 +32,7 @@ describe("Clerk webhook signature boundary", () => {
 			headers: { "svix-id": "delivery" },
 			body: "{}",
 		});
-		expect((await handleClerkEmployeeWebhook(request)).status).toBe(200);
+		expect((await handleClerkWebhook(request)).status).toBe(200);
 		expect(mocks.verify).toHaveBeenCalledWith(request, {
 			signingSecret: "whsec_test",
 		});
@@ -43,7 +43,7 @@ describe("Clerk webhook signature boundary", () => {
 		mocks.reconcile.mockRejectedValue(new Error("unavailable"));
 		expect(
 			(
-				await handleClerkEmployeeWebhook(
+				await handleClerkWebhook(
 					new Request("http://localhost", {
 						method: "POST",
 						headers: { "svix-id": "delivery" },
