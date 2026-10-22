@@ -70,6 +70,10 @@ export const FeeList = ({
 
 			return (
 				<EntityActions
+					viewPermission={["org:fees:read_all", "org:fees:read_assigned"]}
+					editPermission="org:fees:update"
+					restorePermission="org:fees:restore"
+					deletePermission="org:fees:delete"
 					canEdit={actions.canEdit}
 					canRestore={actions.canRestore}
 					canDelete={actions.canDelete}

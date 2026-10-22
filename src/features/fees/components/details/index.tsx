@@ -118,6 +118,10 @@ const FeeDetailsContent = ({
 					{`${fee.contractProcessNumber} • ${fee.revenueType}`}
 				</EntityDetail.Title>
 				<EntityActions
+					viewPermission={["org:fees:read_all", "org:fees:read_assigned"]}
+					editPermission="org:fees:update"
+					restorePermission="org:fees:restore"
+					deletePermission="org:fees:delete"
 					canView={false}
 					canEdit={actions.canEdit}
 					canRestore={actions.canRestore}

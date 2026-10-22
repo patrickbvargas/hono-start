@@ -16,9 +16,9 @@ export function useEmployeeRestoreAccess({
 	const queryClient = useQueryClient();
 	const mutation = useMutation(restoreEmployeeAccessMutationOptions());
 
-	const handleConfirm = async (id: EntityId) => {
+	const handleConfirm = async (id: EntityId, role: string) => {
 		try {
-			await mutation.mutateAsync({ data: { id } });
+			await mutation.mutateAsync({ data: { id, role } });
 			toast.success("Acesso restaurado com sucesso.");
 			await refreshAuditedEntityQueries(queryClient, employeeKeys.all);
 			onSuccess?.();

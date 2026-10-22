@@ -10,12 +10,8 @@ export const Route = createFileRoute("/_app/alterar-senha-obrigatoria")({
 	head: () => ({
 		meta: [{ title: getPageTitle("Alterar senha") }],
 	}),
-	beforeLoad: async ({ context: { session } }) => {
-		if (!session.mustChangePassword) {
-			throw redirect({
-				to: "/",
-			});
-		}
+	beforeLoad: () => {
+		throw redirect({ to: "/" });
 	},
 	component: RouteComponent,
 	errorComponent: ({ error }) => (
@@ -28,7 +24,7 @@ function RouteComponent() {
 		<div className="flex min-h-full items-center justify-center p-6">
 			<AuthenticationScreen
 				title="Alterar senha"
-				description="Sua conta recebeu uma senha temporária. Escolha uma nova senha para continuar."
+				description="Gerencie suas credenciais pela conta Clerk."
 				showBackToLoginLink={false}
 				footer={null}
 			>

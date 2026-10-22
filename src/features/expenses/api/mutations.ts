@@ -1,7 +1,8 @@
 import { mutationOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
-import { assertCan, authMiddleware } from "@/shared/session";
+import { assertCan } from "@/shared/session";
+import { authMiddleware } from "@/shared/session/middleware";
 import {
 	getRequiredServerLoggedUserSession,
 	getServerScope,
@@ -29,7 +30,7 @@ const createExpenseFn = createServerFn({ method: "POST" })
 			const session = await getRequiredServerLoggedUserSession();
 			const { firmId } = await getServerScope("expense");
 
-			assertCan(session, "expense.create", { firmId });
+			assertCan(session, "org:expenses:create", { firmId });
 
 			return await createExpense({
 				actor: {
@@ -63,7 +64,7 @@ const updateExpenseFn = createServerFn({ method: "POST" })
 				throw new Error(EXPENSE_ERRORS.DETAIL_NOT_FOUND);
 			}
 
-			assertCan(session, "expense.update", access.resource);
+			assertCan(session, "org:expenses:update", access.resource);
 
 			return await updateExpense({
 				actor: {
@@ -97,7 +98,7 @@ const deleteExpenseFn = createServerFn({ method: "POST" })
 				throw new Error(EXPENSE_ERRORS.DETAIL_NOT_FOUND);
 			}
 
-			assertCan(session, "expense.delete", access.resource);
+			assertCan(session, "org:expenses:delete", access.resource);
 
 			return await deleteExpense({
 				actor: {
@@ -131,7 +132,7 @@ const restoreExpenseFn = createServerFn({ method: "POST" })
 				throw new Error(EXPENSE_ERRORS.DETAIL_NOT_FOUND);
 			}
 
-			assertCan(session, "expense.restore", access.resource);
+			assertCan(session, "org:expenses:restore", access.resource);
 
 			return await restoreExpense({
 				actor: {

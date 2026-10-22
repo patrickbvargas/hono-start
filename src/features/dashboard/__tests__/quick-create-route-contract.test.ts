@@ -84,7 +84,7 @@ describe("dashboard quick-create route contract", () => {
 		expect(routeContent).toContain("getEmployeeRolesQueryOptions()");
 	});
 
-	it("keeps collaborator quick-create gated by administrator visibility", () => {
+	it("gates collaborator quick-create with its independent permission", () => {
 		const routeContent = readWorkspaceFile(
 			"src",
 			"routes",
@@ -92,7 +92,9 @@ describe("dashboard quick-create route contract", () => {
 			"index.tsx",
 		);
 
-		expect(routeContent).toContain("{isAdmin ? (");
+		expect(routeContent).toContain(
+			'{hasPermission(session, "org:employees:create") ? (',
+		);
 		expect(routeContent).toContain("employeeOverlay.overlay.create.open()");
 	});
 });

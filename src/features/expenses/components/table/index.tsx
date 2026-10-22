@@ -82,6 +82,10 @@ export const ExpenseTable = ({
 
 					return (
 						<EntityActions
+							viewPermission="org:expenses:read"
+							editPermission="org:expenses:update"
+							restorePermission="org:expenses:restore"
+							deletePermission="org:expenses:delete"
 							canEdit={actions.canEdit}
 							canRestore={actions.canRestore}
 							canDelete={actions.canDelete}

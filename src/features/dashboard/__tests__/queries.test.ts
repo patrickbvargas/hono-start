@@ -187,6 +187,7 @@ describe("dashboard data queries", () => {
 		const result = await getDashboardSummary({
 			firmId: 1,
 			isAdmin: true,
+			canReadCashFlow: true,
 			search: {
 				dateFrom: "2026-01-01",
 				dateTo: "2026-03-31",
@@ -468,6 +469,7 @@ describe("dashboard data queries", () => {
 		await getDashboardSummary({
 			firmId: 1,
 			isAdmin: true,
+			canReadCashFlow: true,
 			search: {
 				dateFrom: "2026-01-01",
 				dateTo: "2026-12-31",
@@ -584,6 +586,7 @@ describe("dashboard data queries", () => {
 		const result = await getDashboardSummary({
 			firmId: 1,
 			isAdmin: true,
+			canReadCashFlow: true,
 			search: {
 				dateFrom: "2026-01-01",
 				dateTo: "2026-04-30",

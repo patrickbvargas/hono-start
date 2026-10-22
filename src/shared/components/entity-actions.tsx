@@ -7,8 +7,17 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/shared/components/ui";
+import {
+	type ClerkPermission,
+	hasPermission,
+	useOptionalLoggedUserSession,
+} from "@/shared/session";
 
 interface EntityActionsProps {
+	viewPermission?: ClerkPermission | readonly ClerkPermission[];
+	editPermission?: ClerkPermission | readonly ClerkPermission[];
+	restorePermission?: ClerkPermission | readonly ClerkPermission[];
+	deletePermission?: ClerkPermission | readonly ClerkPermission[];
 	canView?: boolean;
 	canEdit?: boolean;
 	canRestore?: boolean;
@@ -20,6 +29,10 @@ interface EntityActionsProps {
 }
 
 export function EntityActions({
+	viewPermission,
+	editPermission,
+	restorePermission,
+	deletePermission,
 	canView = true,
 	canEdit = false,
 	canRestore = false,
@@ -29,10 +42,20 @@ export function EntityActions({
 	onRestore,
 	onDelete,
 }: EntityActionsProps): ReactNode {
-	const shouldShowView = canView && !!onView;
-	const shouldShowEdit = canEdit && !!onEdit;
-	const shouldShowRestore = canRestore && !!onRestore;
-	const shouldShowDelete = canDelete && !!onDelete;
+	const session = useOptionalLoggedUserSession();
+	const allowed = (
+		permission?: ClerkPermission | readonly ClerkPermission[],
+	) => {
+		if (!permission) return true;
+		return typeof permission === "string"
+			? hasPermission(session, permission)
+			: permission.some((key) => hasPermission(session, key));
+	};
+	const shouldShowView = canView && !!onView && allowed(viewPermission);
+	const shouldShowEdit = canEdit && !!onEdit && allowed(editPermission);
+	const shouldShowRestore =
+		canRestore && !!onRestore && allowed(restorePermission);
+	const shouldShowDelete = canDelete && !!onDelete && allowed(deletePermission);
 
 	if (
 		!shouldShowView &&

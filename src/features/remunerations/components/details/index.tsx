@@ -134,6 +134,13 @@ const RemunerationDetailsContent = ({
 					{`${remuneration.employeeName} • ${remuneration.contractProcessNumber}`}
 				</EntityDetail.Title>
 				<EntityActions
+					viewPermission={[
+						"org:remunerations:read_all",
+						"org:remunerations:read_own",
+					]}
+					editPermission="org:remunerations:update"
+					restorePermission="org:remunerations:restore"
+					deletePermission="org:remunerations:delete"
 					canView={false}
 					canEdit={actions.canEdit}
 					canRestore={actions.canRestore}

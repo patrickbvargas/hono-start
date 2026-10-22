@@ -15,7 +15,7 @@ interface DashboardProps {
 export function Dashboard({ data }: DashboardProps) {
 	return (
 		<ScrollArea hideScrollbar className="h-full min-h-0 flex flex-col gap-4">
-			<div className="flex flex-col gap-4 p-0.5 pb-4">
+			<div className="flex flex-col gap-4 p-0.5">
 				<DashboardMetricCards metrics={data.metrics} />
 				{data.cashFlow ? (
 					<>

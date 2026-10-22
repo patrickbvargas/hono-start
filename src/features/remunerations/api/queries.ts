@@ -2,11 +2,9 @@ import { mutationOptions, queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
 import type { Option } from "@/shared/schemas/option";
-import { authMiddleware, isAdminSession } from "@/shared/session";
-import {
-	getRequiredServerLoggedUserSession,
-	getServerScope,
-} from "@/shared/session/server";
+import { assertCan, hasPermission } from "@/shared/session";
+import { authMiddleware } from "@/shared/session/middleware";
+import { getRequiredServerLoggedUserSession } from "@/shared/session/server";
 import type {
 	QueryManyReturnType,
 	QueryOneReturnType,
@@ -50,16 +48,25 @@ export const remunerationKeys = {
 	employeeOptions: () => [...remunerationKeys.all, "employee-options"] as const,
 };
 
-async function getRemunerationScope() {
+async function getRemunerationScope(exporting = false) {
 	const session = await getRequiredServerLoggedUserSession();
-	const scope = await getServerScope("remuneration");
+	assertCan(
+		session,
+		exporting
+			? ["org:remunerations:export_all", "org:remunerations:export_own"]
+			: ["org:remunerations:read_all", "org:remunerations:read_own"],
+	);
+	const all = hasPermission(
+		session,
+		exporting ? "org:remunerations:export_all" : "org:remunerations:read_all",
+	);
 
 	return {
 		session,
 		scope: {
-			firmId: scope.firmId,
-			employeeId: scope.employeeId,
-			isAdmin: isAdminSession(session),
+			firmId: session.firm.id,
+			employeeId: all ? undefined : session.employee.id,
+			isAdmin: all,
 		},
 	};
 }
@@ -137,7 +144,7 @@ const exportRemunerationsFn = createServerFn({ method: "POST" })
 	.inputValidator(remunerationExportInputSchema)
 	.handler(async ({ data }): Promise<RemunerationExportResult> => {
 		try {
-			const { scope } = await getRemunerationScope();
+			const { scope } = await getRemunerationScope(true);
 			const remunerations = await getRemunerationsForExport({
 				scope,
 				search: data,

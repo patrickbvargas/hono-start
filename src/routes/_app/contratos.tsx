@@ -30,7 +30,7 @@ import {
 import { getPageTitle, ROUTES } from "@/shared/config/routes";
 import { useOverlay } from "@/shared/hooks/use-overlay";
 import type { EntityId } from "@/shared/schemas/entity";
-import { isAdminSession, useLoggedUserSessionStore } from "@/shared/session";
+import { hasPermission, useLoggedUserSessionStore } from "@/shared/session";
 
 export const Route = createFileRoute("/_app/contratos")({
 	head: () => ({
@@ -62,13 +62,18 @@ function RouteComponent() {
 	const search = Route.useSearch();
 	const { contracts } = useContracts(search);
 	const { overlay } = useOverlay<EntityId>();
-	const isAdmin = useLoggedUserSessionStore(isAdminSession);
+	const isAdmin = useLoggedUserSessionStore(
+		(session) =>
+			hasPermission(session, "org:contracts:delete") ||
+			hasPermission(session, "org:contracts:restore"),
+	);
 
 	return (
 		<Wrapper
 			title={ROUTES.contract.title}
 			actions={
 				<ButtonNew
+					permission="org:contracts:create"
 					label="Novo contrato"
 					onClick={() => overlay.create.open()}
 				/>

@@ -16,7 +16,7 @@ These technical choices are mandatory for this repository:
 - ORM: Prisma
 - Database: PostgreSQL
 - File storage: Supabase Storage
-- Authentication: Supabase Auth
+- Authentication and permission grants: Clerk (official TanStack React Start SDK)
 - UI components: shadcn/ui via shared re-exports only
 - Validation: Zod
 - Linting and formatting: Biome
@@ -172,3 +172,7 @@ unless a route-facing consumer requires the difference.
 - Each feature should converge on the `clients` slice anatomy unless a documented exception exists.
 - Route files must read like orchestration code, not like a second implementation layer.
 - Business domains may change between repositories; this slice pattern should not.
+
+## Clerk provider UI exception
+
+Clerk-owned SignIn and account widgets may be imported by authentication feature components. Surrounding product UI continues using shared UI exports. ClerkProvider and request/CSRF middleware are thin framework integration. See CLERK_MIGRATION.md for migration state and deployment prerequisites.

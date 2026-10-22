@@ -50,6 +50,7 @@ export type EmployeeMinAggregateOutputType = {
   fullName: string | null
   email: string | null
   authUserId: string | null
+  clerkUserId: string | null
   typeId: number | null
   roleId: number | null
   oabNumber: string | null
@@ -69,6 +70,7 @@ export type EmployeeMaxAggregateOutputType = {
   fullName: string | null
   email: string | null
   authUserId: string | null
+  clerkUserId: string | null
   typeId: number | null
   roleId: number | null
   oabNumber: string | null
@@ -88,6 +90,7 @@ export type EmployeeCountAggregateOutputType = {
   fullName: number
   email: number
   authUserId: number
+  clerkUserId: number
   typeId: number
   roleId: number
   oabNumber: number
@@ -127,6 +130,7 @@ export type EmployeeMinAggregateInputType = {
   fullName?: true
   email?: true
   authUserId?: true
+  clerkUserId?: true
   typeId?: true
   roleId?: true
   oabNumber?: true
@@ -146,6 +150,7 @@ export type EmployeeMaxAggregateInputType = {
   fullName?: true
   email?: true
   authUserId?: true
+  clerkUserId?: true
   typeId?: true
   roleId?: true
   oabNumber?: true
@@ -165,6 +170,7 @@ export type EmployeeCountAggregateInputType = {
   fullName?: true
   email?: true
   authUserId?: true
+  clerkUserId?: true
   typeId?: true
   roleId?: true
   oabNumber?: true
@@ -271,6 +277,7 @@ export type EmployeeGroupByOutputType = {
   fullName: string
   email: string
   authUserId: string | null
+  clerkUserId: string | null
   typeId: number
   roleId: number
   oabNumber: string | null
@@ -313,6 +320,7 @@ export type EmployeeWhereInput = {
   fullName?: Prisma.StringFilter<"Employee"> | string
   email?: Prisma.StringFilter<"Employee"> | string
   authUserId?: Prisma.UuidNullableFilter<"Employee"> | string | null
+  clerkUserId?: Prisma.StringNullableFilter<"Employee"> | string | null
   typeId?: Prisma.IntFilter<"Employee"> | number
   roleId?: Prisma.IntFilter<"Employee"> | number
   oabNumber?: Prisma.StringNullableFilter<"Employee"> | string | null
@@ -338,6 +346,7 @@ export type EmployeeOrderByWithRelationInput = {
   fullName?: Prisma.SortOrder
   email?: Prisma.SortOrder
   authUserId?: Prisma.SortOrderInput | Prisma.SortOrder
+  clerkUserId?: Prisma.SortOrderInput | Prisma.SortOrder
   typeId?: Prisma.SortOrder
   roleId?: Prisma.SortOrder
   oabNumber?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -361,6 +370,7 @@ export type EmployeeWhereUniqueInput = Prisma.AtLeast<{
   id?: number
   email?: string
   authUserId?: string
+  clerkUserId?: string
   firmId_oabNumber?: Prisma.EmployeeFirmIdOabNumberCompoundUniqueInput
   AND?: Prisma.EmployeeWhereInput | Prisma.EmployeeWhereInput[]
   OR?: Prisma.EmployeeWhereInput[]
@@ -384,7 +394,7 @@ export type EmployeeWhereUniqueInput = Prisma.AtLeast<{
   auditLogs?: Prisma.AuditLogListRelationFilter
   attachments?: Prisma.AttachmentListRelationFilter
   contractAssignments?: Prisma.ContractEmployeeListRelationFilter
-}, "id" | "email" | "authUserId" | "firmId_oabNumber">
+}, "id" | "email" | "authUserId" | "clerkUserId" | "firmId_oabNumber">
 
 export type EmployeeOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -392,6 +402,7 @@ export type EmployeeOrderByWithAggregationInput = {
   fullName?: Prisma.SortOrder
   email?: Prisma.SortOrder
   authUserId?: Prisma.SortOrderInput | Prisma.SortOrder
+  clerkUserId?: Prisma.SortOrderInput | Prisma.SortOrder
   typeId?: Prisma.SortOrder
   roleId?: Prisma.SortOrder
   oabNumber?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -419,6 +430,7 @@ export type EmployeeScalarWhereWithAggregatesInput = {
   fullName?: Prisma.StringWithAggregatesFilter<"Employee"> | string
   email?: Prisma.StringWithAggregatesFilter<"Employee"> | string
   authUserId?: Prisma.UuidNullableWithAggregatesFilter<"Employee"> | string | null
+  clerkUserId?: Prisma.StringNullableWithAggregatesFilter<"Employee"> | string | null
   typeId?: Prisma.IntWithAggregatesFilter<"Employee"> | number
   roleId?: Prisma.IntWithAggregatesFilter<"Employee"> | number
   oabNumber?: Prisma.StringNullableWithAggregatesFilter<"Employee"> | string | null
@@ -436,6 +448,7 @@ export type EmployeeCreateInput = {
   fullName: string
   email: string
   authUserId?: string | null
+  clerkUserId?: string | null
   oabNumber?: string | null
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -459,6 +472,7 @@ export type EmployeeUncheckedCreateInput = {
   fullName: string
   email: string
   authUserId?: string | null
+  clerkUserId?: string | null
   typeId: number
   roleId: number
   oabNumber?: string | null
@@ -479,6 +493,7 @@ export type EmployeeUpdateInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   authUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clerkUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -502,6 +517,7 @@ export type EmployeeUncheckedUpdateInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   authUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clerkUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   typeId?: Prisma.IntFieldUpdateOperationsInput | number
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -524,6 +540,7 @@ export type EmployeeCreateManyInput = {
   fullName: string
   email: string
   authUserId?: string | null
+  clerkUserId?: string | null
   typeId: number
   roleId: number
   oabNumber?: string | null
@@ -541,6 +558,7 @@ export type EmployeeUpdateManyMutationInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   authUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clerkUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -558,6 +576,7 @@ export type EmployeeUncheckedUpdateManyInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   authUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clerkUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   typeId?: Prisma.IntFieldUpdateOperationsInput | number
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -592,6 +611,7 @@ export type EmployeeCountOrderByAggregateInput = {
   fullName?: Prisma.SortOrder
   email?: Prisma.SortOrder
   authUserId?: Prisma.SortOrder
+  clerkUserId?: Prisma.SortOrder
   typeId?: Prisma.SortOrder
   roleId?: Prisma.SortOrder
   oabNumber?: Prisma.SortOrder
@@ -620,6 +640,7 @@ export type EmployeeMaxOrderByAggregateInput = {
   fullName?: Prisma.SortOrder
   email?: Prisma.SortOrder
   authUserId?: Prisma.SortOrder
+  clerkUserId?: Prisma.SortOrder
   typeId?: Prisma.SortOrder
   roleId?: Prisma.SortOrder
   oabNumber?: Prisma.SortOrder
@@ -639,6 +660,7 @@ export type EmployeeMinOrderByAggregateInput = {
   fullName?: Prisma.SortOrder
   email?: Prisma.SortOrder
   authUserId?: Prisma.SortOrder
+  clerkUserId?: Prisma.SortOrder
   typeId?: Prisma.SortOrder
   roleId?: Prisma.SortOrder
   oabNumber?: Prisma.SortOrder
@@ -797,20 +819,12 @@ export type EmployeeUncheckedUpdateManyWithoutRoleNestedInput = {
   deleteMany?: Prisma.EmployeeScalarWhereInput | Prisma.EmployeeScalarWhereInput[]
 }
 
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
-}
-
 export type DecimalFieldUpdateOperationsInput = {
   set?: runtime.Decimal | runtime.DecimalJsLike | number | string
   increment?: runtime.Decimal | runtime.DecimalJsLike | number | string
   decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string
   multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string
   divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
-}
-
-export type DateTimeFieldUpdateOperationsInput = {
-  set?: Date | string
 }
 
 export type NullableDateTimeFieldUpdateOperationsInput = {
@@ -867,6 +881,7 @@ export type EmployeeCreateWithoutFirmInput = {
   fullName: string
   email: string
   authUserId?: string | null
+  clerkUserId?: string | null
   oabNumber?: string | null
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -888,6 +903,7 @@ export type EmployeeUncheckedCreateWithoutFirmInput = {
   fullName: string
   email: string
   authUserId?: string | null
+  clerkUserId?: string | null
   typeId: number
   roleId: number
   oabNumber?: string | null
@@ -939,6 +955,7 @@ export type EmployeeScalarWhereInput = {
   fullName?: Prisma.StringFilter<"Employee"> | string
   email?: Prisma.StringFilter<"Employee"> | string
   authUserId?: Prisma.UuidNullableFilter<"Employee"> | string | null
+  clerkUserId?: Prisma.StringNullableFilter<"Employee"> | string | null
   typeId?: Prisma.IntFilter<"Employee"> | number
   roleId?: Prisma.IntFilter<"Employee"> | number
   oabNumber?: Prisma.StringNullableFilter<"Employee"> | string | null
@@ -956,6 +973,7 @@ export type EmployeeCreateWithoutTypeInput = {
   fullName: string
   email: string
   authUserId?: string | null
+  clerkUserId?: string | null
   oabNumber?: string | null
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -978,6 +996,7 @@ export type EmployeeUncheckedCreateWithoutTypeInput = {
   fullName: string
   email: string
   authUserId?: string | null
+  clerkUserId?: string | null
   roleId: number
   oabNumber?: string | null
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1023,6 +1042,7 @@ export type EmployeeCreateWithoutRoleInput = {
   fullName: string
   email: string
   authUserId?: string | null
+  clerkUserId?: string | null
   oabNumber?: string | null
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1045,6 +1065,7 @@ export type EmployeeUncheckedCreateWithoutRoleInput = {
   fullName: string
   email: string
   authUserId?: string | null
+  clerkUserId?: string | null
   typeId: number
   oabNumber?: string | null
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1090,6 +1111,7 @@ export type EmployeeCreateWithoutAuditLogsInput = {
   fullName: string
   email: string
   authUserId?: string | null
+  clerkUserId?: string | null
   oabNumber?: string | null
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1112,6 +1134,7 @@ export type EmployeeUncheckedCreateWithoutAuditLogsInput = {
   fullName: string
   email: string
   authUserId?: string | null
+  clerkUserId?: string | null
   typeId: number
   roleId: number
   oabNumber?: string | null
@@ -1147,6 +1170,7 @@ export type EmployeeUpdateWithoutAuditLogsInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   authUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clerkUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1169,6 +1193,7 @@ export type EmployeeUncheckedUpdateWithoutAuditLogsInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   authUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clerkUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   typeId?: Prisma.IntFieldUpdateOperationsInput | number
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1188,6 +1213,7 @@ export type EmployeeCreateWithoutContractAssignmentsInput = {
   fullName: string
   email: string
   authUserId?: string | null
+  clerkUserId?: string | null
   oabNumber?: string | null
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1210,6 +1236,7 @@ export type EmployeeUncheckedCreateWithoutContractAssignmentsInput = {
   fullName: string
   email: string
   authUserId?: string | null
+  clerkUserId?: string | null
   typeId: number
   roleId: number
   oabNumber?: string | null
@@ -1245,6 +1272,7 @@ export type EmployeeUpdateWithoutContractAssignmentsInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   authUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clerkUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1267,6 +1295,7 @@ export type EmployeeUncheckedUpdateWithoutContractAssignmentsInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   authUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clerkUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   typeId?: Prisma.IntFieldUpdateOperationsInput | number
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1286,6 +1315,7 @@ export type EmployeeCreateWithoutAttachmentsInput = {
   fullName: string
   email: string
   authUserId?: string | null
+  clerkUserId?: string | null
   oabNumber?: string | null
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1308,6 +1338,7 @@ export type EmployeeUncheckedCreateWithoutAttachmentsInput = {
   fullName: string
   email: string
   authUserId?: string | null
+  clerkUserId?: string | null
   typeId: number
   roleId: number
   oabNumber?: string | null
@@ -1343,6 +1374,7 @@ export type EmployeeUpdateWithoutAttachmentsInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   authUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clerkUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1365,6 +1397,7 @@ export type EmployeeUncheckedUpdateWithoutAttachmentsInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   authUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clerkUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   typeId?: Prisma.IntFieldUpdateOperationsInput | number
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1385,6 +1418,7 @@ export type EmployeeCreateManyFirmInput = {
   fullName: string
   email: string
   authUserId?: string | null
+  clerkUserId?: string | null
   typeId: number
   roleId: number
   oabNumber?: string | null
@@ -1402,6 +1436,7 @@ export type EmployeeUpdateWithoutFirmInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   authUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clerkUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1423,6 +1458,7 @@ export type EmployeeUncheckedUpdateWithoutFirmInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   authUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clerkUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   typeId?: Prisma.IntFieldUpdateOperationsInput | number
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1444,6 +1480,7 @@ export type EmployeeUncheckedUpdateManyWithoutFirmInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   authUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clerkUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   typeId?: Prisma.IntFieldUpdateOperationsInput | number
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1463,6 +1500,7 @@ export type EmployeeCreateManyTypeInput = {
   fullName: string
   email: string
   authUserId?: string | null
+  clerkUserId?: string | null
   roleId: number
   oabNumber?: string | null
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1479,6 +1517,7 @@ export type EmployeeUpdateWithoutTypeInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   authUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clerkUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1501,6 +1540,7 @@ export type EmployeeUncheckedUpdateWithoutTypeInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   authUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clerkUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1522,6 +1562,7 @@ export type EmployeeUncheckedUpdateManyWithoutTypeInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   authUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clerkUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1540,6 +1581,7 @@ export type EmployeeCreateManyRoleInput = {
   fullName: string
   email: string
   authUserId?: string | null
+  clerkUserId?: string | null
   typeId: number
   oabNumber?: string | null
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1556,6 +1598,7 @@ export type EmployeeUpdateWithoutRoleInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   authUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clerkUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1578,6 +1621,7 @@ export type EmployeeUncheckedUpdateWithoutRoleInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   authUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clerkUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   typeId?: Prisma.IntFieldUpdateOperationsInput | number
   oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1599,6 +1643,7 @@ export type EmployeeUncheckedUpdateManyWithoutRoleInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   authUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clerkUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   typeId?: Prisma.IntFieldUpdateOperationsInput | number
   oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1666,6 +1711,7 @@ export type EmployeeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   fullName?: boolean
   email?: boolean
   authUserId?: boolean
+  clerkUserId?: boolean
   typeId?: boolean
   roleId?: boolean
   oabNumber?: boolean
@@ -1692,6 +1738,7 @@ export type EmployeeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   fullName?: boolean
   email?: boolean
   authUserId?: boolean
+  clerkUserId?: boolean
   typeId?: boolean
   roleId?: boolean
   oabNumber?: boolean
@@ -1714,6 +1761,7 @@ export type EmployeeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   fullName?: boolean
   email?: boolean
   authUserId?: boolean
+  clerkUserId?: boolean
   typeId?: boolean
   roleId?: boolean
   oabNumber?: boolean
@@ -1736,6 +1784,7 @@ export type EmployeeSelectScalar = {
   fullName?: boolean
   email?: boolean
   authUserId?: boolean
+  clerkUserId?: boolean
   typeId?: boolean
   roleId?: boolean
   oabNumber?: boolean
@@ -1749,7 +1798,7 @@ export type EmployeeSelectScalar = {
   deletedAt?: boolean
 }
 
-export type EmployeeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "firmId" | "fullName" | "email" | "authUserId" | "typeId" | "roleId" | "oabNumber" | "remunerationPercentage" | "referralPercentage" | "avatarUrl" | "mustChangePassword" | "isActive" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["employee"]>
+export type EmployeeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "firmId" | "fullName" | "email" | "authUserId" | "clerkUserId" | "typeId" | "roleId" | "oabNumber" | "remunerationPercentage" | "referralPercentage" | "avatarUrl" | "mustChangePassword" | "isActive" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["employee"]>
 export type EmployeeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
   type?: boolean | Prisma.EmployeeTypeDefaultArgs<ExtArgs>
@@ -1786,6 +1835,7 @@ export type $EmployeePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     fullName: string
     email: string
     authUserId: string | null
+    clerkUserId: string | null
     typeId: number
     roleId: number
     oabNumber: string | null
@@ -2231,6 +2281,7 @@ export interface EmployeeFieldRefs {
   readonly fullName: Prisma.FieldRef<"Employee", 'String'>
   readonly email: Prisma.FieldRef<"Employee", 'String'>
   readonly authUserId: Prisma.FieldRef<"Employee", 'String'>
+  readonly clerkUserId: Prisma.FieldRef<"Employee", 'String'>
   readonly typeId: Prisma.FieldRef<"Employee", 'Int'>
   readonly roleId: Prisma.FieldRef<"Employee", 'Int'>
   readonly oabNumber: Prisma.FieldRef<"Employee", 'String'>

@@ -86,7 +86,6 @@ function EmployeeFormContent({
 	form,
 	state,
 	title,
-	roles,
 	types,
 }: EmployeeFormContentProps) {
 	return (
@@ -116,11 +115,7 @@ function EmployeeFormContent({
 								<field.Autocomplete label="Função" options={types} isRequired />
 							)}
 						</form.AppField>
-						<form.AppField name="role">
-							{(field) => (
-								<field.Autocomplete label="Perfil" options={roles} isRequired />
-							)}
-						</form.AppField>
+
 						<form.Subscribe
 							selector={(state) => state.values.type === LAWYER_TYPE_VALUE}
 						>

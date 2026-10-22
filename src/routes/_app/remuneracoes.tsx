@@ -27,7 +27,7 @@ import {
 import { getPageTitle, ROUTES } from "@/shared/config/routes";
 import { useOverlay } from "@/shared/hooks/use-overlay";
 import type { EntityId } from "@/shared/schemas/entity";
-import { isAdminSession, useLoggedUserSessionStore } from "@/shared/session";
+import { hasPermission, useLoggedUserSessionStore } from "@/shared/session";
 
 export const Route = createFileRoute("/_app/remuneracoes")({
 	head: () => ({
@@ -59,7 +59,19 @@ function RouteComponent() {
 	const search = Route.useSearch();
 	const { remunerations } = useRemunerations(search);
 	const { overlay } = useOverlay<EntityId>();
-	const isAdmin = useLoggedUserSessionStore(isAdminSession);
+	const isAdmin = useLoggedUserSessionStore(
+		(session) =>
+			hasPermission(session, "org:remunerations:delete") ||
+			hasPermission(session, "org:remunerations:restore"),
+	);
+	const canReadAll = useLoggedUserSessionStore((session) =>
+		hasPermission(session, "org:remunerations:read_all"),
+	);
+	const canExport = useLoggedUserSessionStore((session) =>
+		(
+			["org:remunerations:export_all", "org:remunerations:export_own"] as const
+		).some((permission) => hasPermission(session, permission)),
+	);
 	const { handleExport, isPending, pendingFormat } =
 		useRemunerationExport(search);
 
@@ -67,15 +79,17 @@ function RouteComponent() {
 		<Wrapper
 			title={ROUTES.remuneration.title}
 			actions={
-				<RemunerationExportMenu
-					onExport={handleExport}
-					isPending={isPending}
-					pendingFormat={pendingFormat}
-				/>
+				canExport ? (
+					<RemunerationExportMenu
+						onExport={handleExport}
+						isPending={isPending}
+						pendingFormat={pendingFormat}
+					/>
+				) : null
 			}
 		>
 			<WrapperHeader>
-				<RemunerationFilter isAdmin={isAdmin} />
+				<RemunerationFilter isAdmin={canReadAll} />
 			</WrapperHeader>
 			<WrapperBody>
 				<EntityView

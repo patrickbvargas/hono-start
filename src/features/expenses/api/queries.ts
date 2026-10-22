@@ -2,7 +2,8 @@ import { queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
 import type { Option } from "@/shared/schemas/option";
-import { assertCan, authMiddleware } from "@/shared/session";
+import { assertCan } from "@/shared/session";
+import { authMiddleware } from "@/shared/session/middleware";
 import {
 	getRequiredServerLoggedUserSession,
 	getServerScope,
@@ -38,7 +39,7 @@ const getExpensesFn = createServerFn({ method: "GET" })
 				const session = await getRequiredServerLoggedUserSession();
 				const { firmId } = await getServerScope("expense");
 
-				assertCan(session, "expense.view", { firmId });
+				assertCan(session, "org:expenses:read", { firmId });
 
 				return await getExpenses({ firmId, search: data });
 			} catch (error) {
@@ -56,7 +57,7 @@ const getExpenseByIdFn = createServerFn({ method: "GET" })
 			const session = await getRequiredServerLoggedUserSession();
 			const { firmId } = await getServerScope("expense");
 
-			assertCan(session, "expense.view", { firmId });
+			assertCan(session, "org:expenses:read", { firmId });
 
 			return await getExpenseById({ firmId, id: data.id });
 		} catch (error) {
@@ -76,7 +77,7 @@ const getExpenseCategoriesFn = createServerFn({ method: "GET" })
 			const session = await getRequiredServerLoggedUserSession();
 			const { firmId } = await getServerScope("expense");
 
-			assertCan(session, "expense.view", { firmId });
+			assertCan(session, "org:expenses:read", { firmId });
 
 			return await getExpenseCategories();
 		} catch (error) {

@@ -1,10 +1,7 @@
 import { mutationOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
-import {
-	assertCan,
-	authMiddleware,
-	isContractWritable,
-} from "@/shared/session";
+import { assertCan, isContractWritable } from "@/shared/session";
+import { authMiddleware } from "@/shared/session/middleware";
 import {
 	getRequiredServerLoggedUserSession,
 	getServerScope,
@@ -35,18 +32,25 @@ function assertAttachmentOwnerUploadAccess(
 				: undefined,
 	});
 
-	assertCan(session, "attachment.upload", owner.access.resource);
+	assertCan(session, "org:attachments:upload", owner.access.resource);
+	if (owner.owner.ownerKind === "client") {
+		assertCan(session, "org:clients:update", owner.access.resource);
+	}
 
 	if (owner.owner.ownerKind === "employee") {
-		assertCan(session, "employee.manage", owner.access.resource);
+		assertCan(session, "org:employees:update", owner.access.resource);
 	}
 
 	if (owner.owner.ownerKind === "contract") {
-		assertCan(session, "contract.update", owner.access.resource);
+		assertCan(
+			session,
+			["org:contracts:update_all", "org:contracts:update_assigned"],
+			owner.access.resource,
+		);
 	}
 
 	if (owner.owner.ownerKind === "expense") {
-		assertCan(session, "expense.update", owner.access.resource);
+		assertCan(session, "org:expenses:update", owner.access.resource);
 	}
 }
 
@@ -98,7 +102,27 @@ const deleteAttachmentFn = createServerFn({ method: "POST" })
 				throw new Error(ATTACHMENT_ERRORS.DETAIL_NOT_FOUND);
 			}
 
-			assertCan(session, "attachment.delete", access.resource);
+			assertCan(session, "org:attachments:delete", access.resource);
+			const owner = await assertAttachmentOwnerExists({
+				firmId,
+				input: access.ownerInput,
+			});
+			if (owner.owner.ownerKind === "contract") {
+				assertCan(
+					session,
+					["org:contracts:read_all", "org:contracts:read_assigned"],
+					owner.access.resource,
+				);
+			}
+			if (owner.owner.ownerKind === "employee") {
+				assertCan(session, "org:employees:read", owner.access.resource);
+			}
+			if (owner.owner.ownerKind === "client") {
+				assertCan(session, "org:clients:read", owner.access.resource);
+			}
+			if (owner.owner.ownerKind === "expense") {
+				assertCan(session, "org:expenses:read", owner.access.resource);
+			}
 
 			return await deleteAttachment({
 				actor: {

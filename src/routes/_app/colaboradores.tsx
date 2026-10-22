@@ -26,7 +26,11 @@ import {
 import { getPageTitle, ROUTES } from "@/shared/config/routes";
 import { useOverlay } from "@/shared/hooks/use-overlay";
 import type { EntityId } from "@/shared/schemas/entity";
-import { assertCan, can, useLoggedUserSessionStore } from "@/shared/session";
+import {
+	assertCan,
+	hasPermission,
+	useLoggedUserSessionStore,
+} from "@/shared/session";
 
 export const Route = createFileRoute("/_app/colaboradores")({
 	head: () => ({
@@ -38,7 +42,7 @@ export const Route = createFileRoute("/_app/colaboradores")({
 	},
 	loaderDeps: ({ search }) => ({ search }),
 	loader: async ({ context: { queryClient, session }, deps: { search } }) => {
-		assertCan(session, "employee.manage");
+		assertCan(session, "org:employees:read");
 		await Promise.all([
 			queryClient.ensureQueryData(getEmployeesQueryOptions(search)),
 			queryClient.ensureQueryData(getEmployeeTypesQueryOptions()),
@@ -56,7 +60,7 @@ function RouteComponent() {
 	const { employees } = useEmployees(search);
 	const { overlay } = useOverlay<EntityId>();
 	const canManage = useLoggedUserSessionStore((session) =>
-		can(session, "employee.manage"),
+		hasPermission(session, "org:employees:read"),
 	);
 
 	return (
@@ -65,6 +69,7 @@ function RouteComponent() {
 			actions={
 				canManage && (
 					<ButtonNew
+						permission="org:employees:create"
 						label="Novo colaborador"
 						onClick={() => overlay.create.open()}
 					/>

@@ -20,6 +20,12 @@ function createSession(
 	overrides: Partial<LoggedUserSession> = {},
 ): LoggedUserSession {
 	return {
+		permissions: [],
+		clerk: {
+			userId: "user_test",
+			organizationId: "org_test",
+			sessionId: "sess_test",
+		},
 		user: {
 			id: 1,
 			fullName: "Carlos Mendes",

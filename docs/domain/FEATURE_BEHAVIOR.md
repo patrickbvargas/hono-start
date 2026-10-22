@@ -31,14 +31,12 @@ The software core includes these feature areas:
 
 ### Authentication And Session Management
 
-- Provides login with email or OAB number plus password.
-- Provides authenticated password-change behavior for signed-in users who know the current password.
-- Provides password-reset entry and recovery behavior.
-- Provides administrator-managed access grant and access revoke behavior for collaborators.
-- Provides administrator-issued temporary password reset for collaborators with credential accounts.
-- Forces temporary-password users into an in-product password-change step before they can continue into the protected shell.
-- Protects authenticated areas of the application.
-- Establishes the authoritative session context for tenant and role decisions.
+- Clerk provides email or username sign-in, invitations/setup, recovery and account management in pt-BR.
+- Clerk owns credentials, pending-session tasks and security/session settings.
+- Account managers grant or revoke current-firm membership and select a delegable Clerk role.
+- The app never issues temporary passwords or authenticates by OAB.
+- Protected access requires a verified active session, current membership and active same-firm Employee mapping.
+- Permission grants come exclusively from Clerk; persisted scope and lifecycle rules remain enforced in the app.
 
 ### Dashboard
 

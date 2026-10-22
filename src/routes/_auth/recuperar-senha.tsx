@@ -50,7 +50,7 @@ function RouteComponent() {
 			description={
 				isCompletingReset
 					? "Escolha uma nova senha para voltar a acessar a plataforma."
-					: "Informe seu email ou número da OAB. Se a conta existir, enviaremos um link seguro de redefinição."
+					: "Use a opção de recuperação de senha na sua conta Clerk."
 			}
 			footer={null}
 		>

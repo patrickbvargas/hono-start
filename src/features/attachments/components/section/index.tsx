@@ -15,7 +15,7 @@ import { useOverlay } from "@/shared/hooks/use-overlay";
 import { formatter } from "@/shared/lib/formatter";
 import { cn } from "@/shared/lib/utils";
 import type { EntityId } from "@/shared/schemas/entity";
-import { isAdminSession, useLoggedUserSessionStore } from "@/shared/session";
+import { hasPermission, useLoggedUserSessionStore } from "@/shared/session";
 import { useAttachments } from "../../hooks/use-data";
 import {
 	type AttachmentOwnerKind,
@@ -51,7 +51,9 @@ export const AttachmentSection = ({
 }: AttachmentSectionProps) => {
 	const owner = getAttachmentOwnerInput({ ownerId, ownerKind });
 	const { attachments, error, isPending } = useAttachments(owner);
-	const isAdmin = useLoggedUserSessionStore(isAdminSession);
+	const isAdmin = useLoggedUserSessionStore((session) =>
+		hasPermission(session, "org:attachments:delete"),
+	);
 	const { overlay } = useOverlay<EntityId>();
 
 	return (
@@ -59,6 +61,7 @@ export const AttachmentSection = ({
 			{canUpload ? (
 				<div className="flex">
 					<ButtonNew
+						permission="org:attachments:upload"
 						className="w-fit"
 						label="Novo anexo"
 						onClick={() => overlay.create.open()}

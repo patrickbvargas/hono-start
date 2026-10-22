@@ -3,7 +3,8 @@ import { createServerFn } from "@tanstack/react-start";
 import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { Option } from "@/shared/schemas/option";
-import { authMiddleware, getScope } from "@/shared/session";
+import { assertCan, getScope } from "@/shared/session";
+import { authMiddleware } from "@/shared/session/middleware";
 import type {
 	QueryManyReturnType,
 	QueryOneReturnType,
@@ -31,6 +32,7 @@ const getClientsFn = createServerFn({ method: "GET" })
 			context,
 		}): Promise<QueryPaginatedReturnType<ClientSummary>> => {
 			try {
+				assertCan(context.session, "org:clients:read");
 				const { firmId } = getScope(context.session, "client");
 
 				return await getClients({ firmId, search: data });
@@ -47,6 +49,7 @@ const getClientByIdFn = createServerFn({ method: "GET" })
 	.handler(
 		async ({ data, context }): Promise<QueryOneReturnType<ClientDetail>> => {
 			try {
+				assertCan(context.session, "org:clients:read");
 				const { firmId } = getScope(context.session, "client");
 
 				return await getClientById({

@@ -1,33 +1,26 @@
+vi.mock("@tanstack/react-start/server", () => ({
+	getRequest: () => new Request("http://localhost"),
+}));
+
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const {
-	createSupabaseServerClientMock,
-	flushResponseCookiesMock,
-	isSupabaseAuthUserBannedMock,
-	prismaMock,
-	signOutMock,
-} = vi.hoisted(() => ({
-	createSupabaseServerClientMock: vi.fn(),
-	flushResponseCookiesMock: vi.fn(),
-	isSupabaseAuthUserBannedMock: vi.fn(),
-	prismaMock: {
-		employee: {
-			findFirst: vi.fn(),
-		},
-	},
-	signOutMock: vi.fn(),
+const mocks = vi.hoisted(() => ({
+	auth: vi.fn(),
+	memberships: vi.fn(),
+	employee: vi.fn(),
+	providerSession: vi.fn(),
+	user: vi.fn(),
 }));
-
+vi.mock("@clerk/tanstack-react-start/server", () => ({
+	auth: mocks.auth,
+	clerkClient: () => ({
+		organizations: { getOrganizationMembershipList: mocks.memberships },
+		sessions: { getSession: mocks.providerSession },
+		users: { getUser: mocks.user },
+	}),
+}));
 vi.mock("@/shared/lib/prisma", () => ({
-	prisma: prismaMock,
-}));
-
-vi.mock("@/shared/lib/supabase-admin", () => ({
-	isSupabaseAuthUserBanned: isSupabaseAuthUserBannedMock,
-}));
-
-vi.mock("@/shared/lib/supabase-server", () => ({
-	createSupabaseServerClient: createSupabaseServerClientMock,
+	prisma: { employee: { findFirst: mocks.employee } },
 }));
 
 import {
@@ -35,128 +28,106 @@ import {
 	getRequiredServerLoggedUserSession,
 } from "../server";
 
-const activeEmployee = {
-	id: 7,
-	fullName: "Carlos Mendes",
-	email: "carlos@example.com",
-	mustChangePassword: false,
-	firm: {
-		id: 1,
-		name: "Matriz",
-	},
-	role: {
-		id: 2,
-		value: "USER",
-		label: "Usuário",
-	},
-	type: {
-		id: 3,
-		value: "LAWYER",
-		label: "Advogado",
-	},
-};
-
-function mockSupabaseUser(userId: string | null) {
-	createSupabaseServerClientMock.mockReturnValue({
-		client: {
-			auth: {
-				getUser: vi.fn().mockResolvedValue({
-					data: {
-						user: userId ? { id: userId } : null,
-					},
-					error: null,
-				}),
-				signOut: signOutMock,
-			},
-		},
-		flushResponseCookies: flushResponseCookiesMock,
-		rememberMe: false,
-	});
-}
-
-describe("server session helpers", () => {
+describe("Clerk domain session", () => {
 	beforeEach(() => {
-		vi.clearAllMocks();
-		signOutMock.mockResolvedValue({ error: null });
-		isSupabaseAuthUserBannedMock.mockReturnValue(false);
-		prismaMock.employee.findFirst.mockResolvedValue(activeEmployee);
-		mockSupabaseUser(null);
-	});
-
-	it("returns null when there is no authenticated Supabase session", async () => {
-		await expect(getOptionalServerLoggedUserSession()).resolves.toBeNull();
-		expect(prismaMock.employee.findFirst).not.toHaveBeenCalled();
-		expect(flushResponseCookiesMock).toHaveBeenCalledOnce();
-	});
-
-	it("maps the authenticated Supabase user to the domain session actor", async () => {
-		mockSupabaseUser("11111111-1111-1111-1111-111111111111");
-
-		await expect(getOptionalServerLoggedUserSession()).resolves.toEqual({
-			user: {
-				id: 7,
-				fullName: "Carlos Mendes",
-				email: "carlos@example.com",
-			},
-			employee: {
-				id: 7,
-			},
-			firm: activeEmployee.firm,
-			employeeType: activeEmployee.type,
-			role: activeEmployee.role,
-			mustChangePassword: false,
+		vi.resetAllMocks();
+		mocks.providerSession.mockResolvedValue({
+			status: "active",
+			userId: "user_one",
 		});
-
-		expect(prismaMock.employee.findFirst).toHaveBeenCalledWith({
-			where: {
-				authUserId: "11111111-1111-1111-1111-111111111111",
-				deletedAt: null,
-				isActive: true,
-			},
-			select: expect.any(Object),
+		mocks.user.mockResolvedValue({ banned: false, locked: false });
+		mocks.auth.mockResolvedValue({
+			userId: "user_one",
+			orgId: "org_one",
+			sessionId: "sess_one",
+			isAuthenticated: true,
 		});
-	});
-
-	it("signs out orphaned Supabase sessions that no longer map to an active employee", async () => {
-		createSupabaseServerClientMock
-			.mockReturnValueOnce({
-				client: {
-					auth: {
-						getUser: vi.fn().mockResolvedValue({
-							data: {
-								user: { id: "11111111-1111-1111-1111-111111111111" },
-							},
-							error: null,
-						}),
-						signOut: signOutMock,
-					},
+		mocks.memberships.mockResolvedValue({
+			data: [
+				{
+					publicUserData: { userId: "user_one" },
+					role: "org:custom",
+					permissions: ["org:clients:read", "org:sys_domains:manage"],
 				},
-				flushResponseCookies: flushResponseCookiesMock,
-				rememberMe: false,
-			})
-			.mockReturnValueOnce({
-				client: {
-					auth: {
-						getUser: vi.fn(),
-						signOut: signOutMock,
-					},
-				},
-				flushResponseCookies: flushResponseCookiesMock,
-				rememberMe: false,
-			});
-		prismaMock.employee.findFirst.mockResolvedValue(null);
-
-		await expect(getOptionalServerLoggedUserSession()).resolves.toBeNull();
-
-		expect(signOutMock).toHaveBeenCalledWith({
-			scope: "local",
+			],
 		});
-		expect(createSupabaseServerClientMock).toHaveBeenCalledTimes(2);
+		mocks.employee.mockResolvedValue({
+			id: 7,
+			fullName: "Carlos",
+			email: "carlos@example.com",
+			firm: { id: 1, name: "Firm" },
+			type: { id: 2, value: "LAWYER", label: "Advogado" },
+		});
 	});
-
-	it("throws the pt-BR unauthenticated message for required sessions", async () => {
+	it("uses current grants and same-organization active mapping", async () => {
+		const session = await getRequiredServerLoggedUserSession();
+		expect(session.permissions).toEqual(["org:clients:read"]);
+		expect(session.role.value).toBe("org:custom");
+		expect(mocks.employee).toHaveBeenCalledWith(
+			expect.objectContaining({
+				where: {
+					clerkUserId: "user_one",
+					firm: { clerkOrganizationId: "org_one" },
+					deletedAt: null,
+					isActive: true,
+				},
+			}),
+		);
+	});
+	it.each([
+		{ userId: null },
+		{ orgId: null },
+		{ sessionId: null },
+		{ isAuthenticated: false },
+	])("denies incomplete/pending identity %j", async (invalid) => {
+		mocks.auth.mockResolvedValue({
+			userId: "user_one",
+			orgId: "org_one",
+			sessionId: "sess_one",
+			isAuthenticated: true,
+			...invalid,
+		});
+		expect(await getOptionalServerLoggedUserSession()).toBeNull();
+		expect(mocks.employee).not.toHaveBeenCalled();
+	});
+	it("denies provider-revoked session despite a valid old JWT", async () => {
+		mocks.providerSession.mockResolvedValue({
+			status: "revoked",
+			userId: "user_one",
+		});
+		expect(await getOptionalServerLoggedUserSession()).toBeNull();
+	});
+	it("denies removed membership without waiting for webhook", async () => {
+		mocks.memberships.mockResolvedValue({ data: [] });
+		expect(await getOptionalServerLoggedUserSession()).toBeNull();
+		expect(mocks.employee).not.toHaveBeenCalled();
+	});
+	it("denies missing domain mapping", async () => {
+		mocks.employee.mockResolvedValue(null);
 		await expect(getRequiredServerLoggedUserSession()).rejects.toThrow(
-			"Sua sessão expirou. Faça login novamente.",
+			"Sua sessão expirou",
+		);
+	});
+	it("fails closed on provider outage", async () => {
+		mocks.memberships.mockRejectedValue(new Error("unavailable"));
+		await expect(getRequiredServerLoggedUserSession()).rejects.toThrow();
+		expect(mocks.employee).not.toHaveBeenCalled();
+	});
+	it("does not reuse grants across requests", async () => {
+		expect((await getRequiredServerLoggedUserSession()).permissions).toContain(
+			"org:clients:read",
+		);
+		mocks.memberships.mockResolvedValue({
+			data: [
+				{
+					publicUserData: { userId: "user_one" },
+					role: "org:custom",
+					permissions: [],
+				},
+			],
+		});
+		expect((await getRequiredServerLoggedUserSession()).permissions).toEqual(
+			[],
 		);
 	});
 });

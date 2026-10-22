@@ -1,3 +1,4 @@
+import { clerkClient } from "@clerk/tanstack-react-start/server";
 import { Prisma } from "@/generated/prisma/client";
 import {
 	getEntityActiveWhere,
@@ -5,8 +6,8 @@ import {
 	withDeterministicTieBreaker,
 } from "@/shared/lib/entity-management";
 import { prisma } from "@/shared/lib/prisma";
-import { getSupabaseCredentialAccessState } from "@/shared/lib/supabase-admin";
 import { type Option, optionSchema } from "@/shared/schemas/option";
+import { getRequiredServerLoggedUserSession } from "@/shared/session/server";
 import type {
 	QueryManyReturnType,
 	QueryOneReturnType,
@@ -26,6 +27,10 @@ import {
 	employeeSummarySchema,
 } from "../schemas/model";
 import type { EmployeeSearch } from "../schemas/search";
+import {
+	getAssignableClerkRoles,
+	getEmployeeClerkAccess,
+} from "./clerk-access";
 
 interface BuildEmployeeWhereParams extends EntityFilterParams<EmployeeFilter> {
 	typeIds: number[];
@@ -93,27 +98,53 @@ export async function getEmployees({
 }: EntitySearchParams<EmployeeSearch>): Promise<
 	QueryPaginatedReturnType<EmployeeSummary>
 > {
-	const [resolvedTypes, resolvedRoles] = await Promise.all([
+	const resolvedTypes =
 		search.type.length > 0
-			? prisma.employeeType.findMany({
+			? await prisma.employeeType.findMany({
 					where: { value: { in: search.type } },
 					select: { id: true },
 				})
-			: Promise.resolve([]),
-		search.role.length > 0
-			? prisma.userRole.findMany({
-					where: { value: { in: search.role } },
-					select: { id: true },
-				})
-			: Promise.resolve([]),
-	]);
-
-	const where = buildEmployeeWhere({
-		firmId,
-		filter: search,
-		typeIds: resolvedTypes.map((type) => type.id),
-		roleIds: resolvedRoles.map((role) => role.id),
-	});
+			: [];
+	const firm = await prisma.firm.findUniqueOrThrow({ where: { id: firmId } });
+	const memberships = [];
+	if (firm.clerkOrganizationId) {
+		let offset = 0;
+		while (true) {
+			const page =
+				await clerkClient().organizations.getOrganizationMembershipList({
+					organizationId: firm.clerkOrganizationId,
+					limit: 100,
+					offset,
+				});
+			memberships.push(...page.data);
+			offset += page.data.length;
+			if (offset >= page.totalCount || page.data.length === 0) {
+				break;
+			}
+		}
+	}
+	const roleByUserId = new Map(
+		memberships.map((item) => [item.publicUserData?.userId, item.role]),
+	);
+	const where = {
+		...buildEmployeeWhere({
+			firmId,
+			filter: search,
+			typeIds: resolvedTypes.map((type) => type.id),
+			roleIds: [],
+		}),
+		...(search.role.length
+			? {
+					clerkUserId: {
+						in: memberships
+							.filter((item) => search.role.includes(item.role))
+							.flatMap((item) =>
+								item.publicUserData ? [item.publicUserData.userId] : [],
+							),
+					},
+				}
+			: {}),
+	};
 
 	const sortMap: Record<string, object> = {
 		fullName: { fullName: search.direction },
@@ -121,7 +152,7 @@ export async function getEmployees({
 		oabNumber: { oabNumber: search.direction },
 		remunerationPercent: { remunerationPercentage: search.direction },
 		type: { type: { label: search.direction } },
-		role: { role: { label: search.direction } },
+		role: { fullName: search.direction },
 		isActive: { isActive: search.direction },
 	};
 
@@ -151,7 +182,9 @@ export async function getEmployees({
 		oabNumber: employee.oabNumber,
 		remunerationPercent: Number(employee.remunerationPercentage),
 		type: employee.type.label,
-		role: employee.role.label,
+		role:
+			roleByUserId.get(employee.clerkUserId ?? undefined) ??
+			"Sem associação Clerk",
 		contractCount: contractCounts.get(employee.id) ?? 0,
 		isActive: employee.isActive,
 		isSoftDeleted: Boolean(employee.deletedAt),
@@ -184,9 +217,7 @@ export async function getEmployeeById({
 	const contractCounts = await getActiveContractCountByEmployeeIds([
 		rawData.id,
 	]);
-	const accessState = await getSupabaseCredentialAccessState(
-		rawData.authUserId,
-	);
+	const accessState = await getEmployeeClerkAccess(firmId, rawData.clerkUserId);
 
 	return employeeDetailSchema.parse({
 		id: rawData.id,
@@ -199,14 +230,14 @@ export async function getEmployeeById({
 		type: rawData.type.label,
 		typeValue: rawData.type.value,
 		roleId: rawData.roleId,
-		role: rawData.role.label,
-		roleValue: rawData.role.value,
+		role: accessState.role ?? "Sem associação Clerk",
+		roleValue: accessState.role ?? "",
 		contractCount: contractCounts.get(rawData.id) ?? 0,
 		hasCredentialAccount: accessState.hasCredentialAccount,
 		credentialAccessStatus: accessState.status,
 		hasActiveCredentialAccess: accessState.isAccessActive,
-		mustChangePassword: rawData.mustChangePassword,
-		authUserId: rawData.authUserId,
+		mustChangePassword: false,
+		authUserId: rawData.clerkUserId,
 		isActive: rawData.isActive,
 		isSoftDeleted: Boolean(rawData.deletedAt),
 		createdAt: rawData.createdAt.toISOString(),
@@ -223,11 +254,15 @@ export async function getEmployeeTypes(): Promise<QueryManyReturnType<Option>> {
 }
 
 export async function getEmployeeRoles(): Promise<QueryManyReturnType<Option>> {
-	const roles = await prisma.userRole.findMany({
-		orderBy: { label: "asc" },
-	});
-
-	return optionSchema.array().parse(roles);
+	const roles = await getAssignableClerkRoles(
+		await getRequiredServerLoggedUserSession(),
+	);
+	return roles.map((role, index) => ({
+		id: index + 1,
+		value: role.key,
+		label: role.name,
+		isDisabled: false,
+	}));
 }
 
 export async function getEmployeeTypeByValue(value: string) {

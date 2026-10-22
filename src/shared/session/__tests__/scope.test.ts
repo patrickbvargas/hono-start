@@ -10,6 +10,12 @@ function createSession(
 	overrides: Partial<LoggedUserSession> = {},
 ): LoggedUserSession {
 	return {
+		permissions: [],
+		clerk: {
+			userId: "user_test",
+			organizationId: "org_test",
+			sessionId: "sess_test",
+		},
 		user: {
 			id: 1,
 			fullName: "Amanda Admin",
@@ -53,8 +59,14 @@ describe("session scope", () => {
 		expect(getScope(session, "audit-log")).toEqual({ firmId: 200 });
 	});
 
-	it("keeps admins firm-scoped for contract, fee, and remuneration subjects", () => {
-		const session = createSession();
+	it("keeps explicitly granted all-scopes firm-scoped for contract, fee, and remuneration subjects", () => {
+		const session = createSession({
+			permissions: [
+				"org:contracts:read_all",
+				"org:fees:read_all",
+				"org:remunerations:read_all",
+			],
+		});
 
 		expect(getScope(session, "contract")).toEqual({ firmId: 100 });
 		expect(getScope(session, "fee")).toEqual({ firmId: 100 });

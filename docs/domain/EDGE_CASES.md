@@ -6,10 +6,10 @@ This file preserves canonical edge-case expectations for the product domain.
 
 | Scenario | Expected Behavior |
 |---|---|
-| User enters OAB in lowercase | The system normalizes the value |
+| User enters OAB at login | Clerk email sign-in is required; OAB remains business data |
 | User exceeds failed-login threshold | The system temporarily blocks further attempts and informs the user |
 | Session expires during form work | The next protected action redirects to login and unsaved changes may be lost |
-| User logs in with an administrator-issued temporary password | The system redirects the user to the mandatory password-change screen before other protected routes |
+| Clerk verification or session tasks remain pending | The provider completes them before product access |
 
 ## Client Data
 

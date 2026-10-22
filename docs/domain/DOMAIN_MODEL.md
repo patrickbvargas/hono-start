@@ -16,7 +16,7 @@
 
 ## Entity Responsibilities
 
-- `Firm` defines tenant ownership and firm-level defaults.
+- `Firm` defines tenant ownership and firm-level defaults and links uniquely to a Clerk Organization.
 - `Employee` represents both staff identity and operational participation in contracts.
 - `Client` is the business party attached to legal work.
 - `Contract` is the main business aggregate linking client, team, revenue plans, and lifecycle status.
@@ -36,7 +36,7 @@
 ### Employee
 
 - Carries firm-scoped identity and user-account semantics.
-- Has employee type, user role, optional OAB number, remuneration percentage, referral percentage, optional avatar, active state, and soft-delete state.
+- Links optionally to a Clerk User; has employee type, legacy historical user role, optional OAB number, remuneration percentage, referral percentage, optional avatar, active state, and soft-delete state.
 - OAB number is required for lawyers.
 - OAB number is unique per firm.
 - Employee email is globally unique.
@@ -187,3 +187,7 @@ See `docs/domain/LOOKUP_VALUES.md` for the canonical allowed values and labels.
 
 - Client management, contract management, fee management, and remuneration calculation are separate concerns, but they are tightly linked by the contract lifecycle.
 - The domain is driven by fee collection, expense capture, and downstream remuneration correctness.
+
+## Provider authority
+
+Clerk exclusively owns authentication and permission grants. Legacy UserRole/auth UUID/forced-reset fields remain for migration/rollback only. They cannot grant runtime access. Integer Employee IDs remain audit actors.

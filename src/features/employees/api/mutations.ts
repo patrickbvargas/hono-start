@@ -4,7 +4,8 @@ import {
 	hasExactErrorMessage,
 	isPrismaUniqueConstraintError,
 } from "@/shared/lib/error-mapping";
-import { assertCan, authMiddleware } from "@/shared/session";
+import { assertCan } from "@/shared/session";
+import { authMiddleware } from "@/shared/session/middleware";
 import {
 	getRequiredServerLoggedUserSession,
 	getServerScope,
@@ -15,13 +16,13 @@ import {
 	createEmployee,
 	deleteEmployee,
 	grantEmployeeAccess,
-	resetEmployeePassword,
 	restoreEmployee,
 	restoreEmployeeAccess,
 	revokeEmployeeAccess,
 	updateEmployee,
 } from "../data/mutations";
 import {
+	employeeAccessInputSchema,
 	employeeCreateInputSchema,
 	employeeIdInputSchema,
 	employeeUpdateInputSchema,
@@ -33,7 +34,7 @@ const createEmployeeFn = createServerFn({ method: "POST" })
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();
-			assertCan(session, "employee.manage");
+			assertCan(session, "org:employees:create");
 			const { firmId } = await getServerScope("employee");
 
 			return await createEmployee({
@@ -65,7 +66,7 @@ const updateEmployeeFn = createServerFn({ method: "POST" })
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();
-			assertCan(session, "employee.manage");
+			assertCan(session, "org:employees:update");
 			const { firmId } = await getServerScope("employee");
 
 			return await updateEmployee({
@@ -97,7 +98,7 @@ const deleteEmployeeFn = createServerFn({ method: "POST" })
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();
-			assertCan(session, "employee.manage");
+			assertCan(session, "org:employees:delete");
 			const { firmId } = await getServerScope("employee");
 
 			return await deleteEmployee({
@@ -125,7 +126,7 @@ const restoreEmployeeFn = createServerFn({ method: "POST" })
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();
-			assertCan(session, "employee.manage");
+			assertCan(session, "org:employees:restore");
 			const { firmId } = await getServerScope("employee");
 
 			return await restoreEmployee({
@@ -147,77 +148,34 @@ const restoreEmployeeFn = createServerFn({ method: "POST" })
 		}
 	});
 
-const resetEmployeePasswordFn = createServerFn({ method: "POST" })
-	.middleware([authMiddleware])
-	.inputValidator(employeeIdInputSchema)
-	.handler(
-		async ({
-			data,
-		}): Promise<
-			MutationReturnType & {
-				temporaryPassword: string;
-			}
-		> => {
-			try {
-				const session = await getRequiredServerLoggedUserSession();
-				assertCan(session, "employee.manage");
-				const { firmId } = await getServerScope("employee");
-
-				return await resetEmployeePassword({
-					actor: {
-						id: session.employee.id,
-						name: session.user.fullName,
-						email: session.user.email,
-					},
-					firmId,
-					id: data.id,
-				});
-			} catch (error) {
-				console.error("[resetEmployeePassword]", error);
-				if (hasExactErrorMessage(error, EMPLOYEE_ERRORS)) {
-					throw error;
-				}
-
-				throw new Error(EMPLOYEE_ERRORS.RESET_PASSWORD_FAILED);
-			}
-		},
-	);
-
 const grantEmployeeAccessFn = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
-	.inputValidator(employeeIdInputSchema)
-	.handler(
-		async ({
-			data,
-		}): Promise<
-			MutationReturnType & {
-				temporaryPassword: string;
-			}
-		> => {
-			try {
-				const session = await getRequiredServerLoggedUserSession();
-				assertCan(session, "employee.manage");
-				const { firmId } = await getServerScope("employee");
+	.inputValidator(employeeAccessInputSchema)
+	.handler(async ({ data }): Promise<MutationReturnType> => {
+		try {
+			const session = await getRequiredServerLoggedUserSession();
+			assertCan(session, "org:accounts:manage");
+			const { firmId } = await getServerScope("employee");
 
-				return await grantEmployeeAccess({
-					actor: {
-						id: session.employee.id,
-						name: session.user.fullName,
-						email: session.user.email,
-					},
-					firmId,
-					id: data.id,
-				});
-			} catch (error) {
-				console.error("[grantEmployeeAccess]", error);
-				if (hasExactErrorMessage(error, EMPLOYEE_ERRORS)) {
-					throw error;
-				}
-
-				throw new Error(EMPLOYEE_ERRORS.GRANT_ACCESS_FAILED);
+			return await grantEmployeeAccess({
+				actor: {
+					id: session.employee.id,
+					name: session.user.fullName,
+					email: session.user.email,
+				},
+				firmId,
+				id: data.id,
+				role: data.role,
+			});
+		} catch (error) {
+			console.error("[grantEmployeeAccess]", error);
+			if (hasExactErrorMessage(error, EMPLOYEE_ERRORS)) {
+				throw error;
 			}
-		},
-	);
+
+			throw new Error(EMPLOYEE_ERRORS.GRANT_ACCESS_FAILED);
+		}
+	});
 
 const revokeEmployeeAccessFn = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
@@ -225,7 +183,7 @@ const revokeEmployeeAccessFn = createServerFn({ method: "POST" })
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();
-			assertCan(session, "employee.manage");
+			assertCan(session, "org:accounts:manage");
 			const { firmId } = await getServerScope("employee");
 
 			return await revokeEmployeeAccess({
@@ -249,11 +207,11 @@ const revokeEmployeeAccessFn = createServerFn({ method: "POST" })
 
 const restoreEmployeeAccessFn = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
-	.inputValidator(employeeIdInputSchema)
+	.inputValidator(employeeAccessInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();
-			assertCan(session, "employee.manage");
+			assertCan(session, "org:accounts:manage");
 			const { firmId } = await getServerScope("employee");
 
 			return await restoreEmployeeAccess({
@@ -264,6 +222,7 @@ const restoreEmployeeAccessFn = createServerFn({ method: "POST" })
 				},
 				firmId,
 				id: data.id,
+				role: data.role,
 			});
 		} catch (error) {
 			console.error("[restoreEmployeeAccess]", error);
@@ -286,9 +245,6 @@ export const deleteEmployeeMutationOptions = () =>
 
 export const restoreEmployeeMutationOptions = () =>
 	mutationOptions({ mutationFn: restoreEmployeeFn });
-
-export const resetEmployeePasswordMutationOptions = () =>
-	mutationOptions({ mutationFn: resetEmployeePasswordFn });
 
 export const grantEmployeeAccessMutationOptions = () =>
 	mutationOptions({ mutationFn: grantEmployeeAccessFn });

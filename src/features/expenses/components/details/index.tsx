@@ -99,6 +99,10 @@ function ExpenseDetailsContent({
 			<EntityDetail.Header className="flex-row items-center justify-between gap-3">
 				<EntityDetail.Title>{`${expense.category} • ${formatter.currency(expense.amount)}`}</EntityDetail.Title>
 				<EntityActions
+					viewPermission="org:expenses:read"
+					editPermission="org:expenses:update"
+					restorePermission="org:expenses:restore"
+					deletePermission="org:expenses:delete"
 					canView={false}
 					canEdit={actions.canEdit}
 					canRestore={actions.canRestore}

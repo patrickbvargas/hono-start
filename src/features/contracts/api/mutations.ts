@@ -4,7 +4,8 @@ import {
 	hasExactErrorMessage,
 	isPrismaUniqueConstraintError,
 } from "@/shared/lib/error-mapping";
-import { assertCan, authMiddleware, isAdminSession } from "@/shared/session";
+import { assertCan, hasPermission } from "@/shared/session";
+import { authMiddleware } from "@/shared/session/middleware";
 import {
 	getRequiredServerLoggedUserSession,
 	getServerScope,
@@ -30,7 +31,7 @@ const createContractFn = createServerFn({ method: "POST" })
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();
-			assertCan(session, "contract.create");
+			assertCan(session, "org:contracts:create");
 			const scope = await getServerScope("contract");
 
 			return await createContract({
@@ -41,7 +42,7 @@ const createContractFn = createServerFn({ method: "POST" })
 				},
 				scope: { firmId: scope.firmId },
 				input: data,
-				isAdmin: isAdminSession(session),
+				isAdmin: hasPermission(session, "org:contracts:update_all"),
 			});
 		} catch (error) {
 			console.error("[createContract]", error);
@@ -69,7 +70,11 @@ const updateContractFn = createServerFn({ method: "POST" })
 				throw new Error(CONTRACT_ERRORS.CONTRACT_NOT_FOUND);
 			}
 
-			assertCan(session, "contract.update", access.resource);
+			assertCan(
+				session,
+				["org:contracts:update_all", "org:contracts:update_assigned"],
+				access.resource,
+			);
 			const scope = await getServerScope("contract");
 
 			return await updateContract({
@@ -80,7 +85,7 @@ const updateContractFn = createServerFn({ method: "POST" })
 				},
 				scope: { firmId: scope.firmId },
 				input: data,
-				isAdmin: isAdminSession(session),
+				isAdmin: hasPermission(session, "org:contracts:update_all"),
 			});
 		} catch (error) {
 			console.error("[updateContract]", error);
@@ -108,7 +113,7 @@ const deleteContractFn = createServerFn({ method: "POST" })
 				throw new Error(CONTRACT_ERRORS.CONTRACT_NOT_FOUND);
 			}
 
-			assertCan(session, "contract.delete", access.resource);
+			assertCan(session, "org:contracts:delete", access.resource);
 			const { firmId } = await getServerScope("contract");
 
 			return await deleteContract({
@@ -142,7 +147,7 @@ const restoreContractFn = createServerFn({ method: "POST" })
 				throw new Error(CONTRACT_ERRORS.CONTRACT_NOT_FOUND);
 			}
 
-			assertCan(session, "contract.restore", access.resource);
+			assertCan(session, "org:contracts:restore", access.resource);
 			const { firmId } = await getServerScope("contract");
 
 			return await restoreContract({

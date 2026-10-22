@@ -3,6 +3,7 @@ export {
 	getEmployeesQueryOptions,
 	getEmployeeTypesQueryOptions,
 } from "./api/queries";
+export { handleClerkEmployeeWebhook } from "./api/webhooks";
 export * from "./components/delete";
 export * from "./components/details";
 export * from "./components/filter";

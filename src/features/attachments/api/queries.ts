@@ -1,6 +1,7 @@
 import { queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
-import { assertCan, authMiddleware } from "@/shared/session";
+import { assertCan } from "@/shared/session";
+import { authMiddleware } from "@/shared/session/middleware";
 import {
 	getRequiredServerLoggedUserSession,
 	getServerScope,
@@ -34,18 +35,25 @@ function assertAttachmentOwnerReadAccess(
 	session: Awaited<ReturnType<typeof getRequiredServerLoggedUserSession>>,
 	owner: Awaited<ReturnType<typeof assertAttachmentOwnerExists>>,
 ) {
-	assertCan(session, "attachment.view", owner.access.resource);
+	assertCan(session, "org:attachments:read", owner.access.resource);
+	if (owner.owner.ownerKind === "client") {
+		assertCan(session, "org:clients:read", owner.access.resource);
+	}
 
 	if (owner.owner.ownerKind === "employee") {
-		assertCan(session, "employee.manage", owner.access.resource);
+		assertCan(session, "org:employees:read", owner.access.resource);
 	}
 
 	if (owner.owner.ownerKind === "contract") {
-		assertCan(session, "contract.view", owner.access.resource);
+		assertCan(
+			session,
+			["org:contracts:read_all", "org:contracts:read_assigned"],
+			owner.access.resource,
+		);
 	}
 
 	if (owner.owner.ownerKind === "expense") {
-		assertCan(session, "expense.view", owner.access.resource);
+		assertCan(session, "org:expenses:read", owner.access.resource);
 	}
 }
 

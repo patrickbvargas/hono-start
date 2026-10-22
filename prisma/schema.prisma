@@ -7,7 +7,15 @@ datasource db {
   provider = "postgresql"
 }
 
+model ClerkWebhookReceipt {
+  id          String   @id
+  processedAt DateTime @default(now())
+
+  @@map("clerk_webhook_receipts")
+}
+
 model Firm {
+  clerkOrganizationId String? @unique
   id                Int                @id @default(autoincrement())
   name              String
   auditLogs         AuditLog[]
@@ -120,6 +128,7 @@ model Employee {
   fullName               String
   email                  String       @unique
   authUserId             String?      @unique @db.Uuid
+  clerkUserId            String?      @unique
   typeId                 Int
   roleId                 Int
   oabNumber              String?

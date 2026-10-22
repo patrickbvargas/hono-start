@@ -6,30 +6,14 @@ import {
 	EntityDetail,
 } from "@/shared/components/entity-detail";
 import { EntityStatus } from "@/shared/components/entity-status";
-import {
-	AlertDialog,
-	AlertDialogAction,
-	AlertDialogCancel,
-	AlertDialogContent,
-	AlertDialogDescription,
-	AlertDialogFooter,
-	AlertDialogHeader,
-	AlertDialogTitle,
-	Button,
-	DrawerClose,
-	Spinner,
-} from "@/shared/components/ui";
+import { Button, DrawerClose } from "@/shared/components/ui";
 import { formatter } from "@/shared/lib/formatter";
-import { toast } from "@/shared/lib/toast";
+
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
 import { useEmployee } from "../../hooks/use-data";
-import { useEmployeeGrantAccess } from "../../hooks/use-grant-access";
-import { useEmployeeResetPassword } from "../../hooks/use-reset-password";
-import { useEmployeeRestoreAccess } from "../../hooks/use-restore-access";
-import { useEmployeeRevokeAccess } from "../../hooks/use-revoke-access";
 import { getEmployeeLifecycleActions } from "../../utils/lifecycle-actions";
-import { TemporaryPasswordDialog } from "../temporary-password";
+import { EmployeeAccountAccess } from "../account-access";
 
 interface EmployeeDetailsProps {
 	canManageLifecycle?: boolean;
@@ -40,29 +24,6 @@ interface EmployeeDetailsProps {
 	state: OverlayState;
 }
 
-interface TemporaryPasswordState {
-	context: "grant" | "reset";
-	value: string;
-}
-
-function copyTextWithDocumentFallback(value: string) {
-	const textarea = document.createElement("textarea");
-	textarea.value = value;
-	textarea.setAttribute("readonly", "");
-	textarea.style.position = "fixed";
-	textarea.style.opacity = "0";
-	textarea.style.pointerEvents = "none";
-	document.body.appendChild(textarea);
-	textarea.focus();
-	textarea.select();
-
-	try {
-		return document.execCommand("copy");
-	} finally {
-		document.body.removeChild(textarea);
-	}
-}
-
 export const EmployeeDetails = ({
 	canManageLifecycle = false,
 	id,
@@ -71,9 +32,6 @@ export const EmployeeDetails = ({
 	onRestore,
 	state,
 }: EmployeeDetailsProps) => {
-	const [temporaryPassword, setTemporaryPassword] =
-		React.useState<TemporaryPasswordState | null>(null);
-
 	return (
 		<EntityDetail.Root key={id} state={state}>
 			<React.Suspense fallback={<EmployeeDetailsFallback />}>
@@ -83,8 +41,6 @@ export const EmployeeDetails = ({
 					onDelete={onDelete}
 					onEdit={onEdit}
 					onRestore={onRestore}
-					onTemporaryPasswordChange={setTemporaryPassword}
-					temporaryPassword={temporaryPassword}
 				/>
 			</React.Suspense>
 		</EntityDetail.Root>
@@ -97,8 +53,6 @@ interface EmployeeDetailsContentProps {
 	onDelete?: (id: EntityId) => void;
 	onEdit?: (id: EntityId) => void;
 	onRestore?: (id: EntityId) => void;
-	onTemporaryPasswordChange: (value: TemporaryPasswordState | null) => void;
-	temporaryPassword: TemporaryPasswordState | null;
 }
 
 const EmployeeDetailsContent = ({
@@ -107,43 +61,12 @@ const EmployeeDetailsContent = ({
 	onDelete,
 	onEdit,
 	onRestore,
-	onTemporaryPasswordChange,
-	temporaryPassword,
 }: EmployeeDetailsContentProps) => {
 	const { employee } = useEmployee(id);
 	const actions = getEmployeeLifecycleActions({
 		canManageLifecycle,
 		isSoftDeleted: employee.isSoftDeleted,
 	});
-	const [isGrantDialogOpen, setIsGrantDialogOpen] = React.useState(false);
-	const [isRestoreDialogOpen, setIsRestoreDialogOpen] = React.useState(false);
-	const [isRevokeDialogOpen, setIsRevokeDialogOpen] = React.useState(false);
-	const [isResetDialogOpen, setIsResetDialogOpen] = React.useState(false);
-
-	const { handleConfirm: handleGrantAccess, isPending: isGrantPending } =
-		useEmployeeGrantAccess();
-	const { handleConfirm: handleRestoreAccess, isPending: isRestorePending } =
-		useEmployeeRestoreAccess();
-	const { handleConfirm: handleRevokeAccess, isPending: isRevokePending } =
-		useEmployeeRevokeAccess();
-	const {
-		handleConfirm: handleResetPasswordConfirm,
-		isPending: isResetPending,
-	} = useEmployeeResetPassword();
-
-	const canManageAccess = !employee.isSoftDeleted && canManageLifecycle;
-	const hasEnabledAccess = employee.hasActiveCredentialAccess;
-	const canGrantAccess =
-		canManageAccess &&
-		employee.isActive &&
-		employee.credentialAccessStatus === "NOT_GRANTED";
-	const canRestoreAccess =
-		canManageAccess &&
-		employee.isActive &&
-		employee.credentialAccessStatus === "REVOKED";
-	const canResetPassword = canManageAccess && employee.hasCredentialAccount;
-	const canRevokeAccess = canManageAccess && hasEnabledAccess;
-	const isGrantPasswordVisible = temporaryPassword?.context === "grant";
 
 	const generalInfo = React.useMemo<DetailFieldItem[]>(
 		() => [
@@ -167,13 +90,11 @@ const EmployeeDetailsContent = ({
 				definition:
 					employee.credentialAccessStatus === "ACTIVE"
 						? "Ativo"
-						: employee.credentialAccessStatus === "REVOKED"
-							? "Revogado"
-							: "Não concedido",
-			},
-			{
-				term: "Troca obrigatória senha",
-				definition: employee.mustChangePassword ? "Pendente" : "Não",
+						: employee.credentialAccessStatus === "PENDING"
+							? "Convite pendente"
+							: employee.credentialAccessStatus === "REVOKED"
+								? "Revogado"
+								: "Não concedido",
 			},
 		],
 		[employee],
@@ -215,87 +136,15 @@ const EmployeeDetailsContent = ({
 		[employee],
 	);
 
-	const handleGrantAccessClick = async () => {
-		const password = await handleGrantAccess(id);
-
-		if (password) {
-			onTemporaryPasswordChange({
-				context: "grant",
-				value: password,
-			});
-		}
-	};
-
-	const handleResetPassword = async () => {
-		const password = await handleResetPasswordConfirm(id);
-
-		if (password) {
-			onTemporaryPasswordChange({
-				context: "reset",
-				value: password,
-			});
-		}
-	};
-
-	const handleRevokeAccessClick = async () => {
-		const success = await handleRevokeAccess(id);
-
-		if (success) {
-			setIsRevokeDialogOpen(false);
-			onTemporaryPasswordChange(null);
-		}
-	};
-
-	const handleRestoreAccessClick = async () => {
-		const success = await handleRestoreAccess(id);
-
-		if (success) {
-			setIsRestoreDialogOpen(false);
-		}
-	};
-
-	const handleTemporaryPasswordChange = (isOpen: boolean) => {
-		if (!isOpen) {
-			onTemporaryPasswordChange(null);
-		}
-	};
-
-	const handleCopyPassword = async () => {
-		if (!temporaryPassword?.value) {
-			return;
-		}
-
-		if (!navigator.clipboard) {
-			const copied = copyTextWithDocumentFallback(temporaryPassword.value);
-
-			if (copied) {
-				toast.success("Senha temporária copiada.");
-			} else {
-				toast.danger("Não foi possível copiar a senha temporária.");
-			}
-
-			return;
-		}
-
-		try {
-			await navigator.clipboard.writeText(temporaryPassword.value);
-			toast.success("Senha temporária copiada.");
-		} catch {
-			const copied = copyTextWithDocumentFallback(temporaryPassword.value);
-
-			if (copied) {
-				toast.success("Senha temporária copiada.");
-			} else {
-				toast.danger("Não foi possível copiar a senha temporária.");
-			}
-		}
-	};
-
 	return (
 		<EntityDetail.Content>
 			<EntityDetail.Header className="flex-row items-center justify-between gap-3">
 				<EntityDetail.Title>{employee.fullName}</EntityDetail.Title>
 				<EntityActions
+					viewPermission="org:employees:read"
+					editPermission="org:employees:update"
+					restorePermission="org:employees:restore"
+					deletePermission="org:employees:delete"
 					canView={false}
 					canEdit={actions.canEdit}
 					canRestore={actions.canRestore}
@@ -330,151 +179,7 @@ const EmployeeDetailsContent = ({
 			</EntityDetail.Body>
 			<EntityDetail.Footer>
 				<div className="flex w-full flex-col gap-2">
-					{canGrantAccess || isGrantPasswordVisible ? (
-						<AlertDialog
-							open={isGrantDialogOpen}
-							onOpenChange={(isOpen) => {
-								setIsGrantDialogOpen(isOpen);
-								handleTemporaryPasswordChange(isOpen);
-							}}
-						>
-							{canGrantAccess ? (
-								<Button
-									type="button"
-									variant="secondary"
-									className="w-full"
-									onClick={() => setIsGrantDialogOpen(true)}
-								>
-									Conceder acesso
-								</Button>
-							) : null}
-							<TemporaryPasswordDialog
-								description={
-									isGrantPasswordVisible
-										? `Compartilhe esta senha com ${employee.fullName}.`
-										: `Gerar senha temporária e liberar acesso ao sistema para ${employee.fullName}?`
-								}
-								generateLabel="Conceder acesso"
-								isPending={isGrantPending}
-								onCopy={handleCopyPassword}
-								onGenerate={handleGrantAccessClick}
-								temporaryPassword={
-									isGrantPasswordVisible ? temporaryPassword.value : null
-								}
-							/>
-						</AlertDialog>
-					) : null}
-					{canRestoreAccess ? (
-						<AlertDialog
-							open={isRestoreDialogOpen}
-							onOpenChange={setIsRestoreDialogOpen}
-						>
-							<Button
-								type="button"
-								variant="secondary"
-								className="w-full"
-								onClick={() => setIsRestoreDialogOpen(true)}
-							>
-								Restaurar acesso
-							</Button>
-							<AlertDialogContent>
-								<AlertDialogHeader>
-									<AlertDialogTitle>Restaurar acesso</AlertDialogTitle>
-									<AlertDialogDescription>
-										Restaurar o acesso ao sistema para {employee.fullName} sem
-										alterar a senha atual?
-									</AlertDialogDescription>
-								</AlertDialogHeader>
-								<AlertDialogFooter>
-									<AlertDialogCancel disabled={isRestorePending}>
-										Cancelar
-									</AlertDialogCancel>
-									<AlertDialogAction
-										onClick={handleRestoreAccessClick}
-										disabled={isRestorePending}
-									>
-										{isRestorePending && (
-											<Spinner className="size-4" aria-hidden="true" />
-										)}
-										Restaurar acesso
-									</AlertDialogAction>
-								</AlertDialogFooter>
-							</AlertDialogContent>
-						</AlertDialog>
-					) : null}
-					{canRevokeAccess ? (
-						<AlertDialog
-							open={isRevokeDialogOpen}
-							onOpenChange={setIsRevokeDialogOpen}
-						>
-							<Button
-								type="button"
-								variant="destructive"
-								className="w-full"
-								onClick={() => setIsRevokeDialogOpen(true)}
-							>
-								Revogar acesso
-							</Button>
-							<AlertDialogContent>
-								<AlertDialogHeader>
-									<AlertDialogTitle>Revogar acesso</AlertDialogTitle>
-									<AlertDialogDescription>
-										Bloquear acesso ao sistema para {employee.fullName} e
-										encerrar sessões ativas?
-									</AlertDialogDescription>
-								</AlertDialogHeader>
-								<AlertDialogFooter>
-									<AlertDialogCancel disabled={isRevokePending}>
-										Cancelar
-									</AlertDialogCancel>
-									<AlertDialogAction
-										onClick={handleRevokeAccessClick}
-										disabled={isRevokePending}
-										variant="destructive"
-									>
-										{isRevokePending && (
-											<Spinner className="size-4" aria-hidden="true" />
-										)}
-										Revogar acesso
-									</AlertDialogAction>
-								</AlertDialogFooter>
-							</AlertDialogContent>
-						</AlertDialog>
-					) : null}
-					{canResetPassword ? (
-						<AlertDialog
-							open={isResetDialogOpen}
-							onOpenChange={(isOpen) => {
-								setIsResetDialogOpen(isOpen);
-								handleTemporaryPasswordChange(isOpen);
-							}}
-						>
-							<Button
-								type="button"
-								variant="secondary"
-								className="w-full"
-								onClick={() => setIsResetDialogOpen(true)}
-							>
-								Redefinir senha
-							</Button>
-							<TemporaryPasswordDialog
-								description={
-									temporaryPassword?.context === "reset"
-										? `Compartilhe esta senha com ${employee.fullName}.`
-										: `Gerar nova senha temporária para ${employee.fullName}.`
-								}
-								generateLabel="Redefinir senha"
-								isPending={isResetPending}
-								onCopy={handleCopyPassword}
-								onGenerate={handleResetPassword}
-								temporaryPassword={
-									temporaryPassword?.context === "reset"
-										? temporaryPassword.value
-										: null
-								}
-							/>
-						</AlertDialog>
-					) : null}
+					<EmployeeAccountAccess employee={employee} />
 					<DrawerClose
 						render={
 							<Button type="button" variant="outline" className="w-full" />

@@ -65,6 +65,10 @@ export const ClientList = ({
 
 			return (
 				<EntityActions
+					viewPermission="org:clients:read"
+					editPermission="org:clients:update"
+					restorePermission="org:clients:restore"
+					deletePermission="org:clients:delete"
 					canEdit={actions.canEdit}
 					canRestore={actions.canRestore}
 					canDelete={actions.canDelete}

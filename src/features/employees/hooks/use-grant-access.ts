@@ -16,13 +16,15 @@ export function useEmployeeGrantAccess({
 	const queryClient = useQueryClient();
 	const mutation = useMutation(grantEmployeeAccessMutationOptions());
 
-	const handleConfirm = async (id: EntityId) => {
+	const handleConfirm = async (id: EntityId, role: string) => {
 		try {
-			const result = await mutation.mutateAsync({ data: { id } });
-			toast.success("Acesso concedido com sucesso.");
+			await mutation.mutateAsync({ data: { id, role } });
+			toast.success(
+				"Solicitação de acesso concluída. Consulte o status do convite.",
+			);
 			await refreshAuditedEntityQueries(queryClient, employeeKeys.all);
 			onSuccess?.();
-			return result.temporaryPassword;
+			return true;
 		} catch (error) {
 			toast.danger(getMutationErrorMessage(error));
 			return null;

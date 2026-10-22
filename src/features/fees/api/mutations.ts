@@ -1,7 +1,8 @@
 import { mutationOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
-import { assertCan, authMiddleware } from "@/shared/session";
+import { assertCan } from "@/shared/session";
+import { authMiddleware } from "@/shared/session/middleware";
 import {
 	getRequiredServerLoggedUserSession,
 	getServerScope,
@@ -34,7 +35,7 @@ const createFeeFn = createServerFn({ method: "POST" })
 				throw new Error(FEE_ERRORS.FEE_SELECT_REVENUE);
 			}
 
-			assertCan(session, "fee.create", access.resource);
+			assertCan(session, "org:fees:create", access.resource);
 
 			return await createFee({
 				actor: {
@@ -68,7 +69,7 @@ const updateFeeFn = createServerFn({ method: "POST" })
 				throw new Error(FEE_ERRORS.FEE_NOT_FOUND);
 			}
 
-			assertCan(session, "fee.update", access.resource);
+			assertCan(session, "org:fees:update", access.resource);
 
 			const revenueId = Number(normalizeFeeReference(data.revenueId));
 			const nextRevenueAccess = await getFeeRevenueAccessResourceById(
@@ -80,7 +81,7 @@ const updateFeeFn = createServerFn({ method: "POST" })
 				throw new Error(FEE_ERRORS.FEE_SELECT_REVENUE);
 			}
 
-			assertCan(session, "fee.update", nextRevenueAccess.resource);
+			assertCan(session, "org:fees:update", nextRevenueAccess.resource);
 
 			return await updateFee({
 				actor: {
@@ -115,7 +116,7 @@ const deleteFeeFn = createServerFn({ method: "POST" })
 				throw new Error(FEE_ERRORS.FEE_NOT_FOUND);
 			}
 
-			assertCan(session, "fee.delete", access.resource);
+			assertCan(session, "org:fees:delete", access.resource);
 
 			return await deleteFee({
 				actor: {
@@ -150,7 +151,7 @@ const restoreFeeFn = createServerFn({ method: "POST" })
 				throw new Error(FEE_ERRORS.FEE_NOT_FOUND);
 			}
 
-			assertCan(session, "fee.restore", access.resource);
+			assertCan(session, "org:fees:restore", access.resource);
 
 			return await restoreFee({
 				actor: {

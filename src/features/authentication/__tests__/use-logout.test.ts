@@ -1,90 +1,42 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const {
-	clearAuthenticatedQueryCacheMock,
-	mutateAsyncMock,
-	navigateMock,
-	toastDangerMock,
-	useMutationMock,
-	useNavigateMock,
-	useQueryClientMock,
-} = vi.hoisted(() => ({
-	clearAuthenticatedQueryCacheMock: vi.fn(),
-	mutateAsyncMock: vi.fn(),
-	navigateMock: vi.fn(),
-	toastDangerMock: vi.fn(),
-	useMutationMock: vi.fn(),
-	useNavigateMock: vi.fn(),
-	useQueryClientMock: vi.fn(),
+const mocks = vi.hoisted(() => ({
+	signOut: vi.fn(),
+	cancel: vi.fn(),
+	clear: vi.fn(),
+	navigate: vi.fn(),
+	danger: vi.fn(),
 }));
-
-vi.mock("@tanstack/react-router", () => ({
-	useNavigate: useNavigateMock,
+vi.mock("react", () => ({ useState: () => [false, vi.fn()] }));
+vi.mock("@clerk/tanstack-react-start", () => ({
+	useClerk: () => ({ signOut: mocks.signOut }),
 }));
-
 vi.mock("@tanstack/react-query", () => ({
-	useMutation: useMutationMock,
-	useQueryClient: useQueryClientMock,
+	useQueryClient: () => ({ cancelQueries: mocks.cancel, clear: mocks.clear }),
 }));
-
-vi.mock("@/shared/lib/toast", () => ({
-	toast: {
-		danger: toastDangerMock,
-	},
+vi.mock("@tanstack/react-router", () => ({
+	useNavigate: () => mocks.navigate,
 }));
-
-vi.mock("@/shared/session", () => ({
-	clearAuthenticatedQueryCache: clearAuthenticatedQueryCacheMock,
-}));
-
-vi.mock("../api/mutations", () => ({
-	logoutMutationOptions: () => ({
-		mutationFn: vi.fn(),
-	}),
-}));
+vi.mock("@/shared/lib/toast", () => ({ toast: { danger: mocks.danger } }));
 
 import { useLogout } from "../hooks/use-logout";
 
-describe("useLogout", () => {
-	beforeEach(() => {
-		vi.clearAllMocks();
-		useNavigateMock.mockReturnValue(navigateMock);
-		useQueryClientMock.mockReturnValue({
-			clear: vi.fn(),
-		});
-		useMutationMock.mockReturnValue({
-			isPending: false,
-			mutateAsync: mutateAsyncMock,
-		});
-		mutateAsyncMock.mockResolvedValue({ success: true });
+describe("Clerk logout", () => {
+	beforeEach(() => vi.resetAllMocks());
+	it("cancels old requests and clears protected data before leaving", async () => {
+		await useLogout().handleLogout();
+		expect(mocks.cancel).toHaveBeenCalled();
+		expect(mocks.clear.mock.invocationCallOrder[0]).toBeLessThan(
+			mocks.signOut.mock.invocationCallOrder[0],
+		);
+		expect(mocks.navigate).toHaveBeenCalledWith({ to: "/login" });
 	});
-
-	it("clears authenticated query cache before redirecting to login", async () => {
-		const queryClient = {
-			clear: vi.fn(),
-		};
-		useQueryClientMock.mockReturnValue(queryClient);
-
-		const { handleLogout } = useLogout();
-
-		await handleLogout();
-
-		expect(mutateAsyncMock).toHaveBeenCalledWith({});
-		expect(clearAuthenticatedQueryCacheMock).toHaveBeenCalledTimes(1);
-		expect(clearAuthenticatedQueryCacheMock).toHaveBeenCalledWith(queryClient);
-		expect(navigateMock).toHaveBeenCalledWith({ to: "/login" });
-		expect(toastDangerMock).not.toHaveBeenCalled();
-	});
-
-	it("shows safe feedback when logout fails", async () => {
-		mutateAsyncMock.mockRejectedValue(new Error("boom"));
-
-		const { handleLogout } = useLogout();
-
-		await handleLogout();
-
-		expect(clearAuthenticatedQueryCacheMock).not.toHaveBeenCalled();
-		expect(navigateMock).not.toHaveBeenCalled();
-		expect(toastDangerMock).toHaveBeenCalledWith("boom");
+	it("keeps provider failures out of feedback", async () => {
+		mocks.signOut.mockRejectedValue(new Error("private details"));
+		await useLogout().handleLogout();
+		expect(mocks.danger).toHaveBeenCalledWith(
+			"Não foi possível encerrar a sessão.",
+		);
+		expect(mocks.navigate).not.toHaveBeenCalled();
 	});
 });

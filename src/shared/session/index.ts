@@ -5,24 +5,13 @@ export {
 	isContractWritable,
 } from "./access";
 export { clearAuthenticatedQueryCache } from "./cache";
-export {
-	type AuthenticatedServerFunctionContext,
-	authMiddleware,
-} from "./middleware";
-export {
-	type SessionAction,
-	type SessionPermission,
-	type SessionPermissionAction,
-	type SessionPermissionEntity,
-	sessionActionPolicies,
-	sessionPermissionActions,
-	sessionPermissionEntities,
-	sessionPermissions,
-} from "./permissions";
+export type { ClerkPermission } from "./catalog";
+export type { AuthenticatedServerFunctionContext } from "./middleware";
 export {
 	LoggedUserSessionProvider,
 	useLoggedUserSession,
 	useLoggedUserSessionStore,
+	useOptionalLoggedUserSession,
 } from "./provider";
 export { getCurrentSessionQueryOptions, sessionKeys } from "./query";
 export {
@@ -36,7 +25,7 @@ export { getScope } from "./scope";
 export {
 	getCurrentEmployeeId,
 	getCurrentFirmId,
-	isAdminSession,
+	hasPermission,
 } from "./selectors";
 export {
 	CONTRACT_STATUS_ACTIVE_VALUE,

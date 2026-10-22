@@ -4,7 +4,8 @@ import {
 	hasExactErrorMessage,
 	isPrismaUniqueConstraintError,
 } from "@/shared/lib/error-mapping";
-import { assertCan, authMiddleware, getScope } from "@/shared/session";
+import { assertCan, getScope } from "@/shared/session";
+import { authMiddleware } from "@/shared/session/middleware";
 import type { MutationReturnType } from "@/shared/types/api";
 import { CLIENT_ERRORS } from "../constants/errors";
 import {
@@ -24,7 +25,7 @@ const createClientFn = createServerFn({ method: "POST" })
 	.inputValidator(clientCreateInputSchema)
 	.handler(async ({ data, context }): Promise<MutationReturnType> => {
 		try {
-			assertCan(context.session, "client.create");
+			assertCan(context.session, "org:clients:create");
 			const { firmId } = getScope(context.session, "client");
 
 			return await createClient({
@@ -55,7 +56,7 @@ const updateClientFn = createServerFn({ method: "POST" })
 	.inputValidator(clientUpdateInputSchema)
 	.handler(async ({ data, context }): Promise<MutationReturnType> => {
 		try {
-			assertCan(context.session, "client.update");
+			assertCan(context.session, "org:clients:update");
 			const { firmId } = getScope(context.session, "client");
 
 			return await updateClient({
@@ -86,7 +87,7 @@ const deleteClientFn = createServerFn({ method: "POST" })
 	.inputValidator(clientIdInputSchema)
 	.handler(async ({ data, context }): Promise<MutationReturnType> => {
 		try {
-			assertCan(context.session, "client.delete");
+			assertCan(context.session, "org:clients:delete");
 			const { firmId } = getScope(context.session, "client");
 
 			return await deleteClient({
@@ -113,7 +114,7 @@ const restoreClientFn = createServerFn({ method: "POST" })
 	.inputValidator(clientIdInputSchema)
 	.handler(async ({ data, context }): Promise<MutationReturnType> => {
 		try {
-			assertCan(context.session, "client.restore");
+			assertCan(context.session, "org:clients:restore");
 			const { firmId } = getScope(context.session, "client");
 
 			return await restoreClient({

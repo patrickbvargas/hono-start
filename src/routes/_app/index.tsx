@@ -52,7 +52,11 @@ import {
 import { getPageTitle, ROUTES } from "@/shared/config/routes";
 import { useOverlay } from "@/shared/hooks/use-overlay";
 import type { EntityId } from "@/shared/schemas/entity";
-import { isAdminSession, useLoggedUserSessionStore } from "@/shared/session";
+import {
+	assertCan,
+	hasPermission,
+	useLoggedUserSessionStore,
+} from "@/shared/session";
 
 export const Route = createFileRoute("/_app/")({
 	head: () => ({
@@ -64,25 +68,47 @@ export const Route = createFileRoute("/_app/")({
 	},
 	loaderDeps: ({ search }) => ({ search }),
 	loader: async ({ context: { queryClient, session }, deps: { search } }) => {
+		assertCan(session, ["org:dashboard:read_all", "org:dashboard:read_own"]);
 		const prefetches = [
 			queryClient.ensureQueryData(getDashboardSummaryQueryOptions(search)),
 			queryClient.ensureQueryData(getDashboardEmployeeOptionsQueryOptions()),
-			queryClient.ensureQueryData(getClientTypesQueryOptions()),
-			queryClient.ensureQueryData(getSelectableContractClientsQueryOptions()),
-			queryClient.ensureQueryData(getSelectableContractEmployeesQueryOptions()),
-			queryClient.ensureQueryData(getContractLegalAreasQueryOptions()),
-			queryClient.ensureQueryData(getContractStatusesQueryOptions()),
-			queryClient.ensureQueryData(getContractAssignmentTypesQueryOptions()),
-			queryClient.ensureQueryData(getContractRevenueTypesQueryOptions()),
-			queryClient.ensureQueryData(getSelectableFeeContractsQueryOptions()),
-			queryClient.ensureQueryData(getSelectableFeeRevenuesQueryOptions()),
 		];
 
-		if (isAdminSession(session)) {
-			prefetches.push(
+		if (hasPermission(session, "org:clients:create")) {
+			await queryClient.ensureQueryData(getClientTypesQueryOptions());
+		}
+		if (
+			hasPermission(session, "org:contracts:create") ||
+			(["org:contracts:read_all", "org:contracts:read_assigned"] as const).some(
+				(permission) => hasPermission(session, permission),
+			)
+		) {
+			await Promise.all([
+				queryClient.ensureQueryData(getSelectableContractClientsQueryOptions()),
+				queryClient.ensureQueryData(
+					getSelectableContractEmployeesQueryOptions(),
+				),
+				queryClient.ensureQueryData(getContractLegalAreasQueryOptions()),
+				queryClient.ensureQueryData(getContractStatusesQueryOptions()),
+				queryClient.ensureQueryData(getContractAssignmentTypesQueryOptions()),
+				queryClient.ensureQueryData(getContractRevenueTypesQueryOptions()),
+			]);
+		}
+		if (
+			(["org:fees:read_all", "org:fees:read_assigned"] as const).some(
+				(permission) => hasPermission(session, permission),
+			)
+		) {
+			await Promise.all([
+				queryClient.ensureQueryData(getSelectableFeeContractsQueryOptions()),
+				queryClient.ensureQueryData(getSelectableFeeRevenuesQueryOptions()),
+			]);
+		}
+		if (hasPermission(session, "org:employees:create")) {
+			await Promise.all([
 				queryClient.ensureQueryData(getEmployeeTypesQueryOptions()),
 				queryClient.ensureQueryData(getEmployeeRolesQueryOptions()),
-			);
+			]);
 		}
 
 		await Promise.all(prefetches);
@@ -94,7 +120,13 @@ export const Route = createFileRoute("/_app/")({
 function RouteComponent() {
 	const search = Route.useSearch();
 	const { summary } = useDashboardData(search);
-	const isAdmin = useLoggedUserSessionStore(isAdminSession);
+	const isAdmin = useLoggedUserSessionStore(
+		(session) =>
+			(["org:dashboard:read_all", "org:dashboard:read_own"] as const).some(
+				(permission) => hasPermission(session, permission),
+			) && session.permissions.includes("org:dashboard:read_all"),
+	);
+	const session = useLoggedUserSessionStore((current) => current);
 	const clientOverlay = useOverlay<EntityId>();
 	const contractOverlay = useOverlay<EntityId>();
 	const feeOverlay = useOverlay<EntityId>();
@@ -110,23 +142,31 @@ function RouteComponent() {
 						Novo
 					</DropdownMenuTrigger>
 					<DropdownMenuContent align="end">
-						<DropdownMenuItem
-							onClick={() => clientOverlay.overlay.create.open()}
-						>
-							<UserIcon size={16} />
-							Cliente
-						</DropdownMenuItem>
-						<DropdownMenuItem
-							onClick={() => contractOverlay.overlay.create.open()}
-						>
-							<BriefcaseIcon size={16} />
-							Contrato
-						</DropdownMenuItem>
-						<DropdownMenuItem onClick={() => feeOverlay.overlay.create.open()}>
-							<DollarSignIcon size={16} />
-							Honorário
-						</DropdownMenuItem>
-						{isAdmin ? (
+						{hasPermission(session, "org:clients:create") ? (
+							<DropdownMenuItem
+								onClick={() => clientOverlay.overlay.create.open()}
+							>
+								<UserIcon size={16} />
+								Cliente
+							</DropdownMenuItem>
+						) : null}
+						{hasPermission(session, "org:contracts:create") ? (
+							<DropdownMenuItem
+								onClick={() => contractOverlay.overlay.create.open()}
+							>
+								<BriefcaseIcon size={16} />
+								Contrato
+							</DropdownMenuItem>
+						) : null}
+						{hasPermission(session, "org:fees:create") ? (
+							<DropdownMenuItem
+								onClick={() => feeOverlay.overlay.create.open()}
+							>
+								<DollarSignIcon size={16} />
+								Honorário
+							</DropdownMenuItem>
+						) : null}
+						{hasPermission(session, "org:employees:create") ? (
 							<DropdownMenuItem
 								onClick={() => employeeOverlay.overlay.create.open()}
 							>

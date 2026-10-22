@@ -1,3 +1,5 @@
+import { ptBR } from "@clerk/localizations";
+import { ClerkProvider } from "@clerk/tanstack-react-start";
 import { TanStackDevtools } from "@tanstack/react-devtools";
 import { FormDevtoolsPanel } from "@tanstack/react-form-devtools";
 import type { QueryClient } from "@tanstack/react-query";
@@ -15,6 +17,7 @@ import { RouteNotFound } from "@/shared/components/route-not-found";
 import { ThemeProvider } from "@/shared/components/theme-provider";
 import { Toaster } from "@/shared/components/ui";
 import { getPageTitle } from "@/shared/config/routes";
+import { ClerkSessionBoundary } from "@/shared/session/clerk-boundary";
 import appCss from "@/styles/global.css?url";
 
 interface RouterContext {
@@ -65,7 +68,9 @@ function RootLayout() {
 			data-slot="root-container"
 			className="relative mx-auto h-dvh w-dvw overflow-hidden"
 		>
-			<Outlet />
+			<ClerkSessionBoundary>
+				<Outlet />
+			</ClerkSessionBoundary>
 		</div>
 	);
 }
@@ -77,28 +82,34 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 				<HeadContent />
 			</head>
 			<body>
-				<ThemeProvider>
-					{children}
-					<RouteLoading />
-					<Toaster />
-					<TanStackDevtools
-						plugins={[
-							{
-								name: "Tanstack Query",
-								render: <ReactQueryDevtoolsPanel />,
-							},
-							{
-								name: "Tanstack Form",
-								render: <FormDevtoolsPanel />,
-							},
-							{
-								name: "Tanstack Router",
-								render: <TanStackRouterDevtoolsPanel />,
-							},
-						]}
-					/>
-					<Scripts />
-				</ThemeProvider>
+				<ClerkProvider
+					localization={ptBR}
+					signInUrl="/login"
+					signInFallbackRedirectUrl="/"
+				>
+					<ThemeProvider>
+						{children}
+						<RouteLoading />
+						<Toaster />
+						<TanStackDevtools
+							plugins={[
+								{
+									name: "Tanstack Query",
+									render: <ReactQueryDevtoolsPanel />,
+								},
+								{
+									name: "Tanstack Form",
+									render: <FormDevtoolsPanel />,
+								},
+								{
+									name: "Tanstack Router",
+									render: <TanStackRouterDevtoolsPanel />,
+								},
+							]}
+						/>
+						<Scripts />
+					</ThemeProvider>
+				</ClerkProvider>
 			</body>
 		</html>
 	);

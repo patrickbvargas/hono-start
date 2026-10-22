@@ -27,7 +27,10 @@ vi.mock("@/shared/hooks/use-overlay", () => ({
 }));
 
 vi.mock("@/shared/session", () => ({
-	isAdminSession: () => true,
+	useOptionalLoggedUserSession: () => ({
+		permissions: ["org:attachments:upload"],
+	}),
+	hasPermission: () => true,
 	useLoggedUserSessionStore: () => true,
 }));
 

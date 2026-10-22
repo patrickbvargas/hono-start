@@ -2,11 +2,12 @@ import { queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import type { Option } from "@/shared/schemas/option";
 import {
-	authMiddleware,
+	assertCan,
 	getCurrentEmployeeId,
 	getCurrentFirmId,
-	isAdminSession,
+	hasPermission,
 } from "@/shared/session";
+import { authMiddleware } from "@/shared/session/middleware";
 import { getRequiredServerLoggedUserSession } from "@/shared/session/server";
 import type {
 	QueryManyReturnType,
@@ -33,12 +34,14 @@ const getDashboardSummaryFn = createServerFn({ method: "GET" })
 	.handler(async ({ data }): Promise<QueryOneReturnType<DashboardSummary>> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();
-			const isAdmin = isAdminSession(session);
+			assertCan(session, ["org:dashboard:read_all", "org:dashboard:read_own"]);
+			const isAdmin = hasPermission(session, "org:dashboard:read_all");
 
 			return await getDashboardSummary({
 				firmId: getCurrentFirmId(session),
 				employeeId: isAdmin ? undefined : getCurrentEmployeeId(session),
 				isAdmin,
+				canReadCashFlow: hasPermission(session, "org:dashboard:read_cash_flow"),
 				search: data,
 			});
 		} catch (error) {
@@ -54,8 +57,9 @@ const getDashboardEmployeeOptionsFn = createServerFn({
 	.handler(async (): Promise<QueryManyReturnType<Option>> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();
+			assertCan(session, ["org:dashboard:read_all", "org:dashboard:read_own"]);
 
-			if (!isAdminSession(session)) {
+			if (!hasPermission(session, "org:dashboard:read_all")) {
 				return [];
 			}
 

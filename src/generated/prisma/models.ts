@@ -8,6 +8,7 @@
  *
  * 🟢 You can import this file directly.
  */
+export type * from './models/ClerkWebhookReceipt.ts'
 export type * from './models/Firm.ts'
 export type * from './models/ClientType.ts'
 export type * from './models/EmployeeType.ts'

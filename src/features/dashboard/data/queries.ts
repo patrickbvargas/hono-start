@@ -10,6 +10,7 @@ import {
 import type { DashboardSearch } from "../schemas/search";
 
 interface DashboardScope {
+	canReadCashFlow?: boolean;
 	firmId: number;
 	employeeId?: number;
 	isAdmin: boolean;
@@ -1391,7 +1392,7 @@ export async function getDashboardSummary(
 				},
 			},
 		}),
-		scope.isAdmin
+		scope.isAdmin && scope.canReadCashFlow === true
 			? prisma.expense.findMany({
 					where: {
 						...expenseWhere,
@@ -1402,7 +1403,7 @@ export async function getDashboardSummary(
 					},
 				})
 			: Promise.resolve([]),
-		scope.isAdmin
+		scope.isAdmin && scope.canReadCashFlow === true
 			? prisma.expense.findMany({
 					where: {
 						...expenseWhere,
@@ -1416,7 +1417,7 @@ export async function getDashboardSummary(
 					},
 				})
 			: Promise.resolve([]),
-		scope.isAdmin
+		scope.isAdmin && scope.canReadCashFlow === true
 			? prisma.expense.findMany({
 					where: {
 						...expenseWhere,
@@ -1430,7 +1431,7 @@ export async function getDashboardSummary(
 					},
 				})
 			: Promise.resolve([]),
-		scope.isAdmin
+		scope.isAdmin && scope.canReadCashFlow === true
 			? prisma.revenue.findMany({
 					where: {
 						...revenueWhere,
@@ -1450,7 +1451,7 @@ export async function getDashboardSummary(
 					},
 				})
 			: Promise.resolve([]),
-		scope.isAdmin
+		scope.isAdmin && scope.canReadCashFlow === true
 			? prisma.fee.findMany({
 					where: {
 						...firmWhere,
@@ -1475,7 +1476,7 @@ export async function getDashboardSummary(
 					},
 				})
 			: Promise.resolve([]),
-		scope.isAdmin
+		scope.isAdmin && scope.canReadCashFlow === true
 			? prisma.expense.findMany({
 					where: {
 						...expenseWhere,
@@ -1561,15 +1562,16 @@ export async function getDashboardSummary(
 		period,
 		revenues,
 	});
-	const cashFlow = scope.isAdmin
-		? buildMonthlyCashFlow({
-				chartDownPayments: chartCashFlowDownPayments,
-				chartFees: chartCashFlowFees,
-				chartRemunerations,
-				chartExpenses: chartCashFlowExpenses,
-				range: chartMonthRange,
-			})
-		: null;
+	const cashFlow =
+		scope.isAdmin && scope.canReadCashFlow === true
+			? buildMonthlyCashFlow({
+					chartDownPayments: chartCashFlowDownPayments,
+					chartFees: chartCashFlowFees,
+					chartRemunerations,
+					chartExpenses: chartCashFlowExpenses,
+					range: chartMonthRange,
+				})
+			: null;
 	const legalAreaGroups = new Map<string, GroupTotal>();
 	const revenueTypeGroups = new Map<string, GroupTotal>();
 
@@ -1591,7 +1593,7 @@ export async function getDashboardSummary(
 		isAdmin: scope.isAdmin,
 		scopeLabel: scope.isAdmin ? "Visão da firma" : "Minha visão",
 		metrics: [
-			...(scope.isAdmin
+			...(scope.isAdmin && scope.canReadCashFlow === true
 				? [
 						{
 							label: "Saldo total",

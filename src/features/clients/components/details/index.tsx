@@ -108,6 +108,10 @@ const ClientDetailsContent = ({
 			<EntityDetail.Header className="flex-row items-center justify-between gap-3">
 				<EntityDetail.Title>{client.fullName}</EntityDetail.Title>
 				<EntityActions
+					viewPermission="org:clients:read"
+					editPermission="org:clients:update"
+					restorePermission="org:clients:restore"
+					deletePermission="org:clients:delete"
 					canView={false}
 					canEdit={actions.canEdit}
 					canRestore={actions.canRestore}

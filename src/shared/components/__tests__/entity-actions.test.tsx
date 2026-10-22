@@ -1,3 +1,8 @@
+vi.mock("@/shared/session", () => ({
+	useOptionalLoggedUserSession: () => null,
+	hasPermission: () => false,
+}));
+
 // @vitest-environment jsdom
 
 import { fireEvent, render, screen } from "@testing-library/react";

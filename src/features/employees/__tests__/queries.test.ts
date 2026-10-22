@@ -4,6 +4,11 @@ import { EMPLOYEE_ERRORS } from "../constants/errors";
 const { getSupabaseCredentialAccessStateMock, prismaMock } = vi.hoisted(() => ({
 	getSupabaseCredentialAccessStateMock: vi.fn(),
 	prismaMock: {
+		firm: {
+			findUniqueOrThrow: vi
+				.fn()
+				.mockResolvedValue({ clerkOrganizationId: "org_firm" }),
+		},
 		employee: {
 			count: vi.fn(),
 			findFirst: vi.fn(),
@@ -23,8 +28,22 @@ vi.mock("@/shared/lib/prisma", () => ({
 	prisma: prismaMock,
 }));
 
-vi.mock("@/shared/lib/supabase-admin", () => ({
-	getSupabaseCredentialAccessState: getSupabaseCredentialAccessStateMock,
+vi.mock("../data/clerk-access", () => ({
+	getEmployeeClerkAccess: getSupabaseCredentialAccessStateMock,
+	getAssignableClerkRoles: async () => [{ key: "org:custom", name: "Custom" }],
+}));
+vi.mock("@/shared/session/server", () => ({
+	getRequiredServerLoggedUserSession: async () => ({}),
+}));
+vi.mock("@clerk/tanstack-react-start/server", () => ({
+	clerkClient: () => ({
+		organizations: {
+			getOrganizationMembershipList: async () => ({
+				data: [{ role: "org:custom", publicUserData: { userId: "user_ten" } }],
+				totalCount: 1,
+			}),
+		},
+	}),
 }));
 
 import {
@@ -57,6 +76,7 @@ describe("employee data queries", () => {
 			hasCredentialAccount: true,
 			isAccessActive: true,
 			status: "ACTIVE",
+			role: "org:custom",
 			user: {
 				id: "11111111-1111-1111-1111-111111111111",
 			},
@@ -69,6 +89,7 @@ describe("employee data queries", () => {
 			remunerationPercentage: "0.3",
 			referralPercentage: "0.1",
 			authUserId: "11111111-1111-1111-1111-111111111111",
+			clerkUserId: "user_ten",
 			typeId: 2,
 			roleId: 3,
 			type: { label: "Advogado", value: "LAWYER" },
@@ -91,7 +112,7 @@ describe("employee data queries", () => {
 				direction: "desc",
 				query: "maria",
 				type: ["LAWYER"],
-				role: ["ADMIN"],
+				role: ["org:custom"],
 				active: "true",
 				status: "active",
 			},
@@ -118,9 +139,9 @@ describe("employee data queries", () => {
 						},
 					],
 					typeId: { in: [2] },
-					roleId: { in: [3] },
+					clerkUserId: { in: ["user_ten"] },
 				},
-				orderBy: [{ role: { label: "desc" } }, { id: "asc" }],
+				orderBy: [{ fullName: "desc" }, { id: "asc" }],
 				skip: 10,
 				take: 10,
 			}),
@@ -138,12 +159,12 @@ describe("employee data queries", () => {
 			expect.objectContaining({
 				id: 10,
 				typeValue: "LAWYER",
-				roleValue: "ADMIN",
+				roleValue: "org:custom",
 				contractCount: 2,
 				hasCredentialAccount: true,
 				credentialAccessStatus: "ACTIVE",
 				hasActiveCredentialAccess: true,
-				mustChangePassword: true,
+				mustChangePassword: false,
 			}),
 		);
 
@@ -170,10 +191,8 @@ describe("employee data queries", () => {
 		});
 
 		await expect(getEmployeeRoles()).resolves.toEqual([
-			{ id: 3, value: "ADMIN", label: "Administrador", isDisabled: false },
+			{ id: 1, value: "org:custom", label: "Custom", isDisabled: false },
 		]);
-		expect(prismaMock.userRole.findMany).toHaveBeenCalledWith({
-			orderBy: { label: "asc" },
-		});
+		expect(prismaMock.userRole.findMany).not.toHaveBeenCalled();
 	});
 });

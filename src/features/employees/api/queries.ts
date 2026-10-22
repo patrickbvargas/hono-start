@@ -3,7 +3,8 @@ import { createServerFn } from "@tanstack/react-start";
 import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { Option } from "@/shared/schemas/option";
-import { assertCan, authMiddleware } from "@/shared/session";
+import { assertCan } from "@/shared/session";
+import { authMiddleware } from "@/shared/session/middleware";
 import {
 	getRequiredServerLoggedUserSession,
 	getServerScope,
@@ -39,7 +40,7 @@ const getEmployeesFn = createServerFn({ method: "GET" })
 		async ({ data }): Promise<QueryPaginatedReturnType<EmployeeSummary>> => {
 			try {
 				const session = await getRequiredServerLoggedUserSession();
-				assertCan(session, "employee.manage");
+				assertCan(session, "org:employees:read");
 				const { firmId } = await getServerScope("employee");
 
 				return await getEmployees({ firmId, search: data });
@@ -60,7 +61,7 @@ const getEmployeeByIdFn = createServerFn({ method: "GET" })
 	.handler(async ({ data }): Promise<QueryOneReturnType<EmployeeDetail>> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();
-			assertCan(session, "employee.manage");
+			assertCan(session, "org:employees:read");
 			const { firmId } = await getServerScope("employee");
 
 			return await getEmployeeById({ firmId, id: data.id });

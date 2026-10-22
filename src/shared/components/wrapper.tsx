@@ -60,7 +60,7 @@ export const WrapperBody = ({
 		<div
 			data-slot="wrapper-content"
 			className={cn(
-				"flex flex-1 min-h-0 w-full flex-col px-4 pb-1 overflow-hidden",
+				"flex flex-1 min-h-0 w-full flex-col px-4 pb-4 overflow-hidden",
 				className,
 			)}
 			{...props}

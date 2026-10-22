@@ -1,7 +1,7 @@
 import {
 	getCurrentEmployeeId,
 	getCurrentFirmId,
-	isAdminSession,
+	hasPermission,
 } from "./selectors";
 import type {
 	LoggedUserSession,
@@ -24,7 +24,16 @@ export function getScope(
 		case "contract":
 		case "fee":
 		case "remuneration":
-			if (isAdminSession(session)) {
+			if (
+				hasPermission(
+					session,
+					subject === "contract"
+						? "org:contracts:read_all"
+						: subject === "fee"
+							? "org:fees:read_all"
+							: "org:remunerations:read_all",
+				)
+			) {
 				return { firmId: getCurrentFirmId(session) };
 			}
 

@@ -1,30 +1,26 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useClerk } from "@clerk/tanstack-react-start";
+import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
 import { toast } from "@/shared/lib/toast";
-import { clearAuthenticatedQueryCache } from "@/shared/session";
-import { logoutMutationOptions } from "../api/mutations";
 
 export function useLogout() {
-	const navigate = useNavigate();
+	const { signOut } = useClerk();
 	const queryClient = useQueryClient();
-	const mutation = useMutation(logoutMutationOptions());
-
+	const navigate = useNavigate();
+	const [isPending, setIsPending] = useState(false);
 	async function handleLogout() {
+		setIsPending(true);
 		try {
-			await mutation.mutateAsync({});
-			clearAuthenticatedQueryCache(queryClient);
+			await queryClient.cancelQueries();
+			queryClient.clear();
+			await signOut();
 			await navigate({ to: "/login" });
-		} catch (error) {
-			toast.danger(
-				error instanceof Error
-					? error.message
-					: "Não foi possível encerrar a sessão.",
-			);
+		} catch {
+			toast.danger("Não foi possível encerrar a sessão.");
+		} finally {
+			setIsPending(false);
 		}
 	}
-
-	return {
-		handleLogout,
-		isPending: mutation.isPending,
-	};
+	return { handleLogout, isPending };
 }

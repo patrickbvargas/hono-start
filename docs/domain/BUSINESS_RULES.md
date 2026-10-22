@@ -10,26 +10,17 @@
 
 ## Authentication Rules
 
-- Users authenticate with email or OAB number plus password.
-- OAB login accepts the format of two uppercase letters followed by six digits.
-- Passwords require a minimum length of 8 characters.
-- Authenticated users may change their own password by confirming the current password.
-- The product must support password reset.
-- Administrators may grant system access to an active collaborator.
-- Granting collaborator access must generate a temporary password and require password change on next login.
-- Administrators may revoke collaborator access without deleting the linked auth identity.
-- Administrators may reset a collaborator password by issuing a temporary password from the employee details flow.
-- An administrator-issued temporary password must force the target user to choose a new password on the next login before accessing other protected areas.
-- Revoked collaborators must not authenticate until an administrator grants access again.
-- Inactive or soft-deleted employees must not authenticate even if credential data still exists.
-- Protected pages require an authenticated session.
-- Session-derived role and firm scope are authoritative.
-- Repeated failed authentication attempts must trigger protective behavior rather than unlimited retries.
-- The failed-login threshold is 5 failed attempts within 1 minute for the same identifier.
-- The remember-me flow extends session duration to 7 days.
-- The default authenticated session duration is 24 hours.
-- All pages except Login and Password Reset require an authenticated session.
-- OAB-format validation remains part of authentication semantics where applicable.
+- Clerk owns email or username sign-in, credential policy, recovery, account management, session lifetime and attack protection.
+- OAB remains business data; it is not a login identifier.
+- Clerk invitations/setup replace temporary passwords and app-owned forced password changes.
+- A protected request requires a verified active Clerk session, completed provider tasks, current active Organization membership and an active, non-deleted same-firm Employee mapping.
+- Firm identity is derived from the verified Organization mapping, never a submitted firm ID.
+- Permission grants derive exclusively from current Clerk membership permissions, never local roles, UI visibility or client metadata.
+- Provider verification errors deny protected execution. Membership removal denies access without waiting for webhooks.
+- Account administration requires `org:accounts:manage`; revoke removes only the current firm's membership and preserves other Organizations and audit history.
+- Session policy is configured in Clerk; the legacy custom remember-me duration and failed-attempt threshold no longer apply.
+- Public login/recovery and verified webhook entrypoints do not require a product session. All business entrypoints do.
+- Role presets and scope invariants are defined in ROLES_AND_PERMISSIONS.md.
 
 ## Client Rules
 

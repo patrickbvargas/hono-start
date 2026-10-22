@@ -1,43 +1,27 @@
-import { FieldGroup } from "@/shared/components/ui";
-import { useLoginForm } from "../../hooks/use-login-form";
+import { OrganizationList, SignIn, useAuth } from "@clerk/tanstack-react-start";
+import { getSafeInternalRedirectPath } from "@/shared/session/route";
 
 interface LoginFormProps {
 	redirectTo?: string;
 }
 
 export function LoginForm({ redirectTo }: LoginFormProps) {
-	const { form, isPending } = useLoginForm({ redirectTo });
-
+	const { isLoaded, isSignedIn } = useAuth();
+	if (!isLoaded) {
+		return null;
+	}
+	const destination = getSafeInternalRedirectPath(redirectTo) ?? "/";
 	return (
-		<form.Form form={form}>
-			<div className="space-y-5">
-				<FieldGroup>
-					<form.AppField name="identifier">
-						{(field) => (
-							<field.Input
-								label="E-mail ou OAB"
-								placeholder="nome@firma.com.br ou RS123456"
-								isRequired
-							/>
-						)}
-					</form.AppField>
-				</FieldGroup>
-				<FieldGroup>
-					<form.AppField name="password">
-						{(field) => (
-							<field.Input label="Senha" type="password" isRequired />
-						)}
-					</form.AppField>
-				</FieldGroup>
-				<div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-					<form.AppField name="rememberMe">
-						{(field) => <field.Checkbox label="Manter conectado por 7 dias" />}
-					</form.AppField>
-				</div>
-				<form.Submit isLoading={isPending} className="w-full">
-					Entrar
-				</form.Submit>
-			</div>
-		</form.Form>
+		<>
+			{!isSignedIn ? (
+				<SignIn routing="hash" forceRedirectUrl={destination} />
+			) : null}
+			{isSignedIn ? (
+				<OrganizationList
+					hidePersonal
+					afterSelectOrganizationUrl={destination}
+				/>
+			) : null}
+		</>
 	);
 }

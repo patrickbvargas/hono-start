@@ -2,54 +2,31 @@
 
 This file preserves the canonical user workflows of the product. These flows describe intended user behavior and expected system reactions, not implementation details.
 
-## Login
+## Login and account management
 
-1. The user opens the application and reaches the login screen.
-2. The user enters email or OAB number and password.
-3. The user may select a remember-me option.
-4. The user submits the form.
-5. On success, the user is redirected to the dashboard.
-6. On failure, the user sees a pt-BR error message.
-7. Repeated failed attempts trigger temporary protection behavior.
-8. The login flow is the only public entrypoint besides password reset.
-9. No authenticated product screen is reachable without a valid session.
+1. Open `/login` and authenticate through Clerk email or username sign-in.
+2. Complete any provider verification or session tasks and select an authorized firm.
+3. Enter product screens only with current membership and an active linked Employee.
+4. Recovery is available through Clerk from `/recuperar-senha`; OAB is not a credential.
+5. Open account management from the shell to manage credentials through Clerk.
+6. Signing out cancels requests and removes protected cached data.
 
-## Change Password
+## Grant or change collaborator access
 
-1. The authenticated user opens the account password-change flow from the product shell.
-2. The user enters the current password.
-3. The user enters and confirms a new password that satisfies policy.
-4. The user may choose to revoke other active sessions.
-5. The user submits the form.
-6. On success, the system confirms the password change and keeps the current session usable.
-7. On failure, the user sees a safe pt-BR error message.
+1. An actor with `org:accounts:manage` opens an active same-firm collaborator.
+2. Select an explicitly delegable Clerk role.
+3. The system links a Clerk identity and sends an Organization invitation, or updates an existing membership role.
+4. The collaborator completes Clerk email verification/setup and accepts the invitation.
+5. Partial operations show failure and support retry; unmatched identities never gain product access.
+6. No temporary password is generated or shared.
 
-## Forced Password Change After Administrator Reset
+## Revoke collaborator access
 
-1. An administrator resets a collaborator password from the collaborator details flow.
-2. The system generates a temporary password, invalidates the collaborator's active sessions, and marks the account for mandatory password change.
-3. The administrator shares the temporary password with the collaborator.
-4. The collaborator logs in with the temporary password.
-5. The system redirects the collaborator to the mandatory password-change screen.
-6. The collaborator enters and confirms a new password that satisfies policy.
-7. On success, the system clears the mandatory-reset flag and allows access to the dashboard.
-
-## Grant Collaborator Access
-
-1. An administrator opens the collaborator details flow.
-2. The administrator chooses the grant-access action.
-3. The system creates or re-enables the collaborator's credential access.
-4. The system generates a temporary password, invalidates old sessions, and marks the account for mandatory password change.
-5. The administrator shares the temporary password with the collaborator.
-6. The collaborator logs in and is redirected to the mandatory password-change screen before using the rest of the product.
-
-## Revoke Collaborator Access
-
-1. An administrator opens the collaborator details flow.
-2. The administrator chooses the revoke-access action.
-3. The system disables future credential login for that collaborator.
-4. The system invalidates the collaborator's active sessions immediately.
-5. The collaborator can only return after an administrator grants access again.
+1. An authorized account manager opens a same-firm collaborator.
+2. Revoke the current firm's membership and pending invitations.
+3. Subsequent protected requests fail immediately on current provider verification.
+4. Other Organization memberships and business/audit history remain intact.
+5. Restoring access requires an eligible employee and an explicitly selected role.
 
 ## Register A Client
 

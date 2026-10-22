@@ -104,6 +104,16 @@ export const ContractTable = ({
 
 					return (
 						<EntityActions
+							viewPermission={[
+								"org:contracts:read_all",
+								"org:contracts:read_assigned",
+							]}
+							editPermission={[
+								"org:contracts:update_all",
+								"org:contracts:update_assigned",
+							]}
+							restorePermission="org:contracts:restore"
+							deletePermission="org:contracts:delete"
 							canEdit={actions.canEdit}
 							canRestore={actions.canRestore}
 							canDelete={actions.canDelete}

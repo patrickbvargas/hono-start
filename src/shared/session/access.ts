@@ -1,8 +1,8 @@
-import { type SessionAction, sessionActionPolicies } from "./permissions";
+import type { ClerkPermission } from "./catalog";
 import {
 	getCurrentEmployeeId,
 	getCurrentFirmId,
-	isAdminSession,
+	hasPermission,
 } from "./selectors";
 import {
 	CONTRACT_STATUS_CANCELLED_VALUE,
@@ -121,79 +121,63 @@ function canAccessOwnRemuneration(
 	);
 }
 
-function canAccessAssignedWritableContract(
-	session: LoggedUserSession,
-	resource?: ContractAccessResource | null,
-) {
-	return isAssignedToActor(session, resource) && isContractWritable(resource);
-}
-
-function canAccessAssignedWritableFee(
-	session: LoggedUserSession,
-	resource?: FeeAccessResource | null,
-) {
-	return isAssignedToActor(session, resource) && isContractWritable(resource);
-}
-
-function canRegularUser(
-	session: LoggedUserSession,
-	action: SessionAction,
-	resource?: SessionResource,
-) {
-	const policy = sessionActionPolicies[action];
-
-	switch (policy.kind) {
-		case "authenticated":
-			return true;
-		case "admin-only":
-			return false;
-		case "assigned-read":
-			return isAssignedToActor(
-				session,
-				resource as ContractAccessResource | FeeAccessResource,
-			);
-		case "assigned-contract-write":
-			return canAccessAssignedWritableContract(
-				session,
-				resource as ContractAccessResource,
-			);
-		case "assigned-fee-write":
-			return canAccessAssignedWritableFee(
-				session,
-				resource as FeeAccessResource,
-			);
-		case "own-remuneration":
-			return canAccessOwnRemuneration(
-				session,
-				resource as RemunerationAccessResource,
-			);
-	}
-}
-
+// Permission membership is checked directly; the rest enforces domain scope.
 export function can(
 	session: LoggedUserSession,
-	action: SessionAction,
+	permission: ClerkPermission | readonly ClerkPermission[],
 	resource?: SessionResource,
-) {
-	if (!isSameFirm(session, resource)) {
+): boolean {
+	if (typeof permission !== "string") {
+		return permission.some((key) => can(session, key, resource));
+	}
+	const key = permission;
+	if (!hasPermission(session, key) || !isSameFirm(session, resource))
 		return false;
+	if (
+		key === "org:contracts:read_assigned" ||
+		key === "org:fees:read_assigned"
+	) {
+		return (
+			!resource ||
+			isAssignedToActor(session, resource as ContractAccessResource)
+		);
 	}
-
-	if (isAdminSession(session)) {
-		return true;
+	if (
+		key === "org:contracts:update_all" ||
+		key === "org:contracts:update_assigned"
+	) {
+		return (
+			isContractWritable(resource as ContractAccessResource) &&
+			(key === "org:contracts:update_all" ||
+				isAssignedToActor(session, resource as ContractAccessResource))
+		);
 	}
-
-	return canRegularUser(session, action, resource);
+	if (key === "org:fees:create" || key === "org:fees:update") {
+		return (
+			isContractWritable(resource as FeeAccessResource) &&
+			(hasPermission(session, "org:fees:read_all") ||
+				(hasPermission(session, "org:fees:read_assigned") &&
+					isAssignedToActor(session, resource as FeeAccessResource)))
+		);
+	}
+	if (
+		key === "org:remunerations:read_own" ||
+		key === "org:remunerations:export_own"
+	) {
+		return canAccessOwnRemuneration(
+			session,
+			resource as RemunerationAccessResource,
+		);
+	}
+	return true;
 }
 
 export function assertCan(
 	session: LoggedUserSession,
-	action: SessionAction,
+	permission: ClerkPermission | readonly ClerkPermission[],
 	resource?: SessionResource,
 ) {
-	if (can(session, action, resource)) {
-		return;
+	if (!can(session, permission, resource)) {
+		throw new Error("Você não tem permissão para esta operação.");
 	}
-
-	throw new Error(sessionActionPolicies[action].deniedMessage);
 }

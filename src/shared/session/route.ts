@@ -33,11 +33,7 @@ export function getSafeInternalRedirectPath(
 	return redirectPath;
 }
 
-export function getAuthenticatedHomePath(session: LoggedUserSession) {
-	if (session.mustChangePassword) {
-		return FORCED_PASSWORD_CHANGE_PATH;
-	}
-
+export function getAuthenticatedHomePath(_session: LoggedUserSession) {
 	return "/";
 }
 
@@ -48,7 +44,7 @@ export async function requireRouteSession(
 	const safeRedirectPath = getSafeInternalRedirectPath(redirectPath);
 
 	try {
-		const session = await queryClient.ensureQueryData(
+		const session = await queryClient.fetchQuery(
 			getCurrentSessionQueryOptions(),
 		);
 
@@ -71,5 +67,5 @@ export async function requireRouteSession(
 }
 
 export async function getRouteSession(queryClient: QueryClient) {
-	return queryClient.ensureQueryData(getCurrentSessionQueryOptions());
+	return queryClient.fetchQuery(getCurrentSessionQueryOptions());
 }

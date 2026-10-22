@@ -7,7 +7,7 @@ import {
 	SidebarMenuItem,
 } from "@/shared/components/ui";
 import type { RouteSection } from "@/shared/config/routes";
-import { can, useLoggedUserSessionStore } from "@/shared/session";
+import { hasPermission, useLoggedUserSessionStore } from "@/shared/session";
 
 interface NavMainProps {
 	items: RouteSection[];
@@ -27,7 +27,11 @@ export const NavMain = ({ items }: NavMainProps) => {
 
 	return items.map((item) => {
 		const visibleItems = item.items.filter((subItem) =>
-			subItem.permission ? can(session, subItem.permission) : true,
+			subItem.permission
+				? typeof subItem.permission === "string"
+					? hasPermission(session, subItem.permission)
+					: subItem.permission.some((key) => hasPermission(session, key))
+				: true,
 		);
 
 		if (visibleItems.length === 0) {

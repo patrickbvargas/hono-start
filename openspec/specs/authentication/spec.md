@@ -1,10 +1,15 @@
 # authentication Specification
 
 ## Purpose
-Define the authentication feature contract for public credential flows, protected session gating, password reset, remembered sessions, authenticated password change, forced password rotation, and logout behavior.
+Define the authentication feature contract for Clerk-owned credential flows, protected session gating, recovery, account management, configured session policy, and logout behavior.
 ## Requirements
+
 ### Requirement: Public authentication routes exist outside the authenticated shell
-The system SHALL expose `/login` and `/recuperar-senha` as public routes grouped under a TanStack Router pathless layout route at `_auth/route.tsx`. These routes SHALL render inside the shared public-auth container and SHALL NOT require an authenticated session or render the authenticated sidebar shell.
+The system SHALL expose `/login` and a compatible `/recuperar-senha` entry outside the authenticated shell under `_auth`. Authentication routes SHALL render Clerk-supported sign-in/recovery behavior within feature-owned presentation, with pt-BR localization and any required catch-all paths for provider navigation.
+
+#### Scenario: User opens authentication routes
+- **WHEN** an unauthenticated user opens login or recovery
+- **THEN** the Clerk authentication experience renders without the product sidebar or a prior product session
 
 #### Scenario: Unauthenticated user opens login route
 - **WHEN** an unauthenticated user navigates to `/login`
@@ -16,167 +21,64 @@ The system SHALL expose `/login` and `/recuperar-senha` as public routes grouped
 - **THEN** the system renders the password-reset flow inside the `_auth` public container
 - **AND** no prior authenticated session is required
 
-### Requirement: Users authenticate with email or OAB number plus password
-The system SHALL allow a user to sign in by submitting one identifier field containing either email or OAB number together with a password, using the documented OAB semantics and safe pt-BR error feedback. A successful login MUST keep the login submit action visibly busy until the client finishes clearing protected frontend query caches from any previous authenticated actor, refreshing the shared frontend session query with the resolved logged-user actor, and handing control to protected-route navigation.
-
-#### Scenario: User logs in with email
-- **WHEN** a user submits a valid email and correct password
-- **THEN** the system authenticates the user
-- **AND** keeps the login submit action visibly busy during the post-login client transition
-- **AND** clears protected frontend query caches from any previous authenticated actor
-- **AND** refreshes the shared frontend session query with the resolved logged-user actor
-- **AND** redirects the user to `/`
-
-#### Scenario: User logs in with OAB number
-- **WHEN** a user submits a valid OAB identifier in the documented format and the correct password
-- **THEN** the system authenticates the user
-- **AND** keeps the login submit action visibly busy during the post-login client transition
-- **AND** clears protected frontend query caches from any previous authenticated actor
-- **AND** refreshes the shared frontend session query with the resolved logged-user actor
-- **AND** redirects the user to `/`
-
-#### Scenario: Invalid credentials fail safely
-- **WHEN** a user submits an unknown identifier or incorrect password
-- **THEN** the system denies access and shows a safe pt-BR authentication error without exposing whether the identifier exists
-
-### Requirement: Credential login requires an active linked employee and an unbanned Supabase Auth account
-The system SHALL allow credential login only when the submitted email or OAB resolves to an employee that is active, not soft-deleted, linked to a Supabase Auth user, and not currently banned by Supabase Auth. The system MUST continue to return the same safe pt-BR invalid-credentials response when the identifier is unknown or the password is invalid.
-
-#### Scenario: Employee with active provider access logs in successfully
-- **WHEN** a collaborator whose employee is active, not deleted, linked to a Supabase Auth user, is not banned by the provider, and submits valid credentials
-- **THEN** the system authenticates the collaborator normally
-
-#### Scenario: Revoked collaborator access is denied with revoked-access feedback
-- **WHEN** a collaborator whose linked Supabase Auth account is banned submits the correct password
-- **THEN** the system denies login
-- **AND** shows the dedicated revoked-access feedback in pt-BR
-
-#### Scenario: Inactive or deleted employee cannot authenticate
-- **WHEN** a collaborator submits valid credentials for a linked employee that is inactive or soft-deleted
-- **THEN** the system denies login
-- **AND** shows the same safe invalid-credentials feedback
-
-#### Scenario: Linked auth user without credential account cannot authenticate
-- **WHEN** a collaborator has no valid linked employee record for the resolved Supabase Auth identity
-- **THEN** the system denies credential login
-- **AND** shows the same safe invalid-credentials feedback
-
-### Requirement: Remembered sessions follow documented duration rules
-The system SHALL create authenticated sessions with a default duration of 24 hours and SHALL extend the session duration to 7 days when the user explicitly selects the remember-me flow.
-
-#### Scenario: Default session duration is used
-- **WHEN** a user logs in successfully without selecting remember-me
-- **THEN** the system issues an authenticated session with the default 24-hour duration
-
-#### Scenario: Remember-me extends session duration
-- **WHEN** a user logs in successfully with remember-me selected
-- **THEN** the system issues an authenticated session with a 7-day duration
-
 ### Requirement: Protected routes require authenticated session
-The system SHALL group authenticated product routes under a TanStack Router pathless layout route at `_app/route.tsx`, and that layout SHALL enforce the authenticated-session requirement before rendering child routes. Protected frontend routes SHALL derive browser-side authenticated state from one synchronized session source so child routes do not observe a divergent unauthenticated snapshot after login. The system SHALL continue to redirect authenticated users away from public login and password-reset screens to the dashboard or to the forced-password-change screen when the authenticated account is flagged for mandatory password rotation.
+The system SHALL gate `_app` in `beforeLoad` using a verified active Clerk session, completed session tasks, current organization membership and a valid domain actor mapping. ClerkProvider SHALL own provider state; the shared session query SHALL only project the domain actor and safe capabilities.
+
+#### Scenario: Missing or pending session
+- **WHEN** a signed-out user or a user with incomplete Clerk session tasks enters a protected route
+- **THEN** protected loaders and product content do not continue
+- **AND** the user is directed to the appropriate Clerk authentication/task flow
+
+#### Scenario: Authenticated user revisits login
+- **WHEN** a fully authenticated, mapped user visits a public authentication entry
+- **THEN** the route redirects to the safe requested destination or the authenticated home
 
 #### Scenario: Unauthenticated user hits protected route
 - **WHEN** an unauthenticated user navigates to `/clientes`
 - **THEN** the `_app` authenticated layout blocks access before rendering the child route
 - **AND** the system redirects the user to `/login`
 
-#### Scenario: Authenticated user revisits login route
-- **WHEN** an authenticated user navigates to `/login`
-- **THEN** the system redirects the user to `/`
-
 #### Scenario: Authenticated child route does not use stale unauthenticated browser session state
 - **WHEN** a user has completed login successfully and enters a protected child route inside the authenticated shell
 - **THEN** the child route reads the synchronized frontend authenticated-session source
 - **AND** it does not fail because a separate optional browser session cache still holds an unauthenticated result
 
-#### Scenario: Authenticated user flagged for mandatory password rotation enters the protected shell
-- **WHEN** a user authenticates successfully with a temporary administrator-issued password
-- **THEN** the authenticated route guard redirects that user to the dedicated forced-password-change screen
-- **AND** other protected child routes do not render until the password is changed
-
-#### Scenario: Authenticated flagged user revisits public auth routes
-- **WHEN** an authenticated user with `mustChangePassword = true` navigates to `/login` or `/recuperar-senha`
-- **THEN** the system redirects the user to the forced-password-change screen instead of the dashboard
-
-### Requirement: Administrator-issued temporary passwords force a password change on next login
-The system SHALL support an authenticated forced password-change flow for users whose credential account was reset by an administrator. A flagged authenticated user MUST be required to choose a new password that satisfies policy before accessing the rest of the protected product.
-
-#### Scenario: Flagged user reaches the forced-change screen after login
-- **WHEN** a user signs in with a temporary password from an administrator reset
-- **THEN** the system authenticates the session
-- **AND** redirects the user to the dedicated forced-password-change screen
-- **AND** prevents access to other protected routes until the password is changed
-
-#### Scenario: Flagged user changes password successfully
-- **WHEN** a flagged authenticated user submits a valid new password with matching confirmation on the forced-password-change screen
-- **THEN** the system updates the credential password
-- **AND** clears the `mustChangePassword` account flag
-- **AND** keeps the current authenticated session usable
-- **AND** redirects the user to the dashboard
-
-#### Scenario: Forced-change validation still applies password policy
-- **WHEN** a flagged authenticated user submits a new password that is too short or whose confirmation does not match
-- **THEN** the system blocks submission with inline validation feedback
-- **AND** does not clear the forced-change requirement
-
 ### Requirement: Password reset is supported
-The system SHALL support password-reset request and reset-completion behavior for valid accounts using safe, non-enumerating user feedback.
+The system SHALL delegate password recovery and completion to Clerk-supported flows with safe feedback and no application-owned reset tokens or credential storage.
 
-#### Scenario: User requests password reset
-- **WHEN** a user submits a valid account identifier on `/recuperar-senha`
-- **THEN** the system starts a password-reset flow and shows a safe confirmation message without revealing account existence
+#### Scenario: Recovery completes
+- **WHEN** a user completes Clerk verification and supplies a password accepted by the configured provider policy
+- **THEN** Clerk updates the credential and the app continues only after required session tasks are complete
 
-#### Scenario: User completes password reset
-- **WHEN** a user opens a valid password-reset verification link and submits a new password that satisfies policy
-- **THEN** the system updates the password and allows the user to authenticate with the new credential
+#### Scenario: Recovery fails
+- **WHEN** a reset verification is invalid, expired or an identifier is unknown
+- **THEN** the system displays safe provider-localized feedback without exposing application internals or employee lookup data
 
 ### Requirement: Authenticated users can change their password from the product shell
-The system SHALL allow any authenticated user with a credential-based account to change their password from the authenticated product shell by submitting the current password, a new password that satisfies policy, and a matching confirmation value. The flow MUST keep user-facing feedback in safe pt-BR copy and MUST rely on the authenticated session context rather than any client-submitted user identity.
+The system SHALL expose Clerk account-management UI from the shell and delegate credential updates, verification and supported session-revocation options to Clerk. The application SHALL NOT implement a parallel password mutation or trust a submitted account identity.
 
-#### Scenario: Authenticated user changes password successfully
-- **WHEN** an authenticated user opens the account password-change flow, submits the correct current password, and provides a valid new password with matching confirmation
-- **THEN** the system updates the credential password
-- **AND** shows a success confirmation in pt-BR
-- **AND** keeps the current authenticated session usable
-
-#### Scenario: Current password is invalid
-- **WHEN** an authenticated user submits the password-change form with an incorrect current password
-- **THEN** the system denies the password change
-- **AND** shows a safe pt-BR error for invalid current password
-- **AND** does not reveal internal auth-provider details
-
-#### Scenario: New password confirmation does not match
-- **WHEN** an authenticated user submits a new password and confirmation with different values
-- **THEN** the system blocks submission with inline validation feedback
-- **AND** does not call the authenticated password-change operation
-
-#### Scenario: User revokes other sessions during password change
-- **WHEN** an authenticated user opts to revoke other sessions while changing the password successfully
-- **THEN** the system invalidates the user's other active sessions
-- **AND** preserves the current session so the user remains in the authenticated shell
+#### Scenario: User manages credentials
+- **WHEN** an authenticated user opens account management
+- **THEN** Clerk manages changes for the authenticated identity using its configured security requirements
+- **AND** business screens remain in the existing product shell
 
 ### Requirement: Public credential forms keep secrets out of the browser URL
-The system SHALL ensure that public authentication forms containing password-bearing fields submit through a transport that does not serialize those credential values into the browser URL, including when native browser submission occurs before client hydration or when JavaScript is unavailable.
+The system SHALL use supported Clerk credential transports and SHALL NOT serialize passwords, recovery credentials or secret keys into application URLs, logs or audit payloads.
 
-#### Scenario: Login submission does not place password in URL
-- **WHEN** a user submits the `/login` form with an identifier and password
-- **THEN** the browser URL does not gain the submitted password value
-- **AND** the form fallback behavior remains compatible with the existing login mutation flow
-
-#### Scenario: Password reset completion does not place new password in URL
-- **WHEN** a user submits the password reset completion form on `/recuperar-senha` with a reset token and new password values
-- **THEN** the browser URL does not gain the submitted password values
-- **AND** the reset-completion flow remains compatible with the existing reset mutation flow
+#### Scenario: Credential submission
+- **WHEN** a user submits a password-bearing authentication operation
+- **THEN** credential values do not appear in the browser query string or application logs
 
 ### Requirement: Logout ends authenticated access
-The system SHALL provide a logout action that invalidates the current authenticated session and removes access to protected routes until the user signs in again. The logout flow MUST clear the shared frontend session query and all protected frontend query caches so no browser-side snapshot from the previous actor keeps protected access or protected data alive.
+The system SHALL sign out through Clerk, clear the domain-session projection and all protected caches, and require fresh authentication for protected access. Expiration, user changes and organization changes SHALL invalidate previous-context data, including late in-flight responses.
 
 #### Scenario: User logs out
-- **WHEN** an authenticated user triggers the logout action
-- **THEN** the system invalidates the active session
-- **AND** clears the shared frontend session query
-- **AND** clears protected frontend query caches
-- **AND** redirects the user to `/login`
+- **WHEN** an authenticated user signs out
+- **THEN** Clerk ends the selected session and protected cached data is cleared before returning to login
+
+#### Scenario: Organization changes during a request
+- **WHEN** an old organization's data request completes after switching the active organization
+- **THEN** its response cannot populate or render in the new organization's protected context
 
 #### Scenario: Logged-out user revisits protected page
 - **WHEN** the user tries to open a protected route after logout
@@ -188,17 +90,11 @@ The system SHALL provide a logout action that invalidates the current authentica
 - **AND** redirects the user to `/login`
 
 ### Requirement: Public authentication screens use the shared product UI language
-The system SHALL render the `/login` and `/recuperar-senha` screens with the repository's shared UI composition so the public authentication experience remains consistent with the rest of the product while preserving the existing authentication behavior.
+The system SHALL use Clerk prebuilt authentication/account widgets with pt-BR localization inside feature-owned components and existing public/product layouts. Clerk widgets SHALL be an explicit provider-UI exception; surrounding application UI SHALL continue using shared UI exports.
 
-#### Scenario: Login screen keeps the existing workflow with shared UI treatment
-- **WHEN** an unauthenticated user opens `/login`
-- **THEN** the system shows the same login fields, help text, remember-me control, password-reset link, and submit action
-- **AND** the screen uses the shared product UI language instead of a one-off custom visual system
-
-#### Scenario: Password-reset screen keeps the existing workflow with shared UI treatment
-- **WHEN** an unauthenticated user opens `/recuperar-senha`
-- **THEN** the system shows the same request and reset-completion flows, token-driven mode switching, and safe user feedback
-- **AND** the screen uses the shared product UI language instead of a one-off custom visual system
+#### Scenario: Provider authentication UI is rendered
+- **WHEN** a user opens login, recovery or account management
+- **THEN** Clerk owns the credential interaction and surrounding layout follows the documented feature and shared UI boundaries
 
 ### Requirement: Authentication route guards execute before route loading
 The system SHALL enforce public-auth and protected-app route redirects in TanStack Router `beforeLoad` handlers instead of route `loader` functions. When an unauthenticated actor is redirected away from a protected route, the system MUST preserve the originally requested internal destination so the post-login flow can resume there safely.
@@ -222,3 +118,14 @@ The system SHALL enforce public-auth and protected-app route redirects in TanSta
 - **WHEN** the login flow receives a redirect destination that is missing, malformed, or not an internal route
 - **THEN** the system ignores that destination
 - **AND** the post-login flow navigates to the default authenticated entry route
+
+### Requirement: Authentication policy is managed in Clerk
+The system SHALL configure credentials, session lifetime, enumeration/attack protection and pending-session tasks in Clerk using supported settings. It SHALL remove legacy controls that imply unsupported duration or temporary-password behavior and update canonical contracts to the effective provider policy.
+
+#### Scenario: Session settings are configured
+- **WHEN** an operator configures the Clerk instance for deployment
+- **THEN** effective session/security settings and required plan capabilities are documented and verified without recreating a separate app session mechanism
+
+#### Scenario: Uninvited identity signs in
+- **WHEN** a Clerk identity lacks an authorized firm membership or Employee mapping
+- **THEN** authentication alone does not grant access to product data or self-service firm creation

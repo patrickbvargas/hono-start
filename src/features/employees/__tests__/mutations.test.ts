@@ -1,19 +1,16 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { EmployeeType, UserRole } from "@/generated/prisma/client";
+import type { UserRole } from "@/generated/prisma/client";
 import { EMPLOYEE_ERRORS } from "../constants/errors";
 import type { EmployeeDetail } from "../schemas/model";
 
 const {
 	createAuditLogMock,
-	getSupabaseCredentialAccessStateMock,
 	getEmployeeByIdMock,
 	getEmployeeTypeByValueMock,
 	getUserRoleByValueMock,
 	prismaMock,
-	supabaseAdminClientMock,
 } = vi.hoisted(() => ({
 	createAuditLogMock: vi.fn(),
-	getSupabaseCredentialAccessStateMock: vi.fn(),
 	getEmployeeByIdMock: vi.fn(),
 	getEmployeeTypeByValueMock: vi.fn(),
 	getUserRoleByValueMock: vi.fn(),
@@ -27,26 +24,10 @@ const {
 		},
 		$transaction: vi.fn(),
 	},
-	supabaseAdminClientMock: {
-		auth: {
-			admin: {
-				createUser: vi.fn(),
-				listUsers: vi.fn(),
-				updateUserById: vi.fn(),
-			},
-		},
-	},
 }));
 
 vi.mock("@/shared/lib/prisma", () => ({
 	prisma: prismaMock,
-}));
-
-vi.mock("@/shared/lib/supabase-admin", () => ({
-	getSupabaseAdminClient: () => supabaseAdminClientMock,
-	getSupabaseCredentialAccessState: getSupabaseCredentialAccessStateMock,
-	SUPABASE_AUTH_BAN_FOREVER: "876000h",
-	isSupabaseAuthUserMissingError: vi.fn().mockReturnValue(false),
 }));
 
 vi.mock("@/features/audit-logs/data/mutations", () => ({
@@ -72,21 +53,8 @@ vi.mock("../data/queries", () => ({
 import {
 	createEmployee,
 	deleteEmployee,
-	grantEmployeeAccess,
-	resetEmployeePassword,
 	restoreEmployee,
-	restoreEmployeeAccess,
-	revokeEmployeeAccess,
-	updateEmployee,
 } from "../data/mutations";
-
-const baseType = (overrides: Partial<EmployeeType> = {}): EmployeeType => ({
-	id: 10,
-	value: "LAWYER",
-	label: "Advogado",
-	isActive: true,
-	...overrides,
-});
 
 const baseRole = (overrides: Partial<UserRole> = {}): UserRole => ({
 	id: 20,
@@ -133,37 +101,6 @@ describe("employee lookup-backed writes", () => {
 		});
 		prismaMock.employee.update.mockResolvedValue({});
 		prismaMock.contractEmployee.count.mockResolvedValue(0);
-		supabaseAdminClientMock.auth.admin.createUser.mockResolvedValue({
-			data: {
-				user: {
-					id: "auth-user-1",
-				},
-			},
-			error: null,
-		});
-		supabaseAdminClientMock.auth.admin.listUsers.mockResolvedValue({
-			data: {
-				users: [],
-				nextPage: null,
-			},
-			error: null,
-		});
-		supabaseAdminClientMock.auth.admin.updateUserById.mockResolvedValue({
-			data: {
-				user: {
-					id: "auth-user-1",
-				},
-			},
-			error: null,
-		});
-		getSupabaseCredentialAccessStateMock.mockResolvedValue({
-			hasCredentialAccount: true,
-			isAccessActive: true,
-			status: "ACTIVE",
-			user: {
-				id: "auth-user-1",
-			},
-		});
 		prismaMock.$transaction.mockImplementation(async (callback) =>
 			callback(prismaMock),
 		);
@@ -188,50 +125,6 @@ describe("employee lookup-backed writes", () => {
 				},
 			}),
 		).rejects.toThrow(EMPLOYEE_ERRORS.TYPE_NOT_FOUND);
-	});
-
-	it("bans access in Supabase when the employee email changes", async () => {
-		getEmployeeByIdMock.mockResolvedValue(baseEmployee());
-		getEmployeeTypeByValueMock.mockResolvedValue(baseType());
-		getUserRoleByValueMock.mockResolvedValue(baseRole());
-
-		await expect(
-			updateEmployee({
-				actor: {
-					id: 9,
-					name: "Admin",
-					email: "admin@example.com",
-				},
-				firmId: 1,
-				input: {
-					id: 1,
-					fullName: "Maria Souza",
-					email: "maria.souza@example.com",
-					oabNumber: "RS123456",
-					remunerationPercent: 0.4,
-					referrerPercent: 0.2,
-					type: "LAWYER",
-					role: "USER",
-					isActive: true,
-				},
-			}),
-		).resolves.toEqual({ success: true });
-
-		expect(prismaMock.employee.update).toHaveBeenCalledWith({
-			where: {
-				id: 1,
-			},
-			data: expect.objectContaining({
-				email: "maria.souza@example.com",
-				fullName: "Maria Souza",
-				mustChangePassword: true,
-			}),
-		});
-		expect(
-			supabaseAdminClientMock.auth.admin.updateUserById,
-		).toHaveBeenCalledWith("auth-user-1", {
-			ban_duration: "876000h",
-		});
 	});
 
 	it("soft-deletes active employees and writes an audit log", async () => {
@@ -285,230 +178,6 @@ describe("employee lookup-backed writes", () => {
 			data: {
 				deletedAt: null,
 			},
-		});
-	});
-
-	it("resets a Supabase-linked employee password without writing plaintext to audit", async () => {
-		getEmployeeByIdMock.mockResolvedValue(baseEmployee());
-
-		const result = await resetEmployeePassword({
-			actor: {
-				id: 9,
-				name: "Admin",
-				email: "admin@example.com",
-			},
-			firmId: 1,
-			id: 1,
-		});
-
-		expect(result.success).toBe(true);
-		expect(
-			supabaseAdminClientMock.auth.admin.updateUserById,
-		).toHaveBeenCalledWith(
-			"auth-user-1",
-			expect.objectContaining({
-				email: "maria@example.com",
-				password: result.temporaryPassword,
-			}),
-		);
-		expect(prismaMock.employee.update).toHaveBeenCalledWith({
-			where: {
-				id: 1,
-			},
-			data: {
-				mustChangePassword: true,
-			},
-		});
-		expect(createAuditLogMock).not.toHaveBeenCalledWith(
-			prismaMock,
-			expect.objectContaining({
-				changeData: expect.objectContaining({
-					temporaryPassword: expect.any(String),
-				}),
-			}),
-		);
-	});
-
-	it("resets password for a revoked account without restoring access", async () => {
-		getEmployeeByIdMock.mockResolvedValue(
-			baseEmployee({
-				credentialAccessStatus: "REVOKED",
-				hasActiveCredentialAccess: false,
-			}),
-		);
-		getSupabaseCredentialAccessStateMock.mockResolvedValueOnce({
-			hasCredentialAccount: true,
-			isAccessActive: false,
-			status: "REVOKED",
-			user: {
-				id: "auth-user-1",
-			},
-		});
-
-		const result = await resetEmployeePassword({
-			actor: {
-				id: 9,
-				name: "Admin",
-				email: "admin@example.com",
-			},
-			firmId: 1,
-			id: 1,
-		});
-
-		expect(result.success).toBe(true);
-		expect(
-			supabaseAdminClientMock.auth.admin.updateUserById,
-		).toHaveBeenCalledWith(
-			"auth-user-1",
-			expect.objectContaining({
-				password: result.temporaryPassword,
-			}),
-		);
-	});
-
-	it("grants access by linking a Supabase Auth user and setting domain flags", async () => {
-		getEmployeeByIdMock.mockResolvedValue(
-			baseEmployee({
-				hasCredentialAccount: false,
-				credentialAccessStatus: "NOT_GRANTED",
-				hasActiveCredentialAccess: false,
-				mustChangePassword: false,
-				authUserId: null,
-			}),
-		);
-		getSupabaseCredentialAccessStateMock.mockResolvedValueOnce({
-			hasCredentialAccount: false,
-			isAccessActive: false,
-			status: "NOT_GRANTED",
-			user: null,
-		});
-		supabaseAdminClientMock.auth.admin.listUsers.mockResolvedValueOnce({
-			data: {
-				users: [
-					{
-						id: "auth-user-1",
-						email: "maria@example.com",
-					},
-				],
-				nextPage: null,
-			},
-			error: null,
-		});
-
-		const result = await grantEmployeeAccess({
-			actor: {
-				id: 9,
-				name: "Admin",
-				email: "admin@example.com",
-			},
-			firmId: 1,
-			id: 1,
-		});
-
-		expect(result.success).toBe(true);
-		expect(
-			supabaseAdminClientMock.auth.admin.updateUserById,
-		).toHaveBeenCalledWith(
-			"auth-user-1",
-			expect.objectContaining({
-				email: "maria@example.com",
-				password: result.temporaryPassword,
-			}),
-		);
-		expect(prismaMock.employee.update).toHaveBeenCalledWith({
-			where: {
-				id: 1,
-			},
-			data: {
-				mustChangePassword: true,
-				authUserId: "auth-user-1",
-			},
-		});
-	});
-
-	it("blocks grant access when the collaborator has a revoked account", async () => {
-		getEmployeeByIdMock.mockResolvedValue(
-			baseEmployee({
-				credentialAccessStatus: "REVOKED",
-				hasActiveCredentialAccess: false,
-			}),
-		);
-		getSupabaseCredentialAccessStateMock.mockResolvedValueOnce({
-			hasCredentialAccount: true,
-			isAccessActive: false,
-			status: "REVOKED",
-			user: {
-				id: "auth-user-1",
-			},
-		});
-
-		await expect(
-			grantEmployeeAccess({
-				actor: {
-					id: 9,
-					name: "Admin",
-					email: "admin@example.com",
-				},
-				firmId: 1,
-				id: 1,
-			}),
-		).rejects.toThrow(EMPLOYEE_ERRORS.GRANT_ACCESS_RESTORE_REQUIRED);
-	});
-
-	it("revokes enabled access without deleting the auth identity", async () => {
-		getEmployeeByIdMock.mockResolvedValue(baseEmployee());
-
-		await expect(
-			revokeEmployeeAccess({
-				actor: {
-					id: 9,
-					name: "Admin",
-					email: "admin@example.com",
-				},
-				firmId: 1,
-				id: 1,
-			}),
-		).resolves.toEqual({ success: true });
-
-		expect(
-			supabaseAdminClientMock.auth.admin.updateUserById,
-		).toHaveBeenCalledWith("auth-user-1", {
-			ban_duration: "876000h",
-		});
-	});
-
-	it("restores revoked access without changing the password", async () => {
-		getEmployeeByIdMock.mockResolvedValue(
-			baseEmployee({
-				credentialAccessStatus: "REVOKED",
-				hasActiveCredentialAccess: false,
-			}),
-		);
-		getSupabaseCredentialAccessStateMock.mockResolvedValueOnce({
-			hasCredentialAccount: true,
-			isAccessActive: false,
-			status: "REVOKED",
-			user: {
-				id: "auth-user-1",
-			},
-		});
-
-		await expect(
-			restoreEmployeeAccess({
-				actor: {
-					id: 9,
-					name: "Admin",
-					email: "admin@example.com",
-				},
-				firmId: 1,
-				id: 1,
-			}),
-		).resolves.toEqual({ success: true });
-
-		expect(
-			supabaseAdminClientMock.auth.admin.updateUserById,
-		).toHaveBeenCalledWith("auth-user-1", {
-			ban_duration: "none",
 		});
 	});
 });

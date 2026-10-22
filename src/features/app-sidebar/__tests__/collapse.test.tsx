@@ -58,10 +58,10 @@ vi.mock("@/shared/components/ui", () => ({
 }));
 
 vi.mock("@/shared/session", () => ({
-	can: (
+	hasPermission: (
 		_session: unknown,
-		action: "employee.manage" | "audit-log.view" | string,
-	) => action !== "employee.manage",
+		action: "org:employees:read" | "org:audit_logs:read" | string,
+	) => action !== "org:employees:read",
 	useLoggedUserSessionStore: (
 		selector: (session: { role: { value: string } }) => unknown,
 	) => selector({ role: { value: "USER" } }),
@@ -139,7 +139,7 @@ describe("app sidebar collapse behavior", () => {
 								title: "Colaboradores",
 								url: "/colaboradores",
 								icon: UserIcon,
-								permission: "employee.manage",
+								permission: "org:employees:read",
 							},
 						],
 					},
@@ -163,7 +163,7 @@ describe("app sidebar collapse behavior", () => {
 								title: "Colaboradores",
 								url: "/colaboradores",
 								icon: UserIcon,
-								permission: "employee.manage",
+								permission: "org:employees:read",
 							},
 						],
 					},

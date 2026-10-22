@@ -98,3 +98,7 @@ Lookup values are domain truth:
 | `NOTARY` | Tabelionato |
 | `COURT_COSTS` | Custos Judiciais |
 | `OTHER` | Outros |
+
+## Legacy user roles
+
+The local UserRole lookup remains for historical compatibility during migration. It is not selectable authority for accounts. Current roles and grants are configured in Clerk; employee business forms do not assign access.

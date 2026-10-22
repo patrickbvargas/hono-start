@@ -1,7 +1,6 @@
 import "dotenv/config";
 import { Prisma, PrismaClient } from "../src/generated/prisma/client.js";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { createClient } from "@supabase/supabase-js";
 
 const adapter = new PrismaPg({
   connectionString: process.env.DATABASE_URL!,
@@ -10,21 +9,6 @@ const adapter = new PrismaPg({
 const prisma = new PrismaClient({ adapter });
 const DEFAULT_FIRM_ID = 1;
 const MINIMUM_CONTRACT_COUNT = 20;
-
-const devAuthFixtures = [
-  {
-    email: "admin@hono.com",
-    password: "admin123",
-  },
-  {
-    email: "amanda@hono.com",
-    password: "amanda123",
-  },
-  {
-    email: "carlos@hono.com",
-    password: "carlos123",
-  },
-] as const;
 
 type EmployeeTypeValue = "LAWYER" | "ADMIN_ASSISTANT";
 type UserRoleValue = "ADMIN" | "USER";
@@ -155,33 +139,6 @@ interface CreatedContractAssignment {
     remunerationPercentage: Prisma.Decimal;
     referralPercentage: Prisma.Decimal;
   };
-}
-
-function getRequiredEnv(name: "SUPABASE_URL" | "SUPABASE_SERVICE_ROLE_KEY") {
-  const value =
-    name === "SUPABASE_SERVICE_ROLE_KEY"
-      ? process.env.SUPABASE_SERVICE_ROLE_KEY ??
-        process.env.SUPABASE_STORAGE_SERVICE_KEY
-      : process.env[name];
-
-  if (!value) {
-    throw new Error(`Missing required environment variable: ${name}`);
-  }
-
-  return value;
-}
-
-function createSupabaseAdminClient() {
-  return createClient(
-    getRequiredEnv("SUPABASE_URL"),
-    getRequiredEnv("SUPABASE_SERVICE_ROLE_KEY"),
-    {
-      auth: {
-        autoRefreshToken: false,
-        persistSession: false,
-      },
-    },
-  );
 }
 
 function padNumeric(value: number, size: number) {
@@ -957,123 +914,6 @@ function getRequiredMapValue<TKey, TValue>(
   return item;
 }
 
-async function findSupabaseUserByEmail(
-  supabase: ReturnType<typeof createSupabaseAdminClient>,
-  email: string,
-) {
-  let page = 1;
-
-  while (true) {
-    const { data, error } = await supabase.auth.admin.listUsers({
-      page,
-      perPage: 200,
-    });
-
-    if (error) {
-      throw error;
-    }
-
-    const matchedUser = data.users.find((user) => user.email === email);
-
-    if (matchedUser) {
-      return matchedUser;
-    }
-
-    if (!data.nextPage) {
-      return null;
-    }
-
-    page = data.nextPage;
-  }
-}
-
-async function reconcileSupabaseAuthFixtures() {
-  const supabase = createSupabaseAdminClient();
-
-  for (const fixture of devAuthFixtures) {
-    const employee = await prisma.employee.findUniqueOrThrow({
-      where: {
-        email: fixture.email,
-      },
-      select: {
-        email: true,
-        fullName: true,
-        id: true,
-        authUserId: true,
-      },
-    });
-
-    let authUserId = employee.authUserId;
-
-    if (authUserId) {
-      const { data, error } = await supabase.auth.admin.updateUserById(
-        authUserId,
-        {
-          ban_duration: "none",
-          email: employee.email,
-          email_confirm: true,
-          password: fixture.password,
-          user_metadata: {
-            fullName: employee.fullName,
-          },
-        },
-      );
-
-      if (error || !data.user) {
-        throw error ?? new Error("Failed to update Supabase Auth user.");
-      }
-    } else {
-      const existingUser = await findSupabaseUserByEmail(supabase, fixture.email);
-
-      if (existingUser) {
-        authUserId = existingUser.id;
-        const { data, error } = await supabase.auth.admin.updateUserById(
-          existingUser.id,
-          {
-            ban_duration: "none",
-            email: employee.email,
-            email_confirm: true,
-            password: fixture.password,
-            user_metadata: {
-              fullName: employee.fullName,
-            },
-          },
-        );
-
-        if (error || !data.user) {
-          throw error ?? new Error("Failed to relink Supabase Auth user.");
-        }
-      } else {
-        const { data, error } = await supabase.auth.admin.createUser({
-          email: employee.email,
-          email_confirm: true,
-          password: fixture.password,
-          ban_duration: "none",
-          user_metadata: {
-            fullName: employee.fullName,
-          },
-        });
-
-        if (error || !data.user) {
-          throw error ?? new Error("Failed to create Supabase Auth user.");
-        }
-
-        authUserId = data.user.id;
-      }
-    }
-
-    await prisma.employee.update({
-      where: {
-        id: employee.id,
-      },
-      data: {
-        mustChangePassword: false,
-        authUserId,
-      },
-    });
-  }
-}
-
 function getRecommendingReferralPercentage(
   assignments: CreatedContractAssignment[],
 ) {
@@ -1732,7 +1572,7 @@ async function main() {
     });
   }
 
-  await reconcileSupabaseAuthFixtures();
+  // Clerk identities are provisioned separately after an explicit migration mapping.
 
   console.log("Supabase Auth bootstrap complete.");
 }

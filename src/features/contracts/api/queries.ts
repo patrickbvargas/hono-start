@@ -3,7 +3,8 @@ import { createServerFn } from "@tanstack/react-start";
 import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { Option } from "@/shared/schemas/option";
-import { authMiddleware, isAdminSession } from "@/shared/session";
+import { assertCan, hasPermission } from "@/shared/session";
+import { authMiddleware } from "@/shared/session/middleware";
 import {
 	getRequiredServerLoggedUserSession,
 	getServerScope,
@@ -47,6 +48,10 @@ const getContractsFn = createServerFn({ method: "GET" })
 		async ({ data }): Promise<QueryPaginatedReturnType<ContractSummary>> => {
 			try {
 				const session = await getRequiredServerLoggedUserSession();
+				assertCan(session, [
+					"org:contracts:read_all",
+					"org:contracts:read_assigned",
+				]);
 				const scope = await getServerScope("contract");
 
 				return await getContracts({
@@ -54,7 +59,7 @@ const getContractsFn = createServerFn({ method: "GET" })
 						firmId: scope.firmId,
 						employeeId: scope.employeeId,
 						employeeTypeValue: session.employeeType.value,
-						isAdmin: isAdminSession(session),
+						isAdmin: hasPermission(session, "org:contracts:read_all"),
 					},
 					search: data,
 				});
@@ -71,6 +76,10 @@ const getContractByIdFn = createServerFn({ method: "GET" })
 	.handler(async ({ data }): Promise<QueryOneReturnType<ContractDetail>> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();
+			assertCan(session, [
+				"org:contracts:read_all",
+				"org:contracts:read_assigned",
+			]);
 			const scope = await getServerScope("contract");
 
 			return await getContractById({
@@ -78,7 +87,7 @@ const getContractByIdFn = createServerFn({ method: "GET" })
 					firmId: scope.firmId,
 					employeeId: scope.employeeId,
 					employeeTypeValue: session.employeeType.value,
-					isAdmin: isAdminSession(session),
+					isAdmin: hasPermission(session, "org:contracts:read_all"),
 				},
 				id: data.id,
 			});
@@ -96,7 +105,10 @@ const getContractLegalAreasFn = createServerFn({ method: "GET" })
 	.middleware([authMiddleware])
 	.handler(async (): Promise<QueryManyReturnType<Option>> => {
 		try {
-			await getRequiredServerLoggedUserSession();
+			assertCan(await getRequiredServerLoggedUserSession(), [
+				"org:contracts:read_all",
+				"org:contracts:read_assigned",
+			]);
 			return await getContractLegalAreas();
 		} catch (error) {
 			console.error("[getContractLegalAreas]", error);
@@ -108,7 +120,10 @@ const getContractStatusesFn = createServerFn({ method: "GET" })
 	.middleware([authMiddleware])
 	.handler(async (): Promise<QueryManyReturnType<Option>> => {
 		try {
-			await getRequiredServerLoggedUserSession();
+			assertCan(await getRequiredServerLoggedUserSession(), [
+				"org:contracts:read_all",
+				"org:contracts:read_assigned",
+			]);
 			return await getContractStatuses();
 		} catch (error) {
 			console.error("[getContractStatuses]", error);
@@ -120,7 +135,10 @@ const getContractAssignmentTypesFn = createServerFn({ method: "GET" })
 	.middleware([authMiddleware])
 	.handler(async (): Promise<QueryManyReturnType<Option>> => {
 		try {
-			await getRequiredServerLoggedUserSession();
+			assertCan(await getRequiredServerLoggedUserSession(), [
+				"org:contracts:read_all",
+				"org:contracts:read_assigned",
+			]);
 			return await getContractAssignmentTypes();
 		} catch (error) {
 			console.error("[getContractAssignmentTypes]", error);
@@ -132,7 +150,10 @@ const getContractRevenueTypesFn = createServerFn({ method: "GET" })
 	.middleware([authMiddleware])
 	.handler(async (): Promise<QueryManyReturnType<Option>> => {
 		try {
-			await getRequiredServerLoggedUserSession();
+			assertCan(await getRequiredServerLoggedUserSession(), [
+				"org:contracts:read_all",
+				"org:contracts:read_assigned",
+			]);
 			return await getContractRevenueTypes();
 		} catch (error) {
 			console.error("[getContractRevenueTypes]", error);

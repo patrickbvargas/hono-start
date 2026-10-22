@@ -96,6 +96,10 @@ export const EmployeeTable = ({
 
 					return (
 						<EntityActions
+							viewPermission="org:employees:read"
+							editPermission="org:employees:update"
+							restorePermission="org:employees:restore"
+							deletePermission="org:employees:delete"
 							canEdit={actions.canEdit}
 							canRestore={actions.canRestore}
 							canDelete={actions.canDelete}

@@ -384,6 +384,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
+  ClerkWebhookReceipt: 'ClerkWebhookReceipt',
   Firm: 'Firm',
   ClientType: 'ClientType',
   EmployeeType: 'EmployeeType',
@@ -419,10 +420,84 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "firm" | "clientType" | "employeeType" | "userRole" | "legalArea" | "contractStatus" | "assignmentType" | "revenueType" | "attachmentType" | "expenseCategory" | "employee" | "auditLog" | "client" | "contract" | "contractEmployee" | "revenue" | "fee" | "expense" | "remuneration" | "attachment"
+    modelProps: "clerkWebhookReceipt" | "firm" | "clientType" | "employeeType" | "userRole" | "legalArea" | "contractStatus" | "assignmentType" | "revenueType" | "attachmentType" | "expenseCategory" | "employee" | "auditLog" | "client" | "contract" | "contractEmployee" | "revenue" | "fee" | "expense" | "remuneration" | "attachment"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
+    ClerkWebhookReceipt: {
+      payload: Prisma.$ClerkWebhookReceiptPayload<ExtArgs>
+      fields: Prisma.ClerkWebhookReceiptFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ClerkWebhookReceiptFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClerkWebhookReceiptPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ClerkWebhookReceiptFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClerkWebhookReceiptPayload>
+        }
+        findFirst: {
+          args: Prisma.ClerkWebhookReceiptFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClerkWebhookReceiptPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ClerkWebhookReceiptFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClerkWebhookReceiptPayload>
+        }
+        findMany: {
+          args: Prisma.ClerkWebhookReceiptFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClerkWebhookReceiptPayload>[]
+        }
+        create: {
+          args: Prisma.ClerkWebhookReceiptCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClerkWebhookReceiptPayload>
+        }
+        createMany: {
+          args: Prisma.ClerkWebhookReceiptCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ClerkWebhookReceiptCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClerkWebhookReceiptPayload>[]
+        }
+        delete: {
+          args: Prisma.ClerkWebhookReceiptDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClerkWebhookReceiptPayload>
+        }
+        update: {
+          args: Prisma.ClerkWebhookReceiptUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClerkWebhookReceiptPayload>
+        }
+        deleteMany: {
+          args: Prisma.ClerkWebhookReceiptDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ClerkWebhookReceiptUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ClerkWebhookReceiptUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClerkWebhookReceiptPayload>[]
+        }
+        upsert: {
+          args: Prisma.ClerkWebhookReceiptUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClerkWebhookReceiptPayload>
+        }
+        aggregate: {
+          args: Prisma.ClerkWebhookReceiptAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateClerkWebhookReceipt>
+        }
+        groupBy: {
+          args: Prisma.ClerkWebhookReceiptGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ClerkWebhookReceiptGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ClerkWebhookReceiptCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ClerkWebhookReceiptCountAggregateOutputType> | number
+        }
+      }
+    }
     Firm: {
       payload: Prisma.$FirmPayload<ExtArgs>
       fields: Prisma.FirmFieldRefs
@@ -1942,7 +2017,16 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+export const ClerkWebhookReceiptScalarFieldEnum = {
+  id: 'id',
+  processedAt: 'processedAt'
+} as const
+
+export type ClerkWebhookReceiptScalarFieldEnum = (typeof ClerkWebhookReceiptScalarFieldEnum)[keyof typeof ClerkWebhookReceiptScalarFieldEnum]
+
+
 export const FirmScalarFieldEnum = {
+  clerkOrganizationId: 'clerkOrganizationId',
   id: 'id',
   name: 'name'
 } as const
@@ -2046,6 +2130,7 @@ export const EmployeeScalarFieldEnum = {
   fullName: 'fullName',
   email: 'email',
   authUserId: 'authUserId',
+  clerkUserId: 'clerkUserId',
   typeId: 'typeId',
   roleId: 'roleId',
   oabNumber: 'oabNumber',
@@ -2270,20 +2355,6 @@ export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof Json
 
 
 /**
- * Reference to a field of type 'Int'
- */
-export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
-
-
-/**
- * Reference to a field of type 'Int[]'
- */
-export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
-    
-
-
-/**
  * Reference to a field of type 'String'
  */
 export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String'>
@@ -2294,6 +2365,34 @@ export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 
  * Reference to a field of type 'String[]'
  */
 export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String[]'>
+    
+
+
+/**
+ * Reference to a field of type 'DateTime'
+ */
+export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
+    
+
+
+/**
+ * Reference to a field of type 'DateTime[]'
+ */
+export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Int'
+ */
+export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+/**
+ * Reference to a field of type 'Int[]'
+ */
+export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
 
 
@@ -2315,20 +2414,6 @@ export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
  * Reference to a field of type 'Decimal[]'
  */
 export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
-    
-
-
-/**
- * Reference to a field of type 'DateTime'
- */
-export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
-    
-
-
-/**
- * Reference to a field of type 'DateTime[]'
- */
-export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
     
 
 
@@ -2454,6 +2539,7 @@ export type PrismaClientOptions = ({
   comments?: runtime.SqlCommenterPlugin[]
 }
 export type GlobalOmitConfig = {
+  clerkWebhookReceipt?: Prisma.ClerkWebhookReceiptOmit
   firm?: Prisma.FirmOmit
   clientType?: Prisma.ClientTypeOmit
   employeeType?: Prisma.EmployeeTypeOmit

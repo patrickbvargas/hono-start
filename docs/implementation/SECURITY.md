@@ -1,5 +1,13 @@
 # Security
 
+Permission membership checks use `hasPermission(session, "org:clients:read")`.
+This function returns the result of an exact `session.permissions.includes(key)`
+check, or false without a session. Call sites use Clerk keys directly; do not add
+local aliases, role matrices, wildcard expansion or translated action registries.
+When either scoped grant qualifies, list the keys explicitly at the call site.
+Resource enforcement (`can` / `assertCan`) additionally preserves same-firm,
+assignment, ownership and lifecycle rules. Those rules never grant missing keys.
+
 This document defines reusable trust-boundary and authorization rules for the repository pattern.
 
 ## Trust Boundaries
@@ -54,3 +62,16 @@ This document defines reusable trust-boundary and authorization rules for the re
 
 - Attachment uploads must respect documented type and size constraints.
 - Attachment access and deletion rules must preserve the role model and audit expectations.
+
+## Clerk authority and enforcement
+
+- Clerk is the only authentication and permission-grant authority. Local role names never bypass checks.
+- The official SDK verifies auth context; `src/start.ts` explicitly includes CSRF middleware for server functions.
+- Every protected request verifies current provider session, user restrictions and Organization membership; request-local reuse avoids repeated lookups within that request. Provider failures deny execution.
+- Custom permission grants derive from current Backend API membership state, not stale JWTs, client metadata or webhook delivery.
+- Firm/Employee string links establish the actor. Active/deleted, assignment and writable-resource constraints remain server-side domain checks.
+- Role delegation cannot exceed the current actor's provider grants. Revocation affects only the current Organization.
+- Clerk owns credential policy, email verification, session duration and attack protection.
+- Webhooks verify the raw request signature and deduplicate delivery IDs; reconciliation fetches current provider state rather than trusting delayed snapshots.
+- Public keys use the Vite public boundary. Secret/webhook keys use validated server env only.
+- See CLERK_MIGRATION.md for deployment, rate-limit and cutover prerequisites.

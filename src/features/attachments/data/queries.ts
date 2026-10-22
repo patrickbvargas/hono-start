@@ -211,6 +211,7 @@ export async function getAttachmentAccessById(
 	id: number;
 	resource: { firmId: number };
 	storagePath: string;
+	ownerInput: AttachmentOwnerInput;
 }> | null> {
 	const attachment = await prisma.attachment.findFirst({
 		where: { id, firmId },
@@ -220,6 +221,10 @@ export async function getAttachmentAccessById(
 			firmId: true,
 			storagePath: true,
 			deletedAt: true,
+			clientId: true,
+			employeeId: true,
+			contractId: true,
+			expenseId: true,
 		},
 	});
 
@@ -233,6 +238,12 @@ export async function getAttachmentAccessById(
 		storagePath: attachment.storagePath,
 		deletedAt: attachment.deletedAt,
 		resource: { firmId: attachment.firmId },
+		ownerInput: {
+			clientId: attachment.clientId ?? undefined,
+			employeeId: attachment.employeeId ?? undefined,
+			contractId: attachment.contractId ?? undefined,
+			expenseId: attachment.expenseId ?? undefined,
+		},
 	};
 }
 

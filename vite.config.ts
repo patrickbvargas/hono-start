@@ -8,6 +8,11 @@ import viteTsConfigPaths from "vite-tsconfig-paths";
 import { defineConfig } from "vitest/config";
 
 const config = defineConfig({
+	optimizeDeps: {
+		include: [
+			"@tanstack/react-form-start > @tanstack/react-form > @tanstack/react-store > use-sync-external-store/shim/with-selector",
+		],
+	},
 	resolve: {
 		alias: {
 			"@": fileURLToPath(new URL("./src", import.meta.url)),

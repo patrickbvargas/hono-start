@@ -34,3 +34,7 @@ export function useLoggedUserSessionStore<T>(
 ) {
 	return selector(useLoggedUserSession());
 }
+
+export function useOptionalLoggedUserSession() {
+	return useContext(LoggedUserSessionContext);
+}

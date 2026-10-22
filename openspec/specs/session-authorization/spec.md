@@ -3,16 +3,25 @@
 ## Purpose
 Define the shared session and authorization contract so authenticated actor shape, permission evaluation, tenant scope enforcement, and protected route gating remain consistent across client and server boundaries.
 ## Requirements
+
 ### Requirement: Shared logged-user session contract
-The system SHALL expose a shared session contract that represents the authenticated actor consistently across client and server session consumers, while allowing unauthenticated session reads to return no actor before route or server guards assert access. On the frontend, the authenticated actor MUST have exactly one browser-side source of truth so protected consumers do not depend on divergent client session caches.
+The system SHALL expose one Zod-validated domain projection of verified Clerk identity, active organization, Employee, Firm, employee type and safe capability results. Clerk SHALL remain the provider-session authority, and browser capability data SHALL be advisory rather than trusted server authority.
+
+#### Scenario: Consistent actor
+- **WHEN** client and server consumers resolve the same active context
+- **THEN** they receive consistent employee and firm identities without maintaining another authentication store
+
+#### Scenario: Signed-out reader
+- **WHEN** a public consumer reads the session without an active Clerk identity
+- **THEN** the optional session projection returns no actor
 
 #### Scenario: Session actor shape is consistent
 - **WHEN** the current authenticated session is read in a client consumer or in a server-side session helper
-- **THEN** both consumers receive the same actor fields for user identity, employee identity, firm context, employee type, and role
+- **THEN** both consumers receive the same actor fields for Clerk user identity, employee identity, active organization, firm context, employee type, and permissions
 
 #### Scenario: Session actor is safe to reuse across features
 - **WHEN** a feature imports the shared session contract from `src/shared/session`
-- **THEN** it can evaluate actor identity, role, and firm context without depending on feature-local session types
+- **THEN** it can evaluate actor identity, Clerk permissions, and firm context without depending on feature-local session types
 
 #### Scenario: Unauthenticated read returns no actor
 - **WHEN** a public route or public server flow reads session state before authentication
@@ -24,12 +33,29 @@ The system SHALL expose a shared session contract that represents the authentica
 - **AND** they do not diverge because different client caches hold conflicting session results
 
 ### Requirement: Shared authorization helpers
-The system SHALL evaluate permission decisions through shared authorization helpers that accept the logged-user actor and optional resource context as explicit inputs. The shared authorization surface MUST keep `can(session, action, resource)` and `assertCan(session, action, resource)` as the canonical action API, MUST derive the exported permission type from canonical action and entity catalogs rather than a manually maintained string union, and MUST avoid duplicative feature-specific permission wrappers unless a wrapper has a clear route-facing purpose.
+The system SHALL check an exact native Clerk permission key with `hasPermission(session, key)`, returning `session?.permissions.includes(key) ?? false`. Call sites SHALL use typed `org:<feature>:<permission>` keys directly without local action aliases or an operation-to-permission mapping table. `can(session, permission, resource)` and `assertCan(session, permission, resource)` SHALL combine explicit Clerk grants with resource scope and business assertions only. Local UserRole records, employee type and hard-coded Administrator bypasses MUST NOT grant capabilities. Scope and resource checks SHALL enforce provider-granted all/assigned/own access against persisted business facts.
 
-#### Scenario: Admin access is decided centrally
-- **WHEN** an authorization check is performed for an administrator-only action such as employee management
-- **THEN** the decision is derived from the shared authorization helper
-- **AND** consumers do not need to duplicate inline role comparisons
+#### Scenario: Exact permission check is easy to inspect
+- **WHEN** a consumer checks `org:clients:read`
+- **THEN** `hasPermission` returns true only when that exact key is present in the Clerk-backed permissions array
+- **AND** a missing session or missing key returns false without deriving grants from another action
+
+#### Scenario: Custom role receives a permission
+- **WHEN** an operator grants an existing application permission to a new role in Clerk
+- **THEN** a refreshed/current server check allows the corresponding operation without deploying a role-matrix change
+
+#### Scenario: Admin label without permission
+- **WHEN** a membership role has an administrative label but lacks the required Custom Permission
+- **THEN** the operation is denied without a local role-name bypass
+
+#### Scenario: Assigned scope respects assignment semantics
+- **WHEN** a lawyer has assigned-contract read permission and only a RECOMMENDING assignment
+- **THEN** the contract is excluded
+- **AND** active RESPONSIBLE/RECOMMENDED lawyer assignments or qualifying ADMIN_ASSISTANT assignments are admitted only with the matching provider-granted scope
+
+#### Scenario: Ownership does not grant permission
+- **WHEN** a user owns a remuneration but lacks both own-read and all-read permissions
+- **THEN** ownership alone does not grant visibility
 
 #### Scenario: Resource-scoped access is decided centrally
 - **WHEN** an authorization check is performed for a resource-scoped action such as contract or fee visibility
@@ -40,33 +66,6 @@ The system SHALL evaluate permission decisions through shared authorization help
 - **WHEN** a resource-scoped authorization check is performed for contract visibility or contract-derived visibility
 - **THEN** the decision considers active assignment summaries for the logged-in user, including assignment role and employee type
 - **AND** assignment presence alone is not sufficient
-
-#### Scenario: Recommending assignment does not grant regular-user contract access
-- **WHEN** a regular authenticated lawyer is present on a contract only through an active `RECOMMENDING` assignment
-- **THEN** the shared authorization helper denies contract visibility for that user
-
-#### Scenario: Responsible or recommended lawyer grants regular-user contract access
-- **WHEN** a regular authenticated lawyer is present on a contract through an active `RESPONSIBLE` or `RECOMMENDED` assignment
-- **THEN** the shared authorization helper allows contract visibility for that user
-
-#### Scenario: Admin assistant assignment grants regular-user contract access
-- **WHEN** a regular authenticated administrative assistant is present on a contract through an active `ADMIN_ASSISTANT` assignment
-- **THEN** the shared authorization helper allows contract visibility for that user
-
-#### Scenario: Canonical action API is used directly
-- **WHEN** a consumer needs to evaluate a protected action that is already represented by a shared permission type
-- **THEN** the consumer can call the canonical shared authorization helper directly with the action and resource context
-- **AND** the consumer does not require a feature-specific wrapper with duplicate permission semantics
-
-#### Scenario: Authorization refactor preserves existing decisions
-- **WHEN** the shared authorization implementation is simplified
-- **THEN** existing role, tenant, assignment, own-resource, remuneration, attachment, audit-log, and contract-writability decisions remain unchanged
-- **AND** denied actions still produce safe pt-BR errors through the assertion helper
-
-#### Scenario: Permission coverage is derived from canonical catalogs
-- **WHEN** a contributor adds or removes a shared permission entity or action
-- **THEN** the exported permission type updates from the canonical catalogs rather than from a manually rewritten string union
-- **AND** the authorization policy map remains the single source of truth for non-admin permission coverage
 
 ### Requirement: Shared session module exposes one explicit public surface
 The system SHALL expose the shared session contract through one explicit public barrel in `src/shared/session` and SHALL organize its internal modules by responsibility so consumers can find authorization, scope, middleware, query, and provider concerns without traversing redundant re-export layers.
@@ -82,7 +81,19 @@ The system SHALL expose the shared session contract through one explicit public 
 - **AND** actor types are not mixed into the same file as policy-rule grouping unless that grouping is itself part of the type contract
 
 ### Requirement: Server-side tenant and permission enforcement
-The system SHALL evaluate tenant scope and protected-action permissions in server-side code using server-safe authenticated session helpers rather than browser state or mock session storage.
+The system SHALL enforce verified Clerk authentication, current organization membership, required Custom Permissions and domain scope before protected operations execute. Tenant IDs, role claims and capability projections submitted by clients SHALL NOT grant authority. Queries, counts, options, details, exports, dashboard totals and attachment owner access SHALL apply consistent scopes; absence of a valid scope SHALL deny access.
+
+#### Scenario: Cross-firm resource
+- **WHEN** a permitted actor targets a record belonging to another firm
+- **THEN** access is denied even if the actor has an all-records permission in the active firm
+
+#### Scenario: Read permission does not imply other actions
+- **WHEN** a user has all-records read permission without update, export or delete grants
+- **THEN** those operations remain denied
+
+#### Scenario: Sensitive data aggregation
+- **WHEN** a dashboard or export is requested with only own/assigned scope
+- **THEN** its returned records, counts and derived totals exclude unpermitted firm-wide financial data
 
 #### Scenario: Server function derives tenant scope from authenticated session
 - **WHEN** a protected server function needs the current firm scope
@@ -100,29 +111,27 @@ The system SHALL evaluate tenant scope and protected-action permissions in serve
 - **AND** the function does not continue with a placeholder tenant or actor
 
 ### Requirement: Management routes use shared authorization gating before rendering protected UI
-The system SHALL evaluate administrator-only management route access through shared authorization helpers before rendering protected management screens. Protected management routes MUST resolve the authenticated actor from the required authenticated-session path rather than from an optional unauthenticated browser-session snapshot.
+The system SHALL gate restricted routes and actions using the required Clerk Custom Permissions through shared session helpers before loading/rendering protected content. Server operations SHALL repeat authoritative enforcement regardless of UI gating.
 
-#### Scenario: Route blocks regular user before rendering employee management UI
-- **WHEN** a regular user navigates directly to the employee-management route
-- **THEN** the route evaluates the shared authorization helper before rendering the management screen
-- **AND** the regular user does not receive the employee-management UI
-
-#### Scenario: Route allows administrator to render employee management UI
-- **WHEN** an administrator navigates to the employee-management route
-- **THEN** the route evaluates the shared authorization helper
-- **AND** the employee-management screen is rendered when access is allowed
+#### Scenario: Direct management request without grant
+- **WHEN** a user without the employee-management permission navigates directly to its route or invokes its server operation
+- **THEN** protected employee content is not returned
 
 #### Scenario: Admin route ignores stale optional unauthenticated browser session data
-- **WHEN** an authenticated administrator opens an administrator-only management route after login
+- **WHEN** an authenticated actor with the required Clerk permission opens a restricted management route after login
 - **THEN** the route reads the authenticated actor from the required protected-session path
 - **AND** it does not deny access because a separate optional browser-session cache still holds `null`
 
 ### Requirement: Shared session helpers map authenticated identity to domain actor
-The system SHALL map the authenticated identity to the existing domain session actor shape using the linked employee, firm, role, and employee-type records so downstream authorization and scope decisions remain consistent.
+The system SHALL map verified Clerk user and active organization IDs to explicit Employee/Firm links. Local role lookups SHALL NOT determine grants, while employee type and assignment data SHALL remain business context for scope enforcement.
+
+#### Scenario: Identity mapping fails
+- **WHEN** no active, non-deleted Employee exists for the current user in the mapped organization
+- **THEN** required session resolution denies access and returns no partial actor
 
 #### Scenario: Authenticated identity resolves to domain actor
 - **WHEN** a protected route or server function resolves the current authenticated session
-- **THEN** the shared session helper returns the linked employee id, firm id, role, and employee type needed by current feature authorization rules
+- **THEN** the shared session helper returns the linked employee id, firm id, Clerk permissions, and employee type needed by current feature authorization rules
 
 #### Scenario: Missing employee link denies protected access
 - **WHEN** an authenticated identity does not resolve to a valid employee record in the same tenant context
@@ -141,3 +150,49 @@ The system SHALL require authenticated session access for protected TanStack Rou
 - **WHEN** the router evaluates whether a protected layout route may continue
 - **THEN** it uses the shared session helper contract from `src/shared/session`
 - **AND** it does not introduce a separate route-local authentication source
+
+### Requirement: Permission keys follow Clerk feature and action namespaces
+The system SHALL name application Custom Permissions using Clerk's `org:<feature>:<permission>` format, with stable English lowercase feature/action identifiers and underscores for compound identifiers. Native `org:sys_domains:read`, `org:sys_domains:manage`, `org:sys_billing:read`, and `org:sys_billing:manage` SHALL retain their Clerk System Permission semantics. Business capabilities SHALL use custom feature names without pretending to be Clerk System Permissions. A custom `manage` permission SHALL grant only operations explicitly mapped to it, not an automatic wildcard.
+
+The feature SHALL identify the resource (`clients`, `contracts`, `fees`, `expenses`, `remunerations`, `attachments`, `employees`, `accounts`, `audit_logs`, `dashboard`), and the permission SHALL identify its action. The approved native-key catalog in `src/shared/session/catalog.ts` SHALL govern provisioning and checks. Employee CRUD SHALL use independent `read`, `create`, `update`, `delete`, `restore` permissions; account administration SHALL use `org:accounts:manage`. No permission SHALL repeat the resource name, such as `org:client_read:clients_read`.
+
+#### Scenario: Resource groups multiple actions
+- **WHEN** operators configure client read and update grants
+- **THEN** both permissions belong to feature `clients`, producing `org:clients:read` and `org:clients:update`
+- **AND** granting read does not grant update
+
+#### Scenario: Employee read does not grant account administration
+- **WHEN** a user has `org:employees:read` without `org:accounts:manage`
+- **THEN** permitted employee data may be read but access provisioning and role changes remain denied
+
+#### Scenario: Business permission is configured
+- **WHEN** the application configures employee management or scoped contract reading
+- **THEN** it uses keys such as `org:employees:update` or `org:contracts:read_assigned`
+- **AND** the same exact keys are used in Clerk configuration and application checks
+
+#### Scenario: System permission is encountered
+- **WHEN** an integration uses Clerk domain or billing System Permissions
+- **THEN** those permissions keep their native provider purpose
+- **AND** server-side Custom Permission checks do not assume those System Permissions exist in session claims
+
+### Requirement: Revocation does not depend on webhook delivery
+The system SHALL validate current membership for protected requests and current Clerk grants for mutations and sensitive reads/exports. Removed membership or missing permission SHALL deny the relevant operation without waiting for webhook synchronization. Provider verification failures SHALL deny protected execution instead of falling back to local roles or indefinitely cached grants.
+
+#### Scenario: Old session remains after membership removal
+- **WHEN** a previously signed-in user calls a protected operation after current provider membership is removed
+- **THEN** the server rejects the operation despite the old browser capability snapshot
+
+#### Scenario: Permission removed before a mutation
+- **WHEN** the provider's current permission configuration no longer grants the requested mutation
+- **THEN** the mutation is denied even if an earlier session token carried the grant
+
+#### Scenario: Provider unavailable during current-state verification
+- **WHEN** current membership or required sensitive-operation grants cannot be verified
+- **THEN** the operation fails safely without performing the protected read or write
+
+### Requirement: Business-state assertions remain distinct from permission grants
+The system SHALL preserve firm isolation, ownership, persisted assignment semantics and lifecycle assertions while obtaining capability grants exclusively from Clerk. It SHALL NOT represent arbitrary contract ACLs as growing token metadata or one organization per contract.
+
+#### Scenario: Permitted write targets a closed contract
+- **WHEN** a user with the relevant write permission targets a completed or cancelled contract
+- **THEN** the existing business read-only rule still rejects the write

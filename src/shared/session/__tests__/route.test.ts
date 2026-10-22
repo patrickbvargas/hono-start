@@ -16,7 +16,6 @@ vi.mock("../query", () => ({
 }));
 
 import {
-	FORCED_PASSWORD_CHANGE_PATH,
 	getAuthenticatedHomePath,
 	getRouteSession,
 	getSafeInternalRedirectPath,
@@ -30,20 +29,20 @@ describe("route session helpers", () => {
 
 	it("returns required session data when the query succeeds", async () => {
 		const queryClient = {
-			ensureQueryData: vi.fn().mockResolvedValue({ user: { id: 7 } }),
+			fetchQuery: vi.fn().mockResolvedValue({ user: { id: 7 } }),
 		};
 
 		await expect(requireRouteSession(queryClient as never)).resolves.toEqual({
 			user: { id: 7 },
 		});
-		expect(queryClient.ensureQueryData).toHaveBeenCalledWith({
+		expect(queryClient.fetchQuery).toHaveBeenCalledWith({
 			queryKey: ["session", "current"],
 		});
 	});
 
 	it("redirects protected routes to /login when the shared session query rejects", async () => {
 		const queryClient = {
-			ensureQueryData: vi.fn().mockRejectedValue(new Error("unauthorized")),
+			fetchQuery: vi.fn().mockRejectedValue(new Error("unauthorized")),
 			setQueryData: vi.fn(),
 		};
 
@@ -63,7 +62,7 @@ describe("route session helpers", () => {
 
 	it("redirects protected routes to /login when the shared session query resolves to null", async () => {
 		const queryClient = {
-			ensureQueryData: vi.fn().mockResolvedValue(null),
+			fetchQuery: vi.fn().mockResolvedValue(null),
 			setQueryData: vi.fn(),
 		};
 
@@ -85,11 +84,11 @@ describe("route session helpers", () => {
 
 	it("reads public-route session state from the shared session query without redirecting", async () => {
 		const queryClient = {
-			ensureQueryData: vi.fn().mockResolvedValue(null),
+			fetchQuery: vi.fn().mockResolvedValue(null),
 		};
 
 		await expect(getRouteSession(queryClient as never)).resolves.toBeNull();
-		expect(queryClient.ensureQueryData).toHaveBeenCalledWith({
+		expect(queryClient.fetchQuery).toHaveBeenCalledWith({
 			queryKey: ["session", "current"],
 		});
 	});
@@ -108,7 +107,7 @@ describe("route session helpers", () => {
 		expect(getSafeInternalRedirectPath(undefined)).toBeUndefined();
 	});
 
-	it("derives the authenticated home path from forced password-change state", () => {
+	it("returns the product home after provider-owned session tasks", () => {
 		expect(
 			getAuthenticatedHomePath({
 				user: { id: 1, fullName: "Carlos", email: "carlos@example.com" },
@@ -116,8 +115,14 @@ describe("route session helpers", () => {
 				firm: { id: 1, name: "Matriz" },
 				employeeType: { id: 1, value: "LAWYER", label: "Advogado" },
 				role: { id: 1, value: "USER", label: "Usuário" },
-				mustChangePassword: true,
+				mustChangePassword: false,
+				permissions: [],
+				clerk: {
+					userId: "user_test",
+					organizationId: "org_test",
+					sessionId: "sess_test",
+				},
 			}),
-		).toBe(FORCED_PASSWORD_CHANGE_PATH);
+		).toBe("/");
 	});
 });

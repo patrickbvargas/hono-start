@@ -18,7 +18,7 @@ The goal of this document is to define reusable persistence patterns that can su
 - Business tables use `Int` auto-increment primary keys.
 - Business foreign keys use `Int`.
 - IDs are internal identifiers rather than public business meaning.
-- Supabase Auth tables in the provider-managed `auth` schema are the explicit exception and may use UUID/string identifiers by provider convention.
+- Clerk provider identifiers are strings stored as explicit external links, while business IDs remain integers.
 
 ## Timestamp Strategy
 
@@ -103,13 +103,13 @@ Prisma schema cannot represent PostgreSQL filtered unique indexes directly. When
 - After the migration is created and applied, run `npx prisma db seed`.
 - Contributors must treat reset, migration generation, and reseeding as one workflow for local Prisma schema work in this repository.
 
-## Authentication Tables
+## Authentication identity links
 
-- Supabase Auth manages identity and session tables in the provider-owned `auth` schema.
-- The authentication provider owns those schemas by platform convention.
-- The employee domain stores `authUserId` to link a collaborator to `auth.users`.
-- Credential access enablement is derived from Supabase Auth provider state rather than a mirrored application flag.
-- Domain-owned workflow flags such as `mustChangePassword` remain on `Employee`.
+- Clerk owns identity, sessions, Organization membership, roles and permission grants remotely.
+- Firm links to a unique Clerk Organization; Employee links to a unique Clerk User.
+- Legacy UUID, local role and forced-change fields are retained only during migration/rollback and never grant runtime authority after cutover.
+- Current membership and permission state must be verified with Clerk; domain lifecycle and assignment data remain in Prisma.
+- Generate schema changes on a disposable local DB using the documented workflow; never reset a production or unidentified existing DB.
 
 ## Derived State
 
@@ -135,3 +135,13 @@ Prisma schema cannot represent PostgreSQL filtered unique indexes directly. When
 - Shared data-access helpers may support features, but feature ownership remains local.
 - Product-rule enforcement stays in the service or API layer; database constraints are a safety net rather than the primary contract.
 - If a future project replaces the business domain but keeps this repository pattern, this document should remain mostly unchanged.
+
+## Offline additive migration exception
+
+When a disposable database is unavailable, additive external identity columns
+may be generated with `prisma migrate diff --from-schema <committed-schema>
+--to-schema prisma/schema.prisma --script --output <migration-file>`.
+This compares datamodels without connecting to or resetting the configured DB.
+The generated migration must be reviewed and rehearsed before deployment.
+The reset-first workflow remains required for local development migrations on
+a confirmed disposable database. Never run it against the current Supabase DB.

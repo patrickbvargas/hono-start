@@ -1,6 +1,14 @@
 # Roles And Permissions
 
-## Roles
+## Clerk authority
+
+Clerk exclusively owns authentication, Organization memberships, roles and permission grants. Firm maps to a Clerk Organization; active Employee maps to a Clerk User. Missing membership or inactive/deleted/mismatched Employee denies product access. A role name never bypasses a permission check.
+
+Business permissions use `org:<feature>:<permission>`. See the approved catalog in `src/shared/session/catalog.ts` and deployment guidance in `docs/implementation/CLERK_MIGRATION.md`. Read, create, update, delete, restore and export grants are independent. `manage` is explicit only for account administration. Provider `sys_*` permissions retain their native purpose.
+
+The following matrix describes initial role presets to configure in Clerk, not immutable application grants. Future custom roles may differ. Native RBAC is the current scope; no per-user grant exceptions. All references to administrator-only behavior below mean the corresponding explicit permission in the initial preset.
+
+## Initial roles
 
 - `Administrator`: full firm-scoped operational access.
 - `User`: restricted access scoped to assigned contracts and own financial visibility, while still participating in core workflows allowed by the product.
@@ -39,7 +47,7 @@
 
 - All authenticated users may access the application shell.
 - Administrators manage employee accounts, full financial visibility, audit logs, and restore/delete operations.
-- Administrators also manage collaborator credential resets when email-based recovery is unavailable.
+- Account managers assist with Clerk recovery; the application never generates temporary passwords.
 - Regular users must not access administrative account management or firm-wide confidential financial views.
 
 ## Visibility Rules
@@ -97,6 +105,6 @@
 
 ## Permission Contract
 
-- Role checks are not optional.
+- Clerk permission checks are mandatory; local UserRole values are not authorization authority.
 - UI affordances and server-side enforcement must agree.
 - Role or visibility decisions must derive from authenticated session context, never from client-submitted authority claims.

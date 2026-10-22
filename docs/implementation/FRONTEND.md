@@ -92,3 +92,13 @@ It is meant to survive domain changes as long as the project keeps the same UI a
 - If a feature has both unconditional and conditional option concerns, split the hook concerns instead of collapsing the whole feature into an ad hoc query-consumption pattern.
 - If a filter/header uses only a subset of a larger option hook, create a narrower hook for that surface rather than prefetching unrelated queries in the route loader.
 - Route loaders and first-render suspense hooks must stay aligned: a route that mounts a suspending filter/header on first paint must prefetch the same unconditional queries that the mounted hook consumes.
+
+## Clerk identity UI
+
+ClerkProvider owns authentication. The session Query exposes only a Zod-validated
+domain actor/capability projection. User, organization, session or token-grant
+changes cancel requests, clear caches and revalidate routes before old content
+can render. Clerk SignIn/SignUp/UserProfile widgets are an explicit vendor UI
+exception inside authentication-owned components; other UI uses shared exports.
+Lifecycle UI uses operation-specific Clerk capabilities and persisted state;
+server authorization remains mandatory even for hidden actions.

@@ -3,7 +3,8 @@ import { createServerFn } from "@tanstack/react-start";
 import * as z from "zod";
 import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
 import type { Option } from "@/shared/schemas/option";
-import { authMiddleware, isAdminSession } from "@/shared/session";
+import { assertCan, hasPermission } from "@/shared/session";
+import { authMiddleware } from "@/shared/session/middleware";
 import {
 	getRequiredServerLoggedUserSession,
 	getServerScope,
@@ -39,6 +40,7 @@ const getFeesFn = createServerFn({ method: "GET" })
 	.handler(async ({ data }): Promise<QueryPaginatedReturnType<FeeSummary>> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();
+			assertCan(session, ["org:fees:read_all", "org:fees:read_assigned"]);
 			const scope = await getServerScope("fee");
 
 			return await getFees({
@@ -46,7 +48,7 @@ const getFeesFn = createServerFn({ method: "GET" })
 					firmId: scope.firmId,
 					employeeId: scope.employeeId,
 					employeeTypeValue: session.employeeType.value,
-					isAdmin: isAdminSession(session),
+					isAdmin: hasPermission(session, "org:fees:read_all"),
 				},
 				search: data,
 			});
@@ -62,6 +64,7 @@ const getFeeByIdFn = createServerFn({ method: "GET" })
 	.handler(async ({ data }): Promise<QueryOneReturnType<FeeDetail>> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();
+			assertCan(session, ["org:fees:read_all", "org:fees:read_assigned"]);
 			const scope = await getServerScope("fee");
 
 			return await getFeeById({
@@ -69,7 +72,7 @@ const getFeeByIdFn = createServerFn({ method: "GET" })
 					firmId: scope.firmId,
 					employeeId: scope.employeeId,
 					employeeTypeValue: session.employeeType.value,
-					isAdmin: isAdminSession(session),
+					isAdmin: hasPermission(session, "org:fees:read_all"),
 				},
 				id: data.id,
 			});
@@ -88,13 +91,14 @@ const getSelectableFeeContractsFn = createServerFn({ method: "GET" })
 	.handler(async (): Promise<QueryManyReturnType<Option>> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();
+			assertCan(session, ["org:fees:read_all", "org:fees:read_assigned"]);
 			const scope = await getServerScope("fee");
 
 			return await getSelectableFeeContracts({
 				firmId: scope.firmId,
 				employeeId: scope.employeeId,
 				employeeTypeValue: session.employeeType.value,
-				isAdmin: isAdminSession(session),
+				isAdmin: hasPermission(session, "org:fees:read_all"),
 			});
 		} catch (error) {
 			console.error("[getSelectableFeeContracts]", error);
@@ -112,6 +116,7 @@ const getSelectableFeeRevenuesFn = createServerFn({ method: "GET" })
 	.handler(async ({ data }): Promise<QueryManyReturnType<Option>> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();
+			assertCan(session, ["org:fees:read_all", "org:fees:read_assigned"]);
 			const scope = await getServerScope("fee");
 
 			return await getSelectableFeeRevenues({
@@ -119,7 +124,7 @@ const getSelectableFeeRevenuesFn = createServerFn({ method: "GET" })
 					firmId: scope.firmId,
 					employeeId: scope.employeeId,
 					employeeTypeValue: session.employeeType.value,
-					isAdmin: isAdminSession(session),
+					isAdmin: hasPermission(session, "org:fees:read_all"),
 				},
 				contractId: data.contractId,
 			});

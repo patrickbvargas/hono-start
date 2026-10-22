@@ -132,6 +132,16 @@ const ContractDetailsContent = ({
 			<EntityDetail.Header className="flex-row items-center justify-between gap-3">
 				<EntityDetail.Title>{contract.processNumber}</EntityDetail.Title>
 				<EntityActions
+					viewPermission={[
+						"org:contracts:read_all",
+						"org:contracts:read_assigned",
+					]}
+					editPermission={[
+						"org:contracts:update_all",
+						"org:contracts:update_assigned",
+					]}
+					restorePermission="org:contracts:restore"
+					deletePermission="org:contracts:delete"
 					canView={false}
 					canEdit={actions.canEdit}
 					canRestore={actions.canRestore}

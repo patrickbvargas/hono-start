@@ -17,5 +17,5 @@ export const getCurrentSessionQueryOptions = () =>
 	queryOptions({
 		queryKey: sessionKeys.current(),
 		queryFn: getCurrentSessionFn,
-		staleTime: 60 * 1000,
+		staleTime: 0,
 	});

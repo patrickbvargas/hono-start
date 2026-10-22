@@ -26,7 +26,7 @@ import {
 import { getPageTitle, ROUTES } from "@/shared/config/routes";
 import { useOverlay } from "@/shared/hooks/use-overlay";
 import type { EntityId } from "@/shared/schemas/entity";
-import { isAdminSession, useLoggedUserSessionStore } from "@/shared/session";
+import { hasPermission, useLoggedUserSessionStore } from "@/shared/session";
 
 export const Route = createFileRoute("/_app/honorarios")({
 	head: () => ({
@@ -54,13 +54,18 @@ function RouteComponent() {
 	const search = Route.useSearch();
 	const { fees } = useFees(search);
 	const { overlay } = useOverlay<EntityId>();
-	const isAdmin = useLoggedUserSessionStore(isAdminSession);
+	const isAdmin = useLoggedUserSessionStore(
+		(session) =>
+			hasPermission(session, "org:fees:delete") ||
+			hasPermission(session, "org:fees:restore"),
+	);
 
 	return (
 		<Wrapper
 			title={ROUTES.fee.title}
 			actions={
 				<ButtonNew
+					permission="org:fees:create"
 					label="Novo honorário"
 					onClick={() => overlay.create.open()}
 				/>

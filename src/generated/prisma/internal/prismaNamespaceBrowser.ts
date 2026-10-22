@@ -51,6 +51,7 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
+  ClerkWebhookReceipt: 'ClerkWebhookReceipt',
   Firm: 'Firm',
   ClientType: 'ClientType',
   EmployeeType: 'EmployeeType',
@@ -89,7 +90,16 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+export const ClerkWebhookReceiptScalarFieldEnum = {
+  id: 'id',
+  processedAt: 'processedAt'
+} as const
+
+export type ClerkWebhookReceiptScalarFieldEnum = (typeof ClerkWebhookReceiptScalarFieldEnum)[keyof typeof ClerkWebhookReceiptScalarFieldEnum]
+
+
 export const FirmScalarFieldEnum = {
+  clerkOrganizationId: 'clerkOrganizationId',
   id: 'id',
   name: 'name'
 } as const
@@ -193,6 +203,7 @@ export const EmployeeScalarFieldEnum = {
   fullName: 'fullName',
   email: 'email',
   authUserId: 'authUserId',
+  clerkUserId: 'clerkUserId',
   typeId: 'typeId',
   roleId: 'roleId',
   oabNumber: 'oabNumber',

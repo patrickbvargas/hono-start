@@ -35,16 +35,19 @@ export type FirmSumAggregateOutputType = {
 }
 
 export type FirmMinAggregateOutputType = {
+  clerkOrganizationId: string | null
   id: number | null
   name: string | null
 }
 
 export type FirmMaxAggregateOutputType = {
+  clerkOrganizationId: string | null
   id: number | null
   name: string | null
 }
 
 export type FirmCountAggregateOutputType = {
+  clerkOrganizationId: number
   id: number
   name: number
   _all: number
@@ -60,16 +63,19 @@ export type FirmSumAggregateInputType = {
 }
 
 export type FirmMinAggregateInputType = {
+  clerkOrganizationId?: true
   id?: true
   name?: true
 }
 
 export type FirmMaxAggregateInputType = {
+  clerkOrganizationId?: true
   id?: true
   name?: true
 }
 
 export type FirmCountAggregateInputType = {
+  clerkOrganizationId?: true
   id?: true
   name?: true
   _all?: true
@@ -162,6 +168,7 @@ export type FirmGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 }
 
 export type FirmGroupByOutputType = {
+  clerkOrganizationId: string | null
   id: number
   name: string
   _count: FirmCountAggregateOutputType | null
@@ -190,6 +197,7 @@ export type FirmWhereInput = {
   AND?: Prisma.FirmWhereInput | Prisma.FirmWhereInput[]
   OR?: Prisma.FirmWhereInput[]
   NOT?: Prisma.FirmWhereInput | Prisma.FirmWhereInput[]
+  clerkOrganizationId?: Prisma.StringNullableFilter<"Firm"> | string | null
   id?: Prisma.IntFilter<"Firm"> | number
   name?: Prisma.StringFilter<"Firm"> | string
   auditLogs?: Prisma.AuditLogListRelationFilter
@@ -205,6 +213,7 @@ export type FirmWhereInput = {
 }
 
 export type FirmOrderByWithRelationInput = {
+  clerkOrganizationId?: Prisma.SortOrderInput | Prisma.SortOrder
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
@@ -220,6 +229,7 @@ export type FirmOrderByWithRelationInput = {
 }
 
 export type FirmWhereUniqueInput = Prisma.AtLeast<{
+  clerkOrganizationId?: string
   id?: number
   AND?: Prisma.FirmWhereInput | Prisma.FirmWhereInput[]
   OR?: Prisma.FirmWhereInput[]
@@ -235,9 +245,10 @@ export type FirmWhereUniqueInput = Prisma.AtLeast<{
   fees?: Prisma.FeeListRelationFilter
   expenses?: Prisma.ExpenseListRelationFilter
   remunerations?: Prisma.RemunerationListRelationFilter
-}, "id">
+}, "id" | "clerkOrganizationId">
 
 export type FirmOrderByWithAggregationInput = {
+  clerkOrganizationId?: Prisma.SortOrderInput | Prisma.SortOrder
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   _count?: Prisma.FirmCountOrderByAggregateInput
@@ -251,11 +262,13 @@ export type FirmScalarWhereWithAggregatesInput = {
   AND?: Prisma.FirmScalarWhereWithAggregatesInput | Prisma.FirmScalarWhereWithAggregatesInput[]
   OR?: Prisma.FirmScalarWhereWithAggregatesInput[]
   NOT?: Prisma.FirmScalarWhereWithAggregatesInput | Prisma.FirmScalarWhereWithAggregatesInput[]
+  clerkOrganizationId?: Prisma.StringNullableWithAggregatesFilter<"Firm"> | string | null
   id?: Prisma.IntWithAggregatesFilter<"Firm"> | number
   name?: Prisma.StringWithAggregatesFilter<"Firm"> | string
 }
 
 export type FirmCreateInput = {
+  clerkOrganizationId?: string | null
   name: string
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutFirmInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutFirmInput
@@ -270,6 +283,7 @@ export type FirmCreateInput = {
 }
 
 export type FirmUncheckedCreateInput = {
+  clerkOrganizationId?: string | null
   id?: number
   name: string
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutFirmInput
@@ -285,6 +299,7 @@ export type FirmUncheckedCreateInput = {
 }
 
 export type FirmUpdateInput = {
+  clerkOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   auditLogs?: Prisma.AuditLogUpdateManyWithoutFirmNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutFirmNestedInput
@@ -299,6 +314,7 @@ export type FirmUpdateInput = {
 }
 
 export type FirmUncheckedUpdateInput = {
+  clerkOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutFirmNestedInput
@@ -314,20 +330,24 @@ export type FirmUncheckedUpdateInput = {
 }
 
 export type FirmCreateManyInput = {
+  clerkOrganizationId?: string | null
   id?: number
   name: string
 }
 
 export type FirmUpdateManyMutationInput = {
+  clerkOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type FirmUncheckedUpdateManyInput = {
+  clerkOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type FirmCountOrderByAggregateInput = {
+  clerkOrganizationId?: Prisma.SortOrder
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
 }
@@ -337,11 +357,13 @@ export type FirmAvgOrderByAggregateInput = {
 }
 
 export type FirmMaxOrderByAggregateInput = {
+  clerkOrganizationId?: Prisma.SortOrder
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
 }
 
 export type FirmMinOrderByAggregateInput = {
+  clerkOrganizationId?: Prisma.SortOrder
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
 }
@@ -355,8 +377,8 @@ export type FirmScalarRelationFilter = {
   isNot?: Prisma.FirmWhereInput
 }
 
-export type StringFieldUpdateOperationsInput = {
-  set?: string
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
 }
 
 export type IntFieldUpdateOperationsInput = {
@@ -508,6 +530,7 @@ export type FirmUpdateOneRequiredWithoutAttachmentsNestedInput = {
 }
 
 export type FirmCreateWithoutEmployeesInput = {
+  clerkOrganizationId?: string | null
   name: string
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutFirmInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutFirmInput
@@ -521,6 +544,7 @@ export type FirmCreateWithoutEmployeesInput = {
 }
 
 export type FirmUncheckedCreateWithoutEmployeesInput = {
+  clerkOrganizationId?: string | null
   id?: number
   name: string
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutFirmInput
@@ -551,6 +575,7 @@ export type FirmUpdateToOneWithWhereWithoutEmployeesInput = {
 }
 
 export type FirmUpdateWithoutEmployeesInput = {
+  clerkOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   auditLogs?: Prisma.AuditLogUpdateManyWithoutFirmNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutFirmNestedInput
@@ -564,6 +589,7 @@ export type FirmUpdateWithoutEmployeesInput = {
 }
 
 export type FirmUncheckedUpdateWithoutEmployeesInput = {
+  clerkOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutFirmNestedInput
@@ -578,6 +604,7 @@ export type FirmUncheckedUpdateWithoutEmployeesInput = {
 }
 
 export type FirmCreateWithoutAuditLogsInput = {
+  clerkOrganizationId?: string | null
   name: string
   attachments?: Prisma.AttachmentCreateNestedManyWithoutFirmInput
   clients?: Prisma.ClientCreateNestedManyWithoutFirmInput
@@ -591,6 +618,7 @@ export type FirmCreateWithoutAuditLogsInput = {
 }
 
 export type FirmUncheckedCreateWithoutAuditLogsInput = {
+  clerkOrganizationId?: string | null
   id?: number
   name: string
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutFirmInput
@@ -621,6 +649,7 @@ export type FirmUpdateToOneWithWhereWithoutAuditLogsInput = {
 }
 
 export type FirmUpdateWithoutAuditLogsInput = {
+  clerkOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   attachments?: Prisma.AttachmentUpdateManyWithoutFirmNestedInput
   clients?: Prisma.ClientUpdateManyWithoutFirmNestedInput
@@ -634,6 +663,7 @@ export type FirmUpdateWithoutAuditLogsInput = {
 }
 
 export type FirmUncheckedUpdateWithoutAuditLogsInput = {
+  clerkOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutFirmNestedInput
@@ -648,6 +678,7 @@ export type FirmUncheckedUpdateWithoutAuditLogsInput = {
 }
 
 export type FirmCreateWithoutClientsInput = {
+  clerkOrganizationId?: string | null
   name: string
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutFirmInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutFirmInput
@@ -661,6 +692,7 @@ export type FirmCreateWithoutClientsInput = {
 }
 
 export type FirmUncheckedCreateWithoutClientsInput = {
+  clerkOrganizationId?: string | null
   id?: number
   name: string
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutFirmInput
@@ -691,6 +723,7 @@ export type FirmUpdateToOneWithWhereWithoutClientsInput = {
 }
 
 export type FirmUpdateWithoutClientsInput = {
+  clerkOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   auditLogs?: Prisma.AuditLogUpdateManyWithoutFirmNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutFirmNestedInput
@@ -704,6 +737,7 @@ export type FirmUpdateWithoutClientsInput = {
 }
 
 export type FirmUncheckedUpdateWithoutClientsInput = {
+  clerkOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutFirmNestedInput
@@ -718,6 +752,7 @@ export type FirmUncheckedUpdateWithoutClientsInput = {
 }
 
 export type FirmCreateWithoutContractsInput = {
+  clerkOrganizationId?: string | null
   name: string
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutFirmInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutFirmInput
@@ -731,6 +766,7 @@ export type FirmCreateWithoutContractsInput = {
 }
 
 export type FirmUncheckedCreateWithoutContractsInput = {
+  clerkOrganizationId?: string | null
   id?: number
   name: string
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutFirmInput
@@ -761,6 +797,7 @@ export type FirmUpdateToOneWithWhereWithoutContractsInput = {
 }
 
 export type FirmUpdateWithoutContractsInput = {
+  clerkOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   auditLogs?: Prisma.AuditLogUpdateManyWithoutFirmNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutFirmNestedInput
@@ -774,6 +811,7 @@ export type FirmUpdateWithoutContractsInput = {
 }
 
 export type FirmUncheckedUpdateWithoutContractsInput = {
+  clerkOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutFirmNestedInput
@@ -788,6 +826,7 @@ export type FirmUncheckedUpdateWithoutContractsInput = {
 }
 
 export type FirmCreateWithoutContractEmployeesInput = {
+  clerkOrganizationId?: string | null
   name: string
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutFirmInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutFirmInput
@@ -801,6 +840,7 @@ export type FirmCreateWithoutContractEmployeesInput = {
 }
 
 export type FirmUncheckedCreateWithoutContractEmployeesInput = {
+  clerkOrganizationId?: string | null
   id?: number
   name: string
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutFirmInput
@@ -831,6 +871,7 @@ export type FirmUpdateToOneWithWhereWithoutContractEmployeesInput = {
 }
 
 export type FirmUpdateWithoutContractEmployeesInput = {
+  clerkOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   auditLogs?: Prisma.AuditLogUpdateManyWithoutFirmNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutFirmNestedInput
@@ -844,6 +885,7 @@ export type FirmUpdateWithoutContractEmployeesInput = {
 }
 
 export type FirmUncheckedUpdateWithoutContractEmployeesInput = {
+  clerkOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutFirmNestedInput
@@ -858,6 +900,7 @@ export type FirmUncheckedUpdateWithoutContractEmployeesInput = {
 }
 
 export type FirmCreateWithoutRevenuesInput = {
+  clerkOrganizationId?: string | null
   name: string
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutFirmInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutFirmInput
@@ -871,6 +914,7 @@ export type FirmCreateWithoutRevenuesInput = {
 }
 
 export type FirmUncheckedCreateWithoutRevenuesInput = {
+  clerkOrganizationId?: string | null
   id?: number
   name: string
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutFirmInput
@@ -901,6 +945,7 @@ export type FirmUpdateToOneWithWhereWithoutRevenuesInput = {
 }
 
 export type FirmUpdateWithoutRevenuesInput = {
+  clerkOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   auditLogs?: Prisma.AuditLogUpdateManyWithoutFirmNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutFirmNestedInput
@@ -914,6 +959,7 @@ export type FirmUpdateWithoutRevenuesInput = {
 }
 
 export type FirmUncheckedUpdateWithoutRevenuesInput = {
+  clerkOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutFirmNestedInput
@@ -928,6 +974,7 @@ export type FirmUncheckedUpdateWithoutRevenuesInput = {
 }
 
 export type FirmCreateWithoutFeesInput = {
+  clerkOrganizationId?: string | null
   name: string
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutFirmInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutFirmInput
@@ -941,6 +988,7 @@ export type FirmCreateWithoutFeesInput = {
 }
 
 export type FirmUncheckedCreateWithoutFeesInput = {
+  clerkOrganizationId?: string | null
   id?: number
   name: string
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutFirmInput
@@ -971,6 +1019,7 @@ export type FirmUpdateToOneWithWhereWithoutFeesInput = {
 }
 
 export type FirmUpdateWithoutFeesInput = {
+  clerkOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   auditLogs?: Prisma.AuditLogUpdateManyWithoutFirmNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutFirmNestedInput
@@ -984,6 +1033,7 @@ export type FirmUpdateWithoutFeesInput = {
 }
 
 export type FirmUncheckedUpdateWithoutFeesInput = {
+  clerkOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutFirmNestedInput
@@ -998,6 +1048,7 @@ export type FirmUncheckedUpdateWithoutFeesInput = {
 }
 
 export type FirmCreateWithoutExpensesInput = {
+  clerkOrganizationId?: string | null
   name: string
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutFirmInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutFirmInput
@@ -1011,6 +1062,7 @@ export type FirmCreateWithoutExpensesInput = {
 }
 
 export type FirmUncheckedCreateWithoutExpensesInput = {
+  clerkOrganizationId?: string | null
   id?: number
   name: string
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutFirmInput
@@ -1041,6 +1093,7 @@ export type FirmUpdateToOneWithWhereWithoutExpensesInput = {
 }
 
 export type FirmUpdateWithoutExpensesInput = {
+  clerkOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   auditLogs?: Prisma.AuditLogUpdateManyWithoutFirmNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutFirmNestedInput
@@ -1054,6 +1107,7 @@ export type FirmUpdateWithoutExpensesInput = {
 }
 
 export type FirmUncheckedUpdateWithoutExpensesInput = {
+  clerkOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutFirmNestedInput
@@ -1068,6 +1122,7 @@ export type FirmUncheckedUpdateWithoutExpensesInput = {
 }
 
 export type FirmCreateWithoutRemunerationsInput = {
+  clerkOrganizationId?: string | null
   name: string
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutFirmInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutFirmInput
@@ -1081,6 +1136,7 @@ export type FirmCreateWithoutRemunerationsInput = {
 }
 
 export type FirmUncheckedCreateWithoutRemunerationsInput = {
+  clerkOrganizationId?: string | null
   id?: number
   name: string
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutFirmInput
@@ -1111,6 +1167,7 @@ export type FirmUpdateToOneWithWhereWithoutRemunerationsInput = {
 }
 
 export type FirmUpdateWithoutRemunerationsInput = {
+  clerkOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   auditLogs?: Prisma.AuditLogUpdateManyWithoutFirmNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutFirmNestedInput
@@ -1124,6 +1181,7 @@ export type FirmUpdateWithoutRemunerationsInput = {
 }
 
 export type FirmUncheckedUpdateWithoutRemunerationsInput = {
+  clerkOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutFirmNestedInput
@@ -1138,6 +1196,7 @@ export type FirmUncheckedUpdateWithoutRemunerationsInput = {
 }
 
 export type FirmCreateWithoutAttachmentsInput = {
+  clerkOrganizationId?: string | null
   name: string
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutFirmInput
   clients?: Prisma.ClientCreateNestedManyWithoutFirmInput
@@ -1151,6 +1210,7 @@ export type FirmCreateWithoutAttachmentsInput = {
 }
 
 export type FirmUncheckedCreateWithoutAttachmentsInput = {
+  clerkOrganizationId?: string | null
   id?: number
   name: string
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutFirmInput
@@ -1181,6 +1241,7 @@ export type FirmUpdateToOneWithWhereWithoutAttachmentsInput = {
 }
 
 export type FirmUpdateWithoutAttachmentsInput = {
+  clerkOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   auditLogs?: Prisma.AuditLogUpdateManyWithoutFirmNestedInput
   clients?: Prisma.ClientUpdateManyWithoutFirmNestedInput
@@ -1194,6 +1255,7 @@ export type FirmUpdateWithoutAttachmentsInput = {
 }
 
 export type FirmUncheckedUpdateWithoutAttachmentsInput = {
+  clerkOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutFirmNestedInput
@@ -1320,6 +1382,7 @@ export type FirmCountOutputTypeCountRemunerationsArgs<ExtArgs extends runtime.Ty
 
 
 export type FirmSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  clerkOrganizationId?: boolean
   id?: boolean
   name?: boolean
   auditLogs?: boolean | Prisma.Firm$auditLogsArgs<ExtArgs>
@@ -1336,21 +1399,24 @@ export type FirmSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
 }, ExtArgs["result"]["firm"]>
 
 export type FirmSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  clerkOrganizationId?: boolean
   id?: boolean
   name?: boolean
 }, ExtArgs["result"]["firm"]>
 
 export type FirmSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  clerkOrganizationId?: boolean
   id?: boolean
   name?: boolean
 }, ExtArgs["result"]["firm"]>
 
 export type FirmSelectScalar = {
+  clerkOrganizationId?: boolean
   id?: boolean
   name?: boolean
 }
 
-export type FirmOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name", ExtArgs["result"]["firm"]>
+export type FirmOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"clerkOrganizationId" | "id" | "name", ExtArgs["result"]["firm"]>
 export type FirmInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   auditLogs?: boolean | Prisma.Firm$auditLogsArgs<ExtArgs>
   attachments?: boolean | Prisma.Firm$attachmentsArgs<ExtArgs>
@@ -1382,6 +1448,7 @@ export type $FirmPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     remunerations: Prisma.$RemunerationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
+    clerkOrganizationId: string | null
     id: number
     name: string
   }, ExtArgs["result"]["firm"]>
@@ -1467,8 +1534,8 @@ export interface FirmDelegate<ExtArgs extends runtime.Types.Extensions.InternalA
    * // Get first 10 Firms
    * const firms = await prisma.firm.findMany({ take: 10 })
    * 
-   * // Only select the `id`
-   * const firmWithIdOnly = await prisma.firm.findMany({ select: { id: true } })
+   * // Only select the `clerkOrganizationId`
+   * const firmWithClerkOrganizationIdOnly = await prisma.firm.findMany({ select: { clerkOrganizationId: true } })
    * 
    */
   findMany<T extends FirmFindManyArgs>(args?: Prisma.SelectSubset<T, FirmFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FirmPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
@@ -1512,9 +1579,9 @@ export interface FirmDelegate<ExtArgs extends runtime.Types.Extensions.InternalA
    *   ]
    * })
    * 
-   * // Create many Firms and only return the `id`
-   * const firmWithIdOnly = await prisma.firm.createManyAndReturn({
-   *   select: { id: true },
+   * // Create many Firms and only return the `clerkOrganizationId`
+   * const firmWithClerkOrganizationIdOnly = await prisma.firm.createManyAndReturn({
+   *   select: { clerkOrganizationId: true },
    *   data: [
    *     // ... provide data here
    *   ]
@@ -1603,9 +1670,9 @@ export interface FirmDelegate<ExtArgs extends runtime.Types.Extensions.InternalA
    *   ]
    * })
    * 
-   * // Update zero or more Firms and only return the `id`
-   * const firmWithIdOnly = await prisma.firm.updateManyAndReturn({
-   *   select: { id: true },
+   * // Update zero or more Firms and only return the `clerkOrganizationId`
+   * const firmWithClerkOrganizationIdOnly = await prisma.firm.updateManyAndReturn({
+   *   select: { clerkOrganizationId: true },
    *   where: {
    *     // ... provide filter here
    *   },
@@ -1817,6 +1884,7 @@ export interface Prisma__FirmClient<T, Null = never, ExtArgs extends runtime.Typ
  * Fields of the Firm model
  */
 export interface FirmFieldRefs {
+  readonly clerkOrganizationId: Prisma.FieldRef<"Firm", 'String'>
   readonly id: Prisma.FieldRef<"Firm", 'Int'>
   readonly name: Prisma.FieldRef<"Firm", 'String'>
 }

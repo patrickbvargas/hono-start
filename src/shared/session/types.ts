@@ -1,3 +1,6 @@
+import type * as z from "zod";
+import type { loggedUserSessionSchema } from "./schema";
+
 export const SESSION_ADMIN_ROLE_VALUE = "ADMIN" as const;
 export const SESSION_USER_ROLE_VALUE = "USER" as const;
 export const SESSION_EMPLOYEE_TYPE_LAWYER_VALUE = "LAWYER" as const;
@@ -34,14 +37,7 @@ export interface SessionOption {
 	label: string;
 }
 
-export interface LoggedUserSession {
-	user: SessionIdentity;
-	employee: SessionEmployee;
-	firm: SessionFirm;
-	employeeType: SessionOption;
-	role: SessionOption;
-	mustChangePassword: boolean;
-}
+export type LoggedUserSession = z.infer<typeof loggedUserSessionSchema>;
 
 export type SessionScopeSubject =
 	| "employee"

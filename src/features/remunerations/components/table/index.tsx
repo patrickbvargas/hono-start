@@ -109,6 +109,13 @@ export const RemunerationTable = ({
 
 					return (
 						<EntityActions
+							viewPermission={[
+								"org:remunerations:read_all",
+								"org:remunerations:read_own",
+							]}
+							editPermission="org:remunerations:update"
+							restorePermission="org:remunerations:restore"
+							deletePermission="org:remunerations:delete"
 							canEdit={actions.canEdit}
 							canRestore={actions.canRestore}
 							canDelete={actions.canDelete}

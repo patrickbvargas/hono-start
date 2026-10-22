@@ -113,6 +113,7 @@ function createResolvedAssignment(options: {
 			isActive: true,
 			mustChangePassword: false,
 			authUserId: null,
+			clerkUserId: null,
 			createdAt: new Date(),
 			updatedAt: new Date(),
 			deletedAt: null,

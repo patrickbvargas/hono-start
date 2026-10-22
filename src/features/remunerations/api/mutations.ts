@@ -1,7 +1,8 @@
 import { mutationOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
-import { assertCan, authMiddleware } from "@/shared/session";
+import { assertCan } from "@/shared/session";
+import { authMiddleware } from "@/shared/session/middleware";
 import {
 	getRequiredServerLoggedUserSession,
 	getServerScope,
@@ -21,10 +22,9 @@ import {
 
 async function getAuthorizedRemunerationAccess(
 	action:
-		| "remuneration.view"
-		| "remuneration.update"
-		| "remuneration.delete"
-		| "remuneration.restore",
+		| "org:remunerations:update"
+		| "org:remunerations:delete"
+		| "org:remunerations:restore",
 	id: number,
 ) {
 	const session = await getRequiredServerLoggedUserSession();
@@ -46,7 +46,7 @@ const updateRemunerationFn = createServerFn({ method: "POST" })
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
 			const access = await getAuthorizedRemunerationAccess(
-				"remuneration.update",
+				"org:remunerations:update",
 				data.id,
 			);
 			const session = await getRequiredServerLoggedUserSession();
@@ -76,7 +76,7 @@ const deleteRemunerationFn = createServerFn({ method: "POST" })
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
 			const access = await getAuthorizedRemunerationAccess(
-				"remuneration.delete",
+				"org:remunerations:delete",
 				data.id,
 			);
 			const session = await getRequiredServerLoggedUserSession();
@@ -106,7 +106,7 @@ const restoreRemunerationFn = createServerFn({ method: "POST" })
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
 			const access = await getAuthorizedRemunerationAccess(
-				"remuneration.restore",
+				"org:remunerations:restore",
 				data.id,
 			);
 			const session = await getRequiredServerLoggedUserSession();

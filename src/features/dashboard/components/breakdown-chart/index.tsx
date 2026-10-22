@@ -211,7 +211,7 @@ export function DashboardBreakdownChart({
 						) : (
 							<BreakdownDonutChart items={items} />
 						)}
-						<Separator />
+						<Separator className="hidden sm:block" />
 						{renderBreakdownList(items)}
 					</>
 				)}

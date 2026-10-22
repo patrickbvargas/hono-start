@@ -9,76 +9,33 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as AppRouteRouteImport } from './routes/_app/route'
+import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
-import { Route as AuthRecuperarSenhaRouteImport } from './routes/_auth/recuperar-senha'
-import { Route as AuthLoginRouteImport } from './routes/_auth/login'
-import { Route as AppRemuneracoesRouteImport } from './routes/_app/remuneracoes'
-import { Route as AppHonorariosRouteImport } from './routes/_app/honorarios'
-import { Route as AppDespesasRouteImport } from './routes/_app/despesas'
-import { Route as AppContratosRouteImport } from './routes/_app/contratos'
-import { Route as AppColaboradoresRouteImport } from './routes/_app/colaboradores'
-import { Route as AppClientesRouteImport } from './routes/_app/clientes'
-import { Route as AppAuditoriaRouteImport } from './routes/_app/auditoria'
 import { Route as AppAlterarSenhaObrigatoriaRouteImport } from './routes/_app/alterar-senha-obrigatoria'
+import { Route as AppAuditoriaRouteImport } from './routes/_app/auditoria'
+import { Route as AppClientesRouteImport } from './routes/_app/clientes'
+import { Route as AppColaboradoresRouteImport } from './routes/_app/colaboradores'
+import { Route as AppContratosRouteImport } from './routes/_app/contratos'
+import { Route as AppDespesasRouteImport } from './routes/_app/despesas'
+import { Route as AppHonorariosRouteImport } from './routes/_app/honorarios'
+import { Route as AppRemuneracoesRouteImport } from './routes/_app/remuneracoes'
+import { Route as AuthConviteRouteImport } from './routes/_auth/convite'
+import { Route as AuthLoginRouteImport } from './routes/_auth/login'
+import { Route as AuthRecuperarSenhaRouteImport } from './routes/_auth/recuperar-senha'
+import { Route as ApiWebhooksClerkRouteImport } from './routes/api/webhooks/clerk'
 
-const AuthRouteRoute = AuthRouteRouteImport.update({
-  id: '/_auth',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AppRouteRoute = AppRouteRouteImport.update({
   id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRouteRoute = AuthRouteRouteImport.update({
+  id: '/_auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => AppRouteRoute,
-} as any)
-const AuthRecuperarSenhaRoute = AuthRecuperarSenhaRouteImport.update({
-  id: '/recuperar-senha',
-  path: '/recuperar-senha',
-  getParentRoute: () => AuthRouteRoute,
-} as any)
-const AuthLoginRoute = AuthLoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => AuthRouteRoute,
-} as any)
-const AppRemuneracoesRoute = AppRemuneracoesRouteImport.update({
-  id: '/remuneracoes',
-  path: '/remuneracoes',
-  getParentRoute: () => AppRouteRoute,
-} as any)
-const AppHonorariosRoute = AppHonorariosRouteImport.update({
-  id: '/honorarios',
-  path: '/honorarios',
-  getParentRoute: () => AppRouteRoute,
-} as any)
-const AppDespesasRoute = AppDespesasRouteImport.update({
-  id: '/despesas',
-  path: '/despesas',
-  getParentRoute: () => AppRouteRoute,
-} as any)
-const AppContratosRoute = AppContratosRouteImport.update({
-  id: '/contratos',
-  path: '/contratos',
-  getParentRoute: () => AppRouteRoute,
-} as any)
-const AppColaboradoresRoute = AppColaboradoresRouteImport.update({
-  id: '/colaboradores',
-  path: '/colaboradores',
-  getParentRoute: () => AppRouteRoute,
-} as any)
-const AppClientesRoute = AppClientesRouteImport.update({
-  id: '/clientes',
-  path: '/clientes',
-  getParentRoute: () => AppRouteRoute,
-} as any)
-const AppAuditoriaRoute = AppAuditoriaRouteImport.update({
-  id: '/auditoria',
-  path: '/auditoria',
   getParentRoute: () => AppRouteRoute,
 } as any)
 const AppAlterarSenhaObrigatoriaRoute =
@@ -87,6 +44,61 @@ const AppAlterarSenhaObrigatoriaRoute =
     path: '/alterar-senha-obrigatoria',
     getParentRoute: () => AppRouteRoute,
   } as any)
+const AppAuditoriaRoute = AppAuditoriaRouteImport.update({
+  id: '/auditoria',
+  path: '/auditoria',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppClientesRoute = AppClientesRouteImport.update({
+  id: '/clientes',
+  path: '/clientes',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppColaboradoresRoute = AppColaboradoresRouteImport.update({
+  id: '/colaboradores',
+  path: '/colaboradores',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppContratosRoute = AppContratosRouteImport.update({
+  id: '/contratos',
+  path: '/contratos',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppDespesasRoute = AppDespesasRouteImport.update({
+  id: '/despesas',
+  path: '/despesas',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppHonorariosRoute = AppHonorariosRouteImport.update({
+  id: '/honorarios',
+  path: '/honorarios',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppRemuneracoesRoute = AppRemuneracoesRouteImport.update({
+  id: '/remuneracoes',
+  path: '/remuneracoes',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AuthConviteRoute = AuthConviteRouteImport.update({
+  id: '/convite',
+  path: '/convite',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthLoginRoute = AuthLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthRecuperarSenhaRoute = AuthRecuperarSenhaRouteImport.update({
+  id: '/recuperar-senha',
+  path: '/recuperar-senha',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const ApiWebhooksClerkRoute = ApiWebhooksClerkRouteImport.update({
+  id: '/api/webhooks/clerk',
+  path: '/api/webhooks/clerk',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
@@ -98,8 +110,10 @@ export interface FileRoutesByFullPath {
   '/despesas': typeof AppDespesasRoute
   '/honorarios': typeof AppHonorariosRoute
   '/remuneracoes': typeof AppRemuneracoesRoute
+  '/convite': typeof AuthConviteRoute
   '/login': typeof AuthLoginRoute
   '/recuperar-senha': typeof AuthRecuperarSenhaRoute
+  '/api/webhooks/clerk': typeof ApiWebhooksClerkRoute
 }
 export interface FileRoutesByTo {
   '/': typeof AppIndexRoute
@@ -111,8 +125,10 @@ export interface FileRoutesByTo {
   '/despesas': typeof AppDespesasRoute
   '/honorarios': typeof AppHonorariosRoute
   '/remuneracoes': typeof AppRemuneracoesRoute
+  '/convite': typeof AuthConviteRoute
   '/login': typeof AuthLoginRoute
   '/recuperar-senha': typeof AuthRecuperarSenhaRoute
+  '/api/webhooks/clerk': typeof ApiWebhooksClerkRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -126,9 +142,11 @@ export interface FileRoutesById {
   '/_app/despesas': typeof AppDespesasRoute
   '/_app/honorarios': typeof AppHonorariosRoute
   '/_app/remuneracoes': typeof AppRemuneracoesRoute
+  '/_auth/convite': typeof AuthConviteRoute
   '/_auth/login': typeof AuthLoginRoute
   '/_auth/recuperar-senha': typeof AuthRecuperarSenhaRoute
   '/_app/': typeof AppIndexRoute
+  '/api/webhooks/clerk': typeof ApiWebhooksClerkRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -142,8 +160,10 @@ export interface FileRouteTypes {
     | '/despesas'
     | '/honorarios'
     | '/remuneracoes'
+    | '/convite'
     | '/login'
     | '/recuperar-senha'
+    | '/api/webhooks/clerk'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -155,8 +175,10 @@ export interface FileRouteTypes {
     | '/despesas'
     | '/honorarios'
     | '/remuneracoes'
+    | '/convite'
     | '/login'
     | '/recuperar-senha'
+    | '/api/webhooks/clerk'
   id:
     | '__root__'
     | '/_app'
@@ -169,30 +191,33 @@ export interface FileRouteTypes {
     | '/_app/despesas'
     | '/_app/honorarios'
     | '/_app/remuneracoes'
+    | '/_auth/convite'
     | '/_auth/login'
     | '/_auth/recuperar-senha'
     | '/_app/'
+    | '/api/webhooks/clerk'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   AppRouteRoute: typeof AppRouteRouteWithChildren
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
+  ApiWebhooksClerkRoute: typeof ApiWebhooksClerkRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/_auth': {
-      id: '/_auth'
-      path: ''
-      fullPath: '/'
-      preLoaderRoute: typeof AuthRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_app': {
       id: '/_app'
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof AppRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_auth': {
+      id: '/_auth'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_app/': {
@@ -202,60 +227,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRouteRoute
     }
-    '/_auth/recuperar-senha': {
-      id: '/_auth/recuperar-senha'
-      path: '/recuperar-senha'
-      fullPath: '/recuperar-senha'
-      preLoaderRoute: typeof AuthRecuperarSenhaRouteImport
-      parentRoute: typeof AuthRouteRoute
-    }
-    '/_auth/login': {
-      id: '/_auth/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof AuthLoginRouteImport
-      parentRoute: typeof AuthRouteRoute
-    }
-    '/_app/remuneracoes': {
-      id: '/_app/remuneracoes'
-      path: '/remuneracoes'
-      fullPath: '/remuneracoes'
-      preLoaderRoute: typeof AppRemuneracoesRouteImport
-      parentRoute: typeof AppRouteRoute
-    }
-    '/_app/honorarios': {
-      id: '/_app/honorarios'
-      path: '/honorarios'
-      fullPath: '/honorarios'
-      preLoaderRoute: typeof AppHonorariosRouteImport
-      parentRoute: typeof AppRouteRoute
-    }
-    '/_app/despesas': {
-      id: '/_app/despesas'
-      path: '/despesas'
-      fullPath: '/despesas'
-      preLoaderRoute: typeof AppDespesasRouteImport
-      parentRoute: typeof AppRouteRoute
-    }
-    '/_app/contratos': {
-      id: '/_app/contratos'
-      path: '/contratos'
-      fullPath: '/contratos'
-      preLoaderRoute: typeof AppContratosRouteImport
-      parentRoute: typeof AppRouteRoute
-    }
-    '/_app/colaboradores': {
-      id: '/_app/colaboradores'
-      path: '/colaboradores'
-      fullPath: '/colaboradores'
-      preLoaderRoute: typeof AppColaboradoresRouteImport
-      parentRoute: typeof AppRouteRoute
-    }
-    '/_app/clientes': {
-      id: '/_app/clientes'
-      path: '/clientes'
-      fullPath: '/clientes'
-      preLoaderRoute: typeof AppClientesRouteImport
+    '/_app/alterar-senha-obrigatoria': {
+      id: '/_app/alterar-senha-obrigatoria'
+      path: '/alterar-senha-obrigatoria'
+      fullPath: '/alterar-senha-obrigatoria'
+      preLoaderRoute: typeof AppAlterarSenhaObrigatoriaRouteImport
       parentRoute: typeof AppRouteRoute
     }
     '/_app/auditoria': {
@@ -265,12 +241,75 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAuditoriaRouteImport
       parentRoute: typeof AppRouteRoute
     }
-    '/_app/alterar-senha-obrigatoria': {
-      id: '/_app/alterar-senha-obrigatoria'
-      path: '/alterar-senha-obrigatoria'
-      fullPath: '/alterar-senha-obrigatoria'
-      preLoaderRoute: typeof AppAlterarSenhaObrigatoriaRouteImport
+    '/_app/clientes': {
+      id: '/_app/clientes'
+      path: '/clientes'
+      fullPath: '/clientes'
+      preLoaderRoute: typeof AppClientesRouteImport
       parentRoute: typeof AppRouteRoute
+    }
+    '/_app/colaboradores': {
+      id: '/_app/colaboradores'
+      path: '/colaboradores'
+      fullPath: '/colaboradores'
+      preLoaderRoute: typeof AppColaboradoresRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/contratos': {
+      id: '/_app/contratos'
+      path: '/contratos'
+      fullPath: '/contratos'
+      preLoaderRoute: typeof AppContratosRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/despesas': {
+      id: '/_app/despesas'
+      path: '/despesas'
+      fullPath: '/despesas'
+      preLoaderRoute: typeof AppDespesasRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/honorarios': {
+      id: '/_app/honorarios'
+      path: '/honorarios'
+      fullPath: '/honorarios'
+      preLoaderRoute: typeof AppHonorariosRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/remuneracoes': {
+      id: '/_app/remuneracoes'
+      path: '/remuneracoes'
+      fullPath: '/remuneracoes'
+      preLoaderRoute: typeof AppRemuneracoesRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_auth/convite': {
+      id: '/_auth/convite'
+      path: '/convite'
+      fullPath: '/convite'
+      preLoaderRoute: typeof AuthConviteRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/_auth/login': {
+      id: '/_auth/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof AuthLoginRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/_auth/recuperar-senha': {
+      id: '/_auth/recuperar-senha'
+      path: '/recuperar-senha'
+      fullPath: '/recuperar-senha'
+      preLoaderRoute: typeof AuthRecuperarSenhaRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/api/webhooks/clerk': {
+      id: '/api/webhooks/clerk'
+      path: '/api/webhooks/clerk'
+      fullPath: '/api/webhooks/clerk'
+      preLoaderRoute: typeof ApiWebhooksClerkRouteImport
+      parentRoute: typeof rootRouteImport
     }
   }
 }
@@ -304,11 +343,13 @@ const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
 )
 
 interface AuthRouteRouteChildren {
+  AuthConviteRoute: typeof AuthConviteRoute
   AuthLoginRoute: typeof AuthLoginRoute
   AuthRecuperarSenhaRoute: typeof AuthRecuperarSenhaRoute
 }
 
 const AuthRouteRouteChildren: AuthRouteRouteChildren = {
+  AuthConviteRoute: AuthConviteRoute,
   AuthLoginRoute: AuthLoginRoute,
   AuthRecuperarSenhaRoute: AuthRecuperarSenhaRoute,
 }
@@ -320,16 +361,18 @@ const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   AppRouteRoute: AppRouteRouteWithChildren,
   AuthRouteRoute: AuthRouteRouteWithChildren,
+  ApiWebhooksClerkRoute: ApiWebhooksClerkRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
 
 import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
+import type { startInstance } from './start.ts'
 declare module '@tanstack/react-start' {
   interface Register {
     ssr: true
     router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
   }
 }

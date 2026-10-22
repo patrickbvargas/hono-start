@@ -1,6 +1,6 @@
 import {
+	CircleUserIcon,
 	EllipsisVerticalIcon,
-	KeyRoundIcon,
 	LogOutIcon,
 	MonitorCogIcon,
 	MoonIcon,
@@ -104,8 +104,8 @@ export const NavUser = () => {
 									setIsChangePasswordOpen(true);
 								}}
 							>
-								<KeyRoundIcon size={16} />
-								Alterar senha
+								<CircleUserIcon size={16} />
+								Conta
 							</DropdownMenuItem>
 							<DropdownMenuSub>
 								<DropdownMenuSubTrigger>
