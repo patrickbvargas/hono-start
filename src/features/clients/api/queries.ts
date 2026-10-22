@@ -25,7 +25,7 @@ export const clientKeys = {
 
 const getClientsFn = createServerFn({ method: "GET" })
 	.middleware([authMiddleware])
-	.inputValidator(clientSearchSchema)
+	.validator(clientSearchSchema)
 	.handler(
 		async ({
 			data,
@@ -45,7 +45,7 @@ const getClientsFn = createServerFn({ method: "GET" })
 
 const getClientByIdFn = createServerFn({ method: "GET" })
 	.middleware([authMiddleware])
-	.inputValidator(clientIdInputSchema)
+	.validator(clientIdInputSchema)
 	.handler(
 		async ({ data, context }): Promise<QueryOneReturnType<ClientDetail>> => {
 			try {

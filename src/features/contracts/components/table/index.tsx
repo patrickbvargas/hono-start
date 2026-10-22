@@ -6,6 +6,7 @@ import { EntityIdTrigger } from "@/shared/components/entity-id-trigger";
 import { EntityStatus } from "@/shared/components/entity-status";
 import { Pagination } from "@/shared/components/pagination";
 import { formatter } from "@/shared/lib/formatter";
+import type { dataTableFeatures } from "@/shared/lib/table";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { QueryPaginatedReturnType } from "@/shared/types/api";
 import { CONTRACT_ALLOWED_SORT_COLUMNS } from "../../constants/sorting";
@@ -30,7 +31,7 @@ export const ContractTable = ({
 	onRestore,
 }: ContractTableProps) => {
 	const columns = React.useMemo(() => {
-		const c = createColumnHelper<ContractSummary>();
+		const c = createColumnHelper<typeof dataTableFeatures, ContractSummary>();
 
 		return [
 			c.accessor("id", {

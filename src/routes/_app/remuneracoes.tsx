@@ -1,5 +1,4 @@
 import { createFileRoute, stripSearchParams } from "@tanstack/react-router";
-import { zodValidator } from "@tanstack/zod-adapter";
 import {
 	getRemunerationsQueryOptions,
 	getSelectableRemunerationContractsQueryOptions,
@@ -33,7 +32,7 @@ export const Route = createFileRoute("/_app/remuneracoes")({
 	head: () => ({
 		meta: [{ title: getPageTitle(ROUTES.remuneration.title) }],
 	}),
-	validateSearch: zodValidator(remunerationSearchSchema),
+	validateSearch: remunerationSearchSchema,
 	search: {
 		middlewares: [stripSearchParams(remunerationSearchDefaults)],
 	},

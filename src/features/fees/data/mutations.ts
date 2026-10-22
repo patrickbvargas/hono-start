@@ -260,7 +260,7 @@ async function syncContractStatusFromFees(
 		},
 	});
 
-	if (!contract || !contract.allowStatusChange) {
+	if (!contract?.allowStatusChange) {
 		return;
 	}
 

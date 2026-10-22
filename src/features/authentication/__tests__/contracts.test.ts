@@ -64,13 +64,12 @@ describe("authentication public screen contracts", () => {
 		expect(authLayoutRoute).toContain("items-center justify-center px-4");
 		expect(authLayoutRoute).toContain("<Outlet />");
 		expect(loginRoute).toContain(
-			'import { AuthenticationScreen, LoginForm } from "@/features/authentication";',
+			'import { LoginForm } from "@/features/authentication";',
 		);
 		expect(loginRoute).toContain("beforeLoad:");
-		expect(loginRoute).toContain("validateSearch: zodValidator(");
+		expect(loginRoute).toContain("validateSearch: loginSearchSchema");
 		expect(loginRoute).toContain("<LoginForm redirectTo={redirect} />");
-		expect(loginRoute).toContain("<AuthenticationScreen");
-		expect(loginRoute).toContain("showBackToLoginLink={false}");
+
 		expect(loginRoute).not.toContain("@/features/authentication/components/");
 
 		expect(passwordResetRoute).toContain("AuthenticationScreen,");

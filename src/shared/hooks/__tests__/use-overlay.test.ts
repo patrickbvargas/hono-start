@@ -36,7 +36,7 @@ vi.mock("react", () => hookRuntime.module);
 
 import { useOverlay } from "../use-overlay";
 
-function renderOverlay<T>() {
+function useRenderOverlay<T>() {
 	hookRuntime.beginRender();
 	return useOverlay<T>();
 }
@@ -47,7 +47,7 @@ describe("useOverlay", () => {
 	});
 
 	it("starts closed with named overlay scopes", () => {
-		const current = renderOverlay<number>();
+		const current = useRenderOverlay<number>();
 
 		expect(current.openKeys).toEqual([]);
 		expect(current.overlay.create.isOpen).toBe(false);
@@ -58,14 +58,14 @@ describe("useOverlay", () => {
 	});
 
 	it("opens and renders create without selected entity data", () => {
-		let current = renderOverlay<number>();
+		let current = useRenderOverlay<number>();
 		const renderCreate = vi.fn((state: OverlayState) => state.isOpen);
 
 		expect(current.overlay.create.render(renderCreate)).toBeNull();
 		expect(renderCreate).not.toHaveBeenCalled();
 
 		current.overlay.create.open();
-		current = renderOverlay<number>();
+		current = useRenderOverlay<number>();
 
 		expect(current.openKeys).toEqual(["create"]);
 		expect(current.overlay.create.isOpen).toBe(true);
@@ -79,18 +79,18 @@ describe("useOverlay", () => {
 		);
 
 		current.overlay.create.close();
-		current = renderOverlay<number>();
+		current = useRenderOverlay<number>();
 
 		expect(current.openKeys).toEqual([]);
 		expect(current.overlay.create.render(renderCreate)).toBeNull();
 	});
 
 	it("opens and renders data overlays with selected entity data", () => {
-		let current = renderOverlay<number>();
+		let current = useRenderOverlay<number>();
 		const renderEdit = vi.fn((id: number) => id);
 
 		current.overlay.edit.open(123);
-		current = renderOverlay<number>();
+		current = useRenderOverlay<number>();
 
 		expect(current.openKeys).toEqual(["edit"]);
 		expect(current.overlay.edit.isOpen).toBe(true);
@@ -106,13 +106,13 @@ describe("useOverlay", () => {
 	});
 
 	it("keeps multiple overlays open in the same hook instance", () => {
-		let current = renderOverlay<number>();
+		let current = useRenderOverlay<number>();
 		const renderDetails = vi.fn((id: number) => `details-${id}`);
 		const renderDelete = vi.fn((id: number) => `delete-${id}`);
 
 		current.overlay.details.open(123);
 		current.overlay.delete.open(456);
-		current = renderOverlay<number>();
+		current = useRenderOverlay<number>();
 
 		expect(current.openKeys).toEqual(["details", "delete"]);
 		expect(current.overlay.details.isOpen).toBe(true);
@@ -122,12 +122,12 @@ describe("useOverlay", () => {
 	});
 
 	it("closes only the overlay that receives onOpenChange(false)", () => {
-		let current = renderOverlay<number>();
+		let current = useRenderOverlay<number>();
 		const capturedStates: OverlayState[] = [];
 
 		current.overlay.edit.open(123);
 		current.overlay.delete.open(456);
-		current = renderOverlay<number>();
+		current = useRenderOverlay<number>();
 
 		current.overlay.edit.render((_id, state) => {
 			capturedStates.push(state);
@@ -139,34 +139,34 @@ describe("useOverlay", () => {
 		});
 
 		capturedStates[0]?.onOpenChange(false);
-		current = renderOverlay<number>();
+		current = useRenderOverlay<number>();
 
 		expect(current.openKeys).toEqual(["delete"]);
 		expect(current.overlay.edit.isOpen).toBe(false);
 		expect(current.overlay.delete.isOpen).toBe(true);
 
 		capturedStates[1]?.onOpenChange(false);
-		current = renderOverlay<number>();
+		current = useRenderOverlay<number>();
 
 		expect(current.openKeys).toEqual([]);
 		expect(current.overlay.delete.isOpen).toBe(false);
 	});
 
 	it("ignores close signals for already closed overlays", () => {
-		let current = renderOverlay<number>();
+		let current = useRenderOverlay<number>();
 		const capturedStates: OverlayState[] = [];
 
 		current.overlay.details.open(123);
-		current = renderOverlay<number>();
+		current = useRenderOverlay<number>();
 		current.overlay.details.render((_id, state) => {
 			capturedStates.push(state);
 			return null;
 		});
 
 		capturedStates[0]?.onOpenChange(false);
-		current = renderOverlay<number>();
+		current = useRenderOverlay<number>();
 		capturedStates[0]?.onOpenChange(false);
-		current = renderOverlay<number>();
+		current = useRenderOverlay<number>();
 
 		expect(current.openKeys).toEqual([]);
 		expect(current.overlay.details.isOpen).toBe(false);

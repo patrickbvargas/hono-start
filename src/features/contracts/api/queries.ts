@@ -43,7 +43,7 @@ export const contractKeys = {
 
 const getContractsFn = createServerFn({ method: "GET" })
 	.middleware([authMiddleware])
-	.inputValidator(contractSearchSchema)
+	.validator(contractSearchSchema)
 	.handler(
 		async ({ data }): Promise<QueryPaginatedReturnType<ContractSummary>> => {
 			try {
@@ -72,7 +72,7 @@ const getContractsFn = createServerFn({ method: "GET" })
 
 const getContractByIdFn = createServerFn({ method: "GET" })
 	.middleware([authMiddleware])
-	.inputValidator(contractIdInputSchema)
+	.validator(contractIdInputSchema)
 	.handler(async ({ data }): Promise<QueryOneReturnType<ContractDetail>> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();

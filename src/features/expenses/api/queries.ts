@@ -32,7 +32,7 @@ export const expenseKeys = {
 
 const getExpensesFn = createServerFn({ method: "GET" })
 	.middleware([authMiddleware])
-	.inputValidator(expenseSearchSchema)
+	.validator(expenseSearchSchema)
 	.handler(
 		async ({ data }): Promise<QueryPaginatedReturnType<ExpenseSummary>> => {
 			try {
@@ -51,7 +51,7 @@ const getExpensesFn = createServerFn({ method: "GET" })
 
 const getExpenseByIdFn = createServerFn({ method: "GET" })
 	.middleware([authMiddleware])
-	.inputValidator(expenseIdInputSchema)
+	.validator(expenseIdInputSchema)
 	.handler(async ({ data }): Promise<QueryOneReturnType<ExpenseDetail>> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();

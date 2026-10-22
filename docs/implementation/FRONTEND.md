@@ -102,3 +102,12 @@ can render. Clerk SignIn/SignUp/UserProfile widgets are an explicit vendor UI
 exception inside authentication-owned components; other UI uses shared exports.
 Lifecycle UI uses operation-specific Clerk capabilities and persisted state;
 server authorization remains mandatory even for hidden actions.
+
+## Dependency migration contracts
+
+- TanStack Start server functions validate inputs with `.validator(schema)`.
+- Zod 4 search schemas are passed directly to route `validateSearch`; no Zod 3 adapter is used.
+- TanStack Table 9 tables share `dataTableFeatures` from `src/shared/lib/table.ts`. Column helpers include that feature type; sorting remains server-driven through URL search.
+- Table cell context methods must be called on the context object rather than detached from it.
+- Vite resolves TypeScript paths natively with `resolve.tsconfigPaths`.
+- The shared DataTable accepts heterogeneous accessor value types using TanStack column definitions. Its local `any` value slot follows the library column helper contract; row models remain explicitly typed.

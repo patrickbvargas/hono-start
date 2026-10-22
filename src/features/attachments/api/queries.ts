@@ -59,7 +59,7 @@ function assertAttachmentOwnerReadAccess(
 
 const getAttachmentsByOwnerFn = createServerFn({ method: "GET" })
 	.middleware([authMiddleware])
-	.inputValidator(attachmentListInputSchema)
+	.validator(attachmentListInputSchema)
 	.handler(
 		async ({ data }): Promise<QueryManyReturnType<AttachmentSummary>> => {
 			try {

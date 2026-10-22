@@ -73,7 +73,7 @@ async function getRemunerationScope(exporting = false) {
 
 const getRemunerationsFn = createServerFn({ method: "GET" })
 	.middleware([authMiddleware])
-	.inputValidator(remunerationSearchSchema)
+	.validator(remunerationSearchSchema)
 	.handler(
 		async ({ data }): Promise<QueryPaginatedReturnType<Remuneration>> => {
 			try {
@@ -89,7 +89,7 @@ const getRemunerationsFn = createServerFn({ method: "GET" })
 
 const getRemunerationByIdFn = createServerFn({ method: "GET" })
 	.middleware([authMiddleware])
-	.inputValidator(remunerationIdInputSchema)
+	.validator(remunerationIdInputSchema)
 	.handler(async ({ data }): Promise<QueryOneReturnType<Remuneration>> => {
 		try {
 			const { scope } = await getRemunerationScope();
@@ -141,7 +141,7 @@ const getSelectableRemunerationEmployeesFn = createServerFn({
 
 const exportRemunerationsFn = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
-	.inputValidator(remunerationExportInputSchema)
+	.validator(remunerationExportInputSchema)
 	.handler(async ({ data }): Promise<RemunerationExportResult> => {
 		try {
 			const { scope } = await getRemunerationScope(true);

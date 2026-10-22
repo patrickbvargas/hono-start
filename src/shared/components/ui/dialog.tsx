@@ -150,12 +150,12 @@ function DialogDescription({
 
 export {
 	Dialog,
+	DialogBody,
 	DialogClose,
 	DialogContent,
 	DialogDescription,
 	DialogFooter,
 	DialogHeader,
-	DialogBody,
 	DialogOverlay,
 	DialogPortal,
 	DialogTitle,

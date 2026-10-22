@@ -15,6 +15,7 @@ import {
 	Spinner,
 } from "@/shared/components/ui";
 import { formatter } from "@/shared/lib/formatter";
+import type { dataTableFeatures } from "@/shared/lib/table";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { QueryPaginatedReturnType } from "@/shared/types/api";
 import { REMUNERATION_ALLOWED_SORT_COLUMNS } from "../../constants/sorting";
@@ -39,7 +40,7 @@ export const RemunerationTable = ({
 	onRestore,
 }: RemunerationTableProps) => {
 	const columns = React.useMemo(() => {
-		const c = createColumnHelper<Remuneration>();
+		const c = createColumnHelper<typeof dataTableFeatures, Remuneration>();
 
 		return [
 			c.accessor("id", {

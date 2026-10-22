@@ -153,13 +153,13 @@ function PaginationEllipsis({
 }
 
 export {
-	PaginationRoot,
 	PaginationContent,
 	PaginationEllipsis,
+	PaginationFirst,
 	PaginationItem,
+	PaginationLast,
 	PaginationLink,
 	PaginationNext,
 	PaginationPrevious,
-	PaginationFirst,
-	PaginationLast,
+	PaginationRoot,
 };

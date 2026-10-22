@@ -1,5 +1,4 @@
 import { createFileRoute, stripSearchParams } from "@tanstack/react-router";
-import { zodValidator } from "@tanstack/zod-adapter";
 import {
 	BriefcaseIcon,
 	DollarSignIcon,
@@ -62,7 +61,7 @@ export const Route = createFileRoute("/_app/")({
 	head: () => ({
 		meta: [{ title: getPageTitle(ROUTES.dashboard.title) }],
 	}),
-	validateSearch: zodValidator(dashboardSearchSchema),
+	validateSearch: dashboardSearchSchema,
 	search: {
 		middlewares: [stripSearchParams(dashboardSearchDefaults)],
 	},

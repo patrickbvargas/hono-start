@@ -1,5 +1,4 @@
 import { createFileRoute, stripSearchParams } from "@tanstack/react-router";
-import { zodValidator } from "@tanstack/zod-adapter";
 import {
 	ContractDelete,
 	ContractDetails,
@@ -36,7 +35,7 @@ export const Route = createFileRoute("/_app/contratos")({
 	head: () => ({
 		meta: [{ title: getPageTitle(ROUTES.contract.title) }],
 	}),
-	validateSearch: zodValidator(contractSearchSchema),
+	validateSearch: contractSearchSchema,
 	search: {
 		middlewares: [stripSearchParams(contractSearchDefaults)],
 	},

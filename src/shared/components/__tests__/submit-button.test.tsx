@@ -12,17 +12,16 @@ vi.mock("@/shared/hooks/use-app-form", () => ({
 	useFormContext: useFormContextMock,
 }));
 
-function createFormContextMock(isSubmitting: boolean) {
-	return {
-		handleSubmit: vi.fn(),
-		Subscribe: ({
-			children,
-		}: {
-			children: (value: boolean) => React.ReactNode;
-		}) => children(isSubmitting),
-	};
+function SubscribeMock({
+	children,
+}: {
+	children: (value: boolean) => React.ReactNode;
+}) {
+	return children(useFormContextMock().isSubmitting);
 }
-
+function createFormContextMock(isSubmitting: boolean) {
+	return { handleSubmit: vi.fn(), isSubmitting, Subscribe: SubscribeMock };
+}
 describe("FormSubmitButton", () => {
 	it("keeps original label while showing spinner during form submission", () => {
 		useFormContextMock.mockReturnValue(createFormContextMock(true));

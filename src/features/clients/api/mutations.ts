@@ -22,7 +22,7 @@ import {
 
 const createClientFn = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
-	.inputValidator(clientCreateInputSchema)
+	.validator(clientCreateInputSchema)
 	.handler(async ({ data, context }): Promise<MutationReturnType> => {
 		try {
 			assertCan(context.session, "org:clients:create");
@@ -53,7 +53,7 @@ const createClientFn = createServerFn({ method: "POST" })
 
 const updateClientFn = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
-	.inputValidator(clientUpdateInputSchema)
+	.validator(clientUpdateInputSchema)
 	.handler(async ({ data, context }): Promise<MutationReturnType> => {
 		try {
 			assertCan(context.session, "org:clients:update");
@@ -84,7 +84,7 @@ const updateClientFn = createServerFn({ method: "POST" })
 
 const deleteClientFn = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
-	.inputValidator(clientIdInputSchema)
+	.validator(clientIdInputSchema)
 	.handler(async ({ data, context }): Promise<MutationReturnType> => {
 		try {
 			assertCan(context.session, "org:clients:delete");
@@ -111,7 +111,7 @@ const deleteClientFn = createServerFn({ method: "POST" })
 
 const restoreClientFn = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
-	.inputValidator(clientIdInputSchema)
+	.validator(clientIdInputSchema)
 	.handler(async ({ data, context }): Promise<MutationReturnType> => {
 		try {
 			assertCan(context.session, "org:clients:restore");

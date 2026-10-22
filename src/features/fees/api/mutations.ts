@@ -23,7 +23,7 @@ import { normalizeFeeReference } from "../utils/normalization";
 
 const createFeeFn = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
-	.inputValidator(feeCreateInputSchema)
+	.validator(feeCreateInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();
@@ -58,7 +58,7 @@ const createFeeFn = createServerFn({ method: "POST" })
 
 const updateFeeFn = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
-	.inputValidator(feeUpdateInputSchema)
+	.validator(feeUpdateInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();
@@ -105,7 +105,7 @@ const updateFeeFn = createServerFn({ method: "POST" })
 
 const deleteFeeFn = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
-	.inputValidator(feeIdInputSchema)
+	.validator(feeIdInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();
@@ -140,7 +140,7 @@ const deleteFeeFn = createServerFn({ method: "POST" })
 
 const restoreFeeFn = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
-	.inputValidator(feeIdInputSchema)
+	.validator(feeIdInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();

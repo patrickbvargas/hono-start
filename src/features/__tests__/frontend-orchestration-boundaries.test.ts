@@ -572,7 +572,7 @@ describe("frontend orchestration boundaries", () => {
 			const content = readFileSync(path, "utf8");
 			const checks = [
 				{
-					passes: content.includes("validateSearch: zodValidator("),
+					passes: /validateSearch: \w+SearchSchema/.test(content),
 					message: "route does not validate URL search",
 				},
 				{

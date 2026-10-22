@@ -200,3 +200,7 @@ Near-perfect contract alignment means:
 - derived behavior is specified precisely enough to avoid divergent implementations
 - overlapping summary docs defer to clearly owned canonical rules
 - a new contributor can execute the work without having to reverse-engineer expectations from code
+
+## Test configuration
+
+`vitest.config.ts` isolates unit tests from Start, Nitro and development plugins. It discovers `src/**/*.test.{ts,tsx}` and supplies dummy local database URLs for schema initialization. Database clients remain mocked in unit tests; these values never configure production. Prisma CLI, client and adapter stay on the same stable release line.

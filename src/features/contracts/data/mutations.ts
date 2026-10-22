@@ -414,7 +414,7 @@ export async function updateContract({
 }: UpdateContractParams): Promise<MutationReturnType> {
 	const access = await getContractAccessResourceById(input.id);
 
-	if (!access || !access.resource || access.resource.firmId !== scope.firmId) {
+	if (!access?.resource || access.resource.firmId !== scope.firmId) {
 		throw new Error(CONTRACT_ERRORS.CONTRACT_NOT_FOUND);
 	}
 
@@ -549,7 +549,7 @@ export async function deleteContract({
 }): Promise<MutationReturnType> {
 	const access = await getContractAccessResourceById(id);
 
-	if (!access || !access.resource || access.resource.firmId !== firmId) {
+	if (!access?.resource || access.resource.firmId !== firmId) {
 		throw new Error(CONTRACT_ERRORS.CONTRACT_NOT_FOUND);
 	}
 
@@ -597,7 +597,7 @@ export async function restoreContract({
 }): Promise<MutationReturnType> {
 	const access = await getContractAccessResourceById(id);
 
-	if (!access || !access.resource || access.resource.firmId !== firmId) {
+	if (!access?.resource || access.resource.firmId !== firmId) {
 		throw new Error(CONTRACT_ERRORS.CONTRACT_NOT_FOUND);
 	}
 

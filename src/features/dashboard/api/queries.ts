@@ -30,7 +30,7 @@ export const dashboardKeys = {
 
 const getDashboardSummaryFn = createServerFn({ method: "GET" })
 	.middleware([authMiddleware])
-	.inputValidator(dashboardSearchSchema)
+	.validator(dashboardSearchSchema)
 	.handler(async ({ data }): Promise<QueryOneReturnType<DashboardSummary>> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();

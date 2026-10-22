@@ -30,7 +30,7 @@ import {
 
 const createEmployeeFn = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
-	.inputValidator(employeeCreateInputSchema)
+	.validator(employeeCreateInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();
@@ -62,7 +62,7 @@ const createEmployeeFn = createServerFn({ method: "POST" })
 
 const updateEmployeeFn = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
-	.inputValidator(employeeUpdateInputSchema)
+	.validator(employeeUpdateInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();
@@ -94,7 +94,7 @@ const updateEmployeeFn = createServerFn({ method: "POST" })
 
 const deleteEmployeeFn = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
-	.inputValidator(employeeIdInputSchema)
+	.validator(employeeIdInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();
@@ -122,7 +122,7 @@ const deleteEmployeeFn = createServerFn({ method: "POST" })
 
 const restoreEmployeeFn = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
-	.inputValidator(employeeIdInputSchema)
+	.validator(employeeIdInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();
@@ -150,7 +150,7 @@ const restoreEmployeeFn = createServerFn({ method: "POST" })
 
 const grantEmployeeAccessFn = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
-	.inputValidator(employeeAccessInputSchema)
+	.validator(employeeAccessInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();
@@ -179,7 +179,7 @@ const grantEmployeeAccessFn = createServerFn({ method: "POST" })
 
 const revokeEmployeeAccessFn = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
-	.inputValidator(employeeIdInputSchema)
+	.validator(employeeIdInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();
@@ -207,7 +207,7 @@ const revokeEmployeeAccessFn = createServerFn({ method: "POST" })
 
 const restoreEmployeeAccessFn = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
-	.inputValidator(employeeAccessInputSchema)
+	.validator(employeeAccessInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();

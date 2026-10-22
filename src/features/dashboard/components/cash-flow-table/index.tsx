@@ -7,6 +7,7 @@ import {
 	CardTitle,
 } from "@/shared/components/ui";
 import { formatter } from "@/shared/lib/formatter";
+import type { dataTableFeatures } from "@/shared/lib/table";
 import type { DashboardSummary } from "../../schemas/model";
 
 interface DashboardCashFlowTableProps {
@@ -16,10 +17,10 @@ interface DashboardCashFlowTableProps {
 const EMPTY_LABEL = "Nenhum dado de fluxo de caixa encontrado.";
 
 export function DashboardCashFlowTable({ rows }: DashboardCashFlowTableProps) {
-	const columnHelper =
-		createColumnHelper<
-			NonNullable<DashboardSummary["cashFlow"]>["table"][number]
-		>();
+	const columnHelper = createColumnHelper<
+		typeof dataTableFeatures,
+		NonNullable<DashboardSummary["cashFlow"]>["table"][number]
+	>();
 	const columns = [
 		columnHelper.accessor("monthLabel", {
 			id: "monthLabel",
@@ -31,7 +32,7 @@ export function DashboardCashFlowTable({ rows }: DashboardCashFlowTableProps) {
 		}),
 		columnHelper.accessor("administrative", {
 			header: "Administrativo",
-			cell: ({ getValue }) => formatter.currency(getValue()),
+			cell: (context) => formatter.currency(context.getValue()),
 			meta: {
 				headerClassName: "min-w-32 text-right",
 				cellClassName: "whitespace-nowrap text-right",
@@ -39,7 +40,7 @@ export function DashboardCashFlowTable({ rows }: DashboardCashFlowTableProps) {
 		}),
 		columnHelper.accessor("judicial", {
 			header: "Judicial",
-			cell: ({ getValue }) => formatter.currency(getValue()),
+			cell: (context) => formatter.currency(context.getValue()),
 			meta: {
 				headerClassName: "min-w-32 text-right",
 				cellClassName: "whitespace-nowrap text-right",
@@ -47,7 +48,7 @@ export function DashboardCashFlowTable({ rows }: DashboardCashFlowTableProps) {
 		}),
 		columnHelper.accessor("succumbency", {
 			header: "Sucumbência",
-			cell: ({ getValue }) => formatter.currency(getValue()),
+			cell: (context) => formatter.currency(context.getValue()),
 			meta: {
 				headerClassName: "min-w-32 text-right",
 				cellClassName: "whitespace-nowrap text-right",
@@ -55,7 +56,7 @@ export function DashboardCashFlowTable({ rows }: DashboardCashFlowTableProps) {
 		}),
 		columnHelper.accessor("entry", {
 			header: "Entrada",
-			cell: ({ getValue }) => formatter.currency(getValue()),
+			cell: (context) => formatter.currency(context.getValue()),
 			meta: {
 				headerClassName: "min-w-32 text-right",
 				cellClassName: "whitespace-nowrap text-right font-semibold",
@@ -63,7 +64,7 @@ export function DashboardCashFlowTable({ rows }: DashboardCashFlowTableProps) {
 		}),
 		columnHelper.accessor("remuneration", {
 			header: "Remuneração",
-			cell: ({ getValue }) => formatter.currency(getValue()),
+			cell: (context) => formatter.currency(context.getValue()),
 			meta: {
 				headerClassName: "min-w-32 text-right",
 				cellClassName: "whitespace-nowrap text-right",
@@ -71,7 +72,7 @@ export function DashboardCashFlowTable({ rows }: DashboardCashFlowTableProps) {
 		}),
 		columnHelper.accessor("expense", {
 			header: "Despesa",
-			cell: ({ getValue }) => formatter.currency(getValue()),
+			cell: (context) => formatter.currency(context.getValue()),
 			meta: {
 				headerClassName: "min-w-32 text-right",
 				cellClassName: "whitespace-nowrap text-right",
@@ -79,7 +80,7 @@ export function DashboardCashFlowTable({ rows }: DashboardCashFlowTableProps) {
 		}),
 		columnHelper.accessor("output", {
 			header: "Saída",
-			cell: ({ getValue }) => formatter.currency(getValue()),
+			cell: (context) => formatter.currency(context.getValue()),
 			meta: {
 				headerClassName: "min-w-32 text-right",
 				cellClassName: "whitespace-nowrap text-right font-semibold",
@@ -87,7 +88,7 @@ export function DashboardCashFlowTable({ rows }: DashboardCashFlowTableProps) {
 		}),
 		columnHelper.accessor("balance", {
 			header: "Saldo",
-			cell: ({ getValue }) => formatter.currency(getValue()),
+			cell: (context) => formatter.currency(context.getValue()),
 			meta: {
 				headerClassName: "min-w-32 text-right",
 				cellClassName: "whitespace-nowrap text-right font-semibold",

@@ -6,6 +6,7 @@ import { EntityIdTrigger } from "@/shared/components/entity-id-trigger";
 import { EntityStatus } from "@/shared/components/entity-status";
 import { Pagination } from "@/shared/components/pagination";
 import { formatter } from "@/shared/lib/formatter";
+import type { dataTableFeatures } from "@/shared/lib/table";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { QueryPaginatedReturnType } from "@/shared/types/api";
 import { EMPLOYEE_ALLOWED_SORT_COLUMNS } from "../../constants/sorting";
@@ -30,7 +31,7 @@ export const EmployeeTable = ({
 	onRestore,
 }: EmployeeTableProps) => {
 	const columns = React.useMemo(() => {
-		const c = createColumnHelper<EmployeeSummary>();
+		const c = createColumnHelper<typeof dataTableFeatures, EmployeeSummary>();
 
 		return [
 			c.accessor("id", {

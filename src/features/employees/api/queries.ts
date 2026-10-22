@@ -35,7 +35,7 @@ export const employeeKeys = {
 
 const getEmployeesFn = createServerFn({ method: "GET" })
 	.middleware([authMiddleware])
-	.inputValidator(employeeSearchSchema)
+	.validator(employeeSearchSchema)
 	.handler(
 		async ({ data }): Promise<QueryPaginatedReturnType<EmployeeSummary>> => {
 			try {
@@ -57,7 +57,7 @@ const getEmployeesFn = createServerFn({ method: "GET" })
 
 const getEmployeeByIdFn = createServerFn({ method: "GET" })
 	.middleware([authMiddleware])
-	.inputValidator(employeeIdInputSchema)
+	.validator(employeeIdInputSchema)
 	.handler(async ({ data }): Promise<QueryOneReturnType<EmployeeDetail>> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();

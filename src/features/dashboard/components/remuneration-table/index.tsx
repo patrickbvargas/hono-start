@@ -9,6 +9,7 @@ import {
 	TableRow,
 } from "@/shared/components/ui";
 import { formatter } from "@/shared/lib/formatter";
+import type { dataTableFeatures } from "@/shared/lib/table";
 import type { DashboardSummary } from "../../schemas/model";
 
 interface DashboardRemunerationTableProps {
@@ -25,8 +26,10 @@ export function DashboardRemunerationTable({
 	rows,
 	subtotal,
 }: DashboardRemunerationTableProps) {
-	const columnHelper =
-		createColumnHelper<DashboardSummary["remunerationTable"][number]>();
+	const columnHelper = createColumnHelper<
+		typeof dataTableFeatures,
+		DashboardSummary["remunerationTable"][number]
+	>();
 	const columns = [
 		columnHelper.accessor("employeeName", {
 			id: "employeeName",
@@ -40,7 +43,7 @@ export function DashboardRemunerationTable({
 			columnHelper.accessor((row) => row.months[month.key] ?? 0, {
 				id: month.key,
 				header: month.label,
-				cell: ({ getValue }) => formatter.currency(getValue()),
+				cell: (context) => formatter.currency(context.getValue()),
 				meta: {
 					headerClassName: "min-w-32 text-right",
 					cellClassName: "whitespace-nowrap text-right",
@@ -49,7 +52,7 @@ export function DashboardRemunerationTable({
 		),
 		columnHelper.accessor("formattedTotal", {
 			id: "total",
-			header: "Valor total",
+			header: "Valor total no período",
 			meta: {
 				headerClassName: "min-w-40 text-right",
 				cellClassName: "whitespace-nowrap text-right font-semibold",

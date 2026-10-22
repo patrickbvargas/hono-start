@@ -1,5 +1,4 @@
 import { createFileRoute, stripSearchParams } from "@tanstack/react-router";
-import { zodValidator } from "@tanstack/zod-adapter";
 import {
 	AuditLogDetails,
 	AuditLogFilter,
@@ -29,7 +28,7 @@ export const Route = createFileRoute("/_app/auditoria")({
 	head: () => ({
 		meta: [{ title: getPageTitle(ROUTES.auditLog.title) }],
 	}),
-	validateSearch: zodValidator(auditLogSearchSchema),
+	validateSearch: auditLogSearchSchema,
 	search: {
 		middlewares: [stripSearchParams(auditLogSearchDefaults)],
 	},

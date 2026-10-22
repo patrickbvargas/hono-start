@@ -24,7 +24,7 @@ import {
 
 const createExpenseFn = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
-	.inputValidator(expenseCreateInputSchema)
+	.validator(expenseCreateInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();
@@ -53,7 +53,7 @@ const createExpenseFn = createServerFn({ method: "POST" })
 
 const updateExpenseFn = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
-	.inputValidator(expenseUpdateInputSchema)
+	.validator(expenseUpdateInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();
@@ -87,7 +87,7 @@ const updateExpenseFn = createServerFn({ method: "POST" })
 
 const deleteExpenseFn = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
-	.inputValidator(expenseIdInputSchema)
+	.validator(expenseIdInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();
@@ -121,7 +121,7 @@ const deleteExpenseFn = createServerFn({ method: "POST" })
 
 const restoreExpenseFn = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
-	.inputValidator(expenseIdInputSchema)
+	.validator(expenseIdInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();

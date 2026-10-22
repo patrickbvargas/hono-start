@@ -1,5 +1,4 @@
 import { createFileRoute, stripSearchParams } from "@tanstack/react-router";
-import { zodValidator } from "@tanstack/zod-adapter";
 import {
 	FeeDelete,
 	FeeDetails,
@@ -32,7 +31,7 @@ export const Route = createFileRoute("/_app/honorarios")({
 	head: () => ({
 		meta: [{ title: getPageTitle(ROUTES.fee.title) }],
 	}),
-	validateSearch: zodValidator(feeSearchSchema),
+	validateSearch: feeSearchSchema,
 	search: {
 		middlewares: [stripSearchParams(feeSearchDefaults)],
 	},

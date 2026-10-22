@@ -6,6 +6,7 @@ import { EntityIdTrigger } from "@/shared/components/entity-id-trigger";
 import { EntityStatus } from "@/shared/components/entity-status";
 import { Pagination } from "@/shared/components/pagination";
 import { formatter } from "@/shared/lib/formatter";
+import type { dataTableFeatures } from "@/shared/lib/table";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { QueryPaginatedReturnType } from "@/shared/types/api";
 import { EXPENSE_ALLOWED_SORT_COLUMNS } from "../../constants/sorting";
@@ -30,7 +31,7 @@ export const ExpenseTable = ({
 	onRestore,
 }: ExpenseTableProps) => {
 	const columns = React.useMemo(() => {
-		const c = createColumnHelper<ExpenseSummary>();
+		const c = createColumnHelper<typeof dataTableFeatures, ExpenseSummary>();
 
 		return [
 			c.accessor("id", {

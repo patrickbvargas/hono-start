@@ -2,10 +2,9 @@ import { Link } from "@tanstack/react-router";
 import {
 	type ColumnDef,
 	flexRender,
-	getCoreRowModel,
 	type Header,
-	type TableOptions,
-	useReactTable,
+	type RowData,
+	useTable,
 } from "@tanstack/react-table";
 import { ChevronUpIcon } from "lucide-react";
 import {
@@ -19,10 +18,12 @@ import {
 	TableRow,
 } from "@/shared/components/ui";
 import { useSort } from "@/shared/hooks/use-sort";
+import { dataTableFeatures } from "@/shared/lib/table";
 import { cn } from "@/shared/lib/utils";
 
-interface DataTableProps<TData, TValue> {
-	columns: ColumnDef<TData, TValue>[] | TableOptions<TData>["columns"];
+interface DataTableProps<TData extends RowData> {
+	// biome-ignore lint/suspicious/noExplicitAny: Heterogeneous accessor values follow TanStack column helper contract.
+	columns: ColumnDef<typeof dataTableFeatures, TData, any>[];
 	data: TData[];
 	emptyMessage?: string;
 	className?: string;
@@ -31,7 +32,7 @@ interface DataTableProps<TData, TValue> {
 	tableFooterContent?: React.ReactNode;
 }
 
-export const DataTable = <TData, TValue>({
+export const DataTable = <TData extends RowData>({
 	columns,
 	data,
 	emptyMessage = "Nenhum registro encontrado.",
@@ -39,11 +40,11 @@ export const DataTable = <TData, TValue>({
 	onRowAction,
 	footerContent,
 	tableFooterContent,
-}: DataTableProps<TData, TValue>) => {
-	const table = useReactTable({
+}: DataTableProps<TData>) => {
+	const table = useTable({
 		data,
 		columns,
-		getCoreRowModel: getCoreRowModel(),
+		features: dataTableFeatures,
 	});
 
 	return (
@@ -71,11 +72,7 @@ export const DataTable = <TData, TValue>({
 					<TableBody>
 						{table.getRowModel().rows?.length ? (
 							table.getRowModel().rows.map((row, index) => (
-								<TableRow
-									key={row.id}
-									onClick={() => onRowAction?.(index)}
-									data-state={row.getIsSelected() && "selected"}
-								>
+								<TableRow key={row.id} onClick={() => onRowAction?.(index)}>
 									{row.getVisibleCells().map((cell) => (
 										<TableCell
 											key={cell.id}
@@ -114,11 +111,13 @@ export const DataTable = <TData, TValue>({
 	);
 };
 
-interface DataTableHeaderProps<TData> {
-	header: Header<TData, unknown>;
+interface DataTableHeaderProps<TData extends RowData> {
+	header: Header<typeof dataTableFeatures, TData, unknown>;
 }
 
-const DataTableHeader = <TData,>({ header }: DataTableHeaderProps<TData>) => {
+const DataTableHeader = <TData extends RowData>({
+	header,
+}: DataTableHeaderProps<TData>) => {
 	const { column, direction, getSortSearch } = useSort();
 
 	const canSort = header.column.getCanSort();

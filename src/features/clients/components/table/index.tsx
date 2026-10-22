@@ -5,6 +5,7 @@ import { EntityActions } from "@/shared/components/entity-actions";
 import { EntityIdTrigger } from "@/shared/components/entity-id-trigger";
 import { EntityStatus } from "@/shared/components/entity-status";
 import { Pagination } from "@/shared/components/pagination";
+import type { dataTableFeatures } from "@/shared/lib/table";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { QueryPaginatedReturnType } from "@/shared/types/api";
 import { CLIENT_ALLOWED_SORT_COLUMNS } from "../../constants/sorting";
@@ -30,7 +31,7 @@ export const ClientTable = ({
 	onRestore,
 }: ClientTableProps) => {
 	const columns = React.useMemo(() => {
-		const c = createColumnHelper<ClientSummary>();
+		const c = createColumnHelper<typeof dataTableFeatures, ClientSummary>();
 
 		return [
 			c.accessor("id", {

@@ -3,6 +3,7 @@ import * as React from "react";
 import { DataTable } from "@/shared/components/data-table";
 import { EntityIdTrigger } from "@/shared/components/entity-id-trigger";
 import { Pagination } from "@/shared/components/pagination";
+import type { dataTableFeatures } from "@/shared/lib/table";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { QueryPaginatedReturnType } from "@/shared/types/api";
 import { AUDIT_LOG_ALLOWED_SORT_COLUMNS } from "../../constants/sort";
@@ -18,7 +19,7 @@ export const AuditLogTable = ({
 	onView,
 }: AuditLogTableProps) => {
 	const columns = React.useMemo(() => {
-		const c = createColumnHelper<AuditLog>();
+		const c = createColumnHelper<typeof dataTableFeatures, AuditLog>();
 
 		return [
 			c.accessor("id", {
@@ -38,7 +39,7 @@ export const AuditLogTable = ({
 			}),
 			c.accessor("action", {
 				header: "Ação",
-				cell: ({ getValue }) => getValue() || "—",
+				cell: (context) => context.getValue() || "—",
 				enableSorting: AUDIT_LOG_ALLOWED_SORT_COLUMNS.includes("action"),
 			}),
 			c.accessor("occurredAt", {
@@ -48,7 +49,7 @@ export const AuditLogTable = ({
 			}),
 			c.accessor("actorName", {
 				header: "Usuário",
-				cell: ({ getValue }) => getValue() || "Sistema",
+				cell: (context) => context.getValue() || "Sistema",
 				enableSorting: AUDIT_LOG_ALLOWED_SORT_COLUMNS.includes("actorName"),
 				meta: {
 					minColumnWidth: 220,
@@ -85,7 +86,7 @@ export const AuditLogTable = ({
 			}),
 			c.accessor("description", {
 				header: "Detalhes",
-				cell: ({ getValue }) => getValue() || "—",
+				cell: (context) => context.getValue() || "—",
 				enableSorting: false,
 				meta: {
 					minColumnWidth: 360,
@@ -93,7 +94,7 @@ export const AuditLogTable = ({
 			}),
 			c.accessor("ipAddress", {
 				header: "Endereço IP",
-				cell: ({ getValue }) => getValue() ?? "—",
+				cell: (context) => context.getValue() ?? "—",
 				enableSorting: false,
 			}),
 		];

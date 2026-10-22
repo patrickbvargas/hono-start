@@ -1,5 +1,4 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { zodValidator } from "@tanstack/zod-adapter";
 import * as React from "react";
 import * as z from "zod";
 import {
@@ -21,7 +20,7 @@ export const Route = createFileRoute("/_auth/recuperar-senha")({
 	head: () => ({
 		meta: [{ title: getPageTitle("Recuperar acesso") }],
 	}),
-	validateSearch: zodValidator(passwordResetSearchSchema),
+	validateSearch: passwordResetSearchSchema,
 	beforeLoad: async ({ context: { queryClient } }) => {
 		const session = await getRouteSession(queryClient);
 

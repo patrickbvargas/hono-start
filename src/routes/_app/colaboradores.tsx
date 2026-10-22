@@ -1,5 +1,4 @@
 import { createFileRoute, stripSearchParams } from "@tanstack/react-router";
-import { zodValidator } from "@tanstack/zod-adapter";
 import {
 	EmployeeDelete,
 	EmployeeDetails,
@@ -36,7 +35,7 @@ export const Route = createFileRoute("/_app/colaboradores")({
 	head: () => ({
 		meta: [{ title: getPageTitle(ROUTES.employee.title) }],
 	}),
-	validateSearch: zodValidator(employeeSearchSchema),
+	validateSearch: employeeSearchSchema,
 	search: {
 		middlewares: [stripSearchParams(employeeSearchDefaults)],
 	},

@@ -56,7 +56,7 @@ function assertAttachmentOwnerUploadAccess(
 
 const createAttachmentFn = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
-	.inputValidator(attachmentUploadInputSchema)
+	.validator(attachmentUploadInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();
@@ -91,7 +91,7 @@ const createAttachmentFn = createServerFn({ method: "POST" })
 
 const deleteAttachmentFn = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
-	.inputValidator(attachmentIdInputSchema)
+	.validator(attachmentIdInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();

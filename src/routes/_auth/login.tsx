@@ -1,5 +1,4 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { zodValidator } from "@tanstack/zod-adapter";
 import * as z from "zod";
 import { LoginForm } from "@/features/authentication";
 import { getPageTitle } from "@/shared/config/routes";
@@ -16,7 +15,7 @@ export const Route = createFileRoute("/_auth/login")({
 	head: () => ({
 		meta: [{ title: getPageTitle("Entrar") }],
 	}),
-	validateSearch: zodValidator(loginSearchSchema),
+	validateSearch: loginSearchSchema,
 	beforeLoad: async ({ context: { queryClient } }) => {
 		const session = await getRouteSession(queryClient);
 

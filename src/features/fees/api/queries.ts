@@ -36,7 +36,7 @@ export const feeKeys = {
 
 const getFeesFn = createServerFn({ method: "GET" })
 	.middleware([authMiddleware])
-	.inputValidator(feeSearchSchema)
+	.validator(feeSearchSchema)
 	.handler(async ({ data }): Promise<QueryPaginatedReturnType<FeeSummary>> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();
@@ -60,7 +60,7 @@ const getFeesFn = createServerFn({ method: "GET" })
 
 const getFeeByIdFn = createServerFn({ method: "GET" })
 	.middleware([authMiddleware])
-	.inputValidator(feeIdInputSchema)
+	.validator(feeIdInputSchema)
 	.handler(async ({ data }): Promise<QueryOneReturnType<FeeDetail>> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();
@@ -108,7 +108,7 @@ const getSelectableFeeContractsFn = createServerFn({ method: "GET" })
 
 const getSelectableFeeRevenuesFn = createServerFn({ method: "GET" })
 	.middleware([authMiddleware])
-	.inputValidator(
+	.validator(
 		z.object({
 			contractId: z.string().catch("").default(""),
 		}),

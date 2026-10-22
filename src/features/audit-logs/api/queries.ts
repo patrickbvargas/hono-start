@@ -36,7 +36,7 @@ export const auditLogKeys = {
 
 const getAuditLogsFn = createServerFn({ method: "GET" })
 	.middleware([authMiddleware])
-	.inputValidator(auditLogSearchSchema)
+	.validator(auditLogSearchSchema)
 	.handler(async ({ data }): Promise<QueryPaginatedReturnType<AuditLog>> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();
@@ -52,7 +52,7 @@ const getAuditLogsFn = createServerFn({ method: "GET" })
 
 const getAuditLogByIdFn = createServerFn({ method: "GET" })
 	.middleware([authMiddleware])
-	.inputValidator(entityIdSchema)
+	.validator(entityIdSchema)
 	.handler(async ({ data }): Promise<QueryOneReturnType<AuditLogDetail>> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();

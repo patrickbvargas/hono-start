@@ -27,7 +27,7 @@ import {
 
 const createContractFn = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
-	.inputValidator(contractCreateInputSchema)
+	.validator(contractCreateInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();
@@ -60,7 +60,7 @@ const createContractFn = createServerFn({ method: "POST" })
 
 const updateContractFn = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
-	.inputValidator(contractUpdateInputSchema)
+	.validator(contractUpdateInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();
@@ -103,7 +103,7 @@ const updateContractFn = createServerFn({ method: "POST" })
 
 const deleteContractFn = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
-	.inputValidator(contractIdInputSchema)
+	.validator(contractIdInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();
@@ -137,7 +137,7 @@ const deleteContractFn = createServerFn({ method: "POST" })
 
 const restoreContractFn = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
-	.inputValidator(contractIdInputSchema)
+	.validator(contractIdInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();

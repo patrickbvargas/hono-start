@@ -7,7 +7,7 @@ export const paginationSchema = z.object({
 	page: z.coerce
 		.number()
 		.catch(DEFAULT_PAGE)
-		.transform((page) => (page >= DEFAULT_PAGE ? page : DEFAULT_PAGE)),
+		.transform((page) => Math.max(page, DEFAULT_PAGE)),
 	limit: z.coerce
 		.number()
 		.catch(DEFAULT_LIMIT)

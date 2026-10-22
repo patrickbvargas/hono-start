@@ -1,5 +1,4 @@
 import { createFileRoute, stripSearchParams } from "@tanstack/react-router";
-import { zodValidator } from "@tanstack/zod-adapter";
 import {
 	ClientDelete,
 	ClientDetails,
@@ -31,7 +30,7 @@ export const Route = createFileRoute("/_app/clientes")({
 	head: () => ({
 		meta: [{ title: getPageTitle(ROUTES.client.title) }],
 	}),
-	validateSearch: zodValidator(clientSearchSchema),
+	validateSearch: clientSearchSchema,
 	search: {
 		middlewares: [stripSearchParams(clientSearchDefaults)],
 	},

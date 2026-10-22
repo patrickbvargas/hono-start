@@ -84,9 +84,9 @@ export const EntityFields = ({
 		)}
 		{...props}
 	>
-		{items.map((item, index) => (
+		{items.map((item) => (
 			<div
-				key={`${item.term}-${index}`}
+				key={item.term}
 				className={cn(
 					layout === "stacked"
 						? "flex min-w-0 flex-col gap-1.5"

@@ -42,7 +42,7 @@ async function getAuthorizedRemunerationAccess(
 
 const updateRemunerationFn = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
-	.inputValidator(remunerationUpdateInputSchema)
+	.validator(remunerationUpdateInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
 			const access = await getAuthorizedRemunerationAccess(
@@ -72,7 +72,7 @@ const updateRemunerationFn = createServerFn({ method: "POST" })
 
 const deleteRemunerationFn = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
-	.inputValidator(remunerationIdInputSchema)
+	.validator(remunerationIdInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
 			const access = await getAuthorizedRemunerationAccess(
@@ -102,7 +102,7 @@ const deleteRemunerationFn = createServerFn({ method: "POST" })
 
 const restoreRemunerationFn = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
-	.inputValidator(remunerationIdInputSchema)
+	.validator(remunerationIdInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
 			const access = await getAuthorizedRemunerationAccess(

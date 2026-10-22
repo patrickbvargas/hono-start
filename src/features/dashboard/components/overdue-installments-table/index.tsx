@@ -7,6 +7,7 @@ import {
 	CardTitle,
 } from "@/shared/components/ui";
 import { formatter } from "@/shared/lib/formatter";
+import type { dataTableFeatures } from "@/shared/lib/table";
 import type { DashboardSummary } from "../../schemas/model";
 
 interface DashboardOverdueInstallmentsTableProps {
@@ -19,8 +20,10 @@ const EMPTY_LABEL =
 export function DashboardOverdueInstallmentsTable({
 	rows,
 }: DashboardOverdueInstallmentsTableProps) {
-	const columnHelper =
-		createColumnHelper<DashboardSummary["overdueInstallments"][number]>();
+	const columnHelper = createColumnHelper<
+		typeof dataTableFeatures,
+		DashboardSummary["overdueInstallments"][number]
+	>();
 	const columns = [
 		columnHelper.accessor("contractProcessNumber", {
 			header: "Processo",
@@ -66,7 +69,7 @@ export function DashboardOverdueInstallmentsTable({
 		}),
 		columnHelper.accessor("dueDate", {
 			header: "Vencimento",
-			cell: ({ getValue }) => formatter.date(getValue()),
+			cell: (context) => formatter.date(context.getValue()),
 			meta: {
 				headerClassName: "min-w-32",
 				cellClassName: "whitespace-nowrap",
