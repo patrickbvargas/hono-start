@@ -12,7 +12,7 @@ import * as remunerations from "@/features/remunerations";
 describe("feature public barrels", () => {
 	it("keeps the authentication barrel limited to top-level auth surfaces and route hooks", () => {
 		expect(authentication).toHaveProperty("AuthenticationScreen");
-		expect(authentication).toHaveProperty("ChangePasswordDialog");
+		expect(authentication).toHaveProperty("UserProfileDialog");
 		expect(authentication).toHaveProperty("LoginForm");
 		expect(authentication).toHaveProperty("PasswordResetRequestForm");
 		expect(authentication).toHaveProperty("PasswordResetCompleteForm");

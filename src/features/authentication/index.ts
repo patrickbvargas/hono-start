@@ -1,4 +1,4 @@
-export { ChangePasswordDialog } from "./components/change-password-dialog";
+export { UserProfileDialog } from "./components/user-profile-dialog";
 export { ForcedChangePasswordForm } from "./components/forced-change-password-form";
 export { InvitationSetup } from "./components/invitation";
 export { LoginForm } from "./components/login-form";

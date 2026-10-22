@@ -1,3 +1,4 @@
+import { useUser } from "@clerk/tanstack-react-start";
 import {
 	CircleUserIcon,
 	EllipsisVerticalIcon,
@@ -8,10 +9,11 @@ import {
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useState } from "react";
-import { ChangePasswordDialog, useLogout } from "@/features/authentication";
+import { UserProfileDialog, useLogout } from "@/features/authentication";
 import {
 	Avatar,
 	AvatarFallback,
+	AvatarImage,
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuGroup,
@@ -35,10 +37,13 @@ import { useLoggedUserSession } from "@/shared/session";
 export const NavUser = () => {
 	const { isMobile } = useSidebar();
 	const session = useLoggedUserSession();
+	const { user } = useUser();
+	const fullName = user?.fullName || user?.username || session.user.fullName;
+	const email = user?.primaryEmailAddress?.emailAddress ?? session.user.email;
 	const { handleLogout, isPending } = useLogout();
 	const { theme, setTheme } = useTheme();
-	const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
-	const userInitials = session.user.fullName
+	const [isUserProfileOpen, setIsUserProfileOpen] = useState(false);
+	const userInitials = fullName
 		.split(" ")
 		.filter(Boolean)
 		.slice(0, 2)
@@ -48,23 +53,22 @@ export const NavUser = () => {
 	return (
 		<SidebarMenu>
 			<SidebarMenuItem>
-				<ChangePasswordDialog
-					open={isChangePasswordOpen}
-					onOpenChange={setIsChangePasswordOpen}
+				<UserProfileDialog
+					open={isUserProfileOpen}
+					onOpenChange={setIsUserProfileOpen}
 				/>
 				<DropdownMenu>
 					<DropdownMenuTrigger
 						render={
 							<SidebarMenuButton size="lg">
 								<Avatar>
+									<AvatarImage src={user?.imageUrl} alt={fullName} />
 									<AvatarFallback>{userInitials}</AvatarFallback>
 								</Avatar>
 								<div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
-									<span className="truncate font-medium">
-										{session.user.fullName}
-									</span>
+									<span className="truncate font-medium">{fullName}</span>
 									<span className="text-muted-foreground truncate text-xs">
-										{session.user.email}
+										{email}
 									</span>
 								</div>
 								<EllipsisVerticalIcon
@@ -84,14 +88,13 @@ export const NavUser = () => {
 							<DropdownMenuLabel className="p-0 font-normal">
 								<div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
 									<Avatar className="size-8">
+										<AvatarImage src={user?.imageUrl} alt={fullName} />
 										<AvatarFallback>{userInitials}</AvatarFallback>
 									</Avatar>
 									<div className="grid flex-1 text-left text-sm leading-tight">
-										<span className="truncate font-medium">
-											{session.user.fullName}
-										</span>
+										<span className="truncate font-medium">{fullName}</span>
 										<span className="text-muted-foreground truncate text-xs">
-											{session.user.email}
+											{email}
 										</span>
 									</div>
 								</div>
@@ -101,7 +104,7 @@ export const NavUser = () => {
 						<DropdownMenuGroup>
 							<DropdownMenuItem
 								onClick={() => {
-									setIsChangePasswordOpen(true);
+									setIsUserProfileOpen(true);
 								}}
 							>
 								<CircleUserIcon size={16} />

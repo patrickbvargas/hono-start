@@ -22,7 +22,7 @@ describe("authentication public screen contracts", () => {
 			'export { PasswordResetCompleteForm } from "./components/password-reset-complete-form";',
 		);
 		expect(content).toContain(
-			'export { ChangePasswordDialog } from "./components/change-password-dialog";',
+			'export { UserProfileDialog } from "./components/user-profile-dialog";',
 		);
 		expect(content).toContain(
 			'export { useLogout } from "./hooks/use-logout";',
@@ -50,9 +50,9 @@ describe("authentication public screen contracts", () => {
 		).toContain("export function PasswordResetCompleteForm");
 		expect(
 			read(
-				"src/features/authentication/components/change-password-dialog/index.tsx",
+				"src/features/authentication/components/user-profile-dialog/index.tsx",
 			),
-		).toContain("export function ChangePasswordDialog");
+		).toContain("export function UserProfileDialog");
 	});
 
 	it("keeps public routes declarative and feature-barrel based", () => {
