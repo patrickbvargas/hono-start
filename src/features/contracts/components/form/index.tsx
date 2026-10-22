@@ -238,10 +238,11 @@ function ContractFormContent({
 				<FormSection title="Equipe">
 					<form.AppField name="assignments" mode="array">
 						{(subField) => (
-							<>
+							<div className="space-y-2">
 								<ButtonNew
 									type="button"
 									className="w-fit"
+									variant="secondary"
 									label="Adicionar colaborador"
 									onClick={() =>
 										subField.pushValue(defaultContractAssignmentValues())
@@ -300,17 +301,18 @@ function ContractFormContent({
 										</FieldGroup>
 									)}
 								/>
-							</>
+							</div>
 						)}
 					</form.AppField>
 				</FormSection>
 				<FormSection title="Receitas">
 					<form.AppField name="revenues" mode="array">
 						{(subField) => (
-							<>
+							<div className="space-y-2">
 								<ButtonNew
 									type="button"
 									className="w-fit"
+									variant="secondary"
 									label="Adicionar receita"
 									onClick={() =>
 										subField.pushValue(defaultContractRevenueValues())
@@ -410,7 +412,7 @@ function ContractFormContent({
 										</div>
 									)}
 								/>
-							</>
+							</div>
 						)}
 					</form.AppField>
 				</FormSection>

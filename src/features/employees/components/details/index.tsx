@@ -133,7 +133,6 @@ const EmployeeDetailsContent = ({
 			<EntityDetail.Body>
 				<EntityDetail.Fields items={generalInfo} />
 				<EntityDetail.Separator />
-				<EntityDetail.Separator />
 				<EntityDetail.Section title="Financeiro">
 					<EntityDetail.Fields items={financialInfo} />
 				</EntityDetail.Section>
@@ -141,7 +140,6 @@ const EmployeeDetailsContent = ({
 				<EntityDetail.Section title="Anexos">
 					<AttachmentSection canUpload ownerId={id} ownerKind="employee" />
 				</EntityDetail.Section>
-				<EntityDetail.Separator />
 				<EntityDetail.Separator />
 				<EntityDetail.Section title="Registro">
 					<EntityDetail.Fields items={registerInfo} />
@@ -172,7 +170,6 @@ const EmployeeDetailsFallback = () => (
 		<EntityDetail.Body>
 			<EntityDetail.SkeletonFields rows={4} />
 			<EntityDetail.Separator />
-			<EntityDetail.Separator />
 			<EntityDetail.Section title="Financeiro">
 				<EntityDetail.SkeletonFields rows={2} />
 			</EntityDetail.Section>
@@ -184,7 +181,6 @@ const EmployeeDetailsFallback = () => (
 					ownerKind="employee"
 				/>
 			</EntityDetail.Section>
-			<EntityDetail.Separator />
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Registro">
 				<EntityDetail.SkeletonFields rows={3} />

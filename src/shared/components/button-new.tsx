@@ -14,7 +14,6 @@ interface ButtonNewProps extends React.ComponentPropsWithoutRef<typeof Button> {
 export const ButtonNew = ({
 	permission,
 	label = "Novo",
-	size = "sm",
 	...props
 }: ButtonNewProps) => {
 	const session = useOptionalLoggedUserSession();
@@ -22,7 +21,7 @@ export const ButtonNew = ({
 		return null;
 	}
 	return (
-		<Button size="sm" {...props}>
+		<Button {...props}>
 			<PlusIcon size={16} />
 			<span>{label}</span>
 		</Button>

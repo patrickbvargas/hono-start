@@ -115,3 +115,11 @@ server authorization remains mandatory even for hidden actions.
 ## Business and authentication isolation
 
 See `docs/domain/DOMAIN_MODEL.md` for ownership boundaries. Authentication resolves the optional business actor through server-validated Clerk privateMetadata.employeeId. Employee UI contains business fields only; account administration belongs to Clerk Dashboard.
+
+
+## Application Theme
+
+- `src/styles/global.css` is the single stylesheet for application theme tokens.
+- Edit semantic variables in `:root` and `.dark` to theme shared shadcn UI and Clerk together.
+- Clerk uses its built-in shadcn theme, which consumes these semantic colors. Its font and radius are linked through `--clerk-font-family` and `--clerk-border-radius` on `body` in the base layer, outside the replaceable `:root` and `.dark` theme blocks.
+- Do not add independent colors, fonts, or radii to individual Clerk components through `appearance`.

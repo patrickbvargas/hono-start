@@ -17,25 +17,18 @@ export function Dashboard({ data }: DashboardProps) {
 		<ScrollArea hideScrollbar className="h-full min-h-0 flex flex-col gap-4">
 			<div className="flex flex-col gap-4 p-0.5">
 				<DashboardMetricCards metrics={data.metrics} />
-				{data.cashFlow ? (
-					<>
+				<div className="grid gap-3 xl:grid-cols-2">
+					{data.cashFlow ? (
 						<DashboardCashFlowChart
 							description={data.cashFlow.chartLabel}
 							items={data.cashFlow.chart}
 						/>
-						<DashboardCashFlowTable rows={data.cashFlow.table} />
-					</>
-				) : null}
-				<FinancialEvolutionChart
-					description={data.financialEvolutionLabel}
-					items={data.financialEvolution}
-				/>
-				<DashboardRemunerationTable
-					months={data.remunerationMonths}
-					rows={data.remunerationTable}
-					subtotal={data.remunerationSubtotal}
-				/>
-				<DashboardOverdueInstallmentsTable rows={data.overdueInstallments} />
+					) : null}
+					<FinancialEvolutionChart
+						description={data.financialEvolutionLabel}
+						items={data.financialEvolution}
+					/>
+				</div>
 				<div className="grid gap-3 xl:grid-cols-2">
 					<DashboardBreakdownChart
 						title="Receita por área"
@@ -50,6 +43,15 @@ export function Dashboard({ data }: DashboardProps) {
 						variant="donut"
 					/>
 				</div>
+				{data.cashFlow ? (
+					<DashboardCashFlowTable rows={data.cashFlow.table} />
+				) : null}
+				<DashboardRemunerationTable
+					months={data.remunerationMonths}
+					rows={data.remunerationTable}
+					subtotal={data.remunerationSubtotal}
+				/>
+				<DashboardOverdueInstallmentsTable rows={data.overdueInstallments} />
 			</div>
 		</ScrollArea>
 	);

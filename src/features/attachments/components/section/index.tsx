@@ -63,6 +63,7 @@ export const AttachmentSection = ({
 						permission="org:attachments:upload"
 						className="w-fit"
 						label="Novo anexo"
+						variant="secondary"
 						onClick={() => overlay.create.open()}
 					/>
 				</div>
