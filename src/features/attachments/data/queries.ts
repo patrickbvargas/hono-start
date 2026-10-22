@@ -1,4 +1,4 @@
-import { createAttachmentSignedUrl } from "@/shared/lib/attachment-storage";
+import { env } from "@/shared/config/env";
 import { prisma } from "@/shared/lib/prisma";
 import type { ContractAccessResource } from "@/shared/session";
 import type {
@@ -189,9 +189,8 @@ export async function getAttachmentsByOwner(params: {
 			typeId: attachment.type.id,
 			type: attachment.type.label,
 			typeValue: attachment.type.value,
-			downloadUrl: await createAttachmentSignedUrl({
-				path: attachment.storagePath,
-			}),
+			downloadUrl: new URL(`/api/attachments/${attachment.id}`, env.APP_URL)
+				.href,
 			isActive: attachment.isActive,
 			isSoftDeleted: Boolean(attachment.deletedAt),
 			createdAt: attachment.createdAt.toISOString(),
@@ -211,6 +210,7 @@ export async function getAttachmentAccessById(
 	id: number;
 	resource: { firmId: number };
 	storagePath: string;
+	mimeType: string;
 	ownerInput: AttachmentOwnerInput;
 }> | null> {
 	const attachment = await prisma.attachment.findFirst({
@@ -220,6 +220,7 @@ export async function getAttachmentAccessById(
 			fileName: true,
 			firmId: true,
 			storagePath: true,
+			mimeType: true,
 			deletedAt: true,
 			clientId: true,
 			employeeId: true,
@@ -236,6 +237,7 @@ export async function getAttachmentAccessById(
 		id: attachment.id,
 		fileName: attachment.fileName,
 		storagePath: attachment.storagePath,
+		mimeType: attachment.mimeType,
 		deletedAt: attachment.deletedAt,
 		resource: { firmId: attachment.firmId },
 		ownerInput: {

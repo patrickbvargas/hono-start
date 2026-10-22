@@ -81,3 +81,7 @@ This document defines reusable trust-boundary and authorization rules for the re
 ## Business and authentication isolation
 
 See `docs/domain/DOMAIN_MODEL.md` for ownership boundaries. Authentication resolves the optional business actor through server-validated Clerk privateMetadata.employeeId. Employee UI contains business fields only; account administration belongs to Clerk Dashboard.
+
+## Local attachment storage
+
+ATTACHMENTS_DIR is a private absolute directory outside public assets and build output. Attachment binaries are delivered only through authenticated, firm- and owner-authorized requests. Paths cannot escape the root or traverse symbolic links. Restrict filesystem writers to the application account; do not expose this directory through a web server. Responses use private/no-store caching and nosniff.

@@ -15,7 +15,7 @@ These technical choices are mandatory for this repository:
 - Tables: TanStack Table
 - ORM: Prisma
 - Database: PostgreSQL
-- File storage: Supabase Storage
+- File storage: private local filesystem (ATTACHMENTS_DIR)
 - Authentication and permission grants: Clerk (official TanStack React Start SDK)
 - UI components: shadcn/ui via shared re-exports only
 - Validation: Zod

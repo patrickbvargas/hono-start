@@ -140,7 +140,7 @@ The system SHALL enforce authenticated upload and view permissions and administr
 
 #### Scenario: Administrator can delete attachment
 - **WHEN** an administrator confirms deletion for an attachment in the same firm
-- **THEN** the system soft-deletes the attachment record
+- **THEN** the system permanently deletes both the storage object and the attachment record
 - **AND** the attachment is removed from the default attachment list
 
 ### Requirement: Attachment operations preserve tenant isolation

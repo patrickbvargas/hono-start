@@ -4,7 +4,6 @@ import { prisma } from "../src/shared/lib/prisma";
 
 try {
 	const client = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
-	const storageStatus = process.env.SUPABASE_URL && process.env.SUPABASE_STORAGE_SERVICE_KEY ? (await fetch(`${process.env.SUPABASE_URL}/storage/v1/bucket/${process.env.SUPABASE_STORAGE_BUCKET ?? "attachments"}`, { headers: { apikey: process.env.SUPABASE_STORAGE_SERVICE_KEY, Authorization: `Bearer ${process.env.SUPABASE_STORAGE_SERVICE_KEY}` } })).status : null;
 const [roles, organizations, firms, employees, users, adminCandidates] = await Promise.all([
 		client.organizationRoles.getOrganizationRoleList({ limit: 100 }),
 		client.organizations.getOrganizationList({ limit: 100 }),
@@ -19,7 +18,6 @@ prisma.employee.findMany({ select: { id: true, fullName: true } }),
 		firms, employeeCount: employees,
 clerkUsers: users.data.map((user) => ({ id: user.id, name: user.firstName, matchingAdminIds: adminCandidates.filter((employee) => employee.id === user.privateMetadata.employeeId).map((employee) => employee.id) })),
 adminCandidates: adminCandidates.map(({ id, fullName }) => ({ id, fullName })),
-		storageBucketStatus: storageStatus,
 webhookConfigured: Boolean(process.env.CLERK_WEBHOOK_SIGNING_SECRET),
 	}, null, 2));
 } catch (error) {

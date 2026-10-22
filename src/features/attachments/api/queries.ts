@@ -1,6 +1,5 @@
 import { queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
-import { assertCan } from "@/shared/session";
 import {
 	authMiddleware,
 	getRequiredServerLoggedUserSession,
@@ -12,6 +11,7 @@ import {
 	assertAttachmentOwnerExists,
 	getAttachmentsByOwner,
 } from "../data/queries";
+import { assertAttachmentOwnerReadAccess } from "../rules/access";
 import {
 	type AttachmentListInput,
 	attachmentListInputSchema,
@@ -30,32 +30,6 @@ export const attachmentKeys = {
 		return [...attachmentKeys.all, "list", owner, input] as const;
 	},
 };
-
-function assertAttachmentOwnerReadAccess(
-	session: Awaited<ReturnType<typeof getRequiredServerLoggedUserSession>>,
-	owner: Awaited<ReturnType<typeof assertAttachmentOwnerExists>>,
-) {
-	assertCan(session, "org:attachments:read", owner.access.resource);
-	if (owner.owner.ownerKind === "client") {
-		assertCan(session, "org:clients:read", owner.access.resource);
-	}
-
-	if (owner.owner.ownerKind === "employee") {
-		assertCan(session, "org:employees:read", owner.access.resource);
-	}
-
-	if (owner.owner.ownerKind === "contract") {
-		assertCan(
-			session,
-			["org:contracts:read_all", "org:contracts:read_assigned"],
-			owner.access.resource,
-		);
-	}
-
-	if (owner.owner.ownerKind === "expense") {
-		assertCan(session, "org:expenses:read", owner.access.resource);
-	}
-}
 
 const getAttachmentsByOwnerFn = createServerFn({ method: "GET" })
 	.middleware([authMiddleware])

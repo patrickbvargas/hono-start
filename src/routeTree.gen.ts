@@ -23,6 +23,7 @@ import { Route as AppRemuneracoesRouteImport } from './routes/_app/remuneracoes'
 import { Route as AuthConviteRouteImport } from './routes/_auth/convite'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
 import { Route as AuthRecuperarSenhaRouteImport } from './routes/_auth/recuperar-senha'
+import { Route as ApiAttachmentsIdRouteImport } from './routes/api/attachments/$id'
 import { Route as ApiWebhooksClerkRouteImport } from './routes/api/webhooks/clerk'
 
 const AppRouteRoute = AppRouteRouteImport.update({
@@ -94,6 +95,11 @@ const AuthRecuperarSenhaRoute = AuthRecuperarSenhaRouteImport.update({
   path: '/recuperar-senha',
   getParentRoute: () => AuthRouteRoute,
 } as any)
+const ApiAttachmentsIdRoute = ApiAttachmentsIdRouteImport.update({
+  id: '/api/attachments/$id',
+  path: '/api/attachments/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiWebhooksClerkRoute = ApiWebhooksClerkRouteImport.update({
   id: '/api/webhooks/clerk',
   path: '/api/webhooks/clerk',
@@ -113,6 +119,7 @@ export interface FileRoutesByFullPath {
   '/convite': typeof AuthConviteRoute
   '/login': typeof AuthLoginRoute
   '/recuperar-senha': typeof AuthRecuperarSenhaRoute
+  '/api/attachments/$id': typeof ApiAttachmentsIdRoute
   '/api/webhooks/clerk': typeof ApiWebhooksClerkRoute
 }
 export interface FileRoutesByTo {
@@ -128,6 +135,7 @@ export interface FileRoutesByTo {
   '/convite': typeof AuthConviteRoute
   '/login': typeof AuthLoginRoute
   '/recuperar-senha': typeof AuthRecuperarSenhaRoute
+  '/api/attachments/$id': typeof ApiAttachmentsIdRoute
   '/api/webhooks/clerk': typeof ApiWebhooksClerkRoute
 }
 export interface FileRoutesById {
@@ -146,6 +154,7 @@ export interface FileRoutesById {
   '/_auth/login': typeof AuthLoginRoute
   '/_auth/recuperar-senha': typeof AuthRecuperarSenhaRoute
   '/_app/': typeof AppIndexRoute
+  '/api/attachments/$id': typeof ApiAttachmentsIdRoute
   '/api/webhooks/clerk': typeof ApiWebhooksClerkRoute
 }
 export interface FileRouteTypes {
@@ -163,6 +172,7 @@ export interface FileRouteTypes {
     | '/convite'
     | '/login'
     | '/recuperar-senha'
+    | '/api/attachments/$id'
     | '/api/webhooks/clerk'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -178,6 +188,7 @@ export interface FileRouteTypes {
     | '/convite'
     | '/login'
     | '/recuperar-senha'
+    | '/api/attachments/$id'
     | '/api/webhooks/clerk'
   id:
     | '__root__'
@@ -195,12 +206,14 @@ export interface FileRouteTypes {
     | '/_auth/login'
     | '/_auth/recuperar-senha'
     | '/_app/'
+    | '/api/attachments/$id'
     | '/api/webhooks/clerk'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   AppRouteRoute: typeof AppRouteRouteWithChildren
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
+  ApiAttachmentsIdRoute: typeof ApiAttachmentsIdRoute
   ApiWebhooksClerkRoute: typeof ApiWebhooksClerkRoute
 }
 
@@ -304,6 +317,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRecuperarSenhaRouteImport
       parentRoute: typeof AuthRouteRoute
     }
+    '/api/attachments/$id': {
+      id: '/api/attachments/$id'
+      path: '/api/attachments/$id'
+      fullPath: '/api/attachments/$id'
+      preLoaderRoute: typeof ApiAttachmentsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/webhooks/clerk': {
       id: '/api/webhooks/clerk'
       path: '/api/webhooks/clerk'
@@ -361,6 +381,7 @@ const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   AppRouteRoute: AppRouteRouteWithChildren,
   AuthRouteRoute: AuthRouteRouteWithChildren,
+  ApiAttachmentsIdRoute: ApiAttachmentsIdRoute,
   ApiWebhooksClerkRoute: ApiWebhooksClerkRoute,
 }
 export const routeTree = rootRouteImport

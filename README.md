@@ -44,7 +44,7 @@ The Prisma schema includes the core tenant model, lookup catalogs, clients, empl
 - TanStack Table
 - Prisma
 - PostgreSQL
-- Supabase Storage
+- Private local attachment storage (`ATTACHMENTS_DIR`)
 - Clerk Auth
 - shadcn/ui through shared UI re-exports
 - Zod
