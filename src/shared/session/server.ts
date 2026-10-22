@@ -1,15 +1,15 @@
 import { auth, clerkClient } from "@clerk/tanstack-react-start/server";
+import { createMiddleware, createServerOnlyFn } from "@tanstack/react-start";
 import { getRequest } from "@tanstack/react-start/server";
 import * as z from "zod";
 import { prisma } from "@/shared/lib/prisma";
-import { clerkPermissionSchema } from "./catalog";
-import { loggedUserSessionSchema } from "./schema";
-import { getScope } from "./scope";
+import { getScope } from "./access";
 import type {
 	LoggedUserSession,
 	SessionScope,
 	SessionScopeSubject,
-} from "./types";
+} from "./schema";
+import { clerkPermissionSchema, loggedUserSessionSchema } from "./schema";
 
 const UNAUTHENTICATED_ERROR_MESSAGE =
 	"Sua sessão expirou. Faça login novamente.";
@@ -86,7 +86,6 @@ async function resolveDomainSession(): Promise<LoggedUserSession | null> {
 	});
 	return loggedUserSessionSchema.parse({
 		user: {
-			id: employee?.id ?? null,
 			fullName:
 				[user.firstName, user.lastName].filter(Boolean).join(" ") ||
 				user.username ||
@@ -99,7 +98,6 @@ async function resolveDomainSession(): Promise<LoggedUserSession | null> {
 		employee: { id: employee?.id ?? null },
 		firm,
 		employeeType: employee?.type ?? null,
-		role: { id: 0, value: membership.role, label: membership.role },
 		permissions,
 		clerk: {
 			userId: identity.userId,
@@ -114,16 +112,18 @@ const requestSessions = new WeakMap<
 	Promise<LoggedUserSession | null>
 >();
 
-export async function getOptionalServerLoggedUserSession() {
-	const request = getRequest();
-	const existing = requestSessions.get(request);
-	if (existing) {
-		return existing;
-	}
-	const pending = resolveDomainSession();
-	requestSessions.set(request, pending);
-	return pending;
-}
+export const getOptionalServerLoggedUserSession = createServerOnlyFn(
+	async () => {
+		const request = getRequest();
+		const existing = requestSessions.get(request);
+		if (existing) {
+			return existing;
+		}
+		const pending = resolveDomainSession();
+		requestSessions.set(request, pending);
+		return pending;
+	},
+);
 
 export async function getRequiredServerLoggedUserSession() {
 	const session = await getOptionalServerLoggedUserSession();
@@ -140,3 +140,19 @@ export async function getServerScope(
 ): Promise<SessionScope> {
 	return getScope(await getRequiredServerLoggedUserSession(), subject);
 }
+
+export interface AuthenticatedServerFunctionContext {
+	session: LoggedUserSession;
+}
+
+export const authMiddleware = createMiddleware({
+	type: "function",
+}).server(async ({ next }) => {
+	const session = await getRequiredServerLoggedUserSession();
+
+	return next({
+		context: {
+			session,
+		} satisfies AuthenticatedServerFunctionContext,
+	});
+});

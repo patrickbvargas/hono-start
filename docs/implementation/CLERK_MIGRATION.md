@@ -39,7 +39,7 @@ actual instance before cutover; no plan availability is assumed.
 
 ## Permission catalog and domain mappings
 
-`src/shared/session/catalog.ts` defines the finite business feature/action names.
+`src/shared/session/schema.ts` defines the finite business feature/action names.
 It is a vocabulary for checks, not a role-to-permission grant matrix. Assign
 grants to roles in Clerk. `org:sys_*:*` remains Clerk-owned System Permissions.
 `org:accounts:manage` groups account administration explicitly; it is not a

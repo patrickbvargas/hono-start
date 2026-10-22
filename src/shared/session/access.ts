@@ -1,9 +1,4 @@
-import type { ClerkPermission } from "./catalog";
-import {
-	getCurrentEmployeeId,
-	getCurrentFirmId,
-	hasPermission,
-} from "./selectors";
+import type { ClerkPermission } from "./schema";
 import {
 	CONTRACT_STATUS_CANCELLED_VALUE,
 	CONTRACT_STATUS_COMPLETED_VALUE,
@@ -17,7 +12,9 @@ import {
 	SESSION_EMPLOYEE_TYPE_ADMIN_ASSISTANT_VALUE,
 	SESSION_EMPLOYEE_TYPE_LAWYER_VALUE,
 	type SessionResource,
-} from "./types";
+	type SessionScope,
+	type SessionScopeSubject,
+} from "./schema";
 
 function isSameFirm(
 	session: LoggedUserSession,
@@ -27,7 +24,7 @@ function isSameFirm(
 		return true;
 	}
 
-	return resource.firmId === getCurrentFirmId(session);
+	return resource.firmId === session.firm.id;
 }
 
 function isAssignedToActor(
@@ -107,20 +104,6 @@ export function isContractWritable(
 	return !isContractReadOnly(resource);
 }
 
-function canAccessOwnRemuneration(
-	session: LoggedUserSession,
-	resource?: RemunerationAccessResource | null,
-) {
-	if (!resource) {
-		return true;
-	}
-
-	return (
-		isSameFirm(session, resource) &&
-		resource.employeeId === getCurrentEmployeeId(session)
-	);
-}
-
 // Permission membership is checked directly; the rest enforces domain scope.
 export function can(
 	session: LoggedUserSession,
@@ -170,9 +153,10 @@ export function can(
 		key === "org:remunerations:read_own" ||
 		key === "org:remunerations:export_own"
 	) {
-		return canAccessOwnRemuneration(
-			session,
-			resource as RemunerationAccessResource,
+		return (
+			!resource ||
+			(resource as RemunerationAccessResource).employeeId ===
+				session.employee.id
 		);
 	}
 	return true;
@@ -185,5 +169,54 @@ export function assertCan(
 ) {
 	if (!can(session, permission, resource)) {
 		throw new Error("Você não tem permissão para esta operação.");
+	}
+}
+
+export function getCurrentEmployeeId(session: LoggedUserSession) {
+	if (session.employee.id === null) {
+		throw new Error("Conta sem colaborador vinculado para esta operação.");
+	}
+	return session.employee.id;
+}
+
+export function hasPermission(
+	session: Pick<LoggedUserSession, "permissions"> | null | undefined,
+	permission: ClerkPermission,
+) {
+	return session?.permissions.includes(permission) ?? false;
+}
+
+export function getScope(
+	session: LoggedUserSession,
+	subject: SessionScopeSubject,
+): SessionScope {
+	switch (subject) {
+		case "attachment":
+		case "audit-log":
+		case "client":
+		case "dashboard":
+		case "expense":
+		case "employee":
+			return { firmId: session.firm.id };
+		case "contract":
+		case "fee":
+		case "remuneration":
+			if (
+				hasPermission(
+					session,
+					subject === "contract"
+						? "org:contracts:read_all"
+						: subject === "fee"
+							? "org:fees:read_all"
+							: "org:remunerations:read_all",
+				)
+			) {
+				return { firmId: session.firm.id };
+			}
+
+			return {
+				firmId: session.firm.id,
+				employeeId: getCurrentEmployeeId(session),
+			};
 	}
 }

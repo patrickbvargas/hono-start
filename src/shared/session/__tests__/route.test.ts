@@ -4,23 +4,16 @@ const { redirectMock } = vi.hoisted(() => ({
 	redirectMock: vi.fn(({ to, search }) => ({ to, search })),
 }));
 
-vi.mock("@tanstack/react-router", () => ({
+vi.mock("@tanstack/react-router", async (importOriginal) => ({
+	...(await importOriginal<typeof import("@tanstack/react-router")>()),
 	redirect: redirectMock,
 }));
 
-vi.mock("../query", () => ({
-	sessionKeys: {
-		current: () => ["session", "current"],
-	},
-	getCurrentSessionQueryOptions: () => ({ queryKey: ["session", "current"] }),
-}));
-
 import {
-	getAuthenticatedHomePath,
 	getRouteSession,
 	getSafeInternalRedirectPath,
 	requireRouteSession,
-} from "../route";
+} from "../client";
 
 describe("route session helpers", () => {
 	beforeEach(() => {
@@ -35,9 +28,11 @@ describe("route session helpers", () => {
 		await expect(requireRouteSession(queryClient as never)).resolves.toEqual({
 			user: { id: 7 },
 		});
-		expect(queryClient.fetchQuery).toHaveBeenCalledWith({
-			queryKey: ["session", "current"],
-		});
+		expect(queryClient.fetchQuery).toHaveBeenCalledWith(
+			expect.objectContaining({
+				queryKey: ["session", "current"],
+			}),
+		);
 	});
 
 	it("redirects protected routes to /login when the shared session query rejects", async () => {
@@ -88,9 +83,11 @@ describe("route session helpers", () => {
 		};
 
 		await expect(getRouteSession(queryClient as never)).resolves.toBeNull();
-		expect(queryClient.fetchQuery).toHaveBeenCalledWith({
-			queryKey: ["session", "current"],
-		});
+		expect(queryClient.fetchQuery).toHaveBeenCalledWith(
+			expect.objectContaining({
+				queryKey: ["session", "current"],
+			}),
+		);
 	});
 
 	it("accepts only safe internal redirect targets", () => {
@@ -105,23 +102,5 @@ describe("route session helpers", () => {
 		expect(getSafeInternalRedirectPath("https://evil.test")).toBeUndefined();
 		expect(getSafeInternalRedirectPath("//evil.test")).toBeUndefined();
 		expect(getSafeInternalRedirectPath(undefined)).toBeUndefined();
-	});
-
-	it("returns the product home after provider-owned session tasks", () => {
-		expect(
-			getAuthenticatedHomePath({
-				user: { id: 1, fullName: "Carlos", email: "carlos@example.com" },
-				employee: { id: 1 },
-				firm: { id: 1, name: "Matriz" },
-				employeeType: { id: 1, value: "LAWYER", label: "Advogado" },
-				role: { id: 1, value: "USER", label: "Usuário" },
-				permissions: [],
-				clerk: {
-					userId: "user_test",
-					organizationId: "org_test",
-					sessionId: "sess_test",
-				},
-			}),
-		).toBe("/");
 	});
 });

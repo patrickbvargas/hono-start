@@ -2,8 +2,8 @@ import { mutationOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
 import { assertCan } from "@/shared/session";
-import { authMiddleware } from "@/shared/session/middleware";
 import {
+	authMiddleware,
 	getRequiredServerLoggedUserSession,
 	getServerScope,
 } from "@/shared/session/server";

@@ -4,12 +4,13 @@ const { useContextMock } = vi.hoisted(() => ({
 	useContextMock: vi.fn(),
 }));
 
-vi.mock("react", () => ({
+vi.mock("react", async (importOriginal) => ({
+	...(await importOriginal<typeof import("react")>()),
 	createContext: vi.fn(() => ({})),
 	useContext: useContextMock,
 }));
 
-import { useLoggedUserSession, useLoggedUserSessionStore } from "../provider";
+import { useLoggedUserSession } from "../client";
 
 describe("shared session hooks", () => {
 	beforeEach(() => {
@@ -19,20 +20,18 @@ describe("shared session hooks", () => {
 	it("returns the authenticated actor from the session context", () => {
 		useContextMock.mockReturnValue({
 			user: {
-				id: 7,
 				fullName: "Carlos Mendes",
 				email: "carlos@example.com",
 			},
 			employee: { id: 7 },
 			firm: { id: 1, name: "Matriz" },
 			employeeType: { id: 2, value: "LAWYER", label: "Advogado" },
-			role: { id: 1, value: "ADMIN", label: "Administrador" },
 		});
 
 		expect(useLoggedUserSession()).toEqual(
 			expect.objectContaining({
 				user: expect.objectContaining({
-					id: 7,
+					fullName: "Carlos Mendes",
 				}),
 			}),
 		);
@@ -46,20 +45,18 @@ describe("shared session hooks", () => {
 		);
 	});
 
-	it("applies selectors against the authenticated actor", () => {
+	it("exposes the account profile independently of the business employee", () => {
 		useContextMock.mockReturnValue({
 			user: {
-				id: 9,
 				fullName: "Amanda Admin",
 				email: "amanda@example.com",
 			},
 			employee: { id: 10 },
 			firm: { id: 100, name: "Matriz" },
 			employeeType: { id: 3, value: "LAWYER", label: "Advogado" },
-			role: { id: 1, value: "ADMIN", label: "Administrador" },
 		});
 
-		const email = useLoggedUserSessionStore((session) => session.user.email);
+		const email = useLoggedUserSession().user.email;
 
 		expect(email).toBe("amanda@example.com");
 	});

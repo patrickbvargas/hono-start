@@ -62,9 +62,7 @@ vi.mock("@/shared/session", () => ({
 		_session: unknown,
 		action: "org:employees:read" | "org:audit_logs:read" | string,
 	) => action !== "org:employees:read",
-	useLoggedUserSessionStore: (
-		selector: (session: { role: { value: string } }) => unknown,
-	) => selector({ role: { value: "USER" } }),
+	useLoggedUserSession: () => ({ permissions: [] }),
 }));
 
 import { NavMain } from "../components/nav-main";

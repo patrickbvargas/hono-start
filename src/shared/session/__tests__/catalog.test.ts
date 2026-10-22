@@ -3,7 +3,7 @@ import {
 	clerkPermissionCatalog,
 	clerkPermissionSchema,
 	clerkPermissions,
-} from "./catalog";
+} from "../schema";
 
 describe("Clerk business permission catalog", () => {
 	it("uses unique feature/action keys without provider system features", () => {

@@ -1,10 +1,11 @@
 vi.mock("@tanstack/react-start/server", () => ({
-	getRequest: () => new Request("http://localhost"),
+	getRequest: () => mocks.request(),
 }));
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
+	request: vi.fn(),
 	auth: vi.fn(),
 	memberships: vi.fn(),
 	employee: vi.fn(),
@@ -27,6 +28,7 @@ vi.mock("@/shared/lib/prisma", () => ({
 }));
 
 import {
+	authMiddleware,
 	getOptionalServerLoggedUserSession,
 	getRequiredServerLoggedUserSession,
 } from "../server";
@@ -34,6 +36,7 @@ import {
 describe("Clerk domain session", () => {
 	beforeEach(() => {
 		vi.resetAllMocks();
+		mocks.request.mockImplementation(() => new Request("http://localhost"));
 		mocks.providerSession.mockResolvedValue({
 			status: "active",
 			userId: "user_one",
@@ -62,16 +65,39 @@ describe("Clerk domain session", () => {
 		});
 		mocks.employee.mockResolvedValue({
 			id: 7,
-			fullName: "Carlos",
-			email: "carlos@example.com",
-			firm: { id: 1, name: "Firm" },
 			type: { id: 2, value: "LAWYER", label: "Advogado" },
 		});
+	});
+	it("injects verified context into protected server functions", async () => {
+		const next = vi.fn(async ({ context }) => context);
+		const server = authMiddleware.options.server as unknown as (options: {
+			next: typeof next;
+		}) => Promise<unknown>;
+		await server({ next });
+		expect(next).toHaveBeenCalledWith({
+			context: {
+				session: expect.objectContaining({
+					employee: { id: 7 },
+					permissions: ["org:clients:read"],
+				}),
+			},
+		});
+	});
+	it("stops unauthenticated server functions before feature execution", async () => {
+		mocks.auth.mockResolvedValue({ isAuthenticated: false });
+		const next = vi.fn();
+		const server = authMiddleware.options.server as unknown as (options: {
+			next: typeof next;
+		}) => Promise<unknown>;
+		await expect(server({ next })).rejects.toThrow("Sua sessão expirou");
+		expect(next).not.toHaveBeenCalled();
 	});
 	it("uses current grants and active employee mapping independently of firm organization", async () => {
 		const session = await getRequiredServerLoggedUserSession();
 		expect(session.permissions).toEqual(["org:clients:read"]);
-		expect(session.role.value).toBe("org:custom");
+		expect(session).not.toHaveProperty("role");
+		expect(session.user).not.toHaveProperty("id");
+		expect(session.employee).toEqual({ id: 7 });
 		expect(mocks.employee).toHaveBeenCalledWith(
 			expect.objectContaining({
 				where: {
@@ -155,6 +181,18 @@ describe("Clerk domain session", () => {
 		mocks.memberships.mockRejectedValue(new Error("unavailable"));
 		await expect(getRequiredServerLoggedUserSession()).rejects.toThrow();
 		expect(mocks.employee).not.toHaveBeenCalled();
+	});
+	it("reuses the verified context only within the same request", async () => {
+		mocks.request.mockReturnValue(new Request("http://localhost"));
+		const [first, second] = await Promise.all([
+			getRequiredServerLoggedUserSession(),
+			getRequiredServerLoggedUserSession(),
+		]);
+		expect(first).toBe(second);
+		expect(mocks.auth).toHaveBeenCalledTimes(1);
+		expect(mocks.memberships).toHaveBeenCalledTimes(1);
+		expect(mocks.user).toHaveBeenCalledTimes(1);
+		expect(mocks.employee).toHaveBeenCalledTimes(1);
 	});
 	it("does not reuse grants across requests", async () => {
 		expect((await getRequiredServerLoggedUserSession()).permissions).toContain(

@@ -31,7 +31,7 @@ vi.mock("@/shared/session", () => ({
 		permissions: ["org:attachments:upload"],
 	}),
 	hasPermission: () => true,
-	useLoggedUserSessionStore: () => true,
+	useLoggedUserSession: () => true,
 }));
 
 vi.mock("../components/form", () => ({

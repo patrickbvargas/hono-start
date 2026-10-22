@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { createClerkClient } from "@clerk/backend";
-import { clerkPermissions, type ClerkPermission } from "../src/shared/session/catalog";
+import { clerkPermissions, type ClerkPermission } from "../src/shared/session/schema";
 
 // Initial development bootstrap only. This is never imported by runtime policy.
 const memberGrants: ClerkPermission[] = [

@@ -1,5 +1,5 @@
 import { OrganizationList, SignIn, useAuth } from "@clerk/tanstack-react-start";
-import { getSafeInternalRedirectPath } from "@/shared/session/route";
+import { getSafeInternalRedirectPath } from "@/shared/session/client";
 
 interface LoginFormProps {
 	redirectTo?: string;

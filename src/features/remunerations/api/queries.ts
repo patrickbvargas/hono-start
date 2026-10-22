@@ -7,8 +7,10 @@ import {
 	getCurrentEmployeeId,
 	hasPermission,
 } from "@/shared/session";
-import { authMiddleware } from "@/shared/session/middleware";
-import { getRequiredServerLoggedUserSession } from "@/shared/session/server";
+import {
+	authMiddleware,
+	getRequiredServerLoggedUserSession,
+} from "@/shared/session/server";
 import type {
 	QueryManyReturnType,
 	QueryOneReturnType,

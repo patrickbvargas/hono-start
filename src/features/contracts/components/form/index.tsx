@@ -18,7 +18,7 @@ import {
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { Option } from "@/shared/schemas/option";
-import { hasPermission, useLoggedUserSessionStore } from "@/shared/session";
+import { hasPermission, useLoggedUserSession } from "@/shared/session";
 import type { OverlayState } from "@/shared/types/overlay";
 import {
 	CONTRACT_MAX_EMPLOYEES,
@@ -152,9 +152,8 @@ function ContractFormContent({
 }: ContractFormContentProps) {
 	const rowKeysRef = useRef(new WeakMap<object, string>());
 	const rowKeyCountRef = useRef(0);
-	const isAdmin = useLoggedUserSessionStore((session) =>
-		hasPermission(session, "org:contracts:update_all"),
-	);
+	const session = useLoggedUserSession();
+	const isAdmin = hasPermission(session, "org:contracts:update_all");
 
 	const getRowKey = (value: object) => {
 		const existingKey = rowKeysRef.current.get(value);

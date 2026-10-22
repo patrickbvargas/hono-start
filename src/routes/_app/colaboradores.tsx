@@ -27,7 +27,7 @@ import type { EntityId } from "@/shared/schemas/entity";
 import {
 	assertCan,
 	hasPermission,
-	useLoggedUserSessionStore,
+	useLoggedUserSession,
 } from "@/shared/session";
 
 export const Route = createFileRoute("/_app/colaboradores")({
@@ -56,9 +56,8 @@ function RouteComponent() {
 	const search = Route.useSearch();
 	const { employees } = useEmployees(search);
 	const { overlay } = useOverlay<EntityId>();
-	const canManage = useLoggedUserSessionStore((session) =>
-		hasPermission(session, "org:employees:read"),
-	);
+	const session = useLoggedUserSession();
+	const canManage = hasPermission(session, "org:employees:read");
 
 	return (
 		<Wrapper

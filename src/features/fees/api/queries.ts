@@ -4,8 +4,8 @@ import * as z from "zod";
 import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
 import type { Option } from "@/shared/schemas/option";
 import { assertCan, hasPermission } from "@/shared/session";
-import { authMiddleware } from "@/shared/session/middleware";
 import {
+	authMiddleware,
 	getRequiredServerLoggedUserSession,
 	getServerScope,
 } from "@/shared/session/server";

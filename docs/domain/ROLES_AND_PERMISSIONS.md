@@ -4,7 +4,7 @@
 
 Clerk exclusively owns authentication, Organization memberships, roles and permission grants. Firm is an independent business unit; Employee is a business entity; Clerk privateMetadata.employeeId optionally identifies an active collaborator. Organization membership does not define a firm access boundary. Missing membership denies product access. An explicit invalid or inactive/deleted employeeId binding denies the session; an absent binding disables own/assigned capabilities only. A role name never bypasses a permission check.
 
-Business permissions use `org:<feature>:<permission>`. See the approved catalog in `src/shared/session/catalog.ts` and deployment guidance in `docs/implementation/CLERK_MIGRATION.md`. Read, create, update, delete, restore and export grants are independent. `manage` is explicit only for account administration. Provider `sys_*` permissions retain their native purpose.
+Business permissions use `org:<feature>:<permission>`. See the approved catalog in `src/shared/session/schema.ts` and deployment guidance in `docs/implementation/CLERK_MIGRATION.md`. Read, create, update, delete, restore and export grants are independent. `manage` is explicit only for account administration. Provider `sys_*` permissions retain their native purpose.
 
 The following matrix describes initial role presets to configure in Clerk, not immutable application grants. Future custom roles may differ. Native RBAC is the current scope; no per-user grant exceptions. All references to administrator-only behavior below mean the corresponding explicit permission in the initial preset.
 

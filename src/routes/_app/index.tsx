@@ -53,7 +53,7 @@ import type { EntityId } from "@/shared/schemas/entity";
 import {
 	assertCan,
 	hasPermission,
-	useLoggedUserSessionStore,
+	useLoggedUserSession,
 } from "@/shared/session";
 
 export const Route = createFileRoute("/_app/")({
@@ -117,13 +117,8 @@ export const Route = createFileRoute("/_app/")({
 function RouteComponent() {
 	const search = Route.useSearch();
 	const { summary } = useDashboardData(search);
-	const isAdmin = useLoggedUserSessionStore(
-		(session) =>
-			(["org:dashboard:read_all", "org:dashboard:read_own"] as const).some(
-				(permission) => hasPermission(session, permission),
-			) && session.permissions.includes("org:dashboard:read_all"),
-	);
-	const session = useLoggedUserSessionStore((current) => current);
+	const session = useLoggedUserSession();
+	const isAdmin = hasPermission(session, "org:dashboard:read_all");
 	const clientOverlay = useOverlay<EntityId>();
 	const contractOverlay = useOverlay<EntityId>();
 	const feeOverlay = useOverlay<EntityId>();

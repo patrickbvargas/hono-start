@@ -33,7 +33,10 @@ This document defines reusable trust-boundary and authorization rules for the re
 
 ## Session Policy Shape
 
-- Session selectors determine current role, tenant scope, and actor identity.
+- Session contains the Clerk identity and current permission grants, an optional business Employee binding, the employee type, and the default business firm. It carries no local role or duplicate Employee ID in the account profile.
+- `server.ts` verifies Clerk state and resolves business context once per request. It never computes grants from business data.
+- Session has four implementation modules: `schema.ts` holds the Zod contract, permission keys and types; `server.ts` holds verification and middleware; `client.tsx` holds route queries, React context and identity-change invalidation; `access.ts` holds resource checks and business scopes. `index.ts` exports browser-safe APIs. Protected server operations import middleware and resolvers directly from `server.ts`.
+- React consumers read `useLoggedUserSession()` from the route provider and use ordinary permission checks. There is no separate session store or local credential lifecycle.
 - Session scope utilities derive tenant-scoped or actor-scoped access for each subject area.
 - Session policy utilities decide whether an action is allowed against a resource and must remain aligned with the domain role model.
 
@@ -69,10 +72,9 @@ This document defines reusable trust-boundary and authorization rules for the re
 - The official SDK verifies auth context; `src/start.ts` explicitly includes CSRF middleware for server functions.
 - Every protected request verifies current provider session, user restrictions and Organization membership; request-local reuse avoids repeated lookups within that request. Provider failures deny execution.
 - Custom permission grants derive from current Backend API membership state, not stale JWTs, client metadata or webhook delivery.
-- Firm/Employee string links establish the actor. Active/deleted, assignment and writable-resource constraints remain server-side domain checks.
-- Role delegation cannot exceed the current actor's provider grants. Revocation affects only the current Organization.
+- The optional metadata Employee binding establishes the business actor. Active/deleted, assignment and writable-resource constraints remain server-side domain checks; Firm is resolved independently of Clerk Organizations.
 - Clerk owns credential policy, email verification, session duration and attack protection.
-- Webhooks verify the raw request signature and deduplicate delivery IDs; reconciliation fetches current provider state rather than trusting delayed snapshots.
+- Webhooks verify the raw request signature and deduplicate delivery IDs. They never synchronize authentication data into Employee.
 - Public keys use the Vite public boundary. Secret/webhook keys use validated server env only.
 - See CLERK_MIGRATION.md for deployment, rate-limit and cutover prerequisites.
 

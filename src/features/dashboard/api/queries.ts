@@ -4,11 +4,12 @@ import type { Option } from "@/shared/schemas/option";
 import {
 	assertCan,
 	getCurrentEmployeeId,
-	getCurrentFirmId,
 	hasPermission,
 } from "@/shared/session";
-import { authMiddleware } from "@/shared/session/middleware";
-import { getRequiredServerLoggedUserSession } from "@/shared/session/server";
+import {
+	authMiddleware,
+	getRequiredServerLoggedUserSession,
+} from "@/shared/session/server";
 import type {
 	QueryManyReturnType,
 	QueryOneReturnType,
@@ -38,7 +39,7 @@ const getDashboardSummaryFn = createServerFn({ method: "GET" })
 			const isAdmin = hasPermission(session, "org:dashboard:read_all");
 
 			return await getDashboardSummary({
-				firmId: getCurrentFirmId(session),
+				firmId: session.firm.id,
 				employeeId: isAdmin ? undefined : getCurrentEmployeeId(session),
 				isAdmin,
 				canReadCashFlow: hasPermission(session, "org:dashboard:read_cash_flow"),
@@ -64,7 +65,7 @@ const getDashboardEmployeeOptionsFn = createServerFn({
 			}
 
 			return await getDashboardEmployeeOptions({
-				firmId: getCurrentFirmId(session),
+				firmId: session.firm.id,
 			});
 		} catch (error) {
 			console.error("[getDashboardEmployeeOptions]", error);

@@ -18,7 +18,7 @@ import { RouteNotFound } from "@/shared/components/route-not-found";
 import { ThemeProvider } from "@/shared/components/theme-provider";
 import { Toaster } from "@/shared/components/ui";
 import { getPageTitle } from "@/shared/config/routes";
-import { ClerkSessionBoundary } from "@/shared/session/clerk-boundary";
+import { ClerkSessionBoundary } from "@/shared/session/client";
 import appCss from "@/styles/global.css?url";
 
 interface RouterContext {

@@ -24,7 +24,7 @@ import {
 import { getPageTitle, ROUTES } from "@/shared/config/routes";
 import { useOverlay } from "@/shared/hooks/use-overlay";
 import type { EntityId } from "@/shared/schemas/entity";
-import { hasPermission, useLoggedUserSessionStore } from "@/shared/session";
+import { hasPermission, useLoggedUserSession } from "@/shared/session";
 
 export const Route = createFileRoute("/_app/clientes")({
 	head: () => ({
@@ -51,11 +51,10 @@ function RouteComponent() {
 	const search = Route.useSearch();
 	const { clients } = useClients(search);
 	const { overlay } = useOverlay<EntityId>();
-	const isAdmin = useLoggedUserSessionStore(
-		(session) =>
-			hasPermission(session, "org:clients:delete") ||
-			hasPermission(session, "org:clients:restore"),
-	);
+	const session = useLoggedUserSession();
+	const isAdmin =
+		hasPermission(session, "org:clients:delete") ||
+		hasPermission(session, "org:clients:restore");
 
 	return (
 		<Wrapper

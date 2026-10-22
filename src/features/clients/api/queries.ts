@@ -4,7 +4,7 @@ import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { Option } from "@/shared/schemas/option";
 import { assertCan, getScope } from "@/shared/session";
-import { authMiddleware } from "@/shared/session/middleware";
+import { authMiddleware } from "@/shared/session/server";
 import type {
 	QueryManyReturnType,
 	QueryOneReturnType,

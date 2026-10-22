@@ -4,9 +4,8 @@ import {
 	can,
 	hasPermission,
 	type LoggedUserSession,
-	SESSION_ADMIN_ROLE_VALUE,
 } from "@/shared/session";
-import { clerkPermissions } from "../catalog";
+import { clerkPermissions } from "../schema";
 
 function createSession(
 	overrides: Partial<LoggedUserSession> = {},
@@ -19,7 +18,6 @@ function createSession(
 			sessionId: "sess_test",
 		},
 		user: {
-			id: 1,
 			fullName: "Amanda Admin",
 			email: "amanda@example.com",
 			...overrides.user,
@@ -39,12 +37,6 @@ function createSession(
 			label: "Advogado",
 			...overrides.employeeType,
 		},
-		role: {
-			id: 1,
-			value: SESSION_ADMIN_ROLE_VALUE,
-			label: "Administrador",
-			...overrides.role,
-		},
 		...overrides,
 	};
 }
@@ -60,13 +52,12 @@ describe("Clerk-granted authorization", () => {
 		expect(hasPermission(null, "org:clients:read")).toBe(false);
 		expect(hasPermission(undefined, "org:clients:read")).toBe(false);
 	});
-	it("denies an administrator role without a Clerk grant", () => {
+	it("denies operations without a Clerk grant", () => {
 		expect(hasPermission(createSession(), "org:clients:create")).toBe(false);
 		expect(() => assertCan(createSession(), "org:clients:create")).toThrow();
 	});
-	it("accepts custom roles with the specific grant and no implied CRUD", () => {
+	it("accepts the specific grant without implied CRUD", () => {
 		const session = createSession({
-			role: { id: 0, value: "org:custom", label: "Custom" },
 			permissions: ["org:clients:read"],
 		});
 		expect(hasPermission(session, "org:clients:read")).toBe(true);

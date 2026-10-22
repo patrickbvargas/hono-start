@@ -4,8 +4,8 @@ import type { EntityId } from "@/shared/schemas/entity";
 import { entityIdSchema } from "@/shared/schemas/entity";
 import type { Option } from "@/shared/schemas/option";
 import { assertCan } from "@/shared/session";
-import { authMiddleware } from "@/shared/session/middleware";
 import {
+	authMiddleware,
 	getRequiredServerLoggedUserSession,
 	getServerScope,
 } from "@/shared/session/server";

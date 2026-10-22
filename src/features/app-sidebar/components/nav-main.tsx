@@ -7,7 +7,7 @@ import {
 	SidebarMenuItem,
 } from "@/shared/components/ui";
 import type { RouteSection } from "@/shared/config/routes";
-import { hasPermission, useLoggedUserSessionStore } from "@/shared/session";
+import { hasPermission, useLoggedUserSession } from "@/shared/session";
 
 interface NavMainProps {
 	items: RouteSection[];
@@ -23,7 +23,7 @@ export function isSidebarRouteActive(pathname: string, url: string) {
 
 export const NavMain = ({ items }: NavMainProps) => {
 	const location = useLocation();
-	const session = useLoggedUserSessionStore((currentSession) => currentSession);
+	const session = useLoggedUserSession();
 
 	return items.map((item) => {
 		const visibleItems = item.items.filter((subItem) =>

@@ -1,10 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-	getScope,
-	type LoggedUserSession,
-	SESSION_ADMIN_ROLE_VALUE,
-	SESSION_USER_ROLE_VALUE,
-} from "@/shared/session";
+import { getScope, type LoggedUserSession } from "@/shared/session";
 
 function createSession(
 	overrides: Partial<LoggedUserSession> = {},
@@ -17,7 +12,6 @@ function createSession(
 			sessionId: "sess_test",
 		},
 		user: {
-			id: 1,
 			fullName: "Amanda Admin",
 			email: "amanda@example.com",
 			...overrides.user,
@@ -37,17 +31,28 @@ function createSession(
 			label: "Advogado",
 			...overrides.employeeType,
 		},
-		role: {
-			id: 1,
-			value: SESSION_ADMIN_ROLE_VALUE,
-			label: "Administrador",
-			...overrides.role,
-		},
 		...overrides,
 	};
 }
 
 describe("session scope", () => {
+	it("never widens a scoped read when the account has no employee binding", () => {
+		const session = createSession({ employee: { id: null } });
+		expect(() => getScope(session, "contract")).toThrow(
+			"Conta sem colaborador",
+		);
+		expect(() => getScope(session, "fee")).toThrow("Conta sem colaborador");
+		expect(() => getScope(session, "remuneration")).toThrow(
+			"Conta sem colaborador",
+		);
+	});
+	it("allows a general grant without an employee binding", () => {
+		const session = createSession({
+			employee: { id: null },
+			permissions: ["org:contracts:read_all"],
+		});
+		expect(getScope(session, "contract")).toEqual({ firmId: 100 });
+	});
 	it("uses the authenticated firm for globally firm-scoped subjects", () => {
 		const session = createSession({
 			firm: { id: 200, name: "Filial" },
@@ -73,13 +78,7 @@ describe("session scope", () => {
 	});
 
 	it("adds authenticated employee scope for regular users on assigned-resource subjects", () => {
-		const session = createSession({
-			role: {
-				id: 2,
-				value: SESSION_USER_ROLE_VALUE,
-				label: "Usuário",
-			},
-		});
+		const session = createSession({});
 
 		expect(getScope(session, "contract")).toEqual({
 			firmId: 100,

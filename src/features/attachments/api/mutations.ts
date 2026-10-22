@@ -1,8 +1,8 @@
 import { mutationOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import { assertCan, isContractWritable } from "@/shared/session";
-import { authMiddleware } from "@/shared/session/middleware";
 import {
+	authMiddleware,
 	getRequiredServerLoggedUserSession,
 	getServerScope,
 } from "@/shared/session/server";
