@@ -261,6 +261,7 @@ export function ChartTooltipContent({
 					.map((item, index) => {
 						const key = getPayloadKey(item, nameKey);
 						const color = getPayloadColor(config, item, key);
+						const Icon = config[key]?.icon;
 						const formattedValue = formatter
 							? formatter(item.value, item.name, item, index, payload)
 							: valueFormatter
@@ -281,7 +282,9 @@ export function ChartTooltipContent({
 								key={key}
 							>
 								<div className="flex items-center gap-2 text-muted-foreground">
-									{hideIndicator ? null : (
+									{hideIndicator ? null : Icon ? (
+										<Icon className="size-3.5" />
+									) : (
 										<TooltipIndicator color={color} type={indicator} />
 									)}
 									<span>{nameNode}</span>

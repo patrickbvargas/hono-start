@@ -18,14 +18,10 @@ export function formatMonthLabel(value: string) {
 }
 
 export function formatCompactCurrency(value: number) {
-	if (value === 0) {
-		return "R$ 0";
-	}
-
-	return new Intl.NumberFormat("pt-BR", {
-		style: "currency",
-		currency: "BRL",
-		notation: "compact",
+	const thousands = new Intl.NumberFormat("pt-BR", {
+		minimumFractionDigits: 1,
 		maximumFractionDigits: 1,
-	}).format(value);
+	}).format(value / 1_000);
+
+	return `R$\u00a0${thousands}\u00a0mil`;
 }
