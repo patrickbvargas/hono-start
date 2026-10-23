@@ -119,10 +119,8 @@ function DrilldownContent<
 		<>
 			{props.renderSummary?.(data)}
 			<DataTable
-				columns={props.columns.map((column) => ({
-					...column,
-					enableSorting: false,
-				}))}
+				columns={props.columns}
+				initialSorting={props.initialSorting}
 				data={data.data}
 				pageSize={props.pageSize ?? 10}
 				emptyMessage={props.emptyMessage}

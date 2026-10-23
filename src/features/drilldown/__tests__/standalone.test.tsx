@@ -142,6 +142,15 @@ describe("standalone drilldown", () => {
 				.some((node) => node.classList.contains("sr-only")),
 		).toBe(true);
 		expect(screen.getByText("Nome").closest("a")).toBeNull();
+		const sortHeader = screen.getByRole("button", { name: "Nome" });
+		fireEvent.click(sortHeader);
+		fireEvent.click(sortHeader);
+		expect(await screen.findByText("GRUPO A 2")).toBeTruthy();
+		expect(screen.queryByText("GRUPO A 1")).toBeNull();
+		fireEvent.click(sortHeader);
+		expect(await screen.findByText("GRUPO A 1")).toBeTruthy();
+		expect(read).toHaveBeenCalledTimes(1);
+		expect(window.location.href).toBe(url);
 		fireEvent.click(
 			screen.getByRole("button", { name: "Ir para a próxima página" }),
 		);

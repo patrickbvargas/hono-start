@@ -35,6 +35,7 @@ export interface DrilldownProps<
 	getRowId: (row: T) => string;
 	renderSummary?: (result: TResult) => ReactNode;
 	pageSize?: number;
+	initialSorting?: DataTableProps<T>["initialSorting"];
 	className?: string;
 	emptyMessage?: string;
 	errorMessage?: string;

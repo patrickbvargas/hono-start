@@ -31,23 +31,23 @@ export function getDashboardDrilldownColumns(
 			c.accessor("date", {
 				header: "Data",
 				cell: ({ getValue }) => formatter.date(getValue()),
-				enableSorting: false,
+				enableSorting: true,
 			}),
-			c.accessor("kind", { header: "Movimento", enableSorting: false }),
+			c.accessor("kind", { header: "Movimento", enableSorting: true }),
 			c.accessor(
 				(row) => row.employee ?? row.client ?? row.category ?? row.description,
 				{
 					id: "reference",
 					header: "Referência",
-					enableSorting: false,
+					enableSorting: true,
 					meta: { cellClassName: "whitespace-normal max-w-64" },
 				},
 			),
-			c.accessor("process", { header: "Processo", enableSorting: false }),
+			c.accessor("process", { header: "Processo", enableSorting: true }),
 			c.accessor("amount", {
 				header: "Valor",
 				cell: ({ getValue }) => formatter.currency(getValue()),
-				enableSorting: false,
+				enableSorting: true,
 				meta: { cellClassName: "whitespace-nowrap text-right" },
 			}),
 		];
@@ -58,11 +58,12 @@ export function getDashboardDrilldownColumns(
 				category: (row) => row.category ?? "",
 				date: (row) => row.date,
 				amount: (row) => row.amount,
+				enableSorting: true,
 			});
 		return [
+			{ ...date, id: "date" },
 			category,
-			date,
-			c.accessor("description", { header: "Descrição", enableSorting: false }),
+			c.accessor("description", { header: "Descrição", enableSorting: true }),
 			amount,
 		];
 	}
@@ -70,46 +71,46 @@ export function getDashboardDrilldownColumns(
 		c.accessor("date", {
 			header: installment || planned ? "Vencimento" : "Data",
 			cell: ({ getValue }) => formatter.date(getValue()),
-			enableSorting: false,
+			enableSorting: true,
 		}),
-		c.accessor("kind", { header: "Movimento", enableSorting: false }),
+		c.accessor("kind", { header: "Movimento", enableSorting: true }),
 		...(remuneration
 			? [
 					c.accessor("employee", {
 						header: "Colaborador",
-						enableSorting: false,
+						enableSorting: true,
 					}),
-					c.accessor("assignment", { header: "Função", enableSorting: false }),
+					c.accessor("assignment", { header: "Função", enableSorting: true }),
 				]
 			: [
-					c.accessor("client", { header: "Cliente", enableSorting: false }),
+					c.accessor("client", { header: "Cliente", enableSorting: true }),
 					c.accessor("description", {
 						header: "Descrição",
-						enableSorting: false,
+						enableSorting: true,
 					}),
 				]),
-		c.accessor("process", { header: "Processo", enableSorting: false }),
+		c.accessor("process", { header: "Processo", enableSorting: true }),
 		...(!remuneration
-			? [c.accessor("installment", { header: "Parcela", enableSorting: false })]
+			? [c.accessor("installment", { header: "Parcela", enableSorting: true })]
 			: []),
 		...(installment
 			? [
 					c.accessor("faceAmount", {
 						header: "Valor da parcela",
 						cell: ({ getValue }) => formatter.currency(getValue() ?? 0),
-						enableSorting: false,
+						enableSorting: true,
 					}),
 					c.accessor("paid", {
 						header: "Pago",
 						cell: ({ getValue }) => formatter.currency(getValue() ?? 0),
-						enableSorting: false,
+						enableSorting: true,
 					}),
 				]
 			: []),
 		c.accessor("amount", {
 			header: installment ? "Em aberto" : "Valor",
 			cell: ({ getValue }) => formatter.currency(getValue()),
-			enableSorting: false,
+			enableSorting: true,
 			meta: { cellClassName: "whitespace-nowrap text-right" },
 		}),
 	];

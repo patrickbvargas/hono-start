@@ -4,6 +4,7 @@ import {
 	flexRender,
 	type Header,
 	type RowData,
+	type SortingState,
 	useTable,
 } from "@tanstack/react-table";
 import {
@@ -36,6 +37,7 @@ export interface DataTableProps<TData extends RowData> {
 	data: TData[];
 	getRowId?: (row: TData) => string;
 	pageSize?: number;
+	initialSorting?: SortingState;
 	emptyMessage?: string;
 	className?: string;
 	onRowAction?: (index: number) => void;
@@ -53,6 +55,7 @@ export const DataTable = <TData extends RowData>({
 	tableFooterContent,
 	pageSize,
 	getRowId,
+	initialSorting,
 }: DataTableProps<TData>) => {
 	const table = useTable({
 		data,
@@ -60,7 +63,11 @@ export const DataTable = <TData extends RowData>({
 		columns,
 		features: dataTableFeatures,
 		manualPagination: pageSize === undefined,
-		initialState: { pagination: { pageIndex: 0, pageSize: pageSize ?? 10 } },
+		manualSorting: pageSize === undefined,
+		initialState: {
+			pagination: { pageIndex: 0, pageSize: pageSize ?? 10 },
+			sorting: initialSorting ?? [],
+		},
 	});
 
 	const rows = table.getRowModel().rows;
@@ -92,9 +99,23 @@ export const DataTable = <TData extends RowData>({
 								<TableHead
 									key={header.id}
 									colSpan={header.colSpan}
+									aria-sort={
+										pageSize !== undefined && header.column.getCanSort()
+											? header.column.getIsSorted() === "asc"
+												? "ascending"
+												: header.column.getIsSorted() === "desc"
+													? "descending"
+													: "none"
+											: undefined
+									}
 									className={header.column.columnDef.meta?.headerClassName}
 								>
-									{!header.isPlaceholder && <DataTableHeader header={header} />}
+									{!header.isPlaceholder && (
+										<DataTableHeader
+											header={header}
+											local={pageSize !== undefined}
+										/>
+									)}
 								</TableHead>
 							))}
 						</TableRow>
@@ -192,16 +213,37 @@ export const DataTable = <TData extends RowData>({
 
 interface DataTableHeaderProps<TData extends RowData> {
 	header: Header<typeof dataTableFeatures, TData, unknown>;
+	local?: boolean;
 }
 
 const DataTableHeader = <TData extends RowData>({
 	header,
+	local,
 }: DataTableHeaderProps<TData>) => {
 	if (!header.column.getCanSort()) {
 		return (
 			<div className="flex items-center py-3">
 				{flexRender(header.column.columnDef.header, header.getContext())}
 			</div>
+		);
+	}
+	if (local) {
+		const direction = header.column.getIsSorted();
+		return (
+			<button
+				type="button"
+				onClick={header.column.getToggleSortingHandler()}
+				className="group flex items-center gap-2 py-3 cursor-pointer select-none"
+			>
+				{flexRender(header.column.columnDef.header, header.getContext())}
+				<ChevronUpIcon
+					className={cn(
+						"size-4 transition-all duration-200 text-muted-foreground",
+						direction ? "opacity-100" : "opacity-0 group-hover:opacity-50",
+						direction === "desc" && "rotate-180",
+					)}
+				/>
+			</button>
 		);
 	}
 	return <DataTableSortHeader header={header} />;

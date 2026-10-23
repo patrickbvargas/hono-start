@@ -40,6 +40,7 @@ export function DashboardDrilldownModal({
 			context={{ selection: target.selection, referenceAt }}
 			filters={search}
 			columns={columns}
+			initialSorting={[{ id: "date", desc: true }]}
 			getRowId={(row) => row.id}
 			responseSchema={dashboardDrilldownResultSchema}
 			queryOptions={({ context, filters }) =>

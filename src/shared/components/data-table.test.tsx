@@ -5,11 +5,20 @@ import { afterEach, expect, it, vi } from "vitest";
 import type { dataTableFeatures } from "@/shared/lib/table";
 import { DataTable } from "./data-table";
 
+vi.mock("@tanstack/react-router", () => ({
+	Link: ({
+		children,
+		search,
+	}: React.PropsWithChildren<{ search: unknown }>) => (
+		<a href={`?${JSON.stringify(search)}`}>{children}</a>
+	),
+}));
+
 vi.mock("@/shared/hooks/use-sort", () => ({
 	useSort: () => ({
 		column: undefined,
 		direction: "asc",
-		getSortSearch: vi.fn(),
+		getSortSearch: (column: string) => ({ sort: column, direction: "asc" }),
 	}),
 }));
 vi.mock("@/shared/components/ui", () => ({
@@ -30,6 +39,109 @@ vi.mock("@/shared/components/ui", () => ({
 	TableRow: "tr",
 }));
 afterEach(cleanup);
+
+it("applies initial descending sorting before pagination and allows changing it", () => {
+	render(
+		<DataTable
+			data={[
+				{ name: "2026-01-01" },
+				{ name: "2026-03-01" },
+				{ name: "2026-02-01" },
+			]}
+			columns={[helper.accessor("name", { header: "Data" })]}
+			pageSize={2}
+			initialSorting={[{ id: "name", desc: true }]}
+		/>,
+	);
+	expect(screen.getAllByRole("cell").map((cell) => cell.textContent)).toEqual([
+		"2026-03-01",
+		"2026-02-01",
+	]);
+	fireEvent.click(screen.getByRole("button", { name: "Data" }));
+	expect(screen.getByText("2026-01-01")).toBeTruthy();
+});
+
+it("keeps server sorting in route links without reordering supplied rows", () => {
+	render(
+		<DataTable
+			data={[{ name: "C" }, { name: "A" }]}
+			columns={[helper.accessor("name", { header: "Nome" })]}
+		/>,
+	);
+	expect(
+		screen.getByRole("link", { name: "Nome" }).getAttribute("href"),
+	).toContain('"sort":"name"');
+	expect(screen.getAllByRole("cell").map((cell) => cell.textContent)).toEqual([
+		"C",
+		"A",
+	]);
+});
+
+it("sorts the complete dataset locally before pagination and preserves original row indexes", () => {
+	const onRowAction = vi.fn();
+	const sortable = [
+		helper.accessor("name", { header: "Nome", sortDescFirst: false }),
+	];
+	render(
+		<DataTable
+			data={[{ name: "C" }, { name: "A" }, { name: "B" }]}
+			columns={sortable}
+			pageSize={2}
+			onRowAction={onRowAction}
+		/>,
+	);
+	const header = screen.getByRole("button", { name: "Nome" });
+	fireEvent.click(header);
+	expect(screen.getAllByRole("cell").map((cell) => cell.textContent)).toEqual([
+		"A",
+		"B",
+	]);
+	expect(screen.getByRole("columnheader").getAttribute("aria-sort")).toBe(
+		"ascending",
+	);
+	fireEvent.click(screen.getByText("A"));
+	expect(onRowAction).toHaveBeenCalledWith(1);
+	fireEvent.click(header);
+	expect(screen.getAllByRole("cell").map((cell) => cell.textContent)).toEqual([
+		"C",
+		"B",
+	]);
+	fireEvent.click(header);
+	expect(screen.getAllByRole("cell").map((cell) => cell.textContent)).toEqual([
+		"C",
+		"A",
+	]);
+});
+
+it("sorts numeric accessor values rather than their formatted labels and respects disabled columns", () => {
+	const numberHelper = createColumnHelper<
+		typeof dataTableFeatures,
+		{ value: number }
+	>();
+	render(
+		<DataTable
+			data={[{ value: 100 }, { value: 2 }, { value: 30 }]}
+			columns={[
+				numberHelper.accessor("value", {
+					header: "Valor",
+					sortDescFirst: false,
+					cell: (ctx) => `R$ ${ctx.getValue()}`,
+				}),
+				numberHelper.display({
+					id: "fixed",
+					header: "Fixo",
+					enableSorting: false,
+				}),
+			]}
+			pageSize={2}
+		/>,
+	);
+	fireEvent.click(screen.getByRole("button", { name: "Valor" }));
+	expect(screen.getByText("R$ 2")).toBeTruthy();
+	expect(screen.getByText("R$ 30")).toBeTruthy();
+	expect(screen.queryByText("R$ 100")).toBeNull();
+	expect(screen.queryByRole("button", { name: "Fixo" })).toBeNull();
+});
 const helper = createColumnHelper<typeof dataTableFeatures, { name: string }>();
 const columns = [
 	helper.accessor("name", {
