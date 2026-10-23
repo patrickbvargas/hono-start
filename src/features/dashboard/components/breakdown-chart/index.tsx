@@ -32,7 +32,7 @@ export function DashboardBreakdownChart({
 	const hasValues = items.some((item) => item.total !== 0);
 
 	return (
-		<Card className="min-h-77">
+		<Card className="min-h-85">
 			<CardHeader>
 				<CardTitle className="flex items-center gap-2">
 					{title}
