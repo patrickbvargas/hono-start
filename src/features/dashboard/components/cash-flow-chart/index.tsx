@@ -19,13 +19,18 @@ import { CASH_FLOW_CHART_CONFIG } from "../../constants/charts";
 import type { DashboardCashFlowChartItem } from "../../schemas/model";
 import { formatCompactCurrency, formatMonthLabel } from "../../utils/format";
 import { ChartHelp } from "../chart-help";
+import { DrilldownBarShape } from "../drilldown/bar-shape";
 import { CashFlowTooltip } from "./tooltip";
 
 interface DashboardCashFlowChartProps {
 	items: DashboardCashFlowChartItem[];
+	onSelect?: (item: DashboardCashFlowChartItem, trigger?: SVGElement) => void;
 }
 
-export function DashboardCashFlowChart({ items }: DashboardCashFlowChartProps) {
+export function DashboardCashFlowChart({
+	items,
+	onSelect,
+}: DashboardCashFlowChartProps) {
 	const hasValues = items.some((item) => item.balance !== 0);
 
 	return (
@@ -67,6 +72,17 @@ export function DashboardCashFlowChart({ items }: DashboardCashFlowChartProps) {
 						<YAxis hide axisLine={false} tickLine={false} />
 						<ChartTooltip cursor={false} content={<CashFlowTooltip />} />
 						<Bar
+							shape={(props) => (
+								<DrilldownBarShape
+									{...props}
+									label={`Saldo mensal ${formatMonthLabel(items[props.index]?.month ?? "")}`}
+									onActivate={
+										onSelect && items[props.index]
+											? (trigger) => onSelect(items[props.index], trigger)
+											: undefined
+									}
+								/>
+							)}
 							dataKey="balance"
 							stroke="var(--color-balance)"
 							fill="var(--color-balance)"

@@ -9,6 +9,7 @@ export * from "./components/form";
 export * from "./components/list";
 export * from "./components/restore";
 export * from "./components/table";
+export { getExpenseReadColumns } from "./components/table/columns";
 export { useExpenses } from "./hooks/use-data";
 export type { ExpenseSummary } from "./schemas/model";
 export * from "./schemas/search";

@@ -17,6 +17,7 @@ import { BreakdownDonutChart } from "./donut";
 interface DashboardBreakdownChartProps {
 	title: string;
 	items: DashboardBreakdownItem[];
+	onSelect?: (item: DashboardBreakdownItem, trigger?: SVGElement) => void;
 	emptyLabel: string;
 	variant: "bar" | "donut" | "column";
 }
@@ -26,7 +27,10 @@ export function DashboardBreakdownChart({
 	items,
 	emptyLabel,
 	variant,
+	onSelect,
 }: DashboardBreakdownChartProps) {
+	const hasValues = items.some((item) => item.total !== 0);
+
 	return (
 		<Card className="min-h-77">
 			<CardHeader>
@@ -42,14 +46,14 @@ export function DashboardBreakdownChart({
 				</CardTitle>
 			</CardHeader>
 			<CardContent className="flex min-h-0 flex-1 flex-col gap-3 pt-0">
-				{items.length === 0 ? (
+				{!hasValues ? (
 					<p className="text-sm text-muted-foreground">{emptyLabel}</p>
 				) : (
 					<>
 						{variant === "bar" ? (
-							<BreakdownBarChart items={items} />
+							<BreakdownBarChart items={items} onSelect={onSelect} />
 						) : variant === "column" ? (
-							<BreakdownColumnChart items={items} />
+							<BreakdownColumnChart items={items} onSelect={onSelect} />
 						) : (
 							<BreakdownDonutChart items={items} />
 						)}

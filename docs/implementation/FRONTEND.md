@@ -124,6 +124,12 @@ See `docs/domain/DOMAIN_MODEL.md` for ownership boundaries. Authentication resol
 - Clerk uses its built-in shadcn theme, which consumes these semantic colors. Its font and radius are linked through `--clerk-font-family` and `--clerk-border-radius` on `body` in the base layer, outside the replaceable `:root` and `.dark` theme blocks.
 - Do not add independent colors, fonts, or radii to individual Clerk components through `appearance`.
 
+## Standalone drilldown feature
+
+`src/features/drilldown` exposes a props-configured `Drilldown` modal through its public barrel. The consumer owns protected query-option factories, context/filter contracts, Zod response schema, declarative TanStack columns, row identity and optional summary rendering. Use the established `useOverlay().overlay.details.render` pattern to supply overlay state. No chart/entity registry or domain query belongs inside this feature. Context or filter changes remount the local request controller. Pass pageSize to the existing shared DataTable for frontend pagination; the drilldown must not create another paginator or own page state. Consumer queries return the complete selected dataset and page changes do not fetch again or change route search state. Interactive sorting is disabled in this delivery. Shared DataTable uses supplied stable row IDs and renders non-sortable headers without requiring router context.
+
+Read-only column factories stay in the owning entity feature and are exported explicitly for actual reuse. Expense listing and dashboard expense drilldown reuse `getExpenseReadColumns` through the expenses public barrel; the standalone feature never imports it. Adapt compatible accessors without fetching extra fields or embedding a full entity-list table.
+
 ## Imperative query execution
 
 Use `queryClient.query(options)` for imperative fetching. Feature option factories own cache policy, including `staleTime: Infinity` where configured. Loaders call `queryClient.query(optionsFactory(...))` without overrides. Infinite freshness still permits mutation invalidation to refetch active observers. Do not use static freshness for mutable business data. Do not use deprecated fetchQuery or ensureQueryData methods.

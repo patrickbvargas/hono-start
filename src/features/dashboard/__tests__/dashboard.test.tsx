@@ -27,6 +27,10 @@ vi.mock("../components/breakdown-chart", () => ({
 	DashboardBreakdownChart: ({ title }: { title: string }) => <div>{title}</div>,
 }));
 
+vi.mock("../components/drilldown/modal", () => ({
+	DashboardDrilldownModal: () => <div>Detalhes financeiros</div>,
+}));
+
 vi.mock("../components/cash-flow-chart", () => ({
 	DashboardCashFlowChart: () => <div>Fluxo de caixa</div>,
 }));
@@ -93,6 +97,7 @@ describe("Dashboard", () => {
 	it("replaces recent activity with the remuneration table", () => {
 		const { container } = render(
 			<Dashboard
+				showDetails
 				data={{
 					isAdmin: true,
 					visibility: {

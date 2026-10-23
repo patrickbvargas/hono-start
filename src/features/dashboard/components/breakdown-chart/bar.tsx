@@ -15,14 +15,15 @@ import {
 import { formatter } from "@/shared/lib/formatter";
 import { BREAKDOWN_BAR_CHART_CONFIG } from "../../constants/charts";
 import type { DashboardBreakdownItem } from "../../schemas/model";
-
 import { formatCompactCurrency } from "../../utils/format";
+import { DrilldownBarShape } from "../drilldown/bar-shape";
 
 interface BreakdownItemsProps {
 	items: DashboardBreakdownItem[];
+	onSelect?: (item: DashboardBreakdownItem, trigger?: SVGElement) => void;
 }
 
-export function BreakdownBarChart({ items }: BreakdownItemsProps) {
+export function BreakdownBarChart({ items, onSelect }: BreakdownItemsProps) {
 	return (
 		<ScrollArea
 			className="h-64 w-full"
@@ -61,7 +62,22 @@ export function BreakdownBarChart({ items }: BreakdownItemsProps) {
 							/>
 						}
 					/>
-					<Bar dataKey="total" fill="var(--color-total)" radius={6}>
+					<Bar
+						shape={(props) => (
+							<DrilldownBarShape
+								{...props}
+								label={items[props.index]?.label ?? "valor"}
+								onActivate={
+									onSelect && items[props.index]
+										? (trigger) => onSelect(items[props.index], trigger)
+										: undefined
+								}
+							/>
+						)}
+						dataKey="total"
+						fill="var(--color-total)"
+						radius={6}
+					>
 						<LabelList
 							dataKey="total"
 							formatter={(value) => formatCompactCurrency(Number(value))}

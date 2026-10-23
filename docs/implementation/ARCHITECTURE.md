@@ -74,6 +74,8 @@ Each feature slice is validated by responsibility. A feature should include the
 directories whose responsibilities it owns, and any structural deviation from
 the `clients` reference slice must be justified by feature-specific behavior.
 
+`drilldown` is an isolated presentation/orchestration feature. It deliberately owns no entity API, Prisma data access or permission registry: source features provide typed query options and validated results through props. Its public modal is usable by other features and routes. See FRONTEND.md for the consumer and reusable-column contract.
+
 ```text
 src/features/<feature>/
   api/          route-facing server wrappers and query/mutation options

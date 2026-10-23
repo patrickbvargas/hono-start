@@ -135,6 +135,13 @@ Sortable columns:
 - `feePercentage`
 - `createdAt`
 
+### Record drilldown
+
+- Drilldown uses the existing shared DataTable frontend pagination by supplying pageSize (default 10). The source query returns all authorized records for the selected context on demand. Changing table pages makes no additional request and never rewrites source-page URL, filters, pagination or sort.
+- Sources own stable query keys and authorized server operations. Detail query identity includes normalized context and filters; dashboard queries additionally include the selected series/group/month and reference timestamp.
+- Dashboard details use ascending contribution date followed by stable row identity. Rows, count and all-page totals are computed from one repeatable read. The server returns the complete selected record set after scoped computation; the shared table owns display pagination. Records outside the selected context are not returned.
+- Subject data is read only after its grant check. All queries keep the verified firm and own/assigned scope. Detail queries inherit global freshness and normal source-feature invalidation.
+
 ### Revenue
 
 Default sort: `createdAt` descending

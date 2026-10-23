@@ -267,6 +267,20 @@ The software core includes these feature areas:
 
 - The initial view shows metric cards, financial evolution, monthly balance and revenue by legal area, subject to permissions. The "Mostrar análises detalhadas" checkbox sits at the right of the filter bar and controls all remaining charts and all tables. Its preference is saved in browser localStorage under `dashboard.showDetailedAnalyses`, defaulting to false. Toggling preserves chart order and existing permission checks; the details are omitted when no authorized detail is available. Storage failure does not prevent toggling.
 - Visible monetary chart labels use BRL in thousands with exactly one decimal place (for example, R$ 12,8 mil or R$ 4,0 mil), including zero and amounts below one thousand; tooltips retain complete amounts. Single-series columns show values above positive bars and below negative bars. Financial evolution keeps amounts in tooltips to avoid crowding multiple series; percentage labels remain percentages.
+
+### Dashboard record drilldown
+
+- Dashboard KPI cards also activate the standalone drilldown through explicit metric source keys, using the full selected period. Help and percentage-comparison buttons retain their own tooltip interactions and do not activate drilldown.
+- Receita prevista lists initial down payments and full scheduled installments due in the period, including paid installments; it is distinct from the outstanding future-receipts chart. Receita recebida lists actual receipt contributions; Remunerações geradas lists generated remuneration; Despesas lists period expenses; Resultado do período shows signed receipts minus generated remuneration and expenses.
+
+- The drilldown context (period and filters) appears in an info tooltip beside the modal title, with an accessible description retained for screen readers.
+- Every bar and monthly Result point opens a read-only modal with the exact contributing records, full BRL amounts, record count and total across all pages. Keyboard activation is supported, with focus restored on close.
+- Receipt details include initial down payments and fee receipts once each. Monthly balance and Result show signed receipts, generated remunerations and expenses, with only the signed Total in the summary; they do not represent bank balance or confirmed remuneration settlement.
+- Aging and forecast details show installment face value, paid value and outstanding value at the same reference timestamp as the chart. Their total sums outstanding value. Aging includes older debts before the selected start date.
+- Monthly detail periods intersect the selected month with the dashboard's effective date interval. Area, type, client, function and category details retain the active dashboard filters and financial scope. Clients are grouped by ID, including clients with identical names.
+- Records are fetched on demand. A source-data mismatch refreshes the summary and shows a concise update notice with current detail totals. A filter change closes the dashboard modal; switching selections resets its pagination and cannot display a late response from the previous selection.
+- The isolated drilldown feature is configurable by props and can also serve cards on registration pages. It has no dashboard, chart or entity dependency; consumers supply context, filters, query options, Zod response schema, row identity, columns and optional summaries.
+- Compatible read-only listing columns may be supplied through the owning feature's public API. The modal does not inherit listing actions or URL pagination/sorting. This delivery uses stable server ordering without interactive column sorting.
 - Monthly balance uses columns above/below a zero reference line; it is a monthly result rather than a continuous balance curve.
 - Financial evolution combines receipt, generated-remuneration and expense bars with a result line on the same monetary axis. Existing subject permissions govern each series.
 - Outstanding future receipts use columns ordered as up to 30, 31–60 and 61–90 days. Aging bars remain chronological: up to 30, 31–60, 61–90 and over 90 days, rather than ranking amounts.

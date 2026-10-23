@@ -1,6 +1,9 @@
 import * as z from "zod";
 
 export const dashboardMetricSchema = z.object({
+	drilldown: z
+		.enum(["planned", "revenue", "remuneration", "expense", "result"])
+		.optional(),
 	label: z.string(),
 	value: z.number(),
 	formattedValue: z.string(),
@@ -140,6 +143,7 @@ export const dashboardSummarySchema = z.object({
 	analysis: z
 		.object({
 			referenceLabel: z.string(),
+			referenceAt: z.iso.datetime().optional(),
 			overdueTotal: z.string(),
 			aging: dashboardBreakdownItemSchema.array(),
 			forecast: dashboardBreakdownItemSchema.array(),

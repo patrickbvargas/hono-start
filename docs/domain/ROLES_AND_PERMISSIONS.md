@@ -137,7 +137,7 @@ Every row requires an authenticated session and `org:dashboard:read_all` OR `org
 | Card | Remunerações geradas | M | Authorized remuneration scope |
 | Card | Despesas | D | Firm expenses within the period |
 | Chart | Evolução financeira | R AND M | Expenses and result series additionally require B with no allocation dimensions |
-| Chart | Saldo mensal (area chart) | B | No employee, legal-area or revenue-type filter |
+| Chart | Saldo mensal | B | No employee, legal-area or revenue-type filter |
 | Chart | Remunerações por função | M | Authorized remuneration scope |
 | Chart | Despesas por categoria | D | Shown when expense breakdown contains data |
 | Chart | Dívida por tempo de atraso | R | Authorized contract scope |
@@ -159,6 +159,10 @@ Every row requires an authenticated session and `org:dashboard:read_all` OR `org
 - Dashboard-wide grants do not upgrade subject grants. Employee query parameters cannot impersonate another employee under restricted scope.
 - Missing employee bindings return no own/assigned records. Firm isolation applies to every query.
 - Unauthorized subject queries do not execute; related values are removed from the server response as well as hidden in the UI.
+
+#### Drilldown permissions
+
+Every dashboard detail request, including refreshes and retries, rechecks current dashboard access and the corresponding subject grant on the server. Revenue by month/area/type/client and aging/forecast require R; remuneration by month/function requires M; expenses by month/category require D. Monthly receipt/remuneration details also require evolution availability (R AND M); its expense series requires B without allocation filters. Monthly balance and Result composition require B and no employee, legal-area or revenue-type allocation filters. Own/assigned scope is identical to the aggregate; props, group IDs and collaborator filters never grant additional access. Denials expose no restricted rows, counts or totals. Card details use the same grant as their card: R for planned/received revenue, M for generated remuneration, D for expenses, and B without allocation dimensions for period Result. Single-subject cards do not require the combined evolution chart grants. The standalone modal has no permission registry: each consumer's server source enforces its own access policy.
 - An expense-only actor receives only expense cards and breakdowns, without fee, remuneration or consolidated balance data.
 - Current UI limitation: area/type controls remain visible with empty options without contract read grants. Hiding these controls is a follow-up improvement, not an implemented behavior.
 - Tables currently use desktop visibility classes; permission alone does not make them visible on small screens.

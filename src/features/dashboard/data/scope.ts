@@ -17,6 +17,21 @@ export interface DashboardScope {
 	search: DashboardSearch;
 }
 
+export function canReadDashboardFirmResult(scope: DashboardScope): boolean {
+	return (
+		scope.isAdmin &&
+		scope.canReadCashFlow === true &&
+		scope.access?.revenueAll === true &&
+		scope.access?.remunerationAll === true &&
+		scope.access?.revenue === true &&
+		scope.access?.remuneration === true &&
+		scope.access?.expense === true &&
+		!scope.search.employeeId &&
+		!scope.search.legalArea.length &&
+		!scope.search.revenueType.length
+	);
+}
+
 interface EffectiveEmployeeParams {
 	isAdmin: boolean;
 	requestedEmployeeId?: number;

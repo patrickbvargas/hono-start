@@ -6,6 +6,7 @@ import {
 	getDashboardPeriod,
 	getFinancialEvolutionMonthRange,
 } from "../utils/period";
+import { dashboardRevenueSelect } from "./revenue-select";
 import type { DashboardScope } from "./scope";
 import {
 	getDashboardExpenseWhere,
@@ -79,64 +80,7 @@ export async function getDashboardRecords(scope: DashboardScope) {
 		readAuthorized(scope.access?.revenue === true, () =>
 			prisma.revenue.findMany({
 				where: revenueWhere,
-				select: {
-					id: true,
-					totalValue: true,
-					downPaymentValue: true,
-					paymentStartDate: true,
-					totalInstallments: true,
-					type: {
-						select: {
-							label: true,
-							value: true,
-						},
-					},
-					contract: {
-						select: {
-							processNumber: true,
-							client: {
-								select: {
-									fullName: true,
-								},
-							},
-							legalArea: {
-								select: {
-									label: true,
-									value: true,
-								},
-							},
-							assignments: {
-								where: {
-									deletedAt: null,
-									isActive: true,
-								},
-								select: {
-									employee: {
-										select: {
-											fullName: true,
-										},
-									},
-									assignmentType: {
-										select: {
-											value: true,
-										},
-									},
-								},
-							},
-						},
-					},
-					fees: {
-						where: {
-							deletedAt: null,
-							isActive: true,
-						},
-						select: {
-							amount: true,
-							paymentDate: true,
-							installmentNumber: true,
-						},
-					},
-				},
+				select: dashboardRevenueSelect,
 			}),
 		),
 		readAuthorized(scope.access?.revenue === true, () =>
@@ -265,7 +209,7 @@ export async function getDashboardRecords(scope: DashboardScope) {
 					paymentDate: true,
 					contractEmployee: {
 						select: {
-							assignmentType: { select: { label: true } },
+							assignmentType: { select: { label: true, value: true } },
 							employee: {
 								select: {
 									id: true,
@@ -286,7 +230,7 @@ export async function getDashboardRecords(scope: DashboardScope) {
 						},
 						select: {
 							amount: true,
-							category: { select: { label: true } },
+							category: { select: { label: true, value: true } },
 						},
 					}),
 				)

@@ -17,6 +17,7 @@ import {
 	sumDecimal,
 } from "./revenue";
 import { getScheduledRevenue } from "./schedule";
+import { canReadDashboardFirmResult } from "./scope";
 
 export function buildDashboardSummary({
 	scope,
@@ -66,20 +67,7 @@ export function buildDashboardSummary({
 				.map((revenue) => new Prisma.Decimal(revenue.downPaymentValue ?? 0)),
 		),
 	);
-	const hasDimensionFilters = Boolean(
-		scope.search.employeeId ||
-			scope.search.legalArea.length ||
-			scope.search.revenueType.length,
-	);
-	const showFirmResult =
-		scope.isAdmin &&
-		scope.canReadCashFlow === true &&
-		scope.access?.revenueAll === true &&
-		scope.access?.remunerationAll === true &&
-		scope.access?.revenue === true &&
-		scope.access?.remuneration === true &&
-		scope.access?.expense === true &&
-		!hasDimensionFilters;
+	const showFirmResult = canReadDashboardFirmResult(scope);
 	const currentRemuneration = sumDecimal(
 		allRemunerations.map((remuneration) => remuneration.amount),
 	);
@@ -150,7 +138,7 @@ export function buildDashboardSummary({
 		const label = expense.category?.label ?? "Outros";
 		pushGroupTotal(expenseGroups, {
 			label,
-			value: label,
+			value: expense.category?.value ?? label,
 			total: new Prisma.Decimal(expense.amount),
 		});
 	}
@@ -160,7 +148,7 @@ export function buildDashboardSummary({
 		const label = row.contractEmployee.assignmentType?.label ?? "Outros";
 		pushGroupTotal(assignmentGroups, {
 			label,
-			value: label,
+			value: row.contractEmployee.assignmentType?.value ?? label,
 			total: new Prisma.Decimal(row.amount),
 		});
 	}
@@ -189,6 +177,7 @@ export function buildDashboardSummary({
 				? [
 						{
 							label: "Resultado do período",
+							drilldown: "result" as const,
 							value: Number(totalBalance),
 							formattedValue: formatter.currency(Number(totalBalance)),
 							description:
@@ -211,6 +200,7 @@ export function buildDashboardSummary({
 				: []),
 			{
 				label: "Receita prevista",
+				drilldown: "planned" as const,
 				value: Number(revenueTotal),
 				formattedValue: formatter.currency(Number(revenueTotal)),
 				description:
@@ -233,6 +223,7 @@ export function buildDashboardSummary({
 			},
 			{
 				label: "Receita recebida",
+				drilldown: "revenue" as const,
 				value: Number(revenueReceived),
 				formattedValue: formatter.currency(Number(revenueReceived)),
 				description: "Total de honorários recebido no período.",
@@ -247,6 +238,7 @@ export function buildDashboardSummary({
 			},
 			{
 				label: "Remunerações geradas",
+				drilldown: "remuneration" as const,
 				value: Number(remunerationTotal),
 				formattedValue: formatter.currency(Number(remunerationTotal)),
 				description: "Total gerado para colaboradores no período.",
@@ -315,6 +307,7 @@ export function buildDashboardSummary({
 					? [
 							{
 								label: "Despesas",
+								drilldown: "expense" as const,
 								value: Number(expenseTotal),
 								formattedValue: formatter.currency(Number(expenseTotal)),
 								description: "Despesas registradas no período; visão da firma.",

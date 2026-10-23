@@ -12,6 +12,7 @@ import type { QueryPaginatedReturnType } from "@/shared/types/api";
 import { EXPENSE_ALLOWED_SORT_COLUMNS } from "../../constants/sorting";
 import type { ExpenseSummary } from "../../schemas/model";
 import { getExpenseLifecycleActions } from "../../utils/lifecycle-actions";
+import { getExpenseReadColumns } from "./columns";
 
 interface ExpenseTableProps {
 	canManageLifecycle?: boolean;
@@ -42,21 +43,11 @@ export const ExpenseTable = ({
 				enableSorting: EXPENSE_ALLOWED_SORT_COLUMNS.includes("id"),
 				meta: { headerClassName: "w-18", cellClassName: "whitespace-nowrap" },
 			}),
-			c.accessor("category", {
-				header: "Categoria",
-				enableSorting: EXPENSE_ALLOWED_SORT_COLUMNS.includes("category"),
-				meta: { minColumnWidth: 220 },
-			}),
-			c.accessor("expenseDate", {
-				header: "Data",
-				cell: ({ row }) => formatter.date(row.original.expenseDate),
-				enableSorting: EXPENSE_ALLOWED_SORT_COLUMNS.includes("expenseDate"),
-			}),
-			c.accessor("amount", {
-				header: "Valor",
-				cell: ({ row }) => formatter.currency(row.original.amount),
-				enableSorting: EXPENSE_ALLOWED_SORT_COLUMNS.includes("amount"),
-				meta: { cellClassName: "text-right" },
+			...getExpenseReadColumns<ExpenseSummary>({
+				category: (row) => row.category,
+				date: (row) => row.expenseDate,
+				amount: (row) => row.amount,
+				enableSorting: true,
 			}),
 			c.accessor("isActive", {
 				header: "Situação",

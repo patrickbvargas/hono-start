@@ -23,9 +23,15 @@ import { FINANCIAL_EVOLUTION_CHART_CONFIG } from "../../constants/charts";
 import type { DashboardFinancialEvolutionItem } from "../../schemas/model";
 import { formatMonthLabel } from "../../utils/format";
 import { ChartHelp } from "../chart-help";
+import { DrilldownBarShape } from "../drilldown/bar-shape";
 
 interface FinancialEvolutionChartProps {
 	items: DashboardFinancialEvolutionItem[];
+	onSelect?: (
+		item: DashboardFinancialEvolutionItem,
+		series: "revenue" | "remuneration" | "expense" | "result",
+		trigger?: SVGElement,
+	) => void;
 }
 
 interface ResultLegendIconProps {
@@ -57,6 +63,7 @@ const chartConfig = {
 
 export function FinancialEvolutionChart({
 	items,
+	onSelect,
 }: FinancialEvolutionChartProps) {
 	const hasValues = items.some((item) => {
 		return (
@@ -117,17 +124,53 @@ export function FinancialEvolutionChart({
 						/>
 						<Bar
 							dataKey="revenue"
+							shape={(props) => (
+								<DrilldownBarShape
+									{...props}
+									label={`${chartConfig.revenue.label} ${formatMonthLabel(items[props.index]?.month ?? "")}`}
+									onActivate={
+										onSelect && items[props.index]
+											? (trigger) =>
+													onSelect(items[props.index], "revenue", trigger)
+											: undefined
+									}
+								/>
+							)}
 							fill="var(--color-revenue)"
 							radius={[4, 4, 0, 0]}
 						/>
 						<Bar
 							dataKey="remuneration"
+							shape={(props) => (
+								<DrilldownBarShape
+									{...props}
+									label={`${chartConfig.remuneration.label} ${formatMonthLabel(items[props.index]?.month ?? "")}`}
+									onActivate={
+										onSelect && items[props.index]
+											? (trigger) =>
+													onSelect(items[props.index], "remuneration", trigger)
+											: undefined
+									}
+								/>
+							)}
 							fill="var(--color-remuneration)"
 							radius={[4, 4, 0, 0]}
 						/>
 						{items.some((item) => item.expense !== undefined) ? (
 							<Bar
 								dataKey="expense"
+								shape={(props) => (
+									<DrilldownBarShape
+										{...props}
+										label={`${chartConfig.expense.label} ${formatMonthLabel(items[props.index]?.month ?? "")}`}
+										onActivate={
+											onSelect && items[props.index]
+												? (trigger) =>
+														onSelect(items[props.index], "expense", trigger)
+												: undefined
+										}
+									/>
+								)}
 								fill="var(--color-expense)"
 								radius={[4, 4, 0, 0]}
 							/>
@@ -137,7 +180,44 @@ export function FinancialEvolutionChart({
 								dataKey="result"
 								stroke="var(--color-result)"
 								strokeWidth={2}
-								dot={false}
+								activeDot={false}
+								dot={
+									onSelect
+										? (props) => (
+												<circle
+													key={props.index}
+													cx={props.cx}
+													cy={props.cy}
+													r={5}
+													fill="var(--color-result)"
+													fillOpacity={0}
+													stroke="none"
+													role="button"
+													tabIndex={0}
+													aria-label={`Detalhar Resultado ${formatMonthLabel(items[props.index]?.month ?? "")}`}
+													className="cursor-pointer outline-none transition-[fill-opacity,stroke] hover:fill-opacity-100 hover:stroke-foreground focus-visible:fill-opacity-100 focus-visible:stroke-foreground"
+													pointerEvents="all"
+													onClick={(event) => {
+														onSelect(
+															items[props.index],
+															"result",
+															event.currentTarget,
+														);
+													}}
+													onKeyDown={(event) => {
+														if (event.key === "Enter" || event.key === " ") {
+															event.preventDefault();
+															onSelect(
+																items[props.index],
+																"result",
+																event.currentTarget,
+															);
+														}
+													}}
+												/>
+											)
+										: false
+								}
 								type="linear"
 							/>
 						) : null}

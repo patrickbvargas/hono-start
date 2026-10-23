@@ -177,7 +177,12 @@ function RouteComponent() {
 				/>
 			</WrapperHeader>
 			<WrapperBody>
-				<Dashboard data={summary} showDetails={showDetails} />
+				<Dashboard
+					key={JSON.stringify(search)}
+					data={summary}
+					search={search}
+					showDetails={showDetails}
+				/>
 				{clientOverlay.overlay.create.render((state) => (
 					<ClientForm state={state} onSuccess={state.close} />
 				))}

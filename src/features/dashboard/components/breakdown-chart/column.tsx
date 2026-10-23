@@ -16,12 +16,17 @@ import { formatter } from "@/shared/lib/formatter";
 import { BREAKDOWN_BAR_CHART_CONFIG } from "../../constants/charts";
 import type { DashboardBreakdownItem } from "../../schemas/model";
 import { formatCompactCurrency } from "../../utils/format";
+import { DrilldownBarShape } from "../drilldown/bar-shape";
 
 interface BreakdownColumnChartProps {
 	items: DashboardBreakdownItem[];
+	onSelect?: (item: DashboardBreakdownItem, trigger?: SVGElement) => void;
 }
 
-export function BreakdownColumnChart({ items }: BreakdownColumnChartProps) {
+export function BreakdownColumnChart({
+	items,
+	onSelect,
+}: BreakdownColumnChartProps) {
 	return (
 		<ChartContainer
 			config={BREAKDOWN_BAR_CHART_CONFIG}
@@ -61,6 +66,17 @@ export function BreakdownColumnChart({ items }: BreakdownColumnChartProps) {
 					}
 				/>
 				<Bar
+					shape={(props) => (
+						<DrilldownBarShape
+							{...props}
+							label={items[props.index]?.label ?? "valor"}
+							onActivate={
+								onSelect && items[props.index]
+									? (trigger) => onSelect(items[props.index], trigger)
+									: undefined
+							}
+						/>
+					)}
 					dataKey="total"
 					stroke="var(--color-total)"
 					fill="var(--color-total)"

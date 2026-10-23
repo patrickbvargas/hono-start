@@ -30,10 +30,11 @@ import { dataTableFeatures } from "@/shared/lib/table";
 import { cn } from "@/shared/lib/utils";
 import { PaginationView } from "./pagination";
 
-interface DataTableProps<TData extends RowData> {
+export interface DataTableProps<TData extends RowData> {
 	// biome-ignore lint/suspicious/noExplicitAny: Heterogeneous accessor values follow TanStack column helper contract.
 	columns: ColumnDef<typeof dataTableFeatures, TData, any>[];
 	data: TData[];
+	getRowId?: (row: TData) => string;
 	pageSize?: number;
 	emptyMessage?: string;
 	className?: string;
@@ -51,9 +52,11 @@ export const DataTable = <TData extends RowData>({
 	footerContent,
 	tableFooterContent,
 	pageSize,
+	getRowId,
 }: DataTableProps<TData>) => {
 	const table = useTable({
 		data,
+		getRowId,
 		columns,
 		features: dataTableFeatures,
 		manualPagination: pageSize === undefined,
@@ -130,7 +133,7 @@ export const DataTable = <TData extends RowData>({
 				</Table>
 			</ScrollArea>
 			{pageSize !== undefined && pageCount > 1 ? (
-				<div className="border-t bg-background px-3 pt-2">
+				<div className="border-t bg-background px-3 py-2">
 					<PaginationView
 						totalRecords={data.length}
 						page={pageIndex + 1}
@@ -194,9 +197,21 @@ interface DataTableHeaderProps<TData extends RowData> {
 const DataTableHeader = <TData extends RowData>({
 	header,
 }: DataTableHeaderProps<TData>) => {
+	if (!header.column.getCanSort()) {
+		return (
+			<div className="flex items-center py-3">
+				{flexRender(header.column.columnDef.header, header.getContext())}
+			</div>
+		);
+	}
+	return <DataTableSortHeader header={header} />;
+};
+
+const DataTableSortHeader = <TData extends RowData>({
+	header,
+}: DataTableHeaderProps<TData>) => {
 	const { column, direction, getSortSearch } = useSort();
 
-	const canSort = header.column.getCanSort();
 	const columnId = header.column.id;
 	const isActive = column === columnId;
 
@@ -204,8 +219,6 @@ const DataTableHeader = <TData extends RowData>({
 		header.column.columnDef.header,
 		header.getContext(),
 	);
-
-	if (!canSort) return <div className="flex items-center py-3">{content}</div>;
 
 	return (
 		<Link

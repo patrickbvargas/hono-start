@@ -52,9 +52,7 @@ describe("dashboard data queries", () => {
 					type: { label: "Mensal", value: "MONTHLY" },
 					contract: {
 						processNumber: "PROC-1",
-						client: {
-							fullName: "Cliente A",
-						},
+						client: { id: 1, fullName: "Cliente A" },
 						legalArea: { label: "Previdenciário", value: "SOCIAL_SECURITY" },
 						assignments: [
 							{
@@ -80,9 +78,7 @@ describe("dashboard data queries", () => {
 					type: { label: "Êxito", value: "SUCCESS" },
 					contract: {
 						processNumber: "PROC-2",
-						client: {
-							fullName: "Cliente B",
-						},
+						client: { id: 2, fullName: "Cliente B" },
 						legalArea: { label: "Cível", value: "CIVIL" },
 						assignments: [
 							{
@@ -570,9 +566,7 @@ describe("dashboard data queries", () => {
 					type: { label: "Administrativo", value: "ADMINISTRATIVE" },
 					contract: {
 						processNumber: "PROC-3",
-						client: {
-							fullName: "Cliente C",
-						},
+						client: { id: 3, fullName: "Cliente C" },
 						legalArea: { label: "Família", value: "FAMILY" },
 						assignments: [
 							{

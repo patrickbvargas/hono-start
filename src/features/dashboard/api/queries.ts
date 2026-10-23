@@ -11,19 +11,79 @@ import type {
 	QueryOneReturnType,
 } from "@/shared/types/api";
 import { DASHBOARD_ERRORS } from "../constants/errors";
+import { getDashboardDrilldown } from "../data/drilldown";
 import {
 	getDashboardEmployeeOptions,
 	getDashboardSummary,
 } from "../data/queries";
+import {
+	type DashboardDrilldownInput,
+	type DashboardDrilldownResult,
+	dashboardDrilldownInputSchema,
+	dashboardDrilldownResultSchema,
+} from "../schemas/drilldown";
 import type { DashboardSummary } from "../schemas/model";
 import { type DashboardSearch, dashboardSearchSchema } from "../schemas/search";
 
 export const dashboardKeys = {
 	all: ["dashboard"] as const,
+	drilldown: (input: DashboardDrilldownInput) =>
+		["dashboard", "drilldown", input] as const,
 	summary: (search: DashboardSearch) =>
 		[...dashboardKeys.all, "summary", search] as const,
 	employeeOptions: () => [...dashboardKeys.all, "employee-options"] as const,
 };
+
+const getDashboardDrilldownFn = createServerFn({ method: "GET" })
+	.middleware([authMiddleware])
+	.validator(dashboardDrilldownInputSchema)
+	.handler(async ({ data }) => {
+		try {
+			const session = await getRequiredServerLoggedUserSession();
+			assertCan(session, ["org:dashboard:read_all", "org:dashboard:read_own"]);
+			return dashboardDrilldownResultSchema.parse(
+				await getDashboardDrilldown(
+					{
+						firmId: session.firm.id,
+						employeeId: session.employee.id ?? undefined,
+						employeeTypeValue: session.employeeType?.value,
+						isAdmin: hasPermission(session, "org:dashboard:read_all"),
+						canReadCashFlow: hasPermission(
+							session,
+							"org:dashboard:read_cash_flow",
+						),
+						access: {
+							revenue:
+								hasPermission(session, "org:fees:read_all") ||
+								hasPermission(session, "org:fees:read_assigned"),
+							remuneration:
+								hasPermission(session, "org:remunerations:read_all") ||
+								hasPermission(session, "org:remunerations:read_own"),
+							expense: hasPermission(session, "org:expenses:read"),
+							revenueAll: hasPermission(session, "org:fees:read_all"),
+							remunerationAll: hasPermission(
+								session,
+								"org:remunerations:read_all",
+							),
+						},
+						search: data.search,
+					},
+					data,
+				),
+			);
+		} catch (error) {
+			console.error("[getDashboardDrilldown]", error);
+			throw new Error(DASHBOARD_ERRORS.DRILLDOWN_GET_FAILED);
+		}
+	});
+
+export const getDashboardDrilldownQueryOptions = (
+	input: DashboardDrilldownInput,
+) =>
+	queryOptions<DashboardDrilldownResult>({
+		queryKey: dashboardKeys.drilldown(input),
+		queryFn: () => getDashboardDrilldownFn({ data: input }),
+	});
 
 const getDashboardSummaryFn = createServerFn({ method: "GET" })
 	.middleware([authMiddleware])

@@ -16,6 +16,7 @@ export interface RevenueRow {
 	contract: {
 		processNumber: string;
 		client: {
+			id: number;
 			fullName: string;
 		};
 		legalArea: {
