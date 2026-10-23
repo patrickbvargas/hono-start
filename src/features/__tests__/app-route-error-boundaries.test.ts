@@ -10,7 +10,6 @@ const APP_ROUTE_FILES = [
 	"src/routes/_app/honorarios.tsx",
 	"src/routes/_app/remuneracoes.tsx",
 	"src/routes/_app/auditoria.tsx",
-	"src/routes/_app/alterar-senha-obrigatoria.tsx",
 ];
 
 describe("app route error boundaries", () => {

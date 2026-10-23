@@ -1,35 +1,7 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import {
-	AuthenticationScreen,
-	ForcedChangePasswordForm,
-} from "@/features/authentication";
-import { RouteError } from "@/shared/components/route-error";
-import { getPageTitle } from "@/shared/config/routes";
 
 export const Route = createFileRoute("/_app/alterar-senha-obrigatoria")({
-	head: () => ({
-		meta: [{ title: getPageTitle("Alterar senha") }],
-	}),
 	beforeLoad: () => {
 		throw redirect({ to: "/" });
 	},
-	component: RouteComponent,
-	errorComponent: ({ error }) => (
-		<RouteError title="Alterar senha" error={error} />
-	),
 });
-
-function RouteComponent() {
-	return (
-		<div className="flex min-h-full items-center justify-center p-6">
-			<AuthenticationScreen
-				title="Alterar senha"
-				description="Gerencie suas credenciais pela conta Clerk."
-				showBackToLoginLink={false}
-				footer={null}
-			>
-				<ForcedChangePasswordForm />
-			</AuthenticationScreen>
-		</div>
-	);
-}

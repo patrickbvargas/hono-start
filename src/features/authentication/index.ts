@@ -1,9 +1,6 @@
 export { handleClerkWebhook } from "./api/clerk-webhooks";
-export { ForcedChangePasswordForm } from "./components/forced-change-password-form";
 export { InvitationSetup } from "./components/invitation";
 export { LoginForm } from "./components/login-form";
-export { PasswordResetCompleteForm } from "./components/password-reset-complete-form";
-export { PasswordResetRequestForm } from "./components/password-reset-request-form";
 export { AuthenticationScreen } from "./components/screen";
 export { UserProfileDialog } from "./components/user-profile-dialog";
 export { useLogout } from "./hooks/use-logout";

@@ -14,8 +14,8 @@ describe("feature public barrels", () => {
 		expect(authentication).toHaveProperty("AuthenticationScreen");
 		expect(authentication).toHaveProperty("UserProfileDialog");
 		expect(authentication).toHaveProperty("LoginForm");
-		expect(authentication).toHaveProperty("PasswordResetRequestForm");
-		expect(authentication).toHaveProperty("PasswordResetCompleteForm");
+		expect(authentication).not.toHaveProperty("PasswordResetRequestForm");
+		expect(authentication).not.toHaveProperty("PasswordResetCompleteForm");
 		expect(authentication).toHaveProperty("useLogout");
 		expect(authentication).not.toHaveProperty("useLoginForm");
 		expect(authentication).not.toHaveProperty("loginMutationOptions");

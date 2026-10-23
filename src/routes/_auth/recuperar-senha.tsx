@@ -1,60 +1,7 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import * as React from "react";
-import * as z from "zod";
-import {
-	AuthenticationScreen,
-	PasswordResetCompleteForm,
-	PasswordResetRequestForm,
-} from "@/features/authentication";
-import { getPageTitle } from "@/shared/config/routes";
-import { getRouteSession } from "@/shared/session/client";
-
-const passwordResetSearchSchema = z.object({
-	code: z.string().optional().catch(undefined),
-});
 
 export const Route = createFileRoute("/_auth/recuperar-senha")({
-	head: () => ({
-		meta: [{ title: getPageTitle("Recuperar acesso") }],
-	}),
-	validateSearch: passwordResetSearchSchema,
-	beforeLoad: async ({ context: { queryClient } }) => {
-		const session = await getRouteSession(queryClient);
-
-		if (session) {
-			throw redirect({
-				to: "/",
-			});
-		}
+	beforeLoad: () => {
+		throw redirect({ to: "/login" });
 	},
-	component: RouteComponent,
 });
-
-function RouteComponent() {
-	const { code } = Route.useSearch();
-	const isCompletingReset = !!code;
-
-	React.useEffect(() => {
-		document.title = getPageTitle(
-			isCompletingReset ? "Redefinir senha" : "Recuperar acesso",
-		);
-	}, [isCompletingReset]);
-
-	return (
-		<AuthenticationScreen
-			title={isCompletingReset ? "Redefinir senha" : "Recuperar acesso"}
-			description={
-				isCompletingReset
-					? "Escolha uma nova senha para voltar a acessar a plataforma."
-					: "Use a opção de recuperação de senha na sua conta Clerk."
-			}
-			footer={null}
-		>
-			{isCompletingReset && code ? (
-				<PasswordResetCompleteForm code={code} />
-			) : (
-				<PasswordResetRequestForm />
-			)}
-		</AuthenticationScreen>
-	);
-}

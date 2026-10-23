@@ -50,8 +50,8 @@ The software core includes:
 ## Authentication Experience
 
 - Users authenticate through Clerk email or username sign-in. OAB remains business data.
-- Password reset is part of the product surface.
-- Authenticated users can change their password from inside the product shell.
+- Password reset is handled by the Clerk sign-in surface. Legacy password URLs redirect to login.
+- Authenticated users manage credentials through the Clerk profile inside the product shell.
 - Clerk governs protected-session lifetime and security policy.
 
 ## Product Invariants

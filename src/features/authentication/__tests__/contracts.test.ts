@@ -16,12 +16,6 @@ describe("authentication public screen contracts", () => {
 			'export { LoginForm } from "./components/login-form";',
 		);
 		expect(content).toContain(
-			'export { PasswordResetRequestForm } from "./components/password-reset-request-form";',
-		);
-		expect(content).toContain(
-			'export { PasswordResetCompleteForm } from "./components/password-reset-complete-form";',
-		);
-		expect(content).toContain(
 			'export { UserProfileDialog } from "./components/user-profile-dialog";',
 		);
 		expect(content).toContain(
@@ -38,16 +32,6 @@ describe("authentication public screen contracts", () => {
 		expect(
 			read("src/features/authentication/components/login-form/index.tsx"),
 		).toContain("export function LoginForm");
-		expect(
-			read(
-				"src/features/authentication/components/password-reset-request-form/index.tsx",
-			),
-		).toContain("export function PasswordResetRequestForm");
-		expect(
-			read(
-				"src/features/authentication/components/password-reset-complete-form/index.tsx",
-			),
-		).toContain("export function PasswordResetCompleteForm");
 		expect(
 			read(
 				"src/features/authentication/components/user-profile-dialog/index.tsx",
@@ -72,14 +56,8 @@ describe("authentication public screen contracts", () => {
 
 		expect(loginRoute).not.toContain("@/features/authentication/components/");
 
-		expect(passwordResetRoute).toContain("AuthenticationScreen,");
-		expect(passwordResetRoute).toContain("beforeLoad:");
-		expect(passwordResetRoute).toContain("<AuthenticationScreen");
-		expect(passwordResetRoute).toContain("PasswordResetCompleteForm");
-		expect(passwordResetRoute).toContain("PasswordResetRequestForm");
-		expect(passwordResetRoute).not.toContain(
-			"@/features/authentication/components/",
-		);
+		expect(passwordResetRoute).toContain('throw redirect({ to: "/login" })');
+		expect(passwordResetRoute).not.toContain("PasswordReset");
 	});
 
 	it("keeps the authentication screen on shared UI composition", () => {
