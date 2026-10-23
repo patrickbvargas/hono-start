@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { EMPLOYEE_ERRORS } from "../constants/errors";
 
-const { getSupabaseCredentialAccessStateMock, prismaMock } = vi.hoisted(() => ({
-	getSupabaseCredentialAccessStateMock: vi.fn(),
+const { getEmployeeClerkAccessMock, prismaMock } = vi.hoisted(() => ({
+	getEmployeeClerkAccessMock: vi.fn(),
 	prismaMock: {
 		firm: {
 			findUniqueOrThrow: vi.fn().mockResolvedValue({}),
@@ -27,7 +27,7 @@ vi.mock("@/shared/lib/prisma", () => ({
 }));
 
 vi.mock("../data/clerk-access", () => ({
-	getEmployeeClerkAccess: getSupabaseCredentialAccessStateMock,
+	getEmployeeClerkAccess: getEmployeeClerkAccessMock,
 	getAssignableClerkRoles: async () => [{ key: "org:custom", name: "Custom" }],
 }));
 vi.mock("@/shared/session/server", () => ({
@@ -77,7 +77,7 @@ describe("employee data queries", () => {
 			},
 		]);
 		prismaMock.$queryRaw.mockResolvedValue([{ employeeId: 10, total: 2 }]);
-		getSupabaseCredentialAccessStateMock.mockResolvedValue({
+		getEmployeeClerkAccessMock.mockResolvedValue({
 			isAccessActive: true,
 			status: "ACTIVE",
 			user: {

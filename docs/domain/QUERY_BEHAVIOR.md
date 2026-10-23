@@ -28,17 +28,16 @@ This file defines the canonical domain-facing behavior of filtering, sorting, li
 | Filter key | Meaning | Type / Default |
 |---|---|---|
 | `type` | employee type | lookup value |
-| `role` | user role | lookup value |
-| `status` | soft-delete status | `active`, `inactive`, or `all`; default `active` |
+| `status` | soft-delete status | `active`, `deleted`, or `all`; default `active` |
 | `active` | active flag | `true`, `false`, or `all`; default `all` |
 
 ### Client
 
 | Filter key | Meaning | Type / Default |
 |---|---|---|
-| `search` | name or document search | text |
+| `query` | name or document search | text |
 | `type` | client type | lookup value |
-| `status` | soft-delete status | `active`, `inactive`, or `all`; default `active` |
+| `status` | soft-delete status | `active`, `deleted`, or `all`; default `active` |
 | `active` | active flag | `true`, `false`, or `all`; default `all` |
 
 ### Contract
@@ -49,7 +48,7 @@ This file defines the canonical domain-facing behavior of filtering, sorting, li
 | `clientId` | client filter | entity id |
 | `legalArea` | legal area filter | lookup value |
 | `contractStatus` | contract status filter | lookup value |
-| `status` | soft-delete status | `active`, `inactive`, or `all`; default `active` |
+| `status` | soft-delete status | `active`, `deleted`, or `all`; default `active` |
 | `active` | active flag | `true`, `false`, or `all`; default `all` |
 
 ### Fee
@@ -88,11 +87,9 @@ This file defines the canonical domain-facing behavior of filtering, sorting, li
 | Filter key | Meaning | Type / Default |
 |---|---|---|
 | `query` | actor-name or entity-name search | text |
-| `userId` | acting user | entity id |
+| `actorName` | actor names | string array |
 | `action` | audit action | `CREATE`, `UPDATE`, `DELETE`, `RESTORE` |
 | `entityType` | entity kind | entity type string |
-| `dateFrom` | lower created-at bound | date |
-| `dateTo` | upper created-at bound | date |
 
 ## Sort Contracts
 
@@ -105,10 +102,13 @@ Default sort: `fullName` ascending
 Sortable columns:
 
 - `fullName`
-- `email`
+- `id`
+- `isActive`
+- `oabNumber`
+- `remunerationPercent`
 - `type`
-- `role`
-- `createdAt`
+
+Employee is business data only; account email and role belong to Clerk and are not employee sort/filter fields.
 
 ### Client
 
@@ -119,7 +119,8 @@ Sortable columns:
 - `fullName`
 - `document`
 - `type`
-- `createdAt`
+- `id`
+- `isActive`
 
 ### Contract
 
@@ -176,17 +177,18 @@ Sortable columns:
 
 - `paymentDate`
 - `amount`
-- `percentage`
-- `employee`
+- `effectivePercentage`
+- `employeeName`
 - `createdAt`
 
 ### Audit Log
 
-Default sort: `createdAt` descending
+Default sort: `occurredAt` descending
 
 Sortable columns:
 
-- `createdAt`
-- `user`
-- `entityType`
+- `occurredAt`
+- `actorName`
 - `action`
+- `entityType`
+- `entityName`

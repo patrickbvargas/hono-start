@@ -44,6 +44,7 @@ vi.mock("@/features/audit-logs/data/mutations", () => ({
 vi.mock("@/shared/lib/attachment-storage", () => ({
 	createAttachmentStoragePath: vi.fn(() => "firms/1/client/9/test.pdf"),
 	isAttachmentStorageCapacityError: isAttachmentStorageCapacityErrorMock,
+	readAttachmentFile: vi.fn(async () => Buffer.from("backup")),
 	removeAttachmentFile: removeAttachmentFileMock,
 	uploadAttachmentFile: uploadAttachmentFileMock,
 }));
@@ -277,4 +278,20 @@ describe("attachment data mutations", () => {
 
 		expect(prismaMock.$transaction).not.toHaveBeenCalled();
 	});
+});
+
+it("restores the binary when deletion transaction fails", async () => {
+	prismaMock.attachment.findFirst.mockResolvedValue({
+		id: 50,
+		fileName: "test.pdf",
+		firmId: 1,
+		storagePath: "test.pdf",
+	});
+	prismaMock.$transaction.mockRejectedValueOnce(new Error("database offline"));
+	await expect(deleteAttachment({ firmId: 1, id: 50 })).rejects.toThrow(
+		ATTACHMENT_ERRORS.DELETE_FAILED,
+	);
+	expect(uploadAttachmentFileMock).toHaveBeenCalledWith(
+		expect.objectContaining({ path: "test.pdf", data: Buffer.from("backup") }),
+	);
 });

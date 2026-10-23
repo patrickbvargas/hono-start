@@ -22,13 +22,13 @@ describe("route session helpers", () => {
 
 	it("returns required session data when the query succeeds", async () => {
 		const queryClient = {
-			fetchQuery: vi.fn().mockResolvedValue({ user: { id: 7 } }),
+			query: vi.fn().mockResolvedValue({ user: { id: 7 } }),
 		};
 
 		await expect(requireRouteSession(queryClient as never)).resolves.toEqual({
 			user: { id: 7 },
 		});
-		expect(queryClient.fetchQuery).toHaveBeenCalledWith(
+		expect(queryClient.query).toHaveBeenCalledWith(
 			expect.objectContaining({
 				queryKey: ["session", "current"],
 			}),
@@ -37,7 +37,7 @@ describe("route session helpers", () => {
 
 	it("redirects protected routes to /login when the shared session query rejects", async () => {
 		const queryClient = {
-			fetchQuery: vi.fn().mockRejectedValue(new Error("unauthorized")),
+			query: vi.fn().mockRejectedValue(new Error("unauthorized")),
 			setQueryData: vi.fn(),
 		};
 
@@ -57,7 +57,7 @@ describe("route session helpers", () => {
 
 	it("redirects protected routes to /login when the shared session query resolves to null", async () => {
 		const queryClient = {
-			fetchQuery: vi.fn().mockResolvedValue(null),
+			query: vi.fn().mockResolvedValue(null),
 			setQueryData: vi.fn(),
 		};
 
@@ -79,11 +79,11 @@ describe("route session helpers", () => {
 
 	it("reads public-route session state from the shared session query without redirecting", async () => {
 		const queryClient = {
-			fetchQuery: vi.fn().mockResolvedValue(null),
+			query: vi.fn().mockResolvedValue(null),
 		};
 
 		await expect(getRouteSession(queryClient as never)).resolves.toBeNull();
-		expect(queryClient.fetchQuery).toHaveBeenCalledWith(
+		expect(queryClient.query).toHaveBeenCalledWith(
 			expect.objectContaining({
 				queryKey: ["session", "current"],
 			}),

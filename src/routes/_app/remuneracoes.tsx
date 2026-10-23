@@ -39,13 +39,9 @@ export const Route = createFileRoute("/_app/remuneracoes")({
 	loaderDeps: ({ search }) => ({ search }),
 	loader: async ({ context: { queryClient }, deps: { search } }) => {
 		await Promise.all([
-			queryClient.ensureQueryData(getRemunerationsQueryOptions(search)),
-			queryClient.ensureQueryData(
-				getSelectableRemunerationContractsQueryOptions(),
-			),
-			queryClient.ensureQueryData(
-				getSelectableRemunerationEmployeesQueryOptions(),
-			),
+			queryClient.query(getRemunerationsQueryOptions(search)),
+			queryClient.query(getSelectableRemunerationContractsQueryOptions()),
+			queryClient.query(getSelectableRemunerationEmployeesQueryOptions()),
 		]);
 	},
 	component: RouteComponent,

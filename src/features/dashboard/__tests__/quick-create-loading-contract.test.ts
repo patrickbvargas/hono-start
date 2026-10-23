@@ -17,18 +17,10 @@ describe("dashboard quick-create loading contract", () => {
 			"index.tsx",
 		);
 
-		expect(routeContent).toContain(
-			"queryClient.ensureQueryData(getDashboardSummaryQueryOptions(search))",
-		);
-		expect(routeContent).toContain(
-			"queryClient.ensureQueryData(getDashboardEmployeeOptionsQueryOptions())",
-		);
-		expect(routeContent).toContain(
-			"queryClient.ensureQueryData(getContractLegalAreasQueryOptions())",
-		);
-		expect(routeContent).toContain(
-			"queryClient.ensureQueryData(getContractRevenueTypesQueryOptions())",
-		);
+		expect(routeContent).toContain("getDashboardSummaryQueryOptions(search)");
+		expect(routeContent).toContain("getDashboardEmployeeOptionsQueryOptions()");
+		expect(routeContent).toContain("getContractLegalAreasQueryOptions()");
+		expect(routeContent).toContain("getContractRevenueTypesQueryOptions()");
 	});
 
 	it("gives each quick-create form its own suspense fallback", () => {

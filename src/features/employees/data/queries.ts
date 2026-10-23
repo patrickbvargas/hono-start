@@ -61,7 +61,7 @@ function buildEmployeeWhere({
 	};
 }
 
-// TODO: refatorar
+// Count distinct contracts across active assignments for the selected employees.
 async function getActiveContractCountByEmployeeIds(employeeIds: number[]) {
 	if (employeeIds.length === 0) {
 		return new Map<number, number>();

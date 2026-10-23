@@ -127,19 +127,19 @@ export const getAuditLogActionsQueryOptions = () =>
 	queryOptions({
 		queryKey: auditLogKeys.actions(),
 		queryFn: getAuditLogActionsFn,
-		staleTime: "static",
+		staleTime: Infinity,
 	});
 
 export const getAuditLogEntityTypesQueryOptions = () =>
 	queryOptions({
 		queryKey: auditLogKeys.entityTypes(),
 		queryFn: getAuditLogEntityTypesFn,
-		staleTime: "static",
+		staleTime: Infinity,
 	});
 
 export const getAuditLogActorsQueryOptions = () =>
 	queryOptions({
 		queryKey: auditLogKeys.actors(),
 		queryFn: getAuditLogActorsFn,
-		staleTime: "static",
+		staleTime: Infinity,
 	});

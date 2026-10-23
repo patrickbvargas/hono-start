@@ -81,6 +81,7 @@ export const getDashboardSummaryQueryOptions = (search: DashboardSearch) =>
 
 export const getDashboardEmployeeOptionsQueryOptions = () =>
 	queryOptions({
+		staleTime: Infinity,
 		queryKey: dashboardKeys.employeeOptions(),
 		queryFn: getDashboardEmployeeOptionsFn,
 	});

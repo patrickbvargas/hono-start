@@ -568,7 +568,7 @@ describe("frontend orchestration boundaries", () => {
 					message: "route does not validate URL search",
 				},
 				{
-					passes: content.includes("queryClient.ensureQueryData("),
+					passes: content.includes("queryClient.query("),
 					message: "route loader does not prefetch query data",
 				},
 				{

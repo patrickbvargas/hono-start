@@ -42,13 +42,13 @@ export const Route = createFileRoute("/_app/contratos")({
 	loaderDeps: ({ search }) => ({ search }),
 	loader: async ({ context: { queryClient }, deps: { search } }) => {
 		await Promise.all([
-			queryClient.ensureQueryData(getContractsQueryOptions(search)),
-			queryClient.ensureQueryData(getSelectableContractClientsQueryOptions()),
-			queryClient.ensureQueryData(getSelectableContractEmployeesQueryOptions()),
-			queryClient.ensureQueryData(getContractLegalAreasQueryOptions()),
-			queryClient.ensureQueryData(getContractStatusesQueryOptions()),
-			queryClient.ensureQueryData(getContractAssignmentTypesQueryOptions()),
-			queryClient.ensureQueryData(getContractRevenueTypesQueryOptions()),
+			queryClient.query(getContractsQueryOptions(search)),
+			queryClient.query(getSelectableContractClientsQueryOptions()),
+			queryClient.query(getSelectableContractEmployeesQueryOptions()),
+			queryClient.query(getContractLegalAreasQueryOptions()),
+			queryClient.query(getContractStatusesQueryOptions()),
+			queryClient.query(getContractAssignmentTypesQueryOptions()),
+			queryClient.query(getContractRevenueTypesQueryOptions()),
 		]);
 	},
 	component: RouteComponent,

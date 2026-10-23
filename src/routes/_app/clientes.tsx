@@ -37,8 +37,8 @@ export const Route = createFileRoute("/_app/clientes")({
 	loaderDeps: ({ search }) => ({ search }),
 	loader: async ({ context: { queryClient }, deps: { search } }) => {
 		await Promise.all([
-			queryClient.ensureQueryData(getClientsQueryOptions(search)),
-			queryClient.ensureQueryData(getClientTypesQueryOptions()),
+			queryClient.query(getClientsQueryOptions(search)),
+			queryClient.query(getClientTypesQueryOptions()),
 		]);
 	},
 	component: RouteComponent,

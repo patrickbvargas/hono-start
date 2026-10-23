@@ -16,7 +16,7 @@ vi.mock("../data/queries", () => ({
 	getAttachmentAccessById: mocks.attachment,
 	assertAttachmentOwnerExists: mocks.owner,
 }));
-vi.mock("../rules/access", () => ({
+vi.mock("../api/access", () => ({
 	assertAttachmentOwnerReadAccess: mocks.access,
 }));
 vi.mock("@/shared/lib/attachment-storage", () => ({
@@ -69,4 +69,13 @@ it("handles absent binaries without exposing disk paths", async () => {
 	const response = await handleAttachmentFile("2");
 	expect(response.status).toBe(404);
 	expect(await response.text()).not.toContain("secret");
+});
+
+it("reports disk failures as operational errors", async () => {
+	mocks.read.mockRejectedValue(
+		Object.assign(new Error("private disk details"), { code: "EACCES" }),
+	);
+	const response = await handleAttachmentFile("2");
+	expect(response.status).toBe(500);
+	expect(await response.text()).not.toContain("private disk details");
 });

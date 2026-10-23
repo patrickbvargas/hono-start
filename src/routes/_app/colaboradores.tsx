@@ -42,8 +42,8 @@ export const Route = createFileRoute("/_app/colaboradores")({
 	loader: async ({ context: { queryClient, session }, deps: { search } }) => {
 		assertCan(session, "org:employees:read");
 		await Promise.all([
-			queryClient.ensureQueryData(getEmployeesQueryOptions(search)),
-			queryClient.ensureQueryData(getEmployeeTypesQueryOptions()),
+			queryClient.query(getEmployeesQueryOptions(search)),
+			queryClient.query(getEmployeeTypesQueryOptions()),
 		]);
 	},
 	component: RouteComponent,

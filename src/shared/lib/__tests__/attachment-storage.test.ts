@@ -125,3 +125,22 @@ it("does not overwrite an existing file", async () => {
 		"first",
 	);
 });
+
+it("publishes only one concurrent upload for an identity", async () => {
+	const path = "firms/1/client/2/concurrent.pdf";
+	const results = await Promise.allSettled(
+		["first", "second"].map((value) =>
+			uploadAttachmentFile({
+				path,
+				data: Buffer.from(value),
+				contentType: "application/pdf",
+			}),
+		),
+	);
+	expect(
+		results.filter((result) => result.status === "fulfilled"),
+	).toHaveLength(1);
+	expect(["first", "second"]).toContain(
+		(await readAttachmentFile({ path })).toString(),
+	);
+});

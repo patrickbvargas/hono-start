@@ -22,7 +22,7 @@ describe("route prefetch and loading checklist", () => {
 					"index.tsx",
 				],
 				requiredRouteSnippets: [
-					"queryClient.ensureQueryData(getDashboardSummaryQueryOptions(search))",
+					"getDashboardSummaryQueryOptions(search)",
 					"getDashboardEmployeeOptionsQueryOptions()",
 					"getContractLegalAreasQueryOptions()",
 					"getContractRevenueTypesQueryOptions()",
@@ -45,7 +45,7 @@ describe("route prefetch and loading checklist", () => {
 					"index.tsx",
 				],
 				requiredRouteSnippets: [
-					"queryClient.ensureQueryData(getClientsQueryOptions(search))",
+					"getClientsQueryOptions(search)",
 					"getClientTypesQueryOptions()",
 				],
 				requiredFilterSnippets: ["useClientOptions()", "types"],
@@ -61,7 +61,7 @@ describe("route prefetch and loading checklist", () => {
 					"index.tsx",
 				],
 				requiredRouteSnippets: [
-					"queryClient.ensureQueryData(getEmployeesQueryOptions(search))",
+					"getEmployeesQueryOptions(search)",
 					"getEmployeeTypesQueryOptions()",
 				],
 				requiredFilterSnippets: ["useEmployeeOptions()", "types"],
@@ -77,7 +77,7 @@ describe("route prefetch and loading checklist", () => {
 					"index.tsx",
 				],
 				requiredRouteSnippets: [
-					"queryClient.ensureQueryData(getContractsQueryOptions(search))",
+					"getContractsQueryOptions(search)",
 					"getSelectableContractClientsQueryOptions()",
 					"getContractLegalAreasQueryOptions()",
 					"getContractStatusesQueryOptions()",
@@ -100,7 +100,7 @@ describe("route prefetch and loading checklist", () => {
 					"index.tsx",
 				],
 				requiredRouteSnippets: [
-					"queryClient.ensureQueryData(getFeesQueryOptions(search))",
+					"getFeesQueryOptions(search)",
 					"getSelectableFeeContractsQueryOptions()",
 					"getSelectableFeeRevenuesQueryOptions()",
 				],
@@ -117,7 +117,7 @@ describe("route prefetch and loading checklist", () => {
 					"index.tsx",
 				],
 				requiredRouteSnippets: [
-					"queryClient.ensureQueryData(getRemunerationsQueryOptions(search))",
+					"getRemunerationsQueryOptions(search)",
 					"getSelectableRemunerationContractsQueryOptions()",
 					"getSelectableRemunerationEmployeesQueryOptions()",
 				],
@@ -138,7 +138,7 @@ describe("route prefetch and loading checklist", () => {
 					"index.tsx",
 				],
 				requiredRouteSnippets: [
-					"queryClient.ensureQueryData(getAuditLogsQueryOptions(search))",
+					"getAuditLogsQueryOptions(search)",
 					"getAuditLogActionsQueryOptions()",
 					"getAuditLogEntityTypesQueryOptions()",
 					"getAuditLogActorsQueryOptions()",

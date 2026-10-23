@@ -37,8 +37,8 @@ export const Route = createFileRoute("/_app/despesas")({
 	loaderDeps: ({ search }) => ({ search }),
 	loader: async ({ context: { queryClient }, deps: { search } }) => {
 		await Promise.all([
-			queryClient.ensureQueryData(getExpensesQueryOptions(search)),
-			queryClient.ensureQueryData(getExpenseCategoriesQueryOptions()),
+			queryClient.query(getExpensesQueryOptions(search)),
+			queryClient.query(getExpenseCategoriesQueryOptions()),
 		]);
 	},
 	component: RouteComponent,

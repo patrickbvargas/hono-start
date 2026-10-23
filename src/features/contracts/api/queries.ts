@@ -207,38 +207,40 @@ export const getContractLegalAreasQueryOptions = () =>
 	queryOptions({
 		queryKey: contractKeys.legalAreas(),
 		queryFn: getContractLegalAreasFn,
-		staleTime: "static",
+		staleTime: Infinity,
 	});
 
 export const getContractStatusesQueryOptions = () =>
 	queryOptions({
 		queryKey: contractKeys.statuses(),
 		queryFn: getContractStatusesFn,
-		staleTime: "static",
+		staleTime: Infinity,
 	});
 
 export const getContractAssignmentTypesQueryOptions = () =>
 	queryOptions({
 		queryKey: contractKeys.assignmentTypes(),
 		queryFn: getContractAssignmentTypesFn,
-		staleTime: "static",
+		staleTime: Infinity,
 	});
 
 export const getContractRevenueTypesQueryOptions = () =>
 	queryOptions({
 		queryKey: contractKeys.revenueTypes(),
 		queryFn: getContractRevenueTypesFn,
-		staleTime: "static",
+		staleTime: Infinity,
 	});
 
 export const getSelectableContractClientsQueryOptions = () =>
 	queryOptions({
+		staleTime: Infinity,
 		queryKey: contractKeys.clientOptions(),
 		queryFn: getSelectableContractClientsFn,
 	});
 
 export const getSelectableContractEmployeesQueryOptions = () =>
 	queryOptions({
+		staleTime: Infinity,
 		queryKey: contractKeys.employeeOptions(),
 		queryFn: getSelectableContractEmployeesFn,
 	});

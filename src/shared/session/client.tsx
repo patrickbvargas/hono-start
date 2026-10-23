@@ -70,7 +70,7 @@ export async function requireRouteSession(
 }
 
 export async function getRouteSession(queryClient: QueryClient) {
-	return queryClient.fetchQuery(getCurrentSessionQueryOptions());
+	return queryClient.query(getCurrentSessionQueryOptions());
 }
 
 const LoggedUserSessionContext = createContext<LoggedUserSession | null>(null);

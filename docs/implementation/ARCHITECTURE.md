@@ -176,3 +176,7 @@ unless a route-facing consumer requires the difference.
 ## Clerk provider UI exception
 
 Clerk-owned SignIn and account widgets may be imported by authentication feature components. Surrounding product UI continues using shared UI exports. ClerkProvider and request/CSRF middleware are thin framework integration. See CLERK_MIGRATION.md for migration state and deployment prerequisites.
+
+## HTTP endpoint exception
+
+Feature barrels may re-export server-only entrypoints required by HTTP routes (attachment delivery and Clerk webhooks). Their implementation belongs in feature `api/` modules, not in the barrel. Authorization helpers depending on persisted-resource types also belong in `api/`; pure `rules/` modules must not import `data/`.

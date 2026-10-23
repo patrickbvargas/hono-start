@@ -123,3 +123,9 @@ See `docs/domain/DOMAIN_MODEL.md` for ownership boundaries. Authentication resol
 - Edit semantic variables in `:root` and `.dark` to theme shared shadcn UI and Clerk together.
 - Clerk uses its built-in shadcn theme, which consumes these semantic colors. Its font and radius are linked through `--clerk-font-family` and `--clerk-border-radius` on `body` in the base layer, outside the replaceable `:root` and `.dark` theme blocks.
 - Do not add independent colors, fonts, or radii to individual Clerk components through `appearance`.
+
+## Imperative query execution
+
+Use `queryClient.query(options)` for imperative fetching. Feature option factories own cache policy, including `staleTime: Infinity` where configured. Loaders call `queryClient.query(optionsFactory(...))` without overrides. Infinite freshness still permits mutation invalidation to refetch active observers. Do not use static freshness for mutable business data. Do not use deprecated fetchQuery or ensureQueryData methods.
+
+Entity list, detail and dashboard data queries inherit global QueryClient cache settings; do not override staleTime in those factories or loaders. Only lookup and selectable-option queries use staleTime: Infinity, preserving explicit invalidation support. Session verification keeps its security-specific staleTime: 0.

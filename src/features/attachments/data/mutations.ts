@@ -3,6 +3,7 @@ import { createAuditLog } from "@/features/audit-logs/data/mutations";
 import {
 	createAttachmentStoragePath,
 	isAttachmentStorageCapacityError,
+	readAttachmentFile,
 	removeAttachmentFile,
 	uploadAttachmentFile,
 } from "@/shared/lib/attachment-storage";
@@ -129,29 +130,53 @@ export async function deleteAttachment(params: {
 		throw new Error(ATTACHMENT_ERRORS.DETAIL_NOT_FOUND);
 	}
 
+	let backup: Buffer | undefined;
 	try {
+		try {
+			backup = await readAttachmentFile({ path: attachment.storagePath });
+		} catch (error) {
+			if ((error as NodeJS.ErrnoException).code !== "ENOENT") {
+				throw error;
+			}
+		}
 		await removeAttachmentFile({ path: attachment.storagePath });
 	} catch (error) {
 		console.error("[deleteAttachment:storage]", error);
 		throw new Error(ATTACHMENT_ERRORS.STORAGE_DELETE_FAILED);
 	}
 
-	await prisma.$transaction(async (tx) => {
-		await tx.attachment.delete({
-			where: { id: params.id },
-		});
+	try {
+		await prisma.$transaction(async (tx) => {
+			await tx.attachment.delete({
+				where: { id: params.id },
+			});
 
-		await createAuditLog(tx, {
-			firmId: params.firmId,
-			actor: params.actor,
-			action: "DELETE",
-			entityType: "Attachment",
-			entityId: attachment.id,
-			entityName: attachment.fileName,
-			changeData: { before: attachment },
-			description: `Deleted attachment ${attachment.fileName}.`,
+			await createAuditLog(tx, {
+				firmId: params.firmId,
+				actor: params.actor,
+				action: "DELETE",
+				entityType: "Attachment",
+				entityId: attachment.id,
+				entityName: attachment.fileName,
+				changeData: { before: attachment },
+				description: `Deleted attachment ${attachment.fileName}.`,
+			});
 		});
-	});
+	} catch (error) {
+		if (backup) {
+			try {
+				await uploadAttachmentFile({
+					path: attachment.storagePath,
+					data: backup,
+					contentType: "application/octet-stream",
+				});
+			} catch (restoreError) {
+				console.error("[deleteAttachment:restore]", restoreError);
+			}
+		}
+		console.error("[deleteAttachment:persistence]", error);
+		throw new Error(ATTACHMENT_ERRORS.DELETE_FAILED);
+	}
 
 	return { success: true };
 }

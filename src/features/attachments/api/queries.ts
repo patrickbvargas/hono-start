@@ -11,12 +11,12 @@ import {
 	assertAttachmentOwnerExists,
 	getAttachmentsByOwner,
 } from "../data/queries";
-import { assertAttachmentOwnerReadAccess } from "../rules/access";
 import {
 	type AttachmentListInput,
 	attachmentListInputSchema,
 } from "../schemas/form";
 import type { AttachmentSummary } from "../schemas/model";
+import { assertAttachmentOwnerReadAccess } from "./access";
 
 export const attachmentKeys = {
 	all: ["attachments"] as const,

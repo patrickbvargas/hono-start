@@ -100,6 +100,7 @@ export const getExpenseByIdQueryOptions = (id: number) =>
 
 export const getExpenseCategoriesQueryOptions = () =>
 	queryOptions({
+		staleTime: Infinity,
 		queryKey: expenseKeys.categoryOptions(),
 		queryFn: getExpenseCategoriesFn,
 	});

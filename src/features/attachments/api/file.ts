@@ -4,13 +4,11 @@ import {
 	getRequiredServerLoggedUserSession,
 	getServerScope,
 } from "@/shared/session/server";
-
 import {
 	assertAttachmentOwnerExists,
 	getAttachmentAccessById,
 } from "../data/queries";
-
-import { assertAttachmentOwnerReadAccess } from "../rules/access";
+import { assertAttachmentOwnerReadAccess } from "./access";
 
 export async function handleAttachmentFile(id: string) {
 	const headers = {
@@ -18,6 +16,7 @@ export async function handleAttachmentFile(id: string) {
 		"X-Content-Type-Options": "nosniff",
 	};
 
+	let failureStatus = 403;
 	try {
 		const session = await getRequiredServerLoggedUserSession();
 
@@ -27,6 +26,7 @@ export async function handleAttachmentFile(id: string) {
 			return new Response("Anexo não encontrado", { status: 404, headers });
 		}
 
+		failureStatus = 500;
 		const attachment = await getAttachmentAccessById(firmId, Number(id));
 
 		if (!attachment || attachment.deletedAt) {
@@ -38,8 +38,10 @@ export async function handleAttachmentFile(id: string) {
 			input: attachment.ownerInput,
 		});
 
+		failureStatus = 403;
 		assertAttachmentOwnerReadAccess(session, owner);
 
+		failureStatus = 500;
 		const data = await readAttachmentFile({ path: attachment.storagePath });
 
 		return new Response(new Uint8Array(data), {
@@ -58,7 +60,7 @@ export async function handleAttachmentFile(id: string) {
 
 		return new Response(
 			missing ? "Anexo não encontrado" : "Não foi possível acessar o anexo",
-			{ status: missing ? 404 : 403, headers },
+			{ status: missing ? 404 : failureStatus, headers },
 		);
 	}
 }

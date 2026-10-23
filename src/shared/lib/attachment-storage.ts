@@ -1,8 +1,8 @@
 import {
+	link,
 	lstat,
 	mkdir,
 	readFile,
-	rename,
 	unlink,
 	writeFile,
 } from "node:fs/promises";
@@ -80,16 +80,8 @@ export async function uploadAttachmentFile({
 	const temporary = `${target}.${crypto.randomUUID()}.tmp`;
 	try {
 		await writeFile(temporary, data, { flag: "wx", mode: 0o600 });
-		// UUID identities are generated server-side; reject any existing destination.
-		try {
-			await lstat(target);
-			throw new Error("Anexo já existe");
-		} catch (error) {
-			if (code(error) !== "ENOENT") {
-				throw error;
-			}
-		}
-		await rename(temporary, target);
+		// Publish complete bytes atomically without replacing another upload.
+		await link(temporary, target);
 	} finally {
 		await unlink(temporary).catch((error) => {
 			if (code(error) !== "ENOENT") {

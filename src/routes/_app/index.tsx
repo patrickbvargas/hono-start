@@ -68,12 +68,12 @@ export const Route = createFileRoute("/_app/")({
 	loader: async ({ context: { queryClient, session }, deps: { search } }) => {
 		assertCan(session, ["org:dashboard:read_all", "org:dashboard:read_own"]);
 		const prefetches = [
-			queryClient.ensureQueryData(getDashboardSummaryQueryOptions(search)),
-			queryClient.ensureQueryData(getDashboardEmployeeOptionsQueryOptions()),
+			queryClient.query(getDashboardSummaryQueryOptions(search)),
+			queryClient.query(getDashboardEmployeeOptionsQueryOptions()),
 		];
 
 		if (hasPermission(session, "org:clients:create")) {
-			await queryClient.ensureQueryData(getClientTypesQueryOptions());
+			await queryClient.query(getClientTypesQueryOptions());
 		}
 		if (
 			hasPermission(session, "org:contracts:create") ||
@@ -82,14 +82,12 @@ export const Route = createFileRoute("/_app/")({
 			)
 		) {
 			await Promise.all([
-				queryClient.ensureQueryData(getSelectableContractClientsQueryOptions()),
-				queryClient.ensureQueryData(
-					getSelectableContractEmployeesQueryOptions(),
-				),
-				queryClient.ensureQueryData(getContractLegalAreasQueryOptions()),
-				queryClient.ensureQueryData(getContractStatusesQueryOptions()),
-				queryClient.ensureQueryData(getContractAssignmentTypesQueryOptions()),
-				queryClient.ensureQueryData(getContractRevenueTypesQueryOptions()),
+				queryClient.query(getSelectableContractClientsQueryOptions()),
+				queryClient.query(getSelectableContractEmployeesQueryOptions()),
+				queryClient.query(getContractLegalAreasQueryOptions()),
+				queryClient.query(getContractStatusesQueryOptions()),
+				queryClient.query(getContractAssignmentTypesQueryOptions()),
+				queryClient.query(getContractRevenueTypesQueryOptions()),
 			]);
 		}
 		if (
@@ -98,14 +96,12 @@ export const Route = createFileRoute("/_app/")({
 			)
 		) {
 			await Promise.all([
-				queryClient.ensureQueryData(getSelectableFeeContractsQueryOptions()),
-				queryClient.ensureQueryData(getSelectableFeeRevenuesQueryOptions()),
+				queryClient.query(getSelectableFeeContractsQueryOptions()),
+				queryClient.query(getSelectableFeeRevenuesQueryOptions()),
 			]);
 		}
 		if (hasPermission(session, "org:employees:create")) {
-			await Promise.all([
-				queryClient.ensureQueryData(getEmployeeTypesQueryOptions()),
-			]);
+			await Promise.all([queryClient.query(getEmployeeTypesQueryOptions())]);
 		}
 
 		await Promise.all(prefetches);

@@ -129,8 +129,8 @@ Prisma schema cannot represent PostgreSQL filtered unique indexes directly. When
 
 ## Implementation Boundary
 
-- Query construction belongs in feature API modules.
-- Lookup-backed write resolution belongs in feature API modules.
+- Query construction belongs in feature data modules.
+- Lookup-backed write resolution belongs in feature data modules, invoked by the API boundary.
 - Routes do not construct Prisma filters or order clauses.
 - Shared data-access helpers may support features, but feature ownership remains local.
 - Product-rule enforcement stays in the service or API layer; database constraints are a safety net rather than the primary contract.
