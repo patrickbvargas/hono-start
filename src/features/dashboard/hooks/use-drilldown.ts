@@ -43,7 +43,10 @@ export function useDashboardDrilldown() {
 		overlay.details.open(target);
 	};
 	const openBreakdown = (
-		kind: Exclude<DashboardDrilldownSelection["kind"], "monthly" | "metric">,
+		kind: Exclude<
+			DashboardDrilldownSelection["kind"],
+			"monthly" | "metric" | "employee-month"
+		>,
 		item: DashboardBreakdownItem,
 		title: string,
 		trigger?: SVGElement,

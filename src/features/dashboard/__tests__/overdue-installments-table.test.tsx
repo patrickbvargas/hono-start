@@ -53,6 +53,7 @@ describe("DashboardOverdueInstallmentsTable", () => {
 			<DashboardOverdueInstallmentsTable
 				rows={[
 					{
+						contractId: 1,
 						contractProcessNumber: "PROC-1",
 						clientName: "Cliente 1",
 						lawyerName: "Maria Silva",

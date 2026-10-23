@@ -9,6 +9,7 @@ export const dashboardRevenueSelect = {
 	type: { select: { label: true, value: true } },
 	contract: {
 		select: {
+			id: true,
 			processNumber: true,
 			client: { select: { id: true, fullName: true } },
 			legalArea: { select: { label: true, value: true } },

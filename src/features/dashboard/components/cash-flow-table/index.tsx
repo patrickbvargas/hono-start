@@ -6,16 +6,19 @@ import {
 	CardTitle,
 } from "@/shared/components/ui";
 import type { DashboardCashFlowRow } from "../../schemas/model";
-import { getColumns } from "./columns";
+import { type CashFlowSelectionOptions, getColumns } from "./columns";
 
-interface DashboardCashFlowTableProps {
+interface DashboardCashFlowTableProps extends CashFlowSelectionOptions {
 	rows: DashboardCashFlowRow[];
 }
 
 const EMPTY_LABEL = "Nenhum dado de saldo encontrado.";
 
-export function DashboardCashFlowTable({ rows }: DashboardCashFlowTableProps) {
-	const columns = getColumns();
+export function DashboardCashFlowTable({
+	rows,
+	onSelect,
+}: DashboardCashFlowTableProps) {
+	const columns = getColumns(onSelect);
 
 	return (
 		<Card className="hidden sm:block space-y-2">

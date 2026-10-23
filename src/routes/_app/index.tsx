@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { ClientForm, getClientTypesQueryOptions } from "@/features/clients";
 import {
+	ContractDetails,
 	ContractForm,
 	getContractAssignmentTypesQueryOptions,
 	getContractLegalAreasQueryOptions,
@@ -182,12 +183,21 @@ function RouteComponent() {
 					data={summary}
 					search={search}
 					showDetails={showDetails}
+					onViewContract={
+						hasPermission(session, "org:contracts:read_all") ||
+						hasPermission(session, "org:contracts:read_assigned")
+							? contractOverlay.overlay.details.open
+							: undefined
+					}
 				/>
 				{clientOverlay.overlay.create.render((state) => (
 					<ClientForm state={state} onSuccess={state.close} />
 				))}
 				{contractOverlay.overlay.create.render((state) => (
 					<ContractForm state={state} onSuccess={state.close} />
+				))}
+				{contractOverlay.overlay.details.render((id, state) => (
+					<ContractDetails id={id} state={state} />
 				))}
 				{feeOverlay.overlay.create.render((state) => (
 					<FeeForm state={state} onSuccess={state.close} />

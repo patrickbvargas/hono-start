@@ -65,6 +65,7 @@ export type DashboardRemunerationSubtotal = z.infer<
 >;
 
 export const dashboardOverdueInstallmentRowSchema = z.object({
+	contractId: z.number().int().positive(),
 	contractProcessNumber: z.string(),
 	clientName: z.string(),
 	lawyerName: z.string(),

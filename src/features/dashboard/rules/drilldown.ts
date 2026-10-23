@@ -14,17 +14,26 @@ export function assertDashboardDrilldownScope(
 	const selection = input.selection;
 	const subject =
 		selection.kind === "monthly"
-			? selection.series
+			? selection.series === "output"
+				? "result"
+				: selection.series
 			: selection.kind === "metric"
 				? selection.value === "planned"
 					? "revenue"
 					: selection.value
-				: selection.kind === "function"
+				: selection.kind === "function" || selection.kind === "employee-month"
 					? "remuneration"
 					: selection.kind === "expense"
 						? "expense"
 						: "revenue";
 	const consolidated = canReadDashboardFirmResult(scope);
+	if (
+		selection.kind === "monthly" &&
+		selection.revenueType &&
+		selection.series !== "revenue"
+	) {
+		throw new Error(DASHBOARD_ERRORS.DRILLDOWN_INVALID_SELECTION);
+	}
 	if (subject === "result" ? !consolidated : scope.access?.[subject] !== true) {
 		throw new Error(DASHBOARD_ERRORS.DRILLDOWN_DENIED);
 	}
@@ -38,11 +47,23 @@ export function assertDashboardDrilldownScope(
 	}
 	const range = getFinancialEvolutionMonthRange(scope.search);
 	if (
-		selection.kind === "monthly" &&
+		(selection.kind === "monthly" || selection.kind === "employee-month") &&
+		selection.month !== undefined &&
 		(selection.month < getMonthKey(range.startMonth) ||
 			selection.month > getMonthKey(range.endMonth))
 	) {
 		throw new Error(DASHBOARD_ERRORS.DRILLDOWN_INVALID_SELECTION);
+	}
+	if (
+		selection.kind === "employee-month" &&
+		((!(scope.isAdmin && scope.access?.remunerationAll === true) &&
+			selection.employeeId !== scope.employeeId) ||
+			(scope.isAdmin &&
+				scope.access?.remunerationAll === true &&
+				Boolean(scope.search.employeeId) &&
+				selection.employeeId !== Number(scope.search.employeeId)))
+	) {
+		throw new Error(DASHBOARD_ERRORS.DRILLDOWN_DENIED);
 	}
 	if (
 		new Date(input.referenceAt) >

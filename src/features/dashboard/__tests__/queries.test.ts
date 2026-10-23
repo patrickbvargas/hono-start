@@ -51,6 +51,7 @@ describe("dashboard data queries", () => {
 					totalInstallments: 3,
 					type: { label: "Mensal", value: "MONTHLY" },
 					contract: {
+						id: 1,
 						processNumber: "PROC-1",
 						client: { id: 1, fullName: "Cliente A" },
 						legalArea: { label: "Previdenciário", value: "SOCIAL_SECURITY" },
@@ -77,6 +78,7 @@ describe("dashboard data queries", () => {
 					totalInstallments: 2,
 					type: { label: "Êxito", value: "SUCCESS" },
 					contract: {
+						id: 1,
 						processNumber: "PROC-2",
 						client: { id: 2, fullName: "Cliente B" },
 						legalArea: { label: "Cível", value: "CIVIL" },

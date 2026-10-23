@@ -10,6 +10,7 @@ import {
 	buildDashboardPaymentDateWhere,
 	createMonthEnd,
 	getDashboardPeriod,
+	getFinancialEvolutionMonthRange,
 	isDateInsidePeriod,
 } from "../utils/period";
 import { getInstallmentBucket } from "./analysis";
@@ -52,8 +53,12 @@ export async function getDashboardDrilldown(
 	assertDashboardDrilldownScope(scope, input);
 	const selection = input.selection;
 	let period = getDashboardPeriod(scope.search);
-	if (selection.kind === "monthly") {
-		const start = new Date(`${selection.month}-01T00:00:00.000Z`);
+	if (selection.kind === "monthly" || selection.kind === "employee-month") {
+		const range = getFinancialEvolutionMonthRange(scope.search);
+		const start = selection.month
+			? new Date(`${selection.month}-01T00:00:00.000Z`)
+			: range.startMonth;
+		const end = createMonthEnd(selection.month ? start : range.endMonth);
 		period = {
 			hasPeriod: true,
 			dateFrom: new Date(
@@ -63,10 +68,7 @@ export async function getDashboardDrilldown(
 				),
 			),
 			dateTo: new Date(
-				Math.min(
-					createMonthEnd(start).getTime(),
-					period.dateTo?.getTime() ?? createMonthEnd(start).getTime(),
-				),
+				Math.min(end.getTime(), period.dateTo?.getTime() ?? end.getTime()),
 			),
 		};
 	}
@@ -83,7 +85,7 @@ export async function getDashboardDrilldown(
 						? selection.value
 						: undefined;
 			const receipts =
-				!["function", "expense"].includes(selection.kind) &&
+				!["function", "expense", "employee-month"].includes(selection.kind) &&
 				(!periodSelection ||
 					series === "revenue" ||
 					series === "planned" ||
@@ -100,7 +102,10 @@ export async function getDashboardDrilldown(
 						(selection.kind === "type" &&
 							revenue.type.value !== selection.value) ||
 						(selection.kind === "client" &&
-							String(revenue.contract.client.id) !== selection.value)
+							String(revenue.contract.client.id) !== selection.value) ||
+						(selection.kind === "monthly" &&
+							selection.revenueType &&
+							revenue.type.value !== selection.revenueType)
 					) {
 						continue;
 					}
@@ -187,11 +192,22 @@ export async function getDashboardDrilldown(
 			}
 			if (
 				selection.kind === "function" ||
-				(periodSelection && (series === "remuneration" || series === "result"))
+				selection.kind === "employee-month" ||
+				(periodSelection &&
+					(series === "remuneration" ||
+						series === "result" ||
+						series === "output"))
 			) {
 				const remunerations = await tx.remuneration.findMany({
 					where: {
 						...getDashboardRemunerationWhere(scope),
+						...(selection.kind === "employee-month"
+							? {
+									AND: [
+										{ contractEmployee: { employeeId: selection.employeeId } },
+									],
+								}
+							: {}),
 						...(dateWhere ? { paymentDate: dateWhere } : {}),
 					},
 					select: {
@@ -230,7 +246,8 @@ export async function getDashboardDrilldown(
 			}
 			if (
 				selection.kind === "expense" ||
-				(periodSelection && (series === "expense" || series === "result"))
+				(periodSelection &&
+					(series === "expense" || series === "result" || series === "output"))
 			) {
 				const expenses = await tx.expense.findMany({
 					where: {

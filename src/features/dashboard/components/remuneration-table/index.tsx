@@ -13,9 +13,10 @@ import type {
 	DashboardRemunerationRow,
 	DashboardRemunerationSubtotal,
 } from "../../schemas/model";
-import { getColumns } from "./columns";
+import { getColumns, type RemunerationTableSelectionOptions } from "./columns";
 
-interface DashboardRemunerationTableProps {
+interface DashboardRemunerationTableProps
+	extends RemunerationTableSelectionOptions {
 	months: DashboardRemunerationMonth[];
 	rows: DashboardRemunerationRow[];
 	subtotal: DashboardRemunerationSubtotal | null;
@@ -27,8 +28,9 @@ const EMPTY_LABEL =
 export function DashboardRemunerationTable({
 	months,
 	rows,
+	onSelect,
 }: DashboardRemunerationTableProps) {
-	const columns = getColumns(months);
+	const columns = getColumns(months, onSelect);
 
 	return (
 		<Card className="hidden sm:block space-y-2">

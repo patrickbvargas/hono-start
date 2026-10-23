@@ -10,6 +10,7 @@ import { getColumns } from "./columns";
 
 interface DashboardOverdueInstallmentsTableProps {
 	rows: DashboardOverdueInstallmentRow[];
+	onViewContract?: (id: number) => void;
 }
 
 const EMPTY_LABEL =
@@ -17,8 +18,9 @@ const EMPTY_LABEL =
 
 export function DashboardOverdueInstallmentsTable({
 	rows,
+	onViewContract,
 }: DashboardOverdueInstallmentsTableProps) {
-	const columns = getColumns();
+	const columns = getColumns(onViewContract);
 
 	return (
 		<Card className="hidden sm:block space-y-2">

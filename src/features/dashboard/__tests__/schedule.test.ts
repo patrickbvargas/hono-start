@@ -12,6 +12,7 @@ const revenue: RevenueRow = {
 	totalInstallments: 3,
 	type: { label: "Judicial", value: "JUDICIAL" },
 	contract: {
+		id: 1,
 		processNumber: "1",
 		client: { id: 1, fullName: "Cliente" },
 		legalArea: { label: "Cível", value: "CIVIL" },

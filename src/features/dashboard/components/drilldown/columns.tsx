@@ -17,6 +17,7 @@ export function getDashboardDrilldownColumns(
 		selection.kind === "aging" || selection.kind === "forecast";
 	const remuneration =
 		selection.kind === "function" ||
+		selection.kind === "employee-month" ||
 		(selection.kind === "monthly" && selection.series === "remuneration") ||
 		(selection.kind === "metric" && selection.value === "remuneration");
 	const expense =
@@ -24,7 +25,8 @@ export function getDashboardDrilldownColumns(
 		(selection.kind === "monthly" && selection.series === "expense") ||
 		(selection.kind === "metric" && selection.value === "expense");
 	if (
-		(selection.kind === "monthly" && selection.series === "result") ||
+		(selection.kind === "monthly" &&
+			(selection.series === "result" || selection.series === "output")) ||
 		(selection.kind === "metric" && selection.value === "result")
 	) {
 		return [

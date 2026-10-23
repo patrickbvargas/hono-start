@@ -18,7 +18,7 @@ import {
 	dashboardDrilldownInputSchema,
 } from "../schemas/drilldown";
 
-const scope: DashboardScope = {
+const scope = {
 	firmId: 7,
 	employeeId: 1,
 	isAdmin: true,
@@ -37,7 +37,7 @@ const scope: DashboardScope = {
 		legalArea: [],
 		revenueType: [],
 	},
-};
+} satisfies DashboardScope;
 const input: DashboardDrilldownInput = {
 	search: scope.search,
 	referenceAt: "2026-03-31T23:59:59.999Z",
@@ -52,6 +52,7 @@ const revenue = {
 	type: { label: "Judicial", value: "JUDICIAL" },
 	contract: {
 		client: { id: 1, fullName: "Mesmo nome" },
+		id: 1,
 		processNumber: "P1",
 		legalArea: { value: "CIVIL", label: "Cível" },
 		assignments: [],
@@ -72,6 +73,178 @@ describe("dashboard drilldown", () => {
 		db.revenue.findMany.mockResolvedValue([revenue]);
 		db.remuneration.findMany.mockResolvedValue([]);
 		db.expense.findMany.mockResolvedValue([]);
+	});
+	it("scopes employee-month details to the selected collaborator, dimensions and partial month", async () => {
+		const search = {
+			...scope.search,
+			dateFrom: "2026-02-10",
+			legalArea: ["CIVIL"],
+		};
+		await getDashboardDrilldown(
+			{ ...scope, search },
+			{
+				...input,
+				search,
+				selection: { kind: "employee-month", employeeId: 5, month: "2026-02" },
+			},
+		);
+		expect(db.remuneration.findMany).toHaveBeenCalledWith(
+			expect.objectContaining({
+				where: expect.objectContaining({
+					firmId: 7,
+					deletedAt: null,
+					isActive: true,
+					contractEmployee: {
+						contract: { legalArea: { value: { in: ["CIVIL"] } } },
+					},
+					AND: [{ contractEmployee: { employeeId: 5 } }],
+					paymentDate: {
+						gte: new Date("2026-02-10T00:00:00.000Z"),
+						lte: new Date("2026-02-28T23:59:59.999Z"),
+					},
+				}),
+			}),
+		);
+		expect(db.revenue.findMany).not.toHaveBeenCalled();
+		expect(db.expense.findMany).not.toHaveBeenCalled();
+	});
+	it("denies forged collaborator, month and missing remuneration grant before reading", async () => {
+		const request: DashboardDrilldownInput = {
+			...input,
+			selection: { kind: "employee-month", employeeId: 5, month: "2026-02" },
+		};
+		for (const restricted of [
+			{ ...scope, isAdmin: false, employeeId: 1 },
+			{ ...scope, search: { ...scope.search, employeeId: "1" } },
+			{ ...scope, access: { ...scope.access, remuneration: false } },
+		]) {
+			await expect(
+				getDashboardDrilldown(restricted, request),
+			).rejects.toThrow();
+		}
+		await expect(
+			getDashboardDrilldown(scope, {
+				...request,
+				selection: { kind: "employee-month", employeeId: 5, month: "2025-12" },
+			}),
+		).rejects.toThrow();
+		expect(db.$transaction).not.toHaveBeenCalled();
+		await getDashboardDrilldown(
+			{
+				...scope,
+				isAdmin: false,
+				employeeId: 5,
+				access: { ...scope.access, revenue: false, remunerationAll: false },
+			},
+			request,
+		);
+		expect(db.remuneration.findMany).toHaveBeenCalledWith(
+			expect.objectContaining({
+				where: expect.objectContaining({
+					contractEmployee: { employeeId: 5 },
+					AND: [{ contractEmployee: { employeeId: 5 } }],
+				}),
+			}),
+		);
+	});
+	it("limits collaborator totals to displayed months when the period is unbounded", async () => {
+		vi.useFakeTimers();
+		vi.setSystemTime(new Date("2026-03-31T12:00:00.000Z"));
+		try {
+			const search = { ...scope.search, dateFrom: "", dateTo: "" };
+			await getDashboardDrilldown(
+				{ ...scope, search },
+				{
+					...input,
+					search,
+					referenceAt: "2026-03-31T12:00:00.000Z",
+					selection: { kind: "employee-month", employeeId: 5 },
+				},
+			);
+			expect(db.remuneration.findMany).toHaveBeenCalledWith(
+				expect.objectContaining({
+					where: expect.objectContaining({
+						AND: [{ contractEmployee: { employeeId: 5 } }],
+						paymentDate: {
+							gte: new Date("2025-10-01T00:00:00.000Z"),
+							lte: new Date("2026-03-31T23:59:59.999Z"),
+						},
+					}),
+				}),
+			);
+		} finally {
+			vi.useRealTimers();
+		}
+	});
+	it("reconciles monthly revenue-type and output cells without unrelated movements", async () => {
+		const judicial = await getDashboardDrilldown(scope, {
+			...input,
+			selection: {
+				kind: "monthly",
+				month: "2026-02",
+				series: "revenue",
+				revenueType: "JUDICIAL",
+			},
+		});
+		expect(judicial.amount).toBe(50);
+		const administrative = await getDashboardDrilldown(scope, {
+			...input,
+			selection: {
+				kind: "monthly",
+				month: "2026-02",
+				series: "revenue",
+				revenueType: "ADMINISTRATIVE",
+			},
+		});
+		expect(administrative.amount).toBe(0);
+		db.expense.findMany.mockResolvedValue([
+			{
+				id: 1,
+				expenseDate: new Date("2026-02-04"),
+				amount: new Prisma.Decimal(30),
+				notes: null,
+				category: { label: "Operação", value: "OPERATION" },
+			},
+		]);
+		db.remuneration.findMany.mockResolvedValue([
+			{
+				id: 1,
+				paymentDate: new Date("2026-02-03"),
+				amount: new Prisma.Decimal(20),
+				contractEmployee: {
+					employee: { fullName: "Pessoa" },
+					assignmentType: { label: "Responsável", value: "RESPONSIBLE" },
+					contract: { processNumber: "P1" },
+				},
+			},
+		]);
+		db.revenue.findMany.mockClear();
+		const output = await getDashboardDrilldown(scope, {
+			...input,
+			selection: { kind: "monthly", month: "2026-02", series: "output" },
+		});
+		expect(output).toMatchObject({ amount: 50, total: 2 });
+		expect(db.revenue.findMany).not.toHaveBeenCalled();
+		await expect(
+			getDashboardDrilldown(
+				{ ...scope, canReadCashFlow: false },
+				{
+					...input,
+					selection: { kind: "monthly", month: "2026-02", series: "output" },
+				},
+			),
+		).rejects.toThrow();
+		await expect(
+			getDashboardDrilldown(scope, {
+				...input,
+				selection: {
+					kind: "monthly",
+					month: "2026-02",
+					series: "expense",
+					revenueType: "JUDICIAL",
+				},
+			}),
+		).rejects.toThrow();
 	});
 	it("reconciles the planned-revenue card with full scheduled amounts including paid installments", async () => {
 		const result = await getDashboardDrilldown(scope, {

@@ -141,6 +141,8 @@ Sortable columns:
 - Sources own stable query keys and authorized server operations. Detail query identity includes normalized context and filters; dashboard queries additionally include the selected series/group/month and reference timestamp.
 - Dashboard details use ascending contribution date followed by stable row identity. Rows, count and all-page totals are computed from one repeatable read. The server returns the complete selected record set after scoped computation; the shared table owns display pagination. Records outside the selected context are not returned.
 - Subject data is read only after its grant check. All queries keep the verified firm and own/assigned scope. Detail queries inherit global freshness and normal source-feature invalidation.
+- Remuneration table details select a positive collaborator ID and valid visible month. They require remuneration read access independently of revenue access. The collaborator predicate is intersected with the existing server scope; own access cannot select another collaborator, and an active admin collaborator filter cannot be overridden. The selected month intersects the active period. Dashboard display defaults to descending date using local sorting, without changing the stable server contribution order.
+- An omitted collaborator month selects the displayed dashboard month range intersected with the period, including the default six-month range when bounds are absent. Monthly receipt-type selections filter by stable type value. Monthly output selections require consolidated financial access and return positive remuneration and expense contributions without receipt rows. Invalid combinations of receipt type and non-receipt series are rejected.
 
 ### Revenue
 

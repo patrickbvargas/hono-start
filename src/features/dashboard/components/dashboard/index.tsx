@@ -1,4 +1,5 @@
 import { ScrollArea } from "@/shared/components/ui";
+import type { EntityId } from "@/shared/schemas/entity";
 import { useDashboardDrilldown } from "../../hooks/use-drilldown";
 import type { DashboardSummary } from "../../schemas/model";
 import type { DashboardSearch } from "../../schemas/search";
@@ -7,6 +8,7 @@ import { formatMonthLabel } from "../../utils/format";
 import { DashboardBreakdownChart } from "../breakdown-chart";
 import { DashboardCashFlowChart } from "../cash-flow-chart";
 import { DashboardCashFlowTable } from "../cash-flow-table";
+import { cashFlowDrilldownSeries, labels } from "../cash-flow-table/columns";
 import { DashboardDrilldownModal } from "../drilldown/modal";
 import { FinancialEvolutionChart } from "../financial-evolution-chart";
 import { DashboardMetricCards } from "../metric-cards";
@@ -17,12 +19,14 @@ interface DashboardProps {
 	data: DashboardSummary;
 	showDetails?: boolean;
 	search?: DashboardSearch;
+	onViewContract?: (id: EntityId) => void;
 }
 
 export function Dashboard({
 	data,
 	showDetails = false,
 	search = dashboardSearchSchema.parse({}),
+	onViewContract,
 }: DashboardProps) {
 	const drilldown = useDashboardDrilldown();
 
@@ -220,18 +224,51 @@ export function Dashboard({
 							) : null}
 							<div className="col-span-full flex flex-col gap-4">
 								{data.cashFlow ? (
-									<DashboardCashFlowTable rows={data.cashFlow.table} />
+									<DashboardCashFlowTable
+										rows={data.cashFlow.table}
+										onSelect={(row, column, trigger) =>
+											drilldown.open(
+												{
+													selection: {
+														kind: "monthly",
+														month: row.month,
+														...cashFlowDrilldownSeries[column],
+													},
+													title: `${labels[column]} · ${row.monthLabel}`,
+													expectedAmount: row[column],
+												},
+												trigger,
+											)
+										}
+									/>
 								) : null}
 								{data.visibility?.remuneration ? (
 									<DashboardRemunerationTable
 										months={data.remunerationMonths}
 										rows={data.remunerationTable}
+										onSelect={(row, month, trigger) =>
+											drilldown.open(
+												{
+													selection: {
+														kind: "employee-month",
+														employeeId: row.employeeId,
+														month: month?.key,
+													},
+													title: `Remunerações · ${row.employeeName} · ${month?.label ?? "Total no período"}`,
+													expectedAmount: month
+														? (row.months[month.key] ?? 0)
+														: row.total,
+												},
+												trigger,
+											)
+										}
 										subtotal={data.remunerationSubtotal}
 									/>
 								) : null}
 								{data.visibility?.revenue ? (
 									<DashboardOverdueInstallmentsTable
 										rows={data.overdueInstallments}
+										onViewContract={onViewContract}
 									/>
 								) : null}
 							</div>

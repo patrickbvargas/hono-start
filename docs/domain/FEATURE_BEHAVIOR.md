@@ -270,6 +270,9 @@ The software core includes these feature areas:
 
 ### Dashboard record drilldown
 
+- Remuneration table month values open the selected collaborator/month contributions, including an explicit empty state for zero values. The collaborator total opens contributions across the months displayed in the table, intersected with active period bounds. The same generated-remuneration scope and dimension filters apply. Native buttons support keyboard activation, hover hints and focus restoration.
+- Every monetary cell in the monthly balance table opens its contributing records: receipt type, all entries, generated remuneration, expenses, all outflows or signed result. Outflow details show positive remuneration and expense amounts so their Total matches the cell; balance details retain signed deductions.
+- Overdue installment process numbers open the existing contract drawer from the dashboard when contract read permission is present. The contract query independently enforces current permission, firm and assignment scope. No new entity-detail implementation or contract lifecycle action is added to the dashboard.
 - Dashboard KPI cards also activate the standalone drilldown through explicit metric source keys, using the full selected period. Help and percentage-comparison buttons retain their own tooltip interactions and do not activate drilldown.
 - Receita prevista lists initial down payments and full scheduled installments due in the period, including paid installments; it is distinct from the outstanding future-receipts chart. Receita recebida lists actual receipt contributions; Remunerações geradas lists generated remuneration; Despesas lists period expenses; Resultado do período shows signed receipts minus generated remuneration and expenses.
 
@@ -280,7 +283,7 @@ The software core includes these feature areas:
 - Monthly detail periods intersect the selected month with the dashboard's effective date interval. Area, type, client, function and category details retain the active dashboard filters and financial scope. Clients are grouped by ID, including clients with identical names.
 - Records are fetched on demand. A source-data mismatch refreshes the summary and shows a concise update notice with current detail totals. A filter change closes the dashboard modal; switching selections resets its pagination and cannot display a late response from the previous selection.
 - The isolated drilldown feature is configurable by props and can also serve cards on registration pages. It has no dashboard, chart or entity dependency; consumers supply context, filters, query options, Zod response schema, row identity, columns and optional summaries.
-- Compatible read-only listing columns may be supplied through the owning feature's public API. The modal does not inherit listing actions or URL pagination/sorting. This delivery uses stable server ordering without interactive column sorting.
+- Compatible read-only listing columns may be supplied through the owning feature's public API. The modal does not inherit listing actions or URL pagination/sorting. Columns support local sorting; dashboard details start with date descending, date first and amount last.
 - Monthly balance uses columns above/below a zero reference line; it is a monthly result rather than a continuous balance curve.
 - Financial evolution combines receipt, generated-remuneration and expense bars with a result line on the same monetary axis. Existing subject permissions govern each series.
 - Outstanding future receipts use columns ordered as up to 30, 31–60 and 61–90 days. Aging bars remain chronological: up to 30, 31–60, 61–90 and over 90 days, rather than ranking amounts.

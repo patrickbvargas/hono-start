@@ -51,6 +51,7 @@ export function buildOverdueInstallmentRows({
 				const installmentAmount = item.outstanding;
 
 				rows.push({
+					contractId: revenue.contract.id,
 					contractProcessNumber: revenue.contract.processNumber,
 					clientName: revenue.contract.client.fullName,
 					lawyerName,

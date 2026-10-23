@@ -10,12 +10,20 @@ export const dashboardDrilldownSelectionSchema = z.discriminatedUnion("kind", [
 	z.object({
 		kind: z.literal("monthly"),
 		month,
-		series: z.enum(["revenue", "remuneration", "expense", "result"]),
+		series: z.enum(["revenue", "remuneration", "expense", "result", "output"]),
+		revenueType: z
+			.enum(["ADMINISTRATIVE", "JUDICIAL", "SUCCUMBENCY"])
+			.optional(),
 	}),
 	z.object({ kind: z.literal("area"), value: z.string().min(1) }),
 	z.object({ kind: z.literal("type"), value: z.string().min(1) }),
 	z.object({ kind: z.literal("client"), value: z.string().regex(/^\d+$/) }),
 	z.object({ kind: z.literal("function"), value: z.string().min(1) }),
+	z.object({
+		kind: z.literal("employee-month"),
+		employeeId: z.number().int().positive(),
+		month: month.optional(),
+	}),
 	z.object({ kind: z.literal("expense"), value: z.string().min(1) }),
 	z.object({
 		kind: z.literal("aging"),
