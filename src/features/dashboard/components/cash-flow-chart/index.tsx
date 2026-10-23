@@ -2,6 +2,7 @@ import {
 	Bar,
 	BarChart,
 	CartesianGrid,
+	LabelList,
 	ReferenceLine,
 	XAxis,
 	YAxis,
@@ -16,7 +17,7 @@ import {
 } from "@/shared/components/ui";
 import { CASH_FLOW_CHART_CONFIG } from "../../constants/charts";
 import type { DashboardCashFlowChartItem } from "../../schemas/model";
-import { formatMonthLabel } from "../../utils/format";
+import { formatCompactCurrency, formatMonthLabel } from "../../utils/format";
 import { ChartHelp } from "../chart-help";
 import { CashFlowTooltip } from "./tooltip";
 
@@ -28,7 +29,7 @@ export function DashboardCashFlowChart({ items }: DashboardCashFlowChartProps) {
 	const hasValues = items.some((item) => item.balance !== 0);
 
 	return (
-		<Card className="min-h-80">
+		<Card className="min-h-77">
 			<CardHeader>
 				<CardTitle className="flex items-center gap-2">
 					Saldo mensal
@@ -43,7 +44,11 @@ export function DashboardCashFlowChart({ items }: DashboardCashFlowChartProps) {
 					config={CASH_FLOW_CHART_CONFIG}
 					className="min-h-0 flex-1 w-full dark:[&_.recharts-cartesian-grid_line]:[stroke-opacity:0.05] dark:[&_.recharts-reference-line-line]:[stroke-opacity:0.05]"
 				>
-					<BarChart accessibilityLayer data={items}>
+					<BarChart
+						accessibilityLayer
+						data={items}
+						margin={{ top: 24, bottom: 0, left: 24, right: 24 }}
+					>
 						<CartesianGrid vertical={false} strokeOpacity={0.3} />
 						<ReferenceLine
 							y={0}
@@ -55,6 +60,7 @@ export function DashboardCashFlowChart({ items }: DashboardCashFlowChartProps) {
 							axisLine={false}
 							tickLine={false}
 							tickMargin={10}
+							height={40}
 							minTickGap={24}
 							tickFormatter={formatMonthLabel}
 						/>
@@ -65,7 +71,26 @@ export function DashboardCashFlowChart({ items }: DashboardCashFlowChartProps) {
 							stroke="var(--color-balance)"
 							fill="var(--color-balance)"
 							radius={4}
-						/>
+						>
+							<LabelList
+								dataKey="balance"
+								position="top"
+								offset={8}
+								className="fill-muted-foreground text-xs"
+								formatter={(value) =>
+									Number(value) >= 0 ? formatCompactCurrency(Number(value)) : ""
+								}
+							/>
+							<LabelList
+								dataKey="balance"
+								position="bottom"
+								offset={8}
+								className="fill-muted-foreground text-xs"
+								formatter={(value) =>
+									Number(value) < 0 ? formatCompactCurrency(Number(value)) : ""
+								}
+							/>
+						</Bar>
 					</BarChart>
 				</ChartContainer>
 				{hasValues ? null : (

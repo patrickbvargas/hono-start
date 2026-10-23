@@ -24,6 +24,7 @@ import {
 	getDashboardEmployeeOptionsQueryOptions,
 	getDashboardSummaryQueryOptions,
 	useDashboardData,
+	useDashboardDetailsPreference,
 } from "@/features/dashboard";
 import {
 	EmployeeForm,
@@ -113,6 +114,8 @@ export const Route = createFileRoute("/_app/")({
 function RouteComponent() {
 	const search = Route.useSearch();
 	const { summary } = useDashboardData(search);
+	const { showDetails, handleShowDetailsChange } =
+		useDashboardDetailsPreference();
 	const session = useLoggedUserSession();
 	const isAdmin = hasPermission(session, "org:dashboard:read_all");
 	const clientOverlay = useOverlay<EntityId>();
@@ -169,10 +172,12 @@ function RouteComponent() {
 			<WrapperHeader>
 				<DashboardFilter
 					isAdmin={isAdmin && hasPermission(session, "org:employees:read")}
+					showDetails={showDetails}
+					onShowDetailsChange={handleShowDetailsChange}
 				/>
 			</WrapperHeader>
 			<WrapperBody>
-				<Dashboard data={summary} />
+				<Dashboard data={summary} showDetails={showDetails} />
 				{clientOverlay.overlay.create.render((state) => (
 					<ClientForm state={state} onSuccess={state.close} />
 				))}

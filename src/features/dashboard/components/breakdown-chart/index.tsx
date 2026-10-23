@@ -28,8 +28,8 @@ export function DashboardBreakdownChart({
 	variant,
 }: DashboardBreakdownChartProps) {
 	return (
-		<Card className="min-h-80">
-			<CardHeader className="pb-3">
+		<Card className="min-h-77">
+			<CardHeader>
 				<CardTitle className="flex items-center gap-2">
 					{title}
 					<ChartHelp
@@ -41,7 +41,7 @@ export function DashboardBreakdownChart({
 					/>
 				</CardTitle>
 			</CardHeader>
-			<CardContent className="space-y-3 pt-0">
+			<CardContent className="flex min-h-0 flex-1 flex-col gap-3 pt-0">
 				{items.length === 0 ? (
 					<p className="text-sm text-muted-foreground">{emptyLabel}</p>
 				) : (

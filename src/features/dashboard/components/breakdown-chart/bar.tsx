@@ -63,7 +63,8 @@ export function BreakdownBarChart({ items }: BreakdownItemsProps) {
 					/>
 					<Bar dataKey="total" fill="var(--color-total)" radius={6}>
 						<LabelList
-							dataKey="formattedTotal"
+							dataKey="total"
+							formatter={(value) => formatCompactCurrency(Number(value))}
 							position="right"
 							offset={8}
 							className="fill-muted-foreground text-xs"

@@ -3,8 +3,10 @@ import * as React from "react";
 import { ListFilters } from "@/shared/components/list-filters";
 import {
 	Button,
+	Checkbox,
 	Collapsible,
 	CollapsibleContent,
+	Label,
 } from "@/shared/components/ui";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
 import { formatter } from "@/shared/lib/formatter";
@@ -14,9 +16,15 @@ import { getDashboardActivePeriodShortcut } from "../../utils/period-shortcuts";
 
 interface DashboardFilterProps {
 	isAdmin?: boolean;
+	showDetails?: boolean;
+	onShowDetailsChange?: (checked: boolean) => void;
 }
 
-export function DashboardFilter({ isAdmin = false }: DashboardFilterProps) {
+export function DashboardFilter({
+	isAdmin = false,
+	showDetails = false,
+	onShowDetailsChange,
+}: DashboardFilterProps) {
 	const {
 		filter,
 		defaultFilter,
@@ -176,6 +184,13 @@ export function DashboardFilter({ isAdmin = false }: DashboardFilterProps) {
 							{isMobile ? mobileFilters : null}
 						</div>
 						{!isMobile ? desktopFilterActions : null}
+						<Label className="shrink-0 md:ml-auto">
+							<Checkbox
+								checked={showDetails}
+								onCheckedChange={onShowDetailsChange}
+							/>
+							Mostrar análises detalhadas
+						</Label>
 					</div>
 				</ListFilters.Bar>
 				{isMobile ? null : desktopFilterPanel}

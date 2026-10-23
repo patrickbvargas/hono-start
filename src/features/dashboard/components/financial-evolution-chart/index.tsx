@@ -28,6 +28,33 @@ interface FinancialEvolutionChartProps {
 	items: DashboardFinancialEvolutionItem[];
 }
 
+interface ResultLegendIconProps {
+	className?: string;
+}
+
+function ResultLegendIcon({ className }: ResultLegendIconProps) {
+	return (
+		<svg
+			className={className}
+			viewBox="0 0 16 16"
+			fill="none"
+			stroke="var(--color-result)"
+			strokeWidth={2}
+			aria-hidden="true"
+		>
+			<path d="M1 8h14" />
+		</svg>
+	);
+}
+
+const chartConfig = {
+	...FINANCIAL_EVOLUTION_CHART_CONFIG,
+	result: {
+		...FINANCIAL_EVOLUTION_CHART_CONFIG.result,
+		icon: ResultLegendIcon,
+	},
+};
+
 export function FinancialEvolutionChart({
 	items,
 }: FinancialEvolutionChartProps) {
@@ -41,7 +68,7 @@ export function FinancialEvolutionChart({
 	});
 
 	return (
-		<Card className="min-h-80 col-span-full">
+		<Card className="min-h-77 col-span-full">
 			<CardHeader>
 				<CardTitle className="flex items-center gap-2">
 					Evolução financeira
@@ -53,7 +80,7 @@ export function FinancialEvolutionChart({
 			</CardHeader>
 			<CardContent className="flex min-h-0 flex-1 flex-col gap-3">
 				<ChartContainer
-					config={FINANCIAL_EVOLUTION_CHART_CONFIG}
+					config={chartConfig}
 					className="min-h-0 flex-1 w-full dark:[&_.recharts-cartesian-grid_line]:[stroke-opacity:0.05] dark:[&_.recharts-reference-line-line]:[stroke-opacity:0.05]"
 				>
 					<ComposedChart accessibilityLayer data={items} barGap={8}>
@@ -68,6 +95,7 @@ export function FinancialEvolutionChart({
 							axisLine={false}
 							tickLine={false}
 							tickMargin={10}
+							height={40}
 							minTickGap={24}
 							tickFormatter={formatMonthLabel}
 						/>
@@ -83,7 +111,10 @@ export function FinancialEvolutionChart({
 								/>
 							}
 						/>
-						<ChartLegend content={<ChartLegendContent />} />
+						<ChartLegend
+							itemSorter={(item) => (item.dataKey === "result" ? 1 : 0)}
+							content={<ChartLegendContent />}
+						/>
 						<Bar
 							dataKey="revenue"
 							fill="var(--color-revenue)"

@@ -19,6 +19,7 @@ import {
 	buildDonutChartConfig,
 	getBreakdownColor,
 } from "../../utils/breakdown";
+import { formatCompactCurrency } from "../../utils/format";
 
 interface BreakdownItemsProps {
 	items: DashboardBreakdownItem[];
@@ -76,12 +77,13 @@ export function BreakdownDonutChart({ items }: BreakdownItemsProps) {
 									textAnchor="middle"
 									dominantBaseline="middle"
 								>
+									<title>{formatter.currency(total)}</title>
 									<tspan
 										x={viewBox.cx}
 										dy="-0.3em"
 										className="fill-foreground text-xs font-semibold"
 									>
-										{formatter.currency(total)}
+										{formatCompactCurrency(total)}
 									</tspan>
 									<tspan
 										x={viewBox.cx}

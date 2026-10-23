@@ -265,7 +265,9 @@ The software core includes these feature areas:
 
 ### Dashboard chart presentation
 
+- The initial view shows metric cards, financial evolution, monthly balance and revenue by legal area, subject to permissions. The "Mostrar análises detalhadas" checkbox sits at the right of the filter bar and controls all remaining charts and all tables. Its preference is saved in browser localStorage under `dashboard.showDetailedAnalyses`, defaulting to false. Toggling preserves chart order and existing permission checks; the details are omitted when no authorized detail is available. Storage failure does not prevent toggling.
+- Visible monetary chart labels use compact BRL notation (for example, R$ 12,8 mil); tooltips retain complete amounts. Single-series columns show values above positive bars and below negative bars. Financial evolution keeps amounts in tooltips to avoid crowding multiple series; percentage labels remain percentages.
 - Monthly balance uses columns above/below a zero reference line; it is a monthly result rather than a continuous balance curve.
 - Financial evolution combines receipt, generated-remuneration and expense bars with a result line on the same monetary axis. Existing subject permissions govern each series.
 - Outstanding future receipts use columns ordered as up to 30, 31–60 and 61–90 days. Aging bars remain chronological: up to 30, 31–60, 61–90 and over 90 days, rather than ranking amounts.
-- Category/client/area/function comparisons retain horizontal bars with internal scrolling. Revenue type retains a donut.
+- Chart orientation is fixed: legal area, revenue type, remuneration assignment roles and aging use vertical bars. Clients and expense categories use horizontal bars with internal scrolling. Filtering does not change chart orientation.
