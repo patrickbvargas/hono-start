@@ -2,6 +2,7 @@ import {
 	Bar,
 	BarChart,
 	CartesianGrid,
+	Cell,
 	LabelList,
 	Pie,
 	PieChart,
@@ -138,6 +139,9 @@ function BreakdownBarChart({
 					}
 				/>
 				<Bar dataKey="total" fill="var(--color-total)" radius={6}>
+					{items.map((item, index) => (
+						<Cell key={item.value} fill={getBreakdownColor(index)} />
+					))}
 					<LabelList
 						dataKey="formattedTotal"
 						position="right"

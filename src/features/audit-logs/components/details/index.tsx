@@ -141,7 +141,7 @@ const AuditDiffList = ({ entries }: AuditDiffListProps) => {
 
 	return (
 		<div className="rounded-md border">
-			<div className="hidden grid-cols-[minmax(0,0.8fr)_minmax(0,1fr)_minmax(0,1fr)] gap-3 border-b bg-muted/30 px-3 py-2 text-[11px] font-medium uppercase tracking-wide text-foreground/60 md:grid">
+			<div className="hidden grid-cols-[minmax(0,0.8fr)_minmax(0,1fr)_minmax(0,1fr)] gap-3 border-b bg-muted/30 px-3 py-2 text-xs font-medium uppercase tracking-wide text-foreground/60 md:grid">
 				<span>Campo</span>
 				<span>Antes</span>
 				<span>Depois</span>
@@ -153,7 +153,7 @@ const AuditDiffList = ({ entries }: AuditDiffListProps) => {
 						className="grid gap-2 px-3 py-2 md:grid-cols-[minmax(0,0.8fr)_minmax(0,1fr)_minmax(0,1fr)] md:gap-3"
 					>
 						<div className="min-w-0">
-							<p className="text-[11px] uppercase tracking-wide text-foreground/60 md:hidden">
+							<p className="text-xs uppercase tracking-wide text-foreground/60 md:hidden">
 								Campo
 							</p>
 							<p className="wrap-break-word text-sm font-medium text-foreground">
@@ -161,7 +161,7 @@ const AuditDiffList = ({ entries }: AuditDiffListProps) => {
 							</p>
 						</div>
 						<div className="min-w-0">
-							<p className="text-[11px] uppercase tracking-wide text-foreground/60 md:hidden">
+							<p className="text-xs uppercase tracking-wide text-foreground/60 md:hidden">
 								Antes
 							</p>
 							<p className="wrap-break-word text-sm text-foreground">
@@ -169,7 +169,7 @@ const AuditDiffList = ({ entries }: AuditDiffListProps) => {
 							</p>
 						</div>
 						<div className="min-w-0">
-							<p className="text-[11px] uppercase tracking-wide text-foreground/60 md:hidden">
+							<p className="text-xs uppercase tracking-wide text-foreground/60 md:hidden">
 								Depois
 							</p>
 							<p className="wrap-break-word text-sm text-foreground">

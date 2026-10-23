@@ -125,7 +125,7 @@ function RouteComponent() {
 			title={ROUTES.dashboard.title}
 			actions={
 				<DropdownMenu>
-					<DropdownMenuTrigger render={<Button size="sm" />}>
+					<DropdownMenuTrigger render={<Button />}>
 						<PlusIcon size={16} />
 						Novo
 					</DropdownMenuTrigger>

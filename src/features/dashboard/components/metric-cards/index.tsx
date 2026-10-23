@@ -46,15 +46,15 @@ function getMetricIcon(label: string) {
 
 const toneClassNames = {
 	default: "text-foreground",
-	success: "text-emerald-600 dark:text-emerald-400",
-	warning: "text-amber-600 dark:text-amber-400",
+	success: "text-primary",
+	warning: "text-chart-4",
 	danger: "text-destructive",
 };
 
 const badgeToneClassNames = {
 	default: "bg-secondary text-secondary-foreground",
-	success: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
-	warning: "bg-amber-500/10 text-amber-700 dark:text-amber-300",
+	success: "bg-primary/10 text-primary",
+	warning: "bg-chart-4/10 text-chart-4",
 	danger: "bg-destructive/10 text-destructive",
 };
 
@@ -77,7 +77,7 @@ function getChangeTone(value: number) {
 
 export function DashboardMetricCards({ metrics }: DashboardMetricCardsProps) {
 	return (
-		<div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+		<div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
 			{metrics.map((metric) => (
 				<Card key={metric.label} className="gap-2">
 					<CardHeader>

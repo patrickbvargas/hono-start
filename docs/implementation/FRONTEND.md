@@ -129,3 +129,7 @@ See `docs/domain/DOMAIN_MODEL.md` for ownership boundaries. Authentication resol
 Use `queryClient.query(options)` for imperative fetching. Feature option factories own cache policy, including `staleTime: Infinity` where configured. Loaders call `queryClient.query(optionsFactory(...))` without overrides. Infinite freshness still permits mutation invalidation to refetch active observers. Do not use static freshness for mutable business data. Do not use deprecated fetchQuery or ensureQueryData methods.
 
 Entity list, detail and dashboard data queries inherit global QueryClient cache settings; do not override staleTime in those factories or loaders. Only lookup and selectable-option queries use staleTime: Infinity, preserving explicit invalidation support. Session verification keeps its security-specific staleTime: 0.
+
+### Theme ownership
+
+Application components consume only standard shadcn semantic tokens already defined in global.css. Do not add custom theme variables: users replace :root, .dark and @theme inline wholesale with community themes. Do not use fixed palette colors in application TSX. Component radii derive from the global radius scale without pixel caps. Customize Tailwind spacing, typography and shadow scales in global.css through @theme. Structural grids, responsive visibility, icon geometry and data-driven chart dimensions remain component responsibilities. Exported PDFs retain an independent print palette.
