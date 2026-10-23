@@ -12,28 +12,7 @@ import {
 	type AuditChangeValueEntry,
 	buildAuditChangePresentation,
 } from "../../utils/change-details";
-
-const AUDIT_ACTION_LABELS: Record<string, string> = {
-	CREATE: "Criar",
-	UPDATE: "Atualizar",
-	DELETE: "Excluir",
-	RESTORE: "Restaurar",
-	GRANT_ACCESS: "Conceder acesso",
-	RESTORE_ACCESS: "Restaurar acesso",
-	REVOKE_ACCESS: "Revogar acesso",
-	RESET_PASSWORD: "Redefinir senha",
-};
-
-function getAuditLogTitle(params: {
-	action: string;
-	entityName: string;
-	entityTypeLabel: string;
-}) {
-	const actionLabel = AUDIT_ACTION_LABELS[params.action] ?? params.action;
-	const entityLabel = params.entityName || params.entityTypeLabel || "Sistema";
-
-	return `${actionLabel} • ${entityLabel}`;
-}
+import { getAuditLogTitle } from "../../utils/display";
 
 interface AuditLogDetailsProps {
 	id: EntityId;
@@ -208,11 +187,7 @@ const AuditValueList = ({ entries }: AuditValueListProps) => {
 
 const AuditLogDetailsFallback = () => (
 	<EntityDetail.Content>
-		<EntityDetail.Header>
-			<EntityDetail.Title>
-				<EntityDetail.SkeletonTitle />
-			</EntityDetail.Title>
-		</EntityDetail.Header>
+		<EntityDetail.SkeletonHeader />
 		<EntityDetail.Body>
 			<EntityDetail.SkeletonFields rows={10} />
 			<EntityDetail.Separator />

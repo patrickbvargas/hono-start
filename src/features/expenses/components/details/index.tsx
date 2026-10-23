@@ -1,11 +1,15 @@
 import * as React from "react";
-import { AttachmentSection } from "@/features/attachments";
+import {
+	AttachmentSection,
+	AttachmentSectionFallback,
+} from "@/features/attachments";
 import { EntityActions } from "@/shared/components/entity-actions";
 import {
 	type DetailFieldItem,
 	EntityDetail,
 } from "@/shared/components/entity-detail";
 import { EntityStatus } from "@/shared/components/entity-status";
+import { Skeleton } from "@/shared/components/ui";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
@@ -134,24 +138,16 @@ function ExpenseDetailsContent({
 
 const ExpenseDetailsFallback = () => (
 	<EntityDetail.Content>
-		<EntityDetail.Header>
-			<EntityDetail.Title>
-				<EntityDetail.SkeletonTitle />
-			</EntityDetail.Title>
-		</EntityDetail.Header>
+		<EntityDetail.SkeletonHeader withActions />
 		<EntityDetail.Body>
 			<EntityDetail.SkeletonFields rows={3} />
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Observação">
-				<EntityDetail.SkeletonFields rows={1} />
+				<Skeleton className="h-5 w-full max-w-56" />
 			</EntityDetail.Section>
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Anexos">
-				<AttachmentSection
-					canUpload
-					ownerId={idPlaceholder}
-					ownerKind="expense"
-				/>
+				<AttachmentSectionFallback canUpload />
 			</EntityDetail.Section>
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Registro">
@@ -161,5 +157,3 @@ const ExpenseDetailsFallback = () => (
 		<EntityDetail.Footer />
 	</EntityDetail.Content>
 );
-
-const idPlaceholder = 0 as EntityId;

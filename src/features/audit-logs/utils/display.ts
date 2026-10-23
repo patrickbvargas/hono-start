@@ -1,3 +1,5 @@
+import { AUDIT_ACTION_LABELS } from "../constants/display";
+
 const ENTITY_TYPE_LABELS: Record<string, string> = {
 	Attachment: "Anexo",
 	Client: "Cliente",
@@ -87,4 +89,15 @@ export function getAuditDescription(params: {
 	}
 
 	return params.fallbackDescription;
+}
+
+export function getAuditLogTitle(params: {
+	action: string;
+	entityName: string;
+	entityTypeLabel: string;
+}) {
+	const actionLabel = AUDIT_ACTION_LABELS[params.action] ?? params.action;
+	const entityLabel = params.entityName || params.entityTypeLabel || "Sistema";
+
+	return `${actionLabel} • ${entityLabel}`;
 }

@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { getAuditDescription, getAuditEntityNameLabel } from "../utils/display";
+import {
+	getAuditDescription,
+	getAuditEntityNameLabel,
+	getAuditLogTitle,
+} from "../utils/display";
 
 describe("audit-log display helpers", () => {
 	it("uses system wording instead of generic registro for system events", () => {
@@ -41,5 +45,31 @@ describe("audit-log display helpers", () => {
 	it("translates english entity-name prefixes to pt-BR labels", () => {
 		expect(getAuditEntityNameLabel("Remuneration 594")).toBe("Remuneração 594");
 		expect(getAuditEntityNameLabel("Fee 10")).toBe("Honorário 10");
+	});
+});
+
+describe("audit log titles", () => {
+	it("uses action labels and falls back from entity name to type and system", () => {
+		expect(
+			getAuditLogTitle({
+				action: "CREATE",
+				entityName: "Maria",
+				entityTypeLabel: "Cliente",
+			}),
+		).toBe("Criar • Maria");
+		expect(
+			getAuditLogTitle({
+				action: "UPDATE",
+				entityName: "",
+				entityTypeLabel: "Contrato",
+			}),
+		).toBe("Atualizar • Contrato");
+		expect(
+			getAuditLogTitle({
+				action: "CUSTOM",
+				entityName: "",
+				entityTypeLabel: "",
+			}),
+		).toBe("CUSTOM • Sistema");
 	});
 });

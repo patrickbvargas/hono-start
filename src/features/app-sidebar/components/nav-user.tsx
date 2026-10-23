@@ -1,4 +1,3 @@
-import { useUser } from "@clerk/tanstack-react-start";
 import {
 	CircleUserIcon,
 	EllipsisVerticalIcon,
@@ -7,9 +6,7 @@ import {
 	MoonIcon,
 	SunIcon,
 } from "lucide-react";
-import { useTheme } from "next-themes";
-import { useState } from "react";
-import { UserProfileDialog, useLogout } from "@/features/authentication";
+import { UserProfileDialog } from "@/features/authentication";
 import {
 	Avatar,
 	AvatarFallback,
@@ -30,25 +27,23 @@ import {
 	SidebarMenuButton,
 	SidebarMenuItem,
 	Spinner,
-	useSidebar,
 } from "@/shared/components/ui";
-import { useLoggedUserSession } from "@/shared/session";
+import { useNavUser } from "../hooks/use-nav-user";
 
 export const NavUser = () => {
-	const { isMobile } = useSidebar();
-	const session = useLoggedUserSession();
-	const { user } = useUser();
-	const fullName = user?.fullName || user?.username || session.user.fullName;
-	const email = user?.primaryEmailAddress?.emailAddress ?? session.user.email;
-	const { handleLogout, isPending } = useLogout();
-	const { theme, setTheme } = useTheme();
-	const [isUserProfileOpen, setIsUserProfileOpen] = useState(false);
-	const userInitials = fullName
-		.split(" ")
-		.filter(Boolean)
-		.slice(0, 2)
-		.map((part) => part[0]?.toUpperCase() ?? "")
-		.join("");
+	const {
+		isMobile,
+		fullName,
+		email,
+		imageUrl,
+		handleLogout,
+		isPending,
+		theme,
+		setTheme,
+		isUserProfileOpen,
+		setIsUserProfileOpen,
+		userInitials,
+	} = useNavUser();
 
 	return (
 		<SidebarMenu>
@@ -62,7 +57,7 @@ export const NavUser = () => {
 						render={
 							<SidebarMenuButton size="lg">
 								<Avatar>
-									<AvatarImage src={user?.imageUrl} alt={fullName} />
+									<AvatarImage src={imageUrl} alt={fullName} />
 									<AvatarFallback>{userInitials}</AvatarFallback>
 								</Avatar>
 								<div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
@@ -88,7 +83,7 @@ export const NavUser = () => {
 							<DropdownMenuLabel className="p-0 font-normal">
 								<div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
 									<Avatar className="size-8">
-										<AvatarImage src={user?.imageUrl} alt={fullName} />
+										<AvatarImage src={imageUrl} alt={fullName} />
 										<AvatarFallback>{userInitials}</AvatarFallback>
 									</Avatar>
 									<div className="grid flex-1 text-left text-sm leading-tight">

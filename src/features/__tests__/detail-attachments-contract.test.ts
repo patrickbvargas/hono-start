@@ -14,6 +14,7 @@ describe("detail attachment composition contract", () => {
 			["src", "features", "clients", "components", "details", "index.tsx"],
 			["src", "features", "contracts", "components", "details", "index.tsx"],
 			["src", "features", "employees", "components", "details", "index.tsx"],
+			["src", "features", "expenses", "components", "details", "index.tsx"],
 		];
 
 		for (const file of detailFiles) {
@@ -21,8 +22,8 @@ describe("detail attachment composition contract", () => {
 
 			expect(content).toContain('EntityDetail.Section title="Anexos"');
 			expect(content).toContain("<AttachmentSection");
-			expect(content).toContain("const ");
-			expect(content).toContain("idPlaceholder");
+			expect(content).toContain("<AttachmentSectionFallback canUpload />");
+			expect(content).not.toContain("idPlaceholder");
 		}
 	});
 });

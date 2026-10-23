@@ -149,11 +149,7 @@ const FeeDetailsContent = ({
 
 const FeeDetailsFallback = () => (
 	<EntityDetail.Content>
-		<EntityDetail.Header>
-			<EntityDetail.Title>
-				<EntityDetail.SkeletonTitle />
-			</EntityDetail.Title>
-		</EntityDetail.Header>
+		<EntityDetail.SkeletonHeader withActions />
 		<EntityDetail.Body>
 			<EntityDetail.SkeletonFields rows={6} />
 			<EntityDetail.Separator />

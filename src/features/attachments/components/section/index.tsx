@@ -39,11 +39,7 @@ export const AttachmentSection = ({
 				</div>
 			) : null}
 
-			{isPending ? (
-				<div className="rounded-md border">
-					<AttachmentSectionSkeleton />
-				</div>
-			) : null}
+			{isPending ? <AttachmentSectionSkeleton /> : null}
 
 			{error ? (
 				<p className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-destructive text-sm">

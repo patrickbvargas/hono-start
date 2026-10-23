@@ -15,9 +15,7 @@ import {
 	FieldGroup,
 	Skeleton,
 } from "@/shared/components/ui";
-import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
-import type { Option } from "@/shared/schemas/option";
 import { hasPermission, useLoggedUserSession } from "@/shared/session";
 import type { OverlayState } from "@/shared/types/overlay";
 import {
@@ -26,56 +24,20 @@ import {
 } from "../../constants/values";
 import { useContract, useContractOptions } from "../../hooks/use-data";
 import { useContractForm } from "../../hooks/use-form";
-import type {
-	ContractAssignmentInput,
-	ContractRevenueInput,
-} from "../../schemas/form";
 import {
 	defaultContractAssignmentValues,
 	defaultContractRevenueValues,
 } from "../../utils/default";
 import { getContractEditOptionDefaults } from "../../utils/edit-options";
+import {
+	getAssignmentSummary,
+	getRevenueSummary,
+} from "../../utils/form-summary";
 
 interface ContractFormProps {
 	id?: EntityId;
 	state: OverlayState;
 	onSuccess?: () => void;
-}
-
-function getAssignmentSummary(
-	assignment: ContractAssignmentInput,
-	index: number,
-	employees: Option[],
-	assignmentTypes: Option[],
-) {
-	const employeeLabel = assignment.employeeId.trim()
-		? (employees.find((option) => option.value === assignment.employeeId)
-				?.label ?? `Colaborador #${assignment.employeeId}`)
-		: `Colaborador ${index + 1}`;
-	const assignmentTypeLabel = assignment.assignmentType.trim()
-		? (assignmentTypes.find(
-				(option) => option.value === assignment.assignmentType,
-			)?.label ?? assignment.assignmentType)
-		: "Atribuição pendente";
-
-	return `${employeeLabel} • ${assignmentTypeLabel}`;
-}
-
-function getRevenueSummary(
-	revenue: ContractRevenueInput,
-	index: number,
-	revenueTypes: Option[],
-) {
-	const typeLabel = revenue.type.trim()
-		? (revenueTypes.find((option) => option.value === revenue.type)?.label ??
-			revenue.type)
-		: `Receita ${index + 1}`;
-	const totalValue =
-		revenue.totalValue > 0
-			? formatter.currency(revenue.totalValue)
-			: "Valor pendente";
-
-	return `${typeLabel} • ${totalValue}`;
 }
 
 export const ContractForm = ({ id, state, onSuccess }: ContractFormProps) => {

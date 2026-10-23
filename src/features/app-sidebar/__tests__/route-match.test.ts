@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isSidebarRouteActive } from "../components/nav-main";
+import { isSidebarRouteActive } from "../utils/route-match";
 
 describe("isSidebarRouteActive", () => {
 	it("matches dashboard only on root path", () => {

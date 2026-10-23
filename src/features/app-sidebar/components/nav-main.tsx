@@ -8,17 +8,10 @@ import {
 } from "@/shared/components/ui";
 import type { RouteSection } from "@/shared/config/routes";
 import { hasPermission, useLoggedUserSession } from "@/shared/session";
+import { isSidebarRouteActive } from "../utils/route-match";
 
 interface NavMainProps {
 	items: RouteSection[];
-}
-
-export function isSidebarRouteActive(pathname: string, url: string) {
-	if (url === "/") {
-		return pathname === "/";
-	}
-
-	return pathname === url || pathname.startsWith(`${url}/`);
 }
 
 export const NavMain = ({ items }: NavMainProps) => {

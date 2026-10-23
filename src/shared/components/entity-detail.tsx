@@ -100,7 +100,26 @@ function Footer({ children, ...props }: React.ComponentProps<"div">) {
 }
 
 function SkeletonTitle({ className }: React.ComponentProps<"div">) {
-	return <Skeleton className={cn("h-7 w-40", className)} />;
+	return <Skeleton className={cn("h-6 w-40", className)} />;
+}
+
+interface SkeletonHeaderProps {
+	withActions?: boolean;
+}
+
+function SkeletonHeader({ withActions = false }: SkeletonHeaderProps) {
+	return (
+		<Header
+			className={
+				withActions ? "flex-row items-center justify-between gap-3" : undefined
+			}
+		>
+			<Title>
+				<SkeletonTitle />
+			</Title>
+			{withActions ? <Skeleton className="size-7 shrink-0" /> : null}
+		</Header>
+	);
 }
 
 interface SectionProps {
@@ -130,6 +149,7 @@ export const EntityDetail = {
 	Fields: EntityFields,
 	SkeletonFields: EntitySkeletonFields,
 	SkeletonTitle,
+	SkeletonHeader,
 	Separator,
 };
 

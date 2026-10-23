@@ -3,6 +3,7 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { AttachmentSection } from "../components/section";
+import { AttachmentSectionFallback } from "../components/section/skeleton";
 
 const useAttachmentsMock = vi.fn();
 const deleteOpenMock = vi.fn();
@@ -56,6 +57,18 @@ describe("AttachmentSection", () => {
 		});
 	});
 
+	it("renders an empty-state-sized detail fallback with upload button space", () => {
+		render(<AttachmentSectionFallback canUpload />);
+		expect(useAttachmentsMock).not.toHaveBeenCalled();
+		expect(screen.queryByRole("button")).toBeNull();
+		expect(document.querySelectorAll('[data-slot="skeleton"]').length).toBe(2);
+	});
+
+	it("omits upload button space when uploads are unavailable", () => {
+		render(<AttachmentSectionFallback canUpload={false} />);
+		expect(document.querySelectorAll('[data-slot="skeleton"]').length).toBe(1);
+	});
+
 	it("renders content actions without rendering its own title", () => {
 		render(<AttachmentSection ownerId={1} ownerKind="client" />);
 
@@ -73,7 +86,7 @@ describe("AttachmentSection", () => {
 		render(<AttachmentSection ownerId={1} ownerKind="contract" />);
 
 		expect(screen.queryByText("Carregando anexos...")).toBeNull();
-		expect(document.querySelectorAll('[data-slot="skeleton"]').length).toBe(4);
+		expect(document.querySelectorAll('[data-slot="skeleton"]').length).toBe(1);
 	});
 
 	it("renders attachments in accordion rows with metadata in expanded content", () => {

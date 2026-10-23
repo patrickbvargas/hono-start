@@ -1,5 +1,8 @@
 import * as React from "react";
-import { AttachmentSection } from "@/features/attachments";
+import {
+	AttachmentSection,
+	AttachmentSectionFallback,
+} from "@/features/attachments";
 import { EntityActions } from "@/shared/components/entity-actions";
 import {
 	type DetailFieldItem,
@@ -162,24 +165,16 @@ const EmployeeDetailsContent = ({
 
 const EmployeeDetailsFallback = () => (
 	<EntityDetail.Content>
-		<EntityDetail.Header>
-			<EntityDetail.Title>
-				<EntityDetail.SkeletonTitle />
-			</EntityDetail.Title>
-		</EntityDetail.Header>
+		<EntityDetail.SkeletonHeader withActions />
 		<EntityDetail.Body>
-			<EntityDetail.SkeletonFields rows={4} />
+			<EntityDetail.SkeletonFields rows={3} />
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Financeiro">
 				<EntityDetail.SkeletonFields rows={2} />
 			</EntityDetail.Section>
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Anexos">
-				<AttachmentSection
-					canUpload
-					ownerId={idPlaceholder}
-					ownerKind="employee"
-				/>
+				<AttachmentSectionFallback canUpload />
 			</EntityDetail.Section>
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Registro">
@@ -189,5 +184,3 @@ const EmployeeDetailsFallback = () => (
 		<EntityDetail.Footer />
 	</EntityDetail.Content>
 );
-
-const idPlaceholder = 0 as EntityId;
