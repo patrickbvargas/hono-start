@@ -1,11 +1,4 @@
-import {
-	Bar,
-	BarChart,
-	CartesianGrid,
-	LabelList,
-	XAxis,
-	YAxis,
-} from "recharts";
+import { Bar, BarChart, LabelList, XAxis, YAxis } from "recharts";
 import {
 	ChartContainer,
 	ChartTooltip,
@@ -41,7 +34,6 @@ export function BreakdownBarChart({ items, onSelect }: BreakdownItemsProps) {
 					layout="vertical"
 					margin={{ left: 0, right: 100 }}
 				>
-					<CartesianGrid horizontal={false} vertical={false} />
 					<XAxis type="number" hide tickFormatter={formatCompactCurrency} />
 					<YAxis
 						dataKey="label"

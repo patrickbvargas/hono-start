@@ -1,12 +1,4 @@
-import {
-	Bar,
-	BarChart,
-	CartesianGrid,
-	LabelList,
-	ReferenceLine,
-	XAxis,
-	YAxis,
-} from "recharts";
+import { Bar, BarChart, LabelList, XAxis, YAxis } from "recharts";
 import {
 	ChartContainer,
 	ChartTooltip,
@@ -30,19 +22,13 @@ export function BreakdownColumnChart({
 	return (
 		<ChartContainer
 			config={BREAKDOWN_BAR_CHART_CONFIG}
-			className="min-h-0 flex-1 w-full dark:[&_.recharts-cartesian-grid_line]:[stroke-opacity:0.05] dark:[&_.recharts-reference-line-line]:[stroke-opacity:0.05]"
+			className="min-h-0 flex-1 w-full"
 		>
 			<BarChart
 				accessibilityLayer
 				data={items}
 				margin={{ top: 24, bottom: 0, left: 24, right: 24 }}
 			>
-				<CartesianGrid vertical={false} strokeOpacity={0.3} />
-				<ReferenceLine
-					y={0}
-					stroke="var(--muted-foreground)"
-					strokeOpacity={0.3}
-				/>
 				<XAxis
 					dataKey="label"
 					axisLine={false}

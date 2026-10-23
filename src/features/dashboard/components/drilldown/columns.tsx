@@ -53,13 +53,17 @@ export function getDashboardDrilldownColumns(
 		];
 	}
 	if (expense) {
-		return [
-			...getExpenseReadColumns<DashboardDrilldownRow>({
+		const [category, date, amount] =
+			getExpenseReadColumns<DashboardDrilldownRow>({
 				category: (row) => row.category ?? "",
 				date: (row) => row.date,
 				amount: (row) => row.amount,
-			}),
+			});
+		return [
+			category,
+			date,
 			c.accessor("description", { header: "Descrição", enableSorting: false }),
+			amount,
 		];
 	}
 	return [

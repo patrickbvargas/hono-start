@@ -100,9 +100,17 @@ function DrilldownContent<
 	}
 	if (!query.data || query.isFetching) {
 		return (
-			<div role="status" aria-label="Carregando detalhes" className="space-y-2">
-				<Skeleton className="h-10 w-full" />
-				<Skeleton className="h-40 w-full" />
+			<div
+				role="status"
+				aria-label="Carregando detalhes"
+				className="min-h-0 space-y-4 overflow-auto"
+			>
+				{props.renderSummary ? <Skeleton className="h-5 w-40" /> : null}
+				<Skeleton
+					aria-hidden="true"
+					className="w-full shrink-0"
+					style={{ height: 95 + (props.pageSize ?? 10) * 37 }}
+				/>
 			</div>
 		);
 	}

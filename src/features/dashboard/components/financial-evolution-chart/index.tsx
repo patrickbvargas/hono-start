@@ -1,12 +1,4 @@
-import {
-	Bar,
-	CartesianGrid,
-	ComposedChart,
-	Line,
-	ReferenceLine,
-	XAxis,
-	YAxis,
-} from "recharts";
+import { Bar, ComposedChart, Line, XAxis, YAxis } from "recharts";
 import {
 	Card,
 	CardContent,
@@ -86,17 +78,8 @@ export function FinancialEvolutionChart({
 				</CardTitle>
 			</CardHeader>
 			<CardContent className="flex min-h-0 flex-1 flex-col gap-3">
-				<ChartContainer
-					config={chartConfig}
-					className="min-h-0 flex-1 w-full dark:[&_.recharts-cartesian-grid_line]:[stroke-opacity:0.05] dark:[&_.recharts-reference-line-line]:[stroke-opacity:0.05]"
-				>
+				<ChartContainer config={chartConfig} className="min-h-0 flex-1 w-full">
 					<ComposedChart accessibilityLayer data={items} barGap={8}>
-						<CartesianGrid vertical={false} strokeOpacity={0.3} />
-						<ReferenceLine
-							y={0}
-							stroke="var(--muted-foreground)"
-							strokeOpacity={0.3}
-						/>
 						<XAxis
 							dataKey="month"
 							axisLine={false}
@@ -137,7 +120,7 @@ export function FinancialEvolutionChart({
 								/>
 							)}
 							fill="var(--color-revenue)"
-							radius={[4, 4, 0, 0]}
+							radius={4}
 						/>
 						<Bar
 							dataKey="remuneration"
@@ -154,7 +137,7 @@ export function FinancialEvolutionChart({
 								/>
 							)}
 							fill="var(--color-remuneration)"
-							radius={[4, 4, 0, 0]}
+							radius={4}
 						/>
 						{items.some((item) => item.expense !== undefined) ? (
 							<Bar
@@ -172,7 +155,7 @@ export function FinancialEvolutionChart({
 									/>
 								)}
 								fill="var(--color-expense)"
-								radius={[4, 4, 0, 0]}
+								radius={4}
 							/>
 						) : null}
 						{items.some((item) => item.result !== undefined) ? (
@@ -195,7 +178,7 @@ export function FinancialEvolutionChart({
 													role="button"
 													tabIndex={0}
 													aria-label={`Detalhar Resultado ${formatMonthLabel(items[props.index]?.month ?? "")}`}
-													className="cursor-pointer outline-none transition-[fill-opacity,stroke] hover:fill-opacity-100 hover:stroke-foreground focus-visible:fill-opacity-100 focus-visible:stroke-foreground"
+													className="cursor-pointer outline-none transition-[fill-opacity,stroke] hover:fill-opacity-100 hover:stroke-foreground/30 focus-visible:fill-opacity-100 focus-visible:stroke-foreground/30"
 													pointerEvents="all"
 													onClick={(event) => {
 														onSelect(
@@ -218,7 +201,7 @@ export function FinancialEvolutionChart({
 											)
 										: false
 								}
-								type="linear"
+								type="monotone"
 							/>
 						) : null}
 					</ComposedChart>

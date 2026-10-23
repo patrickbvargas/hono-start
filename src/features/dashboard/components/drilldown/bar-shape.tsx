@@ -19,7 +19,7 @@ export function DrilldownBarShape({
 			tabIndex={0}
 			aria-label={`Detalhar ${label}`}
 			data-drilldown-index={props.index}
-			className="cursor-pointer outline-none [&_.recharts-rectangle]:transition-[filter,stroke,stroke-width] hover:[&_.recharts-rectangle]:brightness-110 hover:[&_.recharts-rectangle]:stroke-foreground hover:[&_.recharts-rectangle]:stroke-2 focus-visible:[&_.recharts-rectangle]:brightness-110 focus-visible:[&_.recharts-rectangle]:stroke-foreground focus-visible:[&_.recharts-rectangle]:stroke-2"
+			className="cursor-pointer outline-none [&_.recharts-rectangle]:transition-[filter,stroke,stroke-width] hover:[&_.recharts-rectangle]:brightness-110 hover:[&_.recharts-rectangle]:stroke-foreground/30 hover:[&_.recharts-rectangle]:stroke-2 focus-visible:[&_.recharts-rectangle]:brightness-110 focus-visible:[&_.recharts-rectangle]:stroke-foreground/30 focus-visible:[&_.recharts-rectangle]:stroke-2"
 			onClick={(event) => {
 				event.stopPropagation();
 				onActivate(event.currentTarget);
