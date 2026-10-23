@@ -1,6 +1,9 @@
 import { mutationOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
-import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
+import {
+	hasSafeMutationErrorMessage,
+	isPrismaUniqueConstraintError,
+} from "@/shared/lib/error-mapping";
 import { assertCan } from "@/shared/session";
 import {
 	authMiddleware,
@@ -62,7 +65,12 @@ const updateRemunerationFn = createServerFn({ method: "POST" })
 			});
 		} catch (error) {
 			console.error("[updateRemuneration]", error);
-			if (hasExactErrorMessage(error, REMUNERATION_ERRORS)) {
+			if (
+				isPrismaUniqueConstraintError(error, ["feeId", "contractEmployeeId"])
+			) {
+				throw new Error(REMUNERATION_ERRORS.REMUNERATION_DUPLICATE);
+			}
+			if (hasSafeMutationErrorMessage(error, REMUNERATION_ERRORS)) {
 				throw error;
 			}
 
@@ -92,7 +100,12 @@ const deleteRemunerationFn = createServerFn({ method: "POST" })
 			});
 		} catch (error) {
 			console.error("[deleteRemuneration]", error);
-			if (hasExactErrorMessage(error, REMUNERATION_ERRORS)) {
+			if (
+				isPrismaUniqueConstraintError(error, ["feeId", "contractEmployeeId"])
+			) {
+				throw new Error(REMUNERATION_ERRORS.REMUNERATION_DUPLICATE);
+			}
+			if (hasSafeMutationErrorMessage(error, REMUNERATION_ERRORS)) {
 				throw error;
 			}
 
@@ -122,7 +135,12 @@ const restoreRemunerationFn = createServerFn({ method: "POST" })
 			});
 		} catch (error) {
 			console.error("[restoreRemuneration]", error);
-			if (hasExactErrorMessage(error, REMUNERATION_ERRORS)) {
+			if (
+				isPrismaUniqueConstraintError(error, ["feeId", "contractEmployeeId"])
+			) {
+				throw new Error(REMUNERATION_ERRORS.REMUNERATION_DUPLICATE);
+			}
+			if (hasSafeMutationErrorMessage(error, REMUNERATION_ERRORS)) {
 				throw error;
 			}
 

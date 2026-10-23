@@ -5,7 +5,8 @@ import type { AuditLog } from "./model";
 
 export const auditLogSortSchema = createSortSchema<AuditLog>({
 	columns: AUDIT_LOG_ALLOWED_SORT_COLUMNS,
-	defaultColumn: "occurredAt",
+	defaultColumn: "id",
+	defaultDirection: "desc",
 });
 
 export type AuditLogSort = z.infer<typeof auditLogSortSchema>;

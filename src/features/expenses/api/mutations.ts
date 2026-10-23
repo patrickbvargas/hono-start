@@ -1,6 +1,6 @@
 import { mutationOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
-import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
+import { hasSafeMutationErrorMessage } from "@/shared/lib/error-mapping";
 import { assertCan } from "@/shared/session";
 import {
 	authMiddleware,
@@ -43,7 +43,7 @@ const createExpenseFn = createServerFn({ method: "POST" })
 			});
 		} catch (error) {
 			console.error("[createExpense]", error);
-			if (hasExactErrorMessage(error, EXPENSE_ERRORS)) {
+			if (hasSafeMutationErrorMessage(error, EXPENSE_ERRORS)) {
 				throw error;
 			}
 
@@ -77,7 +77,7 @@ const updateExpenseFn = createServerFn({ method: "POST" })
 			});
 		} catch (error) {
 			console.error("[updateExpense]", error);
-			if (hasExactErrorMessage(error, EXPENSE_ERRORS)) {
+			if (hasSafeMutationErrorMessage(error, EXPENSE_ERRORS)) {
 				throw error;
 			}
 
@@ -111,7 +111,7 @@ const deleteExpenseFn = createServerFn({ method: "POST" })
 			});
 		} catch (error) {
 			console.error("[deleteExpense]", error);
-			if (hasExactErrorMessage(error, EXPENSE_ERRORS)) {
+			if (hasSafeMutationErrorMessage(error, EXPENSE_ERRORS)) {
 				throw error;
 			}
 
@@ -145,7 +145,7 @@ const restoreExpenseFn = createServerFn({ method: "POST" })
 			});
 		} catch (error) {
 			console.error("[restoreExpense]", error);
-			if (hasExactErrorMessage(error, EXPENSE_ERRORS)) {
+			if (hasSafeMutationErrorMessage(error, EXPENSE_ERRORS)) {
 				throw error;
 			}
 

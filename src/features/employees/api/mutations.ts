@@ -1,6 +1,9 @@
 import { mutationOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
-import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
+import {
+	hasSafeMutationErrorMessage,
+	isPrismaUniqueConstraintError,
+} from "@/shared/lib/error-mapping";
 import { assertCan } from "@/shared/session";
 import {
 	authMiddleware,
@@ -41,8 +44,11 @@ const createEmployeeFn = createServerFn({ method: "POST" })
 			});
 		} catch (error) {
 			console.error("[createEmployee]", error);
+			if (isPrismaUniqueConstraintError(error, ["firmId", "oabNumber"])) {
+				throw new Error(EMPLOYEE_ERRORS.OAB_DUPLICATE);
+			}
 
-			if (hasExactErrorMessage(error, EMPLOYEE_ERRORS)) {
+			if (hasSafeMutationErrorMessage(error, EMPLOYEE_ERRORS)) {
 				throw error;
 			}
 
@@ -70,8 +76,11 @@ const updateEmployeeFn = createServerFn({ method: "POST" })
 			});
 		} catch (error) {
 			console.error("[updateEmployee]", error);
+			if (isPrismaUniqueConstraintError(error, ["firmId", "oabNumber"])) {
+				throw new Error(EMPLOYEE_ERRORS.OAB_DUPLICATE);
+			}
 
-			if (hasExactErrorMessage(error, EMPLOYEE_ERRORS)) {
+			if (hasSafeMutationErrorMessage(error, EMPLOYEE_ERRORS)) {
 				throw error;
 			}
 
@@ -99,7 +108,10 @@ const deleteEmployeeFn = createServerFn({ method: "POST" })
 			});
 		} catch (error) {
 			console.error("[deleteEmployee]", error);
-			if (hasExactErrorMessage(error, EMPLOYEE_ERRORS)) {
+			if (isPrismaUniqueConstraintError(error, ["firmId", "oabNumber"])) {
+				throw new Error(EMPLOYEE_ERRORS.OAB_DUPLICATE);
+			}
+			if (hasSafeMutationErrorMessage(error, EMPLOYEE_ERRORS)) {
 				throw error;
 			}
 
@@ -127,7 +139,10 @@ const restoreEmployeeFn = createServerFn({ method: "POST" })
 			});
 		} catch (error) {
 			console.error("[restoreEmployee]", error);
-			if (hasExactErrorMessage(error, EMPLOYEE_ERRORS)) {
+			if (isPrismaUniqueConstraintError(error, ["firmId", "oabNumber"])) {
+				throw new Error(EMPLOYEE_ERRORS.OAB_DUPLICATE);
+			}
+			if (hasSafeMutationErrorMessage(error, EMPLOYEE_ERRORS)) {
 				throw error;
 			}
 

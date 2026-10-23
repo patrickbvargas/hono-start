@@ -15,7 +15,7 @@ function getAttachmentOwnerCount(data: AttachmentOwnerInput) {
 
 export function assertSingleAttachmentOwnerContext(data: AttachmentOwnerInput) {
 	if (getAttachmentOwnerCount(data) !== 1) {
-		throw new Error("Selecione exatamente um contexto para o anexo.");
+		throw new Error(ATTACHMENT_ERRORS.OWNER_REQUIRED);
 	}
 }
 

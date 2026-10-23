@@ -1,7 +1,7 @@
 import { mutationOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import {
-	hasExactErrorMessage,
+	hasSafeMutationErrorMessage,
 	isPrismaUniqueConstraintError,
 } from "@/shared/lib/error-mapping";
 import { assertCan, hasPermission } from "@/shared/session";
@@ -46,11 +46,17 @@ const createContractFn = createServerFn({ method: "POST" })
 			});
 		} catch (error) {
 			console.error("[createContract]", error);
+			if (isPrismaUniqueConstraintError(error, ["contractId", "employeeId"])) {
+				throw new Error(CONTRACT_ERRORS.CONTRACT_ASSIGNMENT_DUPLICATE);
+			}
+			if (isPrismaUniqueConstraintError(error, ["contractId", "typeId"])) {
+				throw new Error(CONTRACT_ERRORS.CONTRACT_REVENUE_TYPE_DUPLICATE);
+			}
 			if (isPrismaUniqueConstraintError(error, ["firmId", "processNumber"])) {
 				throw new Error(CONTRACT_ERRORS.CONTRACT_PROCESS_NUMBER_DUPLICATE);
 			}
 
-			if (hasExactErrorMessage(error, CONTRACT_ERRORS)) {
+			if (hasSafeMutationErrorMessage(error, CONTRACT_ERRORS)) {
 				throw error;
 			}
 
@@ -89,11 +95,17 @@ const updateContractFn = createServerFn({ method: "POST" })
 			});
 		} catch (error) {
 			console.error("[updateContract]", error);
+			if (isPrismaUniqueConstraintError(error, ["contractId", "employeeId"])) {
+				throw new Error(CONTRACT_ERRORS.CONTRACT_ASSIGNMENT_DUPLICATE);
+			}
+			if (isPrismaUniqueConstraintError(error, ["contractId", "typeId"])) {
+				throw new Error(CONTRACT_ERRORS.CONTRACT_REVENUE_TYPE_DUPLICATE);
+			}
 			if (isPrismaUniqueConstraintError(error, ["firmId", "processNumber"])) {
 				throw new Error(CONTRACT_ERRORS.CONTRACT_PROCESS_NUMBER_DUPLICATE);
 			}
 
-			if (hasExactErrorMessage(error, CONTRACT_ERRORS)) {
+			if (hasSafeMutationErrorMessage(error, CONTRACT_ERRORS)) {
 				throw error;
 			}
 
@@ -127,7 +139,13 @@ const deleteContractFn = createServerFn({ method: "POST" })
 			});
 		} catch (error) {
 			console.error("[deleteContract]", error);
-			if (hasExactErrorMessage(error, CONTRACT_ERRORS)) {
+			if (isPrismaUniqueConstraintError(error, ["contractId", "employeeId"])) {
+				throw new Error(CONTRACT_ERRORS.CONTRACT_ASSIGNMENT_DUPLICATE);
+			}
+			if (isPrismaUniqueConstraintError(error, ["contractId", "typeId"])) {
+				throw new Error(CONTRACT_ERRORS.CONTRACT_REVENUE_TYPE_DUPLICATE);
+			}
+			if (hasSafeMutationErrorMessage(error, CONTRACT_ERRORS)) {
 				throw error;
 			}
 
@@ -161,7 +179,13 @@ const restoreContractFn = createServerFn({ method: "POST" })
 			});
 		} catch (error) {
 			console.error("[restoreContract]", error);
-			if (hasExactErrorMessage(error, CONTRACT_ERRORS)) {
+			if (isPrismaUniqueConstraintError(error, ["contractId", "employeeId"])) {
+				throw new Error(CONTRACT_ERRORS.CONTRACT_ASSIGNMENT_DUPLICATE);
+			}
+			if (isPrismaUniqueConstraintError(error, ["contractId", "typeId"])) {
+				throw new Error(CONTRACT_ERRORS.CONTRACT_REVENUE_TYPE_DUPLICATE);
+			}
+			if (hasSafeMutationErrorMessage(error, CONTRACT_ERRORS)) {
 				throw error;
 			}
 

@@ -6,7 +6,8 @@ export const EMPLOYEE_ERRORS = {
 	DELETE_FAILED: "Erro ao excluir colaborador",
 	DELETE_ACTIVE_DEPENDENCIES:
 		"Não é possível excluir colaborador com remunerações ativas",
-	NOT_FOUND: "colaborador não encontrado",
+	NOT_FOUND: "Colaborador não encontrado",
+	OAB_DUPLICATE: "Esta OAB já está cadastrada",
 	GET_FAILED: "Erro ao buscar colaboradores",
 	RESTORE_FORBIDDEN: "Apenas administradores podem restaurar colaboradores",
 	RESTORE_FAILED: "Erro ao restaurar colaborador",

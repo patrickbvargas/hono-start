@@ -1,4 +1,5 @@
 export const ATTACHMENT_ERRORS = {
+	OWNER_REQUIRED: "Selecione exatamente um contexto para o anexo.",
 	DELETE_FAILED: "Não foi possível excluir anexo.",
 	DETAIL_NOT_FOUND: "Anexo não encontrado.",
 	CONTRACT_NOT_WRITABLE: "Contrato não permite novos anexos.",

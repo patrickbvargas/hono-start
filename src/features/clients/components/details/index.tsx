@@ -81,7 +81,7 @@ const ClientDetailsContent = ({
 	const contactInfo = React.useMemo<DetailFieldItem[]>(
 		() => [
 			{ term: "E-mail", definition: client.email ?? "—" },
-			{ term: "Telefone", definition: client.phone ?? "—" },
+			{ term: "Telefone", definition: formatter.phone(client.phone) },
 		],
 		[client],
 	);

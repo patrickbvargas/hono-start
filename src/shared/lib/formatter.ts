@@ -1,4 +1,14 @@
 export const formatter = {
+	phone: (value: string | null) => {
+		if (!value) {
+			return "—";
+		}
+		const digits = value.replace(/\D/g, "");
+		if (digits.length !== 10 && digits.length !== 11) {
+			return value;
+		}
+		return `(${digits.slice(0, 2)}) ${digits.slice(2, -4)}-${digits.slice(-4)}`;
+	},
 	oab: (oab: string | null) => {
 		if (!oab) return "—";
 		if (oab.length === 8)

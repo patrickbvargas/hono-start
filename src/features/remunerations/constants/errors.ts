@@ -1,4 +1,6 @@
 export const REMUNERATION_ERRORS = {
+	REMUNERATION_DUPLICATE:
+		"Já existe uma remuneração para este honorário e colaborador",
 	REMUNERATION_CREATE_FORBIDDEN:
 		"Apenas administradores podem criar remunerações",
 	REMUNERATION_DELETE_FORBIDDEN:

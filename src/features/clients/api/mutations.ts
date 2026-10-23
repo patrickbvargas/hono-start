@@ -1,7 +1,7 @@
 import { mutationOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import {
-	hasExactErrorMessage,
+	hasSafeMutationErrorMessage,
 	isPrismaUniqueConstraintError,
 } from "@/shared/lib/error-mapping";
 import { assertCan, getScope } from "@/shared/session";
@@ -43,7 +43,7 @@ const createClientFn = createServerFn({ method: "POST" })
 				throw new Error(CLIENT_ERRORS.DOCUMENT_DUPLICATE);
 			}
 
-			if (hasExactErrorMessage(error, CLIENT_ERRORS)) {
+			if (hasSafeMutationErrorMessage(error, CLIENT_ERRORS)) {
 				throw error;
 			}
 
@@ -74,7 +74,7 @@ const updateClientFn = createServerFn({ method: "POST" })
 				throw new Error(CLIENT_ERRORS.DOCUMENT_DUPLICATE);
 			}
 
-			if (hasExactErrorMessage(error, CLIENT_ERRORS)) {
+			if (hasSafeMutationErrorMessage(error, CLIENT_ERRORS)) {
 				throw error;
 			}
 
@@ -101,7 +101,7 @@ const deleteClientFn = createServerFn({ method: "POST" })
 			});
 		} catch (error) {
 			console.error("[deleteClient]", error);
-			if (hasExactErrorMessage(error, CLIENT_ERRORS)) {
+			if (hasSafeMutationErrorMessage(error, CLIENT_ERRORS)) {
 				throw error;
 			}
 
@@ -128,7 +128,7 @@ const restoreClientFn = createServerFn({ method: "POST" })
 			});
 		} catch (error) {
 			console.error("[restoreClient]", error);
-			if (hasExactErrorMessage(error, CLIENT_ERRORS)) {
+			if (hasSafeMutationErrorMessage(error, CLIENT_ERRORS)) {
 				throw error;
 			}
 

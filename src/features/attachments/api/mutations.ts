@@ -1,5 +1,6 @@
 import { mutationOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
+import { hasSafeMutationErrorMessage } from "@/shared/lib/error-mapping";
 import { assertCan, isContractWritable } from "@/shared/session";
 import {
 	authMiddleware,
@@ -76,12 +77,7 @@ const createAttachmentFn = createServerFn({ method: "POST" })
 			});
 		} catch (error) {
 			console.error("[createAttachment]", error);
-			if (
-				error instanceof Error &&
-				Object.values(ATTACHMENT_ERRORS).includes(
-					error.message as (typeof ATTACHMENT_ERRORS)[keyof typeof ATTACHMENT_ERRORS],
-				)
-			) {
+			if (hasSafeMutationErrorMessage(error, ATTACHMENT_ERRORS)) {
 				throw error;
 			}
 
@@ -135,12 +131,7 @@ const deleteAttachmentFn = createServerFn({ method: "POST" })
 			});
 		} catch (error) {
 			console.error("[deleteAttachment]", error);
-			if (
-				error instanceof Error &&
-				Object.values(ATTACHMENT_ERRORS).includes(
-					error.message as (typeof ATTACHMENT_ERRORS)[keyof typeof ATTACHMENT_ERRORS],
-				)
-			) {
+			if (hasSafeMutationErrorMessage(error, ATTACHMENT_ERRORS)) {
 				throw error;
 			}
 

@@ -29,7 +29,7 @@ const INPUT_MASK_DEFINITIONS: Record<
 		options: DEFAULT_INPUT_MASK_OPTIONS,
 	},
 	phoneBr: {
-		mask: ["(99) 9999-9999", "(99) 99999-9999"],
+		mask: "(99) 9999[9]-9999",
 		maxLength: 15,
 		options: DEFAULT_INPUT_MASK_OPTIONS,
 	},

@@ -270,7 +270,7 @@ describe("feature utility contracts", () => {
 			},
 		});
 		expect(getBuiltInInputMaskDefinition("phoneBr")).toEqual({
-			mask: ["(99) 9999-9999", "(99) 99999-9999"],
+			mask: "(99) 9999[9]-9999",
 			maxLength: 15,
 			options: {
 				placeholder: "_",

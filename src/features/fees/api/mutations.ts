@@ -1,6 +1,9 @@
 import { mutationOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
-import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
+import {
+	hasSafeMutationErrorMessage,
+	isPrismaUniqueConstraintError,
+} from "@/shared/lib/error-mapping";
 import { assertCan } from "@/shared/session";
 import {
 	authMiddleware,
@@ -48,7 +51,12 @@ const createFeeFn = createServerFn({ method: "POST" })
 			});
 		} catch (error) {
 			console.error("[createFee]", error);
-			if (hasExactErrorMessage(error, FEE_ERRORS)) {
+			if (
+				isPrismaUniqueConstraintError(error, ["revenueId", "installmentNumber"])
+			) {
+				throw new Error(FEE_ERRORS.FEE_DUPLICATE_INSTALLMENT);
+			}
+			if (hasSafeMutationErrorMessage(error, FEE_ERRORS)) {
 				throw error;
 			}
 
@@ -95,7 +103,12 @@ const updateFeeFn = createServerFn({ method: "POST" })
 			});
 		} catch (error) {
 			console.error("[updateFee]", error);
-			if (hasExactErrorMessage(error, FEE_ERRORS)) {
+			if (
+				isPrismaUniqueConstraintError(error, ["revenueId", "installmentNumber"])
+			) {
+				throw new Error(FEE_ERRORS.FEE_DUPLICATE_INSTALLMENT);
+			}
+			if (hasSafeMutationErrorMessage(error, FEE_ERRORS)) {
 				throw error;
 			}
 
@@ -130,7 +143,12 @@ const deleteFeeFn = createServerFn({ method: "POST" })
 			});
 		} catch (error) {
 			console.error("[deleteFee]", error);
-			if (hasExactErrorMessage(error, FEE_ERRORS)) {
+			if (
+				isPrismaUniqueConstraintError(error, ["revenueId", "installmentNumber"])
+			) {
+				throw new Error(FEE_ERRORS.FEE_DUPLICATE_INSTALLMENT);
+			}
+			if (hasSafeMutationErrorMessage(error, FEE_ERRORS)) {
 				throw error;
 			}
 
@@ -165,7 +183,12 @@ const restoreFeeFn = createServerFn({ method: "POST" })
 			});
 		} catch (error) {
 			console.error("[restoreFee]", error);
-			if (hasExactErrorMessage(error, FEE_ERRORS)) {
+			if (
+				isPrismaUniqueConstraintError(error, ["revenueId", "installmentNumber"])
+			) {
+				throw new Error(FEE_ERRORS.FEE_DUPLICATE_INSTALLMENT);
+			}
+			if (hasSafeMutationErrorMessage(error, FEE_ERRORS)) {
 				throw error;
 			}
 
