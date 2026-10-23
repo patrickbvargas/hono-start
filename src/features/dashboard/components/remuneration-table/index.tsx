@@ -4,10 +4,10 @@ import {
 	CardContent,
 	CardHeader,
 	CardTitle,
-	TableCell,
-	TableRow,
+	// TableCell,
+	// TableRow,
 } from "@/shared/components/ui";
-import { formatter } from "@/shared/lib/formatter";
+// import { formatter } from "@/shared/lib/formatter";
 import type {
 	DashboardRemunerationMonth,
 	DashboardRemunerationRow,
@@ -27,12 +27,11 @@ const EMPTY_LABEL =
 export function DashboardRemunerationTable({
 	months,
 	rows,
-	subtotal,
 }: DashboardRemunerationTableProps) {
 	const columns = getColumns(months);
 
 	return (
-		<Card className="hidden sm:block">
+		<Card className="hidden sm:block space-y-2">
 			<CardHeader>
 				<CardTitle>Remunerações</CardTitle>
 			</CardHeader>
@@ -40,27 +39,28 @@ export function DashboardRemunerationTable({
 				<DataTable
 					columns={columns}
 					data={rows}
+					pageSize={10}
 					emptyMessage={EMPTY_LABEL}
-					tableFooterContent={
-						subtotal ? (
-							<TableRow className="hover:bg-transparent">
-								<TableCell className="whitespace-nowrap font-semibold">
-									{subtotal.label}
-								</TableCell>
-								{months.map((month) => (
-									<TableCell
-										key={month.key}
-										className="whitespace-nowrap text-right font-semibold"
-									>
-										{formatter.currency(subtotal.months[month.key] ?? 0)}
-									</TableCell>
-								))}
-								<TableCell className="whitespace-nowrap text-right font-semibold">
-									{subtotal.formattedTotal}
-								</TableCell>
-							</TableRow>
-						) : null
-					}
+					// tableFooterContent={
+					//   subtotal ? (
+					//     <TableRow className="hover:bg-transparent">
+					//       <TableCell className="whitespace-nowrap font-semibold">
+					//         {subtotal.label}
+					//       </TableCell>
+					//       {months.map((month) => (
+					//         <TableCell
+					//           key={month.key}
+					//           className="whitespace-nowrap text-right font-semibold"
+					//         >
+					//           {formatter.currency(subtotal.months[month.key] ?? 0)}
+					//         </TableCell>
+					//       ))}
+					//       <TableCell className="whitespace-nowrap text-right font-semibold">
+					//         {subtotal.formattedTotal}
+					//       </TableCell>
+					//     </TableRow>
+					//   ) : null
+					// }
 					className="border-0"
 				/>
 			</CardContent>

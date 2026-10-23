@@ -21,7 +21,7 @@ export function DashboardOverdueInstallmentsTable({
 	const columns = getColumns();
 
 	return (
-		<Card className="hidden sm:block">
+		<Card className="hidden sm:block space-y-2">
 			<CardHeader>
 				<CardTitle>Parcelas em possível inadimplência</CardTitle>
 			</CardHeader>
@@ -29,6 +29,7 @@ export function DashboardOverdueInstallmentsTable({
 				<DataTable
 					columns={columns}
 					data={rows}
+					pageSize={10}
 					emptyMessage={EMPTY_LABEL}
 					className="border-0"
 				/>

@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 
 import { createColumnHelper, useTable } from "@tanstack/react-table";
-import { renderHook } from "@testing-library/react";
+import { act, renderHook } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { dataTableFeatures } from "../table";
 
@@ -40,4 +40,33 @@ describe("shared table v9 contract", () => {
 		expect(result.current.getRowModel().rows[0].original.id).toBe(2);
 		expect(result.current.getRowModel().rows[0].getValue("amount")).toBe(99);
 	});
+});
+
+it("uses native pagination and preserves original row indices", () => {
+	const data = Array.from({ length: 25 }, (_, id) => ({ id, amount: id }));
+	const { result } = renderHook(() =>
+		useTable({
+			features: dataTableFeatures,
+			columns,
+			data,
+			initialState: { pagination: { pageIndex: 0, pageSize: 10 } },
+		}),
+	);
+	expect(result.current.getRowModel().rows).toHaveLength(10);
+	expect(result.current.getPageCount()).toBe(3);
+	act(() => result.current.setPageIndex(2));
+	expect(result.current.getRowModel().rows).toHaveLength(5);
+	expect(result.current.getRowModel().rows[0].index).toBe(20);
+});
+it("renders every supplied server row with manual pagination", () => {
+	const data = Array.from({ length: 25 }, (_, id) => ({ id, amount: id }));
+	const { result } = renderHook(() =>
+		useTable({
+			features: dataTableFeatures,
+			columns,
+			data,
+			manualPagination: true,
+		}),
+	);
+	expect(result.current.getRowModel().rows).toHaveLength(25);
 });

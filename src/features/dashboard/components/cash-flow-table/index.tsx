@@ -12,20 +12,21 @@ interface DashboardCashFlowTableProps {
 	rows: DashboardCashFlowRow[];
 }
 
-const EMPTY_LABEL = "Nenhum dado de fluxo de caixa encontrado.";
+const EMPTY_LABEL = "Nenhum dado de saldo encontrado.";
 
 export function DashboardCashFlowTable({ rows }: DashboardCashFlowTableProps) {
 	const columns = getColumns();
 
 	return (
-		<Card className="hidden sm:block">
+		<Card className="hidden sm:block space-y-2">
 			<CardHeader>
-				<CardTitle>Fluxo de caixa mensal</CardTitle>
+				<CardTitle>Saldo mensal</CardTitle>
 			</CardHeader>
 			<CardContent className="flex min-h-0 flex-1 flex-col pt-0">
 				<DataTable
 					columns={columns}
 					data={rows}
+					pageSize={10}
 					emptyMessage={EMPTY_LABEL}
 					className="border-0"
 				/>

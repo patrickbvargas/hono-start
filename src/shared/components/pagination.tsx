@@ -27,16 +27,58 @@ interface PaginationProps extends React.ComponentProps<typeof PaginationRoot> {
 	pageSizeOptions?: readonly number[];
 }
 
-export const Pagination = ({
+export const Pagination = (props: PaginationProps) => {
+	const { page, limit, getPaginationSearch, handlePageSizeChange } =
+		usePagination();
+	return (
+		<PaginationView
+			{...props}
+			page={page}
+			limit={limit}
+			handlePageSizeChange={handlePageSizeChange}
+			renderPage={(target, kind) => {
+				const parts = {
+					first: PaginationFirst,
+					previous: PaginationPrevious,
+					next: PaginationNext,
+					last: PaginationLast,
+					number: PaginationLink,
+				};
+				const Part = parts[kind];
+				return (
+					<Part
+						search={getPaginationSearch(target)}
+						isActive={kind === "number" && target === page}
+					>
+						{kind === "number" ? target : undefined}
+					</Part>
+				);
+			}}
+		/>
+	);
+};
+
+interface PaginationViewProps extends PaginationProps {
+	page: number;
+	limit: number;
+	handlePageSizeChange?: (size: number) => void;
+	renderPage: (
+		page: number,
+		kind: "first" | "previous" | "next" | "last" | "number",
+	) => React.ReactNode;
+}
+
+export const PaginationView = ({
 	totalRecords = 0,
 	siblingCount = DEFAULT_SIBLING_COUNT,
 	pageSizeOptions = DEFAULT_PAGE_SIZE_OPTIONS,
+	page,
+	limit,
+	handlePageSizeChange,
+	renderPage,
 	className,
 	...props
-}: PaginationProps) => {
-	const { page, limit, getPaginationSearch, handlePageSizeChange } =
-		usePagination();
-
+}: PaginationViewProps) => {
 	if (totalRecords === 0) return null;
 
 	const totalPagesCount = Math.ceil(totalRecords / limit);
@@ -59,12 +101,7 @@ export const Pagination = ({
 			const pageNumber = startPage + index;
 			return (
 				<PaginationItem key={pageNumber}>
-					<PaginationLink
-						search={getPaginationSearch(pageNumber)}
-						isActive={pageNumber === page}
-					>
-						{pageNumber}
-					</PaginationLink>
+					{renderPage(pageNumber, "number")}
 				</PaginationItem>
 			);
 		});
@@ -82,40 +119,45 @@ export const Pagination = ({
 					Exibindo {displayedStartRecord}-{displayedEndRecord} de {totalRecords}{" "}
 					registros
 				</p>
-				<div className="sr-only sm:not-sr-only flex items-center justify-end gap-2">
-					<span className="text-sm text-muted-foreground">Por página</span>
-					<Select
-						value={pageSizeValue}
-						onValueChange={(value) => {
-							handlePageSizeChange(Number(value));
-						}}
-					>
-						<SelectTrigger size="sm" className="min-w-20">
-							<SelectValue />
-						</SelectTrigger>
-						<SelectContent align="end">
-							{normalizedPageSizeOptions.map((pageSizeOption) => (
-								<SelectItem key={pageSizeOption} value={String(pageSizeOption)}>
-									{pageSizeOption}
-								</SelectItem>
-							))}
-						</SelectContent>
-					</Select>
-				</div>
+				{handlePageSizeChange ? (
+					<div className="sr-only sm:not-sr-only flex items-center justify-end gap-2">
+						<span className="text-sm text-muted-foreground">Por página</span>
+						<Select
+							value={pageSizeValue}
+							onValueChange={(value) => {
+								handlePageSizeChange(Number(value));
+							}}
+						>
+							<SelectTrigger size="sm" className="min-w-20">
+								<SelectValue />
+							</SelectTrigger>
+							<SelectContent align="end">
+								{normalizedPageSizeOptions.map((pageSizeOption) => (
+									<SelectItem
+										key={pageSizeOption}
+										value={String(pageSizeOption)}
+									>
+										{pageSizeOption}
+									</SelectItem>
+								))}
+							</SelectContent>
+						</Select>
+					</div>
+				) : null}
 			</div>
 			<PaginationContent className="justify-end">
 				<PaginationItem isDisabled={page === 1}>
-					<PaginationFirst search={getPaginationSearch(1)} />
+					{renderPage(1, "first")}
 				</PaginationItem>
 				<PaginationItem isDisabled={page === 1}>
-					<PaginationPrevious search={getPaginationSearch(page - 1)} />
+					{renderPage(page - 1, "previous")}
 				</PaginationItem>
 				{renderPageLinks()}
 				<PaginationItem isDisabled={!(page < totalPagesCount)}>
-					<PaginationNext search={getPaginationSearch(page + 1)} />
+					{renderPage(page + 1, "next")}
 				</PaginationItem>
 				<PaginationItem isDisabled={!(page < totalPagesCount)}>
-					<PaginationLast search={getPaginationSearch(totalPagesCount)} />
+					{renderPage(totalPagesCount, "last")}
 				</PaginationItem>
 			</PaginationContent>
 		</PaginationRoot>

@@ -243,7 +243,7 @@ function FieldWrapper({
 			{label && (
 				<FieldLabel htmlFor={id}>
 					{label}
-					{isRequired && <span className="text-destructive">*</span>}
+					{isRequired && <span className="text-destructive -ml-1">*</span>}
 				</FieldLabel>
 			)}
 			{children}

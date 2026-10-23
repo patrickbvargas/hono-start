@@ -133,3 +133,7 @@ Entity list, detail and dashboard data queries inherit global QueryClient cache 
 ### Theme ownership
 
 Application components consume only standard shadcn semantic tokens already defined in global.css. Do not add custom theme variables: users replace :root, .dark and @theme inline wholesale with community themes. Do not use fixed palette colors in application TSX. Component radii derive from the global radius scale without pixel caps. Customize Tailwind spacing, typography and shadow scales in global.css through @theme. Structural grids, responsive visibility, icon geometry and data-driven chart dimensions remain component responsibilities. Exported PDFs retain an independent print palette.
+
+The shared DataTable optionally accepts pageSize for native TanStack pagination (rowPaginationFeature and createPaginatedRowModel) of supplied rows, with footer navigation only when there are multiple pages and no page-size selector. Without pageSize it renders all supplied rows for server pagination. Row actions retain the original data index; sorting remains URL-driven.
+
+
