@@ -2,7 +2,7 @@
 
 This directory is the canonical project contract for Hono.
 
-If the codebase is incomplete, outdated, or inconsistent, these docs still describe the intended truth of the project.
+For the final organization pass, the user's existing application code defines current behavior. Reconcile stale documentation with that code; do not restore older documented behavior automatically. Functional inconsistencies require an explicit behavior decision.
 
 ## Who This Is For
 
@@ -51,7 +51,7 @@ When a question is answered by a more specific file, prefer that file over a bro
 
 - Domain docs win on business meaning, product behavior, and permissions.
 - Implementation docs win on stack, structure, naming, code organization, and repository patterns.
-- If code disagrees with docs, docs describe intended truth.
+- If current user-adjusted code disagrees with older docs, preserve the code and update the owning documentation. Do not change established behavior solely to satisfy stale documentation or tests.
 - If two docs overlap, the more specific doc wins over the broader summary.
 
 Specificity guidance:

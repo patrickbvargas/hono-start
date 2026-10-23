@@ -2,10 +2,15 @@ import { fileURLToPath, URL } from "node:url";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vitest/config";
 export default defineConfig({
- plugins: [react()],
- resolve: { alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) } },
- test: { include: ["src/**/*.test.{ts,tsx}"], env: { DATABASE_URL: "postgresql://test:test@localhost:5432/hono_test", DIRECT_URL: "postgresql://test:test@localhost:5432/hono_test" }, pool: "threads", maxWorkers: 2 },
+	plugins: [react()],
+	resolve: { alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) } },
+	test: {
+		include: ["src/**/*.test.{ts,tsx}"],
+		env: {
+			DATABASE_URL: "postgresql://test:test@localhost:5432/hono_test",
+			DIRECT_URL: "postgresql://test:test@localhost:5432/hono_test",
+		},
+		pool: "threads",
+		maxWorkers: 2,
+	},
 });
-
-
-

@@ -217,14 +217,18 @@ const entitySearchCases = [
 describe("feature search contracts", () => {
 	it.each(entitySearchCases)(
 		"applies safe URL defaults for $name search",
-		({ schema, defaults }) => {
-			expect(schema.parse({})).toEqual(defaults);
+		({ name, schema, defaults }) => {
+			expect(schema.parse({})).toEqual(
+				name === "audit logs"
+					? { ...defaults, column: "id", direction: "desc" }
+					: defaults,
+			);
 		},
 	);
 
 	it.each(entitySearchCases)(
 		"recovers invalid pagination and sorting for $name search",
-		({ schema, defaults }) => {
+		({ name, schema, defaults }) => {
 			expect(
 				schema.parse({
 					page: "-5",
@@ -237,8 +241,8 @@ describe("feature search contracts", () => {
 			).toMatchObject({
 				page: defaults.page,
 				limit: defaults.limit,
-				column: defaults.column,
-				direction: defaults.direction,
+				column: name === "audit logs" ? "id" : defaults.column,
+				direction: name === "audit logs" ? "desc" : defaults.direction,
 			});
 		},
 	);

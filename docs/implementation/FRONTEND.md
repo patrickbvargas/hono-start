@@ -12,7 +12,7 @@ It is meant to survive domain changes as long as the project keeps the same UI a
 - Route files use `createFileRoute` with validated search state and loader prefetching for list screens.
 - Route loaders must ensure query data ahead of render rather than letting the page fetch ad hoc.
 - Filter-heavy routes prefetch both the primary list query and every unconditional header/filter option query required at first render.
-- The canonical list route shape is the `src/routes/clientes.tsx` flow backed by `src/features/clients`.
+- The canonical list route shape is the `src/routes/_app/clientes.tsx` flow backed by `src/features/clients`.
 
 ## Layout Rules
 
@@ -20,7 +20,7 @@ It is meant to survive domain changes as long as the project keeps the same UI a
 - Entity details open in drawers.
 - Create and edit forms open in modals.
 - Destructive actions require explicit confirmation UI.
-- Entity list pages must be composed with `Wrapper`, `Wrapper.Header`, and `Wrapper.Body`.
+- Entity list pages must be composed with `Wrapper`, `WrapperHeader`, and `WrapperBody`.
 - Entity lists are the main entrypoint for operational work.
 - Feature UI modules follow the canonical slice pattern in `ARCHITECTURE.md`; nested component re-export barrels are not part of the frontend pattern.
 

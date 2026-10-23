@@ -23,15 +23,21 @@ Implemented feature slices live under `src/features/`:
 - `contracts`
 - `fees`
 - `remunerations`
+- `expenses`
+- `attachments`
+- `audit-logs`
+- `dashboard`, `authentication`, and `app-sidebar`
 
 Routes currently expose:
 
-- `/` dashboard shell
+- `/` dashboard
 - `/clientes`
 - `/colaboradores`
 - `/contratos`
 - `/honorarios`
 - `/remuneracoes`
+- `/despesas`
+- `/auditoria`
 
 The Prisma schema includes the core tenant model, lookup catalogs, clients, employees, contracts, contract assignments, revenues, fees, and system-generated remunerations.
 
@@ -55,7 +61,7 @@ The Prisma schema includes the core tenant model, lookup catalogs, clients, empl
 
 ## Project Contract
 
-`docs/` is the canonical project contract. If code and docs disagree, docs describe intended truth.
+`docs/` records the project contract. During the final organization pass, preserve the user's current code behavior and update stale docs to match it; functional changes require an explicit decision.
 
 Start here before non-trivial changes:
 
@@ -75,7 +81,7 @@ Install dependencies:
 pnpm install
 ```
 
-Create `.env` with:
+Copy `.env.example` to `.env` and configure database URLs, Clerk keys, `APP_URL` and the private absolute `ATTACHMENTS_DIR`. See [Clerk setup](docs/implementation/CLERK_MIGRATION.md) and [attachment storage](docs/implementation/ATTACHMENTS.md). Minimal database values:
 
 ```bash
 DATABASE_URL="postgresql://..."
@@ -88,10 +94,10 @@ Generate Prisma client:
 pnpm db:generate
 ```
 
-Apply migrations and seed local data:
+Apply existing migrations to a confirmed local development database, then seed demo data:
 
 ```bash
-pnpm db:migrate
+pnpm exec prisma migrate deploy
 pnpm db:seed
 ```
 
@@ -103,6 +109,8 @@ pnpm dev
 
 The dev server uses port `3000`.
 
+For schema development, follow the disposable-database workflow in [Data Access](docs/implementation/DATA_ACCESS.md). Demo seed data is for development only. Production deployment uses reviewed migrations and separately prepared lookup/firm bootstrap; never run a reset or demo seed against production.
+
 ## Useful Scripts
 
 ```bash
@@ -112,6 +120,9 @@ pnpm test         # run Vitest
 pnpm lint         # run Biome lint
 pnpm format       # run Biome format
 pnpm check        # run Biome check --write
+pnpm check:ci     # read-only source and root configuration checks
+pnpm typecheck    # validate TypeScript
+pnpm verify       # read-only checks, types, full tests, production build
 pnpm db:generate  # generate Prisma client
 pnpm db:migrate   # create/apply local Prisma migration
 pnpm db:seed      # seed lookup and demo operational data
@@ -161,3 +172,7 @@ Feature slices own business behavior. Routes compose feature APIs and UI. Shared
 - sample employees, clients, contracts, revenues, fees, and generated remunerations
 
 Seed data is intended for local development and feature verification.
+
+## Release verification
+
+Run `pnpm verify` before release. Automated success does not verify live Clerk settings, database migrations or authenticated browser workflows. Follow [release prerequisites](docs/implementation/QUALITY_WORKFLOW.md#release-verification) before deployment.

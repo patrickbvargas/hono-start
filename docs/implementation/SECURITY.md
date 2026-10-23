@@ -52,7 +52,7 @@ This document defines reusable trust-boundary and authorization rules for the re
 - Audit trail is mandatory and immutable.
 - Data isolation is tenant-scoped when the product is multi-tenant.
 - Role enforcement governs protected actions.
-- Data retention relies on soft-delete behavior rather than permanent deletion.
+- Business data retention uses soft deletion; attachment deletion permanently removes metadata and binaries as defined in `docs/domain/DOMAIN_MODEL.md`.
 - Sensitive scoped data stays restricted by role and resource scope.
 - Authentication security includes rate-limited failed-login behavior.
 

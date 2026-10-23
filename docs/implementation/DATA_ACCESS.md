@@ -52,7 +52,7 @@ The goal of this document is to define reusable persistence patterns that can su
 
 ## Delete And Restore Semantics
 
-- Entity deletions are soft deletes.
+- Business entity deletions are soft deletes; attachments are permanently deleted as defined in `docs/domain/DOMAIN_MODEL.md`.
 - Restore flows must preserve prior cascade intent.
 - Cascading delete and restore operations run inside transactions.
 - Child records that are configured for retention remain preserved rather than being deleted as a side effect of parent deletion.
@@ -69,7 +69,7 @@ The goal of this document is to define reusable persistence patterns that can su
 
 - URL-driven filter and sort state is validated by feature search schemas.
 - Each feature owns its allowed filter and sort fields in its local schema contract.
-- Features translate validated search state into persistence-layer `where` and `orderBy` logic in the API layer.
+- Features translate validated search state into persistence-layer `where` and `orderBy` logic in feature `data/queries.ts`, invoked by the API boundary.
 - Relation sorting and filtering remain explicit and type-safe.
 - Feature-specific filter and sort semantics are defined outside this document.
 

@@ -183,7 +183,7 @@ Sortable columns:
 
 ### Audit Log
 
-Default sort: `occurredAt` descending
+Current code uses `id` descending as the audit search schema fallback. The data layer maps unknown sort columns to `createdAt` descending. URL stripping/reset defaults separately use `occurredAt` ascending. This existing difference is preserved; changing it requires an explicit behavior decision.
 
 Sortable columns:
 

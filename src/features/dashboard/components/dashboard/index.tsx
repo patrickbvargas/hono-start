@@ -3,9 +3,9 @@ import type { DashboardSummary } from "../../schemas/model";
 import { DashboardBreakdownChart } from "../breakdown-chart";
 import { DashboardCashFlowChart } from "../cash-flow-chart";
 import { DashboardCashFlowTable } from "../cash-flow-table";
-import { FinancialEvolutionChart } from "../financial-evolution";
+import { FinancialEvolutionChart } from "../financial-evolution-chart";
 import { DashboardMetricCards } from "../metric-cards";
-import { DashboardOverdueInstallmentsTable } from "../overdue-installments-table";
+import { DashboardOverdueInstallmentsTable } from "../overdue-table";
 import { DashboardRemunerationTable } from "../remuneration-table";
 
 interface DashboardProps {
@@ -22,8 +22,6 @@ export function Dashboard({ data }: DashboardProps) {
 						<DashboardCashFlowChart items={data.cashFlow.chart} />
 					) : null}
 					<FinancialEvolutionChart items={data.financialEvolution} />
-				</div>
-				<div className="grid gap-3 xl:grid-cols-2">
 					<DashboardBreakdownChart
 						title="Receita por área"
 						items={data.legalAreaRevenue}

@@ -27,7 +27,7 @@ export function FinancialEvolutionChart({
 	});
 
 	return (
-		<Card className="h-80">
+		<Card className="min-h-60">
 			<CardHeader>
 				<CardTitle>Evolução financeira</CardTitle>
 			</CardHeader>

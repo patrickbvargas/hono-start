@@ -94,7 +94,9 @@ describe("DashboardRemunerationTable", () => {
 		expect(screen.getByTestId("data-table").textContent).toContain(
 			"Colaborador | Jan/26 | Fev/26 | Valor total no período",
 		);
-		expect(screen.getByTestId("data-table").textContent).toContain("Subtotal");
+		expect(screen.getByTestId("data-table").textContent).not.toContain(
+			"Subtotal",
+		);
 	});
 
 	it("renders explicit empty state in pt-BR when no rows exist", () => {

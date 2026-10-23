@@ -72,9 +72,9 @@ describe("DashboardCashFlowTable", () => {
 			/>,
 		);
 
-		expect(screen.getByText("Fluxo de caixa mensal")).toBeTruthy();
+		expect(screen.getByText("Saldo mensal")).toBeTruthy();
 		expect(
-			screen.getByText("Fluxo de caixa mensal").closest('[data-slot="card"]'),
+			screen.getByText("Saldo mensal").closest('[data-slot="card"]'),
 		).toBeTruthy();
 		expect(screen.getByTestId("data-table").textContent).toContain("Mês");
 		expect(screen.getByTestId("data-table").textContent).toContain(
@@ -96,9 +96,7 @@ describe("DashboardCashFlowTable", () => {
 	it("renders explicit empty state in pt-BR when no rows exist", () => {
 		render(<DashboardCashFlowTable rows={[]} />);
 
-		expect(
-			screen.getByText("Nenhum dado de fluxo de caixa encontrado."),
-		).toBeTruthy();
+		expect(screen.getByText("Nenhum dado de saldo encontrado.")).toBeTruthy();
 		expect(screen.queryByTestId("data-table")).toBeNull();
 	});
 });

@@ -156,7 +156,7 @@ Dashboard data MUST respect firm isolation, the session role visibility model, a
 - **THEN** the system does not expose cross-firm data
 
 ### Requirement: Dashboard Summaries
-The dashboard SHALL show revenue totals, remuneration totals, monthly comparison information, revenue grouping by legal area and revenue type, a monthly financial evolution chart, a monthly remuneration table by collaborator, and an overdue-installments table for revenues whose expected installment schedule is behind the recorded active fee installments, with supported summaries reflecting the active dashboard period and employee filters. The monthly remuneration table SHALL also expose a subtotal row for the visible monthly buckets, derived from the same filtered and role-scoped remuneration set shown in the table. For administrators, the dashboard SHALL also show a read-only cash-flow summary composed of saldo total, a monthly saldo chart, and a monthly cash-flow table derived from entradas, remunerações, and despesas. In this context, `entrada` means received honorários, `saída` means `remunerações + despesas`, and `saldo` means `entrada - saída`. The monthly cash-flow table SHALL break down entradas by the canonical revenue types `Administrativo`, `Judicial`, and `Sucumbência`, then show derived `Entrada`, `Remuneração`, `Despesa`, `Saída`, and `Saldo` columns for each visible month. The overdue-installments table SHALL derive each expected installment `n` from `paymentStartDate + n meses`, compare that expected schedule against active `Fee.installmentNumber` values for the same revenue, and list each installment that is already due but still has no active fee record. The main dashboard content SHALL scroll inside a shared scroll container without clipping card borders, and the breakdown legend SHALL present concise participation percentages without redundant phrasing. The dashboard SHALL NOT render the "Visão da firma" badge. The root dashboard component SHALL compose dedicated analytical surface components for metric cards, charts, and remuneration tables instead of concentrating all surface implementations inline.
+The dashboard SHALL show revenue totals, remuneration totals, monthly comparison information, revenue grouping by legal area and revenue type, a monthly financial evolution chart, a monthly remuneration table by collaborator, and an overdue-installments table for revenues whose expected installment schedule is behind the recorded active fee installments, with supported summaries reflecting the active dashboard period and employee filters. The monthly remuneration table SHALL display collaborator rows without a subtotal footer. The data response may retain its subtotal projection for compatibility. For administrators, the dashboard SHALL also show a read-only cash-flow summary composed of saldo total, a monthly saldo chart, and a monthly cash-flow table derived from entradas, remunerações, and despesas. In this context, `entrada` means received honorários, `saída` means `remunerações + despesas`, and `saldo` means `entrada - saída`. The monthly cash-flow table SHALL break down entradas by the canonical revenue types `Administrativo`, `Judicial`, and `Sucumbência`, then show derived `Entrada`, `Remuneração`, `Despesa`, `Saída`, and `Saldo` columns for each visible month. The overdue-installments table SHALL derive each expected installment `n` from `paymentStartDate + n meses`, compare that expected schedule against active `Fee.installmentNumber` values for the same revenue, and list each installment that is already due but still has no active fee record. The main dashboard content SHALL scroll inside a shared scroll container without clipping card borders, and the breakdown legend SHALL present concise participation percentages without redundant phrasing. The dashboard SHALL NOT render the "Visão da firma" badge. The root dashboard component SHALL compose dedicated analytical surface components for metric cards, charts, and remuneration tables instead of concentrating all surface implementations inline.
 
 #### Scenario: Dashboard loads summaries
 - **WHEN** dashboard data is available
@@ -240,11 +240,11 @@ The dashboard SHALL show revenue totals, remuneration totals, monthly comparison
 - **WHEN** the monthly remuneration table is displayed
 - **THEN** the system shows a total-in-period value for each collaborator based on the visible monthly buckets
 
-#### Scenario: Dashboard remuneration table includes monthly subtotals
+#### Scenario: Dashboard remuneration table omits subtotal footer
 - **WHEN** the monthly remuneration table is displayed with one or more visible collaborator rows
-- **THEN** the system shows one subtotal value for each visible month column
-- **AND** each subtotal equals the sum of that month's visible collaborator values after role and filter scoping
-- **AND** the subtotal row also shows a total-in-period equal to the sum of the visible monthly subtotals
+- **THEN** the system shows collaborator rows without a subtotal footer
+- **AND** collaborator values retain role and filter scoping
+- **AND** each collaborator retains its total-in-period column
 
 #### Scenario: Cash-flow totals remain arithmetically consistent
 - **WHEN** the administrator cash-flow table is displayed
@@ -274,7 +274,7 @@ The dashboard SHALL show revenue totals, remuneration totals, monthly comparison
 #### Scenario: Regular user opens dashboard
 - **WHEN** a regular user opens the dashboard
 - **THEN** the monthly remuneration table shows only the authenticated user's own scoped remuneration data
-- **AND** the subtotal row reflects only that same scoped data
+- **AND** the table does not add a subtotal footer
 
 #### Scenario: No business records match filters
 - **WHEN** the dashboard has no matching business records for the active filters

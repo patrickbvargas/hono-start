@@ -1,13 +1,50 @@
+import { existsSync, readFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
 import { describe, expect, it } from "vitest";
-import * as attachments from "@/features/attachments";
-import * as auditLogs from "@/features/audit-logs";
-import * as authentication from "@/features/authentication";
-import * as clients from "@/features/clients";
-import * as contracts from "@/features/contracts";
-import * as dashboard from "@/features/dashboard";
-import * as employees from "@/features/employees";
-import * as fees from "@/features/fees";
-import * as remunerations from "@/features/remunerations";
+
+// Inspect export declarations without evaluating provider/server dependencies.
+function readExports(path: string): Record<string, true> {
+	const source = readFileSync(path, "utf8");
+	const exports: Record<string, true> = {};
+	for (const match of source.matchAll(
+		/export\s+(?:async\s+)?(?:function|class|const|let|var)\s+(\w+)/g,
+	)) {
+		exports[match[1]] = true;
+	}
+	for (const match of source.matchAll(/export\s*\{([^}]+)\}/g)) {
+		for (const entry of match[1].split(",")) {
+			const value = entry.trim();
+			if (value && !value.startsWith("type ")) {
+				exports[value.split(/\s+as\s+/).at(-1) ?? value] = true;
+			}
+		}
+	}
+	for (const match of source.matchAll(
+		/export\s*\*\s*from\s*["']([^"']+)["']/g,
+	)) {
+		const base = resolve(dirname(path), match[1]);
+		const target = [
+			`${base}.ts`,
+			`${base}.tsx`,
+			`${base}/index.ts`,
+			`${base}/index.tsx`,
+		].find(existsSync);
+		if (!target) {
+			throw new Error(`Unresolved barrel export: ${base}`);
+		}
+		Object.assign(exports, readExports(target));
+	}
+	return exports;
+}
+const attachments = readExports("src/features/attachments/index.ts");
+const auditLogs = readExports("src/features/audit-logs/index.ts");
+const authentication = readExports("src/features/authentication/index.ts");
+const clients = readExports("src/features/clients/index.ts");
+const contracts = readExports("src/features/contracts/index.ts");
+const dashboard = readExports("src/features/dashboard/index.ts");
+const employees = readExports("src/features/employees/index.ts");
+const fees = readExports("src/features/fees/index.ts");
+const remunerations = readExports("src/features/remunerations/index.ts");
 
 describe("feature public barrels", () => {
 	it("keeps the authentication barrel limited to top-level auth surfaces and route hooks", () => {

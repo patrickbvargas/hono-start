@@ -50,7 +50,7 @@ vi.mock("../components/metric-cards", () => ({
 	),
 }));
 
-vi.mock("../components/overdue-installments-table", () => ({
+vi.mock("../components/overdue-table", () => ({
 	DashboardOverdueInstallmentsTable: ({
 		rows,
 	}: {
@@ -62,7 +62,7 @@ vi.mock("../components/overdue-installments-table", () => ({
 	),
 }));
 
-vi.mock("../components/financial-evolution", () => ({
+vi.mock("../components/financial-evolution-chart", () => ({
 	FinancialEvolutionChart: () => <div>Evolução financeira</div>,
 }));
 

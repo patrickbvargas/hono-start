@@ -8,8 +8,8 @@ describe("auditLogSearchSchema", () => {
 		expect(result).toEqual({
 			page: 1,
 			limit: 25,
-			column: "occurredAt",
-			direction: "asc",
+			column: "id",
+			direction: "desc",
 			query: "",
 			action: [],
 			entityType: [],
@@ -23,7 +23,7 @@ describe("auditLogSearchSchema", () => {
 			direction: "sideways",
 		});
 
-		expect(result.column).toBe("occurredAt");
-		expect(result.direction).toBe("asc");
+		expect(result.column).toBe("id");
+		expect(result.direction).toBe("desc");
 	});
 });

@@ -41,7 +41,7 @@ vi.mock("@/shared/components/ui", () => ({
 	),
 }));
 
-import { DashboardOverdueInstallmentsTable } from "../components/overdue-installments-table";
+import { DashboardOverdueInstallmentsTable } from "../components/overdue-table";
 
 describe("DashboardOverdueInstallmentsTable", () => {
 	afterEach(() => {
