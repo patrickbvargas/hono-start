@@ -29,8 +29,9 @@ export function DashboardRemunerationTable({
 	months,
 	rows,
 	onSelect,
+	onViewEmployee,
 }: DashboardRemunerationTableProps) {
-	const columns = getColumns(months, onSelect);
+	const columns = getColumns(months, onSelect, onViewEmployee);
 
 	return (
 		<Card className="hidden sm:block space-y-2">

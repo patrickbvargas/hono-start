@@ -20,6 +20,7 @@ interface DashboardProps {
 	showDetails?: boolean;
 	search?: DashboardSearch;
 	onViewContract?: (id: EntityId) => void;
+	onViewEmployee?: (id: EntityId) => void;
 }
 
 export function Dashboard({
@@ -27,6 +28,7 @@ export function Dashboard({
 	showDetails = false,
 	search = dashboardSearchSchema.parse({}),
 	onViewContract,
+	onViewEmployee,
 }: DashboardProps) {
 	const drilldown = useDashboardDrilldown();
 
@@ -245,6 +247,7 @@ export function Dashboard({
 								{data.visibility?.remuneration ? (
 									<DashboardRemunerationTable
 										months={data.remunerationMonths}
+										onViewEmployee={onViewEmployee}
 										rows={data.remunerationTable}
 										onSelect={(row, month, trigger) =>
 											drilldown.open(

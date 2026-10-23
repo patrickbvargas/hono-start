@@ -14,6 +14,27 @@ import type { DashboardCashFlowRow } from "../schemas/model";
 
 afterEach(cleanup);
 
+it("opens collaborator details by ID only when the permitted action is provided", () => {
+	const onView = vi.fn();
+	const { rerender } = render(
+		<DataTable
+			data={[person]}
+			columns={getColumns(months, undefined, onView)}
+			pageSize={10}
+		/>,
+	);
+	fireEvent.click(
+		screen.getByRole("button", { name: "Detalhar colaborador Maria" }),
+	);
+	expect(onView).toHaveBeenCalledWith(5);
+	rerender(
+		<DataTable data={[person]} columns={getColumns(months)} pageSize={10} />,
+	);
+	expect(
+		screen.queryByRole("button", { name: "Detalhar colaborador Maria" }),
+	).toBeNull();
+});
+
 vi.mock("@/shared/components/ui", () => ({
 	ScrollArea: ({ children }: PropsWithChildren) => <div>{children}</div>,
 	Table: "table",

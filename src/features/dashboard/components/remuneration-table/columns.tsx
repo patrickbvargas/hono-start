@@ -7,6 +7,7 @@ import type {
 } from "../../schemas/model";
 
 export interface RemunerationTableSelectionOptions {
+	onViewEmployee?: (id: number) => void;
 	onSelect?: (
 		row: DashboardRemunerationRow,
 		month: DashboardRemunerationMonth | undefined,
@@ -17,6 +18,7 @@ export interface RemunerationTableSelectionOptions {
 export function getColumns(
 	months: DashboardRemunerationMonth[],
 	onSelect?: RemunerationTableSelectionOptions["onSelect"],
+	onViewEmployee?: RemunerationTableSelectionOptions["onViewEmployee"],
 ) {
 	const columnHelper = createColumnHelper<
 		typeof dataTableFeatures,
@@ -26,6 +28,20 @@ export function getColumns(
 		columnHelper.accessor("employeeName", {
 			id: "employeeName",
 			header: "Colaborador",
+			cell: (context) =>
+				onViewEmployee ? (
+					<button
+						type="button"
+						className="cursor-pointer rounded-sm px-1 -mx-1 transition-colors hover:bg-accent/30 hover:ring-1 hover:ring-ring/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+						aria-label={`Detalhar colaborador ${context.getValue()}`}
+						title={`Ver detalhes: ${context.getValue()}`}
+						onClick={() => onViewEmployee(context.row.original.employeeId)}
+					>
+						{context.getValue()}
+					</button>
+				) : (
+					context.getValue()
+				),
 			meta: {
 				headerClassName: "min-w-40",
 				cellClassName: "whitespace-nowrap font-medium",

@@ -28,6 +28,7 @@ import {
 	useDashboardDetailsPreference,
 } from "@/features/dashboard";
 import {
+	EmployeeDetails,
 	EmployeeForm,
 	getEmployeeTypesQueryOptions,
 } from "@/features/employees";
@@ -182,6 +183,11 @@ function RouteComponent() {
 					key={JSON.stringify(search)}
 					data={summary}
 					search={search}
+					onViewEmployee={
+						hasPermission(session, "org:employees:read")
+							? employeeOverlay.overlay.details.open
+							: undefined
+					}
 					showDetails={showDetails}
 					onViewContract={
 						hasPermission(session, "org:contracts:read_all") ||
@@ -204,6 +210,9 @@ function RouteComponent() {
 				))}
 				{employeeOverlay.overlay.create.render((state) => (
 					<EmployeeForm state={state} onSuccess={state.close} />
+				))}
+				{employeeOverlay.overlay.details.render((id, state) => (
+					<EmployeeDetails id={id} state={state} />
 				))}
 			</WrapperBody>
 		</Wrapper>

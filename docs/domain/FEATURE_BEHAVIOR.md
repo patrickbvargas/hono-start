@@ -270,6 +270,7 @@ The software core includes these feature areas:
 
 ### Dashboard record drilldown
 
+- Collaborator names in the remuneration table open the existing employee details drawer when `org:employees:read` is granted. Monthly and total values retain their financial drilldown action; opening the employee uses its stable ID and the existing protected employee query.
 - Remuneration table month values open the selected collaborator/month contributions, including an explicit empty state for zero values. The collaborator total opens contributions across the months displayed in the table, intersected with active period bounds. The same generated-remuneration scope and dimension filters apply. Native buttons support keyboard activation, hover hints and focus restoration.
 - Every monetary cell in the monthly balance table opens its contributing records: receipt type, all entries, generated remuneration, expenses, all outflows or signed result. Outflow details show positive remuneration and expense amounts so their Total matches the cell; balance details retain signed deductions.
 - Overdue installment process numbers open the existing contract drawer from the dashboard when contract read permission is present. The contract query independently enforces current permission, firm and assignment scope. No new entity-detail implementation or contract lifecycle action is added to the dashboard.
