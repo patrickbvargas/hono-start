@@ -262,3 +262,10 @@ The software core includes these feature areas:
 - Firm result, expenses and margin are shown only without collaborator, legal-area or revenue-type filters, because expenses have no allocation dimensions. Generated remuneration remains scoped to the selected collaborator.
 - Outstanding installment amounts subtract payments assigned to that installment as of the reference date. Aging and collection include debts before the filter start. Reference is the earlier of filter end and today; future receipts use outstanding contractual installments in the following 90 days.
 - Revenue concentration groups received amounts by client. Generated remuneration groups by assignment role. Charts expose an accessible help button beside the title explaining their meaning and calculation.
+
+### Dashboard chart presentation
+
+- Monthly balance uses columns above/below a zero reference line; it is a monthly result rather than a continuous balance curve.
+- Financial evolution combines receipt, generated-remuneration and expense bars with a result line on the same monetary axis. Existing subject permissions govern each series.
+- Outstanding future receipts use columns ordered as up to 30, 31–60 and 61–90 days. Aging bars remain chronological: up to 30, 31–60, 61–90 and over 90 days, rather than ranking amounts.
+- Category/client/area/function comparisons retain horizontal bars with internal scrolling. Revenue type retains a donut.

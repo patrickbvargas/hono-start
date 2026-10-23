@@ -11,3 +11,9 @@
 - [x] 4.2 Gate cards, charts, tables and employee options; support expense-only access without collaborator binding.
 - [x] 4.3 Verify expense-only, denied and mixed-scope regression cases.
 
+
+## 5. Chart presentation
+- [x] 5.1 Replace monthly balance area with positive/negative columns and financial result bars with a line.
+- [x] 5.2 Render future receipt ranges as columns and preserve chronological aging/forecast order.
+- [x] 5.3 Verify chart regression tests, types and browser rendering.
+

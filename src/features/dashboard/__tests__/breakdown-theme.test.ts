@@ -8,9 +8,7 @@ describe("breakdown chart theme", () => {
 			"utf8",
 		);
 		expect(source).toContain('fill="var(--color-total)"');
-		expect(source).toContain(
-			"<Cell key={item.value} fill={getBreakdownColor(index)} />",
-		);
+		expect(source).not.toContain("getBreakdownColor");
 		expect(
 			readFileSync(new URL("../constants/charts.ts", import.meta.url), "utf8"),
 		).toContain('color: "var(--chart-1)"');

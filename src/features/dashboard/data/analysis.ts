@@ -77,8 +77,15 @@ export function buildFinancialAnalysis(
 	return {
 		referenceLabel: formatter.date(reference.toISOString()),
 		overdueTotal: formatter.currency(Number(total(aging))),
-		aging: mapBreakdown(aging, total(aging)),
-		forecast: mapBreakdown(forecast, total(forecast)),
+		aging: mapBreakdown(aging, total(aging)).sort(
+			(a, b) =>
+				[...aging.keys()].indexOf(a.value) - [...aging.keys()].indexOf(b.value),
+		),
+		forecast: mapBreakdown(forecast, total(forecast)).sort(
+			(a, b) =>
+				[...forecast.keys()].indexOf(a.value) -
+				[...forecast.keys()].indexOf(b.value),
+		),
 		clients: mapBreakdown(clients, total(clients)),
 	};
 }

@@ -23,18 +23,18 @@ vi.mock("recharts", async () => {
 	const actual = await vi.importActual<typeof import("recharts")>("recharts");
 	return {
 		...actual,
-		AreaChart: ({
+		BarChart: ({
 			children,
 			data,
 		}: {
 			children: ReactNode;
 			data: unknown[];
 		}) => (
-			<div data-testid="area-chart" data-items={JSON.stringify(data)}>
+			<div data-testid="bar-chart" data-items={JSON.stringify(data)}>
 				{children}
 			</div>
 		),
-		Area: ({
+		Bar: ({
 			dataKey,
 			fill,
 			stroke,
@@ -44,7 +44,7 @@ vi.mock("recharts", async () => {
 			stroke: string;
 		}) => (
 			<div
-				data-testid="balance-area"
+				data-testid="balance-bar"
 				data-key={dataKey}
 				data-fill={fill}
 				data-stroke={stroke}
@@ -86,21 +86,14 @@ describe("DashboardCashFlowChart", () => {
 		expect(screen.queryByText("Jan/2026 a Mar/2026")).toBeNull();
 		expect(screen.getByTestId("chart-container")).toBeTruthy();
 		expect(
-			JSON.parse(screen.getByTestId("area-chart").dataset.items ?? "[]"),
+			JSON.parse(screen.getByTestId("bar-chart").dataset.items ?? "[]"),
 		).toEqual([
 			{ month: "2026-01", entry: 300, output: 60, balance: 240 },
 			{ month: "2026-02", entry: 0, output: 80, balance: -80 },
 		]);
-		const area = screen.getByTestId("balance-area");
+		const area = screen.getByTestId("balance-bar");
 		expect(area.dataset.key).toBe("balance");
-		expect(area.dataset.fill).toMatch(/^url\(#cash-flow-gradient-.+\)$/);
-		const gradientId = area.dataset.fill?.slice(5, -1) ?? "";
-		const gradient = document.getElementById(gradientId);
-		expect(gradient).toBeTruthy();
-		expect(gradient?.querySelectorAll("stop")).toHaveLength(2);
-		expect(gradient?.querySelector("stop")?.getAttribute("stop-color")).toBe(
-			"var(--color-balance)",
-		);
+		expect(area.dataset.fill).toBe("var(--color-balance)");
 		expect(area.dataset.stroke).toBe("var(--color-balance)");
 	});
 

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { Prisma } from "@/generated/prisma/client";
+import { buildFinancialAnalysis } from "../data/analysis";
 import { calculateChangePercent, type RevenueRow } from "../data/revenue";
 import { buildRevenueSchedule, getScheduledRevenue } from "../data/schedule";
 
@@ -26,6 +27,23 @@ const revenue: RevenueRow = {
 };
 
 describe("dashboard contractual schedule", () => {
+	it("keeps aging and future ranges chronological rather than ranking amounts", () => {
+		const analysis = buildFinancialAnalysis([revenue], {
+			hasPeriod: true,
+			dateTo: new Date("2026-02-01T23:59:59Z"),
+		});
+		expect(analysis.aging.map((item) => item.label)).toEqual([
+			"Até 30 dias",
+			"31–60 dias",
+			"61–90 dias",
+			"Acima de 90 dias",
+		]);
+		expect(analysis.forecast.map((item) => item.label)).toEqual([
+			"Próximos 30 dias",
+			"31–60 dias",
+			"61–90 dias",
+		]);
+	});
 	it("preserves cents and subtracts partial payments as of reference", () => {
 		const schedule = buildRevenueSchedule(revenue, new Date("2026-03-01"));
 		expect(schedule.map((item) => Number(item.amount))).toEqual([

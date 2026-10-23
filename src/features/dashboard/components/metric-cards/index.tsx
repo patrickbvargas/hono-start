@@ -1,11 +1,4 @@
-import {
-	BadgeDollarSignIcon,
-	InfoIcon,
-	LandmarkIcon,
-	TrendingDownIcon,
-	TrendingUpIcon,
-	WalletMinimalIcon,
-} from "lucide-react";
+import { InfoIcon, TrendingDownIcon, TrendingUpIcon } from "lucide-react";
 import {
 	Badge,
 	Card,
@@ -29,26 +22,6 @@ interface DashboardMetricCardsProps {
 	metrics: DashboardMetric[];
 }
 
-function getMetricIcon(label: string) {
-	if (label === "Saldo total") {
-		return <LandmarkIcon key={label} className="size-4" />;
-	}
-
-	if (label === "Receita prevista") {
-		return <BadgeDollarSignIcon key={label} className="size-4" />;
-	}
-
-	if (label === "Receita recebida") {
-		return <TrendingUpIcon key={label} className="size-4" />;
-	}
-
-	if (label === "Remunerações") {
-		return <WalletMinimalIcon key={label} className="size-4" />;
-	}
-
-	return <BadgeDollarSignIcon key={label} className="size-4" />;
-}
-
 export function DashboardMetricCards({ metrics }: DashboardMetricCardsProps) {
 	return (
 		<div className="grid gap-3 sm:grid-cols-2 md:grid-cols-4 2xl:grid-cols-5">
@@ -56,7 +29,6 @@ export function DashboardMetricCards({ metrics }: DashboardMetricCardsProps) {
 				<Card key={metric.label} className="gap-2">
 					<CardHeader>
 						<div className="flex items-center gap-2">
-							{getMetricIcon(metric.label)}
 							<p className="text-sm text-muted-foreground">{metric.label}</p>
 							<TooltipProvider>
 								<Tooltip>
