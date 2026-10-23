@@ -14,10 +14,8 @@ import {
 	assertAttachmentTypeCanBeSelected,
 	assertAttachmentTypeExists,
 } from "../rules/lookups";
-import {
-	type AttachmentUploadInput,
-	getAttachmentOwnerContext,
-} from "../schemas/form";
+import type { AttachmentUploadInput } from "../schemas/form";
+import { getAttachmentOwnerContext } from "../utils/owner";
 import { getAttachmentTypeByValue } from "./queries";
 
 export async function createAttachment(params: {

@@ -6,14 +6,12 @@ import type {
 	QueryOneReturnType,
 } from "@/shared/types/api";
 import { ATTACHMENT_ERRORS } from "../constants/errors";
-import {
-	type AttachmentOwnerInput,
-	getAttachmentOwnerContext,
-} from "../schemas/form";
+import type { AttachmentOwnerInput } from "../schemas/form";
 import {
 	type AttachmentSummary,
 	attachmentSummarySchema,
 } from "../schemas/model";
+import { getAttachmentOwnerContext } from "../utils/owner";
 
 interface AttachmentOwnerResource {
 	deletedAt: Date | null;

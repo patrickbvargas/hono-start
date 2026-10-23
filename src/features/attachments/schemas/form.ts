@@ -23,28 +23,6 @@ function addOwnerContextError(ctx: z.RefinementCtx) {
 	});
 }
 
-export function inferAttachmentTypeFromFile(params: {
-	fileName: string;
-	mimeType: string;
-}) {
-	try {
-		return assertAttachmentFileAccepted({
-			fileName: params.fileName,
-			mimeType: params.mimeType,
-			fileSize: 0,
-		});
-	} catch (error) {
-		if (
-			error instanceof Error &&
-			error.message === ATTACHMENT_ERRORS.INVALID_FILE_TYPE
-		) {
-			return null;
-		}
-
-		throw error;
-	}
-}
-
 function attachmentOwnerRefinement(
 	data: AttachmentOwnerInput,
 	ctx: z.RefinementCtx,
@@ -171,38 +149,3 @@ export type AttachmentFormInput = z.infer<typeof attachmentFormInputSchema>;
 export type AttachmentUploadInput = z.infer<typeof attachmentUploadInputSchema>;
 export type AttachmentIdInput = z.infer<typeof attachmentIdInputSchema>;
 export type AttachmentOwnerKind = z.infer<typeof attachmentOwnerKindSchema>;
-
-export function getAttachmentOwnerContext(input: AttachmentOwnerInput): {
-	ownerId: number;
-	ownerKind: AttachmentOwnerKind;
-} {
-	if (input.clientId) {
-		return { ownerKind: "client", ownerId: input.clientId };
-	}
-
-	if (input.employeeId) {
-		return { ownerKind: "employee", ownerId: input.employeeId };
-	}
-
-	if (input.contractId) {
-		return { ownerKind: "contract", ownerId: input.contractId };
-	}
-
-	return { ownerKind: "expense", ownerId: input.expenseId as number };
-}
-
-export function getAttachmentOwnerInput(params: {
-	ownerId: number;
-	ownerKind: AttachmentOwnerKind;
-}): AttachmentOwnerInput {
-	switch (params.ownerKind) {
-		case "client":
-			return { clientId: params.ownerId };
-		case "employee":
-			return { employeeId: params.ownerId };
-		case "contract":
-			return { contractId: params.ownerId };
-		case "expense":
-			return { expenseId: params.ownerId };
-	}
-}

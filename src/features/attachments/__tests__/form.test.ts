@@ -5,8 +5,8 @@ import { ATTACHMENT_ERRORS } from "../constants/errors";
 import {
 	attachmentFormInputSchema,
 	attachmentUploadInputSchema,
-	inferAttachmentTypeFromFile,
 } from "../schemas/form";
+import { inferAttachmentTypeFromFile } from "../utils/file";
 
 const baseInput = {
 	clientId: 1,

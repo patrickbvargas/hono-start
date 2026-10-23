@@ -1,28 +1,13 @@
-import { DownloadIcon, TrashIcon } from "lucide-react";
 import { ButtonNew } from "@/shared/components/button-new";
-import { EntityFields } from "@/shared/components/entity-fields";
 import { EntityListAccordion } from "@/shared/components/entity-list-accordion";
-import {
-	Button,
-	Separator,
-	Skeleton,
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
-} from "@/shared/components/ui";
-import { useOverlay } from "@/shared/hooks/use-overlay";
-import { formatter } from "@/shared/lib/formatter";
 import { cn } from "@/shared/lib/utils";
 import type { EntityId } from "@/shared/schemas/entity";
-import { hasPermission, useLoggedUserSession } from "@/shared/session";
-import { useAttachments } from "../../hooks/use-data";
-import {
-	type AttachmentOwnerKind,
-	getAttachmentOwnerInput,
-} from "../../schemas/form";
+import { useAttachmentSection } from "../../hooks/use-section";
+import type { AttachmentOwnerKind } from "../../schemas/form";
 import { AttachmentDelete } from "../delete";
 import { AttachmentForm } from "../form";
+import { AttachmentSectionContent } from "./content";
+import { AttachmentSectionSkeleton } from "./skeleton";
 
 interface AttachmentSectionProps {
 	canUpload?: boolean;
@@ -31,29 +16,14 @@ interface AttachmentSectionProps {
 	ownerKind: AttachmentOwnerKind;
 }
 
-function formatFileSize(bytes: number) {
-	if (bytes < 1024) {
-		return `${bytes} B`;
-	}
-
-	if (bytes < 1024 * 1024) {
-		return `${(bytes / 1024).toFixed(1)} KB`;
-	}
-
-	return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-}
-
 export const AttachmentSection = ({
 	canUpload = true,
 	className,
 	ownerId,
 	ownerKind,
 }: AttachmentSectionProps) => {
-	const owner = getAttachmentOwnerInput({ ownerId, ownerKind });
-	const { attachments, error, isPending } = useAttachments(owner);
-	const session = useLoggedUserSession();
-	const isAdmin = hasPermission(session, "org:attachments:delete");
-	const { overlay } = useOverlay<EntityId>();
+	const { owner, attachments, error, isPending, canDelete, overlay } =
+		useAttachmentSection({ ownerId, ownerKind });
 
 	return (
 		<section className={cn("flex flex-col gap-3", className)}>
@@ -97,68 +67,11 @@ export const AttachmentSection = ({
 					getSummary={(attachment) => attachment.fileName}
 					openDescription={undefined}
 					renderContent={(attachment) => (
-						<div className="flex items-center justify-between gap-3">
-							<EntityFields
-								items={[
-									{
-										term: "Tamanho",
-										definition: formatFileSize(attachment.fileSize),
-									},
-									{
-										term: "Anexado em",
-										definition: formatter.date(attachment.createdAt),
-									},
-								]}
-								columns={2}
-							/>
-							<TooltipProvider>
-								<div className="flex justify-end gap-2">
-									<Tooltip>
-										<TooltipTrigger
-											render={
-												<Button
-													size="icon-sm"
-													variant="outline"
-													disabled={!attachment.downloadUrl}
-													onClick={() => {
-														if (attachment.downloadUrl) {
-															window.open(
-																attachment.downloadUrl,
-																"_blank",
-																"noopener,noreferrer",
-															);
-														}
-													}}
-													aria-label={`Baixar ${attachment.fileName}`}
-													title={`Baixar ${attachment.fileName}`}
-												/>
-											}
-										>
-											<DownloadIcon size={16} />
-										</TooltipTrigger>
-										<TooltipContent>Baixar</TooltipContent>
-									</Tooltip>
-									{isAdmin ? (
-										<Tooltip>
-											<TooltipTrigger
-												render={
-													<Button
-														size="icon-sm"
-														variant="destructive"
-														onClick={() => overlay.delete.open(attachment.id)}
-														aria-label={`Excluir ${attachment.fileName}`}
-														title={`Excluir ${attachment.fileName}`}
-													/>
-												}
-											>
-												<TrashIcon size={16} />
-											</TooltipTrigger>
-											<TooltipContent>Excluir</TooltipContent>
-										</Tooltip>
-									) : null}
-								</div>
-							</TooltipProvider>
-						</div>
+						<AttachmentSectionContent
+							attachment={attachment}
+							canDelete={canDelete}
+							onDelete={overlay.delete.open}
+						/>
 					)}
 				/>
 			) : null}
@@ -172,34 +85,3 @@ export const AttachmentSection = ({
 		</section>
 	);
 };
-
-function AttachmentSectionSkeleton() {
-	const skeletonRows = [
-		{
-			key: "attachment-skeleton-primary",
-			fileWidth: "w-40",
-			showSeparator: true,
-		},
-		{
-			key: "attachment-skeleton-secondary",
-			fileWidth: "w-32",
-			showSeparator: false,
-		},
-	];
-
-	return (
-		<div className="px-3 py-3">
-			<div className="flex flex-col gap-3">
-				{skeletonRows.map((row) => (
-					<div key={row.key}>
-						<div className="flex items-center justify-between gap-3 py-1">
-							<Skeleton className={cn("h-4 rounded-sm", row.fileWidth)} />
-							<Skeleton className="h-4 w-4 rounded-sm" />
-						</div>
-						{row.showSeparator ? <Separator className="mt-3" /> : null}
-					</div>
-				))}
-			</div>
-		</div>
-	);
-}
