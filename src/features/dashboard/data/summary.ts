@@ -2,7 +2,7 @@ import { Prisma } from "@/generated/prisma/client";
 import { formatter } from "@/shared/lib/formatter";
 import type { DashboardSummary } from "../schemas/model";
 import { dashboardSummarySchema } from "../schemas/model";
-import { isDateInsidePeriod, isDateInsideRange } from "../utils/period";
+import { buildFinancialAnalysis } from "./analysis";
 import { buildMonthlyCashFlow } from "./cash-flow";
 import { buildMonthlyFinancialEvolution } from "./financial-evolution";
 import { buildOverdueInstallmentRows } from "./overdue-installments";
@@ -16,11 +16,11 @@ import {
 	pushGroupTotal,
 	sumDecimal,
 } from "./revenue";
+import { getScheduledRevenue } from "./schedule";
 
 export function buildDashboardSummary({
 	scope,
-	currentStart,
-	nextStart,
+	previousFees,
 	previousStart,
 	previousEndExclusive,
 	previousLabel,
@@ -28,52 +28,60 @@ export function buildDashboardSummary({
 	period,
 	chartMonthRange,
 	revenues,
-	currentFees,
-	previousFees,
 	allRemunerations,
-	currentRemunerations,
 	previousRemunerations,
 	chartDownPayments,
 	chartFees,
 	chartRemunerations,
 	tableRemunerations,
 	allExpenses,
-	currentExpenses,
 	previousExpenses,
 	chartCashFlowDownPayments,
 	chartCashFlowFees,
 	chartCashFlowExpenses,
 }: Awaited<ReturnType<typeof getDashboardRecords>>): DashboardSummary {
-	const revenueTotal = sumDecimal(
-		revenues
-			.filter((revenue) => isDateInsidePeriod(revenue.paymentStartDate, period))
-			.map((revenue) => revenue.totalValue),
-	);
+	const comparisonPeriod = {
+		hasPeriod: true,
+		dateFrom: previousStart,
+		dateTo: new Date(previousEndExclusive.getTime() - 1),
+	};
+	const revenueTotal = getScheduledRevenue(revenues, period);
 	const revenueReceived = sumDecimal(
 		revenues.map((revenue) => getRevenueReceived(revenue, period)),
 	);
-	const currentPlannedRevenue = sumDecimal(
-		revenues
-			.filter((revenue) =>
-				isDateInsideRange(revenue.paymentStartDate, currentStart, nextStart),
-			)
-			.map((revenue) => revenue.totalValue),
+	const currentPlannedRevenue = revenueTotal;
+	const previousPlannedRevenue = getScheduledRevenue(
+		revenues,
+		comparisonPeriod,
 	);
-	const previousPlannedRevenue = sumDecimal(
-		revenues
-			.filter((revenue) =>
-				isDateInsideRange(
-					revenue.paymentStartDate,
-					previousStart,
-					previousEndExclusive,
-				),
-			)
-			.map((revenue) => revenue.totalValue),
+	const currentRevenue = revenueReceived;
+	const previousRevenue = sumDecimal(previousFees.map((fee) => fee.amount)).add(
+		sumDecimal(
+			revenues
+				.filter(
+					(revenue) =>
+						revenue.paymentStartDate >= previousStart &&
+						revenue.paymentStartDate < previousEndExclusive,
+				)
+				.map((revenue) => new Prisma.Decimal(revenue.downPaymentValue ?? 0)),
+		),
 	);
-	const currentRevenue = sumDecimal(currentFees.map((fee) => fee.amount));
-	const previousRevenue = sumDecimal(previousFees.map((fee) => fee.amount));
+	const hasDimensionFilters = Boolean(
+		scope.search.employeeId ||
+			scope.search.legalArea.length ||
+			scope.search.revenueType.length,
+	);
+	const showFirmResult =
+		scope.isAdmin &&
+		scope.canReadCashFlow === true &&
+		scope.access?.revenueAll === true &&
+		scope.access?.remunerationAll === true &&
+		scope.access?.revenue === true &&
+		scope.access?.remuneration === true &&
+		scope.access?.expense === true &&
+		!hasDimensionFilters;
 	const currentRemuneration = sumDecimal(
-		currentRemunerations.map((remuneration) => remuneration.amount),
+		allRemunerations.map((remuneration) => remuneration.amount),
 	);
 	const previousRemuneration = sumDecimal(
 		previousRemunerations.map((remuneration) => remuneration.amount),
@@ -84,9 +92,7 @@ export function buildDashboardSummary({
 	const expenseTotal = sumDecimal(
 		allExpenses.map((expense) => new Prisma.Decimal(expense.amount)),
 	);
-	const currentExpense = sumDecimal(
-		currentExpenses.map((expense) => new Prisma.Decimal(expense.amount)),
-	);
+	const currentExpense = expenseTotal;
 	const previousExpense = sumDecimal(
 		previousExpenses.map((expense) => new Prisma.Decimal(expense.amount)),
 	);
@@ -94,7 +100,7 @@ export function buildDashboardSummary({
 		.minus(remunerationTotal)
 		.minus(expenseTotal);
 	const currentBalance = currentRevenue
-		.minus(currentRemuneration)
+		.minus(remunerationTotal)
 		.minus(currentExpense);
 	const previousBalance = previousRevenue
 		.minus(previousRemuneration)
@@ -113,16 +119,15 @@ export function buildDashboardSummary({
 		period,
 		revenues,
 	});
-	const cashFlow =
-		scope.isAdmin && scope.canReadCashFlow === true
-			? buildMonthlyCashFlow({
-					chartDownPayments: chartCashFlowDownPayments,
-					chartFees: chartCashFlowFees,
-					chartRemunerations,
-					chartExpenses: chartCashFlowExpenses,
-					range: chartMonthRange,
-				})
-			: null;
+	const cashFlow = showFirmResult
+		? buildMonthlyCashFlow({
+				chartDownPayments: chartCashFlowDownPayments,
+				chartFees: chartCashFlowFees,
+				chartRemunerations,
+				chartExpenses: chartCashFlowExpenses,
+				range: chartMonthRange,
+			})
+		: null;
 	const legalAreaGroups = new Map<string, GroupTotal>();
 	const revenueTypeGroups = new Map<string, GroupTotal>();
 
@@ -140,18 +145,54 @@ export function buildDashboardSummary({
 		});
 	}
 
-	return dashboardSummarySchema.parse({
+	const expenseGroups = new Map<string, GroupTotal>();
+	for (const expense of allExpenses) {
+		const label = expense.category?.label ?? "Outros";
+		pushGroupTotal(expenseGroups, {
+			label,
+			value: label,
+			total: new Prisma.Decimal(expense.amount),
+		});
+	}
+
+	const assignmentGroups = new Map<string, GroupTotal>();
+	for (const row of tableRemunerations) {
+		const label = row.contractEmployee.assignmentType?.label ?? "Outros";
+		pushGroupTotal(assignmentGroups, {
+			label,
+			value: label,
+			total: new Prisma.Decimal(row.amount),
+		});
+	}
+
+	const result = dashboardSummarySchema.parse({
 		isAdmin: scope.isAdmin,
+		remunerationByAssignment: mapBreakdown(assignmentGroups, remunerationTotal),
+		analysis: buildFinancialAnalysis(revenues, period),
+		expenseRevenue: showFirmResult
+			? mapBreakdown(expenseGroups, expenseTotal)
+			: [],
+		operatingRatios: showFirmResult
+			? {
+					margin: revenueReceived.equals(0)
+						? null
+						: Number(totalBalance.div(revenueReceived).mul(100)),
+					remunerationShare: revenueReceived.equals(0)
+						? null
+						: Number(remunerationTotal.div(revenueReceived).mul(100)),
+					expenses: formatter.currency(Number(expenseTotal)),
+				}
+			: null,
 		scopeLabel: scope.isAdmin ? "Visão da firma" : "Minha visão",
 		metrics: [
-			...(scope.isAdmin && scope.canReadCashFlow === true
+			...(showFirmResult
 				? [
 						{
-							label: "Saldo total",
+							label: "Resultado do período",
 							value: Number(totalBalance),
 							formattedValue: formatter.currency(Number(totalBalance)),
 							description:
-								"Total de honorários recebidos menos remunerações e despesas.",
+								"Recebimentos menos remunerações geradas e despesas; não representa saldo bancário.",
 							tone: Number(totalBalance) < 0 ? "danger" : "default",
 							previousLabel,
 							currentValue: Number(currentBalance),
@@ -205,7 +246,7 @@ export function buildDashboardSummary({
 				changePercent: calculateChangePercent(currentRevenue, previousRevenue),
 			},
 			{
-				label: "Remunerações",
+				label: "Remunerações geradas",
 				value: Number(remunerationTotal),
 				formattedValue: formatter.currency(Number(remunerationTotal)),
 				description: "Total gerado para colaboradores no período.",
@@ -231,7 +272,15 @@ export function buildDashboardSummary({
 		remunerationSubtotal: remunerationByCollaborator.subtotal,
 		overdueInstallments,
 		financialEvolutionLabel: chartMonthRange.label,
-		financialEvolution,
+		financialEvolution: cashFlow
+			? cashFlow.table.map((row) => ({
+					month: row.month,
+					revenue: row.entry,
+					remuneration: row.remuneration,
+					expense: row.expense,
+					result: row.balance,
+				}))
+			: financialEvolution,
 		cashFlow: cashFlow
 			? {
 					totalBalance: Number(totalBalance),
@@ -241,5 +290,63 @@ export function buildDashboardSummary({
 					table: cashFlow.table,
 				}
 			: null,
+	});
+	const revenue = scope.access?.revenue === true;
+	const remuneration = scope.access?.remuneration === true;
+	const expense = scope.access?.expense === true;
+	return dashboardSummarySchema.parse({
+		...result,
+		visibility: {
+			revenue,
+			remuneration,
+			expense,
+			evolution: revenue && remuneration,
+		},
+		metrics: result.metrics
+			.filter((metric) =>
+				metric.label === "Resultado do período"
+					? showFirmResult
+					: metric.label === "Remunerações geradas"
+						? remuneration
+						: revenue,
+			)
+			.concat(
+				expense
+					? [
+							{
+								label: "Despesas",
+								value: Number(expenseTotal),
+								formattedValue: formatter.currency(Number(expenseTotal)),
+								description: "Despesas registradas no período; visão da firma.",
+								tone: "default" as const,
+								previousLabel,
+								currentValue: Number(expenseTotal),
+								previousValue: Number(previousExpense),
+								formattedCurrentValue: formatter.currency(Number(expenseTotal)),
+								formattedPreviousValue: formatter.currency(
+									Number(previousExpense),
+								),
+								previousPeriodLabel,
+								changePercent: calculateChangePercent(
+									expenseTotal,
+									previousExpense,
+								),
+							},
+						]
+					: [],
+			),
+		analysis: revenue ? result.analysis : undefined,
+		legalAreaRevenue: revenue ? result.legalAreaRevenue : [],
+		revenueTypeRevenue: revenue ? result.revenueTypeRevenue : [],
+		overdueInstallments: revenue ? result.overdueInstallments : [],
+		remunerationByAssignment: remuneration
+			? result.remunerationByAssignment
+			: undefined,
+		remunerationMonths: remuneration ? result.remunerationMonths : [],
+		remunerationTable: remuneration ? result.remunerationTable : [],
+		remunerationSubtotal: remuneration ? result.remunerationSubtotal : null,
+		financialEvolution:
+			revenue && remuneration ? result.financialEvolution : [],
+		expenseRevenue: expense ? mapBreakdown(expenseGroups, expenseTotal) : [],
 	});
 }

@@ -1,9 +1,8 @@
-import { Prisma } from "@/generated/prisma/client";
 import { formatter } from "@/shared/lib/formatter";
 import type { DashboardOverdueInstallmentRow } from "../schemas/model";
 import type { DashboardPeriod } from "../utils/period";
-import { addMonthsPreservingDay, isDateInsidePeriod } from "../utils/period";
 import type { RevenueRow } from "./revenue";
+import { buildRevenueSchedule } from "./schedule";
 
 function getHandlingLawyerName(
 	assignments: RevenueRow["contract"]["assignments"],
@@ -27,31 +26,6 @@ function getHandlingLawyerName(
 	return "—";
 }
 
-function getCompletedMonthsElapsed(
-	startDate: Date,
-	referenceDate: Date,
-): number {
-	if (referenceDate < startDate) {
-		return 0;
-	}
-
-	let monthDifference =
-		(referenceDate.getUTCFullYear() - startDate.getUTCFullYear()) * 12 +
-		(referenceDate.getUTCMonth() - startDate.getUTCMonth());
-
-	if (referenceDate.getUTCDate() < startDate.getUTCDate()) {
-		monthDifference -= 1;
-	}
-
-	return Math.max(monthDifference, 0);
-}
-
-function getInstallmentAmount(revenue: RevenueRow): Prisma.Decimal {
-	return new Prisma.Decimal(revenue.totalValue.toString())
-		.minus(new Prisma.Decimal(revenue.downPaymentValue?.toString() ?? 0))
-		.div(revenue.totalInstallments);
-}
-
 export function buildOverdueInstallmentRows({
 	period,
 	revenues,
@@ -59,43 +33,22 @@ export function buildOverdueInstallmentRows({
 	period: DashboardPeriod;
 	revenues: RevenueRow[];
 }): DashboardOverdueInstallmentRow[] {
-	const referenceDate = period.dateTo ?? new Date();
+	const referenceDate = new Date(
+		Math.min((period.dateTo ?? new Date()).getTime(), Date.now()),
+	);
 
 	return revenues
 		.flatMap((revenue) => {
-			const expectedInstallments = Math.min(
-				revenue.totalInstallments,
-				getCompletedMonthsElapsed(revenue.paymentStartDate, referenceDate),
-			);
-
-			if (expectedInstallments <= 0) {
-				return [];
-			}
-
-			const activeInstallments = new Set(
-				revenue.fees.map((fee) => fee.installmentNumber),
-			);
-			const installmentAmount = getInstallmentAmount(revenue);
 			const lawyerName = getHandlingLawyerName(revenue.contract.assignments);
 			const rows: DashboardOverdueInstallmentRow[] = [];
 
-			for (
-				let installmentNumber = 1;
-				installmentNumber <= expectedInstallments;
-				installmentNumber += 1
-			) {
-				if (activeInstallments.has(installmentNumber)) {
+			for (const item of buildRevenueSchedule(revenue, referenceDate)) {
+				const referenceDay = new Date(referenceDate.toISOString().slice(0, 10));
+				if (item.dueDate >= referenceDay || item.outstanding.lte(0)) {
 					continue;
 				}
-
-				const dueDate = addMonthsPreservingDay(
-					revenue.paymentStartDate,
-					installmentNumber,
-				);
-
-				if (!isDateInsidePeriod(dueDate, period)) {
-					continue;
-				}
+				const { installmentNumber, dueDate } = item;
+				const installmentAmount = item.outstanding;
 
 				rows.push({
 					contractProcessNumber: revenue.contract.processNumber,

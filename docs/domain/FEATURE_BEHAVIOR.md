@@ -254,3 +254,11 @@ The software core includes these feature areas:
 - Business entities used as form options must respect active and deleted status rules.
 - Lookup values may remain visible but disabled when inactive.
 - This document must not become the duplicate home of entity schemas, validation rules, or permission matrices already defined elsewhere.
+## Dashboard financial analysis
+
+- Balanço is the monthly operational cash-flow view: entry = administrative + judicial + succumbency receipts; output = generated remuneration + recorded expenses; balance = entry - output. It does not establish a bank balance or payout settlement.
+- Expected revenue sums contractual down payments and installments due within the selected dates, including plans started earlier. Installments begin one month after paymentStartDate, preserve the due day where possible, and allocate cent rounding to the last installment.
+- Comparisons include down payments in both receipt bases and compare with the same dates one year earlier. Growth from a zero prior base is unavailable; negative prior bases use their absolute value as denominator.
+- Firm result, expenses and margin are shown only without collaborator, legal-area or revenue-type filters, because expenses have no allocation dimensions. Generated remuneration remains scoped to the selected collaborator.
+- Outstanding installment amounts subtract payments assigned to that installment as of the reference date. Aging and collection include debts before the filter start. Reference is the earlier of filter end and today; future receipts use outstanding contractual installments in the following 90 days.
+- Revenue concentration groups received amounts by client. Generated remuneration groups by assignment role. Charts expose an accessible help button beside the title explaining their meaning and calculation.

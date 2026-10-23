@@ -95,6 +95,12 @@ describe("Dashboard", () => {
 			<Dashboard
 				data={{
 					isAdmin: true,
+					visibility: {
+						revenue: true,
+						remuneration: true,
+						expense: true,
+						evolution: true,
+					},
 					scopeLabel: "Visão da firma",
 					metrics: [
 						{
@@ -219,6 +225,12 @@ describe("Dashboard", () => {
 			<Dashboard
 				data={{
 					isAdmin: false,
+					visibility: {
+						revenue: true,
+						remuneration: true,
+						expense: false,
+						evolution: true,
+					},
 					scopeLabel: "Minha visão",
 					metrics: [],
 					legalAreaRevenue: [],

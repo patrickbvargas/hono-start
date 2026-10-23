@@ -12,7 +12,7 @@ export const dashboardMetricSchema = z.object({
 	formattedCurrentValue: z.string(),
 	formattedPreviousValue: z.string(),
 	previousPeriodLabel: z.string(),
-	changePercent: z.number(),
+	changePercent: z.number().nullable(),
 });
 
 export type DashboardMetric = z.infer<typeof dashboardMetricSchema>;
@@ -82,6 +82,8 @@ export type DashboardOverdueInstallmentRow = z.infer<
 export const dashboardFinancialEvolutionItemSchema = z.object({
 	month: z.string(),
 	revenue: z.number(),
+	expense: z.number().optional(),
+	result: z.number().optional(),
 	remuneration: z.number(),
 });
 
@@ -126,6 +128,33 @@ export const dashboardCashFlowSchema = z.object({
 export type DashboardCashFlow = z.infer<typeof dashboardCashFlowSchema>;
 
 export const dashboardSummarySchema = z.object({
+	visibility: z
+		.object({
+			revenue: z.boolean(),
+			remuneration: z.boolean(),
+			expense: z.boolean(),
+			evolution: z.boolean(),
+		})
+		.optional(),
+	remunerationByAssignment: dashboardBreakdownItemSchema.array().optional(),
+	analysis: z
+		.object({
+			referenceLabel: z.string(),
+			overdueTotal: z.string(),
+			aging: dashboardBreakdownItemSchema.array(),
+			forecast: dashboardBreakdownItemSchema.array(),
+			clients: dashboardBreakdownItemSchema.array(),
+		})
+		.optional(),
+	expenseRevenue: dashboardBreakdownItemSchema.array().optional(),
+	operatingRatios: z
+		.object({
+			margin: z.number().nullable(),
+			remunerationShare: z.number().nullable(),
+			expenses: z.string(),
+		})
+		.nullable()
+		.optional(),
 	isAdmin: z.boolean(),
 	scopeLabel: z.string(),
 	metrics: dashboardMetricSchema.array(),

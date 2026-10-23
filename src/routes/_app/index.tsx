@@ -167,7 +167,9 @@ function RouteComponent() {
 			}
 		>
 			<WrapperHeader>
-				<DashboardFilter isAdmin={isAdmin} />
+				<DashboardFilter
+					isAdmin={isAdmin && hasPermission(session, "org:employees:read")}
+				/>
 			</WrapperHeader>
 			<WrapperBody>
 				<Dashboard data={summary} />

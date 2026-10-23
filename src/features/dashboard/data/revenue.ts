@@ -54,16 +54,18 @@ export function sumDecimal(values: Prisma.Decimal[]): Prisma.Decimal {
 export function calculateChangePercent(
 	currentValue: Prisma.Decimal,
 	previousValue: Prisma.Decimal,
-): number {
+): number | null {
 	if (previousValue.equals(0)) {
 		if (currentValue.equals(0)) {
 			return 0;
 		}
 
-		return 100;
+		return null;
 	}
 
-	return Number(currentValue.minus(previousValue).div(previousValue).mul(100));
+	return Number(
+		currentValue.minus(previousValue).div(previousValue.abs()).mul(100),
+	);
 }
 
 export function pushGroupTotal(

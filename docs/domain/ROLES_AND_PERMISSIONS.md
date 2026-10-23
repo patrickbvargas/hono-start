@@ -112,3 +112,53 @@ The following matrix describes initial role presets to configure in Clerk, not i
 ## Business and authentication isolation
 
 See `DOMAIN_MODEL.md` for ownership. Own and assigned permissions require a valid optional Clerk privateMetadata.employeeId. Organization membership does not confer firm-specific access; metadata-based firm restrictions are future work. Account administration occurs in Clerk Dashboard.
+## Dashboard subject permissions
+
+Dashboard read_all/read_own permits entry, not access to every financial subject. Dashboard data reads additionally require fees:read_all/read_assigned for receipts, schedules, debt and revenue breakdowns; remunerations:read_all/read_own for generated remuneration cards, charts and tables; expenses:read for expense cards and breakdowns. Missing subject grants skip database reads and remove related payload data and UI surfaces. Dashboard-wide access never upgrades assigned/own subject grants, and client employee filters never override the authenticated employee for restricted grants. Missing employee bindings yield no own/assigned records.
+
+Consolidated balance and cash-flow tables require dashboard:read_all, dashboard:read_cash_flow, fees:read_all, remunerations:read_all and expenses:read together, without allocation dimensions. Combined revenue/remuneration charts require both subjects. Expense-only users receive only expense metrics and breakdowns. Employee filter options additionally require employees:read. Dashboard lookup queries do not call contract endpoints without contract read grants.
+
+### Dashboard permission matrix
+
+Every row requires an authenticated session and `org:dashboard:read_all` OR `org:dashboard:read_own`. These grants allow entry only; subject grants below remain mandatory.
+
+| Alias | Additional grants |
+|---|---|
+| R | `org:fees:read_all` OR `org:fees:read_assigned` |
+| M | `org:remunerations:read_all` OR `org:remunerations:read_own` |
+| D | `org:expenses:read` |
+| B | `org:dashboard:read_all` AND `org:dashboard:read_cash_flow` AND `org:fees:read_all` AND `org:remunerations:read_all` AND `org:expenses:read` |
+
+| Surface | Display label | Additional grants | Conditions |
+|---|---|---|---|
+| Card | Resultado do período | B | No employee, legal-area or revenue-type filter |
+| Card | Receita prevista | R | Authorized contract scope |
+| Card | Receita recebida | R | Authorized contract scope |
+| Card | Remunerações geradas | M | Authorized remuneration scope |
+| Card | Despesas | D | Firm expenses within the period |
+| Chart | Evolução financeira | R AND M | Expenses and result series additionally require B with no allocation dimensions |
+| Chart | Saldo mensal (area chart) | B | No employee, legal-area or revenue-type filter |
+| Chart | Remunerações por função | M | Authorized remuneration scope |
+| Chart | Despesas por categoria | D | Shown when expense breakdown contains data |
+| Chart | Dívida por tempo de atraso | R | Authorized contract scope |
+| Chart | Recebimentos futuros em aberto | R | Authorized contract scope |
+| Chart | Receita por cliente | R | Authorized contract scope |
+| Chart | Receita por área | R | Authorized contract scope |
+| Chart | Receita por tipo | R | Authorized contract scope |
+| Table | Saldo mensal (cash flow) | B | No employee, legal-area or revenue-type filter |
+| Table | Remunerações | M | Own or firm scope according to grants |
+| Table | Parcelas em possível inadimplência | R | Authorized contract scope |
+| Filter | Colaborador | `org:dashboard:read_all` AND `org:employees:read` | Selection never overrides own/assigned subject scope |
+| Filter | Área | Options require `org:contracts:read_all` OR `org:contracts:read_assigned` | Current control remains visible with no options when grants are missing |
+| Filter | Tipo de receita | Options require `org:contracts:read_all` OR `org:contracts:read_assigned` | Current control remains visible with no options when grants are missing |
+| Filter | 6M, 12M, year, date bounds and Mais filtros | No additional grants | Applies only to authorized data |
+
+#### Scope and enforcement
+
+- `read_assigned` limits receipts to permitted active contract assignments; `read_own` limits remuneration to the authenticated employee.
+- Dashboard-wide grants do not upgrade subject grants. Employee query parameters cannot impersonate another employee under restricted scope.
+- Missing employee bindings return no own/assigned records. Firm isolation applies to every query.
+- Unauthorized subject queries do not execute; related values are removed from the server response as well as hidden in the UI.
+- An expense-only actor receives only expense cards and breakdowns, without fee, remuneration or consolidated balance data.
+- Current UI limitation: area/type controls remain visible with empty options without contract read grants. Hiding these controls is a follow-up improvement, not an implemented behavior.
+- Tables currently use desktop visibility classes; permission alone does not make them visible on small screens.

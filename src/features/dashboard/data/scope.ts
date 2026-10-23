@@ -3,8 +3,16 @@ import type { DashboardSearch } from "../schemas/search";
 
 export interface DashboardScope {
 	canReadCashFlow?: boolean;
+	access?: {
+		revenue: boolean;
+		remuneration: boolean;
+		expense: boolean;
+		revenueAll: boolean;
+		remunerationAll: boolean;
+	};
 	firmId: number;
 	employeeId?: number;
+	employeeTypeValue?: string;
 	isAdmin: boolean;
 	search: DashboardSearch;
 }
@@ -61,7 +69,7 @@ export function getEffectiveDashboardEmployeeId({
 
 function getSelectedEmployeeId(scope: DashboardScope): number | undefined {
 	return getEffectiveDashboardEmployeeId({
-		isAdmin: scope.isAdmin,
+		isAdmin: scope.isAdmin && scope.access?.remunerationAll === true,
 		requestedEmployeeId: parseOptionalEntityId(scope.search.employeeId),
 		sessionEmployeeId: scope.employeeId,
 	});
@@ -141,6 +149,12 @@ export function getDashboardRemunerationWhere(
 	scope: DashboardScope,
 ): Prisma.RemunerationWhereInput {
 	const employeeId = getSelectedEmployeeId(scope);
+	if (
+		!(scope.isAdmin && scope.access?.remunerationAll === true) &&
+		!employeeId
+	) {
+		return { firmId: scope.firmId, id: -1 };
+	}
 	const { legalArea, revenueType } = getDashboardDimensionFilters(scope.search);
 
 	return {
@@ -184,16 +198,17 @@ export function getDashboardExpenseWhere(
 }
 
 function getAssignedContractWhere(scope: DashboardScope) {
-	const employeeId = getSelectedEmployeeId(scope);
+	const all = scope.isAdmin && scope.access?.revenueAll === true;
+	const employeeId = all
+		? parseOptionalEntityId(scope.search.employeeId)
+		: scope.employeeId;
 
-	if (scope.isAdmin && !employeeId) {
+	if (all && !employeeId) {
 		return {};
 	}
 
 	if (!employeeId) {
-		throw new Error(
-			"Não foi possível identificar o colaborador da sessão para consultar o dashboard",
-		);
+		return { id: -1 };
 	}
 
 	return {
@@ -203,6 +218,14 @@ function getAssignedContractWhere(scope: DashboardScope) {
 				employeeId,
 				deletedAt: null,
 				isActive: true,
+				assignmentType: {
+					value: {
+						in:
+							scope.employeeTypeValue === "ADMIN_ASSISTANT"
+								? ["ADMIN_ASSISTANT"]
+								: ["RESPONSIBLE", "RECOMMENDED"],
+					},
+				},
 			},
 		},
 	};

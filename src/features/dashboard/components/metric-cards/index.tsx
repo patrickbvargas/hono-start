@@ -51,7 +51,7 @@ function getMetricIcon(label: string) {
 
 export function DashboardMetricCards({ metrics }: DashboardMetricCardsProps) {
 	return (
-		<div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+		<div className="grid gap-3 sm:grid-cols-2 md:grid-cols-4 2xl:grid-cols-5">
 			{metrics.map((metric) => (
 				<Card key={metric.label} className="gap-2">
 					<CardHeader>
@@ -75,47 +75,46 @@ export function DashboardMetricCards({ metrics }: DashboardMetricCardsProps) {
 							</TooltipProvider>
 						</div>
 						<CardAction className={METRIC_TONE_CLASSES[metric.tone]}>
-							<Badge
-								variant="secondary"
-								className={cn(
-									METRIC_BADGE_TONE_CLASSES[
-										getChangeTone(metric.changePercent)
-									],
-								)}
-							>
-								{metric.changePercent < 0 ? (
-									<TrendingDownIcon className="size-3.5" />
-								) : (
-									<TrendingUpIcon className="size-3.5" />
-								)}
-								{formatChange(metric.changePercent)}
-							</Badge>
-						</CardAction>
-					</CardHeader>
-					<CardContent className="flex flex-col gap-2 pt-0">
-						<p className="text-2xl font-semibold">{metric.formattedValue}</p>
-						<div className="flex items-center gap-1.5 text-right text-sm text-muted-foreground">
-							<p>
-								{metric.previousLabel}: {metric.formattedPreviousValue}
-							</p>
 							<TooltipProvider>
 								<Tooltip>
 									<TooltipTrigger
 										render={
 											<button
 												type="button"
-												className="sr-only md:not-sr-only inline-flex text-muted-foreground transition-colors hover:text-foreground"
+												aria-label={`Comparação de ${metric.label}`}
+												className="rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
 											/>
 										}
 									>
-										<InfoIcon className="size-3.5" />
+										<Badge
+											variant="secondary"
+											className={cn(
+												METRIC_BADGE_TONE_CLASSES[
+													getChangeTone(metric.changePercent)
+												],
+											)}
+										>
+											{metric.changePercent !== null &&
+											metric.changePercent < 0 ? (
+												<TrendingDownIcon className="size-3.5" />
+											) : (
+												<TrendingUpIcon className="size-3.5" />
+											)}
+											{formatChange(metric.changePercent)}
+										</Badge>
 									</TooltipTrigger>
 									<TooltipContent>
-										Refere-se a {metric.previousPeriodLabel}.
+										<p>
+											{metric.previousLabel}: {metric.formattedPreviousValue}
+										</p>
+										<p>{metric.previousPeriodLabel}</p>
 									</TooltipContent>
 								</Tooltip>
 							</TooltipProvider>
-						</div>
+						</CardAction>
+					</CardHeader>
+					<CardContent className="flex flex-col gap-2 pt-0">
+						<p className="text-2xl font-semibold">{metric.formattedValue}</p>
 					</CardContent>
 				</Card>
 			))}

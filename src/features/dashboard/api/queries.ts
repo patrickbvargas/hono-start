@@ -1,11 +1,7 @@
 import { queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import type { Option } from "@/shared/schemas/option";
-import {
-	assertCan,
-	getCurrentEmployeeId,
-	hasPermission,
-} from "@/shared/session";
+import { assertCan, hasPermission } from "@/shared/session";
 import {
 	authMiddleware,
 	getRequiredServerLoggedUserSession,
@@ -40,7 +36,19 @@ const getDashboardSummaryFn = createServerFn({ method: "GET" })
 
 			return await getDashboardSummary({
 				firmId: session.firm.id,
-				employeeId: isAdmin ? undefined : getCurrentEmployeeId(session),
+				employeeId: session.employee.id ?? undefined,
+				employeeTypeValue: session.employeeType?.value,
+				access: {
+					revenue:
+						hasPermission(session, "org:fees:read_all") ||
+						hasPermission(session, "org:fees:read_assigned"),
+					remuneration:
+						hasPermission(session, "org:remunerations:read_all") ||
+						hasPermission(session, "org:remunerations:read_own"),
+					expense: hasPermission(session, "org:expenses:read"),
+					revenueAll: hasPermission(session, "org:fees:read_all"),
+					remunerationAll: hasPermission(session, "org:remunerations:read_all"),
+				},
 				isAdmin,
 				canReadCashFlow: hasPermission(session, "org:dashboard:read_cash_flow"),
 				search: data,
@@ -60,7 +68,10 @@ const getDashboardEmployeeOptionsFn = createServerFn({
 			const session = await getRequiredServerLoggedUserSession();
 			assertCan(session, ["org:dashboard:read_all", "org:dashboard:read_own"]);
 
-			if (!hasPermission(session, "org:dashboard:read_all")) {
+			if (
+				!hasPermission(session, "org:dashboard:read_all") ||
+				!hasPermission(session, "org:employees:read")
+			) {
 				return [];
 			}
 

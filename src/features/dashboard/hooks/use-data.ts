@@ -3,6 +3,7 @@ import {
 	getContractLegalAreasQueryOptions,
 	getContractRevenueTypesQueryOptions,
 } from "@/features/contracts";
+import { hasPermission, useLoggedUserSession } from "@/shared/session";
 import {
 	getDashboardEmployeeOptionsQueryOptions,
 	getDashboardSummaryQueryOptions,
@@ -18,12 +19,27 @@ export function useDashboardData(search: DashboardSearch) {
 }
 
 export function useDashboardOptions() {
+	const session = useLoggedUserSession();
+	const canReadContractOptions =
+		hasPermission(session, "org:contracts:read_all") ||
+		hasPermission(session, "org:contracts:read_assigned");
+
 	const [{ data: employees }, { data: legalAreas }, { data: revenueTypes }] =
 		useSuspenseQueries({
 			queries: [
 				getDashboardEmployeeOptionsQueryOptions(),
-				getContractLegalAreasQueryOptions(),
-				getContractRevenueTypesQueryOptions(),
+				{
+					...getContractLegalAreasQueryOptions(),
+					queryFn: canReadContractOptions
+						? getContractLegalAreasQueryOptions().queryFn
+						: async () => [],
+				},
+				{
+					...getContractRevenueTypesQueryOptions(),
+					queryFn: canReadContractOptions
+						? getContractRevenueTypesQueryOptions().queryFn
+						: async () => [],
+				},
 			],
 		});
 

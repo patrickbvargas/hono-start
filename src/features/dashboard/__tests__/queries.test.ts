@@ -187,6 +187,13 @@ describe("dashboard data queries", () => {
 		const result = await getDashboardSummary({
 			firmId: 1,
 			isAdmin: true,
+			access: {
+				revenue: true,
+				remuneration: true,
+				expense: true,
+				revenueAll: true,
+				remunerationAll: true,
+			},
 			canReadCashFlow: true,
 			search: {
 				dateFrom: "2026-01-01",
@@ -200,34 +207,35 @@ describe("dashboard data queries", () => {
 		expect(result.scopeLabel).toBe("Visão da firma");
 		expect(result.metrics).toEqual([
 			expect.objectContaining({
-				label: "Saldo total",
+				label: "Resultado do período",
 				value: 220,
-				currentValue: 120,
+				currentValue: 220,
 				previousValue: 30,
 				previousPeriodLabel: "01/01/2025 a 31/03/2025",
 			}),
 			expect.objectContaining({
 				label: "Receita prevista",
-				value: 1000,
-				currentValue: 1000,
+				value: 1150,
+				currentValue: 1150,
 				previousValue: 0,
 				previousPeriodLabel: "01/01/2025 a 31/03/2025",
-				changePercent: 100,
+				changePercent: null,
 			}),
 			expect.objectContaining({
 				label: "Receita recebida",
 				value: 400,
-				currentValue: 300,
+				currentValue: 400,
 				previousValue: 50,
-				changePercent: 500,
+				changePercent: 700,
 			}),
 			expect.objectContaining({
-				label: "Remunerações",
+				label: "Remunerações geradas",
 				value: 100,
 				currentValue: 100,
 				previousValue: 20,
 				changePercent: 400,
 			}),
+			expect.objectContaining({ label: "Despesas", value: 80 }),
 		]);
 		expect(result.legalAreaRevenue).toEqual([
 			expect.objectContaining({
@@ -251,16 +259,22 @@ describe("dashboard data queries", () => {
 				month: "2026-01",
 				revenue: 300,
 				remuneration: 60,
+				expense: 0,
+				result: 240,
 			},
 			{
 				month: "2026-02",
 				revenue: 0,
 				remuneration: 0,
+				expense: 80,
+				result: -80,
 			},
 			{
 				month: "2026-03",
 				revenue: 100,
 				remuneration: 40,
+				expense: 0,
+				result: 60,
 			},
 		]);
 		expect(result.remunerationMonths).toEqual([
@@ -302,7 +316,7 @@ describe("dashboard data queries", () => {
 			total: 100,
 			formattedTotal: expect.stringContaining("100,00"),
 		});
-		expect(result.overdueInstallments).toHaveLength(2);
+		expect(result.overdueInstallments).toHaveLength(4);
 		expect(result.overdueInstallments).toEqual(
 			expect.arrayContaining([
 				expect.objectContaining({
@@ -405,6 +419,13 @@ describe("dashboard data queries", () => {
 			firmId: 1,
 			employeeId: 10,
 			isAdmin: false,
+			access: {
+				revenue: true,
+				remuneration: true,
+				expense: false,
+				revenueAll: false,
+				remunerationAll: false,
+			},
 			search: {
 				dateFrom: "2026-01-01",
 				dateTo: "2026-12-31",
@@ -423,6 +444,9 @@ describe("dashboard data queries", () => {
 							some: {
 								firmId: 1,
 								employeeId: 10,
+								assignmentType: {
+									value: { in: ["RESPONSIBLE", "RECOMMENDED"] },
+								},
 								deletedAt: null,
 								isActive: true,
 							},
@@ -469,6 +493,13 @@ describe("dashboard data queries", () => {
 		await getDashboardSummary({
 			firmId: 1,
 			isAdmin: true,
+			access: {
+				revenue: true,
+				remuneration: true,
+				expense: true,
+				revenueAll: true,
+				remunerationAll: true,
+			},
 			canReadCashFlow: true,
 			search: {
 				dateFrom: "2026-01-01",
@@ -586,6 +617,13 @@ describe("dashboard data queries", () => {
 		const result = await getDashboardSummary({
 			firmId: 1,
 			isAdmin: true,
+			access: {
+				revenue: true,
+				remuneration: true,
+				expense: true,
+				revenueAll: true,
+				remunerationAll: true,
+			},
 			canReadCashFlow: true,
 			search: {
 				dateFrom: "2026-01-01",
@@ -624,5 +662,66 @@ describe("dashboard data queries", () => {
 				fullName: true,
 			},
 		});
+	});
+	it("returns only expenses and never queries fees or remuneration for an expense-only user", async () => {
+		vi.resetAllMocks();
+		prismaMock.expense.findMany.mockResolvedValue([
+			{
+				amount: "80",
+				category: { label: "Telefone" },
+				expenseDate: new Date("2026-02-01"),
+			},
+		]);
+		const result = await getDashboardSummary({
+			firmId: 1,
+			isAdmin: true,
+			canReadCashFlow: true,
+			access: {
+				revenue: false,
+				remuneration: false,
+				expense: true,
+				revenueAll: false,
+				remunerationAll: false,
+			},
+			search: {
+				dateFrom: "2026-01-01",
+				dateTo: "2026-03-31",
+				employeeId: "999",
+				legalArea: [],
+				revenueType: [],
+			},
+		});
+		expect(prismaMock.revenue.findMany).not.toHaveBeenCalled();
+		expect(prismaMock.fee.findMany).not.toHaveBeenCalled();
+		expect(prismaMock.remuneration.findMany).not.toHaveBeenCalled();
+		expect(result.metrics.map((metric) => metric.label)).toEqual(["Despesas"]);
+		expect(result.expenseRevenue?.[0].total).toBe(80);
+		expect(result.analysis).toBeUndefined();
+		expect(result.remunerationByAssignment).toBeUndefined();
+		expect(result.remunerationTable).toEqual([]);
+		expect(result.financialEvolution).toEqual([]);
+		expect(result.cashFlow).toBeNull();
+		expect(result.operatingRatios).toBeNull();
+	});
+	it("denies all subjects when no explicit read access is supplied", async () => {
+		vi.resetAllMocks();
+		const result = await getDashboardSummary({
+			firmId: 1,
+			isAdmin: true,
+			canReadCashFlow: true,
+			search: {
+				dateFrom: "2026-01-01",
+				dateTo: "2026-03-31",
+				employeeId: "",
+				legalArea: [],
+				revenueType: [],
+			},
+		});
+		expect(prismaMock.expense.findMany).not.toHaveBeenCalled();
+		expect(prismaMock.revenue.findMany).not.toHaveBeenCalled();
+		expect(prismaMock.fee.findMany).not.toHaveBeenCalled();
+		expect(prismaMock.remuneration.findMany).not.toHaveBeenCalled();
+		expect(result.metrics).toEqual([]);
+		expect(result.cashFlow).toBeNull();
 	});
 });
