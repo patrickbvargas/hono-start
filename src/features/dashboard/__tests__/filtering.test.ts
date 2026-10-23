@@ -1,9 +1,7 @@
 import { describe, expect, it } from "vitest";
-import {
-	buildDashboardPaymentDateWhere,
-	getEffectiveDashboardEmployeeId,
-} from "../data/queries";
+import { getEffectiveDashboardEmployeeId } from "../data/scope";
 import { dashboardSearchSchema } from "../schemas/search";
+import { buildDashboardPaymentDateWhere } from "../utils/period";
 import {
 	getCurrentYearDateRange,
 	getDashboardActivePeriodShortcut,

@@ -19,15 +19,9 @@ export function Dashboard({ data }: DashboardProps) {
 				<DashboardMetricCards metrics={data.metrics} />
 				<div className="grid gap-3 xl:grid-cols-2">
 					{data.cashFlow ? (
-						<DashboardCashFlowChart
-							description={data.cashFlow.chartLabel}
-							items={data.cashFlow.chart}
-						/>
+						<DashboardCashFlowChart items={data.cashFlow.chart} />
 					) : null}
-					<FinancialEvolutionChart
-						description={data.financialEvolutionLabel}
-						items={data.financialEvolution}
-					/>
+					<FinancialEvolutionChart items={data.financialEvolution} />
 				</div>
 				<div className="grid gap-3 xl:grid-cols-2">
 					<DashboardBreakdownChart

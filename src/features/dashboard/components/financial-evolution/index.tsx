@@ -2,10 +2,8 @@ import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import {
 	Card,
 	CardContent,
-	CardDescription,
 	CardHeader,
 	CardTitle,
-	type ChartConfig,
 	ChartContainer,
 	ChartLegend,
 	ChartLegendContent,
@@ -13,58 +11,15 @@ import {
 	ChartTooltipContent,
 } from "@/shared/components/ui";
 import { formatter } from "@/shared/lib/formatter";
-import type { DashboardSummary } from "../../schemas/model";
+import { FINANCIAL_EVOLUTION_CHART_CONFIG } from "../../constants/charts";
+import type { DashboardFinancialEvolutionItem } from "../../schemas/model";
+import { formatMonthLabel } from "../../utils/format";
 
 interface FinancialEvolutionChartProps {
-	description: string;
-	items: DashboardSummary["financialEvolution"];
-}
-
-const chartConfig = {
-	revenue: {
-		label: "Receita",
-		color: "var(--chart-1)",
-	},
-	remuneration: {
-		label: "Remuneração",
-		color: "var(--chart-2)",
-	},
-} satisfies ChartConfig;
-
-function formatMonthLabel(value: string) {
-	const [year, month] = value.split("-");
-
-	if (!year || !month) {
-		return value;
-	}
-
-	const date = new Date(Date.UTC(Number(year), Number(month) - 1, 1));
-
-	return new Intl.DateTimeFormat("pt-BR", {
-		month: "short",
-		year: "2-digit",
-		timeZone: "UTC",
-	})
-		.format(date)
-		.replace(".", "")
-		.replace(" de ", "/");
-}
-
-function formatAxisCurrency(value: number) {
-	if (value === 0) {
-		return "R$ 0";
-	}
-
-	return new Intl.NumberFormat("pt-BR", {
-		style: "currency",
-		currency: "BRL",
-		notation: "compact",
-		maximumFractionDigits: 1,
-	}).format(value);
+	items: DashboardFinancialEvolutionItem[];
 }
 
 export function FinancialEvolutionChart({
-	description,
 	items,
 }: FinancialEvolutionChartProps) {
 	const hasValues = items.some((item) => {
@@ -75,12 +30,14 @@ export function FinancialEvolutionChart({
 		<Card className="h-80">
 			<CardHeader>
 				<CardTitle>Evolução financeira</CardTitle>
-				<CardDescription>{description}</CardDescription>
 			</CardHeader>
 			<CardContent className="flex min-h-0 flex-1 flex-col gap-3">
-				<ChartContainer config={chartConfig} className="h-80 w-full">
+				<ChartContainer
+					config={FINANCIAL_EVOLUTION_CHART_CONFIG}
+					className="min-h-0 flex-1 w-full dark:[&_.recharts-cartesian-grid_line]:[stroke-opacity:0.05] dark:[&_.recharts-reference-line-line]:[stroke-opacity:0.05]"
+				>
 					<BarChart accessibilityLayer data={items} barGap={8}>
-						<CartesianGrid horizontal={false} vertical={false} />
+						<CartesianGrid vertical={false} strokeOpacity={0.3} />
 						<XAxis
 							dataKey="month"
 							axisLine={false}
@@ -89,14 +46,7 @@ export function FinancialEvolutionChart({
 							minTickGap={24}
 							tickFormatter={formatMonthLabel}
 						/>
-						<YAxis
-							axisLine={false}
-							hide
-							tickLine={false}
-							tickMargin={10}
-							width={96}
-							tickFormatter={formatAxisCurrency}
-						/>
+						<YAxis hide axisLine={false} tickLine={false} />
 						<ChartTooltip
 							cursor={false}
 							content={

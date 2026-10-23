@@ -1,8 +1,8 @@
+import { useId } from "react";
 import {
-	Bar,
-	BarChart,
+	Area,
+	AreaChart,
 	CartesianGrid,
-	Cell,
 	ReferenceLine,
 	XAxis,
 	YAxis,
@@ -10,131 +10,55 @@ import {
 import {
 	Card,
 	CardContent,
-	CardDescription,
 	CardHeader,
 	CardTitle,
-	type ChartConfig,
 	ChartContainer,
 	ChartTooltip,
 } from "@/shared/components/ui";
-import { formatter } from "@/shared/lib/formatter";
-import type { DashboardSummary } from "../../schemas/model";
+import { CASH_FLOW_CHART_CONFIG } from "../../constants/charts";
+import type { DashboardCashFlowChartItem } from "../../schemas/model";
+import { formatMonthLabel } from "../../utils/format";
+import { CashFlowTooltip } from "./tooltip";
 
 interface DashboardCashFlowChartProps {
-	description: string;
-	items: NonNullable<DashboardSummary["cashFlow"]>["chart"];
+	items: DashboardCashFlowChartItem[];
 }
 
-const chartConfig = {
-	balance: {
-		label: "Saldo",
-		color: "var(--chart-1)",
-	},
-} satisfies ChartConfig;
-
-function formatMonthLabel(value: string) {
-	const [year, month] = value.split("-");
-
-	if (!year || !month) {
-		return value;
-	}
-
-	const date = new Date(Date.UTC(Number(year), Number(month) - 1, 1));
-
-	return new Intl.DateTimeFormat("pt-BR", {
-		month: "short",
-		year: "2-digit",
-		timeZone: "UTC",
-	})
-		.format(date)
-		.replace(".", "")
-		.replace(" de ", "/");
-}
-
-function CashFlowTooltip({
-	active,
-	label,
-	payload,
-}: {
-	active?: boolean;
-	label?: string | number;
-	payload?: Array<{
-		payload?: DashboardCashFlowChartProps["items"][number];
-	}>;
-}) {
-	if (!active || !payload?.length || !payload[0]?.payload) {
-		return null;
-	}
-
-	const item = payload[0].payload;
-
-	return (
-		<div className="grid min-w-48 gap-2 rounded-lg border border-border/60 bg-popover px-3 py-2 text-xs shadow-md">
-			<div className="font-medium text-popover-foreground">
-				{formatMonthLabel(String(label ?? item.month))}
-			</div>
-			<div className="grid gap-1.5">
-				<div className="flex items-center justify-between gap-3">
-					<div className="flex items-center gap-2 text-muted-foreground">
-						<span
-							className="size-2.5 rounded-full"
-							style={{ backgroundColor: "var(--chart-2)" }}
-						/>
-						<span>Entrada</span>
-					</div>
-					<span className="font-medium text-popover-foreground">
-						{formatter.currency(item.entry)}
-					</span>
-				</div>
-				<div className="flex items-center justify-between gap-3">
-					<div className="flex items-center gap-2 text-muted-foreground">
-						<span
-							className="size-2.5 rounded-full"
-							style={{ backgroundColor: "var(--chart-4)" }}
-						/>
-						<span>Saída</span>
-					</div>
-					<span className="font-medium text-popover-foreground">
-						{formatter.currency(item.output)}
-					</span>
-				</div>
-				<div className="flex items-center justify-between gap-3">
-					<div className="flex items-center gap-2 text-muted-foreground">
-						<span
-							className="size-2.5 rounded-full"
-							style={{
-								backgroundColor:
-									item.balance < 0 ? "var(--chart-5)" : "var(--chart-1)",
-							}}
-						/>
-						<span>Saldo</span>
-					</div>
-					<span className="font-medium text-popover-foreground">
-						{formatter.currency(item.balance)}
-					</span>
-				</div>
-			</div>
-		</div>
-	);
-}
-
-export function DashboardCashFlowChart({
-	description,
-	items,
-}: DashboardCashFlowChartProps) {
+export function DashboardCashFlowChart({ items }: DashboardCashFlowChartProps) {
+	const gradientId = `cash-flow-gradient-${useId().replace(/:/g, "")}`;
 	const hasValues = items.some((item) => item.balance !== 0);
 
 	return (
 		<Card className="h-80">
 			<CardHeader>
-				<CardTitle>Fluxo de caixa</CardTitle>
-				<CardDescription>{description}</CardDescription>
+				<CardTitle>Saldo mensal</CardTitle>
 			</CardHeader>
 			<CardContent className="flex min-h-0 flex-1 flex-col gap-3">
-				<ChartContainer config={chartConfig} className="h-80 w-full">
-					<BarChart accessibilityLayer data={items} barGap={12}>
-						<CartesianGrid horizontal={false} vertical={false} />
-						<ReferenceLine y={0} stroke="var(--border)" />
+				<ChartContainer
+					config={CASH_FLOW_CHART_CONFIG}
+					className="min-h-0 flex-1 w-full dark:[&_.recharts-cartesian-grid_line]:[stroke-opacity:0.05] dark:[&_.recharts-reference-line-line]:[stroke-opacity:0.05]"
+				>
+					<AreaChart accessibilityLayer data={items}>
+						<defs>
+							<linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+								<stop
+									offset="5%"
+									stopColor="var(--color-balance)"
+									stopOpacity={0.8}
+								/>
+								<stop
+									offset="95%"
+									stopColor="var(--color-balance)"
+									stopOpacity={0.1}
+								/>
+							</linearGradient>
+						</defs>
+						<CartesianGrid vertical={false} strokeOpacity={0.3} />
+						<ReferenceLine
+							y={0}
+							stroke="var(--muted-foreground)"
+							strokeOpacity={0.3}
+						/>
 						<XAxis
 							dataKey="month"
 							axisLine={false}
@@ -143,17 +67,16 @@ export function DashboardCashFlowChart({
 							minTickGap={24}
 							tickFormatter={formatMonthLabel}
 						/>
-						<YAxis axisLine={false} hide tickLine={false} />
+						<YAxis hide axisLine={false} tickLine={false} />
 						<ChartTooltip cursor={false} content={<CashFlowTooltip />} />
-						<Bar dataKey="balance" radius={[4, 4, 4, 4]}>
-							{items.map((item) => (
-								<Cell
-									key={item.month}
-									fill={item.balance < 0 ? "var(--chart-5)" : "var(--chart-1)"}
-								/>
-							))}
-						</Bar>
-					</BarChart>
+						<Area
+							dataKey="balance"
+							type="monotone"
+							stroke="var(--color-balance)"
+							fill={`url(#${gradientId})`}
+							baseValue={0}
+						/>
+					</AreaChart>
 				</ChartContainer>
 				{hasValues ? null : (
 					<p className="text-sm text-muted-foreground">

@@ -18,10 +18,15 @@ import {
 	TooltipTrigger,
 } from "@/shared/components/ui";
 import { cn } from "@/shared/lib/utils";
-import type { DashboardSummary } from "../../schemas/model";
+import {
+	METRIC_BADGE_TONE_CLASSES,
+	METRIC_TONE_CLASSES,
+} from "../../constants/metrics";
+import type { DashboardMetric } from "../../schemas/model";
+import { formatChange, getChangeTone } from "../../utils/metrics";
 
 interface DashboardMetricCardsProps {
-	metrics: DashboardSummary["metrics"];
+	metrics: DashboardMetric[];
 }
 
 function getMetricIcon(label: string) {
@@ -42,37 +47,6 @@ function getMetricIcon(label: string) {
 	}
 
 	return <BadgeDollarSignIcon key={label} className="size-4" />;
-}
-
-const toneClassNames = {
-	default: "text-foreground",
-	success: "text-primary",
-	warning: "text-chart-4",
-	danger: "text-destructive",
-};
-
-const badgeToneClassNames = {
-	default: "bg-secondary text-secondary-foreground",
-	success: "bg-primary/10 text-primary",
-	warning: "bg-chart-4/10 text-chart-4",
-	danger: "bg-destructive/10 text-destructive",
-};
-
-function formatChange(value: number) {
-	const prefix = value > 0 ? "+" : "";
-	return `${prefix}${value.toFixed(0)}%`;
-}
-
-function getChangeTone(value: number) {
-	if (value > 0) {
-		return "success" as const;
-	}
-
-	if (value < 0) {
-		return "danger" as const;
-	}
-
-	return "default" as const;
 }
 
 export function DashboardMetricCards({ metrics }: DashboardMetricCardsProps) {
@@ -100,11 +74,13 @@ export function DashboardMetricCards({ metrics }: DashboardMetricCardsProps) {
 								</Tooltip>
 							</TooltipProvider>
 						</div>
-						<CardAction className={toneClassNames[metric.tone]}>
+						<CardAction className={METRIC_TONE_CLASSES[metric.tone]}>
 							<Badge
 								variant="secondary"
 								className={cn(
-									badgeToneClassNames[getChangeTone(metric.changePercent)],
+									METRIC_BADGE_TONE_CLASSES[
+										getChangeTone(metric.changePercent)
+									],
 								)}
 							>
 								{metric.changePercent < 0 ? (

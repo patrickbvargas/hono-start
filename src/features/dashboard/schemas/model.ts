@@ -15,6 +15,8 @@ export const dashboardMetricSchema = z.object({
 	changePercent: z.number(),
 });
 
+export type DashboardMetric = z.infer<typeof dashboardMetricSchema>;
+
 export const dashboardBreakdownItemSchema = z.object({
 	label: z.string(),
 	value: z.string(),
@@ -23,10 +25,18 @@ export const dashboardBreakdownItemSchema = z.object({
 	percentage: z.number(),
 });
 
+export type DashboardBreakdownItem = z.infer<
+	typeof dashboardBreakdownItemSchema
+>;
+
 export const dashboardRemunerationMonthSchema = z.object({
 	key: z.string(),
 	label: z.string(),
 });
+
+export type DashboardRemunerationMonth = z.infer<
+	typeof dashboardRemunerationMonthSchema
+>;
 
 export const dashboardRemunerationRowSchema = z.object({
 	employeeId: z.number(),
@@ -36,12 +46,20 @@ export const dashboardRemunerationRowSchema = z.object({
 	formattedTotal: z.string(),
 });
 
+export type DashboardRemunerationRow = z.infer<
+	typeof dashboardRemunerationRowSchema
+>;
+
 export const dashboardRemunerationSubtotalSchema = z.object({
 	label: z.string(),
 	months: z.record(z.string(), z.number()),
 	total: z.number(),
 	formattedTotal: z.string(),
 });
+
+export type DashboardRemunerationSubtotal = z.infer<
+	typeof dashboardRemunerationSubtotalSchema
+>;
 
 export const dashboardOverdueInstallmentRowSchema = z.object({
 	contractProcessNumber: z.string(),
@@ -57,11 +75,19 @@ export const dashboardOverdueInstallmentRowSchema = z.object({
 	formattedTotalValue: z.string(),
 });
 
+export type DashboardOverdueInstallmentRow = z.infer<
+	typeof dashboardOverdueInstallmentRowSchema
+>;
+
 export const dashboardFinancialEvolutionItemSchema = z.object({
 	month: z.string(),
 	revenue: z.number(),
 	remuneration: z.number(),
 });
+
+export type DashboardFinancialEvolutionItem = z.infer<
+	typeof dashboardFinancialEvolutionItemSchema
+>;
 
 export const dashboardCashFlowChartItemSchema = z.object({
 	month: z.string(),
@@ -69,6 +95,10 @@ export const dashboardCashFlowChartItemSchema = z.object({
 	output: z.number(),
 	balance: z.number(),
 });
+
+export type DashboardCashFlowChartItem = z.infer<
+	typeof dashboardCashFlowChartItemSchema
+>;
 
 export const dashboardCashFlowRowSchema = z.object({
 	month: z.string(),
@@ -83,6 +113,8 @@ export const dashboardCashFlowRowSchema = z.object({
 	balance: z.number(),
 });
 
+export type DashboardCashFlowRow = z.infer<typeof dashboardCashFlowRowSchema>;
+
 export const dashboardCashFlowSchema = z.object({
 	totalBalance: z.number(),
 	formattedTotalBalance: z.string(),
@@ -90,6 +122,8 @@ export const dashboardCashFlowSchema = z.object({
 	chart: dashboardCashFlowChartItemSchema.array(),
 	table: dashboardCashFlowRowSchema.array(),
 });
+
+export type DashboardCashFlow = z.infer<typeof dashboardCashFlowSchema>;
 
 export const dashboardSummarySchema = z.object({
 	isAdmin: z.boolean(),

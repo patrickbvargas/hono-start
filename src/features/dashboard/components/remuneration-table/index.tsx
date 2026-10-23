@@ -1,4 +1,3 @@
-import { createColumnHelper } from "@tanstack/react-table";
 import { DataTable } from "@/shared/components/data-table";
 import {
 	Card,
@@ -9,13 +8,17 @@ import {
 	TableRow,
 } from "@/shared/components/ui";
 import { formatter } from "@/shared/lib/formatter";
-import type { dataTableFeatures } from "@/shared/lib/table";
-import type { DashboardSummary } from "../../schemas/model";
+import type {
+	DashboardRemunerationMonth,
+	DashboardRemunerationRow,
+	DashboardRemunerationSubtotal,
+} from "../../schemas/model";
+import { getColumns } from "./columns";
 
 interface DashboardRemunerationTableProps {
-	months: DashboardSummary["remunerationMonths"];
-	rows: DashboardSummary["remunerationTable"];
-	subtotal: DashboardSummary["remunerationSubtotal"];
+	months: DashboardRemunerationMonth[];
+	rows: DashboardRemunerationRow[];
+	subtotal: DashboardRemunerationSubtotal | null;
 }
 
 const EMPTY_LABEL =
@@ -26,39 +29,7 @@ export function DashboardRemunerationTable({
 	rows,
 	subtotal,
 }: DashboardRemunerationTableProps) {
-	const columnHelper = createColumnHelper<
-		typeof dataTableFeatures,
-		DashboardSummary["remunerationTable"][number]
-	>();
-	const columns = [
-		columnHelper.accessor("employeeName", {
-			id: "employeeName",
-			header: "Colaborador",
-			meta: {
-				headerClassName: "min-w-40",
-				cellClassName: "whitespace-nowrap font-medium",
-			},
-		}),
-		...months.map((month) =>
-			columnHelper.accessor((row) => row.months[month.key] ?? 0, {
-				id: month.key,
-				header: month.label,
-				cell: (context) => formatter.currency(context.getValue()),
-				meta: {
-					headerClassName: "min-w-32 text-right",
-					cellClassName: "whitespace-nowrap text-right",
-				},
-			}),
-		),
-		columnHelper.accessor("formattedTotal", {
-			id: "total",
-			header: "Valor total no período",
-			meta: {
-				headerClassName: "min-w-40 text-right",
-				cellClassName: "whitespace-nowrap text-right font-semibold",
-			},
-		}),
-	];
+	const columns = getColumns(months);
 
 	return (
 		<Card className="hidden sm:block">
