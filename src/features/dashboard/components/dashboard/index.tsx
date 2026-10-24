@@ -227,7 +227,7 @@ export function Dashboard({
 									variant="bar"
 								/>
 							) : null}
-							{data.isAdmin && data.expenseRevenue?.length ? (
+							{data.expenseRevenue?.length ? (
 								<DashboardBreakdownChart
 									title="Despesas por categoria"
 									onSelect={(item, trigger) =>

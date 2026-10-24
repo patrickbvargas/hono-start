@@ -282,6 +282,46 @@ describe("Dashboard", () => {
 		},
 	);
 
+	it("shows expense breakdowns without dashboard-wide access", () => {
+		render(
+			<Dashboard
+				showDetails
+				data={{
+					isAdmin: false,
+					visibility: {
+						revenue: false,
+						remuneration: false,
+						expense: true,
+						evolution: false,
+					},
+					scopeLabel: "Minha visão",
+					metrics: [],
+					legalAreaRevenue: [],
+					revenueTypeRevenue: [],
+					expenseRevenue: [
+						{
+							label: "Folha",
+							value: "PAYROLL",
+							total: 80,
+							formattedTotal: "R$ 80,00",
+							percentage: 100,
+						},
+					],
+					remunerationMonths: [],
+					remunerationTable: [],
+					remunerationSubtotal: null,
+					overdueInstallments: [],
+					financialEvolutionLabel: "Jan/2026 a Jan/2026",
+					financialEvolution: [],
+					cashFlow: null,
+				}}
+			/>,
+		);
+		expect(screen.getByText("Despesas por categoria")).toBeTruthy();
+		expect(screen.queryByText("Resumo mensal")).toBeNull();
+		expect(screen.queryByText("Resultado mensal")).toBeNull();
+	});
+
 	it("hides cash-flow surfaces for regular users", () => {
 		render(
 			<Dashboard

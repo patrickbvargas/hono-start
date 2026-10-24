@@ -16,12 +16,14 @@ import { getDashboardActivePeriodShortcut } from "../../utils/period-shortcuts";
 
 interface DashboardFilterProps {
 	isAdmin?: boolean;
+	showAllocationFilters?: boolean;
 	showDetails?: boolean;
 	onShowDetailsChange?: (checked: boolean) => void;
 }
 
 export function DashboardFilter({
 	isAdmin = false,
+	showAllocationFilters = true,
 	showDetails = false,
 	onShowDetailsChange,
 }: DashboardFilterProps) {
@@ -68,14 +70,23 @@ export function DashboardFilter({
 			<form.AppField name="dateTo">
 				{(field) => <field.DatePicker label="Período até" />}
 			</form.AppField>
-			<form.AppField name="legalArea">
-				{(field) => <field.CheckboxGroup label="Área" options={legalAreas} />}
-			</form.AppField>
-			<form.AppField name="revenueType">
-				{(field) => (
-					<field.CheckboxGroup label="Tipo de receita" options={revenueTypes} />
-				)}
-			</form.AppField>
+			{showAllocationFilters ? (
+				<>
+					<form.AppField name="legalArea">
+						{(field) => (
+							<field.CheckboxGroup label="Área" options={legalAreas} />
+						)}
+					</form.AppField>
+					<form.AppField name="revenueType">
+						{(field) => (
+							<field.CheckboxGroup
+								label="Tipo de receita"
+								options={revenueTypes}
+							/>
+						)}
+					</form.AppField>
+				</>
+			) : null}
 		</>
 	);
 
@@ -92,16 +103,20 @@ export function DashboardFilter({
 
 	const desktopFilterActions = (
 		<ListFilters.Actions className="w-full md:w-auto">
-			<ListFilters.Popover label="Área">
-				<form.AppField name="legalArea">
-					{(field) => <field.CheckboxGroup options={legalAreas} />}
-				</form.AppField>
-			</ListFilters.Popover>
-			<ListFilters.Popover label="Tipo de receita">
-				<form.AppField name="revenueType">
-					{(field) => <field.CheckboxGroup options={revenueTypes} />}
-				</form.AppField>
-			</ListFilters.Popover>
+			{showAllocationFilters ? (
+				<>
+					<ListFilters.Popover label="Área">
+						<form.AppField name="legalArea">
+							{(field) => <field.CheckboxGroup options={legalAreas} />}
+						</form.AppField>
+					</ListFilters.Popover>
+					<ListFilters.Popover label="Tipo de receita">
+						<form.AppField name="revenueType">
+							{(field) => <field.CheckboxGroup options={revenueTypes} />}
+						</form.AppField>
+					</ListFilters.Popover>
+				</>
+			) : null}
 			<ListFilters.Button
 				type="button"
 				onClick={() => setIsDesktopPanelOpen((open) => !open)}
@@ -210,38 +225,40 @@ export function DashboardFilter({
 								{formatDateRangeChip()}
 							</ListFilters.Chip>
 						) : null}
-						{filter.legalArea.map((value) => (
-							<ListFilters.Chip
-								key={value}
-								onRemove={() =>
-									handleApplyFilter({
-										...filter,
-										legalArea: filter.legalArea.filter(
-											(item) => item !== value,
-										),
-									})
-								}
-								removeLabel={`Remover filtro de área: ${legalAreaLabels.get(value) ?? value}`}
-							>
-								{legalAreaLabels.get(value) ?? value}
-							</ListFilters.Chip>
-						))}
-						{filter.revenueType.map((value) => (
-							<ListFilters.Chip
-								key={value}
-								onRemove={() =>
-									handleApplyFilter({
-										...filter,
-										revenueType: filter.revenueType.filter(
-											(item) => item !== value,
-										),
-									})
-								}
-								removeLabel={`Remover filtro de tipo de receita: ${revenueTypeLabels.get(value) ?? value}`}
-							>
-								{revenueTypeLabels.get(value) ?? value}
-							</ListFilters.Chip>
-						))}
+						{showAllocationFilters &&
+							filter.legalArea.map((value) => (
+								<ListFilters.Chip
+									key={value}
+									onRemove={() =>
+										handleApplyFilter({
+											...filter,
+											legalArea: filter.legalArea.filter(
+												(item) => item !== value,
+											),
+										})
+									}
+									removeLabel={`Remover filtro de área: ${legalAreaLabels.get(value) ?? value}`}
+								>
+									{legalAreaLabels.get(value) ?? value}
+								</ListFilters.Chip>
+							))}
+						{showAllocationFilters &&
+							filter.revenueType.map((value) => (
+								<ListFilters.Chip
+									key={value}
+									onRemove={() =>
+										handleApplyFilter({
+											...filter,
+											revenueType: filter.revenueType.filter(
+												(item) => item !== value,
+											),
+										})
+									}
+									removeLabel={`Remover filtro de tipo de receita: ${revenueTypeLabels.get(value) ?? value}`}
+								>
+									{revenueTypeLabels.get(value) ?? value}
+								</ListFilters.Chip>
+							))}
 						{canClearAdvancedFilters ? (
 							<ListFilters.Clear onClick={handleClearAdvancedFilters} />
 						) : null}

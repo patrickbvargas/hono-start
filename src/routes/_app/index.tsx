@@ -69,7 +69,11 @@ export const Route = createFileRoute("/_app/")({
 	},
 	loaderDeps: ({ search }) => ({ search }),
 	loader: async ({ context: { queryClient, session }, deps: { search } }) => {
-		assertCan(session, ["org:dashboard:read_all", "org:dashboard:read_own"]);
+		assertCan(session, [
+			"org:dashboard:read_all",
+			"org:dashboard:read_own",
+			"org:expenses:read",
+		]);
 		const prefetches = [
 			queryClient.query(getDashboardSummaryQueryOptions(search)),
 			queryClient.query(getDashboardEmployeeOptionsQueryOptions()),
@@ -173,6 +177,9 @@ function RouteComponent() {
 		>
 			<WrapperHeader>
 				<DashboardFilter
+					showAllocationFilters={Boolean(
+						summary.visibility?.revenue || summary.visibility?.remuneration,
+					)}
 					isAdmin={isAdmin && hasPermission(session, "org:employees:read")}
 					showDetails={showDetails}
 					onShowDetailsChange={handleShowDetailsChange}

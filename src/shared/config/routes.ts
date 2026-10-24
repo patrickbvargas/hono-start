@@ -43,7 +43,11 @@ export const ROUTES: Record<RouteName, RouteItem> = {
 		title: "Dashboard",
 		url: "/",
 		icon: LayoutDashboardIcon,
-		permission: ["org:dashboard:read_all", "org:dashboard:read_own"],
+		permission: [
+			"org:dashboard:read_all",
+			"org:dashboard:read_own",
+			"org:expenses:read",
+		],
 	},
 	client: {
 		title: "Clientes",

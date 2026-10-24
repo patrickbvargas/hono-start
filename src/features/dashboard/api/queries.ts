@@ -40,7 +40,11 @@ const getDashboardDrilldownFn = createServerFn({ method: "GET" })
 	.handler(async ({ data }) => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();
-			assertCan(session, ["org:dashboard:read_all", "org:dashboard:read_own"]);
+			assertCan(session, [
+				"org:dashboard:read_all",
+				"org:dashboard:read_own",
+				"org:expenses:read",
+			]);
 			return dashboardDrilldownResultSchema.parse(
 				await getDashboardDrilldown(
 					{
@@ -91,7 +95,11 @@ const getDashboardSummaryFn = createServerFn({ method: "GET" })
 	.handler(async ({ data }): Promise<QueryOneReturnType<DashboardSummary>> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();
-			assertCan(session, ["org:dashboard:read_all", "org:dashboard:read_own"]);
+			assertCan(session, [
+				"org:dashboard:read_all",
+				"org:dashboard:read_own",
+				"org:expenses:read",
+			]);
 			const isAdmin = hasPermission(session, "org:dashboard:read_all");
 
 			return await getDashboardSummary({
@@ -126,7 +134,11 @@ const getDashboardEmployeeOptionsFn = createServerFn({
 	.handler(async (): Promise<QueryManyReturnType<Option>> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();
-			assertCan(session, ["org:dashboard:read_all", "org:dashboard:read_own"]);
+			assertCan(session, [
+				"org:dashboard:read_all",
+				"org:dashboard:read_own",
+				"org:expenses:read",
+			]);
 
 			if (
 				!hasPermission(session, "org:dashboard:read_all") ||

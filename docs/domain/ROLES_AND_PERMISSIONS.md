@@ -114,13 +114,13 @@ The following matrix describes initial role presets to configure in Clerk, not i
 See `DOMAIN_MODEL.md` for ownership. Own and assigned permissions require a valid optional Clerk privateMetadata.employeeId. Organization membership does not confer firm-specific access; metadata-based firm restrictions are future work. Account administration occurs in Clerk Dashboard.
 ## Dashboard subject permissions
 
-Dashboard read_all/read_own permits entry, not access to every financial subject. Dashboard data reads additionally require fees:read_all/read_assigned for receipts, schedules, debt and revenue breakdowns; remunerations:read_all/read_own for generated remuneration cards, charts and tables; expenses:read for expense cards and breakdowns. Missing subject grants skip database reads and remove related payload data and UI surfaces. Dashboard-wide access never upgrades assigned/own subject grants, and client employee filters never override the authenticated employee for restricted grants. Missing employee bindings yield no own/assigned records.
+Dashboard read_all/read_own or expenses:read permits entry, not access to every financial subject. Dashboard data reads additionally require fees:read_all/read_assigned for receipts, schedules, debt and revenue breakdowns; remunerations:read_all/read_own for generated remuneration cards, charts and tables; expenses:read for expense cards and breakdowns. Missing subject grants skip database reads and remove related payload data and UI surfaces. Dashboard-wide access never upgrades assigned/own subject grants, and client employee filters never override the authenticated employee for restricted grants. Missing employee bindings yield no own/assigned records.
 
 Consolidated balance and cash-flow tables require dashboard:read_all, dashboard:read_cash_flow, fees:read_all, remunerations:read_all and expenses:read together, without allocation dimensions. Combined revenue/remuneration charts require both subjects. Expense-only users receive only expense metrics and breakdowns. Employee filter options additionally require employees:read. Dashboard lookup queries do not call contract endpoints without contract read grants.
 
 ### Dashboard permission matrix
 
-Every row requires an authenticated session and `org:dashboard:read_all` OR `org:dashboard:read_own`. These grants allow entry only; subject grants below remain mandatory.
+Every row requires an authenticated session and `org:dashboard:read_all` OR `org:dashboard:read_own` OR `org:expenses:read`. These grants allow entry only; subject grants below remain mandatory.
 
 | Alias | Additional grants |
 |---|---|
@@ -149,8 +149,8 @@ Every row requires an authenticated session and `org:dashboard:read_all` OR `org
 | Table | Remunerações | M | Own or firm scope according to grants |
 | Table | Parcelas em atraso | R | Authorized contract scope |
 | Filter | Colaborador | `org:dashboard:read_all` AND `org:employees:read` | Selection never overrides own/assigned subject scope |
-| Filter | Área | Options require `org:contracts:read_all` OR `org:contracts:read_assigned` | Current control remains visible with no options when grants are missing |
-| Filter | Tipo de receita | Options require `org:contracts:read_all` OR `org:contracts:read_assigned` | Current control remains visible with no options when grants are missing |
+| Filter | Área | Options require `org:contracts:read_all` OR `org:contracts:read_assigned` | Hidden when neither fee nor remuneration data is authorized; options require contract read grants |
+| Filter | Tipo de receita | Options require `org:contracts:read_all` OR `org:contracts:read_assigned` | Hidden when neither fee nor remuneration data is authorized; options require contract read grants |
 | Filter | 6M, 12M, year, date bounds and Mais filtros | No additional grants | Applies only to authorized data |
 
 #### Scope and enforcement
@@ -166,5 +166,5 @@ Every row requires an authenticated session and `org:dashboard:read_all` OR `org
 - Collaborator/month and collaborator total details require M alone and retain the server's own/collaborator scope. All monetary cells in the monthly balance table inherit B; monthly outflow details also require B. Opening a contract from overdue installments additionally requires `org:contracts:read_all` or `org:contracts:read_assigned`; the existing contract detail query rechecks firm and assignment constraints independently.
 Every dashboard detail request, including refreshes and retries, rechecks current dashboard access and the corresponding subject grant on the server. Revenue by month/area/type/client and aging/forecast require R; remuneration by month/function requires M; expenses by month/category require D. Monthly receipt/remuneration details also require evolution availability (R AND M); its expense series requires B without allocation filters. Monthly balance and Result composition require B and no employee, legal-area or revenue-type allocation filters. Own/assigned scope is identical to the aggregate; props, group IDs and collaborator filters never grant additional access. Denials expose no restricted rows, counts or totals. Card details use the same grant as their card: R for planned/received revenue, M for generated remuneration, D for expenses, and B without allocation dimensions for period Result. Single-subject cards do not require the combined evolution chart grants. The standalone modal has no permission registry: each consumer's server source enforces its own access policy.
 - An expense-only actor receives only expense cards and breakdowns, without fee, remuneration or consolidated balance data.
-- Current UI limitation: area/type controls remain visible with empty options without contract read grants. Hiding these controls is a follow-up improvement, not an implemented behavior.
+- Expense-only dashboards hide area/type controls and their active chips on desktop and mobile. Period filters remain available. For other subject combinations, options still require contract read grants.
 - Tables currently use desktop visibility classes; permission alone does not make them visible on small screens.
