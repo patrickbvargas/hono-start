@@ -163,9 +163,7 @@ const EmployeeDetailsContent = ({
 					<EntityDetail.Fields columns={2} items={financialInfo} />
 				</EntityDetail.Section>
 				<EntityDetail.Separator />
-				<EntityDetail.Section title="Anexos">
-					<AttachmentSection canUpload ownerId={id} ownerKind="employee" />
-				</EntityDetail.Section>
+				<AttachmentSection canUpload ownerId={id} ownerKind="employee" />
 				<EntityDetail.Separator />
 				<EntityDetail.Section title="Registro">
 					<EntityDetail.Fields columns={2} items={registerInfo} />
@@ -186,9 +184,7 @@ const EmployeeDetailsFallback = () => (
 				<EntityDetail.SkeletonFields columns={2} rows={2} />
 			</EntityDetail.Section>
 			<EntityDetail.Separator />
-			<EntityDetail.Section title="Anexos">
-				<AttachmentSectionFallback canUpload />
-			</EntityDetail.Section>
+			<AttachmentSectionFallback canUpload />
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Registro">
 				<EntityDetail.SkeletonFields columns={2} rows={3} />

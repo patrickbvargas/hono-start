@@ -1,13 +1,15 @@
+import { SectionTitle } from "@/shared/components/section-title";
 import { Skeleton } from "@/shared/components/ui";
 
 export function AttachmentSectionSkeleton() {
 	return (
-		<div className="rounded-lg border p-3 space-y-3">
-			<Skeleton className="h-5 w-40" />
-			<div className="grid grid-cols-2 gap-4">
-				<Skeleton className="h-10 w-full" />
-				<Skeleton className="h-10 w-full" />
+		<div className="flex items-center gap-3 py-1" aria-hidden="true">
+			<Skeleton className="h-10 w-11 shrink-0" />
+			<div className="min-w-0 flex-1 space-y-2">
+				<Skeleton className="h-4 w-2/3" />
+				<Skeleton className="h-3 w-1/2" />
 			</div>
+			<Skeleton className="size-7 shrink-0" />
 		</div>
 	);
 }
@@ -20,9 +22,12 @@ export function AttachmentSectionFallback({
 	canUpload = true,
 }: AttachmentSectionFallbackProps) {
 	return (
-		<div className="flex flex-col gap-3" aria-hidden="true">
-			{canUpload ? <Skeleton className="h-8 w-28" /> : null}
+		<section className="flex flex-col gap-2">
+			<div className="flex min-h-8 items-center justify-between gap-3">
+				<SectionTitle>Anexos</SectionTitle>
+				{canUpload ? <Skeleton className="h-8 w-20" /> : null}
+			</div>
 			<AttachmentSectionSkeleton />
-		</div>
+		</section>
 	);
 }

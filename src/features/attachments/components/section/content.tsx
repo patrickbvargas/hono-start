@@ -1,11 +1,10 @@
-import { DownloadIcon, TrashIcon } from "lucide-react";
-import { EntityFields } from "@/shared/components/entity-fields";
+import { DownloadIcon, EllipsisVerticalIcon, TrashIcon } from "lucide-react";
 import {
 	Button,
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
 } from "@/shared/components/ui";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
@@ -24,68 +23,74 @@ export function AttachmentSectionContent({
 	onDelete,
 }: AttachmentSectionContentProps) {
 	return (
-		<div className="flex flex-wrap items-end justify-between gap-3">
-			<EntityFields
-				className="min-w-0 flex-1"
-				items={[
-					{
-						term: "Tamanho",
-						definition: formatFileSize(attachment.fileSize),
-					},
-					{
-						term: "Anexado em",
-						definition: formatter.date(attachment.createdAt),
-					},
-				]}
-				columns={2}
-			/>
-			<TooltipProvider>
-				<div className="flex justify-end gap-2">
-					<Tooltip>
-						<TooltipTrigger
+		<div className="flex min-w-0 items-start gap-3">
+			<span
+				className="flex h-10 w-11 shrink-0 items-center justify-center rounded-md bg-muted text-xs font-medium text-muted-foreground"
+				aria-hidden="true"
+			>
+				{attachment.typeValue}
+			</span>
+			<div className="min-w-0 flex-1">
+				<p className="wrap-anywhere text-sm font-medium leading-5">
+					{attachment.fileName}
+				</p>
+				<p className="mt-1 flex flex-wrap gap-x-1 text-xs text-muted-foreground">
+					<span>
+						<span className="sr-only">Tamanho: </span>
+						{formatFileSize(attachment.fileSize)}
+					</span>
+					<span aria-hidden="true">·</span>
+					<span>
+						<span className="sr-only">Anexado em </span>
+						{formatter.date(attachment.createdAt)}
+					</span>
+				</p>
+			</div>
+			<div className="flex shrink-0 items-center gap-1">
+				<Button
+					size="icon-sm"
+					variant="ghost"
+					disabled={!attachment.downloadUrl}
+					onClick={() => {
+						if (attachment.downloadUrl) {
+							window.open(
+								attachment.downloadUrl,
+								"_blank",
+								"noopener,noreferrer",
+							);
+						}
+					}}
+					aria-label={`Baixar ${attachment.fileName}`}
+					title="Baixar arquivo"
+				>
+					<DownloadIcon size={16} />
+				</Button>
+				{canDelete ? (
+					<DropdownMenu>
+						<DropdownMenuTrigger
 							render={
 								<Button
 									size="icon-sm"
-									variant="outline"
-									disabled={!attachment.downloadUrl}
-									onClick={() => {
-										if (attachment.downloadUrl) {
-											window.open(
-												attachment.downloadUrl,
-												"_blank",
-												"noopener,noreferrer",
-											);
-										}
-									}}
-									aria-label={`Baixar ${attachment.fileName}`}
-									title={`Baixar ${attachment.fileName}`}
+									variant="ghost"
+									aria-label={`Ações de ${attachment.fileName}`}
+									title="Mais ações"
 								/>
 							}
 						>
-							<DownloadIcon size={16} />
-						</TooltipTrigger>
-						<TooltipContent>Baixar</TooltipContent>
-					</Tooltip>
-					{canDelete ? (
-						<Tooltip>
-							<TooltipTrigger
-								render={
-									<Button
-										size="icon-sm"
-										variant="destructive"
-										onClick={() => onDelete(attachment.id)}
-										aria-label={`Excluir ${attachment.fileName}`}
-										title={`Excluir ${attachment.fileName}`}
-									/>
-								}
+							<EllipsisVerticalIcon size={16} />
+						</DropdownMenuTrigger>
+						<DropdownMenuContent align="end">
+							<DropdownMenuItem
+								variant="destructive"
+								onClick={() => onDelete(attachment.id)}
 							>
 								<TrashIcon size={16} />
-							</TooltipTrigger>
-							<TooltipContent>Excluir</TooltipContent>
-						</Tooltip>
-					) : null}
-				</div>
-			</TooltipProvider>
+								Excluir
+							</DropdownMenuItem>
+						</DropdownMenuContent>
+					</DropdownMenu>
+				) : null}
+			</div>
 		</div>
 	);
 }

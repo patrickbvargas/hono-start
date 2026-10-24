@@ -7,9 +7,13 @@ export function useAttachments(owner: AttachmentOwnerInput) {
 		data: attachments,
 		error,
 		isPending,
+		refetch,
 	} = useQuery(getAttachmentsByOwnerQueryOptions(owner));
 
 	return {
+		retry: () => {
+			void refetch();
+		},
 		attachments: attachments ?? [],
 		error,
 		isPending,

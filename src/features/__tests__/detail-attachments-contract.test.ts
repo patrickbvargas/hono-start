@@ -20,7 +20,7 @@ describe("detail attachment composition contract", () => {
 		for (const file of detailFiles) {
 			const content = readWorkspaceFile(...file);
 
-			expect(content).toContain('EntityDetail.Section title="Anexos"');
+			expect(content).not.toContain('EntityDetail.Section title="Anexos"');
 			expect(content).toContain("<AttachmentSection");
 			expect(content).toContain("<AttachmentSectionFallback canUpload />");
 			expect(content).not.toContain("idPlaceholder");

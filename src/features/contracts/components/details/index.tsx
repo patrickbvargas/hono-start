@@ -268,9 +268,7 @@ const ContractDetailsContent = ({
 						))}
 				</EntityDetail.Section>
 				<EntityDetail.Separator />
-				<EntityDetail.Section title="Anexos">
-					<AttachmentSection canUpload ownerId={id} ownerKind="contract" />
-				</EntityDetail.Section>
+				<AttachmentSection canUpload ownerId={id} ownerKind="contract" />
 				<EntityDetail.Separator />
 				<EntityDetail.Section title="Registro">
 					<EntityDetail.Fields columns={2} items={registerInfo} />
@@ -316,9 +314,7 @@ const ContractDetailsFallback = () => (
 				</div>
 			</EntityDetail.Section>
 			<EntityDetail.Separator />
-			<EntityDetail.Section title="Anexos">
-				<AttachmentSectionFallback canUpload />
-			</EntityDetail.Section>
+			<AttachmentSectionFallback canUpload />
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Registro">
 				<EntityDetail.SkeletonFields columns={2} rows={3} />

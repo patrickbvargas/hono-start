@@ -169,3 +169,6 @@ RelatedRecordLink loads its lazy detail composition and entity data only when op
 Overlay portals maintain explicit stacking: drawers use the existing z-50 layer, dialog portals establish z-60 and alert-dialog portals z-70 so editing and discard confirmations remain above related drawers. EntityForm uses a flex column bounded by calc(100dvh - 2rem), with a shrinkable, internally scrolling body and fixed header/footer space. Validate geometry and hit testing in a real browser at narrow and short viewports; jsdom does not calculate stacking or viewport layout.
 
 The mobile sidebar closes when selecting a navigation destination, including the home logo and the current route. Its dialog title and description are in pt-BR.
+
+AttachmentSection owns its single shared-style heading, loaded count and permitted Anexar action. Supported drawers mount it directly, without another titled section. Files use divided compact rows with type, wrapping filename, size and date; download stays visible and authorized deletion lives in the secondary actions menu with existing confirmation. Skeletons match the compact header and row. Query errors show safe copy and a retry action.
+Attachment lists have a maximum height of 12rem (approximately three compact rows), then scroll within the section. The section heading and upload action remain outside this scroll area.

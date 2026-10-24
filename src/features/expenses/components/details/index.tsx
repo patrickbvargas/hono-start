@@ -123,9 +123,7 @@ function ExpenseDetailsContent({
 					<p className="text-sm">{expense.notes?.trim() || "—"}</p>
 				</EntityDetail.Section>
 				<EntityDetail.Separator />
-				<EntityDetail.Section title="Anexos">
-					<AttachmentSection canUpload ownerId={id} ownerKind="expense" />
-				</EntityDetail.Section>
+				<AttachmentSection canUpload ownerId={id} ownerKind="expense" />
 				<EntityDetail.Separator />
 				<EntityDetail.Section title="Registro">
 					<EntityDetail.Fields columns={2} items={registerInfo} />
@@ -146,9 +144,7 @@ const ExpenseDetailsFallback = () => (
 				<Skeleton className="h-5 w-full max-w-56" />
 			</EntityDetail.Section>
 			<EntityDetail.Separator />
-			<EntityDetail.Section title="Anexos">
-				<AttachmentSectionFallback canUpload />
-			</EntityDetail.Section>
+			<AttachmentSectionFallback canUpload />
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Registro">
 				<EntityDetail.SkeletonFields columns={2} rows={3} />

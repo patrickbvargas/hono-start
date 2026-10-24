@@ -15,10 +15,10 @@ export function useAttachmentSection({
 	ownerKind,
 }: UseAttachmentSectionOptions) {
 	const owner = getAttachmentOwnerInput({ ownerId, ownerKind });
-	const { attachments, error, isPending } = useAttachments(owner);
+	const { attachments, error, isPending, retry } = useAttachments(owner);
 	const session = useLoggedUserSession();
 	const canDelete = hasPermission(session, "org:attachments:delete");
 	const { overlay } = useOverlay<EntityId>();
 
-	return { owner, attachments, error, isPending, canDelete, overlay };
+	return { owner, attachments, error, isPending, canDelete, overlay, retry };
 }

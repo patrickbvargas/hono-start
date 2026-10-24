@@ -1,5 +1,7 @@
-import { FileIcon } from "lucide-react";
+import { useId } from "react";
 import { ButtonNew } from "@/shared/components/button-new";
+import { SectionTitle } from "@/shared/components/section-title";
+import { Button, ScrollArea } from "@/shared/components/ui";
 import { cn } from "@/shared/lib/utils";
 import type { EntityId } from "@/shared/schemas/entity";
 import { useAttachmentSection } from "../../hooks/use-section";
@@ -22,57 +24,76 @@ export const AttachmentSection = ({
 	ownerId,
 	ownerKind,
 }: AttachmentSectionProps) => {
-	const { owner, attachments, error, isPending, canDelete, overlay } =
+	const headingId = useId();
+	const { owner, attachments, error, isPending, canDelete, overlay, retry } =
 		useAttachmentSection({ ownerId, ownerKind });
 
 	return (
-		<section className={cn("flex flex-col gap-3", className)}>
-			{canUpload ? (
-				<div className="flex">
-					<ButtonNew
-						permission="org:attachments:upload"
-						className="w-fit"
-						label="Novo anexo"
-						variant="secondary"
-						onClick={() => overlay.create.open()}
-					/>
+		<section
+			aria-labelledby={headingId}
+			className={cn("flex min-w-0 flex-col gap-2", className)}
+		>
+			<div className="flex min-h-8 items-center justify-between gap-3">
+				<div className="flex items-center gap-2">
+					<SectionTitle id={headingId}>Anexos</SectionTitle>
+					{!isPending && !error ? (
+						<span className="text-xs tabular-nums text-muted-foreground">
+							{attachments.length}
+						</span>
+					) : null}
 				</div>
-			) : null}
-
+				{canUpload ? (
+					<div className="shrink-0">
+						<ButtonNew
+							permission="org:attachments:upload"
+							className="w-fit"
+							label="Anexar"
+							variant="ghost"
+							size="sm"
+							onClick={() => overlay.create.open()}
+						/>
+					</div>
+				) : null}
+			</div>
 			{isPending ? <AttachmentSectionSkeleton /> : null}
 
 			{error ? (
-				<p className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-destructive text-sm">
-					{error instanceof Error
-						? error.message
-						: "Não foi possível carregar anexos."}
-				</p>
+				<div
+					role="alert"
+					className="flex flex-wrap items-center justify-between gap-2 rounded-md bg-muted/50 px-3 py-2"
+				>
+					<p className="text-sm text-destructive">
+						Não foi possível carregar anexos.
+					</p>
+					<Button variant="outline" size="sm" onClick={retry}>
+						Tentar novamente
+					</Button>
+				</div>
 			) : null}
 
 			{!isPending && !error && attachments.length === 0 ? (
-				<p className="rounded-md border border-dashed px-3 py-4 text-muted-foreground text-sm">
+				<p className="py-2 text-muted-foreground text-sm">
 					Nenhum anexo cadastrado.
 				</p>
 			) : null}
 
 			{!isPending && !error && attachments.length > 0 ? (
-				<ul className="grid gap-3">
-					{attachments.map((attachment) => (
-						<li key={attachment.id} className="min-w-0 rounded-lg border p-3">
-							<div className="mb-3 flex min-w-0 items-start gap-2">
-								<FileIcon className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
-								<p className="min-w-0 wrap-break-word text-sm font-medium">
-									{attachment.fileName}
-								</p>
-							</div>
-							<AttachmentSectionContent
-								attachment={attachment}
-								canDelete={canDelete}
-								onDelete={overlay.delete.open}
-							/>
-						</li>
-					))}
-				</ul>
+				<ScrollArea className="max-h-48 [&>[data-slot=scroll-area-viewport]]:max-h-48">
+					<ul aria-label="Arquivos anexados" className="min-w-0 divide-y">
+						{attachments.map((attachment) => (
+							<li
+								key={attachment.id}
+								className="min-w-0 py-3 first:pt-1 last:pb-1"
+							>
+								<AttachmentSectionContent
+									attachment={attachment}
+									canDelete={canDelete}
+									onDelete={overlay.delete.open}
+								/>
+							</li>
+						))}
+					</ul>
+				</ScrollArea>
 			) : null}
 
 			{overlay.create.render((state) => (
