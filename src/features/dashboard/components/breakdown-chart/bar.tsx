@@ -19,7 +19,7 @@ interface BreakdownItemsProps {
 export function BreakdownBarChart({ items, onSelect }: BreakdownItemsProps) {
 	return (
 		<ScrollArea
-			className="h-64 w-full"
+			className="h-64 w-full min-w-0"
 			tabIndex={0}
 			aria-label="Gráfico de barras com rolagem"
 		>
@@ -32,15 +32,22 @@ export function BreakdownBarChart({ items, onSelect }: BreakdownItemsProps) {
 					accessibilityLayer
 					data={items}
 					layout="vertical"
-					margin={{ left: 0, right: 100 }}
+					margin={{ top: 4, bottom: 4, left: 0, right: 80 }}
 				>
-					<XAxis type="number" hide tickFormatter={formatCompactCurrency} />
+					<XAxis
+						type="number"
+						domain={[0, "dataMax"]}
+						hide
+						tickFormatter={formatCompactCurrency}
+					/>
 					<YAxis
 						dataKey="label"
 						type="category"
 						axisLine={false}
 						tickLine={false}
-						width={104}
+						width="auto"
+						tick={{ fontSize: 12 }}
+						tickMargin={12}
 						interval={0}
 					/>
 					<ChartTooltip

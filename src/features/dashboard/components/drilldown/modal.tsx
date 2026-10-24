@@ -36,7 +36,7 @@ export function DashboardDrilldownModal({
 			state={state}
 			returnFocus={returnFocus}
 			title={target.title}
-			description={`Período: ${search.dateFrom ? formatter.date(`${search.dateFrom}T00:00:00`) : "sem limite inicial"} a ${search.dateTo ? formatter.date(`${search.dateTo}T00:00:00`) : "sem limite final"}\nPosição: ${formatter.date(referenceAt)}\nConforme os filtros do dashboard.`}
+			description={`Período: ${search.dateFrom ? formatter.date(`${search.dateFrom}T00:00:00`) : "sem limite inicial"} a ${search.dateTo ? formatter.date(`${search.dateTo}T00:00:00`) : "sem limite final"}\nPosição: ${formatter.date(referenceAt)}`}
 			context={{ selection: target.selection, referenceAt }}
 			filters={search}
 			columns={columns}

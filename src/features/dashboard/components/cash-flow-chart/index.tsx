@@ -32,7 +32,7 @@ export function DashboardCashFlowChart({
 					Saldo mensal
 					<ChartHelp
 						title="Saldo mensal"
-						description="Receita recebida − despesas de cada mês. Não acumula meses anteriores nem representa saldo bancário."
+						description="Honorários recebidos − despesas de cada mês. Não acumula meses anteriores nem representa saldo bancário."
 					/>
 				</CardTitle>
 			</CardHeader>

@@ -13,19 +13,22 @@ export function assertDashboardDrilldownScope(
 ): void {
 	const selection = input.selection;
 	const subject =
-		selection.kind === "monthly"
-			? selection.series === "output"
-				? "result"
-				: selection.series
-			: selection.kind === "metric"
-				? selection.value === "planned"
-					? "revenue"
-					: selection.value
-				: selection.kind === "function" || selection.kind === "employee-month"
-					? "remuneration"
-					: selection.kind === "expense"
-						? "expense"
-						: "revenue";
+		(selection.kind === "area" || selection.kind === "type") &&
+		selection.series === "remuneration"
+			? "remuneration"
+			: selection.kind === "monthly"
+				? selection.series === "output"
+					? "result"
+					: selection.series
+				: selection.kind === "metric"
+					? selection.value === "planned"
+						? "revenue"
+						: selection.value
+					: selection.kind === "function" || selection.kind === "employee-month"
+						? "remuneration"
+						: selection.kind === "expense"
+							? "expense"
+							: "revenue";
 	const consolidated = canReadDashboardFirmResult(scope);
 	if (
 		selection.kind === "monthly" &&

@@ -68,31 +68,15 @@ export function getColumns(onSelect?: CashFlowSelectionOptions["onSelect"]) {
 			},
 		}),
 		columnHelper.accessor("entry", {
-			header: "Entrada",
+			header: labels.entry,
 			cell: (context) => renderValue(context.row.original, "entry"),
 			meta: {
 				headerClassName: "min-w-32 text-right",
 				cellClassName: "whitespace-nowrap text-right font-semibold",
 			},
 		}),
-		columnHelper.accessor("remuneration", {
-			header: "Remuneração gerada",
-			cell: (context) => renderValue(context.row.original, "remuneration"),
-			meta: {
-				headerClassName: "min-w-32 text-right",
-				cellClassName: "whitespace-nowrap text-right",
-			},
-		}),
-		columnHelper.accessor("expense", {
-			header: "Despesa",
-			cell: (context) => renderValue(context.row.original, "expense"),
-			meta: {
-				headerClassName: "min-w-32 text-right",
-				cellClassName: "whitespace-nowrap text-right",
-			},
-		}),
 		columnHelper.accessor("output", {
-			header: "Saída",
+			header: labels.output,
 			cell: (context) => renderValue(context.row.original, "output"),
 			meta: {
 				headerClassName: "min-w-32 text-right",
@@ -100,7 +84,7 @@ export function getColumns(onSelect?: CashFlowSelectionOptions["onSelect"]) {
 			},
 		}),
 		columnHelper.accessor("balance", {
-			header: "Saldo",
+			header: labels.balance,
 			cell: (context) => renderValue(context.row.original, "balance"),
 			meta: {
 				headerClassName: "min-w-32 text-right",
@@ -125,9 +109,9 @@ export const labels: Record<CashFlowValue, string> = {
 	administrative: "Administrativo",
 	judicial: "Judicial",
 	succumbency: "Sucumbência",
-	entry: "Entrada",
-	remuneration: "Remuneração",
-	expense: "Despesa",
-	output: "Saída",
-	balance: "Saldo",
+	entry: "Entradas",
+	remuneration: "Remuneração gerada",
+	expense: "Despesas",
+	output: "Saídas",
+	balance: "Resultado",
 };

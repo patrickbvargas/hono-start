@@ -72,9 +72,9 @@ describe("DashboardCashFlowTable", () => {
 			/>,
 		);
 
-		expect(screen.getByText("Saldo mensal")).toBeTruthy();
+		expect(screen.getByText("Resultado mensal")).toBeTruthy();
 		expect(
-			screen.getByText("Saldo mensal").closest('[data-slot="card"]'),
+			screen.getByText("Resultado mensal").closest('[data-slot="card"]'),
 		).toBeTruthy();
 		expect(screen.getByTestId("data-table").textContent).toContain("Mês");
 		expect(screen.getByTestId("data-table").textContent).toContain(
@@ -85,18 +85,24 @@ describe("DashboardCashFlowTable", () => {
 			"Sucumbência",
 		);
 		expect(screen.getByTestId("data-table").textContent).toContain("Entrada");
-		expect(screen.getByTestId("data-table").textContent).toContain(
+		expect(screen.getByTestId("data-table").textContent).not.toContain(
 			"Remuneração",
 		);
-		expect(screen.getByTestId("data-table").textContent).toContain("Despesa");
+		expect(screen.getByTestId("data-table").textContent).not.toContain(
+			"Despesas",
+		);
 		expect(screen.getByTestId("data-table").textContent).toContain("Saída");
-		expect(screen.getByTestId("data-table").textContent).toContain("Saldo");
+		expect(screen.getByTestId("data-table").textContent).toContain("Resultado");
 	});
 
 	it("renders explicit empty state in pt-BR when no rows exist", () => {
 		render(<DashboardCashFlowTable rows={[]} />);
 
-		expect(screen.getByText("Nenhum dado de saldo encontrado.")).toBeTruthy();
+		expect(
+			screen.getByText(
+				"Nenhum resultado encontrado para os filtros selecionados.",
+			),
+		).toBeTruthy();
 		expect(screen.queryByTestId("data-table")).toBeNull();
 	});
 });

@@ -8,7 +8,7 @@ export const Route = createFileRoute("/_auth/convite")({
 	component: () => (
 		<AuthenticationScreen
 			title="Concluir acesso"
-			description="Aceite o convite para sua firma."
+			description="Aceite o convite para acessar o sistema."
 			showBackToLoginLink={false}
 		>
 			<InvitationSetup />

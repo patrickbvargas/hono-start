@@ -161,14 +161,20 @@ describe("dashboard data queries", () => {
 					paymentDate: new Date("2026-01-22T00:00:00.000Z"),
 					contractEmployee: {
 						employee: { id: 10, fullName: "Maria Silva" },
+						contract: {
+							legalArea: { label: "Previdenciário", value: "SOCIAL_SECURITY" },
+						},
 					},
+					fee: { revenue: { type: { label: "Mensal", value: "MONTHLY" } } },
 				},
 				{
 					amount: "40",
 					paymentDate: new Date("2026-03-11T00:00:00.000Z"),
 					contractEmployee: {
 						employee: { id: 9, fullName: "Ana Souza" },
+						contract: { legalArea: { label: "Cível", value: "CIVIL" } },
 					},
+					fee: { revenue: { type: { label: "Êxito", value: "SUCCESS" } } },
 				},
 			]);
 		prismaMock.expense.findMany
@@ -202,7 +208,11 @@ describe("dashboard data queries", () => {
 			},
 		});
 
-		expect(result.scopeLabel).toBe("Visão da firma");
+		expect(result.scopeLabel).toBe("Visão geral");
+		expect(result.remunerationByCollaborator).toEqual([
+			expect.objectContaining({ value: "10", label: "Maria Silva", total: 60 }),
+			expect.objectContaining({ value: "9", label: "Ana Souza", total: 40 }),
+		]);
 		expect(result.metrics).toEqual([
 			expect.objectContaining({
 				label: "Resultado do período",
@@ -212,7 +222,7 @@ describe("dashboard data queries", () => {
 				previousPeriodLabel: "01/01/2025 a 31/03/2025",
 			}),
 			expect.objectContaining({
-				label: "Receita prevista",
+				label: "Honorários previstos",
 				value: 1150,
 				currentValue: 1150,
 				previousValue: 0,
@@ -220,7 +230,7 @@ describe("dashboard data queries", () => {
 				changePercent: null,
 			}),
 			expect.objectContaining({
-				label: "Receita recebida",
+				label: "Honorários recebidos",
 				value: 400,
 				currentValue: 400,
 				previousValue: 50,
@@ -248,8 +258,20 @@ describe("dashboard data queries", () => {
 			}),
 		]);
 		expect(result.revenueTypeRevenue).toEqual([
-			expect.objectContaining({ label: "Mensal", total: 300 }),
-			expect.objectContaining({ label: "Êxito", total: 100 }),
+			expect.objectContaining({
+				label: "Mensal",
+				total: 300,
+				remuneration: 60,
+			}),
+			expect.objectContaining({ label: "Êxito", total: 100, remuneration: 40 }),
+		]);
+		expect(result.legalAreaRevenue).toEqual([
+			expect.objectContaining({
+				value: "SOCIAL_SECURITY",
+				total: 300,
+				remuneration: 60,
+			}),
+			expect.objectContaining({ value: "CIVIL", total: 100, remuneration: 40 }),
 		]);
 		expect(result.financialEvolutionLabel).toBe("Jan/2026 a Mar/2026");
 		expect(result.financialEvolution).toEqual([
@@ -462,6 +484,7 @@ describe("dashboard data queries", () => {
 			}),
 		);
 		expect(result.scopeLabel).toBe("Minha visão");
+		expect(result.remunerationByCollaborator).toBeUndefined();
 		expect(result.remunerationSubtotal).toBeNull();
 		expect(result.overdueInstallments).toEqual([]);
 		expect(result.cashFlow).toBeNull();

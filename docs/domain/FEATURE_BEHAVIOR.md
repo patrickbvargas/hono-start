@@ -275,7 +275,7 @@ The software core includes these feature areas:
 - Contribution cells in the monthly balance table open their contributing records: receipt type, all entries, generated remuneration, expenses, all outflows or signed result. Outflow details show positive expense amounts so their Total matches the cell; balance details retain signed deductions.
 - Overdue installment process numbers open the existing contract drawer from the dashboard when contract read permission is present. The contract query independently enforces current permission, firm and assignment scope. No new entity-detail implementation or contract lifecycle action is added to the dashboard.
 - Dashboard KPI cards also activate the standalone drilldown through explicit metric source keys, using the full selected period. Help and percentage-comparison buttons retain their own tooltip interactions and do not activate drilldown.
-- Receita prevista lists initial down payments and full scheduled installments due in the period, including paid installments; it is distinct from the outstanding future-receipts chart. Receita recebida lists actual receipt contributions; Remunerações geradas lists generated remuneration; Despesas lists period expenses; Resultado do período shows signed receipts minus expenses.
+- Honorários previstos lists initial down payments and full scheduled installments due in the period, including paid installments; it is distinct from the outstanding future-receipts chart. Honorários recebidos lists actual receipt contributions; Remunerações geradas lists generated remuneration; Despesas lists period expenses; Resultado do período shows signed receipts minus expenses.
 
 - The drilldown context (period and filters) appears in an info tooltip beside the modal title, with an accessible description retained for screen readers.
 - Every bar and monthly Result point opens a read-only modal with the exact contributing records, full BRL amounts, record count and total across all pages. Keyboard activation is supported, with focus restored on close.
@@ -285,11 +285,31 @@ The software core includes these feature areas:
 - Records are fetched on demand. A source-data mismatch refreshes the summary and shows a concise update notice with current detail totals. A filter change closes the dashboard modal; switching selections resets its pagination and cannot display a late response from the previous selection.
 - The isolated drilldown feature is configurable by props and can also serve cards on registration pages. It has no dashboard, chart or entity dependency; consumers supply context, filters, query options, Zod response schema, row identity, columns and optional summaries.
 - Compatible read-only listing columns may be supplied through the owning feature's public API. The modal does not inherit listing actions or URL pagination/sorting. Columns support local sorting; dashboard details start with date descending, date first and amount last.
-- Monthly balance uses columns above/below a zero reference line; it is a monthly result rather than a continuous balance curve.
-- Financial evolution combines receipt, generated-remuneration and expense bars with a result line on the same monetary axis. Existing subject permissions govern each series.
+- The dashboard omits the separate monthly balance chart because financial evolution already shows its balance line. The monthly balance detail table remains available.
+- Financial evolution combines receipt and expense bars with a balance line on the same monetary axis; generated remuneration is kept outside this chart. Existing subject permissions govern each series.
 - Outstanding future receipts use columns ordered as up to 30, 31–60 and 61–90 days. Aging bars remain chronological: up to 30, 31–60, 61–90 and over 90 days, rather than ranking amounts.
 - Chart orientation is fixed: legal area, revenue type, remuneration assignment roles and aging use vertical bars. Clients and expense categories use horizontal bars with internal scrolling. Filtering does not change chart orientation.
 
 ### Cash balance
 
 - Generated remuneration is a control figure and is never deducted separately from cash balance or margin. Official payroll outflows are Expense records, including PAYROLL_LAWYERS.
+
+- KPI cards retain their existing grid. Generated remuneration remains an informational indicator outside the cash outflow calculation. Existing subject permissions and drilldowns remain applicable.
+
+- The consolidated monthly chart and its detail table share the title Resultado mensal and the labels Entradas, Saídas and Resultado. Saídas are recorded expenses only.
+
+- Resumo mensal appears immediately below the admin-only Resultado mensal chart, with the same minimum height and full grid width. Both use the existing authorized monthly data and month/series drilldowns. Regular users see authorized contract receipts and only their own generated remuneration; expenses and balance are excluded from this comparison chart. Existing combined revenue and remuneration grants remain required.
+
+- Resumo por área and Resumo por tipo replace the receipt-only area/type charts. They sit side by side immediately below the monthly comparison, outside detailed-analysis toggles. Each group compares period receipts (including down payments) against generated remuneration by contract legal area or originating fee revenue type. Remuneration-only groups remain visible. Expenses are excluded; subject grants, firm and own/assigned scope apply independently. Clicking a bar opens only that series and group, with the same active period and dimensions.
+
+- The default dashboard chart set is limited to Resultado mensal (authorized administrators), Resumo mensal (monthly), Resumo por área and Resumo por tipo. All remaining charts and analytical tables are shown only when detailed analyses are enabled; KPI cards retain their existing grid.
+
+- Honorários and generated remuneration remain the core of the dashboard summaries. Resumo mensal, Resumo por área and Resumo por tipo use concise titles; legends and help retain the explicit labels Honorários recebidos and Remunerações geradas (own remuneration for regular users). Expenses remain separate.
+
+- Resultado do período is the KPI aggregate; Resultado mensal is the chart and table grouped by month. Their result formula is received entries minus recorded expenses. The chart line and table result column are labeled Resultado.
+
+- Detailed charts are ordered Honorários por cliente, Remuneração por função, Honorários em atraso, Honorários a receber, then Despesas por categoria (administrators with expense access). The first pair shows concentration and remuneration allocation; the second shows overdue and the next 90 days of outstanding scheduled receipts. Detail tables retain Resultado mensal and Remunerações por colaborador; Parcelas em atraso contains overdue installments with positive outstanding value at the reference date. These naming changes do not alter calculations.
+
+- Detailed analysis starts with Remunerações por colaborador beside Remuneração por função. The collaborator chart is restricted to administrators with all-remuneration read access and uses the same displayed-month totals as the collaborator table; bars open the existing collaborator/month-range details. Honorários por cliente moves beside Despesas por categoria after the overdue/forecast pair.
+
+- The Resultado mensal table keeps receipt-type details, Entradas, Saídas and Resultado. It omits generated remuneration and the duplicate Despesas column, since Saídas already equals expenses. Remuneration is reviewed in its own table and charts. Parcelas em atraso labels outstanding installment amount as Saldo em aberto, original revenue-plan total as Total do honorário, and type as Tipo de honorário. Monetary remuneration totals use decimal arithmetic before numeric presentation.

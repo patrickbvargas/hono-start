@@ -12,7 +12,7 @@ interface DashboardCashFlowTableProps extends CashFlowSelectionOptions {
 	rows: DashboardCashFlowRow[];
 }
 
-const EMPTY_LABEL = "Nenhum dado de saldo encontrado.";
+const EMPTY_LABEL = "Nenhum resultado encontrado para os filtros selecionados.";
 
 export function DashboardCashFlowTable({
 	rows,
@@ -23,7 +23,7 @@ export function DashboardCashFlowTable({
 	return (
 		<Card className="hidden sm:block space-y-2">
 			<CardHeader>
-				<CardTitle>Saldo mensal</CardTitle>
+				<CardTitle>Resultado mensal</CardTitle>
 			</CardHeader>
 			<CardContent className="flex min-h-0 flex-1 flex-col pt-0">
 				<DataTable

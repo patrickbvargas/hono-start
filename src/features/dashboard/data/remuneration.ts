@@ -95,28 +95,33 @@ export function buildMonthlyRemunerationTable({
 				]),
 			);
 			const total = months.reduce(
-				(sum, month) => sum + (monthValues[month.key] ?? 0),
-				0,
+				(sum, month) => sum.add(row.totals.get(month.key) ?? 0),
+				new Prisma.Decimal(0),
 			);
 
 			return {
 				employeeId: row.employeeId,
 				employeeName: row.employeeName,
 				months: monthValues,
-				total,
-				formattedTotal: formatter.currency(total),
+				total: Number(total),
+				formattedTotal: formatter.currency(Number(total)),
 			};
 		});
 
 	const subtotalMonths = Object.fromEntries(
 		months.map((month) => [
 			month.key,
-			table.reduce((sum, row) => sum + (row.months[month.key] ?? 0), 0),
+			Number(
+				table.reduce(
+					(sum, row) => sum.add(row.months[month.key] ?? 0),
+					new Prisma.Decimal(0),
+				),
+			),
 		]),
 	);
 	const subtotalTotal = months.reduce(
-		(sum, month) => sum + (subtotalMonths[month.key] ?? 0),
-		0,
+		(sum, month) => sum.add(subtotalMonths[month.key] ?? 0),
+		new Prisma.Decimal(0),
 	);
 
 	return {
@@ -127,8 +132,8 @@ export function buildMonthlyRemunerationTable({
 				? {
 						label: "Subtotal",
 						months: subtotalMonths,
-						total: subtotalTotal,
-						formattedTotal: formatter.currency(subtotalTotal),
+						total: Number(subtotalTotal),
+						formattedTotal: formatter.currency(Number(subtotalTotal)),
 					}
 				: null,
 	};

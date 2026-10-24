@@ -21,6 +21,7 @@ export const dashboardMetricSchema = z.object({
 export type DashboardMetric = z.infer<typeof dashboardMetricSchema>;
 
 export const dashboardBreakdownItemSchema = z.object({
+	remuneration: z.number().optional(),
 	label: z.string(),
 	value: z.string(),
 	total: z.number(),
@@ -132,6 +133,7 @@ export const dashboardCashFlowSchema = z.object({
 export type DashboardCashFlow = z.infer<typeof dashboardCashFlowSchema>;
 
 export const dashboardSummarySchema = z.object({
+	remunerationByCollaborator: dashboardBreakdownItemSchema.array().optional(),
 	visibility: z
 		.object({
 			revenue: z.boolean(),

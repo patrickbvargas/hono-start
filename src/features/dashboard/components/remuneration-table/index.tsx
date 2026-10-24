@@ -36,7 +36,7 @@ export function DashboardRemunerationTable({
 	return (
 		<Card className="hidden sm:block space-y-2">
 			<CardHeader>
-				<CardTitle>Remunerações</CardTitle>
+				<CardTitle>Remunerações por colaborador</CardTitle>
 			</CardHeader>
 			<CardContent className="flex min-h-0 flex-1 flex-col pt-0">
 				<DataTable

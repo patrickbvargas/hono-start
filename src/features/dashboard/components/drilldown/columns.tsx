@@ -16,6 +16,8 @@ export function getDashboardDrilldownColumns(
 	const installment =
 		selection.kind === "aging" || selection.kind === "forecast";
 	const remuneration =
+		((selection.kind === "area" || selection.kind === "type") &&
+			selection.series === "remuneration") ||
 		selection.kind === "function" ||
 		selection.kind === "employee-month" ||
 		(selection.kind === "monthly" && selection.series === "remuneration") ||

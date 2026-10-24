@@ -138,7 +138,23 @@ export function buildDashboardSummary({
 	}
 
 	const assignmentGroups = new Map<string, GroupTotal>();
+	const areaRemunerations = new Map<string, GroupTotal>();
+	const typeRemunerations = new Map<string, GroupTotal>();
 	for (const row of tableRemunerations) {
+		const area = row.contractEmployee.contract?.legalArea;
+		const type = row.fee?.revenue.type;
+		if (area) {
+			pushGroupTotal(areaRemunerations, {
+				...area,
+				total: new Prisma.Decimal(row.amount),
+			});
+		}
+		if (type) {
+			pushGroupTotal(typeRemunerations, {
+				...type,
+				total: new Prisma.Decimal(row.amount),
+			});
+		}
 		const label = row.contractEmployee.assignmentType?.label ?? "Outros";
 		pushGroupTotal(assignmentGroups, {
 			label,
@@ -146,8 +162,45 @@ export function buildDashboardSummary({
 			total: new Prisma.Decimal(row.amount),
 		});
 	}
+	const withRemunerations = (
+		receipts: Map<string, GroupTotal>,
+		remunerations: Map<string, GroupTotal>,
+	) => {
+		const groups = new Map(receipts);
+		for (const [value, item] of remunerations) {
+			if (!groups.has(value)) {
+				groups.set(value, { ...item, total: new Prisma.Decimal(0) });
+			}
+		}
+		return mapBreakdown(groups, revenueReceived).map((item) => ({
+			...item,
+			remuneration: Number(remunerations.get(item.value)?.total ?? 0),
+		}));
+	};
 
 	const result = dashboardSummarySchema.parse({
+		remunerationByCollaborator:
+			scope.isAdmin &&
+			scope.access?.remunerationAll === true &&
+			scope.access?.remuneration === true
+				? mapBreakdown(
+						new Map(
+							remunerationByCollaborator.table.map((row) => [
+								String(row.employeeId),
+								{
+									value: String(row.employeeId),
+									label: row.employeeName,
+									total: new Prisma.Decimal(row.total),
+								},
+							]),
+						),
+						sumDecimal(
+							remunerationByCollaborator.table.map(
+								(row) => new Prisma.Decimal(row.total),
+							),
+						),
+					)
+				: undefined,
 		isAdmin: scope.isAdmin,
 		remunerationByAssignment: mapBreakdown(assignmentGroups, remunerationTotal),
 		analysis: buildFinancialAnalysis(revenues, period),
@@ -165,7 +218,7 @@ export function buildDashboardSummary({
 					expenses: formatter.currency(Number(expenseTotal)),
 				}
 			: null,
-		scopeLabel: scope.isAdmin ? "Visão da firma" : "Minha visão",
+		scopeLabel: scope.isAdmin ? "Visão geral" : "Minha visão",
 		metrics: [
 			...(showFirmResult
 				? [
@@ -175,7 +228,7 @@ export function buildDashboardSummary({
 							value: Number(totalBalance),
 							formattedValue: formatter.currency(Number(totalBalance)),
 							description:
-								"Receita recebida − despesas do período. Não representa saldo bancário.",
+								"Honorários recebidos − despesas. Não representa saldo bancário.",
 							tone: Number(totalBalance) < 0 ? "danger" : "default",
 							previousLabel,
 							currentValue: Number(currentBalance),
@@ -193,12 +246,12 @@ export function buildDashboardSummary({
 					]
 				: []),
 			{
-				label: "Receita prevista",
+				label: "Honorários previstos",
 				drilldown: "planned" as const,
 				value: Number(revenueTotal),
 				formattedValue: formatter.currency(Number(revenueTotal)),
 				description:
-					"Entradas + parcelas previstas no período. Inclui valores já recebidos.",
+					"Entradas + parcelas previstas. Inclui valores já recebidos.",
 				tone: "default",
 				previousLabel,
 				currentValue: Number(currentPlannedRevenue),
@@ -216,12 +269,11 @@ export function buildDashboardSummary({
 				),
 			},
 			{
-				label: "Receita recebida",
+				label: "Honorários recebidos",
 				drilldown: "revenue" as const,
 				value: Number(revenueReceived),
 				formattedValue: formatter.currency(Number(revenueReceived)),
-				description:
-					"Entradas + pagamentos de honorários recebidos no período, conforme os filtros.",
+				description: "Entradas + pagamentos de honorários recebidos.",
 				tone: "success",
 				previousLabel,
 				currentValue: Number(currentRevenue),
@@ -237,7 +289,7 @@ export function buildDashboardSummary({
 				value: Number(remunerationTotal),
 				formattedValue: formatter.currency(Number(remunerationTotal)),
 				description:
-					"Remunerações geradas no período, conforme os filtros. Não confirma repasse aos colaboradores.",
+					"Remunerações geradas. Indicador de conferência; não compõe as saídas.",
 				tone: "warning",
 				previousLabel,
 				currentValue: Number(currentRemuneration),
@@ -253,8 +305,8 @@ export function buildDashboardSummary({
 				),
 			},
 		],
-		legalAreaRevenue: mapBreakdown(legalAreaGroups, revenueReceived),
-		revenueTypeRevenue: mapBreakdown(revenueTypeGroups, revenueReceived),
+		legalAreaRevenue: withRemunerations(legalAreaGroups, areaRemunerations),
+		revenueTypeRevenue: withRemunerations(revenueTypeGroups, typeRemunerations),
 		remunerationMonths: remunerationByCollaborator.months,
 		remunerationTable: remunerationByCollaborator.table,
 		remunerationSubtotal: remunerationByCollaborator.subtotal,
@@ -307,7 +359,7 @@ export function buildDashboardSummary({
 								value: Number(expenseTotal),
 								formattedValue: formatter.currency(Number(expenseTotal)),
 								description:
-									"Despesas da firma no período. Ignora filtros de colaborador, área e tipo de receita.",
+									"Despesas. Ignora filtros de colaborador, área e tipo de honorário.",
 								tone: "default" as const,
 								previousLabel,
 								currentValue: Number(expenseTotal),

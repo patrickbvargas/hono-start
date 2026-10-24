@@ -8,10 +8,10 @@ export const CASH_FLOW_CHART_CONFIG = {
 } satisfies ChartConfig;
 
 export const FINANCIAL_EVOLUTION_CHART_CONFIG = {
-	expense: { label: "Despesas", color: "var(--chart-3)" },
+	expense: { label: "Saídas", color: "var(--chart-3)" },
 	result: { label: "Resultado", color: "var(--chart-4)" },
 	revenue: {
-		label: "Receita",
+		label: "Entradas",
 		color: "var(--chart-1)",
 	},
 	remuneration: {

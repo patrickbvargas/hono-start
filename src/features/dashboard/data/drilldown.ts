@@ -52,6 +52,9 @@ export async function getDashboardDrilldown(
 ) {
 	assertDashboardDrilldownScope(scope, input);
 	const selection = input.selection;
+	const remunerationDimension =
+		(selection.kind === "area" || selection.kind === "type") &&
+		selection.series === "remuneration";
 	let period = getDashboardPeriod(scope.search);
 	if (selection.kind === "monthly" || selection.kind === "employee-month") {
 		const range = getFinancialEvolutionMonthRange(scope.search);
@@ -85,6 +88,7 @@ export async function getDashboardDrilldown(
 						? selection.value
 						: undefined;
 			const receipts =
+				!remunerationDimension &&
 				!["function", "expense", "employee-month"].includes(selection.kind) &&
 				(!periodSelection ||
 					series === "revenue" ||
@@ -191,6 +195,7 @@ export async function getDashboardDrilldown(
 				}
 			}
 			if (
+				remunerationDimension ||
 				selection.kind === "function" ||
 				selection.kind === "employee-month" ||
 				(periodSelection && series === "remuneration")
@@ -198,6 +203,23 @@ export async function getDashboardDrilldown(
 				const remunerations = await tx.remuneration.findMany({
 					where: {
 						...getDashboardRemunerationWhere(scope),
+						...(remunerationDimension
+							? {
+									AND: [
+										selection.kind === "area"
+											? {
+													contractEmployee: {
+														contract: { legalArea: { value: selection.value } },
+													},
+												}
+											: {
+													fee: {
+														revenue: { type: { value: selection.value } },
+													},
+												},
+									],
+								}
+							: {}),
 						...(selection.kind === "employee-month"
 							? {
 									AND: [

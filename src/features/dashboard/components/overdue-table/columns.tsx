@@ -52,7 +52,7 @@ export function getColumns(onViewContract?: (id: number) => void) {
 			},
 		}),
 		columnHelper.accessor("revenueType", {
-			header: "Tipo receita",
+			header: "Tipo de honorário",
 			meta: {
 				headerClassName: "min-w-36",
 				cellClassName: "whitespace-nowrap",
@@ -75,7 +75,7 @@ export function getColumns(onViewContract?: (id: number) => void) {
 		}),
 		columnHelper.accessor("formattedInstallmentAmount", {
 			id: "formattedInstallmentAmount",
-			header: "Valor parcela",
+			header: "Saldo em aberto",
 			meta: {
 				headerClassName: "min-w-32 text-right",
 				cellClassName: "whitespace-nowrap text-right",
@@ -83,7 +83,7 @@ export function getColumns(onViewContract?: (id: number) => void) {
 		}),
 		columnHelper.accessor("formattedTotalValue", {
 			id: "formattedTotalValue",
-			header: "Valor total",
+			header: "Total do honorário",
 			meta: {
 				headerClassName: "min-w-32 text-right",
 				cellClassName: "whitespace-nowrap text-right font-semibold",

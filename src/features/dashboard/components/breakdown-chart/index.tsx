@@ -38,10 +38,7 @@ export function DashboardBreakdownChart({
 					{title}
 					<ChartHelp
 						title={title}
-						description={
-							CHART_HELP[title] ??
-							"Valores consolidados para os filtros e período selecionados."
-						}
+						description={CHART_HELP[title] ?? "Valores consolidados."}
 					/>
 				</CardTitle>
 			</CardHeader>

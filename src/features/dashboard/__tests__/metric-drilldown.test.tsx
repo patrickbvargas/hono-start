@@ -8,7 +8,7 @@ afterEach(cleanup);
 
 const metric: DashboardMetric = {
 	drilldown: "revenue",
-	label: "Receita recebida",
+	label: "Honorários recebidos",
 	value: 150,
 	formattedValue: "R$ 150,00",
 	description: "Recebimentos no período.",
@@ -26,14 +26,14 @@ it("opens the metric selection while help and comparison controls remain indepen
 	const select = vi.fn();
 	render(<DashboardMetricCards metrics={[metric]} onSelect={select} />);
 	fireEvent.click(
-		screen.getByRole("button", { name: "Sobre Receita recebida" }),
+		screen.getByRole("button", { name: "Sobre Honorários recebidos" }),
 	);
 	fireEvent.click(
-		screen.getByRole("button", { name: "Comparação de Receita recebida" }),
+		screen.getByRole("button", { name: "Comparação de Honorários recebidos" }),
 	);
 	expect(select).not.toHaveBeenCalled();
 	const trigger = screen.getByRole("button", {
-		name: "Detalhar Receita recebida",
+		name: "Detalhar Honorários recebidos",
 	});
 	fireEvent.click(trigger);
 	expect(select).toHaveBeenCalledExactlyOnceWith(metric, trigger);
@@ -47,6 +47,6 @@ it("does not add an activation control without a configured source", () => {
 		/>,
 	);
 	expect(
-		screen.queryByRole("button", { name: "Detalhar Receita recebida" }),
+		screen.queryByRole("button", { name: "Detalhar Honorários recebidos" }),
 	).toBeNull();
 });

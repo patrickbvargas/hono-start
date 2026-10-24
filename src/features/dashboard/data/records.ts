@@ -209,12 +209,22 @@ export async function getDashboardRecords(scope: DashboardScope) {
 					paymentDate: true,
 					contractEmployee: {
 						select: {
+							contract: {
+								select: { legalArea: { select: { label: true, value: true } } },
+							},
 							assignmentType: { select: { label: true, value: true } },
 							employee: {
 								select: {
 									id: true,
 									fullName: true,
 								},
+							},
+						},
+					},
+					fee: {
+						select: {
+							revenue: {
+								select: { type: { select: { label: true, value: true } } },
 							},
 						},
 					},

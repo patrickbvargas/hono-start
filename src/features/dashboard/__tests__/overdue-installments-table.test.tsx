@@ -70,14 +70,12 @@ describe("DashboardOverdueInstallmentsTable", () => {
 			/>,
 		);
 
-		expect(screen.getByText("Parcelas em possível inadimplência")).toBeTruthy();
+		expect(screen.getByText("Parcelas em atraso")).toBeTruthy();
 		expect(
-			screen
-				.getByText("Parcelas em possível inadimplência")
-				.closest('[data-slot="card"]'),
+			screen.getByText("Parcelas em atraso").closest('[data-slot="card"]'),
 		).toBeTruthy();
 		expect(screen.getByTestId("data-table").textContent).toContain(
-			"Processo | Cliente | Advogado | Área | Tipo receita | Parcela | Vencimento | Valor parcela | Valor total",
+			"Processo | Cliente | Advogado | Área | Tipo de honorário | Parcela | Vencimento | Saldo em aberto | Total do honorário",
 		);
 	});
 
@@ -86,7 +84,7 @@ describe("DashboardOverdueInstallmentsTable", () => {
 
 		expect(
 			screen.getByText(
-				"Nenhuma parcela em possível inadimplência encontrada para os filtros selecionados.",
+				"Nenhuma parcela em atraso encontrada para os filtros selecionados.",
 			),
 		).toBeTruthy();
 		expect(screen.queryByTestId("data-table")).toBeNull();

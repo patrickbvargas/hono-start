@@ -67,6 +67,51 @@ const revenue = {
 };
 
 describe("dashboard drilldown", () => {
+	it.each(["area", "type"] as const)(
+		"scopes %s remuneration details independently from receipts",
+		async (kind) => {
+			const ownScope = {
+				...scope,
+				isAdmin: false,
+				access: { ...scope.access, remunerationAll: false },
+			};
+			await getDashboardDrilldown(ownScope, {
+				...input,
+				selection: {
+					kind,
+					value: kind === "area" ? "CIVIL" : "JUDICIAL",
+					series: "remuneration",
+				},
+			});
+			expect(db.revenue.findMany).not.toHaveBeenCalled();
+			expect(db.remuneration.findMany).toHaveBeenCalledWith(
+				expect.objectContaining({
+					where: expect.objectContaining({
+						firmId: 7,
+						contractEmployee: expect.objectContaining({ employeeId: 1 }),
+						AND: [
+							kind === "area"
+								? {
+										contractEmployee: {
+											contract: { legalArea: { value: "CIVIL" } },
+										},
+									}
+								: { fee: { revenue: { type: { value: "JUDICIAL" } } } },
+						],
+					}),
+				}),
+			);
+			await expect(
+				getDashboardDrilldown(
+					{ ...ownScope, access: { ...ownScope.access, remuneration: false } },
+					{
+						...input,
+						selection: { kind, value: "CIVIL", series: "remuneration" },
+					},
+				),
+			).rejects.toThrow();
+		},
+	);
 	beforeEach(() => {
 		vi.clearAllMocks();
 		db.$transaction.mockImplementation((read) => read(db));

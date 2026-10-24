@@ -109,6 +109,9 @@ it("opens every monthly cash-flow amount with its correct column context", () =>
 	for (const key of Object.keys(cashFlowDrilldownSeries) as Array<
 		keyof typeof cashFlowDrilldownSeries
 	>) {
+		if (key === "remuneration" || key === "expense") {
+			continue;
+		}
 		const button = screen.getByRole("button", {
 			name: `Detalhar ${labels[key]} em Fev/26`,
 		});

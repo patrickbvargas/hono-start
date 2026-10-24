@@ -87,9 +87,11 @@ describe("DashboardRemunerationTable", () => {
 			/>,
 		);
 
-		expect(screen.getByText("Remunerações")).toBeTruthy();
+		expect(screen.getByText("Remunerações por colaborador")).toBeTruthy();
 		expect(
-			screen.getByText("Remunerações").closest('[data-slot="card"]'),
+			screen
+				.getByText("Remunerações por colaborador")
+				.closest('[data-slot="card"]'),
 		).toBeTruthy();
 		expect(screen.getByTestId("data-table").textContent).toContain(
 			"Colaborador | Jan/26 | Fev/26 | Valor total no período",

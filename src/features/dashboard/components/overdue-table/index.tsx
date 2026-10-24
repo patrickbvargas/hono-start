@@ -14,7 +14,7 @@ interface DashboardOverdueInstallmentsTableProps {
 }
 
 const EMPTY_LABEL =
-	"Nenhuma parcela em possível inadimplência encontrada para os filtros selecionados.";
+	"Nenhuma parcela em atraso encontrada para os filtros selecionados.";
 
 export function DashboardOverdueInstallmentsTable({
 	rows,
@@ -25,7 +25,7 @@ export function DashboardOverdueInstallmentsTable({
 	return (
 		<Card className="hidden sm:block space-y-2">
 			<CardHeader>
-				<CardTitle>Parcelas em possível inadimplência</CardTitle>
+				<CardTitle>Parcelas em atraso</CardTitle>
 			</CardHeader>
 			<CardContent className="flex min-h-0 flex-1 flex-col pt-0">
 				<DataTable

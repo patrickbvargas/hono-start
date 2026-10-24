@@ -132,22 +132,22 @@ Every row requires an authenticated session and `org:dashboard:read_all` OR `org
 | Surface | Display label | Additional grants | Conditions |
 |---|---|---|---|
 | Card | Resultado do período | B | No employee, legal-area or revenue-type filter |
-| Card | Receita prevista | R | Authorized contract scope |
-| Card | Receita recebida | R | Authorized contract scope |
+| Card | Honorários previstos | R | Authorized contract scope |
+| Card | Honorários recebidos | R | Authorized contract scope |
 | Card | Remunerações geradas | M | Authorized remuneration scope |
 | Card | Despesas | D | Firm expenses within the period |
 | Chart | Evolução financeira | R AND M | Expenses and result series additionally require B with no allocation dimensions |
 | Chart | Saldo mensal | B | No employee, legal-area or revenue-type filter |
-| Chart | Remunerações por função | M | Authorized remuneration scope |
+| Chart | Remuneração por função | M | Authorized remuneration scope |
 | Chart | Despesas por categoria | D | Shown when expense breakdown contains data |
-| Chart | Dívida por tempo de atraso | R | Authorized contract scope |
-| Chart | Recebimentos futuros em aberto | R | Authorized contract scope |
-| Chart | Receita por cliente | R | Authorized contract scope |
+| Chart | Honorários em atraso | R | Authorized contract scope |
+| Chart | Honorários a receber | R | Authorized contract scope |
+| Chart | Honorários por cliente | R | Authorized contract scope |
 | Chart | Receita por área | R | Authorized contract scope |
 | Chart | Receita por tipo | R | Authorized contract scope |
 | Table | Saldo mensal (cash flow) | B | No employee, legal-area or revenue-type filter |
 | Table | Remunerações | M | Own or firm scope according to grants |
-| Table | Parcelas em possível inadimplência | R | Authorized contract scope |
+| Table | Parcelas em atraso | R | Authorized contract scope |
 | Filter | Colaborador | `org:dashboard:read_all` AND `org:employees:read` | Selection never overrides own/assigned subject scope |
 | Filter | Área | Options require `org:contracts:read_all` OR `org:contracts:read_assigned` | Current control remains visible with no options when grants are missing |
 | Filter | Tipo de receita | Options require `org:contracts:read_all` OR `org:contracts:read_assigned` | Current control remains visible with no options when grants are missing |

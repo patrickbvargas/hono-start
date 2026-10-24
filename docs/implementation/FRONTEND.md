@@ -143,3 +143,7 @@ Application components consume only standard shadcn semantic tokens already defi
 The shared DataTable optionally accepts pageSize for native TanStack pagination (rowPaginationFeature and createPaginatedRowModel) of supplied rows, with footer navigation only when there are multiple pages and no page-size selector. With pageSize, sortable headers use native TanStack sorting (createSortedRowModel and sortFns) on the complete supplied dataset before pagination, without router context, URL changes or requests. Column enableSorting and sortingFn settings are respected. The optional initialSorting prop supplies native TanStack initial sorting state. Clicking a header cycles its native sorting states. Without pageSize it renders all supplied rows for server pagination and sorting stays URL-driven with manualSorting enabled. Row actions retain the original data index in both modes.
 
 
+
+## Product terminology
+
+- Keep the organization context implicit in user-facing copy: do not add da firma or do escritório. Use concise wording such as Despesas and Visão geral. Internal firm identifiers remain unchanged.

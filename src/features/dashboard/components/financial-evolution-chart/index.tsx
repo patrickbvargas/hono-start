@@ -1,4 +1,4 @@
-import { Bar, ComposedChart, Line, XAxis, YAxis } from "recharts";
+import { Bar, ComposedChart, LabelList, Line, XAxis, YAxis } from "recharts";
 import {
 	Card,
 	CardContent,
@@ -13,7 +13,7 @@ import {
 import { formatter } from "@/shared/lib/formatter";
 import { FINANCIAL_EVOLUTION_CHART_CONFIG } from "../../constants/charts";
 import type { DashboardFinancialEvolutionItem } from "../../schemas/model";
-import { formatMonthLabel } from "../../utils/format";
+import { formatCompactCurrency, formatMonthLabel } from "../../utils/format";
 import { ChartHelp } from "../chart-help";
 import { DrilldownBarShape } from "../drilldown/bar-shape";
 
@@ -60,7 +60,6 @@ export function FinancialEvolutionChart({
 	const hasValues = items.some((item) => {
 		return (
 			item.revenue !== 0 ||
-			item.remuneration !== 0 ||
 			(item.expense ?? 0) !== 0 ||
 			(item.result ?? 0) !== 0
 		);
@@ -70,16 +69,21 @@ export function FinancialEvolutionChart({
 		<Card className="min-h-85 col-span-full">
 			<CardHeader>
 				<CardTitle className="flex items-center gap-2">
-					Evolução financeira
+					Resultado mensal
 					<ChartHelp
-						title="Evolução financeira"
-						description="Receita recebida e remunerações geradas por mês. Na visão consolidada, inclui despesas e a linha de resultado: receita − despesas."
+						title="Resultado mensal"
+						description="Entradas: honorários recebidos. Saídas: despesas registradas. Resultado = entradas − saídas."
 					/>
 				</CardTitle>
 			</CardHeader>
 			<CardContent className="flex min-h-0 flex-1 flex-col gap-3">
 				<ChartContainer config={chartConfig} className="min-h-0 flex-1 w-full">
-					<ComposedChart accessibilityLayer data={items} barGap={8}>
+					<ComposedChart
+						accessibilityLayer
+						data={items}
+						barGap={8}
+						margin={{ top: 24, bottom: 0, left: 24, right: 24 }}
+					>
 						<XAxis
 							dataKey="month"
 							axisLine={false}
@@ -102,7 +106,9 @@ export function FinancialEvolutionChart({
 							}
 						/>
 						<ChartLegend
-							itemSorter={(item) => (item.dataKey === "result" ? 1 : 0)}
+							itemSorter={(item) =>
+								["revenue", "expense", "result"].indexOf(String(item.dataKey))
+							}
 							content={<ChartLegendContent />}
 						/>
 						<Bar
@@ -121,24 +127,15 @@ export function FinancialEvolutionChart({
 							)}
 							fill="var(--color-revenue)"
 							radius={4}
-						/>
-						<Bar
-							dataKey="remuneration"
-							shape={(props) => (
-								<DrilldownBarShape
-									{...props}
-									label={`${chartConfig.remuneration.label} ${formatMonthLabel(items[props.index]?.month ?? "")}`}
-									onActivate={
-										onSelect && items[props.index]
-											? (trigger) =>
-													onSelect(items[props.index], "remuneration", trigger)
-											: undefined
-									}
-								/>
-							)}
-							fill="var(--color-remuneration)"
-							radius={4}
-						/>
+						>
+							<LabelList
+								dataKey="revenue"
+								position="top"
+								offset={8}
+								className="fill-muted-foreground text-xs"
+								formatter={(value) => formatCompactCurrency(Number(value))}
+							/>
+						</Bar>
 						{items.some((item) => item.expense !== undefined) ? (
 							<Bar
 								dataKey="expense"
@@ -156,7 +153,15 @@ export function FinancialEvolutionChart({
 								)}
 								fill="var(--color-expense)"
 								radius={4}
-							/>
+							>
+								<LabelList
+									dataKey="expense"
+									position="top"
+									offset={8}
+									className="fill-muted-foreground text-xs"
+									formatter={(value) => formatCompactCurrency(Number(value))}
+								/>
+							</Bar>
 						) : null}
 						{items.some((item) => item.result !== undefined) ? (
 							<Line
