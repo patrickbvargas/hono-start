@@ -33,7 +33,7 @@ export const RemunerationList = ({
 		(remuneration: Remuneration): DetailFieldItem[] => [
 			{
 				term: "Competência",
-				definition: formatter.date(remuneration.paymentDate),
+				definition: formatter.calendarDate(remuneration.paymentDate),
 			},
 			{
 				term: "Valor",

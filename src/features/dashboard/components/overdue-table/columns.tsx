@@ -67,7 +67,7 @@ export function getColumns(onViewContract?: (id: number) => void) {
 		}),
 		columnHelper.accessor("dueDate", {
 			header: "Vencimento",
-			cell: (context) => formatter.date(context.getValue()),
+			cell: (context) => formatter.calendarDate(context.getValue()),
 			meta: {
 				headerClassName: "min-w-32",
 				cellClassName: "whitespace-nowrap",

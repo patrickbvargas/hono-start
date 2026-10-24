@@ -194,6 +194,7 @@ export const getRemunerationByIdQueryOptions = (id: number) =>
 export const getSelectableRemunerationContractsQueryOptions = () =>
 	queryOptions({
 		staleTime: Infinity,
+		meta: { refreshOnMutation: true },
 		queryKey: remunerationKeys.contractOptions(),
 		queryFn: getSelectableRemunerationContractsFn,
 	});
@@ -201,6 +202,7 @@ export const getSelectableRemunerationContractsQueryOptions = () =>
 export const getSelectableRemunerationEmployeesQueryOptions = () =>
 	queryOptions({
 		staleTime: Infinity,
+		meta: { refreshOnMutation: true },
 		queryKey: remunerationKeys.employeeOptions(),
 		queryFn: getSelectableRemunerationEmployeesFn,
 	});

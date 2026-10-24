@@ -101,4 +101,5 @@ export const getEmployeeTypesQueryOptions = () =>
 		queryKey: employeeKeys.types(),
 		queryFn: getEmployeeTypesFn,
 		staleTime: Infinity,
+		meta: { refreshOnMutation: true },
 	});

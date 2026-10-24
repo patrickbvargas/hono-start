@@ -55,7 +55,7 @@ export const FeeTable = ({
 			}),
 			c.accessor("paymentDate", {
 				header: "Competência",
-				cell: ({ row }) => formatter.date(row.original.paymentDate),
+				cell: ({ row }) => formatter.calendarDate(row.original.paymentDate),
 				enableSorting: FEE_ALLOWED_SORT_COLUMNS.includes("paymentDate"),
 			}),
 			c.accessor("amount", {

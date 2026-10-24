@@ -165,6 +165,7 @@ export const getDashboardSummaryQueryOptions = (search: DashboardSearch) =>
 export const getDashboardEmployeeOptionsQueryOptions = () =>
 	queryOptions({
 		staleTime: Infinity,
+		meta: { refreshOnMutation: true },
 		queryKey: dashboardKeys.employeeOptions(),
 		queryFn: getDashboardEmployeeOptionsFn,
 	});

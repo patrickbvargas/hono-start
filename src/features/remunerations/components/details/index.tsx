@@ -71,7 +71,7 @@ const RemunerationDetailsContent = ({
 			{ term: "Cliente", definition: remuneration.client },
 			{
 				term: "Competência",
-				definition: formatter.date(remuneration.paymentDate),
+				definition: formatter.calendarDate(remuneration.paymentDate),
 			},
 			{ term: "Valor", definition: formatter.currency(remuneration.amount) },
 			{

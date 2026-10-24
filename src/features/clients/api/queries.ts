@@ -95,4 +95,5 @@ export const getClientTypesQueryOptions = () =>
 		queryKey: clientKeys.types(),
 		queryFn: getClientTypesFn,
 		staleTime: Infinity,
+		meta: { refreshOnMutation: true },
 	});

@@ -72,7 +72,7 @@ function ExpenseDetailsContent({
 	const generalInfo = React.useMemo<DetailFieldItem[]>(
 		() => [
 			{ term: "Categoria", definition: expense.category },
-			{ term: "Data", definition: formatter.date(expense.expenseDate) },
+			{ term: "Data", definition: formatter.calendarDate(expense.expenseDate) },
 			{ term: "Valor", definition: formatter.currency(expense.amount) },
 		],
 		[expense],

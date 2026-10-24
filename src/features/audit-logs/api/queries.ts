@@ -128,6 +128,7 @@ export const getAuditLogActionsQueryOptions = () =>
 		queryKey: auditLogKeys.actions(),
 		queryFn: getAuditLogActionsFn,
 		staleTime: Infinity,
+		meta: { refreshOnMutation: true },
 	});
 
 export const getAuditLogEntityTypesQueryOptions = () =>
@@ -135,6 +136,7 @@ export const getAuditLogEntityTypesQueryOptions = () =>
 		queryKey: auditLogKeys.entityTypes(),
 		queryFn: getAuditLogEntityTypesFn,
 		staleTime: Infinity,
+		meta: { refreshOnMutation: true },
 	});
 
 export const getAuditLogActorsQueryOptions = () =>
@@ -142,4 +144,5 @@ export const getAuditLogActorsQueryOptions = () =>
 		queryKey: auditLogKeys.actors(),
 		queryFn: getAuditLogActorsFn,
 		staleTime: Infinity,
+		meta: { refreshOnMutation: true },
 	});

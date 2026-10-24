@@ -26,7 +26,7 @@ export function getExpenseReadColumns<T extends RowData>({
 		c.accessor(date, {
 			id: "expenseDate",
 			header: "Data",
-			cell: ({ getValue }) => formatter.date(getValue()),
+			cell: ({ getValue }) => formatter.calendarDate(getValue()),
 			enableSorting,
 		}),
 		c.accessor(amount, {

@@ -13,5 +13,9 @@ export async function refreshAuditedEntityQueries(
 	await Promise.all([
 		refreshEntityQueries(queryClient, queryKey),
 		refreshAuditLogQueries(queryClient),
+		// Selectable options are shared across forms and cached indefinitely.
+		queryClient.invalidateQueries({
+			predicate: (query) => query.meta?.refreshOnMutation === true,
+		}),
 	]);
 }

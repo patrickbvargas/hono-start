@@ -208,6 +208,7 @@ export const getContractLegalAreasQueryOptions = () =>
 		queryKey: contractKeys.legalAreas(),
 		queryFn: getContractLegalAreasFn,
 		staleTime: Infinity,
+		meta: { refreshOnMutation: true },
 	});
 
 export const getContractStatusesQueryOptions = () =>
@@ -215,6 +216,7 @@ export const getContractStatusesQueryOptions = () =>
 		queryKey: contractKeys.statuses(),
 		queryFn: getContractStatusesFn,
 		staleTime: Infinity,
+		meta: { refreshOnMutation: true },
 	});
 
 export const getContractAssignmentTypesQueryOptions = () =>
@@ -222,6 +224,7 @@ export const getContractAssignmentTypesQueryOptions = () =>
 		queryKey: contractKeys.assignmentTypes(),
 		queryFn: getContractAssignmentTypesFn,
 		staleTime: Infinity,
+		meta: { refreshOnMutation: true },
 	});
 
 export const getContractRevenueTypesQueryOptions = () =>
@@ -229,11 +232,13 @@ export const getContractRevenueTypesQueryOptions = () =>
 		queryKey: contractKeys.revenueTypes(),
 		queryFn: getContractRevenueTypesFn,
 		staleTime: Infinity,
+		meta: { refreshOnMutation: true },
 	});
 
 export const getSelectableContractClientsQueryOptions = () =>
 	queryOptions({
 		staleTime: Infinity,
+		meta: { refreshOnMutation: true },
 		queryKey: contractKeys.clientOptions(),
 		queryFn: getSelectableContractClientsFn,
 	});
@@ -241,6 +246,7 @@ export const getSelectableContractClientsQueryOptions = () =>
 export const getSelectableContractEmployeesQueryOptions = () =>
 	queryOptions({
 		staleTime: Infinity,
+		meta: { refreshOnMutation: true },
 		queryKey: contractKeys.employeeOptions(),
 		queryFn: getSelectableContractEmployeesFn,
 	});

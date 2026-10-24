@@ -34,7 +34,7 @@ export function getDashboardDrilldownColumns(
 		return [
 			c.accessor("date", {
 				header: "Data",
-				cell: ({ getValue }) => formatter.date(getValue()),
+				cell: ({ getValue }) => formatter.calendarDate(getValue()),
 				enableSorting: true,
 			}),
 			c.accessor("kind", { header: "Movimento", enableSorting: true }),
@@ -74,7 +74,7 @@ export function getDashboardDrilldownColumns(
 	return [
 		c.accessor("date", {
 			header: installment || planned ? "Vencimento" : "Data",
-			cell: ({ getValue }) => formatter.date(getValue()),
+			cell: ({ getValue }) => formatter.calendarDate(getValue()),
 			enableSorting: true,
 		}),
 		c.accessor("kind", { header: "Movimento", enableSorting: true }),

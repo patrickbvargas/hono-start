@@ -26,6 +26,9 @@ It is meant to survive domain changes as long as the project keeps the same UI a
 
 ## Form Rules
 
+- Numeric inputs use an explicit pt-BR locale independently of the OS/browser language. Money fields use a 0.01 step so blur preserves cents. Calendar selection closes its popover after updating the field. Business calendar dates use formatter.calendarDate to preserve their ISO date portion independently of timezone; creation/update timestamps retain formatter.date.
+- Selectable option query factories mark meta.refreshOnMutation as true. Audited mutations invalidate these selections as well as their entity and audit queries, so records created in one form become available in subsequent forms without reloading. Session queries retain their separate security cache policy.
+
 - Forms are built through the shared app-form pattern and then wrapped by feature-local hooks.
 - Feature form hooks are the canonical orchestration layer for create and edit behavior.
 - The feature form hook selects the active schema, submits the parsed payload to the feature mutation boundary, refreshes caches, drives toast feedback, and hydrates edit defaults from the detail query when needed.

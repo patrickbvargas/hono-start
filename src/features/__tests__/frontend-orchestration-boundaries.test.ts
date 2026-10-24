@@ -105,7 +105,11 @@ describe("frontend orchestration boundaries", () => {
 		const violations = multiOptionHooks.flatMap(({ hookFile, hookName }) => {
 			const content = readFileSync(hookFile, "utf8");
 			const hookStart = content.indexOf(`function ${hookName}`);
-			const hookContent = content.slice(hookStart);
+			const nextHookStart = content.indexOf("export function", hookStart + 1);
+			const hookContent =
+				nextHookStart === -1
+					? content.slice(hookStart)
+					: content.slice(hookStart, nextHookStart);
 			const separateSuspenseCalls = [
 				...hookContent.matchAll(/useSuspenseQuery\(/g),
 			];

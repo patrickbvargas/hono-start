@@ -31,7 +31,7 @@ export const ExpenseList = ({
 
 	const renderCardFields = React.useCallback(
 		(expense: ExpenseSummary): DetailFieldItem[] => [
-			{ term: "Data", definition: formatter.date(expense.expenseDate) },
+			{ term: "Data", definition: formatter.calendarDate(expense.expenseDate) },
 			{ term: "Valor", definition: formatter.currency(expense.amount) },
 			{
 				term: "Situação",

@@ -66,7 +66,7 @@ export const RemunerationTable = ({
 			}),
 			c.accessor("paymentDate", {
 				header: "Competência",
-				cell: ({ row }) => formatter.date(row.original.paymentDate),
+				cell: ({ row }) => formatter.calendarDate(row.original.paymentDate),
 				enableSorting:
 					REMUNERATION_ALLOWED_SORT_COLUMNS.includes("paymentDate"),
 			}),

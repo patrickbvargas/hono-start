@@ -34,18 +34,22 @@ function DatePicker({
 	const [open, setOpen] = React.useState(false);
 
 	return (
-		<DatePickerField
-			isDisabled={isDisabled}
-			isInvalid={isInvalid}
-			granularity={granularity}
-			shouldForceLeadingZeros={shouldForceLeadingZeros}
-			{...props}
-		>
-			<Group
-				aria-invalid={isInvalid}
-				className={cn(inputGroupVariants(), className)}
+		<I18nProvider locale="pt-BR-u-ca-gregory">
+			<DatePickerField
+				isDisabled={isDisabled}
+				isInvalid={isInvalid}
+				granularity={granularity}
+				shouldForceLeadingZeros={shouldForceLeadingZeros}
+				{...props}
+				onChange={(value) => {
+					props.onChange?.(value);
+					setOpen(false);
+				}}
 			>
-				<I18nProvider locale="pt-BR-u-ca-gregory">
+				<Group
+					aria-invalid={isInvalid}
+					className={cn(inputGroupVariants(), className)}
+				>
 					<DateInput
 						className={cn(
 							inputVariants(),
@@ -78,9 +82,9 @@ function DatePicker({
 							</PopoverContent>
 						</Popover>
 					</InputGroupAddon>
-				</I18nProvider>
-			</Group>
-		</DatePickerField>
+				</Group>
+			</DatePickerField>
+		</I18nProvider>
 	);
 }
 

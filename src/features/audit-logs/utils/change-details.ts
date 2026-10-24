@@ -265,6 +265,19 @@ function formatValue(key: string | undefined, value: unknown): string {
 			return LOOKUP_VALUE_LABELS[value];
 		}
 
+		if (
+			key &&
+			[
+				"paymentDate",
+				"paymentStartDate",
+				"expenseDate",
+				"dateFrom",
+				"dateTo",
+			].includes(key)
+		) {
+			return formatter.calendarDate(value);
+		}
+
 		if ((key && DATE_KEYS.has(key)) || looksLikeDate(value)) {
 			return formatter.date(value);
 		}

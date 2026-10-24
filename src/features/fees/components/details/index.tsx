@@ -70,7 +70,10 @@ const FeeDetailsContent = ({
 			{ term: "Processo", definition: fee.contractProcessNumber },
 			{ term: "Cliente", definition: fee.client },
 			{ term: "Receita", definition: fee.revenueType },
-			{ term: "Competência", definition: formatter.date(fee.paymentDate) },
+			{
+				term: "Competência",
+				definition: formatter.calendarDate(fee.paymentDate),
+			},
 			{ term: "Valor", definition: formatter.currency(fee.amount) },
 			{ term: "Nº da parcela", definition: String(fee.installmentNumber) },
 		],

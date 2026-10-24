@@ -96,7 +96,7 @@ function ExpenseFormFields({ form, state, title }: ExpenseFormFieldsProps) {
 							<field.Number
 								label="Valor"
 								minValue={0}
-								step={100}
+								step={0.01}
 								isRequired
 								formatOptions={{ style: "currency", currency: "BRL" }}
 							/>

@@ -33,7 +33,7 @@ export const FeeList = ({
 		(fee: FeeSummary): DetailFieldItem[] => [
 			{
 				term: "Competência",
-				definition: formatter.date(fee.paymentDate),
+				definition: formatter.calendarDate(fee.paymentDate),
 			},
 			{
 				term: "Valor",

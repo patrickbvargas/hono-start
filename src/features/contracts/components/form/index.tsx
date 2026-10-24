@@ -334,7 +334,7 @@ function ContractFormContent({
 														<field.Number
 															label="Valor total"
 															minValue={0}
-															step={100}
+															step={0.01}
 															isRequired
 															formatOptions={{
 																style: "currency",
@@ -350,7 +350,7 @@ function ContractFormContent({
 														<field.Number
 															label="Entrada"
 															minValue={0}
-															step={100}
+															step={0.01}
 															formatOptions={{
 																style: "currency",
 																currency: "BRL",

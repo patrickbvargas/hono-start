@@ -1,4 +1,11 @@
 export const formatter = {
+	calendarDate: (value: string | null) => {
+		if (!value) {
+			return "—";
+		}
+		const [year, month, day] = value.slice(0, 10).split("-");
+		return `${day}/${month}/${year}`;
+	},
 	phone: (value: string | null) => {
 		if (!value) {
 			return "—";

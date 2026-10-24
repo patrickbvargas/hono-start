@@ -137,7 +137,7 @@ function toExportRows(remunerations: Remuneration[]): RemunerationExportRow[] {
 		employee: remuneration.employeeName,
 		client: remuneration.client,
 		contract: remuneration.contractProcessNumber,
-		paymentDate: formatter.date(remuneration.paymentDate),
+		paymentDate: formatter.calendarDate(remuneration.paymentDate),
 		amount: formatter.currency(remuneration.amount),
 		amountValue: remuneration.amount,
 		effectivePercentage: formatter.percent(remuneration.effectivePercentage),

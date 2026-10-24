@@ -149,6 +149,7 @@ export const getFeeByIdQueryOptions = (id: number) =>
 export const getSelectableFeeContractsQueryOptions = () =>
 	queryOptions({
 		staleTime: Infinity,
+		meta: { refreshOnMutation: true },
 		queryKey: feeKeys.contractOptions(),
 		queryFn: getSelectableFeeContractsFn,
 	});
@@ -156,6 +157,7 @@ export const getSelectableFeeContractsQueryOptions = () =>
 export const getSelectableFeeRevenuesQueryOptions = (contractId = "") =>
 	queryOptions({
 		staleTime: Infinity,
+		meta: { refreshOnMutation: true },
 		queryKey: feeKeys.revenueOptions(contractId),
 		queryFn: () => getSelectableFeeRevenuesFn({ data: { contractId } }),
 	});
