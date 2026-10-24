@@ -11,7 +11,6 @@ import {
 } from "@/shared/components/entity-detail";
 import { EntityStatus } from "@/shared/components/entity-status";
 import { NavigationLink } from "@/shared/components/navigation-link";
-import { Button, DrawerClose } from "@/shared/components/ui";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
 import { hasPermission, useLoggedUserSession } from "@/shared/session";
@@ -84,6 +83,8 @@ const EmployeeDetailsContent = ({
 					hasPermission(session, "org:contracts:read_assigned") ? (
 						<NavigationLink
 							to="/contratos"
+							state={{ resetFilterPanel: true }}
+							aria-label={`Ver contratos de ${employee.fullName}`}
 							search={{
 								...contractSearchDefaults,
 								employeeId: String(id),
@@ -170,17 +171,7 @@ const EmployeeDetailsContent = ({
 					<EntityDetail.Fields columns={2} items={registerInfo} />
 				</EntityDetail.Section>
 			</EntityDetail.Body>
-			<EntityDetail.Footer>
-				<div className="flex w-full flex-col gap-2">
-					<DrawerClose
-						render={
-							<Button type="button" variant="outline" className="w-full" />
-						}
-					>
-						Fechar
-					</DrawerClose>
-				</div>
-			</EntityDetail.Footer>
+			<EntityDetail.Footer />
 		</EntityDetail.Content>
 	);
 };

@@ -5,6 +5,7 @@ import {
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
+	useSidebar,
 } from "@/shared/components/ui";
 import type { RouteSection } from "@/shared/config/routes";
 import { hasPermission, useLoggedUserSession } from "@/shared/session";
@@ -16,6 +17,7 @@ interface NavMainProps {
 
 export const NavMain = ({ items }: NavMainProps) => {
 	const location = useLocation();
+	const { setOpenMobile } = useSidebar();
 	const session = useLoggedUserSession();
 
 	return items.map((item) => {
@@ -41,7 +43,7 @@ export const NavMain = ({ items }: NavMainProps) => {
 								isActive={isSidebarRouteActive(location.pathname, subItem.url)}
 								tooltip={subItem.title}
 								render={
-									<Link to={subItem.url}>
+									<Link to={subItem.url} onClick={() => setOpenMobile(false)}>
 										{subItem.icon && <subItem.icon />}
 										<span className="group-data-[collapsible=icon]:hidden">
 											{subItem.title}

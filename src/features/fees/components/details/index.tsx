@@ -1,13 +1,11 @@
 import * as React from "react";
-import { clientSearchDefaults } from "@/features/clients";
-import { contractSearchDefaults } from "@/features/contracts";
+import { RelatedRecordLink } from "@/features/related-records";
 import { EntityActions } from "@/shared/components/entity-actions";
 import {
 	type DetailFieldItem,
 	EntityDetail,
 } from "@/shared/components/entity-detail";
 import { EntityStatus } from "@/shared/components/entity-status";
-import { NavigationLink } from "@/shared/components/navigation-link";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
 import { hasPermission, useLoggedUserSession } from "@/shared/session";
@@ -77,15 +75,9 @@ const FeeDetailsContent = ({
 				definition:
 					hasPermission(session, "org:contracts:read_all") ||
 					hasPermission(session, "org:contracts:read_assigned") ? (
-						<NavigationLink
-							to="/contratos"
-							search={{
-								...contractSearchDefaults,
-								query: fee.contractProcessNumber,
-							}}
-						>
+						<RelatedRecordLink kind="contract" id={fee.contractId}>
 							{fee.contractProcessNumber}
-						</NavigationLink>
+						</RelatedRecordLink>
 					) : (
 						fee.contractProcessNumber
 					),
@@ -93,12 +85,9 @@ const FeeDetailsContent = ({
 			{
 				term: "Cliente",
 				definition: hasPermission(session, "org:clients:read") ? (
-					<NavigationLink
-						to="/clientes"
-						search={{ ...clientSearchDefaults, query: fee.client }}
-					>
+					<RelatedRecordLink kind="client" id={fee.clientId}>
 						{fee.client}
-					</NavigationLink>
+					</RelatedRecordLink>
 				) : (
 					fee.client
 				),

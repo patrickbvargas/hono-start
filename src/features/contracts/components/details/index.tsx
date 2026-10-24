@@ -3,9 +3,8 @@ import {
 	AttachmentSection,
 	AttachmentSectionFallback,
 } from "@/features/attachments";
-import { clientSearchDefaults } from "@/features/clients";
-import { employeeSearchDefaults } from "@/features/employees";
 import { FeeForm, feeSearchDefaults } from "@/features/fees";
+import { RelatedRecordLink } from "@/features/related-records";
 import { EntityActions } from "@/shared/components/entity-actions";
 import {
 	type DetailFieldItem,
@@ -99,12 +98,9 @@ const ContractDetailsContent = ({
 			{
 				term: "Cliente",
 				definition: hasPermission(session, "org:clients:read") ? (
-					<NavigationLink
-						to="/clientes"
-						search={{ ...clientSearchDefaults, query: contract.client }}
-					>
+					<RelatedRecordLink kind="client" id={contract.clientId}>
 						{contract.client}
-					</NavigationLink>
+					</RelatedRecordLink>
 				) : (
 					contract.client
 				),
@@ -132,15 +128,9 @@ const ContractDetailsContent = ({
 			contract.assignments.map((assignment) => ({
 				term: assignment.assignmentType,
 				definition: hasPermission(session, "org:employees:read") ? (
-					<NavigationLink
-						to="/colaboradores"
-						search={{
-							...employeeSearchDefaults,
-							query: assignment.employeeName,
-						}}
-					>
+					<RelatedRecordLink kind="employee" id={assignment.employeeId}>
 						{assignment.employeeName}
-					</NavigationLink>
+					</RelatedRecordLink>
 				) : (
 					assignment.employeeName
 				),
@@ -262,6 +252,8 @@ const ContractDetailsContent = ({
 								{canReadFees ? (
 									<NavigationLink
 										to="/honorarios"
+										state={{ resetFilterPanel: true }}
+										aria-label={`Ver honorários da receita ${revenue.type}`}
 										search={{
 											...feeSearchDefaults,
 											contractId: String(id),

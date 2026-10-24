@@ -1,7 +1,7 @@
 import { ChevronDownIcon } from "lucide-react";
-import * as React from "react";
 import { ListFilters } from "@/shared/components/list-filters";
 import { Collapsible, CollapsibleContent } from "@/shared/components/ui";
+import { useFilterPanel } from "@/shared/hooks/use-filter-panel";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
 import { useAuditLogOptions } from "../../hooks/use-data";
 import { useAuditLogFilter } from "../../hooks/use-filter";
@@ -32,15 +32,7 @@ export const AuditLogFilter = () => {
 		filter.action.length > 0 ||
 		filter.entityType.length > 0 ||
 		filter.actorName.length > 0;
-	const [isDesktopPanelOpen, setIsDesktopPanelOpen] = React.useState(
-		filter.action.length > 0 || filter.actorName.length > 0,
-	);
-
-	React.useEffect(() => {
-		if (filter.action.length > 0 || filter.actorName.length > 0) {
-			setIsDesktopPanelOpen(true);
-		}
-	}, [filter.action.length, filter.actorName.length]);
+	const [isDesktopPanelOpen, setIsDesktopPanelOpen] = useFilterPanel();
 
 	const sharedFields = (
 		<>

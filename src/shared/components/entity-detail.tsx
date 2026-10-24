@@ -1,4 +1,5 @@
 import type * as React from "react";
+import { createContext, useContext } from "react";
 import {
 	type DetailFieldItem,
 	EntityFields,
@@ -26,33 +27,38 @@ interface SectionClassNames {
 	content?: string;
 }
 
+const DetailDepthContext = createContext(0);
+
 interface RootProps {
 	state: OverlayState;
 	children: React.ReactNode;
 }
 
 function Root({ state, children, ...props }: RootProps) {
+	const depth = useContext(DetailDepthContext);
 	const container =
 		typeof document === "undefined"
 			? null
 			: document.querySelector<HTMLElement>('[data-slot="root-container"]');
 
 	return (
-		<Drawer
-			open={state.isOpen}
-			onOpenChange={state.onOpenChange}
-			disablePointerDismissal
-			modal={false}
-			{...props}
-		>
-			<DrawerContent
-				container={container ?? undefined}
-				direction="right"
-				className="data-[direction=right]:w-full data-[direction=right]:sm:max-w-xl"
+		<DetailDepthContext value={depth + 1}>
+			<Drawer
+				open={state.isOpen}
+				onOpenChange={state.onOpenChange}
+				disablePointerDismissal
+				modal={false}
+				{...props}
 			>
-				{children}
-			</DrawerContent>
-		</Drawer>
+				<DrawerContent
+					container={container ?? undefined}
+					direction="right"
+					className="data-[direction=right]:w-full data-[direction=right]:sm:max-w-xl"
+				>
+					{children}
+				</DrawerContent>
+			</Drawer>
+		</DetailDepthContext>
 	);
 }
 
@@ -92,11 +98,12 @@ function Body({
 }
 
 function Footer({ children, ...props }: React.ComponentProps<"div">) {
+	const depth = useContext(DetailDepthContext);
 	return (
 		<DrawerFooter {...props}>
 			{children ?? (
 				<DrawerClose render={<Button variant="outline" className="w-full" />}>
-					Fechar
+					{depth > 1 ? "Voltar" : "Fechar"}
 				</DrawerClose>
 			)}
 		</DrawerFooter>
@@ -119,6 +126,7 @@ function SkeletonHeader({ withActions = false }: SkeletonHeaderProps) {
 			}
 		>
 			<Title>
+				<span className="sr-only">Carregando detalhes</span>
 				<SkeletonTitle />
 			</Title>
 			{withActions ? <Skeleton className="size-7 shrink-0" /> : null}

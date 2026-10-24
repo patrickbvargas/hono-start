@@ -1,7 +1,7 @@
 import { ChevronDownIcon } from "lucide-react";
-import * as React from "react";
 import { ListFilters } from "@/shared/components/list-filters";
 import { Collapsible, CollapsibleContent } from "@/shared/components/ui";
+import { useFilterPanel } from "@/shared/hooks/use-filter-panel";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
 import {
 	ENTITY_ACTIVE_FILTER_OPTIONS,
@@ -36,19 +36,8 @@ export const EmployeeFilter = () => {
 		filter.type.length > 0 ||
 		filter.active !== defaultFilter.active ||
 		filter.status !== defaultFilter.status;
-	const hasDesktopPanelFilters =
-		filter.active !== defaultFilter.active ||
-		filter.status !== defaultFilter.status;
 
-	const [isDesktopPanelOpen, setIsDesktopPanelOpen] = React.useState(
-		hasDesktopPanelFilters,
-	);
-
-	React.useEffect(() => {
-		if (hasDesktopPanelFilters) {
-			setIsDesktopPanelOpen(true);
-		}
-	}, [hasDesktopPanelFilters]);
+	const [isDesktopPanelOpen, setIsDesktopPanelOpen] = useFilterPanel();
 
 	const sharedFields = (
 		<>

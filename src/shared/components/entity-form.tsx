@@ -77,19 +77,24 @@ const EntityFormContent = ({
 					state.onOpenChange(open);
 				}}
 			>
-				<DialogContent className={cn("sm:max-w-lg", contentClassName)}>
-					<DialogHeader>
+				<DialogContent
+					className={cn(
+						"flex max-h-[calc(100dvh-2rem)] flex-col sm:max-w-lg",
+						contentClassName,
+					)}
+				>
+					<DialogHeader className="shrink-0 pr-8">
 						<DialogTitle>{title}</DialogTitle>
 					</DialogHeader>
 					<DialogBody
 						className={cn(
-							"flex flex-col gap-5 -mx-4 no-scrollbar max-h-[80dvh] overflow-y-auto px-4 py-2",
+							"flex min-h-0 flex-1 flex-col gap-5 -mx-4 no-scrollbar max-h-[80dvh] overflow-y-auto px-4 py-2",
 							bodyClassName,
 						)}
 					>
 						{children}
 					</DialogBody>
-					{footer && <DialogFooter>{footer}</DialogFooter>}
+					{footer && <DialogFooter className="shrink-0">{footer}</DialogFooter>}
 				</DialogContent>
 			</Dialog>
 			<AlertDialog open={confirmDiscard} onOpenChange={setConfirmDiscard}>

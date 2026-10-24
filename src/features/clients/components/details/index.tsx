@@ -84,6 +84,8 @@ const ClientDetailsContent = ({
 					hasPermission(session, "org:contracts:read_assigned") ? (
 						<NavigationLink
 							to="/contratos"
+							state={{ resetFilterPanel: true }}
+							aria-label={`Ver contratos de ${client.fullName}`}
 							search={{
 								...contractSearchDefaults,
 								clientId: String(client.id),

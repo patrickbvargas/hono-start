@@ -64,7 +64,7 @@ function createRemunerationRow() {
 			employee: { fullName: "Maria Silva" },
 			contract: {
 				processNumber: "PROC-001",
-				client: { fullName: "Cliente A" },
+				client: { id: 41, fullName: "Cliente A" },
 			},
 		},
 		fee: {
@@ -93,7 +93,7 @@ describe("remuneration data queries", () => {
 			{
 				id: 55,
 				processNumber: "PROC-001",
-				client: { fullName: "Cliente A" },
+				client: { id: 41, fullName: "Cliente A" },
 			},
 		]);
 		prismaMock.employee.findMany.mockResolvedValue([
@@ -176,6 +176,7 @@ describe("remuneration data queries", () => {
 			expect.objectContaining({
 				employeeId: 10,
 				employeeName: "Maria Silva",
+				clientId: 41,
 				contractId: 55,
 				isManualOverride: false,
 			}),

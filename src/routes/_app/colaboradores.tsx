@@ -22,8 +22,8 @@ import {
 	WrapperHeader,
 } from "@/shared/components/wrapper";
 import { getPageTitle, ROUTES } from "@/shared/config/routes";
-import { useOverlay } from "@/shared/hooks/use-overlay";
-import type { EntityId } from "@/shared/schemas/entity";
+import { useEntityOverlay } from "@/shared/hooks/use-entity-overlay";
+import { entityDetailSearchSchema } from "@/shared/schemas/entity-detail-search";
 import {
 	assertCan,
 	hasPermission,
@@ -34,11 +34,11 @@ export const Route = createFileRoute("/_app/colaboradores")({
 	head: () => ({
 		meta: [{ title: getPageTitle(ROUTES.employee.title) }],
 	}),
-	validateSearch: employeeSearchSchema,
+	validateSearch: employeeSearchSchema.extend(entityDetailSearchSchema.shape),
 	search: {
 		middlewares: [stripSearchParams(employeeSearchDefaults)],
 	},
-	loaderDeps: ({ search }) => ({ search }),
+	loaderDeps: ({ search: { detailId: _detailId, ...search } }) => ({ search }),
 	loader: async ({ context: { queryClient, session }, deps: { search } }) => {
 		assertCan(session, "org:employees:read");
 		await Promise.all([
@@ -53,9 +53,15 @@ export const Route = createFileRoute("/_app/colaboradores")({
 });
 
 function RouteComponent() {
-	const search = Route.useSearch();
+	const { detailId, ...search } = Route.useSearch();
+	const navigate = Route.useNavigate();
 	const { employees } = useEmployees(search);
-	const { overlay } = useOverlay<EntityId>();
+	const { overlay } = useEntityOverlay(detailId, (id) => {
+		void navigate({
+			search: (previous) => ({ ...previous, detailId: id }),
+			replace: id === undefined,
+		});
+	});
 	const session = useLoggedUserSession();
 	const canManage = hasPermission(session, "org:employees:read");
 

@@ -5,6 +5,7 @@ export const feeDetailSchema = entityIdSchema.safeExtend({
 	contractId: z.number(),
 	contractProcessNumber: z.string(),
 	client: z.string(),
+	clientId: z.number().int().positive(),
 	contractStatusValue: z.string(),
 	revenueId: z.number(),
 	revenueType: z.string(),

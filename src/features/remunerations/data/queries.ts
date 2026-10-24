@@ -142,6 +142,7 @@ export const remunerationListInclude = {
 					processNumber: true,
 					client: {
 						select: {
+							id: true,
 							fullName: true,
 						},
 					},
@@ -181,6 +182,7 @@ export async function mapRemunerations(
 			contract: {
 				processNumber: string;
 				client: {
+					id: number;
 					fullName: string;
 				};
 			};
@@ -200,6 +202,7 @@ export async function mapRemunerations(
 			employeeId: remuneration.contractEmployee.employeeId,
 			employeeName: remuneration.contractEmployee.employee.fullName,
 			client: remuneration.contractEmployee.contract.client.fullName,
+			clientId: remuneration.contractEmployee.contract.client.id,
 			contractId: remuneration.contractEmployee.contractId,
 			contractProcessNumber:
 				remuneration.contractEmployee.contract.processNumber,

@@ -2,19 +2,38 @@
 
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { UserIcon } from "lucide-react";
 import type { ReactNode } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
+const { setOpenMobile } = vi.hoisted(() => ({ setOpenMobile: vi.fn() }));
+
 vi.mock("@tanstack/react-router", () => ({
-	Link: ({ children, to }: { children: ReactNode; to: string }) => (
-		<a href={to}>{children}</a>
+	Link: ({
+		children,
+		to,
+		onClick,
+	}: {
+		children: ReactNode;
+		to: string;
+		onClick?: () => void;
+	}) => (
+		<a
+			href={to}
+			onClick={(event) => {
+				event.preventDefault();
+				onClick?.();
+			}}
+		>
+			{children}
+		</a>
 	),
 	useLocation: () => ({ pathname: "/clientes" }),
 }));
 
 vi.mock("@/shared/components/ui", () => ({
+	useSidebar: () => ({ setOpenMobile }),
 	SidebarGroup: ({
 		children,
 		className,
@@ -171,5 +190,21 @@ describe("app sidebar collapse behavior", () => {
 
 		expect(screen.queryByText("Outro")).toBeNull();
 		expect(screen.queryByTestId("sidebar-group")).toBeNull();
+	});
+	it("closes the mobile menu when a destination is selected", () => {
+		setOpenMobile.mockClear();
+		render(
+			<NavMain
+				items={[
+					{
+						title: "Geral",
+						url: "#",
+						items: [{ title: "Clientes", url: "/clientes", icon: UserIcon }],
+					},
+				]}
+			/>,
+		);
+		fireEvent.click(screen.getByRole("link", { name: "Clientes" }));
+		expect(setOpenMobile).toHaveBeenCalledExactlyOnceWith(false);
 	});
 });

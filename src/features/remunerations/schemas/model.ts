@@ -6,6 +6,7 @@ export const remunerationSchema = entityIdSchema.safeExtend({
 	employeeId: z.number(),
 	employeeName: z.string(),
 	client: z.string(),
+	clientId: z.number().int().positive(),
 	contractId: z.number(),
 	contractProcessNumber: z.string(),
 	feeId: z.number(),

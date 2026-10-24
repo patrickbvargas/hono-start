@@ -49,7 +49,7 @@ It is meant to survive domain changes as long as the project keeps the same UI a
 - Feature routes with filters must render the filter in the header and the table in the body.
 - Overlay state for create, edit, details, delete, and restore must use the shared overlay pattern rather than ad hoc modal state.
 - Entity routes must preserve list context while overlays are open.
-- The canonical overlay composition is: route-level `useOverlay`, create and edit form modals, delete and restore confirmations, and a details drawer rendered from the route body.
+- The canonical overlay composition is: route-level `useEntityOverlay` (delegating local mutation scopes to `useOverlay`), create and edit form modals, delete and restore confirmations, and a details drawer rendered from the route body.
 - `useOverlay` state is route-local to the hook instance, exposes named `create`, `edit`, `details`, `delete`, and `restore` scopes, opens `create` without entity data, and opens `edit`, `details`, `delete`, and `restore` with selected entity data.
 - Multiple overlay scopes from the same `useOverlay` instance may remain open at the same time when the route composition intentionally renders them together, and closing one scope must not implicitly close another.
 - Overlay render callbacks are the canonical bridge from route composition to shared modal, confirmation, and drawer wrappers through `OverlayState`.
@@ -157,3 +157,15 @@ The shared DataTable optionally accepts pageSize for native TanStack pagination 
 Table cell actions use the shared TableButton, including dashboard drilldowns and entity triggers. Financial filtered totals stay on one line. Pagination retains page-size selection and navigation on a single page. Detail skeleton grids match their loaded fields. Attachment details expose filename, metadata and actions together. KPI comparison badges use green/red as explicitly requested; this is the intentional exception to semantic-only theme colors.
 
 Shared NavigationLink preserves TanStack Router link typing and adds a decorative navigation icon. Feature filters accept an optional summary slot in their primary bar; advanced panels must not determine the vertical position of filtered totals.
+
+Entity routes extend their feature list search schema with shared entityDetailSearchSchema. Optional positive integer detailId selects the details drawer through useEntityOverlay; create/edit/delete/restore retain useOverlay state. Exclude detailId from list loader dependencies and list query keys. Related-record triggers use RelatedRecordLink with persisted IDs and local overlays, retaining the current route and origin drawer. Collection links still navigate to filtered lists. Closing a route-selected detail clears only detailId with replace navigation, preserving its filters. Closing a contextual related detail closes only its local overlay. Details selected from lists also use this URL state, supporting browser Back and reload.
+
+Advanced filter panels initialize closed and do not auto-expand in response to active URL filters. Filter chips remain visible while the panel is collapsed.
+
+Collection NavigationLink destinations carry resetFilterPanel in history state. Shared useFilterPanel collapses on each marked navigation key, including navigation within the same mounted route, and preserves manual expansion during ordinary filter edits and detail open/close. Contextual detail buttons expose aria-haspopup=dialog and aria-expanded; collection count links have descriptive accessible names.
+
+RelatedRecordLink loads its lazy detail composition and entity data only when opened. Hover and focus do not prefetch modules, entity data or attachment metadata. Normal Suspense skeletons and existing query cache behavior remain in effect.
+
+Overlay portals maintain explicit stacking: drawers use the existing z-50 layer, dialog portals establish z-60 and alert-dialog portals z-70 so editing and discard confirmations remain above related drawers. EntityForm uses a flex column bounded by calc(100dvh - 2rem), with a shrinkable, internally scrolling body and fixed header/footer space. Validate geometry and hit testing in a real browser at narrow and short viewports; jsdom does not calculate stacking or viewport layout.
+
+The mobile sidebar closes when selecting a navigation destination, including the home logo and the current route. Its dialog title and description are in pt-BR.

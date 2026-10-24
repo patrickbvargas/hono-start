@@ -22,19 +22,19 @@ import {
 	WrapperHeader,
 } from "@/shared/components/wrapper";
 import { getPageTitle, ROUTES } from "@/shared/config/routes";
-import { useOverlay } from "@/shared/hooks/use-overlay";
-import type { EntityId } from "@/shared/schemas/entity";
+import { useEntityOverlay } from "@/shared/hooks/use-entity-overlay";
+import { entityDetailSearchSchema } from "@/shared/schemas/entity-detail-search";
 import { hasPermission, useLoggedUserSession } from "@/shared/session";
 
 export const Route = createFileRoute("/_app/clientes")({
 	head: () => ({
 		meta: [{ title: getPageTitle(ROUTES.client.title) }],
 	}),
-	validateSearch: clientSearchSchema,
+	validateSearch: clientSearchSchema.extend(entityDetailSearchSchema.shape),
 	search: {
 		middlewares: [stripSearchParams(clientSearchDefaults)],
 	},
-	loaderDeps: ({ search }) => ({ search }),
+	loaderDeps: ({ search: { detailId: _detailId, ...search } }) => ({ search }),
 	loader: async ({ context: { queryClient }, deps: { search } }) => {
 		await Promise.all([
 			queryClient.query(getClientsQueryOptions(search)),
@@ -48,9 +48,15 @@ export const Route = createFileRoute("/_app/clientes")({
 });
 
 function RouteComponent() {
-	const search = Route.useSearch();
+	const { detailId, ...search } = Route.useSearch();
+	const navigate = Route.useNavigate();
 	const { clients } = useClients(search);
-	const { overlay } = useOverlay<EntityId>();
+	const { overlay } = useEntityOverlay(detailId, (id) => {
+		void navigate({
+			search: (previous) => ({ ...previous, detailId: id }),
+			replace: id === undefined,
+		});
+	});
 	const session = useLoggedUserSession();
 	const isAdmin =
 		hasPermission(session, "org:clients:delete") ||

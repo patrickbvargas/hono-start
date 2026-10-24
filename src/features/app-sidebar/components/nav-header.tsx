@@ -4,10 +4,12 @@ import {
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
+	useSidebar,
 } from "@/shared/components/ui";
 import { ROUTES } from "@/shared/config/routes";
 
 export const NavHeader = () => {
+	const { setOpenMobile } = useSidebar();
 	return (
 		<SidebarMenu>
 			<SidebarMenuItem>
@@ -15,7 +17,10 @@ export const NavHeader = () => {
 					size="lg"
 					className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
 					render={
-						<Link to={ROUTES.dashboard.url}>
+						<Link
+							to={ROUTES.dashboard.url}
+							onClick={() => setOpenMobile(false)}
+						>
 							<div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
 								<BoxIcon size={16} />
 							</div>

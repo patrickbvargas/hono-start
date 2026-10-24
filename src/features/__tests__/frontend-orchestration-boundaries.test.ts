@@ -563,6 +563,7 @@ describe("frontend orchestration boundaries", () => {
 			"src/routes/_app/contratos.tsx",
 			"src/routes/_app/honorarios.tsx",
 			"src/routes/_app/remuneracoes.tsx",
+			"src/routes/_app/despesas.tsx",
 		];
 		const violations = routeFiles.flatMap((path) => {
 			const content = readFileSync(path, "utf8");
@@ -576,7 +577,7 @@ describe("frontend orchestration boundaries", () => {
 					message: "route loader does not prefetch query data",
 				},
 				{
-					passes: content.includes("useOverlay<"),
+					passes: content.includes("useEntityOverlay(detailId,"),
 					message: "route does not use shared overlay orchestration",
 				},
 				{

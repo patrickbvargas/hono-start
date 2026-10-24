@@ -102,6 +102,7 @@ const contractRevenue = {
 };
 
 const feeDetail = {
+	clientId: 1,
 	id: 6,
 	contractId: 3,
 	contractProcessNumber: "0001234-56.2026.8.26.0001",
@@ -122,6 +123,7 @@ const feeDetail = {
 };
 
 const remuneration = {
+	clientId: 1,
 	id: 7,
 	contractEmployeeId: 4,
 	employeeId: 2,

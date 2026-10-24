@@ -12,6 +12,7 @@ describe("fee edit options", () => {
 			contractId: 11,
 			contractProcessNumber: "PROC-11",
 			client: "Cliente legado",
+			clientId: 1,
 			contractStatusValue: "COMPLETED",
 			revenueId: 19,
 			revenueType: "Mensalidade",

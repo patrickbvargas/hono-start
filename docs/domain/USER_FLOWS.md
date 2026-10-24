@@ -89,3 +89,11 @@ This file preserves the canonical user workflows of the product. These flows des
 3. The system removes the attachment record.
 4. On success, the attachment no longer appears in the list.
 5. On failure, the system keeps the record unchanged and shows a clear pt-BR error.
+
+## Navigate Related Records
+
+- Singular entity triggers open the target record's details drawer by ID over the current screen, without route navigation, a name search or intermediate row selection. This applies to clients, employees, contracts and source fees.
+- Collection links (contracts for a client/employee, fees for a revenue) keep opening the filtered list.
+- Related drawers label their dismiss action Voltar; the main detail keeps Fechar. Related triggers have no navigation icon. Closing the related drawer reveals the origin details with the original list, filters and scroll context intact. Related details retain edit/delete/restore actions when authorized. Read permissions and server resource checks remain enforced.
+
+- Advanced filter panels start closed, including when navigation supplies active filters. Applied filters remain visible as chips; users expand Mais filtros manually.

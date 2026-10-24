@@ -1,15 +1,11 @@
 import * as React from "react";
-import { clientSearchDefaults } from "@/features/clients";
-import { contractSearchDefaults } from "@/features/contracts";
-import { employeeSearchDefaults } from "@/features/employees";
-import { feeSearchDefaults } from "@/features/fees";
+import { RelatedRecordLink } from "@/features/related-records";
 import { EntityActions } from "@/shared/components/entity-actions";
 import {
 	type DetailFieldItem,
 	EntityDetail,
 } from "@/shared/components/entity-detail";
 import { EntityStatus } from "@/shared/components/entity-status";
-import { NavigationLink } from "@/shared/components/navigation-link";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
 import { hasPermission, useLoggedUserSession } from "@/shared/session";
@@ -76,15 +72,9 @@ const RemunerationDetailsContent = ({
 			{
 				term: "Colaborador",
 				definition: hasPermission(session, "org:employees:read") ? (
-					<NavigationLink
-						to="/colaboradores"
-						search={{
-							...employeeSearchDefaults,
-							query: remuneration.employeeName,
-						}}
-					>
+					<RelatedRecordLink kind="employee" id={remuneration.employeeId}>
 						{remuneration.employeeName}
-					</NavigationLink>
+					</RelatedRecordLink>
 				) : (
 					remuneration.employeeName
 				),
@@ -94,15 +84,9 @@ const RemunerationDetailsContent = ({
 				definition:
 					hasPermission(session, "org:contracts:read_all") ||
 					hasPermission(session, "org:contracts:read_assigned") ? (
-						<NavigationLink
-							to="/contratos"
-							search={{
-								...contractSearchDefaults,
-								query: remuneration.contractProcessNumber,
-							}}
-						>
+						<RelatedRecordLink kind="contract" id={remuneration.contractId}>
 							{remuneration.contractProcessNumber}
-						</NavigationLink>
+						</RelatedRecordLink>
 					) : (
 						remuneration.contractProcessNumber
 					),
@@ -110,12 +94,9 @@ const RemunerationDetailsContent = ({
 			{
 				term: "Cliente",
 				definition: hasPermission(session, "org:clients:read") ? (
-					<NavigationLink
-						to="/clientes"
-						search={{ ...clientSearchDefaults, query: remuneration.client }}
-					>
+					<RelatedRecordLink kind="client" id={remuneration.clientId}>
 						{remuneration.client}
-					</NavigationLink>
+					</RelatedRecordLink>
 				) : (
 					remuneration.client
 				),
@@ -140,16 +121,10 @@ const RemunerationDetailsContent = ({
 				definition:
 					hasPermission(session, "org:fees:read_all") ||
 					hasPermission(session, "org:fees:read_assigned") ? (
-						<NavigationLink
-							to="/honorarios"
-							search={{
-								...feeSearchDefaults,
-								contractId: String(remuneration.contractId),
-							}}
-						>
+						<RelatedRecordLink kind="fee" id={remuneration.feeId}>
 							Honorário #{remuneration.feeId} · parcela{" "}
 							{remuneration.feeInstallmentNumber}
-						</NavigationLink>
+						</RelatedRecordLink>
 					) : (
 						String(remuneration.feeId)
 					),

@@ -195,7 +195,7 @@ function mapFeeSummaries(
 				id: number;
 				processNumber: string;
 				status: { value: string };
-				client: { fullName: string };
+				client: { id: number; fullName: string };
 			};
 		};
 	}>,
@@ -206,6 +206,7 @@ function mapFeeSummaries(
 			contractId: fee.revenue.contract.id,
 			contractProcessNumber: fee.revenue.contract.processNumber,
 			client: fee.revenue.contract.client.fullName,
+			clientId: fee.revenue.contract.client.id,
 			contractStatusValue: fee.revenue.contract.status.value,
 			revenueId: fee.revenue.id,
 			revenueType: fee.revenue.type.label,
@@ -258,6 +259,7 @@ const feeInclude = {
 					},
 					client: {
 						select: {
+							id: true,
 							fullName: true,
 						},
 					},

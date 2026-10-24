@@ -28,6 +28,7 @@ describe("NavigationLink", () => {
 			component: () => (
 				<NavigationLink
 					to="/clientes"
+					state={{ resetFilterPanel: true }}
 					search={{
 						page: 1,
 						limit: 25,
@@ -63,5 +64,6 @@ describe("NavigationLink", () => {
 		});
 		expect(await screen.findByText("Listagem de clientes")).toBeTruthy();
 		expect(router.state.location.search).toHaveProperty("query", "Ana");
+		expect(router.state.location.state.resetFilterPanel).toBe(true);
 	});
 });

@@ -105,4 +105,44 @@ describe("EntityDetail", () => {
 		expect(screen.getByText("Drawer aberto")).not.toBeNull();
 		expect(onOpenChange).not.toHaveBeenCalledWith(false);
 	});
+	it("labels nested details Voltar and dismisses only the related drawer", () => {
+		const parentChange = vi.fn();
+		const childChange = vi.fn();
+		render(
+			<EntityDetail.Root state={{ ...OPEN_STATE, onOpenChange: parentChange }}>
+				<EntityDetail.Content>
+					<EntityDetail.Header>
+						<EntityDetail.Title>Contrato de origem</EntityDetail.Title>
+					</EntityDetail.Header>
+					<EntityDetail.Footer />
+					<EntityDetail.Root
+						state={{ ...OPEN_STATE, onOpenChange: childChange }}
+					>
+						<EntityDetail.Content>
+							<EntityDetail.Header>
+								<EntityDetail.Title>Cliente relacionado</EntityDetail.Title>
+							</EntityDetail.Header>
+							<EntityDetail.Footer />
+						</EntityDetail.Content>
+					</EntityDetail.Root>
+				</EntityDetail.Content>
+			</EntityDetail.Root>,
+		);
+		fireEvent.click(screen.getByRole("button", { name: "Voltar" }));
+		expect(childChange).toHaveBeenCalledWith(false, expect.anything());
+		expect(parentChange).not.toHaveBeenCalled();
+	});
+	it("names the detail drawer while loading", () => {
+		render(
+			<EntityDetail.Root state={OPEN_STATE}>
+				<EntityDetail.Content>
+					<EntityDetail.SkeletonHeader />
+					<EntityDetail.Footer />
+				</EntityDetail.Content>
+			</EntityDetail.Root>,
+		);
+		expect(
+			screen.getByRole("dialog", { name: "Carregando detalhes" }),
+		).toBeTruthy();
+	});
 });

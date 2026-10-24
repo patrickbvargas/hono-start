@@ -182,3 +182,5 @@ Clerk-owned SignIn and account widgets may be imported by authentication feature
 ## HTTP endpoint exception
 
 Feature barrels may re-export server-only entrypoints required by HTTP routes (attachment delivery and Clerk webhooks). Their implementation belongs in feature `api/` modules, not in the barrel. Authorization helpers depending on persisted-resource types also belong in `api/`; pure `rules/` modules must not import `data/`.
+
+The related-records feature composes existing public client/employee/contract/fee detail and mutation components for contextual inspection. It owns no data API: existing entity hooks, permissions and server boundaries remain authoritative. Its public RelatedRecordLink uses local useOverlay and lazy-loads the composition on demand, avoiding an eager dependency cycle with entity detail components.

@@ -36,7 +36,7 @@ function createFeeRow() {
 				id: 5,
 				processNumber: "PROC-001",
 				status: { value: "ACTIVE" },
-				client: { fullName: "Cliente A" },
+				client: { id: 41, fullName: "Cliente A" },
 			},
 		},
 	};
@@ -123,6 +123,7 @@ describe("fee data queries", () => {
 			expect.objectContaining({
 				id: 7,
 				contractProcessNumber: "PROC-001",
+				clientId: 41,
 			}),
 		]);
 	});
@@ -142,6 +143,7 @@ describe("fee data queries", () => {
 			expect.objectContaining({
 				id: 7,
 				contractProcessNumber: "PROC-001",
+				clientId: 41,
 			}),
 		);
 		expect(prismaMock.fee.findFirst).toHaveBeenCalledWith(
