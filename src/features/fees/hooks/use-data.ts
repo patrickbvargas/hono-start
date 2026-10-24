@@ -1,4 +1,8 @@
-import { useSuspenseQueries, useSuspenseQuery } from "@tanstack/react-query";
+import {
+	useQuery,
+	useSuspenseQueries,
+	useSuspenseQuery,
+} from "@tanstack/react-query";
 import type { EntityId } from "@/shared/schemas/entity";
 import {
 	getFeeByIdQueryOptions,
@@ -43,5 +47,33 @@ export function useFeeOptions({
 	return {
 		contracts: mergeLegacyFeeOption(contracts, currentContract),
 		revenues: mergeLegacyFeeOption(revenues, currentRevenue),
+	};
+}
+
+export function useFeeFormOptions({
+	contractId = "",
+	currentContract,
+	currentRevenue,
+}: UseFeeOptionsParams = {}) {
+	const { data: contracts } = useSuspenseQuery(
+		getSelectableFeeContractsQueryOptions(),
+	);
+	const {
+		data: revenues = [],
+		isPending,
+		error,
+	} = useQuery({
+		...getSelectableFeeRevenuesQueryOptions(contractId),
+		enabled: !!contractId,
+	});
+
+	if (error) {
+		throw error;
+	}
+
+	return {
+		contracts: mergeLegacyFeeOption(contracts, currentContract),
+		revenues: mergeLegacyFeeOption(revenues, currentRevenue),
+		isLoadingRevenues: !!contractId && isPending,
 	};
 }

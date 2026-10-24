@@ -2,6 +2,8 @@
 
 ## Core Invariants
 
+- Write forms enforce text length limits both in editable fields and server input schemas: names 255 characters, email 254, process number 100, notes 5,000, OAB 8, CPF/CNPJ up to 18 with mask, Brazilian phone up to 15 with mask, and attachment filenames 255. Masked documents and phones are normalized after length validation. These are application limits; PostgreSQL text columns remain unchanged. Existing records are not truncated.
+
 - Every business record belongs to its business firm; Matriz is the current default unit. Firm is independent of authentication.
 - Soft delete and active/inactive status are independent concerns.
 - Lookup-backed selections use stable lookup `value` semantics, not environment-specific IDs.

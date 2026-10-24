@@ -15,6 +15,7 @@ import {
 	FieldGroup,
 	Skeleton,
 } from "@/shared/components/ui";
+import { TEXT_LIMITS } from "@/shared/constants/text-limits";
 import type { EntityId } from "@/shared/schemas/entity";
 import { hasPermission, useLoggedUserSession } from "@/shared/session";
 import type { OverlayState } from "@/shared/types/overlay";
@@ -146,7 +147,13 @@ function ContractFormContent({
 					</FieldGroup>
 					<FieldGroup className="grid gap-5 sm:grid-cols-2">
 						<form.AppField name="processNumber">
-							{(field) => <field.Input label="Processo" isRequired />}
+							{(field) => (
+								<field.Input
+									label="Processo"
+									maxLength={TEXT_LIMITS.processNumber}
+									isRequired
+								/>
+							)}
 						</form.AppField>
 						<form.AppField name="legalArea">
 							{(field) => (
@@ -181,7 +188,12 @@ function ContractFormContent({
 					</FieldGroup>
 					<FieldGroup>
 						<form.AppField name="notes">
-							{(field) => <field.Textarea label="Observações" />}
+							{(field) => (
+								<field.Textarea
+									label="Observações"
+									maxLength={TEXT_LIMITS.notes}
+								/>
+							)}
 						</form.AppField>
 					</FieldGroup>
 					<FieldGroup className="grid gap-5 sm:grid-cols-2">

@@ -5,6 +5,7 @@ import {
 	PlusIcon,
 	UserIcon,
 	UsersIcon,
+	WalletCardsIcon,
 } from "lucide-react";
 import { ClientForm, getClientTypesQueryOptions } from "@/features/clients";
 import {
@@ -32,6 +33,10 @@ import {
 	EmployeeForm,
 	getEmployeeTypesQueryOptions,
 } from "@/features/employees";
+import {
+	ExpenseForm,
+	getExpenseCategoriesQueryOptions,
+} from "@/features/expenses";
 import {
 	FeeForm,
 	getSelectableFeeContractsQueryOptions,
@@ -110,6 +115,9 @@ export const Route = createFileRoute("/_app/")({
 		if (hasPermission(session, "org:employees:create")) {
 			await Promise.all([queryClient.query(getEmployeeTypesQueryOptions())]);
 		}
+		if (hasPermission(session, "org:expenses:create")) {
+			await queryClient.query(getExpenseCategoriesQueryOptions());
+		}
 
 		await Promise.all(prefetches);
 	},
@@ -128,51 +136,71 @@ function RouteComponent() {
 	const contractOverlay = useOverlay<EntityId>();
 	const feeOverlay = useOverlay<EntityId>();
 	const employeeOverlay = useOverlay<EntityId>();
+	const expenseOverlay = useOverlay<EntityId>();
+	const canCreate = (
+		[
+			"org:clients:create",
+			"org:contracts:create",
+			"org:employees:create",
+			"org:fees:create",
+			"org:expenses:create",
+		] as const
+	).some((permission) => hasPermission(session, permission));
 
 	return (
 		<Wrapper
 			title={ROUTES.dashboard.title}
 			actions={
-				<DropdownMenu>
-					<DropdownMenuTrigger render={<Button />}>
-						<PlusIcon size={16} />
-						Novo
-					</DropdownMenuTrigger>
-					<DropdownMenuContent align="end">
-						{hasPermission(session, "org:clients:create") ? (
-							<DropdownMenuItem
-								onClick={() => clientOverlay.overlay.create.open()}
-							>
-								<UserIcon size={16} />
-								Cliente
-							</DropdownMenuItem>
-						) : null}
-						{hasPermission(session, "org:contracts:create") ? (
-							<DropdownMenuItem
-								onClick={() => contractOverlay.overlay.create.open()}
-							>
-								<BriefcaseIcon size={16} />
-								Contrato
-							</DropdownMenuItem>
-						) : null}
-						{hasPermission(session, "org:fees:create") ? (
-							<DropdownMenuItem
-								onClick={() => feeOverlay.overlay.create.open()}
-							>
-								<DollarSignIcon size={16} />
-								Honorário
-							</DropdownMenuItem>
-						) : null}
-						{hasPermission(session, "org:employees:create") ? (
-							<DropdownMenuItem
-								onClick={() => employeeOverlay.overlay.create.open()}
-							>
-								<UsersIcon size={16} />
-								Colaborador
-							</DropdownMenuItem>
-						) : null}
-					</DropdownMenuContent>
-				</DropdownMenu>
+				canCreate ? (
+					<DropdownMenu>
+						<DropdownMenuTrigger render={<Button />}>
+							<PlusIcon size={16} />
+							Novo
+						</DropdownMenuTrigger>
+						<DropdownMenuContent align="end">
+							{hasPermission(session, "org:clients:create") ? (
+								<DropdownMenuItem
+									onClick={() => clientOverlay.overlay.create.open()}
+								>
+									<UserIcon size={16} />
+									Cliente
+								</DropdownMenuItem>
+							) : null}
+							{hasPermission(session, "org:contracts:create") ? (
+								<DropdownMenuItem
+									onClick={() => contractOverlay.overlay.create.open()}
+								>
+									<BriefcaseIcon size={16} />
+									Contrato
+								</DropdownMenuItem>
+							) : null}
+							{hasPermission(session, "org:employees:create") ? (
+								<DropdownMenuItem
+									onClick={() => employeeOverlay.overlay.create.open()}
+								>
+									<UsersIcon size={16} />
+									Colaborador
+								</DropdownMenuItem>
+							) : null}
+							{hasPermission(session, "org:fees:create") ? (
+								<DropdownMenuItem
+									onClick={() => feeOverlay.overlay.create.open()}
+								>
+									<DollarSignIcon size={16} />
+									Honorário
+								</DropdownMenuItem>
+							) : null}
+							{hasPermission(session, "org:expenses:create") ? (
+								<DropdownMenuItem
+									onClick={() => expenseOverlay.overlay.create.open()}
+								>
+									<WalletCardsIcon size={16} />
+									Despesa
+								</DropdownMenuItem>
+							) : null}
+						</DropdownMenuContent>
+					</DropdownMenu>
+				) : null
 			}
 		>
 			<WrapperHeader>
@@ -217,6 +245,9 @@ function RouteComponent() {
 				))}
 				{employeeOverlay.overlay.create.render((state) => (
 					<EmployeeForm state={state} onSuccess={state.close} />
+				))}
+				{expenseOverlay.overlay.create.render((state) => (
+					<ExpenseForm state={state} onSuccess={state.close} />
 				))}
 				{employeeOverlay.overlay.details.render((id, state) => (
 					<EmployeeDetails id={id} state={state} />

@@ -29,6 +29,7 @@ describe("dashboard quick-create loading contract", () => {
 			["src", "features", "employees", "components", "form", "index.tsx"],
 			["src", "features", "contracts", "components", "form", "index.tsx"],
 			["src", "features", "fees", "components", "form", "index.tsx"],
+			["src", "features", "expenses", "components", "form", "index.tsx"],
 		];
 
 		for (const formFile of formFiles) {

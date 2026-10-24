@@ -8,7 +8,7 @@ import { FormSection } from "@/shared/components/form-section";
 import { FieldGroup, Skeleton } from "@/shared/components/ui";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
-import { useFee, useFeeOptions } from "../../hooks/use-data";
+import { useFee, useFeeFormOptions } from "../../hooks/use-data";
 import { useFeeForm } from "../../hooks/use-form";
 import { getFeeEditOptionDefaults } from "../../utils/edit-options";
 
@@ -103,7 +103,7 @@ function FeeFormFields({
 	state,
 	title,
 }: FeeFormFieldsProps) {
-	const { contracts, revenues } = useFeeOptions({
+	const { contracts, revenues, isLoadingRevenues } = useFeeFormOptions({
 		contractId,
 		currentContract,
 		currentRevenue,
@@ -138,11 +138,13 @@ function FeeFormFields({
 								label="Receita"
 								options={revenues}
 								isRequired
-								isDisabled={!contractId}
+								isDisabled={!contractId || isLoadingRevenues}
 								placeholder={
-									contractId
-										? "Selecionar item..."
-										: "Selecione contrato primeiro"
+									isLoadingRevenues
+										? "Carregando receitas..."
+										: contractId
+											? "Selecionar item..."
+											: "Selecione contrato primeiro"
 								}
 							/>
 						)}

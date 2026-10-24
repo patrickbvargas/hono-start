@@ -7,6 +7,7 @@ import {
 } from "@/shared/components/form-field-skeleton";
 import { FormSection } from "@/shared/components/form-section";
 import { FieldGroup, Skeleton } from "@/shared/components/ui";
+import { TEXT_LIMITS } from "@/shared/constants/text-limits";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
 import { useExpense, useExpenseOptions } from "../../hooks/use-data";
@@ -105,6 +106,7 @@ function ExpenseFormFields({ form, state, title }: ExpenseFormFieldsProps) {
 						{(field) => (
 							<field.Textarea
 								label="Observação"
+								maxLength={TEXT_LIMITS.notes}
 								classNames={{ wrapper: "sm:col-span-2" }}
 							/>
 						)}

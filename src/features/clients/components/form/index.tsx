@@ -6,6 +6,7 @@ import {
 } from "@/shared/components/form-field-skeleton";
 import { FormSection } from "@/shared/components/form-section";
 import { FieldGroup, Skeleton } from "@/shared/components/ui";
+import { TEXT_LIMITS } from "@/shared/constants/text-limits";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
 import { CLIENT_TYPE_COMPANY_VALUE } from "../../constants/values";
@@ -128,12 +129,24 @@ function ClientFormContent({
 								</FieldGroup>
 								<FieldGroup>
 									<form.AppField name="fullName">
-										{(field) => <field.Input label={nameLabel} isRequired />}
+										{(field) => (
+											<field.Input
+												label={nameLabel}
+												maxLength={TEXT_LIMITS.name}
+												isRequired
+											/>
+										)}
 									</form.AppField>
 								</FieldGroup>
 								<FieldGroup className="grid gap-5 sm:grid-cols-2">
 									<form.AppField name="email">
-										{(field) => <field.Input label="E-mail" type="email" />}
+										{(field) => (
+											<field.Input
+												label="E-mail"
+												type="email"
+												maxLength={TEXT_LIMITS.email}
+											/>
+										)}
 									</form.AppField>
 									<form.AppField name="phone">
 										{(field) => (

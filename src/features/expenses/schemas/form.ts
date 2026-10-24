@@ -1,4 +1,5 @@
 import * as z from "zod";
+import { TEXT_LIMITS } from "@/shared/constants/text-limits";
 import { entityIdSchema } from "@/shared/schemas/entity";
 import { assertExpenseAmountPositive } from "../rules/write";
 
@@ -6,7 +7,10 @@ const expenseBaseInputSchema = z.object({
 	category: z.string().trim().min(1, "Categoria é obrigatória"),
 	expenseDate: z.iso.date("Data é obrigatória"),
 	amount: z.number().positive("Valor deve ser maior que zero"),
-	notes: z.string().trim(),
+	notes: z
+		.string()
+		.trim()
+		.max(TEXT_LIMITS.notes, "Observações devem ter no máximo 5.000 caracteres"),
 	isActive: z.boolean(),
 });
 

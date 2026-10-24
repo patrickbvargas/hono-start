@@ -1,4 +1,5 @@
 import * as z from "zod";
+import { TEXT_LIMITS } from "@/shared/constants/text-limits";
 import { entityIdSchema } from "@/shared/schemas/entity";
 import { assertDocumentMatchesType } from "../rules/document";
 import {
@@ -7,14 +8,27 @@ import {
 } from "../utils/normalization";
 
 const clientBaseInputSchema = z.object({
-	fullName: z.string().trim().min(1, "Nome é obrigatório"),
+	fullName: z
+		.string()
+		.trim()
+		.min(1, "Nome é obrigatório")
+		.max(TEXT_LIMITS.name, "Nome deve ter no máximo 255 caracteres"),
 	document: z
 		.string()
 		.trim()
 		.min(1, "Documento é obrigatório")
+		.max(TEXT_LIMITS.document, "Documento deve ter no máximo 18 caracteres")
 		.transform(normalizeClientDocument),
-	email: z.union([z.email("Email inválido"), z.literal("")]),
-	phone: z.string().transform(normalizeClientPhone),
+	email: z.union([
+		z
+			.email("Email inválido")
+			.max(TEXT_LIMITS.email, "E-mail deve ter no máximo 254 caracteres"),
+		z.literal(""),
+	]),
+	phone: z
+		.string()
+		.max(TEXT_LIMITS.phone, "Telefone deve ter no máximo 15 caracteres")
+		.transform(normalizeClientPhone),
 	type: z.string().trim().min(1, "Tipo é obrigatório"),
 	isActive: z.boolean(),
 });

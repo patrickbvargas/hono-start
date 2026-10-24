@@ -9,6 +9,45 @@ function readWorkspaceFile(...segments: string[]) {
 }
 
 describe("dashboard quick-create route contract", () => {
+	it("orders creation actions like the sidebar and checks each creation grant", () => {
+		const routeContent = readWorkspaceFile(
+			"src",
+			"routes",
+			"_app",
+			"index.tsx",
+		);
+		const menu = routeContent.slice(
+			routeContent.indexOf('<DropdownMenuContent align="end">'),
+			routeContent.indexOf("</DropdownMenuContent>"),
+		);
+		const permissions = [
+			"clients",
+			"contracts",
+			"employees",
+			"fees",
+			"expenses",
+		];
+		let previousIndex = -1;
+		for (const entity of permissions) {
+			const index = menu.indexOf(
+				`{hasPermission(session, "org:${entity}:create") ? (`,
+			);
+			expect(index).toBeGreaterThan(previousIndex);
+			previousIndex = index;
+		}
+		expect(routeContent).toContain("canCreate ? (");
+		expect(menu).toContain("expenseOverlay.overlay.create.open()");
+		expect(routeContent).toContain("expenseOverlay.overlay.create.render");
+		expect(routeContent).toContain(
+			"<ExpenseForm state={state} onSuccess={state.close} />",
+		);
+		expect(routeContent).toContain(
+			'if (hasPermission(session, "org:expenses:create"))',
+		);
+		expect(routeContent).toContain(
+			"queryClient.query(getExpenseCategoriesQueryOptions())",
+		);
+	});
 	it("wires a Novo dropdown action in the dashboard header", () => {
 		const routeContent = readWorkspaceFile(
 			"src",

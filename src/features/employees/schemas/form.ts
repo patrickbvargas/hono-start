@@ -1,13 +1,19 @@
 import * as z from "zod";
+import { TEXT_LIMITS } from "@/shared/constants/text-limits";
 import { entityIdSchema } from "@/shared/schemas/entity";
 import { assertLawyerHasOab } from "../rules/oab";
 import { assertReferralPercentageWithinRemuneration } from "../rules/referral";
 
 const employeeBaseInputSchema = z.object({
-	fullName: z.string().trim().min(1, "Nome é obrigatório"),
+	fullName: z
+		.string()
+		.trim()
+		.min(1, "Nome é obrigatório")
+		.max(TEXT_LIMITS.name, "Nome deve ter no máximo 255 caracteres"),
 	oabNumber: z
 		.string()
 		.trim()
+		.max(TEXT_LIMITS.oabNumber, "OAB deve ter no máximo 8 caracteres")
 		.regex(/^[A-Z]{2}\d{6}$/, "Formato OAB inválido (ex: RS123456)")
 		.optional()
 		.or(z.literal("")),

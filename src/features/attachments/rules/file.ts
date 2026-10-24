@@ -1,3 +1,4 @@
+import { TEXT_LIMITS } from "@/shared/constants/text-limits";
 import { ATTACHMENT_ERRORS } from "../constants/errors";
 import {
 	ATTACHMENT_ALLOWED_MIME_TYPE_BY_VALUE,
@@ -53,6 +54,10 @@ export function assertAttachmentFileAccepted({
 	fileSize,
 	mimeType,
 }: AttachmentFileRuleInput): AttachmentTypeValue {
+	if (fileName.trim().length > TEXT_LIMITS.fileName) {
+		throw new Error("Nome do arquivo deve ter no máximo 255 caracteres");
+	}
+
 	const inferredType =
 		getAttachmentTypeFromMimeType(mimeType) ??
 		getAttachmentTypeFromExtension(fileName);

@@ -6,6 +6,7 @@ import {
 } from "@/shared/components/form-field-skeleton";
 import { FormSection } from "@/shared/components/form-section";
 import { FieldGroup, Skeleton } from "@/shared/components/ui";
+import { TEXT_LIMITS } from "@/shared/constants/text-limits";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
 import { LAWYER_TYPE_VALUE } from "../../constants/values";
@@ -91,7 +92,13 @@ function EmployeeFormContent({
 				<FormSection>
 					<FieldGroup>
 						<form.AppField name="fullName">
-							{(field) => <field.Input label="Nome" isRequired />}
+							{(field) => (
+								<field.Input
+									label="Nome"
+									maxLength={TEXT_LIMITS.name}
+									isRequired
+								/>
+							)}
 						</form.AppField>
 					</FieldGroup>
 					<FieldGroup className="grid gap-5 sm:grid-cols-2">
@@ -120,7 +127,7 @@ function EmployeeFormContent({
 											<field.Input
 												label="OAB"
 												placeholder="RS000000"
-												maxLength={8}
+												maxLength={TEXT_LIMITS.oabNumber}
 												isRequired
 											/>
 										)}

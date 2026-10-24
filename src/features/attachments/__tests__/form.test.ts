@@ -18,6 +18,30 @@ const baseInput = {
 };
 
 describe("attachment form schema", () => {
+	it("limits filenames in both the file picker and upload payload", () => {
+		const fileName = `${"a".repeat(251)}.pdf`;
+		expect(
+			attachmentUploadInputSchema.safeParse({ ...baseInput, fileName }).success,
+		).toBe(true);
+		expect(
+			attachmentFormInputSchema.safeParse({
+				clientId: 1,
+				file: new File(["test"], fileName, { type: "application/pdf" }),
+			}).success,
+		).toBe(true);
+		expect(
+			attachmentUploadInputSchema.safeParse({
+				...baseInput,
+				fileName: `a${fileName}`,
+			}).success,
+		).toBe(false);
+		expect(
+			attachmentFormInputSchema.safeParse({
+				clientId: 1,
+				file: new File(["test"], `a${fileName}`, { type: "application/pdf" }),
+			}).success,
+		).toBe(false);
+	});
 	it("accepts a valid attachment payload", () => {
 		expect(attachmentUploadInputSchema.parse(baseInput)).toEqual(baseInput);
 	});

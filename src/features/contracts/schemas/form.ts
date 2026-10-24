@@ -1,4 +1,5 @@
 import * as z from "zod";
+import { TEXT_LIMITS } from "@/shared/constants/text-limits";
 import { entityIdSchema } from "@/shared/schemas/entity";
 import {
 	assertContractHasActiveAssignment,
@@ -34,14 +35,26 @@ export const contractRevenueInputSchema = z.object({
 
 const contractBaseInputSchema = z.object({
 	clientId: z.string().trim().min(1, "Cliente é obrigatório"),
-	processNumber: z.string().trim().min(1, "Processo é obrigatório"),
+	processNumber: z
+		.string()
+		.trim()
+		.min(1, "Processo é obrigatório")
+		.max(
+			TEXT_LIMITS.processNumber,
+			"Processo deve ter no máximo 100 caracteres",
+		),
 	legalArea: z.string().trim().min(1, "Área é obrigatória"),
 	status: z.string().trim().min(1, "Status é obrigatório"),
 	feePercentage: z
 		.number()
 		.min(0, "Percentual não pode ser negativo")
 		.max(1, "Percentual não pode ser maior que 100%"),
-	notes: z.string().trim().optional().or(z.literal("")),
+	notes: z
+		.string()
+		.trim()
+		.max(TEXT_LIMITS.notes, "Observações devem ter no máximo 5.000 caracteres")
+		.optional()
+		.or(z.literal("")),
 	allowStatusChange: z.boolean(),
 	isActive: z.boolean(),
 	assignments: z
