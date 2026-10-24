@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { ScrollArea } from "@/shared/components/ui";
 import type { EntityId } from "@/shared/schemas/entity";
 import { useDashboardDrilldown } from "../../hooks/use-drilldown";
@@ -50,6 +51,236 @@ export function Dashboard({
 			data.expenseRevenue?.length ||
 			data.cashFlow,
 	);
+	const charts = useMemo(
+		() => (
+			<div className="grid gap-3 xl:grid-cols-2">
+				{data.isAdmin && data.cashFlow && data.visibility?.evolution ? (
+					<FinancialEvolutionChart
+						items={data.financialEvolution}
+						onSelect={(item, series, trigger) =>
+							drilldown.open(
+								{
+									selection: { kind: "monthly", month: item.month, series },
+									title: `${{ revenue: "Entradas", remuneration: "Remunerações geradas", expense: "Saídas", result: "Resultado" }[series]} · ${formatMonthLabel(item.month)}`,
+									expectedAmount: item[series] ?? 0,
+								},
+								trigger,
+							)
+						}
+					/>
+				) : null}
+				{data.visibility?.evolution ? (
+					<MonthlyRevenueRemunerationChart
+						items={data.financialEvolution}
+						isAdmin={data.isAdmin}
+						onSelect={(item, series, trigger) =>
+							drilldown.open(
+								{
+									selection: { kind: "monthly", month: item.month, series },
+									title: `${series === "revenue" ? "Honorários recebidos" : "Remunerações geradas"} · ${formatMonthLabel(item.month)}`,
+									expectedAmount: item[series],
+								},
+								trigger,
+							)
+						}
+					/>
+				) : null}
+				{data.visibility?.revenue
+					? (["area", "type"] as const).map((kind) => (
+							<RevenueRemunerationBreakdownChart
+								key={kind}
+								dimension={kind}
+								title={kind === "area" ? "Resumo por área" : "Resumo por tipo"}
+								items={
+									kind === "area"
+										? data.legalAreaRevenue
+										: data.revenueTypeRevenue
+								}
+								isAdmin={data.isAdmin}
+								onSelect={(item, series, trigger) =>
+									drilldown.open(
+										{
+											selection: { kind, value: item.value, series },
+											title: `${series === "revenue" ? "Honorários recebidos" : "Remunerações geradas"} · ${item.label}`,
+											expectedAmount:
+												series === "revenue"
+													? item.total
+													: (item.remuneration ?? 0),
+										},
+										trigger,
+									)
+								}
+							/>
+						))
+					: null}
+				{hasDetails && showDetails ? (
+					<>
+						{data.isAdmin && data.remunerationByCollaborator ? (
+							<DashboardBreakdownChart
+								title="Remunerações por colaborador"
+								items={data.remunerationByCollaborator}
+								emptyLabel="Sem remunerações no período."
+								variant="bar"
+								onSelect={(item, trigger) =>
+									drilldown.open(
+										{
+											selection: {
+												kind: "employee-month",
+												employeeId: Number(item.value),
+											},
+											title: `Remunerações · ${item.label}`,
+											expectedAmount: item.total,
+										},
+										trigger,
+									)
+								}
+							/>
+						) : null}
+						{data.remunerationByAssignment ? (
+							<DashboardBreakdownChart
+								title="Remuneração por função"
+								onSelect={(item, trigger) =>
+									drilldown.openBreakdown(
+										"function",
+										item,
+										"Remuneração por função",
+										trigger,
+									)
+								}
+								items={data.remunerationByAssignment}
+								emptyLabel="Sem remunerações."
+								variant="column"
+							/>
+						) : null}
+						{data.analysis ? (
+							<>
+								<DashboardBreakdownChart
+									title="Honorários em atraso"
+									onSelect={(item, trigger) =>
+										drilldown.openBreakdown(
+											"aging",
+											item,
+											"Honorários em atraso",
+											trigger,
+										)
+									}
+									items={data.analysis.aging}
+									emptyLabel="Sem dívida vencida."
+									variant="column"
+								/>
+								<DashboardBreakdownChart
+									title="Honorários a receber"
+									onSelect={(item, trigger) =>
+										drilldown.openBreakdown(
+											"forecast",
+											item,
+											"Honorários a receber",
+											trigger,
+										)
+									}
+									items={data.analysis.forecast}
+									emptyLabel="Sem parcelas futuras nos próximos 90 dias."
+									variant="column"
+								/>
+							</>
+						) : null}
+						{data.analysis ? (
+							<DashboardBreakdownChart
+								title="Honorários por cliente"
+								onSelect={(item, trigger) =>
+									drilldown.openBreakdown(
+										"client",
+										item,
+										"Honorários por cliente",
+										trigger,
+									)
+								}
+								items={data.analysis.clients}
+								emptyLabel="Sem recebimentos."
+								variant="bar"
+							/>
+						) : null}
+						{data.expenseRevenue?.length ? (
+							<DashboardBreakdownChart
+								title="Despesas por categoria"
+								onSelect={(item, trigger) =>
+									drilldown.openBreakdown(
+										"expense",
+										item,
+										"Despesas por categoria",
+										trigger,
+									)
+								}
+								items={data.expenseRevenue}
+								emptyLabel="Sem despesas."
+								variant="bar"
+							/>
+						) : null}
+						<div className="col-span-full flex flex-col gap-4">
+							{data.cashFlow ? (
+								<DashboardCashFlowTable
+									rows={data.cashFlow.table}
+									onSelect={(row, column, trigger) =>
+										drilldown.open(
+											{
+												selection: {
+													kind: "monthly",
+													month: row.month,
+													...cashFlowDrilldownSeries[column],
+												},
+												title: `${labels[column]} · ${row.monthLabel}`,
+												expectedAmount: row[column],
+											},
+											trigger,
+										)
+									}
+								/>
+							) : null}
+							{data.visibility?.remuneration ? (
+								<DashboardRemunerationTable
+									months={data.remunerationMonths}
+									onViewEmployee={onViewEmployee}
+									rows={data.remunerationTable}
+									onSelect={(row, month, trigger) =>
+										drilldown.open(
+											{
+												selection: {
+													kind: "employee-month",
+													employeeId: row.employeeId,
+													month: month?.key,
+												},
+												title: `Remunerações · ${row.employeeName} · ${month?.label ?? "Total no período"}`,
+												expectedAmount: month
+													? (row.months[month.key] ?? 0)
+													: row.total,
+											},
+											trigger,
+										)
+									}
+									subtotal={data.remunerationSubtotal}
+								/>
+							) : null}
+							{data.visibility?.revenue ? (
+								<DashboardOverdueInstallmentsTable
+									rows={data.overdueInstallments}
+									onViewContract={onViewContract}
+								/>
+							) : null}
+						</div>
+					</>
+				) : null}
+			</div>
+		),
+		[
+			data,
+			showDetails,
+			hasDetails,
+			onViewContract,
+			onViewEmployee,
+			drilldown.open,
+			drilldown.openBreakdown,
+		],
+	);
 	return (
 		<ScrollArea hideScrollbar className="h-full min-h-0 flex flex-col gap-4">
 			<div className="flex flex-col gap-4 p-0.5">
@@ -78,225 +309,7 @@ export function Dashboard({
 					/>
 				))}
 
-				<div className="grid gap-3 xl:grid-cols-2">
-					{data.isAdmin && data.cashFlow && data.visibility?.evolution ? (
-						<FinancialEvolutionChart
-							items={data.financialEvolution}
-							onSelect={(item, series, trigger) =>
-								drilldown.open(
-									{
-										selection: { kind: "monthly", month: item.month, series },
-										title: `${{ revenue: "Entradas", remuneration: "Remunerações geradas", expense: "Saídas", result: "Resultado" }[series]} · ${formatMonthLabel(item.month)}`,
-										expectedAmount: item[series] ?? 0,
-									},
-									trigger,
-								)
-							}
-						/>
-					) : null}
-					{data.visibility?.evolution ? (
-						<MonthlyRevenueRemunerationChart
-							items={data.financialEvolution}
-							isAdmin={data.isAdmin}
-							onSelect={(item, series, trigger) =>
-								drilldown.open(
-									{
-										selection: { kind: "monthly", month: item.month, series },
-										title: `${series === "revenue" ? "Honorários recebidos" : "Remunerações geradas"} · ${formatMonthLabel(item.month)}`,
-										expectedAmount: item[series],
-									},
-									trigger,
-								)
-							}
-						/>
-					) : null}
-					{data.visibility?.revenue
-						? (["area", "type"] as const).map((kind) => (
-								<RevenueRemunerationBreakdownChart
-									key={kind}
-									dimension={kind}
-									title={
-										kind === "area" ? "Resumo por área" : "Resumo por tipo"
-									}
-									items={
-										kind === "area"
-											? data.legalAreaRevenue
-											: data.revenueTypeRevenue
-									}
-									isAdmin={data.isAdmin}
-									onSelect={(item, series, trigger) =>
-										drilldown.open(
-											{
-												selection: { kind, value: item.value, series },
-												title: `${series === "revenue" ? "Honorários recebidos" : "Remunerações geradas"} · ${item.label}`,
-												expectedAmount:
-													series === "revenue"
-														? item.total
-														: (item.remuneration ?? 0),
-											},
-											trigger,
-										)
-									}
-								/>
-							))
-						: null}
-					{hasDetails && showDetails ? (
-						<>
-							{data.isAdmin && data.remunerationByCollaborator ? (
-								<DashboardBreakdownChart
-									title="Remunerações por colaborador"
-									items={data.remunerationByCollaborator}
-									emptyLabel="Sem remunerações no período."
-									variant="bar"
-									onSelect={(item, trigger) =>
-										drilldown.open(
-											{
-												selection: {
-													kind: "employee-month",
-													employeeId: Number(item.value),
-												},
-												title: `Remunerações · ${item.label}`,
-												expectedAmount: item.total,
-											},
-											trigger,
-										)
-									}
-								/>
-							) : null}
-							{data.remunerationByAssignment ? (
-								<DashboardBreakdownChart
-									title="Remuneração por função"
-									onSelect={(item, trigger) =>
-										drilldown.openBreakdown(
-											"function",
-											item,
-											"Remuneração por função",
-											trigger,
-										)
-									}
-									items={data.remunerationByAssignment}
-									emptyLabel="Sem remunerações."
-									variant="column"
-								/>
-							) : null}
-							{data.analysis ? (
-								<>
-									<DashboardBreakdownChart
-										title="Honorários em atraso"
-										onSelect={(item, trigger) =>
-											drilldown.openBreakdown(
-												"aging",
-												item,
-												"Honorários em atraso",
-												trigger,
-											)
-										}
-										items={data.analysis.aging}
-										emptyLabel="Sem dívida vencida."
-										variant="column"
-									/>
-									<DashboardBreakdownChart
-										title="Honorários a receber"
-										onSelect={(item, trigger) =>
-											drilldown.openBreakdown(
-												"forecast",
-												item,
-												"Honorários a receber",
-												trigger,
-											)
-										}
-										items={data.analysis.forecast}
-										emptyLabel="Sem parcelas futuras nos próximos 90 dias."
-										variant="column"
-									/>
-								</>
-							) : null}
-							{data.analysis ? (
-								<DashboardBreakdownChart
-									title="Honorários por cliente"
-									onSelect={(item, trigger) =>
-										drilldown.openBreakdown(
-											"client",
-											item,
-											"Honorários por cliente",
-											trigger,
-										)
-									}
-									items={data.analysis.clients}
-									emptyLabel="Sem recebimentos."
-									variant="bar"
-								/>
-							) : null}
-							{data.expenseRevenue?.length ? (
-								<DashboardBreakdownChart
-									title="Despesas por categoria"
-									onSelect={(item, trigger) =>
-										drilldown.openBreakdown(
-											"expense",
-											item,
-											"Despesas por categoria",
-											trigger,
-										)
-									}
-									items={data.expenseRevenue}
-									emptyLabel="Sem despesas."
-									variant="bar"
-								/>
-							) : null}
-							<div className="col-span-full flex flex-col gap-4">
-								{data.cashFlow ? (
-									<DashboardCashFlowTable
-										rows={data.cashFlow.table}
-										onSelect={(row, column, trigger) =>
-											drilldown.open(
-												{
-													selection: {
-														kind: "monthly",
-														month: row.month,
-														...cashFlowDrilldownSeries[column],
-													},
-													title: `${labels[column]} · ${row.monthLabel}`,
-													expectedAmount: row[column],
-												},
-												trigger,
-											)
-										}
-									/>
-								) : null}
-								{data.visibility?.remuneration ? (
-									<DashboardRemunerationTable
-										months={data.remunerationMonths}
-										onViewEmployee={onViewEmployee}
-										rows={data.remunerationTable}
-										onSelect={(row, month, trigger) =>
-											drilldown.open(
-												{
-													selection: {
-														kind: "employee-month",
-														employeeId: row.employeeId,
-														month: month?.key,
-													},
-													title: `Remunerações · ${row.employeeName} · ${month?.label ?? "Total no período"}`,
-													expectedAmount: month
-														? (row.months[month.key] ?? 0)
-														: row.total,
-												},
-												trigger,
-											)
-										}
-										subtotal={data.remunerationSubtotal}
-									/>
-								) : null}
-								{data.visibility?.revenue ? (
-									<DashboardOverdueInstallmentsTable
-										rows={data.overdueInstallments}
-										onViewContract={onViewContract}
-									/>
-								) : null}
-							</div>
-						</>
-					) : null}
-				</div>
+				{charts}
 			</div>
 		</ScrollArea>
 	);
