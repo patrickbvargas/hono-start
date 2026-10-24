@@ -6,6 +6,7 @@ import { Pagination } from "@/shared/components/pagination";
 import type { dataTableFeatures } from "@/shared/lib/table";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { QueryPaginatedReturnType } from "@/shared/types/api";
+import { AUDIT_ACTION_LABELS } from "../../constants/display";
 import { AUDIT_LOG_ALLOWED_SORT_COLUMNS } from "../../constants/sort";
 import type { AuditLog } from "../../schemas/model";
 
@@ -39,7 +40,8 @@ export const AuditLogTable = ({
 			}),
 			c.accessor("action", {
 				header: "Ação",
-				cell: (context) => context.getValue() || "—",
+				cell: (context) =>
+					AUDIT_ACTION_LABELS[context.getValue()] ?? context.getValue() ?? "—",
 				enableSorting: AUDIT_LOG_ALLOWED_SORT_COLUMNS.includes("action"),
 			}),
 			c.accessor("occurredAt", {

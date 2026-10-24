@@ -25,6 +25,7 @@ vi.mock("@/shared/hooks/use-filter", () => ({
 		filter: {
 			query: "proc",
 			clientId: "12",
+			employeeId: "",
 			legalArea: ["SOCIAL_SECURITY"],
 			contractStatus: ["ACTIVE"],
 			active: "false",
@@ -33,6 +34,7 @@ vi.mock("@/shared/hooks/use-filter", () => ({
 		defaultFilter: {
 			query: "",
 			clientId: "",
+			employeeId: "",
 			legalArea: [],
 			contractStatus: [],
 			active: "all",
@@ -69,6 +71,7 @@ describe("useContractFilter", () => {
 		result.current.handleApplyFilter({
 			query: "",
 			clientId: "",
+			employeeId: "",
 			legalArea: [],
 			contractStatus: [],
 			active: "all",
@@ -79,6 +82,7 @@ describe("useContractFilter", () => {
 		expect(resetMock).toHaveBeenCalledWith({
 			query: "",
 			clientId: "",
+			employeeId: "",
 			legalArea: [],
 			contractStatus: [],
 			active: "all",
@@ -87,6 +91,7 @@ describe("useContractFilter", () => {
 		expect(handleFilterMock).toHaveBeenCalledWith({
 			query: "",
 			clientId: "",
+			employeeId: "",
 			legalArea: [],
 			contractStatus: [],
 			active: "all",
@@ -124,6 +129,7 @@ describe("useContractFilter", () => {
 		expect(resetMock).toHaveBeenCalledWith({
 			query: "",
 			clientId: "",
+			employeeId: "",
 			legalArea: [],
 			contractStatus: [],
 			active: "all",

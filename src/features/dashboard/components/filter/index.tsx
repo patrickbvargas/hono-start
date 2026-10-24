@@ -80,7 +80,7 @@ export function DashboardFilter({
 					<form.AppField name="revenueType">
 						{(field) => (
 							<field.CheckboxGroup
-								label="Tipo de receita"
+								label="Tipo de honorário"
 								options={revenueTypes}
 							/>
 						)}
@@ -110,7 +110,7 @@ export function DashboardFilter({
 							{(field) => <field.CheckboxGroup options={legalAreas} />}
 						</form.AppField>
 					</ListFilters.Popover>
-					<ListFilters.Popover label="Tipo de receita">
+					<ListFilters.Popover label="Tipo de honorário">
 						<form.AppField name="revenueType">
 							{(field) => <field.CheckboxGroup options={revenueTypes} />}
 						</form.AppField>

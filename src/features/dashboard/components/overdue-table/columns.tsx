@@ -1,4 +1,5 @@
 import { createColumnHelper } from "@tanstack/react-table";
+import { TableButton } from "@/shared/components/table-button";
 import { formatter } from "@/shared/lib/formatter";
 import type { dataTableFeatures } from "@/shared/lib/table";
 import type { DashboardOverdueInstallmentRow } from "../../schemas/model";
@@ -13,15 +14,14 @@ export function getColumns(onViewContract?: (id: number) => void) {
 			header: "Processo",
 			cell: (context) =>
 				onViewContract ? (
-					<button
+					<TableButton
 						type="button"
-						className="cursor-pointer rounded-sm px-1 -mx-1 transition-colors hover:bg-accent/30 hover:ring-1 hover:ring-ring/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
 						aria-label={`Detalhar contrato ${context.getValue()}`}
 						title={`Ver detalhes: ${context.getValue()}`}
 						onClick={() => onViewContract(context.row.original.contractId)}
 					>
 						{context.getValue()}
-					</button>
+					</TableButton>
 				) : (
 					context.getValue()
 				),

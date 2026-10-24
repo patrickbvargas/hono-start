@@ -19,7 +19,8 @@ export const ContractFilter = () => {
 		handleApplyFilter,
 		handleClearFilters,
 	} = useContractFilter();
-	const { clients, legalAreas, statuses } = useContractFilterOptions();
+	const { clients, legalAreas, statuses, employees } =
+		useContractFilterOptions();
 	const isMobile = useIsMobile();
 
 	const clientLabels = new Map(
@@ -39,13 +40,13 @@ export const ContractFilter = () => {
 	);
 
 	const hasAdvancedFilters =
+		Boolean(filter.employeeId) ||
 		filter.clientId !== defaultFilter.clientId ||
 		filter.legalArea.length > 0 ||
 		filter.contractStatus.length > 0 ||
 		filter.active !== defaultFilter.active ||
 		filter.status !== defaultFilter.status;
 	const hasDesktopPanelFilters =
-		filter.clientId !== defaultFilter.clientId ||
 		filter.contractStatus.length > 0 ||
 		filter.active !== defaultFilter.active ||
 		filter.status !== defaultFilter.status;
@@ -68,13 +69,20 @@ export const ContractFilter = () => {
 			<form.AppField name="legalArea">
 				{(field) => <field.CheckboxGroup label="Área" options={legalAreas} />}
 			</form.AppField>
+			<form.AppField name="employeeId">
+				{(field) => (
+					<field.Autocomplete label="Colaborador" options={employees} />
+				)}
+			</form.AppField>
 			<form.AppField name="contractStatus">
-				{(field) => <field.CheckboxGroup label="Status" options={statuses} />}
+				{(field) => (
+					<field.CheckboxGroup label="Andamento" options={statuses} />
+				)}
 			</form.AppField>
 			<form.AppField name="active">
 				{(field) => (
 					<field.RadioGroup
-						label="Situação"
+						label="Cadastro"
 						options={ENTITY_ACTIVE_FILTER_OPTIONS}
 					/>
 				)}
@@ -103,6 +111,28 @@ export const ContractFilter = () => {
 
 	const desktopFilterActions = (
 		<ListFilters.Actions className="w-full md:w-auto">
+			<div className="w-56 shrink-0">
+				<form.AppField name="clientId">
+					{(field) => (
+						<field.Autocomplete
+							aria-label="Cliente"
+							placeholder="Cliente"
+							options={clients}
+						/>
+					)}
+				</form.AppField>
+			</div>
+			<div className="w-56 shrink-0">
+				<form.AppField name="employeeId">
+					{(field) => (
+						<field.Autocomplete
+							aria-label="Colaborador"
+							placeholder="Colaborador"
+							options={employees}
+						/>
+					)}
+				</form.AppField>
+			</div>
 			<ListFilters.Popover label="Área">
 				<form.AppField name="legalArea">
 					{(field) => <field.CheckboxGroup options={legalAreas} />}
@@ -127,20 +157,15 @@ export const ContractFilter = () => {
 		<Collapsible open={isDesktopPanelOpen} onOpenChange={setIsDesktopPanelOpen}>
 			<CollapsibleContent>
 				<ListFilters.Panel>
-					<form.AppField name="clientId">
-						{(field) => (
-							<field.Autocomplete label="Cliente" options={clients} />
-						)}
-					</form.AppField>
 					<form.AppField name="contractStatus">
 						{(field) => (
-							<field.CheckboxGroup label="Status" options={statuses} />
+							<field.CheckboxGroup label="Andamento" options={statuses} />
 						)}
 					</form.AppField>
 					<form.AppField name="active">
 						{(field) => (
 							<field.RadioGroup
-								label="Situação"
+								label="Cadastro"
 								options={ENTITY_ACTIVE_FILTER_OPTIONS}
 							/>
 						)}
@@ -176,6 +201,17 @@ export const ContractFilter = () => {
 				{isMobile ? null : desktopFilterPanel}
 				{(filter.query || hasAdvancedFilters) && (
 					<ListFilters.Active>
+						{filter.employeeId ? (
+							<ListFilters.Chip
+								onRemove={() =>
+									handleApplyFilter({ ...filter, employeeId: "" })
+								}
+								removeLabel="Remover filtro de colaborador"
+							>
+								{employees.find((item) => item.value === filter.employeeId)
+									?.label ?? `Colaborador #${filter.employeeId}`}
+							</ListFilters.Chip>
+						) : null}
 						{filter.query ? (
 							<ListFilters.Chip
 								onRemove={() =>

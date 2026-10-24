@@ -1,28 +1,34 @@
 import type { MouseEvent, ReactNode } from "react";
-import { Button } from "@/shared/components/ui";
+import { TableButton } from "@/shared/components/table-button";
 import type { EntityId } from "@/shared/schemas/entity";
 
 interface EntityIdTriggerProps {
 	id: EntityId;
 	onView?: (id: EntityId) => void;
+	label?: string;
 }
 
 export function EntityIdTrigger({
 	id,
 	onView,
+	label,
 }: EntityIdTriggerProps): ReactNode {
 	return (
-		<Button
-			variant="link"
-			size="sm"
-			className="h-auto cursor-pointer px-0 font-mono text-muted-foreground no-underline underline-offset-4 hover:text-foreground hover:underline"
-			aria-label={`Ver detalhes do registro #${id}`}
+		<TableButton
+			className={
+				label
+					? "max-w-full whitespace-normal"
+					: "font-mono text-muted-foreground hover:text-foreground"
+			}
+			aria-label={
+				label ? `Ver detalhes de ${label}` : `Ver detalhes do registro #${id}`
+			}
 			onClick={(event: MouseEvent<HTMLButtonElement>) => {
 				event.stopPropagation();
 				onView?.(id);
 			}}
 		>
-			#{id}
-		</Button>
+			{label ?? `#${id}`}
+		</TableButton>
 	);
 }

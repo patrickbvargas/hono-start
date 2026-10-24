@@ -78,7 +78,10 @@ export function DashboardMetricCards({
 											variant="secondary"
 											className={cn(
 												METRIC_BADGE_TONE_CLASSES[
-													getChangeTone(metric.changePercent)
+													getChangeTone(
+														metric.changePercent,
+														metric.drilldown === "expense",
+													)
 												],
 											)}
 										>
@@ -98,6 +101,16 @@ export function DashboardMetricCards({
 											{metric.formattedPreviousValue}
 										</p>
 										<p>{metric.previousPeriodLabel}</p>
+										{metric.drilldown === "expense" &&
+										metric.changePercent !== null ? (
+											<p>
+												{metric.changePercent > 0
+													? "Aumento de despesas"
+													: metric.changePercent < 0
+														? "Redução de despesas"
+														: "Despesas estáveis"}
+											</p>
+										) : null}
 									</TooltipContent>
 								</Tooltip>
 							</TooltipProvider>

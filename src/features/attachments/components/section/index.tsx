@@ -1,5 +1,5 @@
+import { FileIcon } from "lucide-react";
 import { ButtonNew } from "@/shared/components/button-new";
-import { EntityListAccordion } from "@/shared/components/entity-list-accordion";
 import { cn } from "@/shared/lib/utils";
 import type { EntityId } from "@/shared/schemas/entity";
 import { useAttachmentSection } from "../../hooks/use-section";
@@ -56,20 +56,23 @@ export const AttachmentSection = ({
 			) : null}
 
 			{!isPending && !error && attachments.length > 0 ? (
-				<EntityListAccordion
-					items={attachments}
-					getKey={(attachment) => String(attachment.id)}
-					getTitle={(attachment) => attachment.fileName}
-					getSummary={(attachment) => attachment.fileName}
-					openDescription={undefined}
-					renderContent={(attachment) => (
-						<AttachmentSectionContent
-							attachment={attachment}
-							canDelete={canDelete}
-							onDelete={overlay.delete.open}
-						/>
-					)}
-				/>
+				<ul className="grid gap-3">
+					{attachments.map((attachment) => (
+						<li key={attachment.id} className="min-w-0 rounded-lg border p-3">
+							<div className="mb-3 flex min-w-0 items-start gap-2">
+								<FileIcon className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
+								<p className="min-w-0 wrap-break-word text-sm font-medium">
+									{attachment.fileName}
+								</p>
+							</div>
+							<AttachmentSectionContent
+								attachment={attachment}
+								canDelete={canDelete}
+								onDelete={overlay.delete.open}
+							/>
+						</li>
+					))}
+				</ul>
 			) : null}
 
 			{overlay.create.render((state) => (

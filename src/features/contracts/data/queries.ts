@@ -31,6 +31,7 @@ import {
 	contractSummarySchema,
 } from "../schemas/model";
 import type { ContractSearch } from "../schemas/search";
+import { getNextContractInstallment } from "../utils/payment-plan";
 
 interface ContractAccessParams {
 	firmId: number;
@@ -174,6 +175,21 @@ function buildContractWhere({
 				}
 			: {}),
 		...(clientId ? { clientId } : {}),
+		...(filter.employeeId
+			? {
+					AND: [
+						{
+							assignments: {
+								some: {
+									employeeId: Number(filter.employeeId),
+									isActive: true,
+									deletedAt: null,
+								},
+							},
+						},
+					],
+				}
+			: {}),
 		...(legalAreaIds.length > 0 ? { legalAreaId: { in: legalAreaIds } } : {}),
 		...(statusIds.length > 0 ? { statusId: { in: statusIds } } : {}),
 		...(!isAdmin && employeeId
@@ -189,7 +205,7 @@ function buildContractWhere({
 function getRevenuePaymentState(revenue: {
 	totalValue: { toString(): string };
 	downPaymentValue: { toString(): string } | null;
-	fees: Array<{ amount: { toString(): string } }>;
+	fees: Array<{ amount: { toString(): string }; installmentNumber?: number }>;
 }) {
 	const paidValue = revenue.fees.reduce(
 		(total, fee) => total.add(fee.amount.toString()),
@@ -311,7 +327,10 @@ function mapContractDetail(
 			isActive: boolean;
 			deletedAt: Date | null;
 			type: { label: string; value: string };
-			fees: Array<{ amount: { toString(): string } }>;
+			fees: Array<{
+				amount: { toString(): string };
+				installmentNumber?: number;
+			}>;
 		}>;
 	},
 ): ContractDetail {
@@ -359,6 +378,7 @@ function mapContractDetail(
 		})),
 		revenues: contract.revenues.map((revenue) => ({
 			...getRevenuePaymentState(revenue),
+			...getNextContractInstallment(revenue),
 			id: revenue.id,
 			typeId: revenue.typeId,
 			type: revenue.type.label,
@@ -449,6 +469,7 @@ const contractDetailInclude = {
 				},
 				select: {
 					amount: true,
+					installmentNumber: true,
 				},
 			},
 			type: { select: { label: true, value: true } },
@@ -534,6 +555,7 @@ export async function getContractById({
 				filter: {
 					query: "",
 					clientId: "",
+					employeeId: "",
 					legalArea: [],
 					contractStatus: [],
 					active: "all",

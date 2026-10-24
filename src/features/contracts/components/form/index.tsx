@@ -167,7 +167,7 @@ function ContractFormContent({
 						<form.AppField name="status">
 							{(field) => (
 								<field.Autocomplete
-									label="Status"
+									label="Andamento"
 									options={statuses}
 									isRequired
 								/>

@@ -3,16 +3,18 @@ import {
 	AttachmentSection,
 	AttachmentSectionFallback,
 } from "@/features/attachments";
+import { contractSearchDefaults } from "@/features/contracts";
 import { EntityActions } from "@/shared/components/entity-actions";
 import {
 	type DetailFieldItem,
 	EntityDetail,
 } from "@/shared/components/entity-detail";
 import { EntityStatus } from "@/shared/components/entity-status";
+import { NavigationLink } from "@/shared/components/navigation-link";
 import { Button, DrawerClose } from "@/shared/components/ui";
 import { formatter } from "@/shared/lib/formatter";
-
 import type { EntityId } from "@/shared/schemas/entity";
+import { hasPermission, useLoggedUserSession } from "@/shared/session";
 import type { OverlayState } from "@/shared/types/overlay";
 import { useEmployee } from "../../hooks/use-data";
 import { getEmployeeLifecycleActions } from "../../utils/lifecycle-actions";
@@ -65,6 +67,7 @@ const EmployeeDetailsContent = ({
 	onRestore,
 }: EmployeeDetailsContentProps) => {
 	const { employee } = useEmployee(id);
+	const session = useLoggedUserSession();
 	const actions = getEmployeeLifecycleActions({
 		canManageLifecycle,
 		isSoftDeleted: employee.isSoftDeleted,
@@ -74,9 +77,28 @@ const EmployeeDetailsContent = ({
 		() => [
 			{ term: "OAB", definition: formatter.oab(employee.oabNumber) },
 			{ term: "Função", definition: employee.type },
-			{ term: "Contratos", definition: employee.contractCount },
+			{
+				term: "Contratos",
+				definition:
+					hasPermission(session, "org:contracts:read_all") ||
+					hasPermission(session, "org:contracts:read_assigned") ? (
+						<NavigationLink
+							to="/contratos"
+							search={{
+								...contractSearchDefaults,
+								employeeId: String(id),
+								active: "all",
+								status: "all",
+							}}
+						>
+							{employee.contractCount}
+						</NavigationLink>
+					) : (
+						employee.contractCount
+					),
+			},
 		],
-		[employee],
+		[employee, id, session],
 	);
 
 	const financialInfo = React.useMemo<DetailFieldItem[]>(
@@ -134,10 +156,10 @@ const EmployeeDetailsContent = ({
 				/>
 			</EntityDetail.Header>
 			<EntityDetail.Body>
-				<EntityDetail.Fields items={generalInfo} />
+				<EntityDetail.Fields columns={2} items={generalInfo} />
 				<EntityDetail.Separator />
 				<EntityDetail.Section title="Financeiro">
-					<EntityDetail.Fields items={financialInfo} />
+					<EntityDetail.Fields columns={2} items={financialInfo} />
 				</EntityDetail.Section>
 				<EntityDetail.Separator />
 				<EntityDetail.Section title="Anexos">
@@ -145,7 +167,7 @@ const EmployeeDetailsContent = ({
 				</EntityDetail.Section>
 				<EntityDetail.Separator />
 				<EntityDetail.Section title="Registro">
-					<EntityDetail.Fields items={registerInfo} />
+					<EntityDetail.Fields columns={2} items={registerInfo} />
 				</EntityDetail.Section>
 			</EntityDetail.Body>
 			<EntityDetail.Footer>
@@ -167,10 +189,10 @@ const EmployeeDetailsFallback = () => (
 	<EntityDetail.Content>
 		<EntityDetail.SkeletonHeader withActions />
 		<EntityDetail.Body>
-			<EntityDetail.SkeletonFields rows={3} />
+			<EntityDetail.SkeletonFields columns={2} rows={3} />
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Financeiro">
-				<EntityDetail.SkeletonFields rows={2} />
+				<EntityDetail.SkeletonFields columns={2} rows={2} />
 			</EntityDetail.Section>
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Anexos">
@@ -178,7 +200,7 @@ const EmployeeDetailsFallback = () => (
 			</EntityDetail.Section>
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Registro">
-				<EntityDetail.SkeletonFields rows={3} />
+				<EntityDetail.SkeletonFields columns={2} rows={3} />
 			</EntityDetail.Section>
 		</EntityDetail.Body>
 		<EntityDetail.Footer />

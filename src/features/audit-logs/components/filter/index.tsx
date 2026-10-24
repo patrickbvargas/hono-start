@@ -32,14 +32,15 @@ export const AuditLogFilter = () => {
 		filter.action.length > 0 ||
 		filter.entityType.length > 0 ||
 		filter.actorName.length > 0;
-	const [isDesktopPanelOpen, setIsDesktopPanelOpen] =
-		React.useState(hasAdvancedFilters);
+	const [isDesktopPanelOpen, setIsDesktopPanelOpen] = React.useState(
+		filter.action.length > 0 || filter.actorName.length > 0,
+	);
 
 	React.useEffect(() => {
-		if (hasAdvancedFilters) {
+		if (filter.action.length > 0 || filter.actorName.length > 0) {
 			setIsDesktopPanelOpen(true);
 		}
-	}, [hasAdvancedFilters]);
+	}, [filter.action.length, filter.actorName.length]);
 
 	const sharedFields = (
 		<>
@@ -68,6 +69,11 @@ export const AuditLogFilter = () => {
 
 	const desktopFilterActions = (
 		<ListFilters.Actions className="w-full md:w-auto">
+			<ListFilters.Popover label="Tipo">
+				<form.AppField name="entityType">
+					{(field) => <field.CheckboxGroup options={entityTypes} />}
+				</form.AppField>
+			</ListFilters.Popover>
 			<ListFilters.Button
 				type="button"
 				onClick={() => setIsDesktopPanelOpen((open) => !open)}
@@ -90,11 +96,7 @@ export const AuditLogFilter = () => {
 					<form.AppField name="action">
 						{(field) => <field.CheckboxGroup label="Ação" options={actions} />}
 					</form.AppField>
-					<form.AppField name="entityType">
-						{(field) => (
-							<field.CheckboxGroup label="Tipo" options={entityTypes} />
-						)}
-					</form.AppField>
+
 					<form.AppField name="actorName">
 						{(field) => (
 							<field.CheckboxGroup label="Usuário" options={actors} />

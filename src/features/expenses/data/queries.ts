@@ -5,11 +5,12 @@ import {
 	withDeterministicTieBreaker,
 } from "@/shared/lib/entity-management";
 import { prisma } from "@/shared/lib/prisma";
+import { financialTotalsSchema } from "@/shared/schemas/financial-totals";
 import { type Option, optionSchema } from "@/shared/schemas/option";
 import type {
+	FinancialQueryPaginatedReturnType,
 	QueryManyReturnType,
 	QueryOneReturnType,
-	QueryPaginatedReturnType,
 } from "@/shared/types/api";
 import type {
 	EntityFilterParams,
@@ -64,6 +65,7 @@ function buildExpenseWhere({
 }
 
 function mapExpenseSummary(row: {
+	notes?: string | null;
 	id: number;
 	amount: Prisma.Decimal;
 	expenseDate: Date;
@@ -77,6 +79,7 @@ function mapExpenseSummary(row: {
 	};
 }) {
 	return expenseSummarySchema.parse({
+		notes: row.notes ?? null,
 		id: row.id,
 		category: row.category.label,
 		categoryId: row.category.id,
@@ -93,7 +96,7 @@ export async function getExpenses({
 	firmId,
 	search,
 }: EntitySearchParams<ExpenseSearch>): Promise<
-	QueryPaginatedReturnType<ExpenseSummary>
+	FinancialQueryPaginatedReturnType<ExpenseSummary>
 > {
 	const where = buildExpenseWhere({ firmId, filter: search });
 
@@ -109,7 +112,7 @@ export async function getExpenses({
 		{ id: "asc" },
 	);
 
-	const [rows, total] = await Promise.all([
+	const [rows, total, aggregate] = await Promise.all([
 		prisma.expense.findMany({
 			where,
 			include: {
@@ -126,11 +129,15 @@ export async function getExpenses({
 			take: search.limit,
 		}),
 		prisma.expense.count({ where }),
+		prisma.expense.aggregate({ where, _sum: { amount: true } }),
 	]);
 
 	return {
 		data: rows.map(mapExpenseSummary),
 		total,
+		...financialTotalsSchema.parse({
+			totalAmount: Number(aggregate._sum.amount ?? 0),
+		}),
 		page: search.page,
 		pageSize: search.limit,
 	};

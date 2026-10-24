@@ -10,9 +10,9 @@ import {
 	getServerScope,
 } from "@/shared/session/server";
 import type {
+	FinancialQueryPaginatedReturnType,
 	QueryManyReturnType,
 	QueryOneReturnType,
-	QueryPaginatedReturnType,
 } from "@/shared/types/api";
 import { FEE_ERRORS } from "../constants/errors";
 import {
@@ -37,26 +37,30 @@ export const feeKeys = {
 const getFeesFn = createServerFn({ method: "GET" })
 	.middleware([authMiddleware])
 	.validator(feeSearchSchema)
-	.handler(async ({ data }): Promise<QueryPaginatedReturnType<FeeSummary>> => {
-		try {
-			const session = await getRequiredServerLoggedUserSession();
-			assertCan(session, ["org:fees:read_all", "org:fees:read_assigned"]);
-			const scope = await getServerScope("fee");
+	.handler(
+		async ({
+			data,
+		}): Promise<FinancialQueryPaginatedReturnType<FeeSummary>> => {
+			try {
+				const session = await getRequiredServerLoggedUserSession();
+				assertCan(session, ["org:fees:read_all", "org:fees:read_assigned"]);
+				const scope = await getServerScope("fee");
 
-			return await getFees({
-				scope: {
-					firmId: scope.firmId,
-					employeeId: scope.employeeId,
-					employeeTypeValue: session.employeeType?.value,
-					isAdmin: hasPermission(session, "org:fees:read_all"),
-				},
-				search: data,
-			});
-		} catch (error) {
-			console.error("[getFees]", error);
-			throw new Error(FEE_ERRORS.FEE_GET_FAILED);
-		}
-	});
+				return await getFees({
+					scope: {
+						firmId: scope.firmId,
+						employeeId: scope.employeeId,
+						employeeTypeValue: session.employeeType?.value,
+						isAdmin: hasPermission(session, "org:fees:read_all"),
+					},
+					search: data,
+				});
+			} catch (error) {
+				console.error("[getFees]", error);
+				throw new Error(FEE_ERRORS.FEE_GET_FAILED);
+			}
+		},
+	);
 
 const getFeeByIdFn = createServerFn({ method: "GET" })
 	.middleware([authMiddleware])

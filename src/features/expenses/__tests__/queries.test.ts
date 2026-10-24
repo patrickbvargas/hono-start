@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const prismaMock = vi.hoisted(() => ({
 	expense: {
+		aggregate: vi.fn(),
 		count: vi.fn(),
 		findFirst: vi.fn(),
 		findMany: vi.fn(),
@@ -24,6 +25,9 @@ import {
 describe("expense queries", () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
+		prismaMock.expense.aggregate.mockResolvedValue({
+			_sum: { amount: "9876.54" },
+		});
 	});
 
 	it("lists expenses with category and observation filters", async () => {
@@ -61,6 +65,11 @@ describe("expense queries", () => {
 		});
 
 		expect(prismaMock.expense.findMany).toHaveBeenCalled();
+		expect(result.totalAmount).toBe(9876.54);
+		expect(prismaMock.expense.aggregate).toHaveBeenCalledWith({
+			where: prismaMock.expense.findMany.mock.calls[0]?.[0].where,
+			_sum: { amount: true },
+		});
 		expect(result.total).toBe(1);
 		expect(result.data[0]).toMatchObject({
 			id: 5,

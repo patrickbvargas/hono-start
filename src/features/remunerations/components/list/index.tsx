@@ -32,7 +32,7 @@ export const RemunerationList = ({
 	const renderCardFields = React.useCallback(
 		(remuneration: Remuneration): DetailFieldItem[] => [
 			{
-				term: "Competência",
+				term: "Data do honorário",
 				definition: formatter.calendarDate(remuneration.paymentDate),
 			},
 			{

@@ -46,6 +46,13 @@ export const ContractTable = ({
 				},
 			}),
 			c.accessor("processNumber", {
+				cell: (context) => (
+					<EntityIdTrigger
+						id={context.row.original.id}
+						onView={onView}
+						label={context.getValue()}
+					/>
+				),
 				header: "Processo",
 				enableSorting: CONTRACT_ALLOWED_SORT_COLUMNS.includes("processNumber"),
 				meta: {
@@ -70,7 +77,7 @@ export const ContractTable = ({
 				enableSorting: CONTRACT_ALLOWED_SORT_COLUMNS.includes("legalArea"),
 			}),
 			c.accessor("status", {
-				header: "Status",
+				header: "Andamento",
 				enableSorting: CONTRACT_ALLOWED_SORT_COLUMNS.includes("status"),
 			}),
 			c.accessor("feePercentage", {
@@ -79,7 +86,7 @@ export const ContractTable = ({
 				enableSorting: CONTRACT_ALLOWED_SORT_COLUMNS.includes("feePercentage"),
 			}),
 			c.accessor("isActive", {
-				header: "Situação",
+				header: "Cadastro",
 				cell: ({ row }) => (
 					<EntityStatus
 						isActive={row.original.isActive}

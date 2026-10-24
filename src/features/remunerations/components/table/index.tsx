@@ -55,6 +55,13 @@ export const RemunerationTable = ({
 				},
 			}),
 			c.accessor("employeeName", {
+				cell: (context) => (
+					<EntityIdTrigger
+						id={context.row.original.id}
+						onView={onView}
+						label={context.getValue()}
+					/>
+				),
 				header: "Colaborador",
 				meta: { minColumnWidth: 180 },
 				enableSorting:
@@ -65,7 +72,7 @@ export const RemunerationTable = ({
 				meta: { minColumnWidth: 180 },
 			}),
 			c.accessor("paymentDate", {
-				header: "Competência",
+				header: "Data do honorário",
 				cell: ({ row }) => formatter.calendarDate(row.original.paymentDate),
 				enableSorting:
 					REMUNERATION_ALLOWED_SORT_COLUMNS.includes("paymentDate"),

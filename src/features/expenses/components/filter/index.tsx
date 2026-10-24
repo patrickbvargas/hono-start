@@ -11,7 +11,10 @@ import { formatter } from "@/shared/lib/formatter";
 import { useExpenseOptions } from "../../hooks/use-data";
 import { useExpenseFilter } from "../../hooks/use-filter";
 
-export const ExpenseFilter = () => {
+interface ExpenseFilterProps {
+	summary?: React.ReactNode;
+}
+export const ExpenseFilter = ({ summary }: ExpenseFilterProps) => {
 	const {
 		filter,
 		defaultFilter,
@@ -40,7 +43,6 @@ export const ExpenseFilter = () => {
 		filter.active !== defaultFilter.active ||
 		filter.status !== defaultFilter.status;
 	const hasDesktopPanelFilters =
-		filter.category !== defaultFilter.category ||
 		filter.dateFrom !== defaultFilter.dateFrom ||
 		filter.dateTo !== defaultFilter.dateTo;
 
@@ -59,11 +61,13 @@ export const ExpenseFilter = () => {
 
 	const sharedFields = (
 		<>
-			<form.AppField name="category">
-				{(field) => (
-					<field.Autocomplete label="Categoria" options={categories} />
-				)}
-			</form.AppField>
+			{isMobile ? (
+				<form.AppField name="category">
+					{(field) => (
+						<field.Autocomplete label="Categoria" options={categories} />
+					)}
+				</form.AppField>
+			) : null}
 			<form.AppField name="dateFrom">
 				{(field) => <field.DatePicker label="Data de" />}
 			</form.AppField>
@@ -92,7 +96,7 @@ export const ExpenseFilter = () => {
 	return (
 		<form.Form form={form} className="w-full">
 			<ListFilters>
-				<ListFilters.Bar>
+				<ListFilters.Bar className="flex-wrap">
 					<form.AppField name="query">
 						{(field) => (
 							<field.Search
@@ -113,6 +117,17 @@ export const ExpenseFilter = () => {
 						</ListFilters.Drawer>
 					) : (
 						<ListFilters.Actions className="w-full md:w-auto">
+							<div className="w-56 shrink-0">
+								<form.AppField name="category">
+									{(field) => (
+										<field.Autocomplete
+											aria-label="Categoria"
+											placeholder="Categoria"
+											options={categories}
+										/>
+									)}
+								</form.AppField>
+							</div>
 							<ListFilters.Button
 								type="button"
 								onClick={() => setIsDesktopPanelOpen((open) => !open)}
@@ -127,6 +142,7 @@ export const ExpenseFilter = () => {
 							</ListFilters.Button>
 						</ListFilters.Actions>
 					)}
+					<div className="ml-auto shrink-0">{summary}</div>
 				</ListFilters.Bar>
 				{isMobile ? null : (
 					<Collapsible

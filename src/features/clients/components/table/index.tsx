@@ -46,6 +46,13 @@ export const ClientTable = ({
 				},
 			}),
 			c.accessor("fullName", {
+				cell: (context) => (
+					<EntityIdTrigger
+						id={context.row.original.id}
+						onView={onView}
+						label={context.getValue()}
+					/>
+				),
 				header: "Nome",
 				enableSorting: CLIENT_ALLOWED_SORT_COLUMNS.includes("fullName"),
 				meta: {

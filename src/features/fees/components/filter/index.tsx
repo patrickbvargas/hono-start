@@ -11,7 +11,10 @@ import { formatter } from "@/shared/lib/formatter";
 import { useFeeOptions } from "../../hooks/use-data";
 import { useFeeFilter } from "../../hooks/use-filter";
 
-export const FeeFilter = () => {
+interface FeeFilterProps {
+	summary?: React.ReactNode;
+}
+export const FeeFilter = ({ summary }: FeeFilterProps) => {
 	const {
 		filter,
 		defaultFilter,
@@ -46,8 +49,6 @@ export const FeeFilter = () => {
 		filter.active !== defaultFilter.active ||
 		filter.status !== defaultFilter.status;
 	const hasDesktopPanelFilters =
-		filter.contractId !== defaultFilter.contractId ||
-		filter.revenueId !== defaultFilter.revenueId ||
 		filter.dateFrom !== defaultFilter.dateFrom ||
 		filter.dateTo !== defaultFilter.dateTo;
 
@@ -71,13 +72,15 @@ export const FeeFilter = () => {
 				{(field) => <field.Autocomplete label="Contrato" options={contracts} />}
 			</form.AppField>
 			<form.AppField name="revenueId">
-				{(field) => <field.Autocomplete label="Receita" options={revenues} />}
+				{(field) => (
+					<field.Autocomplete label="Tipo de honorário" options={revenues} />
+				)}
 			</form.AppField>
 			<form.AppField name="dateFrom">
-				{(field) => <field.DatePicker label="Competência de" />}
+				{(field) => <field.DatePicker label="Data de recebimento de" />}
 			</form.AppField>
 			<form.AppField name="dateTo">
-				{(field) => <field.DatePicker label="Competência até" />}
+				{(field) => <field.DatePicker label="Data de recebimento até" />}
 			</form.AppField>
 			<form.AppField name="active">
 				{(field) => (
@@ -111,6 +114,28 @@ export const FeeFilter = () => {
 
 	const desktopFilterActions = (
 		<ListFilters.Actions className="w-full md:w-auto">
+			<div className="w-56 shrink-0">
+				<form.AppField name="contractId">
+					{(field) => (
+						<field.Autocomplete
+							aria-label="Contrato"
+							placeholder="Contrato"
+							options={contracts}
+						/>
+					)}
+				</form.AppField>
+			</div>
+			<div className="w-56 shrink-0">
+				<form.AppField name="revenueId">
+					{(field) => (
+						<field.Autocomplete
+							aria-label="Tipo de honorário"
+							placeholder="Tipo de honorário"
+							options={revenues}
+						/>
+					)}
+				</form.AppField>
+			</div>
 			<ListFilters.Button
 				type="button"
 				onClick={() => setIsDesktopPanelOpen((open) => !open)}
@@ -130,21 +155,11 @@ export const FeeFilter = () => {
 		<Collapsible open={isDesktopPanelOpen} onOpenChange={setIsDesktopPanelOpen}>
 			<CollapsibleContent>
 				<ListFilters.Panel>
-					<form.AppField name="contractId">
-						{(field) => (
-							<field.Autocomplete label="Contrato" options={contracts} />
-						)}
-					</form.AppField>
-					<form.AppField name="revenueId">
-						{(field) => (
-							<field.Autocomplete label="Receita" options={revenues} />
-						)}
-					</form.AppField>
 					<form.AppField name="dateFrom">
-						{(field) => <field.DatePicker label="Competência de" />}
+						{(field) => <field.DatePicker label="Data de recebimento de" />}
 					</form.AppField>
 					<form.AppField name="dateTo">
-						{(field) => <field.DatePicker label="Competência até" />}
+						{(field) => <field.DatePicker label="Data de recebimento até" />}
 					</form.AppField>
 					<form.AppField name="active">
 						{(field) => (
@@ -170,7 +185,7 @@ export const FeeFilter = () => {
 	return (
 		<form.Form form={form} className="w-full">
 			<ListFilters>
-				<ListFilters.Bar>
+				<ListFilters.Bar className="flex-wrap">
 					<form.AppField name="query">
 						{(field) => (
 							<field.Search
@@ -181,6 +196,7 @@ export const FeeFilter = () => {
 						)}
 					</form.AppField>
 					{isMobile ? mobileFilters : desktopFilterActions}
+					<div className="ml-auto shrink-0">{summary}</div>
 				</ListFilters.Bar>
 				{isMobile ? null : desktopFilterPanel}
 				{(filter.query || hasAdvancedFilters) && (
@@ -232,7 +248,7 @@ export const FeeFilter = () => {
 										dateFrom: defaultFilter.dateFrom,
 									})
 								}
-								removeLabel={`Remover filtro de competência inicial: ${formatDateChip(filter.dateFrom)}`}
+								removeLabel={`Remover filtro de pagamento inicial: ${formatDateChip(filter.dateFrom)}`}
 							>
 								{`De ${formatDateChip(filter.dateFrom)}`}
 							</ListFilters.Chip>
@@ -245,7 +261,7 @@ export const FeeFilter = () => {
 										dateTo: defaultFilter.dateTo,
 									})
 								}
-								removeLabel={`Remover filtro de competência final: ${formatDateChip(filter.dateTo)}`}
+								removeLabel={`Remover filtro de pagamento final: ${formatDateChip(filter.dateTo)}`}
 							>
 								{`Até ${formatDateChip(filter.dateTo)}`}
 							</ListFilters.Chip>

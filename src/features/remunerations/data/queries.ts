@@ -5,12 +5,13 @@ import {
 	withDeterministicTieBreaker,
 } from "@/shared/lib/entity-management";
 import { prisma } from "@/shared/lib/prisma";
+import { financialTotalsSchema } from "@/shared/schemas/financial-totals";
 import type { Option } from "@/shared/schemas/option";
 import type { RemunerationAccessResource } from "@/shared/session";
 import type {
+	FinancialQueryPaginatedReturnType,
 	QueryManyReturnType,
 	QueryOneReturnType,
-	QueryPaginatedReturnType,
 } from "@/shared/types/api";
 import { REMUNERATION_ERRORS } from "../constants/errors";
 import type { RemunerationFilter } from "../schemas/filter";
@@ -222,13 +223,15 @@ export async function mapRemunerations(
 export async function getRemunerations({
 	scope,
 	search,
-}: GetRemunerationsParams): Promise<QueryPaginatedReturnType<Remuneration>> {
+}: GetRemunerationsParams): Promise<
+	FinancialQueryPaginatedReturnType<Remuneration>
+> {
 	const where = buildRemunerationWhere({
 		...scope,
 		filter: search,
 	});
 
-	const [remunerations, total] = await Promise.all([
+	const [remunerations, total, aggregate] = await Promise.all([
 		prisma.remuneration.findMany({
 			where,
 			include: remunerationListInclude,
@@ -237,11 +240,15 @@ export async function getRemunerations({
 			take: search.limit,
 		}),
 		prisma.remuneration.count({ where }),
+		prisma.remuneration.aggregate({ where, _sum: { amount: true } }),
 	]);
 
 	return {
 		data: await mapRemunerations(remunerations),
 		total,
+		...financialTotalsSchema.parse({
+			totalAmount: Number(aggregate._sum.amount ?? 0),
+		}),
 		page: search.page,
 		pageSize: search.limit,
 	};

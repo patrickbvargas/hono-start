@@ -1,12 +1,18 @@
 import * as React from "react";
+import { clientSearchDefaults } from "@/features/clients";
+import { contractSearchDefaults } from "@/features/contracts";
+import { employeeSearchDefaults } from "@/features/employees";
+import { feeSearchDefaults } from "@/features/fees";
 import { EntityActions } from "@/shared/components/entity-actions";
 import {
 	type DetailFieldItem,
 	EntityDetail,
 } from "@/shared/components/entity-detail";
 import { EntityStatus } from "@/shared/components/entity-status";
+import { NavigationLink } from "@/shared/components/navigation-link";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
+import { hasPermission, useLoggedUserSession } from "@/shared/session";
 import type { OverlayState } from "@/shared/types/overlay";
 import { useRemuneration } from "../../hooks/use-data";
 import { getRemunerationLifecycleActions } from "../../utils/lifecycle-actions";
@@ -59,6 +65,7 @@ const RemunerationDetailsContent = ({
 	onRestore,
 }: RemunerationDetailsContentProps) => {
 	const { remuneration } = useRemuneration(id);
+	const session = useLoggedUserSession();
 	const actions = getRemunerationLifecycleActions({
 		canManageLifecycle,
 		isSoftDeleted: remuneration.isSoftDeleted,
@@ -66,11 +73,55 @@ const RemunerationDetailsContent = ({
 
 	const summaryInfo = React.useMemo<DetailFieldItem[]>(
 		() => [
-			{ term: "Colaborador", definition: remuneration.employeeName },
-			{ term: "Processo", definition: remuneration.contractProcessNumber },
-			{ term: "Cliente", definition: remuneration.client },
 			{
-				term: "Competência",
+				term: "Colaborador",
+				definition: hasPermission(session, "org:employees:read") ? (
+					<NavigationLink
+						to="/colaboradores"
+						search={{
+							...employeeSearchDefaults,
+							query: remuneration.employeeName,
+						}}
+					>
+						{remuneration.employeeName}
+					</NavigationLink>
+				) : (
+					remuneration.employeeName
+				),
+			},
+			{
+				term: "Processo",
+				definition:
+					hasPermission(session, "org:contracts:read_all") ||
+					hasPermission(session, "org:contracts:read_assigned") ? (
+						<NavigationLink
+							to="/contratos"
+							search={{
+								...contractSearchDefaults,
+								query: remuneration.contractProcessNumber,
+							}}
+						>
+							{remuneration.contractProcessNumber}
+						</NavigationLink>
+					) : (
+						remuneration.contractProcessNumber
+					),
+			},
+			{
+				term: "Cliente",
+				definition: hasPermission(session, "org:clients:read") ? (
+					<NavigationLink
+						to="/clientes"
+						search={{ ...clientSearchDefaults, query: remuneration.client }}
+					>
+						{remuneration.client}
+					</NavigationLink>
+				) : (
+					remuneration.client
+				),
+			},
+			{
+				term: "Data do honorário",
 				definition: formatter.calendarDate(remuneration.paymentDate),
 			},
 			{ term: "Valor", definition: formatter.currency(remuneration.amount) },
@@ -79,12 +130,30 @@ const RemunerationDetailsContent = ({
 				definition: formatter.percent(remuneration.effectivePercentage),
 			},
 		],
-		[remuneration],
+		[remuneration, session],
 	);
 
 	const sourceInfo = React.useMemo<DetailFieldItem[]>(
 		() => [
-			{ term: "Honorário", definition: String(remuneration.feeId) },
+			{
+				term: "Honorário",
+				definition:
+					hasPermission(session, "org:fees:read_all") ||
+					hasPermission(session, "org:fees:read_assigned") ? (
+						<NavigationLink
+							to="/honorarios"
+							search={{
+								...feeSearchDefaults,
+								contractId: String(remuneration.contractId),
+							}}
+						>
+							Honorário #{remuneration.feeId} · parcela{" "}
+							{remuneration.feeInstallmentNumber}
+						</NavigationLink>
+					) : (
+						String(remuneration.feeId)
+					),
+			},
 			{
 				term: "Nº da parcela",
 				definition: String(remuneration.feeInstallmentNumber),
@@ -104,7 +173,7 @@ const RemunerationDetailsContent = ({
 				definition: remuneration.parentFeeIsSoftDeleted ? "Excluído" : "Ativo",
 			},
 		],
-		[remuneration],
+		[remuneration, session],
 	);
 
 	const registerInfo = React.useMemo<DetailFieldItem[]>(
@@ -151,14 +220,14 @@ const RemunerationDetailsContent = ({
 				/>
 			</EntityDetail.Header>
 			<EntityDetail.Body>
-				<EntityDetail.Fields items={summaryInfo} />
+				<EntityDetail.Fields columns={2} items={summaryInfo} />
 				<EntityDetail.Separator />
 				<EntityDetail.Section title="Origem">
-					<EntityDetail.Fields items={sourceInfo} />
+					<EntityDetail.Fields columns={2} items={sourceInfo} />
 				</EntityDetail.Section>
 				<EntityDetail.Separator />
 				<EntityDetail.Section title="Registro">
-					<EntityDetail.Fields items={registerInfo} />
+					<EntityDetail.Fields columns={2} items={registerInfo} />
 				</EntityDetail.Section>
 			</EntityDetail.Body>
 			<EntityDetail.Footer />
@@ -170,14 +239,14 @@ const RemunerationDetailsFallback = () => (
 	<EntityDetail.Content>
 		<EntityDetail.SkeletonHeader withActions />
 		<EntityDetail.Body>
-			<EntityDetail.SkeletonFields rows={6} />
+			<EntityDetail.SkeletonFields columns={2} rows={6} />
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Origem">
-				<EntityDetail.SkeletonFields rows={5} />
+				<EntityDetail.SkeletonFields columns={2} rows={5} />
 			</EntityDetail.Section>
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Registro">
-				<EntityDetail.SkeletonFields rows={3} />
+				<EntityDetail.SkeletonFields columns={2} rows={3} />
 			</EntityDetail.Section>
 		</EntityDetail.Body>
 		<EntityDetail.Footer />

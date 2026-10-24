@@ -200,6 +200,7 @@ export const getContractsQueryOptions = (search: ContractSearch) =>
 export const getContractByIdQueryOptions = (id: EntityId) =>
 	queryOptions({
 		queryKey: contractKeys.detail(id),
+		meta: { refreshOnMutation: true },
 		queryFn: () => getContractByIdFn({ data: { id } }),
 	});
 

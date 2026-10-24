@@ -5,6 +5,7 @@ const ENTITY_TYPE_LABELS: Record<string, string> = {
 	Client: "Cliente",
 	Contract: "Contrato",
 	Employee: "Colaborador",
+	Expense: "Despesa",
 	Fee: "Honorário",
 	Remuneration: "Remuneração",
 	Revenue: "Receita",
@@ -27,11 +28,17 @@ export function getAuditEntityTypeLabel(entityType: string) {
 	return ENTITY_TYPE_LABELS[entityType] ?? entityType;
 }
 
-export function getAuditEntityNameLabel(entityName: string) {
+export function getAuditEntityNameLabel(
+	entityName: string,
+	entityId?: string | null,
+) {
 	const trimmedName = entityName.trim();
 
 	if (trimmedName.length === 0) {
 		return "registro";
+	}
+	if (/^Installment\s+\d+$/i.test(trimmedName)) {
+		return `${entityId ? `Honorário #${entityId} · ` : ""}${trimmedName.replace(/^Installment/i, "Parcela")}`;
 	}
 
 	for (const [entityType, entityLabel] of Object.entries(ENTITY_TYPE_LABELS)) {
@@ -47,14 +54,15 @@ export function getAuditEntityNameLabel(entityName: string) {
 	return trimmedName;
 }
 
-function normalizeEntityName(entityName: string) {
-	return getAuditEntityNameLabel(entityName);
+function normalizeEntityName(entityName: string, entityId?: string | null) {
+	return getAuditEntityNameLabel(entityName, entityId);
 }
 
 export function getAuditDescription(params: {
 	action: string;
 	entityType: string;
 	entityName: string;
+	entityId?: string | null;
 	changeData: unknown;
 	fallbackDescription: string;
 }) {
@@ -63,9 +71,15 @@ export function getAuditDescription(params: {
 	const entityTypeLabel = isSystemEvent
 		? "sistema"
 		: getAuditEntityTypeLabel(params.entityType).toLowerCase();
-	const entityName = isSystemEvent
+	const fullEntityName = isSystemEvent
 		? "sistema"
-		: normalizeEntityName(params.entityName);
+		: normalizeEntityName(params.entityName, params.entityId);
+	const entityName =
+		params.entityType === "Fee" &&
+		/^Installment\s+\d+$/i.test(params.entityName.trim()) &&
+		params.entityId
+			? fullEntityName.replace(/^Honorário /, "")
+			: fullEntityName;
 
 	if (
 		params.changeData &&

@@ -6,6 +6,7 @@ import {
 import { Skeleton } from "@/shared/components/ui";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
+import { AUDIT_ACTION_LABELS } from "../../constants/display";
 import { useAuditLog } from "../../hooks/use-data";
 import {
 	type AuditChangeDiffEntry,
@@ -46,7 +47,11 @@ const AuditLogDetailsContent = ({ id }: AuditLogDetailsContentProps) => {
 
 	const summaryInfo = React.useMemo<DetailFieldItem[]>(
 		() => [
-			{ term: "Ação", definition: auditLog.action || "—" },
+			{
+				term: "Ação",
+				definition:
+					AUDIT_ACTION_LABELS[auditLog.action] ?? auditLog.action ?? "—",
+			},
 			{ term: "Tipo", definition: auditLog.entityTypeLabel || "Sistema" },
 			{ term: "Entidade", definition: auditLog.entityName || "Sistema" },
 			{ term: "ID da entidade", definition: auditLog.entityId ?? "—" },
@@ -72,7 +77,7 @@ const AuditLogDetailsContent = ({ id }: AuditLogDetailsContentProps) => {
 				</EntityDetail.Title>
 			</EntityDetail.Header>
 			<EntityDetail.Body>
-				<EntityDetail.Fields items={summaryInfo} />
+				<EntityDetail.Fields columns={2} items={summaryInfo} />
 				<EntityDetail.Separator />
 				<EntityDetail.Section title={changePresentation.title}>
 					{changePresentation.mode === "diff" ? (
@@ -189,11 +194,11 @@ const AuditLogDetailsFallback = () => (
 	<EntityDetail.Content>
 		<EntityDetail.SkeletonHeader />
 		<EntityDetail.Body>
-			<EntityDetail.SkeletonFields rows={10} />
+			<EntityDetail.SkeletonFields columns={2} rows={10} />
 			<EntityDetail.Separator />
 			<section className="flex flex-col gap-2">
 				<Skeleton className="h-3 w-28" />
-				<EntityDetail.SkeletonFields rows={4} />
+				<EntityDetail.SkeletonFields columns={2} rows={4} />
 			</section>
 			<EntityDetail.Separator />
 			<section className="flex flex-col gap-2">

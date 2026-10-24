@@ -13,10 +13,12 @@ import { useRemunerationFilter } from "../../hooks/use-filter";
 
 interface RemunerationFilterProps {
 	isAdmin?: boolean;
+	summary?: React.ReactNode;
 }
 
 export const RemunerationFilter = ({
 	isAdmin = false,
+	summary,
 }: RemunerationFilterProps) => {
 	const {
 		filter,
@@ -50,8 +52,6 @@ export const RemunerationFilter = ({
 		filter.active !== defaultFilter.active ||
 		filter.status !== defaultFilter.status;
 	const hasDesktopPanelFilters =
-		(isAdmin && filter.employeeId !== defaultFilter.employeeId) ||
-		filter.contractId !== defaultFilter.contractId ||
 		filter.dateFrom !== defaultFilter.dateFrom ||
 		filter.dateTo !== defaultFilter.dateTo;
 
@@ -82,10 +82,10 @@ export const RemunerationFilter = ({
 				{(field) => <field.Autocomplete label="Contrato" options={contracts} />}
 			</form.AppField>
 			<form.AppField name="dateFrom">
-				{(field) => <field.DatePicker label="Competência de" />}
+				{(field) => <field.DatePicker label="Data do honorário de" />}
 			</form.AppField>
 			<form.AppField name="dateTo">
-				{(field) => <field.DatePicker label="Competência até" />}
+				{(field) => <field.DatePicker label="Data do honorário até" />}
 			</form.AppField>
 			<form.AppField name="active">
 				{(field) => (
@@ -119,6 +119,30 @@ export const RemunerationFilter = ({
 
 	const desktopFilterActions = (
 		<ListFilters.Actions className="w-full md:w-auto">
+			{isAdmin ? (
+				<div className="w-56 shrink-0">
+					<form.AppField name="employeeId">
+						{(field) => (
+							<field.Autocomplete
+								aria-label="Colaborador"
+								placeholder="Colaborador"
+								options={employees}
+							/>
+						)}
+					</form.AppField>
+				</div>
+			) : null}
+			<div className="w-56 shrink-0">
+				<form.AppField name="contractId">
+					{(field) => (
+						<field.Autocomplete
+							aria-label="Contrato"
+							placeholder="Contrato"
+							options={contracts}
+						/>
+					)}
+				</form.AppField>
+			</div>
 			<ListFilters.Button
 				type="button"
 				onClick={() => setIsDesktopPanelOpen((open) => !open)}
@@ -138,23 +162,11 @@ export const RemunerationFilter = ({
 		<Collapsible open={isDesktopPanelOpen} onOpenChange={setIsDesktopPanelOpen}>
 			<CollapsibleContent>
 				<ListFilters.Panel>
-					{isAdmin ? (
-						<form.AppField name="employeeId">
-							{(field) => (
-								<field.Autocomplete label="Colaborador" options={employees} />
-							)}
-						</form.AppField>
-					) : null}
-					<form.AppField name="contractId">
-						{(field) => (
-							<field.Autocomplete label="Contrato" options={contracts} />
-						)}
-					</form.AppField>
 					<form.AppField name="dateFrom">
-						{(field) => <field.DatePicker label="Competência de" />}
+						{(field) => <field.DatePicker label="Data do honorário de" />}
 					</form.AppField>
 					<form.AppField name="dateTo">
-						{(field) => <field.DatePicker label="Competência até" />}
+						{(field) => <field.DatePicker label="Data do honorário até" />}
 					</form.AppField>
 					<form.AppField name="active">
 						{(field) => (
@@ -180,7 +192,7 @@ export const RemunerationFilter = ({
 	return (
 		<form.Form form={form} className="w-full">
 			<ListFilters>
-				<ListFilters.Bar>
+				<ListFilters.Bar className="flex-wrap">
 					<form.AppField name="query">
 						{(field) => (
 							<field.Search
@@ -191,6 +203,7 @@ export const RemunerationFilter = ({
 						)}
 					</form.AppField>
 					{isMobile ? mobileFilters : desktopFilterActions}
+					<div className="ml-auto shrink-0">{summary}</div>
 				</ListFilters.Bar>
 				{isMobile ? null : desktopFilterPanel}
 				{(filter.query || hasAdvancedFilters) && (
@@ -242,7 +255,7 @@ export const RemunerationFilter = ({
 										dateFrom: defaultFilter.dateFrom,
 									})
 								}
-								removeLabel={`Remover filtro de competência inicial: ${formatDateChip(filter.dateFrom)}`}
+								removeLabel={`Remover filtro de pagamento inicial: ${formatDateChip(filter.dateFrom)}`}
 							>
 								{`De ${formatDateChip(filter.dateFrom)}`}
 							</ListFilters.Chip>
@@ -255,7 +268,7 @@ export const RemunerationFilter = ({
 										dateTo: defaultFilter.dateTo,
 									})
 								}
-								removeLabel={`Remover filtro de competência final: ${formatDateChip(filter.dateTo)}`}
+								removeLabel={`Remover filtro de pagamento final: ${formatDateChip(filter.dateTo)}`}
 							>
 								{`Até ${formatDateChip(filter.dateTo)}`}
 							</ListFilters.Chip>

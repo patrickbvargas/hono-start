@@ -46,6 +46,13 @@ export const EmployeeTable = ({
 				},
 			}),
 			c.accessor("fullName", {
+				cell: (context) => (
+					<EntityIdTrigger
+						id={context.row.original.id}
+						onView={onView}
+						label={context.getValue()}
+					/>
+				),
 				header: "Nome",
 				enableSorting: EMPLOYEE_ALLOWED_SORT_COLUMNS.includes("fullName"),
 				meta: {

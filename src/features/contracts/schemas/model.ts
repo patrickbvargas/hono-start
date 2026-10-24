@@ -22,6 +22,8 @@ export const contractRevenueSchema = entityIdSchema.safeExtend({
 	totalInstallments: z.number(),
 	paidValue: z.number(),
 	installmentsPaid: z.number().int().nonnegative(),
+	nextInstallmentNumber: z.number().int().positive().nullable().default(null),
+	nextDueDate: z.iso.date().nullable().default(null),
 	remainingValue: z.number(),
 	isFullyPaid: z.boolean(),
 	isActive: z.boolean(),

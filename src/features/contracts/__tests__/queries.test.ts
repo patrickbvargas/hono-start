@@ -134,6 +134,40 @@ describe("contract data queries", () => {
 		]);
 	});
 
+	it("intersects an employee filter with the actor's authorized assignments", async () => {
+		await getContracts({
+			scope: {
+				firmId: 1,
+				employeeId: 10,
+				employeeTypeValue: "LAWYER",
+				isAdmin: false,
+			},
+			search: {
+				page: 1,
+				limit: 25,
+				column: "createdAt",
+				direction: "desc",
+				query: "",
+				clientId: "",
+				employeeId: "22",
+				legalArea: [],
+				contractStatus: [],
+				active: "all",
+				status: "active",
+			},
+		});
+		const where = prismaMock.contract.findMany.mock.calls[0][0].where;
+		expect(where.firmId).toBe(1);
+		expect(where.assignments.some.employeeId).toBe(10);
+		expect(where.AND).toEqual([
+			{
+				assignments: {
+					some: { employeeId: 22, isActive: true, deletedAt: null },
+				},
+			},
+		]);
+		expect(prismaMock.contract.count).toHaveBeenCalledWith({ where });
+	});
 	it("scopes regular-user lists by firm, assignment, filters, and deterministic sorting", async () => {
 		const search = {
 			page: 2,
@@ -142,6 +176,7 @@ describe("contract data queries", () => {
 			direction: "desc" as const,
 			query: "PROC",
 			clientId: "9",
+			employeeId: "",
 			legalArea: ["SOCIAL_SECURITY"],
 			contractStatus: ["ACTIVE"],
 			active: "all" as const,
@@ -318,6 +353,7 @@ describe("contract data queries", () => {
 				direction: "desc",
 				query: "",
 				clientId: "",
+				employeeId: "",
 				legalArea: [],
 				contractStatus: [],
 				active: "all",
@@ -343,6 +379,7 @@ describe("contract data queries", () => {
 				direction: "desc",
 				query: "",
 				clientId: "",
+				employeeId: "",
 				legalArea: [],
 				contractStatus: [],
 				active: "all",

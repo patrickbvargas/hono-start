@@ -10,3 +10,8 @@ export type QueryPaginatedReturnType<T> = {
 };
 
 export type MutationReturnType = { success: true };
+
+export type FinancialQueryPaginatedReturnType<T> =
+	QueryPaginatedReturnType<T> & {
+		totalAmount: number;
+	};

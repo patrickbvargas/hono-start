@@ -4,10 +4,12 @@ import { cn } from "@/shared/lib/utils";
 interface WrapperProps extends React.HTMLAttributes<HTMLDivElement> {
 	title?: string;
 	actions?: React.ReactNode;
+	titleAside?: React.ReactNode;
 }
 
 export const Wrapper = ({
 	title,
+	titleAside,
 	actions,
 	children,
 	className,
@@ -27,6 +29,7 @@ export const Wrapper = ({
 					<SidebarTrigger />
 					<Separator orientation="vertical" className="my-auto h-4" />
 					{title && <WrapperTitle title={title} />}
+					{titleAside}
 				</div>
 				{actions}
 			</div>

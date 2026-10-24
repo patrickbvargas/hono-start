@@ -48,6 +48,21 @@ export const ExpenseTable = ({
 				date: (row) => row.expenseDate,
 				amount: (row) => row.amount,
 				enableSorting: true,
+				onCategoryClick: onView ? (row) => onView(row.id) : undefined,
+			}),
+			c.accessor("notes", {
+				header: "Descrição",
+				enableSorting: false,
+				cell: (context) => (
+					<div>
+						<span
+							className="line-clamp-2 max-w-80 whitespace-normal wrap-break-word"
+							title={context.getValue() ?? undefined}
+						>
+							{context.getValue() || "—"}
+						</span>
+					</div>
+				),
 			}),
 			c.accessor("isActive", {
 				header: "Situação",

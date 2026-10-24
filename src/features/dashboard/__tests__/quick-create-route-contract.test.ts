@@ -21,8 +21,8 @@ describe("dashboard quick-create route contract", () => {
 			routeContent.indexOf("</DropdownMenuContent>"),
 		);
 		const permissions = [
-			"clients",
 			"contracts",
+			"clients",
 			"employees",
 			"fees",
 			"expenses",

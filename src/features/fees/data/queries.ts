@@ -5,6 +5,7 @@ import {
 	withDeterministicTieBreaker,
 } from "@/shared/lib/entity-management";
 import { prisma } from "@/shared/lib/prisma";
+import { financialTotalsSchema } from "@/shared/schemas/financial-totals";
 import type { Option } from "@/shared/schemas/option";
 import {
 	CONTRACT_STATUS_ACTIVE_VALUE,
@@ -16,9 +17,9 @@ import {
 	type SessionAssignmentSummary,
 } from "@/shared/session";
 import type {
+	FinancialQueryPaginatedReturnType,
 	QueryManyReturnType,
 	QueryOneReturnType,
-	QueryPaginatedReturnType,
 } from "@/shared/types/api";
 import { FEE_ERRORS } from "../constants/errors";
 import type { FeeFilter } from "../schemas/filter";
@@ -269,7 +270,7 @@ const feeInclude = {
 export async function getFees({
 	scope,
 	search,
-}: GetFeesParams): Promise<QueryPaginatedReturnType<FeeSummary>> {
+}: GetFeesParams): Promise<FinancialQueryPaginatedReturnType<FeeSummary>> {
 	const where = buildFeeWhere({
 		firmId: scope.firmId,
 		employeeId: scope.employeeId,
@@ -290,7 +291,7 @@ export async function getFees({
 		{ id: "asc" },
 	);
 
-	const [fees, total] = await Promise.all([
+	const [fees, total, aggregate] = await Promise.all([
 		prisma.fee.findMany({
 			where,
 			include: feeInclude,
@@ -299,11 +300,15 @@ export async function getFees({
 			take: search.limit,
 		}),
 		prisma.fee.count({ where }),
+		prisma.fee.aggregate({ where, _sum: { amount: true } }),
 	]);
 
 	return {
 		data: mapFeeSummaries(fees),
 		total,
+		...financialTotalsSchema.parse({
+			totalAmount: Number(aggregate._sum.amount ?? 0),
+		}),
 		page: search.page,
 		pageSize: search.limit,
 	};

@@ -3,14 +3,17 @@ import {
 	AttachmentSection,
 	AttachmentSectionFallback,
 } from "@/features/attachments";
+import { contractSearchDefaults } from "@/features/contracts";
 import { EntityActions } from "@/shared/components/entity-actions";
 import {
 	type DetailFieldItem,
 	EntityDetail,
 } from "@/shared/components/entity-detail";
 import { EntityStatus } from "@/shared/components/entity-status";
+import { NavigationLink } from "@/shared/components/navigation-link";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
+import { hasPermission, useLoggedUserSession } from "@/shared/session";
 import type { OverlayState } from "@/shared/types/overlay";
 import { useClient } from "../../hooks/use-data";
 import { formatClientDocument } from "../../utils/format";
@@ -64,6 +67,7 @@ const ClientDetailsContent = ({
 	onRestore,
 }: ClientDetailsContentProps) => {
 	const { client } = useClient(id);
+	const session = useLoggedUserSession();
 	const actions = getClientLifecycleActions({
 		canManageLifecycle,
 		isSoftDeleted: client.isSoftDeleted,
@@ -73,9 +77,26 @@ const ClientDetailsContent = ({
 		() => [
 			{ term: "Documento", definition: formatClientDocument(client.document) },
 			{ term: "Tipo", definition: client.type },
-			{ term: "Contratos", definition: client.contractCount },
+			{
+				term: "Contratos",
+				definition:
+					hasPermission(session, "org:contracts:read_all") ||
+					hasPermission(session, "org:contracts:read_assigned") ? (
+						<NavigationLink
+							to="/contratos"
+							search={{
+								...contractSearchDefaults,
+								clientId: String(client.id),
+							}}
+						>
+							{client.contractCount}
+						</NavigationLink>
+					) : (
+						client.contractCount
+					),
+			},
 		],
-		[client],
+		[client, session],
 	);
 
 	const contactInfo = React.useMemo<DetailFieldItem[]>(
@@ -125,10 +146,10 @@ const ClientDetailsContent = ({
 				/>
 			</EntityDetail.Header>
 			<EntityDetail.Body>
-				<EntityDetail.Fields items={generalInfo} />
+				<EntityDetail.Fields columns={2} items={generalInfo} />
 				<EntityDetail.Separator />
 				<EntityDetail.Section title="Contato">
-					<EntityDetail.Fields items={contactInfo} />
+					<EntityDetail.Fields columns={2} items={contactInfo} />
 				</EntityDetail.Section>
 				<EntityDetail.Separator />
 				<EntityDetail.Section title="Anexos">
@@ -136,7 +157,7 @@ const ClientDetailsContent = ({
 				</EntityDetail.Section>
 				<EntityDetail.Separator />
 				<EntityDetail.Section title="Registro">
-					<EntityDetail.Fields items={registerInfo} />
+					<EntityDetail.Fields columns={2} items={registerInfo} />
 				</EntityDetail.Section>
 			</EntityDetail.Body>
 			<EntityDetail.Footer />
@@ -148,10 +169,10 @@ const ClientDetailsFallback = () => (
 	<EntityDetail.Content>
 		<EntityDetail.SkeletonHeader withActions />
 		<EntityDetail.Body>
-			<EntityDetail.SkeletonFields rows={3} />
+			<EntityDetail.SkeletonFields columns={2} rows={3} />
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Contato">
-				<EntityDetail.SkeletonFields rows={2} />
+				<EntityDetail.SkeletonFields columns={2} rows={2} />
 			</EntityDetail.Section>
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Anexos">
@@ -159,7 +180,7 @@ const ClientDetailsFallback = () => (
 			</EntityDetail.Section>
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Registro">
-				<EntityDetail.SkeletonFields rows={3} />
+				<EntityDetail.SkeletonFields columns={2} rows={3} />
 			</EntityDetail.Section>
 		</EntityDetail.Body>
 		<EntityDetail.Footer />

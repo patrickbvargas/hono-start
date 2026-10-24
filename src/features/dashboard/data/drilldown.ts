@@ -1,6 +1,5 @@
 import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/shared/lib/prisma";
-import { assertDashboardDrilldownScope } from "../rules/drilldown";
 import type {
 	DashboardDrilldownInput,
 	DashboardDrilldownRow,
@@ -14,6 +13,7 @@ import {
 	isDateInsidePeriod,
 } from "../utils/period";
 import { getInstallmentBucket } from "./analysis";
+import { assertDashboardDrilldownScope } from "./assert-drilldown";
 import { dashboardRevenueSelect } from "./revenue-select";
 import { buildRevenueSchedule } from "./schedule";
 import {

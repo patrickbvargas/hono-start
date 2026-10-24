@@ -24,8 +24,9 @@ export function AttachmentSectionContent({
 	onDelete,
 }: AttachmentSectionContentProps) {
 	return (
-		<div className="flex items-center justify-between gap-3">
+		<div className="flex flex-wrap items-end justify-between gap-3">
 			<EntityFields
+				className="min-w-0 flex-1"
 				items={[
 					{
 						term: "Tamanho",

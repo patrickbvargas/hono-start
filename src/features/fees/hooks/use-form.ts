@@ -17,12 +17,22 @@ import {
 } from "../utils/default";
 
 interface UseFeeFormOptions {
+	initialSelection?: {
+		contractId: string;
+		revenueId: string;
+		installmentNumber?: number;
+	};
 	id?: EntityId;
 	initialValue?: FeeDetail;
 	onSuccess?: () => void;
 }
 
-export function useFeeForm({ id, initialValue, onSuccess }: UseFeeFormOptions) {
+export function useFeeForm({
+	id,
+	initialValue,
+	initialSelection,
+	onSuccess,
+}: UseFeeFormOptions) {
 	const queryClient = useQueryClient();
 	const createMutation = useMutation(createFeeMutationOptions());
 	const updateMutation = useMutation(updateFeeMutationOptions());
@@ -31,7 +41,7 @@ export function useFeeForm({ id, initialValue, onSuccess }: UseFeeFormOptions) {
 	const defaultValues =
 		isEditing && initialValue
 			? defaultFeeUpdateValues(initialValue)
-			: defaultFeeCreateValues();
+			: { ...defaultFeeCreateValues(), ...initialSelection };
 
 	const form = useAppForm({
 		defaultValues,

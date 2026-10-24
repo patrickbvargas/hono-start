@@ -159,6 +159,7 @@ const getDashboardEmployeeOptionsFn = createServerFn({
 export const getDashboardSummaryQueryOptions = (search: DashboardSearch) =>
 	queryOptions({
 		queryKey: dashboardKeys.summary(search),
+		meta: { refreshOnMutation: true },
 		queryFn: () => getDashboardSummaryFn({ data: search }),
 	});
 

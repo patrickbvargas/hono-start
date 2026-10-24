@@ -1,7 +1,7 @@
 import { EllipsisVerticalIcon } from "lucide-react";
 import type { ReactNode } from "react";
+import { TableButton } from "@/shared/components/table-button";
 import {
-	Button,
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
@@ -69,7 +69,12 @@ export function EntityActions({
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger
-				render={<Button size="icon-sm" variant="ghost" aria-label="Ações" />}
+				render={
+					<TableButton
+						className="mx-0 inline-flex size-7 items-center justify-center px-0"
+						aria-label="Ações"
+					/>
+				}
 				className="cursor-pointer"
 			>
 				<EllipsisVerticalIcon size={16} />

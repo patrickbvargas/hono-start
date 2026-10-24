@@ -71,18 +71,24 @@ export function useContractOptions({
 }
 
 export function useContractFilterOptions() {
-	const [{ data: clients }, { data: legalAreas }, { data: statuses }] =
-		useSuspenseQueries({
-			queries: [
-				getSelectableContractClientsQueryOptions(),
-				getContractLegalAreasQueryOptions(),
-				getContractStatusesQueryOptions(),
-			],
-		});
+	const [
+		{ data: clients },
+		{ data: legalAreas },
+		{ data: statuses },
+		{ data: employees },
+	] = useSuspenseQueries({
+		queries: [
+			getSelectableContractClientsQueryOptions(),
+			getContractLegalAreasQueryOptions(),
+			getContractStatusesQueryOptions(),
+			getSelectableContractEmployeesQueryOptions(),
+		],
+	});
 
 	return {
 		clients,
 		legalAreas,
 		statuses,
+		employees,
 	};
 }

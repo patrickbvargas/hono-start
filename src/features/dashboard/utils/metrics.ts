@@ -6,12 +6,13 @@ export function formatChange(value: number | null) {
 	return `${prefix}${value.toFixed(0)}%`;
 }
 
-export function getChangeTone(value: number | null) {
-	if (value !== null && value > 0) {
+export function getChangeTone(value: number | null, lowerIsBetter = false) {
+	const direction = value === null ? null : lowerIsBetter ? -value : value;
+	if (direction !== null && direction > 0) {
 		return "success" as const;
 	}
 
-	if (value !== null && value < 0) {
+	if (direction !== null && direction < 0) {
 		return "danger" as const;
 	}
 

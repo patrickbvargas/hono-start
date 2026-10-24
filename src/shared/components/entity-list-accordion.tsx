@@ -77,7 +77,7 @@ export function EntityListAccordion<T>({
 								</div>
 							) : null}
 						</div>
-						<AccordionContent className="pb-4">
+						<AccordionContent className="px-1 pt-1 pb-4">
 							{renderContent(item, index)}
 						</AccordionContent>
 					</AccordionItem>

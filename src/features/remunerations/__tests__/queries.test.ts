@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const { prismaMock } = vi.hoisted(() => ({
 	prismaMock: {
 		remuneration: {
+			aggregate: vi.fn(),
 			count: vi.fn(),
 			findFirst: vi.fn(),
 			findMany: vi.fn(),
@@ -78,6 +79,9 @@ function createRemunerationRow() {
 describe("remuneration data queries", () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
+		prismaMock.remuneration.aggregate.mockResolvedValue({
+			_sum: { amount: "9876.54" },
+		});
 		prismaMock.remuneration.findMany.mockResolvedValue([
 			createRemunerationRow(),
 		]);
@@ -163,6 +167,11 @@ describe("remuneration data queries", () => {
 				orderBy: [{ paymentDate: "desc" }, { id: "asc" }],
 			}),
 		);
+		expect(result.totalAmount).toBe(9876.54);
+		expect(prismaMock.remuneration.aggregate).toHaveBeenCalledWith({
+			where: prismaMock.remuneration.findMany.mock.calls[0]?.[0].where,
+			_sum: { amount: true },
+		});
 		expect(result.data).toEqual([
 			expect.objectContaining({
 				employeeId: 10,

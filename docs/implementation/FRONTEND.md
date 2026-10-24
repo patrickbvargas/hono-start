@@ -26,6 +26,9 @@ It is meant to survive domain changes as long as the project keeps the same UI a
 
 ## Form Rules
 
+- EntityForm subscribes to the existing app-form context to guard dismissal while dirty or submitting. Its shared discard confirmation preserves drafts; skeletons outside form context retain normal dismissal.
+- Financial list APIs use FinancialQueryPaginatedReturnType and validate totalAmount through financialTotalsSchema. Aggregate queries reuse the list's authorized where and omit pagination. Never sum only the current page to represent a filtered total.
+
 - Numeric inputs use an explicit pt-BR locale independently of the OS/browser language. Money fields use a 0.01 step so blur preserves cents. Calendar selection closes its popover after updating the field. Business calendar dates use formatter.calendarDate to preserve their ISO date portion independently of timezone; creation/update timestamps retain formatter.date.
 - Selectable option query factories mark meta.refreshOnMutation as true. Audited mutations invalidate these selections as well as their entity and audit queries, so records created in one form become available in subsequent forms without reloading. Session queries retain their separate security cache policy.
 
@@ -150,3 +153,7 @@ The shared DataTable optionally accepts pageSize for native TanStack pagination 
 ## Product terminology
 
 - Keep the organization context implicit in user-facing copy: do not add da firma or do escritório. Use concise wording such as Despesas and Visão geral. Internal firm identifiers remain unchanged.
+
+Table cell actions use the shared TableButton, including dashboard drilldowns and entity triggers. Financial filtered totals stay on one line. Pagination retains page-size selection and navigation on a single page. Detail skeleton grids match their loaded fields. Attachment details expose filename, metadata and actions together. KPI comparison badges use green/red as explicitly requested; this is the intentional exception to semantic-only theme colors.
+
+Shared NavigationLink preserves TanStack Router link typing and adds a decorative navigation icon. Feature filters accept an optional summary slot in their primary bar; advanced panels must not determine the vertical position of filtered totals.

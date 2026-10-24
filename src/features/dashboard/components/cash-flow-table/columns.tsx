@@ -1,4 +1,5 @@
 import { createColumnHelper } from "@tanstack/react-table";
+import { TableButton } from "@/shared/components/table-button";
 import { formatter } from "@/shared/lib/formatter";
 import type { dataTableFeatures } from "@/shared/lib/table";
 import type { DashboardCashFlowRow } from "../../schemas/model";
@@ -18,15 +19,14 @@ export interface CashFlowSelectionOptions {
 export function getColumns(onSelect?: CashFlowSelectionOptions["onSelect"]) {
 	const renderValue = (row: DashboardCashFlowRow, column: CashFlowValue) =>
 		onSelect ? (
-			<button
+			<TableButton
 				type="button"
-				className="cursor-pointer rounded-sm px-1 -mx-1 transition-colors hover:bg-accent/30 hover:ring-1 hover:ring-ring/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
 				aria-label={`Detalhar ${labels[column]} em ${row.monthLabel}`}
 				title={`Ver detalhes: ${labels[column]} · ${row.monthLabel}`}
 				onClick={(event) => onSelect(row, column, event.currentTarget)}
 			>
 				{formatter.currency(row[column])}
-			</button>
+			</TableButton>
 		) : (
 			formatter.currency(row[column])
 		);

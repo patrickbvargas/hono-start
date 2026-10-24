@@ -46,15 +46,22 @@ export const FeeTable = ({
 				},
 			}),
 			c.accessor("contractProcessNumber", {
+				cell: (context) => (
+					<EntityIdTrigger
+						id={context.row.original.id}
+						onView={onView}
+						label={context.getValue()}
+					/>
+				),
 				header: "Processo",
 				meta: { minColumnWidth: 180 },
 			}),
 			c.accessor("revenueType", {
-				header: "Receita",
+				header: "Tipo de honorário",
 				meta: { minColumnWidth: 160 },
 			}),
 			c.accessor("paymentDate", {
-				header: "Competência",
+				header: "Data de recebimento",
 				cell: ({ row }) => formatter.calendarDate(row.original.paymentDate),
 				enableSorting: FEE_ALLOWED_SORT_COLUMNS.includes("paymentDate"),
 			}),

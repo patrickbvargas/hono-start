@@ -61,12 +61,12 @@ describe("AttachmentSection", () => {
 		render(<AttachmentSectionFallback canUpload />);
 		expect(useAttachmentsMock).not.toHaveBeenCalled();
 		expect(screen.queryByRole("button")).toBeNull();
-		expect(document.querySelectorAll('[data-slot="skeleton"]').length).toBe(2);
+		expect(document.querySelectorAll('[data-slot="skeleton"]').length).toBe(4);
 	});
 
 	it("omits upload button space when uploads are unavailable", () => {
 		render(<AttachmentSectionFallback canUpload={false} />);
-		expect(document.querySelectorAll('[data-slot="skeleton"]').length).toBe(1);
+		expect(document.querySelectorAll('[data-slot="skeleton"]').length).toBe(3);
 	});
 
 	it("renders content actions without rendering its own title", () => {
@@ -86,10 +86,10 @@ describe("AttachmentSection", () => {
 		render(<AttachmentSection ownerId={1} ownerKind="contract" />);
 
 		expect(screen.queryByText("Carregando anexos...")).toBeNull();
-		expect(document.querySelectorAll('[data-slot="skeleton"]').length).toBe(1);
+		expect(document.querySelectorAll('[data-slot="skeleton"]').length).toBe(3);
 	});
 
-	it("renders attachments in accordion rows with metadata in expanded content", () => {
+	it("renders attachment names, metadata and actions together without expansion", () => {
 		useAttachmentsMock.mockReturnValue({
 			attachments: [
 				{
@@ -113,10 +113,7 @@ describe("AttachmentSection", () => {
 
 		render(<AttachmentSection ownerId={1} ownerKind="client" />);
 
-		expect(screen.getByRole("button", { name: "contrato.pdf" })).toBeTruthy();
-		expect(screen.queryByText("Tamanho")).toBeNull();
-
-		fireEvent.click(screen.getByRole("button", { name: "contrato.pdf" }));
+		expect(screen.getByText("contrato.pdf")).toBeTruthy();
 
 		expect(screen.getByText("Tamanho")).toBeTruthy();
 		expect(screen.getByText("1.5 KB")).toBeTruthy();

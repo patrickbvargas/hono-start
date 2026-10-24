@@ -45,7 +45,11 @@ function Root({ state, children, ...props }: RootProps) {
 			modal={false}
 			{...props}
 		>
-			<DrawerContent container={container ?? undefined} direction="right">
+			<DrawerContent
+				container={container ?? undefined}
+				direction="right"
+				className="data-[direction=right]:w-full data-[direction=right]:sm:max-w-xl"
+			>
 				{children}
 			</DrawerContent>
 		</Drawer>

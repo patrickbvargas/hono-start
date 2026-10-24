@@ -33,6 +33,7 @@ export const ExpenseList = ({
 		(expense: ExpenseSummary): DetailFieldItem[] => [
 			{ term: "Data", definition: formatter.calendarDate(expense.expenseDate) },
 			{ term: "Valor", definition: formatter.currency(expense.amount) },
+			{ term: "Descrição", definition: expense.notes || "—" },
 			{
 				term: "Situação",
 				definition: (

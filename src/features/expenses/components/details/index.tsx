@@ -117,7 +117,7 @@ function ExpenseDetailsContent({
 				/>
 			</EntityDetail.Header>
 			<EntityDetail.Body>
-				<EntityDetail.Fields items={generalInfo} />
+				<EntityDetail.Fields columns={2} items={generalInfo} />
 				<EntityDetail.Separator />
 				<EntityDetail.Section title="Observação">
 					<p className="text-sm">{expense.notes?.trim() || "—"}</p>
@@ -128,7 +128,7 @@ function ExpenseDetailsContent({
 				</EntityDetail.Section>
 				<EntityDetail.Separator />
 				<EntityDetail.Section title="Registro">
-					<EntityDetail.Fields items={registerInfo} />
+					<EntityDetail.Fields columns={2} items={registerInfo} />
 				</EntityDetail.Section>
 			</EntityDetail.Body>
 			<EntityDetail.Footer />
@@ -140,7 +140,7 @@ const ExpenseDetailsFallback = () => (
 	<EntityDetail.Content>
 		<EntityDetail.SkeletonHeader withActions />
 		<EntityDetail.Body>
-			<EntityDetail.SkeletonFields rows={3} />
+			<EntityDetail.SkeletonFields columns={2} rows={3} />
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Observação">
 				<Skeleton className="h-5 w-full max-w-56" />
@@ -151,7 +151,7 @@ const ExpenseDetailsFallback = () => (
 			</EntityDetail.Section>
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Registro">
-				<EntityDetail.SkeletonFields rows={3} />
+				<EntityDetail.SkeletonFields columns={2} rows={3} />
 			</EntityDetail.Section>
 		</EntityDetail.Body>
 		<EntityDetail.Footer />

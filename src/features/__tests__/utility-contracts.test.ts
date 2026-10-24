@@ -103,6 +103,8 @@ const contractDetail = {
 			totalInstallments: 10,
 			paidValue: 1000,
 			installmentsPaid: 1,
+			nextInstallmentNumber: 2,
+			nextDueDate: "2026-02-01",
 			remainingValue: 9000,
 			isFullyPaid: false,
 			isActive: true,
@@ -286,7 +288,7 @@ describe("feature utility contracts", () => {
 
 		expect(csv).toContain('"sep=;"');
 		expect(csv).toContain(
-			'"Colaborador";"Cliente";"Processo";"Nº parcela";"Competência";"%";"Origem";"Situação";"Valor"',
+			'"Colaborador";"Cliente";"Processo";"Nº parcela";"Data do honorário";"%";"Origem";"Situação";"Valor"',
 		);
 		expect(csv).toContain(
 			'"João ""Teste"" (Advogado) \\ Silva";"Maria Cliente"',

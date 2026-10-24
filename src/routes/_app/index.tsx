@@ -57,6 +57,7 @@ import {
 } from "@/shared/components/wrapper";
 import { getPageTitle, ROUTES } from "@/shared/config/routes";
 import { useOverlay } from "@/shared/hooks/use-overlay";
+import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
 import {
 	assertCan,
@@ -150,6 +151,17 @@ function RouteComponent() {
 	return (
 		<Wrapper
 			title={ROUTES.dashboard.title}
+			titleAside={
+				<span className="text-xs text-muted-foreground">
+					{search.dateFrom
+						? formatter.calendarDate(search.dateFrom)
+						: "Sem limite inicial"}{" "}
+					–{" "}
+					{search.dateTo
+						? formatter.calendarDate(search.dateTo)
+						: "sem limite final"}
+				</span>
+			}
 			actions={
 				canCreate ? (
 					<DropdownMenu>
@@ -158,20 +170,20 @@ function RouteComponent() {
 							Novo
 						</DropdownMenuTrigger>
 						<DropdownMenuContent align="end">
-							{hasPermission(session, "org:clients:create") ? (
-								<DropdownMenuItem
-									onClick={() => clientOverlay.overlay.create.open()}
-								>
-									<UserIcon size={16} />
-									Cliente
-								</DropdownMenuItem>
-							) : null}
 							{hasPermission(session, "org:contracts:create") ? (
 								<DropdownMenuItem
 									onClick={() => contractOverlay.overlay.create.open()}
 								>
 									<BriefcaseIcon size={16} />
 									Contrato
+								</DropdownMenuItem>
+							) : null}
+							{hasPermission(session, "org:clients:create") ? (
+								<DropdownMenuItem
+									onClick={() => clientOverlay.overlay.create.open()}
+								>
+									<UserIcon size={16} />
+									Cliente
 								</DropdownMenuItem>
 							) : null}
 							{hasPermission(session, "org:employees:create") ? (

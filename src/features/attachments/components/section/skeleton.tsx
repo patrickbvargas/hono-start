@@ -2,8 +2,12 @@ import { Skeleton } from "@/shared/components/ui";
 
 export function AttachmentSectionSkeleton() {
 	return (
-		<div className="rounded-md border border-dashed px-3 py-4">
+		<div className="rounded-lg border p-3 space-y-3">
 			<Skeleton className="h-5 w-40" />
+			<div className="grid grid-cols-2 gap-4">
+				<Skeleton className="h-10 w-full" />
+				<Skeleton className="h-10 w-full" />
+			</div>
 		</div>
 	);
 }

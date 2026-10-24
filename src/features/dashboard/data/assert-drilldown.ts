@@ -1,12 +1,12 @@
 import { DASHBOARD_ERRORS } from "../constants/errors";
-import { getFinancialReferenceDate } from "../data/analysis";
-import { canReadDashboardFirmResult, type DashboardScope } from "../data/scope";
 import type { DashboardDrilldownInput } from "../schemas/drilldown";
 import {
 	getDashboardPeriod,
 	getFinancialEvolutionMonthRange,
 	getMonthKey,
 } from "../utils/period";
+import { getFinancialReferenceDate } from "./analysis";
+import { canReadDashboardFirmResult, type DashboardScope } from "./scope";
 export function assertDashboardDrilldownScope(
 	scope: DashboardScope,
 	input: DashboardDrilldownInput,

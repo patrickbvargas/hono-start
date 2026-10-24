@@ -44,7 +44,7 @@ export const ContractList = ({
 				definition: contract.legalArea,
 			},
 			{
-				term: "Status",
+				term: "Andamento",
 				definition: contract.status,
 			},
 			{
@@ -52,7 +52,7 @@ export const ContractList = ({
 				definition: formatter.percent(contract.feePercentage),
 			},
 			{
-				term: "Situação",
+				term: "Cadastro",
 				definition: (
 					<EntityStatus
 						isActive={contract.isActive}

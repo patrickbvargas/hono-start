@@ -7,6 +7,11 @@ import {
 export const contractFilterSchema = z.object({
 	query: z.string().trim().catch(""),
 	clientId: z.string().catch("").default(""),
+	employeeId: z
+		.string()
+		.regex(/^[1-9]\d*$/)
+		.catch("")
+		.default(""),
 	legalArea: z.array(z.string()).catch([]),
 	contractStatus: z.array(z.string()).catch([]),
 	active: activeFilterSchema,

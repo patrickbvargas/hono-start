@@ -37,7 +37,7 @@ function ResultLegendIcon({ className }: ResultLegendIconProps) {
 			viewBox="0 0 16 16"
 			fill="none"
 			stroke="var(--color-result)"
-			strokeWidth={2}
+			strokeWidth={3}
 			aria-hidden="true"
 		>
 			<path d="M1 8h14" />
@@ -167,7 +167,7 @@ export function FinancialEvolutionChart({
 							<Line
 								dataKey="result"
 								stroke="var(--color-result)"
-								strokeWidth={2}
+								strokeWidth={3}
 								activeDot={false}
 								dot={
 									onSelect

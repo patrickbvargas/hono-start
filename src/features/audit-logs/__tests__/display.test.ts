@@ -6,6 +6,22 @@ import {
 } from "../utils/display";
 
 describe("audit-log display helpers", () => {
+	it("localizes historical expense and installment names without changing their identity", () => {
+		expect(getAuditEntityNameLabel("Expense #121")).toBe("Despesa #121");
+		expect(getAuditEntityNameLabel("Installment 1", "131")).toBe(
+			"Honorário #131 · Parcela 1",
+		);
+		expect(
+			getAuditDescription({
+				action: "CREATE",
+				entityType: "Fee",
+				entityId: "131",
+				entityName: "Installment 1",
+				changeData: null,
+				fallbackDescription: "",
+			}),
+		).toBe("criou honorário #131 · Parcela 1.");
+	});
 	it("uses system wording instead of generic registro for system events", () => {
 		expect(
 			getAuditDescription({
@@ -56,14 +72,14 @@ describe("audit log titles", () => {
 				entityName: "Maria",
 				entityTypeLabel: "Cliente",
 			}),
-		).toBe("Criar • Maria");
+		).toBe("Criação • Maria");
 		expect(
 			getAuditLogTitle({
 				action: "UPDATE",
 				entityName: "",
 				entityTypeLabel: "Contrato",
 			}),
-		).toBe("Atualizar • Contrato");
+		).toBe("Alteração • Contrato");
 		expect(
 			getAuditLogTitle({
 				action: "CUSTOM",

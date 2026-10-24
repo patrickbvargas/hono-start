@@ -9,9 +9,9 @@ import {
 	getServerScope,
 } from "@/shared/session/server";
 import type {
+	FinancialQueryPaginatedReturnType,
 	QueryManyReturnType,
 	QueryOneReturnType,
-	QueryPaginatedReturnType,
 } from "@/shared/types/api";
 import { EXPENSE_ERRORS } from "../constants/errors";
 import {
@@ -34,7 +34,9 @@ const getExpensesFn = createServerFn({ method: "GET" })
 	.middleware([authMiddleware])
 	.validator(expenseSearchSchema)
 	.handler(
-		async ({ data }): Promise<QueryPaginatedReturnType<ExpenseSummary>> => {
+		async ({
+			data,
+		}): Promise<FinancialQueryPaginatedReturnType<ExpenseSummary>> => {
 			try {
 				const session = await getRequiredServerLoggedUserSession();
 				const { firmId } = await getServerScope("expense");

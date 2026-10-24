@@ -14,16 +14,20 @@ export const expenseDetailSchema = entityIdSchema.safeExtend({
 	updatedAt: z.iso.datetime().nullable(),
 });
 
-export const expenseSummarySchema = expenseDetailSchema.pick({
-	id: true,
-	category: true,
-	categoryValue: true,
-	expenseDate: true,
-	amount: true,
-	isActive: true,
-	isSoftDeleted: true,
-	createdAt: true,
-});
+export const expenseSummarySchema = expenseDetailSchema
+	.pick({
+		id: true,
+		category: true,
+		categoryValue: true,
+		expenseDate: true,
+		amount: true,
+		isActive: true,
+		isSoftDeleted: true,
+		createdAt: true,
+	})
+	.safeExtend({
+		notes: z.string().nullable().default(null),
+	});
 
 export type ExpenseDetail = z.infer<typeof expenseDetailSchema>;
 export type ExpenseSummary = z.infer<typeof expenseSummarySchema>;

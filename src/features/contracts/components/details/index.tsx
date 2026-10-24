@@ -3,17 +3,25 @@ import {
 	AttachmentSection,
 	AttachmentSectionFallback,
 } from "@/features/attachments";
+import { clientSearchDefaults } from "@/features/clients";
+import { employeeSearchDefaults } from "@/features/employees";
+import { FeeForm, feeSearchDefaults } from "@/features/fees";
 import { EntityActions } from "@/shared/components/entity-actions";
 import {
 	type DetailFieldItem,
 	EntityDetail,
 } from "@/shared/components/entity-detail";
 import { EntityStatus } from "@/shared/components/entity-status";
+import { NavigationLink } from "@/shared/components/navigation-link";
+import { Button } from "@/shared/components/ui";
+import { useOverlay } from "@/shared/hooks/use-overlay";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
+import { hasPermission, useLoggedUserSession } from "@/shared/session";
 import type { OverlayState } from "@/shared/types/overlay";
 import { useContract } from "../../hooks/use-data";
 import { getContractLifecycleActions } from "../../utils/lifecycle-actions";
+import { RevenuePaymentStatus } from "./payment-status";
 
 interface ContractDetailsProps {
 	canManageLifecycle?: boolean;
@@ -63,6 +71,23 @@ const ContractDetailsContent = ({
 	onRestore,
 }: ContractDetailsContentProps) => {
 	const { contract } = useContract(id);
+	const session = useLoggedUserSession();
+	const canReadFees =
+		hasPermission(session, "org:fees:read_all") ||
+		(hasPermission(session, "org:fees:read_assigned") &&
+			contract.assignments.some(
+				(assignment) =>
+					assignment.isActive &&
+					!assignment.isSoftDeleted &&
+					assignment.employeeId === session.employee.id &&
+					["RESPONSIBLE", "RECOMMENDED", "ADMIN_ASSISTANT"].includes(
+						assignment.assignmentTypeValue,
+					),
+			));
+	const feeOverlay = useOverlay<EntityId>();
+	const [selectedRevenue, setSelectedRevenue] = React.useState<number | null>(
+		null,
+	);
 	const actions = getContractLifecycleActions({
 		canManageLifecycle,
 		isSoftDeleted: contract.isSoftDeleted,
@@ -71,9 +96,21 @@ const ContractDetailsContent = ({
 
 	const generalInfo = React.useMemo<DetailFieldItem[]>(
 		() => [
-			{ term: "Cliente", definition: contract.client },
+			{
+				term: "Cliente",
+				definition: hasPermission(session, "org:clients:read") ? (
+					<NavigationLink
+						to="/clientes"
+						search={{ ...clientSearchDefaults, query: contract.client }}
+					>
+						{contract.client}
+					</NavigationLink>
+				) : (
+					contract.client
+				),
+			},
 			{ term: "Área", definition: contract.legalArea },
-			{ term: "Status", definition: contract.status },
+			{ term: "Andamento", definition: contract.status },
 			{
 				term: "% Honorários",
 				definition: formatter.percent(contract.feePercentage),
@@ -87,31 +124,34 @@ const ContractDetailsContent = ({
 				definition: contract.notes?.trim() ? contract.notes : "—",
 			},
 		],
-		[contract],
+		[contract, session],
 	);
 
 	const assignmentInfo = React.useMemo<DetailFieldItem[]>(
 		() =>
 			contract.assignments.map((assignment) => ({
 				term: assignment.assignmentType,
-				definition: assignment.employeeName,
+				definition: hasPermission(session, "org:employees:read") ? (
+					<NavigationLink
+						to="/colaboradores"
+						search={{
+							...employeeSearchDefaults,
+							query: assignment.employeeName,
+						}}
+					>
+						{assignment.employeeName}
+					</NavigationLink>
+				) : (
+					assignment.employeeName
+				),
 			})),
-		[contract],
-	);
-
-	const revenueInfo = React.useMemo<DetailFieldItem[]>(
-		() =>
-			contract.revenues.map((revenue) => ({
-				term: revenue.type,
-				definition: `${formatter.currency(revenue.totalValue)} • ${revenue.totalInstallments} parcela(s)`,
-			})),
-		[contract],
+		[contract, session],
 	);
 
 	const registerInfo = React.useMemo<DetailFieldItem[]>(
 		() => [
 			{
-				term: "Situação",
+				term: "Cadastro",
 				definition: (
 					<EntityStatus
 						isActive={contract.isActive}
@@ -155,14 +195,85 @@ const ContractDetailsContent = ({
 				/>
 			</EntityDetail.Header>
 			<EntityDetail.Body>
-				<EntityDetail.Fields items={generalInfo} />
+				<EntityDetail.Fields columns={2} items={generalInfo} />
 				<EntityDetail.Separator />
 				<EntityDetail.Section title="Equipe">
-					<EntityDetail.Fields items={assignmentInfo} />
+					<EntityDetail.Fields columns={2} items={assignmentInfo} />
 				</EntityDetail.Section>
 				<EntityDetail.Separator />
 				<EntityDetail.Section title="Receitas">
-					<EntityDetail.Fields items={revenueInfo} />
+					{contract.revenues
+						.filter((revenue) => revenue.isActive && !revenue.isSoftDeleted)
+						.map((revenue) => (
+							<div key={revenue.id} className="space-y-3 rounded-lg border p-3">
+								<div className="flex items-center justify-between gap-3">
+									<h3 className="font-medium">{revenue.type}</h3>
+									<RevenuePaymentStatus
+										isFullyPaid={revenue.isFullyPaid}
+										paidValue={revenue.paidValue}
+										nextDueDate={revenue.nextDueDate}
+									/>
+								</div>
+								<EntityDetail.Fields
+									columns={2}
+									items={[
+										{
+											term: "Valor contratado",
+											definition: formatter.currency(revenue.totalValue),
+										},
+										{
+											term: "Recebido (inclui entrada)",
+											definition: formatter.currency(revenue.paidValue),
+										},
+										{
+											term: "A receber",
+											definition: formatter.currency(revenue.remainingValue),
+										},
+										{
+											term: "Parcelas registradas",
+											definition: `${revenue.installmentsPaid} de ${revenue.totalInstallments}`,
+										},
+										{
+											term: "Próximo vencimento em aberto",
+											definition:
+												revenue.isFullyPaid || !revenue.nextDueDate
+													? "—"
+													: formatter.calendarDate(revenue.nextDueDate),
+										},
+									]}
+								/>
+								{hasPermission(session, "org:fees:create") &&
+								canReadFees &&
+								contract.isActive &&
+								!contract.isSoftDeleted &&
+								contract.statusValue === "ACTIVE" &&
+								!revenue.isFullyPaid &&
+								revenue.nextInstallmentNumber !== null ? (
+									<Button
+										size="sm"
+										onClick={() => {
+											setSelectedRevenue(revenue.id);
+											feeOverlay.overlay.create.open();
+										}}
+									>
+										Registrar honorário
+									</Button>
+								) : null}
+								{canReadFees ? (
+									<NavigationLink
+										to="/honorarios"
+										search={{
+											...feeSearchDefaults,
+											contractId: String(id),
+											revenueId: String(revenue.id),
+										}}
+										className="inline-flex p-2 text-sm underline underline-offset-4"
+									>
+										Honorários
+									</NavigationLink>
+								) : null}
+							</div>
+						))}
 				</EntityDetail.Section>
 				<EntityDetail.Separator />
 				<EntityDetail.Section title="Anexos">
@@ -170,10 +281,24 @@ const ContractDetailsContent = ({
 				</EntityDetail.Section>
 				<EntityDetail.Separator />
 				<EntityDetail.Section title="Registro">
-					<EntityDetail.Fields items={registerInfo} />
+					<EntityDetail.Fields columns={2} items={registerInfo} />
 				</EntityDetail.Section>
 			</EntityDetail.Body>
 			<EntityDetail.Footer />
+			{feeOverlay.overlay.create.render((state) => (
+				<FeeForm
+					state={state}
+					initialSelection={{
+						contractId: String(id),
+						revenueId: String(selectedRevenue),
+						installmentNumber:
+							contract.revenues.find(
+								(revenue) => revenue.id === selectedRevenue,
+							)?.nextInstallmentNumber ?? 1,
+					}}
+					onSuccess={state.close}
+				/>
+			))}
 		</EntityDetail.Content>
 	);
 };
@@ -182,14 +307,21 @@ const ContractDetailsFallback = () => (
 	<EntityDetail.Content>
 		<EntityDetail.SkeletonHeader withActions />
 		<EntityDetail.Body>
-			<EntityDetail.SkeletonFields rows={6} />
+			<EntityDetail.SkeletonFields columns={2} rows={6} />
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Equipe">
-				<EntityDetail.SkeletonFields rows={2} />
+				<EntityDetail.SkeletonFields columns={2} rows={2} />
 			</EntityDetail.Section>
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Receitas">
-				<EntityDetail.SkeletonFields rows={2} />
+				<div className="rounded-lg border p-3 space-y-4">
+					<EntityDetail.SkeletonTitle />
+					<EntityDetail.SkeletonFields columns={2} rows={5} />
+					<div className="flex gap-2">
+						<EntityDetail.SkeletonTitle className="h-8 w-32" />
+						<EntityDetail.SkeletonTitle className="h-8 w-28" />
+					</div>
+				</div>
 			</EntityDetail.Section>
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Anexos">
@@ -197,7 +329,7 @@ const ContractDetailsFallback = () => (
 			</EntityDetail.Section>
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Registro">
-				<EntityDetail.SkeletonFields rows={3} />
+				<EntityDetail.SkeletonFields columns={2} rows={3} />
 			</EntityDetail.Section>
 		</EntityDetail.Body>
 		<EntityDetail.Footer />

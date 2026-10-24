@@ -32,7 +32,7 @@ export function MonthlyRevenueRemunerationChart({
 	onSelect,
 }: MonthlyRevenueRemunerationChartProps) {
 	const config = {
-		revenue: { label: "Honorários recebidos", color: "var(--chart-1)" },
+		revenue: { label: "Honorários recebidos", color: "var(--primary)" },
 		remuneration: {
 			label: isAdmin ? "Remunerações geradas" : "Minhas remunerações geradas",
 			color: "var(--chart-2)",

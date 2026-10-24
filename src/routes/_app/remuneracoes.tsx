@@ -25,6 +25,7 @@ import {
 } from "@/shared/components/wrapper";
 import { getPageTitle, ROUTES } from "@/shared/config/routes";
 import { useOverlay } from "@/shared/hooks/use-overlay";
+import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
 import { hasPermission, useLoggedUserSession } from "@/shared/session";
 
@@ -78,8 +79,18 @@ function RouteComponent() {
 				) : null
 			}
 		>
-			<WrapperHeader>
-				<RemunerationFilter isAdmin={canReadAll} />
+			<WrapperHeader className="flex-wrap md:flex-nowrap">
+				<RemunerationFilter
+					isAdmin={canReadAll}
+					summary={
+						<p className="shrink-0 whitespace-nowrap text-sm text-muted-foreground">
+							Total filtrado:{" "}
+							<strong className="font-semibold tabular-nums text-foreground">
+								{formatter.currency(remunerations.totalAmount)}
+							</strong>
+						</p>
+					}
+				/>
 			</WrapperHeader>
 			<WrapperBody>
 				<EntityView

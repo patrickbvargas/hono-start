@@ -1,4 +1,5 @@
 import { createColumnHelper } from "@tanstack/react-table";
+import { TableButton } from "@/shared/components/table-button";
 import { formatter } from "@/shared/lib/formatter";
 import type { dataTableFeatures } from "@/shared/lib/table";
 import type {
@@ -30,15 +31,14 @@ export function getColumns(
 			header: "Colaborador",
 			cell: (context) =>
 				onViewEmployee ? (
-					<button
+					<TableButton
 						type="button"
-						className="cursor-pointer rounded-sm px-1 -mx-1 transition-colors hover:bg-accent/30 hover:ring-1 hover:ring-ring/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
 						aria-label={`Detalhar colaborador ${context.getValue()}`}
 						title={`Ver detalhes: ${context.getValue()}`}
 						onClick={() => onViewEmployee(context.row.original.employeeId)}
 					>
 						{context.getValue()}
-					</button>
+					</TableButton>
 				) : (
 					context.getValue()
 				),
@@ -53,9 +53,8 @@ export function getColumns(
 				header: month.label,
 				cell: (context) =>
 					onSelect ? (
-						<button
+						<TableButton
 							type="button"
-							className="cursor-pointer rounded-sm px-1 -mx-1 transition-colors hover:bg-accent/30 hover:ring-1 hover:ring-ring/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
 							aria-label={`Detalhar remunerações de ${context.row.original.employeeName} em ${month.label}`}
 							title={`Ver detalhes: ${context.row.original.employeeName} · ${month.label}`}
 							onClick={(event) =>
@@ -63,7 +62,7 @@ export function getColumns(
 							}
 						>
 							{formatter.currency(context.getValue())}
-						</button>
+						</TableButton>
 					) : (
 						formatter.currency(context.getValue())
 					),
@@ -78,9 +77,8 @@ export function getColumns(
 			header: "Valor total no período",
 			cell: (context) =>
 				onSelect ? (
-					<button
+					<TableButton
 						type="button"
-						className="cursor-pointer rounded-sm px-1 -mx-1 transition-colors hover:bg-accent/30 hover:ring-1 hover:ring-ring/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
 						aria-label={`Detalhar total de remunerações de ${context.row.original.employeeName}`}
 						title={`Ver detalhes: ${context.row.original.employeeName} · Total no período`}
 						onClick={(event) =>
@@ -88,7 +86,7 @@ export function getColumns(
 						}
 					>
 						{formatter.currency(context.getValue())}
-					</button>
+					</TableButton>
 				) : (
 					formatter.currency(context.getValue())
 				),

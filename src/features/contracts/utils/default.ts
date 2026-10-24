@@ -71,6 +71,7 @@ export const contractSearchDefaults: ContractSearch = {
 	direction: "desc",
 	query: "",
 	clientId: "",
+	employeeId: "",
 	legalArea: [],
 	contractStatus: [],
 	active: "all",

@@ -13,12 +13,22 @@ import { useFeeForm } from "../../hooks/use-form";
 import { getFeeEditOptionDefaults } from "../../utils/edit-options";
 
 interface FeeFormProps {
+	initialSelection?: {
+		contractId: string;
+		revenueId: string;
+		installmentNumber?: number;
+	};
 	id?: EntityId;
 	state: OverlayState;
 	onSuccess?: () => void;
 }
 
-export const FeeForm = ({ id, state, onSuccess }: FeeFormProps) => {
+export const FeeForm = ({
+	id,
+	state,
+	onSuccess,
+	initialSelection,
+}: FeeFormProps) => {
 	const title = id ? "Editar honorário" : "Novo honorário";
 
 	return (
@@ -26,17 +36,25 @@ export const FeeForm = ({ id, state, onSuccess }: FeeFormProps) => {
 			{id ? (
 				<EditFeeFormContent id={id} state={state} onSuccess={onSuccess} />
 			) : (
-				<CreateFeeFormContent state={state} onSuccess={onSuccess} />
+				<CreateFeeFormContent
+					state={state}
+					onSuccess={onSuccess}
+					initialSelection={initialSelection}
+				/>
 			)}
 		</Suspense>
 	);
 };
 
-function CreateFeeFormContent({ state, onSuccess }: Omit<FeeFormProps, "id">) {
-	const { form } = useFeeForm({ onSuccess });
+function CreateFeeFormContent({
+	state,
+	onSuccess,
+	initialSelection,
+}: Omit<FeeFormProps, "id">) {
+	const { form } = useFeeForm({ onSuccess, initialSelection });
 
 	return (
-		<form.Form form={form} showDebug>
+		<form.Form form={form}>
 			<form.Subscribe selector={(current) => current.values.contractId}>
 				{(contractId) => (
 					<FeeFormFields
@@ -65,7 +83,7 @@ function EditFeeFormContent({
 	});
 
 	return (
-		<form.Form form={form} showDebug>
+		<form.Form form={form}>
 			<form.Subscribe selector={(current) => current.values.contractId}>
 				{(contractId) => (
 					<FeeFormFields
@@ -135,7 +153,7 @@ function FeeFormFields({
 					<form.AppField name="revenueId">
 						{(field) => (
 							<field.Autocomplete
-								label="Receita"
+								label="Tipo de honorário"
 								options={revenues}
 								isRequired
 								isDisabled={!contractId || isLoadingRevenues}
@@ -151,7 +169,7 @@ function FeeFormFields({
 					</form.AppField>
 					<form.AppField name="paymentDate">
 						{(field) => (
-							<field.DatePicker label="Data de pagamento" isRequired />
+							<field.DatePicker label="Data de recebimento" isRequired />
 						)}
 					</form.AppField>
 					<form.AppField name="installmentNumber">

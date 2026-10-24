@@ -1,5 +1,15 @@
 # Feature Behavior
 
+## Operational usability
+
+- Contract details show each active revenue's contracted amount, received amount including down payment, remaining amount, recorded installments, and next outstanding scheduled due date. The schedule follows the dashboard convention: installment 1 falls one month after paymentStartDate, preserving the original day with month-end clamping. Partial receipts leave the installment outstanding. Recording a new fee preselects the contract, revenue and first unrecorded installment, respects create/read grants and assignment scope, and remains unavailable for inactive, deleted, completed, cancelled or fully paid records.
+- Fee, expense and remuneration listings show the sum of the entire filtered and authorized result, independent of pagination, including a zero total for an empty result. Expense listings include a short note. Attachment actions and metadata share the same detail layout across supported entities.
+- Names and process numbers in entity tables open the same detail as the ID action. Related-list links respect the target subject's read grants and retain server-side resource scoping. No link widens access.
+- Fee dates are labelled Data de recebimento. Remuneration dates are labelled Data do honorário because they derive from the originating receipt, not a payroll disbursement. Active/inactive flags describe record validity, never payment settlement. Contract lifecycle is labelled Andamento and active/inactive state Cadastro.
+- Manual remuneration editing identifies the collaborator, contract, source fee and recorded amount/percentage. It explicitly states that saving is a manual adjustment and editing one field does not recalculate the other.
+- Forms request confirmation before closing with unsaved edits and block dismissal during submission. Untouched forms close directly; successful save callbacks close without a discard prompt. Continuing editing preserves the draft.
+- Audit action/type/name labels are localized on read without rewriting stored historical codes. A single-page paginator keeps its count, page-size selection and page navigation. The effective dashboard date range remains visible, and expense increases use adverse comparison styling rather than income-growth styling. KPI grid placement remains unchanged.
+
 This document defines the product surface and the expected behavior of each feature area.
 
 It is intentionally about behavior, not field-by-field data contracts or low-level business rules.
@@ -313,3 +323,9 @@ The software core includes these feature areas:
 - Detailed analysis starts with Remunerações por colaborador beside Remuneração por função. The collaborator chart is restricted to administrators with all-remuneration read access and uses the same displayed-month totals as the collaborator table; bars open the existing collaborator/month-range details. Honorários por cliente moves beside Despesas por categoria after the overdue/forecast pair.
 
 - The Resultado mensal table keeps receipt-type details, Entradas, Saídas and Resultado. It omits generated remuneration and the duplicate Despesas column, since Saídas already equals expenses. Remuneration is reviewed in its own table and charts. Parcelas em atraso labels outstanding installment amount as Saldo em aberto, original revenue-plan total as Total do honorário, and type as Tipo de honorário. Monetary remuneration totals use decimal arithmetic before numeric presentation.
+
+Contract client filters and fee contract/type filters are primary desktop controls beside search. Contract lists support an employee filter across active assignments, intersected with the actor's existing read scope. Employee details link to these contracts; remuneration details link to the employee list when permitted. The effective dashboard date range appears next to its page title.
+
+Primary desktop filters include client/employee in contracts, category in expenses, employee/contract in remunerations (subject to existing role restrictions), and entity type in audit logs. Financial totals remain in the primary filter bar when advanced controls expand. Contract revenues show Quitado, Parcial or Pendente from their existing payment state, including down payments. Navigation orders contracts before clients in the sidebar and dashboard creation menu. Related-record links use a consistent navigation icon and preserve authorization checks.
+
+Revenue badges prioritize Quitado (green), then Em atraso (red) when the earliest open installment due date is before the current UTC calendar date, otherwise Parcial or Pendente. An installment due today is not overdue. This uses the existing schedule and outstanding balance, without changing financial calculations.

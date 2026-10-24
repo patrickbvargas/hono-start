@@ -79,7 +79,9 @@ export const PaginationView = ({
 	className,
 	...props
 }: PaginationViewProps) => {
-	if (totalRecords === 0) return null;
+	if (totalRecords === 0) {
+		return null;
+	}
 
 	const totalPagesCount = Math.ceil(totalRecords / limit);
 	const totalDisplayPages = 1 + siblingCount * 2;
@@ -117,10 +119,10 @@ export const PaginationView = ({
 			<div className="w-full flex flex-col items-center gap-3 sm:flex-row sm:justify-between">
 				<p className="text-sm text-muted-foreground">
 					Exibindo {displayedStartRecord}-{displayedEndRecord} de {totalRecords}{" "}
-					registros
+					{totalRecords === 1 ? "registro" : "registros"}
 				</p>
 				{handlePageSizeChange ? (
-					<div className="sr-only sm:not-sr-only flex items-center justify-end gap-2">
+					<div className="flex items-center justify-end gap-2">
 						<span className="text-sm text-muted-foreground">Por página</span>
 						<Select
 							value={pageSizeValue}
@@ -145,21 +147,23 @@ export const PaginationView = ({
 					</div>
 				) : null}
 			</div>
-			<PaginationContent className="justify-end">
-				<PaginationItem isDisabled={page === 1}>
-					{renderPage(1, "first")}
-				</PaginationItem>
-				<PaginationItem isDisabled={page === 1}>
-					{renderPage(page - 1, "previous")}
-				</PaginationItem>
-				{renderPageLinks()}
-				<PaginationItem isDisabled={!(page < totalPagesCount)}>
-					{renderPage(page + 1, "next")}
-				</PaginationItem>
-				<PaginationItem isDisabled={!(page < totalPagesCount)}>
-					{renderPage(totalPagesCount, "last")}
-				</PaginationItem>
-			</PaginationContent>
+			{totalPagesCount >= 1 ? (
+				<PaginationContent className="justify-end">
+					<PaginationItem isDisabled={page === 1}>
+						{renderPage(1, "first")}
+					</PaginationItem>
+					<PaginationItem isDisabled={page === 1}>
+						{renderPage(page - 1, "previous")}
+					</PaginationItem>
+					{renderPageLinks()}
+					<PaginationItem isDisabled={!(page < totalPagesCount)}>
+						{renderPage(page + 1, "next")}
+					</PaginationItem>
+					<PaginationItem isDisabled={!(page < totalPagesCount)}>
+						{renderPage(totalPagesCount, "last")}
+					</PaginationItem>
+				</PaginationContent>
+			) : null}
 		</PaginationRoot>
 	);
 };

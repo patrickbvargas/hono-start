@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { EntityForm } from "@/shared/components/entity-form";
 import { FormFieldSkeleton } from "@/shared/components/form-field-skeleton";
 import { FieldGroup, Skeleton } from "@/shared/components/ui";
+import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
 import { useRemuneration } from "../../hooks/use-data";
@@ -44,6 +45,22 @@ function RemunerationFormContent({
 				title="Editar remuneração"
 				footer={<form.Submit />}
 			>
+				<div className="rounded-lg border bg-muted/30 p-3 text-sm space-y-1">
+					<p className="font-medium">{remuneration.employeeName}</p>
+					<p>
+						{remuneration.contractProcessNumber} · Parcela{" "}
+						{remuneration.feeInstallmentNumber}
+					</p>
+					<p>Honorário: {formatter.currency(remuneration.feeAmount)}</p>
+					<p>
+						Remuneração registrada: {formatter.currency(remuneration.amount)} ·{" "}
+						{formatter.percent(remuneration.effectivePercentage)}
+					</p>
+					<p className="text-muted-foreground">
+						Salvar aplica um ajuste manual. Valor e percentual são
+						independentes: alterar um não recalcula o outro.
+					</p>
+				</div>
 				<FieldGroup className="grid gap-5 sm:grid-cols-2">
 					<form.AppField name="amount">
 						{(field) => (

@@ -48,7 +48,7 @@ function FieldDefinition({ item, classNames }: FieldDefinitionProps) {
 	return (
 		<dd
 			className={cn(
-				"text-foreground",
+				"text-foreground wrap-break-word",
 				classNames?.definition,
 				item.classNames?.definition,
 			)}
@@ -105,10 +105,12 @@ export const EntityFields = ({
 interface EntitySkeletonFieldsProps
 	extends React.HTMLAttributes<HTMLDivElement> {
 	rows?: number;
+	columns?: 1 | 2;
 }
 
 export function EntitySkeletonFields({
 	rows = 3,
+	columns = 1,
 	className,
 	...props
 }: EntitySkeletonFieldsProps) {
@@ -118,7 +120,15 @@ export function EntitySkeletonFields({
 	}));
 
 	return (
-		<div className={cn("flex flex-col gap-4", className)} {...props}>
+		<div
+			className={cn(
+				columns === 2
+					? "grid grid-cols-2 gap-x-6 gap-y-4"
+					: "flex flex-col gap-4",
+				className,
+			)}
+			{...props}
+		>
 			{skeletonRows.map((row) => (
 				<div key={row.key} className="flex flex-col gap-1.5">
 					<Skeleton className="h-5 w-20" />

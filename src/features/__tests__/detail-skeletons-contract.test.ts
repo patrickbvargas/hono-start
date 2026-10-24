@@ -30,9 +30,9 @@ describe("detail skeleton layout contracts", () => {
 		const expected = groups.map(
 			(group) => (group[2].match(/term:/g) ?? []).length,
 		);
-		const actual = [...fallback.matchAll(/SkeletonFields rows=\{(\d+)\}/g)].map(
-			(match) => Number(match[1]),
-		);
+		const actual = [
+			...fallback.matchAll(/SkeletonFields\s+columns=\{2\}\s+rows=\{(\d+)\}/g),
+		].map((match) => Number(match[1]));
 		// Contract teams/revenues and audit payloads have data-dependent lengths.
 		if (feature === "contracts") {
 			expect(actual[0]).toBe(expected[0]);

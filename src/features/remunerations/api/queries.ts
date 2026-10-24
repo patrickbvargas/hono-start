@@ -12,9 +12,9 @@ import {
 	getRequiredServerLoggedUserSession,
 } from "@/shared/session/server";
 import type {
+	FinancialQueryPaginatedReturnType,
 	QueryManyReturnType,
 	QueryOneReturnType,
-	QueryPaginatedReturnType,
 } from "@/shared/types/api";
 import { REMUNERATION_ERRORS } from "../constants/errors";
 import {
@@ -81,7 +81,9 @@ const getRemunerationsFn = createServerFn({ method: "GET" })
 	.middleware([authMiddleware])
 	.validator(remunerationSearchSchema)
 	.handler(
-		async ({ data }): Promise<QueryPaginatedReturnType<Remuneration>> => {
+		async ({
+			data,
+		}): Promise<FinancialQueryPaginatedReturnType<Remuneration>> => {
 			try {
 				const { scope } = await getRemunerationScope();
 
