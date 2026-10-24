@@ -223,7 +223,7 @@ describe("dashboard drilldown", () => {
 			...input,
 			selection: { kind: "monthly", month: "2026-02", series: "output" },
 		});
-		expect(output).toMatchObject({ amount: 50, total: 2 });
+		expect(output).toMatchObject({ amount: 30, total: 1 });
 		expect(db.revenue.findMany).not.toHaveBeenCalled();
 		await expect(
 			getDashboardDrilldown(
@@ -459,14 +459,13 @@ describe("dashboard drilldown", () => {
 			selection: { kind: "monthly", month: "2026-02", series: "result" },
 		});
 		expect(result).toMatchObject({
-			total: 3,
-			amount: 0,
+			total: 2,
+			amount: 20,
 			entries: 50,
-			deductions: -50,
+			deductions: -30,
 		});
 		expect(result.data.map((row) => row.kind)).toEqual([
 			"Recebimento",
-			"Remuneração gerada",
 			"Despesa",
 		]);
 	});

@@ -61,8 +61,8 @@ export function Drilldown<
 								>
 									<InfoIcon className="size-3.5" />
 								</TooltipTrigger>
-								<TooltipContent className="max-w-xs">
-									{props.description}
+								<TooltipContent>
+									{props.description.replaceAll(". ", ".\n")}
 								</TooltipContent>
 							</Tooltip>
 						</TooltipProvider>

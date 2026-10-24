@@ -32,7 +32,7 @@ export function DashboardCashFlowChart({
 					Saldo mensal
 					<ChartHelp
 						title="Saldo mensal"
-						description="Balanço mensal: entrada = administrativo + judicial + sucumbência; saída = remunerações geradas + despesas; saldo = entrada − saída. Sem saldo bancário inicial."
+						description="Receita recebida − despesas de cada mês. Não acumula meses anteriores nem representa saldo bancário."
 					/>
 				</CardTitle>
 			</CardHeader>

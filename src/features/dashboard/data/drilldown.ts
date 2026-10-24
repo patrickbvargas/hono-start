@@ -193,10 +193,7 @@ export async function getDashboardDrilldown(
 			if (
 				selection.kind === "function" ||
 				selection.kind === "employee-month" ||
-				(periodSelection &&
-					(series === "remuneration" ||
-						series === "result" ||
-						series === "output"))
+				(periodSelection && series === "remuneration")
 			) {
 				const remunerations = await tx.remuneration.findMany({
 					where: {
@@ -238,9 +235,7 @@ export async function getDashboardDrilldown(
 						employee: row.contractEmployee.employee.fullName,
 						assignment: row.contractEmployee.assignmentType.label,
 						process: row.contractEmployee.contract.processNumber,
-						amount:
-							Number(row.amount) *
-							(periodSelection && series === "result" ? -1 : 1),
+						amount: Number(row.amount),
 					});
 				}
 			}

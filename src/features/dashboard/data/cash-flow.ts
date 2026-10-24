@@ -163,11 +163,14 @@ export function buildMonthlyCashFlow({
 		const administrative = Number(bucket.entryTypes.administrative);
 		const judicial = Number(bucket.entryTypes.judicial);
 		const succumbency = Number(bucket.entryTypes.succumbency);
-		const entry = administrative + judicial + succumbency;
+		const entryTotal = bucket.entryTypes.administrative
+			.add(bucket.entryTypes.judicial)
+			.add(bucket.entryTypes.succumbency);
+		const entry = Number(entryTotal);
 		const remuneration = Number(bucket.remuneration);
 		const expense = Number(bucket.expense);
-		const output = remuneration + expense;
-		const balance = entry - output;
+		const output = expense;
+		const balance = Number(entryTotal.minus(bucket.expense));
 
 		return {
 			month: bucket.month,

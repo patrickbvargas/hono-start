@@ -145,7 +145,7 @@ The software core includes these feature areas:
 - Shows firm-wide data for administrators.
 - Shows scoped data for regular users.
 - Includes revenue charts by legal area and revenue type.
-- Uses received fees as dashboard inflow and combines remunerations plus expenses as outflow where the summary requires firm cash-flow.
+- Uses received fees as dashboard inflow and uses recorded expenses alone as outflow where the summary requires firm cash-flow.
 - Does not expose firm-wide expense-derived cash-flow summaries to regular users.
 
 ### Client Expectations
@@ -256,7 +256,7 @@ The software core includes these feature areas:
 - This document must not become the duplicate home of entity schemas, validation rules, or permission matrices already defined elsewhere.
 ## Dashboard financial analysis
 
-- Balanço is the monthly operational cash-flow view: entry = administrative + judicial + succumbency receipts; output = generated remuneration + recorded expenses; balance = entry - output. It does not establish a bank balance or payout settlement.
+- Balanço is the monthly operational cash-flow view: entry = administrative + judicial + succumbency receipts; output = recorded expenses; balance = entry - output. It does not establish a bank balance or payout settlement.
 - Expected revenue sums contractual down payments and installments due within the selected dates, including plans started earlier. Installments begin one month after paymentStartDate, preserve the due day where possible, and allocate cent rounding to the last installment.
 - Comparisons include down payments in both receipt bases and compare with the same dates one year earlier. Growth from a zero prior base is unavailable; negative prior bases use their absolute value as denominator.
 - Firm result, expenses and margin are shown only without collaborator, legal-area or revenue-type filters, because expenses have no allocation dimensions. Generated remuneration remains scoped to the selected collaborator.
@@ -272,14 +272,14 @@ The software core includes these feature areas:
 
 - Collaborator names in the remuneration table open the existing employee details drawer when `org:employees:read` is granted. Monthly and total values retain their financial drilldown action; opening the employee uses its stable ID and the existing protected employee query.
 - Remuneration table month values open the selected collaborator/month contributions, including an explicit empty state for zero values. The collaborator total opens contributions across the months displayed in the table, intersected with active period bounds. The same generated-remuneration scope and dimension filters apply. Native buttons support keyboard activation, hover hints and focus restoration.
-- Every monetary cell in the monthly balance table opens its contributing records: receipt type, all entries, generated remuneration, expenses, all outflows or signed result. Outflow details show positive remuneration and expense amounts so their Total matches the cell; balance details retain signed deductions.
+- Contribution cells in the monthly balance table open their contributing records: receipt type, all entries, generated remuneration, expenses, all outflows or signed result. Outflow details show positive expense amounts so their Total matches the cell; balance details retain signed deductions.
 - Overdue installment process numbers open the existing contract drawer from the dashboard when contract read permission is present. The contract query independently enforces current permission, firm and assignment scope. No new entity-detail implementation or contract lifecycle action is added to the dashboard.
 - Dashboard KPI cards also activate the standalone drilldown through explicit metric source keys, using the full selected period. Help and percentage-comparison buttons retain their own tooltip interactions and do not activate drilldown.
-- Receita prevista lists initial down payments and full scheduled installments due in the period, including paid installments; it is distinct from the outstanding future-receipts chart. Receita recebida lists actual receipt contributions; Remunerações geradas lists generated remuneration; Despesas lists period expenses; Resultado do período shows signed receipts minus generated remuneration and expenses.
+- Receita prevista lists initial down payments and full scheduled installments due in the period, including paid installments; it is distinct from the outstanding future-receipts chart. Receita recebida lists actual receipt contributions; Remunerações geradas lists generated remuneration; Despesas lists period expenses; Resultado do período shows signed receipts minus expenses.
 
 - The drilldown context (period and filters) appears in an info tooltip beside the modal title, with an accessible description retained for screen readers.
 - Every bar and monthly Result point opens a read-only modal with the exact contributing records, full BRL amounts, record count and total across all pages. Keyboard activation is supported, with focus restored on close.
-- Receipt details include initial down payments and fee receipts once each. Monthly balance and Result show signed receipts, generated remunerations and expenses, with only the signed Total in the summary; they do not represent bank balance or confirmed remuneration settlement.
+- Receipt details include initial down payments and fee receipts once each. Monthly balance and Result show signed receipts and expenses, with only the signed Total in the summary; they do not represent bank balance or confirmed remuneration settlement.
 - Aging and forecast details show installment face value, paid value and outstanding value at the same reference timestamp as the chart. Their total sums outstanding value. Aging includes older debts before the selected start date.
 - Monthly detail periods intersect the selected month with the dashboard's effective date interval. Area, type, client, function and category details retain the active dashboard filters and financial scope. Clients are grouped by ID, including clients with identical names.
 - Records are fetched on demand. A source-data mismatch refreshes the summary and shows a concise update notice with current detail totals. A filter change closes the dashboard modal; switching selections resets its pagination and cannot display a late response from the previous selection.
@@ -289,3 +289,7 @@ The software core includes these feature areas:
 - Financial evolution combines receipt, generated-remuneration and expense bars with a result line on the same monetary axis. Existing subject permissions govern each series.
 - Outstanding future receipts use columns ordered as up to 30, 31–60 and 61–90 days. Aging bars remain chronological: up to 30, 31–60, 61–90 and over 90 days, rather than ranking amounts.
 - Chart orientation is fixed: legal area, revenue type, remuneration assignment roles and aging use vertical bars. Clients and expense categories use horizontal bars with internal scrolling. Filtering does not change chart orientation.
+
+### Cash balance
+
+- Generated remuneration is a control figure and is never deducted separately from cash balance or margin. Official payroll outflows are Expense records, including PAYROLL_LAWYERS.

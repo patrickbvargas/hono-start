@@ -56,7 +56,9 @@ export function DashboardMetricCards({
 									>
 										<InfoIcon className="size-3.5" />
 									</TooltipTrigger>
-									<TooltipContent>{metric.description}</TooltipContent>
+									<TooltipContent>
+										{metric.description.replaceAll(". ", ".\n")}
+									</TooltipContent>
 								</Tooltip>
 							</TooltipProvider>
 						</div>
@@ -91,7 +93,9 @@ export function DashboardMetricCards({
 									</TooltipTrigger>
 									<TooltipContent>
 										<p>
-											{metric.previousLabel}: {metric.formattedPreviousValue}
+											{metric.previousLabel}
+											{"\n"}
+											{metric.formattedPreviousValue}
 										</p>
 										<p>{metric.previousPeriodLabel}</p>
 									</TooltipContent>

@@ -73,7 +73,7 @@ export function FinancialEvolutionChart({
 					Evolução financeira
 					<ChartHelp
 						title="Evolução financeira"
-						description="Recebimentos e remunerações geradas por mês, conforme filtros. Na visão completa da firma: despesas e resultado = receita − remunerações − despesas."
+						description="Receita recebida e remunerações geradas por mês. Na visão consolidada, inclui despesas e a linha de resultado: receita − despesas."
 					/>
 				</CardTitle>
 			</CardHeader>

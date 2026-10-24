@@ -84,15 +84,9 @@ export function buildDashboardSummary({
 	const previousExpense = sumDecimal(
 		previousExpenses.map((expense) => new Prisma.Decimal(expense.amount)),
 	);
-	const totalBalance = revenueReceived
-		.minus(remunerationTotal)
-		.minus(expenseTotal);
-	const currentBalance = currentRevenue
-		.minus(remunerationTotal)
-		.minus(currentExpense);
-	const previousBalance = previousRevenue
-		.minus(previousRemuneration)
-		.minus(previousExpense);
+	const totalBalance = revenueReceived.minus(expenseTotal);
+	const currentBalance = currentRevenue.minus(currentExpense);
+	const previousBalance = previousRevenue.minus(previousExpense);
 	const financialEvolution = buildMonthlyFinancialEvolution({
 		chartDownPayments,
 		chartFees,
@@ -181,7 +175,7 @@ export function buildDashboardSummary({
 							value: Number(totalBalance),
 							formattedValue: formatter.currency(Number(totalBalance)),
 							description:
-								"Recebimentos menos remunerações geradas e despesas; não representa saldo bancário.",
+								"Receita recebida − despesas do período. Não representa saldo bancário.",
 							tone: Number(totalBalance) < 0 ? "danger" : "default",
 							previousLabel,
 							currentValue: Number(currentBalance),
@@ -204,7 +198,7 @@ export function buildDashboardSummary({
 				value: Number(revenueTotal),
 				formattedValue: formatter.currency(Number(revenueTotal)),
 				description:
-					"Total de honorários previsto para recebimento no período.",
+					"Entradas + parcelas previstas no período. Inclui valores já recebidos.",
 				tone: "default",
 				previousLabel,
 				currentValue: Number(currentPlannedRevenue),
@@ -226,7 +220,8 @@ export function buildDashboardSummary({
 				drilldown: "revenue" as const,
 				value: Number(revenueReceived),
 				formattedValue: formatter.currency(Number(revenueReceived)),
-				description: "Total de honorários recebido no período.",
+				description:
+					"Entradas + pagamentos de honorários recebidos no período, conforme os filtros.",
 				tone: "success",
 				previousLabel,
 				currentValue: Number(currentRevenue),
@@ -241,7 +236,8 @@ export function buildDashboardSummary({
 				drilldown: "remuneration" as const,
 				value: Number(remunerationTotal),
 				formattedValue: formatter.currency(Number(remunerationTotal)),
-				description: "Total gerado para colaboradores no período.",
+				description:
+					"Remunerações geradas no período, conforme os filtros. Não confirma repasse aos colaboradores.",
 				tone: "warning",
 				previousLabel,
 				currentValue: Number(currentRemuneration),
@@ -310,7 +306,8 @@ export function buildDashboardSummary({
 								drilldown: "expense" as const,
 								value: Number(expenseTotal),
 								formattedValue: formatter.currency(Number(expenseTotal)),
-								description: "Despesas registradas no período; visão da firma.",
+								description:
+									"Despesas da firma no período. Ignora filtros de colaborador, área e tipo de receita.",
 								tone: "default" as const,
 								previousLabel,
 								currentValue: Number(expenseTotal),

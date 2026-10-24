@@ -206,9 +206,9 @@ describe("dashboard data queries", () => {
 		expect(result.metrics).toEqual([
 			expect.objectContaining({
 				label: "Resultado do período",
-				value: 220,
-				currentValue: 220,
-				previousValue: 30,
+				value: 320,
+				currentValue: 320,
+				previousValue: 50,
 				previousPeriodLabel: "01/01/2025 a 31/03/2025",
 			}),
 			expect.objectContaining({
@@ -258,7 +258,7 @@ describe("dashboard data queries", () => {
 				revenue: 300,
 				remuneration: 60,
 				expense: 0,
-				result: 240,
+				result: 300,
 			},
 			{
 				month: "2026-02",
@@ -272,7 +272,7 @@ describe("dashboard data queries", () => {
 				revenue: 100,
 				remuneration: 40,
 				expense: 0,
-				result: 60,
+				result: 100,
 			},
 		]);
 		expect(result.remunerationMonths).toEqual([
@@ -336,15 +336,15 @@ describe("dashboard data queries", () => {
 			]),
 		);
 		expect(result.cashFlow).toEqual({
-			totalBalance: 220,
-			formattedTotalBalance: expect.stringContaining("220,00"),
+			totalBalance: 320,
+			formattedTotalBalance: expect.stringContaining("320,00"),
 			chartLabel: "Jan/2026 a Mar/2026",
 			chart: [
 				{
 					month: "2026-01",
 					entry: 300,
-					output: 60,
-					balance: 240,
+					output: 0,
+					balance: 300,
 				},
 				{
 					month: "2026-02",
@@ -355,8 +355,8 @@ describe("dashboard data queries", () => {
 				{
 					month: "2026-03",
 					entry: 100,
-					output: 40,
-					balance: 60,
+					output: 0,
+					balance: 100,
 				},
 			],
 			table: [
@@ -369,8 +369,8 @@ describe("dashboard data queries", () => {
 					entry: 300,
 					remuneration: 60,
 					expense: 0,
-					output: 60,
-					balance: 240,
+					output: 0,
+					balance: 300,
 				},
 				{
 					month: "2026-02",
@@ -393,8 +393,8 @@ describe("dashboard data queries", () => {
 					entry: 100,
 					remuneration: 40,
 					expense: 0,
-					output: 40,
-					balance: 60,
+					output: 0,
+					balance: 100,
 				},
 			],
 		});

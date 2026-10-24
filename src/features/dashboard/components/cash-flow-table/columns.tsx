@@ -76,7 +76,7 @@ export function getColumns(onSelect?: CashFlowSelectionOptions["onSelect"]) {
 			},
 		}),
 		columnHelper.accessor("remuneration", {
-			header: "Remuneração",
+			header: "Remuneração gerada",
 			cell: (context) => renderValue(context.row.original, "remuneration"),
 			meta: {
 				headerClassName: "min-w-32 text-right",

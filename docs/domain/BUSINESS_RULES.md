@@ -194,3 +194,7 @@
 - OAB example format: `RS 123.456`
 - Phone example format: `(11) 98765-4321`
 - Percentage display uses whole-number visual formatting with `%`
+
+## Dashboard Cash Balance
+
+- Period and monthly result = received revenue minus recorded expenses. Generated remuneration is for checking only and must not be deducted again, because payroll is recorded as an expense.

@@ -26,7 +26,7 @@ export function ChartHelp({ title, description }: ChartHelpProps) {
 				>
 					<InfoIcon className="size-3.5" />
 				</TooltipTrigger>
-				<TooltipContent className="max-w-xs">{description}</TooltipContent>
+				<TooltipContent>{description.replaceAll(". ", ".\n")}</TooltipContent>
 			</Tooltip>
 		</TooltipProvider>
 	);

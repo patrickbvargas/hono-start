@@ -1,16 +1,16 @@
 export const CHART_HELP: Record<string, string> = {
 	"Receita por área":
-		"Honorários recebidos + entradas iniciais no período, por área do contrato. Mostra a participação de cada área.",
+		"Receita recebida no período por área do contrato, incluindo entradas.",
 	"Receita por tipo":
-		"Recebimentos do período por tipo: administrativo, judicial e sucumbência. Percentuais sobre o total filtrado.",
+		"Receita recebida no período, agrupada por tipo de receita.",
 	"Remunerações por função":
-		"Remunerações geradas no período por função no contrato: responsável, indicado, indicante ou assistente. Não comprova pagamento.",
+		"Remunerações geradas por função no contrato. Não confirma repasse aos colaboradores.",
 	"Despesas por categoria":
-		"Despesas do período por categoria. Visão da firma, sem recortes que exigem rateio.",
+		"Despesas da firma no período por categoria. Ignora filtros de colaborador, área e tipo de receita.",
 	"Dívida por tempo de atraso":
-		"Parcelas vencidas − pagamentos até a data de referência, por dias de atraso. Inclui dívidas anteriores ao filtro.",
+		"Parcelas vencidas ainda em aberto, por tempo de atraso. Inclui vencimentos anteriores ao período. Referência: fim do período, limitado a hoje.",
 	"Recebimentos futuros em aberto":
-		"Parcelas a vencer em até 30, 31–60 e 61–90 dias da referência, menos pagamentos registrados. Previsão contratual, sem garantia de recebimento.",
+		"Parcelas em aberto a vencer em até 90 dias da referência. Referência: fim do período, limitado a hoje. Não garante recebimento.",
 	"Receita por cliente":
-		"Recebimentos + entradas iniciais no período, por cliente. Mostra concentração da receita.",
+		"Receita recebida no período por cliente, incluindo entradas.",
 };
