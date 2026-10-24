@@ -21,7 +21,13 @@ export const FormSection = ({
 	return (
 		<section data-slot="form-section" className="flex flex-col gap-3">
 			{title || description || action ? (
-				<div className="flex flex-col gap-1.5 sm:flex-row sm:items-start sm:justify-between sm:gap-3">
+				<div
+					className={
+						description || !action
+							? "flex flex-col gap-1.5 sm:flex-row sm:items-start sm:justify-between sm:gap-3"
+							: "flex min-h-8 items-center justify-between gap-3"
+					}
+				>
 					<div className="space-y-1">
 						{title ? (
 							<SectionTitle className="leading-none">{title}</SectionTitle>

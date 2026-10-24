@@ -1,5 +1,5 @@
 import { TrashIcon } from "lucide-react";
-import { Suspense, useRef } from "react";
+import { Suspense } from "react";
 import { ButtonNew } from "@/shared/components/button-new";
 import { EntityForm } from "@/shared/components/entity-form";
 import { EntityListAccordion } from "@/shared/components/entity-list-accordion";
@@ -25,15 +25,13 @@ import {
 } from "../../constants/values";
 import { useContract, useContractOptions } from "../../hooks/use-data";
 import { useContractForm } from "../../hooks/use-form";
+import { useContractFormSections } from "../../hooks/use-form-sections";
 import {
 	defaultContractAssignmentValues,
 	defaultContractRevenueValues,
 } from "../../utils/default";
 import { getContractEditOptionDefaults } from "../../utils/edit-options";
-import {
-	getAssignmentSummary,
-	getRevenueSummary,
-} from "../../utils/form-summary";
+import { getRevenueSummary } from "../../utils/form-summary";
 
 interface ContractFormProps {
 	id?: EntityId;
@@ -113,22 +111,15 @@ function ContractFormContent({
 	revenueTypes,
 	employees,
 }: ContractFormContentProps) {
-	const rowKeysRef = useRef(new WeakMap<object, string>());
-	const rowKeyCountRef = useRef(0);
 	const session = useLoggedUserSession();
 	const isAdmin = hasPermission(session, "org:contracts:update_all");
-
-	const getRowKey = (value: object) => {
-		const existingKey = rowKeysRef.current.get(value);
-		if (existingKey) {
-			return existingKey;
-		}
-
-		rowKeyCountRef.current += 1;
-		const nextKey = `contract-form-row-${rowKeyCountRef.current}`;
-		rowKeysRef.current.set(value, nextKey);
-		return nextKey;
-	};
+	const {
+		getRowKey,
+		focusAddedRow,
+		removeRowKey,
+		isRevenueRequiredOpen,
+		submissionAttempts,
+	} = useContractFormSections({ form });
 
 	return (
 		<form.Form form={form}>
@@ -209,55 +200,177 @@ function ContractFormContent({
 						) : null}
 					</FieldGroup>
 				</FormSection>
-				<FormSection title="Equipe">
-					<form.AppField name="assignments" mode="array">
-						{(subField) => (
-							<div className="space-y-2">
+				<form.AppField name="assignments" mode="array">
+					{(subField) => (
+						<FormSection
+							title="Equipe"
+							action={
 								<ButtonNew
 									type="button"
 									className="w-fit"
-									variant="secondary"
+									variant="ghost"
+									size="sm"
 									label="Adicionar colaborador"
-									onClick={() =>
-										subField.pushValue(defaultContractAssignmentValues())
-									}
+									onClick={() => {
+										const index = subField.state.value.length;
+										subField.pushValue(defaultContractAssignmentValues());
+										focusAddedRow("assignments", index);
+									}}
 									disabled={
 										subField.state.value.length >= CONTRACT_MAX_EMPLOYEES
 									}
 								/>
-								{subField.state.meta.errors.length > 0 ? (
-									<FieldError errors={subField.state.meta.errors} />
-								) : null}
-								<EntityListAccordion
-									items={subField.state.value}
-									getKey={(assignment) => getRowKey(assignment)}
-									getTitle={(_, index) => `Colaborador ${index + 1}`}
-									getSummary={(assignment, index) =>
-										getAssignmentSummary(
-											assignment,
-											index,
-											employees,
-											assignmentTypes,
-										)
+							}
+						>
+							{subField.state.meta.errors.length > 0 ? (
+								<FieldError errors={subField.state.meta.errors} />
+							) : null}
+							{subField.state.value.map((_, index) => (
+								<div
+									key={getRowKey("assignments", index)}
+									data-contract-row={getRowKey("assignments", index)}
+									className="border-b pb-3 last:border-0 last:pb-0"
+								>
+									<FieldGroup className="grid gap-3 sm:grid-cols-[repeat(2,1fr)_auto]">
+										<form.AppField name={`assignments[${index}].employeeId`}>
+											{(field) => (
+												<field.Autocomplete
+													label="Colaborador"
+													options={employees}
+													isRequired
+												/>
+											)}
+										</form.AppField>
+										<form.AppField
+											name={`assignments[${index}].assignmentType`}
+										>
+											{(field) => (
+												<field.Autocomplete
+													label="Atribuição"
+													options={assignmentTypes}
+													isRequired
+												/>
+											)}
+										</form.AppField>
+										<Button
+											type="button"
+											size="icon"
+											variant="outline"
+											className="place-self-end"
+											aria-label={`Remover colaborador ${index + 1}`}
+											onClick={() => {
+												removeRowKey("assignments", index);
+												subField.removeValue(index);
+											}}
+										>
+											<TrashIcon size={16} />
+										</Button>
+									</FieldGroup>
+								</div>
+							))}
+						</FormSection>
+					)}
+				</form.AppField>
+				<form.AppField name="revenues" mode="array">
+					{(subField) => (
+						<FormSection
+							title="Receitas"
+							action={
+								<ButtonNew
+									type="button"
+									className="w-fit"
+									variant="ghost"
+									size="sm"
+									label="Adicionar receita"
+									onClick={() => {
+										const index = subField.state.value.length;
+										subField.pushValue(defaultContractRevenueValues());
+										focusAddedRow("revenues", index);
+									}}
+									disabled={
+										subField.state.value.length >= CONTRACT_MAX_REVENUES
 									}
-									renderContent={(_, index) => (
-										<FieldGroup className="grid gap-3 sm:grid-cols-[repeat(2,1fr)_auto]">
-											<form.AppField name={`assignments[${index}].employeeId`}>
+								/>
+							}
+						>
+							{subField.state.meta.errors.length > 0 ? (
+								<FieldError errors={subField.state.meta.errors} />
+							) : null}
+							<EntityListAccordion
+								items={subField.state.value}
+								getKey={(_, index) => getRowKey("revenues", index)}
+								isItemAutoOpen={isRevenueRequiredOpen}
+								autoOpenRevision={submissionAttempts}
+								getTitle={(_, index) => `Receita ${index + 1}`}
+								getSummary={(revenue, index) =>
+									getRevenueSummary(revenue, index, revenueTypes)
+								}
+								renderContent={(_, index) => (
+									<div
+										data-contract-row={getRowKey("revenues", index)}
+										className="space-y-3"
+									>
+										<FieldGroup className="grid gap-3 sm:grid-cols-2">
+											<form.AppField name={`revenues[${index}].type`}>
 												{(field) => (
 													<field.Autocomplete
-														label="Colaborador"
-														options={employees}
+														label="Tipo"
+														options={revenueTypes}
+														isRequired
+													/>
+												)}
+											</form.AppField>
+											<form.AppField name={`revenues[${index}].totalValue`}>
+												{(field) => (
+													<field.Number
+														label="Valor total"
+														minValue={0}
+														step={0.01}
+														isRequired
+														formatOptions={{
+															style: "currency",
+															currency: "BRL",
+														}}
+													/>
+												)}
+											</form.AppField>
+										</FieldGroup>
+										<FieldGroup className="grid gap-3 sm:grid-cols-2">
+											<form.AppField
+												name={`revenues[${index}].paymentStartDate`}
+											>
+												{(field) => (
+													<field.DatePicker
+														label="Início do pagamento"
 														isRequired
 													/>
 												)}
 											</form.AppField>
 											<form.AppField
-												name={`assignments[${index}].assignmentType`}
+												name={`revenues[${index}].downPaymentValue`}
 											>
 												{(field) => (
-													<field.Autocomplete
-														label="Atribuição"
-														options={assignmentTypes}
+													<field.Number
+														label="Entrada"
+														minValue={0}
+														step={0.01}
+														formatOptions={{
+															style: "currency",
+															currency: "BRL",
+														}}
+													/>
+												)}
+											</form.AppField>
+										</FieldGroup>
+										<FieldGroup className="grid gap-3 sm:grid-cols-2">
+											<form.AppField
+												name={`revenues[${index}].totalInstallments`}
+											>
+												{(field) => (
+													<field.Number
+														label="Parcelas"
+														minValue={1}
+														step={1}
 														isRequired
 													/>
 												)}
@@ -265,131 +378,23 @@ function ContractFormContent({
 											<Button
 												type="button"
 												size="icon"
-												variant="destructive"
+												variant="outline"
 												className="place-self-end"
-												aria-label={`Remover colaborador ${index + 1}`}
-												onClick={() => subField.removeValue(index)}
+												aria-label={`Remover receita ${index + 1}`}
+												onClick={() => {
+													removeRowKey("revenues", index);
+													subField.removeValue(index);
+												}}
 											>
 												<TrashIcon size={16} />
 											</Button>
 										</FieldGroup>
-									)}
-								/>
-							</div>
-						)}
-					</form.AppField>
-				</FormSection>
-				<FormSection title="Receitas">
-					<form.AppField name="revenues" mode="array">
-						{(subField) => (
-							<div className="space-y-2">
-								<ButtonNew
-									type="button"
-									className="w-fit"
-									variant="secondary"
-									label="Adicionar receita"
-									onClick={() =>
-										subField.pushValue(defaultContractRevenueValues())
-									}
-									disabled={
-										subField.state.value.length >= CONTRACT_MAX_REVENUES
-									}
-								/>
-								{subField.state.meta.errors.length > 0 ? (
-									<FieldError errors={subField.state.meta.errors} />
-								) : null}
-								<EntityListAccordion
-									items={subField.state.value}
-									getKey={(revenue) => getRowKey(revenue)}
-									getTitle={(_, index) => `Receita ${index + 1}`}
-									getSummary={(revenue, index) =>
-										getRevenueSummary(revenue, index, revenueTypes)
-									}
-									renderContent={(_, index) => (
-										<div className="space-y-3">
-											<FieldGroup className="grid gap-3 sm:grid-cols-2">
-												<form.AppField name={`revenues[${index}].type`}>
-													{(field) => (
-														<field.Autocomplete
-															label="Tipo"
-															options={revenueTypes}
-															isRequired
-														/>
-													)}
-												</form.AppField>
-												<form.AppField
-													name={`revenues[${index}].paymentStartDate`}
-												>
-													{(field) => (
-														<field.DatePicker
-															label="Início do pagamento"
-															isRequired
-														/>
-													)}
-												</form.AppField>
-											</FieldGroup>
-											<FieldGroup className="grid gap-3 sm:grid-cols-2">
-												<form.AppField name={`revenues[${index}].totalValue`}>
-													{(field) => (
-														<field.Number
-															label="Valor total"
-															minValue={0}
-															step={0.01}
-															isRequired
-															formatOptions={{
-																style: "currency",
-																currency: "BRL",
-															}}
-														/>
-													)}
-												</form.AppField>
-												<form.AppField
-													name={`revenues[${index}].downPaymentValue`}
-												>
-													{(field) => (
-														<field.Number
-															label="Entrada"
-															minValue={0}
-															step={0.01}
-															formatOptions={{
-																style: "currency",
-																currency: "BRL",
-															}}
-														/>
-													)}
-												</form.AppField>
-											</FieldGroup>
-											<FieldGroup className="grid gap-3 sm:grid-cols-2">
-												<form.AppField
-													name={`revenues[${index}].totalInstallments`}
-												>
-													{(field) => (
-														<field.Number
-															label="Parcelas"
-															minValue={1}
-															step={1}
-															isRequired
-														/>
-													)}
-												</form.AppField>
-												<Button
-													type="button"
-													size="icon"
-													variant="destructive"
-													className="place-self-end"
-													aria-label={`Remover receita ${index + 1}`}
-													onClick={() => subField.removeValue(index)}
-												>
-													<TrashIcon size={16} />
-												</Button>
-											</FieldGroup>
-										</div>
-									)}
-								/>
-							</div>
-						)}
-					</form.AppField>
-				</FormSection>
+									</div>
+								)}
+							/>
+						</FormSection>
+					)}
+				</form.AppField>
 			</EntityForm>
 		</form.Form>
 	);
@@ -423,14 +428,12 @@ function ContractFormSkeleton({
 					<FormCheckboxSkeleton labelWidth="w-34" />
 				</FieldGroup>
 			</FormSection>
-			<FormSection title="Equipe">
-				<Skeleton className="h-8 w-40 rounded-md" />
-				<div className="rounded-lg border">
-					<div className="flex flex-col gap-1 px-4 py-3 pr-10">
-						<Skeleton className="h-4 w-36 rounded-sm" />
-						<Skeleton className="h-3 w-52 rounded-sm" />
-					</div>
-					<div className="px-4 pb-4">
+			<FormSection
+				title="Equipe"
+				action={<Skeleton className="h-8 w-40 rounded-md" />}
+			>
+				<div>
+					<div className="pb-3">
 						<FieldGroup className="grid gap-5 sm:grid-cols-[repeat(2,1fr)_auto]">
 							<FormFieldSkeleton labelWidth="w-22" />
 							<FormFieldSkeleton labelWidth="w-20" />
@@ -439,8 +442,10 @@ function ContractFormSkeleton({
 					</div>
 				</div>
 			</FormSection>
-			<FormSection title="Receitas">
-				<Skeleton className="h-8 w-36 rounded-md" />
+			<FormSection
+				title="Receitas"
+				action={<Skeleton className="h-8 w-36 rounded-md" />}
+			>
 				<div className="rounded-lg border">
 					<div className="flex flex-col gap-1 px-4 py-3 pr-10">
 						<Skeleton className="h-4 w-28 rounded-sm" />

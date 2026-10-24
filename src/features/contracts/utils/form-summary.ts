@@ -38,5 +38,9 @@ export function getRevenueSummary(
 			? formatter.currency(revenue.totalValue)
 			: "Valor pendente";
 
-	return `${typeLabel} • ${totalValue}`;
+	const installments =
+		revenue.totalValue > 0 && revenue.totalInstallments > 0
+			? ` • ${revenue.totalInstallments} ${revenue.totalInstallments === 1 ? "parcela" : "parcelas"}`
+			: "";
+	return `${typeLabel} • ${totalValue}${installments}`;
 }

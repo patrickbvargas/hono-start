@@ -49,7 +49,7 @@ describe("contract form summaries", () => {
 		);
 		expect(
 			getRevenueSummary({ ...revenue, type: "OLD", totalValue: 1200 }, 0, []),
-		).toBe(`OLD • ${formatter.currency(1200)}`);
+		).toBe(`OLD • ${formatter.currency(1200)} • 1 parcela`);
 		expect(
 			getRevenueSummary({ ...revenue, type: "JUDICIAL" }, 0, [
 				{ id: 1, value: "JUDICIAL", label: "Judicial", isDisabled: false },

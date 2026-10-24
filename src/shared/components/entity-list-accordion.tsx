@@ -1,4 +1,5 @@
 import type * as React from "react";
+import { useEffect, useRef, useState } from "react";
 import {
 	Accordion,
 	AccordionContent,
@@ -9,6 +10,8 @@ import { cn } from "@/shared/lib/utils";
 
 interface EntityListAccordionProps<T> {
 	items: T[];
+	isItemAutoOpen?: (item: T, index: number) => boolean;
+	autoOpenRevision?: number;
 	getKey: (item: T, index: number) => string;
 	getTitle: (item: T, index: number) => string;
 	getSummary: (item: T, index: number) => string;
@@ -22,6 +25,8 @@ interface EntityListAccordionProps<T> {
 
 export function EntityListAccordion<T>({
 	items,
+	isItemAutoOpen,
+	autoOpenRevision = 0,
 	getKey,
 	getTitle,
 	getSummary,
@@ -32,12 +37,43 @@ export function EntityListAccordion<T>({
 	className,
 	emptyState = null,
 }: EntityListAccordionProps<T>) {
+	const [openKeys, setOpenKeys] = useState<string[]>([]);
+	const requiredKeys = isItemAutoOpen
+		? items.flatMap((item, index) =>
+				isItemAutoOpen(item, index) ? [getKey(item, index)] : [],
+			)
+		: [];
+	const requiredKeySignature = JSON.stringify(requiredKeys);
+	const previousAutoOpen = useRef<{ keys: string[]; revision: number }>({
+		keys: [],
+		revision: autoOpenRevision,
+	});
+	useEffect(() => {
+		const requested: string[] = JSON.parse(requiredKeySignature);
+		const newlyRequested =
+			autoOpenRevision !== previousAutoOpen.current.revision
+				? requested
+				: requested.filter(
+						(key) => !previousAutoOpen.current.keys.includes(key),
+					);
+		previousAutoOpen.current = { keys: requested, revision: autoOpenRevision };
+		if (newlyRequested.length > 0) {
+			setOpenKeys((current) => [...new Set([...current, ...newlyRequested])]);
+		}
+	}, [requiredKeySignature, autoOpenRevision]);
+	const activeKeys = items.map(getKey);
+	const value = openKeys.filter((key) => activeKeys.includes(key));
 	if (items.length === 0) {
 		return <>{emptyState}</>;
 	}
 
 	return (
-		<Accordion multiple className={cn("rounded-lg border", className)}>
+		<Accordion
+			multiple
+			value={isItemAutoOpen ? value : undefined}
+			onValueChange={isItemAutoOpen ? setOpenKeys : undefined}
+			className={cn("rounded-lg border", className)}
+		>
 			{items.map((item, index) => {
 				const key = getKey(item, index);
 				const title = getTitle(item, index);

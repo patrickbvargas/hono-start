@@ -34,3 +34,35 @@ describe("EntityListAccordion", () => {
 		expect(onAction).toHaveBeenCalledWith(1);
 	});
 });
+
+it("opens incomplete rows but respects manual collapse and reopens on validation", () => {
+	const props = {
+		getKey: (item: { id: number; incomplete: boolean }) => String(item.id),
+		getTitle: () => "Receita",
+		getSummary: () => "Resumo",
+		renderContent: () => <input aria-label="Valor" />,
+		isItemAutoOpen: (item: { incomplete: boolean }) => item.incomplete,
+	};
+	const { rerender, unmount } = render(
+		<EntityListAccordion {...props} items={[{ id: 10, incomplete: true }]} />,
+	);
+	const trigger = screen.getByRole("button", { name: "Resumo" });
+	expect(trigger.getAttribute("aria-expanded")).toBe("true");
+	fireEvent.click(trigger);
+	expect(trigger.getAttribute("aria-expanded")).toBe("false");
+	rerender(
+		<EntityListAccordion
+			{...props}
+			autoOpenRevision={1}
+			items={[{ id: 10, incomplete: true }]}
+		/>,
+	);
+	expect(trigger.getAttribute("aria-expanded")).toBe("true");
+	fireEvent.click(trigger);
+	expect(trigger.getAttribute("aria-expanded")).toBe("false");
+	rerender(
+		<EntityListAccordion {...props} items={[{ id: 10, incomplete: true }]} />,
+	);
+	expect(trigger.getAttribute("aria-expanded")).toBe("true");
+	unmount();
+});
