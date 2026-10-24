@@ -40,7 +40,7 @@ function CreateExpenseFormContent({
 	const { form } = useExpenseForm({ onSuccess });
 
 	return (
-		<form.Form form={form} showDebug>
+		<form.Form form={form}>
 			<ExpenseFormFields form={form} state={state} title="Nova despesa" />
 		</form.Form>
 	);
@@ -59,7 +59,7 @@ function EditExpenseFormContent({
 	});
 
 	return (
-		<form.Form form={form} showDebug>
+		<form.Form form={form}>
 			<ExpenseFormFields form={form} state={state} title="Editar despesa" />
 		</form.Form>
 	);
@@ -77,7 +77,7 @@ function ExpenseFormFields({ form, state, title }: ExpenseFormFieldsProps) {
 	return (
 		<EntityForm state={state} title={title} footer={<form.Submit />}>
 			<FormSection>
-				<FieldGroup className="grid gap-5 sm:grid-cols-2">
+				<FieldGroup className="grid gap-4 sm:grid-cols-2">
 					<form.AppField name="category">
 						{(field) => (
 							<field.Autocomplete
@@ -89,7 +89,7 @@ function ExpenseFormFields({ form, state, title }: ExpenseFormFieldsProps) {
 						)}
 					</form.AppField>
 					<form.AppField name="expenseDate">
-						{(field) => <field.DatePicker label="Data" isRequired />}
+						{(field) => <field.DatePicker label="Data da despesa" isRequired />}
 					</form.AppField>
 					<form.AppField name="amount">
 						{(field) => (
@@ -105,7 +105,7 @@ function ExpenseFormFields({ form, state, title }: ExpenseFormFieldsProps) {
 					<form.AppField name="notes">
 						{(field) => (
 							<field.Textarea
-								label="Observação"
+								label="Observações"
 								maxLength={TEXT_LIMITS.notes}
 								classNames={{ wrapper: "sm:col-span-2" }}
 							/>
@@ -113,10 +113,12 @@ function ExpenseFormFields({ form, state, title }: ExpenseFormFieldsProps) {
 					</form.AppField>
 				</FieldGroup>
 			</FormSection>
-			<FormSection>
-				<form.AppField name="isActive">
-					{(field) => <field.Checkbox label="Ativo" />}
-				</form.AppField>
+			<FormSection title="Opções">
+				<FieldGroup>
+					<form.AppField name="isActive">
+						{(field) => <field.Checkbox label="Ativo" />}
+					</form.AppField>
+				</FieldGroup>
 			</FormSection>
 		</EntityForm>
 	);
@@ -130,18 +132,20 @@ function ExpenseFormSkeleton({
 		<EntityForm
 			state={state}
 			title={title}
-			footer={<Skeleton className="h-9 w-28 rounded-md" />}
+			footer={<Skeleton className="h-8 w-16 rounded-lg" />}
 		>
 			<FormSection>
-				<FieldGroup className="grid gap-5 sm:grid-cols-2">
+				<FieldGroup className="grid gap-4 sm:grid-cols-2">
 					<FormFieldSkeleton labelWidth="w-18" className="sm:col-span-2" />
 					<FormFieldSkeleton labelWidth="w-12" />
 					<FormFieldSkeleton labelWidth="w-10" />
 					<FormTextAreaSkeleton labelWidth="w-22" className="sm:col-span-2" />
 				</FieldGroup>
 			</FormSection>
-			<FormSection>
-				<FormCheckboxSkeleton labelWidth="w-10" />
+			<FormSection title="Opções">
+				<FieldGroup>
+					<FormCheckboxSkeleton labelWidth="w-10" />
+				</FieldGroup>
 			</FormSection>
 		</EntityForm>
 	);

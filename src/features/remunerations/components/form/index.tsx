@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { EntityForm } from "@/shared/components/entity-form";
 import { FormFieldSkeleton } from "@/shared/components/form-field-skeleton";
+import { FormSection } from "@/shared/components/form-section";
 import { FieldGroup, Skeleton } from "@/shared/components/ui";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
@@ -61,34 +62,36 @@ function RemunerationFormContent({
 						independentes: alterar um não recalcula o outro.
 					</p>
 				</div>
-				<FieldGroup className="grid gap-5 sm:grid-cols-2">
-					<form.AppField name="amount">
-						{(field) => (
-							<field.Number
-								label="Valor"
-								minValue={0}
-								step={0.01}
-								isRequired
-								formatOptions={{
-									style: "currency",
-									currency: "BRL",
-								}}
-							/>
-						)}
-					</form.AppField>
-					<form.AppField name="effectivePercentage">
-						{(field) => (
-							<field.Number
-								label="% Efetivo"
-								minValue={0}
-								maxValue={1}
-								step={0.01}
-								isRequired
-								formatOptions={{ style: "percent" }}
-							/>
-						)}
-					</form.AppField>
-				</FieldGroup>
+				<FormSection>
+					<FieldGroup className="grid gap-4 sm:grid-cols-2">
+						<form.AppField name="amount">
+							{(field) => (
+								<field.Number
+									label="Valor"
+									minValue={0}
+									step={0.01}
+									isRequired
+									formatOptions={{
+										style: "currency",
+										currency: "BRL",
+									}}
+								/>
+							)}
+						</form.AppField>
+						<form.AppField name="effectivePercentage">
+							{(field) => (
+								<field.Number
+									label="Percentual efetivo (%)"
+									minValue={0}
+									maxValue={1}
+									step={0.01}
+									isRequired
+									formatOptions={{ style: "percent" }}
+								/>
+							)}
+						</form.AppField>
+					</FieldGroup>
+				</FormSection>
 			</EntityForm>
 		</form.Form>
 	);
@@ -101,12 +104,21 @@ function RemunerationFormSkeleton({
 		<EntityForm
 			state={state}
 			title="Editar remuneração"
-			footer={<Skeleton className="h-9 w-28 rounded-md" />}
+			footer={<Skeleton className="h-8 w-16 rounded-lg" />}
 		>
-			<FieldGroup className="grid gap-5 sm:grid-cols-2">
-				<FormFieldSkeleton labelWidth="w-10" />
-				<FormFieldSkeleton labelWidth="w-28" />
-			</FieldGroup>
+			<div className="space-y-2 rounded-lg border bg-muted/30 p-3">
+				<Skeleton className="h-4 w-40" />
+				<Skeleton className="h-4 w-52" />
+				<Skeleton className="h-4 w-48" />
+				<Skeleton className="h-4 w-full" />
+				<Skeleton className="h-8 w-full" />
+			</div>
+			<FormSection>
+				<FieldGroup className="grid gap-4 sm:grid-cols-2">
+					<FormFieldSkeleton labelWidth="w-10" />
+					<FormFieldSkeleton labelWidth="w-28" />
+				</FieldGroup>
+			</FormSection>
 		</EntityForm>
 	);
 }

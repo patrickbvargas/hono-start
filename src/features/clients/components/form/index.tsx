@@ -101,71 +101,75 @@ function ClientFormContent({
 						const documentPlaceholder = getClientDocumentPlaceholder(typeValue);
 
 						return (
-							<FormSection>
-								<FieldGroup className="grid gap-5 sm:grid-cols-2">
-									<form.AppField name="type">
-										{(field) => (
-											<field.Autocomplete
-												label="Tipo"
-												options={types}
-												isRequired
-											/>
-										)}
-									</form.AppField>
-									<form.AppField name="document">
-										{(field) => (
-											<field.InputMask
-												label={documentLabel}
-												maskKind={
-													typeValue === CLIENT_TYPE_COMPANY_VALUE
-														? "cnpj"
-														: "cpf"
-												}
-												placeholder={documentPlaceholder}
-												isRequired
-											/>
-										)}
-									</form.AppField>
-								</FieldGroup>
-								<FieldGroup>
-									<form.AppField name="fullName">
-										{(field) => (
-											<field.Input
-												label={nameLabel}
-												maxLength={TEXT_LIMITS.name}
-												isRequired
-											/>
-										)}
-									</form.AppField>
-								</FieldGroup>
-								<FieldGroup className="grid gap-5 sm:grid-cols-2">
-									<form.AppField name="email">
-										{(field) => (
-											<field.Input
-												label="E-mail"
-												type="email"
-												maxLength={TEXT_LIMITS.email}
-											/>
-										)}
-									</form.AppField>
-									<form.AppField name="phone">
-										{(field) => (
-											<field.InputMask
-												label="Telefone"
-												maskKind="phoneBr"
-												placeholder="(00) 00000-0000"
-												type="tel"
-												inputMode="numeric"
-											/>
-										)}
-									</form.AppField>
-								</FieldGroup>
-								<FieldGroup>
-									<form.AppField name="isActive">
-										{(field) => <field.Checkbox label="Ativo" />}
-									</form.AppField>
-								</FieldGroup>
-							</FormSection>
+							<>
+								<FormSection>
+									<FieldGroup className="grid gap-4 sm:grid-cols-2">
+										<form.AppField name="type">
+											{(field) => (
+												<field.Autocomplete
+													label="Tipo"
+													options={types}
+													isRequired
+												/>
+											)}
+										</form.AppField>
+										<form.AppField name="document">
+											{(field) => (
+												<field.InputMask
+													label={documentLabel}
+													maskKind={
+														typeValue === CLIENT_TYPE_COMPANY_VALUE
+															? "cnpj"
+															: "cpf"
+													}
+													placeholder={documentPlaceholder}
+													isRequired
+												/>
+											)}
+										</form.AppField>
+									</FieldGroup>
+									<FieldGroup>
+										<form.AppField name="fullName">
+											{(field) => (
+												<field.Input
+													label={nameLabel}
+													maxLength={TEXT_LIMITS.name}
+													isRequired
+												/>
+											)}
+										</form.AppField>
+									</FieldGroup>
+									<FieldGroup className="grid gap-4 sm:grid-cols-2">
+										<form.AppField name="email">
+											{(field) => (
+												<field.Input
+													label="E-mail"
+													type="email"
+													maxLength={TEXT_LIMITS.email}
+												/>
+											)}
+										</form.AppField>
+										<form.AppField name="phone">
+											{(field) => (
+												<field.InputMask
+													label="Telefone"
+													maskKind="phoneBr"
+													placeholder="(00) 00000-0000"
+													type="tel"
+													inputMode="numeric"
+												/>
+											)}
+										</form.AppField>
+									</FieldGroup>
+								</FormSection>
+								<FormSection title="Opções">
+									<FieldGroup>
+										<form.AppField name="isActive">
+											{(field) => <field.Checkbox label="Ativo" />}
+										</form.AppField>
+									</FieldGroup>
+								</FormSection>
+							</>
 						);
 					}}
 				</form.Subscribe>
@@ -182,20 +186,22 @@ function ClientFormSkeleton({
 		<EntityForm
 			state={state}
 			title={title}
-			footer={<Skeleton className="h-9 w-28 rounded-md" />}
+			footer={<Skeleton className="h-8 w-16 rounded-lg" />}
 		>
 			<FormSection>
-				<FieldGroup className="grid gap-5 sm:grid-cols-2">
+				<FieldGroup className="grid gap-4 sm:grid-cols-2">
 					<FormFieldSkeleton labelWidth="w-10" />
 					<FormFieldSkeleton labelWidth="w-16" />
 				</FieldGroup>
 				<FieldGroup>
 					<FormFieldSkeleton labelWidth="w-14" />
 				</FieldGroup>
-				<FieldGroup className="grid gap-5 sm:grid-cols-2">
+				<FieldGroup className="grid gap-4 sm:grid-cols-2">
 					<FormFieldSkeleton labelWidth="w-12" />
 					<FormFieldSkeleton labelWidth="w-16" />
 				</FieldGroup>
+			</FormSection>
+			<FormSection title="Opções">
 				<FieldGroup>
 					<FormCheckboxSkeleton labelWidth="w-10" />
 				</FieldGroup>

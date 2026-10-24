@@ -136,7 +136,7 @@ function ContractFormContent({
 							)}
 						</form.AppField>
 					</FieldGroup>
-					<FieldGroup className="grid gap-5 sm:grid-cols-2">
+					<FieldGroup className="grid gap-4 sm:grid-cols-2">
 						<form.AppField name="processNumber">
 							{(field) => (
 								<field.Input
@@ -167,7 +167,7 @@ function ContractFormContent({
 						<form.AppField name="feePercentage">
 							{(field) => (
 								<field.Number
-									label="% Honorários"
+									label="Honorários (%)"
 									minValue={0}
 									maxValue={1}
 									step={0.01}
@@ -187,7 +187,9 @@ function ContractFormContent({
 							)}
 						</form.AppField>
 					</FieldGroup>
-					<FieldGroup className="grid gap-5 sm:grid-cols-2">
+				</FormSection>
+				<FormSection title="Opções">
+					<FieldGroup className="grid gap-4 sm:grid-cols-2">
 						<form.AppField name="isActive">
 							{(field) => <field.Checkbox label="Ativo" />}
 						</form.AppField>
@@ -231,7 +233,7 @@ function ContractFormContent({
 									data-contract-row={getRowKey("assignments", index)}
 									className="border-b pb-3 last:border-0 last:pb-0"
 								>
-									<FieldGroup className="grid gap-3 sm:grid-cols-[repeat(2,1fr)_auto]">
+									<FieldGroup className="grid gap-4 sm:grid-cols-[repeat(2,1fr)_auto]">
 										<form.AppField name={`assignments[${index}].employeeId`}>
 											{(field) => (
 												<field.Autocomplete
@@ -308,9 +310,9 @@ function ContractFormContent({
 								renderContent={(_, index) => (
 									<div
 										data-contract-row={getRowKey("revenues", index)}
-										className="space-y-3"
+										className="space-y-4"
 									>
-										<FieldGroup className="grid gap-3 sm:grid-cols-2">
+										<FieldGroup className="grid gap-4 sm:grid-cols-2">
 											<form.AppField name={`revenues[${index}].type`}>
 												{(field) => (
 													<field.Autocomplete
@@ -335,7 +337,7 @@ function ContractFormContent({
 												)}
 											</form.AppField>
 										</FieldGroup>
-										<FieldGroup className="grid gap-3 sm:grid-cols-2">
+										<FieldGroup className="grid gap-4 sm:grid-cols-2">
 											<form.AppField
 												name={`revenues[${index}].paymentStartDate`}
 											>
@@ -362,7 +364,7 @@ function ContractFormContent({
 												)}
 											</form.AppField>
 										</FieldGroup>
-										<FieldGroup className="grid gap-3 sm:grid-cols-2">
+										<FieldGroup className="grid gap-4 sm:grid-cols-2">
 											<form.AppField
 												name={`revenues[${index}].totalInstallments`}
 											>
@@ -408,13 +410,13 @@ function ContractFormSkeleton({
 		<EntityForm
 			state={state}
 			title={title}
-			footer={<Skeleton className="h-9 w-28 rounded-md" />}
+			footer={<Skeleton className="h-8 w-16 rounded-lg" />}
 		>
 			<FormSection>
 				<FieldGroup>
 					<FormFieldSkeleton labelWidth="w-14" />
 				</FieldGroup>
-				<FieldGroup className="grid gap-5 sm:grid-cols-2">
+				<FieldGroup className="grid gap-4 sm:grid-cols-2">
 					<FormFieldSkeleton labelWidth="w-18" />
 					<FormFieldSkeleton labelWidth="w-12" />
 					<FormFieldSkeleton labelWidth="w-14" />
@@ -423,18 +425,20 @@ function ContractFormSkeleton({
 				<FieldGroup>
 					<FormTextAreaSkeleton labelWidth="w-22" />
 				</FieldGroup>
-				<FieldGroup className="grid gap-5 sm:grid-cols-2">
+			</FormSection>
+			<FormSection title="Opções">
+				<FieldGroup className="grid gap-4 sm:grid-cols-2">
 					<FormCheckboxSkeleton labelWidth="w-10" />
 					<FormCheckboxSkeleton labelWidth="w-34" />
 				</FieldGroup>
 			</FormSection>
 			<FormSection
 				title="Equipe"
-				action={<Skeleton className="h-8 w-40 rounded-md" />}
+				action={<Skeleton className="h-7 w-40 rounded-md" />}
 			>
 				<div>
 					<div className="pb-3">
-						<FieldGroup className="grid gap-5 sm:grid-cols-[repeat(2,1fr)_auto]">
+						<FieldGroup className="grid gap-4 sm:grid-cols-[repeat(2,1fr)_auto]">
 							<FormFieldSkeleton labelWidth="w-22" />
 							<FormFieldSkeleton labelWidth="w-20" />
 							<Skeleton className="h-8 w-8 place-self-end rounded-md" />
@@ -444,28 +448,25 @@ function ContractFormSkeleton({
 			</FormSection>
 			<FormSection
 				title="Receitas"
-				action={<Skeleton className="h-8 w-36 rounded-md" />}
+				action={<Skeleton className="h-7 w-36 rounded-md" />}
 			>
 				<div className="rounded-lg border">
 					<div className="flex flex-col gap-1 px-4 py-3 pr-10">
 						<Skeleton className="h-4 w-28 rounded-sm" />
 						<Skeleton className="h-3 w-44 rounded-sm" />
 					</div>
-					<div className="px-4 pb-4">
-						<FieldGroup className="grid items-end gap-5 sm:grid-cols-[1fr_1fr_auto]">
-							<FormFieldSkeleton labelWidth="w-24" />
-							<FormFieldSkeleton labelWidth="w-28" />
-							<Skeleton className="h-8 w-8 place-self-end rounded-md" />
-						</FieldGroup>
-						<FieldGroup className="grid gap-5 sm:grid-cols-2">
+					<div className="space-y-4 px-4 pb-4">
+						<FieldGroup className="grid gap-4 sm:grid-cols-2">
+							<FormFieldSkeleton labelWidth="w-12" />
 							<FormFieldSkeleton labelWidth="w-20" />
+						</FieldGroup>
+						<FieldGroup className="grid gap-4 sm:grid-cols-2">
+							<FormFieldSkeleton labelWidth="w-32" />
 							<FormFieldSkeleton labelWidth="w-14" />
 						</FieldGroup>
-						<FieldGroup className="grid gap-5 sm:grid-cols-2">
+						<FieldGroup className="grid gap-4 sm:grid-cols-2">
 							<FormFieldSkeleton labelWidth="w-16" />
-						</FieldGroup>
-						<FieldGroup>
-							<FormCheckboxSkeleton labelWidth="w-24" />
+							<Skeleton className="size-8 place-self-end rounded-lg" />
 						</FieldGroup>
 					</div>
 				</div>

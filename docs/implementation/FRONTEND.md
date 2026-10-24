@@ -26,6 +26,11 @@ It is meant to survive domain changes as long as the project keeps the same UI a
 
 ## Form Rules
 
+- All business create/edit forms use EntityForm, FormSection and the shared app-form fields. Use gap-4 (1rem) between fields and grid columns, with one column on narrow screens and two from sm when fields belong together. Keep the shared control height (h-8), typography, radius, validation and required indicator; do not add feature-specific variants for equivalent fields.
+- Group lifecycle checkboxes in a final basic-data section titled `Opções` (before aggregate team/revenue sections in contracts). Labels use sentence case, `Observações` for notes and a trailing `(%)` for percentage fields. Contextual date labels identify the event. Preserve domain-specific labels and conditional fields.
+- Section additions use a right-aligned ghost/sm action with the plus icon. Row removal uses an outline/icon button matching the h-8 input height. The primary footer uses the shared Submit (`Salvar`); attachment upload keeps its explicit `Enviar anexos` action and progress copy. Loading placeholders mirror the actual field order, groups and button dimensions, including checkbox-before-label order. Production form composition must not enable debug output.
+- Filters retain the shared ListFilters composition rather than a modal layout; equivalent active-record filters use `Situação`. Clerk-owned authentication remains the documented vendor UI exception.
+
 - EntityForm subscribes to the existing app-form context to guard dismissal while dirty or submitting. Its shared discard confirmation preserves drafts; skeletons outside form context retain normal dismissal.
 - Financial list APIs use FinancialQueryPaginatedReturnType and validate totalAmount through financialTotalsSchema. Aggregate queries reuse the list's authorized where and omit pagination. Never sum only the current page to represent a filtered total.
 

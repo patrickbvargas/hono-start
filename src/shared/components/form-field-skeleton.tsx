@@ -49,14 +49,9 @@ export function FormCheckboxSkeleton({
 	className,
 }: FormCheckboxSkeletonProps) {
 	return (
-		<div
-			className={cn(
-				"flex w-full items-center justify-between gap-2 pt-0.5",
-				className,
-			)}
-		>
+		<div className={cn("flex w-full items-center gap-2 pt-0.5", className)}>
+			<Skeleton className="size-4 shrink-0 rounded-sm" />
 			<Skeleton className={cn("h-4 rounded-sm", labelWidth)} />
-			<Skeleton className="size-4 rounded-lg" />
 		</div>
 	);
 }

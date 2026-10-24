@@ -101,7 +101,7 @@ function EmployeeFormContent({
 							)}
 						</form.AppField>
 					</FieldGroup>
-					<FieldGroup className="grid gap-5 sm:grid-cols-2">
+					<FieldGroup className="grid gap-4 sm:grid-cols-2">
 						<form.AppField
 							name="type"
 							listeners={{
@@ -138,11 +138,11 @@ function EmployeeFormContent({
 					</FieldGroup>
 				</FormSection>
 				<FormSection title="Financeiro">
-					<FieldGroup className="grid gap-5 sm:grid-cols-2">
+					<FieldGroup className="grid gap-4 sm:grid-cols-2">
 						<form.AppField name="remunerationPercent">
 							{(field) => (
 								<field.Number
-									label="% Remuneração"
+									label="Remuneração (%)"
 									minValue={0}
 									maxValue={1}
 									step={0.05}
@@ -154,7 +154,7 @@ function EmployeeFormContent({
 						<form.AppField name="referrerPercent">
 							{(field) => (
 								<field.Number
-									label="% Indicação"
+									label="Indicação (%)"
 									minValue={0}
 									maxValue={1}
 									step={0.05}
@@ -164,6 +164,8 @@ function EmployeeFormContent({
 							)}
 						</form.AppField>
 					</FieldGroup>
+				</FormSection>
+				<FormSection title="Opções">
 					<FieldGroup>
 						<form.AppField name="isActive">
 							{(field) => <field.Checkbox label="Ativo" />}
@@ -183,24 +185,24 @@ function EmployeeFormSkeleton({
 		<EntityForm
 			state={state}
 			title={title}
-			footer={<Skeleton className="h-9 w-28 rounded-md" />}
+			footer={<Skeleton className="h-8 w-16 rounded-lg" />}
 		>
 			<FormSection>
 				<FieldGroup>
 					<FormFieldSkeleton labelWidth="w-12" />
-					<FormFieldSkeleton labelWidth="w-12" />
 				</FieldGroup>
-				<FieldGroup className="grid gap-5 sm:grid-cols-2">
+				<FieldGroup className="grid gap-4 sm:grid-cols-2">
 					<FormFieldSkeleton labelWidth="w-14" />
 					<FormFieldSkeleton labelWidth="w-12" />
-					<FormFieldSkeleton labelWidth="w-10" />
 				</FieldGroup>
 			</FormSection>
 			<FormSection title="Financeiro">
-				<FieldGroup className="grid gap-5 sm:grid-cols-2">
+				<FieldGroup className="grid gap-4 sm:grid-cols-2">
 					<FormFieldSkeleton labelWidth="w-26" />
 					<FormFieldSkeleton labelWidth="w-18" />
 				</FieldGroup>
+			</FormSection>
+			<FormSection title="Opções">
 				<FieldGroup>
 					<FormCheckboxSkeleton labelWidth="w-10" />
 				</FieldGroup>

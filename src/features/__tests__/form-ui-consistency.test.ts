@@ -1,0 +1,39 @@
+import { readFileSync } from "node:fs";
+import { describe, expect, it } from "vitest";
+
+const features = [
+	"clients",
+	"employees",
+	"contracts",
+	"fees",
+	"expenses",
+	"remunerations",
+	"attachments",
+];
+
+describe("business form UI contract", () => {
+	it.each(features)("keeps %s on the shared form presentation", (feature) => {
+		const source = readFileSync(
+			`src/features/${feature}/components/form/index.tsx`,
+			"utf8",
+		);
+		expect(source).toContain("<EntityForm");
+		expect(source).toContain("<FormSection");
+		expect(source).toContain("<form.Submit");
+		expect(source).not.toContain("showDebug");
+		expect(source).not.toMatch(/grid (?:items-end )?gap-[35]/);
+		expect(source).not.toMatch(/label="% /);
+		expect(source).not.toContain('label="Observação"');
+	});
+	it.each(["clients", "employees", "contracts", "fees", "expenses"])(
+		"groups %s lifecycle fields consistently",
+		(feature) => {
+			const source = readFileSync(
+				`src/features/${feature}/components/form/index.tsx`,
+				"utf8",
+			);
+			expect(source.match(/<FormSection title="Opções">/g)).toHaveLength(2);
+			expect(source).toContain('label="Ativo"');
+		},
+	);
+});

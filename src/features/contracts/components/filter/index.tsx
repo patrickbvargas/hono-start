@@ -70,7 +70,7 @@ export const ContractFilter = () => {
 			<form.AppField name="active">
 				{(field) => (
 					<field.RadioGroup
-						label="Cadastro"
+						label="Situação"
 						options={ENTITY_ACTIVE_FILTER_OPTIONS}
 					/>
 				)}
@@ -153,7 +153,7 @@ export const ContractFilter = () => {
 					<form.AppField name="active">
 						{(field) => (
 							<field.RadioGroup
-								label="Cadastro"
+								label="Situação"
 								options={ENTITY_ACTIVE_FILTER_OPTIONS}
 							/>
 						)}

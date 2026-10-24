@@ -1,5 +1,5 @@
 import { EntityForm } from "@/shared/components/entity-form";
-import { FieldGroup } from "@/shared/components/ui";
+import { FormSection } from "@/shared/components/form-section";
 import type { OverlayState } from "@/shared/types/overlay";
 import { ATTACHMENT_ACCEPT_ATTRIBUTE } from "../../constants/values";
 import { useAttachmentForm } from "../../hooks/use-form";
@@ -44,7 +44,7 @@ export const AttachmentForm = ({
 					</form.Submit>
 				}
 			>
-				<FieldGroup>
+				<FormSection>
 					<p role="status" className="text-sm text-muted-foreground">
 						{isLoadingAttachments
 							? "Carregando limite de anexos..."
@@ -57,6 +57,7 @@ export const AttachmentForm = ({
 					<form.AppField name="files">
 						{(field) => (
 							<field.File
+								label="Arquivos"
 								multiple
 								maxFiles={maxFiles}
 								isRequired
@@ -75,7 +76,7 @@ export const AttachmentForm = ({
 							/>
 						)}
 					</form.AppField>
-				</FieldGroup>
+				</FormSection>
 			</EntityForm>
 		</form.Form>
 	);

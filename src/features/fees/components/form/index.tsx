@@ -130,7 +130,7 @@ function FeeFormFields({
 	return (
 		<EntityForm state={state} title={title} footer={<form.Submit />}>
 			<FormSection>
-				<FieldGroup className="grid gap-5 sm:grid-cols-2">
+				<FieldGroup className="grid gap-4 sm:grid-cols-2">
 					<form.AppField
 						name="contractId"
 						listeners={{
@@ -153,7 +153,7 @@ function FeeFormFields({
 					<form.AppField name="revenueId">
 						{(field) => (
 							<field.Autocomplete
-								label="Tipo de honorário"
+								label="Receita"
 								options={revenues}
 								isRequired
 								isDisabled={!contractId || isLoadingRevenues}
@@ -162,7 +162,7 @@ function FeeFormFields({
 										? "Carregando receitas..."
 										: contractId
 											? "Selecionar item..."
-											: "Selecione contrato primeiro"
+											: "Selecione um contrato primeiro"
 								}
 							/>
 						)}
@@ -198,8 +198,8 @@ function FeeFormFields({
 					</form.AppField>
 				</FieldGroup>
 			</FormSection>
-			<FormSection>
-				<FieldGroup className="grid gap-5 sm:grid-cols-2">
+			<FormSection title="Opções">
+				<FieldGroup className="grid gap-4 sm:grid-cols-2">
 					<form.AppField name="generatesRemuneration">
 						{(field) => <field.Checkbox label="Gerar remunerações" />}
 					</form.AppField>
@@ -220,10 +220,10 @@ function FeeFormSkeleton({
 		<EntityForm
 			state={state}
 			title={title}
-			footer={<Skeleton className="h-9 w-28 rounded-md" />}
+			footer={<Skeleton className="h-8 w-16 rounded-lg" />}
 		>
 			<FormSection>
-				<FieldGroup className="grid gap-5 sm:grid-cols-2">
+				<FieldGroup className="grid gap-4 sm:grid-cols-2">
 					<FormFieldSkeleton labelWidth="w-16" className="sm:col-span-2" />
 					<FormFieldSkeleton labelWidth="w-14" />
 					<FormFieldSkeleton labelWidth="w-32" />
@@ -231,8 +231,8 @@ function FeeFormSkeleton({
 					<FormFieldSkeleton labelWidth="w-10" />
 				</FieldGroup>
 			</FormSection>
-			<FormSection>
-				<FieldGroup className="grid gap-5 sm:grid-cols-2">
+			<FormSection title="Opções">
+				<FieldGroup className="grid gap-4 sm:grid-cols-2">
 					<FormCheckboxSkeleton labelWidth="w-32" />
 					<FormCheckboxSkeleton labelWidth="w-10" />
 				</FieldGroup>
