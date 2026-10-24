@@ -9,15 +9,15 @@ import {
 } from "@/shared/session/server";
 import type { MutationReturnType } from "@/shared/types/api";
 import { ATTACHMENT_ERRORS } from "../constants/errors";
-import { createAttachment, deleteAttachment } from "../data/mutations";
+import { createAttachments, deleteAttachment } from "../data/mutations";
 import {
 	assertAttachmentOwnerExists,
 	getAttachmentAccessById,
 } from "../data/queries";
 import { assertAttachmentOwnerCanReceiveUpload } from "../rules/owner";
 import {
+	attachmentBatchUploadInputSchema,
 	attachmentIdInputSchema,
-	attachmentUploadInputSchema,
 } from "../schemas/form";
 
 function assertAttachmentOwnerUploadAccess(
@@ -57,7 +57,7 @@ function assertAttachmentOwnerUploadAccess(
 
 const createAttachmentFn = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
-	.validator(attachmentUploadInputSchema)
+	.validator(attachmentBatchUploadInputSchema)
 	.handler(async ({ data }): Promise<MutationReturnType> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();
@@ -66,7 +66,7 @@ const createAttachmentFn = createServerFn({ method: "POST" })
 
 			assertAttachmentOwnerUploadAccess(session, owner);
 
-			return await createAttachment({
+			return await createAttachments({
 				actor: {
 					id: session.employee.id ?? undefined,
 					name: session.user.fullName,

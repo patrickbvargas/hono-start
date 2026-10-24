@@ -6,7 +6,7 @@ The four entity drawers wrap AttachmentSection in a titled section. The feature 
 
 **Goals:** Compact, consistent and keyboard-accessible file management in every supported drawer.
 
-**Non-Goals:** Preview, storage, API, permission or upload workflow changes.
+**Non-Goals:** Preview, storage, API, permission changes.
 
 ## Decisions
 
@@ -28,3 +28,7 @@ Deploy presentation and four owner compositions together. No data migration. Rev
 ## Open Questions
 
 None.
+
+## Atomic batch and owner capacity
+
+The final upload modal accepts up to the remaining capacity of 25 files. Shared FormFile adds optional multiple selection while preserving single-file consumers. A feature-owned Zod batch contract validates the selection and server payload. One protected request checks the owner authorization, stages all binaries, then writes all metadata and audit events in a single transaction. A transaction-scoped advisory lock keyed by firm and owner serializes count-and-create. Existing count plus batch size must not exceed 25. Failures roll back metadata and attempt cleanup of all staged binaries; cleanup failures are logged. No database migration is needed.

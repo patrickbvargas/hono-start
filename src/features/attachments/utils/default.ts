@@ -1,15 +1,15 @@
 import type {
-	AttachmentFormInput,
+	AttachmentBatchFormInput,
 	AttachmentOwnerInput,
 } from "../schemas/form";
 
-export type AttachmentFormValues = AttachmentFormInput;
+export type AttachmentFormValues = AttachmentBatchFormInput;
 
 export function defaultAttachmentCreateValues(
 	owner: AttachmentOwnerInput,
 ): AttachmentFormValues {
 	return {
 		...owner,
-		file: null,
+		files: [],
 	};
 }

@@ -145,3 +145,5 @@ This compares datamodels without connecting to or resetting the configured DB.
 The generated migration must be reviewed and rehearsed before deployment.
 The reset-first workflow remains required for local development migrations on
 a confirmed disposable database. Never run it against the current Supabase DB.
+
+Attachment batch creation stages validated binaries before a single metadata-and-audit transaction, and serializes its count-and-create transaction with a PostgreSQL transaction-scoped advisory lock derived from firm, owner kind and owner ID. Count all non-deleted attachments for that owner and reject if the existing count plus the batch exceeds 25. Clean up all staged binaries if any upload or transaction operation fails. The lock releases at transaction end; no external network or file encoding occurs while holding it.

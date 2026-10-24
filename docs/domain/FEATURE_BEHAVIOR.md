@@ -329,3 +329,7 @@ Contract client filters and fee contract/type filters are primary desktop contro
 Primary desktop filters include client/employee in contracts, category in expenses, employee/contract in remunerations (subject to existing role restrictions), and entity type in audit logs. Financial totals remain in the primary filter bar when advanced controls expand. Contract revenues show Quitado, Parcial or Pendente from their existing payment state, including down payments. Navigation orders contracts before clients in the sidebar and dashboard creation menu. Related-record links use a consistent navigation icon and preserve authorization checks.
 
 Revenue badges prioritize Quitado (green), then Em atraso (red) when the earliest open installment due date is before the current UTC calendar date, otherwise Parcial or Pendente. An installment due today is not overdue. This uses the existing schedule and outstanding balance, without changing financial calculations.
+
+The Novos anexos modal accepts multiple files through selection or drag and drop, up to 25 per batch. It displays selected filenames and sizes, allows removal before submission, shows preparation and sending feedback, and retains the entire selection after failure. Oversized selections are rejected visibly without silently discarding files.
+
+Attachment sections disable Anexar at 25 files. The batch modal shows available capacity and limits selection to remaining capacity, up to 25 files. Server checks remain authoritative if another upload changes capacity concurrently.

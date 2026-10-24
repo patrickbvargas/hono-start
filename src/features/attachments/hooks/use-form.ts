@@ -7,17 +7,16 @@ import { toast } from "@/shared/lib/toast";
 import { createAttachmentMutationOptions } from "../api/mutations";
 import { attachmentKeys } from "../api/queries";
 import {
+	ATTACHMENT_MAX_BATCH_FILES,
+	ATTACHMENT_MAX_OWNER_FILES,
+} from "../constants/values";
+import {
 	type AttachmentOwnerInput,
-	attachmentFormInputSchema,
-	attachmentUploadInputSchema,
+	attachmentBatchFormInputSchema,
 } from "../schemas/form";
 import { defaultAttachmentCreateValues } from "../utils/default";
-import { inferAttachmentTypeFromFile } from "../utils/file";
-import {
-	buildAttachmentUploadInput,
-	fileToBase64,
-	type PreparedAttachmentFile,
-} from "../utils/upload";
+import { uploadAttachmentBatch } from "../utils/upload-batch";
+import { useAttachments } from "./use-data";
 
 interface UseAttachmentFormOptions {
 	onSuccess?: () => void;
@@ -29,59 +28,72 @@ export function useAttachmentForm({
 	owner,
 }: UseAttachmentFormOptions) {
 	const queryClient = useQueryClient();
+	const {
+		attachments,
+		isPending: isLoadingAttachments,
+		error: attachmentsError,
+	} = useAttachments(owner);
+	const remainingSlots = Math.max(
+		0,
+		ATTACHMENT_MAX_OWNER_FILES - attachments.length,
+	);
+	const maxFiles = Math.min(ATTACHMENT_MAX_BATCH_FILES, remainingSlots);
 	const mutation = useMutation(createAttachmentMutationOptions());
-	const [preparedFile, setPreparedFile] =
-		useState<PreparedAttachmentFile | null>(null);
-	const [isPreparingFile, setIsPreparingFile] = useState(false);
+	const [progress, setProgress] = useState<string | null>(null);
 	const form = useAppForm({
 		defaultValues: defaultAttachmentCreateValues(owner),
 		validators: {
-			onSubmit: attachmentFormInputSchema,
+			onChange: attachmentBatchFormInputSchema,
+			onSubmit: attachmentBatchFormInputSchema,
 		},
 		onSubmit: async ({ value }) => {
+			let saved = false;
 			try {
-				const parsedForm = attachmentFormInputSchema.parse(value);
-				const parsed = attachmentUploadInputSchema.parse(
-					await buildAttachmentUploadInput(parsedForm, preparedFile),
+				const parsed = attachmentBatchFormInputSchema.parse(value);
+				if (isLoadingAttachments || attachmentsError) {
+					toast.danger("Aguarde o carregamento dos anexos e tente novamente.");
+					return;
+				}
+				if (parsed.files.length > remainingSlots) {
+					toast.danger(
+						`Restam ${remainingSlots} vagas para anexos neste registro.`,
+					);
+					return;
+				}
+
+				await uploadAttachmentBatch({
+					input: parsed,
+					upload: async (data) => {
+						setProgress("Enviando anexos...");
+						await mutation.mutateAsync({ data });
+					},
+					onProgress: (index, total) =>
+						setProgress(`Preparando ${index} de ${total}...`),
+				});
+				saved = true;
+				toast.success(
+					parsed.files.length === 1
+						? "Anexo enviado com sucesso."
+						: `${parsed.files.length} anexos enviados com sucesso.`,
 				);
-				await mutation.mutateAsync({ data: parsed });
-				toast.success("Anexo enviado com sucesso.");
-				await refreshAuditedEntityQueries(queryClient, attachmentKeys.all);
 				onSuccess?.();
 			} catch (error) {
 				toast.danger(getMutationErrorMessage(error));
+			} finally {
+				setProgress(null);
+				if (saved) {
+					await refreshAuditedEntityQueries(queryClient, attachmentKeys.all);
+				}
 			}
 		},
 	});
-
 	return {
 		form,
-		isPending: mutation.isPending,
-		isPreparingFile,
-		handleFileChange: async (file: File | null) => {
-			if (!file) {
-				setPreparedFile(null);
-				return;
-			}
-
-			setIsPreparingFile(true);
-
-			try {
-				const type =
-					inferAttachmentTypeFromFile({
-						fileName: file.name,
-						mimeType: file.type,
-					}) ?? "";
-				const fileBase64 = await fileToBase64(file);
-
-				setPreparedFile({
-					file,
-					fileBase64,
-					type,
-				});
-			} finally {
-				setIsPreparingFile(false);
-			}
-		},
+		progress,
+		maxFiles,
+		remainingSlots,
+		isLoadingAttachments,
+		attachmentsError,
+		isPending: progress !== null,
 	};
 }

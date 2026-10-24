@@ -1,4 +1,4 @@
-import { UploadIcon } from "lucide-react";
+import { UploadIcon, XIcon } from "lucide-react";
 import { useRef, useState } from "react";
 import { Button, FieldWrapper, Spinner } from "@/shared/components/ui";
 import { useFieldContext } from "@/shared/hooks/use-app-form";
@@ -12,6 +12,7 @@ interface FormFileProps
 			"type" | "value" | "onChange"
 		> {
 	browseLabel?: string;
+	maxFiles?: number;
 	dropDescription?: string;
 	emptyTitle?: string;
 	isLoading?: boolean;
@@ -38,6 +39,8 @@ export const FormFile = ({
 	isDisabled,
 	classNames,
 	accept,
+	multiple = false,
+	maxFiles,
 	browseLabel = "Selecionar arquivo",
 	dropDescription,
 	emptyTitle = "Arraste e solte arquivo aqui",
@@ -46,17 +49,45 @@ export const FormFile = ({
 	onValueChange,
 	...props
 }: FormFileProps) => {
-	const field = useFieldContext<File | null>();
+	const field = useFieldContext<File | File[] | null>();
 	const inputRef = useRef<HTMLInputElement | null>(null);
 	const [isDragActive, setIsDragActive] = useState(false);
 
 	const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 
-	const selectedFile = field.state.value;
+	const [selectionError, setSelectionError] = useState<string | null>(null);
+	const selectedFiles = Array.isArray(field.state.value)
+		? field.state.value
+		: field.state.value
+			? [field.state.value]
+			: [];
+	const selectedFile = multiple ? null : selectedFiles[0];
 	const selectedDescription = selectedFile
 		? `${selectedFile.name} (${formatSelectedFileSize(selectedFile.size)})`
 		: null;
 
+	function handleFilesChange(files: File[]) {
+		const next = [
+			...selectedFiles,
+			...files.filter(
+				(file) =>
+					!selectedFiles.some(
+						(selected) =>
+							selected.name === file.name &&
+							selected.size === file.size &&
+							selected.lastModified === file.lastModified,
+					),
+			),
+		];
+		setIsDragActive(false);
+		if (maxFiles && next.length > maxFiles) {
+			setSelectionError(`Selecione no máximo ${maxFiles} arquivos por envio.`);
+			return;
+		}
+		setSelectionError(null);
+		field.handleChange(next);
+		field.handleBlur();
+	}
 	function handleFileChange(file: File | null) {
 		field.handleChange(file);
 		field.handleBlur();
@@ -114,8 +145,11 @@ export const FormFile = ({
 					}
 
 					event.preventDefault();
-					const file = event.dataTransfer.files.item(0);
-					void handleFileChange(file);
+					if (multiple) {
+						handleFilesChange(Array.from(event.dataTransfer.files));
+					} else {
+						handleFileChange(event.dataTransfer.files.item(0));
+					}
 				}}
 			>
 				<input
@@ -125,11 +159,17 @@ export const FormFile = ({
 					name={field.name}
 					type="file"
 					accept={accept}
+					multiple={multiple}
 					className="sr-only"
 					disabled={isDisabled || isLoading}
 					onBlur={field.handleBlur}
 					onChange={(event) => {
-						void handleFileChange(event.target.files?.item(0) ?? null);
+						if (multiple) {
+							handleFilesChange(Array.from(event.target.files ?? []));
+							event.target.value = "";
+						} else {
+							handleFileChange(event.target.files?.item(0) ?? null);
+						}
 					}}
 				/>
 				<div className="flex size-14 items-center justify-center rounded-full border border-border bg-background">
@@ -162,6 +202,52 @@ export const FormFile = ({
 					{isLoading ? "Carregando..." : browseLabel}
 				</Button>
 			</div>
+			{selectionError ? (
+				<p role="alert" className="text-sm text-destructive">
+					{selectionError}
+				</p>
+			) : null}
+			{multiple && selectedFiles.length > 0 ? (
+				<div className="space-y-2">
+					<p className="text-xs text-muted-foreground">
+						{selectedFiles.length}
+						{maxFiles ? ` de ${maxFiles}` : ""} arquivos selecionados
+					</p>
+					<ul className="max-h-48 divide-y overflow-y-auto">
+						{selectedFiles.map((file, index) => (
+							<li
+								key={`${file.name}-${file.size}-${file.lastModified}`}
+								className="flex items-center gap-3 py-2"
+							>
+								<div className="min-w-0 flex-1">
+									<p className="wrap-anywhere text-sm">{file.name}</p>
+									<p className="text-xs text-muted-foreground">
+										{formatSelectedFileSize(file.size)}
+									</p>
+								</div>
+								<Button
+									type="button"
+									size="icon-sm"
+									variant="ghost"
+									aria-label={`Remover ${file.name}`}
+									disabled={isDisabled || isLoading}
+									onClick={() => {
+										field.handleChange(
+											selectedFiles.filter(
+												(_, itemIndex) => itemIndex !== index,
+											),
+										);
+										field.handleBlur();
+										setSelectionError(null);
+									}}
+								>
+									<XIcon size={16} />
+								</Button>
+							</li>
+						))}
+					</ul>
+				</div>
+			) : null}
 		</FieldWrapper>
 	);
 };

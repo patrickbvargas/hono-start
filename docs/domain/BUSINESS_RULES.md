@@ -200,3 +200,7 @@
 ## Dashboard Cash Balance
 
 - Period and monthly result = received revenue minus recorded expenses. Generated remuneration is for checking only and must not be deducted again, because payroll is recorded as an expense.
+
+Attachment upload selection accepts 1 to 25 files per batch, limited to the remaining owner capacity. Every file must satisfy the existing type, filename and 10 MB limits before sending. A single protected request saves all batch metadata and audit events in one transaction. If staging or persistence fails, all staged binaries are cleaned up and the complete selection remains available for retry; no partial metadata is committed.
+
+Each attachment owner record (client, employee, contract or expense) accepts at most 25 non-deleted attachments, including inactive records. The server enforces count-and-create atomically per firm and owner; deletion frees capacity. Existing records above the limit remain readable, but cannot receive additional files.

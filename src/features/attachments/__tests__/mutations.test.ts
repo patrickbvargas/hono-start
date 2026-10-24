@@ -23,11 +23,13 @@ const {
 	prismaMock: {
 		attachment: {
 			create: vi.fn(),
+			count: vi.fn(),
 			delete: vi.fn(),
 			findFirst: vi.fn(),
 			update: vi.fn(),
 		},
 		$transaction: vi.fn(),
+		$executeRaw: vi.fn(),
 	},
 	removeAttachmentFileMock: vi.fn(),
 	uploadAttachmentFileMock: vi.fn(),
@@ -53,11 +55,138 @@ vi.mock("../data/queries", () => ({
 	getAttachmentTypeByValue: getAttachmentTypeByValueMock,
 }));
 
-import { createAttachment, deleteAttachment } from "../data/mutations";
+import {
+	createAttachment,
+	createAttachments,
+	deleteAttachment,
+} from "../data/mutations";
 
 describe("attachment data mutations", () => {
+	const batchFile = {
+		type: "PDF",
+		fileName: "contrato.pdf",
+		mimeType: "application/pdf",
+		fileSize: 4,
+		fileBase64: "dGVzdA==",
+	};
+	it("saves the complete batch in one locked transaction", async () => {
+		prismaMock.attachment.count.mockResolvedValue(23);
+		await expect(
+			createAttachments({
+				firmId: 1,
+				input: { clientId: 9, files: [batchFile, batchFile] },
+			}),
+		).resolves.toEqual({ success: true });
+		expect(prismaMock.$transaction).toHaveBeenCalledOnce();
+		expect(prismaMock.$executeRaw).toHaveBeenCalledOnce();
+		expect(prismaMock.attachment.create).toHaveBeenCalledTimes(2);
+		expect(createAuditLogMock).toHaveBeenCalledTimes(2);
+		expect(removeAttachmentFileMock).not.toHaveBeenCalled();
+	});
+	it("rejects the whole batch when it exceeds remaining capacity", async () => {
+		prismaMock.attachment.count.mockResolvedValue(24);
+		await expect(
+			createAttachments({
+				firmId: 1,
+				input: { clientId: 9, files: [batchFile, batchFile] },
+			}),
+		).rejects.toThrow(ATTACHMENT_ERRORS.OWNER_LIMIT_REACHED);
+		expect(prismaMock.attachment.create).not.toHaveBeenCalled();
+		expect(removeAttachmentFileMock).toHaveBeenCalledTimes(2);
+	});
+	it("removes every staged file if a later metadata write fails", async () => {
+		prismaMock.attachment.create
+			.mockResolvedValueOnce({ id: 50, fileName: "contrato.pdf" })
+			.mockRejectedValueOnce(new Error("db failed"));
+		await expect(
+			createAttachments({
+				firmId: 1,
+				input: { clientId: 9, files: [batchFile, batchFile] },
+			}),
+		).rejects.toThrow(ATTACHMENT_ERRORS.PERSISTENCE_FAILED);
+		expect(prismaMock.$transaction).toHaveBeenCalledOnce();
+		expect(removeAttachmentFileMock).toHaveBeenCalledTimes(2);
+	});
+	it("cleans staged files and skips the transaction if a later upload fails", async () => {
+		uploadAttachmentFileMock
+			.mockResolvedValueOnce({})
+			.mockRejectedValueOnce(new Error("disk failed"));
+		await expect(
+			createAttachments({
+				firmId: 1,
+				input: { clientId: 9, files: [batchFile, batchFile] },
+			}),
+		).rejects.toThrow(ATTACHMENT_ERRORS.STORAGE_UPLOAD_FAILED);
+		expect(removeAttachmentFileMock).toHaveBeenCalledTimes(1);
+		expect(prismaMock.$transaction).not.toHaveBeenCalled();
+	});
+	it("rejects 26 files before storage or transaction work", async () => {
+		await expect(
+			createAttachments({
+				firmId: 1,
+				input: { clientId: 9, files: Array(26).fill(batchFile) },
+			}),
+		).rejects.toThrow();
+		expect(uploadAttachmentFileMock).not.toHaveBeenCalled();
+		expect(prismaMock.$transaction).not.toHaveBeenCalled();
+	});
+	it.each([
+		{ clientId: 9 },
+		{ employeeId: 9 },
+		{ contractId: 9 },
+		{ expenseId: 9 },
+	])(
+		"rejects the 26th attachment and cleans uploaded storage for %o",
+		async (owner) => {
+			prismaMock.attachment.count.mockResolvedValue(25);
+			await expect(
+				createAttachment({
+					firmId: 1,
+					input: {
+						...owner,
+						type: "PDF",
+						fileName: "contrato.pdf",
+						mimeType: "application/pdf",
+						fileSize: 4,
+						fileBase64: "dGVzdA==",
+					},
+				}),
+			).rejects.toThrow(ATTACHMENT_ERRORS.OWNER_LIMIT_REACHED);
+			expect(prismaMock.attachment.count).toHaveBeenCalledWith({
+				where: { firmId: 1, deletedAt: null, ...owner },
+			});
+			expect(prismaMock.$executeRaw).toHaveBeenCalledOnce();
+			expect(prismaMock.$executeRaw.mock.invocationCallOrder[0]).toBeLessThan(
+				prismaMock.attachment.count.mock.invocationCallOrder[0],
+			);
+			expect(prismaMock.attachment.create).not.toHaveBeenCalled();
+			expect(removeAttachmentFileMock).toHaveBeenCalledOnce();
+			expect(createAuditLogMock).not.toHaveBeenCalled();
+		},
+	);
+	it("allows the 25th attachment while holding the owner lock", async () => {
+		prismaMock.attachment.count.mockResolvedValue(24);
+		await expect(
+			createAttachment({
+				firmId: 1,
+				input: {
+					clientId: 9,
+					type: "PDF",
+					fileName: "contrato.pdf",
+					mimeType: "application/pdf",
+					fileSize: 4,
+					fileBase64: "dGVzdA==",
+				},
+			}),
+		).resolves.toEqual({ success: true });
+		expect(
+			prismaMock.attachment.count.mock.invocationCallOrder[0],
+		).toBeLessThan(prismaMock.attachment.create.mock.invocationCallOrder[0]);
+	});
 	beforeEach(() => {
 		vi.clearAllMocks();
+		prismaMock.attachment.count.mockResolvedValue(0);
+		prismaMock.$executeRaw.mockResolvedValue(1);
 		getAttachmentTypeByValueMock.mockResolvedValue({
 			id: 30,
 			value: "PDF",

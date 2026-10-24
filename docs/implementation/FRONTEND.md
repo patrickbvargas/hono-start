@@ -172,3 +172,5 @@ The mobile sidebar closes when selecting a navigation destination, including the
 
 AttachmentSection owns its single shared-style heading, loaded count and permitted Anexar action. Supported drawers mount it directly, without another titled section. Files use divided compact rows with type, wrapping filename, size and date; download stays visible and authorized deletion lives in the secondary actions menu with existing confirmation. Skeletons match the compact header and row. Query errors show safe copy and a retry action.
 Attachment lists have a maximum height of 12rem (approximately three compact rows), then scroll within the section. The section heading and upload action remain outside this scroll area.
+
+FormFile supports optional multiple selection with an array-valued field and maxFiles, appending new selections and offering individual removal. Existing single-file consumers preserve their value and callback contract. Attachment batch orchestration validates the complete selection using its Zod schema, prepares the full payload, submits it in one protected request, and invalidates attachment/audit queries after successful completion.

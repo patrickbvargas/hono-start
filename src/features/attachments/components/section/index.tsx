@@ -4,6 +4,7 @@ import { SectionTitle } from "@/shared/components/section-title";
 import { Button, ScrollArea } from "@/shared/components/ui";
 import { cn } from "@/shared/lib/utils";
 import type { EntityId } from "@/shared/schemas/entity";
+import { ATTACHMENT_MAX_OWNER_FILES } from "../../constants/values";
 import { useAttachmentSection } from "../../hooks/use-section";
 import type { AttachmentOwnerKind } from "../../schemas/form";
 import { AttachmentDelete } from "../delete";
@@ -47,6 +48,16 @@ export const AttachmentSection = ({
 						<ButtonNew
 							permission="org:attachments:upload"
 							className="w-fit"
+							disabled={
+								!isPending &&
+								!error &&
+								attachments.length >= ATTACHMENT_MAX_OWNER_FILES
+							}
+							title={
+								attachments.length >= ATTACHMENT_MAX_OWNER_FILES
+									? "Limite de 25 anexos atingido"
+									: undefined
+							}
 							label="Anexar"
 							variant="ghost"
 							size="sm"

@@ -16,29 +16,62 @@ export const AttachmentForm = ({
 	owner,
 	state,
 }: AttachmentFormProps) => {
-	const { form, handleFileChange, isPending, isPreparingFile } =
-		useAttachmentForm({ owner, onSuccess });
+	const {
+		form,
+		isPending,
+		progress,
+		maxFiles,
+		remainingSlots,
+		isLoadingAttachments,
+		attachmentsError,
+	} = useAttachmentForm({ owner, onSuccess });
 
 	return (
 		<form.Form form={form}>
 			<EntityForm
 				state={state}
-				title="Novo anexo"
-				footer={<form.Submit disabled={isPending || isPreparingFile} />}
+				title="Novos anexos"
+				footer={
+					<form.Submit
+						disabled={
+							isPending ||
+							isLoadingAttachments ||
+							!!attachmentsError ||
+							remainingSlots === 0
+						}
+					>
+						{progress ?? "Enviar anexos"}
+					</form.Submit>
+				}
 			>
 				<FieldGroup>
-					<form.AppField name="file">
+					<p role="status" className="text-sm text-muted-foreground">
+						{isLoadingAttachments
+							? "Carregando limite de anexos..."
+							: attachmentsError
+								? "Não foi possível verificar o limite. Feche e tente novamente."
+								: remainingSlots === 0
+									? "Limite de 25 anexos atingido. Exclua um anexo para liberar espaço."
+									: `${remainingSlots} de 25 vagas disponíveis. Até ${maxFiles} arquivos neste envio.`}
+					</p>
+					<form.AppField name="files">
 						{(field) => (
 							<field.File
+								multiple
+								maxFiles={maxFiles}
 								isRequired
 								accept={ATTACHMENT_ACCEPT_ATTRIBUTE}
-								isDisabled={isPending}
-								isLoading={isPreparingFile}
-								onValueChange={handleFileChange}
-								emptyTitle="Arraste e solte arquivo aqui"
-								dropDescription="Ou clique para procurar. Formatos aceitos: PDF, JPG e PNG, até 10 MB."
-								loadingText="Preparando arquivo para envio..."
-								browseLabel="Selecionar arquivo"
+								isDisabled={
+									isPending ||
+									isLoadingAttachments ||
+									!!attachmentsError ||
+									remainingSlots === 0
+								}
+								isLoading={isPending}
+								emptyTitle="Arraste e solte arquivos aqui"
+								dropDescription="Selecione até 25 arquivos por envio. PDF, JPG e PNG, até 10 MB por arquivo."
+								loadingText="Enviando arquivos..."
+								browseLabel="Selecionar arquivos"
 							/>
 						)}
 					</form.AppField>

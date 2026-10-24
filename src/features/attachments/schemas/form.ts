@@ -1,7 +1,10 @@
 import * as z from "zod";
 import { entityIdSchema } from "@/shared/schemas/entity";
 import { ATTACHMENT_ERRORS } from "../constants/errors";
-import { ATTACHMENT_OWNER_KINDS } from "../constants/values";
+import {
+	ATTACHMENT_MAX_BATCH_FILES,
+	ATTACHMENT_OWNER_KINDS,
+} from "../constants/values";
 import {
 	assertAttachmentFileAccepted,
 	assertAttachmentTypeMatchesFile,
@@ -149,3 +152,57 @@ export type AttachmentFormInput = z.infer<typeof attachmentFormInputSchema>;
 export type AttachmentUploadInput = z.infer<typeof attachmentUploadInputSchema>;
 export type AttachmentIdInput = z.infer<typeof attachmentIdInputSchema>;
 export type AttachmentOwnerKind = z.infer<typeof attachmentOwnerKindSchema>;
+
+export const attachmentBatchFormInputSchema = attachmentOwnerBaseInputSchema
+	.safeExtend({
+		files: z
+			.array(
+				z.custom<File>((value) => value instanceof File, "Arquivo inválido"),
+			)
+			.min(1, "Selecione pelo menos um arquivo")
+			.max(
+				ATTACHMENT_MAX_BATCH_FILES,
+				"Selecione no máximo 25 arquivos por envio",
+			),
+	})
+	.superRefine((data, ctx) => {
+		attachmentOwnerRefinement(data, ctx);
+		data.files.forEach((file) => {
+			try {
+				assertAttachmentFileAccepted({
+					fileName: file.name,
+					mimeType: file.type,
+					fileSize: file.size,
+				});
+			} catch (error) {
+				if (!(error instanceof Error)) {
+					throw error;
+				}
+				ctx.addIssue({
+					code: "custom",
+					path: ["files"],
+					message: `${file.name}: ${error.message}`,
+				});
+			}
+		});
+	});
+export type AttachmentBatchFormInput = z.infer<
+	typeof attachmentBatchFormInputSchema
+>;
+
+export const attachmentBatchUploadInputSchema = attachmentOwnerBaseInputSchema
+	.safeExtend({
+		files: z
+			.array(
+				attachmentFileBaseInputSchema.superRefine(attachmentFileRefinement),
+			)
+			.min(1, "Selecione pelo menos um arquivo")
+			.max(
+				ATTACHMENT_MAX_BATCH_FILES,
+				"Selecione no máximo 25 arquivos por envio",
+			),
+	})
+	.superRefine(attachmentOwnerRefinement);
+export type AttachmentBatchUploadInput = z.infer<
+	typeof attachmentBatchUploadInputSchema
+>;
