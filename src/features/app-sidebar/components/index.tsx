@@ -16,11 +16,11 @@ import { NavUser } from "./nav-user";
 
 const items: RouteSection[] = [
 	{
-		title: "Geral",
+		title: "Trabalho",
 		url: "#",
 		icon: LayoutDashboardIcon,
 		isActive: true,
-		items: [ROUTES.dashboard, ROUTES.contract, ROUTES.client, ROUTES.employee],
+		items: [ROUTES.dashboard, ROUTES.contract],
 	},
 	{
 		title: "Financeiro",
@@ -29,12 +29,13 @@ const items: RouteSection[] = [
 		icon: DollarSignIcon,
 		items: [ROUTES.fee, ROUTES.remuneration, ROUTES.expense],
 	},
+	{ title: "Cadastros", url: "#", items: [ROUTES.client, ROUTES.employee] },
 	{
-		title: "Outro",
+		title: "Administração",
 		url: "#",
 		isActive: true,
 		icon: ScrollTextIcon,
-		items: [ROUTES.auditLog],
+		items: [ROUTES.auditLog, ROUTES.settings],
 	},
 ] as const;
 

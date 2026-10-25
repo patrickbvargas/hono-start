@@ -99,12 +99,12 @@ describe("AttachmentSection", () => {
 		render(<AttachmentSectionFallback canUpload />);
 		expect(useAttachmentsMock).not.toHaveBeenCalled();
 		expect(screen.queryByRole("button")).toBeNull();
-		expect(document.querySelectorAll('[data-slot="skeleton"]').length).toBe(5);
+		expect(document.querySelectorAll('[data-slot="skeleton"]').length).toBe(2);
 	});
 
 	it("omits upload button space when uploads are unavailable", () => {
 		render(<AttachmentSectionFallback canUpload={false} />);
-		expect(document.querySelectorAll('[data-slot="skeleton"]').length).toBe(4);
+		expect(document.querySelectorAll('[data-slot="skeleton"]').length).toBe(1);
 	});
 
 	it("renders one heading and opens upload from the compact header", () => {
@@ -113,6 +113,55 @@ describe("AttachmentSection", () => {
 		expect(screen.getAllByRole("heading", { name: "Anexos" })).toHaveLength(1);
 		fireEvent.click(screen.getByRole("button", { name: "Anexar" }));
 		expect(createOpenMock).toHaveBeenCalledOnce();
+	});
+
+	it("uses a single text line for empty and loading states", () => {
+		const { rerender, container } = render(
+			<AttachmentSection ownerId={1} ownerKind="client" />,
+		);
+		expect(screen.getByText("Nenhum anexo cadastrado.").className).toContain(
+			"leading-5",
+		);
+		useAttachmentsMock.mockReturnValue({
+			attachments: [],
+			error: null,
+			isPending: true,
+			retry: retryMock,
+		});
+		rerender(<AttachmentSection ownerId={1} ownerKind="client" />);
+		expect(
+			container.querySelector('div.h-5[aria-hidden="true"]')?.className,
+		).toContain("h-5");
+	});
+
+	it("expands attachments in the workspace while retaining compact drawer scrolling", () => {
+		useAttachmentsMock.mockReturnValue({
+			attachments: [
+				{
+					id: 1,
+					fileName: "arquivo.pdf",
+					fileSize: 1024,
+					typeValue: "PDF",
+					createdAt: "2026-10-24T12:00:00Z",
+					downloadUrl: null,
+				},
+			],
+			error: null,
+			isPending: false,
+			retry: retryMock,
+		});
+		const { rerender, container } = render(
+			<AttachmentSection ownerId={1} ownerKind="contract" />,
+		);
+		expect(container.querySelector('[data-slot="scroll-area"]')).not.toBeNull();
+		expect(screen.getByRole("listitem").className).toContain("min-h-16");
+		rerender(
+			<AttachmentSection ownerId={1} ownerKind="contract" layout="expanded" />,
+		);
+		expect(
+			container.querySelector('[data-slot="scroll-area"]')?.className,
+		).toContain("flex-1");
+		expect(screen.getByRole("listitem")).not.toBeNull();
 	});
 
 	it("renders skeleton placeholders while attachments are loading", () => {
@@ -125,7 +174,7 @@ describe("AttachmentSection", () => {
 		render(<AttachmentSection ownerId={1} ownerKind="contract" />);
 
 		expect(screen.queryByText("Carregando anexos...")).toBeNull();
-		expect(document.querySelectorAll('[data-slot="skeleton"]').length).toBe(4);
+		expect(document.querySelectorAll('[data-slot="skeleton"]').length).toBe(1);
 	});
 
 	it("renders metadata, downloads and opens deletion through the menu", async () => {

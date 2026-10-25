@@ -6,12 +6,14 @@ interface EntityIdTriggerProps {
 	id: EntityId;
 	onView?: (id: EntityId) => void;
 	label?: string;
+	actionLabel?: string;
 }
 
 export function EntityIdTrigger({
 	id,
 	onView,
 	label,
+	actionLabel,
 }: EntityIdTriggerProps): ReactNode {
 	return (
 		<TableButton
@@ -21,8 +23,10 @@ export function EntityIdTrigger({
 					: "font-mono text-muted-foreground hover:text-foreground"
 			}
 			aria-label={
-				label ? `Ver detalhes de ${label}` : `Ver detalhes do registro #${id}`
+				actionLabel ??
+				(label ? `Ver detalhes de ${label}` : `Ver detalhes do registro #${id}`)
 			}
+			title={actionLabel}
 			onClick={(event: MouseEvent<HTMLButtonElement>) => {
 				event.stopPropagation();
 				onView?.(id);

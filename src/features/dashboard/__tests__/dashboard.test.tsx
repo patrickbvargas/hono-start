@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@/shared/components/ui", () => ({
+	CardTitle: ({ children }: { children: ReactNode }) => <div>{children}</div>,
 	Badge: ({ children }: { children: ReactNode }) => <div>{children}</div>,
 	Card: ({ children }: { children: ReactNode }) => <div>{children}</div>,
 	CardAction: ({ children }: { children: ReactNode }) => <div>{children}</div>,
@@ -272,6 +273,7 @@ describe("Dashboard", () => {
 				screen.getByTestId("dashboard-metric-cards").textContent,
 			).toContain("Saldo total");
 			expect(screen.queryByText("Fluxo de caixa")).toBeNull();
+			expect(screen.queryByText("Precisa de atenção")).toBeNull();
 			expect(
 				screen.getByTestId("dashboard-cash-flow-table").textContent,
 			).toContain("1 meses fluxo");

@@ -6,13 +6,15 @@
 - `Client` / `Cliente`: the represented person or company.
 - `Contract` / `Contrato`: the legal engagement linked to a client.
 - `Revenue` / `Receita`: a payment plan attached to a contract.
-- `Fee` / `Honorario`: a concrete payment installment received from the client.
+- `Fee` / `Recebimento`: a concrete payment installment received from the client. `Honorários` remains the broader contractual financial obligation and is retained in planned/received analytics labels.
 - `Remuneration` / `Remuneracao`: the amount owed to an employee after a fee event.
 - `Firm` / `Escritorio`: the tenant boundary in the application.
 
+User-facing state terms: `Andamento` is contract lifecycle, `Situação` is active/inactive, and payment badges describe Pendente, Parcial, Quitado or Em atraso.
+
 ## Status Terms
 
-- `active`: non-deleted business record in normal circulation.
+- `active`: enabled business record; separate from whether it is soft-deleted.
 - `inactive`: visible state toggle independent from deletion.
 - `deleted`: soft-deleted record retained for restoration and audit.
 - `writable`: a resource state in which the current attempted mutation is allowed by lifecycle rules, permission rules, and tenant scope.

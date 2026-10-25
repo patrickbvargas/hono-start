@@ -16,9 +16,9 @@ import {
 	TooltipTrigger,
 } from "@/shared/components/ui";
 import { cn } from "@/shared/lib/utils";
-import { useDrilldownController } from "../hooks/use-controller";
-import { useDrilldownData } from "../hooks/use-data";
-import type { DrilldownProps, DrilldownResult } from "../schemas/model";
+import { useDrilldownController } from "../../hooks/use-controller";
+import { useDrilldownData } from "../../hooks/use-data";
+import type { DrilldownProps, DrilldownResult } from "../../schemas/model";
 
 export function Drilldown<
 	T extends RowData,

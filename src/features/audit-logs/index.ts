@@ -6,6 +6,7 @@ export {
 	getAuditLogsQueryOptions,
 } from "./api/queries";
 export { AuditLogDetails } from "./components/details";
+export { EntityAuditHistory } from "./components/entity-history";
 export { AuditLogFilter } from "./components/filter";
 export { AuditLogList } from "./components/list";
 export { AuditLogTable } from "./components/table";

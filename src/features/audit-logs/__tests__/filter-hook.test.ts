@@ -24,6 +24,7 @@ vi.mock("@/shared/hooks/use-filter", () => ({
 	useFilter: () => ({
 		filter: {
 			query: "joao",
+			entityId: 62,
 			action: ["CREATE"],
 			entityType: ["contract"],
 			actorName: ["Joao Silva"],
@@ -117,6 +118,12 @@ describe("useAuditLogFilter", () => {
 			entityType: [],
 			actorName: [],
 		});
-		expect(handleResetFilterMock).toHaveBeenCalledTimes(1);
+		expect(handleFilterMock).toHaveBeenCalledWith({
+			query: "",
+			action: [],
+			entityType: [],
+			actorName: [],
+			entityId: undefined,
+		});
 	});
 });

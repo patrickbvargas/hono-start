@@ -8,7 +8,7 @@ import {
 const feeBaseInputSchema = z.object({
 	contractId: z.string().trim().min(1, "Contrato é obrigatório"),
 	revenueId: z.string().trim().min(1, "Receita é obrigatória"),
-	paymentDate: z.iso.date("Data de pagamento é obrigatória"),
+	paymentDate: z.iso.date("Data de recebimento é obrigatória"),
 	amount: z.number().positive("Valor deve ser maior que zero"),
 	installmentNumber: z
 		.number()

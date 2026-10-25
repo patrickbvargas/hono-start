@@ -102,12 +102,12 @@ const RemunerationDetailsContent = ({
 				),
 			},
 			{
-				term: "Data do honorário",
+				term: "Data do recebimento",
 				definition: formatter.calendarDate(remuneration.paymentDate),
 			},
 			{ term: "Valor", definition: formatter.currency(remuneration.amount) },
 			{
-				term: "% Efetivo",
+				term: "Percentual efetivo (%)",
 				definition: formatter.percent(remuneration.effectivePercentage),
 			},
 		],
@@ -117,12 +117,12 @@ const RemunerationDetailsContent = ({
 	const sourceInfo = React.useMemo<DetailFieldItem[]>(
 		() => [
 			{
-				term: "Honorário",
+				term: "Recebimento",
 				definition:
 					hasPermission(session, "org:fees:read_all") ||
 					hasPermission(session, "org:fees:read_assigned") ? (
 						<RelatedRecordLink kind="fee" id={remuneration.feeId}>
-							Honorário #{remuneration.feeId} · parcela{" "}
+							Recebimento #{remuneration.feeId} · parcela{" "}
 							{remuneration.feeInstallmentNumber}
 						</RelatedRecordLink>
 					) : (
@@ -134,7 +134,7 @@ const RemunerationDetailsContent = ({
 				definition: String(remuneration.feeInstallmentNumber),
 			},
 			{
-				term: "Valor do honorário",
+				term: "Valor do recebimento",
 				definition: formatter.currency(remuneration.feeAmount),
 			},
 			{
@@ -144,7 +144,7 @@ const RemunerationDetailsContent = ({
 					: "Gerada automaticamente",
 			},
 			{
-				term: "Situação do honorário",
+				term: "Situação do recebimento",
 				definition: remuneration.parentFeeIsSoftDeleted ? "Excluído" : "Ativo",
 			},
 		],
@@ -197,7 +197,29 @@ const RemunerationDetailsContent = ({
 			<EntityDetail.Body>
 				<EntityDetail.Fields columns={2} items={summaryInfo} />
 				<EntityDetail.Separator />
-				<EntityDetail.Section title="Origem">
+				<EntityDetail.Section title="Entender cálculo">
+					<div className="mb-3 space-y-2 rounded-lg border bg-muted/30 p-3 text-sm">
+						<p>
+							Base do recebimento:{" "}
+							<strong>{formatter.currency(remuneration.feeAmount)}</strong> ·
+							Percentual registrado:{" "}
+							<strong>
+								{formatter.percent(remuneration.effectivePercentage)}
+							</strong>
+						</p>
+						<p>
+							Remuneração registrada:{" "}
+							<strong>{formatter.currency(remuneration.amount)}</strong>
+						</p>
+						<p className="text-muted-foreground">
+							{remuneration.isManualOverride
+								? "Este registro tem ajuste manual. Valor e percentual são independentes; alterar um não recalcula o outro."
+								: "Valor gerado a partir do recebimento e das regras aplicadas à equipe do contrato. Os dados exibidos são os registrados neste lançamento."}
+						</p>
+						<p className="text-muted-foreground">
+							Remuneração gerada não confirma pagamento ao colaborador.
+						</p>
+					</div>
 					<EntityDetail.Fields columns={2} items={sourceInfo} />
 				</EntityDetail.Section>
 				<EntityDetail.Separator />
@@ -216,7 +238,8 @@ const RemunerationDetailsFallback = () => (
 		<EntityDetail.Body>
 			<EntityDetail.SkeletonFields columns={2} rows={6} />
 			<EntityDetail.Separator />
-			<EntityDetail.Section title="Origem">
+			<EntityDetail.Section title="Entender cálculo">
+				<EntityDetail.SkeletonTitle className="h-32 w-full" />
 				<EntityDetail.SkeletonFields columns={2} rows={5} />
 			</EntityDetail.Section>
 			<EntityDetail.Separator />

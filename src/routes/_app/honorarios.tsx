@@ -71,7 +71,7 @@ function RouteComponent() {
 			actions={
 				<ButtonNew
 					permission="org:fees:create"
-					label="Novo honorário"
+					label="Novo recebimento"
 					onClick={() => overlay.create.open()}
 				/>
 			}

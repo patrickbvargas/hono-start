@@ -1,4 +1,8 @@
-import { useSuspenseQueries, useSuspenseQuery } from "@tanstack/react-query";
+import {
+	useQuery,
+	useSuspenseQueries,
+	useSuspenseQuery,
+} from "@tanstack/react-query";
 import type { EntityId } from "@/shared/schemas/entity";
 import {
 	getAuditLogActionsQueryOptions,
@@ -34,4 +38,14 @@ export function useAuditLogOptions() {
 		});
 
 	return { actions, entityTypes, actors };
+}
+
+export function useAuditHistoryData(search: AuditLogSearch) {
+	const query = useQuery(getAuditLogsQueryOptions(search));
+	return {
+		auditLogs: query.data,
+		isPending: query.isPending,
+		error: query.error,
+		retry: query.refetch,
+	};
 }

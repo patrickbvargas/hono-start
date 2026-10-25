@@ -3,13 +3,8 @@ import { Skeleton } from "@/shared/components/ui";
 
 export function AttachmentSectionSkeleton() {
 	return (
-		<div className="flex items-center gap-3 py-1" aria-hidden="true">
-			<Skeleton className="h-10 w-11 shrink-0" />
-			<div className="min-w-0 flex-1 space-y-2">
-				<Skeleton className="h-4 w-2/3" />
-				<Skeleton className="h-3 w-1/2" />
-			</div>
-			<Skeleton className="size-7 shrink-0" />
+		<div className="flex h-5 items-center" aria-hidden="true">
+			<Skeleton className="h-4 w-44 max-w-full" />
 		</div>
 	);
 }

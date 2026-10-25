@@ -5,6 +5,7 @@ import {
 	LayoutDashboardIcon,
 	type LucideIcon,
 	ScrollTextIcon,
+	SettingsIcon,
 	UserIcon,
 	UsersIcon,
 	WalletCardsIcon,
@@ -36,11 +37,17 @@ type RouteName =
 	| "expense"
 	| "remuneration"
 	| "employee"
-	| "auditLog";
+	| "auditLog"
+	| "settings";
 
 export const ROUTES: Record<RouteName, RouteItem> = {
+	settings: {
+		title: "Configurações",
+		url: "/configuracoes",
+		icon: SettingsIcon,
+	},
 	dashboard: {
-		title: "Dashboard",
+		title: "Visão geral",
 		url: "/",
 		icon: LayoutDashboardIcon,
 		permission: [
@@ -62,7 +69,7 @@ export const ROUTES: Record<RouteName, RouteItem> = {
 		permission: ["org:contracts:read_all", "org:contracts:read_assigned"],
 	},
 	fee: {
-		title: "Honorários",
+		title: "Recebimentos",
 		url: "/honorarios",
 		icon: DollarSignIcon,
 		permission: ["org:fees:read_all", "org:fees:read_assigned"],

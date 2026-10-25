@@ -17,6 +17,7 @@ import {
 	DialogTitle,
 } from "@/shared/components/ui";
 import { formContext } from "@/shared/hooks/use-app-form";
+import { useFormValidationFocus } from "@/shared/hooks/use-form-validation-focus";
 import { cn } from "@/shared/lib/utils";
 import type { OverlayState } from "@/shared/types/overlay";
 
@@ -42,11 +43,26 @@ function ConnectedEntityForm({
 	form,
 	...props
 }: EntityFormProps & { form: AnyFormApi }) {
-	const [dirty, submitting] = useStore(form.store, (state) => [
-		state.isDirty,
-		state.isSubmitting,
-	]);
-	return <EntityFormContent {...props} dirty={dirty} submitting={submitting} />;
+	const [dirty, submitting, attempts, valid, validating] = useStore(
+		form.store,
+		(state) => [
+			state.isDirty,
+			state.isSubmitting,
+			state.submissionAttempts,
+			state.isValid,
+			state.isValidating,
+		],
+	);
+	return (
+		<EntityFormContent
+			{...props}
+			dirty={dirty}
+			submitting={submitting}
+			attempts={attempts}
+			valid={valid}
+			validating={validating}
+		/>
+	);
 }
 
 const EntityFormContent = ({
@@ -58,9 +74,25 @@ const EntityFormContent = ({
 	bodyClassName,
 	dirty = false,
 	submitting = false,
+	attempts = 0,
+	valid = true,
+	validating = false,
 	...props
-}: EntityFormProps & { dirty?: boolean; submitting?: boolean }) => {
+}: EntityFormProps & {
+	dirty?: boolean;
+	submitting?: boolean;
+	attempts?: number;
+	valid?: boolean;
+	validating?: boolean;
+}) => {
 	const [confirmDiscard, setConfirmDiscard] = React.useState(false);
+	const contentRef = useFormValidationFocus({
+		attempts,
+		valid,
+		submitting,
+		validating,
+		isOpen: state.isOpen,
+	});
 	return (
 		<>
 			<Dialog
@@ -78,6 +110,7 @@ const EntityFormContent = ({
 				}}
 			>
 				<DialogContent
+					ref={contentRef}
 					className={cn(
 						"flex max-h-[calc(100dvh-2rem)] flex-col sm:max-w-lg",
 						contentClassName,
@@ -92,6 +125,14 @@ const EntityFormContent = ({
 							bodyClassName,
 						)}
 					>
+						{attempts > 0 && !valid ? (
+							<p
+								role="alert"
+								className="rounded-lg border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive"
+							>
+								Revise os campos indicados antes de salvar.
+							</p>
+						) : null}
 						{children}
 					</DialogBody>
 					{footer && <DialogFooter className="shrink-0">{footer}</DialogFooter>}

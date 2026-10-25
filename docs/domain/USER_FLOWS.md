@@ -97,3 +97,28 @@ This file preserves the canonical user workflows of the product. These flows des
 - Related drawers label their dismiss action Voltar; the main detail keeps Fechar. Related triggers have no navigation icon. Closing the related drawer reveals the origin details with the original list, filters and scroll context intact. Related details retain edit/delete/restore actions when authorized. Read permissions and server resource checks remain enforced.
 
 - Advanced filter panels start closed, including when navigation supplies active filters. Applied filters remain visible as chips; users expand Mais filtros manually.
+
+
+## Connected platform work
+
+Navigation groups Visão geral and Contratos under Trabalho; Recebimentos, Remunerações and Despesas under Financeiro; Clientes and Colaboradores under Cadastros; Auditoria and Configurações under Administração. Existing URLs remain unchanged.
+
+Contract drawers retain quick consultation and offer Abrir página do contrato. The protected /contratos/$contractId workspace contains Visão geral, Financeiro, Equipe, Anexos and Histórico tabs. Opening from a contract list preserves its validated search for the return link. Finance reuses the drawer's revenue summary, existing lifecycle checks and prefilled receipt form. Readable receipts and remunerations have contract-filtered collection links; audit readers see an embedded history table scoped to exact Contract type and ID, paginated in place with change details available in a drawer. Other-entity audit events remain in their own records.
+
+The overview retains an optional work preview component, hidden in the application by default at user request. When explicitly enabled by composition it shows up to three existing authorized overdue installments before its analytics. The preview follows the selected filters and reference date; it is not a global pending count. Each eligible link opens the contract financial tab. No additional aggregation or outflow calculation is implied.
+
+Financial lists offer Todo período and Este mês shortcuts that change only calendar dates and reset pagination, preserving other filters. Remuneration details expose Entender cálculo with stored receipt amount, effective percentage, amount and manual-adjustment copy. Generated remuneration does not confirm payout.
+
+Configurações offers readonly current office/account information, the existing account profile dialog, browser-wide theme preference and workflow guidance. Access administration remains outside this screen; no office setting is written by this change.
+
+Product review: the workspace link lives in contract drawer headers from sm and in the body on mobile. Workspace headers show the contract andamento once, adding lifecycle badges only for inactive/deleted records. Settings content reserves inset space for card outlines.
+
+Contract overview omits the Próximo passo guidance panel. Its header uses a shared andamento badge; inactive/deleted warnings remain separate. The history tab displays the changes table directly without requiring navigation to Auditoria.
+
+Contract list action menus start with Abrir página do contrato and preserve the list search as return context. The overview labels Observações across both columns. Workspace attachments fill available tab space with internal scrolling, while drawers retain compact scrolling and a compact single-text-line empty/loading height. Appearance buttons pair Sistema, Claro and Escuro with the same icons as the theme switcher.
+
+The contract overview displays alerts below its data and derives pending next due dates, remaining balances, missing active revenues and missing active responsible assignments from the authorized contract detail. Future balances are informational rather than overdue debt; the total remaining balance is not presented as the overdue amount. Optional notes and attachments are not required. Actions open the existing finance/team tabs.
+
+Alert severity uses labelled color chips: Alta/red for overdue next due dates, Média/amber for missing active revenue or responsible assignment, Baixa/blue for other remaining balances. History pagination uses the same 32px square buttons and chevron icons as other tables. Legacy tab=alerts search falls back to overview.
+
+Inline contract identifiers/process numbers and mobile contract card actions open the workspace by default, preserving contract-list return filters. Related contract links from other records also navigate to the workspace. The explicit Ver detalhes menu action remains available for quick drawer consultation.

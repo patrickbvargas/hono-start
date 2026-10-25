@@ -123,7 +123,9 @@ export const Route = createFileRoute("/_app/")({
 		await Promise.all(prefetches);
 	},
 	component: RouteComponent,
-	errorComponent: ({ error }) => <RouteError title="Dashboard" error={error} />,
+	errorComponent: ({ error }) => (
+		<RouteError title="Visão geral" error={error} />
+	),
 });
 
 function RouteComponent() {
@@ -199,7 +201,7 @@ function RouteComponent() {
 									onClick={() => feeOverlay.overlay.create.open()}
 								>
 									<DollarSignIcon size={16} />
-									Honorário
+									Recebimento
 								</DropdownMenuItem>
 							) : null}
 							{hasPermission(session, "org:expenses:create") ? (

@@ -53,11 +53,11 @@ export function useFeeForm({
 				if (isEditing) {
 					const parsed = feeUpdateInputSchema.parse(value);
 					await updateMutation.mutateAsync({ data: parsed });
-					toast.success("Honorário atualizado com sucesso.");
+					toast.success("Recebimento atualizado com sucesso.");
 				} else {
 					const parsed = feeCreateInputSchema.parse(value);
 					await createMutation.mutateAsync({ data: parsed });
-					toast.success("Honorário criado com sucesso.");
+					toast.success("Recebimento registrado com sucesso.");
 				}
 
 				await refreshAuditedEntityQueries(queryClient, feeKeys.all);

@@ -10,7 +10,6 @@ export function useAuditLogFilter() {
 		filter,
 		defaultFilter,
 		handleFilter,
-		handleResetFilter,
 		canClearFilters,
 		hasNonDefaultFilter,
 	} = useFilter(auditLogFilterSchema);
@@ -53,7 +52,7 @@ export function useAuditLogFilter() {
 	const handleClearFilters = () => {
 		debounceSubmit.cancel();
 		form.reset(defaultFilter);
-		handleResetFilter();
+		handleFilter({ ...defaultFilter, entityId: undefined });
 	};
 
 	return {

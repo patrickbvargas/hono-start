@@ -5,11 +5,40 @@ vi.mock("@/shared/session", () => ({
 
 // @vitest-environment jsdom
 
-import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { EntityActions } from "../entity-actions";
 
+afterEach(cleanup);
+
 describe("EntityActions", () => {
+	it("places the optional workspace action first and invokes it", () => {
+		const open = vi.fn();
+		render(
+			<EntityActions
+				onOpenPage={open}
+				openPageLabel="Abrir página do contrato"
+				onView={vi.fn()}
+			/>,
+		);
+		fireEvent.click(screen.getByRole("button", { name: "Ações" }));
+		expect(screen.getAllByRole("menuitem")[0].textContent).toBe(
+			"Abrir página do contrato",
+		);
+		fireEvent.click(
+			screen.getByRole("menuitem", { name: "Abrir página do contrato" }),
+		);
+		expect(open).toHaveBeenCalledOnce();
+	});
+	it("does not expose workspace navigation without read permission", () => {
+		render(
+			<EntityActions
+				onOpenPage={vi.fn()}
+				viewPermission="org:contracts:read_all"
+			/>,
+		);
+		expect(screen.queryByRole("button", { name: "Ações" })).toBeNull();
+	});
 	it("renders ver detalhes before editar in row actions menu", () => {
 		render(<EntityActions onView={vi.fn()} canEdit onEdit={vi.fn()} />);
 

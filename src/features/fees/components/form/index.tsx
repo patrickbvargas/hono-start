@@ -29,7 +29,7 @@ export const FeeForm = ({
 	onSuccess,
 	initialSelection,
 }: FeeFormProps) => {
-	const title = id ? "Editar honorário" : "Novo honorário";
+	const title = id ? "Editar recebimento" : "Novo recebimento";
 
 	return (
 		<Suspense fallback={<FeeFormSkeleton state={state} title={title} />}>
@@ -61,7 +61,7 @@ function CreateFeeFormContent({
 						contractId={contractId}
 						form={form}
 						state={state}
-						title="Novo honorário"
+						title="Novo recebimento"
 					/>
 				)}
 			</form.Subscribe>
@@ -92,7 +92,7 @@ function EditFeeFormContent({
 						currentRevenue={currentRevenue}
 						form={form}
 						state={state}
-						title="Editar honorário"
+						title="Editar recebimento"
 					/>
 				)}
 			</form.Subscribe>

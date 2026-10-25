@@ -62,7 +62,7 @@ describe("dashboard quick-create route contract", () => {
 		expect(routeContent).toContain("Novo");
 		expect(routeContent).toContain("Cliente");
 		expect(routeContent).toContain("Contrato");
-		expect(routeContent).toContain("Honorário");
+		expect(routeContent).toContain("Recebimento");
 		expect(routeContent).toContain("Colaborador");
 	});
 

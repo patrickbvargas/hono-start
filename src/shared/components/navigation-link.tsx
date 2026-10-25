@@ -6,6 +6,10 @@ export const NavigationLink = createLink(
 	({ children, className, ...props }: ComponentProps<"a">) => (
 		<a
 			{...props}
+			title={
+				props.title ??
+				(typeof children === "string" ? children : props["aria-label"])
+			}
 			className={cn(
 				"inline-flex max-w-full items-baseline gap-1 rounded-sm underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
 				className,

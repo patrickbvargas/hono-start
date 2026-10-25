@@ -21,7 +21,7 @@ import { useOverlay } from "@/shared/hooks/use-overlay";
 import type { EntityId } from "@/shared/schemas/entity";
 import { hasPermission, useLoggedUserSession } from "@/shared/session";
 import type { OverlayState } from "@/shared/types/overlay";
-import type { RelatedRecordKind } from "../schemas/record";
+import type { RelatedRecordKind } from "../../schemas/record";
 
 const components = {
 	client: {

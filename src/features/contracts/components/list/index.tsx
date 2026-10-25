@@ -13,6 +13,7 @@ import { getContractLifecycleActions } from "../../utils/lifecycle-actions";
 interface ContractListProps {
 	canManageLifecycle?: boolean;
 	data: QueryPaginatedReturnType<ContractSummary>;
+	onOpenPage?: (id: EntityId) => void;
 	onView?: (id: EntityId) => void;
 	onEdit?: (id: EntityId) => void;
 	onDelete?: (id: EntityId) => void;
@@ -22,6 +23,7 @@ interface ContractListProps {
 export const ContractList = ({
 	canManageLifecycle = false,
 	data,
+	onOpenPage,
 	onView,
 	onEdit,
 	onDelete,
@@ -78,6 +80,8 @@ export const ContractList = ({
 
 			return (
 				<EntityActions
+					onOpenPage={onOpenPage ? () => onOpenPage(contract.id) : undefined}
+					openPageLabel="Abrir página do contrato"
 					viewPermission={[
 						"org:contracts:read_all",
 						"org:contracts:read_assigned",
@@ -98,7 +102,7 @@ export const ContractList = ({
 				/>
 			);
 		},
-		[canManageLifecycle, onDelete, onEdit, onRestore, onView],
+		[canManageLifecycle, onDelete, onEdit, onRestore, onView, onOpenPage],
 	);
 
 	return (
@@ -108,7 +112,7 @@ export const ContractList = ({
 			renderTitle={(contract) => contract.processNumber}
 			renderFields={renderCardFields}
 			renderActions={renderCardActions}
-			onCardAction={(contract) => onView?.(contract.id)}
+			onCardAction={(contract) => (onOpenPage ?? onView)?.(contract.id)}
 			footerContent={<Pagination totalRecords={total} />}
 		/>
 	);

@@ -22,6 +22,8 @@ interface EntityActionsProps {
 	canEdit?: boolean;
 	canRestore?: boolean;
 	canDelete?: boolean;
+	onOpenPage?: () => void;
+	openPageLabel?: string;
 	onView?: () => void;
 	onEdit?: () => void;
 	onRestore?: () => void;
@@ -37,6 +39,8 @@ export function EntityActions({
 	canEdit = false,
 	canRestore = false,
 	canDelete = false,
+	onOpenPage,
+	openPageLabel = "Abrir página",
 	onView,
 	onEdit,
 	onRestore,
@@ -46,11 +50,14 @@ export function EntityActions({
 	const allowed = (
 		permission?: ClerkPermission | readonly ClerkPermission[],
 	) => {
-		if (!permission) return true;
+		if (!permission) {
+			return true;
+		}
 		return typeof permission === "string"
 			? hasPermission(session, permission)
 			: permission.some((key) => hasPermission(session, key));
 	};
+	const shouldShowOpenPage = canView && !!onOpenPage && allowed(viewPermission);
 	const shouldShowView = canView && !!onView && allowed(viewPermission);
 	const shouldShowEdit = canEdit && !!onEdit && allowed(editPermission);
 	const shouldShowRestore =
@@ -58,6 +65,7 @@ export function EntityActions({
 	const shouldShowDelete = canDelete && !!onDelete && allowed(deletePermission);
 
 	if (
+		!shouldShowOpenPage &&
 		!shouldShowView &&
 		!shouldShowEdit &&
 		!shouldShowRestore &&
@@ -80,6 +88,11 @@ export function EntityActions({
 				<EllipsisVerticalIcon size={16} />
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end">
+				{shouldShowOpenPage && (
+					<DropdownMenuItem onClick={onOpenPage}>
+						{openPageLabel}
+					</DropdownMenuItem>
+				)}
 				{shouldShowView && (
 					<DropdownMenuItem onClick={onView}>Ver detalhes</DropdownMenuItem>
 				)}

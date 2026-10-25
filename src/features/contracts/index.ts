@@ -1,5 +1,6 @@
 export {
 	getContractAssignmentTypesQueryOptions,
+	getContractByIdQueryOptions,
 	getContractLegalAreasQueryOptions,
 	getContractRevenueTypesQueryOptions,
 	getContractStatusesQueryOptions,
@@ -14,7 +15,9 @@ export * from "./components/form";
 export * from "./components/list";
 export * from "./components/restore";
 export * from "./components/table";
+export { ContractWorkspace } from "./components/workspace";
 export { useContracts } from "./hooks/use-data";
 export type { ContractSummary } from "./schemas/model";
 export * from "./schemas/search";
+export { contractWorkspaceSearchSchema } from "./schemas/workspace";
 export { contractSearchDefaults } from "./utils/default";

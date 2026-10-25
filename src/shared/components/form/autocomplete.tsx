@@ -45,6 +45,7 @@ export const FormAutocomplete = ({
 	...props
 }: FormAutocompleteProps) => {
 	const field = useFieldContext<string>();
+	const controlId = React.useId();
 
 	const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 
@@ -67,7 +68,7 @@ export const FormAutocomplete = ({
 
 	return (
 		<FieldWrapper
-			id={field.name}
+			id={controlId}
 			label={label}
 			description={description}
 			isRequired={isRequired}
@@ -76,7 +77,6 @@ export const FormAutocomplete = ({
 			className={classNames?.wrapper}
 		>
 			<Combobox
-				id={field.name}
 				name={field.name}
 				value={selectedOption}
 				onValueChange={handleValueChange}
@@ -87,6 +87,10 @@ export const FormAutocomplete = ({
 				{...props}
 			>
 				<ComboboxInput
+					id={controlId}
+					aria-label={label}
+					aria-required={isRequired}
+					onBlur={field.handleBlur}
 					placeholder={placeholder}
 					aria-invalid={isInvalid}
 					showClear={isClearable}

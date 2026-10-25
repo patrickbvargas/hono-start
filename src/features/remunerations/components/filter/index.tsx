@@ -1,5 +1,6 @@
 import { ChevronDownIcon } from "lucide-react";
 import type * as React from "react";
+import { FinancialPeriodShortcuts } from "@/shared/components/financial-period-shortcuts";
 import { ListFilters } from "@/shared/components/list-filters";
 import { Collapsible, CollapsibleContent } from "@/shared/components/ui";
 import { useFilterPanel } from "@/shared/hooks/use-filter-panel";
@@ -72,10 +73,10 @@ export const RemunerationFilter = ({
 				{(field) => <field.Autocomplete label="Contrato" options={contracts} />}
 			</form.AppField>
 			<form.AppField name="dateFrom">
-				{(field) => <field.DatePicker label="Data do honorário de" />}
+				{(field) => <field.DatePicker label="Data do recebimento de" />}
 			</form.AppField>
 			<form.AppField name="dateTo">
-				{(field) => <field.DatePicker label="Data do honorário até" />}
+				{(field) => <field.DatePicker label="Data do recebimento até" />}
 			</form.AppField>
 			<form.AppField name="active">
 				{(field) => (
@@ -153,10 +154,10 @@ export const RemunerationFilter = ({
 			<CollapsibleContent>
 				<ListFilters.Panel>
 					<form.AppField name="dateFrom">
-						{(field) => <field.DatePicker label="Data do honorário de" />}
+						{(field) => <field.DatePicker label="Data do recebimento de" />}
 					</form.AppField>
 					<form.AppField name="dateTo">
-						{(field) => <field.DatePicker label="Data do honorário até" />}
+						{(field) => <field.DatePicker label="Data do recebimento até" />}
 					</form.AppField>
 					<form.AppField name="active">
 						{(field) => (
@@ -195,6 +196,11 @@ export const RemunerationFilter = ({
 					{isMobile ? mobileFilters : desktopFilterActions}
 					<div className="ml-auto shrink-0">{summary}</div>
 				</ListFilters.Bar>
+				<FinancialPeriodShortcuts
+					dateFrom={filter.dateFrom}
+					dateTo={filter.dateTo}
+					onChange={(range) => handleApplyFilter({ ...filter, ...range })}
+				/>
 				{isMobile ? null : desktopFilterPanel}
 				{(filter.query || hasAdvancedFilters) && (
 					<ListFilters.Active>

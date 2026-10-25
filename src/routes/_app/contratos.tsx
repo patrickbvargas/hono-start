@@ -61,6 +61,13 @@ function RouteComponent() {
 	const { detailId, ...search } = Route.useSearch();
 	const navigate = Route.useNavigate();
 	const { contracts } = useContracts(search);
+	const openContractPage = (id: number) => {
+		void navigate({
+			to: "/contratos/$contractId",
+			params: { contractId: String(id) },
+			search: { tab: "overview", returnTo: search },
+		});
+	};
 	const { overlay } = useEntityOverlay(detailId, (id) => {
 		void navigate({
 			search: (previous) => ({ ...previous, detailId: id }),
@@ -91,6 +98,7 @@ function RouteComponent() {
 					list={
 						<ContractList
 							data={contracts}
+							onOpenPage={openContractPage}
 							onEdit={overlay.edit.open}
 							onView={overlay.details.open}
 							onDelete={overlay.delete.open}
@@ -101,6 +109,7 @@ function RouteComponent() {
 					table={
 						<ContractTable
 							data={contracts}
+							onOpenPage={openContractPage}
 							onEdit={overlay.edit.open}
 							onView={overlay.details.open}
 							onDelete={overlay.delete.open}

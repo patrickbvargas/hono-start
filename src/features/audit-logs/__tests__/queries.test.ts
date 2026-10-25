@@ -19,8 +19,29 @@ import {
 	getAuditLogEntityTypes,
 	getAuditLogs,
 } from "../data/queries";
+import { auditLogSearchSchema } from "../schemas/search";
 
 describe("audit-log data queries", () => {
+	it("keeps exact contract identity in both list and total queries", async () => {
+		prismaMock.auditLog.findMany.mockResolvedValueOnce([]);
+		prismaMock.auditLog.count.mockResolvedValueOnce(0);
+		await getAuditLogs({
+			firmId: 4,
+			search: auditLogSearchSchema.parse({
+				entityType: ["Contract"],
+				entityId: "62",
+			}),
+		});
+		const where = {
+			firmId: 4,
+			entityType: { in: ["Contract"] },
+			entityId: "62",
+		};
+		expect(prismaMock.auditLog.findMany).toHaveBeenLastCalledWith(
+			expect.objectContaining({ where }),
+		);
+		expect(prismaMock.auditLog.count).toHaveBeenLastCalledWith({ where });
+	});
 	beforeEach(() => {
 		vi.clearAllMocks();
 		prismaMock.auditLog.count.mockResolvedValue(1);

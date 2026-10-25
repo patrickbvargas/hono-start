@@ -26,6 +26,7 @@
 - Feature barrels stay minimal and route-facing; do not export `data/` modules, internal helpers, or implementation-only schemas.
 - Equivalent route-facing feature barrels export the same public API categories: route query factories, top-level route-consumed UI entrypoints, primary route-facing data hooks, search schemas, and route-consumed model types when needed.
 - Feature subfolders do not use local re-export barrel `index.ts` or `index.tsx` files; import concrete modules inside the feature.
+- Feature component entrypoints live in `components/<component-name>/index.tsx`, with the implementation in that file rather than a re-export barrel. Supporting modules such as columns, skeletons and chart parts may remain alongside their owning entrypoint.
 - Shared UI components are consumed through `@/shared/components/ui`.
 - Shared UI generated components and shared UI composites live under `src/shared/components/ui`.
 

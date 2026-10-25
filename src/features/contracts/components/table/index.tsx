@@ -16,6 +16,7 @@ import { getContractLifecycleActions } from "../../utils/lifecycle-actions";
 interface ContractTableProps {
 	canManageLifecycle?: boolean;
 	data: QueryPaginatedReturnType<ContractSummary>;
+	onOpenPage?: (id: EntityId) => void;
 	onView?: (id: EntityId) => void;
 	onEdit?: (id: EntityId) => void;
 	onDelete?: (id: EntityId) => void;
@@ -25,6 +26,7 @@ interface ContractTableProps {
 export const ContractTable = ({
 	canManageLifecycle = false,
 	data: { data, total },
+	onOpenPage,
 	onView,
 	onEdit,
 	onDelete,
@@ -37,7 +39,11 @@ export const ContractTable = ({
 			c.accessor("id", {
 				header: "#",
 				cell: ({ row }) => (
-					<EntityIdTrigger id={row.original.id} onView={onView} />
+					<EntityIdTrigger
+						id={row.original.id}
+						onView={onOpenPage ?? onView}
+						actionLabel={`Abrir página do contrato #${row.original.id}`}
+					/>
 				),
 				enableSorting: CONTRACT_ALLOWED_SORT_COLUMNS.includes("id"),
 				meta: {
@@ -49,7 +55,8 @@ export const ContractTable = ({
 				cell: (context) => (
 					<EntityIdTrigger
 						id={context.row.original.id}
-						onView={onView}
+						onView={onOpenPage ?? onView}
+						actionLabel={`Abrir página do contrato ${context.getValue()}`}
 						label={context.getValue()}
 					/>
 				),
@@ -112,6 +119,10 @@ export const ContractTable = ({
 
 					return (
 						<EntityActions
+							onOpenPage={
+								onOpenPage ? () => onOpenPage(contract.id) : undefined
+							}
+							openPageLabel="Abrir página do contrato"
 							viewPermission={[
 								"org:contracts:read_all",
 								"org:contracts:read_assigned",
@@ -137,7 +148,7 @@ export const ContractTable = ({
 				},
 			}),
 		];
-	}, [canManageLifecycle, onDelete, onEdit, onRestore, onView]);
+	}, [canManageLifecycle, onDelete, onEdit, onRestore, onView, onOpenPage]);
 
 	return (
 		<DataTable

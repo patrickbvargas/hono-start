@@ -16,7 +16,7 @@ export const FeeRestore = ({ id, state, onSuccess }: FeeRestoreProps) => {
 
 	return (
 		<EntityRestoreConfirm
-			title="Restaurar honorário"
+			title="Restaurar recebimento"
 			description="Tem certeza que deseja restaurar?"
 			onConfirm={() => handleConfirm(id)}
 			isPending={isPending}

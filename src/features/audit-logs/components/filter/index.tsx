@@ -29,6 +29,7 @@ export const AuditLogFilter = () => {
 	);
 
 	const hasAdvancedFilters =
+		!!filter.entityId ||
 		filter.action.length > 0 ||
 		filter.entityType.length > 0 ||
 		filter.actorName.length > 0;
@@ -117,6 +118,16 @@ export const AuditLogFilter = () => {
 				{isMobile ? null : desktopFilterPanel}
 				{(filter.query || hasAdvancedFilters) && (
 					<ListFilters.Active>
+						{filter.entityId ? (
+							<ListFilters.Chip
+								removeLabel="Remover filtro de registro"
+								onRemove={() =>
+									handleApplyFilter({ ...filter, entityId: undefined })
+								}
+							>
+								Registro #{filter.entityId}
+							</ListFilters.Chip>
+						) : null}
 						{filter.query ? (
 							<ListFilters.Chip
 								onRemove={() =>

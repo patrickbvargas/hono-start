@@ -1,9 +1,10 @@
+import { useSearch } from "@tanstack/react-router";
 import * as React from "react";
 import {
 	AttachmentSection,
 	AttachmentSectionFallback,
 } from "@/features/attachments";
-import { FeeForm, feeSearchDefaults } from "@/features/fees";
+import { FeeForm } from "@/features/fees";
 import { RelatedRecordLink } from "@/features/related-records";
 import { EntityActions } from "@/shared/components/entity-actions";
 import {
@@ -12,15 +13,16 @@ import {
 } from "@/shared/components/entity-detail";
 import { EntityStatus } from "@/shared/components/entity-status";
 import { NavigationLink } from "@/shared/components/navigation-link";
-import { Button } from "@/shared/components/ui";
 import { useOverlay } from "@/shared/hooks/use-overlay";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
 import { hasPermission, useLoggedUserSession } from "@/shared/session";
 import type { OverlayState } from "@/shared/types/overlay";
 import { useContract } from "../../hooks/use-data";
+import { contractSearchSchema } from "../../schemas/search";
 import { getContractLifecycleActions } from "../../utils/lifecycle-actions";
-import { RevenuePaymentStatus } from "./payment-status";
+import { canReadContractReceipts } from "../../utils/workflow-access";
+import { ContractRevenues } from "./revenues";
 
 interface ContractDetailsProps {
 	canManageLifecycle?: boolean;
@@ -70,19 +72,9 @@ const ContractDetailsContent = ({
 	onRestore,
 }: ContractDetailsContentProps) => {
 	const { contract } = useContract(id);
+	const currentSearch = useSearch({ strict: false });
 	const session = useLoggedUserSession();
-	const canReadFees =
-		hasPermission(session, "org:fees:read_all") ||
-		(hasPermission(session, "org:fees:read_assigned") &&
-			contract.assignments.some(
-				(assignment) =>
-					assignment.isActive &&
-					!assignment.isSoftDeleted &&
-					assignment.employeeId === session.employee.id &&
-					["RESPONSIBLE", "RECOMMENDED", "ADMIN_ASSISTANT"].includes(
-						assignment.assignmentTypeValue,
-					),
-			));
+	const canReadFees = canReadContractReceipts(session, contract);
 	const feeOverlay = useOverlay<EntityId>();
 	const [selectedRevenue, setSelectedRevenue] = React.useState<number | null>(
 		null,
@@ -141,7 +133,7 @@ const ContractDetailsContent = ({
 	const registerInfo = React.useMemo<DetailFieldItem[]>(
 		() => [
 			{
-				term: "Cadastro",
+				term: "Situação",
 				definition: (
 					<EntityStatus
 						isActive={contract.isActive}
@@ -160,10 +152,27 @@ const ContractDetailsContent = ({
 		[contract],
 	);
 
+	const workspaceLink = (
+		<NavigationLink
+			to="/contratos/$contractId"
+			params={{ contractId: String(id) }}
+			search={{
+				tab: "overview",
+				returnTo: contractSearchSchema.parse(currentSearch),
+			}}
+			className="inline-flex items-center gap-1 text-xs font-medium"
+		>
+			Abrir página do contrato
+		</NavigationLink>
+	);
+
 	return (
 		<EntityDetail.Content>
 			<EntityDetail.Header className="flex-row items-center justify-between gap-3">
-				<EntityDetail.Title>{contract.processNumber}</EntityDetail.Title>
+				<EntityDetail.Title className="min-w-0 flex-1 truncate">
+					{contract.processNumber}
+				</EntityDetail.Title>
+				<div className="hidden shrink-0 sm:block">{workspaceLink}</div>
 				<EntityActions
 					viewPermission={[
 						"org:contracts:read_all",
@@ -185,6 +194,7 @@ const ContractDetailsContent = ({
 				/>
 			</EntityDetail.Header>
 			<EntityDetail.Body>
+				<div className="sm:hidden">{workspaceLink}</div>
 				<EntityDetail.Fields columns={2} items={generalInfo} />
 				<EntityDetail.Separator />
 				<EntityDetail.Section title="Equipe">
@@ -192,80 +202,14 @@ const ContractDetailsContent = ({
 				</EntityDetail.Section>
 				<EntityDetail.Separator />
 				<EntityDetail.Section title="Receitas">
-					{contract.revenues
-						.filter((revenue) => revenue.isActive && !revenue.isSoftDeleted)
-						.map((revenue) => (
-							<div key={revenue.id} className="space-y-3 rounded-lg border p-3">
-								<div className="flex items-center justify-between gap-3">
-									<h3 className="font-medium">{revenue.type}</h3>
-									<RevenuePaymentStatus
-										isFullyPaid={revenue.isFullyPaid}
-										paidValue={revenue.paidValue}
-										nextDueDate={revenue.nextDueDate}
-									/>
-								</div>
-								<EntityDetail.Fields
-									columns={2}
-									items={[
-										{
-											term: "Valor contratado",
-											definition: formatter.currency(revenue.totalValue),
-										},
-										{
-											term: "Recebido (inclui entrada)",
-											definition: formatter.currency(revenue.paidValue),
-										},
-										{
-											term: "A receber",
-											definition: formatter.currency(revenue.remainingValue),
-										},
-										{
-											term: "Parcelas registradas",
-											definition: `${revenue.installmentsPaid} de ${revenue.totalInstallments}`,
-										},
-										{
-											term: "Próximo vencimento em aberto",
-											definition:
-												revenue.isFullyPaid || !revenue.nextDueDate
-													? "—"
-													: formatter.calendarDate(revenue.nextDueDate),
-										},
-									]}
-								/>
-								{hasPermission(session, "org:fees:create") &&
-								canReadFees &&
-								contract.isActive &&
-								!contract.isSoftDeleted &&
-								contract.statusValue === "ACTIVE" &&
-								!revenue.isFullyPaid &&
-								revenue.nextInstallmentNumber !== null ? (
-									<Button
-										size="sm"
-										onClick={() => {
-											setSelectedRevenue(revenue.id);
-											feeOverlay.overlay.create.open();
-										}}
-									>
-										Registrar honorário
-									</Button>
-								) : null}
-								{canReadFees ? (
-									<NavigationLink
-										to="/honorarios"
-										state={{ resetFilterPanel: true }}
-										aria-label={`Ver honorários da receita ${revenue.type}`}
-										search={{
-											...feeSearchDefaults,
-											contractId: String(id),
-											revenueId: String(revenue.id),
-										}}
-										className="inline-flex p-2 text-sm underline underline-offset-4"
-									>
-										Honorários
-									</NavigationLink>
-								) : null}
-							</div>
-						))}
+					<ContractRevenues
+						contract={contract}
+						canReadFees={canReadFees}
+						onRegister={(revenueId) => {
+							setSelectedRevenue(revenueId);
+							feeOverlay.overlay.create.open();
+						}}
+					/>
 				</EntityDetail.Section>
 				<EntityDetail.Separator />
 				<AttachmentSection canUpload ownerId={id} ownerKind="contract" />

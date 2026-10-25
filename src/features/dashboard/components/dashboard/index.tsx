@@ -16,10 +16,12 @@ import { MonthlyRevenueRemunerationChart } from "../monthly-revenue-remuneration
 import { DashboardOverdueInstallmentsTable } from "../overdue-table";
 import { DashboardRemunerationTable } from "../remuneration-table";
 import { RevenueRemunerationBreakdownChart } from "../revenue-remuneration-breakdown-chart";
+import { DashboardWorkPanel } from "../work-panel";
 
 interface DashboardProps {
 	data: DashboardSummary;
 	showDetails?: boolean;
+	showWorkPanel?: boolean;
 	search?: DashboardSearch;
 	onViewContract?: (id: EntityId) => void;
 	onViewEmployee?: (id: EntityId) => void;
@@ -28,6 +30,7 @@ interface DashboardProps {
 export function Dashboard({
 	data,
 	showDetails = false,
+	showWorkPanel = false,
 	search = dashboardSearchSchema.parse({}),
 	onViewContract,
 	onViewEmployee,
@@ -284,6 +287,13 @@ export function Dashboard({
 	return (
 		<ScrollArea hideScrollbar className="h-full min-h-0 flex flex-col gap-4">
 			<div className="flex flex-col gap-4 p-0.5">
+				{showWorkPanel && data.visibility?.revenue ? (
+					<DashboardWorkPanel
+						rows={data.overdueInstallments}
+						scopeLabel={data.scopeLabel}
+						canOpenContracts={!!onViewContract}
+					/>
+				) : null}
 				<DashboardMetricCards
 					metrics={data.metrics}
 					onSelect={(metric, trigger) => {

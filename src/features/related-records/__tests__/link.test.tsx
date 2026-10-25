@@ -1,4 +1,11 @@
 // @vitest-environment jsdom
+
+import {
+	createMemoryHistory,
+	createRootRoute,
+	createRouter,
+	RouterProvider,
+} from "@tanstack/react-router";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { OverlayState } from "@/shared/types/overlay";
@@ -27,7 +34,30 @@ import { RelatedRecordLink } from "../components/link";
 
 afterEach(cleanup);
 describe("contextual related details", () => {
-	it.each(["client", "employee", "contract", "fee"] as const)(
+	it("opens contracts through a workspace link instead of a detail overlay", async () => {
+		const route = createRootRoute({
+			component: () => (
+				<RelatedRecordLink kind="contract" id={42}>
+					Contrato relacionado
+				</RelatedRecordLink>
+			),
+		});
+		const router = createRouter({
+			routeTree: route,
+			history: createMemoryHistory({ initialEntries: ["/"] }),
+		});
+		await router.load();
+		render(<RouterProvider router={router} />);
+		const link = await screen.findByRole("link", {
+			name: "Contrato relacionado",
+		});
+		expect(link.getAttribute("href")).toBe("/contratos/42?tab=overview");
+		expect(link.getAttribute("title")).toBe(
+			"Abrir página do contrato Contrato relacionado",
+		);
+		expect(screen.queryByLabelText("Detalhe relacionado")).toBeNull();
+	});
+	it.each(["client", "employee", "fee"] as const)(
 		"opens and closes %s without replacing source screen or URL",
 		async (kind) => {
 			const url = window.location.href;

@@ -11,6 +11,7 @@ vi.mock("@tanstack/react-router", () => ({
 }));
 
 vi.mock("@/shared/components/ui", () => ({
+	useSidebar: () => ({ setOpenMobile: vi.fn() }),
 	SidebarMenu: ({ children }: { children: ReactNode }) => <div>{children}</div>,
 	SidebarMenuButton: ({
 		children,

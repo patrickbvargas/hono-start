@@ -9,7 +9,7 @@ import {
 } from "@/shared/components/ui";
 import type { RouteSection } from "@/shared/config/routes";
 import { hasPermission, useLoggedUserSession } from "@/shared/session";
-import { isSidebarRouteActive } from "../utils/route-match";
+import { isSidebarRouteActive } from "../../utils/route-match";
 
 interface NavMainProps {
 	items: RouteSection[];

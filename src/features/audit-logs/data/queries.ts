@@ -48,6 +48,7 @@ function buildAuditLogWhere({
 
 	return {
 		firmId,
+		...(filter.entityId ? { entityId: String(filter.entityId) } : {}),
 		...(filter.query
 			? {
 					OR: [

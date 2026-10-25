@@ -1,5 +1,6 @@
 import { ChevronDownIcon } from "lucide-react";
 import type * as React from "react";
+import { FinancialPeriodShortcuts } from "@/shared/components/financial-period-shortcuts";
 import { ListFilters } from "@/shared/components/list-filters";
 import { Collapsible, CollapsibleContent } from "@/shared/components/ui";
 import { useFilterPanel } from "@/shared/hooks/use-filter-panel";
@@ -188,6 +189,11 @@ export const FeeFilter = ({ summary }: FeeFilterProps) => {
 					{isMobile ? mobileFilters : desktopFilterActions}
 					<div className="ml-auto shrink-0">{summary}</div>
 				</ListFilters.Bar>
+				<FinancialPeriodShortcuts
+					dateFrom={filter.dateFrom}
+					dateTo={filter.dateTo}
+					onChange={(range) => handleApplyFilter({ ...filter, ...range })}
+				/>
 				{isMobile ? null : desktopFilterPanel}
 				{(filter.query || hasAdvancedFilters) && (
 					<ListFilters.Active>

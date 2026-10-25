@@ -176,8 +176,19 @@ Overlay portals maintain explicit stacking: drawers use the existing z-50 layer,
 The mobile sidebar closes when selecting a navigation destination, including the home logo and the current route. Its dialog title and description are in pt-BR.
 
 AttachmentSection owns its single shared-style heading, loaded count and permitted Anexar action. Supported drawers mount it directly, without another titled section. Files use divided compact rows with type, wrapping filename, size and date; download stays visible and authorized deletion lives in the secondary actions menu with existing confirmation. Skeletons match the compact header and row. Query errors show safe copy and a retry action.
-Attachment lists have a maximum height of 12rem (approximately three compact rows), then scroll within the section. The section heading and upload action remain outside this scroll area.
+Compact drawer attachment lists have a maximum height of 12rem (approximately three compact rows), then scroll within the section. The section heading and upload action remain outside this scroll area. The contract workspace fills the available tab height and scrolls attachments internally beneath the fixed section heading and upload action. File rows reserve a 4rem minimum height; long filenames may increase row height. Empty and loading states use a single 1.25rem text line without row padding.
 
 FormFile supports optional multiple selection with an array-valued field and maxFiles, appending new selections and offering individual removal. Existing single-file consumers preserve their value and callback contract. Attachment batch orchestration validates the complete selection using its Zod schema, prepares the full payload, submits it in one protected request, and invalidates attachment/audit queries after successful completion.
 
 Contract forms show collaborator and assignment fields directly. Revenue rows open initially when incomplete or invalid and remain manually collapsible; submission attempts reopen invalid rows, and summarize type, total and installment count when collapsed. Type and total precede payment details. The feature form-sections hook preserves stable row keys and focuses the first field after additions. Shared EntityListAccordion supports opt-in automatic-open rows; other consumers retain normal collapsed behavior.
+
+
+## Connected platform presentation
+
+The contract workspace is the explicit full-page exception to drawer-only details. Its route remains thin, prefetches the existing protected detail query and validates tab/return context with the feature-owned Zod schema. ContractRevenues and canReadContractReceipts are shared inside the contract feature between drawer and workspace. Route search navigation names the dynamic destination explicitly. Mutations use existing overlays and form hooks; no new persistence or permissions model is introduced.
+
+EntityForm subscribes to submission attempts and validation state, shows a shared invalid-submit alert and focuses the first enabled invalid control in its own portal after invalid sections open. FormSubmitButton uses the native form association by formId, allowing one submit through the existing FormRoot even when rendered in a dialog portal. Autocomplete labels target unique control IDs and expose a label/required state on their actual inputs. FinancialPeriodShortcuts is shared across the three financial lists.
+
+Audit filter entityId is an optional positive integer. List and count queries apply its exact stored string identity with existing firm/type scopes. The active-filter chip makes it visible and removable; clearing all filters explicitly removes it.
+
+EntityAuditHistory is a feature-owned embedded audit collection with local page state, fixed newest-first ordering, existing protected query factories, exact entity type/ID scope and local detail overlays. It mounts its query only for audit readers and only when its tab is mounted; it must not reuse route-driven AuditLogTable pagination/sorting in a parent workspace.

@@ -16,7 +16,7 @@ export const FeeDelete = ({ id, state, onSuccess }: FeeDeleteProps) => {
 
 	return (
 		<EntityDeleteConfirm
-			title="Excluir honorário"
+			title="Excluir recebimento"
 			description="Tem certeza que deseja excluir?"
 			onConfirm={() => handleConfirm(id)}
 			isPending={isPending}

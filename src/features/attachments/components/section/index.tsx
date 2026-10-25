@@ -14,6 +14,7 @@ import { AttachmentSectionSkeleton } from "./skeleton";
 
 interface AttachmentSectionProps {
 	canUpload?: boolean;
+	layout?: "compact" | "expanded";
 	className?: string;
 	ownerId: EntityId;
 	ownerKind: AttachmentOwnerKind;
@@ -21,6 +22,7 @@ interface AttachmentSectionProps {
 
 export const AttachmentSection = ({
 	canUpload = true,
+	layout = "compact",
 	className,
 	ownerId,
 	ownerKind,
@@ -29,12 +31,30 @@ export const AttachmentSection = ({
 	const { owner, attachments, error, isPending, canDelete, overlay, retry } =
 		useAttachmentSection({ ownerId, ownerKind });
 
+	const attachmentList = (
+		<ul aria-label="Arquivos anexados" className="min-w-0 divide-y">
+			{attachments.map((attachment) => (
+				<li key={attachment.id} className="min-h-16 min-w-0 py-3">
+					<AttachmentSectionContent
+						attachment={attachment}
+						canDelete={canDelete}
+						onDelete={overlay.delete.open}
+					/>
+				</li>
+			))}
+		</ul>
+	);
+
 	return (
 		<section
 			aria-labelledby={headingId}
-			className={cn("flex min-w-0 flex-col gap-2", className)}
+			className={cn(
+				"flex min-w-0 flex-col gap-2",
+				layout === "expanded" && "h-full min-h-0",
+				className,
+			)}
 		>
-			<div className="flex min-h-8 items-center justify-between gap-3">
+			<div className="flex min-h-8 shrink-0 items-center justify-between gap-3">
 				<div className="flex items-center gap-2">
 					<SectionTitle id={headingId}>Anexos</SectionTitle>
 					{!isPending && !error ? (
@@ -71,7 +91,7 @@ export const AttachmentSection = ({
 			{error ? (
 				<div
 					role="alert"
-					className="flex flex-wrap items-center justify-between gap-2 rounded-md bg-muted/50 px-3 py-2"
+					className="flex min-h-16 flex-wrap items-center justify-between gap-2 rounded-md bg-muted/50 px-3 py-2"
 				>
 					<p className="text-sm text-destructive">
 						Não foi possível carregar anexos.
@@ -83,27 +103,20 @@ export const AttachmentSection = ({
 			) : null}
 
 			{!isPending && !error && attachments.length === 0 ? (
-				<p className="py-2 text-muted-foreground text-sm">
+				<p className="text-muted-foreground text-sm leading-5">
 					Nenhum anexo cadastrado.
 				</p>
 			) : null}
 
 			{!isPending && !error && attachments.length > 0 ? (
-				<ScrollArea className="max-h-48 [&>[data-slot=scroll-area-viewport]]:max-h-48">
-					<ul aria-label="Arquivos anexados" className="min-w-0 divide-y">
-						{attachments.map((attachment) => (
-							<li
-								key={attachment.id}
-								className="min-w-0 py-3 first:pt-1 last:pb-1"
-							>
-								<AttachmentSectionContent
-									attachment={attachment}
-									canDelete={canDelete}
-									onDelete={overlay.delete.open}
-								/>
-							</li>
-						))}
-					</ul>
+				<ScrollArea
+					className={
+						layout === "expanded"
+							? "min-h-0 flex-1"
+							: "max-h-48 [&>[data-slot=scroll-area-viewport]]:max-h-48"
+					}
+				>
+					{attachmentList}
 				</ScrollArea>
 			) : null}
 

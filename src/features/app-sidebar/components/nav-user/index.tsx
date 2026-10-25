@@ -28,7 +28,7 @@ import {
 	SidebarMenuItem,
 	Spinner,
 } from "@/shared/components/ui";
-import { useNavUser } from "../hooks/use-nav-user";
+import { useNavUser } from "../../hooks/use-nav-user";
 
 export const NavUser = () => {
 	const {

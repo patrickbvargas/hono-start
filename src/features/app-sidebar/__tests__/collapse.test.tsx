@@ -127,11 +127,11 @@ describe("app sidebar collapse behavior", () => {
 
 	it("adds compact hide classes to header and user text blocks", () => {
 		const navHeaderSource = readFileSync(
-			resolve("src/features/app-sidebar/components/nav-header.tsx"),
+			resolve("src/features/app-sidebar/components/nav-header/index.tsx"),
 			"utf8",
 		);
 		const navUserSource = readFileSync(
-			resolve("src/features/app-sidebar/components/nav-user.tsx"),
+			resolve("src/features/app-sidebar/components/nav-user/index.tsx"),
 			"utf8",
 		);
 
