@@ -1,6 +1,9 @@
 import { env } from "@/shared/config/env";
 import { prisma } from "@/shared/lib/prisma";
-import type { ContractAccessResource } from "@/shared/session";
+import type {
+	ContractAccessResource,
+	RemunerationAccessResource,
+} from "@/shared/session";
 import type {
 	QueryManyReturnType,
 	QueryOneReturnType,
@@ -30,6 +33,93 @@ interface AttachmentContractOwnerResource extends AttachmentOwnerResource {
 
 interface AttachmentExpenseOwnerResource extends AttachmentOwnerResource {
 	resource: { firmId: number };
+}
+
+interface AttachmentRemunerationOwnerResource extends AttachmentOwnerResource {
+	resource: RemunerationAccessResource;
+}
+
+export async function getAttachmentFeeOwnerResource(
+	firmId: number,
+	id: number,
+): Promise<AttachmentContractOwnerResource | null> {
+	const fee = await prisma.fee.findFirst({
+		where: { id, firmId },
+		select: {
+			id: true,
+			firmId: true,
+			deletedAt: true,
+			revenue: { select: { firmId: true, deletedAt: true, contractId: true } },
+		},
+	});
+	if (!fee || fee.revenue.firmId !== firmId) {
+		return null;
+	}
+	const contract = await getAttachmentContractOwnerResource(
+		firmId,
+		fee.revenue.contractId,
+	);
+	if (!contract) {
+		return null;
+	}
+	return {
+		id: fee.id,
+		firmId,
+		deletedAt: fee.deletedAt ?? fee.revenue.deletedAt ?? contract.deletedAt,
+		resource: contract.resource,
+	};
+}
+
+export async function getAttachmentRemunerationOwnerResource(
+	firmId: number,
+	id: number,
+): Promise<AttachmentRemunerationOwnerResource | null> {
+	const remuneration = await prisma.remuneration.findFirst({
+		where: { id, firmId },
+		select: {
+			id: true,
+			firmId: true,
+			deletedAt: true,
+			feeId: true,
+			contractEmployee: {
+				select: {
+					firmId: true,
+					deletedAt: true,
+					employeeId: true,
+					employee: { select: { firmId: true, deletedAt: true } },
+					contract: { select: { firmId: true, deletedAt: true } },
+				},
+			},
+		},
+	});
+	if (!remuneration) {
+		return null;
+	}
+	const assignment = remuneration.contractEmployee;
+	if (
+		[
+			assignment.firmId,
+			assignment.employee.firmId,
+			assignment.contract.firmId,
+		].some((id) => id !== firmId)
+	) {
+		return null;
+	}
+	const fee = await getAttachmentFeeOwnerResource(firmId, remuneration.feeId);
+	if (!fee) {
+		return null;
+	}
+	return {
+		id: remuneration.id,
+		firmId,
+		deletedAt:
+			remuneration.deletedAt ??
+			fee.deletedAt ??
+			assignment.deletedAt ??
+			assignment.employee.deletedAt ??
+			assignment.contract.deletedAt,
+		resource: { firmId, employeeId: assignment.employeeId },
+	};
 }
 
 export async function getAttachmentTypeByValue(value: string) {
@@ -165,6 +255,10 @@ export async function getAttachmentsByOwner(params: {
 			...(owner.ownerKind === "employee" ? { employeeId: owner.ownerId } : {}),
 			...(owner.ownerKind === "contract" ? { contractId: owner.ownerId } : {}),
 			...(owner.ownerKind === "expense" ? { expenseId: owner.ownerId } : {}),
+			...(owner.ownerKind === "fee" ? { feeId: owner.ownerId } : {}),
+			...(owner.ownerKind === "remuneration"
+				? { remunerationId: owner.ownerId }
+				: {}),
 		},
 		include: {
 			type: {
@@ -224,6 +318,8 @@ export async function getAttachmentAccessById(
 			employeeId: true,
 			contractId: true,
 			expenseId: true,
+			feeId: true,
+			remunerationId: true,
 		},
 	});
 
@@ -243,6 +339,8 @@ export async function getAttachmentAccessById(
 			employeeId: attachment.employeeId ?? undefined,
 			contractId: attachment.contractId ?? undefined,
 			expenseId: attachment.expenseId ?? undefined,
+			feeId: attachment.feeId ?? undefined,
+			remunerationId: attachment.remunerationId ?? undefined,
 		},
 	};
 }
@@ -254,6 +352,26 @@ export async function assertAttachmentOwnerExists(params: {
 	const owner = getAttachmentOwnerContext(params.input);
 
 	switch (owner.ownerKind) {
+		case "fee": {
+			const fee = await getAttachmentFeeOwnerResource(
+				params.firmId,
+				owner.ownerId,
+			);
+			if (!fee) {
+				throw new Error(ATTACHMENT_ERRORS.OWNER_NOT_FOUND);
+			}
+			return { owner, access: fee };
+		}
+		case "remuneration": {
+			const remuneration = await getAttachmentRemunerationOwnerResource(
+				params.firmId,
+				owner.ownerId,
+			);
+			if (!remuneration) {
+				throw new Error(ATTACHMENT_ERRORS.OWNER_NOT_FOUND);
+			}
+			return { owner, access: remuneration };
+		}
 		case "client": {
 			const client = await getAttachmentClientOwnerResource(
 				params.firmId,

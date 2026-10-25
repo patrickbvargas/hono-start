@@ -16,6 +16,8 @@ const attachmentOwnerBaseInputSchema = z.object({
 	employeeId: entityIdSchema.shape.id.optional(),
 	contractId: entityIdSchema.shape.id.optional(),
 	expenseId: entityIdSchema.shape.id.optional(),
+	feeId: entityIdSchema.shape.id.optional(),
+	remunerationId: entityIdSchema.shape.id.optional(),
 });
 
 function addOwnerContextError(ctx: z.RefinementCtx) {

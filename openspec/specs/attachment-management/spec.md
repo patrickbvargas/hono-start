@@ -2,12 +2,12 @@
 
 ## Purpose
 
-Define attachment upload, listing, owner-context binding, storage persistence, and permission behavior for client, employee, contract, and expense contexts.
+Define attachment upload, listing, owner-context binding, storage persistence, and permission behavior for client, employee, contract, expense, fee, and remuneration contexts.
 
 ---
 ## Requirements
 ### Requirement: List attachments in supported owner contexts
-The system SHALL display attachments inside client, employee, contract and expense detail drawers without leaving the parent context. A single shared-style heading SHALL align the count and authorized upload action. Files SHALL appear in compact divided rows with filename, type, file size and creation date visible without expansion. Download SHALL remain visible; authorized deletion SHALL be available through a secondary actions menu and retain explicit confirmation. Loading SHALL use matching skeletons. Empty and error states SHALL remain explicit. Tenant scope and existing permission checks SHALL remain enforced.
+The system SHALL display attachments inside client, employee, contract, expense, fee and remuneration detail drawers without leaving the parent context. A single shared-style heading SHALL align the count and authorized upload action. Files SHALL appear in compact divided rows with filename, type, file size and creation date visible without expansion. Download SHALL remain visible; authorized deletion SHALL be available through a secondary actions menu and retain explicit confirmation. Loading SHALL use matching skeletons. Empty and error states SHALL remain explicit. Tenant scope and existing permission checks SHALL remain enforced.
 
 #### Scenario: Client details show client attachments
 - **WHEN** a user opens an authorized client detail
@@ -56,8 +56,13 @@ The system SHALL display attachments inside client, employee, contract and expen
 - **WHEN** the file list exceeds approximately three compact rows
 - **THEN** it scrolls inside a maximum height of 12rem while the heading and upload action remain outside the scroll area
 
+
+#### Scenario: Financial details and dedicated pages
+- **WHEN** a user opens an authorized fee or remuneration drawer or its Anexos page tab
+- **THEN** only that financial record's attachments appear with shared upload, list, download and confirmed deletion
+
 ### Requirement: Attachment writes bind to exactly one owner context
-The system SHALL persist each attachment with exactly one owner context among client, employee, contract, or expense.
+The system SHALL persist each attachment with exactly one owner context among client, employee, contract, expense, fee, or remuneration.
 
 #### Scenario: Valid single owner context
 - **WHEN** a user uploads an attachment with exactly one valid owner reference in the authenticated firm
@@ -147,7 +152,7 @@ The system SHALL enforce authenticated upload and view permissions and administr
 The system SHALL derive attachment tenant scope from the authenticated session rather than from client-submitted authority claims.
 
 #### Scenario: Cross-firm owner reference is rejected
-- **WHEN** a user submits an attachment upload for a client, employee, contract, or expense outside the authenticated firm
+- **WHEN** a user submits an attachment upload for a client, employee, contract, expense, fee, or remuneration outside the authenticated firm
 - **THEN** the system rejects the request before storage metadata is persisted
 
 #### Scenario: Cross-firm attachment list is never returned
@@ -155,7 +160,7 @@ The system SHALL derive attachment tenant scope from the authenticated session r
 - **THEN** the system returns only attachments belonging to the authenticated user's firm
 
 ### Requirement: Attachment sections preserve the current parent workflow
-The system SHALL integrate attachment actions into the existing client, employee, contract, and expense detail flows using drawers and modals rather than standalone CRUD pages.
+The system SHALL integrate attachment actions into the existing client, employee, contract, expense, fee, and remuneration detail flows using drawers and modals rather than standalone CRUD pages.
 
 #### Scenario: Upload opens as an overlay from parent details
 - **WHEN** a user starts the attachment upload flow from a supported parent detail context
@@ -242,7 +247,7 @@ The system SHALL accept between 1 and 25 files in one protected upload operation
 - **AND** selections beyond available capacity are visibly rejected without silent truncation
 
 ### Requirement: Maximum attachments per owner
-Each client, employee, contract or expense SHALL accept at most 25 non-deleted attachments, including inactive attachments. The server SHALL serialize capacity checking and batch creation per firm and owner so concurrent uploads cannot exceed the limit. The modal SHALL show remaining capacity and limit selection to that capacity. At capacity, Anexar SHALL be disabled. Deletion SHALL free capacity. Existing records above the limit SHALL remain readable but SHALL reject further uploads.
+Each client, employee, contract, expense, fee or remuneration SHALL accept at most 25 non-deleted attachments, including inactive attachments. The server SHALL serialize capacity checking and batch creation per firm and owner so concurrent uploads cannot exceed the limit. The modal SHALL show remaining capacity and limit selection to that capacity. At capacity, Anexar SHALL be disabled. Deletion SHALL free capacity. Existing records above the limit SHALL remain readable but SHALL reject further uploads.
 
 #### Scenario: Remaining capacity limits the batch
 - **WHEN** an owner already has 23 non-deleted attachments
@@ -259,3 +264,26 @@ Each client, employee, contract or expense SHALL accept at most 25 non-deleted a
 #### Scenario: Deletion releases capacity
 - **WHEN** an attachment is permanently deleted successfully
 - **THEN** its slot becomes available for another upload
+
+### Requirement: Financial evidence permissions and lifecycle
+The system SHALL require the corresponding attachment upload/read/delete capability plus the financial owner's subject read capability. Fee access SHALL enforce read_all or eligible read_assigned scope. Remuneration access SHALL enforce read_all or read_own scope. Financial evidence uploads SHALL NOT require monetary update permission and SHALL remain possible after contract completion or cancellation. Uploads SHALL reject owners or financial ancestors that are soft-deleted. Existing evidence SHALL be retained across soft deletion and restoration. Existing file, capacity, batch atomicity, private storage and audit rules SHALL apply to both financial owners.
+
+#### Scenario: Own remuneration without financial edit access
+- **WHEN** a user with attachment upload and own remuneration read uploads a valid document to their remuneration
+- **THEN** upload succeeds without granting financial edits or other collaborators' access
+
+#### Scenario: Assigned fee scope on every operation
+- **WHEN** a user with only assigned fee reads requests list, upload, download or deletion for an unassigned fee
+- **THEN** the operation is denied before metadata, bytes or mutations are exposed
+
+#### Scenario: Completed or cancelled contract
+- **WHEN** a readable receipt belongs to a completed or cancelled contract and the actor can upload evidence
+- **THEN** a valid proof can be attached without modifying financial values or contract status
+
+#### Scenario: Deleted financial ancestry
+- **WHEN** upload targets a deleted financial owner or ancestor
+- **THEN** upload is denied and existing files remain retained for authorized reading and restoration
+
+#### Scenario: Financial capacity and exclusivity
+- **WHEN** an owner has 25 attachments or upload provides both feeId and remunerationId
+- **THEN** the request is rejected without committing files or metadata

@@ -76,7 +76,7 @@ This file preserves the canonical user workflows of the product. These flows des
 
 ## Upload An Attachment
 
-1. The user opens a client, employee, contract, or expense detail context.
+1. The user opens a client, employee, contract, expense, fee, or remuneration detail context.
 2. The user starts the upload flow.
 3. The user selects a supported file within the allowed size limit.
 4. On success, the file appears in the attachment list.
@@ -132,3 +132,5 @@ Client, employee, fee, expense, remuneration and audit identities in tables and 
 ## Consistent record page presentation
 
 Every record page, including contracts, uses the same compact identity row and application-header Editar/Excluir/Restaurar action placement and labels. Identity, record ID and lifecycle chip appear above tabs; state is not repeated inside overview or registration fields. History contains creation/update dates followed by authorized audit events. Clients separate Contato, employees/receipts/remunerations separate Financeiro, and audits separate Alterações and Dados técnicos from overview. Expenses keep their short payment record in overview. Contract retains Financeiro and Equipe; tab counts follow actual content, not a fixed entity-independent count. Complete contextual drawers retain their existing fields and actions.
+
+Receipt and remuneration documentation: open the record page and its Anexos tab, or Ver detalhes in context, then Anexar. Select supported proof/calculation files, submit and open/download from the same section. Completed contracts permit financial evidence; excluded owners do not receive new files. Return/list context and existing financial values remain preserved.

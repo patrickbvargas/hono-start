@@ -7,6 +7,8 @@ export const ATTACHMENT_OWNER_KINDS = [
 	"employee",
 	"contract",
 	"expense",
+	"fee",
+	"remuneration",
 ] as const;
 export const ATTACHMENT_ALLOWED_MIME_TYPE_BY_VALUE = {
 	PDF: ["application/pdf"],

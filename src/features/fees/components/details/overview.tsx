@@ -1,4 +1,5 @@
 import * as React from "react";
+import { AttachmentSection } from "@/features/attachments";
 import { RelatedRecordLink } from "@/features/related-records";
 import { remunerationSearchDefaults } from "@/features/remunerations";
 import {
@@ -133,6 +134,16 @@ export function FeeOverview({ id, section = "all" }: FeeOverviewProps) {
 				<EntityDetail.Fields columns={2} items={remunerationInfo} />
 			</EntityDetail.Section>
 			<EntityDetail.Separator />
+			{hasPermission(session, "org:attachments:read") && (
+				<>
+					<AttachmentSection
+						ownerId={id}
+						ownerKind="fee"
+						canUpload={!fee.isSoftDeleted}
+					/>
+					<EntityDetail.Separator />
+				</>
+			)}
 			<EntityDetail.Section title="Registro">
 				<EntityDetail.Fields columns={2} items={registerInfo} />
 			</EntityDetail.Section>

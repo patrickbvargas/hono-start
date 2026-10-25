@@ -19,7 +19,13 @@ export function getAttachmentOwnerContext(input: AttachmentOwnerInput): {
 		return { ownerKind: "contract", ownerId: input.contractId };
 	}
 
-	return { ownerKind: "expense", ownerId: input.expenseId as number };
+	if (input.expenseId) {
+		return { ownerKind: "expense", ownerId: input.expenseId };
+	}
+	if (input.feeId) {
+		return { ownerKind: "fee", ownerId: input.feeId };
+	}
+	return { ownerKind: "remuneration", ownerId: input.remunerationId as number };
 }
 
 export function getAttachmentOwnerInput(params: {
@@ -35,5 +41,9 @@ export function getAttachmentOwnerInput(params: {
 			return { contractId: params.ownerId };
 		case "expense":
 			return { expenseId: params.ownerId };
+		case "fee":
+			return { feeId: params.ownerId };
+		case "remuneration":
+			return { remunerationId: params.ownerId };
 	}
 }

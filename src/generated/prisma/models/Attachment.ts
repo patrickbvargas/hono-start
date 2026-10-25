@@ -33,6 +33,8 @@ export type AttachmentAvgAggregateOutputType = {
   employeeId: number | null
   contractId: number | null
   expenseId: number | null
+  feeId: number | null
+  remunerationId: number | null
   typeId: number | null
   fileSize: number | null
 }
@@ -44,6 +46,8 @@ export type AttachmentSumAggregateOutputType = {
   employeeId: number | null
   contractId: number | null
   expenseId: number | null
+  feeId: number | null
+  remunerationId: number | null
   typeId: number | null
   fileSize: number | null
 }
@@ -55,6 +59,8 @@ export type AttachmentMinAggregateOutputType = {
   employeeId: number | null
   contractId: number | null
   expenseId: number | null
+  feeId: number | null
+  remunerationId: number | null
   typeId: number | null
   fileName: string | null
   storagePath: string | null
@@ -73,6 +79,8 @@ export type AttachmentMaxAggregateOutputType = {
   employeeId: number | null
   contractId: number | null
   expenseId: number | null
+  feeId: number | null
+  remunerationId: number | null
   typeId: number | null
   fileName: string | null
   storagePath: string | null
@@ -91,6 +99,8 @@ export type AttachmentCountAggregateOutputType = {
   employeeId: number
   contractId: number
   expenseId: number
+  feeId: number
+  remunerationId: number
   typeId: number
   fileName: number
   storagePath: number
@@ -111,6 +121,8 @@ export type AttachmentAvgAggregateInputType = {
   employeeId?: true
   contractId?: true
   expenseId?: true
+  feeId?: true
+  remunerationId?: true
   typeId?: true
   fileSize?: true
 }
@@ -122,6 +134,8 @@ export type AttachmentSumAggregateInputType = {
   employeeId?: true
   contractId?: true
   expenseId?: true
+  feeId?: true
+  remunerationId?: true
   typeId?: true
   fileSize?: true
 }
@@ -133,6 +147,8 @@ export type AttachmentMinAggregateInputType = {
   employeeId?: true
   contractId?: true
   expenseId?: true
+  feeId?: true
+  remunerationId?: true
   typeId?: true
   fileName?: true
   storagePath?: true
@@ -151,6 +167,8 @@ export type AttachmentMaxAggregateInputType = {
   employeeId?: true
   contractId?: true
   expenseId?: true
+  feeId?: true
+  remunerationId?: true
   typeId?: true
   fileName?: true
   storagePath?: true
@@ -169,6 +187,8 @@ export type AttachmentCountAggregateInputType = {
   employeeId?: true
   contractId?: true
   expenseId?: true
+  feeId?: true
+  remunerationId?: true
   typeId?: true
   fileName?: true
   storagePath?: true
@@ -274,6 +294,8 @@ export type AttachmentGroupByOutputType = {
   employeeId: number | null
   contractId: number | null
   expenseId: number | null
+  feeId: number | null
+  remunerationId: number | null
   typeId: number
   fileName: string
   storagePath: string
@@ -315,6 +337,8 @@ export type AttachmentWhereInput = {
   employeeId?: Prisma.IntNullableFilter<"Attachment"> | number | null
   contractId?: Prisma.IntNullableFilter<"Attachment"> | number | null
   expenseId?: Prisma.IntNullableFilter<"Attachment"> | number | null
+  feeId?: Prisma.IntNullableFilter<"Attachment"> | number | null
+  remunerationId?: Prisma.IntNullableFilter<"Attachment"> | number | null
   typeId?: Prisma.IntFilter<"Attachment"> | number
   fileName?: Prisma.StringFilter<"Attachment"> | string
   storagePath?: Prisma.StringFilter<"Attachment"> | string
@@ -328,6 +352,8 @@ export type AttachmentWhereInput = {
   contract?: Prisma.XOR<Prisma.ContractNullableScalarRelationFilter, Prisma.ContractWhereInput> | null
   employee?: Prisma.XOR<Prisma.EmployeeNullableScalarRelationFilter, Prisma.EmployeeWhereInput> | null
   expense?: Prisma.XOR<Prisma.ExpenseNullableScalarRelationFilter, Prisma.ExpenseWhereInput> | null
+  fee?: Prisma.XOR<Prisma.FeeNullableScalarRelationFilter, Prisma.FeeWhereInput> | null
+  remuneration?: Prisma.XOR<Prisma.RemunerationNullableScalarRelationFilter, Prisma.RemunerationWhereInput> | null
   firm?: Prisma.XOR<Prisma.FirmScalarRelationFilter, Prisma.FirmWhereInput>
   type?: Prisma.XOR<Prisma.AttachmentTypeScalarRelationFilter, Prisma.AttachmentTypeWhereInput>
 }
@@ -339,6 +365,8 @@ export type AttachmentOrderByWithRelationInput = {
   employeeId?: Prisma.SortOrderInput | Prisma.SortOrder
   contractId?: Prisma.SortOrderInput | Prisma.SortOrder
   expenseId?: Prisma.SortOrderInput | Prisma.SortOrder
+  feeId?: Prisma.SortOrderInput | Prisma.SortOrder
+  remunerationId?: Prisma.SortOrderInput | Prisma.SortOrder
   typeId?: Prisma.SortOrder
   fileName?: Prisma.SortOrder
   storagePath?: Prisma.SortOrder
@@ -352,6 +380,8 @@ export type AttachmentOrderByWithRelationInput = {
   contract?: Prisma.ContractOrderByWithRelationInput
   employee?: Prisma.EmployeeOrderByWithRelationInput
   expense?: Prisma.ExpenseOrderByWithRelationInput
+  fee?: Prisma.FeeOrderByWithRelationInput
+  remuneration?: Prisma.RemunerationOrderByWithRelationInput
   firm?: Prisma.FirmOrderByWithRelationInput
   type?: Prisma.AttachmentTypeOrderByWithRelationInput
 }
@@ -367,6 +397,8 @@ export type AttachmentWhereUniqueInput = Prisma.AtLeast<{
   employeeId?: Prisma.IntNullableFilter<"Attachment"> | number | null
   contractId?: Prisma.IntNullableFilter<"Attachment"> | number | null
   expenseId?: Prisma.IntNullableFilter<"Attachment"> | number | null
+  feeId?: Prisma.IntNullableFilter<"Attachment"> | number | null
+  remunerationId?: Prisma.IntNullableFilter<"Attachment"> | number | null
   typeId?: Prisma.IntFilter<"Attachment"> | number
   fileName?: Prisma.StringFilter<"Attachment"> | string
   mimeType?: Prisma.StringFilter<"Attachment"> | string
@@ -379,6 +411,8 @@ export type AttachmentWhereUniqueInput = Prisma.AtLeast<{
   contract?: Prisma.XOR<Prisma.ContractNullableScalarRelationFilter, Prisma.ContractWhereInput> | null
   employee?: Prisma.XOR<Prisma.EmployeeNullableScalarRelationFilter, Prisma.EmployeeWhereInput> | null
   expense?: Prisma.XOR<Prisma.ExpenseNullableScalarRelationFilter, Prisma.ExpenseWhereInput> | null
+  fee?: Prisma.XOR<Prisma.FeeNullableScalarRelationFilter, Prisma.FeeWhereInput> | null
+  remuneration?: Prisma.XOR<Prisma.RemunerationNullableScalarRelationFilter, Prisma.RemunerationWhereInput> | null
   firm?: Prisma.XOR<Prisma.FirmScalarRelationFilter, Prisma.FirmWhereInput>
   type?: Prisma.XOR<Prisma.AttachmentTypeScalarRelationFilter, Prisma.AttachmentTypeWhereInput>
 }, "id" | "storagePath">
@@ -390,6 +424,8 @@ export type AttachmentOrderByWithAggregationInput = {
   employeeId?: Prisma.SortOrderInput | Prisma.SortOrder
   contractId?: Prisma.SortOrderInput | Prisma.SortOrder
   expenseId?: Prisma.SortOrderInput | Prisma.SortOrder
+  feeId?: Prisma.SortOrderInput | Prisma.SortOrder
+  remunerationId?: Prisma.SortOrderInput | Prisma.SortOrder
   typeId?: Prisma.SortOrder
   fileName?: Prisma.SortOrder
   storagePath?: Prisma.SortOrder
@@ -416,6 +452,8 @@ export type AttachmentScalarWhereWithAggregatesInput = {
   employeeId?: Prisma.IntNullableWithAggregatesFilter<"Attachment"> | number | null
   contractId?: Prisma.IntNullableWithAggregatesFilter<"Attachment"> | number | null
   expenseId?: Prisma.IntNullableWithAggregatesFilter<"Attachment"> | number | null
+  feeId?: Prisma.IntNullableWithAggregatesFilter<"Attachment"> | number | null
+  remunerationId?: Prisma.IntNullableWithAggregatesFilter<"Attachment"> | number | null
   typeId?: Prisma.IntWithAggregatesFilter<"Attachment"> | number
   fileName?: Prisma.StringWithAggregatesFilter<"Attachment"> | string
   storagePath?: Prisma.StringWithAggregatesFilter<"Attachment"> | string
@@ -440,6 +478,8 @@ export type AttachmentCreateInput = {
   contract?: Prisma.ContractCreateNestedOneWithoutAttachmentsInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutAttachmentsInput
   expense?: Prisma.ExpenseCreateNestedOneWithoutAttachmentsInput
+  fee?: Prisma.FeeCreateNestedOneWithoutAttachmentsInput
+  remuneration?: Prisma.RemunerationCreateNestedOneWithoutAttachmentsInput
   firm: Prisma.FirmCreateNestedOneWithoutAttachmentsInput
   type: Prisma.AttachmentTypeCreateNestedOneWithoutAttachmentsInput
 }
@@ -451,6 +491,8 @@ export type AttachmentUncheckedCreateInput = {
   employeeId?: number | null
   contractId?: number | null
   expenseId?: number | null
+  feeId?: number | null
+  remunerationId?: number | null
   typeId: number
   fileName: string
   storagePath: string
@@ -475,6 +517,8 @@ export type AttachmentUpdateInput = {
   contract?: Prisma.ContractUpdateOneWithoutAttachmentsNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutAttachmentsNestedInput
   expense?: Prisma.ExpenseUpdateOneWithoutAttachmentsNestedInput
+  fee?: Prisma.FeeUpdateOneWithoutAttachmentsNestedInput
+  remuneration?: Prisma.RemunerationUpdateOneWithoutAttachmentsNestedInput
   firm?: Prisma.FirmUpdateOneRequiredWithoutAttachmentsNestedInput
   type?: Prisma.AttachmentTypeUpdateOneRequiredWithoutAttachmentsNestedInput
 }
@@ -486,6 +530,8 @@ export type AttachmentUncheckedUpdateInput = {
   employeeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   contractId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  feeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   typeId?: Prisma.IntFieldUpdateOperationsInput | number
   fileName?: Prisma.StringFieldUpdateOperationsInput | string
   storagePath?: Prisma.StringFieldUpdateOperationsInput | string
@@ -504,6 +550,8 @@ export type AttachmentCreateManyInput = {
   employeeId?: number | null
   contractId?: number | null
   expenseId?: number | null
+  feeId?: number | null
+  remunerationId?: number | null
   typeId: number
   fileName: string
   storagePath: string
@@ -533,6 +581,8 @@ export type AttachmentUncheckedUpdateManyInput = {
   employeeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   contractId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  feeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   typeId?: Prisma.IntFieldUpdateOperationsInput | number
   fileName?: Prisma.StringFieldUpdateOperationsInput | string
   storagePath?: Prisma.StringFieldUpdateOperationsInput | string
@@ -561,6 +611,8 @@ export type AttachmentCountOrderByAggregateInput = {
   employeeId?: Prisma.SortOrder
   contractId?: Prisma.SortOrder
   expenseId?: Prisma.SortOrder
+  feeId?: Prisma.SortOrder
+  remunerationId?: Prisma.SortOrder
   typeId?: Prisma.SortOrder
   fileName?: Prisma.SortOrder
   storagePath?: Prisma.SortOrder
@@ -579,6 +631,8 @@ export type AttachmentAvgOrderByAggregateInput = {
   employeeId?: Prisma.SortOrder
   contractId?: Prisma.SortOrder
   expenseId?: Prisma.SortOrder
+  feeId?: Prisma.SortOrder
+  remunerationId?: Prisma.SortOrder
   typeId?: Prisma.SortOrder
   fileSize?: Prisma.SortOrder
 }
@@ -590,6 +644,8 @@ export type AttachmentMaxOrderByAggregateInput = {
   employeeId?: Prisma.SortOrder
   contractId?: Prisma.SortOrder
   expenseId?: Prisma.SortOrder
+  feeId?: Prisma.SortOrder
+  remunerationId?: Prisma.SortOrder
   typeId?: Prisma.SortOrder
   fileName?: Prisma.SortOrder
   storagePath?: Prisma.SortOrder
@@ -608,6 +664,8 @@ export type AttachmentMinOrderByAggregateInput = {
   employeeId?: Prisma.SortOrder
   contractId?: Prisma.SortOrder
   expenseId?: Prisma.SortOrder
+  feeId?: Prisma.SortOrder
+  remunerationId?: Prisma.SortOrder
   typeId?: Prisma.SortOrder
   fileName?: Prisma.SortOrder
   storagePath?: Prisma.SortOrder
@@ -626,6 +684,8 @@ export type AttachmentSumOrderByAggregateInput = {
   employeeId?: Prisma.SortOrder
   contractId?: Prisma.SortOrder
   expenseId?: Prisma.SortOrder
+  feeId?: Prisma.SortOrder
+  remunerationId?: Prisma.SortOrder
   typeId?: Prisma.SortOrder
   fileSize?: Prisma.SortOrder
 }
@@ -840,6 +900,48 @@ export type AttachmentUncheckedUpdateManyWithoutContractNestedInput = {
   deleteMany?: Prisma.AttachmentScalarWhereInput | Prisma.AttachmentScalarWhereInput[]
 }
 
+export type AttachmentCreateNestedManyWithoutFeeInput = {
+  create?: Prisma.XOR<Prisma.AttachmentCreateWithoutFeeInput, Prisma.AttachmentUncheckedCreateWithoutFeeInput> | Prisma.AttachmentCreateWithoutFeeInput[] | Prisma.AttachmentUncheckedCreateWithoutFeeInput[]
+  connectOrCreate?: Prisma.AttachmentCreateOrConnectWithoutFeeInput | Prisma.AttachmentCreateOrConnectWithoutFeeInput[]
+  createMany?: Prisma.AttachmentCreateManyFeeInputEnvelope
+  connect?: Prisma.AttachmentWhereUniqueInput | Prisma.AttachmentWhereUniqueInput[]
+}
+
+export type AttachmentUncheckedCreateNestedManyWithoutFeeInput = {
+  create?: Prisma.XOR<Prisma.AttachmentCreateWithoutFeeInput, Prisma.AttachmentUncheckedCreateWithoutFeeInput> | Prisma.AttachmentCreateWithoutFeeInput[] | Prisma.AttachmentUncheckedCreateWithoutFeeInput[]
+  connectOrCreate?: Prisma.AttachmentCreateOrConnectWithoutFeeInput | Prisma.AttachmentCreateOrConnectWithoutFeeInput[]
+  createMany?: Prisma.AttachmentCreateManyFeeInputEnvelope
+  connect?: Prisma.AttachmentWhereUniqueInput | Prisma.AttachmentWhereUniqueInput[]
+}
+
+export type AttachmentUpdateManyWithoutFeeNestedInput = {
+  create?: Prisma.XOR<Prisma.AttachmentCreateWithoutFeeInput, Prisma.AttachmentUncheckedCreateWithoutFeeInput> | Prisma.AttachmentCreateWithoutFeeInput[] | Prisma.AttachmentUncheckedCreateWithoutFeeInput[]
+  connectOrCreate?: Prisma.AttachmentCreateOrConnectWithoutFeeInput | Prisma.AttachmentCreateOrConnectWithoutFeeInput[]
+  upsert?: Prisma.AttachmentUpsertWithWhereUniqueWithoutFeeInput | Prisma.AttachmentUpsertWithWhereUniqueWithoutFeeInput[]
+  createMany?: Prisma.AttachmentCreateManyFeeInputEnvelope
+  set?: Prisma.AttachmentWhereUniqueInput | Prisma.AttachmentWhereUniqueInput[]
+  disconnect?: Prisma.AttachmentWhereUniqueInput | Prisma.AttachmentWhereUniqueInput[]
+  delete?: Prisma.AttachmentWhereUniqueInput | Prisma.AttachmentWhereUniqueInput[]
+  connect?: Prisma.AttachmentWhereUniqueInput | Prisma.AttachmentWhereUniqueInput[]
+  update?: Prisma.AttachmentUpdateWithWhereUniqueWithoutFeeInput | Prisma.AttachmentUpdateWithWhereUniqueWithoutFeeInput[]
+  updateMany?: Prisma.AttachmentUpdateManyWithWhereWithoutFeeInput | Prisma.AttachmentUpdateManyWithWhereWithoutFeeInput[]
+  deleteMany?: Prisma.AttachmentScalarWhereInput | Prisma.AttachmentScalarWhereInput[]
+}
+
+export type AttachmentUncheckedUpdateManyWithoutFeeNestedInput = {
+  create?: Prisma.XOR<Prisma.AttachmentCreateWithoutFeeInput, Prisma.AttachmentUncheckedCreateWithoutFeeInput> | Prisma.AttachmentCreateWithoutFeeInput[] | Prisma.AttachmentUncheckedCreateWithoutFeeInput[]
+  connectOrCreate?: Prisma.AttachmentCreateOrConnectWithoutFeeInput | Prisma.AttachmentCreateOrConnectWithoutFeeInput[]
+  upsert?: Prisma.AttachmentUpsertWithWhereUniqueWithoutFeeInput | Prisma.AttachmentUpsertWithWhereUniqueWithoutFeeInput[]
+  createMany?: Prisma.AttachmentCreateManyFeeInputEnvelope
+  set?: Prisma.AttachmentWhereUniqueInput | Prisma.AttachmentWhereUniqueInput[]
+  disconnect?: Prisma.AttachmentWhereUniqueInput | Prisma.AttachmentWhereUniqueInput[]
+  delete?: Prisma.AttachmentWhereUniqueInput | Prisma.AttachmentWhereUniqueInput[]
+  connect?: Prisma.AttachmentWhereUniqueInput | Prisma.AttachmentWhereUniqueInput[]
+  update?: Prisma.AttachmentUpdateWithWhereUniqueWithoutFeeInput | Prisma.AttachmentUpdateWithWhereUniqueWithoutFeeInput[]
+  updateMany?: Prisma.AttachmentUpdateManyWithWhereWithoutFeeInput | Prisma.AttachmentUpdateManyWithWhereWithoutFeeInput[]
+  deleteMany?: Prisma.AttachmentScalarWhereInput | Prisma.AttachmentScalarWhereInput[]
+}
+
 export type AttachmentCreateNestedManyWithoutExpenseInput = {
   create?: Prisma.XOR<Prisma.AttachmentCreateWithoutExpenseInput, Prisma.AttachmentUncheckedCreateWithoutExpenseInput> | Prisma.AttachmentCreateWithoutExpenseInput[] | Prisma.AttachmentUncheckedCreateWithoutExpenseInput[]
   connectOrCreate?: Prisma.AttachmentCreateOrConnectWithoutExpenseInput | Prisma.AttachmentCreateOrConnectWithoutExpenseInput[]
@@ -882,6 +984,48 @@ export type AttachmentUncheckedUpdateManyWithoutExpenseNestedInput = {
   deleteMany?: Prisma.AttachmentScalarWhereInput | Prisma.AttachmentScalarWhereInput[]
 }
 
+export type AttachmentCreateNestedManyWithoutRemunerationInput = {
+  create?: Prisma.XOR<Prisma.AttachmentCreateWithoutRemunerationInput, Prisma.AttachmentUncheckedCreateWithoutRemunerationInput> | Prisma.AttachmentCreateWithoutRemunerationInput[] | Prisma.AttachmentUncheckedCreateWithoutRemunerationInput[]
+  connectOrCreate?: Prisma.AttachmentCreateOrConnectWithoutRemunerationInput | Prisma.AttachmentCreateOrConnectWithoutRemunerationInput[]
+  createMany?: Prisma.AttachmentCreateManyRemunerationInputEnvelope
+  connect?: Prisma.AttachmentWhereUniqueInput | Prisma.AttachmentWhereUniqueInput[]
+}
+
+export type AttachmentUncheckedCreateNestedManyWithoutRemunerationInput = {
+  create?: Prisma.XOR<Prisma.AttachmentCreateWithoutRemunerationInput, Prisma.AttachmentUncheckedCreateWithoutRemunerationInput> | Prisma.AttachmentCreateWithoutRemunerationInput[] | Prisma.AttachmentUncheckedCreateWithoutRemunerationInput[]
+  connectOrCreate?: Prisma.AttachmentCreateOrConnectWithoutRemunerationInput | Prisma.AttachmentCreateOrConnectWithoutRemunerationInput[]
+  createMany?: Prisma.AttachmentCreateManyRemunerationInputEnvelope
+  connect?: Prisma.AttachmentWhereUniqueInput | Prisma.AttachmentWhereUniqueInput[]
+}
+
+export type AttachmentUpdateManyWithoutRemunerationNestedInput = {
+  create?: Prisma.XOR<Prisma.AttachmentCreateWithoutRemunerationInput, Prisma.AttachmentUncheckedCreateWithoutRemunerationInput> | Prisma.AttachmentCreateWithoutRemunerationInput[] | Prisma.AttachmentUncheckedCreateWithoutRemunerationInput[]
+  connectOrCreate?: Prisma.AttachmentCreateOrConnectWithoutRemunerationInput | Prisma.AttachmentCreateOrConnectWithoutRemunerationInput[]
+  upsert?: Prisma.AttachmentUpsertWithWhereUniqueWithoutRemunerationInput | Prisma.AttachmentUpsertWithWhereUniqueWithoutRemunerationInput[]
+  createMany?: Prisma.AttachmentCreateManyRemunerationInputEnvelope
+  set?: Prisma.AttachmentWhereUniqueInput | Prisma.AttachmentWhereUniqueInput[]
+  disconnect?: Prisma.AttachmentWhereUniqueInput | Prisma.AttachmentWhereUniqueInput[]
+  delete?: Prisma.AttachmentWhereUniqueInput | Prisma.AttachmentWhereUniqueInput[]
+  connect?: Prisma.AttachmentWhereUniqueInput | Prisma.AttachmentWhereUniqueInput[]
+  update?: Prisma.AttachmentUpdateWithWhereUniqueWithoutRemunerationInput | Prisma.AttachmentUpdateWithWhereUniqueWithoutRemunerationInput[]
+  updateMany?: Prisma.AttachmentUpdateManyWithWhereWithoutRemunerationInput | Prisma.AttachmentUpdateManyWithWhereWithoutRemunerationInput[]
+  deleteMany?: Prisma.AttachmentScalarWhereInput | Prisma.AttachmentScalarWhereInput[]
+}
+
+export type AttachmentUncheckedUpdateManyWithoutRemunerationNestedInput = {
+  create?: Prisma.XOR<Prisma.AttachmentCreateWithoutRemunerationInput, Prisma.AttachmentUncheckedCreateWithoutRemunerationInput> | Prisma.AttachmentCreateWithoutRemunerationInput[] | Prisma.AttachmentUncheckedCreateWithoutRemunerationInput[]
+  connectOrCreate?: Prisma.AttachmentCreateOrConnectWithoutRemunerationInput | Prisma.AttachmentCreateOrConnectWithoutRemunerationInput[]
+  upsert?: Prisma.AttachmentUpsertWithWhereUniqueWithoutRemunerationInput | Prisma.AttachmentUpsertWithWhereUniqueWithoutRemunerationInput[]
+  createMany?: Prisma.AttachmentCreateManyRemunerationInputEnvelope
+  set?: Prisma.AttachmentWhereUniqueInput | Prisma.AttachmentWhereUniqueInput[]
+  disconnect?: Prisma.AttachmentWhereUniqueInput | Prisma.AttachmentWhereUniqueInput[]
+  delete?: Prisma.AttachmentWhereUniqueInput | Prisma.AttachmentWhereUniqueInput[]
+  connect?: Prisma.AttachmentWhereUniqueInput | Prisma.AttachmentWhereUniqueInput[]
+  update?: Prisma.AttachmentUpdateWithWhereUniqueWithoutRemunerationInput | Prisma.AttachmentUpdateWithWhereUniqueWithoutRemunerationInput[]
+  updateMany?: Prisma.AttachmentUpdateManyWithWhereWithoutRemunerationInput | Prisma.AttachmentUpdateManyWithWhereWithoutRemunerationInput[]
+  deleteMany?: Prisma.AttachmentScalarWhereInput | Prisma.AttachmentScalarWhereInput[]
+}
+
 export type AttachmentCreateWithoutFirmInput = {
   fileName: string
   storagePath: string
@@ -895,6 +1039,8 @@ export type AttachmentCreateWithoutFirmInput = {
   contract?: Prisma.ContractCreateNestedOneWithoutAttachmentsInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutAttachmentsInput
   expense?: Prisma.ExpenseCreateNestedOneWithoutAttachmentsInput
+  fee?: Prisma.FeeCreateNestedOneWithoutAttachmentsInput
+  remuneration?: Prisma.RemunerationCreateNestedOneWithoutAttachmentsInput
   type: Prisma.AttachmentTypeCreateNestedOneWithoutAttachmentsInput
 }
 
@@ -904,6 +1050,8 @@ export type AttachmentUncheckedCreateWithoutFirmInput = {
   employeeId?: number | null
   contractId?: number | null
   expenseId?: number | null
+  feeId?: number | null
+  remunerationId?: number | null
   typeId: number
   fileName: string
   storagePath: string
@@ -951,6 +1099,8 @@ export type AttachmentScalarWhereInput = {
   employeeId?: Prisma.IntNullableFilter<"Attachment"> | number | null
   contractId?: Prisma.IntNullableFilter<"Attachment"> | number | null
   expenseId?: Prisma.IntNullableFilter<"Attachment"> | number | null
+  feeId?: Prisma.IntNullableFilter<"Attachment"> | number | null
+  remunerationId?: Prisma.IntNullableFilter<"Attachment"> | number | null
   typeId?: Prisma.IntFilter<"Attachment"> | number
   fileName?: Prisma.StringFilter<"Attachment"> | string
   storagePath?: Prisma.StringFilter<"Attachment"> | string
@@ -975,6 +1125,8 @@ export type AttachmentCreateWithoutTypeInput = {
   contract?: Prisma.ContractCreateNestedOneWithoutAttachmentsInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutAttachmentsInput
   expense?: Prisma.ExpenseCreateNestedOneWithoutAttachmentsInput
+  fee?: Prisma.FeeCreateNestedOneWithoutAttachmentsInput
+  remuneration?: Prisma.RemunerationCreateNestedOneWithoutAttachmentsInput
   firm: Prisma.FirmCreateNestedOneWithoutAttachmentsInput
 }
 
@@ -985,6 +1137,8 @@ export type AttachmentUncheckedCreateWithoutTypeInput = {
   employeeId?: number | null
   contractId?: number | null
   expenseId?: number | null
+  feeId?: number | null
+  remunerationId?: number | null
   fileName: string
   storagePath: string
   mimeType: string
@@ -1033,6 +1187,8 @@ export type AttachmentCreateWithoutEmployeeInput = {
   client?: Prisma.ClientCreateNestedOneWithoutAttachmentsInput
   contract?: Prisma.ContractCreateNestedOneWithoutAttachmentsInput
   expense?: Prisma.ExpenseCreateNestedOneWithoutAttachmentsInput
+  fee?: Prisma.FeeCreateNestedOneWithoutAttachmentsInput
+  remuneration?: Prisma.RemunerationCreateNestedOneWithoutAttachmentsInput
   firm: Prisma.FirmCreateNestedOneWithoutAttachmentsInput
   type: Prisma.AttachmentTypeCreateNestedOneWithoutAttachmentsInput
 }
@@ -1043,6 +1199,8 @@ export type AttachmentUncheckedCreateWithoutEmployeeInput = {
   clientId?: number | null
   contractId?: number | null
   expenseId?: number | null
+  feeId?: number | null
+  remunerationId?: number | null
   typeId: number
   fileName: string
   storagePath: string
@@ -1092,6 +1250,8 @@ export type AttachmentCreateWithoutClientInput = {
   contract?: Prisma.ContractCreateNestedOneWithoutAttachmentsInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutAttachmentsInput
   expense?: Prisma.ExpenseCreateNestedOneWithoutAttachmentsInput
+  fee?: Prisma.FeeCreateNestedOneWithoutAttachmentsInput
+  remuneration?: Prisma.RemunerationCreateNestedOneWithoutAttachmentsInput
   firm: Prisma.FirmCreateNestedOneWithoutAttachmentsInput
   type: Prisma.AttachmentTypeCreateNestedOneWithoutAttachmentsInput
 }
@@ -1102,6 +1262,8 @@ export type AttachmentUncheckedCreateWithoutClientInput = {
   employeeId?: number | null
   contractId?: number | null
   expenseId?: number | null
+  feeId?: number | null
+  remunerationId?: number | null
   typeId: number
   fileName: string
   storagePath: string
@@ -1151,6 +1313,8 @@ export type AttachmentCreateWithoutContractInput = {
   client?: Prisma.ClientCreateNestedOneWithoutAttachmentsInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutAttachmentsInput
   expense?: Prisma.ExpenseCreateNestedOneWithoutAttachmentsInput
+  fee?: Prisma.FeeCreateNestedOneWithoutAttachmentsInput
+  remuneration?: Prisma.RemunerationCreateNestedOneWithoutAttachmentsInput
   firm: Prisma.FirmCreateNestedOneWithoutAttachmentsInput
   type: Prisma.AttachmentTypeCreateNestedOneWithoutAttachmentsInput
 }
@@ -1161,6 +1325,8 @@ export type AttachmentUncheckedCreateWithoutContractInput = {
   clientId?: number | null
   employeeId?: number | null
   expenseId?: number | null
+  feeId?: number | null
+  remunerationId?: number | null
   typeId: number
   fileName: string
   storagePath: string
@@ -1198,6 +1364,69 @@ export type AttachmentUpdateManyWithWhereWithoutContractInput = {
   data: Prisma.XOR<Prisma.AttachmentUpdateManyMutationInput, Prisma.AttachmentUncheckedUpdateManyWithoutContractInput>
 }
 
+export type AttachmentCreateWithoutFeeInput = {
+  fileName: string
+  storagePath: string
+  mimeType: string
+  fileSize: number
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  client?: Prisma.ClientCreateNestedOneWithoutAttachmentsInput
+  contract?: Prisma.ContractCreateNestedOneWithoutAttachmentsInput
+  employee?: Prisma.EmployeeCreateNestedOneWithoutAttachmentsInput
+  expense?: Prisma.ExpenseCreateNestedOneWithoutAttachmentsInput
+  remuneration?: Prisma.RemunerationCreateNestedOneWithoutAttachmentsInput
+  firm: Prisma.FirmCreateNestedOneWithoutAttachmentsInput
+  type: Prisma.AttachmentTypeCreateNestedOneWithoutAttachmentsInput
+}
+
+export type AttachmentUncheckedCreateWithoutFeeInput = {
+  id?: number
+  firmId: number
+  clientId?: number | null
+  employeeId?: number | null
+  contractId?: number | null
+  expenseId?: number | null
+  remunerationId?: number | null
+  typeId: number
+  fileName: string
+  storagePath: string
+  mimeType: string
+  fileSize: number
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+}
+
+export type AttachmentCreateOrConnectWithoutFeeInput = {
+  where: Prisma.AttachmentWhereUniqueInput
+  create: Prisma.XOR<Prisma.AttachmentCreateWithoutFeeInput, Prisma.AttachmentUncheckedCreateWithoutFeeInput>
+}
+
+export type AttachmentCreateManyFeeInputEnvelope = {
+  data: Prisma.AttachmentCreateManyFeeInput | Prisma.AttachmentCreateManyFeeInput[]
+  skipDuplicates?: boolean
+}
+
+export type AttachmentUpsertWithWhereUniqueWithoutFeeInput = {
+  where: Prisma.AttachmentWhereUniqueInput
+  update: Prisma.XOR<Prisma.AttachmentUpdateWithoutFeeInput, Prisma.AttachmentUncheckedUpdateWithoutFeeInput>
+  create: Prisma.XOR<Prisma.AttachmentCreateWithoutFeeInput, Prisma.AttachmentUncheckedCreateWithoutFeeInput>
+}
+
+export type AttachmentUpdateWithWhereUniqueWithoutFeeInput = {
+  where: Prisma.AttachmentWhereUniqueInput
+  data: Prisma.XOR<Prisma.AttachmentUpdateWithoutFeeInput, Prisma.AttachmentUncheckedUpdateWithoutFeeInput>
+}
+
+export type AttachmentUpdateManyWithWhereWithoutFeeInput = {
+  where: Prisma.AttachmentScalarWhereInput
+  data: Prisma.XOR<Prisma.AttachmentUpdateManyMutationInput, Prisma.AttachmentUncheckedUpdateManyWithoutFeeInput>
+}
+
 export type AttachmentCreateWithoutExpenseInput = {
   fileName: string
   storagePath: string
@@ -1210,6 +1439,8 @@ export type AttachmentCreateWithoutExpenseInput = {
   client?: Prisma.ClientCreateNestedOneWithoutAttachmentsInput
   contract?: Prisma.ContractCreateNestedOneWithoutAttachmentsInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutAttachmentsInput
+  fee?: Prisma.FeeCreateNestedOneWithoutAttachmentsInput
+  remuneration?: Prisma.RemunerationCreateNestedOneWithoutAttachmentsInput
   firm: Prisma.FirmCreateNestedOneWithoutAttachmentsInput
   type: Prisma.AttachmentTypeCreateNestedOneWithoutAttachmentsInput
 }
@@ -1220,6 +1451,8 @@ export type AttachmentUncheckedCreateWithoutExpenseInput = {
   clientId?: number | null
   employeeId?: number | null
   contractId?: number | null
+  feeId?: number | null
+  remunerationId?: number | null
   typeId: number
   fileName: string
   storagePath: string
@@ -1257,12 +1490,77 @@ export type AttachmentUpdateManyWithWhereWithoutExpenseInput = {
   data: Prisma.XOR<Prisma.AttachmentUpdateManyMutationInput, Prisma.AttachmentUncheckedUpdateManyWithoutExpenseInput>
 }
 
+export type AttachmentCreateWithoutRemunerationInput = {
+  fileName: string
+  storagePath: string
+  mimeType: string
+  fileSize: number
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  client?: Prisma.ClientCreateNestedOneWithoutAttachmentsInput
+  contract?: Prisma.ContractCreateNestedOneWithoutAttachmentsInput
+  employee?: Prisma.EmployeeCreateNestedOneWithoutAttachmentsInput
+  expense?: Prisma.ExpenseCreateNestedOneWithoutAttachmentsInput
+  fee?: Prisma.FeeCreateNestedOneWithoutAttachmentsInput
+  firm: Prisma.FirmCreateNestedOneWithoutAttachmentsInput
+  type: Prisma.AttachmentTypeCreateNestedOneWithoutAttachmentsInput
+}
+
+export type AttachmentUncheckedCreateWithoutRemunerationInput = {
+  id?: number
+  firmId: number
+  clientId?: number | null
+  employeeId?: number | null
+  contractId?: number | null
+  expenseId?: number | null
+  feeId?: number | null
+  typeId: number
+  fileName: string
+  storagePath: string
+  mimeType: string
+  fileSize: number
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+}
+
+export type AttachmentCreateOrConnectWithoutRemunerationInput = {
+  where: Prisma.AttachmentWhereUniqueInput
+  create: Prisma.XOR<Prisma.AttachmentCreateWithoutRemunerationInput, Prisma.AttachmentUncheckedCreateWithoutRemunerationInput>
+}
+
+export type AttachmentCreateManyRemunerationInputEnvelope = {
+  data: Prisma.AttachmentCreateManyRemunerationInput | Prisma.AttachmentCreateManyRemunerationInput[]
+  skipDuplicates?: boolean
+}
+
+export type AttachmentUpsertWithWhereUniqueWithoutRemunerationInput = {
+  where: Prisma.AttachmentWhereUniqueInput
+  update: Prisma.XOR<Prisma.AttachmentUpdateWithoutRemunerationInput, Prisma.AttachmentUncheckedUpdateWithoutRemunerationInput>
+  create: Prisma.XOR<Prisma.AttachmentCreateWithoutRemunerationInput, Prisma.AttachmentUncheckedCreateWithoutRemunerationInput>
+}
+
+export type AttachmentUpdateWithWhereUniqueWithoutRemunerationInput = {
+  where: Prisma.AttachmentWhereUniqueInput
+  data: Prisma.XOR<Prisma.AttachmentUpdateWithoutRemunerationInput, Prisma.AttachmentUncheckedUpdateWithoutRemunerationInput>
+}
+
+export type AttachmentUpdateManyWithWhereWithoutRemunerationInput = {
+  where: Prisma.AttachmentScalarWhereInput
+  data: Prisma.XOR<Prisma.AttachmentUpdateManyMutationInput, Prisma.AttachmentUncheckedUpdateManyWithoutRemunerationInput>
+}
+
 export type AttachmentCreateManyFirmInput = {
   id?: number
   clientId?: number | null
   employeeId?: number | null
   contractId?: number | null
   expenseId?: number | null
+  feeId?: number | null
+  remunerationId?: number | null
   typeId: number
   fileName: string
   storagePath: string
@@ -1287,6 +1585,8 @@ export type AttachmentUpdateWithoutFirmInput = {
   contract?: Prisma.ContractUpdateOneWithoutAttachmentsNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutAttachmentsNestedInput
   expense?: Prisma.ExpenseUpdateOneWithoutAttachmentsNestedInput
+  fee?: Prisma.FeeUpdateOneWithoutAttachmentsNestedInput
+  remuneration?: Prisma.RemunerationUpdateOneWithoutAttachmentsNestedInput
   type?: Prisma.AttachmentTypeUpdateOneRequiredWithoutAttachmentsNestedInput
 }
 
@@ -1296,6 +1596,8 @@ export type AttachmentUncheckedUpdateWithoutFirmInput = {
   employeeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   contractId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  feeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   typeId?: Prisma.IntFieldUpdateOperationsInput | number
   fileName?: Prisma.StringFieldUpdateOperationsInput | string
   storagePath?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1313,6 +1615,8 @@ export type AttachmentUncheckedUpdateManyWithoutFirmInput = {
   employeeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   contractId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  feeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   typeId?: Prisma.IntFieldUpdateOperationsInput | number
   fileName?: Prisma.StringFieldUpdateOperationsInput | string
   storagePath?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1331,6 +1635,8 @@ export type AttachmentCreateManyTypeInput = {
   employeeId?: number | null
   contractId?: number | null
   expenseId?: number | null
+  feeId?: number | null
+  remunerationId?: number | null
   fileName: string
   storagePath: string
   mimeType: string
@@ -1354,6 +1660,8 @@ export type AttachmentUpdateWithoutTypeInput = {
   contract?: Prisma.ContractUpdateOneWithoutAttachmentsNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutAttachmentsNestedInput
   expense?: Prisma.ExpenseUpdateOneWithoutAttachmentsNestedInput
+  fee?: Prisma.FeeUpdateOneWithoutAttachmentsNestedInput
+  remuneration?: Prisma.RemunerationUpdateOneWithoutAttachmentsNestedInput
   firm?: Prisma.FirmUpdateOneRequiredWithoutAttachmentsNestedInput
 }
 
@@ -1364,6 +1672,8 @@ export type AttachmentUncheckedUpdateWithoutTypeInput = {
   employeeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   contractId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  feeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   fileName?: Prisma.StringFieldUpdateOperationsInput | string
   storagePath?: Prisma.StringFieldUpdateOperationsInput | string
   mimeType?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1381,6 +1691,8 @@ export type AttachmentUncheckedUpdateManyWithoutTypeInput = {
   employeeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   contractId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  feeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   fileName?: Prisma.StringFieldUpdateOperationsInput | string
   storagePath?: Prisma.StringFieldUpdateOperationsInput | string
   mimeType?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1397,6 +1709,8 @@ export type AttachmentCreateManyEmployeeInput = {
   clientId?: number | null
   contractId?: number | null
   expenseId?: number | null
+  feeId?: number | null
+  remunerationId?: number | null
   typeId: number
   fileName: string
   storagePath: string
@@ -1420,6 +1734,8 @@ export type AttachmentUpdateWithoutEmployeeInput = {
   client?: Prisma.ClientUpdateOneWithoutAttachmentsNestedInput
   contract?: Prisma.ContractUpdateOneWithoutAttachmentsNestedInput
   expense?: Prisma.ExpenseUpdateOneWithoutAttachmentsNestedInput
+  fee?: Prisma.FeeUpdateOneWithoutAttachmentsNestedInput
+  remuneration?: Prisma.RemunerationUpdateOneWithoutAttachmentsNestedInput
   firm?: Prisma.FirmUpdateOneRequiredWithoutAttachmentsNestedInput
   type?: Prisma.AttachmentTypeUpdateOneRequiredWithoutAttachmentsNestedInput
 }
@@ -1430,6 +1746,8 @@ export type AttachmentUncheckedUpdateWithoutEmployeeInput = {
   clientId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   contractId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  feeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   typeId?: Prisma.IntFieldUpdateOperationsInput | number
   fileName?: Prisma.StringFieldUpdateOperationsInput | string
   storagePath?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1447,6 +1765,8 @@ export type AttachmentUncheckedUpdateManyWithoutEmployeeInput = {
   clientId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   contractId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  feeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   typeId?: Prisma.IntFieldUpdateOperationsInput | number
   fileName?: Prisma.StringFieldUpdateOperationsInput | string
   storagePath?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1464,6 +1784,8 @@ export type AttachmentCreateManyClientInput = {
   employeeId?: number | null
   contractId?: number | null
   expenseId?: number | null
+  feeId?: number | null
+  remunerationId?: number | null
   typeId: number
   fileName: string
   storagePath: string
@@ -1487,6 +1809,8 @@ export type AttachmentUpdateWithoutClientInput = {
   contract?: Prisma.ContractUpdateOneWithoutAttachmentsNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutAttachmentsNestedInput
   expense?: Prisma.ExpenseUpdateOneWithoutAttachmentsNestedInput
+  fee?: Prisma.FeeUpdateOneWithoutAttachmentsNestedInput
+  remuneration?: Prisma.RemunerationUpdateOneWithoutAttachmentsNestedInput
   firm?: Prisma.FirmUpdateOneRequiredWithoutAttachmentsNestedInput
   type?: Prisma.AttachmentTypeUpdateOneRequiredWithoutAttachmentsNestedInput
 }
@@ -1497,6 +1821,8 @@ export type AttachmentUncheckedUpdateWithoutClientInput = {
   employeeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   contractId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  feeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   typeId?: Prisma.IntFieldUpdateOperationsInput | number
   fileName?: Prisma.StringFieldUpdateOperationsInput | string
   storagePath?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1514,6 +1840,8 @@ export type AttachmentUncheckedUpdateManyWithoutClientInput = {
   employeeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   contractId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  feeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   typeId?: Prisma.IntFieldUpdateOperationsInput | number
   fileName?: Prisma.StringFieldUpdateOperationsInput | string
   storagePath?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1531,6 +1859,8 @@ export type AttachmentCreateManyContractInput = {
   clientId?: number | null
   employeeId?: number | null
   expenseId?: number | null
+  feeId?: number | null
+  remunerationId?: number | null
   typeId: number
   fileName: string
   storagePath: string
@@ -1554,6 +1884,8 @@ export type AttachmentUpdateWithoutContractInput = {
   client?: Prisma.ClientUpdateOneWithoutAttachmentsNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutAttachmentsNestedInput
   expense?: Prisma.ExpenseUpdateOneWithoutAttachmentsNestedInput
+  fee?: Prisma.FeeUpdateOneWithoutAttachmentsNestedInput
+  remuneration?: Prisma.RemunerationUpdateOneWithoutAttachmentsNestedInput
   firm?: Prisma.FirmUpdateOneRequiredWithoutAttachmentsNestedInput
   type?: Prisma.AttachmentTypeUpdateOneRequiredWithoutAttachmentsNestedInput
 }
@@ -1564,6 +1896,8 @@ export type AttachmentUncheckedUpdateWithoutContractInput = {
   clientId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   employeeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  feeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   typeId?: Prisma.IntFieldUpdateOperationsInput | number
   fileName?: Prisma.StringFieldUpdateOperationsInput | string
   storagePath?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1581,6 +1915,83 @@ export type AttachmentUncheckedUpdateManyWithoutContractInput = {
   clientId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   employeeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  feeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  typeId?: Prisma.IntFieldUpdateOperationsInput | number
+  fileName?: Prisma.StringFieldUpdateOperationsInput | string
+  storagePath?: Prisma.StringFieldUpdateOperationsInput | string
+  mimeType?: Prisma.StringFieldUpdateOperationsInput | string
+  fileSize?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type AttachmentCreateManyFeeInput = {
+  id?: number
+  firmId: number
+  clientId?: number | null
+  employeeId?: number | null
+  contractId?: number | null
+  expenseId?: number | null
+  remunerationId?: number | null
+  typeId: number
+  fileName: string
+  storagePath: string
+  mimeType: string
+  fileSize: number
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+}
+
+export type AttachmentUpdateWithoutFeeInput = {
+  fileName?: Prisma.StringFieldUpdateOperationsInput | string
+  storagePath?: Prisma.StringFieldUpdateOperationsInput | string
+  mimeType?: Prisma.StringFieldUpdateOperationsInput | string
+  fileSize?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  client?: Prisma.ClientUpdateOneWithoutAttachmentsNestedInput
+  contract?: Prisma.ContractUpdateOneWithoutAttachmentsNestedInput
+  employee?: Prisma.EmployeeUpdateOneWithoutAttachmentsNestedInput
+  expense?: Prisma.ExpenseUpdateOneWithoutAttachmentsNestedInput
+  remuneration?: Prisma.RemunerationUpdateOneWithoutAttachmentsNestedInput
+  firm?: Prisma.FirmUpdateOneRequiredWithoutAttachmentsNestedInput
+  type?: Prisma.AttachmentTypeUpdateOneRequiredWithoutAttachmentsNestedInput
+}
+
+export type AttachmentUncheckedUpdateWithoutFeeInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  firmId?: Prisma.IntFieldUpdateOperationsInput | number
+  clientId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  employeeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  contractId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  typeId?: Prisma.IntFieldUpdateOperationsInput | number
+  fileName?: Prisma.StringFieldUpdateOperationsInput | string
+  storagePath?: Prisma.StringFieldUpdateOperationsInput | string
+  mimeType?: Prisma.StringFieldUpdateOperationsInput | string
+  fileSize?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type AttachmentUncheckedUpdateManyWithoutFeeInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  firmId?: Prisma.IntFieldUpdateOperationsInput | number
+  clientId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  employeeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  contractId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   typeId?: Prisma.IntFieldUpdateOperationsInput | number
   fileName?: Prisma.StringFieldUpdateOperationsInput | string
   storagePath?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1598,6 +2009,8 @@ export type AttachmentCreateManyExpenseInput = {
   clientId?: number | null
   employeeId?: number | null
   contractId?: number | null
+  feeId?: number | null
+  remunerationId?: number | null
   typeId: number
   fileName: string
   storagePath: string
@@ -1621,6 +2034,8 @@ export type AttachmentUpdateWithoutExpenseInput = {
   client?: Prisma.ClientUpdateOneWithoutAttachmentsNestedInput
   contract?: Prisma.ContractUpdateOneWithoutAttachmentsNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutAttachmentsNestedInput
+  fee?: Prisma.FeeUpdateOneWithoutAttachmentsNestedInput
+  remuneration?: Prisma.RemunerationUpdateOneWithoutAttachmentsNestedInput
   firm?: Prisma.FirmUpdateOneRequiredWithoutAttachmentsNestedInput
   type?: Prisma.AttachmentTypeUpdateOneRequiredWithoutAttachmentsNestedInput
 }
@@ -1631,6 +2046,8 @@ export type AttachmentUncheckedUpdateWithoutExpenseInput = {
   clientId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   employeeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   contractId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  feeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   typeId?: Prisma.IntFieldUpdateOperationsInput | number
   fileName?: Prisma.StringFieldUpdateOperationsInput | string
   storagePath?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1648,6 +2065,83 @@ export type AttachmentUncheckedUpdateManyWithoutExpenseInput = {
   clientId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   employeeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   contractId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  feeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  typeId?: Prisma.IntFieldUpdateOperationsInput | number
+  fileName?: Prisma.StringFieldUpdateOperationsInput | string
+  storagePath?: Prisma.StringFieldUpdateOperationsInput | string
+  mimeType?: Prisma.StringFieldUpdateOperationsInput | string
+  fileSize?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type AttachmentCreateManyRemunerationInput = {
+  id?: number
+  firmId: number
+  clientId?: number | null
+  employeeId?: number | null
+  contractId?: number | null
+  expenseId?: number | null
+  feeId?: number | null
+  typeId: number
+  fileName: string
+  storagePath: string
+  mimeType: string
+  fileSize: number
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+}
+
+export type AttachmentUpdateWithoutRemunerationInput = {
+  fileName?: Prisma.StringFieldUpdateOperationsInput | string
+  storagePath?: Prisma.StringFieldUpdateOperationsInput | string
+  mimeType?: Prisma.StringFieldUpdateOperationsInput | string
+  fileSize?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  client?: Prisma.ClientUpdateOneWithoutAttachmentsNestedInput
+  contract?: Prisma.ContractUpdateOneWithoutAttachmentsNestedInput
+  employee?: Prisma.EmployeeUpdateOneWithoutAttachmentsNestedInput
+  expense?: Prisma.ExpenseUpdateOneWithoutAttachmentsNestedInput
+  fee?: Prisma.FeeUpdateOneWithoutAttachmentsNestedInput
+  firm?: Prisma.FirmUpdateOneRequiredWithoutAttachmentsNestedInput
+  type?: Prisma.AttachmentTypeUpdateOneRequiredWithoutAttachmentsNestedInput
+}
+
+export type AttachmentUncheckedUpdateWithoutRemunerationInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  firmId?: Prisma.IntFieldUpdateOperationsInput | number
+  clientId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  employeeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  contractId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  feeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  typeId?: Prisma.IntFieldUpdateOperationsInput | number
+  fileName?: Prisma.StringFieldUpdateOperationsInput | string
+  storagePath?: Prisma.StringFieldUpdateOperationsInput | string
+  mimeType?: Prisma.StringFieldUpdateOperationsInput | string
+  fileSize?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type AttachmentUncheckedUpdateManyWithoutRemunerationInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  firmId?: Prisma.IntFieldUpdateOperationsInput | number
+  clientId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  employeeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  contractId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  feeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   typeId?: Prisma.IntFieldUpdateOperationsInput | number
   fileName?: Prisma.StringFieldUpdateOperationsInput | string
   storagePath?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1668,6 +2162,8 @@ export type AttachmentSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   employeeId?: boolean
   contractId?: boolean
   expenseId?: boolean
+  feeId?: boolean
+  remunerationId?: boolean
   typeId?: boolean
   fileName?: boolean
   storagePath?: boolean
@@ -1681,6 +2177,8 @@ export type AttachmentSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   contract?: boolean | Prisma.Attachment$contractArgs<ExtArgs>
   employee?: boolean | Prisma.Attachment$employeeArgs<ExtArgs>
   expense?: boolean | Prisma.Attachment$expenseArgs<ExtArgs>
+  fee?: boolean | Prisma.Attachment$feeArgs<ExtArgs>
+  remuneration?: boolean | Prisma.Attachment$remunerationArgs<ExtArgs>
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
   type?: boolean | Prisma.AttachmentTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["attachment"]>
@@ -1692,6 +2190,8 @@ export type AttachmentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   employeeId?: boolean
   contractId?: boolean
   expenseId?: boolean
+  feeId?: boolean
+  remunerationId?: boolean
   typeId?: boolean
   fileName?: boolean
   storagePath?: boolean
@@ -1705,6 +2205,8 @@ export type AttachmentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   contract?: boolean | Prisma.Attachment$contractArgs<ExtArgs>
   employee?: boolean | Prisma.Attachment$employeeArgs<ExtArgs>
   expense?: boolean | Prisma.Attachment$expenseArgs<ExtArgs>
+  fee?: boolean | Prisma.Attachment$feeArgs<ExtArgs>
+  remuneration?: boolean | Prisma.Attachment$remunerationArgs<ExtArgs>
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
   type?: boolean | Prisma.AttachmentTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["attachment"]>
@@ -1716,6 +2218,8 @@ export type AttachmentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   employeeId?: boolean
   contractId?: boolean
   expenseId?: boolean
+  feeId?: boolean
+  remunerationId?: boolean
   typeId?: boolean
   fileName?: boolean
   storagePath?: boolean
@@ -1729,6 +2233,8 @@ export type AttachmentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   contract?: boolean | Prisma.Attachment$contractArgs<ExtArgs>
   employee?: boolean | Prisma.Attachment$employeeArgs<ExtArgs>
   expense?: boolean | Prisma.Attachment$expenseArgs<ExtArgs>
+  fee?: boolean | Prisma.Attachment$feeArgs<ExtArgs>
+  remuneration?: boolean | Prisma.Attachment$remunerationArgs<ExtArgs>
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
   type?: boolean | Prisma.AttachmentTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["attachment"]>
@@ -1740,6 +2246,8 @@ export type AttachmentSelectScalar = {
   employeeId?: boolean
   contractId?: boolean
   expenseId?: boolean
+  feeId?: boolean
+  remunerationId?: boolean
   typeId?: boolean
   fileName?: boolean
   storagePath?: boolean
@@ -1751,12 +2259,14 @@ export type AttachmentSelectScalar = {
   deletedAt?: boolean
 }
 
-export type AttachmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "firmId" | "clientId" | "employeeId" | "contractId" | "expenseId" | "typeId" | "fileName" | "storagePath" | "mimeType" | "fileSize" | "isActive" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["attachment"]>
+export type AttachmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "firmId" | "clientId" | "employeeId" | "contractId" | "expenseId" | "feeId" | "remunerationId" | "typeId" | "fileName" | "storagePath" | "mimeType" | "fileSize" | "isActive" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["attachment"]>
 export type AttachmentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   client?: boolean | Prisma.Attachment$clientArgs<ExtArgs>
   contract?: boolean | Prisma.Attachment$contractArgs<ExtArgs>
   employee?: boolean | Prisma.Attachment$employeeArgs<ExtArgs>
   expense?: boolean | Prisma.Attachment$expenseArgs<ExtArgs>
+  fee?: boolean | Prisma.Attachment$feeArgs<ExtArgs>
+  remuneration?: boolean | Prisma.Attachment$remunerationArgs<ExtArgs>
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
   type?: boolean | Prisma.AttachmentTypeDefaultArgs<ExtArgs>
 }
@@ -1765,6 +2275,8 @@ export type AttachmentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.E
   contract?: boolean | Prisma.Attachment$contractArgs<ExtArgs>
   employee?: boolean | Prisma.Attachment$employeeArgs<ExtArgs>
   expense?: boolean | Prisma.Attachment$expenseArgs<ExtArgs>
+  fee?: boolean | Prisma.Attachment$feeArgs<ExtArgs>
+  remuneration?: boolean | Prisma.Attachment$remunerationArgs<ExtArgs>
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
   type?: boolean | Prisma.AttachmentTypeDefaultArgs<ExtArgs>
 }
@@ -1773,6 +2285,8 @@ export type AttachmentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   contract?: boolean | Prisma.Attachment$contractArgs<ExtArgs>
   employee?: boolean | Prisma.Attachment$employeeArgs<ExtArgs>
   expense?: boolean | Prisma.Attachment$expenseArgs<ExtArgs>
+  fee?: boolean | Prisma.Attachment$feeArgs<ExtArgs>
+  remuneration?: boolean | Prisma.Attachment$remunerationArgs<ExtArgs>
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
   type?: boolean | Prisma.AttachmentTypeDefaultArgs<ExtArgs>
 }
@@ -1784,6 +2298,8 @@ export type $AttachmentPayload<ExtArgs extends runtime.Types.Extensions.Internal
     contract: Prisma.$ContractPayload<ExtArgs> | null
     employee: Prisma.$EmployeePayload<ExtArgs> | null
     expense: Prisma.$ExpensePayload<ExtArgs> | null
+    fee: Prisma.$FeePayload<ExtArgs> | null
+    remuneration: Prisma.$RemunerationPayload<ExtArgs> | null
     firm: Prisma.$FirmPayload<ExtArgs>
     type: Prisma.$AttachmentTypePayload<ExtArgs>
   }
@@ -1794,6 +2310,8 @@ export type $AttachmentPayload<ExtArgs extends runtime.Types.Extensions.Internal
     employeeId: number | null
     contractId: number | null
     expenseId: number | null
+    feeId: number | null
+    remunerationId: number | null
     typeId: number
     fileName: string
     storagePath: string
@@ -2201,6 +2719,8 @@ export interface Prisma__AttachmentClient<T, Null = never, ExtArgs extends runti
   contract<T extends Prisma.Attachment$contractArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Attachment$contractArgs<ExtArgs>>): Prisma.Prisma__ContractClient<runtime.Types.Result.GetResult<Prisma.$ContractPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   employee<T extends Prisma.Attachment$employeeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Attachment$employeeArgs<ExtArgs>>): Prisma.Prisma__EmployeeClient<runtime.Types.Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   expense<T extends Prisma.Attachment$expenseArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Attachment$expenseArgs<ExtArgs>>): Prisma.Prisma__ExpenseClient<runtime.Types.Result.GetResult<Prisma.$ExpensePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  fee<T extends Prisma.Attachment$feeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Attachment$feeArgs<ExtArgs>>): Prisma.Prisma__FeeClient<runtime.Types.Result.GetResult<Prisma.$FeePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  remuneration<T extends Prisma.Attachment$remunerationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Attachment$remunerationArgs<ExtArgs>>): Prisma.Prisma__RemunerationClient<runtime.Types.Result.GetResult<Prisma.$RemunerationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   firm<T extends Prisma.FirmDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FirmDefaultArgs<ExtArgs>>): Prisma.Prisma__FirmClient<runtime.Types.Result.GetResult<Prisma.$FirmPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   type<T extends Prisma.AttachmentTypeDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AttachmentTypeDefaultArgs<ExtArgs>>): Prisma.Prisma__AttachmentTypeClient<runtime.Types.Result.GetResult<Prisma.$AttachmentTypePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
@@ -2238,6 +2758,8 @@ export interface AttachmentFieldRefs {
   readonly employeeId: Prisma.FieldRef<"Attachment", 'Int'>
   readonly contractId: Prisma.FieldRef<"Attachment", 'Int'>
   readonly expenseId: Prisma.FieldRef<"Attachment", 'Int'>
+  readonly feeId: Prisma.FieldRef<"Attachment", 'Int'>
+  readonly remunerationId: Prisma.FieldRef<"Attachment", 'Int'>
   readonly typeId: Prisma.FieldRef<"Attachment", 'Int'>
   readonly fileName: Prisma.FieldRef<"Attachment", 'String'>
   readonly storagePath: Prisma.FieldRef<"Attachment", 'String'>
@@ -2721,6 +3243,44 @@ export type Attachment$expenseArgs<ExtArgs extends runtime.Types.Extensions.Inte
    */
   include?: Prisma.ExpenseInclude<ExtArgs> | null
   where?: Prisma.ExpenseWhereInput
+}
+
+/**
+ * Attachment.fee
+ */
+export type Attachment$feeArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Fee
+   */
+  select?: Prisma.FeeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Fee
+   */
+  omit?: Prisma.FeeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FeeInclude<ExtArgs> | null
+  where?: Prisma.FeeWhereInput
+}
+
+/**
+ * Attachment.remuneration
+ */
+export type Attachment$remunerationArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Remuneration
+   */
+  select?: Prisma.RemunerationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Remuneration
+   */
+  omit?: Prisma.RemunerationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RemunerationInclude<ExtArgs> | null
+  where?: Prisma.RemunerationWhereInput
 }
 
 /**

@@ -172,3 +172,7 @@ Every dashboard detail request, including refreshes and retries, rechecks curren
 ## Pending work access
 
 Pendências requires contracts:read_all or contracts:read_assigned. Every record and summary retains firm ownership and existing contract assignment visibility. Every financial issue (overdue, upcoming, exhausted plan and settled-contract review) additionally requires fees:read_all or fees:read_assigned independently; an all-contract grant does not widen assigned financial scope. Missing/invalid employee bindings do not grant assigned reads; recommending-only participation grants no visibility. Counts are computed after subject authorization. Links to clients require clients:read. The contract workspace applies the same financial subject check to its alerts.
+
+## Financial attachment access
+
+Receipt and remuneration attachment operations require the corresponding `org:attachments:read`, `org:attachments:upload` or `org:attachments:delete` grant plus parent financial read access. Receipts use `org:fees:read_all` or eligible `org:fees:read_assigned`; remunerations use `org:remunerations:read_all` or `org:remunerations:read_own` against the persisted beneficiary. Upload does not require financial update permission and remains available after contract completion/cancellation. Deleted owners or financial ancestors block new uploads. Download and deletion recheck persisted subject scope. Attachment grants alone never grant financial visibility.

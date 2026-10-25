@@ -11,7 +11,7 @@
 - `Fee`: a concrete payment received against a revenue.
 - `Expense`: a concrete firm outflow recorded independently from contracts.
 - `Remuneration`: an amount owed to an employee as the result of a fee.
-- `Attachment`: a file associated with a client, employee, contract, or expense.
+- `Attachment`: a file associated with a client, employee, contract, expense, fee, or remuneration.
 - `AuditLog`: immutable record of business changes.
 
 ## Entity Responsibilities
@@ -88,7 +88,7 @@
 
 ### Attachment
 
-- Belongs to one firm and exactly one owner context among client, employee, contract, or expense.
+- Belongs to one firm and exactly one owner context among client, employee, contract, expense, fee, or remuneration.
 - Carries file name, file URL or path, attachment type, and file size.
 - Attachment deletion permanently removes both the stored file and its database record.
 

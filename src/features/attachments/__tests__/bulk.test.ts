@@ -11,6 +11,22 @@ function file(name = "documento.pdf") {
 }
 
 describe("atomic attachment bulk upload", () => {
+	it.each([{ feeId: 9 }, { remunerationId: 12 }])(
+		"prepares one batch for the financial owner %o",
+		async (owner) => {
+			const upload = vi.fn().mockResolvedValue(undefined);
+			await uploadAttachmentBatch({
+				input: { ...owner, files: [file("pix.pdf"), file("calculo.pdf")] },
+				upload,
+				onProgress: vi.fn(),
+			});
+			expect(upload).toHaveBeenCalledOnce();
+			expect(upload.mock.calls[0][0]).toMatchObject({
+				...owner,
+				files: [{ fileName: "pix.pdf" }, { fileName: "calculo.pdf" }],
+			});
+		},
+	);
 	it("accepts one to 25 files and rejects zero or 26", () => {
 		for (const count of [1, 25]) {
 			expect(

@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { AttachmentSection } from "@/features/attachments";
 import { EntityAuditHistory } from "@/features/audit-logs";
 import { EntityStatus } from "@/shared/components/entity-status";
 import {
@@ -28,8 +29,14 @@ export function RemunerationWorkspace({
 	onTabChange,
 	onDeleted,
 }: RemunerationWorkspaceProps) {
-	const { remuneration, overlay, canEdit, canDelete, canRestore } =
-		useRemunerationWorkspace(id);
+	const {
+		remuneration,
+		overlay,
+		canEdit,
+		canDelete,
+		canRestore,
+		canReadAttachments,
+	} = useRemunerationWorkspace(id);
 	return (
 		<EntityWorkspace
 			title="Remuneração"
@@ -49,7 +56,11 @@ export function RemunerationWorkspace({
 					Voltar para remunerações
 				</Link>
 			}
-			tab={search.tab}
+			tab={
+				search.tab === "attachments" && !canReadAttachments
+					? "overview"
+					: search.tab
+			}
 			onTabChange={(tab) =>
 				onTabChange(remunerationWorkspaceSearchSchema.shape.tab.parse(tab))
 			}
@@ -68,6 +79,26 @@ export function RemunerationWorkspace({
 					label: "Financeiro",
 					content: <RemunerationOverview id={id} section="finance" />,
 				},
+				...(canReadAttachments
+					? [
+							{
+								value: "attachments",
+								label: "Anexos",
+								expanded: true,
+								content: (
+									<AttachmentSection
+										ownerId={id}
+										ownerKind="remuneration"
+										layout="expanded"
+										canUpload={
+											!remuneration.isSoftDeleted &&
+											!remuneration.parentFeeIsSoftDeleted
+										}
+									/>
+								),
+							},
+						]
+					: []),
 				{
 					value: "history",
 					fullWidth: true,

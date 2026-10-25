@@ -141,12 +141,13 @@
 
 ## Attachment Rules
 
-- Attachments may belong to clients, employees, contracts, or expenses.
+- Attachments may belong to clients, employees, contracts, expenses, fees, or remunerations.
 - Supported file types and size limits are part of the product contract.
 - Upload and view permissions differ from delete permissions.
 - Supported attachment types are `PDF`, `JPG`, and `PNG`.
 - Maximum attachment size is `10 MB`.
-- Exactly one attachment owner context is set per file: client, employee, contract, or expense.
+- Exactly one attachment owner context is set per file: client, employee, contract, expense, fee, or remuneration.
+- Financial attachments are supporting evidence (including PIX/payment proofs and calculation history), not automatic payment confirmation. Upload requires attachment upload and scoped financial read permission, independently from monetary editing. Completed/cancelled contracts still allow financial evidence uploads. Deleted financial owners or ancestors reject new uploads; existing evidence is retained through deletion and restoration.
 - Attachment storage uses a persistent file-storage backend and retains file path or URL in the record.
 - Attachment deletion permanently removes both the storage object and the attachment record.
 
@@ -203,4 +204,4 @@
 
 Attachment upload selection accepts 1 to 25 files per batch, limited to the remaining owner capacity. Every file must satisfy the existing type, filename and 10 MB limits before sending. A single protected request saves all batch metadata and audit events in one transaction. If staging or persistence fails, all staged binaries are cleaned up and the complete selection remains available for retry; no partial metadata is committed.
 
-Each attachment owner record (client, employee, contract or expense) accepts at most 25 non-deleted attachments, including inactive records. The server enforces count-and-create atomically per firm and owner; deletion frees capacity. Existing records above the limit remain readable, but cannot receive additional files.
+Each attachment owner record (client, employee, contract, expense, fee or remuneration) accepts at most 25 non-deleted attachments, including inactive records. The server enforces count-and-create atomically per firm and owner; deletion frees capacity. Existing records above the limit remain readable, but cannot receive additional files.

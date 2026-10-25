@@ -295,6 +295,7 @@ model Fee {
   firm                  Firm           @relation(fields: [firmId], references: [id])
   revenue               Revenue        @relation(fields: [revenueId], references: [id])
   remunerations         Remuneration[]
+  attachments           Attachment[]
 
   @@index([firmId])
   @@index([revenueId])
@@ -338,6 +339,7 @@ model Remuneration {
   amount             Decimal          @db.Decimal(14, 2)
   paymentDate        DateTime
   isSystemGenerated  Boolean          @default(true)
+  attachments        Attachment[]
   isActive           Boolean          @default(true)
   createdAt          DateTime         @default(now())
   updatedAt          DateTime         @updatedAt
@@ -363,6 +365,8 @@ model Attachment {
   employeeId  Int?
   contractId  Int?
   expenseId   Int?
+  feeId       Int?
+  remunerationId Int?
   typeId      Int
   fileName    String
   storagePath String         @unique
@@ -376,6 +380,8 @@ model Attachment {
   contract    Contract?      @relation(fields: [contractId], references: [id])
   employee    Employee?      @relation(fields: [employeeId], references: [id])
   expense     Expense?       @relation(fields: [expenseId], references: [id])
+  fee         Fee?           @relation(fields: [feeId], references: [id])
+  remuneration Remuneration? @relation(fields: [remunerationId], references: [id])
   firm        Firm           @relation(fields: [firmId], references: [id])
   type        AttachmentType @relation(fields: [typeId], references: [id])
 
@@ -384,6 +390,8 @@ model Attachment {
   @@index([employeeId])
   @@index([contractId])
   @@index([expenseId])
+  @@index([feeId])
+  @@index([remunerationId])
   @@index([typeId])
   @@index([deletedAt])
   @@index([isActive])

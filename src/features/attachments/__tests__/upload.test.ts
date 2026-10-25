@@ -16,6 +16,8 @@ describe("attachment upload preparation", () => {
 			clientId: undefined,
 			employeeId: undefined,
 			expenseId: undefined,
+			feeId: undefined,
+			remunerationId: undefined,
 			type: "PDF",
 			fileName: "contrato.pdf",
 			mimeType: "application/pdf",

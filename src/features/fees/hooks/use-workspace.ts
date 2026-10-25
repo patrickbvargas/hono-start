@@ -14,6 +14,7 @@ export function useFeeWorkspace(id: number) {
 		contractStatusValue: fee.contractStatusValue,
 	});
 	return {
+		canReadAttachments: hasPermission(session, "org:attachments:read"),
 		fee,
 		overlay,
 		canEdit: actions.canEdit && hasPermission(session, "org:fees:update"),

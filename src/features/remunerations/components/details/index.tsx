@@ -1,4 +1,5 @@
 import * as React from "react";
+import { AttachmentSectionFallback } from "@/features/attachments";
 import { EntityActions } from "@/shared/components/entity-actions";
 import { EntityDetail } from "@/shared/components/entity-detail";
 import type { EntityId } from "@/shared/schemas/entity";
@@ -101,6 +102,8 @@ const RemunerationDetailsFallback = () => (
 				<EntityDetail.SkeletonTitle className="h-32 w-full" />
 				<EntityDetail.SkeletonFields columns={2} rows={5} />
 			</EntityDetail.Section>
+			<EntityDetail.Separator />
+			<AttachmentSectionFallback />
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Registro">
 				<EntityDetail.SkeletonFields columns={2} rows={3} />

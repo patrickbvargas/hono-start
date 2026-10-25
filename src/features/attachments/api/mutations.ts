@@ -1,7 +1,7 @@
 import { mutationOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import { hasSafeMutationErrorMessage } from "@/shared/lib/error-mapping";
-import { assertCan, isContractWritable } from "@/shared/session";
+import { assertCan } from "@/shared/session";
 import {
 	authMiddleware,
 	getRequiredServerLoggedUserSession,
@@ -14,46 +14,14 @@ import {
 	assertAttachmentOwnerExists,
 	getAttachmentAccessById,
 } from "../data/queries";
-import { assertAttachmentOwnerCanReceiveUpload } from "../rules/owner";
 import {
 	attachmentBatchUploadInputSchema,
 	attachmentIdInputSchema,
 } from "../schemas/form";
-
-function assertAttachmentOwnerUploadAccess(
-	session: Awaited<ReturnType<typeof getRequiredServerLoggedUserSession>>,
-	owner: Awaited<ReturnType<typeof assertAttachmentOwnerExists>>,
-) {
-	assertAttachmentOwnerCanReceiveUpload({
-		deletedAt: owner.access.deletedAt,
-		ownerKind: owner.owner.ownerKind,
-		isWritableContract:
-			owner.owner.ownerKind === "contract"
-				? isContractWritable(owner.access.resource)
-				: undefined,
-	});
-
-	assertCan(session, "org:attachments:upload", owner.access.resource);
-	if (owner.owner.ownerKind === "client") {
-		assertCan(session, "org:clients:update", owner.access.resource);
-	}
-
-	if (owner.owner.ownerKind === "employee") {
-		assertCan(session, "org:employees:update", owner.access.resource);
-	}
-
-	if (owner.owner.ownerKind === "contract") {
-		assertCan(
-			session,
-			["org:contracts:update_all", "org:contracts:update_assigned"],
-			owner.access.resource,
-		);
-	}
-
-	if (owner.owner.ownerKind === "expense") {
-		assertCan(session, "org:expenses:update", owner.access.resource);
-	}
-}
+import {
+	assertAttachmentOwnerSubjectReadAccess,
+	assertAttachmentOwnerUploadAccess,
+} from "./access";
 
 const createAttachmentFn = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
@@ -103,22 +71,7 @@ const deleteAttachmentFn = createServerFn({ method: "POST" })
 				firmId,
 				input: access.ownerInput,
 			});
-			if (owner.owner.ownerKind === "contract") {
-				assertCan(
-					session,
-					["org:contracts:read_all", "org:contracts:read_assigned"],
-					owner.access.resource,
-				);
-			}
-			if (owner.owner.ownerKind === "employee") {
-				assertCan(session, "org:employees:read", owner.access.resource);
-			}
-			if (owner.owner.ownerKind === "client") {
-				assertCan(session, "org:clients:read", owner.access.resource);
-			}
-			if (owner.owner.ownerKind === "expense") {
-				assertCan(session, "org:expenses:read", owner.access.resource);
-			}
+			assertAttachmentOwnerSubjectReadAccess(session, owner);
 
 			return await deleteAttachment({
 				actor: {

@@ -40,6 +40,8 @@ export async function buildAttachmentUploadInput(
 		employeeId: value.employeeId,
 		contractId: value.contractId,
 		expenseId: value.expenseId,
+		feeId: value.feeId,
+		remunerationId: value.remunerationId,
 		type,
 		fileName: value.file.name,
 		mimeType: value.file.type,

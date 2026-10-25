@@ -18,6 +18,33 @@ const baseInput = {
 };
 
 describe("attachment form schema", () => {
+	it.each([{ feeId: 9 }, { remunerationId: 12 }])(
+		"accepts a single financial owner %o",
+		(owner) => {
+			expect(
+				attachmentUploadInputSchema.safeParse({
+					...baseInput,
+					clientId: undefined,
+					...owner,
+				}).success,
+			).toBe(true);
+		},
+	);
+	it("rejects financial owners combined with any other context", () => {
+		for (const owner of [
+			{ feeId: 1, remunerationId: 2 },
+			{ feeId: 1, expenseId: 2 },
+			{ remunerationId: 1, clientId: 2 },
+		]) {
+			expect(
+				attachmentUploadInputSchema.safeParse({
+					...baseInput,
+					clientId: undefined,
+					...owner,
+				}).success,
+			).toBe(false);
+		}
+	});
 	it("limits filenames in both the file picker and upload payload", () => {
 		const fileName = `${"a".repeat(251)}.pdf`;
 		expect(

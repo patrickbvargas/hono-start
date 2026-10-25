@@ -77,16 +77,14 @@ describe("workspace navigation boundaries", () => {
 			clientWorkspaceSearchSchema,
 			employeeWorkspaceSearchSchema,
 			expenseWorkspaceSearchSchema,
+			feeWorkspaceSearchSchema,
+			remunerationWorkspaceSearchSchema,
 		]) {
 			expect(schema.parse({ tab: "attachments" }).tab).toBe("attachments");
 		}
-		for (const schema of [
-			feeWorkspaceSearchSchema,
-			remunerationWorkspaceSearchSchema,
-			auditLogWorkspaceSearchSchema,
-		]) {
-			expect(schema.parse({ tab: "attachments" }).tab).toBe("overview");
-		}
+		expect(
+			auditLogWorkspaceSearchSchema.parse({ tab: "attachments" }).tab,
+		).toBe("overview");
 	});
 	it("preserves financial filters without introducing a new return contract", () => {
 		const result = remunerationWorkspaceSearchSchema.parse({

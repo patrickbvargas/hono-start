@@ -2139,8 +2139,8 @@ export type ExpenseCategoryScalarFieldEnum = (typeof ExpenseCategoryScalarFieldE
 export const EmployeeScalarFieldEnum = {
   id: 'id',
   firmId: 'firmId',
-  fullName: 'fullName',
   typeId: 'typeId',
+  fullName: 'fullName',
   oabNumber: 'oabNumber',
   remunerationPercentage: 'remunerationPercentage',
   referralPercentage: 'referralPercentage',
@@ -2300,6 +2300,8 @@ export const AttachmentScalarFieldEnum = {
   employeeId: 'employeeId',
   contractId: 'contractId',
   expenseId: 'expenseId',
+  feeId: 'feeId',
+  remunerationId: 'remunerationId',
   typeId: 'typeId',
   fileName: 'fileName',
   storagePath: 'storagePath',

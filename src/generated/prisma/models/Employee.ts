@@ -45,8 +45,8 @@ export type EmployeeSumAggregateOutputType = {
 export type EmployeeMinAggregateOutputType = {
   id: number | null
   firmId: number | null
-  fullName: string | null
   typeId: number | null
+  fullName: string | null
   oabNumber: string | null
   remunerationPercentage: runtime.Decimal | null
   referralPercentage: runtime.Decimal | null
@@ -59,8 +59,8 @@ export type EmployeeMinAggregateOutputType = {
 export type EmployeeMaxAggregateOutputType = {
   id: number | null
   firmId: number | null
-  fullName: string | null
   typeId: number | null
+  fullName: string | null
   oabNumber: string | null
   remunerationPercentage: runtime.Decimal | null
   referralPercentage: runtime.Decimal | null
@@ -73,8 +73,8 @@ export type EmployeeMaxAggregateOutputType = {
 export type EmployeeCountAggregateOutputType = {
   id: number
   firmId: number
-  fullName: number
   typeId: number
+  fullName: number
   oabNumber: number
   remunerationPercentage: number
   referralPercentage: number
@@ -105,8 +105,8 @@ export type EmployeeSumAggregateInputType = {
 export type EmployeeMinAggregateInputType = {
   id?: true
   firmId?: true
-  fullName?: true
   typeId?: true
+  fullName?: true
   oabNumber?: true
   remunerationPercentage?: true
   referralPercentage?: true
@@ -119,8 +119,8 @@ export type EmployeeMinAggregateInputType = {
 export type EmployeeMaxAggregateInputType = {
   id?: true
   firmId?: true
-  fullName?: true
   typeId?: true
+  fullName?: true
   oabNumber?: true
   remunerationPercentage?: true
   referralPercentage?: true
@@ -133,8 +133,8 @@ export type EmployeeMaxAggregateInputType = {
 export type EmployeeCountAggregateInputType = {
   id?: true
   firmId?: true
-  fullName?: true
   typeId?: true
+  fullName?: true
   oabNumber?: true
   remunerationPercentage?: true
   referralPercentage?: true
@@ -234,8 +234,8 @@ export type EmployeeGroupByArgs<ExtArgs extends runtime.Types.Extensions.Interna
 export type EmployeeGroupByOutputType = {
   id: number
   firmId: number
-  fullName: string
   typeId: number
+  fullName: string
   oabNumber: string | null
   remunerationPercentage: runtime.Decimal
   referralPercentage: runtime.Decimal
@@ -271,8 +271,8 @@ export type EmployeeWhereInput = {
   NOT?: Prisma.EmployeeWhereInput | Prisma.EmployeeWhereInput[]
   id?: Prisma.IntFilter<"Employee"> | number
   firmId?: Prisma.IntFilter<"Employee"> | number
-  fullName?: Prisma.StringFilter<"Employee"> | string
   typeId?: Prisma.IntFilter<"Employee"> | number
+  fullName?: Prisma.StringFilter<"Employee"> | string
   oabNumber?: Prisma.StringNullableFilter<"Employee"> | string | null
   remunerationPercentage?: Prisma.DecimalFilter<"Employee"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFilter<"Employee"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -290,8 +290,8 @@ export type EmployeeWhereInput = {
 export type EmployeeOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   firmId?: Prisma.SortOrder
-  fullName?: Prisma.SortOrder
   typeId?: Prisma.SortOrder
+  fullName?: Prisma.SortOrder
   oabNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   remunerationPercentage?: Prisma.SortOrder
   referralPercentage?: Prisma.SortOrder
@@ -313,8 +313,8 @@ export type EmployeeWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.EmployeeWhereInput[]
   NOT?: Prisma.EmployeeWhereInput | Prisma.EmployeeWhereInput[]
   firmId?: Prisma.IntFilter<"Employee"> | number
-  fullName?: Prisma.StringFilter<"Employee"> | string
   typeId?: Prisma.IntFilter<"Employee"> | number
+  fullName?: Prisma.StringFilter<"Employee"> | string
   oabNumber?: Prisma.StringNullableFilter<"Employee"> | string | null
   remunerationPercentage?: Prisma.DecimalFilter<"Employee"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFilter<"Employee"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -332,8 +332,8 @@ export type EmployeeWhereUniqueInput = Prisma.AtLeast<{
 export type EmployeeOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   firmId?: Prisma.SortOrder
-  fullName?: Prisma.SortOrder
   typeId?: Prisma.SortOrder
+  fullName?: Prisma.SortOrder
   oabNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   remunerationPercentage?: Prisma.SortOrder
   referralPercentage?: Prisma.SortOrder
@@ -354,8 +354,8 @@ export type EmployeeScalarWhereWithAggregatesInput = {
   NOT?: Prisma.EmployeeScalarWhereWithAggregatesInput | Prisma.EmployeeScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Employee"> | number
   firmId?: Prisma.IntWithAggregatesFilter<"Employee"> | number
-  fullName?: Prisma.StringWithAggregatesFilter<"Employee"> | string
   typeId?: Prisma.IntWithAggregatesFilter<"Employee"> | number
+  fullName?: Prisma.StringWithAggregatesFilter<"Employee"> | string
   oabNumber?: Prisma.StringNullableWithAggregatesFilter<"Employee"> | string | null
   remunerationPercentage?: Prisma.DecimalWithAggregatesFilter<"Employee"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalWithAggregatesFilter<"Employee"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -384,8 +384,8 @@ export type EmployeeCreateInput = {
 export type EmployeeUncheckedCreateInput = {
   id?: number
   firmId: number
-  fullName: string
   typeId: number
+  fullName: string
   oabNumber?: string | null
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -417,8 +417,8 @@ export type EmployeeUpdateInput = {
 export type EmployeeUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   firmId?: Prisma.IntFieldUpdateOperationsInput | number
-  fullName?: Prisma.StringFieldUpdateOperationsInput | string
   typeId?: Prisma.IntFieldUpdateOperationsInput | number
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
   oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -434,8 +434,8 @@ export type EmployeeUncheckedUpdateInput = {
 export type EmployeeCreateManyInput = {
   id?: number
   firmId: number
-  fullName: string
   typeId: number
+  fullName: string
   oabNumber?: string | null
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -459,8 +459,8 @@ export type EmployeeUpdateManyMutationInput = {
 export type EmployeeUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   firmId?: Prisma.IntFieldUpdateOperationsInput | number
-  fullName?: Prisma.StringFieldUpdateOperationsInput | string
   typeId?: Prisma.IntFieldUpdateOperationsInput | number
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
   oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -488,8 +488,8 @@ export type EmployeeFirmIdOabNumberCompoundUniqueInput = {
 export type EmployeeCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   firmId?: Prisma.SortOrder
-  fullName?: Prisma.SortOrder
   typeId?: Prisma.SortOrder
+  fullName?: Prisma.SortOrder
   oabNumber?: Prisma.SortOrder
   remunerationPercentage?: Prisma.SortOrder
   referralPercentage?: Prisma.SortOrder
@@ -510,8 +510,8 @@ export type EmployeeAvgOrderByAggregateInput = {
 export type EmployeeMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   firmId?: Prisma.SortOrder
-  fullName?: Prisma.SortOrder
   typeId?: Prisma.SortOrder
+  fullName?: Prisma.SortOrder
   oabNumber?: Prisma.SortOrder
   remunerationPercentage?: Prisma.SortOrder
   referralPercentage?: Prisma.SortOrder
@@ -524,8 +524,8 @@ export type EmployeeMaxOrderByAggregateInput = {
 export type EmployeeMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   firmId?: Prisma.SortOrder
-  fullName?: Prisma.SortOrder
   typeId?: Prisma.SortOrder
+  fullName?: Prisma.SortOrder
   oabNumber?: Prisma.SortOrder
   remunerationPercentage?: Prisma.SortOrder
   referralPercentage?: Prisma.SortOrder
@@ -716,8 +716,8 @@ export type EmployeeCreateWithoutFirmInput = {
 
 export type EmployeeUncheckedCreateWithoutFirmInput = {
   id?: number
-  fullName: string
   typeId: number
+  fullName: string
   oabNumber?: string | null
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -762,8 +762,8 @@ export type EmployeeScalarWhereInput = {
   NOT?: Prisma.EmployeeScalarWhereInput | Prisma.EmployeeScalarWhereInput[]
   id?: Prisma.IntFilter<"Employee"> | number
   firmId?: Prisma.IntFilter<"Employee"> | number
-  fullName?: Prisma.StringFilter<"Employee"> | string
   typeId?: Prisma.IntFilter<"Employee"> | number
+  fullName?: Prisma.StringFilter<"Employee"> | string
   oabNumber?: Prisma.StringNullableFilter<"Employee"> | string | null
   remunerationPercentage?: Prisma.DecimalFilter<"Employee"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFilter<"Employee"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -848,8 +848,8 @@ export type EmployeeCreateWithoutAuditLogsInput = {
 export type EmployeeUncheckedCreateWithoutAuditLogsInput = {
   id?: number
   firmId: number
-  fullName: string
   typeId: number
+  fullName: string
   oabNumber?: string | null
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -895,8 +895,8 @@ export type EmployeeUpdateWithoutAuditLogsInput = {
 export type EmployeeUncheckedUpdateWithoutAuditLogsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   firmId?: Prisma.IntFieldUpdateOperationsInput | number
-  fullName?: Prisma.StringFieldUpdateOperationsInput | string
   typeId?: Prisma.IntFieldUpdateOperationsInput | number
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
   oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -926,8 +926,8 @@ export type EmployeeCreateWithoutContractAssignmentsInput = {
 export type EmployeeUncheckedCreateWithoutContractAssignmentsInput = {
   id?: number
   firmId: number
-  fullName: string
   typeId: number
+  fullName: string
   oabNumber?: string | null
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -973,8 +973,8 @@ export type EmployeeUpdateWithoutContractAssignmentsInput = {
 export type EmployeeUncheckedUpdateWithoutContractAssignmentsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   firmId?: Prisma.IntFieldUpdateOperationsInput | number
-  fullName?: Prisma.StringFieldUpdateOperationsInput | string
   typeId?: Prisma.IntFieldUpdateOperationsInput | number
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
   oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1004,8 +1004,8 @@ export type EmployeeCreateWithoutAttachmentsInput = {
 export type EmployeeUncheckedCreateWithoutAttachmentsInput = {
   id?: number
   firmId: number
-  fullName: string
   typeId: number
+  fullName: string
   oabNumber?: string | null
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1051,8 +1051,8 @@ export type EmployeeUpdateWithoutAttachmentsInput = {
 export type EmployeeUncheckedUpdateWithoutAttachmentsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   firmId?: Prisma.IntFieldUpdateOperationsInput | number
-  fullName?: Prisma.StringFieldUpdateOperationsInput | string
   typeId?: Prisma.IntFieldUpdateOperationsInput | number
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
   oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1066,8 +1066,8 @@ export type EmployeeUncheckedUpdateWithoutAttachmentsInput = {
 
 export type EmployeeCreateManyFirmInput = {
   id?: number
-  fullName: string
   typeId: number
+  fullName: string
   oabNumber?: string | null
   remunerationPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1094,8 +1094,8 @@ export type EmployeeUpdateWithoutFirmInput = {
 
 export type EmployeeUncheckedUpdateWithoutFirmInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  fullName?: Prisma.StringFieldUpdateOperationsInput | string
   typeId?: Prisma.IntFieldUpdateOperationsInput | number
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
   oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1110,8 +1110,8 @@ export type EmployeeUncheckedUpdateWithoutFirmInput = {
 
 export type EmployeeUncheckedUpdateManyWithoutFirmInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  fullName?: Prisma.StringFieldUpdateOperationsInput | string
   typeId?: Prisma.IntFieldUpdateOperationsInput | number
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
   oabNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remunerationPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referralPercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1230,8 +1230,8 @@ export type EmployeeCountOutputTypeCountContractAssignmentsArgs<ExtArgs extends 
 export type EmployeeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   firmId?: boolean
-  fullName?: boolean
   typeId?: boolean
+  fullName?: boolean
   oabNumber?: boolean
   remunerationPercentage?: boolean
   referralPercentage?: boolean
@@ -1250,8 +1250,8 @@ export type EmployeeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
 export type EmployeeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   firmId?: boolean
-  fullName?: boolean
   typeId?: boolean
+  fullName?: boolean
   oabNumber?: boolean
   remunerationPercentage?: boolean
   referralPercentage?: boolean
@@ -1266,8 +1266,8 @@ export type EmployeeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
 export type EmployeeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   firmId?: boolean
-  fullName?: boolean
   typeId?: boolean
+  fullName?: boolean
   oabNumber?: boolean
   remunerationPercentage?: boolean
   referralPercentage?: boolean
@@ -1282,8 +1282,8 @@ export type EmployeeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
 export type EmployeeSelectScalar = {
   id?: boolean
   firmId?: boolean
-  fullName?: boolean
   typeId?: boolean
+  fullName?: boolean
   oabNumber?: boolean
   remunerationPercentage?: boolean
   referralPercentage?: boolean
@@ -1293,7 +1293,7 @@ export type EmployeeSelectScalar = {
   deletedAt?: boolean
 }
 
-export type EmployeeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "firmId" | "fullName" | "typeId" | "oabNumber" | "remunerationPercentage" | "referralPercentage" | "isActive" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["employee"]>
+export type EmployeeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "firmId" | "typeId" | "fullName" | "oabNumber" | "remunerationPercentage" | "referralPercentage" | "isActive" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["employee"]>
 export type EmployeeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
   type?: boolean | Prisma.EmployeeTypeDefaultArgs<ExtArgs>
@@ -1323,8 +1323,8 @@ export type $EmployeePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     firmId: number
-    fullName: string
     typeId: number
+    fullName: string
     oabNumber: string | null
     remunerationPercentage: runtime.Decimal
     referralPercentage: runtime.Decimal
@@ -1762,8 +1762,8 @@ export interface Prisma__EmployeeClient<T, Null = never, ExtArgs extends runtime
 export interface EmployeeFieldRefs {
   readonly id: Prisma.FieldRef<"Employee", 'Int'>
   readonly firmId: Prisma.FieldRef<"Employee", 'Int'>
-  readonly fullName: Prisma.FieldRef<"Employee", 'String'>
   readonly typeId: Prisma.FieldRef<"Employee", 'Int'>
+  readonly fullName: Prisma.FieldRef<"Employee", 'String'>
   readonly oabNumber: Prisma.FieldRef<"Employee", 'String'>
   readonly remunerationPercentage: Prisma.FieldRef<"Employee", 'Decimal'>
   readonly referralPercentage: Prisma.FieldRef<"Employee", 'Decimal'>

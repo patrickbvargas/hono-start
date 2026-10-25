@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { AttachmentSection } from "@/features/attachments";
 import { EntityAuditHistory } from "@/features/audit-logs";
 import { EntityStatus } from "@/shared/components/entity-status";
 import {
@@ -28,7 +29,8 @@ export function FeeWorkspace({
 	onTabChange,
 	onDeleted,
 }: FeeWorkspaceProps) {
-	const { fee, overlay, canEdit, canDelete, canRestore } = useFeeWorkspace(id);
+	const { fee, overlay, canEdit, canDelete, canRestore, canReadAttachments } =
+		useFeeWorkspace(id);
 	return (
 		<EntityWorkspace
 			title="Recebimento"
@@ -45,7 +47,11 @@ export function FeeWorkspace({
 					Voltar para recebimentos
 				</Link>
 			}
-			tab={search.tab}
+			tab={
+				search.tab === "attachments" && !canReadAttachments
+					? "overview"
+					: search.tab
+			}
 			onTabChange={(tab) =>
 				onTabChange(feeWorkspaceSearchSchema.shape.tab.parse(tab))
 			}
@@ -64,6 +70,23 @@ export function FeeWorkspace({
 					label: "Financeiro",
 					content: <FeeOverview id={id} section="finance" />,
 				},
+				...(canReadAttachments
+					? [
+							{
+								value: "attachments",
+								label: "Anexos",
+								expanded: true,
+								content: (
+									<AttachmentSection
+										ownerId={id}
+										ownerKind="fee"
+										layout="expanded"
+										canUpload={!fee.isSoftDeleted}
+									/>
+								),
+							},
+						]
+					: []),
 				{
 					value: "history",
 					fullWidth: true,

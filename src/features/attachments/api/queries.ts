@@ -25,6 +25,9 @@ export const attachmentKeys = {
 			input.clientId ??
 			input.employeeId ??
 			input.contractId ??
+			input.expenseId ??
+			input.feeId ??
+			input.remunerationId ??
 			attachmentKeys.all[0];
 
 		return [...attachmentKeys.all, "list", owner, input] as const;

@@ -50,7 +50,13 @@ async function localPath(path: string) {
 export function createAttachmentStoragePath(params: {
 	firmId: number;
 	ownerId: number;
-	ownerKind: "client" | "contract" | "employee" | "expense";
+	ownerKind:
+		| "client"
+		| "contract"
+		| "employee"
+		| "expense"
+		| "fee"
+		| "remuneration";
 	fileName: string;
 }) {
 	const sanitizedName = params.fileName

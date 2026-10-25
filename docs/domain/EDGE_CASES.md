@@ -73,3 +73,10 @@ This file preserves canonical edge-case expectations for the product domain.
 |---|---|
 | Business entity is created, updated, deleted, or restored | An immutable audit entry is recorded |
 | Someone attempts to edit or delete audit history | The action is not allowed |
+
+## Financial evidence
+
+- Own remuneration read access does not expose another collaborator's attachments. Assigned receipt access does not expose an unassigned contract's receipt files.
+- The last receipt may complete a contract; its proof can still be attached with financial read and attachment upload grants.
+- Deleted financial owners/ancestors reject new uploads without deleting retained evidence. Restoring the financial ancestry permits uploads again.
+- Financial evidence uses the same 25-file capacity and exactly-one-owner validation as other attachment contexts.

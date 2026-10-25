@@ -1,4 +1,5 @@
 import * as React from "react";
+import { AttachmentSection } from "@/features/attachments";
 import { RelatedRecordLink } from "@/features/related-records";
 import {
 	type DetailFieldItem,
@@ -175,6 +176,19 @@ export function RemunerationOverview({
 				<EntityDetail.Fields columns={2} items={sourceInfo} />
 			</EntityDetail.Section>
 			<EntityDetail.Separator />
+			{hasPermission(session, "org:attachments:read") && (
+				<>
+					<AttachmentSection
+						ownerId={id}
+						ownerKind="remuneration"
+						canUpload={
+							!remuneration.isSoftDeleted &&
+							!remuneration.parentFeeIsSoftDeleted
+						}
+					/>
+					<EntityDetail.Separator />
+				</>
+			)}
 			<EntityDetail.Section title="Registro">
 				<EntityDetail.Fields columns={2} items={registerInfo} />
 			</EntityDetail.Section>

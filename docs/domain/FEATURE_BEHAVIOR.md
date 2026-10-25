@@ -101,7 +101,7 @@ The software core includes these feature areas:
 
 ### Attachments
 
-- Provides file handling for client, employee, contract, and expense contexts.
+- Provides file handling for client, employee, contract, expense, fee, and remuneration contexts.
 - Supports upload and view behavior within allowed contexts.
 - Keeps deletion behavior restricted according to permissions.
 
@@ -347,3 +347,5 @@ Queue follow-up presentation: dates include elapsed calendar days only for overd
 Client and employee overview pages preview up to five alerts from their related contracts using the same pending-work definitions and protected query. Exact client IDs or active employee assignments intersect the viewer's firm, contract and financial scope. The preview displays full authorized alert/contract totals and links to the complete filtered pending-work list. Contract references open contextual drawers. Missing contract or receipt grants omit the preview and its query. Loading, errors with retry and empty states remain local.
 
 Receipt remuneration counts link to the exact receipt-filtered remuneration list when permitted. Own-only readers see Ver minhas remunerações rather than a team-wide linked count. Employee finance links to that employee's remunerations only for all-readers or the same own-scoped employee. Existing client/employee contract collections and contract finance collection links remain available; singular relationships keep contextual drawers.
+
+Receipt and remuneration pages include an Anexos tab with expanded shared attachments; contextual drawers show the compact section. Sections require attachment read permission, and upload requires its independent grant. Files can document PIX, payments and calculation history in the supported PDF/JPG/PNG formats. Evidence remains independent of recorded amounts and payment status.

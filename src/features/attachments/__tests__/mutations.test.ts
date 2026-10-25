@@ -135,6 +135,8 @@ describe("attachment data mutations", () => {
 		{ employeeId: 9 },
 		{ contractId: 9 },
 		{ expenseId: 9 },
+		{ feeId: 9 },
+		{ remunerationId: 9 },
 	])(
 		"rejects the 26th attachment and cleans uploaded storage for %o",
 		async (owner) => {

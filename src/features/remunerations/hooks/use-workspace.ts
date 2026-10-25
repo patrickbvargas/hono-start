@@ -13,6 +13,7 @@ export function useRemunerationWorkspace(id: number) {
 		isSoftDeleted: remuneration.isSoftDeleted,
 	});
 	return {
+		canReadAttachments: hasPermission(session, "org:attachments:read"),
 		remuneration,
 		overlay,
 		canEdit:
