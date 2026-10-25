@@ -77,6 +77,35 @@ function createRemunerationRow() {
 }
 
 describe("remuneration data queries", () => {
+	it("intersects exact receipt filtering with firm and own-employee scope", () => {
+		const where = buildRemunerationWhere({
+			firmId: 1,
+			employeeId: 10,
+			isAdmin: false,
+			filter: { ...baseSearch, feeId: 99 },
+		});
+		expect(where).toMatchObject({
+			firmId: 1,
+			feeId: 99,
+			contractEmployee: { employeeId: 10, contractId: 55 },
+		});
+	});
+	it("applies receipt scope identically to rows, totals and export", async () => {
+		const scope = { firmId: 1, isAdmin: true };
+		const search = { ...baseSearch, feeId: 99 };
+		await getRemunerations({ scope, search });
+		const where = prismaMock.remuneration.findMany.mock.calls[0][0].where;
+		expect(where).toMatchObject({ firmId: 1, feeId: 99 });
+		expect(prismaMock.remuneration.count).toHaveBeenCalledWith({ where });
+		expect(prismaMock.remuneration.aggregate).toHaveBeenCalledWith({
+			where,
+			_sum: { amount: true },
+		});
+		await getRemunerationsForExport({ scope, search });
+		expect(prismaMock.remuneration.findMany.mock.calls[1][0].where).toEqual(
+			where,
+		);
+	});
 	beforeEach(() => {
 		vi.clearAllMocks();
 		prismaMock.remuneration.aggregate.mockResolvedValue({

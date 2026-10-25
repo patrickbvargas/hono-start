@@ -104,7 +104,7 @@ function EntityAuditHistoryContent({
 			<DataTable
 				columns={columns}
 				data={auditLogs?.data ?? []}
-				emptyMessage="Nenhuma alteração registrada para este contrato."
+				emptyMessage="Nenhuma alteração registrada para este registro."
 				className="max-h-[32rem]"
 				footerContent={
 					<PaginationView

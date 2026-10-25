@@ -89,7 +89,7 @@ describe("embedded entity audit history", () => {
 		});
 		render(<EntityAuditHistory entityType="Contract" entityId={60} />);
 		expect(
-			screen.getByText("Nenhuma alteração registrada para este contrato."),
+			screen.getByText("Nenhuma alteração registrada para este registro."),
 		).not.toBeNull();
 		expect(
 			screen.queryByRole("button", { name: "Próxima página do histórico" }),

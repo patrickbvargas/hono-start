@@ -12,10 +12,11 @@ const features = [
 ];
 
 function readDetails(feature: string) {
-	return readFileSync(
-		`src/features/${feature}/components/details/index.tsx`,
-		"utf8",
-	);
+	const root = `src/features/${feature}/components/details`;
+	const content = readFileSync(`${root}/index.tsx`, "utf8");
+	return feature === "contracts"
+		? content
+		: readFileSync(`${root}/overview.tsx`, "utf8") + content;
 }
 
 describe("detail skeleton layout contracts", () => {

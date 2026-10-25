@@ -1,4 +1,5 @@
 export {
+	getEmployeeByIdQueryOptions,
 	getEmployeesQueryOptions,
 	getEmployeeTypesQueryOptions,
 } from "./api/queries";
@@ -9,7 +10,9 @@ export * from "./components/form";
 export * from "./components/list";
 export * from "./components/restore";
 export * from "./components/table";
+export { EmployeeWorkspace } from "./components/workspace";
 export { useEmployees } from "./hooks/use-data";
 export type { EmployeeSummary } from "./schemas/model";
 export * from "./schemas/search";
+export { employeeWorkspaceSearchSchema } from "./schemas/workspace";
 export { employeeSearchDefaults } from "./utils/default";

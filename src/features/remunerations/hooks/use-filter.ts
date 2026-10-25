@@ -13,7 +13,6 @@ export function useRemunerationFilter() {
 		filter,
 		defaultFilter,
 		handleFilter,
-		handleResetFilter,
 		canClearFilters,
 		hasNonDefaultFilter,
 	} = useFilter(remunerationFilterSchema);
@@ -56,7 +55,7 @@ export function useRemunerationFilter() {
 	const handleClearFilters = () => {
 		debounceSubmit.cancel();
 		form.reset(defaultFilter);
-		handleResetFilter();
+		handleFilter({ ...defaultFilter, feeId: undefined });
 	};
 
 	return {

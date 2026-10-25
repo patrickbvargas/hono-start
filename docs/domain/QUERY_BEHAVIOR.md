@@ -78,6 +78,7 @@ This file defines the canonical domain-facing behavior of filtering, sorting, li
 |---|---|---|
 | `query` | parent contract process-number or employee-name search | text |
 | `employeeId` | employee filter | entity id |
+| `feeId` | exact source receipt for remunerations | optional positive integer; invalid input ignored |
 | `contractId` | contract filter | entity id |
 | `dateFrom` | lower payment-date bound | date |
 | `dateTo` | upper payment-date bound | date |
@@ -207,3 +208,5 @@ Pending work pagination, filtering and summary counts execute in one parameteriz
 Severity and type filters accept multiple selected values: OR within one field, AND between fields. Empty arrays mean unrestricted values within the authorized scope. Each selected value has its own removable chip; legacy single-value URLs normalize to arrays.
 
 Pending return context is an optional object validated by the owning pending-work search schema. Page, limit, filters and visible sort dimensions are retained across workspace tabs/reloads; no free-form return URL is accepted. Card filtering clears/replaces only severity and resets page. Days overdue are computed on the server from the earliest outstanding schedule date against the America/Sao_Paulo calendar day. Saldo a receber is total remaining balance and includes future installments; no separate overdue-balance column is displayed.
+
+Remuneration receipt scope applies to rows, counts, monetary totals and exports, intersected with firm and own/all visibility. The Recebimento chip exposes this scope and can remove it; clearing all filters explicitly clears feeId. Page changes and financial-period shortcuts preserve it. Receipt collection links use non-deleted records with all active states, matching the linked remuneration count.

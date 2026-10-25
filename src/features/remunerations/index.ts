@@ -1,4 +1,5 @@
 export {
+	getRemunerationByIdQueryOptions,
 	getRemunerationsQueryOptions,
 	getSelectableRemunerationContractsQueryOptions,
 	getSelectableRemunerationEmployeesQueryOptions,
@@ -10,8 +11,10 @@ export * from "./components/form";
 export * from "./components/list";
 export * from "./components/restore";
 export * from "./components/table";
+export { RemunerationWorkspace } from "./components/workspace";
 export { useRemunerations } from "./hooks/use-data";
 export { useRemunerationExport } from "./hooks/use-export";
 export type { Remuneration } from "./schemas/model";
 export * from "./schemas/search";
+export { remunerationWorkspaceSearchSchema } from "./schemas/workspace";
 export { remunerationSearchDefaults } from "./utils/default";

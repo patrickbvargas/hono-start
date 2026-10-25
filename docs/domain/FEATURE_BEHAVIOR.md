@@ -133,11 +133,13 @@ The software core includes these feature areas:
 - `/remuneracoes`
 - `/auditoria`
 
+Each primary entity collection also exposes a protected `/<collection>/<id>` record page. Contracts retain their existing workspace; audit record pages remain read-only. Revenues and attachments continue inside their owning record contexts.
+
 ## Canonical Screen Behavior
 
 - Dashboard is the default authenticated landing page.
 - Entity list screens are the primary operational entrypoints.
-- Entity details open without losing list context.
+- Entity identities and mobile cards open dedicated pages by default, preserving validated collection return context. Explicit collection menu actions open pages or quick detail drawers. Related records open contextual drawers with permitted lifecycle actions.
 - Create and edit flows happen as overlays rather than dedicated CRUD pages.
 - Administrative actions appear only when the session allows them.
 - Read-only business states must block writes consistently across all affected surfaces.
@@ -187,7 +189,7 @@ The software core includes these feature areas:
 
 - Administrators can record expenses through a standalone `Despesas` route.
 - Expense list state is URL-driven and preserves filters, pagination, and sorting.
-- Expense details open in a drawer and include an `Anexos` section.
+- Expense details open in a dedicated page by default, with overview, attachments and authorized history tabs. The existing drawer remains available for contextual inspection.
 
 ### Attachment Expectations
 
@@ -341,3 +343,7 @@ Pendências lists authorized financial follow-up below Contratos. High severity:
 Deleted contracts are excluded. Inactive contracts retain overdue and exhausted-plan issues but not proactive reminders or settled-status review. Financial permissions scope every issue and summary. Rows disappear when the source is corrected and data refreshes. Search and checkbox filters apply to the whole collection; summaries count issues by severity and distinct contracts. Table columns support validated ascending/descending server sorting before pagination with stable identity tiebreakers. Actions open the contract finance tab and permitted client links open contextual drawers. The workspace uses the same alert definitions.
 
 Queue follow-up presentation: dates include elapsed calendar days only for overdue schedules; a single monetary column is labelled Saldo a receber and shows total remaining balance, including future installments. Separate Saldo vencido presentation was removed after product review. Severity cards apply their filter; Pendências clears only severity and both preserve other search dimensions while resetting page. Contract references and finance actions retain a validated pendingReturnTo context; the workspace shows Voltar para pendências and preserves context across tabs and reloads. Existing contract-list return context remains independent.
+
+Client and employee overview pages preview up to five alerts from their related contracts using the same pending-work definitions and protected query. Exact client IDs or active employee assignments intersect the viewer's firm, contract and financial scope. The preview displays full authorized alert/contract totals and links to the complete filtered pending-work list. Contract references open contextual drawers. Missing contract or receipt grants omit the preview and its query. Loading, errors with retry and empty states remain local.
+
+Receipt remuneration counts link to the exact receipt-filtered remuneration list when permitted. Own-only readers see Ver minhas remunerações rather than a team-wide linked count. Employee finance links to that employee's remunerations only for all-readers or the same own-scoped employee. Existing client/employee contract collections and contract finance collection links remain available; singular relationships keep contextual drawers.

@@ -13,6 +13,7 @@ import { getFeeLifecycleActions } from "../../utils/lifecycle-actions";
 interface FeeListProps {
 	canManageLifecycle?: boolean;
 	data: QueryPaginatedReturnType<FeeSummary>;
+	onOpenPage?: (id: EntityId) => void;
 	onView?: (id: EntityId) => void;
 	onEdit?: (id: EntityId) => void;
 	onDelete?: (id: EntityId) => void;
@@ -22,6 +23,7 @@ interface FeeListProps {
 export const FeeList = ({
 	canManageLifecycle = false,
 	data,
+	onOpenPage,
 	onView,
 	onEdit,
 	onDelete,
@@ -70,6 +72,7 @@ export const FeeList = ({
 
 			return (
 				<EntityActions
+					onOpenPage={onOpenPage ? () => onOpenPage(fee.id) : undefined}
 					viewPermission={["org:fees:read_all", "org:fees:read_assigned"]}
 					editPermission="org:fees:update"
 					restorePermission="org:fees:restore"
@@ -84,7 +87,7 @@ export const FeeList = ({
 				/>
 			);
 		},
-		[canManageLifecycle, onDelete, onEdit, onRestore, onView],
+		[canManageLifecycle, onOpenPage, onDelete, onEdit, onRestore, onView],
 	);
 
 	return (
@@ -94,7 +97,7 @@ export const FeeList = ({
 			renderTitle={(fee) => `${fee.contractProcessNumber} • ${fee.revenueType}`}
 			renderFields={renderCardFields}
 			renderActions={renderCardActions}
-			onCardAction={(fee) => onView?.(fee.id)}
+			onCardAction={(fee) => (onOpenPage ?? onView)?.(fee.id)}
 			footerContent={<Pagination totalRecords={total} />}
 		/>
 	);

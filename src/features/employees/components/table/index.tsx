@@ -16,6 +16,7 @@ import { getEmployeeLifecycleActions } from "../../utils/lifecycle-actions";
 interface EmployeeTableProps {
 	canManageLifecycle?: boolean;
 	data: QueryPaginatedReturnType<EmployeeSummary>;
+	onOpenPage?: (id: EntityId) => void;
 	onView?: (id: EntityId) => void;
 	onEdit?: (id: EntityId) => void;
 	onDelete?: (id: EntityId) => void;
@@ -25,6 +26,7 @@ interface EmployeeTableProps {
 export const EmployeeTable = ({
 	canManageLifecycle = false,
 	data: { data, total },
+	onOpenPage,
 	onView,
 	onEdit,
 	onDelete,
@@ -37,7 +39,11 @@ export const EmployeeTable = ({
 			c.accessor("id", {
 				header: "#",
 				cell: ({ row }) => (
-					<EntityIdTrigger id={row.original.id} onView={onView} />
+					<EntityIdTrigger
+						id={row.original.id}
+						onOpenPage={onOpenPage}
+						onView={onView}
+					/>
 				),
 				enableSorting: EMPLOYEE_ALLOWED_SORT_COLUMNS.includes("id"),
 				meta: {
@@ -49,6 +55,7 @@ export const EmployeeTable = ({
 				cell: (context) => (
 					<EntityIdTrigger
 						id={context.row.original.id}
+						onOpenPage={onOpenPage}
 						onView={onView}
 						label={context.getValue()}
 					/>
@@ -100,6 +107,9 @@ export const EmployeeTable = ({
 
 					return (
 						<EntityActions
+							onOpenPage={
+								onOpenPage ? () => onOpenPage(employee.id) : undefined
+							}
 							viewPermission="org:employees:read"
 							editPermission="org:employees:update"
 							restorePermission="org:employees:restore"
@@ -119,7 +129,7 @@ export const EmployeeTable = ({
 				},
 			}),
 		];
-	}, [canManageLifecycle, onView, onEdit, onDelete, onRestore]);
+	}, [canManageLifecycle, onOpenPage, onView, onEdit, onDelete, onRestore]);
 
 	return (
 		<DataTable

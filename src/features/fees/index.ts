@@ -1,4 +1,5 @@
 export {
+	getFeeByIdQueryOptions,
 	getFeesQueryOptions,
 	getSelectableFeeContractsQueryOptions,
 	getSelectableFeeRevenuesQueryOptions,
@@ -10,7 +11,9 @@ export * from "./components/form";
 export * from "./components/list";
 export * from "./components/restore";
 export * from "./components/table";
+export { FeeWorkspace } from "./components/workspace";
 export { useFees } from "./hooks/use-data";
 export type { FeeSummary } from "./schemas/model";
 export * from "./schemas/search";
+export { feeWorkspaceSearchSchema } from "./schemas/workspace";
 export { feeSearchDefaults } from "./utils/default";

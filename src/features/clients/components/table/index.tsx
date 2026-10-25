@@ -16,6 +16,7 @@ import { getClientLifecycleActions } from "../../utils/lifecycle-actions";
 interface ClientTableProps {
 	canManageLifecycle?: boolean;
 	data: QueryPaginatedReturnType<ClientSummary>;
+	onOpenPage?: (id: EntityId) => void;
 	onView?: (id: EntityId) => void;
 	onEdit?: (id: EntityId) => void;
 	onDelete?: (id: EntityId) => void;
@@ -25,6 +26,7 @@ interface ClientTableProps {
 export const ClientTable = ({
 	canManageLifecycle = false,
 	data: { data, total },
+	onOpenPage,
 	onView,
 	onEdit,
 	onDelete,
@@ -37,7 +39,11 @@ export const ClientTable = ({
 			c.accessor("id", {
 				header: "#",
 				cell: ({ row }) => (
-					<EntityIdTrigger id={row.original.id} onView={onView} />
+					<EntityIdTrigger
+						id={row.original.id}
+						onOpenPage={onOpenPage}
+						onView={onView}
+					/>
 				),
 				enableSorting: CLIENT_ALLOWED_SORT_COLUMNS.includes("id"),
 				meta: {
@@ -49,6 +55,7 @@ export const ClientTable = ({
 				cell: (context) => (
 					<EntityIdTrigger
 						id={context.row.original.id}
+						onOpenPage={onOpenPage}
 						onView={onView}
 						label={context.getValue()}
 					/>
@@ -93,6 +100,7 @@ export const ClientTable = ({
 
 					return (
 						<EntityActions
+							onOpenPage={onOpenPage ? () => onOpenPage(client.id) : undefined}
 							viewPermission="org:clients:read"
 							editPermission="org:clients:update"
 							restorePermission="org:clients:restore"
@@ -112,7 +120,7 @@ export const ClientTable = ({
 				},
 			}),
 		];
-	}, [canManageLifecycle, onDelete, onEdit, onRestore, onView]);
+	}, [canManageLifecycle, onOpenPage, onDelete, onEdit, onRestore, onView]);
 
 	return (
 		<DataTable

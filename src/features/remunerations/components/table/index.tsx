@@ -25,6 +25,7 @@ import { getRemunerationLifecycleActions } from "../../utils/lifecycle-actions";
 interface RemunerationTableProps {
 	canManageLifecycle?: boolean;
 	data: QueryPaginatedReturnType<Remuneration>;
+	onOpenPage?: (id: EntityId) => void;
 	onView?: (id: EntityId) => void;
 	onEdit?: (id: EntityId) => void;
 	onDelete?: (id: EntityId) => void;
@@ -34,6 +35,7 @@ interface RemunerationTableProps {
 export const RemunerationTable = ({
 	canManageLifecycle = false,
 	data: { data, total },
+	onOpenPage,
 	onView,
 	onEdit,
 	onDelete,
@@ -46,7 +48,11 @@ export const RemunerationTable = ({
 			c.accessor("id", {
 				header: "#",
 				cell: ({ row }) => (
-					<EntityIdTrigger id={row.original.id} onView={onView} />
+					<EntityIdTrigger
+						id={row.original.id}
+						onOpenPage={onOpenPage}
+						onView={onView}
+					/>
 				),
 				enableSorting: REMUNERATION_ALLOWED_SORT_COLUMNS.includes("id"),
 				meta: {
@@ -58,6 +64,7 @@ export const RemunerationTable = ({
 				cell: (context) => (
 					<EntityIdTrigger
 						id={context.row.original.id}
+						onOpenPage={onOpenPage}
 						onView={onView}
 						label={context.getValue()}
 					/>
@@ -117,6 +124,9 @@ export const RemunerationTable = ({
 
 					return (
 						<EntityActions
+							onOpenPage={
+								onOpenPage ? () => onOpenPage(remuneration.id) : undefined
+							}
 							viewPermission={[
 								"org:remunerations:read_all",
 								"org:remunerations:read_own",
@@ -139,7 +149,7 @@ export const RemunerationTable = ({
 				},
 			}),
 		];
-	}, [canManageLifecycle, onDelete, onEdit, onRestore, onView]);
+	}, [canManageLifecycle, onOpenPage, onDelete, onEdit, onRestore, onView]);
 
 	return (
 		<DataTable

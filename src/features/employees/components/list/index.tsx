@@ -13,6 +13,7 @@ import { getEmployeeLifecycleActions } from "../../utils/lifecycle-actions";
 interface EmployeeListProps {
 	canManageLifecycle?: boolean;
 	data: QueryPaginatedReturnType<EmployeeSummary>;
+	onOpenPage?: (id: EntityId) => void;
 	onView?: (id: EntityId) => void;
 	onEdit?: (id: EntityId) => void;
 	onDelete?: (id: EntityId) => void;
@@ -22,6 +23,7 @@ interface EmployeeListProps {
 export const EmployeeList = ({
 	canManageLifecycle = false,
 	data,
+	onOpenPage,
 	onView,
 	onEdit,
 	onDelete,
@@ -69,6 +71,7 @@ export const EmployeeList = ({
 
 			return (
 				<EntityActions
+					onOpenPage={onOpenPage ? () => onOpenPage(employee.id) : undefined}
 					viewPermission="org:employees:read"
 					editPermission="org:employees:update"
 					restorePermission="org:employees:restore"
@@ -83,7 +86,7 @@ export const EmployeeList = ({
 				/>
 			);
 		},
-		[canManageLifecycle, onDelete, onEdit, onRestore, onView],
+		[canManageLifecycle, onOpenPage, onDelete, onEdit, onRestore, onView],
 	);
 
 	return (
@@ -93,7 +96,7 @@ export const EmployeeList = ({
 			renderTitle={(employee) => employee.fullName}
 			renderFields={renderCardFields}
 			renderActions={renderCardActions}
-			onCardAction={(employee) => onView?.(employee.id)}
+			onCardAction={(employee) => (onOpenPage ?? onView)?.(employee.id)}
 			footerContent={<Pagination totalRecords={total} />}
 		/>
 	);

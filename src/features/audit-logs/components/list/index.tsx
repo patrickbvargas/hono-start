@@ -1,5 +1,6 @@
 import * as React from "react";
 import { DataCardList } from "@/shared/components/data-card-list";
+import { EntityActions } from "@/shared/components/entity-actions";
 import type { DetailFieldItem } from "@/shared/components/entity-fields";
 import { Pagination } from "@/shared/components/pagination";
 import type { EntityId } from "@/shared/schemas/entity";
@@ -9,10 +10,15 @@ import { getAuditLogTitle } from "../../utils/display";
 
 interface AuditLogListProps {
 	data: QueryPaginatedReturnType<AuditLog>;
+	onOpenPage?: (id: EntityId) => void;
 	onView?: (id: EntityId) => void;
 }
 
-export const AuditLogList = ({ data, onView }: AuditLogListProps) => {
+export const AuditLogList = ({
+	data,
+	onView,
+	onOpenPage,
+}: AuditLogListProps) => {
 	const { data: items, total } = data;
 
 	const renderCardFields = React.useCallback(
@@ -68,7 +74,18 @@ export const AuditLogList = ({ data, onView }: AuditLogListProps) => {
 		<DataCardList
 			data={items}
 			getRowKey={(auditLog) => auditLog.id}
-			onCardAction={onView ? (auditLog) => onView(auditLog.id) : undefined}
+			onCardAction={
+				(onOpenPage ?? onView)
+					? (auditLog) => (onOpenPage ?? onView)?.(auditLog.id)
+					: undefined
+			}
+			renderActions={(auditLog) => (
+				<EntityActions
+					viewPermission="org:audit_logs:read"
+					onOpenPage={onOpenPage ? () => onOpenPage(auditLog.id) : undefined}
+					onView={onView ? () => onView(auditLog.id) : undefined}
+				/>
+			)}
 			renderTitle={getAuditLogTitle}
 			renderFields={renderCardFields}
 			footerContent={<Pagination totalRecords={total} />}

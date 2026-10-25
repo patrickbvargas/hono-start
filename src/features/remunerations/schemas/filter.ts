@@ -5,6 +5,13 @@ import {
 } from "@/shared/schemas/filter";
 
 export const remunerationFilterSchema = z.object({
+	feeId: z.coerce
+		.number()
+		.int()
+		.positive()
+		.max(2147483647)
+		.optional()
+		.catch(undefined),
 	query: z.string().trim().catch(""),
 	employeeId: z.string().catch("").default(""),
 	contractId: z.string().catch("").default(""),

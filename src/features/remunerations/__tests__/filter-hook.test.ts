@@ -135,6 +135,14 @@ describe("useRemunerationFilter", () => {
 			active: "all",
 			status: "active",
 		});
-		expect(handleResetFilterMock).toHaveBeenCalledTimes(1);
+		expect(handleResetFilterMock).not.toHaveBeenCalled();
+		expect(handleFilterMock).toHaveBeenCalledWith(
+			expect.objectContaining({
+				feeId: undefined,
+				query: "",
+				employeeId: "",
+				contractId: "",
+			}),
+		);
 	});
 });

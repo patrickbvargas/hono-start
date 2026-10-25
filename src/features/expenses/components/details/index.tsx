@@ -1,20 +1,14 @@
 import * as React from "react";
-import {
-	AttachmentSection,
-	AttachmentSectionFallback,
-} from "@/features/attachments";
+import { AttachmentSectionFallback } from "@/features/attachments";
 import { EntityActions } from "@/shared/components/entity-actions";
-import {
-	type DetailFieldItem,
-	EntityDetail,
-} from "@/shared/components/entity-detail";
-import { EntityStatus } from "@/shared/components/entity-status";
+import { EntityDetail } from "@/shared/components/entity-detail";
 import { Skeleton } from "@/shared/components/ui";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
 import { useExpense } from "../../hooks/use-data";
 import { getExpenseLifecycleActions } from "../../utils/lifecycle-actions";
+import { ExpenseOverview } from "./overview";
 
 interface ExpenseDetailsProps {
 	canManageLifecycle?: boolean;
@@ -69,35 +63,6 @@ function ExpenseDetailsContent({
 		isSoftDeleted: expense.isSoftDeleted,
 	});
 
-	const generalInfo = React.useMemo<DetailFieldItem[]>(
-		() => [
-			{ term: "Categoria", definition: expense.category },
-			{ term: "Data", definition: formatter.calendarDate(expense.expenseDate) },
-			{ term: "Valor", definition: formatter.currency(expense.amount) },
-		],
-		[expense],
-	);
-
-	const registerInfo = React.useMemo<DetailFieldItem[]>(
-		() => [
-			{
-				term: "Situação",
-				definition: (
-					<EntityStatus
-						isActive={expense.isActive}
-						isSoftDeleted={expense.isSoftDeleted}
-					/>
-				),
-			},
-			{ term: "Criado em", definition: formatter.date(expense.createdAt) },
-			{
-				term: "Atualizado em",
-				definition: expense.updatedAt ? formatter.date(expense.updatedAt) : "—",
-			},
-		],
-		[expense],
-	);
-
 	return (
 		<EntityDetail.Content>
 			<EntityDetail.Header className="flex-row items-center justify-between gap-3">
@@ -117,17 +82,7 @@ function ExpenseDetailsContent({
 				/>
 			</EntityDetail.Header>
 			<EntityDetail.Body>
-				<EntityDetail.Fields columns={2} items={generalInfo} />
-				<EntityDetail.Separator />
-				<EntityDetail.Section title="Observação">
-					<p className="text-sm">{expense.notes?.trim() || "—"}</p>
-				</EntityDetail.Section>
-				<EntityDetail.Separator />
-				<AttachmentSection canUpload ownerId={id} ownerKind="expense" />
-				<EntityDetail.Separator />
-				<EntityDetail.Section title="Registro">
-					<EntityDetail.Fields columns={2} items={registerInfo} />
-				</EntityDetail.Section>
+				<ExpenseOverview id={id} />
 			</EntityDetail.Body>
 			<EntityDetail.Footer />
 		</EntityDetail.Content>

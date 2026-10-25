@@ -51,6 +51,13 @@ export const Route = createFileRoute("/_app/despesas")({
 function RouteComponent() {
 	const { detailId, ...search } = Route.useSearch();
 	const navigate = Route.useNavigate();
+	const openExpensePage = (id: number) => {
+		void navigate({
+			to: "/despesas/$expenseId",
+			params: { expenseId: String(id) },
+			search: { tab: "overview", returnTo: search },
+		});
+	};
 	const { expenses } = useExpenses(search);
 	const { overlay } = useEntityOverlay(detailId, (id) => {
 		void navigate({
@@ -90,6 +97,7 @@ function RouteComponent() {
 				<EntityView
 					list={
 						<ExpenseList
+							onOpenPage={openExpensePage}
 							data={expenses}
 							onEdit={overlay.edit.open}
 							onView={overlay.details.open}
@@ -100,6 +108,7 @@ function RouteComponent() {
 					}
 					table={
 						<ExpenseTable
+							onOpenPage={openExpensePage}
 							data={expenses}
 							onEdit={overlay.edit.open}
 							onView={overlay.details.open}

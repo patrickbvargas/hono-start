@@ -1,6 +1,7 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import * as React from "react";
 import { DataTable } from "@/shared/components/data-table";
+import { EntityActions } from "@/shared/components/entity-actions";
 import { EntityIdTrigger } from "@/shared/components/entity-id-trigger";
 import { Pagination } from "@/shared/components/pagination";
 import type { dataTableFeatures } from "@/shared/lib/table";
@@ -12,11 +13,13 @@ import type { AuditLog } from "../../schemas/model";
 
 interface AuditLogTableProps {
 	data: QueryPaginatedReturnType<AuditLog>;
+	onOpenPage?: (id: EntityId) => void;
 	onView?: (id: EntityId) => void;
 }
 
 export const AuditLogTable = ({
 	data: { data, total },
+	onOpenPage,
 	onView,
 }: AuditLogTableProps) => {
 	const columns = React.useMemo(() => {
@@ -26,8 +29,12 @@ export const AuditLogTable = ({
 			c.accessor("id", {
 				header: "#",
 				cell: ({ row }) =>
-					onView ? (
-						<EntityIdTrigger id={row.original.id} onView={onView} />
+					(onOpenPage ?? onView) ? (
+						<EntityIdTrigger
+							id={row.original.id}
+							onOpenPage={onOpenPage}
+							onView={onView}
+						/>
 					) : (
 						<span className="font-mono text-muted-foreground">
 							#{row.original.id}
@@ -99,8 +106,21 @@ export const AuditLogTable = ({
 				cell: (context) => context.getValue() ?? "—",
 				enableSorting: false,
 			}),
+			c.display({
+				id: "actions",
+				cell: ({ row }) => (
+					<EntityActions
+						viewPermission="org:audit_logs:read"
+						onOpenPage={
+							onOpenPage ? () => onOpenPage(row.original.id) : undefined
+						}
+						onView={onView ? () => onView(row.original.id) : undefined}
+					/>
+				),
+				meta: { cellClassName: "w-11" },
+			}),
 		];
-	}, [onView]);
+	}, [onView, onOpenPage]);
 
 	return (
 		<DataTable

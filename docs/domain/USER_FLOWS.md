@@ -57,7 +57,7 @@ This file preserves the canonical user workflows of the product. These flows des
 3. The administrator selects a category, enters date and amount, and optionally fills observation.
 4. The administrator saves the expense.
 5. On success, the system confirms via toast, closes the overlay, and refreshes the list.
-6. The administrator may open the details drawer to inspect observation, attachments, and audit-oriented metadata.
+6. The administrator opens the expense page to inspect observation, attachments and authorized history; quick drawer inspection remains available through the menu.
 
 ## View And Export Remunerations
 
@@ -115,7 +115,7 @@ Product review: the workspace link lives in contract drawer headers from sm and 
 
 Contract overview omits the Próximo passo guidance panel. Its header uses a shared andamento badge; inactive/deleted warnings remain separate. The history tab displays the changes table directly without requiring navigation to Auditoria.
 
-The workspace header offers Excluir contrato to actors with contract delete permission for non-deleted contracts. It reuses the existing confirmation and protected soft-delete flow, including the active-revenue deletion block. Success returns to the originating validated contract list or pending queue with filters preserved; cancellation or failure keeps the current page.
+The page header offers Excluir to actors with contract delete permission for non-deleted contracts. It reuses the existing confirmation and protected soft-delete flow, including the active-revenue deletion block. Success returns to the originating validated contract list or pending queue with filters preserved; cancellation or failure keeps the current page.
 
 Contract list action menus start with Abrir página do contrato and preserve the list search as return context. The overview labels Observações across both columns. Workspace attachments fill available tab space with internal scrolling, while drawers retain compact scrolling and a compact single-text-line empty/loading height. Appearance buttons pair Sistema, Claro and Escuro with the same icons as the theme switcher.
 
@@ -123,4 +123,12 @@ The contract overview displays alerts below its data and derives pending next du
 
 Alert severity uses labelled color chips: Alta/red for overdue next due dates, Média/amber for missing active revenue or responsible assignment, Baixa/blue for other remaining balances. History pagination uses the same 32px square buttons and chevron icons as other tables. Legacy tab=alerts search falls back to overview.
 
-Inline contract identifiers/process numbers and mobile contract card actions open the workspace by default, preserving contract-list return filters. Related contract links from other records also navigate to the workspace. The explicit Ver detalhes menu action remains available for quick drawer consultation.
+Inline contract identifiers/process numbers and mobile contract card actions open the workspace by default, preserving contract-list return filters. Related contract links from other records open contextual drawers, retaining the originating page or drawer. The explicit Ver detalhes menu action remains available for quick drawer consultation.
+
+## Record management pages
+
+Client, employee, fee, expense, remuneration and audit identities in tables and mobile cards open dedicated pages, following the contract layout. Collection menus explicitly offer Abrir página and Ver detalhes. Return links preserve validated filters, sorting and pagination. Page tabs survive reloads. Edit and restore stay on the page; successful deletion returns to its collection. Cancellation or failure preserves the current page. Related records open existing drawers with permitted actions. Business pages expose authorized history and existing attachment owners expose expanded attachments; audit pages remain read-only.
+
+## Consistent record page presentation
+
+Every record page, including contracts, uses the same compact identity row and application-header Editar/Excluir/Restaurar action placement and labels. Identity, record ID and lifecycle chip appear above tabs; state is not repeated inside overview or registration fields. History contains creation/update dates followed by authorized audit events. Clients separate Contato, employees/receipts/remunerations separate Financeiro, and audits separate Alterações and Dados técnicos from overview. Expenses keep their short payment record in overview. Contract retains Financeiro and Equipe; tab counts follow actual content, not a fixed entity-independent count. Complete contextual drawers retain their existing fields and actions.

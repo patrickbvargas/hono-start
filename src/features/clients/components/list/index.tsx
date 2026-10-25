@@ -13,6 +13,7 @@ import { getClientLifecycleActions } from "../../utils/lifecycle-actions";
 interface ClientListProps {
 	canManageLifecycle?: boolean;
 	data: QueryPaginatedReturnType<ClientSummary>;
+	onOpenPage?: (id: EntityId) => void;
 	onView?: (id: EntityId) => void;
 	onEdit?: (id: EntityId) => void;
 	onDelete?: (id: EntityId) => void;
@@ -22,6 +23,7 @@ interface ClientListProps {
 export const ClientList = ({
 	canManageLifecycle = false,
 	data,
+	onOpenPage,
 	onView,
 	onEdit,
 	onDelete,
@@ -65,6 +67,7 @@ export const ClientList = ({
 
 			return (
 				<EntityActions
+					onOpenPage={onOpenPage ? () => onOpenPage(client.id) : undefined}
 					viewPermission="org:clients:read"
 					editPermission="org:clients:update"
 					restorePermission="org:clients:restore"
@@ -79,7 +82,7 @@ export const ClientList = ({
 				/>
 			);
 		},
-		[canManageLifecycle, onDelete, onEdit, onRestore, onView],
+		[canManageLifecycle, onOpenPage, onDelete, onEdit, onRestore, onView],
 	);
 
 	return (
@@ -89,7 +92,7 @@ export const ClientList = ({
 			renderTitle={(client) => client.fullName}
 			renderFields={renderCardFields}
 			renderActions={renderCardActions}
-			onCardAction={(client) => onView?.(client.id)}
+			onCardAction={(client) => (onOpenPage ?? onView)?.(client.id)}
 			footerContent={<Pagination totalRecords={total} />}
 		/>
 	);

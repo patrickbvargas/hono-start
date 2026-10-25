@@ -26,6 +26,23 @@ const result = {
 };
 
 describe("pending work data boundary", () => {
+	it("intersects related client and employee IDs with the viewer's assignment visibility", async () => {
+		await getPendingWork({
+			scope: {
+				...scope,
+				allContracts: false,
+				allFees: false,
+				assignedFees: true,
+				employeeId: 9,
+			},
+			search: { ...search, clientId: "42", employeeId: "23", limit: 5 },
+		});
+		const sql: Prisma.Sql = queryRaw.mock.calls[0][0];
+		expect(sql.values).toEqual(expect.arrayContaining([9, "42", "23", 5]));
+		expect(sql.text).toContain('c."clientId"::text');
+		expect(sql.text).toContain('a."employeeId"::text');
+		expect(sql.text).toContain("c.financial");
+	});
 	it("orders the complete query and JSON page consistently with a stable tiebreaker", async () => {
 		await getPendingWork({
 			scope,

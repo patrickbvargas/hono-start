@@ -18,7 +18,11 @@ describe("detail attachment composition contract", () => {
 		];
 
 		for (const file of detailFiles) {
-			const content = readWorkspaceFile(...file);
+			const content =
+				readWorkspaceFile(...file) +
+				(file[2] === "contracts"
+					? ""
+					: readWorkspaceFile(...file.slice(0, -1), "overview.tsx"));
 
 			expect(content).not.toContain('EntityDetail.Section title="Anexos"');
 			expect(content).toContain("<AttachmentSection");

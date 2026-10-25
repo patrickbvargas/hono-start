@@ -5,6 +5,23 @@ import { describe, expect, it, vi } from "vitest";
 import { EntityIdTrigger } from "../entity-id-trigger";
 
 describe("EntityIdTrigger", () => {
+	it("prefers page navigation while preserving contextual drawer fallback", () => {
+		const onOpenPage = vi.fn();
+		const onView = vi.fn();
+		render(
+			<EntityIdTrigger
+				id={42}
+				label="Maria"
+				onOpenPage={onOpenPage}
+				onView={onView}
+			/>,
+		);
+		fireEvent.click(
+			screen.getByRole("button", { name: "Abrir página de Maria" }),
+		);
+		expect(onOpenPage).toHaveBeenCalledWith(42);
+		expect(onView).not.toHaveBeenCalled();
+	});
 	it("opens the selected record from its human-readable name", () => {
 		const onView = vi.fn();
 		render(

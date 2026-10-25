@@ -62,6 +62,7 @@ export function buildRemunerationWhere({
 
 	return {
 		firmId,
+		...(filter.feeId ? { feeId: filter.feeId } : {}),
 		...getEntityDeletedWhere(filter.status),
 		...getEntityActiveWhere(filter.active),
 		...(filter.query

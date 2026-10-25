@@ -1,4 +1,4 @@
-import { CatchBoundary, Link } from "@tanstack/react-router";
+import { CatchBoundary } from "@tanstack/react-router";
 import { lazy, type ReactNode, Suspense } from "react";
 import { EntityDetail } from "@/shared/components/entity-detail";
 import { useOverlay } from "@/shared/hooks/use-overlay";
@@ -23,23 +23,6 @@ export function RelatedRecordLink({
 	children,
 }: RelatedRecordLinkProps) {
 	const { overlay } = useOverlay<EntityId>();
-	if (kind === "contract") {
-		return (
-			<Link
-				to="/contratos/$contractId"
-				params={{ contractId: String(id) }}
-				search={{ tab: "overview" }}
-				title={
-					typeof children === "string"
-						? `Abrir página do contrato ${children}`
-						: "Abrir página do contrato"
-				}
-				className="inline-flex max-w-full rounded-sm text-left underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-			>
-				<span className="min-w-0 wrap-break-word">{children}</span>
-			</Link>
-		);
-	}
 	return (
 		<>
 			<button

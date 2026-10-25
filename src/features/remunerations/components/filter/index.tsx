@@ -47,6 +47,7 @@ export const RemunerationFilter = ({
 	);
 
 	const hasAdvancedFilters =
+		!!filter.feeId ||
 		(isAdmin && filter.employeeId !== defaultFilter.employeeId) ||
 		filter.contractId !== defaultFilter.contractId ||
 		filter.dateFrom !== defaultFilter.dateFrom ||
@@ -204,6 +205,16 @@ export const RemunerationFilter = ({
 				{isMobile ? null : desktopFilterPanel}
 				{(filter.query || hasAdvancedFilters) && (
 					<ListFilters.Active>
+						{filter.feeId ? (
+							<ListFilters.Chip
+								onRemove={() =>
+									handleApplyFilter({ ...filter, feeId: undefined })
+								}
+								removeLabel={`Remover filtro de recebimento #${filter.feeId}`}
+							>
+								Recebimento #{filter.feeId}
+							</ListFilters.Chip>
+						) : null}
 						{filter.query ? (
 							<ListFilters.Chip
 								onRemove={() =>

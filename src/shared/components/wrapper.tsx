@@ -24,7 +24,10 @@ export const Wrapper = ({
 			)}
 			{...props}
 		>
-			<div className="h-12 flex items-center justify-between px-4 pt-1.5">
+			<div
+				data-slot="wrapper-header-bar"
+				className="h-12 shrink-0 flex items-center justify-between gap-2 px-4 pt-1.5"
+			>
 				<div className="flex items-center gap-2">
 					<SidebarTrigger />
 					<Separator orientation="vertical" className="my-auto h-4" />

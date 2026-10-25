@@ -12,6 +12,8 @@ export function useContractWorkspace(id: number) {
 	const canReadFees = canReadContractReceipts(session, contract);
 	const canDelete =
 		!contract.isSoftDeleted && hasPermission(session, "org:contracts:delete");
+	const canRestore =
+		contract.isSoftDeleted && hasPermission(session, "org:contracts:restore");
 	const today = new Intl.DateTimeFormat("en-CA", {
 		timeZone: "America/Sao_Paulo",
 		year: "numeric",
@@ -38,6 +40,7 @@ export function useContractWorkspace(id: number) {
 		canReadFees,
 		canEdit,
 		canDelete,
+		canRestore,
 		registerReceipt,
 	};
 }

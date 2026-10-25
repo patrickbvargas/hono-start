@@ -17,7 +17,7 @@ It is meant to survive domain changes as long as the project keeps the same UI a
 ## Layout Rules
 
 - Route pages use the wrapper layout system from shared components.
-- Entity details open in drawers.
+- Entity collections open dedicated record workspaces by default. Contextual relationship inspection uses existing detail drawers.
 - Create and edit forms open in modals.
 - Destructive actions require explicit confirmation UI.
 - Entity list pages must be composed with `Wrapper`, `WrapperHeader`, and `WrapperBody`.
@@ -185,7 +185,7 @@ Contract forms show collaborator and assignment fields directly. Revenue rows op
 
 ## Connected platform presentation
 
-The contract workspace is the explicit full-page exception to drawer-only details. Its route remains thin, prefetches the existing protected detail query and validates tab/return context with the feature-owned Zod schema. ContractRevenues and canReadContractReceipts are shared inside the contract feature between drawer and workspace. Route search navigation names the dynamic destination explicitly. Mutations use existing overlays and form hooks; no new persistence or permissions model is introduced.
+The contract workspace is the reference for dedicated record pages across entity collections. Its route remains thin, prefetches the existing protected detail query and validates tab/return context with the feature-owned Zod schema. ContractRevenues and canReadContractReceipts are shared inside the contract feature between drawer and workspace. Route search navigation names the dynamic destination explicitly. Mutations use existing overlays and form hooks; no new persistence or permissions model is introduced.
 
 EntityForm subscribes to submission attempts and validation state, shows a shared invalid-submit alert and focuses the first enabled invalid control in its own portal after invalid sections open. FormSubmitButton uses the native form association by formId, allowing one submit through the existing FormRoot even when rendered in a dialog portal. Autocomplete labels target unique control IDs and expose a label/required state on their actual inputs. FinancialPeriodShortcuts is shared across the three financial lists.
 
@@ -196,3 +196,15 @@ EntityAuditHistory is a feature-owned embedded audit collection with local page 
 Product review: severity and type use checkbox multi-selection. Empty selections mean all; values within one filter combine with OR, different filters combine with AND. Each active value has its own removable chip. Summary cards use the same shared Card/Header/Content, typography and padding as dashboard metrics, with its standard 24px header baseline (96px total at a single-line title), red high values, amber medium values and blue low values; zero stays neutral. The body uses the dashboard's inner p-0.5 and gap-4 to preserve card rings and spacing.
 
 Pending-work inline and action links retain validated list search through contract workspace pendingReturnTo; it is validated using the pending feature's public search contract and does not accept arbitrary return URLs. Summary card filtering is owned by a feature hook using shared useFilter. Dates and remaining-balance display are shared between the feature table and mobile cards; navigation actions use the shared buttonVariants styling on native router links. Product review keeps only the monetary label Saldo a receber.
+
+## Entity management workspace pattern
+
+Clients, employees, fees, expenses, remunerations and audit logs own components/workspace/index.tsx, hooks/use-workspace.ts and schemas/workspace.ts. Dynamic sibling routes remain thin, validate positive IDs and prefetch existing protected queries. Feature schemas validate supported tabs and returnTo against their list search schema; invalid return state uses list defaults. EntityWorkspace is presentation only and is used by contracts as well as the other record pages; it owns headings, record-level actions, identity, return link, content width and scrollable tabs. Feature overview content is shared locally with drawers, never rendering drawer primitives on a page. Existing attachment owners use a dedicated expanded tab; history mounts only when selected and remains audit-reader scoped. Audit pages are immutable. Table and card primary actions prefer onOpenPage, with explicit page and drawer menu entries; legacy detailId URLs remain valid and excluded from list query keys. Feature hooks retain query, permission and overlay orchestration; existing lifecycle helpers, forms, confirmations and invalidation remain authoritative. RelatedRecordLink always opens contextual drawers, including contracts.
+
+Record-page content uses feature-owned section selection on existing overview components; the default all section retains complete drawer presentation. Contact and financial sections validate URL tab state through the owning feature Zod schema. EntityWorkspaceHistory presents creation/update fields without lifecycle state, followed by caller-supplied scoped history. Page lifecycle state belongs only in the common identity header; contract Andamento is not repeated in overview. Common actions use Editar, Excluir and Restaurar labels. History and wide financial tables may fill available width; ordinary data sections share the same maximum width. Audit overview, changes and technical payload are separate addressable tabs.
+
+RelatedContractAlerts is owned by pending-work and reused in client/employee overviews. It gates mounting on contract and fee subject grants, consumes the existing query through use-data/use-related-contract-alerts, uses fixed local preview search independent of the parent route and never fans out per contract. Collection navigation uses NavigationLink and exact validated IDs; contextual contract inspection uses RelatedRecordLink. Remuneration feeId is an optional positive numeric filter owned by its search schema, with an active removable chip and explicit clear-all removal; the existing data where-builder drives list, aggregates and export consistently.
+
+Record workspace lifecycle actions use the application header action slot. Identity, ID and status share one compact row. The workspace wrapper never scrolls: tabs fill remaining height and their panels own vertical scrolling; expanded attachments retain internal list scrolling.
+
+Client and employee overview alerts use the shared ScrollArea in a flex section that fills remaining tab height, matching attachment scrolling. General fields and alert heading/summary stay outside the list scroller. Very short viewports retain an outer overflow fallback.

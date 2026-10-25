@@ -1,4 +1,8 @@
-import { useSuspenseQueries, useSuspenseQuery } from "@tanstack/react-query";
+import {
+	useQuery,
+	useSuspenseQueries,
+	useSuspenseQuery,
+} from "@tanstack/react-query";
 import {
 	getSelectableContractClientsQueryOptions,
 	getSelectableContractEmployeesQueryOptions,
@@ -11,6 +15,16 @@ export function usePendingWork(search: PendingWorkSearch) {
 		getPendingWorkQueryOptions(search),
 	);
 	return { pendingWork };
+}
+
+export function usePendingWorkPreviewData(search: PendingWorkSearch) {
+	const query = useQuery(getPendingWorkQueryOptions(search));
+	return {
+		pendingWork: query.data,
+		isPending: query.isPending,
+		error: query.error,
+		retry: query.refetch,
+	};
 }
 
 export function usePendingWorkOptions() {

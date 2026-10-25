@@ -58,7 +58,7 @@ The software core includes:
 
 - The application is multi-tenant by firm.
 - The software core is legal-fee and remuneration management, not general CRM.
-- Business users interact through lists, drawers, and modal forms rather than standalone CRUD pages.
+- Business users enter through lists and manage records in dedicated pages. Related records open in contextual drawers; create and edit remain modal forms.
 - The product must remain desktop-first with basic mobile support.
 - The product must preserve pt-BR labels, messages, and user feedback.
 - Role-aware financial visibility is part of the product identity.

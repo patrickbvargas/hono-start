@@ -16,6 +16,7 @@ import { getFeeLifecycleActions } from "../../utils/lifecycle-actions";
 interface FeeTableProps {
 	canManageLifecycle?: boolean;
 	data: QueryPaginatedReturnType<FeeSummary>;
+	onOpenPage?: (id: EntityId) => void;
 	onView?: (id: EntityId) => void;
 	onEdit?: (id: EntityId) => void;
 	onDelete?: (id: EntityId) => void;
@@ -25,6 +26,7 @@ interface FeeTableProps {
 export const FeeTable = ({
 	canManageLifecycle = false,
 	data: { data, total },
+	onOpenPage,
 	onView,
 	onEdit,
 	onDelete,
@@ -37,7 +39,11 @@ export const FeeTable = ({
 			c.accessor("id", {
 				header: "#",
 				cell: ({ row }) => (
-					<EntityIdTrigger id={row.original.id} onView={onView} />
+					<EntityIdTrigger
+						id={row.original.id}
+						onOpenPage={onOpenPage}
+						onView={onView}
+					/>
 				),
 				enableSorting: FEE_ALLOWED_SORT_COLUMNS.includes("id"),
 				meta: {
@@ -49,6 +55,7 @@ export const FeeTable = ({
 				cell: (context) => (
 					<EntityIdTrigger
 						id={context.row.original.id}
+						onOpenPage={onOpenPage}
 						onView={onView}
 						label={context.getValue()}
 					/>
@@ -103,6 +110,7 @@ export const FeeTable = ({
 
 					return (
 						<EntityActions
+							onOpenPage={onOpenPage ? () => onOpenPage(fee.id) : undefined}
 							viewPermission={["org:fees:read_all", "org:fees:read_assigned"]}
 							editPermission="org:fees:update"
 							restorePermission="org:fees:restore"
@@ -122,7 +130,7 @@ export const FeeTable = ({
 				},
 			}),
 		];
-	}, [canManageLifecycle, onDelete, onEdit, onRestore, onView]);
+	}, [canManageLifecycle, onOpenPage, onDelete, onEdit, onRestore, onView]);
 
 	return (
 		<DataTable

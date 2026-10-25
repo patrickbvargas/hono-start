@@ -4,6 +4,7 @@ import type { EntityId } from "@/shared/schemas/entity";
 
 interface EntityIdTriggerProps {
 	id: EntityId;
+	onOpenPage?: (id: EntityId) => void;
 	onView?: (id: EntityId) => void;
 	label?: string;
 	actionLabel?: string;
@@ -11,6 +12,7 @@ interface EntityIdTriggerProps {
 
 export function EntityIdTrigger({
 	id,
+	onOpenPage,
 	onView,
 	label,
 	actionLabel,
@@ -24,12 +26,16 @@ export function EntityIdTrigger({
 			}
 			aria-label={
 				actionLabel ??
-				(label ? `Ver detalhes de ${label}` : `Ver detalhes do registro #${id}`)
+				(onOpenPage
+					? `Abrir página de ${label ?? `registro #${id}`}`
+					: label
+						? `Ver detalhes de ${label}`
+						: `Ver detalhes do registro #${id}`)
 			}
 			title={actionLabel}
 			onClick={(event: MouseEvent<HTMLButtonElement>) => {
 				event.stopPropagation();
-				onView?.(id);
+				(onOpenPage ?? onView)?.(id);
 			}}
 		>
 			{label ?? `#${id}`}

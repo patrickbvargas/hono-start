@@ -48,6 +48,14 @@ export const Route = createFileRoute("/_app/auditoria")({
 
 function RouteComponent() {
 	const search = Route.useSearch();
+	const navigate = Route.useNavigate();
+	const openAuditLogPage = (id: number) => {
+		void navigate({
+			to: "/auditoria/$auditLogId",
+			params: { auditLogId: String(id) },
+			search: { tab: "overview", returnTo: search },
+		});
+	};
 	const { auditLogs } = useAuditLogs(search);
 	const { overlay } = useOverlay<EntityId>();
 
@@ -59,9 +67,19 @@ function RouteComponent() {
 			<WrapperBody>
 				<EntityView
 					className="min-h-0 flex-1"
-					list={<AuditLogList data={auditLogs} onView={overlay.details.open} />}
+					list={
+						<AuditLogList
+							onOpenPage={openAuditLogPage}
+							data={auditLogs}
+							onView={overlay.details.open}
+						/>
+					}
 					table={
-						<AuditLogTable data={auditLogs} onView={overlay.details.open} />
+						<AuditLogTable
+							onOpenPage={openAuditLogPage}
+							data={auditLogs}
+							onView={overlay.details.open}
+						/>
 					}
 				/>
 				{overlay.details.render((id, state) => (

@@ -17,6 +17,7 @@ import { getExpenseReadColumns } from "./columns";
 interface ExpenseTableProps {
 	canManageLifecycle?: boolean;
 	data: QueryPaginatedReturnType<ExpenseSummary>;
+	onOpenPage?: (id: EntityId) => void;
 	onView?: (id: EntityId) => void;
 	onEdit?: (id: EntityId) => void;
 	onDelete?: (id: EntityId) => void;
@@ -26,6 +27,7 @@ interface ExpenseTableProps {
 export const ExpenseTable = ({
 	canManageLifecycle = false,
 	data: { data, total },
+	onOpenPage,
 	onView,
 	onEdit,
 	onDelete,
@@ -38,7 +40,11 @@ export const ExpenseTable = ({
 			c.accessor("id", {
 				header: "#",
 				cell: ({ row }) => (
-					<EntityIdTrigger id={row.original.id} onView={onView} />
+					<EntityIdTrigger
+						id={row.original.id}
+						onOpenPage={onOpenPage}
+						onView={onView}
+					/>
 				),
 				enableSorting: EXPENSE_ALLOWED_SORT_COLUMNS.includes("id"),
 				meta: { headerClassName: "w-18", cellClassName: "whitespace-nowrap" },
@@ -48,7 +54,10 @@ export const ExpenseTable = ({
 				date: (row) => row.expenseDate,
 				amount: (row) => row.amount,
 				enableSorting: true,
-				onCategoryClick: onView ? (row) => onView(row.id) : undefined,
+				onCategoryClick:
+					(onOpenPage ?? onView)
+						? (row) => (onOpenPage ?? onView)?.(row.id)
+						: undefined,
 			}),
 			c.accessor("notes", {
 				header: "Descrição",
@@ -89,6 +98,7 @@ export const ExpenseTable = ({
 
 					return (
 						<EntityActions
+							onOpenPage={onOpenPage ? () => onOpenPage(expense.id) : undefined}
 							viewPermission="org:expenses:read"
 							editPermission="org:expenses:update"
 							restorePermission="org:expenses:restore"
@@ -106,7 +116,7 @@ export const ExpenseTable = ({
 				meta: { cellClassName: "w-11" },
 			}),
 		];
-	}, [canManageLifecycle, onDelete, onEdit, onRestore, onView]);
+	}, [canManageLifecycle, onOpenPage, onDelete, onEdit, onRestore, onView]);
 
 	return (
 		<DataTable

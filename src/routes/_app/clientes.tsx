@@ -50,6 +50,13 @@ export const Route = createFileRoute("/_app/clientes")({
 function RouteComponent() {
 	const { detailId, ...search } = Route.useSearch();
 	const navigate = Route.useNavigate();
+	const openClientPage = (id: number) => {
+		void navigate({
+			to: "/clientes/$clientId",
+			params: { clientId: String(id) },
+			search: { tab: "overview", returnTo: search },
+		});
+	};
 	const { clients } = useClients(search);
 	const { overlay } = useEntityOverlay(detailId, (id) => {
 		void navigate({
@@ -81,6 +88,7 @@ function RouteComponent() {
 					className="min-h-0 flex-1"
 					list={
 						<ClientList
+							onOpenPage={openClientPage}
 							data={clients}
 							onEdit={overlay.edit.open}
 							onView={overlay.details.open}
@@ -91,6 +99,7 @@ function RouteComponent() {
 					}
 					table={
 						<ClientTable
+							onOpenPage={openClientPage}
 							data={clients}
 							onEdit={overlay.edit.open}
 							onView={overlay.details.open}

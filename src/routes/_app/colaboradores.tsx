@@ -55,6 +55,13 @@ export const Route = createFileRoute("/_app/colaboradores")({
 function RouteComponent() {
 	const { detailId, ...search } = Route.useSearch();
 	const navigate = Route.useNavigate();
+	const openEmployeePage = (id: number) => {
+		void navigate({
+			to: "/colaboradores/$employeeId",
+			params: { employeeId: String(id) },
+			search: { tab: "overview", returnTo: search },
+		});
+	};
 	const { employees } = useEmployees(search);
 	const { overlay } = useEntityOverlay(detailId, (id) => {
 		void navigate({
@@ -85,6 +92,7 @@ function RouteComponent() {
 				<EntityView
 					list={
 						<EmployeeList
+							onOpenPage={openEmployeePage}
 							data={employees}
 							onEdit={overlay.edit.open}
 							onView={overlay.details.open}
@@ -95,6 +103,7 @@ function RouteComponent() {
 					}
 					table={
 						<EmployeeTable
+							onOpenPage={openEmployeePage}
 							data={employees}
 							onEdit={overlay.edit.open}
 							onView={overlay.details.open}

@@ -1,23 +1,12 @@
 import * as React from "react";
-import {
-	AttachmentSection,
-	AttachmentSectionFallback,
-} from "@/features/attachments";
-import { contractSearchDefaults } from "@/features/contracts";
+import { AttachmentSectionFallback } from "@/features/attachments";
 import { EntityActions } from "@/shared/components/entity-actions";
-import {
-	type DetailFieldItem,
-	EntityDetail,
-} from "@/shared/components/entity-detail";
-import { EntityStatus } from "@/shared/components/entity-status";
-import { NavigationLink } from "@/shared/components/navigation-link";
-import { formatter } from "@/shared/lib/formatter";
+import { EntityDetail } from "@/shared/components/entity-detail";
 import type { EntityId } from "@/shared/schemas/entity";
-import { hasPermission, useLoggedUserSession } from "@/shared/session";
 import type { OverlayState } from "@/shared/types/overlay";
 import { useClient } from "../../hooks/use-data";
-import { formatClientDocument } from "../../utils/format";
 import { getClientLifecycleActions } from "../../utils/lifecycle-actions";
+import { ClientOverview } from "./overview";
 
 interface ClientDetailsProps {
 	canManageLifecycle?: boolean;
@@ -67,67 +56,10 @@ const ClientDetailsContent = ({
 	onRestore,
 }: ClientDetailsContentProps) => {
 	const { client } = useClient(id);
-	const session = useLoggedUserSession();
 	const actions = getClientLifecycleActions({
 		canManageLifecycle,
 		isSoftDeleted: client.isSoftDeleted,
 	});
-
-	const generalInfo = React.useMemo<DetailFieldItem[]>(
-		() => [
-			{ term: "Documento", definition: formatClientDocument(client.document) },
-			{ term: "Tipo", definition: client.type },
-			{
-				term: "Contratos",
-				definition:
-					hasPermission(session, "org:contracts:read_all") ||
-					hasPermission(session, "org:contracts:read_assigned") ? (
-						<NavigationLink
-							to="/contratos"
-							state={{ resetFilterPanel: true }}
-							aria-label={`Ver contratos de ${client.fullName}`}
-							search={{
-								...contractSearchDefaults,
-								clientId: String(client.id),
-							}}
-						>
-							{client.contractCount}
-						</NavigationLink>
-					) : (
-						client.contractCount
-					),
-			},
-		],
-		[client, session],
-	);
-
-	const contactInfo = React.useMemo<DetailFieldItem[]>(
-		() => [
-			{ term: "E-mail", definition: client.email ?? "—" },
-			{ term: "Telefone", definition: formatter.phone(client.phone) },
-		],
-		[client],
-	);
-
-	const registerInfo = React.useMemo<DetailFieldItem[]>(
-		() => [
-			{
-				term: "Situação",
-				definition: (
-					<EntityStatus
-						isActive={client.isActive}
-						isSoftDeleted={client.isSoftDeleted}
-					/>
-				),
-			},
-			{ term: "Criado em", definition: formatter.date(client.createdAt) },
-			{
-				term: "Atualizado em",
-				definition: client.updatedAt ? formatter.date(client.updatedAt) : "—",
-			},
-		],
-		[client],
-	);
 
 	return (
 		<EntityDetail.Content>
@@ -148,17 +80,7 @@ const ClientDetailsContent = ({
 				/>
 			</EntityDetail.Header>
 			<EntityDetail.Body>
-				<EntityDetail.Fields columns={2} items={generalInfo} />
-				<EntityDetail.Separator />
-				<EntityDetail.Section title="Contato">
-					<EntityDetail.Fields columns={2} items={contactInfo} />
-				</EntityDetail.Section>
-				<EntityDetail.Separator />
-				<AttachmentSection canUpload ownerId={id} ownerKind="client" />
-				<EntityDetail.Separator />
-				<EntityDetail.Section title="Registro">
-					<EntityDetail.Fields columns={2} items={registerInfo} />
-				</EntityDetail.Section>
+				<ClientOverview id={id} />
 			</EntityDetail.Body>
 			<EntityDetail.Footer />
 		</EntityDetail.Content>

@@ -13,6 +13,7 @@ import { getRemunerationLifecycleActions } from "../../utils/lifecycle-actions";
 interface RemunerationListProps {
 	canManageLifecycle?: boolean;
 	data: QueryPaginatedReturnType<Remuneration>;
+	onOpenPage?: (id: EntityId) => void;
 	onView?: (id: EntityId) => void;
 	onEdit?: (id: EntityId) => void;
 	onDelete?: (id: EntityId) => void;
@@ -22,6 +23,7 @@ interface RemunerationListProps {
 export const RemunerationList = ({
 	canManageLifecycle = false,
 	data,
+	onOpenPage,
 	onView,
 	onEdit,
 	onDelete,
@@ -65,6 +67,9 @@ export const RemunerationList = ({
 
 			return (
 				<EntityActions
+					onOpenPage={
+						onOpenPage ? () => onOpenPage(remuneration.id) : undefined
+					}
 					viewPermission={[
 						"org:remunerations:read_all",
 						"org:remunerations:read_own",
@@ -82,7 +87,7 @@ export const RemunerationList = ({
 				/>
 			);
 		},
-		[canManageLifecycle, onDelete, onEdit, onRestore, onView],
+		[canManageLifecycle, onOpenPage, onDelete, onEdit, onRestore, onView],
 	);
 
 	return (
@@ -94,7 +99,7 @@ export const RemunerationList = ({
 			}
 			renderFields={renderCardFields}
 			renderActions={renderCardActions}
-			onCardAction={(remuneration) => onView?.(remuneration.id)}
+			onCardAction={(remuneration) => (onOpenPage ?? onView)?.(remuneration.id)}
 			footerContent={<Pagination totalRecords={total} />}
 		/>
 	);

@@ -13,6 +13,7 @@ import { getExpenseLifecycleActions } from "../../utils/lifecycle-actions";
 interface ExpenseListProps {
 	canManageLifecycle?: boolean;
 	data: QueryPaginatedReturnType<ExpenseSummary>;
+	onOpenPage?: (id: EntityId) => void;
 	onView?: (id: EntityId) => void;
 	onEdit?: (id: EntityId) => void;
 	onDelete?: (id: EntityId) => void;
@@ -22,6 +23,7 @@ interface ExpenseListProps {
 export const ExpenseList = ({
 	canManageLifecycle = false,
 	data,
+	onOpenPage,
 	onView,
 	onEdit,
 	onDelete,
@@ -57,6 +59,7 @@ export const ExpenseList = ({
 
 			return (
 				<EntityActions
+					onOpenPage={onOpenPage ? () => onOpenPage(expense.id) : undefined}
 					viewPermission="org:expenses:read"
 					editPermission="org:expenses:update"
 					restorePermission="org:expenses:restore"
@@ -71,7 +74,7 @@ export const ExpenseList = ({
 				/>
 			);
 		},
-		[canManageLifecycle, onDelete, onEdit, onRestore, onView],
+		[canManageLifecycle, onOpenPage, onDelete, onEdit, onRestore, onView],
 	);
 
 	return (
@@ -81,7 +84,7 @@ export const ExpenseList = ({
 			renderTitle={(expense) => expense.category}
 			renderFields={renderCardFields}
 			renderActions={renderCardActions}
-			onCardAction={(expense) => onView?.(expense.id)}
+			onCardAction={(expense) => (onOpenPage ?? onView)?.(expense.id)}
 			footerContent={<Pagination totalRecords={total} />}
 		/>
 	);
