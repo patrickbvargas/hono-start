@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import {
 	ContractWorkspace,
+	contractSearchDefaults,
 	contractWorkspaceSearchSchema,
 	getContractByIdQueryOptions,
 } from "@/features/contracts";
@@ -25,6 +26,13 @@ function ContractPage() {
 		<ContractWorkspace
 			id={Number(params.contractId)}
 			search={search}
+			onDeleted={() => {
+				void navigate({
+					to: search.pendingReturnTo ? "/pendencias" : "/contratos",
+					search:
+						search.pendingReturnTo ?? search.returnTo ?? contractSearchDefaults,
+				});
+			}}
 			onTabChange={(tab) => {
 				void navigate({
 					to: "/contratos/$contractId",

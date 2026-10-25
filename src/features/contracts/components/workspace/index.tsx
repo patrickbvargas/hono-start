@@ -21,6 +21,7 @@ import { hasPermission } from "@/shared/session";
 import { useContractWorkspace } from "../../hooks/use-workspace";
 import type { ContractWorkspaceSearch } from "../../schemas/workspace";
 import { contractSearchDefaults } from "../../utils/default";
+import { ContractDelete } from "../delete";
 import { ContractRevenues } from "../details/revenues";
 import { ContractForm } from "../form";
 import { ContractAlerts } from "./alerts";
@@ -29,11 +30,13 @@ interface ContractWorkspaceProps {
 	id: number;
 	search: ContractWorkspaceSearch;
 	onTabChange: (tab: ContractWorkspaceSearch["tab"]) => void;
+	onDeleted: () => void;
 }
 export function ContractWorkspace({
 	id,
 	search,
 	onTabChange,
+	onDeleted,
 }: ContractWorkspaceProps) {
 	const {
 		contract,
@@ -43,6 +46,7 @@ export function ContractWorkspace({
 		selectedRevenue,
 		canReadFees,
 		canEdit,
+		canDelete,
 		registerReceipt,
 	} = useContractWorkspace(id);
 	const activeRevenues = contract.revenues.filter(
@@ -53,11 +57,21 @@ export function ContractWorkspace({
 		<Wrapper
 			title="Contrato"
 			actions={
-				canEdit ? (
-					<Button variant="outline" onClick={() => overlay.edit.open(id)}>
-						Editar contrato
-					</Button>
-				) : undefined
+				<div className="flex flex-wrap gap-2">
+					{canEdit && (
+						<Button variant="outline" onClick={() => overlay.edit.open(id)}>
+							Editar contrato
+						</Button>
+					)}
+					{canDelete && (
+						<Button
+							variant="destructive"
+							onClick={() => overlay.delete.open(id)}
+						>
+							Excluir contrato
+						</Button>
+					)}
+				</div>
 			}
 		>
 			<WrapperBody
@@ -264,6 +278,16 @@ export function ContractWorkspace({
 				</Tabs>
 				{overlay.edit.render((contractId, state) => (
 					<ContractForm id={contractId} state={state} onSuccess={state.close} />
+				))}
+				{overlay.delete.render((contractId, state) => (
+					<ContractDelete
+						id={contractId}
+						state={state}
+						onSuccess={() => {
+							state.close();
+							onDeleted();
+						}}
+					/>
 				))}
 				{overlay.create.render((state) => (
 					<FeeForm

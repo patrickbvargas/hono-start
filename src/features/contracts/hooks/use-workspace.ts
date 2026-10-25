@@ -10,6 +10,8 @@ export function useContractWorkspace(id: number) {
 	const { overlay } = useOverlay<number>();
 	const [selectedRevenue, setSelectedRevenue] = useState<number | null>(null);
 	const canReadFees = canReadContractReceipts(session, contract);
+	const canDelete =
+		!contract.isSoftDeleted && hasPermission(session, "org:contracts:delete");
 	const today = new Intl.DateTimeFormat("en-CA", {
 		timeZone: "America/Sao_Paulo",
 		year: "numeric",
@@ -35,6 +37,7 @@ export function useContractWorkspace(id: number) {
 		selectedRevenue,
 		canReadFees,
 		canEdit,
+		canDelete,
 		registerReceipt,
 	};
 }
