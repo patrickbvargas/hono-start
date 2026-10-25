@@ -10,9 +10,13 @@ export function useContractWorkspace(id: number) {
 	const { overlay } = useOverlay<number>();
 	const [selectedRevenue, setSelectedRevenue] = useState<number | null>(null);
 	const canReadFees = canReadContractReceipts(session, contract);
-	const now = new Date();
-	const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
-	const alerts = getContractWorkspaceAlerts(contract, today);
+	const today = new Intl.DateTimeFormat("en-CA", {
+		timeZone: "America/Sao_Paulo",
+		year: "numeric",
+		month: "2-digit",
+		day: "2-digit",
+	}).format(new Date());
+	const alerts = getContractWorkspaceAlerts(contract, today, canReadFees);
 	const canEdit =
 		!contract.isSoftDeleted &&
 		!["COMPLETED", "CANCELLED"].includes(contract.statusValue) &&

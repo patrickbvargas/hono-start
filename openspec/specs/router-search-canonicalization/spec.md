@@ -1,4 +1,8 @@
-## ADDED Requirements
+## Purpose
+
+Define shareable validated route search URLs that omit redundant default values.
+
+## Requirements
 
 ### Requirement: Route-backed search URLs omit redundant default values
 The system SHALL canonicalize TanStack Router URLs for screens with validated search state so parameters whose values equal the route's documented defaults are omitted from the generated query string. Non-default search values MUST remain in the URL so refresh and shared links restore the same visible state.

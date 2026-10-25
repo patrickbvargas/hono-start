@@ -3,6 +3,7 @@ import {
 	BriefcaseIcon,
 	DollarSignIcon,
 	LayoutDashboardIcon,
+	ListTodoIcon,
 	type LucideIcon,
 	ScrollTextIcon,
 	SettingsIcon,
@@ -38,9 +39,16 @@ type RouteName =
 	| "remuneration"
 	| "employee"
 	| "auditLog"
+	| "pendingWork"
 	| "settings";
 
 export const ROUTES: Record<RouteName, RouteItem> = {
+	pendingWork: {
+		title: "Pendências",
+		url: "/pendencias",
+		icon: ListTodoIcon,
+		permission: ["org:contracts:read_all", "org:contracts:read_assigned"],
+	},
 	settings: {
 		title: "Configurações",
 		url: "/configuracoes",

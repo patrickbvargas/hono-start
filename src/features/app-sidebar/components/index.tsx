@@ -20,7 +20,7 @@ const items: RouteSection[] = [
 		url: "#",
 		icon: LayoutDashboardIcon,
 		isActive: true,
-		items: [ROUTES.dashboard, ROUTES.contract],
+		items: [ROUTES.dashboard, ROUTES.contract, ROUTES.pendingWork],
 	},
 	{
 		title: "Financeiro",

@@ -1,3 +1,7 @@
+## Purpose
+
+Define responsive collaborator list filters backed by validated URL search state and shared filter controls.
+
 ## Requirements
 
 ### Requirement: Display employee filter controls

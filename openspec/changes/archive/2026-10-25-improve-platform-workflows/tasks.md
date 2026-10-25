@@ -38,3 +38,5 @@ Review: alerts moved into overview, severity chips high/red, medium/amber, low/b
 Inline navigation review: contract identifier/process triggers and mobile cards now open workspace; related contract references use route links. Explicit detail menu remains unchanged. Browser verified contract 61 workspace and preserved return filters without a dialog.
 
 Attachment density review: empty text and skeleton reduced to one 20px text line, removing the previous 64px minimum and vertical padding. Actual file rows remain unchanged.
+
+Follow-up add-pending-work-center replaces informational future-balance alerts with actionable-only alerts, aligns workspace calendar reference to America/Sao_Paulo and requires independent financial read grants. The current requirement was reconciled before either change is archived.

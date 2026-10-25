@@ -1,4 +1,8 @@
-## MODIFIED Requirements
+## Purpose
+
+Define schema-driven request validation boundaries, naming and database-independent form rules.
+
+## Requirements
 
 ### Requirement: Feature validation concerns use a canonical boundary
 The system SHALL organize feature validation concerns using a canonical boundary so schemas, pure assertion helpers, Prisma-backed lookup resolution, persistence-aware checks, read-model mapping, and form-hook orchestration have distinct ownership.

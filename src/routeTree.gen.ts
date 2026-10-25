@@ -20,6 +20,7 @@ import { Route as AppConfiguracoesRouteImport } from './routes/_app/configuracoe
 import { Route as AppContratosRouteImport } from './routes/_app/contratos'
 import { Route as AppDespesasRouteImport } from './routes/_app/despesas'
 import { Route as AppHonorariosRouteImport } from './routes/_app/honorarios'
+import { Route as AppPendenciasRouteImport } from './routes/_app/pendencias'
 import { Route as AppRemuneracoesRouteImport } from './routes/_app/remuneracoes'
 import { Route as AuthConviteRouteImport } from './routes/_auth/convite'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
@@ -82,6 +83,11 @@ const AppHonorariosRoute = AppHonorariosRouteImport.update({
   path: '/honorarios',
   getParentRoute: () => AppRouteRoute,
 } as any)
+const AppPendenciasRoute = AppPendenciasRouteImport.update({
+  id: '/pendencias',
+  path: '/pendencias',
+  getParentRoute: () => AppRouteRoute,
+} as any)
 const AppRemuneracoesRoute = AppRemuneracoesRouteImport.update({
   id: '/remuneracoes',
   path: '/remuneracoes',
@@ -128,6 +134,7 @@ export interface FileRoutesByFullPath {
   '/contratos': typeof AppContratosRoute
   '/despesas': typeof AppDespesasRoute
   '/honorarios': typeof AppHonorariosRoute
+  '/pendencias': typeof AppPendenciasRoute
   '/remuneracoes': typeof AppRemuneracoesRoute
   '/convite': typeof AuthConviteRoute
   '/login': typeof AuthLoginRoute
@@ -146,6 +153,7 @@ export interface FileRoutesByTo {
   '/contratos': typeof AppContratosRoute
   '/despesas': typeof AppDespesasRoute
   '/honorarios': typeof AppHonorariosRoute
+  '/pendencias': typeof AppPendenciasRoute
   '/remuneracoes': typeof AppRemuneracoesRoute
   '/convite': typeof AuthConviteRoute
   '/login': typeof AuthLoginRoute
@@ -166,6 +174,7 @@ export interface FileRoutesById {
   '/_app/contratos': typeof AppContratosRoute
   '/_app/despesas': typeof AppDespesasRoute
   '/_app/honorarios': typeof AppHonorariosRoute
+  '/_app/pendencias': typeof AppPendenciasRoute
   '/_app/remuneracoes': typeof AppRemuneracoesRoute
   '/_auth/convite': typeof AuthConviteRoute
   '/_auth/login': typeof AuthLoginRoute
@@ -187,6 +196,7 @@ export interface FileRouteTypes {
     | '/contratos'
     | '/despesas'
     | '/honorarios'
+    | '/pendencias'
     | '/remuneracoes'
     | '/convite'
     | '/login'
@@ -205,6 +215,7 @@ export interface FileRouteTypes {
     | '/contratos'
     | '/despesas'
     | '/honorarios'
+    | '/pendencias'
     | '/remuneracoes'
     | '/convite'
     | '/login'
@@ -224,6 +235,7 @@ export interface FileRouteTypes {
     | '/_app/contratos'
     | '/_app/despesas'
     | '/_app/honorarios'
+    | '/_app/pendencias'
     | '/_app/remuneracoes'
     | '/_auth/convite'
     | '/_auth/login'
@@ -320,6 +332,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppHonorariosRouteImport
       parentRoute: typeof AppRouteRoute
     }
+    '/_app/pendencias': {
+      id: '/_app/pendencias'
+      path: '/pendencias'
+      fullPath: '/pendencias'
+      preLoaderRoute: typeof AppPendenciasRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
     '/_app/remuneracoes': {
       id: '/_app/remuneracoes'
       path: '/remuneracoes'
@@ -381,6 +400,7 @@ interface AppRouteRouteChildren {
   AppContratosRoute: typeof AppContratosRoute
   AppDespesasRoute: typeof AppDespesasRoute
   AppHonorariosRoute: typeof AppHonorariosRoute
+  AppPendenciasRoute: typeof AppPendenciasRoute
   AppRemuneracoesRoute: typeof AppRemuneracoesRoute
   AppIndexRoute: typeof AppIndexRoute
   AppContratosContractIdRoute: typeof AppContratosContractIdRoute
@@ -395,6 +415,7 @@ const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppContratosRoute: AppContratosRoute,
   AppDespesasRoute: AppDespesasRoute,
   AppHonorariosRoute: AppHonorariosRoute,
+  AppPendenciasRoute: AppPendenciasRoute,
   AppRemuneracoesRoute: AppRemuneracoesRoute,
   AppIndexRoute: AppIndexRoute,
   AppContratosContractIdRoute: AppContratosContractIdRoute,

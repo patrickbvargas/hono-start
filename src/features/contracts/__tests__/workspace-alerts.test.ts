@@ -2,68 +2,102 @@ import { describe, expect, it } from "vitest";
 import type { ContractDetail } from "../schemas/model";
 import { getContractWorkspaceAlerts } from "../utils/workspace-alerts";
 
+const revenue = {
+	id: 1,
+	type: "Judicial",
+	isActive: true,
+	isSoftDeleted: false,
+	remainingValue: 100,
+	isFullyPaid: false,
+	installmentsPaid: 0,
+	totalInstallments: 2,
+	nextDueDate: "2026-10-25",
+};
+const contract = (revenues: unknown[] = [revenue], extra = {}) =>
+	({
+		isActive: true,
+		isSoftDeleted: false,
+		statusValue: "ACTIVE",
+		revenues,
+		assignments: [],
+		...extra,
+	}) as unknown as ContractDetail;
+
 describe("contract alerts", () => {
-	it("separates overdue dates from future balances and ignores inactive revenues", () => {
-		const contract = {
-			assignments: [
-				{
-					isActive: true,
-					isSoftDeleted: false,
-					assignmentTypeValue: "RESPONSIBLE",
-				},
-			],
-			revenues: [
-				{
-					id: 1,
-					type: "Judicial",
-					isActive: true,
-					isSoftDeleted: false,
-					remainingValue: 500,
-					isFullyPaid: false,
-					nextDueDate: "2026-10-23",
-				},
-				{
-					id: 2,
-					type: "Administrativo",
-					isActive: true,
-					isSoftDeleted: false,
-					remainingValue: 300,
-					isFullyPaid: false,
-					nextDueDate: "2026-10-24",
-				},
-				{ id: 3, isActive: false, isSoftDeleted: false },
-			],
-		} as ContractDetail;
-		const alerts = getContractWorkspaceAlerts(contract, "2026-10-24");
-		expect(alerts).toHaveLength(2);
-		expect(alerts.map((a) => a.severity)).toEqual(["high", "low"]);
-		expect(alerts[0].description).toContain("inclui parcelas futuras");
+	it("never treats blocked creation data as pending work", () => {
+		expect(getContractWorkspaceAlerts(contract([]), "2026-10-25")).toEqual([]);
 	});
-	it("flags missing active data but does not require notes or attachments", () => {
+	it("limits upcoming alerts to today through seven calendar days", () => {
+		expect(
+			getContractWorkspaceAlerts(contract(), "2026-10-25")[0].severity,
+		).toBe("medium");
+		expect(
+			getContractWorkspaceAlerts(
+				contract([{ ...revenue, nextDueDate: "2026-11-01" }]),
+				"2026-10-25",
+			)[0].severity,
+		).toBe("medium");
+		expect(
+			getContractWorkspaceAlerts(
+				contract([{ ...revenue, nextDueDate: "2026-11-02" }]),
+				"2026-10-25",
+			),
+		).toEqual([]);
+	});
+	it("prioritizes exhausted plans over overdue dates without duplicating the revenue", () => {
 		const alerts = getContractWorkspaceAlerts(
-			{ revenues: [], assignments: [] } as unknown as ContractDetail,
-			"2026-10-24",
+			contract([
+				{ ...revenue, installmentsPaid: 2, nextDueDate: "2026-10-01" },
+			]),
+			"2026-10-25",
 		);
-		expect(alerts.map((a) => a.id)).toEqual(["no-revenues", "no-responsible"]);
+		expect(alerts).toHaveLength(1);
+		expect(alerts[0].id).toBe("balance-1");
+		expect(alerts[0].severity).toBe("high");
 	});
-	it("has no alerts for settled revenues with a responsible assignment", () => {
-		const contract = {
-			assignments: [
-				{
-					isActive: true,
-					isSoftDeleted: false,
-					assignmentTypeValue: "RESPONSIBLE",
-				},
-			],
-			revenues: [
-				{
-					isActive: true,
-					isSoftDeleted: false,
-					isFullyPaid: true,
-					remainingValue: 0,
-				},
-			],
-		} as ContractDetail;
-		expect(getContractWorkspaceAlerts(contract, "2026-10-24")).toEqual([]);
+	it("warns about overdue balances on inactive contracts but omits upcoming reminders", () => {
+		expect(
+			getContractWorkspaceAlerts(
+				contract([{ ...revenue, nextDueDate: "2026-10-24" }], {
+					isActive: false,
+				}),
+				"2026-10-25",
+			)[0].severity,
+		).toBe("high");
+		expect(
+			getContractWorkspaceAlerts(
+				contract([revenue], { isActive: false }),
+				"2026-10-25",
+			),
+		).toEqual([]);
+	});
+	it("treats settled active contracts as a low severity review rather than an error", () => {
+		const paid = { ...revenue, isFullyPaid: true, remainingValue: 0 };
+		expect(
+			getContractWorkspaceAlerts(contract([paid]), "2026-10-25")[0].severity,
+		).toBe("low");
+		expect(
+			getContractWorkspaceAlerts(
+				contract([paid], { statusValue: "COMPLETED" }),
+				"2026-10-25",
+			),
+		).toEqual([]);
+	});
+	it("omits all financial alerts when unauthorized or deleted, and ignores inactive revenues", () => {
+		expect(getContractWorkspaceAlerts(contract(), "2026-10-25", false)).toEqual(
+			[],
+		);
+		expect(
+			getContractWorkspaceAlerts(
+				contract([revenue], { isSoftDeleted: true }),
+				"2026-10-25",
+			),
+		).toEqual([]);
+		expect(
+			getContractWorkspaceAlerts(
+				contract([{ ...revenue, isActive: false }]),
+				"2026-10-25",
+			),
+		).toEqual([]);
 	});
 });

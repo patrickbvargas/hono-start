@@ -201,3 +201,9 @@ Sortable columns:
 - `action`
 - `entityType`
 - `entityName`
+
+Pending work pagination, filtering and summary counts execute in one parameterized server query. Defaults are page 1, limit 25, no filters; page size is capped at 100. Filters reset page while preserving page size; default severity rank (high, medium, low), earliest due date (null last), contract ID and issue ID provide deterministic order; validated column/direction parameters support global server sorting by severity, title, contract, client and due date before pagination. Calendar reference is the server's America/Sao_Paulo day, not a client-authoritative date. Payment plans use down payment, per-installment recorded active amounts, two-decimal rounding and final installment remainder. No dashboard period filter truncates this operational collection.
+
+Severity and type filters accept multiple selected values: OR within one field, AND between fields. Empty arrays mean unrestricted values within the authorized scope. Each selected value has its own removable chip; legacy single-value URLs normalize to arrays.
+
+Pending return context is an optional object validated by the owning pending-work search schema. Page, limit, filters and visible sort dimensions are retained across workspace tabs/reloads; no free-form return URL is accepted. Card filtering clears/replaces only severity and resets page. Days overdue are computed on the server from the earliest outstanding schedule date against the America/Sao_Paulo calendar day. Saldo a receber is total remaining balance and includes future installments; no separate overdue-balance column is displayed.

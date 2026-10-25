@@ -5,6 +5,27 @@ import { contractWorkspaceSearchSchema } from "../schemas/workspace";
 import { canReadContractReceipts } from "../utils/workflow-access";
 
 describe("contract workspace boundaries", () => {
+	it("validates pending queue return filters and rejects external return addresses", () => {
+		const parsed = contractWorkspaceSearchSchema.parse({
+			pendingReturnTo: {
+				page: 2,
+				column: "client",
+				direction: "desc",
+				severity: ["medium"],
+			},
+		});
+		expect(parsed.pendingReturnTo).toMatchObject({
+			page: 2,
+			column: "client",
+			direction: "desc",
+			severity: ["medium"],
+		});
+		expect(
+			contractWorkspaceSearchSchema.parse({
+				pendingReturnTo: "https://untrusted.invalid",
+			}).pendingReturnTo,
+		).toBeUndefined();
+	});
 	it("validates tabs and keeps return list context", () => {
 		expect(contractWorkspaceSearchSchema.parse({ tab: "unknown" }).tab).toBe(
 			"overview",

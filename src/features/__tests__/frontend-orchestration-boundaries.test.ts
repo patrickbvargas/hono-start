@@ -516,7 +516,11 @@ describe("frontend orchestration boundaries", () => {
 		const tableFiles = listFiles("src/features")
 			.map(normalizePath)
 			.filter((path) => path.endsWith("/components/table/index.tsx"))
-			.filter((path) => !path.includes("/audit-logs/"));
+			// Read-only audit and derived operational queues have no entity lifecycle actions.
+			.filter(
+				(path) =>
+					!path.includes("/audit-logs/") && !path.includes("/pending-work/"),
+			);
 		const violations = tableFiles.flatMap((path) => {
 			const content = readFileSync(path, "utf8");
 			const checks = [

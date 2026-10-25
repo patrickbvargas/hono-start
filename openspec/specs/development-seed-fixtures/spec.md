@@ -1,3 +1,7 @@
+## Purpose
+
+Define deterministic development fixtures for firm-scoped entities and multi-year financial workflows.
+
 ## Requirements
 
 ### Requirement: Seed bootstrap includes contract financial fixtures

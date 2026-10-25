@@ -1,4 +1,8 @@
-## ADDED Requirements
+## Purpose
+
+Define consistent global router error and not-found boundaries inside the application shell.
+
+## Requirements
 
 ### Requirement: Router root provides global error and not-found boundaries
 The system SHALL define global TanStack Router boundaries at the root route for uncaught route errors and unmatched URLs. These global boundaries MUST render inside the shared root document shell so 404 and fallback error states remain visually consistent with the application shell.

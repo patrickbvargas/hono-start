@@ -1,4 +1,8 @@
-## ADDED Requirements
+## Purpose
+
+Define connected contract workspaces, consistent product navigation, contextual financial workflows, settings and shared form usability.
+
+## Requirements
 
 ### Requirement: Task-oriented navigation
 The application SHALL group navigation into Trabalho, Financeiro, Cadastros and Administração and label the dashboard Visão geral and recorded fees Recebimentos, preserving URLs and permission filtering.
@@ -85,19 +89,19 @@ Contract drawers SHALL place workspace navigation in the desktop header and in t
 - **THEN** the first action opens the workspace with preserved return filters; overview observations have a label spanning both columns and appearance choices include theme-switcher icons
 
 ### Requirement: Contract alerts
-The workspace SHALL display alerts below contract data in Visão geral, derived from authorized contract data, separating overdue next due dates from informational remaining balances and missing active revenues or responsible assignments. Optional notes and attachments MUST NOT trigger missing-data alerts. Native related-record tooltips SHALL describe the detail action, and history SHALL omit its redundant explanatory footer.
+The workspace SHALL display actionable alerts below contract data in Visão geral, derived from authorized contract data: overdue next due dates, remaining balances after the last recorded installment, upcoming dates through seven calendar days and low-severity settled-contract status review. Financial subjects require independent receipt read access. Future remaining balances beyond seven days, missing creation-invariant data, optional notes and attachments MUST NOT trigger alerts. Native related-record tooltips SHALL describe the detail action, and history SHALL omit its redundant explanatory footer.
 
 #### Scenario: Outstanding future balance
-- **WHEN** a revenue has a remaining balance but its next due date is today or later
-- **THEN** the alert is informational and does not label the balance overdue
+- **WHEN** a revenue has a remaining balance but its next due date is more than seven calendar days ahead
+- **THEN** no alert is generated and the balance remains available in the financial section
 
 #### Scenario: Overdue revenue
-- **WHEN** an active unsettled revenue has a next due date before the local calendar date
+- **WHEN** an authorized active unsettled revenue has a next due date before the America/Sao_Paulo calendar date
 - **THEN** the alert identifies that date, distinguishes the total remaining balance from an overdue amount, and offers the finance tab
 
 #### Scenario: Alert severity and overview placement
 - **WHEN** a user opens Visão geral
-- **THEN** alerts appear below contract data with labelled red/high, amber/medium or blue/low chips, and no separate Alertas tab exists
+- **THEN** actionable alerts appear below contract data with labelled red/high, amber/medium or blue/low chips, and no separate Alertas tab exists
 
 #### Scenario: Consistent history pagination
 - **WHEN** the contract history has records

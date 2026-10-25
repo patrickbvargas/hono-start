@@ -1,4 +1,8 @@
-## MODIFIED Requirements
+## Purpose
+
+Define feature ownership boundaries and consistent entity-management implementation patterns.
+
+## Requirements
 
 ### Requirement: Feature slices preserve ownership boundaries
 The system SHALL keep clear ownership boundaries between feature slices, routes, and shared infrastructure for feature work, and equivalent micro-patterns SHALL converge across feature slices instead of remaining as informal per-feature variations.

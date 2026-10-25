@@ -68,11 +68,15 @@ export function ContractWorkspace({
 				}
 			>
 				<Link
-					to="/contratos"
-					search={search.returnTo ?? contractSearchDefaults}
+					to={search.pendingReturnTo ? "/pendencias" : "/contratos"}
+					search={
+						search.pendingReturnTo ?? search.returnTo ?? contractSearchDefaults
+					}
 					className="w-fit shrink-0 text-sm underline underline-offset-4"
 				>
-					Voltar para contratos
+					{search.pendingReturnTo
+						? "Voltar para pendências"
+						: "Voltar para contratos"}
 				</Link>
 				<div className="flex shrink-0 flex-wrap items-start justify-between gap-3">
 					<div className="min-w-0 space-y-1">

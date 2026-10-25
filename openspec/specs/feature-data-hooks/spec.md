@@ -2,7 +2,7 @@
 
 Define the route-facing and feature-component data hook boundaries for feature page data.
 
-## MODIFIED Requirements
+## Requirements
 
 ### Requirement: Feature page data is consumed through feature-local data hooks
 The system SHALL provide feature-local data hooks for routes and feature components that consume feature query data during render, and equivalent query concerns SHALL use the same hook semantics across feature slices.

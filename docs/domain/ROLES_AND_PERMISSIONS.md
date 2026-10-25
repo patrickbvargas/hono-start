@@ -168,3 +168,7 @@ Every dashboard detail request, including refreshes and retries, rechecks curren
 - An expense-only actor receives only expense cards and breakdowns, without fee, remuneration or consolidated balance data.
 - Expense-only dashboards hide area/type controls and their active chips on desktop and mobile. Period filters remain available. For other subject combinations, options still require contract read grants.
 - Tables currently use desktop visibility classes; permission alone does not make them visible on small screens.
+
+## Pending work access
+
+Pendências requires contracts:read_all or contracts:read_assigned. Every record and summary retains firm ownership and existing contract assignment visibility. Every financial issue (overdue, upcoming, exhausted plan and settled-contract review) additionally requires fees:read_all or fees:read_assigned independently; an all-contract grant does not widen assigned financial scope. Missing/invalid employee bindings do not grant assigned reads; recommending-only participation grants no visibility. Counts are computed after subject authorization. Links to clients require clients:read. The contract workspace applies the same financial subject check to its alerts.

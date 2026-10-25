@@ -27,16 +27,18 @@ export function ContractAlerts({ alerts, onNavigate }: ContractAlertsProps) {
 									className={
 										{
 											high: "border-transparent bg-red-600/10 text-red-700 dark:text-red-400",
+											low: "border-transparent bg-blue-600/10 text-blue-700 dark:text-blue-400",
 											medium:
 												"border-transparent bg-amber-600/10 text-amber-800 dark:text-amber-400",
-											low: "border-transparent bg-blue-600/10 text-blue-700 dark:text-blue-400",
 										}[alert.severity]
 									}
 								>
 									{
-										{ high: "Alta", medium: "Média", low: "Baixa" }[
-											alert.severity
-										]
+										{
+											high: "Alta",
+											low: "Baixa",
+											medium: "Média",
+										}[alert.severity]
 									}
 								</Badge>
 							</div>

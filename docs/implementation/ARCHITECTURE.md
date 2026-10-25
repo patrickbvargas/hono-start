@@ -184,3 +184,9 @@ Clerk-owned SignIn and account widgets may be imported by authentication feature
 Feature barrels may re-export server-only entrypoints required by HTTP routes (attachment delivery and Clerk webhooks). Their implementation belongs in feature `api/` modules, not in the barrel. Authorization helpers depending on persisted-resource types also belong in `api/`; pure `rules/` modules must not import `data/`.
 
 The related-records feature composes existing public client/employee/contract/fee detail and mutation components for contextual inspection. It owns no data API: existing entity hooks, permissions and server boundaries remain authoritative. Its public RelatedRecordLink uses local useOverlay and lazy-loads the composition on demand, avoiding an eager dependency cycle with entity detail components.
+
+## Pending work center
+
+Pendências is a read-only operational collection below Contratos, owned by `features/pending-work`. Its schemas, protected API, data queries, hooks and folder/index.tsx UI follow the reference slice. It has no form writes, delete/restore hooks or lifecycle EntityActions/EntityIdTrigger: issue identities are derived strings and contextual links open the source entity. Its table and mobile cards use the shared presentation primitives.
+
+The Prisma data boundary uses a parameterized SQL CTE union because derived schedule and missing-relation issues require joint server-side filtering, pagination and summary counts. Rows and counts share one statement snapshot; no client aggregation or per-contract detail fan-out. No migration or new dependency.

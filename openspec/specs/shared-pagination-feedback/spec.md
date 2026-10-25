@@ -1,4 +1,8 @@
-## ADDED Requirements
+## Purpose
+
+Define accurate shared pagination summaries for URL-driven list ranges and page-size changes.
+
+## Requirements
 
 ### Requirement: Shared pagination feedback reflects the visible record range
 The system SHALL render a shared pagination summary that reflects the current visible record range for URL-driven paginated lists.
