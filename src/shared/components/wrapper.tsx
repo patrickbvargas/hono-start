@@ -1,5 +1,6 @@
 import { Separator, SidebarTrigger } from "@/shared/components/ui";
 import { cn } from "@/shared/lib/utils";
+import { ValueVisibilityToggle } from "./value-visibility";
 
 interface WrapperProps extends React.HTMLAttributes<HTMLDivElement> {
 	title?: string;
@@ -34,7 +35,10 @@ export const Wrapper = ({
 					{title && <WrapperTitle title={title} />}
 					{titleAside}
 				</div>
-				{actions}
+				<div className="flex shrink-0 items-center gap-2">
+					<ValueVisibilityToggle />
+					{actions}
+				</div>
 			</div>
 			{children}
 		</div>

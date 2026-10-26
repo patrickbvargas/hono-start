@@ -10,6 +10,7 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/shared/components/ui";
+import { SensitiveValue } from "@/shared/components/value-visibility";
 import { cn } from "@/shared/lib/utils";
 import {
 	METRIC_BADGE_TONE_CLASSES,
@@ -98,7 +99,9 @@ export function DashboardMetricCards({
 										<p>
 											{metric.previousLabel}
 											{"\n"}
-											{metric.formattedPreviousValue}
+											<SensitiveValue>
+												{metric.formattedPreviousValue}
+											</SensitiveValue>
 										</p>
 										<p>{metric.previousPeriodLabel}</p>
 										{metric.drilldown === "expense" &&
@@ -117,7 +120,9 @@ export function DashboardMetricCards({
 						</CardAction>
 					</CardHeader>
 					<CardContent className="pointer-events-none relative flex flex-col gap-2 pt-0">
-						<p className="text-2xl font-semibold">{metric.formattedValue}</p>
+						<p className="text-2xl font-semibold">
+							<SensitiveValue>{metric.formattedValue}</SensitiveValue>
+						</p>
 					</CardContent>
 				</Card>
 			))}

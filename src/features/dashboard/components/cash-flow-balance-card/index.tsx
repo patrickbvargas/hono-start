@@ -1,5 +1,6 @@
 import { LandmarkIcon } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/shared/components/ui";
+import { SensitiveValue } from "@/shared/components/value-visibility";
 import { cn } from "@/shared/lib/utils";
 import type { DashboardSummary } from "../../schemas/model";
 
@@ -27,7 +28,7 @@ export function DashboardCashFlowBalanceCard({
 						isNegative && "text-destructive",
 					)}
 				>
-					{data.formattedTotalBalance}
+					<SensitiveValue>{data.formattedTotalBalance}</SensitiveValue>
 				</p>
 				<p className="text-sm text-muted-foreground">Saldo total</p>
 			</CardContent>

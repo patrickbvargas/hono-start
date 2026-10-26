@@ -1,6 +1,7 @@
 import { RelatedRecordLink } from "@/features/related-records";
 import { DataCardList } from "@/shared/components/data-card-list";
 import { Pagination } from "@/shared/components/pagination";
+import { SensitiveValue } from "@/shared/components/value-visibility";
 import { formatter } from "@/shared/lib/formatter";
 import { hasPermission, useLoggedUserSession } from "@/shared/session";
 import type { PendingWorkPage } from "../../schemas/model";
@@ -52,9 +53,13 @@ export function PendingWorkList({ data }: PendingWorkListProps) {
 				{
 					term: "Saldo a receber",
 					definition:
-						item.remainingAmount === null
-							? "—"
-							: formatter.currency(item.remainingAmount),
+						item.remainingAmount === null ? (
+							"—"
+						) : (
+							<SensitiveValue>
+								{formatter.currency(item.remainingAmount)}
+							</SensitiveValue>
+						),
 				},
 			]}
 			renderActions={(item) => <PendingWorkAction item={item} />}

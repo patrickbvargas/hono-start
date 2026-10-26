@@ -7,6 +7,7 @@ import {
 } from "@/shared/components/entity-detail";
 import { EntityStatus } from "@/shared/components/entity-status";
 import { FormSection } from "@/shared/components/form-section";
+import { SensitiveValue } from "@/shared/components/value-visibility";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
 import { hasPermission, useLoggedUserSession } from "@/shared/session";
@@ -61,7 +62,14 @@ export function RemunerationOverview({
 				term: "Data de recebimento",
 				definition: formatter.calendarDate(remuneration.paymentDate),
 			},
-			{ term: "Valor", definition: formatter.currency(remuneration.amount) },
+			{
+				term: "Valor",
+				definition: (
+					<SensitiveValue>
+						{formatter.currency(remuneration.amount)}
+					</SensitiveValue>
+				),
+			},
 			{
 				term: "Percentual efetivo (%)",
 				definition: formatter.percent(remuneration.effectivePercentage),
@@ -92,7 +100,11 @@ export function RemunerationOverview({
 			},
 			{
 				term: "Valor do recebimento",
-				definition: formatter.currency(remuneration.feeAmount),
+				definition: (
+					<SensitiveValue>
+						{formatter.currency(remuneration.feeAmount)}
+					</SensitiveValue>
+				),
 			},
 			{
 				term: "Origem",
@@ -132,13 +144,21 @@ export function RemunerationOverview({
 		<div className="mb-3 space-y-2 rounded-lg border bg-muted/30 p-3 text-sm">
 			<p>
 				Base do recebimento:{" "}
-				<strong>{formatter.currency(remuneration.feeAmount)}</strong> ·
-				Percentual registrado:{" "}
+				<strong>
+					<SensitiveValue>
+						{formatter.currency(remuneration.feeAmount)}
+					</SensitiveValue>
+				</strong>{" "}
+				· Percentual registrado:{" "}
 				<strong>{formatter.percent(remuneration.effectivePercentage)}</strong>
 			</p>
 			<p>
 				Remuneração registrada:{" "}
-				<strong>{formatter.currency(remuneration.amount)}</strong>
+				<strong>
+					<SensitiveValue>
+						{formatter.currency(remuneration.amount)}
+					</SensitiveValue>
+				</strong>
 			</p>
 			{remuneration.isManualOverride && (
 				<p className="text-muted-foreground">

@@ -4,6 +4,7 @@ import {
 	EntityDetail,
 } from "@/shared/components/entity-detail";
 import { FormSection } from "@/shared/components/form-section";
+import { SensitiveValue } from "@/shared/components/value-visibility";
 import type { EntityId } from "@/shared/schemas/entity";
 import { AUDIT_ACTION_LABELS } from "../../constants/display";
 import { useAuditLog } from "../../hooks/use-data";
@@ -87,7 +88,7 @@ export const AuditLogOverview = ({
 				<EntityDetail.Fields columns={2} items={summaryInfo.slice(7, 9)} />
 				{changePresentation.rawJson ? (
 					<pre className="overflow-x-auto rounded-md border bg-muted/30 p-3 text-xs text-foreground">
-						{changePresentation.rawJson}
+						<SensitiveValue>{changePresentation.rawJson}</SensitiveValue>
 					</pre>
 				) : (
 					<p className="text-sm text-muted-foreground">
@@ -108,7 +109,7 @@ export const AuditLogOverview = ({
 					<EntityDetail.Separator />
 					<EntityDetail.Section title="Payload técnico">
 						<pre className="overflow-x-auto rounded-md border bg-muted/30 p-3 text-xs text-foreground">
-							{changePresentation.rawJson}
+							<SensitiveValue>{changePresentation.rawJson}</SensitiveValue>
 						</pre>
 					</EntityDetail.Section>
 				</>
@@ -156,7 +157,11 @@ const AuditDiffList = ({ entries }: AuditDiffListProps) => {
 								Antes
 							</p>
 							<p className="wrap-break-word text-sm text-foreground">
-								{entry.before}
+								{entry.before.includes("R$") ? (
+									<SensitiveValue>{entry.before}</SensitiveValue>
+								) : (
+									entry.before
+								)}
 							</p>
 						</div>
 						<div className="min-w-0">
@@ -164,7 +169,11 @@ const AuditDiffList = ({ entries }: AuditDiffListProps) => {
 								Depois
 							</p>
 							<p className="wrap-break-word text-sm text-foreground">
-								{entry.after}
+								{entry.after.includes("R$") ? (
+									<SensitiveValue>{entry.after}</SensitiveValue>
+								) : (
+									entry.after
+								)}
 							</p>
 						</div>
 					</div>
@@ -191,7 +200,11 @@ const AuditValueList = ({ entries }: AuditValueListProps) => {
 		<EntityDetail.Fields
 			items={entries.map((entry) => ({
 				term: entry.label,
-				definition: entry.value,
+				definition: entry.value.includes("R$") ? (
+					<SensitiveValue>{entry.value}</SensitiveValue>
+				) : (
+					entry.value
+				),
 			}))}
 		/>
 	);

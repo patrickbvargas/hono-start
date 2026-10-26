@@ -5,6 +5,7 @@ import { EntityActions } from "@/shared/components/entity-actions";
 import { EntityIdTrigger } from "@/shared/components/entity-id-trigger";
 import { EntityStatus } from "@/shared/components/entity-status";
 import { Pagination } from "@/shared/components/pagination";
+import { SensitiveValue } from "@/shared/components/value-visibility";
 import { formatter } from "@/shared/lib/formatter";
 import type { dataTableFeatures } from "@/shared/lib/table";
 import type { EntityId } from "@/shared/schemas/entity";
@@ -95,7 +96,11 @@ export const FeeTable = ({
 			}),
 			c.accessor("amount", {
 				header: "Valor",
-				cell: ({ row }) => formatter.currency(row.original.amount),
+				cell: ({ row }) => (
+					<SensitiveValue>
+						{formatter.currency(row.original.amount)}
+					</SensitiveValue>
+				),
 				enableSorting: FEE_ALLOWED_SORT_COLUMNS.includes("amount"),
 				meta: {
 					cellClassName: "text-right",

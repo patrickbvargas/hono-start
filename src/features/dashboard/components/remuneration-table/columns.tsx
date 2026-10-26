@@ -1,5 +1,6 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import { TableButton } from "@/shared/components/table-button";
+import { SensitiveValue } from "@/shared/components/value-visibility";
 import { formatter } from "@/shared/lib/formatter";
 import type { dataTableFeatures } from "@/shared/lib/table";
 import type {
@@ -63,10 +64,14 @@ export function getColumns(
 								onSelect(context.row.original, month, event.currentTarget)
 							}
 						>
-							{formatter.currency(context.getValue())}
+							<SensitiveValue>
+								{formatter.currency(context.getValue())}
+							</SensitiveValue>
 						</TableButton>
 					) : (
-						formatter.currency(context.getValue())
+						<SensitiveValue>
+							{formatter.currency(context.getValue())}
+						</SensitiveValue>
 					),
 				meta: {
 					headerClassName: "min-w-32 text-right",
@@ -88,10 +93,14 @@ export function getColumns(
 							onSelect(context.row.original, undefined, event.currentTarget)
 						}
 					>
-						{formatter.currency(context.getValue())}
+						<SensitiveValue>
+							{formatter.currency(context.getValue())}
+						</SensitiveValue>
 					</TableButton>
 				) : (
-					formatter.currency(context.getValue())
+					<SensitiveValue>
+						{formatter.currency(context.getValue())}
+					</SensitiveValue>
 				),
 			meta: {
 				headerClassName: "min-w-40 text-right",

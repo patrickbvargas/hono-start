@@ -3,6 +3,7 @@ import { EntityForm } from "@/shared/components/entity-form";
 import { FormFieldSkeleton } from "@/shared/components/form-field-skeleton";
 import { FormSection } from "@/shared/components/form-section";
 import { FieldGroup, Skeleton } from "@/shared/components/ui";
+import { SensitiveValue } from "@/shared/components/value-visibility";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
@@ -52,10 +53,18 @@ function RemunerationFormContent({
 						{remuneration.contractProcessNumber} · Parcela{" "}
 						{remuneration.feeInstallmentNumber}
 					</p>
-					<p>Honorário: {formatter.currency(remuneration.feeAmount)}</p>
 					<p>
-						Remuneração registrada: {formatter.currency(remuneration.amount)} ·{" "}
-						{formatter.percent(remuneration.effectivePercentage)}
+						Honorário:{" "}
+						<SensitiveValue>
+							{formatter.currency(remuneration.feeAmount)}
+						</SensitiveValue>
+					</p>
+					<p>
+						Remuneração registrada:{" "}
+						<SensitiveValue>
+							{formatter.currency(remuneration.amount)}
+						</SensitiveValue>{" "}
+						· {formatter.percent(remuneration.effectivePercentage)}
 					</p>
 					<p className="text-muted-foreground">
 						Salvar aplica um ajuste manual. Valor e percentual são

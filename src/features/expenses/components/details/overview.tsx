@@ -6,6 +6,7 @@ import {
 } from "@/shared/components/entity-detail";
 import { EntityStatus } from "@/shared/components/entity-status";
 import { FormSection } from "@/shared/components/form-section";
+import { SensitiveValue } from "@/shared/components/value-visibility";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
 import { hasPermission, useLoggedUserSession } from "@/shared/session";
@@ -28,7 +29,12 @@ export function ExpenseOverview({
 		() => [
 			{ term: "Categoria", definition: expense.category },
 			{ term: "Data", definition: formatter.calendarDate(expense.expenseDate) },
-			{ term: "Valor", definition: formatter.currency(expense.amount) },
+			{
+				term: "Valor",
+				definition: (
+					<SensitiveValue>{formatter.currency(expense.amount)}</SensitiveValue>
+				),
+			},
 		],
 		[expense],
 	);

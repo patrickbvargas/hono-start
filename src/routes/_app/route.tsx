@@ -1,6 +1,7 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { AppSidebar } from "@/features/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/shared/components/ui";
+import { ValueVisibilityProvider } from "@/shared/components/value-visibility";
 import {
 	LoggedUserSessionProvider,
 	requireRouteSession,
@@ -20,12 +21,14 @@ function RouteComponent() {
 
 	return (
 		<LoggedUserSessionProvider session={session}>
-			<SidebarProvider className="size-full">
-				<AppSidebar />
-				<SidebarInset>
-					<Outlet />
-				</SidebarInset>
-			</SidebarProvider>
+			<ValueVisibilityProvider>
+				<SidebarProvider className="size-full">
+					<AppSidebar />
+					<SidebarInset>
+						<Outlet />
+					</SidebarInset>
+				</SidebarProvider>
+			</ValueVisibilityProvider>
 		</LoggedUserSessionProvider>
 	);
 }

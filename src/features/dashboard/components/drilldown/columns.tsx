@@ -1,5 +1,6 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import { getExpenseReadColumns } from "@/features/expenses";
+import { SensitiveValue } from "@/shared/components/value-visibility";
 import { formatter } from "@/shared/lib/formatter";
 import type { dataTableFeatures } from "@/shared/lib/table";
 import type {
@@ -50,7 +51,9 @@ export function getDashboardDrilldownColumns(
 			c.accessor("process", { header: "Processo", enableSorting: true }),
 			c.accessor("amount", {
 				header: "Valor",
-				cell: ({ getValue }) => formatter.currency(getValue()),
+				cell: ({ getValue }) => (
+					<SensitiveValue>{formatter.currency(getValue())}</SensitiveValue>
+				),
 				enableSorting: true,
 				meta: { cellClassName: "whitespace-nowrap text-right" },
 			}),
@@ -101,19 +104,29 @@ export function getDashboardDrilldownColumns(
 			? [
 					c.accessor("faceAmount", {
 						header: "Valor da parcela",
-						cell: ({ getValue }) => formatter.currency(getValue() ?? 0),
+						cell: ({ getValue }) => (
+							<SensitiveValue>
+								{formatter.currency(getValue() ?? 0)}
+							</SensitiveValue>
+						),
 						enableSorting: true,
 					}),
 					c.accessor("paid", {
 						header: "Pago",
-						cell: ({ getValue }) => formatter.currency(getValue() ?? 0),
+						cell: ({ getValue }) => (
+							<SensitiveValue>
+								{formatter.currency(getValue() ?? 0)}
+							</SensitiveValue>
+						),
 						enableSorting: true,
 					}),
 				]
 			: []),
 		c.accessor("amount", {
 			header: installment ? "Em aberto" : "Valor",
-			cell: ({ getValue }) => formatter.currency(getValue()),
+			cell: ({ getValue }) => (
+				<SensitiveValue>{formatter.currency(getValue())}</SensitiveValue>
+			),
 			enableSorting: true,
 			meta: { cellClassName: "whitespace-nowrap text-right" },
 		}),

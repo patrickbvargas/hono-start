@@ -16,6 +16,8 @@ It is meant to survive domain changes as long as the project keeps the same UI a
 
 ## Layout Rules
 
+- Top-bar create, edit, delete and restore buttons use the shared Button `sm` size, including the dashboard create menu and ButtonNew.
+
 - Route pages use the wrapper layout system from shared components.
 - Entity collections open dedicated record workspaces by default. Contextual relationship inspection uses existing detail drawers.
 - Create and edit forms open in modals.
@@ -83,6 +85,8 @@ It is meant to survive domain changes as long as the project keeps the same UI a
 - UI patterns must remain consistent across entities unless an intentional difference is documented.
 
 ## Interaction Contract
+
+- The wrapper header exposes a global eye button to hide/show financial display values, including dashboard cards, charts, lists and details. The preference is local to the browser and persists across navigation and reload. Hidden monetary text uses `R$ •••` without blur and an accessible `Valor oculto` label. Hidden charts show the same placeholder instead of their contents; editing inputs and exported documents retain their original values. This display preference does not change permissions or requests.
 
 - Toasts are the canonical user-feedback mechanism for mutation results.
 - Do not use browser-native alerts or confirms for product interactions.

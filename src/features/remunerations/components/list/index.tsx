@@ -4,6 +4,7 @@ import { EntityActions } from "@/shared/components/entity-actions";
 import type { DetailFieldItem } from "@/shared/components/entity-fields";
 import { EntityStatus } from "@/shared/components/entity-status";
 import { Pagination } from "@/shared/components/pagination";
+import { SensitiveValue } from "@/shared/components/value-visibility";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { QueryPaginatedReturnType } from "@/shared/types/api";
@@ -39,7 +40,11 @@ export const RemunerationList = ({
 			},
 			{
 				term: "Valor",
-				definition: formatter.currency(remuneration.amount),
+				definition: (
+					<SensitiveValue>
+						{formatter.currency(remuneration.amount)}
+					</SensitiveValue>
+				),
 			},
 			{
 				term: "% Efetivo",

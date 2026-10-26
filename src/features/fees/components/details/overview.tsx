@@ -9,6 +9,7 @@ import {
 import { EntityStatus } from "@/shared/components/entity-status";
 import { FormSection } from "@/shared/components/form-section";
 import { NavigationLink } from "@/shared/components/navigation-link";
+import { SensitiveValue } from "@/shared/components/value-visibility";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
 import { hasPermission, useLoggedUserSession } from "@/shared/session";
@@ -51,7 +52,12 @@ export function FeeOverview({ id, section = "all" }: FeeOverviewProps) {
 				term: "Data de recebimento",
 				definition: formatter.calendarDate(fee.paymentDate),
 			},
-			{ term: "Valor", definition: formatter.currency(fee.amount) },
+			{
+				term: "Valor",
+				definition: (
+					<SensitiveValue>{formatter.currency(fee.amount)}</SensitiveValue>
+				),
+			},
 			{ term: "Nº da parcela", definition: String(fee.installmentNumber) },
 		],
 		[fee, session],

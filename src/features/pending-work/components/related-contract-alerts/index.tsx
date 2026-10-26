@@ -2,6 +2,7 @@ import { RelatedRecordLink } from "@/features/related-records";
 import { NavigationLink } from "@/shared/components/navigation-link";
 import { SectionTitle } from "@/shared/components/section-title";
 import { Button, ScrollArea, Skeleton } from "@/shared/components/ui";
+import { SensitiveValue } from "@/shared/components/value-visibility";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
 import { hasPermission, useLoggedUserSession } from "@/shared/session";
@@ -108,7 +109,9 @@ function RelatedContractAlertsContent(props: RelatedContractAlertsProps) {
 											{item.remainingAmount !== null && (
 												<p className="text-muted-foreground">
 													Saldo a receber:{" "}
-													{formatter.currency(item.remainingAmount)}
+													<SensitiveValue>
+														{formatter.currency(item.remainingAmount)}
+													</SensitiveValue>
 												</p>
 											)}
 										</div>

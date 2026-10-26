@@ -4,6 +4,7 @@ import { EntityActions } from "@/shared/components/entity-actions";
 import type { DetailFieldItem } from "@/shared/components/entity-fields";
 import { EntityStatus } from "@/shared/components/entity-status";
 import { Pagination } from "@/shared/components/pagination";
+import { SensitiveValue } from "@/shared/components/value-visibility";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { QueryPaginatedReturnType } from "@/shared/types/api";
@@ -34,7 +35,12 @@ export const ExpenseList = ({
 	const renderCardFields = React.useCallback(
 		(expense: ExpenseSummary): DetailFieldItem[] => [
 			{ term: "Data", definition: formatter.calendarDate(expense.expenseDate) },
-			{ term: "Valor", definition: formatter.currency(expense.amount) },
+			{
+				term: "Valor",
+				definition: (
+					<SensitiveValue>{formatter.currency(expense.amount)}</SensitiveValue>
+				),
+			},
 			{ term: "Descrição", definition: expense.notes || "—" },
 			{
 				term: "Situação",

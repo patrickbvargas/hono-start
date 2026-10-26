@@ -9,6 +9,7 @@ import {
 import { EntityStatus } from "@/shared/components/entity-status";
 import { FormSection } from "@/shared/components/form-section";
 import { NavigationLink } from "@/shared/components/navigation-link";
+import { SensitiveValue } from "@/shared/components/value-visibility";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
 import { hasPermission, useLoggedUserSession } from "@/shared/session";
@@ -171,7 +172,11 @@ function EmployeeFinanceSummary({ id }: { id: EntityId }) {
 				items={[
 					{
 						term: "Total de remunerações geradas",
-						definition: formatter.currency(finance.totalAmount),
+						definition: (
+							<SensitiveValue>
+								{formatter.currency(finance.totalAmount)}
+							</SensitiveValue>
+						),
 					},
 				]}
 			/>

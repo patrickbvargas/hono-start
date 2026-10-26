@@ -1,5 +1,6 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import { TableButton } from "@/shared/components/table-button";
+import { SensitiveValue } from "@/shared/components/value-visibility";
 import { formatter } from "@/shared/lib/formatter";
 import type { dataTableFeatures } from "@/shared/lib/table";
 import type { DashboardCashFlowRow } from "../../schemas/model";
@@ -26,10 +27,10 @@ export function getColumns(onSelect?: CashFlowSelectionOptions["onSelect"]) {
 				title={`Ver detalhes: ${labels[column]} · ${row.monthLabel}`}
 				onClick={(event) => onSelect(row, column, event.currentTarget)}
 			>
-				{formatter.currency(row[column])}
+				<SensitiveValue>{formatter.currency(row[column])}</SensitiveValue>
 			</TableButton>
 		) : (
-			formatter.currency(row[column])
+			<SensitiveValue>{formatter.currency(row[column])}</SensitiveValue>
 		);
 	const columnHelper = createColumnHelper<
 		typeof dataTableFeatures,

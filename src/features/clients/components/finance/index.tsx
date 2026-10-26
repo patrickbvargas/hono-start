@@ -3,6 +3,7 @@ import { EntityDetail } from "@/shared/components/entity-detail";
 import { EntityFields } from "@/shared/components/entity-fields";
 import { FormSection } from "@/shared/components/form-section";
 import { NavigationLink } from "@/shared/components/navigation-link";
+import { SensitiveValue } from "@/shared/components/value-visibility";
 import { formatter } from "@/shared/lib/formatter";
 import { useClientFinance } from "../../hooks/use-data";
 
@@ -24,15 +25,27 @@ export function ClientFinance({ id, compact = false }: ClientFinanceProps) {
 					},
 					{
 						term: "Valor contratado",
-						definition: formatter.currency(finance.totalValue),
+						definition: (
+							<SensitiveValue>
+								{formatter.currency(finance.totalValue)}
+							</SensitiveValue>
+						),
 					},
 					{
 						term: "Recebido (inclui entrada)",
-						definition: formatter.currency(finance.paidValue),
+						definition: (
+							<SensitiveValue>
+								{formatter.currency(finance.paidValue)}
+							</SensitiveValue>
+						),
 					},
 					{
 						term: "Saldo a receber",
-						definition: formatter.currency(finance.remainingValue),
+						definition: (
+							<SensitiveValue>
+								{formatter.currency(finance.remainingValue)}
+							</SensitiveValue>
+						),
 					},
 				]}
 			/>

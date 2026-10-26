@@ -168,7 +168,7 @@ function RouteComponent() {
 			actions={
 				canCreate ? (
 					<DropdownMenu>
-						<DropdownMenuTrigger render={<Button />}>
+						<DropdownMenuTrigger render={<Button size="sm" />}>
 							<PlusIcon size={16} />
 							Novo
 						</DropdownMenuTrigger>

@@ -13,6 +13,7 @@ import {
 import { FormSection } from "@/shared/components/form-section";
 import { NavigationLink } from "@/shared/components/navigation-link";
 import { Badge, Button } from "@/shared/components/ui";
+import { SensitiveValue } from "@/shared/components/value-visibility";
 import { formatter } from "@/shared/lib/formatter";
 import { hasPermission } from "@/shared/session";
 import { useContractWorkspace } from "../../hooks/use-workspace";
@@ -205,23 +206,41 @@ export function ContractWorkspace({
 										items={[
 											{
 												term: "Valor contratado",
-												definition: formatter.currency(
-													activeRevenues.reduce((s, r) => s + r.totalValue, 0),
+												definition: (
+													<SensitiveValue>
+														{formatter.currency(
+															activeRevenues.reduce(
+																(s, r) => s + r.totalValue,
+																0,
+															),
+														)}
+													</SensitiveValue>
 												),
 											},
 											{
 												term: "Recebido (inclui entrada)",
-												definition: formatter.currency(
-													activeRevenues.reduce((s, r) => s + r.paidValue, 0),
+												definition: (
+													<SensitiveValue>
+														{formatter.currency(
+															activeRevenues.reduce(
+																(s, r) => s + r.paidValue,
+																0,
+															),
+														)}
+													</SensitiveValue>
 												),
 											},
 											{
 												term: "Saldo a receber",
-												definition: formatter.currency(
-													activeRevenues.reduce(
-														(s, r) => s + r.remainingValue,
-														0,
-													),
+												definition: (
+													<SensitiveValue>
+														{formatter.currency(
+															activeRevenues.reduce(
+																(s, r) => s + r.remainingValue,
+																0,
+															),
+														)}
+													</SensitiveValue>
 												),
 											},
 										]}

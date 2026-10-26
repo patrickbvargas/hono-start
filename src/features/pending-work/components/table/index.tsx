@@ -2,6 +2,7 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { useMemo } from "react";
 import { DataTable } from "@/shared/components/data-table";
 import { Pagination } from "@/shared/components/pagination";
+import { SensitiveValue } from "@/shared/components/value-visibility";
 import { formatter } from "@/shared/lib/formatter";
 import type { dataTableFeatures } from "@/shared/lib/table";
 import { usePendingWorkNavigation } from "../../hooks/use-navigation";
@@ -52,7 +53,11 @@ export function PendingWorkTable({ data }: PendingWorkTableProps) {
 				enableSorting: true,
 				cell: ({ getValue }) => {
 					const value = getValue();
-					return value === null ? "—" : formatter.currency(value);
+					return value === null ? (
+						"—"
+					) : (
+						<SensitiveValue>{formatter.currency(value)}</SensitiveValue>
+					);
 				},
 				meta: { cellClassName: "whitespace-nowrap tabular-nums" },
 			}),

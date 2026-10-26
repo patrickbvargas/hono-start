@@ -1,6 +1,7 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { lazy, Suspense, useEffect, useMemo } from "react";
 import { Drilldown } from "@/features/drilldown";
+import { SensitiveValue } from "@/shared/components/value-visibility";
 import { useOverlay } from "@/shared/hooks/use-overlay";
 import { formatter } from "@/shared/lib/formatter";
 import type { OverlayState } from "@/shared/types/overlay";
@@ -95,7 +96,9 @@ function DrilldownSummary({ amount, target }: DrilldownSummaryProps) {
 					Dados atualizados. Exibindo a composição atual.
 				</p>
 			) : null}
-			<p className="font-medium">Total: {formatter.currency(amount)}</p>
+			<p className="font-medium">
+				Total: <SensitiveValue>{formatter.currency(amount)}</SensitiveValue>
+			</p>
 		</div>
 	);
 }

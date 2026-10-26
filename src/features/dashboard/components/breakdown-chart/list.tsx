@@ -1,3 +1,4 @@
+import { SensitiveValue } from "@/shared/components/value-visibility";
 import type { DashboardBreakdownItem } from "../../schemas/model";
 import { getBreakdownColor } from "../../utils/breakdown";
 
@@ -26,7 +27,7 @@ export function BreakdownList({ items }: BreakdownItemsProps) {
 						</div>
 					</div>
 					<span className="shrink-0 text-muted-foreground">
-						{item.formattedTotal}
+						<SensitiveValue>{item.formattedTotal}</SensitiveValue>
 					</span>
 				</div>
 			))}

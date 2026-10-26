@@ -14,6 +14,7 @@ import {
 	DropdownMenuTrigger,
 	Spinner,
 } from "@/shared/components/ui";
+import { SensitiveValue } from "@/shared/components/value-visibility";
 import { formatter } from "@/shared/lib/formatter";
 import type { dataTableFeatures } from "@/shared/lib/table";
 import type { EntityId } from "@/shared/schemas/entity";
@@ -114,7 +115,11 @@ export const RemunerationTable = ({
 			}),
 			c.accessor("amount", {
 				header: "Valor",
-				cell: ({ row }) => formatter.currency(row.original.amount),
+				cell: ({ row }) => (
+					<SensitiveValue>
+						{formatter.currency(row.original.amount)}
+					</SensitiveValue>
+				),
 				enableSorting: REMUNERATION_ALLOWED_SORT_COLUMNS.includes("amount"),
 				meta: {
 					cellClassName: "text-right",

@@ -17,6 +17,7 @@ import {
 import { ButtonNew } from "@/shared/components/button-new";
 import { EntityView } from "@/shared/components/entity-view";
 import { RouteError } from "@/shared/components/route-error";
+import { SensitiveValue } from "@/shared/components/value-visibility";
 import {
 	Wrapper,
 	WrapperBody,
@@ -89,7 +90,9 @@ function RouteComponent() {
 						<p className="shrink-0 whitespace-nowrap text-sm text-muted-foreground">
 							Total filtrado:{" "}
 							<strong className="font-semibold tabular-nums text-foreground">
-								{formatter.currency(fees.totalAmount)}
+								<SensitiveValue>
+									{formatter.currency(fees.totalAmount)}
+								</SensitiveValue>
 							</strong>
 						</p>
 					}

@@ -5,6 +5,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/shared/components/ui";
+import { SensitiveValue } from "@/shared/components/value-visibility";
 import { formatter } from "@/shared/lib/formatter";
 import type { DashboardOverdueInstallmentRow } from "../../schemas/model";
 
@@ -50,7 +51,9 @@ export function DashboardWorkPanel({
 								</div>
 								<div className="flex items-center gap-3">
 									<span className="whitespace-nowrap text-sm font-medium">
-										{row.formattedInstallmentAmount}
+										<SensitiveValue>
+											{row.formattedInstallmentAmount}
+										</SensitiveValue>
 									</span>
 									{canOpenContracts && (
 										<NavigationLink

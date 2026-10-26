@@ -15,6 +15,7 @@ import type {
 } from "recharts/types/component/DefaultTooltipContent";
 import type { TooltipContentProps } from "recharts/types/component/Tooltip";
 import { cn } from "@/shared/lib/utils";
+import { useValueVisibility } from "../value-visibility";
 
 type ChartTheme = {
 	light: string;
@@ -139,6 +140,7 @@ export function ChartContainer({
 	style,
 	...props
 }: ChartContainerProps) {
+	const { hidden } = useValueVisibility();
 	const id = React.useId().replace(/:/g, "");
 	const chartVariables = React.useMemo(() => {
 		return getChartVariables(config);
@@ -148,9 +150,11 @@ export function ChartContainer({
 		<ChartContext.Provider value={{ config }}>
 			<div
 				data-chart={id}
+				aria-label={hidden ? "Valores do gráfico ocultos" : undefined}
 				className={cn(
 					"`min-h-50 w-full text-xs [&_.recharts-responsive-container]:h-full!",
 					className,
+					hidden && "flex items-center justify-center select-none",
 				)}
 				style={
 					{
@@ -160,9 +164,15 @@ export function ChartContainer({
 				}
 				{...props}
 			>
-				<ResponsiveContainer width="100%" height="100%">
-					{children}
-				</ResponsiveContainer>
+				{hidden ? (
+					<span className="text-muted-foreground text-lg" aria-hidden="true">
+						R$ •••
+					</span>
+				) : (
+					<ResponsiveContainer width="100%" height="100%">
+						{children}
+					</ResponsiveContainer>
+				)}
 			</div>
 		</ChartContext.Provider>
 	);

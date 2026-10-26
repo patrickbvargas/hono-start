@@ -8,6 +8,25 @@
 
 ## Requirements
 
+### Requirement: Financial display visibility preference
+The authenticated page header SHALL expose an eye button to hide or show financial display values across cards, lists, totals and details. Hidden monetary values SHALL display `R$ •••` without blur and SHALL expose an accessible `Valor oculto` label. Hidden charts SHALL display the same placeholder instead of chart contents. The browser-local preference SHALL persist across navigation and reload without changing permissions, server requests, editing inputs or exports.
+
+#### Scenario: Hide and restore values
+- **WHEN** a user selects `Ocultar valores`
+- **THEN** financial display values, including values in open detail portals, SHALL be replaced by the masked placeholder
+- **AND** the control SHALL offer `Mostrar valores` to restore their display
+
+#### Scenario: Restore the saved preference
+- **WHEN** a user reloads after hiding values
+- **THEN** financial display values SHALL remain hidden
+
+### Requirement: Compact top-bar actions
+Top-bar create, edit, delete and restore buttons SHALL use the shared Button `sm` size, including the dashboard create menu and shared ButtonNew.
+
+#### Scenario: Consistent action sizes
+- **WHEN** a user navigates between the dashboard, entity lists and record pages
+- **THEN** their top-bar create, edit, delete and restore actions SHALL use the same small button size
+
 ### Requirement: Layout wraps all authenticated content
 `AppLayout` SHALL be mounted by a TanStack Router pathless layout route at `_app/route.tsx` and SHALL render as the top-level shell for all authenticated product pages via `<Outlet />`. It SHALL contain the sidebar and the main content area side by side so that every post-login page is rendered inside the same authenticated container instead of mounting its own shell independently.
 

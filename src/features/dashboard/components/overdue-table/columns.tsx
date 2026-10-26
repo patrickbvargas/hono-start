@@ -1,5 +1,6 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import { TableButton } from "@/shared/components/table-button";
+import { SensitiveValue } from "@/shared/components/value-visibility";
 import { formatter } from "@/shared/lib/formatter";
 import type { dataTableFeatures } from "@/shared/lib/table";
 import type { DashboardOverdueInstallmentRow } from "../../schemas/model";
@@ -76,6 +77,7 @@ export function getColumns(onViewContract?: (id: number) => void) {
 		}),
 		columnHelper.accessor("formattedInstallmentAmount", {
 			id: "formattedInstallmentAmount",
+			cell: (context) => <SensitiveValue>{context.getValue()}</SensitiveValue>,
 			header: "Saldo em aberto",
 			meta: {
 				headerClassName: "min-w-32 text-right",
@@ -84,6 +86,7 @@ export function getColumns(onViewContract?: (id: number) => void) {
 		}),
 		columnHelper.accessor("formattedTotalValue", {
 			id: "formattedTotalValue",
+			cell: (context) => <SensitiveValue>{context.getValue()}</SensitiveValue>,
 			header: "Total do honorário",
 			meta: {
 				headerClassName: "min-w-32 text-right",

@@ -5,6 +5,7 @@ import { EntityActions } from "@/shared/components/entity-actions";
 import { EntityDetail } from "@/shared/components/entity-detail";
 import { NavigationLink } from "@/shared/components/navigation-link";
 import { Skeleton } from "@/shared/components/ui";
+import { SensitiveValue } from "@/shared/components/value-visibility";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
 import { hasPermission, useLoggedUserSession } from "@/shared/session";
@@ -85,7 +86,10 @@ function ExpenseDetailsContent({
 	return (
 		<EntityDetail.Content>
 			<EntityDetail.Header className="flex-row items-center justify-between gap-3">
-				<EntityDetail.Title className="min-w-0 flex-1 truncate">{`${expense.category} • ${formatter.currency(expense.amount)}`}</EntityDetail.Title>
+				<EntityDetail.Title className="min-w-0 flex-1 truncate">
+					{expense.category} •{" "}
+					<SensitiveValue>{formatter.currency(expense.amount)}</SensitiveValue>
+				</EntityDetail.Title>
 				<div className="hidden shrink-0 sm:block">{workspaceLink}</div>
 				<EntityActions
 					viewPermission="org:expenses:read"

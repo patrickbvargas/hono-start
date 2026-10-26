@@ -2,6 +2,7 @@ import { feeSearchDefaults } from "@/features/fees";
 import { EntityDetail } from "@/shared/components/entity-detail";
 import { NavigationLink } from "@/shared/components/navigation-link";
 import { Button } from "@/shared/components/ui";
+import { SensitiveValue } from "@/shared/components/value-visibility";
 import { formatter } from "@/shared/lib/formatter";
 import { hasPermission, useLoggedUserSession } from "@/shared/session";
 import type { ContractDetail } from "../../schemas/model";
@@ -37,19 +38,35 @@ export function ContractRevenues({
 							items={[
 								{
 									term: "Valor contratado",
-									definition: formatter.currency(revenue.totalValue),
+									definition: (
+										<SensitiveValue>
+											{formatter.currency(revenue.totalValue)}
+										</SensitiveValue>
+									),
 								},
 								{
 									term: "Valor entrada",
-									definition: formatter.currency(revenue.downPaymentValue ?? 0),
+									definition: (
+										<SensitiveValue>
+											{formatter.currency(revenue.downPaymentValue ?? 0)}
+										</SensitiveValue>
+									),
 								},
 								{
 									term: "Recebido (inclui entrada)",
-									definition: formatter.currency(revenue.paidValue),
+									definition: (
+										<SensitiveValue>
+											{formatter.currency(revenue.paidValue)}
+										</SensitiveValue>
+									),
 								},
 								{
 									term: "Saldo a receber",
-									definition: formatter.currency(revenue.remainingValue),
+									definition: (
+										<SensitiveValue>
+											{formatter.currency(revenue.remainingValue)}
+										</SensitiveValue>
+									),
 								},
 								{
 									term: "Parcelas registradas",

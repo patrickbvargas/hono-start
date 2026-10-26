@@ -1,5 +1,6 @@
 import { createColumnHelper, type RowData } from "@tanstack/react-table";
 import { TableButton } from "@/shared/components/table-button";
+import { SensitiveValue } from "@/shared/components/value-visibility";
 import { formatter } from "@/shared/lib/formatter";
 import type { dataTableFeatures } from "@/shared/lib/table";
 
@@ -46,7 +47,9 @@ export function getExpenseReadColumns<T extends RowData>({
 		c.accessor(amount, {
 			id: "amount",
 			header: "Valor",
-			cell: ({ getValue }) => formatter.currency(getValue()),
+			cell: ({ getValue }) => (
+				<SensitiveValue>{formatter.currency(getValue())}</SensitiveValue>
+			),
 			enableSorting,
 			meta: { cellClassName: "text-right" },
 		}),

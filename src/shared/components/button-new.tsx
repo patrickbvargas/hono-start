@@ -21,7 +21,7 @@ export const ButtonNew = ({
 		return null;
 	}
 	return (
-		<Button {...props}>
+		<Button size="sm" {...props}>
 			<PlusIcon size={16} />
 			<span>{label}</span>
 		</Button>
