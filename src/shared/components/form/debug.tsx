@@ -2,6 +2,7 @@ import { type AnyFormApi, useStore } from "@tanstack/react-form-start";
 import { ChevronLeft } from "lucide-react";
 import * as React from "react";
 import { createPortal } from "react-dom";
+import * as z from "zod";
 import {
 	Accordion,
 	AccordionContent,
@@ -13,6 +14,10 @@ import {
 import { useLocalStorage } from "@/shared/hooks/use-local-storage";
 import { cn } from "@/shared/lib/utils";
 
+const debugOpenSchema = z.boolean();
+const expandedKeysSchema = z.array(z.string());
+const defaultExpandedKeys: string[] = [];
+
 interface FormRootProps {
 	form: AnyFormApi;
 }
@@ -23,10 +28,13 @@ export const FormDebug = ({ form }: FormRootProps) => {
 		state.errors,
 	]);
 	const [mounted, setMounted] = React.useState(false);
-	const [isOpen, setIsOpen] = useLocalStorage<boolean>("RHFDebug.open", false);
+	const [isOpen, setIsOpen] = useLocalStorage<boolean>("RHFDebug.open", false, {
+		schema: debugOpenSchema,
+	});
 	const [expandedKeys, setExpandedKeys] = useLocalStorage<string[]>(
 		"RHFDebug.expandedKeys",
-		[],
+		defaultExpandedKeys,
+		{ schema: expandedKeysSchema },
 	);
 
 	React.useEffect(() => {
