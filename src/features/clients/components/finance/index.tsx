@@ -19,6 +19,10 @@ export function ClientFinance({ id, compact = false }: ClientFinanceProps) {
 				columns={2}
 				items={[
 					{
+						term: "Contratos no resumo",
+						definition: String(finance.contractCount),
+					},
+					{
 						term: "Valor contratado",
 						definition: formatter.currency(finance.totalValue),
 					},

@@ -55,6 +55,13 @@ describe("embedded entity audit history", () => {
 		render(<EntityAuditHistory entityType="Contract" entityId={60} />);
 		expect(mocks.useHistory).toHaveBeenCalledWith("Contract", 60);
 		expect(screen.getByRole("table")).not.toBeNull();
+		expect(
+			screen.getAllByRole("columnheader").map((header) => header.textContent),
+		).toEqual(["#", "Ocorrido em", "Ação", "Usuário", "Detalhes"]);
+		fireEvent.click(
+			screen.getByRole("button", { name: "Ver resumo do registro #10" }),
+		);
+		expect(mocks.open).toHaveBeenCalledWith(10);
 		expect(screen.getByText("Maria")).not.toBeNull();
 		fireEvent.click(
 			screen.getByRole("button", { name: "Próxima página do histórico" }),

@@ -54,6 +54,7 @@ export function ContractWorkspace({
 	const activeRevenues = contract.revenues.filter(
 		(r) => r.isActive && !r.isSoftDeleted,
 	);
+	const canReadAttachments = hasPermission(session, "org:attachments:read");
 	const selected = activeRevenues.find((r) => r.id === selectedRevenue);
 	return (
 		<EntityWorkspace
@@ -88,7 +89,11 @@ export function ContractWorkspace({
 						: "Voltar para contratos"}
 				</Link>
 			}
-			tab={search.tab}
+			tab={
+				search.tab === "attachments" && !canReadAttachments
+					? "overview"
+					: search.tab
+			}
 			onTabChange={(tab) =>
 				onTabChange(contractWorkspaceSearchSchema.shape.tab.parse(tab))
 			}
@@ -189,11 +194,39 @@ export function ContractWorkspace({
 												}}
 												className="text-sm underline underline-offset-4"
 											>
-												Conferir remunerações
+												Ver remunerações
 											</NavigationLink>
 										)}
 									</div>
 								</div>
+								<FormSection title="Financeiro">
+									<EntityDetail.Fields
+										columns={2}
+										items={[
+											{
+												term: "Valor contratado",
+												definition: formatter.currency(
+													activeRevenues.reduce((s, r) => s + r.totalValue, 0),
+												),
+											},
+											{
+												term: "Recebido (inclui entrada)",
+												definition: formatter.currency(
+													activeRevenues.reduce((s, r) => s + r.paidValue, 0),
+												),
+											},
+											{
+												term: "Saldo a receber",
+												definition: formatter.currency(
+													activeRevenues.reduce(
+														(s, r) => s + r.remainingValue,
+														0,
+													),
+												),
+											},
+										]}
+									/>
+								</FormSection>
 								<ContractRevenues
 									contract={contract}
 									canReadFees={canReadFees}
@@ -209,6 +242,13 @@ export function ContractWorkspace({
 					content: (
 						<>
 							<FormSection title="Equipe do contrato">
+								{!contract.assignments.some(
+									(a) => a.isActive && !a.isSoftDeleted,
+								) && (
+									<p className="text-sm text-muted-foreground">
+										Nenhum colaborador vinculado.
+									</p>
+								)}
 								<div className="divide-y rounded-lg border">
 									{contract.assignments
 										.filter((a) => a.isActive && !a.isSoftDeleted)
@@ -248,25 +288,28 @@ export function ContractWorkspace({
 						</>
 					),
 				},
-				{
-					value: "attachments",
-					label: "Anexos",
-					expanded: true,
-					content: (
-						<>
-							<AttachmentSection
-								canUpload
-								layout="expanded"
-								ownerId={id}
-								ownerKind="contract"
-							/>
-						</>
-					),
-				},
+				...(canReadAttachments
+					? [
+							{
+								value: "attachments",
+								label: "Anexos",
+								expanded: true,
+								content: (
+									<>
+										<AttachmentSection
+											canUpload={canEdit}
+											layout="expanded"
+											ownerId={id}
+											ownerKind="contract"
+										/>
+									</>
+								),
+							},
+						]
+					: []),
 				{
 					value: "history",
 					label: "Histórico",
-					fullWidth: true,
 					content: (
 						<>
 							<EntityWorkspaceHistory

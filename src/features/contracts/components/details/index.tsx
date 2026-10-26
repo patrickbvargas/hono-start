@@ -212,7 +212,19 @@ const ContractDetailsContent = ({
 					/>
 				</EntityDetail.Section>
 				<EntityDetail.Separator />
-				<AttachmentSection canUpload ownerId={id} ownerKind="contract" />
+				{hasPermission(session, "org:attachments:read") && (
+					<AttachmentSection
+						canUpload={
+							!contract.isSoftDeleted &&
+							!["COMPLETED", "CANCELLED"].includes(contract.statusValue) &&
+							(hasPermission(session, "org:contracts:update_all") ||
+								(hasPermission(session, "org:contracts:update_assigned") &&
+									contract.isAssignedToActor))
+						}
+						ownerId={id}
+						ownerKind="contract"
+					/>
+				)}
 				<EntityDetail.Separator />
 				<EntityDetail.Section title="Registro">
 					<EntityDetail.Fields columns={2} items={registerInfo} />

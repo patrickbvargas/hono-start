@@ -40,7 +40,7 @@ export function RemunerationWorkspace({
 	return (
 		<EntityWorkspace
 			title="Remuneração"
-			identity={remuneration.employeeName}
+			identity={`${remuneration.employeeName} • ${remuneration.contractProcessNumber}`}
 			subtitle={`#${id}`}
 			status={
 				<EntityStatus
@@ -101,7 +101,6 @@ export function RemunerationWorkspace({
 					: []),
 				{
 					value: "history",
-					fullWidth: true,
 					label: "Histórico",
 					content: (
 						<EntityWorkspaceHistory

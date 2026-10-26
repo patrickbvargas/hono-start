@@ -1,10 +1,15 @@
+vi.mock("@/shared/session", () => ({
+	useLoggedUserSession: () => ({}),
+	hasPermission: () => state.attachments,
+}));
+
 // @vitest-environment jsdom
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { OverlayState } from "@/shared/types/overlay";
 
-const state = vi.hoisted(() => ({ deleted: false }));
+const state = vi.hoisted(() => ({ deleted: false, attachments: true }));
 vi.mock("@tanstack/react-router", () => ({
 	Link: ({ children }: { children: ReactNode }) => (
 		<a href="/despesas">{children}</a>
@@ -151,4 +156,18 @@ describe("expense page lifecycle composition", () => {
 		expect(screen.queryByRole("dialog")).toBeNull();
 		expect(onDeleted).not.toHaveBeenCalled();
 	});
+});
+
+it("falls back from forbidden attachments to overview", () => {
+	state.attachments = false;
+	render(
+		<ExpenseWorkspace
+			id={42}
+			search={{ tab: "attachments" }}
+			onDeleted={vi.fn()}
+			onTabChange={vi.fn()}
+		/>,
+	);
+	expect(screen.queryByRole("tab", { name: "Anexos" })).toBeNull();
+	expect(screen.getByText("Dados da despesa")).toBeTruthy();
 });

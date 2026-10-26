@@ -130,6 +130,7 @@ export function getRemunerationOrderBy(search: RemunerationSearch) {
 export const remunerationListInclude = {
 	contractEmployee: {
 		select: {
+			assignmentType: { select: { label: true } },
 			id: true,
 			contractId: true,
 			employeeId: true,
@@ -153,6 +154,7 @@ export const remunerationListInclude = {
 	},
 	fee: {
 		select: {
+			revenue: { select: { type: { select: { label: true } } } },
 			id: true,
 			amount: true,
 			installmentNumber: true,
@@ -174,6 +176,7 @@ export async function mapRemunerations(
 		createdAt: Date;
 		updatedAt: Date;
 		contractEmployee: {
+			assignmentType: { label: string };
 			id: number;
 			contractId: number;
 			employeeId: number;
@@ -189,6 +192,7 @@ export async function mapRemunerations(
 			};
 		};
 		fee: {
+			revenue: { type: { label: string } };
 			id: number;
 			amount: Prisma.Decimal;
 			installmentNumber: number;
@@ -208,6 +212,8 @@ export async function mapRemunerations(
 			contractProcessNumber:
 				remuneration.contractEmployee.contract.processNumber,
 			feeId: remuneration.fee.id,
+			revenueType: remuneration.fee.revenue.type.label,
+			assignmentType: remuneration.contractEmployee.assignmentType.label,
 			feeAmount: Number(remuneration.fee.amount),
 			feeInstallmentNumber: remuneration.fee.installmentNumber,
 			paymentDate: remuneration.paymentDate.toISOString(),

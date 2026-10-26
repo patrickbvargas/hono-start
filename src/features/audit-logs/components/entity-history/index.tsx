@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { useMemo } from "react";
 import { DataTable } from "@/shared/components/data-table";
+import { EntityIdTrigger } from "@/shared/components/entity-id-trigger";
 import { PaginationView } from "@/shared/components/pagination";
 import { TableButton } from "@/shared/components/table-button";
 import { Button, Skeleton } from "@/shared/components/ui";
@@ -46,8 +47,16 @@ function EntityAuditHistoryContent({
 	const columns = useMemo(() => {
 		const c = createColumnHelper<typeof dataTableFeatures, AuditLog>();
 		return [
+			c.accessor("id", {
+				header: "#",
+				enableSorting: false,
+				cell: ({ row }) => (
+					<EntityIdTrigger id={row.original.id} onView={details.open} />
+				),
+				meta: { headerClassName: "w-18", cellClassName: "whitespace-nowrap" },
+			}),
 			c.accessor("occurredAtLabel", {
-				header: "Data e hora",
+				header: "Ocorrido em",
 				enableSorting: false,
 			}),
 			c.accessor("action", {
@@ -57,12 +66,12 @@ function EntityAuditHistoryContent({
 					AUDIT_ACTION_LABELS[context.getValue()] ?? context.getValue(),
 			}),
 			c.accessor("actorName", {
-				header: "Responsável",
+				header: "Usuário",
 				enableSorting: false,
 				cell: (context) => context.getValue() || "Sistema",
 			}),
 			c.accessor("description", {
-				header: "Alteração",
+				header: "Detalhes",
 				enableSorting: false,
 				cell: (context) => (
 					<TableButton

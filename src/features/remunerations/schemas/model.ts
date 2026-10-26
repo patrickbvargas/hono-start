@@ -10,6 +10,8 @@ export const remunerationSchema = entityIdSchema.safeExtend({
 	contractId: z.number(),
 	contractProcessNumber: z.string(),
 	feeId: z.number(),
+	revenueType: z.string(),
+	assignmentType: z.string(),
 	feeAmount: z.number(),
 	feeInstallmentNumber: z.number().int(),
 	paymentDate: z.iso.datetime(),

@@ -23,6 +23,7 @@ vi.mock("../schemas/workspace", () => ({
 	contractWorkspaceSearchSchema: { parse: () => ({ tab: "overview" }) },
 }));
 vi.mock("@tanstack/react-router", () => ({
+	createLink: (component: unknown) => component,
 	Link: ({ children }: { children: ReactNode }) => (
 		<a href="/contratos">{children}</a>
 	),

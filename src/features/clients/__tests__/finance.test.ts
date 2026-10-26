@@ -31,17 +31,20 @@ describe("client finance", () => {
 	it("sums exact decimals, includes deposits and clamps each revenue balance", async () => {
 		db.revenue.findMany.mockResolvedValue([
 			{
+				contractId: 1,
 				totalValue: new Prisma.Decimal("100"),
 				downPaymentValue: new Prisma.Decimal("10.10"),
 				fees: [{ amount: new Prisma.Decimal("20.20") }],
 			},
 			{
+				contractId: 1,
 				totalValue: new Prisma.Decimal("50"),
 				downPaymentValue: null,
 				fees: [{ amount: new Prisma.Decimal("60") }],
 			},
 		]);
 		expect(await getClientFinance({ firmId: 7, id: 1 })).toEqual({
+			contractCount: 1,
 			totalValue: 150,
 			paidValue: 90.3,
 			remainingValue: 69.7,
@@ -61,6 +64,7 @@ describe("client finance", () => {
 	it("returns zero for an empty client", async () => {
 		db.revenue.findMany.mockResolvedValue([]);
 		expect(await getClientFinance({ firmId: 7, id: 1 })).toEqual({
+			contractCount: 0,
 			totalValue: 0,
 			paidValue: 0,
 			remainingValue: 0,

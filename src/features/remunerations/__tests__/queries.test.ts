@@ -58,6 +58,7 @@ function createRemunerationRow() {
 		createdAt: new Date("2026-01-20T00:00:00.000Z"),
 		updatedAt: new Date("2026-01-21T00:00:00.000Z"),
 		contractEmployee: {
+			assignmentType: { label: "Responsável" },
 			id: 12,
 			contractId: 55,
 			employeeId: 10,
@@ -68,6 +69,7 @@ function createRemunerationRow() {
 			},
 		},
 		fee: {
+			revenue: { type: { label: "Judicial" } },
 			id: 99,
 			amount: "1500",
 			installmentNumber: 2,
@@ -208,6 +210,8 @@ describe("remuneration data queries", () => {
 				clientId: 41,
 				contractId: 55,
 				isManualOverride: false,
+				revenueType: "Judicial",
+				assignmentType: "Responsável",
 			}),
 		]);
 	});

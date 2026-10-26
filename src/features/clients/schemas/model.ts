@@ -30,6 +30,7 @@ export type ClientDetail = z.infer<typeof clientDetailSchema>;
 export type ClientSummary = z.infer<typeof clientSummarySchema>;
 
 export const clientFinanceSchema = z.object({
+	contractCount: z.number().int().nonnegative(),
 	totalValue: z.number(),
 	paidValue: z.number(),
 	remainingValue: z.number(),

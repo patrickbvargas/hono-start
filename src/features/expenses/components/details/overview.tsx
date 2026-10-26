@@ -8,6 +8,7 @@ import { EntityStatus } from "@/shared/components/entity-status";
 import { FormSection } from "@/shared/components/form-section";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
+import { hasPermission, useLoggedUserSession } from "@/shared/session";
 import { useExpense } from "../../hooks/use-data";
 
 interface ExpenseOverviewProps {
@@ -21,6 +22,7 @@ export function ExpenseOverview({
 	section = "all",
 }: ExpenseOverviewProps) {
 	const { expense } = useExpense(id);
+	const session = useLoggedUserSession();
 
 	const generalInfo = React.useMemo<DetailFieldItem[]>(
 		() => [
@@ -70,13 +72,20 @@ export function ExpenseOverview({
 		<div className="flex min-w-0 flex-col gap-3">
 			<EntityDetail.Fields columns={2} items={generalInfo} />
 			<EntityDetail.Separator />
-			<EntityDetail.Section title="Observação">
+			<EntityDetail.Section title="Observações">
 				<p className="text-sm">{expense.notes?.trim() || "—"}</p>
 			</EntityDetail.Section>
-			{includeAttachments && (
+			{includeAttachments && hasPermission(session, "org:attachments:read") && (
 				<>
 					<EntityDetail.Separator />
-					<AttachmentSection canUpload ownerId={id} ownerKind="expense" />
+					<AttachmentSection
+						canUpload={
+							!expense.isSoftDeleted &&
+							hasPermission(session, "org:expenses:update")
+						}
+						ownerId={id}
+						ownerKind="expense"
+					/>
 				</>
 			)}
 			<EntityDetail.Separator />

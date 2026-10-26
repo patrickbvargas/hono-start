@@ -115,10 +115,17 @@ export function ClientOverview({
 						<ClientFinance id={id} compact />
 					</>
 				)}
-			{includeAttachments && (
+			{includeAttachments && hasPermission(session, "org:attachments:read") && (
 				<>
 					<EntityDetail.Separator />
-					<AttachmentSection canUpload ownerId={id} ownerKind="client" />
+					<AttachmentSection
+						canUpload={
+							!client.isSoftDeleted &&
+							hasPermission(session, "org:clients:update")
+						}
+						ownerId={id}
+						ownerKind="client"
+					/>
 				</>
 			)}
 			<EntityDetail.Separator />

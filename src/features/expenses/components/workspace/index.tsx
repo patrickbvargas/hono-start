@@ -6,6 +6,7 @@ import {
 	EntityWorkspace,
 	EntityWorkspaceHistory,
 } from "@/shared/components/entity-workspace";
+import { hasPermission, useLoggedUserSession } from "@/shared/session";
 import { useExpenseWorkspace } from "../../hooks/use-workspace";
 import {
 	type ExpenseWorkspaceSearch,
@@ -29,6 +30,11 @@ export function ExpenseWorkspace({
 	onTabChange,
 	onDeleted,
 }: ExpenseWorkspaceProps) {
+	const accessSession = useLoggedUserSession();
+	const canReadAttachments = hasPermission(
+		accessSession,
+		"org:attachments:read",
+	);
 	const { expense, overlay, canEdit, canDelete, canRestore } =
 		useExpenseWorkspace(id);
 	return (
@@ -47,7 +53,11 @@ export function ExpenseWorkspace({
 					Voltar para despesas
 				</Link>
 			}
-			tab={search.tab}
+			tab={
+				search.tab === "attachments" && !canReadAttachments
+					? "overview"
+					: search.tab
+			}
 			onTabChange={(tab) =>
 				onTabChange(expenseWorkspaceSearchSchema.shape.tab.parse(tab))
 			}
@@ -60,22 +70,28 @@ export function ExpenseWorkspace({
 					label: "Visão geral",
 					content: <ExpenseOverview id={id} section="overview" />,
 				},
-				{
-					value: "attachments",
-					label: "Anexos",
-					expanded: true,
-					content: (
-						<AttachmentSection
-							canUpload
-							layout="expanded"
-							ownerId={id}
-							ownerKind="expense"
-						/>
-					),
-				},
+				...(canReadAttachments
+					? [
+							{
+								value: "attachments",
+								label: "Anexos",
+								expanded: true,
+								content: (
+									<AttachmentSection
+										canUpload={
+											!expense.isSoftDeleted &&
+											hasPermission(accessSession, "org:expenses:update")
+										}
+										layout="expanded"
+										ownerId={id}
+										ownerKind="expense"
+									/>
+								),
+							},
+						]
+					: []),
 				{
 					value: "history",
-					fullWidth: true,
 					label: "Histórico",
 					content: (
 						<EntityWorkspaceHistory

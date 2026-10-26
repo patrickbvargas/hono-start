@@ -143,7 +143,6 @@ it.each([false, true])(
 				{
 					value: "history",
 					label: "Histórico",
-					fullWidth: true,
 					content: <p>Tabela</p>,
 				},
 			],
@@ -156,7 +155,7 @@ it.each([false, true])(
 		rerender(<EntityWorkspace {...props} tab="history" />);
 		expect(
 			screen.getByText("Tabela").parentElement?.classList.contains("max-w-4xl"),
-		).toBe(false);
+		).toBe(true);
 		expect(
 			screen.getByText("Tabela").parentElement?.classList.contains("w-full"),
 		).toBe(true);

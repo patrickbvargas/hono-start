@@ -7,6 +7,8 @@ import {
 	EntityWorkspace,
 	EntityWorkspaceHistory,
 } from "@/shared/components/entity-workspace";
+import { ScrollArea } from "@/shared/components/ui";
+import { hasPermission, useLoggedUserSession } from "@/shared/session";
 import { useEmployeeWorkspace } from "../../hooks/use-workspace";
 import {
 	type EmployeeWorkspaceSearch,
@@ -30,6 +32,11 @@ export function EmployeeWorkspace({
 	onTabChange,
 	onDeleted,
 }: EmployeeWorkspaceProps) {
+	const accessSession = useLoggedUserSession();
+	const canReadAttachments = hasPermission(
+		accessSession,
+		"org:attachments:read",
+	);
 	const { employee, overlay, canEdit, canDelete, canRestore } =
 		useEmployeeWorkspace(id);
 	return (
@@ -51,7 +58,11 @@ export function EmployeeWorkspace({
 					Voltar para colaboradores
 				</Link>
 			}
-			tab={search.tab}
+			tab={
+				search.tab === "attachments" && !canReadAttachments
+					? "overview"
+					: search.tab
+			}
 			onTabChange={(tab) =>
 				onTabChange(employeeWorkspaceSearchSchema.shape.tab.parse(tab))
 			}
@@ -64,10 +75,12 @@ export function EmployeeWorkspace({
 					expanded: true,
 					label: "Visão geral",
 					content: (
-						<div className="flex h-full min-h-0 flex-col gap-6 overflow-y-auto [&>section:first-child]:shrink-0">
-							<EmployeeOverview id={id} section="overview" />
-							<RelatedContractAlerts kind="employee" id={id} />
-						</div>
+						<ScrollArea className="h-full min-h-0 w-full">
+							<div className="flex flex-col gap-6">
+								<EmployeeOverview id={id} section="overview" />
+								<RelatedContractAlerts kind="employee" id={id} />
+							</div>
+						</ScrollArea>
 					),
 				},
 				{
@@ -75,22 +88,28 @@ export function EmployeeWorkspace({
 					label: "Financeiro",
 					content: <EmployeeOverview id={id} section="finance" />,
 				},
-				{
-					value: "attachments",
-					label: "Anexos",
-					expanded: true,
-					content: (
-						<AttachmentSection
-							canUpload
-							layout="expanded"
-							ownerId={id}
-							ownerKind="employee"
-						/>
-					),
-				},
+				...(canReadAttachments
+					? [
+							{
+								value: "attachments",
+								label: "Anexos",
+								expanded: true,
+								content: (
+									<AttachmentSection
+										canUpload={
+											!employee.isSoftDeleted &&
+											hasPermission(accessSession, "org:employees:update")
+										}
+										layout="expanded"
+										ownerId={id}
+										ownerKind="employee"
+									/>
+								),
+							},
+						]
+					: []),
 				{
 					value: "history",
-					fullWidth: true,
 					label: "Histórico",
 					content: (
 						<EntityWorkspaceHistory

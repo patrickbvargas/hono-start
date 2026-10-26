@@ -34,7 +34,7 @@ export function FeeWorkspace({
 	return (
 		<EntityWorkspace
 			title="Recebimento"
-			identity={fee.contractProcessNumber}
+			identity={`${fee.contractProcessNumber} • ${fee.revenueType}`}
 			subtitle={`#${id}`}
 			status={
 				<EntityStatus
@@ -89,7 +89,6 @@ export function FeeWorkspace({
 					: []),
 				{
 					value: "history",
-					fullWidth: true,
 					label: "Histórico",
 					content: (
 						<EntityWorkspaceHistory

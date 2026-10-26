@@ -3,6 +3,7 @@ import { EntityFields } from "@/shared/components/entity-fields";
 import { FormSection } from "@/shared/components/form-section";
 import {
 	Button,
+	ScrollArea,
 	Tabs,
 	TabsContent,
 	TabsList,
@@ -16,7 +17,6 @@ interface WorkspaceSection {
 	label: string;
 	content: ReactNode;
 	expanded?: boolean;
-	fullWidth?: boolean;
 }
 
 interface EntityWorkspaceProps {
@@ -122,22 +122,18 @@ export function EntityWorkspace({
 							className={
 								section.expanded
 									? "min-h-0 min-w-0 w-full max-w-4xl flex-1 overflow-hidden"
-									: "min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-contain"
+									: "min-h-0 min-w-0 flex-1 overflow-hidden"
 							}
 						>
 							{tab === section.value &&
 								(section.expanded ? (
 									section.content
 								) : (
-									<div
-										className={
-											section.fullWidth
-												? "w-full space-y-5"
-												: "w-full max-w-4xl space-y-5"
-										}
-									>
-										{section.content}
-									</div>
+									<ScrollArea className="h-full min-h-0 w-full">
+										<div className="w-full max-w-4xl space-y-5">
+											{section.content}
+										</div>
+									</ScrollArea>
 								))}
 						</TabsContent>
 					))}

@@ -72,6 +72,8 @@ export function RemunerationOverview({
 
 	const sourceInfo = React.useMemo<DetailFieldItem[]>(
 		() => [
+			{ term: "Tipo de honorário", definition: remuneration.revenueType },
+			{ term: "Vínculo no contrato", definition: remuneration.assignmentType },
 			{
 				term: "Recebimento",
 				definition:

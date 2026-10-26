@@ -193,6 +193,7 @@ export async function getClientFinance({
 			contract: { firmId, clientId: id, isActive: true, deletedAt: null },
 		},
 		select: {
+			contractId: true,
 			totalValue: true,
 			downPaymentValue: true,
 			fees: {
@@ -216,6 +217,7 @@ export async function getClientFinance({
 		);
 	}
 	return clientFinanceSchema.parse({
+		contractCount: new Set(revenues.map((r) => r.contractId)).size,
 		totalValue: Number(totalValue),
 		paidValue: Number(paidValue),
 		remainingValue: Number(remainingValue),

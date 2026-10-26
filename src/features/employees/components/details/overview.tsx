@@ -141,10 +141,17 @@ export function EmployeeOverview({
 					<div className="mt-3 text-sm">{remunerationLink}</div>
 				)}
 			</EntityDetail.Section>
-			{includeAttachments && (
+			{includeAttachments && hasPermission(session, "org:attachments:read") && (
 				<>
 					<EntityDetail.Separator />
-					<AttachmentSection canUpload ownerId={id} ownerKind="employee" />
+					<AttachmentSection
+						canUpload={
+							!employee.isSoftDeleted &&
+							hasPermission(session, "org:employees:update")
+						}
+						ownerId={id}
+						ownerKind="employee"
+					/>
 				</>
 			)}
 			<EntityDetail.Separator />

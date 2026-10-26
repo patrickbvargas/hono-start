@@ -7,6 +7,8 @@ import {
 	EntityWorkspace,
 	EntityWorkspaceHistory,
 } from "@/shared/components/entity-workspace";
+import { ScrollArea } from "@/shared/components/ui";
+import { hasPermission, useLoggedUserSession } from "@/shared/session";
 import { useClientWorkspace } from "../../hooks/use-workspace";
 import {
 	type ClientWorkspaceSearch,
@@ -31,6 +33,11 @@ export function ClientWorkspace({
 	onTabChange,
 	onDeleted,
 }: ClientWorkspaceProps) {
+	const accessSession = useLoggedUserSession();
+	const canReadAttachments = hasPermission(
+		accessSession,
+		"org:attachments:read",
+	);
 	const { client, overlay, canEdit, canDelete, canRestore, canReadFinance } =
 		useClientWorkspace(id);
 	return (
@@ -49,7 +56,12 @@ export function ClientWorkspace({
 					Voltar para clientes
 				</Link>
 			}
-			tab={search.tab}
+			tab={
+				(search.tab === "attachments" && !canReadAttachments) ||
+				(search.tab === "finance" && !canReadFinance)
+					? "overview"
+					: search.tab
+			}
 			onTabChange={(tab) =>
 				onTabChange(clientWorkspaceSearchSchema.shape.tab.parse(tab))
 			}
@@ -62,10 +74,12 @@ export function ClientWorkspace({
 					expanded: true,
 					label: "Visão geral",
 					content: (
-						<div className="flex h-full min-h-0 flex-col gap-6 overflow-y-auto [&>section:first-child]:shrink-0">
-							<ClientOverview id={id} section="overview" />
-							<RelatedContractAlerts kind="client" id={id} />
-						</div>
+						<ScrollArea className="h-full min-h-0 w-full">
+							<div className="flex flex-col gap-6">
+								<ClientOverview id={id} section="overview" />
+								<RelatedContractAlerts kind="client" id={id} />
+							</div>
+						</ScrollArea>
 					),
 				},
 				...(canReadFinance
@@ -82,22 +96,28 @@ export function ClientWorkspace({
 					label: "Contato",
 					content: <ClientOverview id={id} section="contact" />,
 				},
-				{
-					value: "attachments",
-					label: "Anexos",
-					expanded: true,
-					content: (
-						<AttachmentSection
-							canUpload
-							layout="expanded"
-							ownerId={id}
-							ownerKind="client"
-						/>
-					),
-				},
+				...(canReadAttachments
+					? [
+							{
+								value: "attachments",
+								label: "Anexos",
+								expanded: true,
+								content: (
+									<AttachmentSection
+										canUpload={
+											!client.isSoftDeleted &&
+											hasPermission(accessSession, "org:clients:update")
+										}
+										layout="expanded"
+										ownerId={id}
+										ownerKind="client"
+									/>
+								),
+							},
+						]
+					: []),
 				{
 					value: "history",
-					fullWidth: true,
 					label: "Histórico",
 					content: (
 						<EntityWorkspaceHistory

@@ -60,6 +60,8 @@ const fixtures = vi.hoisted(() => {
 			amount: 700,
 			effectivePercentage: 0.35,
 			feeId: 42,
+			revenueType: "Sucumbência",
+			assignmentType: "Responsável",
 			feeAmount: 2000,
 			feeInstallmentNumber: 2,
 			isManualOverride: false,
@@ -94,7 +96,12 @@ const fixtures = vi.hoisted(() => {
 vi.mock("../clients/hooks/use-data", () => ({
 	useClient: () => ({ client: fixtures.client }),
 	useClientFinance: () => ({
-		finance: { totalValue: 1500, paidValue: 500, remainingValue: 1000 },
+		finance: {
+			contractCount: 2,
+			totalValue: 1500,
+			paidValue: 500,
+			remainingValue: 1000,
+		},
 	}),
 }));
 vi.mock("../employees/hooks/use-data", () => ({
@@ -303,4 +310,26 @@ it("shows generated employee totals with the matching active list", () => {
 			.getByRole("link", { name: "Ver remunerações de Ana" })
 			.getAttribute("href"),
 	).toContain("active=true");
+});
+
+it.each([
+	ClientOverview,
+	EmployeeOverview,
+	ExpenseOverview,
+	FeeOverview,
+	RemunerationOverview,
+])("hides attachments without read permission", (Overview) => {
+	access.permissions = [];
+	render(<Overview id={42} />);
+	expect(screen.queryByText("Anexos completos")).toBeNull();
+});
+it("shows remuneration origin context in finance and drawer", () => {
+	const { rerender } = render(
+		<RemunerationOverview id={42} section="finance" />,
+	);
+	expect(screen.getByText("Sucumbência")).toBeTruthy();
+	expect(screen.getByText("Responsável")).toBeTruthy();
+	rerender(<RemunerationOverview id={42} />);
+	expect(screen.getByText("Sucumbência")).toBeTruthy();
+	expect(screen.getByText("Responsável")).toBeTruthy();
 });
