@@ -1,10 +1,13 @@
+import { useSearch } from "@tanstack/react-router";
 import * as React from "react";
 import { AttachmentSectionFallback } from "@/features/attachments";
 import { EntityActions } from "@/shared/components/entity-actions";
 import { EntityDetail } from "@/shared/components/entity-detail";
+import { NavigationLink } from "@/shared/components/navigation-link";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
 import { useClient } from "../../hooks/use-data";
+import { clientSearchSchema } from "../../schemas/search";
 import { getClientLifecycleActions } from "../../utils/lifecycle-actions";
 import { ClientOverview } from "./overview";
 
@@ -55,16 +58,34 @@ const ClientDetailsContent = ({
 	onEdit,
 	onRestore,
 }: ClientDetailsContentProps) => {
+	const currentSearch = useSearch({ strict: false });
 	const { client } = useClient(id);
 	const actions = getClientLifecycleActions({
 		canManageLifecycle,
 		isSoftDeleted: client.isSoftDeleted,
 	});
 
+	const workspaceLink = (
+		<NavigationLink
+			to="/clientes/$clientId"
+			params={{ clientId: String(id) }}
+			search={{
+				tab: "overview",
+				returnTo: clientSearchSchema.parse(currentSearch),
+			}}
+			className="inline-flex items-center gap-1 text-xs font-medium"
+		>
+			Abrir página
+		</NavigationLink>
+	);
+
 	return (
 		<EntityDetail.Content>
 			<EntityDetail.Header className="flex-row items-center justify-between gap-3">
-				<EntityDetail.Title>{client.fullName}</EntityDetail.Title>
+				<EntityDetail.Title className="min-w-0 flex-1 truncate">
+					{client.fullName}
+				</EntityDetail.Title>
+				<div className="hidden shrink-0 sm:block">{workspaceLink}</div>
 				<EntityActions
 					viewPermission="org:clients:read"
 					editPermission="org:clients:update"
@@ -80,6 +101,7 @@ const ClientDetailsContent = ({
 				/>
 			</EntityDetail.Header>
 			<EntityDetail.Body>
+				<div className="sm:hidden">{workspaceLink}</div>
 				<ClientOverview id={id} />
 			</EntityDetail.Body>
 			<EntityDetail.Footer />

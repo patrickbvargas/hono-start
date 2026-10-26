@@ -1,10 +1,13 @@
+import { useSearch } from "@tanstack/react-router";
 import * as React from "react";
 import { AttachmentSectionFallback } from "@/features/attachments";
 import { EntityActions } from "@/shared/components/entity-actions";
 import { EntityDetail } from "@/shared/components/entity-detail";
+import { NavigationLink } from "@/shared/components/navigation-link";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
 import { useRemuneration } from "../../hooks/use-data";
+import { remunerationSearchSchema } from "../../schemas/search";
 import { getRemunerationLifecycleActions } from "../../utils/lifecycle-actions";
 import { RemunerationOverview } from "./overview";
 
@@ -55,18 +58,32 @@ const RemunerationDetailsContent = ({
 	onEdit,
 	onRestore,
 }: RemunerationDetailsContentProps) => {
+	const currentSearch = useSearch({ strict: false });
 	const { remuneration } = useRemuneration(id);
 	const actions = getRemunerationLifecycleActions({
 		canManageLifecycle,
 		isSoftDeleted: remuneration.isSoftDeleted,
 	});
 
+	const workspaceLink = (
+		<NavigationLink
+			to="/remuneracoes/$remunerationId"
+			params={{ remunerationId: String(id) }}
+			search={{
+				tab: "overview",
+				returnTo: remunerationSearchSchema.parse(currentSearch),
+			}}
+			className="inline-flex items-center gap-1 text-xs font-medium"
+		>
+			Abrir página
+		</NavigationLink>
+	);
+
 	return (
 		<EntityDetail.Content>
 			<EntityDetail.Header className="flex-row items-center justify-between gap-3">
-				<EntityDetail.Title>
-					{`${remuneration.employeeName} • ${remuneration.contractProcessNumber}`}
-				</EntityDetail.Title>
+				<EntityDetail.Title className="min-w-0 flex-1 truncate">{`${remuneration.employeeName} • ${remuneration.contractProcessNumber}`}</EntityDetail.Title>
+				<div className="hidden shrink-0 sm:block">{workspaceLink}</div>
 				<EntityActions
 					viewPermission={[
 						"org:remunerations:read_all",
@@ -85,6 +102,7 @@ const RemunerationDetailsContent = ({
 				/>
 			</EntityDetail.Header>
 			<EntityDetail.Body>
+				<div className="sm:hidden">{workspaceLink}</div>
 				<RemunerationOverview id={id} />
 			</EntityDetail.Body>
 			<EntityDetail.Footer />

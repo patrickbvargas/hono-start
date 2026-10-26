@@ -122,7 +122,6 @@ export const ContractTable = ({
 							onOpenPage={
 								onOpenPage ? () => onOpenPage(contract.id) : undefined
 							}
-							openPageLabel="Abrir página do contrato"
 							viewPermission={[
 								"org:contracts:read_all",
 								"org:contracts:read_assigned",

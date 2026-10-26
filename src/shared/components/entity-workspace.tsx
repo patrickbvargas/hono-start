@@ -96,7 +96,9 @@ export function EntityWorkspace({
 						</span>
 					)}
 					{status && (
-						<div className="flex shrink-0 items-center gap-1.5">{status}</div>
+						<div className="ml-auto flex shrink-0 items-center gap-1.5">
+							{status}
+						</div>
 					)}
 				</div>
 				<Tabs

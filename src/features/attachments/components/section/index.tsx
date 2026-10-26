@@ -113,7 +113,7 @@ export const AttachmentSection = ({
 					className={
 						layout === "expanded"
 							? "min-h-0 flex-1"
-							: "max-h-48 [&>[data-slot=scroll-area-viewport]]:max-h-48"
+							: "max-h-56 [&>[data-slot=scroll-area-viewport]]:max-h-56"
 					}
 				>
 					{attachmentList}

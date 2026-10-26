@@ -1,9 +1,12 @@
+import { useSearch } from "@tanstack/react-router";
 import * as React from "react";
 import { EntityDetail } from "@/shared/components/entity-detail";
+import { NavigationLink } from "@/shared/components/navigation-link";
 import { Skeleton } from "@/shared/components/ui";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
 import { useAuditLog } from "../../hooks/use-data";
+import { auditLogSearchSchema } from "../../schemas/search";
 import { getAuditLogTitle } from "../../utils/display";
 
 import { AuditLogOverview } from "./overview";
@@ -24,13 +27,32 @@ export const AuditLogDetails = ({ id, state }: AuditLogDetailsProps) => {
 };
 
 function AuditLogDetailsContent({ id }: { id: EntityId }) {
+	const currentSearch = useSearch({ strict: false });
 	const { auditLog } = useAuditLog(id);
+	const workspaceLink = (
+		<NavigationLink
+			to="/auditoria/$auditLogId"
+			params={{ auditLogId: String(id) }}
+			search={{
+				tab: "overview",
+				returnTo: auditLogSearchSchema.parse(currentSearch),
+			}}
+			className="inline-flex items-center gap-1 text-xs font-medium"
+		>
+			Abrir página
+		</NavigationLink>
+	);
+
 	return (
 		<EntityDetail.Content>
-			<EntityDetail.Header>
-				<EntityDetail.Title>{getAuditLogTitle(auditLog)}</EntityDetail.Title>
+			<EntityDetail.Header className="flex-row items-center justify-between gap-3">
+				<EntityDetail.Title className="min-w-0 flex-1 truncate">
+					{getAuditLogTitle(auditLog)}
+				</EntityDetail.Title>
+				<div className="hidden shrink-0 sm:block">{workspaceLink}</div>
 			</EntityDetail.Header>
 			<EntityDetail.Body>
+				<div className="sm:hidden">{workspaceLink}</div>
 				<AuditLogOverview id={id} />
 			</EntityDetail.Body>
 			<EntityDetail.Footer />

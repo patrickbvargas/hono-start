@@ -153,7 +153,9 @@ describe("AttachmentSection", () => {
 		const { rerender, container } = render(
 			<AttachmentSection ownerId={1} ownerKind="contract" />,
 		);
-		expect(container.querySelector('[data-slot="scroll-area"]')).not.toBeNull();
+		expect(
+			container.querySelector('[data-slot="scroll-area"]')?.className,
+		).toContain("max-h-56");
 		expect(screen.getByRole("listitem").className).toContain("min-h-16");
 		rerender(
 			<AttachmentSection ownerId={1} ownerKind="contract" layout="expanded" />,

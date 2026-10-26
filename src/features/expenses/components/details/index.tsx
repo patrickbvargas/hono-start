@@ -1,12 +1,15 @@
+import { useSearch } from "@tanstack/react-router";
 import * as React from "react";
 import { AttachmentSectionFallback } from "@/features/attachments";
 import { EntityActions } from "@/shared/components/entity-actions";
 import { EntityDetail } from "@/shared/components/entity-detail";
+import { NavigationLink } from "@/shared/components/navigation-link";
 import { Skeleton } from "@/shared/components/ui";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
 import { useExpense } from "../../hooks/use-data";
+import { expenseSearchSchema } from "../../schemas/search";
 import { getExpenseLifecycleActions } from "../../utils/lifecycle-actions";
 import { ExpenseOverview } from "./overview";
 
@@ -57,16 +60,32 @@ function ExpenseDetailsContent({
 	onEdit,
 	onRestore,
 }: ExpenseDetailsContentProps) {
+	const currentSearch = useSearch({ strict: false });
 	const { expense } = useExpense(id);
 	const actions = getExpenseLifecycleActions({
 		canManageLifecycle,
 		isSoftDeleted: expense.isSoftDeleted,
 	});
 
+	const workspaceLink = (
+		<NavigationLink
+			to="/despesas/$expenseId"
+			params={{ expenseId: String(id) }}
+			search={{
+				tab: "overview",
+				returnTo: expenseSearchSchema.parse(currentSearch),
+			}}
+			className="inline-flex items-center gap-1 text-xs font-medium"
+		>
+			Abrir página
+		</NavigationLink>
+	);
+
 	return (
 		<EntityDetail.Content>
 			<EntityDetail.Header className="flex-row items-center justify-between gap-3">
-				<EntityDetail.Title>{`${expense.category} • ${formatter.currency(expense.amount)}`}</EntityDetail.Title>
+				<EntityDetail.Title className="min-w-0 flex-1 truncate">{`${expense.category} • ${formatter.currency(expense.amount)}`}</EntityDetail.Title>
+				<div className="hidden shrink-0 sm:block">{workspaceLink}</div>
 				<EntityActions
 					viewPermission="org:expenses:read"
 					editPermission="org:expenses:update"
@@ -82,6 +101,7 @@ function ExpenseDetailsContent({
 				/>
 			</EntityDetail.Header>
 			<EntityDetail.Body>
+				<div className="sm:hidden">{workspaceLink}</div>
 				<ExpenseOverview id={id} />
 			</EntityDetail.Body>
 			<EntityDetail.Footer />

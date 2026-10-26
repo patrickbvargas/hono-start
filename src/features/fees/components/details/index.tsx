@@ -1,10 +1,13 @@
+import { useSearch } from "@tanstack/react-router";
 import * as React from "react";
 import { AttachmentSectionFallback } from "@/features/attachments";
 import { EntityActions } from "@/shared/components/entity-actions";
 import { EntityDetail } from "@/shared/components/entity-detail";
+import { NavigationLink } from "@/shared/components/navigation-link";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
 import { useFee } from "../../hooks/use-data";
+import { feeSearchSchema } from "../../schemas/search";
 import { getFeeLifecycleActions } from "../../utils/lifecycle-actions";
 import { FeeOverview } from "./overview";
 
@@ -55,6 +58,7 @@ const FeeDetailsContent = ({
 	onEdit,
 	onRestore,
 }: FeeDetailsContentProps) => {
+	const currentSearch = useSearch({ strict: false });
 	const { fee } = useFee(id);
 	const actions = getFeeLifecycleActions({
 		canManageLifecycle,
@@ -62,12 +66,25 @@ const FeeDetailsContent = ({
 		isSoftDeleted: fee.isSoftDeleted,
 	});
 
+	const workspaceLink = (
+		<NavigationLink
+			to="/honorarios/$feeId"
+			params={{ feeId: String(id) }}
+			search={{
+				tab: "overview",
+				returnTo: feeSearchSchema.parse(currentSearch),
+			}}
+			className="inline-flex items-center gap-1 text-xs font-medium"
+		>
+			Abrir página
+		</NavigationLink>
+	);
+
 	return (
 		<EntityDetail.Content>
 			<EntityDetail.Header className="flex-row items-center justify-between gap-3">
-				<EntityDetail.Title>
-					{`${fee.contractProcessNumber} • ${fee.revenueType}`}
-				</EntityDetail.Title>
+				<EntityDetail.Title className="min-w-0 flex-1 truncate">{`${fee.contractProcessNumber} • ${fee.revenueType}`}</EntityDetail.Title>
+				<div className="hidden shrink-0 sm:block">{workspaceLink}</div>
 				<EntityActions
 					viewPermission={["org:fees:read_all", "org:fees:read_assigned"]}
 					editPermission="org:fees:update"
@@ -83,6 +100,7 @@ const FeeDetailsContent = ({
 				/>
 			</EntityDetail.Header>
 			<EntityDetail.Body>
+				<div className="sm:hidden">{workspaceLink}</div>
 				<FeeOverview id={id} />
 			</EntityDetail.Body>
 			<EntityDetail.Footer />

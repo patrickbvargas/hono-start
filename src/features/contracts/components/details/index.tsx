@@ -162,7 +162,7 @@ const ContractDetailsContent = ({
 			}}
 			className="inline-flex items-center gap-1 text-xs font-medium"
 		>
-			Abrir página do contrato
+			Abrir página
 		</NavigationLink>
 	);
 

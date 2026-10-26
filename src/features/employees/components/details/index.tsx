@@ -1,10 +1,13 @@
+import { useSearch } from "@tanstack/react-router";
 import * as React from "react";
 import { AttachmentSectionFallback } from "@/features/attachments";
 import { EntityActions } from "@/shared/components/entity-actions";
 import { EntityDetail } from "@/shared/components/entity-detail";
+import { NavigationLink } from "@/shared/components/navigation-link";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
 import { useEmployee } from "../../hooks/use-data";
+import { employeeSearchSchema } from "../../schemas/search";
 import { getEmployeeLifecycleActions } from "../../utils/lifecycle-actions";
 import { EmployeeOverview } from "./overview";
 
@@ -55,16 +58,34 @@ const EmployeeDetailsContent = ({
 	onEdit,
 	onRestore,
 }: EmployeeDetailsContentProps) => {
+	const currentSearch = useSearch({ strict: false });
 	const { employee } = useEmployee(id);
 	const actions = getEmployeeLifecycleActions({
 		canManageLifecycle,
 		isSoftDeleted: employee.isSoftDeleted,
 	});
 
+	const workspaceLink = (
+		<NavigationLink
+			to="/colaboradores/$employeeId"
+			params={{ employeeId: String(id) }}
+			search={{
+				tab: "overview",
+				returnTo: employeeSearchSchema.parse(currentSearch),
+			}}
+			className="inline-flex items-center gap-1 text-xs font-medium"
+		>
+			Abrir página
+		</NavigationLink>
+	);
+
 	return (
 		<EntityDetail.Content>
 			<EntityDetail.Header className="flex-row items-center justify-between gap-3">
-				<EntityDetail.Title>{employee.fullName}</EntityDetail.Title>
+				<EntityDetail.Title className="min-w-0 flex-1 truncate">
+					{employee.fullName}
+				</EntityDetail.Title>
+				<div className="hidden shrink-0 sm:block">{workspaceLink}</div>
 				<EntityActions
 					viewPermission="org:employees:read"
 					editPermission="org:employees:update"
@@ -80,6 +101,7 @@ const EmployeeDetailsContent = ({
 				/>
 			</EntityDetail.Header>
 			<EntityDetail.Body>
+				<div className="sm:hidden">{workspaceLink}</div>
 				<EmployeeOverview id={id} />
 			</EntityDetail.Body>
 			<EntityDetail.Footer />
