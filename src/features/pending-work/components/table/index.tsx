@@ -43,7 +43,11 @@ export function PendingWorkTable({ data }: PendingWorkTableProps) {
 				enableSorting: true,
 				cell: ({ row }) =>
 					canReadClient ? (
-						<RelatedRecordLink kind="client" id={row.original.clientId}>
+						<RelatedRecordLink
+							variant="table"
+							kind="client"
+							id={row.original.clientId}
+						>
 							{row.original.client}
 						</RelatedRecordLink>
 					) : (

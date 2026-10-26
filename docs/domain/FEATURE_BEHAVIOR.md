@@ -356,3 +356,5 @@ Client Financeiro is the second workspace tab, before Contato. Its summary and r
 
 ### Entity workspace consistency
 Entity pages use contextual identities, shared scroll areas, and attachment visibility gated by attachment read permission. Upload controls follow owner update permission and lifecycle restrictions. Unavailable client finance and attachment tabs fall back to overview. Contract finance includes consolidated totals over active undeleted revenues. Client finance counts distinct active contracts with eligible revenues. Remuneration finance and summaries include the revenue type and assignment role. Empty contract teams show an explicit empty state.
+
+For expense-only dashboard visibility (expenses allowed, revenue and remuneration denied), Despesas por categoria is a primary chart independent of the detailed-analysis preference, including its empty state. The detailed-analysis toggle is hidden only for this visibility combination; mixed-access dashboards retain their existing behavior.

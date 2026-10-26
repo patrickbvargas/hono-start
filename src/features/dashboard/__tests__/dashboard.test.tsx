@@ -357,3 +357,37 @@ describe("Dashboard", () => {
 		expect(screen.getByText("Resumo mensal")).toBeTruthy();
 	});
 });
+
+it.each([true, false])(
+	"shows expense-only chart without depending on detailed preference (%s)",
+	(showDetails) => {
+		cleanup();
+		render(
+			<Dashboard
+				showDetails={showDetails}
+				data={{
+					isAdmin: false,
+					visibility: {
+						expense: true,
+						revenue: false,
+						remuneration: false,
+						evolution: false,
+					},
+					scopeLabel: "Despesas",
+					metrics: [],
+					legalAreaRevenue: [],
+					revenueTypeRevenue: [],
+					expenseRevenue: [],
+					remunerationMonths: [],
+					remunerationTable: [],
+					remunerationSubtotal: null,
+					overdueInstallments: [],
+					financialEvolutionLabel: "",
+					financialEvolution: [],
+					cashFlow: null,
+				}}
+			/>,
+		);
+		expect(screen.getAllByText("Despesas por categoria")).toHaveLength(1);
+	},
+);

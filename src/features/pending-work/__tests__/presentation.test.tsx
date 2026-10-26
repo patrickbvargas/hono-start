@@ -8,6 +8,7 @@ import {
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { PendingWorkAction } from "../components/action";
+import { PendingWorkContractLink } from "../components/contract-link";
 import { PendingWorkDueDate } from "../components/due-date";
 import { PendingWorkSeverity } from "../components/severity";
 import { PendingWorkSummary } from "../components/summary";
@@ -45,7 +46,12 @@ describe("pending work presentation", () => {
 			const router = createRouter({
 				routeTree: createRootRoute({
 					validateSearch: pendingWorkSearchSchema,
-					component: () => <PendingWorkAction item={item} />,
+					component: () => (
+						<>
+							<PendingWorkAction item={item} />
+							<PendingWorkContractLink item={item} />
+						</>
+					),
 				}),
 				history: createMemoryHistory({
 					initialEntries: [
@@ -58,6 +64,10 @@ describe("pending work presentation", () => {
 			const link = await screen.findByRole("link", {
 				name: tab === "finance" ? "Abrir financeiro" : "Abrir equipe",
 			});
+			expect(link.querySelector("svg")).toBeNull();
+			const contractLink = screen.getByRole("link", { name: "PROC-42" });
+			expect(contractLink.querySelector("svg")).toBeNull();
+			expect(contractLink.className).not.toMatch(/(?:^|\s)underline(?:\s|$)/);
 			const destination = new URL(
 				link.getAttribute("href") ?? "",
 				"http://localhost",

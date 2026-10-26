@@ -25,6 +25,7 @@ import {
 	dashboardSearchSchema,
 	getDashboardEmployeeOptionsQueryOptions,
 	getDashboardSummaryQueryOptions,
+	isExpenseOnlyDashboard,
 	useDashboardData,
 	useDashboardDetailsPreference,
 } from "@/features/dashboard";
@@ -225,6 +226,7 @@ function RouteComponent() {
 					isAdmin={isAdmin && hasPermission(session, "org:employees:read")}
 					showDetails={showDetails}
 					onShowDetailsChange={handleShowDetailsChange}
+					showDetailsToggle={!isExpenseOnlyDashboard(summary.visibility)}
 				/>
 			</WrapperHeader>
 			<WrapperBody>

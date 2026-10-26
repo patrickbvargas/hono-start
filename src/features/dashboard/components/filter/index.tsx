@@ -18,6 +18,7 @@ interface DashboardFilterProps {
 	isAdmin?: boolean;
 	showAllocationFilters?: boolean;
 	showDetails?: boolean;
+	showDetailsToggle?: boolean;
 	onShowDetailsChange?: (checked: boolean) => void;
 }
 
@@ -25,6 +26,7 @@ export function DashboardFilter({
 	isAdmin = false,
 	showAllocationFilters = true,
 	showDetails = false,
+	showDetailsToggle = true,
 	onShowDetailsChange,
 }: DashboardFilterProps) {
 	const {
@@ -199,13 +201,15 @@ export function DashboardFilter({
 							{isMobile ? mobileFilters : null}
 						</div>
 						{!isMobile ? desktopFilterActions : null}
-						<Label className="shrink-0 md:ml-auto">
-							<Checkbox
-								checked={showDetails}
-								onCheckedChange={onShowDetailsChange}
-							/>
-							Mostrar análises detalhadas
-						</Label>
+						{showDetailsToggle && (
+							<Label className="shrink-0 md:ml-auto">
+								<Checkbox
+									checked={showDetails}
+									onCheckedChange={onShowDetailsChange}
+								/>
+								Mostrar análises detalhadas
+							</Label>
+						)}
 					</div>
 				</ListFilters.Bar>
 				{isMobile ? null : desktopFilterPanel}

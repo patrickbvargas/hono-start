@@ -1,4 +1,4 @@
-import { NavigationLink } from "@/shared/components/navigation-link";
+import { Link } from "@tanstack/react-router";
 import { buttonVariants } from "@/shared/components/ui";
 import { cn } from "@/shared/lib/utils";
 import { usePendingWorkNavigation } from "../../hooks/use-navigation";
@@ -11,7 +11,7 @@ interface PendingWorkActionProps {
 export function PendingWorkAction({ item }: PendingWorkActionProps) {
 	const { workspaceSearch } = usePendingWorkNavigation();
 	return (
-		<NavigationLink
+		<Link
 			to="/contratos/$contractId"
 			params={{ contractId: String(item.contractId) }}
 			search={workspaceSearch(item.tab)}
@@ -19,6 +19,6 @@ export function PendingWorkAction({ item }: PendingWorkActionProps) {
 			className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
 		>
 			{item.tab === "finance" ? "Abrir financeiro" : "Abrir equipe"}
-		</NavigationLink>
+		</Link>
 	);
 }

@@ -6,6 +6,7 @@ import type { DashboardSummary } from "../../schemas/model";
 import type { DashboardSearch } from "../../schemas/search";
 import { dashboardSearchSchema } from "../../schemas/search";
 import { formatMonthLabel } from "../../utils/format";
+import { isExpenseOnlyDashboard } from "../../utils/visibility";
 import { DashboardBreakdownChart } from "../breakdown-chart";
 import { DashboardCashFlowTable } from "../cash-flow-table";
 import { cashFlowDrilldownSeries, labels } from "../cash-flow-table/columns";
@@ -36,6 +37,7 @@ export function Dashboard({
 	onViewEmployee,
 }: DashboardProps) {
 	const drilldown = useDashboardDrilldown();
+	const expenseOnly = isExpenseOnlyDashboard(data.visibility);
 
 	const referenceAt =
 		data.analysis?.referenceAt ??
@@ -116,6 +118,23 @@ export function Dashboard({
 							/>
 						))
 					: null}
+				{expenseOnly ||
+				(hasDetails && showDetails && Boolean(data.expenseRevenue?.length)) ? (
+					<DashboardBreakdownChart
+						title="Despesas por categoria"
+						onSelect={(item, trigger) =>
+							drilldown.openBreakdown(
+								"expense",
+								item,
+								"Despesas por categoria",
+								trigger,
+							)
+						}
+						items={data.expenseRevenue ?? []}
+						emptyLabel="Sem despesas."
+						variant="bar"
+					/>
+				) : null}
 				{hasDetails && showDetails ? (
 					<>
 						{data.isAdmin && data.remunerationByCollaborator ? (
@@ -203,22 +222,7 @@ export function Dashboard({
 								variant="bar"
 							/>
 						) : null}
-						{data.expenseRevenue?.length ? (
-							<DashboardBreakdownChart
-								title="Despesas por categoria"
-								onSelect={(item, trigger) =>
-									drilldown.openBreakdown(
-										"expense",
-										item,
-										"Despesas por categoria",
-										trigger,
-									)
-								}
-								items={data.expenseRevenue}
-								emptyLabel="Sem despesas."
-								variant="bar"
-							/>
-						) : null}
+
 						<div className="col-span-full flex flex-col gap-4">
 							{data.cashFlow ? (
 								<DashboardCashFlowTable
@@ -277,6 +281,7 @@ export function Dashboard({
 		[
 			data,
 			showDetails,
+			expenseOnly,
 			hasDetails,
 			onViewContract,
 			onViewEmployee,

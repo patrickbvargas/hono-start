@@ -1,6 +1,7 @@
 import { CatchBoundary } from "@tanstack/react-router";
 import { lazy, type ReactNode, Suspense } from "react";
 import { EntityDetail } from "@/shared/components/entity-detail";
+import { TableButton } from "@/shared/components/table-button";
 import { useOverlay } from "@/shared/hooks/use-overlay";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { RelatedRecordKind } from "../../schemas/record";
@@ -15,17 +16,20 @@ interface RelatedRecordLinkProps {
 	kind: RelatedRecordKind;
 	id: EntityId;
 	children: ReactNode;
+	variant?: "default" | "table";
 }
 
 export function RelatedRecordLink({
 	kind,
 	id,
 	children,
+	variant = "default",
 }: RelatedRecordLinkProps) {
 	const { overlay } = useOverlay<EntityId>();
+	const Trigger = variant === "table" ? TableButton : "button";
 	return (
 		<>
-			<button
+			<Trigger
 				type="button"
 				aria-haspopup="dialog"
 				title={
@@ -35,10 +39,14 @@ export function RelatedRecordLink({
 				}
 				aria-expanded={overlay.details.isOpen}
 				onClick={() => overlay.details.open(id)}
-				className="inline-flex max-w-full cursor-pointer items-baseline rounded-sm text-left underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+				className={
+					variant === "table"
+						? "inline-flex max-w-full items-baseline"
+						: "inline-flex max-w-full cursor-pointer items-baseline rounded-sm text-left underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+				}
 			>
 				<span className="min-w-0 wrap-break-word">{children}</span>
-			</button>
+			</Trigger>
 			{overlay.details.render((selectedId, state) => (
 				<CatchBoundary
 					getResetKey={() => kind + selectedId}
