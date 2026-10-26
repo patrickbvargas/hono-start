@@ -50,3 +50,11 @@ it("does not add an activation control without a configured source", () => {
 		screen.queryByRole("button", { name: "Detalhar Honorários recebidos" }),
 	).toBeNull();
 });
+
+it("keeps metric titles on one line with an ellipsis and preserves the full title", () => {
+	render(<DashboardMetricCards metrics={[metric]} />);
+	const label = screen.getByText(metric.label);
+	expect(label.classList.contains("truncate")).toBe(true);
+	expect(label.title).toBe(metric.label);
+	expect(label.parentElement?.classList.contains("min-w-0")).toBe(true);
+});

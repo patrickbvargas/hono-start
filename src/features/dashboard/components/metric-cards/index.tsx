@@ -31,7 +31,7 @@ export function DashboardMetricCards({
 	return (
 		<div className="grid gap-3 sm:grid-cols-2 md:grid-cols-4 2xl:grid-cols-5">
 			{metrics.map((metric) => (
-				<Card key={metric.label} className="relative gap-2">
+				<Card key={metric.label} className="relative min-w-0 gap-2">
 					{onSelect && metric.drilldown ? (
 						<button
 							type="button"
@@ -42,8 +42,13 @@ export function DashboardMetricCards({
 						/>
 					) : null}
 					<CardHeader className="pointer-events-none relative">
-						<div className="flex items-center gap-2">
-							<p className="text-sm text-muted-foreground">{metric.label}</p>
+						<div className="flex min-w-0 items-center gap-2">
+							<p
+								className="truncate text-sm text-muted-foreground"
+								title={metric.label}
+							>
+								{metric.label}
+							</p>
 							<TooltipProvider>
 								<Tooltip>
 									<TooltipTrigger
@@ -51,7 +56,7 @@ export function DashboardMetricCards({
 											<button
 												type="button"
 												aria-label={`Sobre ${metric.label}`}
-												className="pointer-events-auto inline-flex text-muted-foreground transition-colors hover:text-foreground"
+												className="pointer-events-auto inline-flex shrink-0 text-muted-foreground transition-colors hover:text-foreground"
 											/>
 										}
 									>

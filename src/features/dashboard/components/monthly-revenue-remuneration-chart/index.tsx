@@ -9,6 +9,7 @@ import {
 	ChartLegendContent,
 	ChartTooltip,
 	ChartTooltipContent,
+	ScrollArea,
 } from "@/shared/components/ui";
 import { formatter } from "@/shared/lib/formatter";
 import type { DashboardFinancialEvolutionItem } from "../../schemas/model";
@@ -42,7 +43,7 @@ export function MonthlyRevenueRemunerationChart({
 		(item) => item.revenue !== 0 || item.remuneration !== 0,
 	);
 	return (
-		<Card className="min-h-85 col-span-full">
+		<Card className="min-w-0 h-85 min-h-85 col-span-full">
 			<CardHeader>
 				<CardTitle className="flex items-center gap-2">
 					Resumo mensal
@@ -57,70 +58,82 @@ export function MonthlyRevenueRemunerationChart({
 				</CardTitle>
 			</CardHeader>
 			<CardContent className="flex min-h-0 flex-1 flex-col gap-3">
-				<ChartContainer config={config} className="min-h-0 flex-1 w-full">
-					<BarChart
-						accessibilityLayer
-						data={items}
-						barGap={8}
-						margin={{ top: 24, bottom: 0, left: 24, right: 24 }}
-					>
-						<XAxis
-							dataKey="month"
-							axisLine={false}
-							tickLine={false}
-							tickMargin={10}
-							height={40}
-							minTickGap={24}
-							tickFormatter={formatMonthLabel}
-						/>
-						<YAxis hide axisLine={false} tickLine={false} />
-						<ChartTooltip
-							cursor={false}
-							content={
-								<ChartTooltipContent
-									labelFormatter={(value) => formatMonthLabel(String(value))}
-									valueFormatter={(value) =>
-										formatter.currency(Number(value ?? 0))
+				<ScrollArea className="min-h-0 min-w-0 flex-1">
+					<div className="h-full pb-5">
+						<ChartContainer
+							config={config}
+							className="h-full min-h-0 w-full"
+							style={{ minWidth: items.length * 112 + 48 }}
+						>
+							<BarChart
+								accessibilityLayer
+								data={items}
+								barGap={8}
+								margin={{ top: 24, bottom: 0, left: 24, right: 24 }}
+							>
+								<XAxis
+									dataKey="month"
+									axisLine={false}
+									tickLine={false}
+									tickMargin={10}
+									height={40}
+									minTickGap={24}
+									tickFormatter={formatMonthLabel}
+								/>
+								<YAxis hide axisLine={false} tickLine={false} />
+								<ChartTooltip
+									cursor={false}
+									content={
+										<ChartTooltipContent
+											labelFormatter={(value) =>
+												formatMonthLabel(String(value))
+											}
+											valueFormatter={(value) =>
+												formatter.currency(Number(value ?? 0))
+											}
+										/>
 									}
 								/>
-							}
-						/>
-						<ChartLegend
-							itemSorter={(item) =>
-								["revenue", "remuneration"].indexOf(String(item.dataKey))
-							}
-							content={<ChartLegendContent />}
-						/>
-						{(["revenue", "remuneration"] as const).map((series) => (
-							<Bar
-								key={series}
-								dataKey={series}
-								fill={`var(--color-${series})`}
-								radius={4}
-								shape={(props) => (
-									<DrilldownBarShape
-										{...props}
-										label={`${config[series].label} ${formatMonthLabel(items[props.index]?.month ?? "")}`}
-										onActivate={
-											onSelect && items[props.index]
-												? (trigger) =>
-														onSelect(items[props.index], series, trigger)
-												: undefined
-										}
-									/>
-								)}
-							>
-								<LabelList
-									dataKey={series}
-									position="top"
-									offset={8}
-									className="fill-muted-foreground text-xs"
-									formatter={(value) => formatCompactCurrency(Number(value))}
+								<ChartLegend
+									itemSorter={(item) =>
+										["revenue", "remuneration"].indexOf(String(item.dataKey))
+									}
+									content={<ChartLegendContent />}
 								/>
-							</Bar>
-						))}
-					</BarChart>
-				</ChartContainer>
+								{(["revenue", "remuneration"] as const).map((series) => (
+									<Bar
+										key={series}
+										dataKey={series}
+										fill={`var(--color-${series})`}
+										radius={4}
+										shape={(props) => (
+											<DrilldownBarShape
+												{...props}
+												label={`${config[series].label} ${formatMonthLabel(items[props.index]?.month ?? "")}`}
+												onActivate={
+													onSelect && items[props.index]
+														? (trigger) =>
+																onSelect(items[props.index], series, trigger)
+														: undefined
+												}
+											/>
+										)}
+									>
+										<LabelList
+											dataKey={series}
+											position="top"
+											offset={8}
+											className="fill-muted-foreground text-xs"
+											formatter={(value) =>
+												formatCompactCurrency(Number(value))
+											}
+										/>
+									</Bar>
+								))}
+							</BarChart>
+						</ChartContainer>
+					</div>
+				</ScrollArea>
 				{hasValues ? null : (
 					<p className="text-sm text-muted-foreground">
 						Nenhum valor encontrado para os filtros selecionados.
