@@ -132,6 +132,8 @@ const remuneration = {
 	contractId: 3,
 	contractProcessNumber: "0001234-56.2026.8.26.0001",
 	feeId: 6,
+	revenueType: "Contratuais",
+	assignmentType: "Responsável",
 	feeAmount: 1000,
 	feeInstallmentNumber: 1,
 	paymentDate: timestamp,

@@ -32,6 +32,37 @@ export const ExpenseTable = ({
 	onDelete,
 	onRestore,
 }: ExpenseTableProps) => {
+	const renderActions = React.useCallback(
+		(
+			expense: ExpenseSummary,
+			presentation: "dropdown" | "context" = "dropdown",
+		) => {
+			const actions = getExpenseLifecycleActions({
+				canManageLifecycle,
+				isSoftDeleted: expense.isSoftDeleted,
+			});
+
+			return (
+				<EntityActions
+					presentation={presentation}
+					onOpenPage={onOpenPage ? () => onOpenPage(expense.id) : undefined}
+					viewPermission="org:expenses:read"
+					editPermission="org:expenses:update"
+					restorePermission="org:expenses:restore"
+					deletePermission="org:expenses:delete"
+					canEdit={actions.canEdit}
+					canRestore={actions.canRestore}
+					canDelete={actions.canDelete}
+					onView={onView ? () => onView(expense.id) : undefined}
+					onEdit={onEdit ? () => onEdit(expense.id) : undefined}
+					onRestore={onRestore ? () => onRestore(expense.id) : undefined}
+					onDelete={onDelete ? () => onDelete(expense.id) : undefined}
+				/>
+			);
+		},
+		[canManageLifecycle, onOpenPage, onDelete, onEdit, onRestore, onView],
+	);
+
 	const columns = React.useMemo(() => {
 		const c = createColumnHelper<typeof dataTableFeatures, ExpenseSummary>();
 
@@ -73,39 +104,17 @@ export const ExpenseTable = ({
 			}),
 			c.display({
 				id: "actions",
-				cell: ({ row }) => {
-					const expense = row.original;
-					const actions = getExpenseLifecycleActions({
-						canManageLifecycle,
-						isSoftDeleted: expense.isSoftDeleted,
-					});
-
-					return (
-						<EntityActions
-							onOpenPage={onOpenPage ? () => onOpenPage(expense.id) : undefined}
-							viewPermission="org:expenses:read"
-							editPermission="org:expenses:update"
-							restorePermission="org:expenses:restore"
-							deletePermission="org:expenses:delete"
-							canEdit={actions.canEdit}
-							canRestore={actions.canRestore}
-							canDelete={actions.canDelete}
-							onView={() => onView?.(expense.id)}
-							onEdit={() => onEdit?.(expense.id)}
-							onRestore={() => onRestore?.(expense.id)}
-							onDelete={() => onDelete?.(expense.id)}
-						/>
-					);
-				},
+				cell: ({ row }) => renderActions(row.original),
 				meta: { cellClassName: "w-11" },
 			}),
 		];
-	}, [canManageLifecycle, onOpenPage, onDelete, onEdit, onRestore, onView]);
+	}, [renderActions]);
 
 	return (
 		<DataTable
 			columns={columns}
 			data={data}
+			renderRowContextMenu={(index) => renderActions(data[index], "context")}
 			onRowAction={
 				onOpenPage ? (index) => onOpenPage(data[index].id) : undefined
 			}

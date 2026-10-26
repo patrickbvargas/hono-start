@@ -2,6 +2,7 @@ import { EllipsisVerticalIcon } from "lucide-react";
 import type { ReactNode } from "react";
 import { TableButton } from "@/shared/components/table-button";
 import {
+	ContextMenuItem,
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
@@ -14,6 +15,7 @@ import {
 } from "@/shared/session";
 
 interface EntityActionsProps {
+	presentation?: "dropdown" | "context";
 	viewPermission?: ClerkPermission | readonly ClerkPermission[];
 	editPermission?: ClerkPermission | readonly ClerkPermission[];
 	restorePermission?: ClerkPermission | readonly ClerkPermission[];
@@ -31,6 +33,7 @@ interface EntityActionsProps {
 }
 
 export function EntityActions({
+	presentation = "dropdown",
 	viewPermission,
 	editPermission,
 	restorePermission,
@@ -74,6 +77,23 @@ export function EntityActions({
 		return null;
 	}
 
+	const Item = presentation === "context" ? ContextMenuItem : DropdownMenuItem;
+	const items = (
+		<>
+			{shouldShowOpenPage && <Item onClick={onOpenPage}>{openPageLabel}</Item>}
+			{shouldShowView && <Item onClick={onView}>Ver resumo</Item>}
+			{shouldShowEdit && <Item onClick={onEdit}>Editar</Item>}
+			{shouldShowRestore && <Item onClick={onRestore}>Restaurar</Item>}
+			{shouldShowDelete && (
+				<Item variant="destructive" onClick={onDelete}>
+					Excluir
+				</Item>
+			)}
+		</>
+	);
+	if (presentation === "context") {
+		return items;
+	}
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger
@@ -87,27 +107,7 @@ export function EntityActions({
 			>
 				<EllipsisVerticalIcon size={16} />
 			</DropdownMenuTrigger>
-			<DropdownMenuContent align="end">
-				{shouldShowOpenPage && (
-					<DropdownMenuItem onClick={onOpenPage}>
-						{openPageLabel}
-					</DropdownMenuItem>
-				)}
-				{shouldShowView && (
-					<DropdownMenuItem onClick={onView}>Ver resumo</DropdownMenuItem>
-				)}
-				{shouldShowEdit && (
-					<DropdownMenuItem onClick={onEdit}>Editar</DropdownMenuItem>
-				)}
-				{shouldShowRestore && (
-					<DropdownMenuItem onClick={onRestore}>Restaurar</DropdownMenuItem>
-				)}
-				{shouldShowDelete && (
-					<DropdownMenuItem variant="destructive" onClick={onDelete}>
-						Excluir
-					</DropdownMenuItem>
-				)}
-			</DropdownMenuContent>
+			<DropdownMenuContent align="end">{items}</DropdownMenuContent>
 		</DropdownMenu>
 	);
 }

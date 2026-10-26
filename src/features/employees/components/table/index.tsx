@@ -32,6 +32,37 @@ export const EmployeeTable = ({
 	onDelete,
 	onRestore,
 }: EmployeeTableProps) => {
+	const renderActions = React.useCallback(
+		(
+			employee: EmployeeSummary,
+			presentation: "dropdown" | "context" = "dropdown",
+		) => {
+			const actions = getEmployeeLifecycleActions({
+				canManageLifecycle,
+				isSoftDeleted: employee.isSoftDeleted,
+			});
+
+			return (
+				<EntityActions
+					presentation={presentation}
+					onOpenPage={onOpenPage ? () => onOpenPage(employee.id) : undefined}
+					viewPermission="org:employees:read"
+					editPermission="org:employees:update"
+					restorePermission="org:employees:restore"
+					deletePermission="org:employees:delete"
+					canEdit={actions.canEdit}
+					canRestore={actions.canRestore}
+					canDelete={actions.canDelete}
+					onView={onView ? () => onView(employee.id) : undefined}
+					onEdit={onEdit ? () => onEdit(employee.id) : undefined}
+					onRestore={onRestore ? () => onRestore(employee.id) : undefined}
+					onDelete={onDelete ? () => onDelete(employee.id) : undefined}
+				/>
+			);
+		},
+		[canManageLifecycle, onOpenPage, onView, onEdit, onDelete, onRestore],
+	);
+
 	const columns = React.useMemo(() => {
 		const c = createColumnHelper<typeof dataTableFeatures, EmployeeSummary>();
 
@@ -90,43 +121,19 @@ export const EmployeeTable = ({
 			}),
 			c.display({
 				id: "actions",
-				cell: ({ row }) => {
-					const employee = row.original;
-					const actions = getEmployeeLifecycleActions({
-						canManageLifecycle,
-						isSoftDeleted: employee.isSoftDeleted,
-					});
-
-					return (
-						<EntityActions
-							onOpenPage={
-								onOpenPage ? () => onOpenPage(employee.id) : undefined
-							}
-							viewPermission="org:employees:read"
-							editPermission="org:employees:update"
-							restorePermission="org:employees:restore"
-							deletePermission="org:employees:delete"
-							canEdit={actions.canEdit}
-							canRestore={actions.canRestore}
-							canDelete={actions.canDelete}
-							onView={() => onView?.(employee.id)}
-							onEdit={() => onEdit?.(employee.id)}
-							onRestore={() => onRestore?.(employee.id)}
-							onDelete={() => onDelete?.(employee.id)}
-						/>
-					);
-				},
+				cell: ({ row }) => renderActions(row.original),
 				meta: {
 					cellClassName: "w-11",
 				},
 			}),
 		];
-	}, [canManageLifecycle, onOpenPage, onView, onEdit, onDelete, onRestore]);
+	}, [renderActions]);
 
 	return (
 		<DataTable
 			columns={columns}
 			data={data}
+			renderRowContextMenu={(index) => renderActions(data[index], "context")}
 			onRowAction={
 				onOpenPage ? (index) => onOpenPage(data[index].id) : undefined
 			}

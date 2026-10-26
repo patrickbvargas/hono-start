@@ -14,9 +14,12 @@ import {
 	ChevronRightIcon,
 	ChevronUpIcon,
 } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import {
 	Button,
+	ContextMenu,
+	ContextMenuContent,
+	ContextMenuTrigger,
 	ScrollArea,
 	Table,
 	TableBody,
@@ -40,6 +43,7 @@ export interface DataTableProps<TData extends RowData> {
 	initialSorting?: SortingState;
 	emptyMessage?: string;
 	className?: string;
+	renderRowContextMenu?: (index: number) => React.ReactNode;
 	onRowAction?: (index: number) => void;
 	rowActionLabel?: string;
 	footerContent?: React.ReactNode;
@@ -52,6 +56,7 @@ export const DataTable = <TData extends RowData>({
 	emptyMessage = "Nenhum registro encontrado.",
 	className,
 	onRowAction,
+	renderRowContextMenu,
 	rowActionLabel = "Abrir página do registro",
 	footerContent,
 	tableFooterContent,
@@ -124,49 +129,62 @@ export const DataTable = <TData extends RowData>({
 					</TableHeader>
 					<TableBody>
 						{table.getRowModel().rows?.length ? (
-							rows.map((row) => (
-								<TableRow
-									key={row.id}
-									tabIndex={onRowAction ? 0 : undefined}
-									title={onRowAction ? rowActionLabel : undefined}
-									className={
-										onRowAction
-											? "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
-											: undefined
-									}
-									onClick={(event) => {
-										if (
-											(event.target as HTMLElement).closest(
-												"button, a, input, select, textarea, [role=menuitem], [data-slot=dropdown-menu-content]",
-											)
-										) {
-											return;
+							rows.map((row) => {
+								const content = (
+									<TableRow
+										key={row.id}
+										tabIndex={
+											onRowAction || renderRowContextMenu ? 0 : undefined
 										}
-										onRowAction?.(row.index);
-									}}
-									onKeyDown={(event) => {
-										if (
-											event.target === event.currentTarget &&
-											(event.key === "Enter" || event.key === " ")
-										) {
-											event.preventDefault();
+										title={onRowAction ? rowActionLabel : undefined}
+										className={
+											onRowAction
+												? "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
+												: undefined
+										}
+										onClick={(event) => {
+											if (
+												(event.target as HTMLElement).closest(
+													ROW_INTERACTIVE_SELECTOR,
+												)
+											) {
+												return;
+											}
 											onRowAction?.(row.index);
-										}
-									}}
-								>
-									{row.getVisibleCells().map((cell) => (
-										<TableCell
-											key={cell.id}
-											className={cell.column.columnDef.meta?.cellClassName}
-										>
-											{flexRender(
-												cell.column.columnDef.cell,
-												cell.getContext(),
-											)}
-										</TableCell>
-									))}
-								</TableRow>
-							))
+										}}
+										onKeyDown={(event) => {
+											if (
+												event.target === event.currentTarget &&
+												(event.key === "Enter" || event.key === " ")
+											) {
+												event.preventDefault();
+												onRowAction?.(row.index);
+											}
+										}}
+									>
+										{row.getVisibleCells().map((cell) => (
+											<TableCell
+												key={cell.id}
+												className={cell.column.columnDef.meta?.cellClassName}
+											>
+												{flexRender(
+													cell.column.columnDef.cell,
+													cell.getContext(),
+												)}
+											</TableCell>
+										))}
+									</TableRow>
+								);
+								return renderRowContextMenu ? (
+									<DataTableContextRow
+										key={row.id}
+										row={content}
+										menu={renderRowContextMenu(row.index)}
+									/>
+								) : (
+									content
+								);
+							})
 						) : (
 							<TableRow>
 								<TableCell
@@ -240,6 +258,54 @@ export const DataTable = <TData extends RowData>({
 		</div>
 	);
 };
+
+const ROW_INTERACTIVE_SELECTOR =
+	"button, a, input, select, textarea, [role=menuitem], [data-slot=dropdown-menu-content], [data-slot=context-menu-content]";
+
+interface DataTableContextRowProps {
+	row: React.ReactElement;
+	menu: React.ReactNode;
+}
+
+function DataTableContextRow({ row, menu }: DataTableContextRowProps) {
+	const triggerRef = useRef<HTMLElement | null>(null);
+	return (
+		<ContextMenu>
+			<ContextMenuTrigger
+				ref={(element) => {
+					triggerRef.current = element;
+				}}
+				render={row}
+				onContextMenuCapture={(event) => {
+					if ((event.target as HTMLElement).closest(ROW_INTERACTIVE_SELECTOR)) {
+						event.stopPropagation();
+					}
+				}}
+				onKeyDown={(event) => {
+					if (
+						event.target === event.currentTarget &&
+						(event.key === "ContextMenu" ||
+							(event.shiftKey && event.key === "F10"))
+					) {
+						event.preventDefault();
+						const rect = event.currentTarget.getBoundingClientRect();
+						event.currentTarget.dispatchEvent(
+							new MouseEvent("contextmenu", {
+								bubbles: true,
+								cancelable: true,
+								clientX: rect.left + 16,
+								clientY: rect.bottom,
+							}),
+						);
+					}
+				}}
+			/>
+			<ContextMenuContent finalFocus={() => triggerRef.current}>
+				{menu}
+			</ContextMenuContent>
+		</ContextMenu>
+	);
+}
 
 interface DataTableHeaderProps<TData extends RowData> {
 	header: Header<typeof dataTableFeatures, TData, unknown>;

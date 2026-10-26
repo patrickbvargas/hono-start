@@ -32,6 +32,37 @@ export const ClientTable = ({
 	onDelete,
 	onRestore,
 }: ClientTableProps) => {
+	const renderActions = React.useCallback(
+		(
+			client: ClientSummary,
+			presentation: "dropdown" | "context" = "dropdown",
+		) => {
+			const actions = getClientLifecycleActions({
+				canManageLifecycle,
+				isSoftDeleted: client.isSoftDeleted,
+			});
+
+			return (
+				<EntityActions
+					presentation={presentation}
+					onOpenPage={onOpenPage ? () => onOpenPage(client.id) : undefined}
+					viewPermission="org:clients:read"
+					editPermission="org:clients:update"
+					restorePermission="org:clients:restore"
+					deletePermission="org:clients:delete"
+					canEdit={actions.canEdit}
+					canRestore={actions.canRestore}
+					canDelete={actions.canDelete}
+					onView={onView ? () => onView(client.id) : undefined}
+					onEdit={onEdit ? () => onEdit(client.id) : undefined}
+					onRestore={onRestore ? () => onRestore(client.id) : undefined}
+					onDelete={onDelete ? () => onDelete(client.id) : undefined}
+				/>
+			);
+		},
+		[canManageLifecycle, onOpenPage, onDelete, onEdit, onRestore, onView],
+	);
+
 	const columns = React.useMemo(() => {
 		const c = createColumnHelper<typeof dataTableFeatures, ClientSummary>();
 
@@ -83,41 +114,19 @@ export const ClientTable = ({
 			}),
 			c.display({
 				id: "actions",
-				cell: ({ row }) => {
-					const client = row.original;
-					const actions = getClientLifecycleActions({
-						canManageLifecycle,
-						isSoftDeleted: client.isSoftDeleted,
-					});
-
-					return (
-						<EntityActions
-							onOpenPage={onOpenPage ? () => onOpenPage(client.id) : undefined}
-							viewPermission="org:clients:read"
-							editPermission="org:clients:update"
-							restorePermission="org:clients:restore"
-							deletePermission="org:clients:delete"
-							canEdit={actions.canEdit}
-							canRestore={actions.canRestore}
-							canDelete={actions.canDelete}
-							onView={() => onView?.(client.id)}
-							onEdit={() => onEdit?.(client.id)}
-							onRestore={() => onRestore?.(client.id)}
-							onDelete={() => onDelete?.(client.id)}
-						/>
-					);
-				},
+				cell: ({ row }) => renderActions(row.original),
 				meta: {
 					cellClassName: "w-11",
 				},
 			}),
 		];
-	}, [canManageLifecycle, onOpenPage, onDelete, onEdit, onRestore, onView]);
+	}, [renderActions]);
 
 	return (
 		<DataTable
 			columns={columns}
 			data={data}
+			renderRowContextMenu={(index) => renderActions(data[index], "context")}
 			onRowAction={
 				onOpenPage ? (index) => onOpenPage(data[index].id) : undefined
 			}

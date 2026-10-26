@@ -32,6 +32,35 @@ export const FeeTable = ({
 	onDelete,
 	onRestore,
 }: FeeTableProps) => {
+	const renderActions = React.useCallback(
+		(fee: FeeSummary, presentation: "dropdown" | "context" = "dropdown") => {
+			const actions = getFeeLifecycleActions({
+				canManageLifecycle,
+				contractStatusValue: fee.contractStatusValue,
+				isSoftDeleted: fee.isSoftDeleted,
+			});
+
+			return (
+				<EntityActions
+					presentation={presentation}
+					onOpenPage={onOpenPage ? () => onOpenPage(fee.id) : undefined}
+					viewPermission={["org:fees:read_all", "org:fees:read_assigned"]}
+					editPermission="org:fees:update"
+					restorePermission="org:fees:restore"
+					deletePermission="org:fees:delete"
+					canEdit={actions.canEdit}
+					canRestore={actions.canRestore}
+					canDelete={actions.canDelete}
+					onView={onView ? () => onView(fee.id) : undefined}
+					onEdit={onEdit ? () => onEdit(fee.id) : undefined}
+					onRestore={onRestore ? () => onRestore(fee.id) : undefined}
+					onDelete={onDelete ? () => onDelete(fee.id) : undefined}
+				/>
+			);
+		},
+		[canManageLifecycle, onOpenPage, onDelete, onEdit, onRestore, onView],
+	);
+
 	const columns = React.useMemo(() => {
 		const c = createColumnHelper<typeof dataTableFeatures, FeeSummary>();
 
@@ -87,42 +116,19 @@ export const FeeTable = ({
 			}),
 			c.display({
 				id: "actions",
-				cell: ({ row }) => {
-					const fee = row.original;
-					const actions = getFeeLifecycleActions({
-						canManageLifecycle,
-						contractStatusValue: fee.contractStatusValue,
-						isSoftDeleted: fee.isSoftDeleted,
-					});
-
-					return (
-						<EntityActions
-							onOpenPage={onOpenPage ? () => onOpenPage(fee.id) : undefined}
-							viewPermission={["org:fees:read_all", "org:fees:read_assigned"]}
-							editPermission="org:fees:update"
-							restorePermission="org:fees:restore"
-							deletePermission="org:fees:delete"
-							canEdit={actions.canEdit}
-							canRestore={actions.canRestore}
-							canDelete={actions.canDelete}
-							onView={() => onView?.(fee.id)}
-							onEdit={() => onEdit?.(fee.id)}
-							onRestore={() => onRestore?.(fee.id)}
-							onDelete={() => onDelete?.(fee.id)}
-						/>
-					);
-				},
+				cell: ({ row }) => renderActions(row.original),
 				meta: {
 					cellClassName: "w-11",
 				},
 			}),
 		];
-	}, [canManageLifecycle, onOpenPage, onDelete, onEdit, onRestore, onView]);
+	}, [renderActions]);
 
 	return (
 		<DataTable
 			columns={columns}
 			data={data}
+			renderRowContextMenu={(index) => renderActions(data[index], "context")}
 			onRowAction={
 				onOpenPage ? (index) => onOpenPage(data[index].id) : undefined
 			}

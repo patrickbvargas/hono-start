@@ -41,6 +41,42 @@ export const RemunerationTable = ({
 	onDelete,
 	onRestore,
 }: RemunerationTableProps) => {
+	const renderActions = React.useCallback(
+		(
+			remuneration: Remuneration,
+			presentation: "dropdown" | "context" = "dropdown",
+		) => {
+			const actions = getRemunerationLifecycleActions({
+				canManageLifecycle,
+				isSoftDeleted: remuneration.isSoftDeleted,
+			});
+
+			return (
+				<EntityActions
+					presentation={presentation}
+					onOpenPage={
+						onOpenPage ? () => onOpenPage(remuneration.id) : undefined
+					}
+					viewPermission={[
+						"org:remunerations:read_all",
+						"org:remunerations:read_own",
+					]}
+					editPermission="org:remunerations:update"
+					restorePermission="org:remunerations:restore"
+					deletePermission="org:remunerations:delete"
+					canEdit={actions.canEdit}
+					canRestore={actions.canRestore}
+					canDelete={actions.canDelete}
+					onView={onView ? () => onView(remuneration.id) : undefined}
+					onEdit={onEdit ? () => onEdit(remuneration.id) : undefined}
+					onRestore={onRestore ? () => onRestore(remuneration.id) : undefined}
+					onDelete={onDelete ? () => onDelete(remuneration.id) : undefined}
+				/>
+			);
+		},
+		[canManageLifecycle, onOpenPage, onDelete, onEdit, onRestore, onView],
+	);
+
 	const columns = React.useMemo(() => {
 		const c = createColumnHelper<typeof dataTableFeatures, Remuneration>();
 
@@ -102,46 +138,19 @@ export const RemunerationTable = ({
 			}),
 			c.display({
 				id: "actions",
-				cell: ({ row }) => {
-					const remuneration = row.original;
-					const actions = getRemunerationLifecycleActions({
-						canManageLifecycle,
-						isSoftDeleted: remuneration.isSoftDeleted,
-					});
-
-					return (
-						<EntityActions
-							onOpenPage={
-								onOpenPage ? () => onOpenPage(remuneration.id) : undefined
-							}
-							viewPermission={[
-								"org:remunerations:read_all",
-								"org:remunerations:read_own",
-							]}
-							editPermission="org:remunerations:update"
-							restorePermission="org:remunerations:restore"
-							deletePermission="org:remunerations:delete"
-							canEdit={actions.canEdit}
-							canRestore={actions.canRestore}
-							canDelete={actions.canDelete}
-							onView={() => onView?.(remuneration.id)}
-							onEdit={() => onEdit?.(remuneration.id)}
-							onRestore={() => onRestore?.(remuneration.id)}
-							onDelete={() => onDelete?.(remuneration.id)}
-						/>
-					);
-				},
+				cell: ({ row }) => renderActions(row.original),
 				meta: {
 					cellClassName: "w-11",
 				},
 			}),
 		];
-	}, [canManageLifecycle, onOpenPage, onDelete, onEdit, onRestore, onView]);
+	}, [renderActions]);
 
 	return (
 		<DataTable
 			columns={columns}
 			data={data}
+			renderRowContextMenu={(index) => renderActions(data[index], "context")}
 			onRowAction={
 				onOpenPage ? (index) => onOpenPage(data[index].id) : undefined
 			}

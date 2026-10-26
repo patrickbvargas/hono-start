@@ -23,6 +23,7 @@ vi.mock("@/shared/hooks/use-app-form", () => ({
 vi.mock("@/shared/hooks/use-filter", () => ({
 	useFilter: () => ({
 		filter: {
+			clientId: 9,
 			query: "123",
 			contractId: "12",
 			revenueId: "15",
@@ -135,6 +136,15 @@ describe("useFeeFilter", () => {
 			active: "all",
 			status: "active",
 		});
-		expect(handleResetFilterMock).toHaveBeenCalledTimes(1);
+		expect(handleFilterMock).toHaveBeenCalledExactlyOnceWith({
+			query: "",
+			contractId: "",
+			revenueId: "",
+			dateFrom: "",
+			dateTo: "",
+			active: "all",
+			status: "active",
+			clientId: undefined,
+		});
 	});
 });

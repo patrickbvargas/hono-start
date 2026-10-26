@@ -22,6 +22,20 @@ export const AuditLogTable = ({
 	onOpenPage,
 	onView,
 }: AuditLogTableProps) => {
+	const renderActions = React.useCallback(
+		(auditLog: AuditLog, presentation: "dropdown" | "context" = "dropdown") => {
+			return (
+				<EntityActions
+					presentation={presentation}
+					viewPermission="org:audit_logs:read"
+					onOpenPage={onOpenPage ? () => onOpenPage(auditLog.id) : undefined}
+					onView={onView ? () => onView(auditLog.id) : undefined}
+				/>
+			);
+		},
+		[onView, onOpenPage],
+	);
+
 	const columns = React.useMemo(() => {
 		const c = createColumnHelper<typeof dataTableFeatures, AuditLog>();
 
@@ -106,24 +120,17 @@ export const AuditLogTable = ({
 			}),
 			c.display({
 				id: "actions",
-				cell: ({ row }) => (
-					<EntityActions
-						viewPermission="org:audit_logs:read"
-						onOpenPage={
-							onOpenPage ? () => onOpenPage(row.original.id) : undefined
-						}
-						onView={onView ? () => onView(row.original.id) : undefined}
-					/>
-				),
+				cell: ({ row }) => renderActions(row.original),
 				meta: { cellClassName: "w-11" },
 			}),
 		];
-	}, [onView, onOpenPage]);
+	}, [renderActions, onOpenPage, onView]);
 
 	return (
 		<DataTable
 			columns={columns}
 			data={data}
+			renderRowContextMenu={(index) => renderActions(data[index], "context")}
 			onRowAction={
 				onOpenPage ? (index) => onOpenPage(data[index].id) : undefined
 			}
