@@ -58,58 +58,62 @@ export function Settings() {
 					</div>
 				</CardContent>
 			</Card>
-			<Card className="lg:col-span-2">
-				<CardHeader>
-					<CardTitle>Como trabalhar no Hono</CardTitle>
-				</CardHeader>
-				<CardContent className="space-y-4 text-sm">
-					<ol className="list-decimal space-y-2 pl-5">
-						<li>
-							Cadastre o cliente e os colaboradores que participam do contrato.
-						</li>
-						<li>Crie o contrato, defina a equipe e as receitas previstas.</li>
-						<li>
-							Abra o contrato e use a aba Financeiro para registrar os
-							recebimentos.
-						</li>
-						<li>
-							Confira as remunerações geradas e os indicadores da visão geral.
-						</li>
-					</ol>
-					<p className="text-muted-foreground">
-						Receitas são valores previstos. Recebimentos registram entradas
-						realizadas. Remunerações geradas não confirmam pagamento ao
-						colaborador; saídas são registradas em Despesas.
-					</p>
-					<div className="flex flex-wrap gap-3">
-						{(hasPermission(session, "org:contracts:read_all") ||
-							hasPermission(session, "org:contracts:read_assigned")) && (
-							<NavigationLink
-								to="/contratos"
-								search={contractSearchDefaults}
-								className="underline underline-offset-4"
-							>
-								Ir para contratos
-							</NavigationLink>
-						)}
-						{(hasPermission(session, "org:remunerations:read_all") ||
-							hasPermission(session, "org:remunerations:read_own")) && (
-							<NavigationLink
-								to="/remuneracoes"
-								search={remunerationSearchDefaults}
-								className="underline underline-offset-4"
-							>
-								Conferir e exportar remunerações
-							</NavigationLink>
-						)}
-					</div>
-					<p className="text-muted-foreground">
-						Colaboradores representam a equipe de trabalho. Contas e permissões
-						de acesso são administradas separadamente pelo responsável pela
-						plataforma.
-					</p>
-				</CardContent>
-			</Card>
+			{(hasPermission(session, "org:contracts:read_all") ||
+				hasPermission(session, "org:contracts:read_assigned")) && (
+				<Card className="lg:col-span-2">
+					<CardHeader>
+						<CardTitle>Como trabalhar no Hono</CardTitle>
+					</CardHeader>
+					<CardContent className="space-y-4 text-sm">
+						<ol className="list-decimal space-y-2 pl-5">
+							<li>
+								Cadastre o cliente e os colaboradores que participam do
+								contrato.
+							</li>
+							<li>Crie o contrato, defina a equipe e as receitas previstas.</li>
+							<li>
+								Abra o contrato e use a aba Financeiro para registrar os
+								recebimentos.
+							</li>
+							<li>
+								Confira as remunerações geradas e os indicadores da visão geral.
+							</li>
+						</ol>
+						<p className="text-muted-foreground">
+							Receitas são valores previstos. Recebimentos registram entradas
+							realizadas. Remunerações geradas não confirmam pagamento ao
+							colaborador; saídas são registradas em Despesas.
+						</p>
+						<div className="flex flex-wrap gap-3">
+							{(hasPermission(session, "org:contracts:read_all") ||
+								hasPermission(session, "org:contracts:read_assigned")) && (
+								<NavigationLink
+									to="/contratos"
+									search={contractSearchDefaults}
+									className="underline underline-offset-4"
+								>
+									Ir para contratos
+								</NavigationLink>
+							)}
+							{(hasPermission(session, "org:remunerations:read_all") ||
+								hasPermission(session, "org:remunerations:read_own")) && (
+								<NavigationLink
+									to="/remuneracoes"
+									search={remunerationSearchDefaults}
+									className="underline underline-offset-4"
+								>
+									Conferir e exportar remunerações
+								</NavigationLink>
+							)}
+						</div>
+						<p className="text-muted-foreground">
+							Colaboradores representam a equipe de trabalho. Contas e
+							permissões de acesso são administradas separadamente pelo
+							responsável pela plataforma.
+						</p>
+					</CardContent>
+				</Card>
+			)}
 		</div>
 	);
 }

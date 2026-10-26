@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { EntityWorkspace } from "@/shared/components/entity-workspace";
-import { Badge } from "@/shared/components/ui";
+import { Badge, ScrollArea } from "@/shared/components/ui";
 import { useAuditLogWorkspace } from "../../hooks/use-workspace";
 import {
 	type AuditLogWorkspaceSearch,
@@ -47,12 +47,22 @@ export function AuditLogWorkspace({
 				{
 					value: "changes",
 					label: "Alterações",
-					content: <AuditLogOverview id={id} section="changes" />,
+					expanded: true,
+					content: (
+						<ScrollArea className="h-full min-h-0 w-full">
+							<AuditLogOverview id={id} section="changes" />
+						</ScrollArea>
+					),
 				},
 				{
 					value: "technical",
 					label: "Dados técnicos",
-					content: <AuditLogOverview id={id} section="technical" />,
+					expanded: true,
+					content: (
+						<ScrollArea className="h-full min-h-0 w-full">
+							<AuditLogOverview id={id} section="technical" />
+						</ScrollArea>
+					),
 				},
 			]}
 		/>
