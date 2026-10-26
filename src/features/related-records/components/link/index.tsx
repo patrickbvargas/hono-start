@@ -30,8 +30,8 @@ export function RelatedRecordLink({
 				aria-haspopup="dialog"
 				title={
 					typeof children === "string"
-						? `Ver detalhes de ${children}`
-						: "Ver detalhes"
+						? `Ver resumo de ${children}`
+						: "Ver resumo"
 				}
 				aria-expanded={overlay.details.isOpen}
 				onClick={() => overlay.details.open(id)}

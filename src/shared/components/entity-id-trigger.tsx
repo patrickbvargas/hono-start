@@ -29,8 +29,8 @@ export function EntityIdTrigger({
 				(onOpenPage
 					? `Abrir página de ${label ?? `registro #${id}`}`
 					: label
-						? `Ver detalhes de ${label}`
-						: `Ver detalhes do registro #${id}`)
+						? `Ver resumo de ${label}`
+						: `Ver resumo do registro #${id}`)
 			}
 			title={actionLabel}
 			onClick={(event: MouseEvent<HTMLButtonElement>) => {

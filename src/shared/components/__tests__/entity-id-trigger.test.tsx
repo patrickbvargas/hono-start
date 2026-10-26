@@ -28,7 +28,7 @@ describe("EntityIdTrigger", () => {
 			<EntityIdTrigger id={99} label="Processo de teste" onView={onView} />,
 		);
 		fireEvent.click(
-			screen.getByRole("button", { name: "Ver detalhes de Processo de teste" }),
+			screen.getByRole("button", { name: "Ver resumo de Processo de teste" }),
 		);
 		expect(onView).toHaveBeenCalledWith(99);
 	});
@@ -38,7 +38,7 @@ describe("EntityIdTrigger", () => {
 		render(<EntityIdTrigger id={12} onView={onView} />);
 
 		const trigger = screen.getByRole("button", {
-			name: "Ver detalhes do registro #12",
+			name: "Ver resumo do registro #12",
 		});
 
 		expect(trigger.textContent).toBe("#12");

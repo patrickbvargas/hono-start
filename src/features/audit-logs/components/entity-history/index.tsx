@@ -70,7 +70,7 @@ function EntityAuditHistoryContent({
 						onClick={() => details.open(context.row.original.id)}
 						aria-label={`Ver alteração #${context.row.original.id}`}
 					>
-						{context.getValue() || "Ver detalhes"}
+						{context.getValue() || "Ver resumo"}
 					</TableButton>
 				),
 			}),

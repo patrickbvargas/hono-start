@@ -56,6 +56,11 @@ describe("contextual related details", () => {
 					.getByRole("button", { name: "Registro relacionado" })
 					.getAttribute("aria-expanded"),
 			).toBe("false");
+			expect(
+				screen
+					.getByRole("button", { name: "Registro relacionado" })
+					.getAttribute("title"),
+			).toBe("Ver resumo de Registro relacionado");
 			expect(screen.queryByLabelText("Detalhe relacionado")).toBeNull();
 			fireEvent.click(
 				screen.getByRole("button", { name: "Registro relacionado" }),
