@@ -17,6 +17,7 @@ import type {
 import { FEE_ERRORS } from "../constants/errors";
 import {
 	getFeeById,
+	getFeeRevenueTypes,
 	getFees,
 	getSelectableFeeContracts,
 	getSelectableFeeRevenues,
@@ -164,4 +165,19 @@ export const getSelectableFeeRevenuesQueryOptions = (contractId = "") =>
 		meta: { refreshOnMutation: true },
 		queryKey: feeKeys.revenueOptions(contractId),
 		queryFn: () => getSelectableFeeRevenuesFn({ data: { contractId } }),
+	});
+
+const getFeeRevenueTypesFn = createServerFn({ method: "GET" })
+	.middleware([authMiddleware])
+	.handler(async (): Promise<QueryManyReturnType<Option>> => {
+		const session = await getRequiredServerLoggedUserSession();
+		assertCan(session, ["org:fees:read_all", "org:fees:read_assigned"]);
+		return getFeeRevenueTypes();
+	});
+export const getFeeRevenueTypesQueryOptions = () =>
+	queryOptions({
+		queryKey: [...feeKeys.all, "revenue-types"],
+		staleTime: Infinity,
+		meta: { refreshOnMutation: true },
+		queryFn: getFeeRevenueTypesFn,
 	});

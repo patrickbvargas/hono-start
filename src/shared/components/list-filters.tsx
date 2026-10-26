@@ -179,7 +179,13 @@ function ListFiltersPopover({
 				{label}
 				<ChevronDownIcon size={16} />
 			</PopoverTrigger>
-			<PopoverContent align="start" className={cn("p-4", className)}>
+			<PopoverContent
+				align="start"
+				className={cn(
+					"w-max max-w-[calc(100vw-2rem)] p-3 [&_*]:[container-type:normal]",
+					className,
+				)}
+			>
 				{title ? (
 					<PopoverHeader>
 						<PopoverTitle>{title}</PopoverTitle>

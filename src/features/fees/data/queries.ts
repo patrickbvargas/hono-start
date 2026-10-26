@@ -6,7 +6,7 @@ import {
 } from "@/shared/lib/entity-management";
 import { prisma } from "@/shared/lib/prisma";
 import { financialTotalsSchema } from "@/shared/schemas/financial-totals";
-import type { Option } from "@/shared/schemas/option";
+import { type Option, optionSchema } from "@/shared/schemas/option";
 import {
 	CONTRACT_STATUS_ACTIVE_VALUE,
 	type FeeAccessResource,
@@ -153,6 +153,16 @@ function buildFeeWhere({
 					revenue: {
 						contractId: Number(filter.contractId),
 					},
+				}
+			: {}),
+		...(filter.revenueType
+			? {
+					AND: [
+						...(filter.clientId
+							? [{ revenue: { contract: { clientId: filter.clientId } } }]
+							: []),
+						{ revenue: { type: { value: filter.revenueType } } },
+					],
 				}
 			: {}),
 		...(filter.revenueId ? { revenueId: Number(filter.revenueId) } : {}),
@@ -588,4 +598,12 @@ export async function getFeeAccessResourceById(firmId: number, id: number) {
 			),
 		} satisfies FeeAccessResource,
 	};
+}
+
+export async function getFeeRevenueTypes(): Promise<
+	QueryManyReturnType<Option>
+> {
+	return optionSchema
+		.array()
+		.parse(await prisma.revenueType.findMany({ orderBy: { label: "asc" } }));
 }

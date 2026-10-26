@@ -10,7 +10,9 @@ import {
 } from "@testing-library/react";
 import { useState } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { FinancialPeriodShortcuts } from "../financial-period-shortcuts";
 import { DatePicker } from "../ui/date-picker";
+import { DateRangePicker } from "../ui/date-range-picker";
 import { InputNumber } from "../ui/input-number";
 
 afterEach(cleanup);
@@ -30,6 +32,72 @@ function Example() {
 }
 
 describe("financial inputs", () => {
+	it("applies a range only after both dates are selected and closes the calendar", async () => {
+		vi.stubGlobal(
+			"ResizeObserver",
+			class {
+				observe() {}
+				unobserve() {}
+				disconnect() {}
+			},
+		);
+		const onChange = vi.fn();
+		render(
+			<FinancialPeriodShortcuts
+				dateFrom="2026-10-01"
+				dateTo="2026-10-31"
+				onChange={onChange}
+			/>,
+		);
+		const trigger = screen.getByRole("button", { name: "Personalizado" });
+		fireEvent.click(trigger);
+		fireEvent.click(
+			await screen.findByRole("button", {
+				name: /sábado, 10 de outubro de 2026/,
+			}),
+		);
+		expect(onChange).not.toHaveBeenCalled();
+		expect(trigger.getAttribute("aria-expanded")).toBe("true");
+		fireEvent.click(
+			screen.getByRole("button", {
+				name: /terça-feira, 20 de outubro de 2026/,
+			}),
+		);
+		expect(onChange).toHaveBeenCalledWith({
+			dateFrom: "2026-10-10",
+			dateTo: "2026-10-20",
+		});
+		await waitFor(() =>
+			expect(trigger.getAttribute("aria-expanded")).toBe("false"),
+		);
+		vi.unstubAllGlobals();
+	});
+
+	it("clears both range boundaries together", async () => {
+		vi.stubGlobal(
+			"ResizeObserver",
+			class {
+				observe() {}
+				unobserve() {}
+				disconnect() {}
+			},
+		);
+		const onChange = vi.fn();
+		render(
+			<DateRangePicker
+				label="Período"
+				dateFrom="2026-10-01"
+				dateTo=""
+				onChange={onChange}
+			/>,
+		);
+		fireEvent.click(screen.getByRole("button", { name: "Período" }));
+		fireEvent.click(
+			await screen.findByRole("button", { name: "Limpar período" }),
+		);
+		expect(onChange).toHaveBeenCalledWith({ dateFrom: "", dateTo: "" });
+		vi.unstubAllGlobals();
+	});
 	it("uses Brazilian currency and preserves typed cents on blur", () => {
 		render(<Example />);
 		const input = screen.getByRole("textbox", {

@@ -21,13 +21,13 @@ export function PendingWorkFilter() {
 	return (
 		<form.Form form={form} className="w-full">
 			<ListFilters>
-				<ListFilters.Bar className="flex-wrap">
+				<ListFilters.Bar className="flex-wrap md:flex-nowrap gap-2">
 					<form.AppField name="query">
 						{(field) => (
 							<field.Search
 								aria-label="Contrato ou cliente"
 								placeholder="Buscar por contrato ou cliente..."
-								classNames={{ wrapper: "w-full md:max-w-80" }}
+								classNames={{ wrapper: "w-full md:w-52 md:shrink-0 xl:w-60" }}
 							/>
 						)}
 					</form.AppField>
@@ -66,8 +66,8 @@ export function PendingWorkFilter() {
 							</form.AppField>
 						</ListFilters.Drawer>
 					) : (
-						<ListFilters.Actions>
-							<div className="w-56 shrink-0">
+						<ListFilters.Actions className="w-full min-w-0 md:w-auto md:flex-nowrap">
+							<div className="w-48 min-w-0 shrink">
 								<form.AppField name="clientId">
 									{(field) => (
 										<field.Autocomplete
@@ -78,7 +78,7 @@ export function PendingWorkFilter() {
 									)}
 								</form.AppField>
 							</div>
-							<div className="w-56 shrink-0">
+							<div className="w-48 min-w-0 shrink">
 								<form.AppField name="employeeId">
 									{(field) => (
 										<field.Autocomplete
@@ -92,20 +92,14 @@ export function PendingWorkFilter() {
 							<ListFilters.Popover label="Criticidade">
 								<form.AppField name="severity">
 									{(field) => (
-										<field.CheckboxGroup
-											label="Criticidade"
-											options={PENDING_SEVERITY_OPTIONS}
-										/>
+										<field.CheckboxGroup options={PENDING_SEVERITY_OPTIONS} />
 									)}
 								</form.AppField>
 							</ListFilters.Popover>
 							<ListFilters.Popover label="Tipo">
 								<form.AppField name="type">
 									{(field) => (
-										<field.CheckboxGroup
-											label="Tipo de pendência"
-											options={PENDING_TYPE_OPTIONS}
-										/>
+										<field.CheckboxGroup options={PENDING_TYPE_OPTIONS} />
 									)}
 								</form.AppField>
 							</ListFilters.Popover>

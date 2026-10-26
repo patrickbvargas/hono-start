@@ -3,6 +3,7 @@ import { feeSearchSchema } from "../schemas/search";
 
 const { prismaMock } = vi.hoisted(() => ({
 	prismaMock: {
+		revenueType: { findMany: vi.fn() },
 		fee: {
 			aggregate: vi.fn(),
 			count: vi.fn(),
@@ -16,7 +17,7 @@ vi.mock("@/shared/lib/prisma", () => ({
 	prisma: prismaMock,
 }));
 
-import { getFeeById, getFees } from "../data/queries";
+import { getFeeById, getFeeRevenueTypes, getFees } from "../data/queries";
 
 function createFeeRow() {
 	return {
@@ -44,6 +45,43 @@ function createFeeRow() {
 }
 
 describe("fee data queries", () => {
+	it("loads type options from the lookup instead of contract revenue records", async () => {
+		prismaMock.revenueType.findMany.mockResolvedValue([
+			{ id: 1, value: "JUDICIAL", label: "Judicial", isActive: true },
+		]);
+		expect(await getFeeRevenueTypes()).toEqual([
+			{ id: 1, value: "JUDICIAL", label: "Judicial", isDisabled: false },
+		]);
+	});
+
+	it("combines type filtering with client, contract and assigned access for list and total", async () => {
+		await getFees({
+			scope: {
+				firmId: 1,
+				employeeId: 10,
+				employeeTypeValue: "LAWYER",
+				isAdmin: false,
+			},
+			search: feeSearchSchema.parse({
+				revenueType: "JUDICIAL",
+				clientId: 41,
+				contractId: "5",
+			}),
+		});
+		const where = prismaMock.fee.findMany.mock.calls[0]?.[0].where;
+		expect(where.AND).toEqual([
+			{ revenue: { contract: { clientId: 41 } } },
+			{ revenue: { type: { value: "JUDICIAL" } } },
+		]);
+		expect(where.revenue).toMatchObject({
+			contractId: 5,
+			contract: { assignments: { some: { employeeId: 10 } } },
+		});
+		expect(prismaMock.fee.aggregate).toHaveBeenCalledWith({
+			where,
+			_sum: { amount: true },
+		});
+	});
 	beforeEach(() => {
 		vi.clearAllMocks();
 		prismaMock.fee.aggregate.mockResolvedValue({ _sum: { amount: "9876.54" } });

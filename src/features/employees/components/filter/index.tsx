@@ -70,7 +70,7 @@ export const EmployeeFilter = () => {
 	);
 
 	const desktopFilterActions = (
-		<ListFilters.Actions className="w-full md:w-auto">
+		<ListFilters.Actions className="w-full min-w-0 md:w-auto md:flex-nowrap">
 			<ListFilters.Popover label="Função">
 				<form.AppField name="type">
 					{(field) => <field.CheckboxGroup options={types} />}
@@ -96,13 +96,13 @@ export const EmployeeFilter = () => {
 	return (
 		<form.Form form={form} className="w-full">
 			<ListFilters>
-				<ListFilters.Bar className="flex-wrap md:flex-nowrap">
+				<ListFilters.Bar className="flex-wrap md:flex-nowrap gap-2">
 					<form.AppField name="query">
 						{(field) => (
 							<field.Search
 								aria-label="Nome ou OAB"
 								placeholder="Buscar por nome ou OAB..."
-								classNames={{ wrapper: "w-full md:max-w-80" }}
+								classNames={{ wrapper: "w-full md:w-52 md:shrink-0 xl:w-60" }}
 							/>
 						)}
 					</form.AppField>

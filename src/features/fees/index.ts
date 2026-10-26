@@ -1,5 +1,6 @@
 export {
 	getFeeByIdQueryOptions,
+	getFeeRevenueTypesQueryOptions,
 	getFeesQueryOptions,
 	getSelectableFeeContractsQueryOptions,
 	getSelectableFeeRevenuesQueryOptions,

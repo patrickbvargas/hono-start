@@ -9,9 +9,9 @@ import {
 	FeeTable,
 	feeSearchDefaults,
 	feeSearchSchema,
+	getFeeRevenueTypesQueryOptions,
 	getFeesQueryOptions,
 	getSelectableFeeContractsQueryOptions,
-	getSelectableFeeRevenuesQueryOptions,
 	useFees,
 } from "@/features/fees";
 import { ButtonNew } from "@/shared/components/button-new";
@@ -42,7 +42,7 @@ export const Route = createFileRoute("/_app/honorarios")({
 		await Promise.all([
 			queryClient.query(getFeesQueryOptions(search)),
 			queryClient.query(getSelectableFeeContractsQueryOptions()),
-			queryClient.query(getSelectableFeeRevenuesQueryOptions()),
+			queryClient.query(getFeeRevenueTypesQueryOptions()),
 		]);
 	},
 	component: RouteComponent,

@@ -6,6 +6,7 @@ import {
 import type { EntityId } from "@/shared/schemas/entity";
 import {
 	getFeeByIdQueryOptions,
+	getFeeRevenueTypesQueryOptions,
 	getFeesQueryOptions,
 	getSelectableFeeContractsQueryOptions,
 	getSelectableFeeRevenuesQueryOptions,
@@ -76,4 +77,14 @@ export function useFeeFormOptions({
 		revenues: mergeLegacyFeeOption(revenues, currentRevenue),
 		isLoadingRevenues: !!contractId && isPending,
 	};
+}
+
+export function useFeeFilterOptions() {
+	const [{ data: contracts }, { data: revenueTypes }] = useSuspenseQueries({
+		queries: [
+			getSelectableFeeContractsQueryOptions(),
+			getFeeRevenueTypesQueryOptions(),
+		],
+	});
+	return { contracts, revenueTypes };
 }

@@ -1,7 +1,4 @@
-import { ChevronDownIcon } from "lucide-react";
 import { ListFilters } from "@/shared/components/list-filters";
-import { Collapsible, CollapsibleContent } from "@/shared/components/ui";
-import { useFilterPanel } from "@/shared/hooks/use-filter-panel";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
 import {
 	ENTITY_ACTIVE_FILTER_OPTIONS,
@@ -46,8 +43,6 @@ export const ContractFilter = () => {
 		filter.contractStatus.length > 0 ||
 		filter.active !== defaultFilter.active ||
 		filter.status !== defaultFilter.status;
-
-	const [isDesktopPanelOpen, setIsDesktopPanelOpen] = useFilterPanel();
 
 	const sharedFields = (
 		<>
@@ -98,8 +93,8 @@ export const ContractFilter = () => {
 	);
 
 	const desktopFilterActions = (
-		<ListFilters.Actions className="w-full md:w-auto">
-			<div className="w-56 shrink-0">
+		<ListFilters.Actions className="w-full min-w-0 md:w-auto md:flex-nowrap">
+			<div className="w-40 min-w-0 shrink">
 				<form.AppField name="clientId">
 					{(field) => (
 						<field.Autocomplete
@@ -110,7 +105,7 @@ export const ContractFilter = () => {
 					)}
 				</form.AppField>
 			</div>
-			<div className="w-56 shrink-0">
+			<div className="w-40 min-w-0 shrink">
 				<form.AppField name="employeeId">
 					{(field) => (
 						<field.Autocomplete
@@ -126,67 +121,43 @@ export const ContractFilter = () => {
 					{(field) => <field.CheckboxGroup options={legalAreas} />}
 				</form.AppField>
 			</ListFilters.Popover>
-			<ListFilters.Button
-				type="button"
-				onClick={() => setIsDesktopPanelOpen((open) => !open)}
-				aria-expanded={isDesktopPanelOpen}
-				className="md:min-w-28"
-			>
-				Mais filtros
-				<ChevronDownIcon
-					size={16}
-					className={isDesktopPanelOpen ? "rotate-180" : undefined}
-				/>
-			</ListFilters.Button>
+			<ListFilters.Popover label="Andamento">
+				<form.AppField name="contractStatus">
+					{(field) => <field.CheckboxGroup options={statuses} />}
+				</form.AppField>
+			</ListFilters.Popover>
+			<ListFilters.Popover label="Situação">
+				<form.AppField name="active">
+					{(field) => (
+						<field.RadioGroup options={ENTITY_ACTIVE_FILTER_OPTIONS} />
+					)}
+				</form.AppField>
+			</ListFilters.Popover>
+			<ListFilters.Popover label="Registro">
+				<form.AppField name="status">
+					{(field) => (
+						<field.RadioGroup options={ENTITY_DELETED_FILTER_OPTIONS} />
+					)}
+				</form.AppField>
+			</ListFilters.Popover>
 		</ListFilters.Actions>
-	);
-
-	const desktopFilterPanel = (
-		<Collapsible open={isDesktopPanelOpen} onOpenChange={setIsDesktopPanelOpen}>
-			<CollapsibleContent>
-				<ListFilters.Panel>
-					<form.AppField name="contractStatus">
-						{(field) => (
-							<field.CheckboxGroup label="Andamento" options={statuses} />
-						)}
-					</form.AppField>
-					<form.AppField name="active">
-						{(field) => (
-							<field.RadioGroup
-								label="Situação"
-								options={ENTITY_ACTIVE_FILTER_OPTIONS}
-							/>
-						)}
-					</form.AppField>
-					<form.AppField name="status">
-						{(field) => (
-							<field.RadioGroup
-								label="Registro"
-								options={ENTITY_DELETED_FILTER_OPTIONS}
-							/>
-						)}
-					</form.AppField>
-				</ListFilters.Panel>
-			</CollapsibleContent>
-		</Collapsible>
 	);
 
 	return (
 		<form.Form form={form} className="w-full">
 			<ListFilters>
-				<ListFilters.Bar>
+				<ListFilters.Bar className="flex-wrap md:flex-nowrap gap-2">
 					<form.AppField name="query">
 						{(field) => (
 							<field.Search
 								aria-label="Número do processo ou cliente"
 								placeholder="Buscar por processo ou cliente..."
-								classNames={{ wrapper: "w-full md:max-w-80" }}
+								classNames={{ wrapper: "w-full md:w-52 md:shrink-0 xl:w-60" }}
 							/>
 						)}
 					</form.AppField>
 					{isMobile ? mobileFilters : desktopFilterActions}
 				</ListFilters.Bar>
-				{isMobile ? null : desktopFilterPanel}
 				{(filter.query || hasAdvancedFilters) && (
 					<ListFilters.Active>
 						{filter.employeeId ? (

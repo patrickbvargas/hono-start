@@ -1,4 +1,4 @@
-import { Button } from "@/shared/components/ui";
+import { Button, DateRangePicker } from "@/shared/components/ui";
 
 interface FinancialPeriodShortcutsProps {
 	dateFrom: string;
@@ -24,7 +24,7 @@ export function FinancialPeriodShortcuts({
 		<div
 			role="group"
 			aria-label="Atalhos de período"
-			className="flex flex-wrap items-center gap-2"
+			className="flex shrink-0 items-center gap-2 whitespace-nowrap"
 		>
 			<span className="text-xs text-muted-foreground">Período</span>
 			<Button
@@ -49,6 +49,17 @@ export function FinancialPeriodShortcuts({
 			>
 				Este mês
 			</Button>
+			<DateRangePicker
+				label="Período personalizado"
+				triggerLabel="Personalizado"
+				isActive={
+					Boolean(dateFrom || dateTo) &&
+					!(dateFrom === month.dateFrom && dateTo === month.dateTo)
+				}
+				dateFrom={dateFrom}
+				dateTo={dateTo}
+				onChange={onChange}
+			/>
 		</div>
 	);
 }

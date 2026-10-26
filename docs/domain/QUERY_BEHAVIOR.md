@@ -58,6 +58,7 @@ This file defines the canonical domain-facing behavior of filtering, sorting, li
 | `query` | parent contract process-number search | text |
 | `contractId` | parent contract | entity id |
 | `revenueId` | parent revenue | entity id |
+| `revenueType` | fee list honorarium type | revenue type lookup value |
 | `dateFrom` | lower payment-date bound | date |
 | `dateTo` | upper payment-date bound | date |
 
