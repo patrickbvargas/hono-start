@@ -132,6 +132,25 @@ describe("EntityDetail", () => {
 		expect(childChange).toHaveBeenCalledWith(false, expect.anything());
 		expect(parentChange).not.toHaveBeenCalled();
 	});
+	it("reserves separate responsive page-link slots and action geometry while loading", () => {
+		const { container } = render(
+			<EntityDetail.Root state={OPEN_STATE}>
+				<EntityDetail.SkeletonHeader withActions withPageLink />
+				<EntityDetail.Body>
+					<EntityDetail.SkeletonPageLink />
+				</EntityDetail.Body>
+			</EntityDetail.Root>,
+		);
+		const drawer = screen.getByRole("dialog", { name: "Carregando detalhes" });
+		expect(
+			drawer.querySelector('[data-slot="drawer-header"]')?.className,
+		).toContain("flex-row");
+		expect(drawer.querySelector(".hidden.h-4.w-24.shrink-0")).toBeTruthy();
+		expect(drawer.querySelector(".size-7.shrink-0")).toBeTruthy();
+		expect(drawer.querySelector(".h-5.items-center")).toBeTruthy();
+		expect(container.querySelector("a")).toBeNull();
+	});
+
 	it("names the detail drawer while loading", () => {
 		render(
 			<EntityDetail.Root state={OPEN_STATE}>

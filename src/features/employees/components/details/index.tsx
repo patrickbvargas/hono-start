@@ -5,6 +5,7 @@ import { EntityActions } from "@/shared/components/entity-actions";
 import { EntityDetail } from "@/shared/components/entity-detail";
 import { NavigationLink } from "@/shared/components/navigation-link";
 import type { EntityId } from "@/shared/schemas/entity";
+import { hasPermission, useLoggedUserSession } from "@/shared/session";
 import type { OverlayState } from "@/shared/types/overlay";
 import { useEmployee } from "../../hooks/use-data";
 import { employeeSearchSchema } from "../../schemas/search";
@@ -30,7 +31,7 @@ export const EmployeeDetails = ({
 }: EmployeeDetailsProps) => {
 	return (
 		<EntityDetail.Root key={id} state={state}>
-			<React.Suspense fallback={<EmployeeDetailsFallback />}>
+			<React.Suspense fallback={<EmployeeDetailsFallback id={id} />}>
 				<EmployeeDetailsContent
 					canManageLifecycle={canManageLifecycle}
 					id={id}
@@ -109,22 +110,48 @@ const EmployeeDetailsContent = ({
 	);
 };
 
-const EmployeeDetailsFallback = () => (
-	<EntityDetail.Content>
-		<EntityDetail.SkeletonHeader withActions />
-		<EntityDetail.Body>
-			<EntityDetail.SkeletonFields columns={2} rows={3} />
-			<EntityDetail.Separator />
-			<EntityDetail.Section title="Financeiro">
-				<EntityDetail.SkeletonFields columns={2} rows={2} />
-			</EntityDetail.Section>
-			<EntityDetail.Separator />
-			<AttachmentSectionFallback canUpload />
-			<EntityDetail.Separator />
-			<EntityDetail.Section title="Registro">
+const EmployeeDetailsFallback = ({ id }: { id: EntityId }) => {
+	const session = useLoggedUserSession();
+	return (
+		<EntityDetail.Content>
+			<EntityDetail.SkeletonHeader withActions withPageLink />
+			<EntityDetail.Body>
+				<EntityDetail.SkeletonPageLink />
 				<EntityDetail.SkeletonFields columns={2} rows={3} />
-			</EntityDetail.Section>
-		</EntityDetail.Body>
-		<EntityDetail.Footer />
-	</EntityDetail.Content>
-);
+				<EntityDetail.Separator />
+				<EntityDetail.Section title="Financeiro">
+					<EntityDetail.SkeletonFields columns={2} rows={2} />
+					{(hasPermission(session, "org:remunerations:read_all") ||
+						(hasPermission(session, "org:remunerations:read_own") &&
+							session.employee.id === id)) && (
+						<>
+							<EntityDetail.SkeletonFields
+								columns={2}
+								rows={1}
+								className="mt-3"
+							/>
+							<EntityDetail.SkeletonTitle className="mt-2 h-10 w-full sm:h-5" />
+							<EntityDetail.SkeletonTitle className="mt-3 h-5 w-36" />
+						</>
+					)}
+				</EntityDetail.Section>
+				{hasPermission(session, "org:attachments:read") && (
+					<>
+						<EntityDetail.Separator />
+						<AttachmentSectionFallback
+							canUpload={
+								hasPermission(session, "org:attachments:upload") &&
+								hasPermission(session, "org:employees:update")
+							}
+						/>
+					</>
+				)}
+				<EntityDetail.Separator />
+				<EntityDetail.Section title="Registro">
+					<EntityDetail.SkeletonFields columns={2} rows={3} />
+				</EntityDetail.Section>
+			</EntityDetail.Body>
+			<EntityDetail.Footer />
+		</EntityDetail.Content>
+	);
+};

@@ -41,7 +41,13 @@ describe("detail skeleton layout contracts", () => {
 		} else if (feature === "audit-logs") {
 			expect(actual[0]).toBe(expected[0]);
 		} else {
-			expect(actual).toEqual(expected);
+			const fixedGroups =
+				feature === "clients"
+					? actual.filter((_, index) => index !== 2)
+					: feature === "employees"
+						? actual.filter((_, index) => index !== 2)
+						: actual;
+			expect(fixedGroups).toEqual(expected);
 		}
 	});
 	it.each(features)(
@@ -56,16 +62,23 @@ describe("detail skeleton layout contracts", () => {
 					(match) => match[1],
 				);
 			if (feature !== "audit-logs") {
-				expect(titles(fallback)).toEqual(titles(real));
+				const expectedTitles = titles(real);
+				if (feature === "clients") {
+					expectedTitles.splice(1, 0, "Financeiro");
+				}
+				expect(titles(fallback)).toEqual(expectedTitles);
+				expect(fallback).toContain("<EntityDetail.SkeletonPageLink />");
 				expect(fallback).toContain(
-					"<EntityDetail.SkeletonHeader withActions />",
+					"<EntityDetail.SkeletonHeader withActions withPageLink />",
 				);
 			} else {
-				expect(fallback).toContain("<EntityDetail.SkeletonHeader />");
+				expect(fallback).toContain(
+					"<EntityDetail.SkeletonHeader withPageLink />",
+				);
 			}
 			if (feature === "expenses") {
 				const observation = fallback
-					.split('title="Observação"')[1]
+					.split('title="Observações"')[1]
 					.split("</EntityDetail.Section>")[0];
 				expect(observation).not.toContain("SkeletonFields");
 			}

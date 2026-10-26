@@ -62,8 +62,9 @@ function AuditLogDetailsContent({ id }: { id: EntityId }) {
 
 const AuditLogDetailsFallback = () => (
 	<EntityDetail.Content>
-		<EntityDetail.SkeletonHeader />
+		<EntityDetail.SkeletonHeader withPageLink />
 		<EntityDetail.Body>
+			<EntityDetail.SkeletonPageLink />
 			<EntityDetail.SkeletonFields columns={2} rows={10} />
 			<EntityDetail.Separator />
 			<section className="flex flex-col gap-2">

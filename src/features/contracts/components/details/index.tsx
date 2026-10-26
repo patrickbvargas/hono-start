@@ -249,33 +249,46 @@ const ContractDetailsContent = ({
 	);
 };
 
-const ContractDetailsFallback = () => (
-	<EntityDetail.Content>
-		<EntityDetail.SkeletonHeader withActions />
-		<EntityDetail.Body>
-			<EntityDetail.SkeletonFields columns={2} rows={6} />
-			<EntityDetail.Separator />
-			<EntityDetail.Section title="Equipe">
-				<EntityDetail.SkeletonFields columns={2} rows={2} />
-			</EntityDetail.Section>
-			<EntityDetail.Separator />
-			<EntityDetail.Section title="Receitas">
-				<div className="rounded-lg border p-3 space-y-4">
-					<EntityDetail.SkeletonTitle />
-					<EntityDetail.SkeletonFields columns={2} rows={5} />
-					<div className="flex gap-2">
-						<EntityDetail.SkeletonTitle className="h-8 w-32" />
-						<EntityDetail.SkeletonTitle className="h-8 w-28" />
+const ContractDetailsFallback = () => {
+	const session = useLoggedUserSession();
+	return (
+		<EntityDetail.Content>
+			<EntityDetail.SkeletonHeader withActions withPageLink />
+			<EntityDetail.Body>
+				<EntityDetail.SkeletonPageLink />
+				<EntityDetail.SkeletonFields columns={2} rows={6} />
+				<EntityDetail.Separator />
+				<EntityDetail.Section title="Equipe">
+					<EntityDetail.SkeletonFields columns={2} rows={2} />
+				</EntityDetail.Section>
+				<EntityDetail.Separator />
+				<EntityDetail.Section title="Receitas">
+					<div className="space-y-3 rounded-lg border p-3">
+						<div className="flex items-center justify-between gap-3">
+							<EntityDetail.SkeletonTitle />
+							<EntityDetail.SkeletonTitle className="h-5 w-16" />
+						</div>
+						<EntityDetail.SkeletonFields columns={2} rows={6} />
+						<div className="flex items-center gap-1">
+							<EntityDetail.SkeletonTitle className="h-8 w-44" />
+							<EntityDetail.SkeletonTitle className="h-9 w-32" />
+						</div>
 					</div>
-				</div>
-			</EntityDetail.Section>
-			<EntityDetail.Separator />
-			<AttachmentSectionFallback canUpload />
-			<EntityDetail.Separator />
-			<EntityDetail.Section title="Registro">
-				<EntityDetail.SkeletonFields columns={2} rows={3} />
-			</EntityDetail.Section>
-		</EntityDetail.Body>
-		<EntityDetail.Footer />
-	</EntityDetail.Content>
-);
+				</EntityDetail.Section>
+				<EntityDetail.Separator />
+				{hasPermission(session, "org:attachments:read") && (
+					<>
+						<AttachmentSectionFallback
+							canUpload={hasPermission(session, "org:attachments:upload")}
+						/>
+						<EntityDetail.Separator />
+					</>
+				)}
+				<EntityDetail.Section title="Registro">
+					<EntityDetail.SkeletonFields columns={2} rows={3} />
+				</EntityDetail.Section>
+			</EntityDetail.Body>
+			<EntityDetail.Footer />
+		</EntityDetail.Content>
+	);
+};

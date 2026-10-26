@@ -5,6 +5,7 @@ import { EntityActions } from "@/shared/components/entity-actions";
 import { EntityDetail } from "@/shared/components/entity-detail";
 import { NavigationLink } from "@/shared/components/navigation-link";
 import type { EntityId } from "@/shared/schemas/entity";
+import { hasPermission, useLoggedUserSession } from "@/shared/session";
 import type { OverlayState } from "@/shared/types/overlay";
 import { useClient } from "../../hooks/use-data";
 import { clientSearchSchema } from "../../schemas/search";
@@ -109,22 +110,45 @@ const ClientDetailsContent = ({
 	);
 };
 
-const ClientDetailsFallback = () => (
-	<EntityDetail.Content>
-		<EntityDetail.SkeletonHeader withActions />
-		<EntityDetail.Body>
-			<EntityDetail.SkeletonFields columns={2} rows={3} />
-			<EntityDetail.Separator />
-			<EntityDetail.Section title="Contato">
-				<EntityDetail.SkeletonFields columns={2} rows={2} />
-			</EntityDetail.Section>
-			<EntityDetail.Separator />
-			<AttachmentSectionFallback canUpload />
-			<EntityDetail.Separator />
-			<EntityDetail.Section title="Registro">
+const ClientDetailsFallback = () => {
+	const session = useLoggedUserSession();
+	return (
+		<EntityDetail.Content>
+			<EntityDetail.SkeletonHeader withActions withPageLink />
+			<EntityDetail.Body>
+				<EntityDetail.SkeletonPageLink />
 				<EntityDetail.SkeletonFields columns={2} rows={3} />
-			</EntityDetail.Section>
-		</EntityDetail.Body>
-		<EntityDetail.Footer />
-	</EntityDetail.Content>
-);
+				<EntityDetail.Separator />
+				<EntityDetail.Section title="Contato">
+					<EntityDetail.SkeletonFields columns={2} rows={2} />
+				</EntityDetail.Section>
+				{hasPermission(session, "org:contracts:read_all") &&
+					hasPermission(session, "org:fees:read_all") && (
+						<>
+							<EntityDetail.Separator />
+							<EntityDetail.Section title="Financeiro">
+								<EntityDetail.SkeletonFields columns={2} rows={4} />
+								<EntityDetail.SkeletonTitle className="mt-3 h-5 w-36" />
+							</EntityDetail.Section>
+						</>
+					)}
+				{hasPermission(session, "org:attachments:read") && (
+					<>
+						<EntityDetail.Separator />
+						<AttachmentSectionFallback
+							canUpload={
+								hasPermission(session, "org:attachments:upload") &&
+								hasPermission(session, "org:clients:update")
+							}
+						/>
+					</>
+				)}
+				<EntityDetail.Separator />
+				<EntityDetail.Section title="Registro">
+					<EntityDetail.SkeletonFields columns={2} rows={3} />
+				</EntityDetail.Section>
+			</EntityDetail.Body>
+			<EntityDetail.Footer />
+		</EntityDetail.Content>
+	);
+};

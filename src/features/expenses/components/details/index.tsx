@@ -7,6 +7,7 @@ import { NavigationLink } from "@/shared/components/navigation-link";
 import { Skeleton } from "@/shared/components/ui";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
+import { hasPermission, useLoggedUserSession } from "@/shared/session";
 import type { OverlayState } from "@/shared/types/overlay";
 import { useExpense } from "../../hooks/use-data";
 import { expenseSearchSchema } from "../../schemas/search";
@@ -109,22 +110,35 @@ function ExpenseDetailsContent({
 	);
 }
 
-const ExpenseDetailsFallback = () => (
-	<EntityDetail.Content>
-		<EntityDetail.SkeletonHeader withActions />
-		<EntityDetail.Body>
-			<EntityDetail.SkeletonFields columns={2} rows={3} />
-			<EntityDetail.Separator />
-			<EntityDetail.Section title="Observação">
-				<Skeleton className="h-5 w-full max-w-56" />
-			</EntityDetail.Section>
-			<EntityDetail.Separator />
-			<AttachmentSectionFallback canUpload />
-			<EntityDetail.Separator />
-			<EntityDetail.Section title="Registro">
+const ExpenseDetailsFallback = () => {
+	const session = useLoggedUserSession();
+	return (
+		<EntityDetail.Content>
+			<EntityDetail.SkeletonHeader withActions withPageLink />
+			<EntityDetail.Body>
+				<EntityDetail.SkeletonPageLink />
 				<EntityDetail.SkeletonFields columns={2} rows={3} />
-			</EntityDetail.Section>
-		</EntityDetail.Body>
-		<EntityDetail.Footer />
-	</EntityDetail.Content>
-);
+				<EntityDetail.Separator />
+				<EntityDetail.Section title="Observações">
+					<Skeleton className="h-5 w-full max-w-56" />
+				</EntityDetail.Section>
+				{hasPermission(session, "org:attachments:read") && (
+					<>
+						<EntityDetail.Separator />
+						<AttachmentSectionFallback
+							canUpload={
+								hasPermission(session, "org:expenses:update") &&
+								hasPermission(session, "org:attachments:upload")
+							}
+						/>
+					</>
+				)}
+				<EntityDetail.Separator />
+				<EntityDetail.Section title="Registro">
+					<EntityDetail.SkeletonFields columns={2} rows={3} />
+				</EntityDetail.Section>
+			</EntityDetail.Body>
+			<EntityDetail.Footer />
+		</EntityDetail.Content>
+	);
+};

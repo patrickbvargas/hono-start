@@ -116,21 +116,32 @@ function SkeletonTitle({ className }: React.ComponentProps<"div">) {
 
 interface SkeletonHeaderProps {
 	withActions?: boolean;
+	withPageLink?: boolean;
 }
 
-function SkeletonHeader({ withActions = false }: SkeletonHeaderProps) {
+function SkeletonHeader({
+	withActions = false,
+	withPageLink = false,
+}: SkeletonHeaderProps) {
 	return (
-		<Header
-			className={
-				withActions ? "flex-row items-center justify-between gap-3" : undefined
-			}
-		>
-			<Title>
+		<Header className="flex-row items-center justify-between gap-3">
+			<Title className="min-w-0 flex-1 truncate">
 				<span className="sr-only">Carregando detalhes</span>
-				<SkeletonTitle />
+				<SkeletonTitle className="max-w-full" />
 			</Title>
-			{withActions ? <Skeleton className="size-7 shrink-0" /> : null}
+			{withPageLink && (
+				<Skeleton className="hidden h-4 w-24 shrink-0 sm:block" />
+			)}
+			{withActions && <Skeleton className="size-7 shrink-0" />}
 		</Header>
+	);
+}
+
+function SkeletonPageLink() {
+	return (
+		<div className="flex h-5 items-center sm:hidden">
+			<Skeleton className="h-4 w-24" />
+		</div>
 	);
 }
 
@@ -162,6 +173,7 @@ export const EntityDetail = {
 	SkeletonFields: EntitySkeletonFields,
 	SkeletonTitle,
 	SkeletonHeader,
+	SkeletonPageLink,
 	Separator,
 };
 
