@@ -129,7 +129,7 @@ describe("EntityDetail", () => {
 			</EntityDetail.Root>,
 		);
 		fireEvent.click(screen.getByRole("button", { name: "Voltar" }));
-		expect(childChange).toHaveBeenCalledWith(false, expect.anything());
+		expect(childChange).toHaveBeenCalledWith(false);
 		expect(parentChange).not.toHaveBeenCalled();
 	});
 	it("reserves separate responsive page-link slots and action geometry while loading", () => {

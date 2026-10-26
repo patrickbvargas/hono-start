@@ -45,8 +45,22 @@ function Root({ state, children, ...props }: RootProps) {
 		<DetailDepthContext value={depth + 1}>
 			<Drawer
 				open={state.isOpen}
-				onOpenChange={state.onOpenChange}
-				disablePointerDismissal
+				onOpenChange={(open, details) => {
+					const target = details.event.target;
+					// Portaled sibling forms must not dismiss their source summary.
+					if (
+						details.reason === "focus-out" ||
+						(details.reason === "outside-press" &&
+							!(
+								target instanceof Element &&
+								target.matches('[data-slot="drawer-overlay"]')
+							))
+					) {
+						details.cancel();
+						return;
+					}
+					state.onOpenChange(open);
+				}}
 				modal={false}
 				{...props}
 			>

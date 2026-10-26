@@ -86,6 +86,8 @@ It is meant to survive domain changes as long as the project keeps the same UI a
 
 ## Interaction Contract
 
+- Contextual EntityDetail drawers dismiss on backdrop presses, Escape and their explicit close button. They remain non-modal so sibling edit/delete dialogs and attachment forms can receive focus. Focus leaving the drawer does not dismiss it; outside presses in portaled menus, forms and confirmation dialogs do not dismiss it either. Drawer backdrops remain rendered when nested inside a dialog, including drilldown summaries, so backdrop dismissal closes the summary while preserving its parent. Base UI owns nested-layer dismissal so only the innermost summary closes on a backdrop press.
+
 - The wrapper header exposes a global eye button to hide/show financial display values, including dashboard cards, charts, lists and details. The preference is local to the browser and persists across navigation and reload. Hidden monetary text uses `R$ •••` without blur and an accessible `Valor oculto` label. Hidden charts show the same placeholder instead of their contents; editing inputs and exported documents retain their original values. This display preference does not change permissions or requests.
 
 - Toasts are the canonical user-feedback mechanism for mutation results.

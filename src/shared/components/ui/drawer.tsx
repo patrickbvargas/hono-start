@@ -49,7 +49,8 @@ function DrawerContent({
 }: DrawerContentProps) {
 	return (
 		<DrawerPortal container={container}>
-			<DrawerOverlay />
+			{/* Nested drawers still need their own backdrop above the parent dialog. */}
+			<DrawerOverlay forceRender />
 			<DrawerPrimitive.Popup
 				data-slot="drawer-content"
 				data-direction={direction}
