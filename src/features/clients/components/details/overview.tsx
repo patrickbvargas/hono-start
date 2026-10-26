@@ -13,6 +13,7 @@ import type { EntityId } from "@/shared/schemas/entity";
 import { hasPermission, useLoggedUserSession } from "@/shared/session";
 import { useClient } from "../../hooks/use-data";
 import { formatClientDocument } from "../../utils/format";
+import { ClientFinance } from "../finance";
 
 interface ClientOverviewProps {
 	section?: "all" | "overview" | "contact";
@@ -43,6 +44,8 @@ export function ClientOverview({
 							search={{
 								...contractSearchDefaults,
 								clientId: String(client.id),
+								active: "all",
+								status: "all",
 							}}
 						>
 							{client.contractCount}
@@ -105,6 +108,13 @@ export function ClientOverview({
 			<EntityDetail.Section title="Contato">
 				<EntityDetail.Fields columns={2} items={contactInfo} />
 			</EntityDetail.Section>
+			{hasPermission(session, "org:contracts:read_all") &&
+				hasPermission(session, "org:fees:read_all") && (
+					<>
+						<EntityDetail.Separator />
+						<ClientFinance id={id} compact />
+					</>
+				)}
 			{includeAttachments && (
 				<>
 					<EntityDetail.Separator />

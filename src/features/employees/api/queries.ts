@@ -3,7 +3,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { Option } from "@/shared/schemas/option";
-import { assertCan } from "@/shared/session";
+import { assertCan, getScope, hasPermission } from "@/shared/session";
 import {
 	authMiddleware,
 	getRequiredServerLoggedUserSession,
@@ -17,15 +17,21 @@ import type {
 import { EMPLOYEE_ERRORS } from "../constants/errors";
 import {
 	getEmployeeById,
+	getEmployeeFinance,
 	getEmployees,
 	getEmployeeTypes,
 } from "../data/queries";
 import { employeeIdInputSchema } from "../schemas/form";
-import type { EmployeeDetail, EmployeeSummary } from "../schemas/model";
+import type {
+	EmployeeDetail,
+	EmployeeFinance,
+	EmployeeSummary,
+} from "../schemas/model";
 import { type EmployeeSearch, employeeSearchSchema } from "../schemas/search";
 
 export const employeeKeys = {
 	all: ["employee"] as const,
+	finance: (id: EntityId) => [...employeeKeys.all, "finance", id] as const,
 	list: (search: EmployeeSearch) => [...employeeKeys.all, search] as const,
 	detail: (id: EntityId) => [...employeeKeys.all, "detail", id] as const,
 	types: () => [...employeeKeys.all, "types"] as const,
@@ -101,5 +107,31 @@ export const getEmployeeTypesQueryOptions = () =>
 		queryKey: employeeKeys.types(),
 		queryFn: getEmployeeTypesFn,
 		staleTime: Infinity,
+		meta: { refreshOnMutation: true },
+	});
+
+const getEmployeeFinanceFn = createServerFn({ method: "GET" })
+	.middleware([authMiddleware])
+	.validator(employeeIdInputSchema)
+	.handler(async ({ data, context }): Promise<EmployeeFinance> => {
+		try {
+			assertCan(context.session, "org:employees:read");
+			if (!hasPermission(context.session, "org:remunerations:read_all")) {
+				assertCan(context.session, "org:remunerations:read_own");
+				if (context.session.employee.id !== data.id) {
+					throw new Error("Acesso negado");
+				}
+			}
+			const { firmId } = getScope(context.session, "employee");
+			return await getEmployeeFinance({ firmId, id: data.id });
+		} catch (error) {
+			console.error("[getEmployeeFinance]", error);
+			throw new Error(EMPLOYEE_ERRORS.FINANCE_GET_FAILED);
+		}
+	});
+export const getEmployeeFinanceQueryOptions = (id: EntityId) =>
+	queryOptions({
+		queryKey: employeeKeys.finance(id),
+		queryFn: () => getEmployeeFinanceFn({ data: { id } }),
 		meta: { refreshOnMutation: true },
 	});

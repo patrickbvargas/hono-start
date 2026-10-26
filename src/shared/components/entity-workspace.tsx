@@ -121,7 +121,7 @@ export function EntityWorkspace({
 							value={section.value}
 							className={
 								section.expanded
-									? "min-h-0 min-w-0 flex-1 overflow-hidden"
+									? "min-h-0 min-w-0 w-full max-w-4xl flex-1 overflow-hidden"
 									: "min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-contain"
 							}
 						>
@@ -131,7 +131,9 @@ export function EntityWorkspace({
 								) : (
 									<div
 										className={
-											section.fullWidth ? "space-y-5" : "max-w-4xl space-y-5"
+											section.fullWidth
+												? "w-full space-y-5"
+												: "w-full max-w-4xl space-y-5"
 										}
 									>
 										{section.content}

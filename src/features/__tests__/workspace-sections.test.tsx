@@ -93,9 +93,13 @@ const fixtures = vi.hoisted(() => {
 });
 vi.mock("../clients/hooks/use-data", () => ({
 	useClient: () => ({ client: fixtures.client }),
+	useClientFinance: () => ({
+		finance: { totalValue: 1500, paidValue: 500, remainingValue: 1000 },
+	}),
 }));
 vi.mock("../employees/hooks/use-data", () => ({
 	useEmployee: () => ({ employee: fixtures.employee }),
+	useEmployeeFinance: () => ({ finance: { totalAmount: 700 } }),
 }));
 vi.mock("../fees/hooks/use-data", () => ({
 	useFee: () => ({ fee: fixtures.fee }),
@@ -162,14 +166,14 @@ beforeEach(() => {
 	access.employeeId = 42;
 });
 describe("record page information hierarchy", () => {
-	it("omits the removed explanatory paragraphs from remuneration finance", () => {
+	it("shares the calculation summary while omitting removed automatic explanation", () => {
 		render(<RemunerationOverview id={42} section="finance" />);
 		expect(
 			screen.queryByText(/Valor gerado a partir do recebimento/),
 		).toBeNull();
 		expect(
-			screen.queryByText(/Remuneração gerada não confirma pagamento/),
-		).toBeNull();
+			screen.getByText(/Remuneração gerada não confirma pagamento/),
+		).toBeTruthy();
 		expect(screen.getByText("Origem")).toBeTruthy();
 	});
 	it("does not label another collaborator's list as the viewer's own remuneration", () => {
@@ -207,7 +211,7 @@ describe("record page information hierarchy", () => {
 			screen
 				.getByRole("link", { name: "Ver remunerações de Ana" })
 				.getAttribute("href"),
-		).toBe("/remuneracoes?employeeId=42");
+		).toBe("/remuneracoes?employeeId=42&active=true&status=active");
 	});
 	it.each([
 		ClientOverview,
@@ -274,4 +278,29 @@ describe("record page information hierarchy", () => {
 		expect(screen.getByText("Nº da parcela")).toBeTruthy();
 		expect(screen.queryByText(/parcela 2/)).toBeNull();
 	});
+});
+
+it("includes client finance in the drawer and uses an unfiltered contract destination", () => {
+	render(<ClientOverview id={42} />);
+	expect(screen.getByText("Financeiro")).toBeTruthy();
+	expect(
+		screen.getByRole("link", { name: "Ver recebimentos" }).getAttribute("href"),
+	).toContain("clientId=42");
+	const contracts = screen
+		.getByRole("link", { name: "Ver contratos de Maria" })
+		.getAttribute("href");
+	expect(contracts).toContain("status=all");
+	expect(contracts).toContain("active=all");
+});
+it("shows generated employee totals with the matching active list", () => {
+	render(<EmployeeOverview id={42} section="finance" />);
+	expect(screen.getByText("Total de remunerações geradas")).toBeTruthy();
+	expect(
+		screen.getByText(/Remuneração gerada não confirma pagamento/),
+	).toBeTruthy();
+	expect(
+		screen
+			.getByRole("link", { name: "Ver remunerações de Ana" })
+			.getAttribute("href"),
+	).toContain("active=true");
 });

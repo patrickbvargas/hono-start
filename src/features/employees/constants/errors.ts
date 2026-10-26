@@ -1,4 +1,5 @@
 export const EMPLOYEE_ERRORS = {
+	FINANCE_GET_FAILED: "Erro ao buscar resumo financeiro do colaborador",
 	MANAGE_FORBIDDEN: "Apenas administradores podem gerenciar colaboradores",
 	CREATE_FORBIDDEN: "Você não tem permissão para criar colaboradores",
 	CREATE_FAILED: "Erro ao criar colaborador",

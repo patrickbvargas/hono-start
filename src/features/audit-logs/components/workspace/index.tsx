@@ -47,13 +47,11 @@ export function AuditLogWorkspace({
 				{
 					value: "changes",
 					label: "Alterações",
-					fullWidth: true,
 					content: <AuditLogOverview id={id} section="changes" />,
 				},
 				{
 					value: "technical",
 					label: "Dados técnicos",
-					fullWidth: true,
 					content: <AuditLogOverview id={id} section="technical" />,
 				},
 			]}

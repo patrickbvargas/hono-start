@@ -2,6 +2,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import type { EntityId } from "@/shared/schemas/entity";
 import {
 	getEmployeeByIdQueryOptions,
+	getEmployeeFinanceQueryOptions,
 	getEmployeesQueryOptions,
 	getEmployeeTypesQueryOptions,
 } from "../api/queries";
@@ -24,4 +25,11 @@ export function useEmployee(id: EntityId) {
 export function useEmployeeOptions() {
 	const { data: types } = useSuspenseQuery(getEmployeeTypesQueryOptions());
 	return { types };
+}
+
+export function useEmployeeFinance(id: EntityId) {
+	const { data: finance } = useSuspenseQuery(
+		getEmployeeFinanceQueryOptions(id),
+	);
+	return { finance };
 }

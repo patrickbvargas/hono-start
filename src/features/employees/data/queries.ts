@@ -20,8 +20,10 @@ import { EMPLOYEE_ERRORS } from "../constants/errors";
 import type { EmployeeFilter } from "../schemas/filter";
 import {
 	type EmployeeDetail,
+	type EmployeeFinance,
 	type EmployeeSummary,
 	employeeDetailSchema,
+	employeeFinanceSchema,
 	employeeSummarySchema,
 } from "../schemas/model";
 import type { EmployeeSearch } from "../schemas/search";
@@ -197,5 +199,30 @@ export async function getEmployeeTypes(): Promise<QueryManyReturnType<Option>> {
 export async function getEmployeeTypeByValue(value: string) {
 	return prisma.employeeType.findUnique({
 		where: { value },
+	});
+}
+
+export async function getEmployeeFinance({
+	firmId,
+	id,
+}: EntityUniqueParams): Promise<EmployeeFinance> {
+	const employee = await prisma.employee.findFirst({
+		where: { id, firmId },
+		select: { id: true },
+	});
+	if (!employee) {
+		throw new Error(EMPLOYEE_ERRORS.NOT_FOUND);
+	}
+	const totals = await prisma.remuneration.aggregate({
+		where: {
+			firmId,
+			isActive: true,
+			deletedAt: null,
+			contractEmployee: { firmId, employeeId: id },
+		},
+		_sum: { amount: true },
+	});
+	return employeeFinanceSchema.parse({
+		totalAmount: Number(totals._sum.amount ?? 0),
 	});
 }

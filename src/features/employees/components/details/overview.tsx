@@ -12,7 +12,7 @@ import { NavigationLink } from "@/shared/components/navigation-link";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
 import { hasPermission, useLoggedUserSession } from "@/shared/session";
-import { useEmployee } from "../../hooks/use-data";
+import { useEmployee, useEmployeeFinance } from "../../hooks/use-data";
 
 interface EmployeeOverviewProps {
 	section?: "all" | "overview" | "finance";
@@ -33,7 +33,12 @@ export function EmployeeOverview({
 			<NavigationLink
 				to="/remuneracoes"
 				state={{ resetFilterPanel: true }}
-				search={{ ...remunerationSearchDefaults, employeeId: String(id) }}
+				search={{
+					...remunerationSearchDefaults,
+					employeeId: String(id),
+					active: "true",
+					status: "active",
+				}}
 				aria-label={`Ver remunerações de ${employee.fullName}`}
 			>
 				Ver remunerações
@@ -117,6 +122,7 @@ export function EmployeeOverview({
 		return (
 			<FormSection title="Percentuais de remuneração">
 				<EntityDetail.Fields columns={2} items={financialInfo} />
+				{remunerationLink && <EmployeeFinanceSummary id={id} />}
 				{remunerationLink && (
 					<div className="mt-3 text-sm">{remunerationLink}</div>
 				)}
@@ -130,6 +136,7 @@ export function EmployeeOverview({
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Financeiro">
 				<EntityDetail.Fields columns={2} items={financialInfo} />
+				{remunerationLink && <EmployeeFinanceSummary id={id} />}
 				{remunerationLink && (
 					<div className="mt-3 text-sm">{remunerationLink}</div>
 				)}
@@ -144,6 +151,26 @@ export function EmployeeOverview({
 			<EntityDetail.Section title="Registro">
 				<EntityDetail.Fields columns={2} items={registerInfo} />
 			</EntityDetail.Section>
+		</div>
+	);
+}
+
+function EmployeeFinanceSummary({ id }: { id: EntityId }) {
+	const { finance } = useEmployeeFinance(id);
+	return (
+		<div className="mt-3">
+			<EntityDetail.Fields
+				columns={2}
+				items={[
+					{
+						term: "Total de remunerações geradas",
+						definition: formatter.currency(finance.totalAmount),
+					},
+				]}
+			/>
+			<p className="mt-2 text-sm text-muted-foreground">
+				Remuneração gerada não confirma pagamento ao colaborador.
+			</p>
 		</div>
 	);
 }

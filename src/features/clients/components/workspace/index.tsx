@@ -62,16 +62,11 @@ export function ClientWorkspace({
 					expanded: true,
 					label: "Visão geral",
 					content: (
-						<div className="flex h-full min-h-0 max-w-4xl flex-col gap-6 overflow-y-auto [&>section:first-child]:shrink-0">
+						<div className="flex h-full min-h-0 flex-col gap-6 overflow-y-auto [&>section:first-child]:shrink-0">
 							<ClientOverview id={id} section="overview" />
 							<RelatedContractAlerts kind="client" id={id} />
 						</div>
 					),
-				},
-				{
-					value: "contact",
-					label: "Contato",
-					content: <ClientOverview id={id} section="contact" />,
 				},
 				...(canReadFinance
 					? [
@@ -82,6 +77,11 @@ export function ClientWorkspace({
 							},
 						]
 					: []),
+				{
+					value: "contact",
+					label: "Contato",
+					content: <ClientOverview id={id} section="contact" />,
+				},
 				{
 					value: "attachments",
 					label: "Anexos",

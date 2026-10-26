@@ -212,3 +212,5 @@ Pending return context is an optional object validated by the owning pending-wor
 Remuneration receipt scope applies to rows, counts, monetary totals and exports, intersected with firm and own/all visibility. The Recebimento chip exposes this scope and can remove it; clearing all filters explicitly clears feeId. Page changes and financial-period shortcuts preserve it. Receipt collection links use non-deleted records with all active states, matching the linked remuneration count.
 
 Receipt searches accept an optional positive clientId, combined with all existing filters and permission scopes. The active client filter is visible as a removable chip and clear-all removes it.
+
+Client contract-count navigation includes all active/inactive and deleted/non-deleted contracts so the destination matches the unfiltered related count, as employee contract-count navigation already does. Existing assignment visibility still applies.

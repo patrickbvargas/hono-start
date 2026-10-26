@@ -156,7 +156,6 @@ export function ContractWorkspace({
 				{
 					value: "finance",
 					label: "Financeiro",
-					fullWidth: true,
 					content: (
 						<>
 							<div className="space-y-5">
@@ -207,7 +206,6 @@ export function ContractWorkspace({
 				{
 					value: "team",
 					label: "Equipe",
-					fullWidth: true,
 					content: (
 						<>
 							<FormSection title="Equipe do contrato">

@@ -1,4 +1,5 @@
 import { feeSearchDefaults } from "@/features/fees";
+import { EntityDetail } from "@/shared/components/entity-detail";
 import { EntityFields } from "@/shared/components/entity-fields";
 import { FormSection } from "@/shared/components/form-section";
 import { NavigationLink } from "@/shared/components/navigation-link";
@@ -7,11 +8,13 @@ import { useClientFinance } from "../../hooks/use-data";
 
 interface ClientFinanceProps {
 	id: number;
+	compact?: boolean;
 }
-export function ClientFinance({ id }: ClientFinanceProps) {
+export function ClientFinance({ id, compact = false }: ClientFinanceProps) {
 	const { finance } = useClientFinance(id);
+	const Section = compact ? EntityDetail.Section : FormSection;
 	return (
-		<FormSection title="Resumo financeiro">
+		<Section title="Financeiro">
 			<EntityFields
 				columns={2}
 				items={[
@@ -38,6 +41,6 @@ export function ClientFinance({ id }: ClientFinanceProps) {
 					Ver recebimentos
 				</NavigationLink>
 			</div>
-		</FormSection>
+		</Section>
 	);
 }

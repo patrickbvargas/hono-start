@@ -58,7 +58,7 @@ export function RemunerationOverview({
 				),
 			},
 			{
-				term: "Data do recebimento",
+				term: "Data de recebimento",
 				definition: formatter.calendarDate(remuneration.paymentDate),
 			},
 			{ term: "Valor", definition: formatter.currency(remuneration.amount) },
@@ -126,6 +126,29 @@ export function RemunerationOverview({
 		[remuneration],
 	);
 
+	const calculationSummary = (
+		<div className="mb-3 space-y-2 rounded-lg border bg-muted/30 p-3 text-sm">
+			<p>
+				Base do recebimento:{" "}
+				<strong>{formatter.currency(remuneration.feeAmount)}</strong> ·
+				Percentual registrado:{" "}
+				<strong>{formatter.percent(remuneration.effectivePercentage)}</strong>
+			</p>
+			<p>
+				Remuneração registrada:{" "}
+				<strong>{formatter.currency(remuneration.amount)}</strong>
+			</p>
+			{remuneration.isManualOverride && (
+				<p className="text-muted-foreground">
+					Este registro tem ajuste manual. Valor e percentual são independentes;
+					alterar um não recalcula o outro.
+				</p>
+			)}
+			<p className="text-muted-foreground">
+				Remuneração gerada não confirma pagamento ao colaborador.
+			</p>
+		</div>
+	);
 	if (section === "overview") {
 		return (
 			<FormSection title="Vínculos da remuneração">
@@ -139,7 +162,8 @@ export function RemunerationOverview({
 				<FormSection title="Valores registrados">
 					<EntityDetail.Fields columns={2} items={summaryInfo.slice(3)} />
 				</FormSection>
-				<FormSection title="Origem do cálculo">
+				<FormSection title="Entender cálculo">
+					{calculationSummary}
 					<EntityDetail.Fields columns={2} items={sourceInfo} />
 				</FormSection>
 			</div>
@@ -151,29 +175,7 @@ export function RemunerationOverview({
 			<EntityDetail.Fields columns={2} items={summaryInfo} />
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Entender cálculo">
-				<div className="mb-3 space-y-2 rounded-lg border bg-muted/30 p-3 text-sm">
-					<p>
-						Base do recebimento:{" "}
-						<strong>{formatter.currency(remuneration.feeAmount)}</strong> ·
-						Percentual registrado:{" "}
-						<strong>
-							{formatter.percent(remuneration.effectivePercentage)}
-						</strong>
-					</p>
-					<p>
-						Remuneração registrada:{" "}
-						<strong>{formatter.currency(remuneration.amount)}</strong>
-					</p>
-					{remuneration.isManualOverride && (
-						<p className="text-muted-foreground">
-							Este registro tem ajuste manual. Valor e percentual são
-							independentes; alterar um não recalcula o outro.
-						</p>
-					)}
-					<p className="text-muted-foreground">
-						Remuneração gerada não confirma pagamento ao colaborador.
-					</p>
-				</div>
+				{calculationSummary}
 				<EntityDetail.Fields columns={2} items={sourceInfo} />
 			</EntityDetail.Section>
 			<EntityDetail.Separator />

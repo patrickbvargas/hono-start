@@ -124,3 +124,41 @@ describe("record workspace presentation", () => {
 		expect(screen.queryByRole("button")).toBeNull();
 	});
 });
+
+it.each([false, true])(
+	"keeps normal and expanded content at the same width (expanded=%s)",
+	(expanded) => {
+		const props = {
+			title: "Cliente",
+			identity: "Maria",
+			returnLink: <a href="/clientes">Voltar</a>,
+			onTabChange: vi.fn(),
+			sections: [
+				{
+					value: "overview",
+					label: "Visão geral",
+					expanded,
+					content: <p>Resumo</p>,
+				},
+				{
+					value: "history",
+					label: "Histórico",
+					fullWidth: true,
+					content: <p>Tabela</p>,
+				},
+			],
+		};
+		const { rerender } = render(<EntityWorkspace {...props} tab="overview" />);
+		const panel = screen.getByRole("tabpanel");
+		const bounded = expanded ? panel : screen.getByText("Resumo").parentElement;
+		expect(bounded?.classList.contains("max-w-4xl")).toBe(true);
+		expect(bounded?.classList.contains("w-full")).toBe(true);
+		rerender(<EntityWorkspace {...props} tab="history" />);
+		expect(
+			screen.getByText("Tabela").parentElement?.classList.contains("max-w-4xl"),
+		).toBe(false);
+		expect(
+			screen.getByText("Tabela").parentElement?.classList.contains("w-full"),
+		).toBe(true);
+	},
+);

@@ -29,3 +29,6 @@ export const employeeSummarySchema = employeeDetailSchema.pick({
 
 export type EmployeeDetail = z.infer<typeof employeeDetailSchema>;
 export type EmployeeSummary = z.infer<typeof employeeSummarySchema>;
+
+export const employeeFinanceSchema = z.object({ totalAmount: z.number() });
+export type EmployeeFinance = z.infer<typeof employeeFinanceSchema>;

@@ -44,7 +44,7 @@ export function ContractRevenues({
 									definition: formatter.currency(revenue.paidValue),
 								},
 								{
-									term: "A receber",
+									term: "Saldo a receber",
 									definition: formatter.currency(revenue.remainingValue),
 								},
 								{

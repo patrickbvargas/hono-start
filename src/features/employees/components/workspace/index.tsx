@@ -64,7 +64,7 @@ export function EmployeeWorkspace({
 					expanded: true,
 					label: "Visão geral",
 					content: (
-						<div className="flex h-full min-h-0 max-w-4xl flex-col gap-6 overflow-y-auto [&>section:first-child]:shrink-0">
+						<div className="flex h-full min-h-0 flex-col gap-6 overflow-y-auto [&>section:first-child]:shrink-0">
 							<EmployeeOverview id={id} section="overview" />
 							<RelatedContractAlerts kind="employee" id={id} />
 						</div>

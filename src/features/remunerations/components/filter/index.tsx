@@ -74,10 +74,10 @@ export const RemunerationFilter = ({
 				{(field) => <field.Autocomplete label="Contrato" options={contracts} />}
 			</form.AppField>
 			<form.AppField name="dateFrom">
-				{(field) => <field.DatePicker label="Data do recebimento de" />}
+				{(field) => <field.DatePicker label="Data de recebimento de" />}
 			</form.AppField>
 			<form.AppField name="dateTo">
-				{(field) => <field.DatePicker label="Data do recebimento até" />}
+				{(field) => <field.DatePicker label="Data de recebimento até" />}
 			</form.AppField>
 			<form.AppField name="active">
 				{(field) => (
@@ -155,10 +155,10 @@ export const RemunerationFilter = ({
 			<CollapsibleContent>
 				<ListFilters.Panel>
 					<form.AppField name="dateFrom">
-						{(field) => <field.DatePicker label="Data do recebimento de" />}
+						{(field) => <field.DatePicker label="Data de recebimento de" />}
 					</form.AppField>
 					<form.AppField name="dateTo">
-						{(field) => <field.DatePicker label="Data do recebimento até" />}
+						{(field) => <field.DatePicker label="Data de recebimento até" />}
 					</form.AppField>
 					<form.AppField name="active">
 						{(field) => (
