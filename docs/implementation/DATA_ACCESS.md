@@ -120,6 +120,10 @@ Prisma schema cannot represent PostgreSQL filtered unique indexes directly. When
 
 - Lookup catalogs must be seeded before the application is operational.
 - Seeded lookup identities remain stable by `value`, not by numeric `id`.
+- `pnpm run db:reset` applies migrations, generates Prisma Client and explicitly seeds once (Prisma 7 does not auto-seed).
+- Demo persistence uses DIRECT_URL, including its schema, matching migration/reset targeting. Configure runtime DATABASE_URL against the same business database/schema.
+- Pure fixture builders live in `prisma/seed-fixtures.ts` and `prisma/seed-scenarios.ts`; persistence remains seed-owned. Same-reference reruns preserve financial row IDs, attachment references and audit identities.
+- The rolling dataset, reference-date setting and preview prerequisites are documented in [Demo data](DEMO_DATA.md).
 
 ## Audit Persistence Contract
 

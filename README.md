@@ -165,13 +165,13 @@ Feature slices own business behavior. Routes compose feature APIs and UI. Shared
 
 ## Seed Data
 
-`prisma/seed.ts` creates:
+`pnpm run db:reset` applies migrations, generates Prisma Client and seeds the complete demo once. Configure database URLs pointing to the same development database and `ATTACHMENTS_DIR` first. Reset deletes that database schema's existing data.
 
-- firm `Matriz`
-- lookup values for employee types, roles, client types, legal areas, contract statuses, assignment types, and revenue types
-- sample employees, clients, contracts, revenues, fees, and generated remunerations
+The seed creates Matriz, lookup catalogs, 20 clients, 21 collaborators, two full prior years of monthly financial activity and elapsed months of the reference year. It includes lifecycle scenarios, expenses, automatic/manual remunerations, audit history and 18 readable example attachments.
 
-Seed data is intended for local development and feature verification.
+Dates default to today in America/Sao_Paulo. Optionally pin `SEED_REFERENCE_DATE=2026-10-26` in `.env` for a reproducible preview; remove it to roll forward. Existing dashboard YTD and same-date prior-year comparisons use the persisted data, including down payments. Future revenue plans contain no future realized payments.
+
+See [Demo data](docs/implementation/DEMO_DATA.md) for examples, totals, repeatability and Clerk setup. Demo data is for development and client previews only.
 
 ## Release verification
 
