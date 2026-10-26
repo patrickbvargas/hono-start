@@ -54,6 +54,7 @@ It is meant to survive domain changes as long as the project keeps the same UI a
 - Feature routes with filters must render the filter in the header and the table in the body.
 - Overlay state for create, edit, details, delete, and restore must use the shared overlay pattern rather than ad hoc modal state.
 - Entity routes must preserve list context while overlays are open.
+- Delete confirmations use the static message `Tem certeza que deseja excluir?` and the selected entity ID. Opening a confirmation must not fetch entity data just to build its message.
 - The canonical overlay composition is: route-level `useEntityOverlay` (delegating local mutation scopes to `useOverlay`), create and edit form modals, delete and restore confirmations, and a details drawer rendered from the route body.
 - `useOverlay` state is route-local to the hook instance, exposes named `create`, `edit`, `details`, `delete`, and `restore` scopes, opens `create` without entity data, and opens `edit`, `details`, `delete`, and `restore` with selected entity data.
 - Multiple overlay scopes from the same `useOverlay` instance may remain open at the same time when the route composition intentionally renders them together, and closing one scope must not implicitly close another.

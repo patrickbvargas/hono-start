@@ -1,7 +1,6 @@
 import { EntityDeleteConfirm } from "@/shared/components/entity-confirmation";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { OverlayState } from "@/shared/types/overlay";
-import { useEmployee } from "../../hooks/use-data";
 import { useEmployeeDelete } from "../../hooks/use-delete";
 
 interface EmployeeDeleteProps {
@@ -15,13 +14,11 @@ export const EmployeeDelete = ({
 	state,
 	onSuccess,
 }: EmployeeDeleteProps) => {
-	const { employee } = useEmployee(id);
 	const { handleConfirm, isPending } = useEmployeeDelete({ onSuccess });
-
 	return (
 		<EntityDeleteConfirm
 			title="Excluir colaborador"
-			description={`Tem certeza que deseja excluir ${employee.fullName}?`}
+			description="Tem certeza que deseja excluir?"
 			onConfirm={() => handleConfirm(id)}
 			isPending={isPending}
 			state={state}

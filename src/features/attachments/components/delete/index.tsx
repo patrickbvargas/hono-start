@@ -19,7 +19,7 @@ export const AttachmentDelete = ({
 	return (
 		<EntityDeleteConfirm
 			title="Excluir anexo"
-			description="Tem certeza que deseja excluir este anexo?"
+			description="Tem certeza que deseja excluir?"
 			onConfirm={() => handleConfirm(id)}
 			isPending={isPending}
 			state={state}
