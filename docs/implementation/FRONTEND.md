@@ -216,3 +216,7 @@ Content navigation to another page uses NavigationLink with its decorative arrow
 Entity workspace tabs share the same full available width up to max-w-4xl, including expanded attachment and alert panels, finance, team and audit details. History tabs, including audit tables, use the same maximum width; expanded controls height/scrolling, not width.
 
 Table interaction contract: record IDs are noninteractive muted identifiers; primary names open full record pages; linked related entities open their contextual summaries. Missing handlers render plain text rather than switching destination. Explicit navigation actions retain labeled outline buttons with navigation arrows. TableButton and table-mode related links share neutral foreground text, permanent underline and keyboard focus; no permanent border. Text links that navigate include the shared decorative arrow; summary/drawer triggers have no arrow. Entire rows do not navigate. Page and drawer content links retain their existing context-specific presentation.
+
+Embedded EntityAuditHistory descriptions open their local audit detail drawer through TableButton, retaining the entity page URL and selected tab.
+
+Expanded workspace panels retain native outer vertical overflow as a fallback. Overview compositions constrain alert lists to the remaining height; expanded attachment sections retain a minimum usable height. Inner lists scroll first and native scroll chaining reaches the tab at their boundaries.

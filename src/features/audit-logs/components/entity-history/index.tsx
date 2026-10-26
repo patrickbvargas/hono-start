@@ -8,8 +8,8 @@ import {
 import { useMemo } from "react";
 import { DataTable } from "@/shared/components/data-table";
 import { EntityActions } from "@/shared/components/entity-actions";
-import { NavigationLink } from "@/shared/components/navigation-link";
 import { PaginationView } from "@/shared/components/pagination";
+import { TableButton } from "@/shared/components/table-button";
 import { Button, Skeleton } from "@/shared/components/ui";
 import type { dataTableFeatures } from "@/shared/lib/table";
 import { hasPermission, useLoggedUserSession } from "@/shared/session";
@@ -76,15 +76,13 @@ function EntityAuditHistoryContent({
 				header: "Detalhes",
 				enableSorting: false,
 				cell: (context) => (
-					<NavigationLink
-						to="/auditoria/$auditLogId"
-						params={{ auditLogId: String(context.row.original.id) }}
-						search={{ tab: "overview" }}
-						title={`Abrir página da alteração #${context.row.original.id}`}
-						className="text-foreground underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+					<TableButton
+						onClick={() => details.open(context.row.original.id)}
+						aria-haspopup="dialog"
+						title={`Ver resumo da alteração #${context.row.original.id}`}
 					>
-						{context.getValue() || "Abrir página"}
-					</NavigationLink>
+						{context.getValue() || "Ver resumo"}
+					</TableButton>
 				),
 			}),
 			c.display({

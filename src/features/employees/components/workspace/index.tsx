@@ -7,7 +7,6 @@ import {
 	EntityWorkspace,
 	EntityWorkspaceHistory,
 } from "@/shared/components/entity-workspace";
-import { ScrollArea } from "@/shared/components/ui";
 import { hasPermission, useLoggedUserSession } from "@/shared/session";
 import { useEmployeeWorkspace } from "../../hooks/use-workspace";
 import {
@@ -75,12 +74,12 @@ export function EmployeeWorkspace({
 					expanded: true,
 					label: "Visão geral",
 					content: (
-						<ScrollArea className="h-full min-h-0 w-full">
-							<div className="flex flex-col gap-6">
+						<div className="h-full min-h-80 w-full">
+							<div className="flex h-full min-h-0 flex-col gap-6 [&>section:first-child]:shrink-0">
 								<EmployeeOverview id={id} section="overview" />
 								<RelatedContractAlerts kind="employee" id={id} />
 							</div>
-						</ScrollArea>
+						</div>
 					),
 				},
 				{

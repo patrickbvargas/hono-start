@@ -50,7 +50,7 @@ export const AttachmentSection = ({
 			aria-labelledby={headingId}
 			className={cn(
 				"flex min-w-0 flex-col gap-2",
-				layout === "expanded" && "h-full min-h-0",
+				layout === "expanded" && "h-full min-h-40",
 				className,
 			)}
 		>

@@ -121,7 +121,7 @@ export function EntityWorkspace({
 							value={section.value}
 							className={
 								section.expanded
-									? "min-h-0 min-w-0 w-full max-w-4xl flex-1 overflow-hidden"
+									? "min-h-0 min-w-0 w-full max-w-4xl flex-1 overflow-x-hidden overflow-y-auto"
 									: "min-h-0 min-w-0 flex-1 overflow-hidden"
 							}
 						>

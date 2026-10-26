@@ -1,34 +1,6 @@
 // @vitest-environment jsdom
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
-import type { ReactNode } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-
-vi.mock("@tanstack/react-router", async (importOriginal) => {
-	const actual =
-		await importOriginal<typeof import("@tanstack/react-router")>();
-	return {
-		...actual,
-		Link: ({
-			children,
-			params,
-			title,
-			className,
-		}: {
-			children: ReactNode;
-			params: { auditLogId: string };
-			title: string;
-			className: string;
-		}) => (
-			<a
-				href={`/auditoria/${params.auditLogId}?tab=overview`}
-				title={title}
-				className={className}
-			>
-				{children}
-			</a>
-		),
-	};
-});
 
 import { EntityAuditHistory } from "../components/entity-history";
 
@@ -88,12 +60,14 @@ describe("embedded entity audit history", () => {
 		expect(
 			screen.getAllByRole("columnheader").map((header) => header.textContent),
 		).toEqual(["#", "Ocorrido em", "Ação", "Usuário", "Detalhes", ""]);
-		expect(
-			screen
-				.getByRole("link", { name: "atualizou contrato PROC-60." })
-				.getAttribute("href"),
-		).toBe("/auditoria/10?tab=overview");
-		expect(mocks.open).not.toHaveBeenCalled();
+		const description = screen.getByRole("button", {
+			name: "atualizou contrato PROC-60.",
+		});
+		expect(description.getAttribute("aria-haspopup")).toBe("dialog");
+		expect(screen.queryByRole("link")).toBeNull();
+		fireEvent.click(description);
+		expect(mocks.open).toHaveBeenCalledWith(10);
+		expect(window.location.href).toBe(before);
 		expect(screen.getByText("Maria")).not.toBeNull();
 		fireEvent.click(
 			screen.getByRole("button", { name: "Próxima página do histórico" }),

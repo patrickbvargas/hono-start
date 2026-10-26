@@ -149,6 +149,10 @@ it.each([false, true])(
 		};
 		const { rerender } = render(<EntityWorkspace {...props} tab="overview" />);
 		const panel = screen.getByRole("tabpanel");
+		if (expanded) {
+			expect(panel.classList.contains("overflow-y-auto")).toBe(true);
+			expect(panel.classList.contains("overflow-hidden")).toBe(false);
+		}
 		const bounded = expanded ? panel : screen.getByText("Resumo").parentElement;
 		expect(bounded?.classList.contains("max-w-4xl")).toBe(true);
 		expect(bounded?.classList.contains("w-full")).toBe(true);
