@@ -40,6 +40,10 @@ export function ContractRevenues({
 									definition: formatter.currency(revenue.totalValue),
 								},
 								{
+									term: "Valor entrada",
+									definition: formatter.currency(revenue.downPaymentValue ?? 0),
+								},
+								{
 									term: "Recebido (inclui entrada)",
 									definition: formatter.currency(revenue.paidValue),
 								},

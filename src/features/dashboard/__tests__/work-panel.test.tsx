@@ -5,8 +5,8 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { DashboardWorkPanel } from "../components/work-panel";
 import type { DashboardOverdueInstallmentRow } from "../schemas/model";
 
-vi.mock("@tanstack/react-router", () => ({
-	Link: ({
+vi.mock("@/shared/components/navigation-link", () => ({
+	NavigationLink: ({
 		children,
 		params,
 		"aria-label": label,

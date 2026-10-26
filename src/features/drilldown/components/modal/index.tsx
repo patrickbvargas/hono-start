@@ -30,8 +30,19 @@ export function Drilldown<
 	const key = JSON.stringify([props.context, props.filters]);
 	const { handleOpenChange, restoreFocus } = useDrilldownController(props);
 	return (
-		<Dialog open={props.state.isOpen} onOpenChange={handleOpenChange}>
+		<Dialog
+			open={props.state.isOpen}
+			modal={!props.detailOpen}
+			onOpenChange={(open, details) => {
+				if (props.detailOpen) {
+					details.cancel();
+					return;
+				}
+				handleOpenChange(open);
+			}}
+		>
 			<DialogContent
+				portalClassName={props.detailOpen ? "z-40" : undefined}
 				className={cn(
 					"flex max-h-[85dvh] flex-col sm:max-w-5xl",
 					props.className,
@@ -73,6 +84,7 @@ export function Drilldown<
 				</DialogHeader>
 				{props.state.isOpen ? <DrilldownContent key={key} {...props} /> : null}
 			</DialogContent>
+			{props.children}
 		</Dialog>
 	);
 }
@@ -125,6 +137,12 @@ function DrilldownContent<
 				pageSize={props.pageSize ?? 10}
 				emptyMessage={props.emptyMessage}
 				getRowId={props.getRowId}
+				rowActionLabel={props.rowActionLabel}
+				onRowAction={
+					props.onRowAction
+						? (index) => props.onRowAction?.(data.data[index])
+						: undefined
+				}
 				className="min-h-0 flex-1"
 			/>
 		</>

@@ -118,6 +118,7 @@ export async function getDashboardDrilldown(
 						process: revenue.contract.processNumber,
 						type: revenue.type.label,
 						description: revenue.type.label,
+						record: { kind: "contract" as const, id: revenue.contract.id },
 					};
 					if (selection.kind === "aging" || selection.kind === "forecast") {
 						const reference = new Date(input.referenceAt);
@@ -185,6 +186,7 @@ export async function getDashboardDrilldown(
 										id: `fee:${revenue.id}:${fee.installmentNumber}`,
 										date: fee.paymentDate.toISOString(),
 										kind: "Recebimento",
+										record: { kind: "fee", id: fee.id },
 										installment: fee.installmentNumber,
 										amount: Number(fee.amount),
 									});
@@ -251,6 +253,7 @@ export async function getDashboardDrilldown(
 					}
 					result.push({
 						id: `remuneration:${row.id}`,
+						record: { kind: "remuneration", id: row.id },
 						date: row.paymentDate.toISOString(),
 						kind: "Remuneração gerada",
 						description: row.contractEmployee.employee.fullName,
@@ -290,6 +293,7 @@ export async function getDashboardDrilldown(
 						id: `expense:${row.id}`,
 						date: row.expenseDate.toISOString(),
 						kind: "Despesa",
+						record: { kind: "expense", id: row.id },
 						description: row.notes ?? row.category.label,
 						category: row.category.label,
 						amount:

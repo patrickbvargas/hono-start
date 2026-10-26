@@ -65,7 +65,7 @@ vi.mock("@/shared/components/ui", () => ({
 	TableFooter: ({ children }: { children: ReactNode }) => (
 		<tfoot>{children}</tfoot>
 	),
-	TableRow: ({ children }: { children: ReactNode }) => <tr>{children}</tr>,
+	TableRow: (props: ComponentProps<"tr">) => <tr {...props} />,
 	TableCell: ({ children }: { children: ReactNode }) => <td>{children}</td>,
 	TableHead: ({ children }: { children: ReactNode }) => <th>{children}</th>,
 }));
@@ -103,8 +103,9 @@ describe("standalone drilldown", () => {
 			defaultOptions: { queries: { retry: false } },
 		});
 		const onOpenChange = vi.fn();
+		const onRowAction = vi.fn();
 		const url = window.location.href;
-		const view = (open: boolean, group: string) => (
+		const view = (open: boolean, group: string, detailOpen = false) => (
 			<QueryClientProvider client={client}>
 				<Drilldown
 					state={{
@@ -112,6 +113,9 @@ describe("standalone drilldown", () => {
 						onOpenChange,
 						close: () => onOpenChange(false),
 					}}
+					detailOpen={detailOpen}
+					onRowAction={onRowAction}
+					rowActionLabel="Ver resumo do registro"
 					title="Clientes ativos"
 					description="Card da página de clientes"
 					context={{ group }}
@@ -133,6 +137,19 @@ describe("standalone drilldown", () => {
 		expect(read).not.toHaveBeenCalled();
 		rendered.rerender(view(true, "grupo A"));
 		expect(await screen.findByText("GRUPO A 1")).toBeTruthy();
+		const firstRow = screen.getByText("GRUPO A 1").closest("tr");
+		if (!firstRow) {
+			throw new Error("Missing row");
+		}
+		expect(firstRow.title).toBe("Ver resumo do registro");
+		fireEvent.click(firstRow);
+		fireEvent.keyDown(firstRow, { key: "Enter" });
+		fireEvent.keyDown(firstRow, { key: " " });
+		expect(onRowAction).toHaveBeenCalledTimes(3);
+		expect(onRowAction).toHaveBeenLastCalledWith({
+			id: "grupo A:1",
+			name: "grupo A 1",
+		});
 		expect(
 			screen.getByRole("button", { name: "Contexto de Clientes ativos" }),
 		).toBeTruthy();
@@ -149,12 +166,17 @@ describe("standalone drilldown", () => {
 		expect(screen.queryByText("GRUPO A 1")).toBeNull();
 		fireEvent.click(sortHeader);
 		expect(await screen.findByText("GRUPO A 1")).toBeTruthy();
+
 		expect(read).toHaveBeenCalledTimes(1);
 		expect(window.location.href).toBe(url);
 		fireEvent.click(
 			screen.getByRole("button", { name: "Ir para a próxima página" }),
 		);
 		expect(await screen.findByText("GRUPO A 2")).toBeTruthy();
+		rendered.rerender(view(true, "grupo A", true));
+		expect(screen.getByText("GRUPO A 2")).toBeTruthy();
+		rendered.rerender(view(true, "grupo A", false));
+		expect(screen.getByText("GRUPO A 2")).toBeTruthy();
 		expect(window.location.href).toBe(url);
 		expect(read).toHaveBeenCalledTimes(1);
 		rendered.rerender(view(true, "grupo B"));

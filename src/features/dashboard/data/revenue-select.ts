@@ -24,6 +24,11 @@ export const dashboardRevenueSelect = {
 	},
 	fees: {
 		where: { deletedAt: null, isActive: true },
-		select: { amount: true, paymentDate: true, installmentNumber: true },
+		select: {
+			id: true,
+			amount: true,
+			paymentDate: true,
+			installmentNumber: true,
+		},
 	},
 } satisfies Prisma.RevenueSelect;

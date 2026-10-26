@@ -1,6 +1,7 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { useEffect, useMemo } from "react";
+import { lazy, Suspense, useEffect, useMemo } from "react";
 import { Drilldown } from "@/features/drilldown";
+import { useOverlay } from "@/shared/hooks/use-overlay";
 import { formatter } from "@/shared/lib/formatter";
 import type { OverlayState } from "@/shared/types/overlay";
 import {
@@ -8,9 +9,16 @@ import {
 	getDashboardDrilldownQueryOptions,
 } from "../../api/queries";
 import type { DashboardDrilldownTarget } from "../../hooks/use-drilldown";
+import type { DashboardRecordTarget } from "../../schemas/drilldown";
 import { dashboardDrilldownResultSchema } from "../../schemas/drilldown";
 import type { DashboardSearch } from "../../schemas/search";
 import { getDashboardDrilldownColumns } from "./columns";
+
+const DashboardRecordSummary = lazy(() =>
+	import("./summary").then((module) => ({
+		default: module.DashboardRecordSummary,
+	})),
+);
 
 interface DashboardDrilldownModalProps {
 	target: DashboardDrilldownTarget;
@@ -27,6 +35,7 @@ export function DashboardDrilldownModal({
 	state,
 	returnFocus,
 }: DashboardDrilldownModalProps) {
+	const { overlay } = useOverlay<DashboardRecordTarget>();
 	const columns = useMemo(
 		() => getDashboardDrilldownColumns(target.selection),
 		[target.selection],
@@ -34,6 +43,9 @@ export function DashboardDrilldownModal({
 	return (
 		<Drilldown
 			state={state}
+			detailOpen={overlay.details.isOpen}
+			onRowAction={(row) => overlay.details.open(row.record)}
+			rowActionLabel="Ver resumo do registro"
 			returnFocus={returnFocus}
 			title={target.title}
 			description={`Período: ${search.dateFrom ? formatter.date(`${search.dateFrom}T00:00:00`) : "sem limite inicial"} a ${search.dateTo ? formatter.date(`${search.dateTo}T00:00:00`) : "sem limite final"}\nPosição: ${formatter.date(referenceAt)}`}
@@ -52,7 +64,13 @@ export function DashboardDrilldownModal({
 			renderSummary={(page) => (
 				<DrilldownSummary amount={page.amount} target={target} />
 			)}
-		/>
+		>
+			{overlay.details.render((record, summaryState) => (
+				<Suspense fallback={null}>
+					<DashboardRecordSummary record={record} state={summaryState} />
+				</Suspense>
+			))}
+		</Drilldown>
 	);
 }
 

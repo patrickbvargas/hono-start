@@ -1,1 +1,7 @@
-export type RelatedRecordKind = "client" | "employee" | "contract" | "fee";
+export type RelatedRecordKind =
+	| "client"
+	| "employee"
+	| "contract"
+	| "fee"
+	| "expense"
+	| "remuneration";

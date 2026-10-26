@@ -41,6 +41,7 @@ export interface DataTableProps<TData extends RowData> {
 	emptyMessage?: string;
 	className?: string;
 	onRowAction?: (index: number) => void;
+	rowActionLabel?: string;
 	footerContent?: React.ReactNode;
 	tableFooterContent?: React.ReactNode;
 }
@@ -51,6 +52,7 @@ export const DataTable = <TData extends RowData>({
 	emptyMessage = "Nenhum registro encontrado.",
 	className,
 	onRowAction,
+	rowActionLabel = "Abrir página do registro",
 	footerContent,
 	tableFooterContent,
 	pageSize,
@@ -126,7 +128,7 @@ export const DataTable = <TData extends RowData>({
 								<TableRow
 									key={row.id}
 									tabIndex={onRowAction ? 0 : undefined}
-									title={onRowAction ? "Abrir página do registro" : undefined}
+									title={onRowAction ? rowActionLabel : undefined}
 									className={
 										onRowAction
 											? "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"

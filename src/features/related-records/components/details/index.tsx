@@ -16,7 +16,19 @@ import {
 	EmployeeForm,
 	EmployeeRestore,
 } from "@/features/employees";
+import {
+	ExpenseDelete,
+	ExpenseDetails,
+	ExpenseForm,
+	ExpenseRestore,
+} from "@/features/expenses";
 import { FeeDelete, FeeDetails, FeeForm, FeeRestore } from "@/features/fees";
+import {
+	RemunerationDelete,
+	RemunerationDetails,
+	RemunerationForm,
+	RemunerationRestore,
+} from "@/features/remunerations";
 import { useOverlay } from "@/shared/hooks/use-overlay";
 import type { EntityId } from "@/shared/schemas/entity";
 import { hasPermission, useLoggedUserSession } from "@/shared/session";
@@ -24,6 +36,22 @@ import type { OverlayState } from "@/shared/types/overlay";
 import type { RelatedRecordKind } from "../../schemas/record";
 
 const components = {
+	expense: {
+		Details: ExpenseDetails,
+		Form: ExpenseForm,
+		Delete: ExpenseDelete,
+		Restore: ExpenseRestore,
+		deletePermission: "org:expenses:delete",
+		restorePermission: "org:expenses:restore",
+	},
+	remuneration: {
+		Details: RemunerationDetails,
+		Form: RemunerationForm,
+		Delete: RemunerationDelete,
+		Restore: RemunerationRestore,
+		deletePermission: "org:remunerations:delete",
+		restorePermission: "org:remunerations:restore",
+	},
 	client: {
 		Details: ClientDetails,
 		Form: ClientForm,

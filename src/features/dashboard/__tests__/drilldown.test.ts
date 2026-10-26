@@ -59,6 +59,7 @@ const revenue = {
 	},
 	fees: [
 		{
+			id: 91,
 			amount: new Prisma.Decimal(50),
 			installmentNumber: 1,
 			paymentDate: new Date("2026-02-02"),
@@ -67,6 +68,25 @@ const revenue = {
 };
 
 describe("dashboard drilldown", () => {
+	it("returns persisted summary targets independent of synthetic row identities", async () => {
+		const result = await getDashboardDrilldown(scope, input);
+		expect(
+			result.data.find((row) => row.kind === "Recebimento")?.record,
+		).toEqual({ kind: "fee", id: 91 });
+		expect(
+			result.data.find((row) => row.id.startsWith("down-payment:"))?.record,
+		).toEqual({ kind: "contract", id: 1 });
+		const planned = await getDashboardDrilldown(scope, {
+			...input,
+			selection: { kind: "metric", value: "planned" },
+		});
+		expect(planned.data.length).toBeGreaterThan(0);
+		expect(
+			planned.data.every(
+				(row) => row.record.kind === "contract" && row.record.id === 1,
+			),
+		).toBe(true);
+	});
 	it.each(["area", "type"] as const)(
 		"scopes %s remuneration details independently from receipts",
 		async (kind) => {
@@ -269,6 +289,15 @@ describe("dashboard drilldown", () => {
 			selection: { kind: "monthly", month: "2026-02", series: "output" },
 		});
 		expect(output).toMatchObject({ amount: 30, total: 1 });
+		expect(output.data[0].record).toEqual({ kind: "expense", id: 1 });
+		const remunerations = await getDashboardDrilldown(scope, {
+			...input,
+			selection: { kind: "metric", value: "remuneration" },
+		});
+		expect(remunerations.data[0].record).toEqual({
+			kind: "remuneration",
+			id: 1,
+		});
 		expect(db.revenue.findMany).not.toHaveBeenCalled();
 		await expect(
 			getDashboardDrilldown(

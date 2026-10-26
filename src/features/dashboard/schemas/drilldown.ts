@@ -58,8 +58,15 @@ export const dashboardDrilldownInputSchema = z.object({
 export type DashboardDrilldownInput = z.infer<
 	typeof dashboardDrilldownInputSchema
 >;
+export const dashboardRecordTargetSchema = z.object({
+	kind: z.enum(["contract", "fee", "remuneration", "expense"]),
+	id: z.number().int().positive(),
+});
+export type DashboardRecordTarget = z.infer<typeof dashboardRecordTargetSchema>;
+
 export const dashboardDrilldownRowSchema = z.object({
 	id: z.string(),
+	record: dashboardRecordTargetSchema,
 	date: z.iso.datetime(),
 	kind: z.string(),
 	description: z.string(),
