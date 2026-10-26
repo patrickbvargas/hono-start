@@ -170,7 +170,7 @@ function createPhone(seed: number) {
 
 export function createEmployeeSeeds(): EmployeeSeedInput[] {
 	const seededAdminEmployee: EmployeeSeedInput = {
-		fullName: "Patrícia Vargas",
+		fullName: "Patrick Vargas",
 		email: "admin@hono.com",
 		typeValue: "LAWYER",
 		roleValue: "ADMIN",

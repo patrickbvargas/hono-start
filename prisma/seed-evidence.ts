@@ -16,6 +16,19 @@ export async function seedPreviewEvidence(
 		expenseNotes: string[];
 	},
 ) {
+	await prisma.auditLog.updateMany({
+		where: {
+			firmId,
+			actorName: "Patrícia Vargas",
+			OR: [
+				{ description: { startsWith: "Cadastro demonstrativo:" } },
+				{ description: { startsWith: "Exclusão demonstrativa:" } },
+				{ description: { startsWith: "Ajuste demonstrativo de remuneração:" } },
+			],
+		},
+		data: { actorName: "Patrick Vargas" },
+	});
+
 	interface EvidenceRow {
 		id: number;
 		createdAt: Date;
@@ -140,7 +153,7 @@ export async function seedPreviewEvidence(
 			if (!existingDescriptions.has(createDescription)) {
 				events.push({
 					...base,
-					actorName: "Patrícia Vargas",
+					actorName: "Patrick Vargas",
 					actorEmail: "demo@example.com",
 					action: "CREATE",
 					entityName,
@@ -164,7 +177,7 @@ export async function seedPreviewEvidence(
 				if (!existingDescriptions.has(description)) {
 					events.push({
 						...base,
-						actorName: "Patrícia Vargas",
+						actorName: "Patrick Vargas",
 						action: "DELETE",
 						entityName,
 						changeData: {
@@ -185,7 +198,7 @@ export async function seedPreviewEvidence(
 				if (!existingDescriptions.has(description)) {
 					events.push({
 						...base,
-						actorName: "Patrícia Vargas",
+						actorName: "Patrick Vargas",
 						action: "UPDATE",
 						entityName,
 						changeData: {
