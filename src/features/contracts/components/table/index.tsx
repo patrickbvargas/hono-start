@@ -41,7 +41,8 @@ export const ContractTable = ({
 				cell: ({ row }) => (
 					<EntityIdTrigger
 						id={row.original.id}
-						onView={onOpenPage ?? onView}
+						onOpenPage={onOpenPage}
+						onView={onView}
 						actionLabel={`Abrir página do contrato #${row.original.id}`}
 					/>
 				),
@@ -55,7 +56,8 @@ export const ContractTable = ({
 				cell: (context) => (
 					<EntityIdTrigger
 						id={context.row.original.id}
-						onView={onOpenPage ?? onView}
+						onOpenPage={onOpenPage}
+						onView={onView}
 						actionLabel={`Abrir página do contrato ${context.getValue()}`}
 						label={context.getValue()}
 					/>

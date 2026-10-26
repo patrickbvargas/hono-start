@@ -129,6 +129,9 @@ function buildFeeWhere({
 		firmId,
 		...getEntityDeletedWhere(filter.status),
 		...getEntityActiveWhere(filter.active),
+		...(filter.clientId
+			? { AND: [{ revenue: { contract: { clientId: filter.clientId } } }] }
+			: {}),
 		...(filter.query
 			? {
 					OR: [

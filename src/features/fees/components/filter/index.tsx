@@ -210,6 +210,16 @@ export const FeeFilter = ({ summary }: FeeFilterProps) => {
 								{filter.query}
 							</ListFilters.Chip>
 						) : null}
+						{filter.clientId ? (
+							<ListFilters.Chip
+								onRemove={() =>
+									handleApplyFilter({ ...filter, clientId: undefined })
+								}
+								removeLabel="Remover filtro de cliente"
+							>
+								Cliente #{filter.clientId}
+							</ListFilters.Chip>
+						) : null}
 						{filter.contractId ? (
 							<ListFilters.Chip
 								onRemove={() =>

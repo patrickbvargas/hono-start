@@ -2,6 +2,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import type { EntityId } from "@/shared/schemas/entity";
 import {
 	getClientByIdQueryOptions,
+	getClientFinanceQueryOptions,
 	getClientsQueryOptions,
 	getClientTypesQueryOptions,
 } from "../api/queries";
@@ -23,4 +24,9 @@ export function useClientOptions() {
 	const { data: types } = useSuspenseQuery(getClientTypesQueryOptions());
 
 	return { types };
+}
+
+export function useClientFinance(id: EntityId) {
+	const { data: finance } = useSuspenseQuery(getClientFinanceQueryOptions(id));
+	return { finance };
 }

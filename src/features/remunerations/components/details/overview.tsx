@@ -164,11 +164,12 @@ export function RemunerationOverview({
 						Remuneração registrada:{" "}
 						<strong>{formatter.currency(remuneration.amount)}</strong>
 					</p>
-					<p className="text-muted-foreground">
-						{remuneration.isManualOverride
-							? "Este registro tem ajuste manual. Valor e percentual são independentes; alterar um não recalcula o outro."
-							: "Valor gerado a partir do recebimento e das regras aplicadas à equipe do contrato. Os dados exibidos são os registrados neste lançamento."}
-					</p>
+					{remuneration.isManualOverride && (
+						<p className="text-muted-foreground">
+							Este registro tem ajuste manual. Valor e percentual são
+							independentes; alterar um não recalcula o outro.
+						</p>
+					)}
 					<p className="text-muted-foreground">
 						Remuneração gerada não confirma pagamento ao colaborador.
 					</p>

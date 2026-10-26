@@ -1,5 +1,5 @@
-import { Link } from "@tanstack/react-router";
 import { AlertCircleIcon } from "lucide-react";
+import { NavigationLink } from "@/shared/components/navigation-link";
 import { RouteFeedback } from "@/shared/components/route-feedback";
 import { buttonVariants } from "@/shared/components/ui";
 import { ROUTES } from "@/shared/config/routes";
@@ -21,12 +21,12 @@ export const RouteError = ({ error, title }: RouteErrorProps) => {
 			watermark="OPS"
 			icon={<AlertCircleIcon className="size-12" />}
 			actions={
-				<Link
+				<NavigationLink
 					to={ROUTES.dashboard.url}
 					className={buttonVariants({ size: "lg" })}
 				>
 					Voltar ao início
-				</Link>
+				</NavigationLink>
 			}
 		/>
 	);

@@ -28,3 +28,10 @@ export const clientSummarySchema = clientDetailSchema.pick({
 
 export type ClientDetail = z.infer<typeof clientDetailSchema>;
 export type ClientSummary = z.infer<typeof clientSummarySchema>;
+
+export const clientFinanceSchema = z.object({
+	totalValue: z.number(),
+	paidValue: z.number(),
+	remainingValue: z.number(),
+});
+export type ClientFinance = z.infer<typeof clientFinanceSchema>;

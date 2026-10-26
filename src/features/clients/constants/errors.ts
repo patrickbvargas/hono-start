@@ -17,6 +17,7 @@ export const CLIENT_ERRORS = {
 	DOCUMENT_CNPJ_INVALID: "CNPJ inválido",
 	DOCUMENT_DUPLICATE: "Este documento já está cadastrado",
 	TYPE_INVALID: "Tipo de cliente inválido",
+	FINANCE_GET_FAILED: "Erro ao buscar resumo financeiro do cliente",
 	GET_FAILED: "Erro ao buscar clientes",
 	DETAIL_FAILED: "Erro ao buscar cliente",
 	TYPES_GET_FAILED: "Erro ao buscar tipos de cliente",

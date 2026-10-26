@@ -11,14 +11,24 @@ import type {
 	QueryPaginatedReturnType,
 } from "@/shared/types/api";
 import { CLIENT_ERRORS } from "../constants/errors";
-import { getClientById, getClients, getClientTypes } from "../data/queries";
+import {
+	getClientById,
+	getClientFinance,
+	getClients,
+	getClientTypes,
+} from "../data/queries";
 import { clientIdInputSchema } from "../schemas/form";
-import type { ClientDetail, ClientSummary } from "../schemas/model";
+import type {
+	ClientDetail,
+	ClientFinance,
+	ClientSummary,
+} from "../schemas/model";
 import { type ClientSearch, clientSearchSchema } from "../schemas/search";
 
 export const clientKeys = {
 	all: ["client"] as const,
 	list: (search: ClientSearch) => [...clientKeys.all, search] as const,
+	finance: (id: EntityId) => [...clientKeys.all, "finance", id] as const,
 	detail: (id: EntityId) => [...clientKeys.all, "detail", id] as const,
 	types: () => [...clientKeys.all, "types"] as const,
 };
@@ -95,5 +105,27 @@ export const getClientTypesQueryOptions = () =>
 		queryKey: clientKeys.types(),
 		queryFn: getClientTypesFn,
 		staleTime: Infinity,
+		meta: { refreshOnMutation: true },
+	});
+
+const getClientFinanceFn = createServerFn({ method: "GET" })
+	.middleware([authMiddleware])
+	.validator(clientIdInputSchema)
+	.handler(async ({ data, context }): Promise<ClientFinance> => {
+		try {
+			assertCan(context.session, "org:clients:read");
+			assertCan(context.session, "org:contracts:read_all");
+			assertCan(context.session, "org:fees:read_all");
+			const { firmId } = getScope(context.session, "client");
+			return await getClientFinance({ firmId, id: data.id });
+		} catch (error) {
+			console.error("[getClientFinance]", error);
+			throw new Error(CLIENT_ERRORS.FINANCE_GET_FAILED);
+		}
+	});
+export const getClientFinanceQueryOptions = (id: EntityId) =>
+	queryOptions({
+		queryKey: clientKeys.finance(id),
+		queryFn: () => getClientFinanceFn({ data: { id } }),
 		meta: { refreshOnMutation: true },
 	});

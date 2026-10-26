@@ -115,8 +115,11 @@ export function EmployeeOverview({
 	}
 	if (section === "finance") {
 		return (
-			<FormSection title="Percentuais de remuneração" action={remunerationLink}>
+			<FormSection title="Percentuais de remuneração">
 				<EntityDetail.Fields columns={2} items={financialInfo} />
+				{remunerationLink && (
+					<div className="mt-3 text-sm">{remunerationLink}</div>
+				)}
 			</FormSection>
 		);
 	}

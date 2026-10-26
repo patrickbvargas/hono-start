@@ -19,6 +19,11 @@ describe("EntityIdTrigger", () => {
 		fireEvent.click(
 			screen.getByRole("button", { name: "Abrir página de Maria" }),
 		);
+		expect(
+			screen
+				.getByRole("button", { name: "Abrir página de Maria" })
+				.querySelector("svg[aria-hidden=true]"),
+		).toBeNull();
 		expect(onOpenPage).toHaveBeenCalledWith(42);
 		expect(onView).not.toHaveBeenCalled();
 	});
@@ -42,6 +47,7 @@ describe("EntityIdTrigger", () => {
 		});
 
 		expect(trigger.textContent).toBe("#12");
+		expect(trigger.querySelector("svg")).toBeNull();
 
 		fireEvent.click(trigger);
 

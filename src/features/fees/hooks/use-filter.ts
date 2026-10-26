@@ -10,7 +10,6 @@ export function useFeeFilter() {
 		filter,
 		defaultFilter,
 		handleFilter,
-		handleResetFilter,
 		canClearFilters,
 		hasNonDefaultFilter,
 	} = useFilter(feeFilterSchema);
@@ -52,8 +51,8 @@ export function useFeeFilter() {
 
 	const handleClearFilters = () => {
 		debounceSubmit.cancel();
-		form.reset(defaultFilter);
-		handleResetFilter();
+		form.reset({ ...defaultFilter, clientId: undefined });
+		handleFilter({ ...defaultFilter, clientId: undefined });
 	};
 
 	return {

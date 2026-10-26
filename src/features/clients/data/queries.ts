@@ -1,4 +1,4 @@
-import type { Prisma } from "@/generated/prisma/client";
+import { Prisma } from "@/generated/prisma/client";
 import {
 	getEntityActiveWhere,
 	getEntityDeletedWhere,
@@ -20,8 +20,10 @@ import { CLIENT_ERRORS } from "../constants/errors";
 import type { ClientFilter } from "../schemas/filter";
 import {
 	type ClientDetail,
+	type ClientFinance,
 	type ClientSummary,
 	clientDetailSchema,
+	clientFinanceSchema,
 	clientSummarySchema,
 } from "../schemas/model";
 import type { ClientSearch } from "../schemas/search";
@@ -175,5 +177,47 @@ export async function getClientTypes(): Promise<QueryManyReturnType<Option>> {
 export async function getClientTypeByValue(value: string) {
 	return prisma.clientType.findUnique({
 		where: { value },
+	});
+}
+
+export async function getClientFinance({
+	firmId,
+	id,
+}: EntityUniqueParams): Promise<ClientFinance> {
+	await getClientById({ firmId, id });
+	const revenues = await prisma.revenue.findMany({
+		where: {
+			firmId,
+			isActive: true,
+			deletedAt: null,
+			contract: { firmId, clientId: id, isActive: true, deletedAt: null },
+		},
+		select: {
+			totalValue: true,
+			downPaymentValue: true,
+			fees: {
+				where: { firmId, isActive: true, deletedAt: null },
+				select: { amount: true },
+			},
+		},
+	});
+	let totalValue = new Prisma.Decimal(0);
+	let paidValue = new Prisma.Decimal(0);
+	let remainingValue = new Prisma.Decimal(0);
+	for (const revenue of revenues) {
+		const paid = revenue.fees.reduce(
+			(sum, fee) => sum.plus(fee.amount),
+			new Prisma.Decimal(revenue.downPaymentValue ?? 0),
+		);
+		totalValue = totalValue.plus(revenue.totalValue);
+		paidValue = paidValue.plus(paid);
+		remainingValue = remainingValue.plus(
+			Prisma.Decimal.max(new Prisma.Decimal(revenue.totalValue).minus(paid), 0),
+		);
+	}
+	return clientFinanceSchema.parse({
+		totalValue: Number(totalValue),
+		paidValue: Number(paidValue),
+		remainingValue: Number(remainingValue),
 	});
 }

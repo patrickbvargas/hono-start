@@ -11,6 +11,7 @@ import {
 	EntityWorkspaceHistory,
 } from "@/shared/components/entity-workspace";
 import { FormSection } from "@/shared/components/form-section";
+import { NavigationLink } from "@/shared/components/navigation-link";
 import { Badge, Button } from "@/shared/components/ui";
 import { formatter } from "@/shared/lib/formatter";
 import { hasPermission } from "@/shared/session";
@@ -168,7 +169,7 @@ export function ContractWorkspace({
 									</div>
 									<div className="flex flex-wrap gap-3">
 										{canReadFees && (
-											<Link
+											<NavigationLink
 												to="/honorarios"
 												search={{
 													...feeSearchDefaults,
@@ -177,11 +178,11 @@ export function ContractWorkspace({
 												className="text-sm underline underline-offset-4"
 											>
 												Ver recebimentos
-											</Link>
+											</NavigationLink>
 										)}
 										{(hasPermission(session, "org:remunerations:read_all") ||
 											hasPermission(session, "org:remunerations:read_own")) && (
-											<Link
+											<NavigationLink
 												to="/remuneracoes"
 												search={{
 													...remunerationSearchDefaults,
@@ -190,7 +191,7 @@ export function ContractWorkspace({
 												className="text-sm underline underline-offset-4"
 											>
 												Conferir remunerações
-											</Link>
+											</NavigationLink>
 										)}
 									</div>
 								</div>

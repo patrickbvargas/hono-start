@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { NavigationLink } from "@/shared/components/navigation-link";
 import {
 	Card,
 	CardContent,
@@ -53,7 +53,7 @@ export function DashboardWorkPanel({
 										{row.formattedInstallmentAmount}
 									</span>
 									{canOpenContracts && (
-										<Link
+										<NavigationLink
 											to="/contratos/$contractId"
 											params={{ contractId: String(row.contractId) }}
 											search={{ tab: "finance" }}
@@ -61,7 +61,7 @@ export function DashboardWorkPanel({
 											aria-label={`Abrir financeiro de ${row.contractProcessNumber}`}
 										>
 											Abrir contrato
-										</Link>
+										</NavigationLink>
 									)}
 								</div>
 							</li>

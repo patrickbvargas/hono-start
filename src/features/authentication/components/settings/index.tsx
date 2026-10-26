@@ -1,7 +1,7 @@
-import { Link } from "@tanstack/react-router";
 import { MonitorCogIcon, MoonIcon, SunIcon } from "lucide-react";
 import { contractSearchDefaults } from "@/features/contracts";
 import { remunerationSearchDefaults } from "@/features/remunerations";
+import { NavigationLink } from "@/shared/components/navigation-link";
 import {
 	Button,
 	Card,
@@ -84,23 +84,23 @@ export function Settings() {
 					<div className="flex flex-wrap gap-3">
 						{(hasPermission(session, "org:contracts:read_all") ||
 							hasPermission(session, "org:contracts:read_assigned")) && (
-							<Link
+							<NavigationLink
 								to="/contratos"
 								search={contractSearchDefaults}
 								className="underline underline-offset-4"
 							>
 								Ir para contratos
-							</Link>
+							</NavigationLink>
 						)}
 						{(hasPermission(session, "org:remunerations:read_all") ||
 							hasPermission(session, "org:remunerations:read_own")) && (
-							<Link
+							<NavigationLink
 								to="/remuneracoes"
 								search={remunerationSearchDefaults}
 								className="underline underline-offset-4"
 							>
 								Conferir e exportar remunerações
-							</Link>
+							</NavigationLink>
 						)}
 					</div>
 					<p className="text-muted-foreground">

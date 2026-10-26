@@ -15,6 +15,7 @@ import {
 import { clientSearchDefaults } from "../../utils/default";
 import { ClientDelete } from "../delete";
 import { ClientOverview } from "../details/overview";
+import { ClientFinance } from "../finance";
 import { ClientForm } from "../form";
 import { ClientRestore } from "../restore";
 
@@ -30,7 +31,7 @@ export function ClientWorkspace({
 	onTabChange,
 	onDeleted,
 }: ClientWorkspaceProps) {
-	const { client, overlay, canEdit, canDelete, canRestore } =
+	const { client, overlay, canEdit, canDelete, canRestore, canReadFinance } =
 		useClientWorkspace(id);
 	return (
 		<EntityWorkspace
@@ -72,6 +73,15 @@ export function ClientWorkspace({
 					label: "Contato",
 					content: <ClientOverview id={id} section="contact" />,
 				},
+				...(canReadFinance
+					? [
+							{
+								value: "finance",
+								label: "Financeiro",
+								content: <ClientFinance id={id} />,
+							},
+						]
+					: []),
 				{
 					value: "attachments",
 					label: "Anexos",

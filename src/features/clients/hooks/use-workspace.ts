@@ -14,6 +14,9 @@ export function useClientWorkspace(id: number) {
 	});
 	return {
 		client,
+		canReadFinance:
+			hasPermission(session, "org:contracts:read_all") &&
+			hasPermission(session, "org:fees:read_all"),
 		overlay,
 		canEdit: actions.canEdit && hasPermission(session, "org:clients:update"),
 		canDelete:

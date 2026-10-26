@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { feeSearchSchema } from "../schemas/search";
 
 const { prismaMock } = vi.hoisted(() => ({
 	prismaMock: {
@@ -128,6 +129,23 @@ describe("fee data queries", () => {
 		]);
 	});
 
+	it("combines exact client filtering with restricted assignments for rows and totals", async () => {
+		await getFees({
+			scope: {
+				firmId: 1,
+				employeeId: 10,
+				employeeTypeValue: "LAWYER",
+				isAdmin: false,
+			},
+			search: feeSearchSchema.parse({ clientId: 41, contractId: "5" }),
+		});
+		const where = prismaMock.fee.findMany.mock.calls[0][0].where;
+		expect(where.AND).toEqual([{ revenue: { contract: { clientId: 41 } } }]);
+		expect(where.revenue.contract.assignments.some.employeeId).toBe(10);
+		expect(where.revenue.contractId).toBe(5);
+		expect(prismaMock.fee.aggregate.mock.calls[0][0].where).toEqual(where);
+		expect(prismaMock.fee.count.mock.calls[0][0].where).toEqual(where);
+	});
 	it("keeps detail lookups compatible with the query-enabled filter defaults", async () => {
 		await expect(
 			getFeeById({
