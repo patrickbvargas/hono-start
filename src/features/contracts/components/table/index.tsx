@@ -99,11 +99,6 @@ export const ContractTable = ({
 				),
 				enableSorting: CONTRACT_ALLOWED_SORT_COLUMNS.includes("isActive"),
 			}),
-			c.accessor("createdAt", {
-				header: "Criado em",
-				cell: ({ row }) => formatter.date(row.original.createdAt),
-				enableSorting: CONTRACT_ALLOWED_SORT_COLUMNS.includes("createdAt"),
-			}),
 			c.display({
 				id: "actions",
 				cell: ({ row }) => {

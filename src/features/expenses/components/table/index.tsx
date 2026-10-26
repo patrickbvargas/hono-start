@@ -5,7 +5,6 @@ import { EntityActions } from "@/shared/components/entity-actions";
 import { EntityIdTrigger } from "@/shared/components/entity-id-trigger";
 import { EntityStatus } from "@/shared/components/entity-status";
 import { Pagination } from "@/shared/components/pagination";
-import { formatter } from "@/shared/lib/formatter";
 import type { dataTableFeatures } from "@/shared/lib/table";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { QueryPaginatedReturnType } from "@/shared/types/api";
@@ -71,11 +70,6 @@ export const ExpenseTable = ({
 						isSoftDeleted={row.original.isSoftDeleted}
 					/>
 				),
-			}),
-			c.accessor("createdAt", {
-				header: "Criado em",
-				cell: ({ row }) => formatter.date(row.original.createdAt),
-				enableSorting: EXPENSE_ALLOWED_SORT_COLUMNS.includes("createdAt"),
 			}),
 			c.display({
 				id: "actions",

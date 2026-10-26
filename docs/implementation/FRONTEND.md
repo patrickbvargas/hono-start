@@ -215,6 +215,8 @@ Content navigation to another page uses NavigationLink with its decorative arrow
 
 Entity workspace tabs share the same full available width up to max-w-4xl, including expanded attachment and alert panels, finance, team and audit details. History tabs, including audit tables, use the same maximum width; expanded controls height/scrolling, not width.
 
+Entity listing tables omit the creation timestamp column (`Criado em`).
+
 Table interaction contract: main entity listing rows open the record page and support Enter/Space activation, with a native title tooltip describing the action. IDs, primary labels and related entity cells render plain text; the row has one destination. Interactive controls and the options menu do not trigger row navigation. Contextual tables retain their local summary/drawer triggers. Dashboard table triggers use a subtle background and ring on hover, with no permanent underline. Explicit navigation actions retain labeled outline buttons with navigation arrows. Page and drawer content links retain their existing context-specific presentation.
 
 Embedded EntityAuditHistory descriptions open their local audit detail drawer through TableButton, retaining the entity page URL and selected tab.

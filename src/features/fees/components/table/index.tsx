@@ -85,11 +85,6 @@ export const FeeTable = ({
 					/>
 				),
 			}),
-			c.accessor("createdAt", {
-				header: "Criado em",
-				cell: ({ row }) => formatter.date(row.original.createdAt),
-				enableSorting: FEE_ALLOWED_SORT_COLUMNS.includes("createdAt"),
-			}),
 			c.display({
 				id: "actions",
 				cell: ({ row }) => {
