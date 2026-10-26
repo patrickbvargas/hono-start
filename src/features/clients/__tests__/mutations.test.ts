@@ -158,6 +158,7 @@ describe("client lookup-backed writes", () => {
 				entityId: 1,
 				entityName: input.fullName,
 				changeData: input,
+				description: "Criou cliente Cliente Teste.",
 			}),
 		);
 	});

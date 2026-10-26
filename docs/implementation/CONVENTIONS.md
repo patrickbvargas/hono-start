@@ -4,6 +4,7 @@
 
 - User-facing copy must follow the product locale defined by the domain or product contract.
 - Code identifiers, filenames, comments, and logs must be in English.
+- Business audit observations (`description`) are user-facing content and follow the persistence language defined in `docs/domain/BUSINESS_RULES.md`; this exception does not translate operational codes or technical payloads.
 
 ## Naming
 

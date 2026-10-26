@@ -110,6 +110,7 @@ describe("remuneration data mutations", () => {
 			expect.objectContaining({
 				firmId: 1,
 				action: "UPDATE",
+				description: "Atualizou remuneração 1.",
 				entityType: "Remuneration",
 				entityId: 1,
 			}),
@@ -164,6 +165,7 @@ describe("remuneration data mutations", () => {
 			prismaMock,
 			expect.objectContaining({
 				action: "DELETE",
+				description: "Excluiu remuneração 1.",
 				entityType: "Remuneration",
 				entityId: 1,
 			}),
@@ -196,6 +198,7 @@ describe("remuneration data mutations", () => {
 			prismaMock,
 			expect.objectContaining({
 				action: "RESTORE",
+				description: "Restaurou remuneração 1.",
 				entityType: "Remuneration",
 				entityId: 1,
 			}),

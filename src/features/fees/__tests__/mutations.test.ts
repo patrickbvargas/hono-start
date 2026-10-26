@@ -242,6 +242,7 @@ describe("fee data mutations", () => {
 			expect.objectContaining({
 				firmId: 1,
 				action: "CREATE",
+				description: "Criou honorário da parcela 2.",
 				entityType: "Fee",
 				entityId: 6,
 				entityName: "Installment 2",

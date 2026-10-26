@@ -49,7 +49,7 @@ export async function createClient({
 			entityId: client.id,
 			entityName: client.fullName,
 			changeData: input,
-			description: `Created client ${client.fullName}.`,
+			description: `Criou cliente ${client.fullName}.`,
 		});
 	});
 
@@ -111,7 +111,7 @@ export async function updateClient({
 				before: client,
 				after: input,
 			}),
-			description: `Updated client ${input.fullName}.`,
+			description: `Atualizou cliente ${input.fullName}.`,
 		});
 	});
 
@@ -167,7 +167,7 @@ export async function deleteClient({
 			entityId: id,
 			entityName: client.fullName,
 			changeData: { before: client },
-			description: `Deleted client ${client.fullName}.`,
+			description: `Excluiu cliente ${client.fullName}.`,
 		});
 	});
 
@@ -197,7 +197,7 @@ export async function restoreClient({
 			entityId: id,
 			entityName: client.fullName,
 			changeData: { before: client },
-			description: `Restored client ${client.fullName}.`,
+			description: `Restaurou cliente ${client.fullName}.`,
 		});
 	});
 

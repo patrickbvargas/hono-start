@@ -62,7 +62,7 @@ export async function updateRemuneration({
 				before,
 				after: input,
 			}),
-			description: `Updated remuneration ${input.id}.`,
+			description: `Atualizou remuneração ${input.id}.`,
 		});
 	});
 
@@ -102,7 +102,7 @@ export async function deleteRemuneration({
 			entityId: id,
 			entityName: `Remuneration ${id}`,
 			changeData: { before },
-			description: `Deleted remuneration ${id}.`,
+			description: `Excluiu remuneração ${id}.`,
 		});
 	});
 
@@ -146,7 +146,7 @@ export async function restoreRemuneration({
 			entityId: id,
 			entityName: `Remuneration ${id}`,
 			changeData: { before },
-			description: `Restored remuneration ${id}.`,
+			description: `Restaurou remuneração ${id}.`,
 		});
 	});
 

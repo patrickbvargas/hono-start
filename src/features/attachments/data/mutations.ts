@@ -137,7 +137,7 @@ export async function createAttachments(params: {
 							ownerId: owner.ownerId,
 							type: item.file.type,
 						},
-						description: `Uploaded attachment ${attachment.fileName}.`,
+						description: `Enviou anexo ${attachment.fileName}.`,
 					});
 				}
 			},
@@ -205,7 +205,7 @@ export async function deleteAttachment(params: {
 				entityId: attachment.id,
 				entityName: attachment.fileName,
 				changeData: { before: attachment },
-				description: `Deleted attachment ${attachment.fileName}.`,
+				description: `Excluiu anexo ${attachment.fileName}.`,
 			});
 		});
 	} catch (error) {

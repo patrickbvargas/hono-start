@@ -60,7 +60,7 @@ export async function createEmployee({
 			entityId: employee.id,
 			entityName: employee.fullName,
 			changeData: input,
-			description: `Created employee ${employee.fullName}.`,
+			description: `Criou colaborador ${employee.fullName}.`,
 		});
 	});
 
@@ -128,7 +128,7 @@ export async function updateEmployee({
 					...input,
 				},
 			}),
-			description: `Updated employee ${input.fullName}.`,
+			description: `Atualizou colaborador ${input.fullName}.`,
 		});
 	});
 
@@ -179,7 +179,7 @@ export async function deleteEmployee({
 			entityId: id,
 			entityName: employee.fullName,
 			changeData: { before: employee },
-			description: `Deleted employee ${employee.fullName}.`,
+			description: `Excluiu colaborador ${employee.fullName}.`,
 		});
 	});
 
@@ -213,7 +213,7 @@ export async function restoreEmployee({
 			entityId: id,
 			entityName: employee.fullName,
 			changeData: { before: employee },
-			description: `Restored employee ${employee.fullName}.`,
+			description: `Restaurou colaborador ${employee.fullName}.`,
 		});
 	});
 

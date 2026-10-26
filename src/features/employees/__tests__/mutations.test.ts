@@ -130,6 +130,14 @@ describe("employee lookup-backed writes", () => {
 				id: 1,
 			}),
 		).resolves.toEqual({ success: true });
+		expect(createAuditLogMock).toHaveBeenCalledWith(
+			prismaMock,
+			expect.objectContaining({
+				action: "DELETE",
+				entityType: "Employee",
+				description: "Excluiu colaborador Maria Silva.",
+			}),
+		);
 
 		expect(prismaMock.employee.update).toHaveBeenCalledWith({
 			where: {

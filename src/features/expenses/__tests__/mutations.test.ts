@@ -141,7 +141,14 @@ describe("expense mutations", () => {
 				isActive: true,
 			},
 		});
-		expect(createAuditLogMock).toHaveBeenCalled();
+		expect(createAuditLogMock).toHaveBeenCalledWith(
+			prismaMock,
+			expect.objectContaining({
+				action: "CREATE",
+				entityType: "Expense",
+				description: "Criou despesa 9.",
+			}),
+		);
 	});
 
 	it("allows unchanged inactive persisted categories on update", async () => {

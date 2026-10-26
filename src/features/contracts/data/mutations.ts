@@ -399,7 +399,7 @@ export async function createContract({
 			entityId: contract.id,
 			entityName: contract.processNumber,
 			changeData: input,
-			description: `Created contract ${contract.processNumber}.`,
+			description: `Criou contrato ${contract.processNumber}.`,
 		});
 	});
 
@@ -532,7 +532,7 @@ export async function updateContract({
 				before,
 				after: input,
 			}),
-			description: `Updated contract ${input.processNumber}.`,
+			description: `Atualizou contrato ${input.processNumber}.`,
 		});
 	});
 
@@ -580,7 +580,7 @@ export async function deleteContract({
 			entityId: id,
 			entityName: contract.processNumber,
 			changeData: { before: contract },
-			description: `Deleted contract ${contract.processNumber}.`,
+			description: `Excluiu contrato ${contract.processNumber}.`,
 		});
 	});
 
@@ -624,7 +624,7 @@ export async function restoreContract({
 			entityId: id,
 			entityName: contract.processNumber,
 			changeData: { before: contract },
-			description: `Restored contract ${contract.processNumber}.`,
+			description: `Restaurou contrato ${contract.processNumber}.`,
 		});
 	});
 

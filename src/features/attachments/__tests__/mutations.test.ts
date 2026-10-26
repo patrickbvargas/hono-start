@@ -81,6 +81,16 @@ describe("attachment data mutations", () => {
 		expect(prismaMock.$executeRaw).toHaveBeenCalledOnce();
 		expect(prismaMock.attachment.create).toHaveBeenCalledTimes(2);
 		expect(createAuditLogMock).toHaveBeenCalledTimes(2);
+		for (const [, event] of createAuditLogMock.mock.calls) {
+			expect(event).toEqual(
+				expect.objectContaining({
+					action: "CREATE",
+					entityType: "Attachment",
+					entityName: "contrato.pdf",
+					description: "Enviou anexo contrato.pdf.",
+				}),
+			);
+		}
 		expect(removeAttachmentFileMock).not.toHaveBeenCalled();
 	});
 	it("rejects the whole batch when it exceeds remaining capacity", async () => {
@@ -254,6 +264,7 @@ describe("attachment data mutations", () => {
 			prismaMock,
 			expect.objectContaining({
 				action: "CREATE",
+				description: "Enviou anexo contrato.pdf.",
 				entityType: "Attachment",
 			}),
 		);

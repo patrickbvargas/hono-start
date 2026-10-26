@@ -54,7 +54,7 @@ export async function createExpense({
 			entityId: expense.id,
 			entityName: `${category.label} #${expense.id}`,
 			changeData: input,
-			description: `Created expense ${expense.id}.`,
+			description: `Criou despesa ${expense.id}.`,
 		});
 	});
 
@@ -100,7 +100,7 @@ export async function updateExpense({
 				before,
 				after: input,
 			}),
-			description: `Updated expense ${input.id}.`,
+			description: `Atualizou despesa ${input.id}.`,
 		});
 	});
 
@@ -130,7 +130,7 @@ export async function deleteExpense({
 			entityId: id,
 			entityName: `${before.category} #${id}`,
 			changeData: { before },
-			description: `Deleted expense ${id}.`,
+			description: `Excluiu despesa ${id}.`,
 		});
 	});
 
@@ -160,7 +160,7 @@ export async function restoreExpense({
 			entityId: id,
 			entityName: `${before.category} #${id}`,
 			changeData: { before },
-			description: `Restored expense ${id}.`,
+			description: `Restaurou despesa ${id}.`,
 		});
 	});
 

@@ -363,7 +363,7 @@ export async function createFee({
 			entityId: fee.id,
 			entityName: `Installment ${fee.installmentNumber}`,
 			changeData: input,
-			description: `Created fee installment ${fee.installmentNumber}.`,
+			description: `Criou honorário da parcela ${fee.installmentNumber}.`,
 		});
 	});
 
@@ -468,7 +468,7 @@ export async function updateFee({
 				before,
 				after: input,
 			}),
-			description: `Updated fee installment ${input.installmentNumber}.`,
+			description: `Atualizou honorário da parcela ${input.installmentNumber}.`,
 		});
 	});
 
@@ -512,7 +512,7 @@ export async function deleteFee({
 			entityId: id,
 			entityName: `Fee ${id}`,
 			changeData: { before },
-			description: `Deleted fee ${id}.`,
+			description: `Excluiu honorário ${id}.`,
 		});
 	});
 
@@ -555,7 +555,7 @@ export async function restoreFee({
 			entityId: id,
 			entityName: `Fee ${id}`,
 			changeData: { before },
-			description: `Restored fee ${id}.`,
+			description: `Restaurou honorário ${id}.`,
 		});
 	});
 

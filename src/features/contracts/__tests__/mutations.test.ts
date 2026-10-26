@@ -234,6 +234,7 @@ describe("contract data mutations", () => {
 			expect.objectContaining({
 				firmId: 1,
 				action: "CREATE",
+				description: "Criou contrato PROC-001.",
 				entityType: "Contract",
 				entityId: 99,
 			}),
@@ -431,6 +432,7 @@ describe("contract data mutations", () => {
 			expect.objectContaining({
 				firmId: 1,
 				action: "UPDATE",
+				description: "Atualizou contrato PROC-001.",
 				entityType: "Contract",
 				entityId: 99,
 			}),
@@ -495,6 +497,7 @@ describe("contract data mutations", () => {
 			expect.objectContaining({
 				firmId: 1,
 				action: "DELETE",
+				description: "Excluiu contrato PROC-001.",
 				entityType: "Contract",
 				entityId: 99,
 			}),
@@ -519,6 +522,7 @@ describe("contract data mutations", () => {
 			expect.objectContaining({
 				firmId: 1,
 				action: "RESTORE",
+				description: "Restaurou contrato PROC-001.",
 				entityType: "Contract",
 				entityId: 99,
 			}),
