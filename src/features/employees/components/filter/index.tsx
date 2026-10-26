@@ -1,7 +1,4 @@
-import { ChevronDownIcon } from "lucide-react";
 import { ListFilters } from "@/shared/components/list-filters";
-import { Collapsible, CollapsibleContent } from "@/shared/components/ui";
-import { useFilterPanel } from "@/shared/hooks/use-filter-panel";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
 import {
 	ENTITY_ACTIVE_FILTER_OPTIONS,
@@ -36,8 +33,6 @@ export const EmployeeFilter = () => {
 		filter.type.length > 0 ||
 		filter.active !== defaultFilter.active ||
 		filter.status !== defaultFilter.status;
-
-	const [isDesktopPanelOpen, setIsDesktopPanelOpen] = useFilterPanel();
 
 	const sharedFields = (
 		<>
@@ -81,50 +76,27 @@ export const EmployeeFilter = () => {
 					{(field) => <field.CheckboxGroup options={types} />}
 				</form.AppField>
 			</ListFilters.Popover>
-			<ListFilters.Button
-				type="button"
-				onClick={() => setIsDesktopPanelOpen((open) => !open)}
-				aria-expanded={isDesktopPanelOpen}
-				className="md:min-w-28"
-			>
-				Mais filtros
-				<ChevronDownIcon
-					size={16}
-					className={isDesktopPanelOpen ? "rotate-180" : undefined}
-				/>
-			</ListFilters.Button>
+			<ListFilters.Popover label="Situação">
+				<form.AppField name="active">
+					{(field) => (
+						<field.RadioGroup options={ENTITY_ACTIVE_FILTER_OPTIONS} />
+					)}
+				</form.AppField>
+			</ListFilters.Popover>
+			<ListFilters.Popover label="Registro">
+				<form.AppField name="status">
+					{(field) => (
+						<field.RadioGroup options={ENTITY_DELETED_FILTER_OPTIONS} />
+					)}
+				</form.AppField>
+			</ListFilters.Popover>
 		</ListFilters.Actions>
-	);
-
-	const desktopFilterPanel = (
-		<Collapsible open={isDesktopPanelOpen} onOpenChange={setIsDesktopPanelOpen}>
-			<CollapsibleContent>
-				<ListFilters.Panel>
-					<form.AppField name="active">
-						{(field) => (
-							<field.RadioGroup
-								label="Situação"
-								options={ENTITY_ACTIVE_FILTER_OPTIONS}
-							/>
-						)}
-					</form.AppField>
-					<form.AppField name="status">
-						{(field) => (
-							<field.RadioGroup
-								label="Registro"
-								options={ENTITY_DELETED_FILTER_OPTIONS}
-							/>
-						)}
-					</form.AppField>
-				</ListFilters.Panel>
-			</CollapsibleContent>
-		</Collapsible>
 	);
 
 	return (
 		<form.Form form={form} className="w-full">
 			<ListFilters>
-				<ListFilters.Bar>
+				<ListFilters.Bar className="flex-wrap md:flex-nowrap">
 					<form.AppField name="query">
 						{(field) => (
 							<field.Search
@@ -136,7 +108,6 @@ export const EmployeeFilter = () => {
 					</form.AppField>
 					{isMobile ? mobileFilters : desktopFilterActions}
 				</ListFilters.Bar>
-				{isMobile ? null : desktopFilterPanel}
 				{(filter.query || hasAdvancedFilters) && (
 					<ListFilters.Active>
 						{filter.query ? (

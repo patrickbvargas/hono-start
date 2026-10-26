@@ -1,7 +1,4 @@
-import { ChevronDownIcon } from "lucide-react";
 import { ListFilters } from "@/shared/components/list-filters";
-import { Collapsible, CollapsibleContent } from "@/shared/components/ui";
-import { useFilterPanel } from "@/shared/hooks/use-filter-panel";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
 import { useAuditLogOptions } from "../../hooks/use-data";
 import { useAuditLogFilter } from "../../hooks/use-filter";
@@ -33,7 +30,6 @@ export const AuditLogFilter = () => {
 		filter.action.length > 0 ||
 		filter.entityType.length > 0 ||
 		filter.actorName.length > 0;
-	const [isDesktopPanelOpen, setIsDesktopPanelOpen] = useFilterPanel();
 
 	const sharedFields = (
 		<>
@@ -67,43 +63,23 @@ export const AuditLogFilter = () => {
 					{(field) => <field.CheckboxGroup options={entityTypes} />}
 				</form.AppField>
 			</ListFilters.Popover>
-			<ListFilters.Button
-				type="button"
-				onClick={() => setIsDesktopPanelOpen((open) => !open)}
-				aria-expanded={isDesktopPanelOpen}
-				className="md:min-w-28"
-			>
-				Mais filtros
-				<ChevronDownIcon
-					size={16}
-					className={isDesktopPanelOpen ? "rotate-180" : undefined}
-				/>
-			</ListFilters.Button>
+			<ListFilters.Popover label="Ação">
+				<form.AppField name="action">
+					{(field) => <field.CheckboxGroup options={actions} />}
+				</form.AppField>
+			</ListFilters.Popover>
+			<ListFilters.Popover label="Usuário">
+				<form.AppField name="actorName">
+					{(field) => <field.CheckboxGroup options={actors} />}
+				</form.AppField>
+			</ListFilters.Popover>
 		</ListFilters.Actions>
-	);
-
-	const desktopFilterPanel = (
-		<Collapsible open={isDesktopPanelOpen} onOpenChange={setIsDesktopPanelOpen}>
-			<CollapsibleContent>
-				<ListFilters.Panel>
-					<form.AppField name="action">
-						{(field) => <field.CheckboxGroup label="Ação" options={actions} />}
-					</form.AppField>
-
-					<form.AppField name="actorName">
-						{(field) => (
-							<field.CheckboxGroup label="Usuário" options={actors} />
-						)}
-					</form.AppField>
-				</ListFilters.Panel>
-			</CollapsibleContent>
-		</Collapsible>
 	);
 
 	return (
 		<form.Form form={form} className="w-full">
 			<ListFilters>
-				<ListFilters.Bar>
+				<ListFilters.Bar className="flex-wrap md:flex-nowrap">
 					<form.AppField name="query">
 						{(field) => (
 							<field.Search
@@ -115,7 +91,6 @@ export const AuditLogFilter = () => {
 					</form.AppField>
 					{isMobile ? mobileFilters : desktopFilterActions}
 				</ListFilters.Bar>
-				{isMobile ? null : desktopFilterPanel}
 				{(filter.query || hasAdvancedFilters) && (
 					<ListFilters.Active>
 						{filter.entityId ? (
