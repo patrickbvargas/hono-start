@@ -31,3 +31,11 @@ describe("TableButton", () => {
 		expect(click).not.toHaveBeenCalled();
 	});
 });
+
+it("restores dashboard hover borders without permanent underline", () => {
+	render(<TableButton variant="hover">Detalhar dashboard</TableButton>);
+	const button = screen.getByRole("button");
+	expect(button.className).toContain("hover:ring-1");
+	expect(button.className).toContain("hover:bg-accent/30");
+	expect(button.className.split(" ")).not.toContain("underline");
+});

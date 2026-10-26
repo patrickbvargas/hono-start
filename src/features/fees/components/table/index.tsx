@@ -38,13 +38,7 @@ export const FeeTable = ({
 		return [
 			c.accessor("id", {
 				header: "#",
-				cell: ({ row }) => (
-					<EntityIdTrigger
-						id={row.original.id}
-						onOpenPage={onOpenPage}
-						onView={onView}
-					/>
-				),
+				cell: ({ row }) => <EntityIdTrigger id={row.original.id} />,
 				enableSorting: FEE_ALLOWED_SORT_COLUMNS.includes("id"),
 				meta: {
 					headerClassName: "w-18",
@@ -55,7 +49,6 @@ export const FeeTable = ({
 				cell: (context) => (
 					<EntityIdTrigger
 						id={context.row.original.id}
-						onOpenPage={onOpenPage}
 						label={context.getValue()}
 					/>
 				),
@@ -135,6 +128,9 @@ export const FeeTable = ({
 		<DataTable
 			columns={columns}
 			data={data}
+			onRowAction={
+				onOpenPage ? (index) => onOpenPage(data[index].id) : undefined
+			}
 			footerContent={<Pagination totalRecords={total} />}
 		/>
 	);

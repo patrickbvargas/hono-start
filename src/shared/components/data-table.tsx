@@ -123,7 +123,35 @@ export const DataTable = <TData extends RowData>({
 					<TableBody>
 						{table.getRowModel().rows?.length ? (
 							rows.map((row) => (
-								<TableRow key={row.id} onClick={() => onRowAction?.(row.index)}>
+								<TableRow
+									key={row.id}
+									tabIndex={onRowAction ? 0 : undefined}
+									title={onRowAction ? "Abrir página do registro" : undefined}
+									className={
+										onRowAction
+											? "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
+											: undefined
+									}
+									onClick={(event) => {
+										if (
+											(event.target as HTMLElement).closest(
+												"button, a, input, select, textarea, [role=menuitem], [data-slot=dropdown-menu-content]",
+											)
+										) {
+											return;
+										}
+										onRowAction?.(row.index);
+									}}
+									onKeyDown={(event) => {
+										if (
+											event.target === event.currentTarget &&
+											(event.key === "Enter" || event.key === " ")
+										) {
+											event.preventDefault();
+											onRowAction?.(row.index);
+										}
+									}}
+								>
 									{row.getVisibleCells().map((cell) => (
 										<TableCell
 											key={cell.id}

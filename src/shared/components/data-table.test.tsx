@@ -174,3 +174,41 @@ it("hides navigation for one page and preserves server rows", () => {
 	expect(screen.getByText("Registro 4")).toBeTruthy();
 	expect(screen.queryByRole("navigation")).toBeNull();
 });
+it("opens rows by click or keyboard and ignores nested options", () => {
+	const onRowAction = vi.fn();
+	const onOptions = vi.fn();
+	const { container } = render(
+		<DataTable
+			data={[{ name: "Registro" }]}
+			columns={[
+				helper.accessor("name", { header: "Nome" }),
+				helper.display({
+					id: "options",
+					cell: () => (
+						<button type="button" onClick={onOptions}>
+							<span>Opções</span>
+						</button>
+					),
+				}),
+			]}
+			onRowAction={onRowAction}
+		/>,
+	);
+	const row = container.querySelector("tbody tr");
+	if (!row) {
+		throw new Error("Missing record row");
+	}
+	expect(row.getAttribute("tabindex")).toBe("0");
+	expect(row.getAttribute("title")).toBe("Abrir página do registro");
+	fireEvent.click(screen.getByText("Registro"));
+	expect(onRowAction).toHaveBeenCalledWith(0);
+	fireEvent.click(screen.getByText("Opções"));
+	fireEvent.keyDown(screen.getByRole("button", { name: "Opções" }), {
+		key: "Enter",
+	});
+	expect(onOptions).toHaveBeenCalledOnce();
+	expect(onRowAction).toHaveBeenCalledTimes(1);
+	fireEvent.keyDown(row, { key: "Enter" });
+	fireEvent.keyDown(row, { key: " " });
+	expect(onRowAction).toHaveBeenCalledTimes(3);
+});

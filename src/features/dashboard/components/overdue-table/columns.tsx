@@ -15,6 +15,7 @@ export function getColumns(onViewContract?: (id: number) => void) {
 			cell: (context) =>
 				onViewContract ? (
 					<TableButton
+						variant="hover"
 						type="button"
 						aria-label={`Detalhar contrato ${context.getValue()}`}
 						title={`Ver detalhes: ${context.getValue()}`}

@@ -1,14 +1,11 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import { useMemo } from "react";
-import { RelatedRecordLink } from "@/features/related-records";
 import { DataTable } from "@/shared/components/data-table";
 import { Pagination } from "@/shared/components/pagination";
 import { formatter } from "@/shared/lib/formatter";
 import type { dataTableFeatures } from "@/shared/lib/table";
-import { hasPermission, useLoggedUserSession } from "@/shared/session";
+import { usePendingWorkNavigation } from "../../hooks/use-navigation";
 import type { PendingWork, PendingWorkPage } from "../../schemas/model";
-import { PendingWorkAction } from "../action";
-import { PendingWorkContractLink } from "../contract-link";
 import { PendingWorkDueDate } from "../due-date";
 import { PendingWorkSeverity } from "../severity";
 
@@ -17,8 +14,7 @@ interface PendingWorkTableProps {
 }
 
 export function PendingWorkTable({ data }: PendingWorkTableProps) {
-	const session = useLoggedUserSession();
-	const canReadClient = hasPermission(session, "org:clients:read");
+	const { openFinance } = usePendingWorkNavigation();
 	const columns = useMemo(() => {
 		const c = createColumnHelper<typeof dataTableFeatures, PendingWork>();
 		return [
@@ -35,24 +31,11 @@ export function PendingWorkTable({ data }: PendingWorkTableProps) {
 			c.accessor("processNumber", {
 				header: "Contrato",
 				enableSorting: true,
-				cell: ({ row }) => <PendingWorkContractLink item={row.original} />,
 			}),
 			c.accessor("client", {
 				header: "Cliente",
 				meta: { cellClassName: "max-w-48 whitespace-normal" },
 				enableSorting: true,
-				cell: ({ row }) =>
-					canReadClient ? (
-						<RelatedRecordLink
-							variant="table"
-							kind="client"
-							id={row.original.clientId}
-						>
-							{row.original.client}
-						</RelatedRecordLink>
-					) : (
-						row.original.client
-					),
 			}),
 			c.accessor("dueDate", {
 				header: "Vencimento",
@@ -73,18 +56,14 @@ export function PendingWorkTable({ data }: PendingWorkTableProps) {
 				},
 				meta: { cellClassName: "whitespace-nowrap tabular-nums" },
 			}),
-			c.display({
-				id: "action",
-				header: "",
-				cell: ({ row }) => <PendingWorkAction item={row.original} />,
-			}),
 		];
-	}, [canReadClient]);
+	}, []);
 	return (
 		<DataTable
 			className="min-h-0 flex-1"
 			columns={columns}
 			data={data.data}
+			onRowAction={(index) => openFinance(data.data[index].contractId)}
 			getRowId={(item) => item.id}
 			emptyMessage="Nenhuma pendência encontrada para os filtros selecionados."
 			footerContent={<Pagination totalRecords={data.total} />}

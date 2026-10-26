@@ -32,6 +32,7 @@ export function getColumns(
 			cell: (context) =>
 				onViewEmployee ? (
 					<TableButton
+						variant="hover"
 						type="button"
 						aria-label={`Detalhar colaborador ${context.getValue()}`}
 						title={`Ver detalhes: ${context.getValue()}`}
@@ -54,6 +55,7 @@ export function getColumns(
 				cell: (context) =>
 					onSelect ? (
 						<TableButton
+							variant="hover"
 							type="button"
 							aria-label={`Detalhar remunerações de ${context.row.original.employeeName} em ${month.label}`}
 							title={`Ver detalhes: ${context.row.original.employeeName} · ${month.label}`}
@@ -78,6 +80,7 @@ export function getColumns(
 			cell: (context) =>
 				onSelect ? (
 					<TableButton
+						variant="hover"
 						type="button"
 						aria-label={`Detalhar total de remunerações de ${context.row.original.employeeName}`}
 						title={`Ver detalhes: ${context.row.original.employeeName} · Total no período`}

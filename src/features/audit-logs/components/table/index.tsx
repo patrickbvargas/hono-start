@@ -30,11 +30,7 @@ export const AuditLogTable = ({
 				header: "#",
 				cell: ({ row }) =>
 					(onOpenPage ?? onView) ? (
-						<EntityIdTrigger
-							id={row.original.id}
-							onOpenPage={onOpenPage}
-							onView={onView}
-						/>
+						<EntityIdTrigger id={row.original.id} />
 					) : (
 						<span className="font-mono text-muted-foreground">
 							#{row.original.id}
@@ -88,13 +84,7 @@ export const AuditLogTable = ({
 
 					const label =
 						row.original.entityName || (isSystemEvent ? "Sistema" : "—");
-					return (
-						<EntityIdTrigger
-							id={row.original.id}
-							label={label}
-							onOpenPage={onOpenPage}
-						/>
-					);
+					return <EntityIdTrigger id={row.original.id} label={label} />;
 				},
 				enableSorting: AUDIT_LOG_ALLOWED_SORT_COLUMNS.includes("entityName"),
 				meta: {
@@ -134,6 +124,9 @@ export const AuditLogTable = ({
 		<DataTable
 			columns={columns}
 			data={data}
+			onRowAction={
+				onOpenPage ? (index) => onOpenPage(data[index].id) : undefined
+			}
 			footerContent={<Pagination totalRecords={total} />}
 		/>
 	);

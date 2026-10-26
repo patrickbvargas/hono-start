@@ -20,6 +20,7 @@ export function getColumns(onSelect?: CashFlowSelectionOptions["onSelect"]) {
 	const renderValue = (row: DashboardCashFlowRow, column: CashFlowValue) =>
 		onSelect ? (
 			<TableButton
+				variant="hover"
 				type="button"
 				aria-label={`Detalhar ${labels[column]} em ${row.monthLabel}`}
 				title={`Ver detalhes: ${labels[column]} · ${row.monthLabel}`}

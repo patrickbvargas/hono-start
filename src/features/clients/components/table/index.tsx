@@ -38,13 +38,7 @@ export const ClientTable = ({
 		return [
 			c.accessor("id", {
 				header: "#",
-				cell: ({ row }) => (
-					<EntityIdTrigger
-						id={row.original.id}
-						onOpenPage={onOpenPage}
-						onView={onView}
-					/>
-				),
+				cell: ({ row }) => <EntityIdTrigger id={row.original.id} />,
 				enableSorting: CLIENT_ALLOWED_SORT_COLUMNS.includes("id"),
 				meta: {
 					headerClassName: "w-18",
@@ -55,7 +49,6 @@ export const ClientTable = ({
 				cell: (context) => (
 					<EntityIdTrigger
 						id={context.row.original.id}
-						onOpenPage={onOpenPage}
 						label={context.getValue()}
 					/>
 				),
@@ -125,6 +118,9 @@ export const ClientTable = ({
 		<DataTable
 			columns={columns}
 			data={data}
+			onRowAction={
+				onOpenPage ? (index) => onOpenPage(data[index].id) : undefined
+			}
 			footerContent={<Pagination totalRecords={total} />}
 		/>
 	);

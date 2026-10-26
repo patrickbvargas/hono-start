@@ -39,13 +39,7 @@ export const ExpenseTable = ({
 		return [
 			c.accessor("id", {
 				header: "#",
-				cell: ({ row }) => (
-					<EntityIdTrigger
-						id={row.original.id}
-						onOpenPage={onOpenPage}
-						onView={onView}
-					/>
-				),
+				cell: ({ row }) => <EntityIdTrigger id={row.original.id} />,
 				enableSorting: EXPENSE_ALLOWED_SORT_COLUMNS.includes("id"),
 				meta: { headerClassName: "w-18", cellClassName: "whitespace-nowrap" },
 			}),
@@ -54,7 +48,6 @@ export const ExpenseTable = ({
 				date: (row) => row.expenseDate,
 				amount: (row) => row.amount,
 				enableSorting: true,
-				onCategoryClick: onOpenPage ? (row) => onOpenPage(row.id) : undefined,
 			}),
 			c.accessor("notes", {
 				header: "Descrição",
@@ -119,6 +112,9 @@ export const ExpenseTable = ({
 		<DataTable
 			columns={columns}
 			data={data}
+			onRowAction={
+				onOpenPage ? (index) => onOpenPage(data[index].id) : undefined
+			}
 			footerContent={<Pagination totalRecords={total} />}
 		/>
 	);
