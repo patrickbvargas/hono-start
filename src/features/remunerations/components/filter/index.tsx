@@ -195,13 +195,15 @@ export const RemunerationFilter = ({
 						)}
 					</form.AppField>
 					{isMobile ? mobileFilters : desktopFilterActions}
-					<div className="ml-auto shrink-0">{summary}</div>
 				</ListFilters.Bar>
-				<FinancialPeriodShortcuts
-					dateFrom={filter.dateFrom}
-					dateTo={filter.dateTo}
-					onChange={(range) => handleApplyFilter({ ...filter, ...range })}
-				/>
+				<div className="flex flex-wrap items-center justify-between gap-2">
+					<FinancialPeriodShortcuts
+						dateFrom={filter.dateFrom}
+						dateTo={filter.dateTo}
+						onChange={(range) => handleApplyFilter({ ...filter, ...range })}
+					/>
+					<div className="ml-auto shrink-0">{summary}</div>
+				</div>
 				{isMobile ? null : desktopFilterPanel}
 				{(filter.query || hasAdvancedFilters) && (
 					<ListFilters.Active>
