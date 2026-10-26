@@ -54,6 +54,7 @@ describe("AttachmentSection", () => {
 				attachment={{
 					id: 1,
 					fileName: "arquivo.pdf",
+					uploadedByName: null,
 					fileSize: 1,
 					mimeType: "application/pdf",
 					typeId: 1,
@@ -79,6 +80,7 @@ describe("AttachmentSection", () => {
 		expect(
 			screen.queryByRole("button", { name: "Ações de arquivo.pdf" }),
 		).toBeNull();
+		expect(screen.getByText("Autor não informado")).toBeTruthy();
 	});
 	afterEach(() => {
 		cleanup();
@@ -185,6 +187,7 @@ describe("AttachmentSection", () => {
 				{
 					id: 1,
 					fileName: "contrato.pdf",
+					uploadedByName: "Maria",
 					fileSize: 1536,
 					mimeType: "application/pdf",
 					typeId: 1,
@@ -205,6 +208,13 @@ describe("AttachmentSection", () => {
 		render(<AttachmentSection ownerId={1} ownerKind="client" />);
 
 		expect(screen.getByText("contrato.pdf")).toBeTruthy();
+		expect(screen.getByText("Enviado por Maria")).toBeTruthy();
+		expect(screen.getByText("Enviado por Maria").closest("p")).toBe(
+			screen.getByText("1.5 KB").closest("p"),
+		);
+		expect(screen.getByText("Enviado por Maria").className).toContain(
+			"truncate",
+		);
 
 		expect(screen.getByText("Tamanho:")).toBeTruthy();
 		expect(screen.getByText("1.5 KB")).toBeTruthy();
@@ -228,6 +238,32 @@ describe("AttachmentSection", () => {
 		fireEvent.click(await screen.findByRole("menuitem", { name: "Excluir" }));
 		expect(deleteOpenMock).toHaveBeenCalledWith(1);
 	});
+
+	it.each([10, 25])(
+		"disables upload at %i existing attachments without hiding them",
+		(count) => {
+			useAttachmentsMock.mockReturnValue({
+				attachments: Array.from({ length: count }, (_, id) => ({
+					id,
+					fileName: `file-${id}.pdf`,
+					fileSize: 100,
+					typeValue: "PDF",
+					createdAt: "2026-10-24T12:00:00Z",
+					downloadUrl: null,
+					uploadedByName: null,
+				})),
+				error: null,
+				isPending: false,
+				retry: retryMock,
+			});
+			render(<AttachmentSection ownerId={1} ownerKind="client" />);
+			expect(
+				(screen.getByRole("button", { name: "Anexar" }) as HTMLButtonElement)
+					.disabled,
+			).toBe(true);
+			expect(screen.getAllByRole("listitem")).toHaveLength(count);
+		},
+	);
 
 	it("hides upload without permission or when unavailable", () => {
 		permissionMock.mockReturnValue(false);

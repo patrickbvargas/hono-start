@@ -79,4 +79,4 @@ This file preserves canonical edge-case expectations for the product domain.
 - Own remuneration read access does not expose another collaborator's attachments. Assigned receipt access does not expose an unassigned contract's receipt files.
 - The last receipt may complete a contract; its proof can still be attached with financial read and attachment upload grants.
 - Deleted financial owners/ancestors reject new uploads without deleting retained evidence. Restoring the financial ancestry permits uploads again.
-- Financial evidence uses the same 25-file capacity and exactly-one-owner validation as other attachment contexts.
+- Financial evidence uses the same 10-file capacity and exactly-one-owner validation as other attachment contexts.

@@ -70,7 +70,7 @@ describe("attachment data mutations", () => {
 		fileBase64: "dGVzdA==",
 	};
 	it("saves the complete batch in one locked transaction", async () => {
-		prismaMock.attachment.count.mockResolvedValue(23);
+		prismaMock.attachment.count.mockResolvedValue(8);
 		await expect(
 			createAttachments({
 				firmId: 1,
@@ -84,7 +84,7 @@ describe("attachment data mutations", () => {
 		expect(removeAttachmentFileMock).not.toHaveBeenCalled();
 	});
 	it("rejects the whole batch when it exceeds remaining capacity", async () => {
-		prismaMock.attachment.count.mockResolvedValue(24);
+		prismaMock.attachment.count.mockResolvedValue(9);
 		await expect(
 			createAttachments({
 				firmId: 1,
@@ -120,11 +120,11 @@ describe("attachment data mutations", () => {
 		expect(removeAttachmentFileMock).toHaveBeenCalledTimes(1);
 		expect(prismaMock.$transaction).not.toHaveBeenCalled();
 	});
-	it("rejects 26 files before storage or transaction work", async () => {
+	it("rejects 11 files before storage or transaction work", async () => {
 		await expect(
 			createAttachments({
 				firmId: 1,
-				input: { clientId: 9, files: Array(26).fill(batchFile) },
+				input: { clientId: 9, files: Array(11).fill(batchFile) },
 			}),
 		).rejects.toThrow();
 		expect(uploadAttachmentFileMock).not.toHaveBeenCalled();
@@ -138,9 +138,9 @@ describe("attachment data mutations", () => {
 		{ feeId: 9 },
 		{ remunerationId: 9 },
 	])(
-		"rejects the 26th attachment and cleans uploaded storage for %o",
+		"rejects the 11th attachment and cleans uploaded storage for %o",
 		async (owner) => {
-			prismaMock.attachment.count.mockResolvedValue(25);
+			prismaMock.attachment.count.mockResolvedValue(10);
 			await expect(
 				createAttachment({
 					firmId: 1,
@@ -166,8 +166,8 @@ describe("attachment data mutations", () => {
 			expect(createAuditLogMock).not.toHaveBeenCalled();
 		},
 	);
-	it("allows the 25th attachment while holding the owner lock", async () => {
-		prismaMock.attachment.count.mockResolvedValue(24);
+	it("allows the 10th attachment while holding the owner lock", async () => {
+		prismaMock.attachment.count.mockResolvedValue(9);
 		await expect(
 			createAttachment({
 				firmId: 1,

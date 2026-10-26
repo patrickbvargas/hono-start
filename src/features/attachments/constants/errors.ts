@@ -1,6 +1,7 @@
+import { ATTACHMENT_MAX_OWNER_FILES } from "./values";
+
 export const ATTACHMENT_ERRORS = {
-	OWNER_LIMIT_REACHED:
-		"Limite de 25 anexos por registro atingido. Exclua um anexo para liberar espaço.",
+	OWNER_LIMIT_REACHED: `Limite de ${ATTACHMENT_MAX_OWNER_FILES} anexos por registro atingido. Exclua um anexo para liberar espaço.`,
 	OWNER_REQUIRED: "Selecione exatamente um contexto para o anexo.",
 	DELETE_FAILED: "Não foi possível excluir anexo.",
 	DETAIL_NOT_FOUND: "Anexo não encontrado.",

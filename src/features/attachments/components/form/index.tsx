@@ -1,7 +1,10 @@
 import { EntityForm } from "@/shared/components/entity-form";
 import { FormSection } from "@/shared/components/form-section";
 import type { OverlayState } from "@/shared/types/overlay";
-import { ATTACHMENT_ACCEPT_ATTRIBUTE } from "../../constants/values";
+import {
+	ATTACHMENT_ACCEPT_ATTRIBUTE,
+	ATTACHMENT_MAX_OWNER_FILES,
+} from "../../constants/values";
 import { useAttachmentForm } from "../../hooks/use-form";
 import type { AttachmentOwnerInput } from "../../schemas/form";
 
@@ -51,8 +54,8 @@ export const AttachmentForm = ({
 							: attachmentsError
 								? "Não foi possível verificar o limite. Feche e tente novamente."
 								: remainingSlots === 0
-									? "Limite de 25 anexos atingido. Exclua um anexo para liberar espaço."
-									: `${remainingSlots} de 25 vagas disponíveis. Até ${maxFiles} arquivos neste envio.`}
+									? `Limite de ${ATTACHMENT_MAX_OWNER_FILES} anexos atingido. Exclua um anexo para liberar espaço.`
+									: `Você pode adicionar mais ${maxFiles} ${maxFiles === 1 ? "anexo" : "anexos"}.`}
 					</p>
 					<form.AppField name="files">
 						{(field) => (
@@ -69,8 +72,8 @@ export const AttachmentForm = ({
 									remainingSlots === 0
 								}
 								isLoading={isPending}
-								emptyTitle="Arraste e solte arquivos aqui"
-								dropDescription="Selecione até 25 arquivos por envio. PDF, JPG e PNG, até 10 MB por arquivo."
+								emptyTitle="Arraste arquivos aqui ou clique em Selecionar arquivos"
+								dropDescription="PDF, JPG ou PNG • Até 10 MB por arquivo."
 								loadingText="Enviando arquivos..."
 								browseLabel="Selecionar arquivos"
 							/>

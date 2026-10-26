@@ -164,7 +164,7 @@ export const attachmentBatchFormInputSchema = attachmentOwnerBaseInputSchema
 			.min(1, "Selecione pelo menos um arquivo")
 			.max(
 				ATTACHMENT_MAX_BATCH_FILES,
-				"Selecione no máximo 25 arquivos por envio",
+				`Selecione no máximo ${ATTACHMENT_MAX_BATCH_FILES} arquivos por envio`,
 			),
 	})
 	.superRefine((data, ctx) => {
@@ -201,7 +201,7 @@ export const attachmentBatchUploadInputSchema = attachmentOwnerBaseInputSchema
 			.min(1, "Selecione pelo menos um arquivo")
 			.max(
 				ATTACHMENT_MAX_BATCH_FILES,
-				"Selecione no máximo 25 arquivos por envio",
+				`Selecione no máximo ${ATTACHMENT_MAX_BATCH_FILES} arquivos por envio`,
 			),
 	})
 	.superRefine(attachmentOwnerRefinement);

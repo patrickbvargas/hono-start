@@ -3,6 +3,7 @@ import { ATTACHMENT_ERRORS } from "../constants/errors";
 
 const { prismaMock } = vi.hoisted(() => ({
 	prismaMock: {
+		auditLog: { findMany: vi.fn() },
 		fee: { findFirst: vi.fn() },
 		remuneration: { findFirst: vi.fn() },
 		attachment: { findFirst: vi.fn(), findMany: vi.fn() },
@@ -33,6 +34,56 @@ import {
 } from "../data/queries";
 
 describe("attachment owner access queries", () => {
+	it("maps only original tenant-scoped upload names with explicit unknown fallback", async () => {
+		const row = {
+			fileName: "evidence.pdf",
+			fileSize: 100,
+			mimeType: "application/pdf",
+			type: { id: 1, label: "PDF", value: "PDF" },
+			isActive: true,
+			deletedAt: null,
+			createdAt: new Date("2026-10-26T12:00:00Z"),
+			updatedAt: null,
+		};
+		prismaMock.attachment.findMany.mockResolvedValue(
+			[1, 2, 3, 4].map((id) => ({ ...row, id })),
+		);
+		prismaMock.auditLog.findMany.mockResolvedValue([
+			{ entityId: "1", actorName: "Maria" },
+			{ entityId: "1", actorName: "Later actor" },
+			{ entityId: "2", actorName: "Sistema" },
+			{ entityId: "3", actorName: "  " },
+		]);
+		const result = await getAttachmentsByOwner({
+			firmId: 100,
+			input: { clientId: 14 },
+		});
+		expect(result.map((item) => item.uploadedByName)).toEqual([
+			"Maria",
+			null,
+			null,
+			null,
+		]);
+		expect(prismaMock.auditLog.findMany).toHaveBeenCalledWith({
+			where: {
+				firmId: 100,
+				entityType: "Attachment",
+				action: "CREATE",
+				entityId: { in: ["1", "2", "3", "4"] },
+			},
+			select: { entityId: true, actorName: true },
+			orderBy: [{ createdAt: "asc" }, { id: "asc" }],
+		});
+	});
+
+	it("does not query attribution for empty attachment lists", async () => {
+		prismaMock.attachment.findMany.mockResolvedValue([]);
+		await expect(
+			getAttachmentsByOwner({ firmId: 100, input: { clientId: 14 } }),
+		).resolves.toEqual([]);
+		expect(prismaMock.auditLog.findMany).not.toHaveBeenCalled();
+	});
+
 	beforeEach(() => {
 		vi.clearAllMocks();
 	});

@@ -34,7 +34,7 @@ export function AttachmentSectionContent({
 				<p className="wrap-anywhere text-sm font-medium leading-5">
 					{attachment.fileName}
 				</p>
-				<p className="mt-1 flex flex-wrap gap-x-1 text-xs text-muted-foreground">
+				<p className="mt-1 flex min-w-0 items-center gap-x-1 whitespace-nowrap text-xs text-muted-foreground">
 					<span>
 						<span className="sr-only">Tamanho: </span>
 						{formatFileSize(attachment.fileSize)}
@@ -43,6 +43,19 @@ export function AttachmentSectionContent({
 					<span>
 						<span className="sr-only">Anexado em </span>
 						{formatter.date(attachment.createdAt)}
+					</span>
+					<span aria-hidden="true">·</span>
+					<span
+						className="min-w-0 truncate"
+						title={
+							attachment.uploadedByName
+								? `Enviado por ${attachment.uploadedByName}`
+								: "Autor não informado"
+						}
+					>
+						{attachment.uploadedByName
+							? `Enviado por ${attachment.uploadedByName}`
+							: "Autor não informado"}
 					</span>
 				</p>
 			</div>

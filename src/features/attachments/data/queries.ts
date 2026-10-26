@@ -272,10 +272,31 @@ export async function getAttachmentsByOwner(params: {
 		orderBy: [{ createdAt: "desc" }, { id: "desc" }],
 	});
 
+	const uploadEvents = rows.length
+		? await prisma.auditLog.findMany({
+				where: {
+					firmId: params.firmId,
+					entityType: "Attachment",
+					action: "CREATE",
+					entityId: { in: rows.map((row) => String(row.id)) },
+				},
+				select: { entityId: true, actorName: true },
+				orderBy: [{ createdAt: "asc" }, { id: "asc" }],
+			})
+		: [];
+	const senders = new Map<string, string | null>();
+	for (const event of uploadEvents) {
+		if (event.entityId && !senders.has(event.entityId)) {
+			const name = event.actorName.trim();
+			senders.set(event.entityId, name && name !== "Sistema" ? name : null);
+		}
+	}
+
 	const attachments = await Promise.all(
 		rows.map(async (attachment) => ({
 			id: attachment.id,
 			fileName: attachment.fileName,
+			uploadedByName: senders.get(String(attachment.id)) ?? null,
 			fileSize: attachment.fileSize,
 			mimeType: attachment.mimeType,
 			typeId: attachment.type.id,

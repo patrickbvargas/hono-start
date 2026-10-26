@@ -332,9 +332,11 @@ Primary desktop filters include client/employee in contracts, category in expens
 
 Revenue badges prioritize Quitado (green), then Em atraso (red) when the earliest open installment due date is before the current UTC calendar date, otherwise Parcial or Pendente. An installment due today is not overdue. This uses the existing schedule and outstanding balance, without changing financial calculations.
 
-The Novos anexos modal accepts multiple files through selection or drag and drop, up to 25 per batch. It displays selected filenames and sizes, allows removal before submission, shows preparation and sending feedback, and retains the entire selection after failure. Oversized selections are rejected visibly without silently discarding files.
+The Novos anexos modal accepts multiple files through selection or drag and drop, up to 10 per batch. It displays selected filenames and sizes, allows removal before submission, shows preparation and sending feedback, and retains the entire selection after failure. Oversized selections are rejected visibly without silently discarding files.
 
-Attachment sections disable Anexar at 25 files. The batch modal shows available capacity and limits selection to remaining capacity, up to 25 files. Server checks remain authoritative if another upload changes capacity concurrently.
+Attachment sections disable Anexar at 10 files. The batch modal shows available capacity and limits selection to remaining capacity, up to 10 files. Server checks remain authoritative if another upload changes capacity concurrently.
+
+Upload guidance states the actual additional attachment capacity, selection/drag instructions, supported formats and per-file size limit without repeating a fixed batch allowance. Attachment lists display Enviado por with the original sender snapshot from the firm's immutable Attachment CREATE audit event. Each file in a batch records the authenticated session actor atomically with creation. Attribution uses the earliest CREATE event and does not change with later actors or account renames. Missing, blank or system-only attribution displays Autor não informado. Attachment readers receive only the sender name, without audit payloads, emails or a separate audit-read grant.
 
 ## Pending work center
 
@@ -358,3 +360,5 @@ Client Financeiro is the second workspace tab, before Contato. Its summary and r
 Entity pages use contextual identities, shared scroll areas, and attachment visibility gated by attachment read permission. Upload controls follow owner update permission and lifecycle restrictions. Unavailable client finance and attachment tabs fall back to overview. Contract finance includes consolidated totals over active undeleted revenues. Client finance counts distinct active contracts with eligible revenues. Remuneration finance and summaries include the revenue type and assignment role. Empty contract teams show an explicit empty state.
 
 For expense-only dashboard visibility (expenses allowed, revenue and remuneration denied), Despesas por categoria is a primary chart independent of the detailed-analysis preference, including its empty state. The detailed-analysis toggle is hidden only for this visibility combination; mixed-access dashboards retain their existing behavior.
+
+Attachment rows retain the filename title and group size, date and sender on a single metadata line. Long sender names truncate visually and remain available through the full-text tooltip.

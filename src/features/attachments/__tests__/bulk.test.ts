@@ -27,8 +27,8 @@ describe("atomic attachment bulk upload", () => {
 			});
 		},
 	);
-	it("accepts one to 25 files and rejects zero or 26", () => {
-		for (const count of [1, 25]) {
+	it("accepts one to 10 files and rejects zero or 11", () => {
+		for (const count of [1, 10]) {
 			expect(
 				attachmentBatchFormInputSchema.safeParse({
 					clientId: 1,
@@ -36,7 +36,7 @@ describe("atomic attachment bulk upload", () => {
 				}).success,
 			).toBe(true);
 		}
-		for (const count of [0, 26]) {
+		for (const count of [0, 11]) {
 			expect(
 				attachmentBatchFormInputSchema.safeParse({
 					clientId: 1,
@@ -56,13 +56,13 @@ describe("atomic attachment bulk upload", () => {
 		expect(
 			attachmentBatchUploadInputSchema.safeParse({
 				clientId: 1,
-				files: Array(25).fill(valid),
+				files: Array(10).fill(valid),
 			}).success,
 		).toBe(true);
 		expect(
 			attachmentBatchUploadInputSchema.safeParse({
 				clientId: 1,
-				files: Array(26).fill(valid),
+				files: Array(11).fill(valid),
 			}).success,
 		).toBe(false);
 		expect(
@@ -100,8 +100,8 @@ describe("atomic attachment bulk upload", () => {
 		}
 		expect(upload).not.toHaveBeenCalled();
 	});
-	it("sends all 25 files in one request", async () => {
-		const files = Array.from({ length: 25 }, (_, index) =>
+	it("sends all 10 files in one request", async () => {
+		const files = Array.from({ length: 10 }, (_, index) =>
 			file(`${index}.pdf`),
 		);
 		const upload = vi.fn().mockResolvedValue(undefined);
@@ -120,7 +120,7 @@ describe("atomic attachment bulk upload", () => {
 				type: "PDF",
 			})),
 		});
-		expect(onProgress).toHaveBeenLastCalledWith(25, 25);
+		expect(onProgress).toHaveBeenLastCalledWith(10, 10);
 	});
 	it("retains the entire selection after a failed operation", async () => {
 		const files = [file("a.pdf"), file("b.pdf")];

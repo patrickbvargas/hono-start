@@ -75,7 +75,7 @@ export const AttachmentSection = ({
 							}
 							title={
 								attachments.length >= ATTACHMENT_MAX_OWNER_FILES
-									? "Limite de 25 anexos atingido"
+									? `Limite de ${ATTACHMENT_MAX_OWNER_FILES} anexos atingido`
 									: undefined
 							}
 							label="Anexar"

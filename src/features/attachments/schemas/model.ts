@@ -3,6 +3,7 @@ import { entityIdSchema } from "@/shared/schemas/entity";
 
 export const attachmentSummarySchema = entityIdSchema.safeExtend({
 	fileName: z.string(),
+	uploadedByName: z.string().nullable(),
 	fileSize: z.number().int().nonnegative(),
 	mimeType: z.string(),
 	typeId: z.number(),
