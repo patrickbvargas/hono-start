@@ -1,56 +1,34 @@
 // @vitest-environment jsdom
-
-import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { EntityIdTrigger } from "../entity-id-trigger";
 
-describe("EntityIdTrigger", () => {
-	it("prefers page navigation while preserving contextual drawer fallback", () => {
-		const onOpenPage = vi.fn();
-		const onView = vi.fn();
-		render(
-			<EntityIdTrigger
-				id={42}
-				label="Maria"
-				onOpenPage={onOpenPage}
-				onView={onView}
-			/>,
+afterEach(cleanup);
+describe("table record navigation", () => {
+	it("keeps IDs muted and noninteractive even with handlers", () => {
+		render(<EntityIdTrigger id={42} onOpenPage={vi.fn()} onView={vi.fn()} />);
+		expect(screen.queryByRole("button")).toBeNull();
+		expect(screen.getByText("#42").className).toContain(
+			"text-muted-foreground",
 		);
-		fireEvent.click(
-			screen.getByRole("button", { name: "Abrir página de Maria" }),
-		);
-		expect(
-			screen
-				.getByRole("button", { name: "Abrir página de Maria" })
-				.querySelector("svg[aria-hidden=true]"),
-		).toBeNull();
-		expect(onOpenPage).toHaveBeenCalledWith(42);
-		expect(onView).not.toHaveBeenCalled();
 	});
-	it("opens the selected record from its human-readable name", () => {
-		const onView = vi.fn();
+	it("opens page from name and never opens summary", () => {
+		const open = vi.fn(),
+			view = vi.fn();
 		render(
-			<EntityIdTrigger id={99} label="Processo de teste" onView={onView} />,
+			<EntityIdTrigger id={42} label="Maria" onOpenPage={open} onView={view} />,
 		);
-		fireEvent.click(
-			screen.getByRole("button", { name: "Ver resumo de Processo de teste" }),
-		);
-		expect(onView).toHaveBeenCalledWith(99);
-	});
-	it("renders the formatted id and opens details with the same id", () => {
-		const onView = vi.fn();
-
-		render(<EntityIdTrigger id={12} onView={onView} />);
-
 		const trigger = screen.getByRole("button", {
-			name: "Ver resumo do registro #12",
+			name: "Abrir página de Maria",
 		});
-
-		expect(trigger.textContent).toBe("#12");
-		expect(trigger.querySelector("svg")).toBeNull();
-
+		expect(trigger.querySelector("svg[aria-hidden=true]")).not.toBeNull();
 		fireEvent.click(trigger);
-
-		expect(onView).toHaveBeenCalledWith(12);
+		expect(open).toHaveBeenCalledWith(42);
+		expect(view).not.toHaveBeenCalled();
+	});
+	it("keeps names plain when page navigation unavailable", () => {
+		render(<EntityIdTrigger id={42} label="Maria" onView={vi.fn()} />);
+		expect(screen.queryByRole("button")).toBeNull();
+		expect(screen.getByText("Maria")).toBeTruthy();
 	});
 });

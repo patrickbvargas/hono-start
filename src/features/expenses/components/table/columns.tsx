@@ -25,7 +25,10 @@ export function getExpenseReadColumns<T extends RowData>({
 			header: "Categoria",
 			cell: (context) =>
 				onCategoryClick ? (
-					<TableButton onClick={() => onCategoryClick(context.row.original)}>
+					<TableButton
+						title={`Abrir página de ${context.getValue()}`}
+						onClick={() => onCategoryClick(context.row.original)}
+					>
 						{context.getValue()}
 					</TableButton>
 				) : (

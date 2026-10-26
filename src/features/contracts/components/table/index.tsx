@@ -1,5 +1,6 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import * as React from "react";
+import { RelatedRecordLink } from "@/features/related-records";
 import { DataTable } from "@/shared/components/data-table";
 import { EntityActions } from "@/shared/components/entity-actions";
 import { EntityIdTrigger } from "@/shared/components/entity-id-trigger";
@@ -8,6 +9,7 @@ import { Pagination } from "@/shared/components/pagination";
 import { formatter } from "@/shared/lib/formatter";
 import type { dataTableFeatures } from "@/shared/lib/table";
 import type { EntityId } from "@/shared/schemas/entity";
+import { hasPermission, useLoggedUserSession } from "@/shared/session";
 import type { QueryPaginatedReturnType } from "@/shared/types/api";
 import { CONTRACT_ALLOWED_SORT_COLUMNS } from "../../constants/sorting";
 import type { ContractSummary } from "../../schemas/model";
@@ -32,6 +34,7 @@ export const ContractTable = ({
 	onDelete,
 	onRestore,
 }: ContractTableProps) => {
+	const session = useLoggedUserSession();
 	const columns = React.useMemo(() => {
 		const c = createColumnHelper<typeof dataTableFeatures, ContractSummary>();
 
@@ -57,8 +60,6 @@ export const ContractTable = ({
 					<EntityIdTrigger
 						id={context.row.original.id}
 						onOpenPage={onOpenPage}
-						onView={onView}
-						actionLabel={`Abrir página do contrato ${context.getValue()}`}
 						label={context.getValue()}
 					/>
 				),
@@ -69,6 +70,18 @@ export const ContractTable = ({
 				},
 			}),
 			c.accessor("client", {
+				cell: ({ row }) =>
+					hasPermission(session, "org:clients:read") ? (
+						<RelatedRecordLink
+							variant="table"
+							kind="client"
+							id={row.original.clientId}
+						>
+							{row.original.client}
+						</RelatedRecordLink>
+					) : (
+						row.original.client
+					),
 				header: "Cliente",
 				enableSorting: CONTRACT_ALLOWED_SORT_COLUMNS.includes("client"),
 				meta: {
@@ -149,7 +162,15 @@ export const ContractTable = ({
 				},
 			}),
 		];
-	}, [canManageLifecycle, onDelete, onEdit, onRestore, onView, onOpenPage]);
+	}, [
+		session,
+		canManageLifecycle,
+		onDelete,
+		onEdit,
+		onRestore,
+		onView,
+		onOpenPage,
+	]);
 
 	return (
 		<DataTable

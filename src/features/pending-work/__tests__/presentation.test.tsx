@@ -64,10 +64,12 @@ describe("pending work presentation", () => {
 			const link = await screen.findByRole("link", {
 				name: tab === "finance" ? "Abrir financeiro" : "Abrir equipe",
 			});
-			expect(link.querySelector("svg")).toBeNull();
+			expect(link.querySelector("svg[aria-hidden=true]")).not.toBeNull();
 			const contractLink = screen.getByRole("link", { name: "PROC-42" });
-			expect(contractLink.querySelector("svg")).toBeNull();
-			expect(contractLink.className).not.toMatch(/(?:^|\s)underline(?:\s|$)/);
+			expect(
+				contractLink.querySelector("svg[aria-hidden=true]"),
+			).not.toBeNull();
+			expect(contractLink.className).toMatch(/(?:^|\s)underline(?:\s|$)/);
 			const destination = new URL(
 				link.getAttribute("href") ?? "",
 				"http://localhost",

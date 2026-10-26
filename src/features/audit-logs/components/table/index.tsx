@@ -86,7 +86,15 @@ export const AuditLogTable = ({
 						!row.original.entityTypeLabel &&
 						!row.original.actorName;
 
-					return row.original.entityName || (isSystemEvent ? "Sistema" : "—");
+					const label =
+						row.original.entityName || (isSystemEvent ? "Sistema" : "—");
+					return (
+						<EntityIdTrigger
+							id={row.original.id}
+							label={label}
+							onOpenPage={onOpenPage}
+						/>
+					);
 				},
 				enableSorting: AUDIT_LOG_ALLOWED_SORT_COLUMNS.includes("entityName"),
 				meta: {

@@ -56,7 +56,6 @@ export const EmployeeTable = ({
 					<EntityIdTrigger
 						id={context.row.original.id}
 						onOpenPage={onOpenPage}
-						onView={onView}
 						label={context.getValue()}
 					/>
 				),

@@ -1,6 +1,35 @@
 // @vitest-environment jsdom
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import type { ReactNode } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
+vi.mock("@tanstack/react-router", async (importOriginal) => {
+	const actual =
+		await importOriginal<typeof import("@tanstack/react-router")>();
+	return {
+		...actual,
+		Link: ({
+			children,
+			params,
+			title,
+			className,
+		}: {
+			children: ReactNode;
+			params: { auditLogId: string };
+			title: string;
+			className: string;
+		}) => (
+			<a
+				href={`/auditoria/${params.auditLogId}?tab=overview`}
+				title={title}
+				className={className}
+			>
+				{children}
+			</a>
+		),
+	};
+});
+
 import { EntityAuditHistory } from "../components/entity-history";
 
 const mocks = vi.hoisted(() => ({
@@ -11,6 +40,7 @@ const mocks = vi.hoisted(() => ({
 	retry: vi.fn(),
 }));
 vi.mock("@/shared/session", () => ({
+	useOptionalLoggedUserSession: () => null,
 	useLoggedUserSession: () => ({
 		permissions: mocks.allowed ? ["org:audit_logs:read"] : [],
 	}),
@@ -57,18 +87,21 @@ describe("embedded entity audit history", () => {
 		expect(screen.getByRole("table")).not.toBeNull();
 		expect(
 			screen.getAllByRole("columnheader").map((header) => header.textContent),
-		).toEqual(["#", "Ocorrido em", "Ação", "Usuário", "Detalhes"]);
-		fireEvent.click(
-			screen.getByRole("button", { name: "Ver resumo do registro #10" }),
-		);
-		expect(mocks.open).toHaveBeenCalledWith(10);
+		).toEqual(["#", "Ocorrido em", "Ação", "Usuário", "Detalhes", ""]);
+		expect(
+			screen
+				.getByRole("link", { name: "atualizou contrato PROC-60." })
+				.getAttribute("href"),
+		).toBe("/auditoria/10?tab=overview");
+		expect(mocks.open).not.toHaveBeenCalled();
 		expect(screen.getByText("Maria")).not.toBeNull();
 		fireEvent.click(
 			screen.getByRole("button", { name: "Próxima página do histórico" }),
 		);
 		expect(mocks.setPage).toHaveBeenCalledWith(2);
 		expect(window.location.href).toBe(before);
-		fireEvent.click(screen.getByRole("button", { name: "Ver alteração #10" }));
+		fireEvent.click(screen.getByRole("button", { name: "Ações" }));
+		fireEvent.click(screen.getByRole("menuitem", { name: "Ver resumo" }));
 		expect(mocks.open).toHaveBeenCalledWith(10);
 	});
 	it("does not mount the history query without audit access", () => {

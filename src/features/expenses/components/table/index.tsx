@@ -54,10 +54,7 @@ export const ExpenseTable = ({
 				date: (row) => row.expenseDate,
 				amount: (row) => row.amount,
 				enableSorting: true,
-				onCategoryClick:
-					(onOpenPage ?? onView)
-						? (row) => (onOpenPage ?? onView)?.(row.id)
-						: undefined,
+				onCategoryClick: onOpenPage ? (row) => onOpenPage(row.id) : undefined,
 			}),
 			c.accessor("notes", {
 				header: "Descrição",

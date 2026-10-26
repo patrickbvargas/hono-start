@@ -1,6 +1,7 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import { FileDownIcon } from "lucide-react";
 import * as React from "react";
+import { RelatedRecordLink } from "@/features/related-records";
 import { DataTable } from "@/shared/components/data-table";
 import { EntityActions } from "@/shared/components/entity-actions";
 import { EntityIdTrigger } from "@/shared/components/entity-id-trigger";
@@ -17,6 +18,7 @@ import {
 import { formatter } from "@/shared/lib/formatter";
 import type { dataTableFeatures } from "@/shared/lib/table";
 import type { EntityId } from "@/shared/schemas/entity";
+import { hasPermission, useLoggedUserSession } from "@/shared/session";
 import type { QueryPaginatedReturnType } from "@/shared/types/api";
 import { REMUNERATION_ALLOWED_SORT_COLUMNS } from "../../constants/sorting";
 import type { Remuneration } from "../../schemas/model";
@@ -41,6 +43,7 @@ export const RemunerationTable = ({
 	onDelete,
 	onRestore,
 }: RemunerationTableProps) => {
+	const session = useLoggedUserSession();
 	const columns = React.useMemo(() => {
 		const c = createColumnHelper<typeof dataTableFeatures, Remuneration>();
 
@@ -65,7 +68,6 @@ export const RemunerationTable = ({
 					<EntityIdTrigger
 						id={context.row.original.id}
 						onOpenPage={onOpenPage}
-						onView={onView}
 						label={context.getValue()}
 					/>
 				),
@@ -75,6 +77,19 @@ export const RemunerationTable = ({
 					REMUNERATION_ALLOWED_SORT_COLUMNS.includes("employeeName"),
 			}),
 			c.accessor("contractProcessNumber", {
+				cell: ({ row }) =>
+					hasPermission(session, "org:contracts:read_all") ||
+					hasPermission(session, "org:contracts:read_assigned") ? (
+						<RelatedRecordLink
+							variant="table"
+							kind="contract"
+							id={row.original.contractId}
+						>
+							{row.original.contractProcessNumber}
+						</RelatedRecordLink>
+					) : (
+						row.original.contractProcessNumber
+					),
 				header: "Processo",
 				meta: { minColumnWidth: 180 },
 			}),
@@ -149,7 +164,15 @@ export const RemunerationTable = ({
 				},
 			}),
 		];
-	}, [canManageLifecycle, onOpenPage, onDelete, onEdit, onRestore, onView]);
+	}, [
+		session,
+		canManageLifecycle,
+		onOpenPage,
+		onDelete,
+		onEdit,
+		onRestore,
+		onView,
+	]);
 
 	return (
 		<DataTable

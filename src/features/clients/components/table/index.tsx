@@ -56,7 +56,6 @@ export const ClientTable = ({
 					<EntityIdTrigger
 						id={context.row.original.id}
 						onOpenPage={onOpenPage}
-						onView={onView}
 						label={context.getValue()}
 					/>
 				),
