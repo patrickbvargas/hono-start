@@ -64,19 +64,8 @@ export function RelatedRecordLink({
 						</EntityDetail.Root>
 					)}
 				>
-					<Suspense
-						fallback={
-							<EntityDetail.Root state={state}>
-								<EntityDetail.Content>
-									<EntityDetail.SkeletonHeader />
-									<EntityDetail.Body>
-										<EntityDetail.SkeletonFields columns={2} rows={4} />
-									</EntityDetail.Body>
-									<EntityDetail.Footer />
-								</EntityDetail.Content>
-							</EntityDetail.Root>
-						}
-					>
+					{/* Entity details own the drawer and its data-loading skeleton. */}
+					<Suspense fallback={null}>
 						<RelatedRecordDetails kind={kind} id={selectedId} state={state} />
 					</Suspense>
 				</CatchBoundary>

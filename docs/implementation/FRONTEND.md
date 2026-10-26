@@ -174,7 +174,7 @@ Advanced filter panels initialize closed and do not auto-expand in response to a
 
 Collection NavigationLink destinations carry resetFilterPanel in history state. Shared useFilterPanel collapses on each marked navigation key, including navigation within the same mounted route, and preserves manual expansion during ordinary filter edits and detail open/close. Contextual detail buttons expose aria-haspopup=dialog and aria-expanded; collection count links have descriptive accessible names.
 
-RelatedRecordLink loads its lazy detail composition and entity data only when opened. Hover and focus do not prefetch modules, entity data or attachment metadata. Normal Suspense skeletons and existing query cache behavior remain in effect.
+RelatedRecordLink loads its lazy detail composition and entity data only when opened. Hover and focus do not prefetch modules, entity data or attachment metadata. The module-loading Suspense boundary renders no provisional drawer; the entity detail owns the single drawer and its data-loading skeleton, avoiding a second entrance animation when the module resolves. Existing query cache behavior remains in effect.
 
 Overlay portals maintain explicit stacking: drawers use the existing z-50 layer, dialog portals establish z-60 and alert-dialog portals z-70 so editing and discard confirmations remain above related drawers. EntityForm uses a flex column bounded by calc(100dvh - 2rem), with a shrinkable, internally scrolling body and fixed header/footer space. Validate geometry and hit testing in a real browser at narrow and short viewports; jsdom does not calculate stacking or viewport layout.
 
