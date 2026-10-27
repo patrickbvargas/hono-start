@@ -56,7 +56,7 @@ The software core includes:
 
 ## Product Invariants
 
-- The application is multi-tenant by firm.
+- One company operates multiple Firms: operational and financial data are isolated per branch; clients, employees and lookup options are shared. See [Multitenancy](MULTITENANCY.md).
 - The software core is legal-fee and remuneration management, not general CRM.
 - Business users enter through lists and manage records in dedicated pages. Related records open in contextual drawers; create and edit remain modal forms.
 - The product must remain desktop-first with basic mobile support.

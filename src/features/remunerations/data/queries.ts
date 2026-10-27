@@ -357,7 +357,6 @@ export async function getSelectableRemunerationEmployees({
 
 	const employees = await prisma.employee.findMany({
 		where: {
-			firmId,
 			contractAssignments: {
 				some: {
 					remunerations: {

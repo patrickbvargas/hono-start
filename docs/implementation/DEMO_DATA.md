@@ -14,13 +14,21 @@ By default the reference is today's date in America/Sao_Paulo. For a fixed previ
 
 ## Dataset
 
-- Matriz, all canonical lookup catalogs, 20 clients (individual/company) and 21 collaborators (lawyers/assistants), including inactive and deleted master records.
+- Matriz (Firm 1), POA (Firm 2), all canonical lookup catalogs, 20 global clients (individual/company) and 21 collaborators (lawyers/assistants), including inactive and deleted master records.
 - Six monthly contract cohorts for each month in two complete prior years and elapsed months of the reference year, plus eleven named lifecycle/operational examples. October 2026 gives 215 contracts and 342 expenses.
 - All legal areas and revenue types; responsible, referring/referred and assistant assignments. Names, amounts, Brazilian document checksums and fictional process identifiers support realistic browsing.
 - Down payments, no down payment, partial payments, settled contracts, automatic remuneration, manual remuneration adjustments and receipts without remuneration generation.
 - Overdue, current and future plans; cancelled/inactive/deleted contracts; deleted receipt with remuneration cascade; settled contract with completion locked; multiple revenues; missing active responsible and missing active revenue examples.
 - Ten recurring expense categories with plausible seasonal and annual variation. Inactive/deleted expenses do not contribute to normal dashboard totals.
 - Immutable creation/deletion/manual-adjustment audit examples and three readable PNG example documents for each of six attachment owners. Files are explicitly illustrative and have no legal validity.
+
+## Multiple units
+
+Matriz retains the full historical dataset. POA has 17 contracts (six recent monthly examples plus eleven lifecycle/pending examples) and 12 expenses. POA reuses the same global client and employee IDs, while its contracts, assignments, revenues, receipts, remunerations and expenses belong to Firm 2. Its monetary values are 60% of the matching Matriz examples so switching units visibly changes totals. Process numbers may repeat across units, as uniqueness is per Firm.
+
+Global master creation/deletion history and their example attachments are seeded once, with Matriz as origin, and remain visible from both units under existing permissions. Each unit has its own operational audit and attachment examples, including attachment creation history. Repeating seed at the same reference date preserves these identities. A reset migrates an empty schema before generating examples, so the historical profile-copy migration does not create duplicate master audit events.
+
+Configure two Clerk Organizations with privateMetadata.firmId equal to 1 and 2, respectively, and grant the demonstration account membership in both. The seed does not create provider accounts, memberships or permissions.
 
 ## Pending work walkthrough
 

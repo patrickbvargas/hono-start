@@ -1,12 +1,12 @@
 ## Purpose
 
-Define the employee-management capability for firm-scoped employee listing, lifecycle actions, visibility rules, and authorization constraints.
+Define the employee-management capability for company-wide employee listing, lifecycle actions, visibility rules, and authorization constraints.
 ## Requirements
 
 References below to administrators or regular users describe initial role presets, not runtime role-name gates. Clerk Custom Permissions determine access: `org:employees:read`, `org:employees:create`, `org:employees:update`, `org:employees:delete`, and `org:employees:restore` independently gate their respective operations, while account administration requires `org:accounts:manage`. A user with the required grant is authorized regardless of role label; a user without it is denied. Local role/profile display or filtering data SHALL NOT grant capabilities.
 
 ### Requirement: List employees
-The system SHALL display a paginated, sortable, filterable list of employees belonging to the authenticated administrator's firm, following the shared entity-management list contract.
+The system SHALL display a paginated, sortable, filterable list of company-wide employees, with current-Firm contract counts, following the shared entity-management list contract.
 
 #### Scenario: Default desktop employees view
 - **WHEN** an administrator navigates to the employees route on a desktop-width viewport
@@ -63,7 +63,7 @@ The system SHALL display a paginated, sortable, filterable list of employees bel
 
 #### Scenario: Firm isolation
 - **WHEN** the list is loaded
-- **THEN** only employees belonging to the authenticated user's firm are returned
+- **THEN** eligible global employees are returned, with contract counts restricted to the current Firm
 
 ### Requirement: isActive field on employee record
 The system SHALL store an `isActive` boolean on every employee record, defaulting to `true`. Active status is independent of soft-delete: an employee can be inactive without being deleted, and a soft-deleted employee retains their `isActive` value upon restoration.
@@ -165,7 +165,7 @@ The system SHALL allow employee creation only with `org:employees:create` grante
 - **AND** any direct attempt to trigger the create action is rejected
 
 ### Requirement: Edit employee (Admin only)
-The system SHALL require `org:employees:update` to edit a same-firm Employee and preserve existing domain validations, list/detail UX, lifecycle state and audit behavior. Authorization role changes SHALL require `org:accounts:manage` and update Clerk membership through an authorized provider operation rather than a local UserRole foreign key.
+The system SHALL require `org:employees:update` to edit a global Employee under current Organization permissions and preserve existing domain validations, list/detail UX, lifecycle state and audit behavior. Authorization role changes SHALL require `org:accounts:manage` and update Clerk membership through an authorized provider operation rather than a local UserRole foreign key.
 
 #### Scenario: Editing business fields
 - **WHEN** an authorized actor edits an employee's business data
@@ -217,7 +217,7 @@ The system SHALL allow administrators to inspect employee details without leavin
 - **THEN** the route and server authorization boundaries SHALL reject the operation before employee detail content is returned
 
 ### Requirement: Administrators can grant initial collaborator access from employee details
-The system SHALL allow an actor with the account-management Custom Permission to initiate Clerk-backed invitation/account setup from an active, non-deleted same-firm employee's details. Access SHALL require a linked identity and membership with explicitly selected permitted grants. It SHALL NOT issue or reveal an application-generated temporary password.
+The system SHALL allow an actor with the account-management Custom Permission to initiate Clerk-backed invitation/account setup from an active, non-deleted global employee's identity through Clerk administration for the current Organization. Access SHALL require a linked identity and membership with explicitly selected permitted grants. It SHALL NOT issue or reveal an application-generated temporary password.
 
 #### Scenario: Grant initial access
 - **WHEN** an authorized actor grants access to an eligible employee
@@ -225,14 +225,14 @@ The system SHALL allow an actor with the account-management Custom Permission to
 - **AND** product access remains denied until membership and Employee mapping are valid
 
 #### Scenario: Ineligible target
-- **WHEN** the employee is inactive, deleted or belongs to another firm
+- **WHEN** the employee is inactive or deleted
 - **THEN** access provisioning is rejected before granting membership
 
 ### Requirement: Administrators can revoke collaborator access from employee details
 The system SHALL allow authorized account managers to remove access to the current firm's organization while preserving the Clerk identity and business history. Revocation SHALL deny subsequent protected requests through current membership checks without requiring webhook delivery. A firm-scoped action SHALL NOT globally ban a user with other organization memberships.
 
 #### Scenario: Revoke firm access
-- **WHEN** an authorized actor revokes a same-firm employee's access
+- **WHEN** an authorized actor revokes a global employee's linked account membership in the current Organization
 - **THEN** the employee loses current-firm membership access while unrelated memberships and audit history remain intact
 
 #### Scenario: Revoked collaborator no longer appears as access-enabled
@@ -309,19 +309,20 @@ The system SHALL require `org:employees:read` for employee routes/list/detail re
 - **AND** that contract flow does not expose the employee-management screen or employee account details
 
 ### Requirement: Multi-tenancy enforcement on employee queries
-All employee queries and mutations SHALL be strictly scoped to the authenticated user's firm.
+Employee master queries and mutations SHALL be company-wide under current Organization membership and employee action grants. Employee type, percentages and lifecycle SHALL be shared. Contract counts and financial summaries SHALL include only current-Firm operations. Shared Employee IDs SHALL NOT grant access to other-Firm operations.
 
 #### Scenario: firmId from session
 - **WHEN** any employee query or mutation is executed
 - **THEN** the `firmId` is read exclusively from the authenticated session
 - **AND** any client-supplied `firmId` is ignored
 
-#### Scenario: Cross-firm access denied
-- **WHEN** a user attempts to read or modify an employee belonging to a different firm
-- **THEN** the system returns no data (effectively not found) or rejects the mutation
+#### Scenario: Shared employee across authorized branches
+- **WHEN** a permitted user reads or modifies a global employee from another authorized branch
+- **THEN** the same Employee ID and shared business settings are used
+- **AND** other branches' operations remain unavailable in current-Firm summaries
 
 ### Requirement: Employee-management uses shared authorization boundaries
-The system SHALL use shared Clerk-backed session and permission helpers for employee reads/writes, access provisioning, credential assistance, and lifecycle actions, with explicit same-firm target checks and no local UserRole-based authority.
+The system SHALL use shared Clerk-backed session and permission helpers for employee reads/writes, access provisioning, credential assistance, and lifecycle actions, with current Organization grant checks, global master identity, Firm-scoped operations and no local UserRole-based authority.
 
 #### Scenario: Forged account-management authority
 - **WHEN** a client submits role or firm values claiming account-management access

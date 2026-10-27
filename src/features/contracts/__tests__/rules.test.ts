@@ -105,7 +105,6 @@ function createResolvedAssignment(options: {
 			),
 			fullName: "Maria Silva",
 			oabNumber: "RS123456",
-			firmId: 1,
 			typeId: 1,
 			isActive: true,
 			createdAt: new Date(),

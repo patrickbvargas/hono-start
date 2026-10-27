@@ -7,6 +7,8 @@ export interface AuditLogActor {
 }
 
 export interface CreateAuditLogInput {
+	clientId?: number;
+	employeeId?: number;
 	firmId: number;
 	actor?: AuditLogActor;
 	action: string;
@@ -181,6 +183,8 @@ export async function createAuditLog(
 	db: AuditLogDb,
 	{
 		firmId,
+		clientId,
+		employeeId,
 		actor,
 		action,
 		entityType,
@@ -194,6 +198,16 @@ export async function createAuditLog(
 ) {
 	await db.auditLog.create({
 		data: {
+			clientId:
+				clientId ??
+				(entityType === "Client" && entityId != null
+					? Number(entityId)
+					: undefined),
+			employeeId:
+				employeeId ??
+				(entityType === "Employee" && entityId != null
+					? Number(entityId)
+					: undefined),
 			firmId,
 			actorId: actor?.id ?? null,
 			actorName: actor?.name ?? "Sistema",

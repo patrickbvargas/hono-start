@@ -12,6 +12,10 @@ This documentation set is written for:
 - new developers onboarding to the project
 - maintainers validating whether code still matches intended product and repository rules
 
+## Multitenancy entrypoint
+
+Read [Multitenancy: one company, multiple branches](domain/MULTITENANCY.md) alongside DOMAIN_MODEL.md for the entity-scope matrix, shared registration versus local operations, attachment/audit ownership, Clerk Organization mapping and demo workflow. This is the authoritative scope contract; generic tenant wording elsewhere must be interpreted through this matrix.
+
 ## Contract Structure
 
 The contract is split into two layers:

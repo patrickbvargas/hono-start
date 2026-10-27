@@ -18,7 +18,7 @@ it("scopes active persisted remuneration totals to firm and employee", async () 
 		totalAmount: 1234.56,
 	});
 	expect(db.employee.findFirst).toHaveBeenCalledWith({
-		where: { firmId: 7, id: 14 },
+		where: { id: 14 },
 		select: { id: true },
 	});
 	expect(db.remuneration.aggregate).toHaveBeenCalledWith({
@@ -37,7 +37,7 @@ it("returns zero with no remunerations", async () => {
 		totalAmount: 0,
 	});
 });
-it("rejects foreign employees before reading totals", async () => {
+it("rejects nonexistent employees before reading totals", async () => {
 	db.employee.findFirst.mockResolvedValue(null);
 	await expect(getEmployeeFinance({ firmId: 7, id: 14 })).rejects.toThrow();
 	expect(db.remuneration.aggregate).not.toHaveBeenCalled();

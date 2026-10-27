@@ -84,7 +84,7 @@ The system SHALL expose the shared session contract through one explicit public 
 The system SHALL enforce verified Clerk authentication, current organization membership, required Custom Permissions and domain scope before protected operations execute. Tenant IDs, role claims and capability projections submitted by clients SHALL NOT grant authority. Queries, counts, options, details, exports, dashboard totals and attachment owner access SHALL apply consistent scopes; absence of a valid scope SHALL deny access.
 
 #### Scenario: Cross-firm resource
-- **WHEN** a permitted actor targets a record belonging to another firm
+- **WHEN** a permitted actor targets an operational record belonging to another firm
 - **THEN** access is denied even if the actor has an all-records permission in the active firm
 
 #### Scenario: Read permission does not imply other actions
@@ -123,10 +123,10 @@ The system SHALL gate restricted routes and actions using the required Clerk Cus
 - **AND** it does not deny access because a separate optional browser-session cache still holds `null`
 
 ### Requirement: Shared session helpers map authenticated identity to domain actor
-The system SHALL map verified Clerk user and active organization IDs to an existing Firm through Organization privateMetadata.firmId and an optional business Employee through User privateMetadata.employeeId. Local role lookups SHALL NOT determine grants, while employee type and assignment data SHALL remain business context for scope enforcement. A valid Employee from another Firm SHALL be omitted from the active unit session together with own/assigned grants; explicitly authorized general grants SHALL remain available.
+The system SHALL map verified Clerk user and active organization IDs to an existing Firm through Organization privateMetadata.firmId and an optional global Employee through User privateMetadata.employeeId. Employee SHALL NOT carry firmId. Current Organization membership supplies grants; the active global Employee supplies business actor ID and type. Missing Employee binding SHALL omit own/assigned grants; an invalid, inactive or deleted explicit binding SHALL deny session resolution.
 
 #### Scenario: Identity mapping fails
-- **WHEN** the active Organization lacks a valid existing Firm mapping, or an explicit Employee binding is invalid, inactive or deleted
+- **WHEN** the active Organization lacks a valid existing Firm mapping, or an explicit Employee identity anchor does not exist
 - **THEN** required session resolution denies access and returns no domain actor
 
 #### Scenario: Authenticated identity resolves to domain actor
@@ -138,10 +138,10 @@ The system SHALL map verified Clerk user and active organization IDs to an exist
 - **THEN** general capabilities remain available according to current Clerk grants
 - **AND** employee and employeeType are null and own/assigned capabilities are excluded
 
-#### Scenario: Employee belongs to another unit
-- **WHEN** an active valid Employee binding belongs to a Firm other than the selected Organization's Firm
-- **THEN** that Employee is not carried into the selected unit context
-- **AND** general capabilities remain available while own/assigned capabilities are excluded
+#### Scenario: Global employee acts in another branch
+- **WHEN** a member switches to another authorized Organization with a valid Firm mapping
+- **THEN** the same active Employee ID and type remain bound
+- **AND** operational reads and writes still enforce the selected Firm and current Organization grants
 
 ### Requirement: Protected route session enforcement happens before child route loading
 The system SHALL require authenticated session access for protected TanStack Router layout routes in `beforeLoad` so protected child routes are blocked before their loaders and render paths continue. Shared session helpers used by route gating MUST remain the canonical source for route-level session decisions.
@@ -208,7 +208,7 @@ The system SHALL resolve the authorized Firm exclusively from the currently acti
 #### Scenario: Configured Organization selects its Firm
 - **WHEN** an active Organization has valid privateMetadata.firmId
 - **THEN** the domain session uses precisely that existing Firm
-- **AND** all existing queries, mutations, exports and attachment scopes use that Firm
+- **AND** operational queries, mutations and exports use that Firm; global masters remain shared and attachment scopes follow their owners
 
 #### Scenario: Organization has no valid mapping
 - **WHEN** firmId is absent, null, a string, zero, negative, fractional or references no Firm
@@ -224,9 +224,9 @@ The system SHALL resolve the authorized Firm exclusively from the currently acti
 - **WHEN** browser input or Organization public/unsafe metadata supplies a firmId without a valid private mapping
 - **THEN** access remains denied
 
-#### Scenario: Employee binding belongs to another Firm
-- **WHEN** a User has a valid active employeeId whose Employee is outside the configured active Firm
-- **THEN** the Firm session retains only authorized general grants, with employee and employeeType null and own/assigned grants removed
+#### Scenario: Employee binding survives authorized unit switching
+- **WHEN** a User has a valid global active employeeId and switches to another authorized Organization
+- **THEN** employee ID and type remain bound while grants and operational scope come from the selected Organization
 
 #### Scenario: General account has no Employee binding
 - **WHEN** a member has valid Firm metadata and no employeeId

@@ -658,10 +658,10 @@ export async function getContractRevenueTypes(): Promise<
 }
 
 export async function getSelectableContractClients(
-	firmId: number,
+	_firmId: number,
 ): Promise<QueryManyReturnType<Option>> {
 	const clients = await prisma.client.findMany({
-		where: { firmId, deletedAt: null, isActive: true },
+		where: { deletedAt: null, isActive: true },
 		orderBy: { fullName: "asc" },
 		select: {
 			id: true,
@@ -678,10 +678,10 @@ export async function getSelectableContractClients(
 }
 
 export async function getSelectableContractEmployees(
-	firmId: number,
+	_firmId: number,
 ): Promise<QueryManyReturnType<Option>> {
 	const employees = await prisma.employee.findMany({
-		where: { firmId, deletedAt: null, isActive: true },
+		where: { deletedAt: null, isActive: true },
 		orderBy: { fullName: "asc" },
 		select: {
 			id: true,

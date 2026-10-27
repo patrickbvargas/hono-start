@@ -125,7 +125,7 @@ export async function resolveContractLookupSelections(
 
 export async function resolveContractAssignments(
 	db: PrismaClient,
-	firmId: number,
+	_firmId: number,
 	assignments: ContractAssignmentInput[],
 ): Promise<ResolvedContractAssignment[]> {
 	const employeeIds = assignments.map((assignment) =>
@@ -137,7 +137,7 @@ export async function resolveContractAssignments(
 
 	const [employees, assignmentTypes] = await Promise.all([
 		db.employee.findMany({
-			where: { firmId, id: { in: employeeIds } },
+			where: { id: { in: employeeIds } },
 			include: { type: true },
 		}),
 		getAssignmentTypesByValues(assignmentTypeValues),
@@ -323,7 +323,6 @@ export async function createContract({
 	const client = await prisma.client.findFirst({
 		where: {
 			id: clientId,
-			firmId: scope.firmId,
 			deletedAt: null,
 			isActive: true,
 		},
@@ -473,7 +472,6 @@ export async function updateContract({
 	const client = await prisma.client.findFirst({
 		where: {
 			id: clientId,
-			firmId: scope.firmId,
 			deletedAt: null,
 			isActive: true,
 		},

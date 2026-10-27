@@ -355,3 +355,38 @@ export function createExpenseSeeds(reference: Date): ExpenseSeedInput[] {
 	});
 	return result;
 }
+
+// A smaller independent operation over the same global clients and employees.
+export function createPoaSeeds(
+	contracts: ContractSeedInput[],
+	expenses: ExpenseSeedInput[],
+) {
+	const scale = (value: string) =>
+		new Prisma.Decimal(value).mul("0.6").toFixed(2);
+	return {
+		contracts: contracts.slice(-17).map((contract) => ({
+			...contract,
+			notes: `POA — ${contract.notes}`,
+			assignments: contract.assignments.map((assignment) => ({
+				...assignment,
+			})),
+			revenues: contract.revenues.map((revenue) => ({
+				...revenue,
+				totalValue: scale(revenue.totalValue),
+				downPaymentValue:
+					revenue.downPaymentValue == null
+						? null
+						: scale(revenue.downPaymentValue),
+				fees: revenue.fees.map((fee) => ({
+					...fee,
+					amount: scale(fee.amount),
+				})),
+			})),
+		})),
+		expenses: expenses.slice(-12).map((expense) => ({
+			...expense,
+			amount: scale(expense.amount),
+			notes: `POA — ${expense.notes}`,
+		})),
+	};
+}

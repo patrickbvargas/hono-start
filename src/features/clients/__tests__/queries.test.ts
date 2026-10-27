@@ -59,7 +59,7 @@ describe("client data queries", () => {
 		]);
 	});
 
-	it("builds tenant-scoped paginated list queries with aligned count and stable sorting", async () => {
+	it("builds company-wide paginated list queries with aligned count and stable sorting", async () => {
 		const result = await getClients({
 			firmId: 99,
 			search: {
@@ -75,7 +75,6 @@ describe("client data queries", () => {
 		});
 
 		const expectedWhere = {
-			firmId: 99,
 			deletedAt: null,
 			isActive: true,
 			OR: [
@@ -104,7 +103,7 @@ describe("client data queries", () => {
 				type: true,
 				_count: {
 					select: {
-						contracts: true,
+						contracts: { where: { firmId: 99 } },
 					},
 				},
 			},
@@ -151,12 +150,12 @@ describe("client data queries", () => {
 		});
 
 		expect(prismaMock.client.findFirst).toHaveBeenCalledWith({
-			where: { id: 1, firmId: 99 },
+			where: { id: 1 },
 			include: {
 				type: true,
 				_count: {
 					select: {
-						contracts: true,
+						contracts: { where: { firmId: 99 } },
 					},
 				},
 			},

@@ -19,8 +19,6 @@ model Firm {
   name              String
   auditLogs         AuditLog[]
   attachments       Attachment[]
-  clients           Client[]
-  employees         Employee[]
   contracts         Contract[]
   contractEmployees ContractEmployee[]
   revenues          Revenue[]
@@ -42,20 +40,20 @@ model ClientType {
 }
 
 model EmployeeType {
- employees Employee[]
   id        Int        @id @default(autoincrement())
   value     String     @unique
   label     String
   isActive  Boolean    @default(true)
+  employees Employee[]
 
   @@map("employee_types")
 }
 
 model UserRole {
-  id        Int        @id @default(autoincrement())
-  value     String     @unique
-  label     String
-  isActive  Boolean    @default(true)
+  id       Int     @id @default(autoincrement())
+  value    String  @unique
+  label    String
+  isActive Boolean @default(true)
 
   @@map("user_roles")
 }
@@ -91,11 +89,11 @@ model AssignmentType {
 }
 
 model RevenueType {
-  id        Int       @id @default(autoincrement())
-  value     String    @unique
-  label     String
-  isActive  Boolean   @default(true)
-  revenues  Revenue[]
+  id       Int       @id @default(autoincrement())
+  value    String    @unique
+  label    String
+  isActive Boolean   @default(true)
+  revenues Revenue[]
 
   @@map("revenue_types")
 }
@@ -121,32 +119,36 @@ model ExpenseCategory {
 }
 
 model Employee {
-  id                     Int          @id @default(autoincrement())
-  firmId                 Int
+  id              Int        @id @default(autoincrement())
+
   typeId                 Int
   fullName               String
   oabNumber              String?
-  remunerationPercentage Decimal      @db.Decimal(5, 4)
-  referralPercentage     Decimal      @db.Decimal(5, 4)
-  isActive               Boolean      @default(true)
-  createdAt              DateTime     @default(now())
-  updatedAt              DateTime     @updatedAt
+  remunerationPercentage Decimal   @db.Decimal(5, 4)
+  referralPercentage     Decimal   @db.Decimal(5, 4)
+  isActive               Boolean   @default(true)
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
   deletedAt              DateTime?
-  firm                   Firm         @relation(fields: [firmId], references: [id])
-  type                   EmployeeType @relation(fields: [typeId], references: [id])
-  auditLogs              AuditLog[]
-  attachments            Attachment[]
-  contractAssignments    ContractEmployee[]
 
-  @@unique([firmId, oabNumber])
-  @@index([firmId])
+  type                EmployeeType       @relation(fields: [typeId], references: [id])
+  auditLogs           AuditLog[]
+  attachments         Attachment[]
+  contractAssignments ContractEmployee[]
+  sharedAuditLogs AuditLog[] @relation("EmployeeAuditOwner")
+
+  @@unique([oabNumber])
   @@index([deletedAt])
   @@index([isActive])
   @@map("employees")
 }
 
 model AuditLog {
-  id          Int      @id @default(autoincrement())
+  clientId    Int?
+  employeeId  Int?
+  client      Client?   @relation(fields: [clientId], references: [id])
+  employee    Employee? @relation("EmployeeAuditOwner", fields: [employeeId], references: [id])
+  id          Int       @id @default(autoincrement())
   firmId      Int
   actorId     Int?
   actorName   String
@@ -159,36 +161,38 @@ model AuditLog {
   ipAddress   String?
   userAgent   String?
   description String
-  createdAt   DateTime @default(now())
+  createdAt   DateTime  @default(now())
   actor       Employee? @relation(fields: [actorId], references: [id])
-  firm        Firm     @relation(fields: [firmId], references: [id])
+  firm        Firm      @relation(fields: [firmId], references: [id])
 
   @@index([firmId, createdAt])
   @@index([firmId, action])
   @@index([firmId, entityType])
   @@index([actorId])
+  @@index([clientId, createdAt])
+  @@index([employeeId, createdAt])
   @@map("audit_logs")
 }
 
 model Client {
+  auditLogs AuditLog[]
   id        Int        @id @default(autoincrement())
-  firmId    Int
+
   typeId    Int
   fullName  String
   document  String
   email     String?
   phone     String?
-  isActive  Boolean    @default(true)
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   deletedAt DateTime?
-  firm      Firm       @relation(fields: [firmId], references: [id])
-  type      ClientType @relation(fields: [typeId], references: [id])
-  attachments Attachment[]
-  contracts Contract[]
 
-  @@unique([firmId, document])
-  @@index([firmId])
+  type        ClientType   @relation(fields: [typeId], references: [id])
+  attachments Attachment[]
+  contracts   Contract[]
+
+  @@unique([document])
   @@index([deletedAt])
   @@index([isActive])
   @@map("clients")
@@ -307,19 +311,19 @@ model Fee {
 }
 
 model Expense {
-  id             Int             @id @default(autoincrement())
-  firmId         Int
-  categoryId     Int
-  expenseDate    DateTime
-  amount         Decimal         @db.Decimal(14, 2)
-  notes          String?
-  isActive       Boolean         @default(true)
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
-  deletedAt      DateTime?
-  attachments    Attachment[]
-  category       ExpenseCategory @relation(fields: [categoryId], references: [id])
-  firm           Firm            @relation(fields: [firmId], references: [id])
+  id          Int             @id @default(autoincrement())
+  firmId      Int
+  categoryId  Int
+  expenseDate DateTime
+  amount      Decimal         @db.Decimal(14, 2)
+  notes       String?
+  isActive    Boolean         @default(true)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  deletedAt   DateTime?
+  attachments Attachment[]
+  category    ExpenseCategory @relation(fields: [categoryId], references: [id])
+  firm        Firm            @relation(fields: [firmId], references: [id])
 
   @@index([firmId])
   @@index([categoryId])
@@ -331,22 +335,22 @@ model Expense {
 }
 
 model Remuneration {
-  id                 Int              @id @default(autoincrement())
-  firmId             Int
-  feeId              Int
-  contractEmployeeId Int
-  effectivePercentage Decimal         @db.Decimal(5, 4)
-  amount             Decimal          @db.Decimal(14, 2)
-  paymentDate        DateTime
-  isSystemGenerated  Boolean          @default(true)
-  attachments        Attachment[]
-  isActive           Boolean          @default(true)
-  createdAt          DateTime         @default(now())
-  updatedAt          DateTime         @updatedAt
-  deletedAt          DateTime?
-  contractEmployee   ContractEmployee @relation(fields: [contractEmployeeId], references: [id])
-  fee                Fee              @relation(fields: [feeId], references: [id])
-  firm               Firm             @relation(fields: [firmId], references: [id])
+  id                  Int              @id @default(autoincrement())
+  firmId              Int
+  feeId               Int
+  contractEmployeeId  Int
+  effectivePercentage Decimal          @db.Decimal(5, 4)
+  amount              Decimal          @db.Decimal(14, 2)
+  paymentDate         DateTime
+  isSystemGenerated   Boolean          @default(true)
+  attachments         Attachment[]
+  isActive            Boolean          @default(true)
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
+  deletedAt           DateTime?
+  contractEmployee    ContractEmployee @relation(fields: [contractEmployeeId], references: [id])
+  fee                 Fee              @relation(fields: [feeId], references: [id])
+  firm                Firm             @relation(fields: [firmId], references: [id])
 
   @@index([firmId])
   @@index([feeId])
@@ -359,31 +363,31 @@ model Remuneration {
 }
 
 model Attachment {
-  id          Int            @id @default(autoincrement())
-  firmId      Int
-  clientId    Int?
-  employeeId  Int?
-  contractId  Int?
-  expenseId   Int?
-  feeId       Int?
+  id             Int            @id @default(autoincrement())
+  firmId         Int
+  clientId       Int?
+  employeeId     Int?
+  contractId     Int?
+  expenseId      Int?
+  feeId          Int?
   remunerationId Int?
-  typeId      Int
-  fileName    String
-  storagePath String         @unique
-  mimeType    String
-  fileSize    Int
-  isActive    Boolean        @default(true)
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
-  deletedAt   DateTime?
-  client      Client?        @relation(fields: [clientId], references: [id])
-  contract    Contract?      @relation(fields: [contractId], references: [id])
-  employee    Employee?      @relation(fields: [employeeId], references: [id])
-  expense     Expense?       @relation(fields: [expenseId], references: [id])
-  fee         Fee?           @relation(fields: [feeId], references: [id])
-  remuneration Remuneration? @relation(fields: [remunerationId], references: [id])
-  firm        Firm           @relation(fields: [firmId], references: [id])
-  type        AttachmentType @relation(fields: [typeId], references: [id])
+  typeId         Int
+  fileName       String
+  storagePath    String         @unique
+  mimeType       String
+  fileSize       Int
+  isActive       Boolean        @default(true)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  deletedAt      DateTime?
+  client         Client?        @relation(fields: [clientId], references: [id])
+  contract       Contract?      @relation(fields: [contractId], references: [id])
+  employee       Employee?      @relation(fields: [employeeId], references: [id])
+  expense        Expense?       @relation(fields: [expenseId], references: [id])
+  fee            Fee?           @relation(fields: [feeId], references: [id])
+  remuneration   Remuneration?  @relation(fields: [remunerationId], references: [id])
+  firm           Firm           @relation(fields: [firmId], references: [id])
+  type           AttachmentType @relation(fields: [typeId], references: [id])
 
   @@index([firmId])
   @@index([clientId])

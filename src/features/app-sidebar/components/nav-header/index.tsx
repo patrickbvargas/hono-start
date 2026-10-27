@@ -24,11 +24,7 @@ export const NavHeader = () => {
 						aria-label={name}
 						className="shrink-0 rounded-lg focus-visible:outline-ring"
 					>
-						<Avatar
-							key={imageUrl}
-							size="lg"
-							className="rounded-lg after:rounded-lg group-data-[collapsible=icon]:size-8"
-						>
+						<Avatar key={imageUrl} className="rounded-lg after:rounded-lg">
 							<AvatarImage
 								src={imageUrl}
 								alt={name}

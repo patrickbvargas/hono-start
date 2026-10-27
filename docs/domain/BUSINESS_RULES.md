@@ -4,7 +4,7 @@
 
 - Write forms enforce text length limits both in editable fields and server input schemas: names 255 characters, email 254, process number 100, notes 5,000, OAB 8, CPF/CNPJ up to 18 with mask, Brazilian phone up to 15 with mask, and attachment filenames 255. Masked documents and phones are normalized after length validation. These are application limits; PostgreSQL text columns remain unchanged. Existing records are not truncated.
 
-- Every business record belongs to its business firm; Matriz is the current default unit. Firm is independent of authentication.
+- One installation serves one company. Clients, employees and lookups are global; operational records belong to one Firm. Evidence follows its owner. See [Multitenancy](MULTITENANCY.md). The verified active Organization selects the Firm with no default-unit fallback.
 - Soft delete and active/inactive status are independent concerns.
 - Lookup-backed selections use stable lookup `value` semantics, not environment-specific IDs.
 - Financial calculations must preserve decimal precision.
@@ -32,7 +32,7 @@
 - Client type may be changed after creation.
 - Editing client type requires the submitted document to match the selected type semantics.
 - Inactive or deleted clients must not appear in contract creation options.
-- Client document uniqueness is firm-scoped.
+- Client document uniqueness is company-wide.
 - Client forms expose `isActive` as an `Ativo` checkbox.
 - Client detail behavior includes related contracts and attachments.
 - Individual clients display the primary name field as `Nome`.
@@ -102,7 +102,7 @@
 
 ## Expense Rules
 
-- Every expense belongs to exactly one firm-scoped expense category.
+- Every expense belongs to exactly one Firm and references one global expense-category lookup.
 - Expense category selection uses stable lookup values.
 - Expense amount must be positive.
 - Expense date is mandatory.
@@ -164,12 +164,12 @@
 
 | Entity | Deletion Is Blocked When |
 |---|---|
-| Client | Has active contracts |
+| Client | Has active contracts in any branch |
 | Contract | Has active revenues |
 | Revenue | Has active fees |
 | Fee | Has active remunerations |
 | Employee from contract | Has active remunerations on that contract |
-| Employee account | Has active contract assignments with active remunerations |
+| Employee business record | Has non-deleted contract assignments with non-deleted remunerations in any branch |
 
 ## Contract Status Flow
 
@@ -206,4 +206,8 @@
 
 Attachment upload selection accepts 1 to 10 files per batch, limited to the remaining owner capacity. Every file must satisfy the existing type, filename and 10 MB limits before sending. A single protected request saves all batch metadata and audit events in one transaction. If staging or persistence fails, all staged binaries are cleaned up and the complete selection remains available for retry; no partial metadata is committed.
 
-Each attachment owner record (client, employee, contract, expense, fee or remuneration) accepts at most 10 non-deleted attachments, including inactive records. The server enforces count-and-create atomically per firm and owner; deletion frees capacity. Existing records above the limit remain readable, but cannot receive additional files.
+Each attachment owner record (client, employee, contract, expense, fee or remuneration) accepts at most 10 non-deleted attachments, including inactive records. The server enforces count-and-create atomically per global client/employee owner, or per firm and operational owner; deletion frees capacity. Existing records above the limit remain readable, but cannot receive additional files.
+
+## Company-wide clients and employees
+
+See [Multitenancy](MULTITENANCY.md) for the authoritative entity-scope matrix, global lifecycle, evidence visibility and current-Firm enforcement.

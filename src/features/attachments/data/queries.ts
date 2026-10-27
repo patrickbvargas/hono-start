@@ -86,7 +86,7 @@ export async function getAttachmentRemunerationOwnerResource(
 					firmId: true,
 					deletedAt: true,
 					employeeId: true,
-					employee: { select: { firmId: true, deletedAt: true } },
+					employee: { select: { deletedAt: true } },
 					contract: { select: { firmId: true, deletedAt: true } },
 				},
 			},
@@ -97,11 +97,7 @@ export async function getAttachmentRemunerationOwnerResource(
 	}
 	const assignment = remuneration.contractEmployee;
 	if (
-		[
-			assignment.firmId,
-			assignment.employee.firmId,
-			assignment.contract.firmId,
-		].some((id) => id !== firmId)
+		[assignment.firmId, assignment.contract.firmId].some((id) => id !== firmId)
 	) {
 		return null;
 	}
@@ -133,8 +129,8 @@ export async function getAttachmentClientOwnerResource(
 	id: number,
 ): Promise<AttachmentOwnerResource | null> {
 	const client = await prisma.client.findFirst({
-		where: { id, firmId },
-		select: { id: true, firmId: true, deletedAt: true },
+		where: { id },
+		select: { id: true, deletedAt: true },
 	});
 
 	if (!client) {
@@ -144,8 +140,8 @@ export async function getAttachmentClientOwnerResource(
 	return {
 		id: client.id,
 		deletedAt: client.deletedAt,
-		firmId: client.firmId,
-		resource: { firmId: client.firmId },
+		firmId,
+		resource: { firmId },
 	};
 }
 
@@ -154,8 +150,8 @@ export async function getAttachmentEmployeeOwnerResource(
 	id: number,
 ): Promise<AttachmentEmployeeOwnerResource | null> {
 	const employee = await prisma.employee.findFirst({
-		where: { id, firmId },
-		select: { id: true, firmId: true, deletedAt: true },
+		where: { id },
+		select: { id: true, deletedAt: true },
 	});
 
 	if (!employee) {
@@ -165,8 +161,8 @@ export async function getAttachmentEmployeeOwnerResource(
 	return {
 		id: employee.id,
 		deletedAt: employee.deletedAt,
-		firmId: employee.firmId,
-		resource: { employeeId: employee.id, firmId: employee.firmId },
+		firmId,
+		resource: { employeeId: employee.id, firmId },
 	};
 }
 
@@ -249,7 +245,9 @@ export async function getAttachmentsByOwner(params: {
 	const owner = getAttachmentOwnerContext(params.input);
 	const rows = await prisma.attachment.findMany({
 		where: {
-			firmId: params.firmId,
+			...(owner.ownerKind === "client" || owner.ownerKind === "employee"
+				? {}
+				: { firmId: params.firmId }),
 			deletedAt: null,
 			...(owner.ownerKind === "client" ? { clientId: owner.ownerId } : {}),
 			...(owner.ownerKind === "employee" ? { employeeId: owner.ownerId } : {}),
@@ -275,7 +273,6 @@ export async function getAttachmentsByOwner(params: {
 	const uploadEvents = rows.length
 		? await prisma.auditLog.findMany({
 				where: {
-					firmId: params.firmId,
 					entityType: "Attachment",
 					action: "CREATE",
 					entityId: { in: rows.map((row) => String(row.id)) },
@@ -327,7 +324,7 @@ export async function getAttachmentAccessById(
 	ownerInput: AttachmentOwnerInput;
 }> | null> {
 	const attachment = await prisma.attachment.findFirst({
-		where: { id, firmId },
+		where: { id, ...getAttachmentVisibilityWhere(firmId) },
 		select: {
 			id: true,
 			fileName: true,
@@ -354,7 +351,12 @@ export async function getAttachmentAccessById(
 		storagePath: attachment.storagePath,
 		mimeType: attachment.mimeType,
 		deletedAt: attachment.deletedAt,
-		resource: { firmId: attachment.firmId },
+		resource: {
+			firmId:
+				attachment.clientId || attachment.employeeId
+					? firmId
+					: attachment.firmId,
+		},
 		ownerInput: {
 			clientId: attachment.clientId ?? undefined,
 			employeeId: attachment.employeeId ?? undefined,
@@ -442,4 +444,14 @@ export async function assertAttachmentOwnerExists(params: {
 			return { owner, access: expense };
 		}
 	}
+}
+
+export function getAttachmentVisibilityWhere(firmId: number) {
+	return {
+		OR: [
+			{ firmId },
+			{ clientId: { not: null } },
+			{ employeeId: { not: null } },
+		],
+	};
 }

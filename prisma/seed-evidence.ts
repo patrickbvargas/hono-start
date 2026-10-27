@@ -55,7 +55,7 @@ export async function seedPreviewEvidence(
 			entityType: "Client",
 			owner: "clientId",
 			rows: await prisma.client.findMany({
-				where: { firmId, document: { in: keys.clientDocuments } },
+				where: { document: { in: keys.clientDocuments } },
 				select: { id: true, fullName: true, createdAt: true, deletedAt: true },
 			}),
 		},
@@ -63,7 +63,7 @@ export async function seedPreviewEvidence(
 			entityType: "Employee",
 			owner: "employeeId",
 			rows: await prisma.employee.findMany({
-				where: { firmId, fullName: { in: keys.employeeNames } },
+				where: { fullName: { in: keys.employeeNames } },
 				select: { id: true, fullName: true, createdAt: true, deletedAt: true },
 			}),
 		},
@@ -147,6 +147,8 @@ export async function seedPreviewEvidence(
 			const base = {
 				firmId,
 				entityType: group.entityType,
+				clientId: group.entityType === "Client" ? row.id : undefined,
+				employeeId: group.entityType === "Employee" ? row.id : undefined,
 				entityId: String(row.id),
 			};
 			const createDescription = `Cadastro demonstrativo: ${group.entityType} ${row.id} — ${entityName}.`;
@@ -248,11 +250,29 @@ export async function seedPreviewEvidence(
 				fileSize: bytes.length,
 				createdAt: reference,
 			};
-			await prisma.attachment.upsert({
+			const attachment = await prisma.attachment.upsert({
 				where: { storagePath },
 				update: {},
 				create: data,
 			});
+			const description = `Anexo demonstrativo: Attachment ${attachment.id}.`;
+			if (!existingDescriptions.has(description)) {
+				events.push({
+					firmId,
+					clientId: group.owner === "clientId" ? row.id : undefined,
+					employeeId: group.owner === "employeeId" ? row.id : undefined,
+					entityType: "Attachment",
+					entityId: String(attachment.id),
+					entityName: attachment.fileName,
+					actorName: "Patrick Vargas",
+					action: "CREATE",
+					changeData: {
+						after: { fileName: attachment.fileName, [group.owner]: row.id },
+					},
+					description,
+					createdAt: reference,
+				});
+			}
 		}
 	}
 	if (events.length > 0) {

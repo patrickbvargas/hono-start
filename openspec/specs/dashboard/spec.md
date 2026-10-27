@@ -142,7 +142,7 @@ Dashboard data MUST respect firm isolation, the session role visibility model, a
 - **AND** the system may include firm-wide cash-flow aggregates derived from honorários, remunerações, and despesas
 
 #### Scenario: Administrator views filtered employee dashboard
-- **WHEN** an administrator opens the dashboard with an employee filter for an employee in the same firm
+- **WHEN** an administrator opens the dashboard with an employee filter for a global employee, with financial results limited to the active Firm
 - **THEN** the system shows summaries narrowed to that employee while keeping all data inside the administrator's firm
 - **AND** employee-sensitive cash-flow datasets remain narrowed only where the underlying data model supports that relationship
 

@@ -33,12 +33,10 @@ interface BuildEmployeeWhereParams extends EntityFilterParams<EmployeeFilter> {
 }
 
 function buildEmployeeWhere({
-	firmId,
 	filter,
 	typeIds,
 }: BuildEmployeeWhereParams): Prisma.EmployeeWhereInput {
 	return {
-		firmId,
 		...getEntityDeletedWhere(filter.status),
 		...getEntityActiveWhere(filter.active),
 		...(filter.query
@@ -64,7 +62,10 @@ function buildEmployeeWhere({
 }
 
 // Count distinct contracts across active assignments for the selected employees.
-async function getActiveContractCountByEmployeeIds(employeeIds: number[]) {
+async function getActiveContractCountByEmployeeIds(
+	firmId: number,
+	employeeIds: number[],
+) {
 	if (employeeIds.length === 0) {
 		return new Map<number, number>();
 	}
@@ -76,7 +77,7 @@ async function getActiveContractCountByEmployeeIds(employeeIds: number[]) {
 			"employeeId" AS "employeeId",
 			COUNT(DISTINCT "contractId")::int AS "total"
 		FROM "contract_employees"
-		WHERE "employeeId" IN (${Prisma.join(employeeIds)})
+		WHERE "firmId" = ${firmId} AND "employeeId" IN (${Prisma.join(employeeIds)})
 			AND "deletedAt" IS NULL
 			AND "isActive" = true
 		GROUP BY "employeeId"
@@ -130,6 +131,7 @@ export async function getEmployees({
 	]);
 
 	const contractCounts = await getActiveContractCountByEmployeeIds(
+		firmId,
 		rawData.map((employee) => employee.id),
 	);
 
@@ -157,7 +159,7 @@ export async function getEmployeeById({
 	id,
 }: EntityUniqueParams): Promise<QueryOneReturnType<EmployeeDetail>> {
 	const rawData = await prisma.employee.findFirst({
-		where: { id, firmId },
+		where: { id },
 		include: {
 			type: true,
 		},
@@ -167,7 +169,7 @@ export async function getEmployeeById({
 		throw new Error(EMPLOYEE_ERRORS.NOT_FOUND);
 	}
 
-	const contractCounts = await getActiveContractCountByEmployeeIds([
+	const contractCounts = await getActiveContractCountByEmployeeIds(firmId, [
 		rawData.id,
 	]);
 
@@ -207,7 +209,7 @@ export async function getEmployeeFinance({
 	id,
 }: EntityUniqueParams): Promise<EmployeeFinance> {
 	const employee = await prisma.employee.findFirst({
-		where: { id, firmId },
+		where: { id },
 		select: { id: true },
 	});
 	if (!employee) {

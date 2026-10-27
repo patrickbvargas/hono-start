@@ -118,7 +118,6 @@ describe("employee data queries", () => {
 		expect(prismaMock.employee.findMany).toHaveBeenCalledWith(
 			expect.objectContaining({
 				where: {
-					firmId: 1,
 					deletedAt: null,
 					isActive: true,
 					OR: [

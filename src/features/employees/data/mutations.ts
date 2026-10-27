@@ -42,7 +42,6 @@ export async function createEmployee({
 	await prisma.$transaction(async (tx) => {
 		const employee = await tx.employee.create({
 			data: {
-				firmId,
 				fullName: input.fullName,
 				typeId: type.id,
 				oabNumber: input.oabNumber || null,
@@ -152,7 +151,6 @@ export async function deleteEmployee({
 		where: {
 			deletedAt: null,
 			employeeId: id,
-			firmId,
 			remunerations: {
 				some: {
 					deletedAt: null,

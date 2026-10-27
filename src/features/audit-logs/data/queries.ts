@@ -47,7 +47,7 @@ function buildAuditLogWhere({
 		: false;
 
 	return {
-		firmId,
+		AND: [getAuditVisibilityWhere(firmId)],
 		...(filter.entityId ? { entityId: String(filter.entityId) } : {}),
 		...(filter.query
 			? {
@@ -190,7 +190,7 @@ export async function getAuditLogById({
 	const auditLog = await prisma.auditLog.findFirst({
 		where: {
 			id,
-			firmId,
+			...getAuditVisibilityWhere(firmId),
 		},
 	});
 
@@ -223,7 +223,7 @@ export async function getAuditLogActions(
 	firmId: number,
 ): Promise<QueryManyReturnType<Option>> {
 	const actions = await prisma.auditLog.findMany({
-		where: { firmId },
+		where: getAuditVisibilityWhere(firmId),
 		distinct: ["action"],
 		select: { action: true },
 		orderBy: { action: "asc" },
@@ -236,7 +236,7 @@ export async function getAuditLogEntityTypes(
 	firmId: number,
 ): Promise<QueryManyReturnType<Option>> {
 	const entityTypes = await prisma.auditLog.findMany({
-		where: { firmId },
+		where: getAuditVisibilityWhere(firmId),
 		distinct: ["entityType"],
 		select: { entityType: true },
 		orderBy: { entityType: "asc" },
@@ -252,7 +252,7 @@ export async function getAuditLogActors(
 	firmId: number,
 ): Promise<QueryManyReturnType<Option>> {
 	const actors = await prisma.auditLog.findMany({
-		where: { firmId },
+		where: getAuditVisibilityWhere(firmId),
 		distinct: ["actorName"],
 		select: { actorName: true },
 		orderBy: { actorName: "asc" },
@@ -279,8 +279,25 @@ export async function getAuditHistory({
 	entityId,
 }: AuditHistory & { firmId: number }): Promise<AuditLog[]> {
 	const rows = await prisma.auditLog.findMany({
-		where: { firmId, entityType, entityId: String(entityId) },
+		where:
+			entityType === "Client"
+				? { clientId: entityId }
+				: entityType === "Employee"
+					? { employeeId: entityId }
+					: { firmId, entityType, entityId: String(entityId) },
 		orderBy: [{ createdAt: "desc" }, { id: "asc" }],
 	});
 	return rows.map(mapAuditLog);
+}
+
+export function getAuditVisibilityWhere(
+	firmId: number,
+): Prisma.AuditLogWhereInput {
+	return {
+		OR: [
+			{ firmId },
+			{ clientId: { not: null } },
+			{ employeeId: { not: null } },
+		],
+	};
 }

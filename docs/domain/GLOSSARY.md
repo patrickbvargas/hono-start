@@ -2,13 +2,13 @@
 
 ## Domain Terms
 
-- `Employee` / `Colaborador`: a lawyer or administrative assistant inside the firm.
+- `Employee` / `Colaborador`: a company-wide lawyer or administrative assistant, independent of branch.
 - `Client` / `Cliente`: the represented person or company.
 - `Contract` / `Contrato`: the legal engagement linked to a client.
 - `Revenue` / `Receita`: a payment plan attached to a contract.
 - `Fee` / `Recebimento`: a concrete payment installment received from the client. `Honorários` remains the broader contractual financial obligation and is retained in planned/received analytics labels.
 - `Remuneration` / `Remuneracao`: the amount owed to an employee after a fee event.
-- `Firm` / `Escritorio`: the tenant boundary in the application.
+- `Firm` / `Unidade` / `Filial`: an operational isolation boundary within the same company; global registrations are shared. See [Multitenancy](MULTITENANCY.md).
 
 User-facing state terms: `Andamento` is contract lifecycle, `Situação` is active/inactive, and payment badges describe Pendente, Parcial, Quitado or Em atraso.
 
@@ -24,7 +24,9 @@ User-facing state terms: `Andamento` is contract lifecycle, `Situação` is acti
 
 - `scoped`: limited by authenticated role, tenant, and resource visibility rules rather than firm-wide by default.
 - `role-scoped`: visible or actionable according to the current user's role.
-- `firm-scoped`: visible or actionable across the current firm only, never across firms.
+- `firm-scoped`: limited to operations owned by the current Firm, plus the applicable subject/assignment/own rules.
+- `company-wide` / `global`: shared master or lookup data across all branches in this installation, still protected by authentication and action permissions.
+- `origin firm`: the upload/event branch retained on evidence; owner scope determines visibility.
 - `assignment-scoped`: visible or actionable only when the current actor is assigned to the relevant contract context.
 - `allowed contract boundaries`: the actor is in the same firm, satisfies assignment-based visibility where required, and the target contract-side resource is still writable for the attempted action.
 - `own financial visibility`: a regular user can see only remuneration and dashboard financial data tied to that user's own employee identity unless another rule explicitly expands scope.

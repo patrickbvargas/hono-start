@@ -10,7 +10,7 @@ The goal of this document is to define reusable persistence patterns that can su
 
 - Prisma is the canonical ORM in this repository.
 - Generated Prisma artifacts are not edited manually.
-- When the product is multi-tenant, tenant-scoped entities use one canonical tenant foreign key such as `firmId`, except global lookup tables and provider-owned tables.
+- When the product is multi-tenant, tenant-scoped entities use one canonical tenant foreign key such as `firmId`, except the documented global Client/Employee masters, lookup tables and provider-owned tables. Evidence retains origin firmId with owner-based visibility.
 - Primary keys are internal identifiers and must not become the application identity of lookup-backed selections.
 
 ## Identifier Strategy
@@ -106,7 +106,7 @@ Prisma schema cannot represent PostgreSQL filtered unique indexes directly. When
 ## Authentication identity links
 
 - Clerk owns identity, sessions, Organization membership, roles and permission grants remotely.
-- Firm and Employee contain only business data, with no provider identity columns. Organization privateMetadata.firmId resolves the active existing business unit; User privateMetadata.employeeId optionally resolves a business actor inside that unit for own/assigned scopes. Both links are managed only in Clerk and verified server-side.
+- Firm and Employee contain only business data, with no provider identity columns. Organization privateMetadata.firmId resolves the active existing business unit; User privateMetadata.employeeId optionally resolves a global business actor for own/assigned scopes. Both links are managed only in Clerk and verified server-side.
 - Legacy UUID, local role and forced-change fields are retained only during migration/rollback and never grant runtime authority after cutover.
 - Current membership and permission state must be verified with Clerk; domain lifecycle and assignment data remain in Prisma.
 - Generate schema changes on a disposable local DB using the documented workflow; never reset a production or unidentified existing DB.
@@ -140,14 +140,17 @@ Prisma schema cannot represent PostgreSQL filtered unique indexes directly. When
 - Product-rule enforcement stays in the service or API layer; database constraints are a safety net rather than the primary contract.
 - If a future project replaces the business domain but keeps this repository pattern, this document should remain mostly unchanged.
 
-## Offline additive migration exception
+## Offline reviewed migration exception
 
-When a disposable database is unavailable, additive external identity columns
-may be generated with `prisma migrate diff --from-schema <committed-schema>
+When the configured database must not be reset, external identity changes and the reviewed global-client/employee normalization may be generated offline with `prisma migrate diff --from-schema <committed-schema>
 --to-schema prisma/schema.prisma --script --output <migration-file>`.
 This compares datamodels without connecting to or resetting the configured DB.
 The generated migration must be reviewed and rehearsed before deployment.
 The reset-first workflow remains required for local development migrations on
 a confirmed disposable database. Never run it against the current Supabase DB.
 
-Attachment batch creation stages validated binaries before a single metadata-and-audit transaction, and serializes its count-and-create transaction with a PostgreSQL transaction-scoped advisory lock derived from firm, owner kind and owner ID. Count all non-deleted attachments for that owner and reject if the existing count plus the batch exceeds 25. Clean up all staged binaries if any upload or transaction operation fails. The lock releases at transaction end; no external network or file encoding occurs while holding it.
+Attachment batch creation stages validated binaries before a single metadata-and-audit transaction, and serializes its count-and-create transaction with a PostgreSQL transaction-scoped advisory lock derived from global owner kind/ID for Client/Employee, or Firm plus owner kind/ID for operational owners. Count all non-deleted attachments within that same owner scope and reject if the existing count plus the batch exceeds 10. Clean up all staged binaries if any upload or transaction operation fails. The lock releases at transaction end; no external network or file encoding occurs while holding it.
+
+## Company-wide clients and employees
+
+See [Multitenancy](../domain/MULTITENANCY.md) for the authoritative entity-scope matrix, global lifecycle, evidence visibility and current-Firm enforcement.

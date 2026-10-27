@@ -2,9 +2,9 @@
 
 ## Core Entities
 
-- `Firm`: tenant root for all business data.
-- `Employee`: a lawyer or administrative assistant who may also be a system user.
-- `Client`: an individual or company represented by the firm.
+- `Firm`: ownership boundary for operational business data.
+- `Employee`: a company-wide lawyer or administrative assistant who may also be a system user.
+- `Client`: a company-wide individual or business party, independent of Firm.
 - `Contract`: a legal engagement linked to one client.
 - `ContractEmployee`: assignment of an employee to a contract with a specific role.
 - `Revenue`: a payment plan attached to a contract.
@@ -35,18 +35,18 @@
 
 ### Employee
 
-- Carries professional collaborator identity and firm-scoped business data only.
+- Carries company-wide professional identity and business settings.
 - Has employee type, optional OAB number, remuneration percentage, referral percentage, active state, and soft-delete state.
 - OAB number is required for lawyers.
-- OAB number is unique per firm.
+- OAB number is unique company-wide.
 - Employee stores a professional name and business attributes only. Account email, photo and access role are read from Clerk, not copied into Employee. Account creation and invitations are managed in Clerk.
 - `referralPercentage` must not exceed `remunerationPercentage`.
 
 ### Client
 
-- Belongs to exactly one firm.
+- Is shared across the company, independent of Firm.
 - Carries a client type that may be changed later.
-- Carries a firm-scoped unique document.
+- Carries a company-wide unique document.
 - Supports optional contact fields and active or deleted lifecycle state.
 
 ### Contract
@@ -88,13 +88,13 @@
 
 ### Attachment
 
-- Belongs to one firm and exactly one owner context among client, employee, contract, expense, fee, or remuneration.
+- Has exactly one owner context among client, employee, contract, expense, fee, or remuneration. firmId records upload origin; visibility follows the owner as defined in [Multitenancy](MULTITENANCY.md).
 - Carries file name, file URL or path, attachment type, and file size.
 - Attachment deletion permanently removes both the stored file and its database record.
 
 ### AuditLog
 
-- Belongs to one firm and one acting user.
+- Records its event-origin firm and actor snapshot; actorId optionally links the acting Employee. Shared owner references are separate from the actor.
 - Records entity type, entity id, action, change payload, and immutable creation timestamp.
 - Is append-only and never soft-deleted.
 
@@ -130,7 +130,7 @@ See `docs/domain/LOOKUP_VALUES.md` for the canonical allowed values and labels.
 
 ## Relationship Summary
 
-- One `Firm` owns many employees, clients, contracts, revenues, fees, remunerations, attachments, and audit logs.
+- One `Firm` owns many contracts, revenues, fees, expenses and remunerations, and records attachment/audit origin; clients, employees and lookup options are shared.
 - One `Firm` owns many expenses.
 - One `Client` may own many contracts.
 - One `Contract` must belong to one client and may own many assignments, revenues, and attachments.
@@ -149,9 +149,9 @@ See `docs/domain/LOOKUP_VALUES.md` for the canonical allowed values and labels.
 
 ## Tenant Model
 
-- Firm is the tenant boundary.
-- Business records belong to exactly one firm.
-- A user must never see or mutate data from another firm.
+- Firm is the operational isolation boundary within one company.
+- Client, Employee and lookup options are global; operations belong to exactly one Firm. Attachments and audit follow their owner while retaining origin firmId.
+- Other-Firm operations are never exposed through a shared master. See the complete [entity-scope matrix and examples](MULTITENANCY.md).
 
 ## Conceptual Rules For Status And Visibility
 
@@ -198,4 +198,8 @@ Firm is a business unit (unidade/filial). The active Clerk Organization privateM
 
 ## Business and authentication isolation
 
-Employee has no Clerk ID, account email, avatar or access role. Users and invitations are managed in Clerk. Server-validated Clerk privateMetadata.employeeId optionally resolves an active Employee for own and assigned capabilities; missing binding never widens scope. An explicit invalid, inactive or deleted binding denies the session. General capabilities do not require an Employee link. A valid Employee from another Firm is omitted from the active unit session (employee and type null); authorized general grants remain, while own/assigned grants are excluded. Audit actors without an Employee retain their Clerk account name and email with a null employee actor ID. Firm is selected exclusively by the active Organization privateMetadata.firmId fetched server-side for the current request. Switching Organization changes the unit context and clears previous frontend data; every protected operation still enforces its current Firm scope.
+Employee has no Clerk ID, account email, avatar or access role. Users and invitations are managed in Clerk. Server-validated Clerk privateMetadata.employeeId optionally resolves an active Employee for own and assigned capabilities; missing binding never widens scope. An explicit invalid, inactive or deleted binding denies the session. General capabilities do not require an Employee link. The same valid global Employee remains bound when switching Firm; current Clerk membership grants and operational Firm scopes still apply. Audit actors without an Employee retain their Clerk account name and email with a null employee actor ID. Firm is selected exclusively by the active Organization privateMetadata.firmId fetched server-side for the current request. Switching Organization changes the unit context and clears previous frontend data; every protected operation still enforces its current Firm scope.
+
+## Company-wide clients and employees
+
+See [Multitenancy](MULTITENANCY.md) for the authoritative entity-scope matrix, global lifecycle, evidence visibility and current-Firm enforcement.

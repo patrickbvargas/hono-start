@@ -24,7 +24,10 @@ import {
 	getAttachmentOwnerContext,
 	getAttachmentOwnerInput,
 } from "../utils/owner";
-import { getAttachmentTypeByValue } from "./queries";
+import {
+	getAttachmentTypeByValue,
+	getAttachmentVisibilityWhere,
+} from "./queries";
 
 export async function createAttachment(params: {
 	actor?: AuditLogActor;
@@ -97,11 +100,13 @@ export async function createAttachments(params: {
 	try {
 		await prisma.$transaction(
 			async (tx) => {
-				const lockKey = `attachments:${params.firmId}:${owner.ownerKind}:${owner.ownerId}`;
+				const lockKey = `attachments:${owner.ownerKind === "client" || owner.ownerKind === "employee" ? "company" : params.firmId}:${owner.ownerKind}:${owner.ownerId}`;
 				await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtextextended(${lockKey}, 0))`;
 				const count = await tx.attachment.count({
 					where: {
-						firmId: params.firmId,
+						...(owner.ownerKind === "client" || owner.ownerKind === "employee"
+							? {}
+							: { firmId: params.firmId }),
 						deletedAt: null,
 						...getAttachmentOwnerInput(owner),
 					},
@@ -127,6 +132,9 @@ export async function createAttachments(params: {
 						actor: params.actor,
 						action: "CREATE",
 						entityType: "Attachment",
+						clientId: owner.ownerKind === "client" ? owner.ownerId : undefined,
+						employeeId:
+							owner.ownerKind === "employee" ? owner.ownerId : undefined,
 						entityId: attachment.id,
 						entityName: attachment.fileName,
 						changeData: {
@@ -163,10 +171,12 @@ export async function deleteAttachment(params: {
 	id: number;
 }): Promise<MutationReturnType> {
 	const attachment = await prisma.attachment.findFirst({
-		where: { id: params.id, firmId: params.firmId },
+		where: { id: params.id, ...getAttachmentVisibilityWhere(params.firmId) },
 		select: {
 			id: true,
 			fileName: true,
+			clientId: true,
+			employeeId: true,
 			firmId: true,
 			storagePath: true,
 		},
@@ -202,6 +212,8 @@ export async function deleteAttachment(params: {
 				actor: params.actor,
 				action: "DELETE",
 				entityType: "Attachment",
+				clientId: attachment.clientId ?? undefined,
+				employeeId: attachment.employeeId ?? undefined,
 				entityId: attachment.id,
 				entityName: attachment.fileName,
 				changeData: { before: attachment },

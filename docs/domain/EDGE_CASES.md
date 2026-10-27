@@ -15,7 +15,7 @@ This file preserves canonical edge-case expectations for the product domain.
 
 | Scenario | Expected Behavior |
 |---|---|
-| Two clients share the same CPF or CNPJ in one firm | The system rejects the duplicate |
+| Two clients share the same CPF or CNPJ anywhere in the company | The system rejects the duplicate |
 | Deleting a client with active contracts | The system blocks deletion with a clear explanation |
 | Changing client type after creation with a mismatched document | The system rejects the update with the type-specific CPF or CNPJ validation message |
 
@@ -64,8 +64,10 @@ This file preserves canonical edge-case expectations for the product domain.
 
 | Scenario | Expected Behavior |
 |---|---|
-| User from one firm attempts to access another firm's data | Access is denied |
-| Form tries to reference another firm's entity | That entity is not available for valid selection |
+| User in one branch attempts to access another branch's operational record | Access is denied, including through shared client/employee references |
+| Form references another branch's operational parent | The server rejects the reference |
+| Form selects a global client or employee created from another branch | Selection is permitted under existing grants and active/non-deleted rules |
+| Shared employee settings change in one branch | Every branch sees the same settings; persisted remuneration follows existing recalculation rules |
 
 ## Audit And Compliance
 
@@ -80,3 +82,7 @@ This file preserves canonical edge-case expectations for the product domain.
 - The last receipt may complete a contract; its proof can still be attached with financial read and attachment upload grants.
 - Deleted financial owners/ancestors reject new uploads without deleting retained evidence. Restoring the financial ancestry permits uploads again.
 - Financial evidence uses the same 10-file capacity and exactly-one-owner validation as other attachment contexts.
+
+## Company-wide clients and employees
+
+See [Multitenancy](MULTITENANCY.md) for the authoritative entity-scope matrix, global lifecycle, evidence visibility and current-Firm enforcement.

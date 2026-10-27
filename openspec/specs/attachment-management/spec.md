@@ -11,11 +11,11 @@ The system SHALL display attachments inside client, employee, contract, expense,
 
 #### Scenario: Client details show client attachments
 - **WHEN** a user opens an authorized client detail
-- **THEN** only that client's attachments in the current firm are listed
+- **THEN** only that global client's attachments are listed, independent of upload branch
 
 #### Scenario: Employee details show employee attachments
 - **WHEN** a user opens an authorized employee detail
-- **THEN** only that employee's attachments in the current firm are listed
+- **THEN** only that global employee's attachments are listed, independent of upload branch
 
 #### Scenario: Contract details show contract attachments
 - **WHEN** a user opens an authorized contract detail
@@ -65,7 +65,7 @@ The system SHALL display attachments inside client, employee, contract, expense,
 The system SHALL persist each attachment with exactly one owner context among client, employee, contract, expense, fee, or remuneration.
 
 #### Scenario: Valid single owner context
-- **WHEN** a user uploads an attachment with exactly one valid owner reference in the authenticated firm
+- **WHEN** a user uploads an attachment with exactly one valid global Client/Employee owner or operational owner in the authenticated Firm
 - **THEN** the system persists the attachment metadata linked to that owner
 
 #### Scenario: Missing owner context is rejected
@@ -144,20 +144,25 @@ The system SHALL enforce authenticated upload and view permissions and administr
 - **THEN** the server rejects the action before the attachment lifecycle changes
 
 #### Scenario: Administrator can delete attachment
-- **WHEN** an administrator confirms deletion for an attachment in the same firm
+- **WHEN** an administrator confirms deletion for an authorized shared-master attachment or current-Firm operational attachment
 - **THEN** the system permanently deletes both the storage object and the attachment record
 - **AND** the attachment is removed from the default attachment list
 
 ### Requirement: Attachment operations preserve tenant isolation
-The system SHALL derive attachment tenant scope from the authenticated session rather than from client-submitted authority claims.
+The system SHALL derive branch context from the authenticated session. Client/employee evidence SHALL be shared across this company under existing subject and attachment grants; operational evidence SHALL remain branch-scoped. Client-submitted authority claims SHALL NOT widen access.
 
 #### Scenario: Cross-firm owner reference is rejected
-- **WHEN** a user submits an attachment upload for a client, employee, contract, expense, fee, or remuneration outside the authenticated firm
+- **WHEN** a user submits an attachment upload using an operational owner outside the authenticated firm
 - **THEN** the system rejects the request before storage metadata is persisted
 
 #### Scenario: Cross-firm attachment list is never returned
 - **WHEN** an attachment list query is executed
-- **THEN** the system returns only attachments belonging to the authenticated user's firm
+- **THEN** the system returns attachments of the requested shared client/employee, or operational attachments belonging to the authenticated user's firm
+
+#### Scenario: Shared master evidence
+- **WHEN** a permitted branch user opens a shared client/employee from any branch
+- **THEN** listing, upload, direct download and deletion follow the same shared client/employee ownership and existing action grants
+- **AND** capacity is enforced once per global owner, independent of upload branch
 
 ### Requirement: Attachment sections preserve the current parent workflow
 The system SHALL integrate attachment actions into the existing client, employee, contract, expense, fee, and remuneration detail flows using drawers and modals rather than standalone CRUD pages.
@@ -247,7 +252,7 @@ The system SHALL accept between 1 and 10 files in one protected upload operation
 - **AND** selections beyond available capacity are visibly rejected without silent truncation
 
 ### Requirement: Maximum attachments per owner
-Each client, employee, contract, expense, fee or remuneration SHALL accept at most 10 non-deleted attachments, including inactive attachments. The server SHALL serialize capacity checking and batch creation per firm and owner so concurrent uploads cannot exceed the limit. The modal SHALL show remaining capacity and limit selection to that capacity. At capacity, Anexar SHALL be disabled. Deletion SHALL free capacity. Existing records above the limit SHALL remain readable but SHALL reject further uploads.
+Each client, employee, contract, expense, fee or remuneration SHALL accept at most 10 non-deleted attachments, including inactive attachments. The server SHALL serialize capacity checking and batch creation per global Client/Employee owner, or per Firm and operational owner, so concurrent uploads cannot exceed the limit. The modal SHALL show remaining capacity and limit selection to that capacity. At capacity, Anexar SHALL be disabled. Deletion SHALL free capacity. Existing records above the limit SHALL remain readable but SHALL reject further uploads.
 
 #### Scenario: Remaining capacity limits the batch
 - **WHEN** an owner already has 8 non-deleted attachments

@@ -671,7 +671,6 @@ describe("dashboard data queries", () => {
 		]);
 		expect(prismaMock.employee.findMany).toHaveBeenCalledWith({
 			where: {
-				firmId: 1,
 				deletedAt: null,
 				isActive: true,
 			},

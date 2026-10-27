@@ -140,7 +140,6 @@ describe("client lookup-backed writes", () => {
 		expect(prismaMock.$transaction).toHaveBeenCalledOnce();
 		expect(prismaMock.client.create).toHaveBeenCalledWith({
 			data: {
-				firmId: 1,
 				typeId: 30,
 				fullName: input.fullName,
 				document: input.document,

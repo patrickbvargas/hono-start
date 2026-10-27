@@ -29,7 +29,6 @@ import {
 import type { ClientSearch } from "../schemas/search";
 
 function buildClientWhere({
-	firmId,
 	filter,
 }: EntityFilterParams<ClientFilter>): Prisma.ClientWhereInput {
 	const searchWhere = filter.query
@@ -62,7 +61,6 @@ function buildClientWhere({
 			: {};
 
 	return {
-		firmId,
 		...getEntityDeletedWhere(filter.status),
 		...getEntityActiveWhere(filter.active),
 		...searchWhere,
@@ -98,7 +96,7 @@ export async function getClients({
 				type: true,
 				_count: {
 					select: {
-						contracts: true,
+						contracts: { where: { firmId } },
 					},
 				},
 			},
@@ -132,12 +130,12 @@ export async function getClientById({
 	id,
 }: EntityUniqueParams): Promise<QueryOneReturnType<ClientDetail>> {
 	const rawData = await prisma.client.findFirst({
-		where: { id, firmId },
+		where: { id },
 		include: {
 			type: true,
 			_count: {
 				select: {
-					contracts: true,
+					contracts: { where: { firmId } },
 				},
 			},
 		},

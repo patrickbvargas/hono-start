@@ -2,7 +2,7 @@
 
 ## Clerk authority
 
-Clerk exclusively owns authentication, Organization memberships, roles and permission grants. Firm is an independent business unit; Employee is a business entity; Clerk privateMetadata.employeeId optionally identifies an active collaborator. The active Organization privateMetadata.firmId defines the existing business unit; no valid mapping means no protected data. Missing membership denies product access. An explicit invalid or inactive/deleted employeeId binding denies the session; an absent binding or valid binding to another Firm disables own/assigned capabilities only, while current Clerk general grants remain available. A role name never bypasses a permission check.
+Clerk exclusively owns authentication, Organization memberships, roles and permission grants. Firm is an independent business unit; Employee is a business entity; Clerk privateMetadata.employeeId optionally identifies an active collaborator. The active Organization privateMetadata.firmId defines the existing business unit; no valid mapping means no protected data. Missing membership denies product access. An explicit invalid or inactive/deleted employeeId binding denies the session; an absent binding disables own/assigned capabilities only, while current Clerk general grants remain available. A role name never bypasses a permission check.
 
 Business permissions use `org:<feature>:<permission>`. See the approved catalog in `src/shared/session/schema.ts` and deployment guidance in `docs/implementation/CLERK_MIGRATION.md`. Read, create, update, delete, restore and export grants are independent. `manage` is explicit only for account administration. Provider `sys_*` permissions retain their native purpose.
 
@@ -176,3 +176,7 @@ Pendências requires contracts:read_all or contracts:read_assigned. Every record
 ## Financial attachment access
 
 Receipt and remuneration attachment operations require the corresponding `org:attachments:read`, `org:attachments:upload` or `org:attachments:delete` grant plus parent financial read access. Receipts use `org:fees:read_all` or eligible `org:fees:read_assigned`; remunerations use `org:remunerations:read_all` or `org:remunerations:read_own` against the persisted beneficiary. Upload does not require financial update permission and remains available after contract completion/cancellation. Deleted owners or financial ancestors block new uploads. Download and deletion recheck persisted subject scope. Attachment grants alone never grant financial visibility.
+
+## Company-wide clients and employees
+
+See [Multitenancy](MULTITENANCY.md) for the authoritative entity-scope matrix, global lifecycle, evidence visibility and current-Firm enforcement.

@@ -22,17 +22,17 @@ The system SHALL omit field-change summaries for CREATE audit events while retai
 - **THEN** its existing payload and presentation remain unchanged
 
 ### Requirement: List audit logs
-The system SHALL display a paginated, sortable, filterable audit-log list for administrators, following the shared entity-management list contract and preserving authenticated firm scope.
+The system SHALL display a paginated, sortable, filterable audit-log list for administrators, following the shared entity-management list contract and preserving local operational scope while including explicitly shared company registration and master-evidence events. All reads SHALL retain the current audit read grant.
 
-#### Scenario: Administrator sees firm audit logs only
+#### Scenario: Administrator sees local and shared audit logs
 - **WHEN** an administrator navigates to the audit-log route
-- **THEN** the system displays audit records belonging to the administrator's firm
+- **THEN** the system displays local audit records plus explicitly shared registration/settings/evidence events while preserving origin firm metadata
 
 #### Scenario: Query by acting user name or record name
 - **WHEN** an administrator enters a free-text query in the audit-log list
 - **THEN** the system matches audit records whose acting user name contains the query text
 - **AND** the system also matches audit records whose record name contains the query text
-- **AND** the audit list remains scoped to the authenticated administrator's firm
+- **AND** the audit list remains scoped to local operational events and shared company registration/evidence events
 
 #### Scenario: Query combines with existing categorical filters
 - **WHEN** an administrator applies action, entity-type, or actor filters together with a free-text query
@@ -52,6 +52,15 @@ The system SHALL display a paginated, sortable, filterable audit-log list for ad
 - **WHEN** an administrator opens the audit log list
 - **THEN** the page provides the same shared view toggle contract used by the other entity management routes
 - **AND** the administrator can switch between table and card list presentations without losing current list state
+
+#### Scenario: Shared event detail
+- **WHEN** a user opens a shared audit event from another branch
+- **THEN** the detail applies the same visibility rule as the list and retains origin branch metadata
+- **AND** global employee percentages and configuration are included in shared change payloads, while unrelated operational payloads remain branch scoped
+
+#### Scenario: Administrator sees firm audit logs only
+- **WHEN** an administrator navigates to the audit-log route
+- **THEN** the system displays current-Firm operational audit records plus shared company registration/settings/evidence events
 
 ### Requirement: Audit-log advanced filters indicate active non-default state
 The system SHALL render the audit-log list filter surface with the shared list-filters pattern so advanced filters remain visually discoverable, responsive, and clearly summarize non-default state.

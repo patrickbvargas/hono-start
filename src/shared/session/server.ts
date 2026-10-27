@@ -81,7 +81,6 @@ async function resolveDomainSession(): Promise<LoggedUserSession | null> {
 				},
 				select: {
 					id: true,
-					firmId: true,
 					type: { select: { id: true, value: true, label: true } },
 				},
 			})
@@ -89,7 +88,7 @@ async function resolveDomainSession(): Promise<LoggedUserSession | null> {
 	if (metadata.data.employeeId && !boundEmployee) {
 		return null;
 	}
-	const employee = boundEmployee?.firmId === firm.id ? boundEmployee : null;
+	const employee = boundEmployee;
 	const permissions = membership.permissions.flatMap((value) => {
 		const result = clerkPermissionSchema.safeParse(value);
 		return result.success &&

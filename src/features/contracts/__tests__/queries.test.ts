@@ -417,7 +417,7 @@ describe("contract data queries", () => {
 			},
 		]);
 		expect(prismaMock.client.findMany).toHaveBeenCalledWith({
-			where: { firmId: 1, deletedAt: null, isActive: true },
+			where: { deletedAt: null, isActive: true },
 			orderBy: { fullName: "asc" },
 			select: {
 				id: true,
@@ -434,7 +434,7 @@ describe("contract data queries", () => {
 			},
 		]);
 		expect(prismaMock.employee.findMany).toHaveBeenCalledWith({
-			where: { firmId: 1, deletedAt: null, isActive: true },
+			where: { deletedAt: null, isActive: true },
 			orderBy: { fullName: "asc" },
 			select: {
 				id: true,

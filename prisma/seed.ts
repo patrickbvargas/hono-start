@@ -17,6 +17,7 @@ import { createClientSeeds, createEmployeeSeeds } from "./seed-fixtures.js";
 import {
 	createContractSeeds,
 	createExpenseSeeds,
+	createPoaSeeds,
 	getSeedReferenceDate,
 } from "./seed-scenarios.js";
 
@@ -29,6 +30,7 @@ const adapter = new PrismaPg(
 
 const prisma = new PrismaClient({ adapter });
 const DEFAULT_FIRM_ID = 1;
+const POA_FIRM_ID = 2;
 
 export interface EmployeeRecord {
 	id: number;
@@ -536,6 +538,12 @@ async function main() {
 		create: { id: DEFAULT_FIRM_ID, name: "Matriz" },
 	});
 
+	await prisma.firm.upsert({
+		where: { id: POA_FIRM_ID },
+		update: { name: "POA" },
+		create: { id: POA_FIRM_ID, name: "POA" },
+	});
+
 	const employeeSeeds = createEmployeeSeeds();
 	const clientSeeds = createClientSeeds();
 	const masterCreatedAt = new Date(
@@ -559,7 +567,6 @@ async function main() {
 	for (const employee of employeeSeeds) {
 		const existingEmployee = await prisma.employee.findFirst({
 			where: {
-				firmId: DEFAULT_FIRM_ID,
 				OR: [
 					{ fullName: employee.fullName },
 					...(employee.oabNumber ? [{ oabNumber: employee.oabNumber }] : []),
@@ -571,7 +578,6 @@ async function main() {
 		});
 
 		const employeeData = {
-			firmId: DEFAULT_FIRM_ID,
 			fullName: employee.fullName,
 			typeId:
 				employee.typeValue === "LAWYER" ? lawyerType.id : assistantType.id,
@@ -602,13 +608,9 @@ async function main() {
 		clientSeeds.map((client) =>
 			prisma.client.upsert({
 				where: {
-					firmId_document: {
-						firmId: DEFAULT_FIRM_ID,
-						document: client.document,
-					},
+					document: client.document,
 				},
 				update: {
-					firmId: DEFAULT_FIRM_ID,
 					typeId:
 						client.typeValue === "INDIVIDUAL"
 							? individualType.id
@@ -621,7 +623,6 @@ async function main() {
 					createdAt: masterCreatedAt,
 				},
 				create: {
-					firmId: DEFAULT_FIRM_ID,
 					typeId:
 						client.typeValue === "INDIVIDUAL"
 							? individualType.id
@@ -648,7 +649,6 @@ async function main() {
 		expenseCategories,
 	] = await Promise.all([
 		prisma.employee.findMany({
-			where: { firmId: DEFAULT_FIRM_ID },
 			select: {
 				id: true,
 				fullName: true,
@@ -657,7 +657,6 @@ async function main() {
 			},
 		}),
 		prisma.client.findMany({
-			where: { firmId: DEFAULT_FIRM_ID },
 			select: {
 				id: true,
 				document: true,
@@ -695,12 +694,12 @@ async function main() {
 		}),
 	]);
 
-	const contractSeeds = createContractSeeds(
+	const matrizContracts = createContractSeeds(
 		clientSeeds,
 		employeeSeeds,
 		reference,
 	);
-	const expenseSeeds = createExpenseSeeds(reference);
+	const matrizExpenses = createExpenseSeeds(reference);
 	const employeeByEmail = mapByKey(
 		employeeRecords.map((employee) => ({
 			...employee,
@@ -735,71 +734,89 @@ async function main() {
 		(item) => item.value,
 	);
 
-	for (let offset = 0; offset < contractSeeds.length; offset += 6) {
-		await Promise.all(
-			contractSeeds.slice(offset, offset + 6).map((contractSeed) =>
-				prisma.$transaction(
-					async (tx) => {
-						await reconcileContractFinancialFixture({
-							tx,
-							firmId: DEFAULT_FIRM_ID,
-							contractSeed,
-							clientByDocument,
-							employeeByEmail,
-							legalAreaByValue,
-							statusByValue,
-							assignmentTypeByValue,
-							revenueTypeByValue,
-						});
-					},
-					{ timeout: 30000 },
+	const poa = createPoaSeeds(matrizContracts, matrizExpenses);
+	for (const { firmId, contracts: contractSeeds, expenses: expenseSeeds } of [
+		{
+			firmId: DEFAULT_FIRM_ID,
+			contracts: matrizContracts,
+			expenses: matrizExpenses,
+		},
+		{ firmId: POA_FIRM_ID, ...poa },
+	]) {
+		for (let offset = 0; offset < contractSeeds.length; offset += 6) {
+			await Promise.all(
+				contractSeeds.slice(offset, offset + 6).map((contractSeed) =>
+					prisma.$transaction(
+						async (tx) => {
+							await reconcileContractFinancialFixture({
+								tx,
+								firmId,
+								contractSeed,
+								clientByDocument,
+								employeeByEmail,
+								legalAreaByValue,
+								statusByValue,
+								assignmentTypeByValue,
+								revenueTypeByValue,
+							});
+						},
+						{ timeout: 30000 },
+					),
 				),
+			);
+		}
+
+		for (let offset = 0; offset < expenseSeeds.length; offset += 10) {
+			await Promise.all(
+				expenseSeeds.slice(offset, offset + 10).map(async (expenseSeed) => {
+					const category = getRequiredMapValue(
+						expenseCategoryByValue,
+						expenseSeed.categoryValue,
+						`expense category ${expenseSeed.categoryValue}`,
+					);
+
+					const data = {
+						firmId,
+						categoryId: category.id,
+						expenseDate: new Date(expenseSeed.expenseDate),
+						amount: expenseSeed.amount,
+						notes: expenseSeed.notes,
+						isActive: expenseSeed.isActive,
+						deletedAt: expenseSeed.deletedAt
+							? new Date(expenseSeed.deletedAt)
+							: null,
+						createdAt: new Date(expenseSeed.createdAt),
+					};
+					const existing = await prisma.expense.findFirst({
+						where: { firmId, notes: expenseSeed.notes },
+						select: { id: true },
+					});
+					if (existing) {
+						await prisma.expense.update({ where: { id: existing.id }, data });
+					} else {
+						await prisma.expense.create({ data });
+					}
+				}),
+			);
+		}
+		await seedPreviewEvidence(prisma, firmId, reference, {
+			clientDocuments:
+				firmId === DEFAULT_FIRM_ID
+					? clientSeeds.map((row) => row.document)
+					: [],
+			employeeNames:
+				firmId === DEFAULT_FIRM_ID
+					? employeeSeeds.map((row) => row.fullName)
+					: [],
+			processNumbers: contractSeeds.map((row) => row.processNumber),
+			expenseNotes: expenseSeeds.flatMap((row) =>
+				row.notes ? [row.notes] : [],
 			),
+		});
+		console.log(
+			`Demo unidade ${firmId}: ${contractSeeds.length} contratos, ${expenseSeeds.length} despesas. Identidades Clerk configuradas separadamente.`,
 		);
 	}
-
-	for (let offset = 0; offset < expenseSeeds.length; offset += 10) {
-		await Promise.all(
-			expenseSeeds.slice(offset, offset + 10).map(async (expenseSeed) => {
-				const category = getRequiredMapValue(
-					expenseCategoryByValue,
-					expenseSeed.categoryValue,
-					`expense category ${expenseSeed.categoryValue}`,
-				);
-
-				const data = {
-					firmId: DEFAULT_FIRM_ID,
-					categoryId: category.id,
-					expenseDate: new Date(expenseSeed.expenseDate),
-					amount: expenseSeed.amount,
-					notes: expenseSeed.notes,
-					isActive: expenseSeed.isActive,
-					deletedAt: expenseSeed.deletedAt
-						? new Date(expenseSeed.deletedAt)
-						: null,
-					createdAt: new Date(expenseSeed.createdAt),
-				};
-				const existing = await prisma.expense.findFirst({
-					where: { firmId: DEFAULT_FIRM_ID, notes: expenseSeed.notes },
-					select: { id: true },
-				});
-				if (existing) {
-					await prisma.expense.update({ where: { id: existing.id }, data });
-				} else {
-					await prisma.expense.create({ data });
-				}
-			}),
-		);
-	}
-	await seedPreviewEvidence(prisma, DEFAULT_FIRM_ID, reference, {
-		clientDocuments: clientSeeds.map((row) => row.document),
-		employeeNames: employeeSeeds.map((row) => row.fullName),
-		processNumbers: contractSeeds.map((row) => row.processNumber),
-		expenseNotes: expenseSeeds.flatMap((row) => (row.notes ? [row.notes] : [])),
-	});
-	console.log(
-		`Demo: ${contractSeeds.length} contratos, ${expenseSeeds.length} despesas. Identidades Clerk configuradas separadamente.`,
-	);
 
 	// Clerk identities are provisioned separately after an explicit migration mapping.
 }

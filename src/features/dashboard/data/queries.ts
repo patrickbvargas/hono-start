@@ -13,13 +13,12 @@ export async function getDashboardSummary(
 }
 
 export async function getDashboardEmployeeOptions({
-	firmId,
+	firmId: _firmId,
 }: {
 	firmId: number;
 }): Promise<QueryManyReturnType<Option>> {
 	const employees = await prisma.employee.findMany({
 		where: {
-			firmId,
 			deletedAt: null,
 			isActive: true,
 		},

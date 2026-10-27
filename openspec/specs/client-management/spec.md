@@ -1,10 +1,10 @@
 # client-management Specification
 
 ## Purpose
-Define the client-management contract for firm-scoped list, detail, create, update, delete, restore, lookup-option, and validation behavior within the shared entity-management workflow.
+Define the client-management contract for company-wide list, detail, create, update, delete, restore, lookup-option, and validation behavior within the shared entity-management workflow.
 ## Requirements
 ### Requirement: List clients
-The system SHALL display a paginated, sortable, filterable list of clients belonging to the authenticated user's firm, following the shared entity-management list contract.
+The system SHALL display a paginated, sortable, filterable list of company-wide clients visible under current Organization grants, following the shared entity-management list contract.
 
 #### Scenario: Default desktop list view
 - **WHEN** an authenticated user navigates to the clients route on a desktop-width viewport without a saved list-surface preference
@@ -61,7 +61,7 @@ The system SHALL display a paginated, sortable, filterable list of clients belon
 
 #### Scenario: Firm isolation
 - **WHEN** the client list is loaded
-- **THEN** only clients belonging to the authenticated user's firm are returned
+- **THEN** eligible company-wide clients are returned, with contract counts restricted to the current Firm
 
 ### Requirement: View client details
 The system SHALL allow authenticated users to inspect client details without leaving the list workflow.
@@ -108,7 +108,7 @@ The system SHALL allow authenticated users to create a client in their own firm 
 
 #### Scenario: Successful creation
 - **WHEN** an authenticated user submits a valid create form
-- **THEN** the system creates the client record scoped to the authenticated user's firm
+- **THEN** the system creates one company-wide client record without firmId
 - **AND** the submitted client type lookup value is resolved by the server before persistence
 - **AND** the stored `isActive` value reflects the form checkbox
 - **AND** the stored document and phone values do not include mask characters
@@ -116,8 +116,8 @@ The system SHALL allow authenticated users to create a client in their own firm 
 - **AND** a success toast is shown
 - **AND** the client list refreshes to include the new record
 
-#### Scenario: Duplicate document in the same firm
-- **WHEN** a user submits a client document already used by another client in the same firm
+#### Scenario: Duplicate document in the company
+- **WHEN** a user submits a client document already used by another client anywhere in the company
 - **THEN** the system rejects the submission
 - **AND** the form shows a Portuguese validation message indicating the document is already registered
 
@@ -137,7 +137,7 @@ The system SHALL allow authenticated users to update client profile fields, incl
 
 #### Scenario: Successful edit
 - **WHEN** an authenticated user submits a valid edit form
-- **THEN** the system updates the client record in the authenticated user's firm
+- **THEN** the system updates the shared client record for every branch
 - **AND** the stored document and phone values do not include mask characters
 - **AND** the modal closes
 - **AND** a success toast is shown
@@ -157,7 +157,7 @@ The system SHALL allow administrators to soft-delete and restore clients while p
 - **AND** a success toast is shown
 
 #### Scenario: Delete blocked by active contracts
-- **WHEN** an administrator attempts to delete a client that still has active contracts
+- **WHEN** an administrator attempts to delete a client that still has active contracts in any branch
 - **THEN** the system rejects the deletion
 - **AND** an explanatory Portuguese error message is shown
 
@@ -177,7 +177,7 @@ The system SHALL expose client option queries for downstream form usage using th
 #### Scenario: Client option query excludes inactive and deleted rows
 - **WHEN** a client option query is executed for another feature's form
 - **THEN** it returns only clients where `deletedAt = null` and `isActive = true`
-- **AND** only clients from the authenticated user's firm are included
+- **AND** eligible global clients are included, independent of creation branch
 
 #### Scenario: Client type option query returns lookup rows by stable value
 - **WHEN** the client form loads client type options
@@ -186,7 +186,7 @@ The system SHALL expose client option queries for downstream form usage using th
 - **AND** inactive lookup rows remain visible as disabled options
 
 ### Requirement: Client route and mutations enforce authenticated firm scope
-The system SHALL enforce client access and tenant scope from the authenticated session rather than from client-provided input.
+The system SHALL enforce current Organization membership and client action grants from the authenticated session. Client master reads and writes SHALL be company-wide without firmId; counts and financial summaries SHALL remain scoped to the current Firm. Client-supplied authority SHALL NOT grant access.
 
 #### Scenario: Authenticated users can access the client route
 - **WHEN** an authenticated user navigates to the clients route
@@ -198,7 +198,7 @@ The system SHALL enforce client access and tenant scope from the authenticated s
 
 #### Scenario: Server derives client firm scope from session
 - **WHEN** any client list query, detail query, option query, create, update, delete, or restore mutation is executed
-- **THEN** the server derives the authoritative `firmId` from the authenticated session
+- **THEN** the server verifies current membership and action grants, with global master access and current-Firm operation summaries
 - **AND** any client-supplied tenant scope is ignored
 
 ### Requirement: Client management has one authoritative feature slice

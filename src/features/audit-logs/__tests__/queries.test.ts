@@ -19,6 +19,7 @@ import {
 	getAuditLogActors,
 	getAuditLogEntityTypes,
 	getAuditLogs,
+	getAuditVisibilityWhere,
 } from "../data/queries";
 import { auditLogSearchSchema } from "../schemas/search";
 
@@ -49,7 +50,7 @@ describe("audit-log data queries", () => {
 			}),
 		});
 		const where = {
-			firmId: 4,
+			AND: [getAuditVisibilityWhere(4)],
 			entityType: { in: ["Contract"] },
 			entityId: "62",
 		};
@@ -97,7 +98,7 @@ describe("audit-log data queries", () => {
 
 		expect(prismaMock.auditLog.findMany).toHaveBeenCalledWith({
 			where: {
-				firmId: 1,
+				AND: [getAuditVisibilityWhere(1)],
 				OR: [
 					{
 						actorName: {
@@ -170,7 +171,7 @@ describe("audit-log data queries", () => {
 
 		expect(prismaMock.auditLog.findMany).toHaveBeenCalledWith({
 			where: {
-				firmId: 1,
+				AND: [getAuditVisibilityWhere(1)],
 				OR: [
 					{
 						actorName: {
@@ -228,7 +229,7 @@ describe("audit-log data queries", () => {
 			{ id: 2, value: "UPDATE", label: "UPDATE", isDisabled: false },
 		]);
 		expect(prismaMock.auditLog.findMany).toHaveBeenNthCalledWith(1, {
-			where: { firmId: 1 },
+			where: getAuditVisibilityWhere(1),
 			distinct: ["action"],
 			select: { action: true },
 			orderBy: { action: "asc" },
@@ -285,5 +286,25 @@ describe("audit-log data queries", () => {
 				description: "atualizou remuneração Remuneração 594.",
 			}),
 		]);
+	});
+	it.each(["Client", "Employee"] as const)(
+		"loads shared %s and evidence history from any origin branch",
+		async (entityType) => {
+			prismaMock.auditLog.findMany.mockResolvedValueOnce([]);
+			await getAuditHistory({ firmId: 2, entityType, entityId: 7 });
+			expect(prismaMock.auditLog.findMany).toHaveBeenLastCalledWith({
+				where: entityType === "Client" ? { clientId: 7 } : { employeeId: 7 },
+				orderBy: [{ createdAt: "desc" }, { id: "asc" }],
+			});
+		},
+	);
+	it("does not widen operational visibility when sharing master evidence", () => {
+		expect(getAuditVisibilityWhere(2)).toEqual({
+			OR: [
+				{ firmId: 2 },
+				{ clientId: { not: null } },
+				{ employeeId: { not: null } },
+			],
+		});
 	});
 });

@@ -95,7 +95,7 @@ Every detail request SHALL require current dashboard access and the applicable f
 - **AND** an absent Employee binding never grants broader access
 
 #### Scenario: Cross-firm or invalid selection
-- **WHEN** a request references another firm's client or an unsupported chart/series/group combination
+- **WHEN** a request references a client without authorized operations in the selected Firm or an unsupported chart/series/group combination
 - **THEN** it is rejected without revealing restricted record existence
 
 #### Scenario: Consolidated result restriction

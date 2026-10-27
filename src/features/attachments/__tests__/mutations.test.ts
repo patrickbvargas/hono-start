@@ -51,7 +51,8 @@ vi.mock("@/shared/lib/attachment-storage", () => ({
 	uploadAttachmentFile: uploadAttachmentFileMock,
 }));
 
-vi.mock("../data/queries", () => ({
+vi.mock("../data/queries", async (importOriginal) => ({
+	...(await importOriginal<typeof import("../data/queries")>()),
 	getAttachmentTypeByValue: getAttachmentTypeByValueMock,
 }));
 
@@ -165,7 +166,13 @@ describe("attachment data mutations", () => {
 				}),
 			).rejects.toThrow(ATTACHMENT_ERRORS.OWNER_LIMIT_REACHED);
 			expect(prismaMock.attachment.count).toHaveBeenCalledWith({
-				where: { firmId: 1, deletedAt: null, ...owner },
+				where: {
+					...("clientId" in owner || "employeeId" in owner
+						? {}
+						: { firmId: 1 }),
+					deletedAt: null,
+					...owner,
+				},
 			});
 			expect(prismaMock.$executeRaw).toHaveBeenCalledOnce();
 			expect(prismaMock.$executeRaw.mock.invocationCallOrder[0]).toBeLessThan(

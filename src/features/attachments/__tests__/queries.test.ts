@@ -66,7 +66,6 @@ describe("attachment owner access queries", () => {
 		]);
 		expect(prismaMock.auditLog.findMany).toHaveBeenCalledWith({
 			where: {
-				firmId: 100,
 				entityType: "Attachment",
 				action: "CREATE",
 				entityId: { in: ["1", "2", "3", "4"] },
@@ -264,4 +263,35 @@ describe("attachment owner access queries", () => {
 			}),
 		).rejects.toThrow(ATTACHMENT_ERRORS.OWNER_NOT_FOUND);
 	});
+	it.each([{ clientId: 14 }, { employeeId: 7 }])(
+		"shares original-owner attachments from another upload branch: %j",
+		async (owner) => {
+			prismaMock.attachment.findFirst.mockResolvedValue({
+				id: 30,
+				firmId: 1,
+				...owner,
+				clientId: "clientId" in owner ? owner.clientId : null,
+				employeeId: "employeeId" in owner ? owner.employeeId : null,
+			});
+			const access = await getAttachmentAccessById(2, 30);
+			expect(access?.resource).toEqual({ firmId: 2 });
+			expect(prismaMock.attachment.findFirst).toHaveBeenLastCalledWith(
+				expect.objectContaining({
+					where: {
+						id: 30,
+						OR: [
+							{ firmId: 2 },
+							{ clientId: { not: null } },
+							{ employeeId: { not: null } },
+						],
+					},
+				}),
+			);
+			prismaMock.attachment.findMany.mockResolvedValue([]);
+			await getAttachmentsByOwner({ firmId: 2, input: owner });
+			expect(prismaMock.attachment.findMany).toHaveBeenLastCalledWith(
+				expect.objectContaining({ where: { deletedAt: null, ...owner } }),
+			);
+		},
+	);
 });

@@ -2138,7 +2138,6 @@ export type ExpenseCategoryScalarFieldEnum = (typeof ExpenseCategoryScalarFieldE
 
 export const EmployeeScalarFieldEnum = {
   id: 'id',
-  firmId: 'firmId',
   typeId: 'typeId',
   fullName: 'fullName',
   oabNumber: 'oabNumber',
@@ -2154,6 +2153,8 @@ export type EmployeeScalarFieldEnum = (typeof EmployeeScalarFieldEnum)[keyof typ
 
 
 export const AuditLogScalarFieldEnum = {
+  clientId: 'clientId',
+  employeeId: 'employeeId',
   id: 'id',
   firmId: 'firmId',
   actorId: 'actorId',
@@ -2175,7 +2176,6 @@ export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typ
 
 export const ClientScalarFieldEnum = {
   id: 'id',
-  firmId: 'firmId',
   typeId: 'typeId',
   fullName: 'fullName',
   document: 'document',

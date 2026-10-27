@@ -26,9 +26,9 @@ This document defines reusable trust-boundary and authorization rules for the re
 
 ## Tenant Isolation
 
-- In multi-tenant products, every business query and mutation must be scoped to the authenticated tenant.
-- In multi-tenant products, related records referenced by input must also belong to the same tenant.
-- Global lookup tables are the intentional exception when the product uses them.
+- Operational queries, writes and referenced operational parents must use the authenticated current Firm.
+- Global Client, Employee and lookup records intentionally have no Firm ownership; current membership and action grants remain required.
+- Shared master IDs do not authorize another Firm's operations. Evidence visibility follows its owner, independently of origin firmId. See [Multitenancy](../domain/MULTITENANCY.md).
 - Session-derived scope utilities in `src/shared/session` are the canonical place for access-policy composition in this repository.
 
 ## Session Policy Shape
@@ -86,4 +86,8 @@ See `docs/domain/DOMAIN_MODEL.md` for ownership boundaries. Authentication resol
 
 ATTACHMENTS_DIR is a private absolute directory outside public assets and build output. Attachment binaries are delivered only through authenticated, firm- and owner-authorized requests. Paths cannot escape the root or traverse symbolic links. Restrict filesystem writers to the application account; do not expose this directory through a web server. Responses use private/no-store caching and nosniff.
 
-A valid Employee binding to another Firm is not used as an actor in the active unit: employee and employeeType are null and own/assigned grants are stripped. Only explicitly granted general capabilities remain. Invalid, inactive or deleted explicit Employee bindings still deny the session. Switching among N memberships never carries the prior unit actor or data into the new unit.
+Employee is global. The same active Employee ID and type remain bound across authorized Organizations; each membership supplies its own current grants. Missing binding removes own/assigned grants; invalid, inactive or deleted explicit bindings deny the session. Organization changes clear prior-unit caches, and operational scope is derived afresh on the server.
+
+## Company-wide clients and employees
+
+See [Multitenancy](../domain/MULTITENANCY.md) for the authoritative entity-scope matrix, global lifecycle, evidence visibility and current-Firm enforcement.

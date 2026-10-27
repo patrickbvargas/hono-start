@@ -278,12 +278,12 @@ describe("Clerk domain session", () => {
 		mocks.firm.mockResolvedValue({ id: 93, name: "Other branch" });
 		const changed = await getRequiredServerLoggedUserSession();
 		expect(changed.firm.id).toBe(93);
-		expect(changed.employee.id).toBeNull();
+		expect(changed.employee.id).toBe(7);
 		mocks.organization.mockResolvedValue({ privateMetadata: {} });
 		expect(await getOptionalServerLoggedUserSession()).toBeNull();
 		expect(mocks.organization).toHaveBeenCalledTimes(3);
 	});
-	it("switches unit and grants without carrying the previous business actor", async () => {
+	it("switches unit while preserving the global actor and current membership grants", async () => {
 		mocks.memberships.mockResolvedValue({
 			data: [
 				{
@@ -309,9 +309,14 @@ describe("Clerk domain session", () => {
 		const session = await getRequiredServerLoggedUserSession();
 		expect(session.clerk.organizationId).toBe("org_other");
 		expect(session.firm.id).toBe(93);
-		expect(session.employee.id).toBeNull();
-		expect(session.employeeType).toBeNull();
-		expect(session.permissions).toEqual(["org:clients:read"]);
+		expect(session.employee.id).toBe(7);
+		expect(session.employeeType).toMatchObject({ value: "LAWYER" });
+		expect(session.permissions).toEqual([
+			"org:clients:read",
+			"org:contracts:read_assigned",
+			"org:remunerations:read_own",
+			"org:dashboard:read_own",
+		]);
 	});
 	it("fails closed when Organization verification is unavailable", async () => {
 		mocks.organization.mockRejectedValue(new Error("unavailable"));

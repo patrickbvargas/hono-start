@@ -5,7 +5,7 @@ Define deterministic development fixtures for firm-scoped entities and multi-yea
 ## Requirements
 
 ### Requirement: Seed bootstrap includes contract financial fixtures
-The system SHALL populate deterministic contract financial fixtures for the default development firm when the Prisma seed runs.
+The system SHALL populate deterministic contract financial fixtures for Matriz (Firm 1) and a smaller POA operation (Firm 2) when the Prisma seed runs, reusing the same global Client/Employee IDs.
 
 #### Scenario: Seed creates contract financial aggregate records
 - **WHEN** `prisma db seed` runs against a reset local database
@@ -78,7 +78,7 @@ The system SHALL create seeded remuneration records according to the same docume
 - **THEN** the seeded remuneration amount equals the fee amount multiplied by that employee's remuneration percentage
 
 ### Requirement: Seed output remains deterministic and idempotent
-The system SHALL allow repeated seed execution to converge to one stable contract financial fixture dataset for the default firm.
+The system SHALL allow repeated seed execution to converge to one stable contract financial fixture dataset per seeded Firm at the same reference date, preserving global master and evidence identities.
 
 #### Scenario: Re-running seed does not duplicate seeded contracts
 - **WHEN** `prisma db seed` is run multiple times against the same database state
@@ -108,7 +108,7 @@ The system SHALL distribute seeded assignments so both administrators and regula
 - **AND** the dataset is not limited to one single assigned contract
 
 ### Requirement: Reset produces a complete preview
-The development reset command SHALL apply migrations, generate the client and run the seed exactly once, creating realistic lifecycle examples, immutable audit history and readable example attachments for all six owner types in Matriz.
+The development reset command SHALL apply migrations, generate the client and run the seed exactly once, creating realistic lifecycle examples and operational history/evidence in Matriz and POA. Shared Client/Employee history and attachments SHALL be created once and remain visible from both units under existing grants. The reset SHALL NOT provision Clerk accounts or memberships.
 
 #### Scenario: Fresh reset
 - **WHEN** db:reset completes with configured database and private attachment storage
@@ -135,3 +135,11 @@ The seed SHALL provide named overdue high-severity, upcoming medium-severity and
 - **THEN** the upcoming example has its first installment paid and its next outstanding installment due within seven days inclusive
 - **AND** overdue and settled-active examples independently demonstrate high and low severity
 - **AND** existing realized YTD receipt totals remain unchanged
+
+### Requirement: Smaller second-unit demonstration
+The seed SHALL create POA with 17 contracts and 12 expenses, derived from recent and lifecycle examples with monetary values at 60% of corresponding Matriz examples. Contracts, assignments, revenues, fees, remunerations and expenses SHALL retain matching branch ownership while clients and employees remain global.
+
+#### Scenario: Switch between seeded units
+- **WHEN** an authorized member switches between Organizations mapped to Firm 1 and Firm 2
+- **THEN** client and employee IDs remain shared while operational lists, amounts and evidence reflect the selected unit
+- **AND** repeating seed at the same reference date preserves all fixture IDs and does not duplicate audit or attachments

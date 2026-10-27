@@ -31,7 +31,6 @@ export async function createClient({
 	await prisma.$transaction(async (tx) => {
 		const client = await tx.client.create({
 			data: {
-				firmId,
 				typeId: type.id,
 				fullName: input.fullName,
 				document: input.document,
