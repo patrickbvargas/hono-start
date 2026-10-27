@@ -9,6 +9,14 @@ import {
 } from "../utils/period-shortcuts";
 
 describe("dashboard filtering", () => {
+	it("validates optional client and contract URL selections", () => {
+		expect(
+			dashboardSearchSchema.parse({ clientId: "7", contractId: "42" }),
+		).toMatchObject({ clientId: "7", contractId: "42" });
+		expect(
+			dashboardSearchSchema.parse({ clientId: "-1", contractId: "invalid" }),
+		).toMatchObject({ clientId: "", contractId: "" });
+	});
 	it("parses empty URL search with safe defaults", () => {
 		const currentYearRange = getCurrentYearDateRange();
 

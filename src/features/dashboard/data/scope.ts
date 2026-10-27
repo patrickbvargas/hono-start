@@ -27,6 +27,8 @@ export function canReadDashboardFirmResult(scope: DashboardScope): boolean {
 		scope.access?.remuneration === true &&
 		scope.access?.expense === true &&
 		!scope.search.employeeId &&
+		!scope.search.clientId &&
+		!scope.search.contractId &&
 		!scope.search.legalArea.length &&
 		!scope.search.revenueType.length
 	);
@@ -43,7 +45,7 @@ interface DashboardDimensionFilters {
 	revenueType: string[];
 }
 
-function parseOptionalEntityId(value: string): number | undefined {
+function parseOptionalEntityId(value: string | undefined): number | undefined {
 	if (!value) {
 		return undefined;
 	}
@@ -96,6 +98,12 @@ function getDashboardContractDimensionWhere(
 	const { legalArea, revenueType } = getDashboardDimensionFilters(scope.search);
 
 	return {
+		...(scope.search.clientId
+			? { clientId: Number(scope.search.clientId) }
+			: {}),
+		...(scope.search.contractId
+			? { AND: [{ id: Number(scope.search.contractId) }] }
+			: {}),
 		...(legalArea.length > 0
 			? { legalArea: { value: { in: legalArea } } }
 			: {}),
@@ -189,12 +197,20 @@ export function getDashboardRemunerationWhere(
 			: {}),
 		contractEmployee: {
 			...(employeeId ? { employeeId } : {}),
-			...(legalArea.length > 0
+			...(legalArea.length > 0 ||
+			scope.search.clientId ||
+			scope.search.contractId
 				? {
 						contract: {
-							legalArea: {
-								value: { in: legalArea },
-							},
+							...(legalArea.length > 0
+								? { legalArea: { value: { in: legalArea } } }
+								: {}),
+							...(scope.search.clientId
+								? { clientId: Number(scope.search.clientId) }
+								: {}),
+							...(scope.search.contractId
+								? { AND: [{ id: Number(scope.search.contractId) }] }
+								: {}),
 						},
 					}
 				: {}),

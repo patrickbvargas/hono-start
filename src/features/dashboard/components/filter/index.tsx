@@ -1,11 +1,8 @@
-import { ChevronDownIcon } from "lucide-react";
-import * as React from "react";
 import { ListFilters } from "@/shared/components/list-filters";
 import {
 	Button,
 	Checkbox,
-	Collapsible,
-	CollapsibleContent,
+	DateRangePicker,
 	Label,
 } from "@/shared/components/ui";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
@@ -41,7 +38,8 @@ export function DashboardFilter({
 		handlePeriodShortcut,
 		periodShortcuts,
 	} = useDashboardFilter();
-	const { employees, legalAreas, revenueTypes } = useDashboardOptions();
+	const { employees, legalAreas, revenueTypes, clients, contracts } =
+		useDashboardOptions();
 	const isMobile = useIsMobile();
 
 	const legalAreaLabels = new Map(
@@ -55,23 +53,8 @@ export function DashboardFilter({
 		return `${formatter.date(`${filter.dateFrom}T12:00:00.000Z`)} - ${formatter.date(`${filter.dateTo}T12:00:00.000Z`)}`;
 	};
 
-	const [isDesktopPanelOpen, setIsDesktopPanelOpen] =
-		React.useState(hasManualPeriod);
-
-	React.useEffect(() => {
-		if (hasManualPeriod) {
-			setIsDesktopPanelOpen(true);
-		}
-	}, [hasManualPeriod]);
-
 	const sharedFields = (
 		<>
-			<form.AppField name="dateFrom">
-				{(field) => <field.DatePicker label="Período de" />}
-			</form.AppField>
-			<form.AppField name="dateTo">
-				{(field) => <field.DatePicker label="Período até" />}
-			</form.AppField>
 			{showAllocationFilters ? (
 				<>
 					<form.AppField name="legalArea">
@@ -119,102 +102,140 @@ export function DashboardFilter({
 					</ListFilters.Popover>
 				</>
 			) : null}
-			<ListFilters.Button
-				type="button"
-				onClick={() => setIsDesktopPanelOpen((open) => !open)}
-				aria-expanded={isDesktopPanelOpen}
-				className="md:min-w-28"
-			>
-				Mais filtros
-				<ChevronDownIcon
-					size={16}
-					className={isDesktopPanelOpen ? "rotate-180" : undefined}
-				/>
-			</ListFilters.Button>
 		</ListFilters.Actions>
-	);
-
-	const desktopFilterPanel = (
-		<Collapsible open={isDesktopPanelOpen} onOpenChange={setIsDesktopPanelOpen}>
-			<CollapsibleContent>
-				<ListFilters.Panel>
-					<form.AppField name="dateFrom">
-						{(field) => <field.DatePicker label="Período de" />}
-					</form.AppField>
-					<form.AppField name="dateTo">
-						{(field) => <field.DatePicker label="Período até" />}
-					</form.AppField>
-				</ListFilters.Panel>
-			</CollapsibleContent>
-		</Collapsible>
 	);
 
 	return (
 		<form.Form form={form} className="w-full">
 			<ListFilters>
 				<ListFilters.Bar className="w-full flex-col items-stretch md:flex-row md:items-center md:justify-between">
-					<div className="flex w-full flex-col gap-3 md:flex-row md:items-center">
+					<div className="flex w-full flex-col gap-2 md:flex-row md:flex-wrap md:items-center">
 						{isAdmin ? (
 							<form.AppField name="employeeId">
 								{(field) => (
 									<field.Autocomplete
 										label="Colaborador"
 										options={employees}
-										placeholder="Selecionar colaborador..."
+										placeholder="Colaborador"
 										classNames={{
 											wrapper:
-												"w-full md:max-w-80 [&_[data-slot=field-label]]:sr-only",
+												"w-full md:w-52 md:shrink-0 xl:w-60 [&_[data-slot=field-label]]:sr-only",
 										}}
 									/>
 								)}
 							</form.AppField>
 						) : null}
-						<div className="flex items-center gap-2 justify-between">
-							<form.Subscribe
-								selector={(state) =>
-									getDashboardActivePeriodShortcut({
-										dateFrom: state.values.dateFrom,
-										dateTo: state.values.dateTo,
-									})
-								}
-							>
-								{(activeShortcut) => (
-									<div className="flex items-center gap-2">
-										{periodShortcuts.map((shortcut) => (
-											<Button
-												key={shortcut.id}
-												type="button"
-												variant={
-													activeShortcut === shortcut.id
-														? "secondary"
-														: "outline"
-												}
-												aria-pressed={activeShortcut === shortcut.id}
-												onClick={() => handlePeriodShortcut(shortcut.id)}
-											>
-												{shortcut.label}
-											</Button>
-										))}
-									</div>
-								)}
-							</form.Subscribe>
-							{isMobile ? mobileFilters : null}
-						</div>
+						{showAllocationFilters ? (
+							<>
+								<form.AppField name="clientId">
+									{(field) => (
+										<field.Autocomplete
+											aria-label="Cliente"
+											placeholder="Cliente"
+											options={clients}
+											classNames={{
+												wrapper: "w-full md:w-52 md:shrink-0 xl:w-60",
+											}}
+										/>
+									)}
+								</form.AppField>
+								<form.AppField name="contractId">
+									{(field) => (
+										<field.Autocomplete
+											aria-label="Contrato"
+											placeholder="Contrato"
+											options={contracts}
+											classNames={{
+												wrapper: "w-full md:w-52 md:shrink-0 xl:w-60",
+											}}
+										/>
+									)}
+								</form.AppField>
+							</>
+						) : null}
+						{isMobile && showAllocationFilters ? mobileFilters : null}
 						{!isMobile ? desktopFilterActions : null}
-						{showDetailsToggle && (
-							<Label className="shrink-0 md:ml-auto">
-								<Checkbox
-									checked={showDetails}
-									onCheckedChange={onShowDetailsChange}
-								/>
-								Mostrar análises detalhadas
-							</Label>
-						)}
 					</div>
 				</ListFilters.Bar>
-				{isMobile ? null : desktopFilterPanel}
+				<div className="flex flex-wrap items-center justify-between gap-2">
+					<form.Subscribe
+						selector={(state) =>
+							getDashboardActivePeriodShortcut({
+								dateFrom: state.values.dateFrom,
+								dateTo: state.values.dateTo,
+							})
+						}
+					>
+						{(activeShortcut) => (
+							<div
+								className="flex flex-wrap items-center gap-2"
+								role="group"
+								aria-label="Atalhos de período"
+							>
+								<span className="text-xs text-muted-foreground">Período</span>
+								{periodShortcuts.map((shortcut) => (
+									<Button
+										size="sm"
+										key={shortcut.id}
+										type="button"
+										variant={
+											activeShortcut === shortcut.id ? "secondary" : "ghost"
+										}
+										aria-pressed={activeShortcut === shortcut.id}
+										onClick={() => handlePeriodShortcut(shortcut.id)}
+									>
+										{shortcut.id === "last6Months"
+											? "6 meses"
+											: shortcut.id === "last12Months"
+												? "12 meses"
+												: "Este ano"}
+									</Button>
+								))}
+								<DateRangePicker
+									label="Período personalizado"
+									triggerLabel="Personalizado"
+									isActive={activeShortcut === null}
+									dateFrom={filter.dateFrom}
+									dateTo={filter.dateTo}
+									onChange={(range) =>
+										handleApplyFilter({ ...filter, ...range })
+									}
+								/>
+							</div>
+						)}
+					</form.Subscribe>
+					{showDetailsToggle && (
+						<Label className="shrink-0 md:ml-auto">
+							<Checkbox
+								checked={showDetails}
+								onCheckedChange={onShowDetailsChange}
+							/>
+							Mostrar análises detalhadas
+						</Label>
+					)}
+				</div>
 				{hasAdvancedFilters ? (
 					<ListFilters.Active>
+						{filter.clientId ? (
+							<ListFilters.Chip
+								onRemove={() => handleApplyFilter({ ...filter, clientId: "" })}
+								removeLabel="Remover filtro de cliente"
+							>
+								{clients.find((option) => option.value === filter.clientId)
+									?.label ?? filter.clientId}
+							</ListFilters.Chip>
+						) : null}
+						{filter.contractId ? (
+							<ListFilters.Chip
+								onRemove={() =>
+									handleApplyFilter({ ...filter, contractId: "" })
+								}
+								removeLabel="Remover filtro de contrato"
+							>
+								{contracts.find((option) => option.value === filter.contractId)
+									?.label ?? filter.contractId}
+							</ListFilters.Chip>
+						) : null}
 						{hasManualPeriod ? (
 							<ListFilters.Chip
 								onRemove={() =>

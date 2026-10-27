@@ -215,3 +215,5 @@ Remuneration receipt scope applies to rows, counts, monetary totals and exports,
 Receipt searches accept an optional positive clientId, combined with all existing filters and permission scopes. The active client filter is visible as a removable chip and clear-all removes it.
 
 Client contract-count navigation includes all active/inactive and deleted/non-deleted contracts so the destination matches the unfiltered related count, as employee contract-count navigation already does. Existing assignment visibility still applies.
+
+Dashboard Cliente and Contrato filters intersect with the existing firm, assignment/ownership, period and dimension scopes for revenues, receipts, remunerations and their drilldowns. Both selections combine with AND; conflicting selections return no matching records. Standalone expenses remain firm-wide and the consolidated firm result is hidden when either selection is active.

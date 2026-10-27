@@ -34,6 +34,7 @@ export function useDashboardFilter() {
 			filter.dateTo !== defaultFilter.dateTo);
 	const hasAdvancedFilters =
 		hasManualPeriod ||
+		Boolean(filter.clientId || filter.contractId) ||
 		filter.legalArea.length > 0 ||
 		filter.revenueType.length > 0;
 
@@ -97,6 +98,8 @@ export function useDashboardFilter() {
 
 		const nextFilter: DashboardFilter = {
 			...filter,
+			clientId: defaultFilter.clientId,
+			contractId: defaultFilter.contractId,
 			legalArea: defaultFilter.legalArea,
 			revenueType: defaultFilter.revenueType,
 			...(activePeriodShortcut === null

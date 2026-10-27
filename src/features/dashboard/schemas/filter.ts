@@ -17,6 +17,16 @@ export const dashboardFilterSchema = z
 	.object({
 		dateFrom: z.string().catch(defaultDateFrom).default(defaultDateFrom),
 		dateTo: z.string().catch(defaultDateTo).default(defaultDateTo),
+		clientId: z
+			.string()
+			.regex(/^(?:[1-9]\d*)?$/)
+			.optional()
+			.catch(""),
+		contractId: z
+			.string()
+			.regex(/^(?:[1-9]\d*)?$/)
+			.optional()
+			.catch(""),
 		employeeId: z.string().catch("").default(""),
 		legalArea: z.array(z.string()).catch([]).default([]),
 		revenueType: z.array(z.string()).catch([]).default([]),

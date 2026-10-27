@@ -64,7 +64,7 @@ interface ListFiltersClearProps {
 function ListFiltersRoot({ className, ...props }: ListFiltersRootProps) {
 	return (
 		<div
-			className={cn("flex w-full flex-col gap-3 [&>*:empty]:hidden", className)}
+			className={cn("flex w-full flex-col gap-1 [&>*:empty]:hidden", className)}
 			{...props}
 		/>
 	);
