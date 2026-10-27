@@ -156,7 +156,7 @@ export const RemunerationFilter = ({
 					</form.AppField>
 					{isMobile ? mobileFilters : desktopFilterActions}
 				</ListFilters.Bar>
-				<div className="flex flex-wrap items-center justify-between gap-2">
+				<div className="flex flex-wrap items-center justify-between gap-2 pt-2">
 					<FinancialPeriodShortcuts
 						dateFrom={filter.dateFrom}
 						dateTo={filter.dateTo}

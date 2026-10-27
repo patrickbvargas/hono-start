@@ -106,14 +106,16 @@ export function EntityWorkspace({
 					onValueChange={(value) => onTabChange(value)}
 					className="min-h-0 flex-1 gap-3 overflow-hidden"
 				>
-					<ScrollArea className="shrink-0 pb-1">
-						<TabsList aria-label={`Seções: ${title}`}>
-							{sections.map((section) => (
-								<TabsTrigger key={section.value} value={section.value}>
-									{section.label}
-								</TabsTrigger>
-							))}
-						</TabsList>
+					<ScrollArea className="h-9 shrink-0">
+						<div className="flex w-max">
+							<TabsList aria-label={`Seções: ${title}`}>
+								{sections.map((section) => (
+									<TabsTrigger key={section.value} value={section.value}>
+										{section.label}
+									</TabsTrigger>
+								))}
+							</TabsList>
+						</div>
 					</ScrollArea>
 					{sections.map((section) => (
 						<TabsContent

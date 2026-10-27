@@ -157,7 +157,7 @@ export function DashboardFilter({
 						{!isMobile ? desktopFilterActions : null}
 					</div>
 				</ListFilters.Bar>
-				<div className="flex flex-wrap items-center justify-between gap-2">
+				<div className="flex flex-wrap items-center justify-between gap-2 pt-2">
 					<form.Subscribe
 						selector={(state) =>
 							getDashboardActivePeriodShortcut({

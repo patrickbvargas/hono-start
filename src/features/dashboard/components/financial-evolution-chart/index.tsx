@@ -67,7 +67,7 @@ export function FinancialEvolutionChart({
 	});
 
 	return (
-		<Card className="min-w-0 h-81 min-h-81 col-span-full">
+		<Card className="min-w-0 h-80 min-h-80 col-span-full">
 			<CardHeader>
 				<CardTitle className="flex items-center gap-2">
 					Resultado mensal

@@ -125,7 +125,7 @@ export const ExpenseFilter = ({ summary }: ExpenseFilterProps) => {
 						</ListFilters.Actions>
 					)}
 				</ListFilters.Bar>
-				<div className="flex flex-wrap items-center justify-between gap-2">
+				<div className="flex flex-wrap items-center justify-between gap-2 pt-2">
 					<FinancialPeriodShortcuts
 						dateFrom={filter.dateFrom}
 						dateTo={filter.dateTo}
