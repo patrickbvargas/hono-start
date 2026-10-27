@@ -164,7 +164,13 @@ describe("AttachmentSection", () => {
 		);
 		expect(
 			container.querySelector('[data-slot="scroll-area"]')?.className,
-		).toContain("flex-1");
+		).toContain("flex-auto");
+		expect(screen.getByRole("region", { name: "Anexos" }).className).toContain(
+			"max-h-full",
+		);
+		expect(
+			screen.getByRole("region", { name: "Anexos" }).className,
+		).not.toContain("h-full min-h-40");
 		expect(screen.getByRole("listitem")).not.toBeNull();
 	});
 

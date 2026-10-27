@@ -76,7 +76,7 @@ function ExpenseFormFields({ form, state, title }: ExpenseFormFieldsProps) {
 
 	return (
 		<EntityForm state={state} title={title} footer={<form.Submit />}>
-			<FormSection>
+			<FormSection variant="plain">
 				<FieldGroup className="grid gap-4 sm:grid-cols-2">
 					<form.AppField name="category">
 						{(field) => (
@@ -112,8 +112,6 @@ function ExpenseFormFields({ form, state, title }: ExpenseFormFieldsProps) {
 						)}
 					</form.AppField>
 				</FieldGroup>
-			</FormSection>
-			<FormSection title="Opções">
 				<FieldGroup>
 					<form.AppField name="isActive">
 						{(field) => <field.Checkbox label="Ativo" />}
@@ -134,15 +132,13 @@ function ExpenseFormSkeleton({
 			title={title}
 			footer={<Skeleton className="h-8 w-16 rounded-lg" />}
 		>
-			<FormSection>
+			<FormSection variant="plain">
 				<FieldGroup className="grid gap-4 sm:grid-cols-2">
 					<FormFieldSkeleton labelWidth="w-18" className="sm:col-span-2" />
 					<FormFieldSkeleton labelWidth="w-12" />
 					<FormFieldSkeleton labelWidth="w-10" />
 					<FormTextAreaSkeleton labelWidth="w-22" className="sm:col-span-2" />
 				</FieldGroup>
-			</FormSection>
-			<FormSection title="Opções">
 				<FieldGroup>
 					<FormCheckboxSkeleton labelWidth="w-10" />
 				</FieldGroup>

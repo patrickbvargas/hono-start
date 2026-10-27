@@ -41,19 +41,10 @@ function RelatedContractAlertsContent(props: RelatedContractAlertsProps) {
 		return null;
 	}
 	return (
-		<section className="relative flex min-h-40 flex-1 flex-col [&>[data-slot=form-section]]:min-h-0 [&>[data-slot=form-section]]:flex-1 [&>[data-slot=form-section]>div:first-child]:shrink-0">
-			<NavigationLink
-				className="absolute right-0 top-1.5 -translate-y-1/2 items-center text-sm leading-none [&>svg]:static"
-				to="/pendencias"
-				search={collectionSearch}
-				state={{ resetFilterPanel: true }}
-				aria-label={`Ver todos os alertas dos contratos deste ${props.kind === "client" ? "cliente" : "colaborador"}`}
-			>
-				Ver todos os alertas
-			</NavigationLink>
+		<section className="flex min-h-0 flex-initial flex-col [&>[data-slot=form-section]]:min-h-0 [&>[data-slot=form-section]]:flex-auto [&>[data-slot=form-section]>div:first-child]:shrink-0 [&>[data-slot=form-section]>div:first-child]:items-center">
 			<FormSection
 				title="Alertas"
-				className="min-h-0 flex-1 gap-3 overflow-hidden"
+				className="min-h-0 flex-auto gap-3 overflow-hidden"
 			>
 				{isPending ? (
 					<div
@@ -79,7 +70,7 @@ function RelatedContractAlertsContent(props: RelatedContractAlertsProps) {
 					</p>
 				) : (
 					<>
-						<ScrollArea className="min-h-0 flex-1">
+						<ScrollArea className="min-h-0 flex-auto">
 							<ul
 								className="space-y-3"
 								aria-label="Alertas dos contratos vinculados"
@@ -130,6 +121,16 @@ function RelatedContractAlertsContent(props: RelatedContractAlertsProps) {
 						)}
 					</>
 				)}
+				<div className="mt-3 shrink-0 text-sm">
+					<NavigationLink
+						to="/pendencias"
+						search={collectionSearch}
+						state={{ resetFilterPanel: true }}
+						aria-label={`Ver todos os alertas dos contratos deste ${props.kind === "client" ? "cliente" : "colaborador"}`}
+					>
+						Ver todos os alertas
+					</NavigationLink>
+				</div>
 			</FormSection>
 		</section>
 	);

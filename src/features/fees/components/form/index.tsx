@@ -129,7 +129,7 @@ function FeeFormFields({
 
 	return (
 		<EntityForm state={state} title={title} footer={<form.Submit />}>
-			<FormSection>
+			<FormSection variant="plain">
 				<FieldGroup className="grid gap-4 sm:grid-cols-2">
 					<form.AppField
 						name="contractId"
@@ -197,12 +197,12 @@ function FeeFormFields({
 						)}
 					</form.AppField>
 				</FieldGroup>
-			</FormSection>
-			<FormSection title="Opções">
 				<FieldGroup className="grid gap-4 sm:grid-cols-2">
 					<form.AppField name="generatesRemuneration">
 						{(field) => <field.Checkbox label="Gerar remunerações" />}
 					</form.AppField>
+				</FieldGroup>
+				<FieldGroup>
 					<form.AppField name="isActive">
 						{(field) => <field.Checkbox label="Ativo" />}
 					</form.AppField>
@@ -222,7 +222,7 @@ function FeeFormSkeleton({
 			title={title}
 			footer={<Skeleton className="h-8 w-16 rounded-lg" />}
 		>
-			<FormSection>
+			<FormSection variant="plain">
 				<FieldGroup className="grid gap-4 sm:grid-cols-2">
 					<FormFieldSkeleton labelWidth="w-16" className="sm:col-span-2" />
 					<FormFieldSkeleton labelWidth="w-14" />
@@ -230,10 +230,10 @@ function FeeFormSkeleton({
 					<FormFieldSkeleton labelWidth="w-14" />
 					<FormFieldSkeleton labelWidth="w-10" />
 				</FieldGroup>
-			</FormSection>
-			<FormSection title="Opções">
 				<FieldGroup className="grid gap-4 sm:grid-cols-2">
 					<FormCheckboxSkeleton labelWidth="w-32" />
+				</FieldGroup>
+				<FieldGroup>
 					<FormCheckboxSkeleton labelWidth="w-10" />
 				</FieldGroup>
 			</FormSection>

@@ -63,12 +63,20 @@ export function ExpenseOverview({
 		return (
 			<div className="space-y-6">
 				<FormSection title="Dados da despesa">
-					<EntityDetail.Fields columns={2} items={generalInfo} />
-				</FormSection>
-				<FormSection title="Observações">
-					<p className="whitespace-pre-wrap text-sm">
-						{expense.notes?.trim() || "—"}
-					</p>
+					<EntityDetail.Fields
+						columns={2}
+						items={[
+							...generalInfo,
+							{
+								term: "Observações",
+								definition: expense.notes?.trim() || "—",
+								classNames: {
+									item: "col-span-2",
+									definition: "whitespace-pre-wrap",
+								},
+							},
+						]}
+					/>
 				</FormSection>
 			</div>
 		);

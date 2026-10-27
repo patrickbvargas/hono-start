@@ -50,13 +50,23 @@ export const AttachmentSection = ({
 			aria-labelledby={headingId}
 			className={cn(
 				"flex min-w-0 flex-col gap-2",
-				layout === "expanded" && "h-full min-h-40",
+				layout === "expanded" &&
+					"max-h-full min-h-0 gap-4 rounded-xl border bg-card p-4 text-card-foreground",
 				className,
 			)}
 		>
-			<div className="flex min-h-8 shrink-0 items-center justify-between gap-3">
+			<div className="flex shrink-0 items-start justify-between gap-3">
 				<div className="flex items-center gap-2">
-					<SectionTitle id={headingId}>Anexos</SectionTitle>
+					<SectionTitle
+						id={headingId}
+						className={
+							layout === "expanded"
+								? "text-sm normal-case tracking-normal text-foreground leading-none"
+								: undefined
+						}
+					>
+						Anexos
+					</SectionTitle>
 					{!isPending && !error ? (
 						<span className="text-xs tabular-nums text-muted-foreground">
 							{attachments.length}
@@ -112,7 +122,7 @@ export const AttachmentSection = ({
 				<ScrollArea
 					className={
 						layout === "expanded"
-							? "min-h-0 flex-1"
+							? "min-h-0 flex-auto"
 							: "max-h-56 [&>[data-slot=scroll-area-viewport]]:max-h-56"
 					}
 				>

@@ -73,10 +73,8 @@ function EntityAuditHistoryContent({
 	}, []);
 	if (isPending) {
 		return (
-			<div aria-label="Carregando histórico" className="space-y-3">
-				{[1, 2, 3, 4].map((row) => (
-					<Skeleton key={row} className="h-10 w-full" />
-				))}
+			<div aria-label="Carregando histórico">
+				<Skeleton className="h-20 w-full" />
 			</div>
 		);
 	}
@@ -109,7 +107,7 @@ function EntityAuditHistoryContent({
 					/>
 				)}
 				emptyMessage="Nenhuma alteração registrada para este registro."
-				className="max-h-[32rem]"
+				className="max-h-[32rem] rounded-none border-0"
 				pageSize={25}
 			/>
 			{details.render((id, state) => (

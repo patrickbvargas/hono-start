@@ -124,7 +124,7 @@ function ContractFormContent({
 	return (
 		<form.Form form={form}>
 			<EntityForm state={state} title={title} footer={<form.Submit />}>
-				<FormSection>
+				<FormSection variant="plain" title="Dados do contrato">
 					<FieldGroup>
 						<form.AppField name="clientId">
 							{(field) => (
@@ -187,12 +187,8 @@ function ContractFormContent({
 							)}
 						</form.AppField>
 					</FieldGroup>
-				</FormSection>
-				<FormSection title="Opções">
+
 					<FieldGroup className="grid gap-4 sm:grid-cols-2">
-						<form.AppField name="isActive">
-							{(field) => <field.Checkbox label="Ativo" />}
-						</form.AppField>
 						{isAdmin ? (
 							<form.AppField name="allowStatusChange">
 								{(field) => (
@@ -201,10 +197,16 @@ function ContractFormContent({
 							</form.AppField>
 						) : null}
 					</FieldGroup>
+					<FieldGroup>
+						<form.AppField name="isActive">
+							{(field) => <field.Checkbox label="Ativo" />}
+						</form.AppField>
+					</FieldGroup>
 				</FormSection>
 				<form.AppField name="assignments" mode="array">
 					{(subField) => (
 						<FormSection
+							variant="plain"
 							title="Equipe"
 							action={
 								<ButtonNew
@@ -276,6 +278,7 @@ function ContractFormContent({
 				<form.AppField name="revenues" mode="array">
 					{(subField) => (
 						<FormSection
+							variant="plain"
 							title="Receitas"
 							action={
 								<ButtonNew
@@ -412,7 +415,7 @@ function ContractFormSkeleton({
 			title={title}
 			footer={<Skeleton className="h-8 w-16 rounded-lg" />}
 		>
-			<FormSection>
+			<FormSection variant="plain" title="Dados do contrato">
 				<FieldGroup>
 					<FormFieldSkeleton labelWidth="w-14" />
 				</FieldGroup>
@@ -425,14 +428,16 @@ function ContractFormSkeleton({
 				<FieldGroup>
 					<FormTextAreaSkeleton labelWidth="w-22" />
 				</FieldGroup>
-			</FormSection>
-			<FormSection title="Opções">
+
 				<FieldGroup className="grid gap-4 sm:grid-cols-2">
-					<FormCheckboxSkeleton labelWidth="w-10" />
 					<FormCheckboxSkeleton labelWidth="w-34" />
+				</FieldGroup>
+				<FieldGroup>
+					<FormCheckboxSkeleton labelWidth="w-10" />
 				</FieldGroup>
 			</FormSection>
 			<FormSection
+				variant="plain"
 				title="Equipe"
 				action={<Skeleton className="h-7 w-40 rounded-md" />}
 			>
@@ -447,6 +452,7 @@ function ContractFormSkeleton({
 				</div>
 			</FormSection>
 			<FormSection
+				variant="plain"
 				title="Receitas"
 				action={<Skeleton className="h-7 w-36 rounded-md" />}
 			>

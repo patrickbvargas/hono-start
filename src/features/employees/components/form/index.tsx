@@ -89,7 +89,7 @@ function EmployeeFormContent({
 	return (
 		<form.Form form={form}>
 			<EntityForm state={state} title={title} footer={<form.Submit />}>
-				<FormSection>
+				<FormSection variant="plain" title="Dados profissionais">
 					<FieldGroup>
 						<form.AppField name="fullName">
 							{(field) => (
@@ -136,8 +136,13 @@ function EmployeeFormContent({
 							}
 						</form.Subscribe>
 					</FieldGroup>
+					<FieldGroup>
+						<form.AppField name="isActive">
+							{(field) => <field.Checkbox label="Ativo" />}
+						</form.AppField>
+					</FieldGroup>
 				</FormSection>
-				<FormSection title="Financeiro">
+				<FormSection variant="plain" title="Financeiro">
 					<FieldGroup className="grid gap-4 sm:grid-cols-2">
 						<form.AppField name="remunerationPercent">
 							{(field) => (
@@ -165,13 +170,6 @@ function EmployeeFormContent({
 						</form.AppField>
 					</FieldGroup>
 				</FormSection>
-				<FormSection title="Opções">
-					<FieldGroup>
-						<form.AppField name="isActive">
-							{(field) => <field.Checkbox label="Ativo" />}
-						</form.AppField>
-					</FieldGroup>
-				</FormSection>
 			</EntityForm>
 		</form.Form>
 	);
@@ -187,7 +185,7 @@ function EmployeeFormSkeleton({
 			title={title}
 			footer={<Skeleton className="h-8 w-16 rounded-lg" />}
 		>
-			<FormSection>
+			<FormSection variant="plain" title="Dados profissionais">
 				<FieldGroup>
 					<FormFieldSkeleton labelWidth="w-12" />
 				</FieldGroup>
@@ -195,16 +193,14 @@ function EmployeeFormSkeleton({
 					<FormFieldSkeleton labelWidth="w-14" />
 					<FormFieldSkeleton labelWidth="w-12" />
 				</FieldGroup>
+				<FieldGroup>
+					<FormCheckboxSkeleton labelWidth="w-10" />
+				</FieldGroup>
 			</FormSection>
-			<FormSection title="Financeiro">
+			<FormSection variant="plain" title="Financeiro">
 				<FieldGroup className="grid gap-4 sm:grid-cols-2">
 					<FormFieldSkeleton labelWidth="w-26" />
 					<FormFieldSkeleton labelWidth="w-18" />
-				</FieldGroup>
-			</FormSection>
-			<FormSection title="Opções">
-				<FieldGroup>
-					<FormCheckboxSkeleton labelWidth="w-10" />
 				</FieldGroup>
 			</FormSection>
 		</EntityForm>

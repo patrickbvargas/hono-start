@@ -9,6 +9,7 @@ import {
 	AlertDialogFooter,
 	AlertDialogHeader,
 	AlertDialogTitle,
+	Button,
 	Dialog,
 	DialogBody,
 	DialogContent,
@@ -27,6 +28,7 @@ interface EntityFormProps
 	title: string;
 	state: OverlayState;
 	footer?: React.ReactNode;
+	footerStart?: React.ReactNode;
 	children: React.ReactNode;
 	contentClassName?: string;
 	bodyClassName?: string;
@@ -70,6 +72,7 @@ const EntityFormContent = ({
 	title,
 	state,
 	footer,
+	footerStart,
 	children,
 	contentClassName,
 	bodyClassName,
@@ -87,6 +90,16 @@ const EntityFormContent = ({
 	validating?: boolean;
 }) => {
 	const [confirmDiscard, setConfirmDiscard] = React.useState(false);
+	const requestClose = () => {
+		if (submitting) {
+			return;
+		}
+		if (dirty) {
+			setConfirmDiscard(true);
+			return;
+		}
+		state.onOpenChange(false);
+	};
 	const contentRef = useFormValidationFocus({
 		attempts,
 		valid,
@@ -100,11 +113,8 @@ const EntityFormContent = ({
 				{...props}
 				open={state.isOpen}
 				onOpenChange={(open) => {
-					if (!open && submitting) {
-						return;
-					}
-					if (!open && dirty) {
-						setConfirmDiscard(true);
+					if (!open) {
+						requestClose();
 						return;
 					}
 					state.onOpenChange(open);
@@ -113,16 +123,19 @@ const EntityFormContent = ({
 				<DialogContent
 					ref={contentRef}
 					className={cn(
-						"flex max-h-[calc(100dvh-2rem)] flex-col sm:max-w-lg",
+						"flex max-h-[calc(100dvh-2rem)] flex-col gap-0 overflow-hidden p-0 shadow-xl sm:max-w-2xl",
 						contentClassName,
 					)}
 				>
-					<DialogHeader className="shrink-0 pr-8">
+					<DialogHeader className="shrink-0 gap-1.5 border-b bg-muted/30 px-5 py-4 pr-12">
 						<DialogTitle>{title}</DialogTitle>
 					</DialogHeader>
-					<ScrollArea className="min-h-0 flex-1 max-h-[80dvh] -mx-4 [&>[data-slot=scroll-area-viewport]]:max-h-[80dvh]">
+					<ScrollArea className="min-h-0 max-h-[calc(100dvh-13rem)] flex-1 [&>[data-slot=scroll-area-viewport]]:max-h-[calc(100dvh-13rem)]">
 						<DialogBody
-							className={cn("flex flex-col gap-5 px-4 py-2", bodyClassName)}
+							className={cn(
+								"flex flex-col gap-3 p-4 sm:p-5 [&>[data-slot=form-section]~[data-slot=form-section]]:border-t [&>[data-slot=form-section]~[data-slot=form-section]]:pt-3",
+								bodyClassName,
+							)}
 						>
 							{attempts > 0 && !valid ? (
 								<p
@@ -135,7 +148,24 @@ const EntityFormContent = ({
 							{children}
 						</DialogBody>
 					</ScrollArea>
-					{footer && <DialogFooter className="shrink-0">{footer}</DialogFooter>}
+					{footer && (
+						<DialogFooter className="m-0 shrink-0 flex-col rounded-none px-5 py-3 sm:flex-row sm:items-center">
+							{footerStart && (
+								<div className="min-w-0 sm:mr-auto">{footerStart}</div>
+							)}
+							<div className="flex items-center justify-end gap-2">
+								<Button
+									type="button"
+									variant="outline"
+									disabled={submitting}
+									onClick={requestClose}
+								>
+									Cancelar
+								</Button>
+								{footer}
+							</div>
+						</DialogFooter>
+					)}
 				</DialogContent>
 			</Dialog>
 			<AlertDialog open={confirmDiscard} onOpenChange={setConfirmDiscard}>

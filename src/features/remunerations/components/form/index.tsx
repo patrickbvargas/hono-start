@@ -71,7 +71,7 @@ function RemunerationFormContent({
 						independentes: alterar um não recalcula o outro.
 					</p>
 				</div>
-				<FormSection>
+				<FormSection variant="plain">
 					<FieldGroup className="grid gap-4 sm:grid-cols-2">
 						<form.AppField name="amount">
 							{(field) => (
@@ -122,7 +122,7 @@ function RemunerationFormSkeleton({
 				<Skeleton className="h-4 w-full" />
 				<Skeleton className="h-8 w-full" />
 			</div>
-			<FormSection>
+			<FormSection variant="plain">
 				<FieldGroup className="grid gap-4 sm:grid-cols-2">
 					<FormFieldSkeleton labelWidth="w-10" />
 					<FormFieldSkeleton labelWidth="w-28" />

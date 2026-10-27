@@ -19,20 +19,26 @@ describe("business form UI contract", () => {
 		);
 		expect(source).toContain("<EntityForm");
 		expect(source).toContain("<FormSection");
+		expect(source).not.toMatch(/<FormSection(?!\s+variant="plain")/);
 		expect(source).toContain("<form.Submit");
 		expect(source).not.toContain("showDebug");
 		expect(source).not.toMatch(/grid (?:items-end )?gap-[35]/);
 		expect(source).not.toMatch(/label="% /);
 		expect(source).not.toContain('label="Observação"');
 	});
-	it.each(["clients", "employees", "contracts", "fees", "expenses"])(
-		"groups %s lifecycle fields consistently",
+
+	it.each(["clients", "employees", "expenses", "fees", "contracts"])(
+		"keeps the %s lifecycle option in the form flow",
 		(feature) => {
 			const source = readFileSync(
 				`src/features/${feature}/components/form/index.tsx`,
 				"utf8",
 			);
-			expect(source.match(/<FormSection title="Opções">/g)).toHaveLength(2);
+			expect(source).not.toContain('<FormSection title="Opções">');
+			expect(source).not.toContain("footerStart=");
+			expect(source).toMatch(
+				/<FormSection[^>]*>[\s\S]*?<form.AppField name="isActive">[\s\S]*?<\/FormSection>/,
+			);
 			expect(source).toContain('label="Ativo"');
 		},
 	);

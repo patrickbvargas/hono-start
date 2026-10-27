@@ -47,7 +47,7 @@ export const AttachmentForm = ({
 					</form.Submit>
 				}
 			>
-				<FormSection>
+				<FormSection variant="plain">
 					<p role="status" className="text-sm text-muted-foreground">
 						{isLoadingAttachments
 							? "Carregando limite de anexos..."

@@ -8,6 +8,16 @@ import { Button } from "../ui";
 afterEach(cleanup);
 
 describe("shared form presentation", () => {
+	it("allows an upload surface to own its border without a nested card", () => {
+		const { container } = render(
+			<FormSection variant="plain">
+				<span>Arquivos</span>
+			</FormSection>,
+		);
+		const section = container.querySelector('[data-slot="form-section"]');
+		expect(section?.className).not.toContain("border");
+		expect(section?.textContent).toBe("Arquivos");
+	});
 	it("keeps a section action beside the heading and fields in the shared spacing", () => {
 		const { container } = render(
 			<FormSection
