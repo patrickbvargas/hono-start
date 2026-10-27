@@ -48,7 +48,8 @@ export function PendingWorkSummary({
 	return (
 		<section
 			aria-label="Resumo das pendências filtradas"
-			className="grid shrink-0 grid-cols-2 gap-3 md:grid-cols-4 2xl:grid-cols-5"
+			hidden
+			className="shrink-0 grid-cols-2 gap-3 md:grid-cols-4 2xl:grid-cols-5"
 		>
 			{metrics.map((metric) => (
 				<Card key={metric.label} className="relative gap-2">
