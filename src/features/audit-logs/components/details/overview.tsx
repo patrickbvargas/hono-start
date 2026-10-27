@@ -4,6 +4,7 @@ import {
 	EntityDetail,
 } from "@/shared/components/entity-detail";
 import { FormSection } from "@/shared/components/form-section";
+import { ScrollArea } from "@/shared/components/ui";
 import { SensitiveValue } from "@/shared/components/value-visibility";
 import type { EntityId } from "@/shared/schemas/entity";
 import { AUDIT_ACTION_LABELS } from "../../constants/display";
@@ -89,9 +90,11 @@ export const AuditLogOverview = ({
 			<FormSection title="Dados técnicos">
 				<EntityDetail.Fields columns={2} items={summaryInfo.slice(7, 9)} />
 				{changePresentation.rawJson ? (
-					<pre className="overflow-x-auto rounded-md border bg-muted/30 p-3 text-xs text-foreground">
-						<SensitiveValue>{changePresentation.rawJson}</SensitiveValue>
-					</pre>
+					<ScrollArea className="min-w-0 rounded-md border bg-muted/30">
+						<pre className="w-max min-w-full p-3 pb-5 text-xs text-foreground">
+							<SensitiveValue>{changePresentation.rawJson}</SensitiveValue>
+						</pre>
+					</ScrollArea>
 				) : (
 					<p className="text-sm text-muted-foreground">
 						Nenhum payload técnico disponível.
@@ -114,9 +117,11 @@ export const AuditLogOverview = ({
 				<>
 					<EntityDetail.Separator />
 					<EntityDetail.Section title="Payload técnico">
-						<pre className="overflow-x-auto rounded-md border bg-muted/30 p-3 text-xs text-foreground">
-							<SensitiveValue>{changePresentation.rawJson}</SensitiveValue>
-						</pre>
+						<ScrollArea className="min-w-0 rounded-md border bg-muted/30">
+							<pre className="w-max min-w-full p-3 pb-5 text-xs text-foreground">
+								<SensitiveValue>{changePresentation.rawJson}</SensitiveValue>
+							</pre>
+						</ScrollArea>
 					</EntityDetail.Section>
 				</>
 			) : null}

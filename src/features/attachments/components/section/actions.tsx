@@ -21,7 +21,7 @@ export function AttachmentActions({
 		<>
 			<Item disabled={!canDownload} onClick={onDownload}>
 				<DownloadIcon size={16} />
-				Baixar arquivo
+				Baixar
 			</Item>
 			{canDelete && (
 				<Item variant="destructive" onClick={onDelete}>

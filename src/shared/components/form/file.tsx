@@ -1,6 +1,11 @@
 import { UploadIcon, XIcon } from "lucide-react";
 import { useRef, useState } from "react";
-import { Button, FieldWrapper, Spinner } from "@/shared/components/ui";
+import {
+	Button,
+	FieldWrapper,
+	ScrollArea,
+	Spinner,
+} from "@/shared/components/ui";
 import { useFieldContext } from "@/shared/hooks/use-app-form";
 import { cn } from "@/shared/lib/utils";
 import type { FieldCommonProps } from "@/shared/types/field";
@@ -213,39 +218,41 @@ export const FormFile = ({
 						{selectedFiles.length}
 						{maxFiles ? ` de ${maxFiles}` : ""} arquivos selecionados
 					</p>
-					<ul className="max-h-48 divide-y overflow-y-auto">
-						{selectedFiles.map((file, index) => (
-							<li
-								key={`${file.name}-${file.size}-${file.lastModified}`}
-								className="flex items-center gap-3 py-2"
-							>
-								<div className="min-w-0 flex-1">
-									<p className="wrap-anywhere text-sm">{file.name}</p>
-									<p className="text-xs text-muted-foreground">
-										{formatSelectedFileSize(file.size)}
-									</p>
-								</div>
-								<Button
-									type="button"
-									size="icon-sm"
-									variant="ghost"
-									aria-label={`Remover ${file.name}`}
-									disabled={isDisabled || isLoading}
-									onClick={() => {
-										field.handleChange(
-											selectedFiles.filter(
-												(_, itemIndex) => itemIndex !== index,
-											),
-										);
-										field.handleBlur();
-										setSelectionError(null);
-									}}
+					<ScrollArea className="max-h-48 [&>[data-slot=scroll-area-viewport]]:max-h-48">
+						<ul className="divide-y">
+							{selectedFiles.map((file, index) => (
+								<li
+									key={`${file.name}-${file.size}-${file.lastModified}`}
+									className="flex items-center gap-3 py-2"
 								>
-									<XIcon size={16} />
-								</Button>
-							</li>
-						))}
-					</ul>
+									<div className="min-w-0 flex-1">
+										<p className="wrap-anywhere text-sm">{file.name}</p>
+										<p className="text-xs text-muted-foreground">
+											{formatSelectedFileSize(file.size)}
+										</p>
+									</div>
+									<Button
+										type="button"
+										size="icon-sm"
+										variant="ghost"
+										aria-label={`Remover ${file.name}`}
+										disabled={isDisabled || isLoading}
+										onClick={() => {
+											field.handleChange(
+												selectedFiles.filter(
+													(_, itemIndex) => itemIndex !== index,
+												),
+											);
+											field.handleBlur();
+											setSelectionError(null);
+										}}
+									>
+										<XIcon size={16} />
+									</Button>
+								</li>
+							))}
+						</ul>
+					</ScrollArea>
 				</div>
 			) : null}
 		</FieldWrapper>

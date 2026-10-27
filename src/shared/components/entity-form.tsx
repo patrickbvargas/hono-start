@@ -15,6 +15,7 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
+	ScrollArea,
 } from "@/shared/components/ui";
 import { formContext } from "@/shared/hooks/use-app-form";
 import { useFormValidationFocus } from "@/shared/hooks/use-form-validation-focus";
@@ -119,22 +120,21 @@ const EntityFormContent = ({
 					<DialogHeader className="shrink-0 pr-8">
 						<DialogTitle>{title}</DialogTitle>
 					</DialogHeader>
-					<DialogBody
-						className={cn(
-							"flex min-h-0 flex-1 flex-col gap-5 -mx-4 no-scrollbar max-h-[80dvh] overflow-y-auto px-4 py-2",
-							bodyClassName,
-						)}
-					>
-						{attempts > 0 && !valid ? (
-							<p
-								role="alert"
-								className="rounded-lg border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive"
-							>
-								Revise os campos indicados antes de salvar.
-							</p>
-						) : null}
-						{children}
-					</DialogBody>
+					<ScrollArea className="min-h-0 flex-1 max-h-[80dvh] -mx-4 [&>[data-slot=scroll-area-viewport]]:max-h-[80dvh]">
+						<DialogBody
+							className={cn("flex flex-col gap-5 px-4 py-2", bodyClassName)}
+						>
+							{attempts > 0 && !valid ? (
+								<p
+									role="alert"
+									className="rounded-lg border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive"
+								>
+									Revise os campos indicados antes de salvar.
+								</p>
+							) : null}
+							{children}
+						</DialogBody>
+					</ScrollArea>
 					{footer && <DialogFooter className="shrink-0">{footer}</DialogFooter>}
 				</DialogContent>
 			</Dialog>

@@ -23,6 +23,16 @@ function Example({ close }: { close: () => void }) {
 }
 
 describe("form discard protection", () => {
+	it("keeps form fields inside the shared scroll viewport and the header outside", () => {
+		render(<Example close={vi.fn()} />);
+		const input = screen.getByRole("textbox", { name: "Nome" });
+		expect(input.closest('[data-slot="scroll-area-viewport"]')).toBeTruthy();
+		expect(
+			screen
+				.getByRole("heading", { name: "Novo registro" })
+				.closest('[data-slot="scroll-area"]'),
+		).toBeNull();
+	});
 	it("closes untouched forms immediately", () => {
 		const close = vi.fn();
 		render(<Example close={close} />);

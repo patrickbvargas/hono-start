@@ -52,6 +52,8 @@ It is meant to survive domain changes as long as the project keeps the same UI a
 
 ## Table And List Rules
 
+- Application-owned scrolling regions use the shared ScrollArea, including form bodies, mobile filter bodies, sidebar content, settings, loading placeholders and technical payloads. Keep height constraints on the root and viewport for content-sized regions and retain fixed headers/footers outside the viewport. Vendor-owned select, combobox, command and menu scrolling remains integrated with those primitives' keyboard navigation and positioning.
+
 - Lists are server-driven.
 - Filtering, sorting, and pagination are URL-driven.
 - Empty, loading, and error states must be explicit.
@@ -265,4 +267,4 @@ RelatedRecordLink accepts primaryAction="summary" or primaryAction="page" for pe
 
 Dashboard drilldown rows and pending-work tables expose Abrir página and Ver resumo through equivalent shared context menus and visible overflow buttons. Generic Drilldown forwards an optional row-context renderer with the actual local row object after sorting/pagination. RelatedRecordActions composes existing EntityActions with related-record navigation and read grants; it does not own an overlay. Dashboard and pending-work parents retain summary overlays outside transient menus. Pending-work menus navigate to the issue finance/team tab with validated pendingReturnTo; existing primary row clicks retain finance navigation, and mobile cards expose equivalent overflow actions.
 
-Attachment items expose shared context and overflow menus containing Baixar arquivo and authorized Excluir, using one local action renderer. The direct download shortcut remains. Missing download URLs disable download in every surface; deletion retains the existing confirmation. Attachment item focus supports Shift+F10/ContextMenu and Escape restores focus. Overflow remains available to read-only users for download.
+Attachment items expose shared context and overflow menus containing Baixar and authorized Excluir, using one local action renderer. The direct download shortcut remains. Missing download URLs disable download in every surface; deletion retains the existing confirmation. Attachment item focus supports Shift+F10/ContextMenu and Escape restores focus. Overflow remains available to read-only users for download.

@@ -53,7 +53,9 @@ vi.mock("@/shared/components/ui", () => ({
 	}: ComponentProps<"button"> & { variant?: string }) => (
 		<button {...props}>{children}</button>
 	),
-	Skeleton: () => <div />,
+	Skeleton: (props: ComponentProps<"div">) => (
+		<div data-slot="skeleton" {...props} />
+	),
 	ScrollArea: ({ children }: { children: ReactNode }) => <div>{children}</div>,
 	Table: ({ children }: { children: ReactNode }) => <table>{children}</table>,
 	TableHeader: ({ children }: { children: ReactNode }) => (
@@ -220,6 +222,12 @@ describe("standalone drilldown", () => {
 			</QueryClientProvider>
 		);
 		const rendered = render(view("old"));
+		const loading = screen.getByRole("status", { name: "Carregando detalhes" });
+		expect(loading.querySelectorAll('[data-slot="skeleton"]')).toHaveLength(1);
+		expect(
+			loading.querySelector<HTMLElement>('[data-slot="skeleton"]')?.style
+				.height,
+		).toBe("545px");
 		rendered.rerender(view("new"));
 		expect(await screen.findByText("NOVO")).toBeTruthy();
 		await act(async () =>

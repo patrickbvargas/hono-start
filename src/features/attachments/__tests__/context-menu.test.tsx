@@ -56,8 +56,8 @@ it.each(["context", "dropdown"] as const)(
 		await openMenu(presentation);
 		expect(
 			screen.getAllByRole("menuitem").map((item) => item.textContent),
-		).toEqual(["Baixar arquivo", "Excluir"]);
-		fireEvent.click(screen.getByRole("menuitem", { name: "Baixar arquivo" }));
+		).toEqual(["Baixar", "Excluir"]);
+		fireEvent.click(screen.getByRole("menuitem", { name: "Baixar" }));
 		expect(open).toHaveBeenCalledExactlyOnceWith(
 			"/api/attachments/42",
 			"_blank",
@@ -82,7 +82,7 @@ it.each(["context", "dropdown"] as const)(
 		await openMenu(presentation);
 		expect(
 			screen
-				.getByRole("menuitem", { name: "Baixar arquivo" })
+				.getByRole("menuitem", { name: "Baixar" })
 				.getAttribute("aria-disabled"),
 		).toBe("true");
 		expect(screen.queryByRole("menuitem", { name: "Excluir" })).toBeNull();

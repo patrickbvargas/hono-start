@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Settings } from "@/features/authentication";
+import { ScrollArea } from "@/shared/components/ui";
 import { Wrapper, WrapperBody } from "@/shared/components/wrapper";
 import { getPageTitle } from "@/shared/config/routes";
 export const Route = createFileRoute("/_app/configuracoes")({
@@ -9,8 +10,10 @@ export const Route = createFileRoute("/_app/configuracoes")({
 function SettingsPage() {
 	return (
 		<Wrapper title="Configurações">
-			<WrapperBody className="overflow-y-auto">
-				<Settings />
+			<WrapperBody>
+				<ScrollArea className="min-h-0 flex-1">
+					<Settings />
+				</ScrollArea>
 			</WrapperBody>
 		</Wrapper>
 	);

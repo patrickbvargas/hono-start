@@ -14,6 +14,7 @@ import {
 	PopoverHeader,
 	PopoverTitle,
 	PopoverTrigger,
+	ScrollArea,
 } from "@/shared/components/ui";
 import { cn } from "@/shared/lib/utils";
 
@@ -153,9 +154,9 @@ function ListFiltersDrawer({
 				<DrawerHeader>
 					<DrawerTitle>{title ?? label}</DrawerTitle>
 				</DrawerHeader>
-				<div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto px-4 pb-4">
-					{children}
-				</div>
+				<ScrollArea className="min-h-0 flex-1">
+					<div className="flex flex-col gap-4 px-4 pb-4">{children}</div>
+				</ScrollArea>
 				<DrawerFooter>
 					{footer}
 					<DrawerClose render={<Button variant="outline" className="w-full" />}>

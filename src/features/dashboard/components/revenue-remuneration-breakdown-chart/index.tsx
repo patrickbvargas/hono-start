@@ -49,7 +49,7 @@ export function RevenueRemunerationBreakdownChart({
 		(item) => item.total !== 0 || (item.remuneration ?? 0) !== 0,
 	);
 	return (
-		<Card className="min-w-0 h-85 min-h-85">
+		<Card className="min-w-0 h-81 min-h-81">
 			<CardHeader>
 				<CardTitle className="flex items-center gap-2">
 					{title}
