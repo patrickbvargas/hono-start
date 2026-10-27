@@ -1,0 +1,66 @@
+{
+  "poaFirmId": 2,
+  "matrizFirmId": 1,
+  "checks": [
+    {
+      "entity": "Client",
+      "visibleInPOA": true,
+      "deniedInMatriz": true,
+      "reason": "Cliente não encontrado"
+    },
+    {
+      "entity": "Employee",
+      "visibleInPOA": true,
+      "deniedInMatriz": true,
+      "reason": "Colaborador não encontrado"
+    },
+    {
+      "entity": "Contract",
+      "visibleInPOA": true,
+      "deniedInMatriz": true,
+      "reason": "Contrato não encontrado"
+    },
+    {
+      "entity": "Fee",
+      "visibleInPOA": true,
+      "deniedInMatriz": true,
+      "reason": "Recebimento não encontrado"
+    },
+    {
+      "entity": "Remuneration",
+      "visibleInPOA": true,
+      "deniedInMatriz": true,
+      "reason": "Remuneração não encontrada"
+    },
+    {
+      "entity": "Expense",
+      "visibleInPOA": true,
+      "deniedInMatriz": true,
+      "reason": "Despesa não encontrada"
+    },
+    {
+      "entity": "Attachment",
+      "visibleInPOA": true,
+      "deniedInMatriz": true,
+      "reason": ""
+    },
+    {
+      "entity": "AuditLog",
+      "visibleInPOA": true,
+      "deniedInMatriz": true,
+      "reason": "Log de auditoria não encontrado."
+    }
+  ],
+  "attachmentReadable": true,
+  "otherUnitsUnchanged": true,
+  "browserVerified": [
+    "Cliente",
+    "Colaborador",
+    "Contrato",
+    "Recebimento",
+    "Remuneracao",
+    "Despesa",
+    "Anexo no cliente",
+    "Pendencia derivada com vencimento em 01/10/2026"
+  ]
+}

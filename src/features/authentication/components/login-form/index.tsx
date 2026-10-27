@@ -6,7 +6,7 @@ interface LoginFormProps {
 }
 
 export function LoginForm({ redirectTo }: LoginFormProps) {
-	const { isLoaded, isSignedIn } = useAuth();
+	const { isLoaded, isSignedIn, orgId } = useAuth();
 	if (!isLoaded) {
 		return null;
 	}
@@ -17,10 +17,22 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
 				<SignIn routing="hash" forceRedirectUrl={destination} />
 			) : null}
 			{isSignedIn ? (
-				<OrganizationList
-					hidePersonal
-					afterSelectOrganizationUrl={destination}
-				/>
+				<div className="flex max-w-sm flex-col gap-4">
+					{orgId ? (
+						<p
+							role="alert"
+							className="text-center text-sm text-muted-foreground"
+						>
+							Não foi possível carregar a unidade selecionada. Peça ao
+							administrador para conferir a configuração da unidade ou selecione
+							outra organização.
+						</p>
+					) : null}
+					<OrganizationList
+						hidePersonal
+						afterSelectOrganizationUrl={destination}
+					/>
+				</div>
 			) : null}
 		</>
 	);

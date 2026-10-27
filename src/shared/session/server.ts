@@ -14,6 +14,10 @@ import { clerkPermissionSchema, loggedUserSessionSchema } from "./schema";
 const UNAUTHENTICATED_ERROR_MESSAGE =
 	"Sua sessão expirou. Faça login novamente.";
 
+const organizationPrivateMetadataSchema = z.object({
+	firmId: z.number().int().positive(),
+});
+
 async function resolveDomainSession(): Promise<LoggedUserSession | null> {
 	const identity = await auth();
 	if (
@@ -25,7 +29,7 @@ async function resolveDomainSession(): Promise<LoggedUserSession | null> {
 		return null;
 	}
 	const client = clerkClient();
-	const [providerSession, user, { data }] = await Promise.all([
+	const [providerSession, user, { data }, organization] = await Promise.all([
 		client.sessions.getSession(identity.sessionId),
 		client.users.getUser(identity.userId),
 		client.organizations.getOrganizationMembershipList({
@@ -33,6 +37,7 @@ async function resolveDomainSession(): Promise<LoggedUserSession | null> {
 			userId: [identity.userId],
 			limit: 2,
 		}),
+		client.organizations.getOrganization({ organizationId: identity.orgId }),
 	]);
 	if (
 		providerSession.status !== "active" ||
@@ -48,13 +53,26 @@ async function resolveDomainSession(): Promise<LoggedUserSession | null> {
 	if (!membership) {
 		return null;
 	}
+	const organizationMetadata = organizationPrivateMetadataSchema.safeParse(
+		organization.privateMetadata ?? {},
+	);
+	if (!organizationMetadata.success) {
+		return null;
+	}
+	const firm = await prisma.firm.findUnique({
+		where: { id: organizationMetadata.data.firmId },
+		select: { id: true, name: true },
+	});
+	if (!firm) {
+		return null;
+	}
 	const metadata = z
 		.object({ employeeId: z.number().int().positive().optional() })
 		.safeParse(user.privateMetadata ?? {});
 	if (!metadata.success) {
 		return null;
 	}
-	const employee = metadata.data.employeeId
+	const boundEmployee = metadata.data.employeeId
 		? await prisma.employee.findFirst({
 				where: {
 					id: metadata.data.employeeId,
@@ -63,20 +81,15 @@ async function resolveDomainSession(): Promise<LoggedUserSession | null> {
 				},
 				select: {
 					id: true,
+					firmId: true,
 					type: { select: { id: true, value: true, label: true } },
 				},
 			})
 		: null;
-	if (metadata.data.employeeId && !employee) {
+	if (metadata.data.employeeId && !boundEmployee) {
 		return null;
 	}
-	const firm = await prisma.firm.findFirst({
-		orderBy: { id: "asc" },
-		select: { id: true, name: true },
-	});
-	if (!firm) {
-		return null;
-	}
+	const employee = boundEmployee?.firmId === firm.id ? boundEmployee : null;
 	const permissions = membership.permissions.flatMap((value) => {
 		const result = clerkPermissionSchema.safeParse(value);
 		return result.success &&

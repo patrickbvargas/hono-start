@@ -8,6 +8,8 @@ const mocks = vi.hoisted(() => ({
 	request: vi.fn(),
 	auth: vi.fn(),
 	memberships: vi.fn(),
+	organization: vi.fn(),
+	firm: vi.fn(),
 	employee: vi.fn(),
 	providerSession: vi.fn(),
 	user: vi.fn(),
@@ -15,7 +17,10 @@ const mocks = vi.hoisted(() => ({
 vi.mock("@clerk/tanstack-react-start/server", () => ({
 	auth: mocks.auth,
 	clerkClient: () => ({
-		organizations: { getOrganizationMembershipList: mocks.memberships },
+		organizations: {
+			getOrganizationMembershipList: mocks.memberships,
+			getOrganization: mocks.organization,
+		},
 		sessions: { getSession: mocks.providerSession },
 		users: { getUser: mocks.user },
 	}),
@@ -23,7 +28,7 @@ vi.mock("@clerk/tanstack-react-start/server", () => ({
 vi.mock("@/shared/lib/prisma", () => ({
 	prisma: {
 		employee: { findFirst: mocks.employee },
-		firm: { findFirst: async () => ({ id: 1, name: "Matriz" }) },
+		firm: { findUnique: mocks.firm },
 	},
 }));
 
@@ -36,6 +41,8 @@ import {
 describe("Clerk domain session", () => {
 	beforeEach(() => {
 		vi.resetAllMocks();
+		mocks.organization.mockResolvedValue({ privateMetadata: { firmId: 42 } });
+		mocks.firm.mockResolvedValue({ id: 42, name: "Selected branch" });
 		mocks.request.mockImplementation(() => new Request("http://localhost"));
 		mocks.providerSession.mockResolvedValue({
 			status: "active",
@@ -65,6 +72,7 @@ describe("Clerk domain session", () => {
 		});
 		mocks.employee.mockResolvedValue({
 			id: 7,
+			firmId: 42,
 			type: { id: 2, value: "LAWYER", label: "Advogado" },
 		});
 	});
@@ -92,7 +100,7 @@ describe("Clerk domain session", () => {
 		await expect(server({ next })).rejects.toThrow("Sua sessão expirou");
 		expect(next).not.toHaveBeenCalled();
 	});
-	it("uses current grants and active employee mapping independently of firm organization", async () => {
+	it("uses current grants and an employee inside the configured organization Firm", async () => {
 		const session = await getRequiredServerLoggedUserSession();
 		expect(session.permissions).toEqual(["org:clients:read"]);
 		expect(session).not.toHaveProperty("role");
@@ -210,5 +218,105 @@ describe("Clerk domain session", () => {
 		expect((await getRequiredServerLoggedUserSession()).permissions).toEqual(
 			[],
 		);
+	});
+	it("uses exactly the Firm configured by the active Organization", async () => {
+		const session = await getRequiredServerLoggedUserSession();
+		expect(session.firm).toEqual({ id: 42, name: "Selected branch" });
+		expect(mocks.organization).toHaveBeenCalledWith({
+			organizationId: "org_one",
+		});
+		expect(mocks.firm).toHaveBeenCalledWith({
+			where: { id: 42 },
+			select: { id: true, name: true },
+		});
+	});
+	it.each([
+		undefined,
+		null,
+		"42",
+		0,
+		-1,
+		1.5,
+		true,
+		{},
+		Number.MAX_SAFE_INTEGER + 1,
+	])(
+		"denies invalid Organization firmId %j before reading business data",
+		async (firmId) => {
+			mocks.organization.mockResolvedValue({ privateMetadata: { firmId } });
+			expect(await getOptionalServerLoggedUserSession()).toBeNull();
+			expect(mocks.firm).not.toHaveBeenCalled();
+			expect(mocks.employee).not.toHaveBeenCalled();
+		},
+	);
+	it("does not trust public or unsafe Organization metadata", async () => {
+		mocks.organization.mockResolvedValue({
+			privateMetadata: {},
+			publicMetadata: { firmId: 42 },
+			unsafeMetadata: { firmId: 42 },
+		});
+		expect(await getOptionalServerLoggedUserSession()).toBeNull();
+		expect(mocks.firm).not.toHaveBeenCalled();
+	});
+	it("denies an Organization mapped to a nonexistent Firm", async () => {
+		mocks.firm.mockResolvedValue(null);
+		expect(await getOptionalServerLoggedUserSession()).toBeNull();
+		expect(mocks.employee).not.toHaveBeenCalled();
+	});
+	it("does not execute protected functions for an unmapped Organization", async () => {
+		mocks.organization.mockResolvedValue({ privateMetadata: {} });
+		const next = vi.fn();
+		const server = authMiddleware.options.server as unknown as (options: {
+			next: typeof next;
+		}) => Promise<unknown>;
+		await expect(server({ next })).rejects.toThrow("Sua sessão expirou");
+		expect(next).not.toHaveBeenCalled();
+	});
+	it("refreshes metadata between requests and never falls back after removal", async () => {
+		expect((await getRequiredServerLoggedUserSession()).firm.id).toBe(42);
+		mocks.organization.mockResolvedValue({ privateMetadata: { firmId: 93 } });
+		mocks.firm.mockResolvedValue({ id: 93, name: "Other branch" });
+		const changed = await getRequiredServerLoggedUserSession();
+		expect(changed.firm.id).toBe(93);
+		expect(changed.employee.id).toBeNull();
+		mocks.organization.mockResolvedValue({ privateMetadata: {} });
+		expect(await getOptionalServerLoggedUserSession()).toBeNull();
+		expect(mocks.organization).toHaveBeenCalledTimes(3);
+	});
+	it("switches unit and grants without carrying the previous business actor", async () => {
+		mocks.memberships.mockResolvedValue({
+			data: [
+				{
+					publicUserData: { userId: "user_one" },
+					permissions: [
+						"org:clients:read",
+						"org:contracts:read_assigned",
+						"org:remunerations:read_own",
+						"org:dashboard:read_own",
+					],
+				},
+			],
+		});
+		expect((await getRequiredServerLoggedUserSession()).employee.id).toBe(7);
+		mocks.auth.mockResolvedValue({
+			userId: "user_one",
+			orgId: "org_other",
+			sessionId: "sess_one",
+			isAuthenticated: true,
+		});
+		mocks.organization.mockResolvedValue({ privateMetadata: { firmId: 93 } });
+		mocks.firm.mockResolvedValue({ id: 93, name: "Other branch" });
+		const session = await getRequiredServerLoggedUserSession();
+		expect(session.clerk.organizationId).toBe("org_other");
+		expect(session.firm.id).toBe(93);
+		expect(session.employee.id).toBeNull();
+		expect(session.employeeType).toBeNull();
+		expect(session.permissions).toEqual(["org:clients:read"]);
+	});
+	it("fails closed when Organization verification is unavailable", async () => {
+		mocks.organization.mockRejectedValue(new Error("unavailable"));
+		await expect(getRequiredServerLoggedUserSession()).rejects.toThrow();
+		expect(mocks.firm).not.toHaveBeenCalled();
+		expect(mocks.employee).not.toHaveBeenCalled();
 	});
 });

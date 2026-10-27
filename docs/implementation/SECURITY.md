@@ -33,7 +33,7 @@ This document defines reusable trust-boundary and authorization rules for the re
 
 ## Session Policy Shape
 
-- Session contains the Clerk identity and current permission grants, an optional business Employee binding, the employee type, and the default business firm. It carries no local role or duplicate Employee ID in the account profile.
+- Session contains the Clerk identity and current permission grants, an optional business Employee binding, the employee type, and the Firm configured in active Organization privateMetadata.firmId. It carries no local role or duplicate Employee ID in the account profile.
 - `server.ts` verifies Clerk state and resolves business context once per request. It never computes grants from business data.
 - Session has four implementation modules: `schema.ts` holds the Zod contract, permission keys and types; `server.ts` holds verification and middleware; `client.tsx` holds route queries, React context and identity-change invalidation; `access.ts` holds resource checks and business scopes. `index.ts` exports browser-safe APIs. Protected server operations import middleware and resolvers directly from `server.ts`.
 - React consumers read `useLoggedUserSession()` from the route provider and use ordinary permission checks. There is no separate session store or local credential lifecycle.
@@ -70,9 +70,9 @@ This document defines reusable trust-boundary and authorization rules for the re
 
 - Clerk is the only authentication and permission-grant authority. Local role names never bypass checks.
 - The official SDK verifies auth context; `src/start.ts` explicitly includes CSRF middleware for server functions.
-- Every protected request verifies current provider session, user restrictions and Organization membership; request-local reuse avoids repeated lookups within that request. Provider failures deny execution.
+- Every protected request verifies current provider session, user restrictions, Organization membership and private Firm mapping; request-local reuse avoids repeated lookups within that request. Provider failures deny execution.
 - Custom permission grants derive from current Backend API membership state, not stale JWTs, client metadata or webhook delivery.
-- The optional metadata Employee binding establishes the business actor. Active/deleted, assignment and writable-resource constraints remain server-side domain checks; Firm is resolved independently of Clerk Organizations.
+- The optional metadata Employee binding establishes the business actor. Active/deleted, assignment and writable-resource constraints remain server-side domain checks; Firm is resolved only from current server-fetched Organization privateMetadata.firmId, strictly validated as a positive integer and an existing Firm. Public/unsafe metadata and client inputs never grant Firm access; no default-Firm fallback exists.
 - Clerk owns credential policy, email verification, session duration and attack protection.
 - Webhooks verify the raw request signature and deduplicate delivery IDs. They never synchronize authentication data into Employee.
 - Public keys use the Vite public boundary. Secret/webhook keys use validated server env only.
@@ -85,3 +85,5 @@ See `docs/domain/DOMAIN_MODEL.md` for ownership boundaries. Authentication resol
 ## Local attachment storage
 
 ATTACHMENTS_DIR is a private absolute directory outside public assets and build output. Attachment binaries are delivered only through authenticated, firm- and owner-authorized requests. Paths cannot escape the root or traverse symbolic links. Restrict filesystem writers to the application account; do not expose this directory through a web server. Responses use private/no-store caching and nosniff.
+
+A valid Employee binding to another Firm is not used as an actor in the active unit: employee and employeeType are null and own/assigned grants are stripped. Only explicitly granted general capabilities remain. Invalid, inactive or deleted explicit Employee bindings still deny the session. Switching among N memberships never carries the prior unit actor or data into the new unit.

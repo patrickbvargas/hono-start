@@ -1,0 +1,76 @@
+{
+  "organization": "POA",
+  "firmId": 2,
+  "firmName": "POA",
+  "marker": "Teste isolamento POA",
+  "records": {
+    "client": {
+      "id": 81,
+      "name": "Teste isolamento POA — Cliente"
+    },
+    "employee": {
+      "id": 23,
+      "name": "Teste isolamento POA — Colaborador"
+    },
+    "contract": {
+      "id": 861,
+      "processNumber": "TESTE-ISOLAMENTO-POA-20261027"
+    },
+    "assignment": {
+      "id": 465
+    },
+    "revenue": {
+      "id": 217,
+      "totalValue": "1000"
+    },
+    "fee": {
+      "id": 208,
+      "amount": "250"
+    },
+    "remuneration": {
+      "id": 418,
+      "amount": "25"
+    },
+    "expense": {
+      "id": 343,
+      "amount": "40"
+    },
+    "attachment": {
+      "id": 36,
+      "fileName": "teste-isolamento-poa.png"
+    }
+  },
+  "audits": [
+    {
+      "id": 1321,
+      "entityType": "Attachment",
+      "entityId": "36"
+    },
+    {
+      "id": 1316,
+      "entityType": "Client",
+      "entityId": "81"
+    },
+    {
+      "id": 1318,
+      "entityType": "Contract",
+      "entityId": "861"
+    },
+    {
+      "id": 1317,
+      "entityType": "Employee",
+      "entityId": "23"
+    },
+    {
+      "id": 1320,
+      "entityType": "Expense",
+      "entityId": "343"
+    },
+    {
+      "id": 1319,
+      "entityType": "Fee",
+      "entityId": "208"
+    }
+  ],
+  "otherUnitsUnchanged": true
+}

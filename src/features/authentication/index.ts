@@ -1,6 +1,7 @@
 export { handleClerkWebhook } from "./api/clerk-webhooks";
 export { InvitationSetup } from "./components/invitation";
 export { LoginForm } from "./components/login-form";
+export { OrganizationSwitcher } from "./components/organization-switcher";
 export { AuthenticationScreen } from "./components/screen";
 export { Settings } from "./components/settings";
 export { UserProfileDialog } from "./components/user-profile-dialog";

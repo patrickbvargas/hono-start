@@ -154,3 +154,7 @@ response. Keep build and interactive development verification sequential.
 ## Current identity setup
 
 Manage accounts and grants in Clerk Dashboard. Set privateMetadata to {"employeeId": 123} only when an account represents that active Employee. Do not use unsafeMetadata. Employee CRUD does not create, invite, modify or delete Clerk users. Migrate existing Employee.clerkUserId mappings into Clerk privateMetadata before deploying the schema retirement migration; no automatic account grants or metadata changes are performed by application migrations. Configure privateMetadata per Clerk environment; IDs refer to the corresponding application database.
+
+## Organization unit mapping
+
+For every Organization intended to access the application, set privateMetadata.firmId to the numeric ID of its existing business Firm. The application reads the configured value each request; no organization names or IDs are hard-coded. Missing, invalid or unknown Firm mappings deny all protected data and leave organization selection available on login. Multiple Organizations may deliberately share a Firm. Do not place authority in publicMetadata or unsafeMetadata. No database migration, reset, automatic Firm creation or metadata synchronization is required. Unit switching cancels/clears previous frontend queries and revalidates routes; server checks always enforce the currently configured Firm. Operator examples are illustrative only and never runtime defaults.

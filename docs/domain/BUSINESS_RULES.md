@@ -16,7 +16,7 @@
 - OAB remains business data; it is not a login identifier.
 - Clerk invitations/setup replace temporary passwords and app-owned forced password changes.
 - A protected request requires a verified active Clerk session, completed provider tasks, current active Organization membership and a valid active Employee if privateMetadata.employeeId is explicitly set.
-- Firm is a business context independent of Clerk Organizations. User-specific firm restrictions are future work.
+- Firm is the unit boundary selected by active Clerk Organization privateMetadata.firmId. Only memberships with valid mappings to existing Firms grant a unit context; absent or invalid mappings deny all protected data. Switching unit changes all firm-scoped reads and writes.
 - Permission grants derive exclusively from current Clerk membership permissions, never local roles, UI visibility or client metadata.
 - Provider verification errors deny protected execution. Membership removal denies access without waiting for webhooks.
 - Accounts and Organization membership are administered in Clerk Dashboard. Employee CRUD never performs provider account administration.

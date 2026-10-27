@@ -16,7 +16,7 @@
 
 ## Entity Responsibilities
 
-- `Firm` defines tenant ownership and firm-level defaults independently of Clerk Organizations.
+- `Firm` defines business-unit ownership and defaults. The active Clerk Organization privateMetadata.firmId selects that existing unit.
 - `Employee` represents both staff identity and operational participation in contracts.
 - `Client` is the business party attached to legal work.
 - `Contract` is the main business aggregate linking client, team, revenue plans, and lifecycle status.
@@ -194,8 +194,8 @@ Clerk exclusively owns authentication and permission grants. Legacy UserRole rem
 
 Employee profile photos are owned by Clerk; Employee does not persist an avatar URL.
 
-Firm is a business unit. Matriz is the default unit; future branches retain firmId ownership. Clerk Organizations group users and do not map to firms or grant firm access.
+Firm is a business unit (unidade/filial). The active Clerk Organization privateMetadata.firmId must be a positive integer identifying an existing Firm. The operator manages this link only in Clerk; no organization name or fixed ID is special. Membership plus the valid mapping defines the current unit boundary. Missing, malformed or nonexistent mappings deny access with no default Firm. Multiple Organizations may intentionally share a Firm.
 
 ## Business and authentication isolation
 
-Employee has no Clerk ID, account email, avatar or access role. Users and invitations are managed in Clerk. Server-validated Clerk privateMetadata.employeeId optionally resolves an active Employee for own and assigned capabilities; missing binding never widens scope. An explicit invalid, inactive or deleted binding denies the session. General capabilities do not require an Employee link. Audit actors without an Employee retain their Clerk account name and email with a null employee actor ID. Firm is an independent business unit: Matriz is the default context, independent of Organization membership. Metadata-based firm access is future work.
+Employee has no Clerk ID, account email, avatar or access role. Users and invitations are managed in Clerk. Server-validated Clerk privateMetadata.employeeId optionally resolves an active Employee for own and assigned capabilities; missing binding never widens scope. An explicit invalid, inactive or deleted binding denies the session. General capabilities do not require an Employee link. A valid Employee from another Firm is omitted from the active unit session (employee and type null); authorized general grants remain, while own/assigned grants are excluded. Audit actors without an Employee retain their Clerk account name and email with a null employee actor ID. Firm is selected exclusively by the active Organization privateMetadata.firmId fetched server-side for the current request. Switching Organization changes the unit context and clears previous frontend data; every protected operation still enforces its current Firm scope.

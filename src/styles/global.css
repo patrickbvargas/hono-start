@@ -118,6 +118,10 @@
 }
 
 @layer base {
+	.cl-logoImage {
+		border-radius: var(--radius);
+	}
+
 	* {
 		@apply border-border outline-ring/50;
 	}

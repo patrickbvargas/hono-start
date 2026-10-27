@@ -1,36 +1,54 @@
 import { Link } from "@tanstack/react-router";
-import { BoxIcon } from "lucide-react";
+import { OrganizationSwitcher } from "@/features/authentication";
 import {
+	Avatar,
+	AvatarFallback,
+	AvatarImage,
 	SidebarMenu,
-	SidebarMenuButton,
 	SidebarMenuItem,
-	useSidebar,
 } from "@/shared/components/ui";
 import { ROUTES } from "@/shared/config/routes";
+import { useNavHeader } from "../../hooks/use-nav-header";
 
 export const NavHeader = () => {
-	const { setOpenMobile } = useSidebar();
+	const { name, organizationName, imageUrl, initials, handleNavigate } =
+		useNavHeader();
 	return (
 		<SidebarMenu>
 			<SidebarMenuItem>
-				<SidebarMenuButton
-					size="lg"
-					className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-					render={
+				<div className="flex h-12 min-w-0 items-center gap-2 p-2 group-data-[collapsible=icon]:p-0">
+					<Link
+						to={ROUTES.dashboard.url}
+						onClick={handleNavigate}
+						title={name}
+						aria-label={name}
+						className="shrink-0 rounded-lg focus-visible:outline-ring"
+					>
+						<Avatar
+							key={imageUrl}
+							size="lg"
+							className="rounded-lg after:rounded-lg group-data-[collapsible=icon]:size-8"
+						>
+							<AvatarImage
+								src={imageUrl}
+								alt={name}
+								className="rounded-lg object-contain"
+							/>
+							<AvatarFallback className="rounded-lg">{initials}</AvatarFallback>
+						</Avatar>
+					</Link>
+					<div className="grid min-w-0 flex-1 gap-0.5 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
 						<Link
 							to={ROUTES.dashboard.url}
-							onClick={() => setOpenMobile(false)}
+							onClick={handleNavigate}
+							title={name}
+							className="truncate rounded font-medium focus-visible:outline-ring"
 						>
-							<div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-								<BoxIcon size={16} />
-							</div>
-							<div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
-								<span className="truncate font-medium">Hono</span>
-								<span className="truncate text-xs">v0.0.0</span>
-							</div>
+							{name}
 						</Link>
-					}
-				></SidebarMenuButton>
+						<OrganizationSwitcher organizationName={organizationName} />
+					</div>
+				</div>
 			</SidebarMenuItem>
 		</SidebarMenu>
 	);
