@@ -19,7 +19,7 @@ import {
 	auditLogDetailSchema,
 	auditLogSchema,
 } from "../schemas/model";
-import type { AuditLogSearch } from "../schemas/search";
+import type { AuditHistory, AuditLogSearch } from "../schemas/search";
 import {
 	getAuditDescription,
 	getAuditEntityNameLabel,
@@ -271,4 +271,16 @@ export async function getAuditLogActors(
 	);
 
 	return mapDistinctOptions(normalizedActors);
+}
+
+export async function getAuditHistory({
+	firmId,
+	entityType,
+	entityId,
+}: AuditHistory & { firmId: number }): Promise<AuditLog[]> {
+	const rows = await prisma.auditLog.findMany({
+		where: { firmId, entityType, entityId: String(entityId) },
+		orderBy: [{ createdAt: "desc" }, { id: "asc" }],
+	});
+	return rows.map(mapAuditLog);
 }

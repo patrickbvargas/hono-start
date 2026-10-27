@@ -10,3 +10,9 @@ export const auditLogSearchSchema = z.object({
 });
 
 export type AuditLogSearch = z.infer<typeof auditLogSearchSchema>;
+
+export const auditHistorySchema = z.object({
+	entityType: z.string().min(1),
+	entityId: z.number().int().positive(),
+});
+export type AuditHistory = z.infer<typeof auditHistorySchema>;

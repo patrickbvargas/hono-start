@@ -5,13 +5,14 @@ import {
 } from "@tanstack/react-query";
 import type { EntityId } from "@/shared/schemas/entity";
 import {
+	getAuditHistoryQueryOptions,
 	getAuditLogActionsQueryOptions,
 	getAuditLogActorsQueryOptions,
 	getAuditLogByIdQueryOptions,
 	getAuditLogEntityTypesQueryOptions,
 	getAuditLogsQueryOptions,
 } from "../api/queries";
-import type { AuditLogSearch } from "../schemas/search";
+import type { AuditHistory, AuditLogSearch } from "../schemas/search";
 
 export function useAuditLogs(search: AuditLogSearch) {
 	const { data: auditLogs } = useSuspenseQuery(
@@ -40,8 +41,8 @@ export function useAuditLogOptions() {
 	return { actions, entityTypes, actors };
 }
 
-export function useAuditHistoryData(search: AuditLogSearch) {
-	const query = useQuery(getAuditLogsQueryOptions(search));
+export function useAuditHistoryData(scope: AuditHistory) {
+	const query = useQuery(getAuditHistoryQueryOptions(scope));
 	return {
 		auditLogs: query.data,
 		isPending: query.isPending,

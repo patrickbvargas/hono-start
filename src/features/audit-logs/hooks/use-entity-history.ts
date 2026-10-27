@@ -1,19 +1,25 @@
-import { useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
 import { useOverlay } from "@/shared/hooks/use-overlay";
 import { auditLogSearchSchema } from "../schemas/search";
 import { useAuditHistoryData } from "./use-data";
 export function useEntityHistory(entityType: string, entityId: number) {
-	const [page, setPage] = useState(1);
-	const limit = 10;
+	const navigate = useNavigate();
 	const search = auditLogSearchSchema.parse({
 		entityType: [entityType],
 		entityId,
-		page,
-		limit,
+		page: 1,
+		limit: 25,
 		column: "occurredAt",
 		direction: "desc",
 	});
-	const query = useAuditHistoryData(search);
+	const query = useAuditHistoryData({ entityType, entityId });
 	const { overlay } = useOverlay<number>();
-	return { ...query, page, setPage, limit, details: overlay.details };
+	const openPage = (id: number) => {
+		void navigate({
+			to: "/auditoria/$auditLogId",
+			params: { auditLogId: String(id) },
+			search: { tab: "overview", returnTo: search },
+		});
+	};
+	return { ...query, openPage, details: overlay.details };
 }

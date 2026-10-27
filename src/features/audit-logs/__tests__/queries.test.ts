@@ -14,6 +14,7 @@ vi.mock("@/shared/lib/prisma", () => ({
 }));
 
 import {
+	getAuditHistory,
 	getAuditLogActions,
 	getAuditLogActors,
 	getAuditLogEntityTypes,
@@ -22,6 +23,21 @@ import {
 import { auditLogSearchSchema } from "../schemas/search";
 
 describe("audit-log data queries", () => {
+	it("loads complete entity history with tenant scope and no server pagination", async () => {
+		prismaMock.auditLog.findMany.mockResolvedValueOnce([]);
+		expect(
+			await getAuditHistory({
+				firmId: 4,
+				entityType: "Contract",
+				entityId: 62,
+			}),
+		).toEqual([]);
+		expect(prismaMock.auditLog.findMany).toHaveBeenCalledWith({
+			where: { firmId: 4, entityType: "Contract", entityId: "62" },
+			orderBy: [{ createdAt: "desc" }, { id: "asc" }],
+		});
+		expect(prismaMock.auditLog.count).not.toHaveBeenCalled();
+	});
 	it("keeps exact contract identity in both list and total queries", async () => {
 		prismaMock.auditLog.findMany.mockResolvedValueOnce([]);
 		prismaMock.auditLog.count.mockResolvedValueOnce(0);

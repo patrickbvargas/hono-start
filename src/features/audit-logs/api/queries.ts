@@ -16,6 +16,7 @@ import type {
 } from "@/shared/types/api";
 import { AUDIT_LOG_ERRORS } from "../constants/errors";
 import {
+	getAuditHistory,
 	getAuditLogActions,
 	getAuditLogActors,
 	getAuditLogById,
@@ -23,11 +24,18 @@ import {
 	getAuditLogs,
 } from "../data/queries";
 import type { AuditLog, AuditLogDetail } from "../schemas/model";
-import { type AuditLogSearch, auditLogSearchSchema } from "../schemas/search";
+import {
+	type AuditHistory,
+	type AuditLogSearch,
+	auditHistorySchema,
+	auditLogSearchSchema,
+} from "../schemas/search";
 
 export const auditLogKeys = {
 	all: ["audit-log"] as const,
 	list: (search: AuditLogSearch) => [...auditLogKeys.all, search] as const,
+	history: (scope: AuditHistory) =>
+		[...auditLogKeys.all, "history", scope] as const,
 	detail: (id: EntityId) => [...auditLogKeys.all, "detail", id] as const,
 	actions: () => [...auditLogKeys.all, "actions"] as const,
 	entityTypes: () => [...auditLogKeys.all, "entity-types"] as const,
@@ -145,4 +153,24 @@ export const getAuditLogActorsQueryOptions = () =>
 		queryFn: getAuditLogActorsFn,
 		staleTime: Infinity,
 		meta: { refreshOnMutation: true },
+	});
+
+const getAuditHistoryFn = createServerFn({ method: "GET" })
+	.middleware([authMiddleware])
+	.validator(auditHistorySchema)
+	.handler(async ({ data }): Promise<AuditLog[]> => {
+		try {
+			const session = await getRequiredServerLoggedUserSession();
+			assertCan(session, "org:audit_logs:read");
+			const { firmId } = await getServerScope("audit-log");
+			return await getAuditHistory({ firmId, ...data });
+		} catch (error) {
+			console.error("[getAuditHistory]", error);
+			throw new Error(AUDIT_LOG_ERRORS.GET_FAILED);
+		}
+	});
+export const getAuditHistoryQueryOptions = (scope: AuditHistory) =>
+	queryOptions({
+		queryKey: auditLogKeys.history(scope),
+		queryFn: () => getAuditHistoryFn({ data: scope }),
 	});

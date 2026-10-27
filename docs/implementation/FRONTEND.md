@@ -201,7 +201,7 @@ EntityForm subscribes to submission attempts and validation state, shows a share
 
 Audit filter entityId is an optional positive integer. List and count queries apply its exact stored string identity with existing firm/type scopes. The active-filter chip makes it visible and removable; clearing all filters explicitly removes it.
 
-EntityAuditHistory is a feature-owned embedded audit collection with local page state, fixed newest-first ordering, existing protected query factories, exact entity type/ID scope and local detail overlays. It mounts its query only for audit readers and only when its tab is mounted; it must not reuse route-driven AuditLogTable pagination/sorting in a parent workspace.
+EntityAuditHistory is a feature-owned embedded audit collection with the complete entity-scoped history, native DataTable frontend pagination via pageSize={25} (controls hidden for at most one page), fixed newest-first ordering, existing protected query factories, exact entity type/ID scope and local detail overlays. It mounts its query only for audit readers and only when its tab is mounted; it must not reuse route-driven AuditLogTable pagination/sorting in a parent workspace.
 
 Product review: severity and type use checkbox multi-selection. Empty selections mean all; values within one filter combine with OR, different filters combine with AND. Each active value has its own removable chip. Summary cards use the same shared Card/Header/Content, typography and padding as dashboard metrics, with its standard 24px header baseline (96px total at a single-line title), red high values, amber medium values and blue low values; zero stays neutral. The body uses the dashboard's inner p-0.5 and gap-4 to preserve card rings and spacing.
 
@@ -229,7 +229,7 @@ Entity listing tables omit the creation timestamp column (`Criado em`).
 
 Table interaction contract: main entity listing rows open the record page and support Enter/Space activation, with a native title tooltip describing the action. IDs, primary labels and related entity cells render plain text; the row has one destination. Interactive controls and the options menu do not trigger row navigation. Contextual tables retain their local summary/drawer triggers. Dashboard table triggers use a subtle background and ring on hover, with no permanent underline. Explicit navigation actions retain labeled outline buttons with navigation arrows. Page and drawer content links retain their existing context-specific presentation.
 
-Embedded EntityAuditHistory descriptions open their local audit detail drawer through TableButton, retaining the entity page URL and selected tab.
+Embedded EntityAuditHistory rows open their local audit detail drawer by click or Enter/Space, retaining the entity page URL and selected tab. Descriptions are plain text and there is no actions column. The row context menu exposes Abrir página and Ver resumo through shared EntityActions; audit page navigation retains the scoped audit search as return context.
 
 Expanded workspace panels retain native outer vertical overflow as a fallback. Overview compositions constrain alert lists to the remaining height; expanded attachment sections retain a minimum usable height. Inner lists scroll first and native scroll chaining reaches the tab at their boundaries.
 

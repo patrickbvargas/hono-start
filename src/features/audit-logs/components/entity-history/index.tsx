@@ -1,15 +1,7 @@
 import { createColumnHelper } from "@tanstack/react-table";
-import {
-	ChevronFirstIcon,
-	ChevronLastIcon,
-	ChevronLeftIcon,
-	ChevronRightIcon,
-} from "lucide-react";
 import { useMemo } from "react";
 import { DataTable } from "@/shared/components/data-table";
 import { EntityActions } from "@/shared/components/entity-actions";
-import { PaginationView } from "@/shared/components/pagination";
-import { TableButton } from "@/shared/components/table-button";
 import { Button, Skeleton } from "@/shared/components/ui";
 import type { dataTableFeatures } from "@/shared/lib/table";
 import { hasPermission, useLoggedUserSession } from "@/shared/session";
@@ -42,7 +34,7 @@ function EntityAuditHistoryContent({
 	entityType,
 	entityId,
 }: EntityAuditHistoryProps) {
-	const { auditLogs, isPending, error, retry, page, setPage, limit, details } =
+	const { auditLogs, isPending, error, retry, details, openPage } =
 		useEntityHistory(entityType, entityId);
 	const columns = useMemo(() => {
 		const c = createColumnHelper<typeof dataTableFeatures, AuditLog>();
@@ -75,24 +67,10 @@ function EntityAuditHistoryContent({
 			c.accessor("description", {
 				header: "Detalhes",
 				enableSorting: false,
-				cell: (context) => (
-					<TableButton
-						onClick={() => details.open(context.row.original.id)}
-						aria-haspopup="dialog"
-						title={`Ver resumo da alteração #${context.row.original.id}`}
-					>
-						{context.getValue() || "Ver resumo"}
-					</TableButton>
-				),
-			}),
-			c.display({
-				id: "actions",
-				cell: ({ row }) => (
-					<EntityActions onView={() => details.open(row.original.id)} />
-				),
+				cell: (context) => context.getValue() || "Ver resumo",
 			}),
 		];
-	}, [details.open]);
+	}, []);
 	if (isPending) {
 		return (
 			<div aria-label="Carregando histórico" className="space-y-3">
@@ -114,62 +92,25 @@ function EntityAuditHistoryContent({
 			</div>
 		);
 	}
-	const total = auditLogs?.total ?? 0;
-	const pages = Math.max(1, Math.ceil(total / limit));
+	const data = auditLogs ?? [];
 	return (
 		<div className="space-y-3">
 			<DataTable
 				columns={columns}
-				data={auditLogs?.data ?? []}
+				data={data}
+				onRowAction={(index) => details.open(data[index].id)}
+				rowActionLabel="Ver resumo da alteração"
+				renderRowContextMenu={(index) => (
+					<EntityActions
+						presentation="context"
+						viewPermission="org:audit_logs:read"
+						onOpenPage={() => openPage(data[index].id)}
+						onView={() => details.open(data[index].id)}
+					/>
+				)}
 				emptyMessage="Nenhuma alteração registrada para este registro."
 				className="max-h-[32rem]"
-				footerContent={
-					<PaginationView
-						totalRecords={total}
-						page={page}
-						limit={limit}
-						renderPage={(target, kind) => (
-							<Button
-								type="button"
-								variant={
-									target === page && kind === "number" ? "outline" : "ghost"
-								}
-								size="icon"
-								aria-current={
-									target === page && kind === "number" ? "page" : undefined
-								}
-								aria-label={
-									kind === "number"
-										? `Página ${target} do histórico`
-										: {
-												first: "Primeira página do histórico",
-												previous: "Página anterior do histórico",
-												next: "Próxima página do histórico",
-												last: "Última página do histórico",
-											}[kind]
-								}
-								disabled={
-									kind === "first" || kind === "previous"
-										? page <= 1
-										: kind === "next" || kind === "last"
-											? page >= pages
-											: false
-								}
-								onClick={() => setPage(target)}
-							>
-								{
-									{
-										first: <ChevronFirstIcon />,
-										previous: <ChevronLeftIcon />,
-										next: <ChevronRightIcon />,
-										last: <ChevronLastIcon />,
-										number: String(target),
-									}[kind]
-								}
-							</Button>
-						)}
-					/>
-				}
+				pageSize={25}
 			/>
 			{details.render((id, state) => (
 				<AuditLogDetails id={id} state={state} />
