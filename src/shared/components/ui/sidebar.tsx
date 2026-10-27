@@ -374,7 +374,7 @@ function SidebarContent({
 			data-slot="sidebar-content"
 			data-sidebar="content"
 			className={cn(
-				"min-h-0 flex-1 group-data-[collapsible=icon]:[&_[data-slot=scroll-area-viewport]]:overflow-hidden",
+				"min-h-0 min-w-0 flex-1 [&_[data-slot=scroll-area-viewport]]:overflow-x-hidden! [&_[data-slot=scroll-area-scrollbar][data-orientation=horizontal]]:hidden",
 				className,
 			)}
 			{...props}
