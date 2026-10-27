@@ -1,6 +1,7 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { lazy, Suspense, useEffect, useMemo } from "react";
 import { Drilldown } from "@/features/drilldown";
+import { RelatedRecordActions } from "@/features/related-records";
 import { SensitiveValue } from "@/shared/components/value-visibility";
 import { useOverlay } from "@/shared/hooks/use-overlay";
 import { formatter } from "@/shared/lib/formatter";
@@ -47,12 +48,35 @@ export function DashboardDrilldownModal({
 			detailOpen={overlay.details.isOpen}
 			onRowAction={(row) => overlay.details.open(row.record)}
 			rowActionLabel="Ver resumo do registro"
+			renderRowContextMenu={(row) => (
+				<RelatedRecordActions
+					kind={row.record.kind}
+					id={row.record.id}
+					presentation="context"
+					onView={() => overlay.details.open(row.record)}
+				/>
+			)}
 			returnFocus={returnFocus}
 			title={target.title}
 			description={`Período: ${search.dateFrom ? formatter.date(`${search.dateFrom}T00:00:00`) : "sem limite inicial"} a ${search.dateTo ? formatter.date(`${search.dateTo}T00:00:00`) : "sem limite final"}\nPosição: ${formatter.date(referenceAt)}`}
 			context={{ selection: target.selection, referenceAt }}
 			filters={search}
-			columns={columns}
+			columns={[
+				...columns,
+				{
+					id: "actions",
+					header: "",
+					enableSorting: false,
+					meta: { headerClassName: "w-10", cellClassName: "text-right" },
+					cell: ({ row }) => (
+						<RelatedRecordActions
+							kind={row.original.record.kind}
+							id={row.original.record.id}
+							onView={() => overlay.details.open(row.original.record)}
+						/>
+					),
+				},
+			]}
 			initialSorting={[{ id: "date", desc: true }]}
 			getRowId={(row) => row.id}
 			responseSchema={dashboardDrilldownResultSchema}

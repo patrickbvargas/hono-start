@@ -78,8 +78,8 @@ describe("AttachmentSection", () => {
 			).disabled,
 		).toBe(true);
 		expect(
-			screen.queryByRole("button", { name: "Ações de arquivo.pdf" }),
-		).toBeNull();
+			screen.getByRole("button", { name: "Ações de arquivo.pdf" }),
+		).toBeTruthy();
 		expect(screen.getByText("Autor não informado")).toBeTruthy();
 	});
 	afterEach(() => {

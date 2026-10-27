@@ -1,15 +1,19 @@
-import { DownloadIcon, EllipsisVerticalIcon, TrashIcon } from "lucide-react";
+import { DownloadIcon, EllipsisVerticalIcon } from "lucide-react";
+import { useRef } from "react";
 import {
 	Button,
+	ContextMenu,
+	ContextMenuContent,
+	ContextMenuTrigger,
 	DropdownMenu,
 	DropdownMenuContent,
-	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/shared/components/ui";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { AttachmentSummary } from "../../schemas/model";
 import { formatFileSize } from "../../utils/format";
+import { AttachmentActions } from "./actions";
 
 interface AttachmentSectionContentProps {
 	attachment: AttachmentSummary;
@@ -22,7 +26,22 @@ export function AttachmentSectionContent({
 	canDelete,
 	onDelete,
 }: AttachmentSectionContentProps) {
-	return (
+	const triggerRef = useRef<HTMLElement | null>(null);
+	const download = () => {
+		if (attachment.downloadUrl) {
+			window.open(attachment.downloadUrl, "_blank", "noopener,noreferrer");
+		}
+	};
+	const actions = (presentation: "dropdown" | "context") => (
+		<AttachmentActions
+			presentation={presentation}
+			canDownload={!!attachment.downloadUrl}
+			canDelete={canDelete}
+			onDownload={download}
+			onDelete={() => onDelete(attachment.id)}
+		/>
+	);
+	const content = (
 		<div className="flex min-w-0 items-start gap-3">
 			<span
 				className="flex h-10 w-11 shrink-0 items-center justify-center rounded-md bg-muted text-xs font-medium text-muted-foreground"
@@ -64,46 +83,64 @@ export function AttachmentSectionContent({
 					size="icon-sm"
 					variant="ghost"
 					disabled={!attachment.downloadUrl}
-					onClick={() => {
-						if (attachment.downloadUrl) {
-							window.open(
-								attachment.downloadUrl,
-								"_blank",
-								"noopener,noreferrer",
-							);
-						}
-					}}
+					onClick={download}
 					aria-label={`Baixar ${attachment.fileName}`}
 					title="Baixar arquivo"
 				>
 					<DownloadIcon size={16} />
 				</Button>
-				{canDelete ? (
-					<DropdownMenu>
-						<DropdownMenuTrigger
-							render={
-								<Button
-									size="icon-sm"
-									variant="ghost"
-									aria-label={`Ações de ${attachment.fileName}`}
-									title="Mais ações"
-								/>
-							}
-						>
-							<EllipsisVerticalIcon size={16} />
-						</DropdownMenuTrigger>
-						<DropdownMenuContent align="end">
-							<DropdownMenuItem
-								variant="destructive"
-								onClick={() => onDelete(attachment.id)}
-							>
-								<TrashIcon size={16} />
-								Excluir
-							</DropdownMenuItem>
-						</DropdownMenuContent>
-					</DropdownMenu>
-				) : null}
+				<DropdownMenu>
+					<DropdownMenuTrigger
+						render={
+							<Button
+								size="icon-sm"
+								variant="ghost"
+								aria-label={`Ações de ${attachment.fileName}`}
+								title="Mais ações"
+							/>
+						}
+					>
+						<EllipsisVerticalIcon size={16} />
+					</DropdownMenuTrigger>
+					<DropdownMenuContent align="end">
+						{actions("dropdown")}
+					</DropdownMenuContent>
+				</DropdownMenu>
 			</div>
 		</div>
+	);
+	return (
+		<ContextMenu>
+			<ContextMenuTrigger
+				render={content}
+				tabIndex={0}
+				aria-label={`Anexo ${attachment.fileName}`}
+				ref={(element) => {
+					triggerRef.current = element;
+				}}
+				onContextMenu={(event) => event.stopPropagation()}
+				onKeyDown={(event) => {
+					if (
+						event.target === event.currentTarget &&
+						(event.key === "ContextMenu" ||
+							(event.shiftKey && event.key === "F10"))
+					) {
+						event.preventDefault();
+						const rect = event.currentTarget.getBoundingClientRect();
+						event.currentTarget.dispatchEvent(
+							new MouseEvent("contextmenu", {
+								bubbles: true,
+								cancelable: true,
+								clientX: rect.left + 16,
+								clientY: rect.bottom,
+							}),
+						);
+					}
+				}}
+			/>
+			<ContextMenuContent finalFocus={() => triggerRef.current}>
+				{actions("context")}
+			</ContextMenuContent>
+		</ContextMenu>
 	);
 }

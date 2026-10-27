@@ -140,3 +140,5 @@ Dashboard drilldown rows open the corresponding contextual summary by click or E
 Each active contract revenue displays Valor entrada separately from Valor contratado and Recebido (inclui entrada), both in contextual summaries and the contract page Financeiro tab. It shows the persisted down payment amount in BRL; no down payment displays R$ 0,00.
 
 Singular related-record links also offer a right-click or keyboard context menu: Abrir página navigates directly to the related record, and Ver resumo retains contextual inspection. Primary click still opens the summary.
+
+Dashboard drilldown row menus offer Abrir página and Ver resumo through right click, keyboard or visible overflow. Page access targets the persisted entity directly, including contracts for planned installments and down payments. Summary access retains analysis context. Pendências table and card menus use the same labels; Abrir página opens the issue's contract finance/team tab with pending-list return context, while Ver resumo preserves the list. Attachment items offer Baixar arquivo and authorized Excluir through context/overflow menus and retain download shortcuts and delete confirmation.

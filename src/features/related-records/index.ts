@@ -5,4 +5,5 @@ export const RelatedRecordDetails = lazy(() =>
 		default: module.RelatedRecordDetails,
 	})),
 );
+export { RelatedRecordActions } from "./components/actions";
 export { RelatedRecordLink } from "./components/link";

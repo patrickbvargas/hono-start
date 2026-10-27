@@ -36,6 +36,7 @@ export interface DrilldownProps<
 	renderSummary?: (result: TResult) => ReactNode;
 	pageSize?: number;
 	onRowAction?: (row: T) => void;
+	renderRowContextMenu?: (row: T) => ReactNode;
 	rowActionLabel?: string;
 	detailOpen?: boolean;
 	children?: ReactNode;

@@ -21,7 +21,8 @@ vi.mock("@/shared/components/pagination", () => ({ Pagination: () => null }));
 vi.mock("@/shared/hooks/use-sort", () => ({
 	useSort: () => ({ getSortSearch: () => ({}) }),
 }));
-vi.mock("@/shared/components/ui", () => ({
+vi.mock("@/shared/components/ui", async (importOriginal) => ({
+	...(await importOriginal<typeof import("@/shared/components/ui")>()),
 	ScrollArea: ({ children }: React.PropsWithChildren) => <div>{children}</div>,
 	Table: "table",
 	TableBody: "tbody",
@@ -38,7 +39,7 @@ afterEach(() => {
 	vi.clearAllMocks();
 });
 it.each(["finance", "team"] as const)(
-	"opens finance from the %s issue row without inline links or actions",
+	"preserves finance primary navigation for the %s issue row",
 	(tab) => {
 		const data: PendingWorkPage = {
 			data: [
@@ -71,7 +72,8 @@ it.each(["finance", "team"] as const)(
 		if (!row) {
 			throw new Error("Missing pending row");
 		}
-		expect(row.querySelector("a, button")).toBeNull();
+		expect(row.querySelector("a")).toBeNull();
+		expect(screen.getByRole("button", { name: "Ações" })).toBeTruthy();
 		expect(screen.queryByText("Abrir financeiro")).toBeNull();
 		fireEvent.click(screen.getByText("PROC-42"));
 		expect(navigate).toHaveBeenCalledWith({
@@ -89,3 +91,8 @@ it.each(["finance", "team"] as const)(
 		});
 	},
 );
+
+vi.mock("@/shared/session", () => ({
+	useOptionalLoggedUserSession: () => null,
+	hasPermission: () => true,
+}));

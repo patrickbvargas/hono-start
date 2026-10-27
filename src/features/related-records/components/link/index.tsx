@@ -1,6 +1,5 @@
 import { CatchBoundary } from "@tanstack/react-router";
 import { lazy, type ReactNode, Suspense, useRef } from "react";
-import { EntityActions } from "@/shared/components/entity-actions";
 import { EntityDetail } from "@/shared/components/entity-detail";
 import { TableButton } from "@/shared/components/table-button";
 import {
@@ -12,20 +11,12 @@ import { useOverlay } from "@/shared/hooks/use-overlay";
 import type { EntityId } from "@/shared/schemas/entity";
 import { useRecordPage } from "../../hooks/use-record-page";
 import type { RelatedRecordKind } from "../../schemas/record";
+import { RelatedRecordActions } from "../actions";
 
 type RelatedRecordPrimaryAction = "summary" | "page";
 
 // Change this default to switch primary clicks across all related links.
 const DEFAULT_PRIMARY_ACTION: RelatedRecordPrimaryAction = "summary";
-
-const readPermissions = {
-	client: "org:clients:read",
-	employee: "org:employees:read",
-	contract: ["org:contracts:read_all", "org:contracts:read_assigned"],
-	fee: ["org:fees:read_all", "org:fees:read_assigned"],
-	expense: "org:expenses:read",
-	remuneration: ["org:remunerations:read_all", "org:remunerations:read_own"],
-} as const;
 
 const RelatedRecordDetails = lazy(() =>
 	import("../details").then((module) => ({
@@ -109,9 +100,10 @@ export function RelatedRecordLink({
 					}}
 				/>
 				<ContextMenuContent finalFocus={() => triggerRef.current}>
-					<EntityActions
+					<RelatedRecordActions
 						presentation="context"
-						viewPermission={readPermissions[kind]}
+						kind={kind}
+						id={id}
 						onOpenPage={() => {
 							void openPage();
 						}}

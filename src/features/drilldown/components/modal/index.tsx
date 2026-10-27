@@ -138,6 +138,11 @@ function DrilldownContent<
 				emptyMessage={props.emptyMessage}
 				getRowId={props.getRowId}
 				rowActionLabel={props.rowActionLabel}
+				renderRowContextMenu={
+					props.renderRowContextMenu
+						? (index) => props.renderRowContextMenu?.(data.data[index])
+						: undefined
+				}
 				onRowAction={
 					props.onRowAction
 						? (index) => props.onRowAction?.(data.data[index])
