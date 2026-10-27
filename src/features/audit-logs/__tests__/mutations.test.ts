@@ -1,7 +1,45 @@
-import { describe, expect, it } from "vitest";
-import { buildAuditUpdateChangeData } from "../data/mutations";
+import { describe, expect, it, vi } from "vitest";
+import type { PrismaClient } from "@/generated/prisma/client";
+import { buildAuditUpdateChangeData, createAuditLog } from "../data/mutations";
 
 describe("audit-log mutation helpers", () => {
+	it.each(["CREATE", "UPDATE", "DELETE", "RESTORE"])(
+		"preserves metadata and full technical payload for %s",
+		async (action) => {
+			const create = vi.fn().mockResolvedValue({});
+			const db = { auditLog: { create } } as unknown as PrismaClient;
+			const changeData = { before: { amount: 10 }, after: { amount: 20 } };
+			await createAuditLog(db, {
+				firmId: 2,
+				actor: { id: 3, name: "Maria", email: "maria@example.com" },
+				action,
+				entityType: "Expense",
+				entityId: 4,
+				entityName: "Despesa",
+				description: "Evento de despesa",
+				ipAddress: "127.0.0.1",
+				userAgent: "test",
+				changeData,
+			});
+			expect(create).toHaveBeenCalledWith({
+				data: {
+					firmId: 2,
+					actorId: 3,
+					actorName: "Maria",
+					actorEmail: "maria@example.com",
+					action,
+					entityType: "Expense",
+					entityId: "4",
+					entityName: "Despesa",
+					description: "Evento de despesa",
+					ipAddress: "127.0.0.1",
+					userAgent: "test",
+					changeData,
+				},
+			});
+			expect(changeData.after.amount).toBe(20);
+		},
+	);
 	it("stores update payloads with aligned before/after shape and only changed fields", () => {
 		expect(
 			buildAuditUpdateChangeData({

@@ -16,7 +16,7 @@ export interface AuditChangeValueEntry extends AuditChangeEntryBase {
 	value: string;
 }
 
-type AuditChangeMode = "diff" | "snapshot" | "raw";
+type AuditChangeMode = "diff" | "snapshot" | "raw" | "none";
 
 export interface AuditChangePresentation {
 	entries: AuditChangeDiffEntry[] | AuditChangeValueEntry[];
@@ -414,6 +414,14 @@ export function buildAuditChangePresentation(params: {
 }) {
 	const extracted = extractBeforeAfter(params.changeData);
 	const rawJson = stringifyRaw(params.changeData);
+	if (params.action === "CREATE") {
+		return {
+			mode: "none",
+			title: "Alterações",
+			entries: [],
+			rawJson,
+		} satisfies AuditChangePresentation;
+	}
 
 	if (extracted) {
 		const diffEntries = collectDiffEntries(extracted.before, extracted.after);

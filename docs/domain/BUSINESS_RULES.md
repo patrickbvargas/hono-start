@@ -184,6 +184,7 @@
 
 - Every create, update, soft-delete, and restore on business entities must be auditable.
 - Audit history is immutable.
+- CREATE audit events retain their full technical payload, event metadata, actor and entity identity. Creation summaries omit field changes; technical details remain available and stored history remains immutable. UPDATE, DELETE and RESTORE payloads retain their existing behavior.
 - New audit observations (`description`) are persisted in pt-BR. Operational action and entity type codes, entity names, identifiers, actor snapshots and technical payloads retain their existing values. Historical records are not rewritten; existing localized reads remain supported.
 
 ## Data Formatting Rules

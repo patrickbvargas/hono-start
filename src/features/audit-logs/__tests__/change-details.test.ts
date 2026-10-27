@@ -2,6 +2,22 @@ import { describe, expect, it } from "vitest";
 import { buildAuditChangePresentation } from "../utils/change-details";
 
 describe("audit-log change details", () => {
+	it.each([
+		{},
+		{ after: { fullName: "Maria" } },
+		{ before: null, after: { amount: 10 } },
+	])(
+		"omits creation field details while preserving historical technical data: %j",
+		(changeData) => {
+			const result = buildAuditChangePresentation({
+				action: "CREATE",
+				changeData,
+			});
+			expect(result.mode).toBe("none");
+			expect(result.entries).toEqual([]);
+			expect(result.rawJson).toBe(JSON.stringify(changeData, null, 2));
+		},
+	);
 	it("maps lookup values to domain labels and ignores before-only metadata in update diffs", () => {
 		const result = buildAuditChangePresentation({
 			action: "UPDATE",

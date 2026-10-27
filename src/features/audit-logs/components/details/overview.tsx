@@ -64,7 +64,9 @@ export const AuditLogOverview = ({
 				/>
 			) : (
 				<p className="text-sm text-muted-foreground">
-					Nenhum detalhamento estruturado disponível para este registro.
+					{changePresentation.mode === "none"
+						? "Eventos de criação não exibem mudanças de campos no resumo."
+						: "Nenhum detalhamento estruturado disponível para este registro."}
 				</p>
 			)}
 		</EntityDetail.Section>
@@ -102,8 +104,12 @@ export const AuditLogOverview = ({
 	return (
 		<div className="flex min-w-0 flex-col gap-3">
 			<EntityDetail.Fields columns={2} items={summaryInfo} />
-			<EntityDetail.Separator />
-			{changes}
+			{changePresentation.mode !== "none" ? (
+				<>
+					<EntityDetail.Separator />
+					{changes}
+				</>
+			) : null}
 			{changePresentation.rawJson ? (
 				<>
 					<EntityDetail.Separator />
