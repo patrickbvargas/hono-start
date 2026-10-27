@@ -277,6 +277,12 @@ function DataTableContextRow({ row, menu }: DataTableContextRowProps) {
 				}}
 				render={row}
 				onContextMenuCapture={(event) => {
+					const nestedTrigger = (event.target as HTMLElement).closest(
+						"[data-context-menu-trigger]",
+					);
+					if (nestedTrigger && nestedTrigger !== event.currentTarget) {
+						return;
+					}
 					if ((event.target as HTMLElement).closest(ROW_INTERACTIVE_SELECTOR)) {
 						event.stopPropagation();
 					}

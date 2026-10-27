@@ -138,3 +138,5 @@ Receipt and remuneration documentation: open the record page and its Anexos tab,
 Dashboard drilldown rows open the corresponding contextual summary by click or Enter/Space. Receipts open their receipt summary, remunerations and expenses their own summary, and planned/outstanding installments and initial down payments their contract summary. Closing the summary returns to the same modal with filters, sorting, pagination and scroll preserved. Unavailable records show safe dismissible feedback; existing access permissions remain enforced.
 
 Each active contract revenue displays Valor entrada separately from Valor contratado and Recebido (inclui entrada), both in contextual summaries and the contract page Financeiro tab. It shows the persisted down payment amount in BRL; no down payment displays R$ 0,00.
+
+Singular related-record links also offer a right-click or keyboard context menu: Abrir página navigates directly to the related record, and Ver resumo retains contextual inspection. Primary click still opens the summary.

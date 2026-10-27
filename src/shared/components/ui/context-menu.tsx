@@ -10,7 +10,11 @@ function ContextMenu(props: ContextMenuPrimitive.Root.Props) {
 
 function ContextMenuTrigger(props: ContextMenuPrimitive.Trigger.Props) {
 	return (
-		<ContextMenuPrimitive.Trigger data-slot="context-menu-trigger" {...props} />
+		<ContextMenuPrimitive.Trigger
+			data-slot="context-menu-trigger"
+			data-context-menu-trigger=""
+			{...props}
+		/>
 	);
 }
 

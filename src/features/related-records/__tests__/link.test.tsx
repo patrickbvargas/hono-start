@@ -24,6 +24,12 @@ vi.mock("../components/details", () => ({
 	),
 }));
 
+vi.mock("@tanstack/react-router", async (importOriginal) => ({
+	...(await importOriginal<typeof import("@tanstack/react-router")>()),
+	useNavigate: () => vi.fn(),
+	useSearch: () => ({}),
+}));
+
 import { RelatedRecordLink } from "../components/link";
 
 afterEach(cleanup);
