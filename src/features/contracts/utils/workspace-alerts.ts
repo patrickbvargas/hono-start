@@ -1,11 +1,13 @@
 import * as z from "zod";
-import { formatter } from "@/shared/lib/formatter";
 import type { ContractDetail } from "../schemas/model";
 
 const workspaceAlertSchema = z.object({
 	id: z.string(),
 	title: z.string(),
 	description: z.string(),
+	dueDate: z.string().nullable().default(null),
+	overdueDays: z.number().int().nonnegative().nullable().default(null),
+	remainingAmount: z.number().nonnegative().nullable().default(null),
 	severity: z.enum(["high", "medium", "low"]),
 	tab: z.enum(["finance", "team"]),
 });
@@ -34,7 +36,11 @@ export function getContractWorkspaceAlerts(
 			alerts.push({
 				id: `balance-${revenue.id}`,
 				title: `${revenue.type}: saldo após a última parcela`,
-				description: `Todas as parcelas estão registradas, mas ainda há ${formatter.currency(revenue.remainingValue)} a receber. Confira os recebimentos e revise o plano.`,
+				description:
+					"Todas as parcelas estão registradas, mas ainda há saldo a receber. Confira os recebimentos e revise o plano.",
+				dueDate: null,
+				overdueDays: null,
+				remainingAmount: revenue.remainingValue,
 				severity: "high",
 				tab: "finance",
 			});
@@ -47,7 +53,15 @@ export function getContractWorkspaceAlerts(
 			alerts.push({
 				id: `revenue-${revenue.id}`,
 				title: `${revenue.type}: vencimento em atraso`,
-				description: `Próximo vencimento em aberto: ${formatter.calendarDate(revenue.nextDueDate)}. Saldo total a receber: ${formatter.currency(revenue.remainingValue)} (inclui parcelas futuras, quando houver).`,
+				description:
+					"Confira o recebimento em atraso. O saldo inclui parcelas futuras, quando houver.",
+				dueDate: revenue.nextDueDate,
+				overdueDays: Math.floor(
+					(Date.parse(`${today}T00:00:00Z`) -
+						Date.parse(`${revenue.nextDueDate}T00:00:00Z`)) /
+						86400000,
+				),
+				remainingAmount: revenue.remainingValue,
 				severity: "high",
 				tab: "finance",
 			});
@@ -55,7 +69,11 @@ export function getContractWorkspaceAlerts(
 			alerts.push({
 				id: `upcoming-${revenue.id}`,
 				title: `${revenue.type}: vencimento próximo`,
-				description: `Vencimento em aberto em ${formatter.calendarDate(revenue.nextDueDate)}. Confira a cobrança prevista para os próximos 7 dias (inclui hoje).`,
+				description:
+					"Confira a cobrança prevista para os próximos 7 dias (inclui hoje).",
+				dueDate: revenue.nextDueDate,
+				overdueDays: null,
+				remainingAmount: revenue.remainingValue,
 				severity: "medium",
 				tab: "finance",
 			});
@@ -68,6 +86,9 @@ export function getContractWorkspaceAlerts(
 	) {
 		alerts.push({
 			id: "settled-active",
+			dueDate: null,
+			overdueDays: null,
+			remainingAmount: null,
 			title: "Contrato quitado: revisar andamento",
 			description:
 				"Todas as receitas ativas estão quitadas. Confira se o contrato deve ser concluído; manter o andamento ativo pode ser uma decisão intencional.",

@@ -83,7 +83,12 @@ describe("related contract alert previews", () => {
 	it("uses complete authorized totals, distinguishes the preview and retains contextual contract inspection", () => {
 		render(<RelatedContractAlerts kind="client" id={42} />);
 		expect(mocks.useAlerts).toHaveBeenCalledWith({ kind: "client", id: 42 });
-		expect(screen.getByText("8 alertas em 3 contratos.")).toBeTruthy();
+		expect(screen.queryByText("8 alertas em 3 contratos.")).toBeNull();
+		expect(screen.getByText("Alertas")).toBeTruthy();
+		const title = screen.getByRole("heading", {
+			name: "Judicial: vencimento em atraso",
+		});
+		expect(title.nextElementSibling?.textContent).toBe("Alta");
 		expect(screen.getByText(/Exibindo 1 de 8 alertas/)).toBeTruthy();
 		const contract = screen.getByRole("button", { name: "PROC-7" });
 		expect(contract.getAttribute("data-record-id")).toBe("7");
@@ -141,15 +146,18 @@ describe("related contract alert previews", () => {
 		fireEvent.click(screen.getByRole("button", { name: "Tentar novamente" }));
 		expect(mocks.retry).toHaveBeenCalledOnce();
 	});
-	it("shows an explicit empty state", () => {
-		mocks.useAlerts.mockReturnValue({
-			...mocks.useAlerts(),
-			pendingWork: { data: [], total: 0, contracts: 0 },
-		});
-		render(<RelatedContractAlerts kind="client" id={42} />);
-		expect(
-			screen.getByText("Nenhum alerta nos contratos vinculados."),
-		).toBeTruthy();
-		expect(screen.queryByRole("list")).toBeNull();
-	});
+	it.each(["client", "employee"] as const)(
+		"hides the empty %s alert section",
+		(kind) => {
+			mocks.useAlerts.mockReturnValue({
+				...mocks.useAlerts(),
+				pendingWork: { data: [], total: 0, contracts: 0 },
+			});
+			const { container } = render(
+				<RelatedContractAlerts kind={kind} id={42} />,
+			);
+			expect(container.innerHTML).toBe("");
+			expect(screen.queryByRole("list")).toBeNull();
+		},
+	);
 });

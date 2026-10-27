@@ -1,4 +1,5 @@
 export { getPendingWorkQueryOptions } from "./api/queries";
+export { PendingWorkDueDate } from "./components/due-date";
 export { PendingWorkFilter } from "./components/filter";
 export { PendingWorkList } from "./components/list";
 export { RelatedContractAlerts } from "./components/related-contract-alerts";

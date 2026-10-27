@@ -24,6 +24,31 @@ const contract = (revenues: unknown[] = [revenue], extra = {}) =>
 	}) as unknown as ContractDetail;
 
 describe("contract alerts", () => {
+	it("exposes calendar due date, elapsed days and full remaining balance", () => {
+		expect(
+			getContractWorkspaceAlerts(
+				contract([{ ...revenue, nextDueDate: "2026-09-30" }]),
+				"2026-10-25",
+			)[0],
+		).toMatchObject({
+			dueDate: "2026-09-30",
+			overdueDays: 25,
+			remainingAmount: 100,
+		});
+		expect(
+			getContractWorkspaceAlerts(contract(), "2026-10-25")[0],
+		).toMatchObject({
+			dueDate: "2026-10-25",
+			overdueDays: null,
+			remainingAmount: 100,
+		});
+		expect(
+			getContractWorkspaceAlerts(
+				contract([{ ...revenue, installmentsPaid: 2 }]),
+				"2026-10-25",
+			)[0],
+		).toMatchObject({ dueDate: null, overdueDays: null, remainingAmount: 100 });
+	});
 	it("never treats blocked creation data as pending work", () => {
 		expect(getContractWorkspaceAlerts(contract([]), "2026-10-25")).toEqual([]);
 	});

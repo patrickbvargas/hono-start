@@ -251,3 +251,9 @@ Inline entity selectors on list screens match the search width (13rem on desktop
 Dashboard period controls use the same compact shortcut and shared DateRangePicker pattern as financial lists, on a separate row below the main filters, with 6 meses, 12 meses, Este ano and Personalizado. Custom dates apply together from the calendar; period fields are absent from the mobile filter drawer and there is no desktop Mais filtros date panel.
 
 Dashboard exposes searchable inline Cliente and Contrato selectors alongside Colaborador, with the same bounded widths, removable chips and clear-filter behavior. Options reuse the existing permission-scoped client/contract query factories and route prefetches.
+
+Contract, client and employee overview alerts share bordered rounded rows with p-4 padding and gap-3 spacing. Each row begins with a text-sm medium title followed by its severity chip, with supporting details below and contextual information or actions to the right.
+
+Contract overview alerts render due dates and elapsed overdue days through the same PendingWorkDueDate component as related-contract previews, with remaining balance protected by SensitiveValue. Upcoming alerts have no overdue-day label; exhausted installment plans show balance without a fabricated due date.
+
+Record workspace tabs use the shared ScrollArea for fallback overflow and the tab strip. Overview alert lists consume the remaining section height and scroll internally, retaining data and alert headings above them. Tab overflow is reserved for viewports too short to fit the fixed data plus the minimum alert area. Native overflow-y-auto on expanded tab panels is not used.

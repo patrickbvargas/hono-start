@@ -104,10 +104,11 @@ export function ContractWorkspace({
 			sections={[
 				{
 					value: "overview",
+					expanded: true,
 					label: "Visão geral",
 					content: (
-						<>
-							<div>
+						<div className="flex h-full min-h-80 flex-col gap-5">
+							<div className="shrink-0">
 								<FormSection title="Dados do contrato">
 									<EntityDetail.Fields
 										columns={2}
@@ -151,12 +152,17 @@ export function ContractWorkspace({
 									/>
 								</FormSection>
 							</div>
-							<div className="mt-5">
-								<FormSection title="Alertas">
-									<ContractAlerts alerts={alerts} onNavigate={onTabChange} />
-								</FormSection>
-							</div>
-						</>
+							{alerts.length > 0 && (
+								<div className="flex min-h-40 flex-1 flex-col [&>section]:min-h-0 [&>section]:flex-1 [&>section>div:first-child]:shrink-0">
+									<FormSection
+										title="Alertas"
+										className="min-h-0 flex-1 overflow-hidden"
+									>
+										<ContractAlerts alerts={alerts} onNavigate={onTabChange} />
+									</FormSection>
+								</div>
+							)}
+						</div>
 					),
 				},
 				{

@@ -150,8 +150,9 @@ it.each([false, true])(
 		const { rerender } = render(<EntityWorkspace {...props} tab="overview" />);
 		const panel = screen.getByRole("tabpanel");
 		if (expanded) {
-			expect(panel.classList.contains("overflow-y-auto")).toBe(true);
-			expect(panel.classList.contains("overflow-hidden")).toBe(false);
+			expect(panel.classList.contains("overflow-y-auto")).toBe(false);
+			expect(panel.querySelector("[data-slot=scroll-area]")).toBeTruthy();
+			expect(panel.classList.contains("overflow-hidden")).toBe(true);
 		}
 		const bounded = expanded ? panel : screen.getByText("Resumo").parentElement;
 		expect(bounded?.classList.contains("max-w-4xl")).toBe(true);
