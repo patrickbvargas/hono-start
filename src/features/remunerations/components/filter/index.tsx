@@ -100,7 +100,7 @@ export const RemunerationFilter = ({
 
 	const desktopFilterActions = (
 		<ListFilters.Actions className="w-full min-w-0 md:w-auto md:flex-nowrap">
-			<div className="w-48 min-w-0 shrink">
+			<div className="w-full min-w-0 md:w-52 md:shrink-0 xl:w-60">
 				<form.AppField name="contractId">
 					{(field) => (
 						<field.Autocomplete
@@ -112,7 +112,7 @@ export const RemunerationFilter = ({
 				</form.AppField>
 			</div>
 			{isAdmin ? (
-				<div className="w-48 min-w-0 shrink">
+				<div className="w-full min-w-0 md:w-52 md:shrink-0 xl:w-60">
 					<form.AppField name="employeeId">
 						{(field) => (
 							<field.Autocomplete

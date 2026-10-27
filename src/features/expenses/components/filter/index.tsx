@@ -97,7 +97,7 @@ export const ExpenseFilter = ({ summary }: ExpenseFilterProps) => {
 						</ListFilters.Drawer>
 					) : (
 						<ListFilters.Actions className="w-full min-w-0 md:w-auto md:flex-nowrap">
-							<div className="w-48 min-w-0 shrink">
+							<div className="w-full min-w-0 md:w-52 md:shrink-0 xl:w-60">
 								<form.AppField name="category">
 									{(field) => (
 										<field.Autocomplete
