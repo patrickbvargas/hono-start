@@ -79,11 +79,11 @@ export function EmployeeOverview({
 	const financialInfo = React.useMemo<DetailFieldItem[]>(
 		() => [
 			{
-				term: "% Remuneração",
+				term: "Remuneração (%)",
 				definition: formatter.percent(employee.remunerationPercent),
 			},
 			{
-				term: "% Indicação",
+				term: "Indicação (%)",
 				definition: formatter.percent(employee.referrerPercent),
 			},
 		],

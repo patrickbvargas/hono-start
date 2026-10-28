@@ -53,8 +53,10 @@ export const AuditLogOverview = ({
 		[auditLog],
 	);
 
+	const ChangesSection =
+		section === "changes" ? FormSection : EntityDetail.Section;
 	const changes = (
-		<EntityDetail.Section title={changePresentation.title}>
+		<ChangesSection title={changePresentation.title}>
 			{changePresentation.mode === "diff" ? (
 				<AuditDiffList
 					entries={changePresentation.entries as AuditChangeDiffEntry[]}
@@ -70,7 +72,7 @@ export const AuditLogOverview = ({
 						: "Nenhum detalhamento estruturado disponível para este registro."}
 				</p>
 			)}
-		</EntityDetail.Section>
+		</ChangesSection>
 	);
 	if (section === "overview") {
 		return (

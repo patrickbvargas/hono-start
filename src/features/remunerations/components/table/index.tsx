@@ -110,7 +110,7 @@ export const RemunerationTable = ({
 				meta: { minColumnWidth: 180 },
 			}),
 			c.accessor("paymentDate", {
-				header: "Data do honorário",
+				header: "Data de recebimento",
 				cell: ({ row }) => formatter.calendarDate(row.original.paymentDate),
 				enableSorting:
 					REMUNERATION_ALLOWED_SORT_COLUMNS.includes("paymentDate"),
@@ -128,7 +128,7 @@ export const RemunerationTable = ({
 				},
 			}),
 			c.accessor("effectivePercentage", {
-				header: "% Efetivo",
+				header: "Percentual efetivo (%)",
 				cell: ({ row }) => formatter.percent(row.original.effectivePercentage),
 				enableSorting: REMUNERATION_ALLOWED_SORT_COLUMNS.includes(
 					"effectivePercentage",

@@ -37,7 +37,7 @@ export const RemunerationList = ({
 	const renderCardFields = React.useCallback(
 		(remuneration: Remuneration): DetailFieldItem[] => [
 			{
-				term: "Data do honorário",
+				term: "Data de recebimento",
 				definition: formatter.calendarDate(remuneration.paymentDate),
 			},
 			{
@@ -49,7 +49,7 @@ export const RemunerationList = ({
 				),
 			},
 			{
-				term: "% Efetivo",
+				term: "Percentual efetivo (%)",
 				definition: formatter.percent(remuneration.effectivePercentage),
 			},
 			{

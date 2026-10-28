@@ -1,5 +1,6 @@
 import { feeSearchDefaults } from "@/features/fees";
 import { EntityDetail } from "@/shared/components/entity-detail";
+import { FormSection } from "@/shared/components/form-section";
 import { NavigationLink } from "@/shared/components/navigation-link";
 import { Button } from "@/shared/components/ui";
 import { SensitiveValue } from "@/shared/components/value-visibility";
@@ -24,15 +25,17 @@ export function ContractRevenues({
 			{contract.revenues
 				.filter((revenue) => revenue.isActive && !revenue.isSoftDeleted)
 				.map((revenue) => (
-					<div key={revenue.id} className="space-y-3 rounded-lg border p-3">
-						<div className="flex items-center justify-between gap-3">
-							<h3 className="font-medium">{revenue.type}</h3>
+					<FormSection
+						key={revenue.id}
+						title={revenue.type}
+						action={
 							<RevenuePaymentStatus
 								isFullyPaid={revenue.isFullyPaid}
 								paidValue={revenue.paidValue}
 								nextDueDate={revenue.nextDueDate}
 							/>
-						</div>
+						}
+					>
 						<EntityDetail.Fields
 							columns={2}
 							items={[
@@ -81,39 +84,41 @@ export function ContractRevenues({
 								},
 							]}
 						/>
-						{hasPermission(session, "org:fees:create") &&
-						canReadFees &&
-						contract.isActive &&
-						!contract.isSoftDeleted &&
-						contract.statusValue === "ACTIVE" &&
-						!revenue.isFullyPaid &&
-						revenue.nextInstallmentNumber !== null ? (
-							<Button
-								size="sm"
-								onClick={() => {
-									onRegister(revenue.id);
-								}}
-							>
-								Registrar recebimento
-							</Button>
-						) : null}
-						{canReadFees ? (
-							<NavigationLink
-								to="/honorarios"
-								state={{ resetFilterPanel: true }}
-								aria-label={`Ver recebimentos da receita ${revenue.type}`}
-								search={{
-									...feeSearchDefaults,
-									contractId: String(contract.id),
-									revenueId: String(revenue.id),
-								}}
-								className="inline-flex p-2 text-sm underline underline-offset-4"
-							>
-								Recebimentos
-							</NavigationLink>
-						) : null}
-					</div>
-				))}{" "}
+						<div className="flex flex-wrap items-center gap-3">
+							{hasPermission(session, "org:fees:create") &&
+							canReadFees &&
+							contract.isActive &&
+							!contract.isSoftDeleted &&
+							contract.statusValue === "ACTIVE" &&
+							!revenue.isFullyPaid &&
+							revenue.nextInstallmentNumber !== null ? (
+								<Button
+									size="sm"
+									onClick={() => {
+										onRegister(revenue.id);
+									}}
+								>
+									Registrar recebimento
+								</Button>
+							) : null}
+							{canReadFees ? (
+								<NavigationLink
+									to="/honorarios"
+									state={{ resetFilterPanel: true }}
+									aria-label={`Ver recebimentos da receita ${revenue.type}`}
+									search={{
+										...feeSearchDefaults,
+										contractId: String(contract.id),
+										revenueId: String(revenue.id),
+									}}
+									className="text-sm"
+								>
+									Recebimentos
+								</NavigationLink>
+							) : null}
+						</div>
+					</FormSection>
+				))}
 			{contract.revenues.filter((r) => r.isActive && !r.isSoftDeleted)
 				.length === 0 ? (
 				<p className="text-sm text-muted-foreground">

@@ -122,7 +122,7 @@ const RemunerationDetailsFallback = () => {
 				<EntityDetail.SkeletonFields columns={2} rows={6} />
 				<EntityDetail.Separator />
 				<EntityDetail.Section title="Entender cálculo">
-					<div className="mb-3 space-y-2 rounded-lg border bg-muted/30 p-3 text-sm">
+					<div className="mb-4 space-y-2 border-b pb-4 text-sm">
 						<Skeleton className="h-10 w-full" />
 						<Skeleton className="h-5 w-3/4" />
 						<Skeleton className="h-10 w-full sm:h-5" />

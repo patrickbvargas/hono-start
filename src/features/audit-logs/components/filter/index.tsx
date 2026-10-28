@@ -61,7 +61,7 @@ export const AuditLogFilter = ({ controller }: AuditLogFilterProps) => {
 	);
 
 	const desktopFilterActions = (
-		<ListFilters.Actions className="w-full min-w-0 md:w-auto md:flex-nowrap">
+		<ListFilters.Actions className="contents">
 			<ListFilters.Popover label="Tipo">
 				<form.AppField name="entityType">
 					{(field) => <field.CheckboxGroup options={entityTypes} />}
@@ -83,7 +83,7 @@ export const AuditLogFilter = ({ controller }: AuditLogFilterProps) => {
 	return (
 		<form.Form form={form} className="w-full">
 			<ListFilters>
-				<ListFilters.Bar className="flex-wrap md:flex-nowrap gap-2">
+				<ListFilters.Bar className="flex-wrap gap-2">
 					<form.AppField name="query">
 						{(field) => (
 							<field.Search

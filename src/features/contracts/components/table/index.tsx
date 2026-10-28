@@ -125,7 +125,7 @@ export const ContractTable = ({
 				enableSorting: CONTRACT_ALLOWED_SORT_COLUMNS.includes("status"),
 			}),
 			c.accessor("feePercentage", {
-				header: "% Honorários",
+				header: "Honorários (%)",
 				cell: ({ row }) => formatter.percent(row.original.feePercentage),
 				enableSorting: CONTRACT_ALLOWED_SORT_COLUMNS.includes("feePercentage"),
 			}),

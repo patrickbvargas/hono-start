@@ -97,7 +97,7 @@ export const ContractFilter = ({ controller }: ContractFilterProps) => {
 	);
 
 	const desktopFilterActions = (
-		<ListFilters.Actions className="w-full min-w-0 md:w-auto md:flex-nowrap">
+		<ListFilters.Actions className="contents">
 			<div className="w-full min-w-0 md:w-52 md:shrink-0 xl:w-60">
 				<form.AppField name="clientId">
 					{(field) => (
@@ -150,7 +150,7 @@ export const ContractFilter = ({ controller }: ContractFilterProps) => {
 	return (
 		<form.Form form={form} className="w-full">
 			<ListFilters>
-				<ListFilters.Bar className="flex-wrap md:flex-nowrap gap-2">
+				<ListFilters.Bar className="flex-wrap gap-2">
 					<form.AppField name="query">
 						{(field) => (
 							<field.Search

@@ -289,3 +289,10 @@ The authentication-owned OrganizationSwitcher hides Personal Account and the tri
 ## Company-wide clients and employees
 
 See [Multitenancy](../domain/MULTITENANCY.md) for the authoritative entity-scope matrix, global lifecycle, evidence visibility and current-Firm enforcement.
+
+### Visual consistency across detail tabs
+
+- Expanded audit change tabs use the same `FormSection` card as overview and technical tabs; compact details retain their plain sections.
+- Contract revenue groups use `FormSection` and a wrapping row for related actions. Remuneration calculation summaries use spacing and a divider inside the section instead of a nested card.
+- Desktop collection filters wrap within available width so all controls remain reachable. Search and filter controls share one wrapping row, using `contents` on the desktop action group to keep line starts aligned.
+- Financial labels use `Honorários (%)`, `Remuneração (%)`, `Indicação (%)` and `Percentual efetivo (%)`; remuneration receipt dates use `Data de recebimento` in lists, details and exports.

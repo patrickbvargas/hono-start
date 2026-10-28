@@ -249,7 +249,7 @@ describe("record page information hierarchy", () => {
 		expect(screen.getByText("Anexos completos")).toBeTruthy();
 	});
 	it.each([
-		{ Overview: EmployeeOverview, label: "% Remuneração" },
+		{ Overview: EmployeeOverview, label: "Remuneração (%)" },
 		{ Overview: FeeOverview, label: "Remuneração automática" },
 		{ Overview: RemunerationOverview, label: "Percentual efetivo (%)" },
 	])("puts $label in finance instead of overview", ({ Overview, label }) => {

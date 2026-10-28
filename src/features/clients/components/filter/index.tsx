@@ -74,7 +74,7 @@ export const ClientFilter = ({ controller }: ClientFilterProps) => {
 	);
 
 	const desktopFilterActions = (
-		<ListFilters.Actions className="w-full min-w-0 md:w-auto md:flex-nowrap">
+		<ListFilters.Actions className="contents">
 			<ListFilters.Popover label="Tipo">
 				<form.AppField name="type">
 					{(field) => <field.CheckboxGroup options={types} />}
@@ -100,7 +100,7 @@ export const ClientFilter = ({ controller }: ClientFilterProps) => {
 	return (
 		<form.Form form={form} className="w-full">
 			<ListFilters>
-				<ListFilters.Bar className="flex-wrap md:flex-nowrap gap-2">
+				<ListFilters.Bar className="flex-wrap gap-2">
 					<form.AppField name="query">
 						{(field) => (
 							<field.Search

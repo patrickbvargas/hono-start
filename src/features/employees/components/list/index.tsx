@@ -44,7 +44,7 @@ export const EmployeeList = ({
 				definition: employee.type,
 			},
 			{
-				term: "% Remuneração",
+				term: "Remuneração (%)",
 				definition: formatter.percent(employee.remunerationPercent),
 			},
 			{

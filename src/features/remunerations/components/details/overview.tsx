@@ -141,7 +141,7 @@ export function RemunerationOverview({
 	);
 
 	const calculationSummary = (
-		<div className="mb-3 space-y-2 rounded-lg border bg-muted/30 p-3 text-sm">
+		<div className="mb-4 space-y-2 border-b pb-4 text-sm">
 			<p>
 				Base do recebimento:{" "}
 				<strong>

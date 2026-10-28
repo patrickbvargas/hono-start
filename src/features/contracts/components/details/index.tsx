@@ -100,7 +100,7 @@ const ContractDetailsContent = ({
 			{ term: "Área", definition: contract.legalArea },
 			{ term: "Andamento", definition: contract.status },
 			{
-				term: "% Honorários",
+				term: "Honorários (%)",
 				definition: formatter.percent(contract.feePercentage),
 			},
 			{

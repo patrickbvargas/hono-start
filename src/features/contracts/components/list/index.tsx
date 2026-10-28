@@ -52,7 +52,7 @@ export const ContractList = ({
 				definition: contract.status,
 			},
 			{
-				term: "% Honorários",
+				term: "Honorários (%)",
 				definition: formatter.percent(contract.feePercentage),
 			},
 			{
