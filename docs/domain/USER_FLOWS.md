@@ -101,7 +101,7 @@ This file preserves the canonical user workflows of the product. These flows des
 
 ## Connected platform work
 
-Navigation groups Visão geral and Contratos under Trabalho; Recebimentos, Remunerações and Despesas under Financeiro; Clientes and Colaboradores under Cadastros; Auditoria and Configurações under Administração. Existing URLs remain unchanged.
+Navigation groups Visão geral and Contratos under Trabalho; Recebimentos, Remunerações and Despesas under Financeiro; Clientes and Colaboradores under Cadastros; Configurações under Administração. Auditoria remains available by URL and contextual history links, without a sidebar item. Existing URLs remain unchanged.
 
 Contract drawers retain quick consultation and offer Abrir página do contrato. The protected /contratos/$contractId workspace contains Visão geral, Financeiro, Equipe, Anexos and Histórico tabs. Opening from a contract list preserves its validated search for the return link. Finance reuses the drawer's revenue summary, existing lifecycle checks and prefilled receipt form. Readable receipts and remunerations have contract-filtered collection links; audit readers see an embedded history table scoped to exact Contract type and ID, paginated in place with change details available in a drawer. Other-entity audit events remain in their own records.
 

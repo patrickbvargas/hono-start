@@ -26,6 +26,10 @@ import {
 	getAuditEntityTypeLabel,
 } from "../utils/display";
 
+interface AuditAccessParams {
+	accessWhere?: Prisma.AuditLogWhereInput;
+}
+
 const dateTimeFormatter = new Intl.DateTimeFormat("pt-BR", {
 	dateStyle: "short",
 	timeStyle: "short",
@@ -36,9 +40,11 @@ function isSystemActorName(actorName: string) {
 }
 
 function buildAuditLogWhere({
+	accessWhere,
 	firmId,
 	filter,
-}: EntityFilterParams<AuditLogFilter>): Prisma.AuditLogWhereInput {
+}: EntityFilterParams<AuditLogFilter> &
+	AuditAccessParams): Prisma.AuditLogWhereInput {
 	const actorFilterValues = filter.actorName.flatMap((value) =>
 		value === "Sistema" ? ["Sistema", ""] : [value],
 	);
@@ -47,7 +53,7 @@ function buildAuditLogWhere({
 		: false;
 
 	return {
-		AND: [getAuditVisibilityWhere(firmId)],
+		AND: [accessWhere ?? getAuditVisibilityWhere(firmId)],
 		...(filter.entityId ? { entityId: String(filter.entityId) } : {}),
 		...(filter.query
 			? {
@@ -145,12 +151,13 @@ function mapAuditLogDetail(row: {
 }
 
 export async function getAuditLogs({
+	accessWhere,
 	firmId,
 	search,
-}: EntitySearchParams<AuditLogSearch>): Promise<
+}: EntitySearchParams<AuditLogSearch> & AuditAccessParams): Promise<
 	QueryPaginatedReturnType<AuditLog>
 > {
-	const where = buildAuditLogWhere({ firmId, filter: search });
+	const where = buildAuditLogWhere({ firmId, filter: search, accessWhere });
 
 	const sortMap: Record<string, object> = {
 		occurredAt: { createdAt: search.direction },
@@ -184,13 +191,16 @@ export async function getAuditLogs({
 }
 
 export async function getAuditLogById({
+	accessWhere,
 	firmId,
 	id,
-}: EntityUniqueParams): Promise<QueryOneReturnType<AuditLogDetail>> {
+}: EntityUniqueParams & AuditAccessParams): Promise<
+	QueryOneReturnType<AuditLogDetail>
+> {
 	const auditLog = await prisma.auditLog.findFirst({
 		where: {
 			id,
-			...getAuditVisibilityWhere(firmId),
+			...(accessWhere ?? getAuditVisibilityWhere(firmId)),
 		},
 	});
 
@@ -221,9 +231,10 @@ function mapDistinctOptionsWithLabel(
 
 export async function getAuditLogActions(
 	firmId: number,
+	accessWhere?: Prisma.AuditLogWhereInput,
 ): Promise<QueryManyReturnType<Option>> {
 	const actions = await prisma.auditLog.findMany({
-		where: getAuditVisibilityWhere(firmId),
+		where: accessWhere ?? getAuditVisibilityWhere(firmId),
 		distinct: ["action"],
 		select: { action: true },
 		orderBy: { action: "asc" },
@@ -234,9 +245,10 @@ export async function getAuditLogActions(
 
 export async function getAuditLogEntityTypes(
 	firmId: number,
+	accessWhere?: Prisma.AuditLogWhereInput,
 ): Promise<QueryManyReturnType<Option>> {
 	const entityTypes = await prisma.auditLog.findMany({
-		where: getAuditVisibilityWhere(firmId),
+		where: accessWhere ?? getAuditVisibilityWhere(firmId),
 		distinct: ["entityType"],
 		select: { entityType: true },
 		orderBy: { entityType: "asc" },
@@ -250,9 +262,10 @@ export async function getAuditLogEntityTypes(
 
 export async function getAuditLogActors(
 	firmId: number,
+	accessWhere?: Prisma.AuditLogWhereInput,
 ): Promise<QueryManyReturnType<Option>> {
 	const actors = await prisma.auditLog.findMany({
-		where: getAuditVisibilityWhere(firmId),
+		where: accessWhere ?? getAuditVisibilityWhere(firmId),
 		distinct: ["actorName"],
 		select: { actorName: true },
 		orderBy: { actorName: "asc" },
@@ -274,17 +287,20 @@ export async function getAuditLogActors(
 }
 
 export async function getAuditHistory({
+	accessWhere,
 	firmId,
 	entityType,
 	entityId,
-}: AuditHistory & { firmId: number }): Promise<AuditLog[]> {
+}: AuditHistory & { firmId: number } & AuditAccessParams): Promise<AuditLog[]> {
 	const rows = await prisma.auditLog.findMany({
-		where:
-			entityType === "Client"
+		where: {
+			...(accessWhere ? { AND: [accessWhere] } : {}),
+			...(entityType === "Client"
 				? { clientId: entityId }
 				: entityType === "Employee"
 					? { employeeId: entityId }
-					: { firmId, entityType, entityId: String(entityId) },
+					: { firmId, entityType, entityId: String(entityId) }),
+		},
 		orderBy: [{ createdAt: "desc" }, { id: "asc" }],
 	});
 	return rows.map(mapAuditLog);

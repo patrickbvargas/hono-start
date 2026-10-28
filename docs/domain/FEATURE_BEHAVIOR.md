@@ -198,7 +198,7 @@ Each primary entity collection also exposes a protected `/<collection>/<id>` rec
 
 ### Audit Expectations
 
-- Administrators can inspect immutable audit history.
+- Audit readers can inspect immutable history only for entities they can currently read.
 - Audit history exists to explain business mutations after the fact.
 
 ### Export Expectations

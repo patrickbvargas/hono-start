@@ -44,7 +44,7 @@ This document defines reusable trust-boundary and authorization rules for the re
 
 - Database errors, stack traces, and internals must not be exposed to end users.
 - Sensitive role-scoped data must follow the documented role model.
-- Audit-trail data is append-only and administrator-scoped when the product includes audit history.
+- Audit-trail data is append-only. Audit read permission also requires current read access to the audited entity; enforce the same scope on history, lists, counts, options and direct details.
 
 ## Security And Compliance Summary
 

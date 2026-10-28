@@ -39,14 +39,14 @@ The following matrix describes initial role presets to configure in Clerk, not i
 | Export remunerations | Yes, firm-wide | Yes, scoped |
 | Upload and view attachments | Yes | Yes |
 | Delete attachments | Yes | No |
-| View audit log | Yes | No |
+| View audit log | Yes, within readable entities | Yes, within readable entities |
 | Manage employee accounts | Yes | No |
 | Reset collaborator password | Yes | No |
 
 ## Permission Baseline
 
 - All authenticated users may access the application shell.
-- Administrators manage employee accounts, full financial visibility, audit logs, and restore/delete operations.
+- Administrators manage employee accounts, full financial visibility and restore/delete operations. Audit visibility follows entity access for every role.
 - Account managers assist with Clerk recovery; the application never generates temporary passwords.
 - Regular users must not access administrative account management or firm-wide confidential financial views.
 
@@ -66,7 +66,7 @@ The following matrix describes initial role presets to configure in Clerk, not i
 ## Protected Actions
 
 - Delete and restore actions are administrator-only.
-- Audit log access is administrator-only.
+- Audit access requires `org:audit_logs:read` plus read access to the audited entity. Member/User roles may receive this grant; it never widens entity visibility.
 - Manual remuneration edits are administrator-only.
 - Contract status lock management is administrator-only.
 - Employee management is administrator-only.
@@ -92,7 +92,7 @@ The following matrix describes initial role presets to configure in Clerk, not i
 | Expenses | Administrator only |
 | Remunerations | Authenticated and role-scoped |
 | User Management | Administrator only |
-| Audit Log | Administrator only |
+| Audit Log | Audit read grant plus audited-entity read scope |
 
 ## Access Policy Notes
 
@@ -180,3 +180,7 @@ Receipt and remuneration attachment operations require the corresponding `org:at
 ## Company-wide clients and employees
 
 See [Multitenancy](MULTITENANCY.md) for the authoritative entity-scope matrix, global lifecycle, evidence visibility and current-Firm enforcement.
+
+## Audit subject scope
+
+With `org:audit_logs:read`, users can inspect history only for entities they can currently read. Clients and employees follow their company-wide read grants. Contracts follow all/active-assignment scope, fees follow their contract scope, remunerations follow all/own scope and expenses require expense read. Attachment events follow their owner, including deleted attachment snapshots. Event authorship never grants access. Lists, counts, filter options, entity history and direct audit detail URLs enforce the same server-derived scope; search parameters cannot expand it. Missing Employee bindings or revoked assignments grant no assigned/own history. Operational events remain in the current Firm; shared Client/Employee history retains its company-wide scope. Unknown or unresolvable contexts are denied.

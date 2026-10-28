@@ -163,3 +163,5 @@ For every Organization intended to access the application, set privateMetadata.f
 ## Branch scope
 
 See [Multitenancy](../domain/MULTITENANCY.md) for the current one-company/multiple-branch model. Client and Employee are global, including employee settings and lifecycle. Current Organization grants and Firm-scoped operations remain independent from shared identity. Attachment and audit firmId retain origin; their owner determines visibility.
+
+Member audit access: grant `org:audit_logs:read` to the intended Clerk role. The application additionally restricts every audit read to the currently readable subject; the audit grant alone never grants entity access. Role configuration remains in Clerk.

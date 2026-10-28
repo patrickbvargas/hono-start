@@ -15,6 +15,7 @@ import type {
 	QueryPaginatedReturnType,
 } from "@/shared/types/api";
 import { AUDIT_LOG_ERRORS } from "../constants/errors";
+import { getAuditAccessWhere } from "../data/access";
 import {
 	getAuditHistory,
 	getAuditLogActions,
@@ -50,8 +51,9 @@ const getAuditLogsFn = createServerFn({ method: "GET" })
 			const session = await getRequiredServerLoggedUserSession();
 			assertCan(session, "org:audit_logs:read");
 			const { firmId } = await getServerScope("audit-log");
+			const accessWhere = await getAuditAccessWhere(session);
 
-			return await getAuditLogs({ firmId, search: data });
+			return await getAuditLogs({ firmId, search: data, accessWhere });
 		} catch (error) {
 			console.error("[getAuditLogs]", error);
 			throw new Error(AUDIT_LOG_ERRORS.GET_FAILED);
@@ -66,8 +68,9 @@ const getAuditLogByIdFn = createServerFn({ method: "GET" })
 			const session = await getRequiredServerLoggedUserSession();
 			assertCan(session, "org:audit_logs:read");
 			const { firmId } = await getServerScope("audit-log");
+			const accessWhere = await getAuditAccessWhere(session);
 
-			return await getAuditLogById({ firmId, id: data.id });
+			return await getAuditLogById({ firmId, id: data.id, accessWhere });
 		} catch (error) {
 			console.error("[getAuditLogById]", error);
 			throw new Error(AUDIT_LOG_ERRORS.DETAIL_FAILED);
@@ -81,8 +84,9 @@ const getAuditLogActionsFn = createServerFn({ method: "GET" })
 			const session = await getRequiredServerLoggedUserSession();
 			assertCan(session, "org:audit_logs:read");
 			const { firmId } = await getServerScope("audit-log");
+			const accessWhere = await getAuditAccessWhere(session);
 
-			return await getAuditLogActions(firmId);
+			return await getAuditLogActions(firmId, accessWhere);
 		} catch (error) {
 			console.error("[getAuditLogActions]", error);
 			throw new Error(AUDIT_LOG_ERRORS.ACTIONS_GET_FAILED);
@@ -96,8 +100,9 @@ const getAuditLogEntityTypesFn = createServerFn({ method: "GET" })
 			const session = await getRequiredServerLoggedUserSession();
 			assertCan(session, "org:audit_logs:read");
 			const { firmId } = await getServerScope("audit-log");
+			const accessWhere = await getAuditAccessWhere(session);
 
-			return await getAuditLogEntityTypes(firmId);
+			return await getAuditLogEntityTypes(firmId, accessWhere);
 		} catch (error) {
 			console.error("[getAuditLogEntityTypes]", error);
 			throw new Error(AUDIT_LOG_ERRORS.ENTITY_TYPES_GET_FAILED);
@@ -111,8 +116,9 @@ const getAuditLogActorsFn = createServerFn({ method: "GET" })
 			const session = await getRequiredServerLoggedUserSession();
 			assertCan(session, "org:audit_logs:read");
 			const { firmId } = await getServerScope("audit-log");
+			const accessWhere = await getAuditAccessWhere(session);
 
-			return await getAuditLogActors(firmId);
+			return await getAuditLogActors(firmId, accessWhere);
 		} catch (error) {
 			console.error("[getAuditLogActors]", error);
 			throw new Error(AUDIT_LOG_ERRORS.ACTORS_GET_FAILED);
@@ -163,7 +169,8 @@ const getAuditHistoryFn = createServerFn({ method: "GET" })
 			const session = await getRequiredServerLoggedUserSession();
 			assertCan(session, "org:audit_logs:read");
 			const { firmId } = await getServerScope("audit-log");
-			return await getAuditHistory({ firmId, ...data });
+			const accessWhere = await getAuditAccessWhere(session);
+			return await getAuditHistory({ firmId, ...data, accessWhere });
 		} catch (error) {
 			console.error("[getAuditHistory]", error);
 			throw new Error(AUDIT_LOG_ERRORS.GET_FAILED);

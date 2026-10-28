@@ -5,6 +5,7 @@ const { prismaMock } = vi.hoisted(() => ({
 		auditLog: {
 			count: vi.fn(),
 			findMany: vi.fn(),
+			findFirst: vi.fn(),
 		},
 	},
 }));
@@ -17,6 +18,7 @@ import {
 	getAuditHistory,
 	getAuditLogActions,
 	getAuditLogActors,
+	getAuditLogById,
 	getAuditLogEntityTypes,
 	getAuditLogs,
 	getAuditVisibilityWhere,
@@ -24,6 +26,63 @@ import {
 import { auditLogSearchSchema } from "../schemas/search";
 
 describe("audit-log data queries", () => {
+	it("applies subject visibility to history, detail, counts and filter options", async () => {
+		const accessWhere = {
+			OR: [{ entityType: "Contract", entityId: "7", firmId: 2 }],
+		};
+		prismaMock.auditLog.findMany.mockResolvedValue([]);
+		prismaMock.auditLog.count.mockResolvedValue(0);
+		await getAuditHistory({
+			firmId: 2,
+			entityType: "Contract",
+			entityId: 8,
+			accessWhere,
+		});
+		expect(prismaMock.auditLog.findMany).toHaveBeenLastCalledWith(
+			expect.objectContaining({
+				where: {
+					AND: [accessWhere],
+					firmId: 2,
+					entityType: "Contract",
+					entityId: "8",
+				},
+			}),
+		);
+		await getAuditHistory({
+			firmId: 2,
+			entityType: "Employee",
+			entityId: 8,
+			accessWhere,
+		});
+		expect(prismaMock.auditLog.findMany).toHaveBeenLastCalledWith(
+			expect.objectContaining({ where: { AND: [accessWhere], employeeId: 8 } }),
+		);
+		await getAuditLogs({
+			firmId: 2,
+			search: auditLogSearchSchema.parse({ query: "other" }),
+			accessWhere,
+		});
+		expect(prismaMock.auditLog.count).toHaveBeenLastCalledWith({
+			where: expect.objectContaining({ AND: [accessWhere] }),
+		});
+		prismaMock.auditLog.findFirst.mockResolvedValue(null);
+		await expect(
+			getAuditLogById({ firmId: 2, id: 99, accessWhere }),
+		).rejects.toThrow("Log de auditoria não encontrado.");
+		expect(prismaMock.auditLog.findFirst).toHaveBeenLastCalledWith({
+			where: { id: 99, ...accessWhere },
+		});
+		for (const getOptions of [
+			getAuditLogActions,
+			getAuditLogActors,
+			getAuditLogEntityTypes,
+		]) {
+			await getOptions(2, accessWhere);
+			expect(prismaMock.auditLog.findMany).toHaveBeenLastCalledWith(
+				expect.objectContaining({ where: accessWhere }),
+			);
+		}
+	});
 	it("loads complete entity history with tenant scope and no server pagination", async () => {
 		prismaMock.auditLog.findMany.mockResolvedValueOnce([]);
 		expect(

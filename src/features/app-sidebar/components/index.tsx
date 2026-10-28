@@ -35,7 +35,7 @@ const items: RouteSection[] = [
 		url: "#",
 		isActive: true,
 		icon: ScrollTextIcon,
-		items: [ROUTES.auditLog, ROUTES.settings],
+		items: [ROUTES.settings],
 	},
 ] as const;
 
