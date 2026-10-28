@@ -27,6 +27,7 @@ vi.mock("@/shared/hooks/use-overlay", () => ({
 				open: deleteOpenMock,
 				render: () => null,
 			},
+			details: { open: vi.fn(), close: vi.fn(), render: () => null },
 		},
 	}),
 }));
@@ -68,6 +69,7 @@ describe("AttachmentSection", () => {
 				}}
 				canDelete={false}
 				onDelete={deleteOpenMock}
+				onPreview={vi.fn()}
 			/>,
 		);
 		expect(
@@ -101,12 +103,12 @@ describe("AttachmentSection", () => {
 		render(<AttachmentSectionFallback canUpload />);
 		expect(useAttachmentsMock).not.toHaveBeenCalled();
 		expect(screen.queryByRole("button")).toBeNull();
-		expect(document.querySelectorAll('[data-slot="skeleton"]').length).toBe(2);
+		expect(document.querySelectorAll('[data-slot="skeleton"]').length).toBe(5);
 	});
 
 	it("omits upload button space when uploads are unavailable", () => {
 		render(<AttachmentSectionFallback canUpload={false} />);
-		expect(document.querySelectorAll('[data-slot="skeleton"]').length).toBe(1);
+		expect(document.querySelectorAll('[data-slot="skeleton"]').length).toBe(4);
 	});
 
 	it("renders one heading and opens upload from the compact header", () => {
@@ -117,7 +119,7 @@ describe("AttachmentSection", () => {
 		expect(createOpenMock).toHaveBeenCalledOnce();
 	});
 
-	it("uses a single text line for empty and loading states", () => {
+	it("keeps empty copy compact and matches loading to the padded attachment row", () => {
 		const { rerender, container } = render(
 			<AttachmentSection ownerId={1} ownerKind="client" />,
 		);
@@ -132,8 +134,8 @@ describe("AttachmentSection", () => {
 		});
 		rerender(<AttachmentSection ownerId={1} ownerKind="client" />);
 		expect(
-			container.querySelector('div.h-5[aria-hidden="true"]')?.className,
-		).toContain("h-5");
+			container.querySelector('div.h-16[aria-hidden="true"]')?.className,
+		).toContain("py-1");
 	});
 
 	it("expands attachments in the workspace while retaining compact drawer scrolling", () => {
@@ -159,6 +161,7 @@ describe("AttachmentSection", () => {
 			container.querySelector('[data-slot="scroll-area"]')?.className,
 		).toContain("max-h-56");
 		expect(screen.getByRole("listitem").className).toContain("min-h-16");
+		expect(screen.getByRole("listitem").className).toContain("py-1");
 		rerender(
 			<AttachmentSection ownerId={1} ownerKind="contract" layout="expanded" />,
 		);
@@ -184,7 +187,7 @@ describe("AttachmentSection", () => {
 		render(<AttachmentSection ownerId={1} ownerKind="contract" />);
 
 		expect(screen.queryByText("Carregando anexos...")).toBeNull();
-		expect(document.querySelectorAll('[data-slot="skeleton"]').length).toBe(1);
+		expect(document.querySelectorAll('[data-slot="skeleton"]').length).toBe(4);
 	});
 
 	it("renders metadata, downloads and opens deletion through the menu", async () => {

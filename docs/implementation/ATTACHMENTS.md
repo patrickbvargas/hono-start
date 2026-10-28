@@ -16,3 +16,7 @@ Attachment owners are client, employee, contract, expense, fee and remuneration.
 ## Branch scope
 
 See [Multitenancy](../domain/MULTITENANCY.md) for the current one-company/multiple-branch model. Client and Employee are global, including employee settings and lifecycle. Current Organization grants and Firm-scoped operations remain independent from shared identity. Attachment and audit firmId retain origin; their owner determines visibility.
+
+## Preview verification
+
+Click an attachment identity in a record page or contextual drawer. Verify PDF page navigation/zoom in the local PDF.js reader and printing in the target browser, JPG/PNG fitting without cropping, filename/metadata and right-aligned actions. The complete native PDF reader remains available in a new tab; Abrir em nova aba and download remain available. Confirm Escape/close returns to the originating trigger, row actions do not open preview, deletion cancellation retains preview, and confirmed deletion closes it. Test missing files and denied access for safe retry feedback. Preview requests use the authenticated delivery endpoint, consume cancellation signals, retain no inactive binary query cache and revoke temporary object URLs on replacement/close.

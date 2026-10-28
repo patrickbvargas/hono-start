@@ -9,6 +9,7 @@ import { useAttachmentSection } from "../../hooks/use-section";
 import type { AttachmentOwnerKind } from "../../schemas/form";
 import { AttachmentDelete } from "../delete";
 import { AttachmentForm } from "../form";
+import { AttachmentPreview } from "../preview";
 import { AttachmentSectionContent } from "./content";
 import { AttachmentSectionSkeleton } from "./skeleton";
 
@@ -28,17 +29,27 @@ export const AttachmentSection = ({
 	ownerKind,
 }: AttachmentSectionProps) => {
 	const headingId = useId();
-	const { owner, attachments, error, isPending, canDelete, overlay, retry } =
-		useAttachmentSection({ ownerId, ownerKind });
+	const {
+		owner,
+		attachments,
+		error,
+		isPending,
+		canDelete,
+		overlay,
+		retry,
+		openPreview,
+		previewTriggerRef,
+	} = useAttachmentSection({ ownerId, ownerKind });
 
 	const attachmentList = (
 		<ul aria-label="Arquivos anexados" className="min-w-0 divide-y">
 			{attachments.map((attachment) => (
-				<li key={attachment.id} className="min-h-16 min-w-0 py-3">
+				<li key={attachment.id} className="min-h-16 min-w-0 py-1">
 					<AttachmentSectionContent
 						attachment={attachment}
 						canDelete={canDelete}
 						onDelete={overlay.delete.open}
+						onPreview={(trigger) => openPreview(attachment.id, trigger)}
 					/>
 				</li>
 			))}
@@ -133,8 +144,29 @@ export const AttachmentSection = ({
 			{overlay.create.render((state) => (
 				<AttachmentForm owner={owner} state={state} onSuccess={state.close} />
 			))}
+			{overlay.details.render((id, state) => {
+				const attachment = attachments.find((item) => item.id === id);
+				return attachment ? (
+					<AttachmentPreview
+						key={id}
+						attachment={attachment}
+						state={state}
+						canDelete={canDelete}
+						onDelete={overlay.delete.open}
+						triggerRef={previewTriggerRef}
+						confirmationOpen={overlay.delete.isOpen}
+					/>
+				) : null;
+			})}
 			{overlay.delete.render((id, state) => (
-				<AttachmentDelete id={id} state={state} onSuccess={state.close} />
+				<AttachmentDelete
+					id={id}
+					state={state}
+					onSuccess={() => {
+						state.close();
+						overlay.details.close();
+					}}
+				/>
 			))}
 		</section>
 	);

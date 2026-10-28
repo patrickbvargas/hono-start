@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { useOverlay } from "@/shared/hooks/use-overlay";
 import type { EntityId } from "@/shared/schemas/entity";
 import { hasPermission, useLoggedUserSession } from "@/shared/session";
@@ -19,6 +20,21 @@ export function useAttachmentSection({
 	const session = useLoggedUserSession();
 	const canDelete = hasPermission(session, "org:attachments:delete");
 	const { overlay } = useOverlay<EntityId>();
+	const previewTriggerRef = useRef<HTMLElement | null>(null);
+	const openPreview = (id: EntityId, trigger: HTMLElement) => {
+		previewTriggerRef.current = trigger;
+		overlay.details.open(id);
+	};
 
-	return { owner, attachments, error, isPending, canDelete, overlay, retry };
+	return {
+		owner,
+		attachments,
+		error,
+		isPending,
+		canDelete,
+		overlay,
+		retry,
+		openPreview,
+		previewTriggerRef,
+	};
 }

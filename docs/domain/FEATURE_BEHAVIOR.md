@@ -103,7 +103,13 @@ The software core includes these feature areas:
 
 - Provides file handling for client, employee, contract, expense, fee, and remuneration contexts.
 - Supports upload and view behavior within allowed contexts.
+- Attachment identity buttons open a wide contextual preview modal by click, Enter or Space. The fixed header shows filename, type, size, creation date and sender, with download, permitted deletion and close actions on the right. PDFs use a local PDF.js reader with page navigation and the same floating zoom toolbar as images; JPG/PNG images fit without cropping. The modal preserves the originating record context and restores focus when dismissed. Row download and menus do not open the preview.
+- Preview delivery retains existing session, owner and branch authorization. Loading uses a skeleton through download and the image/PDF load event, including retries; HTTP/image failures show safe pt-BR feedback with Tentar novamente. Abrir em nova aba and download remain available when a URL exists, including when the PDF cannot be rendered. Preview binaries are not retained after closing and temporary object URLs are revoked. Deletion from preview requires existing confirmation; cancellation/failure preserves preview and successful deletion closes it.
 - Keeps deletion behavior restricted according to permissions.
+- Attachment rows vertically center identity/metadata with the actions, retain light padding and highlight the complete row on hover/focus. Overflow and context menus offer Visualizar before the existing actions, opening the same contextual preview.
+- Preview headers use a compact filename row and a single metadata line where space permits, including sender; long filenames truncate with full-name tooltip and metadata wraps on small screens. Abrir em nova aba uses an underlined label followed by the navigation arrow, consistent with entity page links.
+- Image previews expose floating zoom out/in controls, current percentage, 100% actual size and Ajustar à tela. They initially fit without enlarging small files, support zoom up to 800%, and allow mouse/touch dragging or arrow-key panning within image bounds. Resizing, changing zoom or switching images resets position. PDF shares the image zoom toolbar, adds page navigation and fit-to-width, and renders one page at a time.
+- Image preview menus expose Imprimir after loading. Printing prepares only the complete image, preserving proportions and excluding preview controls, metadata and current zoom/pan. The browser's print dialog owns printer selection and cancellation. Temporary print content is removed after printing or preview dismissal. PDF printing uses the browser print dialog; the full native reader remains available in a new tab.
 
 ### Audit Log
 

@@ -1,4 +1,4 @@
-import { DownloadIcon, TrashIcon } from "lucide-react";
+import { DownloadIcon, EyeIcon, PrinterIcon, TrashIcon } from "lucide-react";
 import { ContextMenuItem, DropdownMenuItem } from "@/shared/components/ui";
 
 interface AttachmentActionsProps {
@@ -7,6 +7,9 @@ interface AttachmentActionsProps {
 	canDelete: boolean;
 	onDownload: () => void;
 	onDelete: () => void;
+	onPreview?: () => void;
+	onPrint?: () => void;
+	canPrint?: boolean;
 }
 
 export function AttachmentActions({
@@ -15,14 +18,29 @@ export function AttachmentActions({
 	canDelete,
 	onDownload,
 	onDelete,
+	onPreview,
+	onPrint,
+	canPrint = true,
 }: AttachmentActionsProps) {
 	const Item = presentation === "context" ? ContextMenuItem : DropdownMenuItem;
 	return (
 		<>
+			{onPreview && (
+				<Item onClick={onPreview}>
+					<EyeIcon size={16} />
+					Visualizar
+				</Item>
+			)}
 			<Item disabled={!canDownload} onClick={onDownload}>
 				<DownloadIcon size={16} />
 				Baixar
 			</Item>
+			{onPrint && (
+				<Item disabled={!canPrint} onClick={onPrint}>
+					<PrinterIcon size={16} />
+					Imprimir
+				</Item>
+			)}
 			{canDelete && (
 				<Item variant="destructive" onClick={onDelete}>
 					<TrashIcon size={16} />

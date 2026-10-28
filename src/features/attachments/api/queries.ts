@@ -20,6 +20,8 @@ import { assertAttachmentOwnerReadAccess } from "./access";
 
 export const attachmentKeys = {
 	all: ["attachments"] as const,
+	file: (id: number, url: string | null) =>
+		[...attachmentKeys.all, "file", id, url] as const,
 	list: (input: AttachmentListInput) => {
 		const owner =
 			input.clientId ??
@@ -33,6 +35,39 @@ export const attachmentKeys = {
 		return [...attachmentKeys.all, "list", owner, input] as const;
 	},
 };
+
+export function getAttachmentFileQueryOptions(attachment: AttachmentSummary) {
+	return queryOptions({
+		queryKey: attachmentKeys.file(attachment.id, attachment.downloadUrl),
+		queryFn: async ({ signal }) => {
+			if (!attachment.downloadUrl) {
+				throw new Error(ATTACHMENT_ERRORS.PREVIEW_UNAVAILABLE);
+			}
+			const response = await fetch(attachment.downloadUrl, {
+				signal,
+				cache: "no-store",
+				credentials: "same-origin",
+			});
+			const mimeType = response.headers
+				.get("Content-Type")
+				?.split(";")[0]
+				.trim();
+			if (
+				!response.ok ||
+				!mimeType ||
+				!["application/pdf", "image/jpeg", "image/png"].includes(mimeType)
+			) {
+				throw new Error(ATTACHMENT_ERRORS.PREVIEW_FAILED);
+			}
+			return response.blob();
+		},
+		gcTime: 0,
+		retry: false,
+		refetchOnWindowFocus: false,
+		refetchOnReconnect: false,
+		structuralSharing: false,
+	});
+}
 
 const getAttachmentsByOwnerFn = createServerFn({ method: "GET" })
 	.middleware([authMiddleware])

@@ -11,6 +11,10 @@ export const ATTACHMENT_ERRORS = {
 	FILE_TOO_LARGE: "Arquivo deve ter no máximo 10 MB.",
 	INVALID_FILE_TYPE: "Formato de arquivo inválido. Use PDF, JPG ou PNG.",
 	LIST_FAILED: "Não foi possível carregar anexos.",
+	PREVIEW_FAILED: "Não foi possível exibir o anexo.",
+	PRINT_FAILED:
+		"Não foi possível preparar o arquivo para impressão. Tente abrir em nova aba.",
+	PREVIEW_UNAVAILABLE: "Visualização indisponível para este anexo.",
 	OWNER_NOT_FOUND: "Contexto do anexo não encontrado.",
 	PERSISTENCE_FAILED: "Não foi possível salvar metadados do anexo.",
 	STORAGE_CAPACITY_EXCEEDED:

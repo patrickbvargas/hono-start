@@ -51,12 +51,13 @@ it.each(["context", "dropdown"] as const)(
 				attachment={attachment}
 				canDelete
 				onDelete={onDelete}
+				onPreview={vi.fn()}
 			/>,
 		);
 		await openMenu(presentation);
 		expect(
 			screen.getAllByRole("menuitem").map((item) => item.textContent),
-		).toEqual(["Baixar", "Excluir"]);
+		).toEqual(["Visualizar", "Baixar", "Excluir"]);
 		fireEvent.click(screen.getByRole("menuitem", { name: "Baixar" }));
 		expect(open).toHaveBeenCalledExactlyOnceWith(
 			"/api/attachments/42",
@@ -70,6 +71,26 @@ it.each(["context", "dropdown"] as const)(
 );
 
 it.each(["context", "dropdown"] as const)(
+	"opens preview through %s and returns the identity trigger",
+	async (presentation) => {
+		const onPreview = vi.fn();
+		render(
+			<AttachmentSectionContent
+				attachment={attachment}
+				canDelete={false}
+				onDelete={vi.fn()}
+				onPreview={onPreview}
+			/>,
+		);
+		await openMenu(presentation);
+		fireEvent.click(screen.getByRole("menuitem", { name: "Visualizar" }));
+		expect(onPreview).toHaveBeenCalledExactlyOnceWith(
+			screen.getByRole("button", { name: "Visualizar prova.pdf" }),
+		);
+	},
+);
+
+it.each(["context", "dropdown"] as const)(
 	"disables unavailable download and omits deletion through %s",
 	async (presentation) => {
 		render(
@@ -77,6 +98,7 @@ it.each(["context", "dropdown"] as const)(
 				attachment={{ ...attachment, downloadUrl: null }}
 				canDelete={false}
 				onDelete={vi.fn()}
+				onPreview={vi.fn()}
 			/>,
 		);
 		await openMenu(presentation);
@@ -97,6 +119,7 @@ it.each([{ key: "F10", shiftKey: true }, { key: "ContextMenu" }])(
 				attachment={attachment}
 				canDelete={false}
 				onDelete={vi.fn()}
+				onPreview={vi.fn()}
 			/>,
 		);
 		const trigger = screen.getByLabelText("Anexo prova.pdf");

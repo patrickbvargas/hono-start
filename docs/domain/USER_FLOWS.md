@@ -117,7 +117,7 @@ Contract overview omits the Próximo passo guidance panel. Its header uses a sha
 
 The page header offers Excluir to actors with contract delete permission for non-deleted contracts. It reuses the existing confirmation and protected soft-delete flow, including the active-revenue deletion block. Success returns to the originating validated contract list or pending queue with filters preserved; cancellation or failure keeps the current page.
 
-Contract list action menus start with Abrir página do contrato and preserve the list search as return context. The overview labels Observações across both columns. Workspace attachments fill available tab space with internal scrolling, while drawers retain compact scrolling and a compact single-text-line empty/loading height. Appearance buttons pair Sistema, Claro and Escuro with the same icons as the theme switcher.
+Contract list action menus start with Abrir página do contrato and preserve the list search as return context. The overview labels Observações across both columns. Workspace attachments fill available tab space with internal scrolling, while drawers retain compact scrolling and a compact single-text-line empty state and a loading skeleton matching the padded attachment row. Appearance buttons pair Sistema, Claro and Escuro with the same icons as the theme switcher.
 
 The contract overview displays alerts below its data and derives pending next due dates, remaining balances, missing active revenues and missing active responsible assignments from the authorized contract detail. Future balances are informational rather than overdue debt; the total remaining balance is not presented as the overdue amount. Optional notes and attachments are not required. Actions open the existing finance/team tabs.
 
