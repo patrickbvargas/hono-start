@@ -7,11 +7,55 @@ vi.mock("@/shared/session", () => ({
 
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { DropdownMenu, DropdownMenuContent } from "@/shared/components/ui";
 import { EntityActions } from "../entity-actions";
 
 afterEach(cleanup);
 
 describe("EntityActions", () => {
+	it.each(["dropdown", "context"] as const)(
+		"renders decorative icons for every %s action",
+		(presentation) => {
+			const actions = (
+				<EntityActions
+					presentation={presentation}
+					onOpenPage={vi.fn()}
+					onView={vi.fn()}
+					canEdit
+					onEdit={vi.fn()}
+					canRestore
+					onRestore={vi.fn()}
+					canDelete
+					onDelete={vi.fn()}
+				/>
+			);
+			render(
+				presentation === "context" ? (
+					<DropdownMenu defaultOpen>
+						<DropdownMenuContent>{actions}</DropdownMenuContent>
+					</DropdownMenu>
+				) : (
+					actions
+				),
+			);
+			if (presentation === "dropdown") {
+				fireEvent.click(screen.getByRole("button", { name: "Ações" }));
+			}
+			for (const name of [
+				"Abrir página",
+				"Ver resumo",
+				"Editar",
+				"Restaurar",
+				"Excluir",
+			]) {
+				const icon = screen
+					.getByRole("menuitem", { name })
+					.querySelector("svg");
+				expect(icon?.getAttribute("aria-hidden")).toBe("true");
+				expect(icon?.getAttribute("width")).toBe("16");
+			}
+		},
+	);
 	it("places the optional workspace action first and invokes it", () => {
 		const open = vi.fn();
 		render(<EntityActions onOpenPage={open} onView={vi.fn()} />);

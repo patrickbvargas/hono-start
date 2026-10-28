@@ -1,4 +1,11 @@
-import { EllipsisVerticalIcon } from "lucide-react";
+import {
+	EllipsisVerticalIcon,
+	EyeIcon,
+	FileTextIcon,
+	PencilIcon,
+	RotateCcwIcon,
+	TrashIcon,
+} from "lucide-react";
 import type { ReactNode } from "react";
 import { TableButton } from "@/shared/components/table-button";
 import {
@@ -80,12 +87,33 @@ export function EntityActions({
 	const Item = presentation === "context" ? ContextMenuItem : DropdownMenuItem;
 	const items = (
 		<>
-			{shouldShowOpenPage && <Item onClick={onOpenPage}>{openPageLabel}</Item>}
-			{shouldShowView && <Item onClick={onView}>Ver resumo</Item>}
-			{shouldShowEdit && <Item onClick={onEdit}>Editar</Item>}
-			{shouldShowRestore && <Item onClick={onRestore}>Restaurar</Item>}
+			{shouldShowOpenPage && (
+				<Item onClick={onOpenPage}>
+					<FileTextIcon size={16} aria-hidden="true" />
+					{openPageLabel}
+				</Item>
+			)}
+			{shouldShowView && (
+				<Item onClick={onView}>
+					<EyeIcon size={16} aria-hidden="true" />
+					Ver resumo
+				</Item>
+			)}
+			{shouldShowEdit && (
+				<Item onClick={onEdit}>
+					<PencilIcon size={16} aria-hidden="true" />
+					Editar
+				</Item>
+			)}
+			{shouldShowRestore && (
+				<Item onClick={onRestore}>
+					<RotateCcwIcon size={16} aria-hidden="true" />
+					Restaurar
+				</Item>
+			)}
 			{shouldShowDelete && (
 				<Item variant="destructive" onClick={onDelete}>
+					<TrashIcon size={16} aria-hidden="true" />
 					Excluir
 				</Item>
 			)}

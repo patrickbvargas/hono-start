@@ -1,5 +1,5 @@
 import { createColumnHelper } from "@tanstack/react-table";
-import { FileDownIcon } from "lucide-react";
+import { FileDownIcon, FileSpreadsheetIcon, FileTextIcon } from "lucide-react";
 import * as React from "react";
 import { DataTable } from "@/shared/components/data-table";
 import { EntityActions } from "@/shared/components/entity-actions";
@@ -188,12 +188,14 @@ export const RemunerationExportMenu = ({
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end">
 				<DropdownMenuItem disabled={isPending} onClick={() => onExport("pdf")}>
+					<FileTextIcon size={16} aria-hidden="true" />
 					{pendingFormat === "pdf" ? "Gerando PDF..." : "PDF"}
 				</DropdownMenuItem>
 				<DropdownMenuItem
 					disabled={isPending}
 					onClick={() => onExport("spreadsheet")}
 				>
+					<FileSpreadsheetIcon size={16} aria-hidden="true" />
 					{pendingFormat === "spreadsheet"
 						? "Gerando planilha..."
 						: "Planilha (.csv)"}
