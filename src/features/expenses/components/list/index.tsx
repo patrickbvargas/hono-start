@@ -2,7 +2,6 @@ import * as React from "react";
 import { DataCardList } from "@/shared/components/data-card-list";
 import { EntityActions } from "@/shared/components/entity-actions";
 import type { DetailFieldItem } from "@/shared/components/entity-fields";
-import { EntityStatus } from "@/shared/components/entity-status";
 import { Pagination } from "@/shared/components/pagination";
 import { SensitiveValue } from "@/shared/components/value-visibility";
 import { formatter } from "@/shared/lib/formatter";
@@ -44,15 +43,6 @@ export const ExpenseList = ({
 				),
 			},
 			{ term: "Descrição", definition: expense.notes || "—" },
-			{
-				term: "Situação",
-				definition: (
-					<EntityStatus
-						isActive={expense.isActive}
-						isSoftDeleted={expense.isSoftDeleted}
-					/>
-				),
-			},
 			{ term: "Criado em", definition: formatter.date(expense.createdAt) },
 		],
 		[],

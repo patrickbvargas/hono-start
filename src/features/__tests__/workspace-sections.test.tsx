@@ -260,7 +260,9 @@ describe("record page information hierarchy", () => {
 		expect(screen.queryByText("Criado em")).toBeNull();
 		rerender(<Overview id={42} />);
 		expect(screen.getByText(label)).toBeTruthy();
-		expect(screen.getByText("Situação")).toBeTruthy();
+		expect(Boolean(screen.queryByText("Situação"))).toBe(
+			Overview === EmployeeOverview,
+		);
 	});
 	it("separates audit event, change and technical data while preserving the drawer", () => {
 		const { rerender } = render(<AuditLogOverview id={1} section="overview" />);

@@ -6,7 +6,6 @@ import {
 	type DetailFieldItem,
 	EntityDetail,
 } from "@/shared/components/entity-detail";
-import { EntityStatus } from "@/shared/components/entity-status";
 import { FormSection } from "@/shared/components/form-section";
 import { NavigationLink } from "@/shared/components/navigation-link";
 import { SensitiveValue } from "@/shared/components/value-visibility";
@@ -94,15 +93,6 @@ export function FeeOverview({ id, section = "all" }: FeeOverviewProps) {
 
 	const registerInfo = React.useMemo<DetailFieldItem[]>(
 		() => [
-			{
-				term: "Situação",
-				definition: (
-					<EntityStatus
-						isActive={fee.isActive}
-						isSoftDeleted={fee.isSoftDeleted}
-					/>
-				),
-			},
 			{ term: "Criado em", definition: formatter.date(fee.createdAt) },
 			{
 				term: "Atualizado em",

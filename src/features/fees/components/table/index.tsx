@@ -3,7 +3,6 @@ import * as React from "react";
 import { DataTable } from "@/shared/components/data-table";
 import { EntityActions } from "@/shared/components/entity-actions";
 import { EntityIdTrigger } from "@/shared/components/entity-id-trigger";
-import { EntityStatus } from "@/shared/components/entity-status";
 import { Pagination } from "@/shared/components/pagination";
 import { SensitiveValue } from "@/shared/components/value-visibility";
 import { formatter } from "@/shared/lib/formatter";
@@ -111,15 +110,6 @@ export const FeeTable = ({
 			c.accessor("installmentNumber", {
 				header: "Nº da parcela",
 				enableSorting: FEE_ALLOWED_SORT_COLUMNS.includes("installmentNumber"),
-			}),
-			c.accessor("isActive", {
-				header: "Situação",
-				cell: ({ row }) => (
-					<EntityStatus
-						isActive={row.original.isActive}
-						isSoftDeleted={row.original.isSoftDeleted}
-					/>
-				),
 			}),
 			c.display({
 				id: "actions",

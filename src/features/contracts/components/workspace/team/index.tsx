@@ -1,5 +1,4 @@
 import { RelatedRecordLink } from "@/features/related-records";
-import { EntityStatus } from "@/shared/components/entity-status";
 import { FormSection } from "@/shared/components/form-section";
 import { Button } from "@/shared/components/ui";
 import type { ContractDetail } from "../../../schemas/model";
@@ -44,9 +43,6 @@ export function ContractTeam({
 								<span className="text-sm text-muted-foreground">
 									{assignment.assignmentType}
 								</span>
-								{!assignment.isActive && (
-									<EntityStatus isActive={false} isSoftDeleted={false} />
-								)}
 							</div>
 						</div>
 					))}

@@ -4,7 +4,6 @@ import {
 	type DetailFieldItem,
 	EntityDetail,
 } from "@/shared/components/entity-detail";
-import { EntityStatus } from "@/shared/components/entity-status";
 import { FormSection } from "@/shared/components/form-section";
 import { SensitiveValue } from "@/shared/components/value-visibility";
 import { formatter } from "@/shared/lib/formatter";
@@ -41,15 +40,6 @@ export function ExpenseOverview({
 
 	const registerInfo = React.useMemo<DetailFieldItem[]>(
 		() => [
-			{
-				term: "Situação",
-				definition: (
-					<EntityStatus
-						isActive={expense.isActive}
-						isSoftDeleted={expense.isSoftDeleted}
-					/>
-				),
-			},
 			{ term: "Criado em", definition: formatter.date(expense.createdAt) },
 			{
 				term: "Atualizado em",

@@ -43,10 +43,12 @@ export function RemunerationWorkspace({
 			identity={`${remuneration.employeeName} • ${remuneration.contractProcessNumber}`}
 			subtitle={`#${id}`}
 			status={
-				<EntityStatus
-					isActive={remuneration.isActive}
-					isSoftDeleted={remuneration.isSoftDeleted}
-				/>
+				remuneration.isSoftDeleted ? (
+					<EntityStatus
+						isActive={remuneration.isActive}
+						isSoftDeleted={remuneration.isSoftDeleted}
+					/>
+				) : undefined
 			}
 			returnLink={
 				<Link

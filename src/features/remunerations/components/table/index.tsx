@@ -4,7 +4,6 @@ import * as React from "react";
 import { DataTable } from "@/shared/components/data-table";
 import { EntityActions } from "@/shared/components/entity-actions";
 import { EntityIdTrigger } from "@/shared/components/entity-id-trigger";
-import { EntityStatus } from "@/shared/components/entity-status";
 import { Pagination } from "@/shared/components/pagination";
 import {
 	Button,
@@ -132,15 +131,6 @@ export const RemunerationTable = ({
 				cell: ({ row }) => formatter.percent(row.original.effectivePercentage),
 				enableSorting: REMUNERATION_ALLOWED_SORT_COLUMNS.includes(
 					"effectivePercentage",
-				),
-			}),
-			c.accessor("isActive", {
-				header: "Situação",
-				cell: ({ row }) => (
-					<EntityStatus
-						isActive={row.original.isActive}
-						isSoftDeleted={row.original.isSoftDeleted}
-					/>
 				),
 			}),
 			c.display({

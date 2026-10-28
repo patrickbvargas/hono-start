@@ -11,7 +11,6 @@ import {
 	type DetailFieldItem,
 	EntityDetail,
 } from "@/shared/components/entity-detail";
-import { EntityStatus } from "@/shared/components/entity-status";
 import { NavigationLink } from "@/shared/components/navigation-link";
 import { useOverlay } from "@/shared/hooks/use-overlay";
 import { formatter } from "@/shared/lib/formatter";
@@ -132,15 +131,6 @@ const ContractDetailsContent = ({
 
 	const registerInfo = React.useMemo<DetailFieldItem[]>(
 		() => [
-			{
-				term: "Situação",
-				definition: (
-					<EntityStatus
-						isActive={contract.isActive}
-						isSoftDeleted={contract.isSoftDeleted}
-					/>
-				),
-			},
 			{ term: "Criado em", definition: formatter.date(contract.createdAt) },
 			{
 				term: "Atualizado em",

@@ -4,10 +4,7 @@ import {
 } from "@/shared/components/employee-filter-option";
 import { ListFilters } from "@/shared/components/list-filters";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
-import {
-	ENTITY_ACTIVE_FILTER_OPTIONS,
-	ENTITY_DELETED_FILTER_OPTIONS,
-} from "@/shared/lib/entity-management";
+import { ENTITY_DELETED_FILTER_OPTIONS } from "@/shared/lib/entity-management";
 import { useContractFilterOptions } from "../../hooks/use-data";
 import type { useContractFilter } from "../../hooks/use-filter";
 
@@ -37,9 +34,6 @@ export const ContractFilter = ({ controller }: ContractFilterProps) => {
 	const contractStatusLabels = new Map(
 		statuses.map((option) => [option.value, option.label]),
 	);
-	const activeLabels = new Map(
-		ENTITY_ACTIVE_FILTER_OPTIONS.map((option) => [option.value, option.label]),
-	);
 	const deletedLabels = new Map(
 		ENTITY_DELETED_FILTER_OPTIONS.map((option) => [option.value, option.label]),
 	);
@@ -49,7 +43,6 @@ export const ContractFilter = ({ controller }: ContractFilterProps) => {
 		filter.clientId !== defaultFilter.clientId ||
 		filter.legalArea.length > 0 ||
 		filter.contractStatus.length > 0 ||
-		filter.active !== defaultFilter.active ||
 		filter.status !== defaultFilter.status;
 
 	const sharedFields = (
@@ -73,14 +66,6 @@ export const ContractFilter = ({ controller }: ContractFilterProps) => {
 			<form.AppField name="contractStatus">
 				{(field) => (
 					<field.CheckboxGroup label="Andamento" options={statuses} />
-				)}
-			</form.AppField>
-			<form.AppField name="active">
-				{(field) => (
-					<field.RadioGroup
-						label="Situação"
-						options={ENTITY_ACTIVE_FILTER_OPTIONS}
-					/>
 				)}
 			</form.AppField>
 			<form.AppField name="status">
@@ -139,13 +124,6 @@ export const ContractFilter = ({ controller }: ContractFilterProps) => {
 			<ListFilters.Popover label="Andamento">
 				<form.AppField name="contractStatus">
 					{(field) => <field.CheckboxGroup options={statuses} />}
-				</form.AppField>
-			</ListFilters.Popover>
-			<ListFilters.Popover label="Situação">
-				<form.AppField name="active">
-					{(field) => (
-						<field.RadioGroup options={ENTITY_ACTIVE_FILTER_OPTIONS} />
-					)}
 				</form.AppField>
 			</ListFilters.Popover>
 			<ListFilters.Popover label="Registro">
@@ -244,19 +222,6 @@ export const ContractFilter = ({ controller }: ContractFilterProps) => {
 								{contractStatusLabels.get(value) ?? value}
 							</ListFilters.Chip>
 						))}
-						{filter.active !== defaultFilter.active ? (
-							<ListFilters.Chip
-								onRemove={() =>
-									handleApplyFilter({
-										...filter,
-										active: defaultFilter.active,
-									})
-								}
-								removeLabel={`Remover filtro de situação: ${activeLabels.get(filter.active) ?? filter.active}`}
-							>
-								{activeLabels.get(filter.active) ?? filter.active}
-							</ListFilters.Chip>
-						) : null}
 						{filter.status !== defaultFilter.status ? (
 							<ListFilters.Chip
 								onRemove={() =>

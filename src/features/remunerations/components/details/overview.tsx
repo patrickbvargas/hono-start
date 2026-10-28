@@ -5,7 +5,6 @@ import {
 	type DetailFieldItem,
 	EntityDetail,
 } from "@/shared/components/entity-detail";
-import { EntityStatus } from "@/shared/components/entity-status";
 import { FormSection } from "@/shared/components/form-section";
 import { SensitiveValue } from "@/shared/components/value-visibility";
 import { formatter } from "@/shared/lib/formatter";
@@ -114,7 +113,9 @@ export function RemunerationOverview({
 			},
 			{
 				term: "Situação do recebimento",
-				definition: remuneration.parentFeeIsSoftDeleted ? "Excluído" : "Ativo",
+				definition: remuneration.parentFeeIsSoftDeleted
+					? "Excluído"
+					: "Não excluído",
 			},
 		],
 		[remuneration, session],
@@ -122,15 +123,6 @@ export function RemunerationOverview({
 
 	const registerInfo = React.useMemo<DetailFieldItem[]>(
 		() => [
-			{
-				term: "Situação",
-				definition: (
-					<EntityStatus
-						isActive={remuneration.isActive}
-						isSoftDeleted={remuneration.isSoftDeleted}
-					/>
-				),
-			},
 			{ term: "Criado em", definition: formatter.date(remuneration.createdAt) },
 			{
 				term: "Atualizado em",

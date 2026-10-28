@@ -3,7 +3,6 @@ import * as React from "react";
 import { DataTable } from "@/shared/components/data-table";
 import { EntityActions } from "@/shared/components/entity-actions";
 import { EntityIdTrigger } from "@/shared/components/entity-id-trigger";
-import { EntityStatus } from "@/shared/components/entity-status";
 import { Pagination } from "@/shared/components/pagination";
 import { formatter } from "@/shared/lib/formatter";
 import type { dataTableFeatures } from "@/shared/lib/table";
@@ -128,16 +127,6 @@ export const ContractTable = ({
 				header: "Honorários (%)",
 				cell: ({ row }) => formatter.percent(row.original.feePercentage),
 				enableSorting: CONTRACT_ALLOWED_SORT_COLUMNS.includes("feePercentage"),
-			}),
-			c.accessor("isActive", {
-				header: "Cadastro",
-				cell: ({ row }) => (
-					<EntityStatus
-						isActive={row.original.isActive}
-						isSoftDeleted={row.original.isSoftDeleted}
-					/>
-				),
-				enableSorting: CONTRACT_ALLOWED_SORT_COLUMNS.includes("isActive"),
 			}),
 			c.display({
 				id: "actions",

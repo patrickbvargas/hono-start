@@ -3,7 +3,13 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-const state = vi.hoisted(() => ({ canDelete: true, canRestore: false }));
+const state = vi.hoisted(() => ({
+	canDelete: true,
+	canRestore: false,
+	isActive: true,
+	status: "Ativo",
+	statusValue: "ACTIVE",
+}));
 vi.mock("@/shared/components/wrapper", () => ({
 	Wrapper: ({
 		children,
@@ -97,9 +103,9 @@ vi.mock("../hooks/use-workspace", async () => {
 				processNumber: "PROC-1",
 				client: "Cliente",
 				legalArea: "Judicial",
-				status: "Ativo",
-				statusValue: "ACTIVE",
-				isActive: true,
+				status: state.status,
+				statusValue: state.statusValue,
+				isActive: state.isActive,
 				isSoftDeleted: false,
 				feePercentage: 0.1,
 				allowStatusChange: true,
@@ -119,6 +125,9 @@ import { contractWorkspaceSearchSchema } from "../schemas/workspace";
 beforeEach(() => {
 	state.canDelete = true;
 	state.canRestore = false;
+	state.isActive = true;
+	state.status = "Ativo";
+	state.statusValue = "ACTIVE";
 });
 afterEach(cleanup);
 describe("contract workspace deletion", () => {
@@ -138,6 +147,25 @@ describe("contract workspace deletion", () => {
 		expect(screen.queryByText("Criado em")).toBeNull();
 		expect(screen.getAllByText("Ativo")).toHaveLength(1);
 	});
+	it("shows andamento independently of the persisted activation flag", () => {
+		state.isActive = false;
+		state.status = "Concluído";
+		state.statusValue = "COMPLETED";
+		render(
+			<ContractWorkspace
+				id={1}
+				search={contractWorkspaceSearchSchema.parse({})}
+				onTabChange={vi.fn()}
+				onDeleted={vi.fn()}
+			/>,
+		);
+		expect(screen.getByLabelText("Andamento: Concluído").textContent).toBe(
+			"Concluído",
+		);
+		expect(screen.queryByText("Ativo")).toBeNull();
+		expect(screen.queryByText("Inativo")).toBeNull();
+	});
+
 	it("restores through the existing confirmation while retaining the workspace", () => {
 		state.canDelete = false;
 		state.canRestore = true;

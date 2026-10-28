@@ -2,7 +2,6 @@ import * as React from "react";
 import { DataCardList } from "@/shared/components/data-card-list";
 import { EntityActions } from "@/shared/components/entity-actions";
 import type { DetailFieldItem } from "@/shared/components/entity-fields";
-import { EntityStatus } from "@/shared/components/entity-status";
 import { Pagination } from "@/shared/components/pagination";
 import { SensitiveValue } from "@/shared/components/value-visibility";
 import { formatter } from "@/shared/lib/formatter";
@@ -49,15 +48,6 @@ export const FeeList = ({
 			{
 				term: "Nº da parcela",
 				definition: fee.installmentNumber,
-			},
-			{
-				term: "Situação",
-				definition: (
-					<EntityStatus
-						isActive={fee.isActive}
-						isSoftDeleted={fee.isSoftDeleted}
-					/>
-				),
 			},
 			{
 				term: "Criado em",

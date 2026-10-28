@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import { EntityForm } from "@/shared/components/entity-form";
 import {
-	FormCheckboxSkeleton,
 	FormFieldSkeleton,
 	FormTextAreaSkeleton,
 } from "@/shared/components/form-field-skeleton";
@@ -112,11 +111,6 @@ function ExpenseFormFields({ form, state, title }: ExpenseFormFieldsProps) {
 						)}
 					</form.AppField>
 				</FieldGroup>
-				<FieldGroup>
-					<form.AppField name="isActive">
-						{(field) => <field.Checkbox label="Ativo" />}
-					</form.AppField>
-				</FieldGroup>
 			</FormSection>
 		</EntityForm>
 	);
@@ -138,9 +132,6 @@ function ExpenseFormSkeleton({
 					<FormFieldSkeleton labelWidth="w-12" />
 					<FormFieldSkeleton labelWidth="w-10" />
 					<FormTextAreaSkeleton labelWidth="w-22" className="sm:col-span-2" />
-				</FieldGroup>
-				<FieldGroup>
-					<FormCheckboxSkeleton labelWidth="w-10" />
 				</FieldGroup>
 			</FormSection>
 		</EntityForm>

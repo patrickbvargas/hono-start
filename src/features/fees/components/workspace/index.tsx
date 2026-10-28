@@ -37,10 +37,12 @@ export function FeeWorkspace({
 			identity={`${fee.contractProcessNumber} • ${fee.revenueType}`}
 			subtitle={`#${id}`}
 			status={
-				<EntityStatus
-					isActive={fee.isActive}
-					isSoftDeleted={fee.isSoftDeleted}
-				/>
+				fee.isSoftDeleted ? (
+					<EntityStatus
+						isActive={fee.isActive}
+						isSoftDeleted={fee.isSoftDeleted}
+					/>
+				) : undefined
 			}
 			returnLink={
 				<Link to="/honorarios" search={search.returnTo ?? feeSearchDefaults}>

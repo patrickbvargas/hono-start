@@ -28,7 +28,7 @@ const inactive: ContractDetail["assignments"][number] = {
 	isSoftDeleted: false,
 };
 
-it("shows inactive non-deleted assignments with an inactive badge alongside active members", () => {
+it("shows non-deleted assignments without activation badges", () => {
 	const edit = vi.fn();
 	render(
 		<ContractTeam
@@ -50,7 +50,7 @@ it("shows inactive non-deleted assignments with an inactive badge alongside acti
 		screen.getByRole("link", { name: "Colaborador inativo" }),
 	).toBeTruthy();
 	expect(screen.getByText("Colaborador ativo")).toBeTruthy();
-	expect(screen.getByText("Inativo")).toBeTruthy();
+	expect(screen.queryByText("Inativo")).toBeNull();
 	fireEvent.click(screen.getByRole("button", { name: "Editar equipe" }));
 	expect(edit).toHaveBeenCalledOnce();
 });

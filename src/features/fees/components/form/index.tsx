@@ -202,11 +202,6 @@ function FeeFormFields({
 						{(field) => <field.Checkbox label="Gerar remunerações" />}
 					</form.AppField>
 				</FieldGroup>
-				<FieldGroup>
-					<form.AppField name="isActive">
-						{(field) => <field.Checkbox label="Ativo" />}
-					</form.AppField>
-				</FieldGroup>
 			</FormSection>
 		</EntityForm>
 	);
@@ -232,9 +227,6 @@ function FeeFormSkeleton({
 				</FieldGroup>
 				<FieldGroup className="grid gap-4 sm:grid-cols-2">
 					<FormCheckboxSkeleton labelWidth="w-32" />
-				</FieldGroup>
-				<FieldGroup>
-					<FormCheckboxSkeleton labelWidth="w-10" />
 				</FieldGroup>
 			</FormSection>
 		</EntityForm>

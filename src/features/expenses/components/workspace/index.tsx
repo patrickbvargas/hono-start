@@ -43,10 +43,12 @@ export function ExpenseWorkspace({
 			identity={expense.category}
 			subtitle={`#${id}`}
 			status={
-				<EntityStatus
-					isActive={expense.isActive}
-					isSoftDeleted={expense.isSoftDeleted}
-				/>
+				expense.isSoftDeleted ? (
+					<EntityStatus
+						isActive={expense.isActive}
+						isSoftDeleted={expense.isSoftDeleted}
+					/>
+				) : undefined
 			}
 			returnLink={
 				<Link to="/despesas" search={search.returnTo ?? expenseSearchDefaults}>

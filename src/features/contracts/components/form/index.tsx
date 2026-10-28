@@ -198,11 +198,6 @@ function ContractFormContent({
 							</form.AppField>
 						) : null}
 					</FieldGroup>
-					<FieldGroup>
-						<form.AppField name="isActive">
-							{(field) => <field.Checkbox label="Ativo" />}
-						</form.AppField>
-					</FieldGroup>
 				</FormSection>
 				<form.AppField name="assignments" mode="array">
 					{(subField) => (
@@ -444,9 +439,6 @@ function ContractFormSkeleton({
 
 				<FieldGroup className="grid gap-4 sm:grid-cols-2">
 					<FormCheckboxSkeleton labelWidth="w-34" />
-				</FieldGroup>
-				<FieldGroup>
-					<FormCheckboxSkeleton labelWidth="w-10" />
 				</FieldGroup>
 			</FormSection>
 			<FormSection

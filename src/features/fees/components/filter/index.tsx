@@ -3,10 +3,7 @@ import { renderContractFilterOption } from "@/shared/components/contract-filter-
 import { FinancialPeriodShortcuts } from "@/shared/components/financial-period-shortcuts";
 import { ListFilters } from "@/shared/components/list-filters";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
-import {
-	ENTITY_ACTIVE_FILTER_OPTIONS,
-	ENTITY_DELETED_FILTER_OPTIONS,
-} from "@/shared/lib/entity-management";
+import { ENTITY_DELETED_FILTER_OPTIONS } from "@/shared/lib/entity-management";
 import { formatter } from "@/shared/lib/formatter";
 import { useFeeFilterOptions } from "../../hooks/use-data";
 import type { useFeeFilter } from "../../hooks/use-filter";
@@ -33,9 +30,6 @@ export const FeeFilter = ({ controller, summary }: FeeFilterProps) => {
 	const revenueLabels = new Map(
 		revenueTypes.map((option) => [option.value, option.label]),
 	);
-	const activeLabels = new Map(
-		ENTITY_ACTIVE_FILTER_OPTIONS.map((option) => [option.value, option.label]),
-	);
 	const statusLabels = new Map(
 		ENTITY_DELETED_FILTER_OPTIONS.map((option) => [option.value, option.label]),
 	);
@@ -46,7 +40,6 @@ export const FeeFilter = ({ controller, summary }: FeeFilterProps) => {
 		filter.revenueType !== defaultFilter.revenueType ||
 		filter.dateFrom !== defaultFilter.dateFrom ||
 		filter.dateTo !== defaultFilter.dateTo ||
-		filter.active !== defaultFilter.active ||
 		filter.status !== defaultFilter.status;
 
 	const formatDateChip = (value: string) => {
@@ -70,14 +63,6 @@ export const FeeFilter = ({ controller, summary }: FeeFilterProps) => {
 					<field.Autocomplete
 						label="Tipo de honorário"
 						options={revenueTypes}
-					/>
-				)}
-			</form.AppField>
-			<form.AppField name="active">
-				{(field) => (
-					<field.RadioGroup
-						label="Situação"
-						options={ENTITY_ACTIVE_FILTER_OPTIONS}
 					/>
 				)}
 			</form.AppField>
@@ -121,13 +106,6 @@ export const FeeFilter = ({ controller, summary }: FeeFilterProps) => {
 			<ListFilters.Popover label="Tipo">
 				<form.AppField name="revenueType">
 					{(field) => <field.RadioGroup options={revenueTypes} />}
-				</form.AppField>
-			</ListFilters.Popover>
-			<ListFilters.Popover label="Situação">
-				<form.AppField name="active">
-					{(field) => (
-						<field.RadioGroup options={ENTITY_ACTIVE_FILTER_OPTIONS} />
-					)}
 				</form.AppField>
 			</ListFilters.Popover>
 			<ListFilters.Popover label="Registro">
@@ -246,19 +224,6 @@ export const FeeFilter = ({ controller, summary }: FeeFilterProps) => {
 								removeLabel={`Remover filtro de pagamento final: ${formatDateChip(filter.dateTo)}`}
 							>
 								{`Até ${formatDateChip(filter.dateTo)}`}
-							</ListFilters.Chip>
-						) : null}
-						{filter.active !== defaultFilter.active ? (
-							<ListFilters.Chip
-								onRemove={() =>
-									handleApplyFilter({
-										...filter,
-										active: defaultFilter.active,
-									})
-								}
-								removeLabel={`Remover filtro de situação: ${activeLabels.get(filter.active) ?? filter.active}`}
-							>
-								{activeLabels.get(filter.active) ?? filter.active}
 							</ListFilters.Chip>
 						) : null}
 						{filter.status !== defaultFilter.status ? (

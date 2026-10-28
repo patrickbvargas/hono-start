@@ -16,7 +16,7 @@ This file defines the canonical domain-facing behavior of filtering, sorting, li
 
 ## Filter Conventions
 
-- `status` and `active` are independent filters.
+- `status` and `active` are independent filters. Only clients and employees expose active/inactive filter controls. Other collections retain their existing query contracts for contextual links and compatibility, without exposing active/inactive controls or chips.
 - `status=active` means non-deleted records regardless of `isActive`.
 - `active=true` means active records regardless of deleted-state filter.
 - Business-entity option queries use both `deletedAt: null` and `isActive: true`.

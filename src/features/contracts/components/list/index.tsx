@@ -2,7 +2,6 @@ import * as React from "react";
 import { DataCardList } from "@/shared/components/data-card-list";
 import { EntityActions } from "@/shared/components/entity-actions";
 import type { DetailFieldItem } from "@/shared/components/entity-fields";
-import { EntityStatus } from "@/shared/components/entity-status";
 import { Pagination } from "@/shared/components/pagination";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
@@ -54,15 +53,6 @@ export const ContractList = ({
 			{
 				term: "Honorários (%)",
 				definition: formatter.percent(contract.feePercentage),
-			},
-			{
-				term: "Cadastro",
-				definition: (
-					<EntityStatus
-						isActive={contract.isActive}
-						isSoftDeleted={contract.isSoftDeleted}
-					/>
-				),
 			},
 			{
 				term: "Criado em",

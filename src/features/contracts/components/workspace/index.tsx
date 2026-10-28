@@ -71,7 +71,7 @@ export function ContractWorkspace({
 					>
 						{contract.status}
 					</Badge>
-					{(!contract.isActive || contract.isSoftDeleted) && (
+					{contract.isSoftDeleted && (
 						<EntityStatus
 							isActive={contract.isActive}
 							isSoftDeleted={contract.isSoftDeleted}
