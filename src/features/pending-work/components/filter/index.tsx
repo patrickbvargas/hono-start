@@ -1,3 +1,7 @@
+import {
+	renderEmployeeFilterAvatar,
+	renderEmployeeFilterOption,
+} from "@/shared/components/employee-filter-option";
 import { ListFilters } from "@/shared/components/list-filters";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
 import {
@@ -49,7 +53,12 @@ export function PendingWorkFilter({ controller }: PendingWorkFilterProps) {
 							</form.AppField>
 							<form.AppField name="employeeId">
 								{(field) => (
-									<field.Autocomplete label="Colaborador" options={employees} />
+									<field.Autocomplete
+										label="Colaborador"
+										options={employees}
+										renderOption={renderEmployeeFilterOption}
+										renderSelectedAdornment={renderEmployeeFilterAvatar}
+									/>
 								)}
 							</form.AppField>
 							<form.AppField name="severity">
@@ -89,6 +98,8 @@ export function PendingWorkFilter({ controller }: PendingWorkFilterProps) {
 											aria-label="Colaborador"
 											placeholder="Colaborador"
 											options={employees}
+											renderOption={renderEmployeeFilterOption}
+											renderSelectedAdornment={renderEmployeeFilterAvatar}
 										/>
 									)}
 								</form.AppField>

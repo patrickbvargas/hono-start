@@ -6,6 +6,7 @@ export interface FieldClassNames {
 }
 
 export interface FieldOption {
+	imageUrl?: string;
 	value: string;
 	label: string;
 	isDisabled?: boolean;

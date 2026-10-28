@@ -1,5 +1,6 @@
 import { mutationOptions, queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
+import { enrichEmployeeAvatars } from "@/features/authentication";
 import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
 import type { Option } from "@/shared/schemas/option";
 import {
@@ -138,7 +139,9 @@ const getSelectableRemunerationEmployeesFn = createServerFn({
 		try {
 			const { scope } = await getRemunerationScope();
 
-			return await getSelectableRemunerationEmployees(scope);
+			return await enrichEmployeeAvatars(
+				await getSelectableRemunerationEmployees(scope),
+			);
 		} catch (error) {
 			console.error("[getSelectableRemunerationEmployees]", error);
 			throw new Error(
@@ -203,7 +206,7 @@ export const getSelectableRemunerationContractsQueryOptions = () =>
 
 export const getSelectableRemunerationEmployeesQueryOptions = () =>
 	queryOptions({
-		staleTime: Infinity,
+		staleTime: 60_000,
 		meta: { refreshOnMutation: true },
 		queryKey: remunerationKeys.employeeOptions(),
 		queryFn: getSelectableRemunerationEmployeesFn,

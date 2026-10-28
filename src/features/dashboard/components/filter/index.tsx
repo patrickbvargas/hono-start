@@ -1,4 +1,8 @@
 import { renderContractFilterOption } from "@/shared/components/contract-filter-option";
+import {
+	renderEmployeeFilterAvatar,
+	renderEmployeeFilterOption,
+} from "@/shared/components/employee-filter-option";
 import { ListFilters } from "@/shared/components/list-filters";
 import {
 	Button,
@@ -117,6 +121,8 @@ export function DashboardFilter({
 									<field.Autocomplete
 										label="Colaborador"
 										options={employees}
+										renderOption={renderEmployeeFilterOption}
+										renderSelectedAdornment={renderEmployeeFilterAvatar}
 										placeholder="Colaborador"
 										classNames={{
 											wrapper:

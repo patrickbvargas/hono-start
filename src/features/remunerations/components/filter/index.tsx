@@ -1,5 +1,9 @@
 import type * as React from "react";
 import { renderContractFilterOption } from "@/shared/components/contract-filter-option";
+import {
+	renderEmployeeFilterAvatar,
+	renderEmployeeFilterOption,
+} from "@/shared/components/employee-filter-option";
 import { FinancialPeriodShortcuts } from "@/shared/components/financial-period-shortcuts";
 import { ListFilters } from "@/shared/components/list-filters";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
@@ -74,7 +78,12 @@ export const RemunerationFilter = ({
 			{isAdmin ? (
 				<form.AppField name="employeeId">
 					{(field) => (
-						<field.Autocomplete label="Colaborador" options={employees} />
+						<field.Autocomplete
+							label="Colaborador"
+							options={employees}
+							renderOption={renderEmployeeFilterOption}
+							renderSelectedAdornment={renderEmployeeFilterAvatar}
+						/>
 					)}
 				</form.AppField>
 			) : null}
@@ -131,6 +140,8 @@ export const RemunerationFilter = ({
 								aria-label="Colaborador"
 								placeholder="Colaborador"
 								options={employees}
+								renderOption={renderEmployeeFilterOption}
+								renderSelectedAdornment={renderEmployeeFilterAvatar}
 							/>
 						)}
 					</form.AppField>

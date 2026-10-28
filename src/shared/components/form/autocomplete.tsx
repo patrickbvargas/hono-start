@@ -7,6 +7,7 @@ import {
 	ComboboxItem,
 	ComboboxList,
 	FieldWrapper,
+	InputGroupAddon,
 } from "@/shared/components/ui";
 import { useFieldContext } from "@/shared/hooks/use-app-form";
 import type {
@@ -23,6 +24,7 @@ interface FormAutocompleteProps
 		> {
 	options: FieldOption[];
 	renderOption?: (option: FieldOption) => React.ReactNode;
+	renderSelectedAdornment?: (option: FieldOption) => React.ReactNode;
 	placeholder?: string;
 	emptyMessage?: string;
 	isClearable?: boolean;
@@ -41,6 +43,7 @@ export const FormAutocomplete = ({
 	isDisabled,
 	options,
 	renderOption,
+	renderSelectedAdornment,
 	isClearable = true,
 	placeholder = "Selecionar item...",
 	emptyMessage = "Nenhum item encontrado.",
@@ -97,7 +100,13 @@ export const FormAutocomplete = ({
 					placeholder={placeholder}
 					aria-invalid={isInvalid}
 					showClear={isClearable}
-				/>
+				>
+					{selectedOption && renderSelectedAdornment ? (
+						<InputGroupAddon align="inline-start">
+							{renderSelectedAdornment(selectedOption)}
+						</InputGroupAddon>
+					) : null}
+				</ComboboxInput>
 				<ComboboxContent className={classNames?.content}>
 					<ComboboxEmpty className={classNames?.empty}>
 						{emptyMessage}

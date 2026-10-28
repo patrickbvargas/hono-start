@@ -1,5 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
+import { enrichEmployeeAvatars } from "@/features/authentication";
 import type { Option } from "@/shared/schemas/option";
 import { assertCan, hasPermission } from "@/shared/session";
 import {
@@ -147,9 +148,11 @@ const getDashboardEmployeeOptionsFn = createServerFn({
 				return [];
 			}
 
-			return await getDashboardEmployeeOptions({
-				firmId: session.firm.id,
-			});
+			return await enrichEmployeeAvatars(
+				await getDashboardEmployeeOptions({
+					firmId: session.firm.id,
+				}),
+			);
 		} catch (error) {
 			console.error("[getDashboardEmployeeOptions]", error);
 			throw new Error(DASHBOARD_ERRORS.EMPLOYEE_OPTIONS_GET_FAILED);
@@ -165,7 +168,7 @@ export const getDashboardSummaryQueryOptions = (search: DashboardSearch) =>
 
 export const getDashboardEmployeeOptionsQueryOptions = () =>
 	queryOptions({
-		staleTime: Infinity,
+		staleTime: 60_000,
 		meta: { refreshOnMutation: true },
 		queryKey: dashboardKeys.employeeOptions(),
 		queryFn: getDashboardEmployeeOptionsFn,

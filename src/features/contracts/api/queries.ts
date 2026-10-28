@@ -1,5 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
+import { enrichEmployeeAvatars } from "@/features/authentication";
 import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { Option } from "@/shared/schemas/option";
@@ -184,7 +185,9 @@ const getSelectableContractEmployeesFn = createServerFn({
 		try {
 			await getRequiredServerLoggedUserSession();
 			const { firmId } = await getServerScope("contract");
-			return await getSelectableContractEmployees(firmId);
+			return await enrichEmployeeAvatars(
+				await getSelectableContractEmployees(firmId),
+			);
 		} catch (error) {
 			console.error("[getSelectableContractEmployees]", error);
 			throw new Error(CONTRACT_ERRORS.CONTRACT_SELECTABLE_EMPLOYEES_FAILED);
@@ -246,7 +249,7 @@ export const getSelectableContractClientsQueryOptions = () =>
 
 export const getSelectableContractEmployeesQueryOptions = () =>
 	queryOptions({
-		staleTime: Infinity,
+		staleTime: 60_000,
 		meta: { refreshOnMutation: true },
 		queryKey: contractKeys.employeeOptions(),
 		queryFn: getSelectableContractEmployeesFn,

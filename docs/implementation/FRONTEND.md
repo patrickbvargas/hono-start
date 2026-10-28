@@ -135,6 +135,8 @@ exception inside authentication-owned components; other UI uses shared exports.
 Lifecycle UI uses operation-specific Clerk capabilities and persisted state;
 server authorization remains mandatory even for hidden actions.
 
+Collaborator filters in Dashboard, Contracts, Remunerations and Pending Work show the Clerk photo beside option names and the selected value. Missing links/photos, ambiguous account bindings and broken images use initials from the business name. Reuse the shared employee filter renderer and the autocomplete's optional selected adornment; keep search labels, IDs and option eligibility unchanged. Protected option handlers enrich photos through authentication's server-only helper, using Clerk privateMetadata.employeeId and returning only validated HTTPS image URLs. Photos are never stored on Employee. Display-only server cache and employee option queries refresh after 60 seconds; provider failures retain usable fallback options with a 10-second server retry cooldown. This cache never authorizes access.
+
 ## Dependency migration contracts
 
 - TanStack Start server functions validate inputs with `.validator(schema)`.
