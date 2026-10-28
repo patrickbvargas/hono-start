@@ -44,7 +44,7 @@ The software core includes these feature areas:
 - Clerk provides email or username sign-in, invitations/setup, recovery and account management in pt-BR.
 - Clerk owns credentials, pending-session tasks and security/session settings.
 - The app never issues temporary passwords or authenticates by OAB.
-- Protected access requires a verified active session, current membership and valid optional privateMetadata.employeeId binding when present.
+- Protected access requires a verified active session, current membership, required User privateMetadata.employeeId and Organization privateMetadata.firmId. Both must be positive integers identifying an active, non-deleted Employee and an existing Firm respectively. All roles, including administrators, require both bindings.
 - Permission grants come exclusively from Clerk; persisted scope and lifecycle rules remain enforced in the app.
 
 ### Dashboard

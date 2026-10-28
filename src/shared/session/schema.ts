@@ -83,6 +83,30 @@ export const CONTRACT_STATUS_COMPLETED_VALUE = "COMPLETED" as const;
 
 export type LoggedUserSession = z.infer<typeof loggedUserSessionSchema>;
 
+export const sessionConfigurationIssueSchema = z.enum([
+	"employee_missing",
+	"employee_invalid",
+	"employee_unavailable",
+	"firm_missing",
+	"firm_invalid",
+	"firm_unavailable",
+]);
+
+export type SessionConfigurationIssue = z.infer<
+	typeof sessionConfigurationIssueSchema
+>;
+
+export const sessionAccessSchema = z.discriminatedUnion("status", [
+	z.object({ status: z.literal("ready"), session: loggedUserSessionSchema }),
+	z.object({
+		status: z.literal("configuration_required"),
+		issues: z.array(sessionConfigurationIssueSchema).min(1),
+	}),
+	z.object({ status: z.literal("unauthenticated") }),
+]);
+
+export type SessionAccess = z.infer<typeof sessionAccessSchema>;
+
 export type SessionScopeSubject =
 	| "employee"
 	| "client"

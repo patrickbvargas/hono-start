@@ -213,7 +213,7 @@ Filesystem tests require a filesystem and execution account that support hard-li
 
 Before production release, the operator must verify:
 
-- Production Clerk keys, sign-in settings, Organization permissions, membership revocation and optional Employee bindings, following `CLERK_MIGRATION.md`.
+- Production Clerk keys, sign-in settings, Organization permissions, membership revocation and required Employee bindings, following `CLERK_MIGRATION.md`.
 - Reviewed migrations and required lookup/firm bootstrap on the intended database; no demo seed or reset.
 - Private persistent attachment storage with read/write/delete access, hard-link support and joint database/filesystem backup and restore, following `ATTACHMENTS.md`.
 - Authenticated upload/open/delete, denied cross-scope access, and core financial workflows against the deployment environment.

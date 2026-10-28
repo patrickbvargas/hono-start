@@ -10,6 +10,8 @@ This file preserves canonical edge-case expectations for the product domain.
 | User exceeds failed-login threshold | The system temporarily blocks further attempts and informs the user |
 | Session expires during form work | The next protected action redirects to login and unsaved changes may be lost |
 | Clerk verification or session tasks remain pending | The provider completes them before product access |
+| User employeeId or Organization firmId is missing or malformed in private metadata | Deny protected access for every role; show persistent configuration guidance identifying each affected field |
+| A required mapping references an unavailable Employee or nonexistent Firm | Deny access and identify the affected binding; administrator corrects it in Clerk, then the user retries without signing out |
 
 ## Client Data
 

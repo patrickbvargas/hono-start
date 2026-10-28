@@ -55,7 +55,7 @@ Each new audit event records the branch where that action happened. For example,
 
 The active Clerk Organization's server-fetched privateMetadata.firmId must be a positive integer identifying an existing Firm. Missing membership, invalid mapping or provider verification failure denies protected execution. There is no default Firm fallback. Matriz/POA names and IDs have no special runtime authority. Multiple Organizations may map to one Firm.
 
-User privateMetadata.employeeId optionally identifies one global active, non-deleted Employee. The same employee ID and type remain bound when switching authorized Organizations. Membership permissions come from the newly selected Organization; a shared employee identity never transfers grants between memberships. Missing employee binding removes own/assigned capabilities; an explicit invalid, inactive or deleted binding denies the session. Business employee CRUD does not administer Clerk accounts or memberships.
+User privateMetadata.employeeId must identify one global active, non-deleted Employee for every role. The same employee ID and type remain bound when switching authorized Organizations. Membership permissions come from the newly selected Organization; a shared employee identity never transfers grants between memberships. Missing, invalid, inactive or deleted employee bindings deny all protected access. Business employee CRUD does not administer Clerk accounts or memberships.
 
 On Organization change, the UI cancels queries, clears cached data and refreshes route/session context before showing the next unit. Each server request independently enforces its current verified scope.
 

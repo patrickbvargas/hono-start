@@ -15,9 +15,9 @@ This file preserves the canonical user workflows of the product. These flows des
 
 1. Register business collaborators in the app independently of accounts.
 2. Create or invite users and assign Organization roles in Clerk Dashboard.
-3. Optionally set privateMetadata.employeeId to an active business Employee ID for own/assigned visibility.
-4. Sign-in validates current provider membership, permissions and any explicit business link.
-5. Missing employeeId disables own/assigned access while general granted operations remain available.
+3. Set User privateMetadata.employeeId to an active business Employee ID and Organization privateMetadata.firmId to an existing Firm ID. Both numeric fields are required for every role.
+4. Sign-in validates current provider membership, permissions and both required business links.
+5. Missing or invalid mappings block protected access. Login shows Configuração de acesso incompleta with each missing/malformed field or unavailable reference, administrator guidance, Tentar novamente and Sair, without Organization selection. Retry revalidates current Clerk state and returns to the safe requested destination after correction.
 6. Revoking or deleting a Clerk account leaves Employee and financial/audit history unchanged.
 
 ## Register A Client
@@ -146,3 +146,5 @@ Dashboard drilldown row menus offer Abrir página and Ver resumo through right c
 ## Company-wide clients and employees
 
 See [Multitenancy](MULTITENANCY.md) for the authoritative entity-scope matrix, global lifecycle, evidence visibility and current-Firm enforcement.
+
+Organization selection is hidden whenever any employeeId or firmId configuration issue exists, including combined issues, because required metadata must be corrected in Clerk. Retry and sign-out remain available. Organization selection remains available before selection or for other access denials without configuration findings.

@@ -8,12 +8,28 @@ import { redirect, useRouter } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import type { LoggedUserSession } from "./schema";
-import { getOptionalServerLoggedUserSession } from "./server";
+import { sessionAccessSchema } from "./schema";
+import {
+	getOptionalServerLoggedUserSession,
+	getServerSessionAccess,
+} from "./server";
 
 export const sessionKeys = {
 	all: ["session"] as const,
 	current: () => [...sessionKeys.all, "current"] as const,
+	access: () => [...sessionKeys.all, "access"] as const,
 };
+
+const getSessionAccessFn = createServerFn({ method: "GET" }).handler(async () =>
+	sessionAccessSchema.parse(await getServerSessionAccess()),
+);
+
+export const getSessionAccessQueryOptions = () =>
+	queryOptions({
+		queryKey: sessionKeys.access(),
+		queryFn: getSessionAccessFn,
+		staleTime: 0,
+	});
 
 const getCurrentSessionFn = createServerFn({ method: "GET" }).handler(
 	async () => {

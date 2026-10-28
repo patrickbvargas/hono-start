@@ -36,6 +36,7 @@ import {
 	authMiddleware,
 	getOptionalServerLoggedUserSession,
 	getRequiredServerLoggedUserSession,
+	getServerSessionAccess,
 } from "../server";
 
 describe("Clerk domain session", () => {
@@ -144,31 +145,86 @@ describe("Clerk domain session", () => {
 		expect(await getOptionalServerLoggedUserSession()).toBeNull();
 		expect(mocks.employee).not.toHaveBeenCalled();
 	});
-	it("allows an account without employee binding for general capabilities", async () => {
-		mocks.user.mockResolvedValue({
-			privateMetadata: {},
-			banned: false,
-			locked: false,
-			emailAddresses: [{ emailAddress: "admin@example.com" }],
+	it("denies an account without employee binding even with general grants", async () => {
+		mocks.user.mockResolvedValue({ privateMetadata: {} });
+		expect(await getServerSessionAccess()).toEqual({
+			status: "configuration_required",
+			issues: ["employee_missing"],
 		});
-		mocks.memberships.mockResolvedValue({
-			data: [
-				{
-					publicUserData: { userId: "user_one" },
-					role: "org:custom",
-					permissions: [
-						"org:clients:read",
-						"org:remunerations:read_own",
-						"org:contracts:read_assigned",
-					],
-				},
-			],
-		});
-		const session = await getRequiredServerLoggedUserSession();
-		expect(session.employee.id).toBeNull();
-		expect(session.permissions).toEqual(["org:clients:read"]);
+		expect(await getOptionalServerLoggedUserSession()).toBeNull();
+		await expect(getRequiredServerLoggedUserSession()).rejects.toThrow(
+			"Configuração de acesso incompleta",
+		);
 		expect(mocks.employee).not.toHaveBeenCalled();
 	});
+	it("reports both missing fields without private values", async () => {
+		mocks.user.mockResolvedValue({ privateMetadata: {} });
+		mocks.organization.mockResolvedValue({ privateMetadata: {} });
+		expect(await getServerSessionAccess()).toEqual({
+			status: "configuration_required",
+			issues: ["employee_missing", "firm_missing"],
+		});
+		expect(mocks.firm).not.toHaveBeenCalled();
+		expect(mocks.employee).not.toHaveBeenCalled();
+	});
+	it("reports both unavailable references", async () => {
+		mocks.employee.mockResolvedValue(null);
+		mocks.firm.mockResolvedValue(null);
+		expect(await getServerSessionAccess()).toEqual({
+			status: "configuration_required",
+			issues: ["firm_unavailable", "employee_unavailable"],
+		});
+	});
+	it("reads corrected metadata on the next request", async () => {
+		const validUser = await mocks.user();
+		mocks.user.mockResolvedValue({ ...validUser, privateMetadata: {} });
+		expect((await getServerSessionAccess()).status).toBe(
+			"configuration_required",
+		);
+		mocks.user.mockResolvedValue(validUser);
+		expect((await getServerSessionAccess()).status).toBe("ready");
+	});
+	it("does not reveal configuration for a revoked membership", async () => {
+		mocks.memberships.mockResolvedValue({ data: [] });
+		mocks.user.mockResolvedValue({ privateMetadata: {} });
+		mocks.organization.mockResolvedValue({ privateMetadata: {} });
+		expect(await getServerSessionAccess()).toEqual({
+			status: "unauthenticated",
+		});
+	});
+	it.each([
+		undefined,
+		null,
+		"",
+		"7",
+		-1,
+		0,
+		1.5,
+		true,
+		{},
+		Number.MAX_SAFE_INTEGER + 1,
+	])("identifies malformed or missing employeeId %j", async (employeeId) => {
+		mocks.user.mockResolvedValue({ privateMetadata: { employeeId } });
+		expect(await getServerSessionAccess()).toEqual({
+			status: "configuration_required",
+			issues: [
+				employeeId === undefined ? "employee_missing" : "employee_invalid",
+			],
+		});
+	});
+	it("reports an inactive, deleted or nonexistent Employee without issuing a session", async () => {
+		mocks.employee.mockResolvedValue(null);
+		expect(await getServerSessionAccess()).toEqual({
+			status: "configuration_required",
+			issues: ["employee_unavailable"],
+		});
+		expect(mocks.employee).toHaveBeenCalledWith(
+			expect.objectContaining({
+				where: { id: 7, deletedAt: null, isActive: true },
+			}),
+		);
+	});
+
 	it.each(["7", -1, 0, 1.5])(
 		"rejects invalid metadata employeeId %s",
 		async (employeeId) => {
@@ -182,7 +238,7 @@ describe("Clerk domain session", () => {
 	it("denies missing domain mapping", async () => {
 		mocks.employee.mockResolvedValue(null);
 		await expect(getRequiredServerLoggedUserSession()).rejects.toThrow(
-			"Sua sessão expirou",
+			"Configuração de acesso incompleta",
 		);
 	});
 	it("fails closed on provider outage", async () => {
@@ -261,7 +317,9 @@ describe("Clerk domain session", () => {
 	it("denies an Organization mapped to a nonexistent Firm", async () => {
 		mocks.firm.mockResolvedValue(null);
 		expect(await getOptionalServerLoggedUserSession()).toBeNull();
-		expect(mocks.employee).not.toHaveBeenCalled();
+		expect((await getServerSessionAccess()).status).toBe(
+			"configuration_required",
+		);
 	});
 	it("does not execute protected functions for an unmapped Organization", async () => {
 		mocks.organization.mockResolvedValue({ privateMetadata: {} });
@@ -269,7 +327,9 @@ describe("Clerk domain session", () => {
 		const server = authMiddleware.options.server as unknown as (options: {
 			next: typeof next;
 		}) => Promise<unknown>;
-		await expect(server({ next })).rejects.toThrow("Sua sessão expirou");
+		await expect(server({ next })).rejects.toThrow(
+			"Configuração de acesso incompleta",
+		);
 		expect(next).not.toHaveBeenCalled();
 	});
 	it("refreshes metadata between requests and never falls back after removal", async () => {

@@ -153,7 +153,7 @@ response. Keep build and interactive development verification sequential.
 
 ## Current identity setup
 
-Manage accounts and grants in Clerk Dashboard. Set privateMetadata to {"employeeId": 123} only when an account represents that active Employee. Do not use unsafeMetadata. Employee CRUD does not create, invite, modify or delete Clerk users. Migrate existing Employee.clerkUserId mappings into Clerk privateMetadata before deploying the schema retirement migration; no automatic account grants or metadata changes are performed by application migrations. Configure privateMetadata per Clerk environment; IDs refer to the corresponding application database.
+Manage accounts and grants in Clerk Dashboard. Every application account, including administrators, must set User privateMetadata to {"employeeId": 123}, referencing an active, non-deleted Employee. Missing, malformed or unavailable Employee mappings deny all protected access. Do not use unsafeMetadata. Employee CRUD does not create, invite, modify or delete Clerk users. Migrate existing Employee.clerkUserId mappings into Clerk privateMetadata before deploying the schema retirement migration; no automatic account grants or metadata changes are performed by application migrations. Configure privateMetadata per Clerk environment; IDs refer to the corresponding application database.
 
 ## Organization unit mapping
 
@@ -165,3 +165,9 @@ For every Organization intended to access the application, set privateMetadata.f
 See [Multitenancy](../domain/MULTITENANCY.md) for the current one-company/multiple-branch model. Client and Employee are global, including employee settings and lifecycle. Current Organization grants and Firm-scoped operations remain independent from shared identity. Attachment and audit firmId retain origin; their owner determines visibility.
 
 Member audit access: grant `org:audit_logs:read` to the intended Clerk role. The application additionally restricts every audit read to the currently readable subject; the audit grant alone never grants entity access. Role configuration remains in Clerk.
+
+## Required mapping recovery
+
+Both User privateMetadata.employeeId and Organization privateMetadata.firmId are mandatory numeric positive integers in the target environment. Signed-in verified members with missing or invalid configuration see Configuração de acesso incompleta on login, identifying each affected mapping without its private value. Correct metadata in Clerk, then choose Tentar novamente; the app revalidates current provider state and returns to the safe destination. Sair remains available; Organization selection is hidden for configuration issues. Existing unbound administrator accounts must be configured before deploying this requirement. No database migration is required.
+
+Organization selection is hidden whenever any employeeId or firmId configuration issue exists, including combined issues, because required metadata must be corrected in Clerk. Retry and sign-out remain available. Organization selection remains available before selection or for other access denials without configuration findings.

@@ -6,10 +6,16 @@ import { prisma } from "@/shared/lib/prisma";
 import { getScope } from "./access";
 import type {
 	LoggedUserSession,
+	SessionAccess,
+	SessionConfigurationIssue,
 	SessionScope,
 	SessionScopeSubject,
 } from "./schema";
-import { clerkPermissionSchema, loggedUserSessionSchema } from "./schema";
+import {
+	clerkPermissionSchema,
+	loggedUserSessionSchema,
+	sessionAccessSchema,
+} from "./schema";
 
 const UNAUTHENTICATED_ERROR_MESSAGE =
 	"Sua sessão expirou. Faça login novamente.";
@@ -18,7 +24,7 @@ const organizationPrivateMetadataSchema = z.object({
 	firmId: z.number().int().positive(),
 });
 
-async function resolveDomainSession(): Promise<LoggedUserSession | null> {
+async function resolveDomainSession(): Promise<SessionAccess> {
 	const identity = await auth();
 	if (
 		!identity.userId ||
@@ -26,7 +32,7 @@ async function resolveDomainSession(): Promise<LoggedUserSession | null> {
 		!identity.sessionId ||
 		!identity.isAuthenticated
 	) {
-		return null;
+		return { status: "unauthenticated" };
 	}
 	const client = clerkClient();
 	const [providerSession, user, { data }, organization] = await Promise.all([
@@ -45,58 +51,67 @@ async function resolveDomainSession(): Promise<LoggedUserSession | null> {
 		user.banned ||
 		user.locked
 	) {
-		return null;
+		return { status: "unauthenticated" };
 	}
 	const membership = data.find(
 		(item) => item.publicUserData?.userId === identity.userId,
 	);
 	if (!membership) {
-		return null;
+		return { status: "unauthenticated" };
 	}
 	const organizationMetadata = organizationPrivateMetadataSchema.safeParse(
 		organization.privateMetadata ?? {},
 	);
+	const metadata = z
+		.object({ employeeId: z.number().int().positive() })
+		.safeParse(user.privateMetadata ?? {});
+	const issues: SessionConfigurationIssue[] = [];
+	if (!metadata.success) {
+		issues.push(
+			user.privateMetadata?.employeeId === undefined
+				? "employee_missing"
+				: "employee_invalid",
+		);
+	}
 	if (!organizationMetadata.success) {
-		return null;
+		issues.push(
+			organization.privateMetadata?.firmId === undefined
+				? "firm_missing"
+				: "firm_invalid",
+		);
+	}
+	if (!metadata.success || !organizationMetadata.success) {
+		return { status: "configuration_required", issues };
 	}
 	const firm = await prisma.firm.findUnique({
 		where: { id: organizationMetadata.data.firmId },
 		select: { id: true, name: true },
 	});
 	if (!firm) {
-		return null;
+		issues.push("firm_unavailable");
 	}
-	const metadata = z
-		.object({ employeeId: z.number().int().positive().optional() })
-		.safeParse(user.privateMetadata ?? {});
-	if (!metadata.success) {
-		return null;
+	const employee = await prisma.employee.findFirst({
+		where: {
+			id: metadata.data.employeeId,
+			deletedAt: null,
+			isActive: true,
+		},
+		select: {
+			id: true,
+			type: { select: { id: true, value: true, label: true } },
+		},
+	});
+	if (!employee) {
+		issues.push("employee_unavailable");
 	}
-	const boundEmployee = metadata.data.employeeId
-		? await prisma.employee.findFirst({
-				where: {
-					id: metadata.data.employeeId,
-					deletedAt: null,
-					isActive: true,
-				},
-				select: {
-					id: true,
-					type: { select: { id: true, value: true, label: true } },
-				},
-			})
-		: null;
-	if (metadata.data.employeeId && !boundEmployee) {
-		return null;
+	if (!firm || !employee) {
+		return { status: "configuration_required", issues };
 	}
-	const employee = boundEmployee;
 	const permissions = membership.permissions.flatMap((value) => {
 		const result = clerkPermissionSchema.safeParse(value);
-		return result.success &&
-			(employee || (!value.endsWith("_own") && !value.endsWith("_assigned")))
-			? [result.data]
-			: [];
+		return result.success ? [result.data] : [];
 	});
-	return loggedUserSessionSchema.parse({
+	const session = loggedUserSessionSchema.parse({
 		user: {
 			fullName:
 				[user.firstName, user.lastName].filter(Boolean).join(" ") ||
@@ -107,9 +122,9 @@ async function resolveDomainSession(): Promise<LoggedUserSession | null> {
 					(address) => address.id === user.primaryEmailAddressId,
 				)?.emailAddress ?? user.emailAddresses[0]?.emailAddress,
 		},
-		employee: { id: employee?.id ?? null },
+		employee: { id: employee.id },
 		firm,
-		employeeType: employee?.type ?? null,
+		employeeType: employee.type,
 		permissions,
 		clerk: {
 			userId: identity.userId,
@@ -117,34 +132,43 @@ async function resolveDomainSession(): Promise<LoggedUserSession | null> {
 			sessionId: identity.sessionId,
 		},
 	});
+	return { status: "ready", session };
 }
 
-const requestSessions = new WeakMap<
-	Request,
-	Promise<LoggedUserSession | null>
->();
+const requestSessions = new WeakMap<Request, Promise<SessionAccess>>();
+
+export const getServerSessionAccess = createServerOnlyFn(async () => {
+	const request = getRequest();
+	const existing = requestSessions.get(request);
+	if (existing) {
+		return existing;
+	}
+	const pending = resolveDomainSession().then((result) =>
+		sessionAccessSchema.parse(result),
+	);
+	requestSessions.set(request, pending);
+	return pending;
+});
 
 export const getOptionalServerLoggedUserSession = createServerOnlyFn(
-	async () => {
-		const request = getRequest();
-		const existing = requestSessions.get(request);
-		if (existing) {
-			return existing;
-		}
-		const pending = resolveDomainSession();
-		requestSessions.set(request, pending);
-		return pending;
+	async (): Promise<LoggedUserSession | null> => {
+		const access = await getServerSessionAccess();
+		return access.status === "ready" ? access.session : null;
 	},
 );
 
 export async function getRequiredServerLoggedUserSession() {
-	const session = await getOptionalServerLoggedUserSession();
-
-	if (!session) {
+	const access = await getServerSessionAccess();
+	if (access.status === "configuration_required") {
+		throw new Error(
+			"Configuração de acesso incompleta. Peça ao administrador para conferir os vínculos do usuário e da organização no Clerk.",
+		);
+	}
+	if (access.status !== "ready") {
 		throw new Error(UNAUTHENTICATED_ERROR_MESSAGE);
 	}
 
-	return session;
+	return access.session;
 }
 
 export async function getServerScope(

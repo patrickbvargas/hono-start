@@ -2,7 +2,7 @@
 
 ## Clerk authority
 
-Clerk exclusively owns authentication, Organization memberships, roles and permission grants. Firm is an independent business unit; Employee is a business entity; Clerk privateMetadata.employeeId optionally identifies an active collaborator. The active Organization privateMetadata.firmId defines the existing business unit; no valid mapping means no protected data. Missing membership denies product access. An explicit invalid or inactive/deleted employeeId binding denies the session; an absent binding disables own/assigned capabilities only, while current Clerk general grants remain available. A role name never bypasses a permission check.
+Clerk exclusively owns authentication, Organization memberships, roles and permission grants. Firm is an independent business unit; Employee is a business entity; Clerk privateMetadata.employeeId must identify an active collaborator for every role, including administrators. The active Organization privateMetadata.firmId defines the existing business unit; no valid mapping means no protected data. Missing membership denies product access. Missing, invalid, inactive or deleted employeeId bindings deny all protected access and produce configuration guidance for verified members. A role name never bypasses a permission check.
 
 Business permissions use `org:<feature>:<permission>`. See the approved catalog in `src/shared/session/schema.ts` and deployment guidance in `docs/implementation/CLERK_MIGRATION.md`. Read, create, update, delete, restore and export grants are independent. `manage` is explicit only for account administration. Provider `sys_*` permissions retain their native purpose.
 
@@ -111,10 +111,10 @@ The following matrix describes initial role presets to configure in Clerk, not i
 
 ## Business and authentication isolation
 
-See `DOMAIN_MODEL.md` for ownership. Own and assigned permissions require a valid optional Clerk privateMetadata.employeeId. Organization membership does not confer firm-specific access; metadata-based firm restrictions are future work. Account administration occurs in Clerk Dashboard.
+See `DOMAIN_MODEL.md` for ownership. Own and assigned permissions require a valid required Clerk privateMetadata.employeeId. Organization membership does not confer firm-specific access; metadata-based firm restrictions are future work. Account administration occurs in Clerk Dashboard.
 ## Dashboard subject permissions
 
-Dashboard read_all/read_own or expenses:read permits entry, not access to every financial subject. Dashboard data reads additionally require fees:read_all/read_assigned for receipts, schedules, debt and revenue breakdowns; remunerations:read_all/read_own for generated remuneration cards, charts and tables; expenses:read for expense cards and breakdowns. Missing subject grants skip database reads and remove related payload data and UI surfaces. Dashboard-wide access never upgrades assigned/own subject grants, and client employee filters never override the authenticated employee for restricted grants. Missing employee bindings yield no own/assigned records.
+Dashboard read_all/read_own or expenses:read permits entry, not access to every financial subject. Dashboard data reads additionally require fees:read_all/read_assigned for receipts, schedules, debt and revenue breakdowns; remunerations:read_all/read_own for generated remuneration cards, charts and tables; expenses:read for expense cards and breakdowns. Missing subject grants skip database reads and remove related payload data and UI surfaces. Dashboard-wide access never upgrades assigned/own subject grants, and client employee filters never override the authenticated employee for restricted grants. Missing employee bindings deny protected session resolution.
 
 Consolidated balance and cash-flow tables require dashboard:read_all, dashboard:read_cash_flow, fees:read_all, remunerations:read_all and expenses:read together, without allocation dimensions. Combined revenue/remuneration charts require both subjects. Expense-only users receive only expense metrics and breakdowns. Employee filter options additionally require employees:read. Dashboard lookup queries do not call contract endpoints without contract read grants.
 
@@ -157,7 +157,7 @@ Every row requires an authenticated session and `org:dashboard:read_all` OR `org
 
 - `read_assigned` limits receipts to permitted active contract assignments; `read_own` limits remuneration to the authenticated employee.
 - Dashboard-wide grants do not upgrade subject grants. Employee query parameters cannot impersonate another employee under restricted scope.
-- Missing employee bindings return no own/assigned records. Firm isolation applies to every query.
+- Missing employee bindings deny protected access. Firm isolation applies to every query.
 - Unauthorized subject queries do not execute; related values are removed from the server response as well as hidden in the UI.
 
 #### Drilldown permissions

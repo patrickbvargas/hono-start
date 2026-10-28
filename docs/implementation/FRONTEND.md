@@ -148,7 +148,7 @@ Collaborator filters in Dashboard, Contracts, Remunerations and Pending Work sho
 
 ## Business and authentication isolation
 
-See `docs/domain/DOMAIN_MODEL.md` for ownership boundaries. Authentication resolves the optional business actor through server-validated Clerk privateMetadata.employeeId. Employee UI contains business fields only; account administration belongs to Clerk Dashboard.
+See `docs/domain/DOMAIN_MODEL.md` for ownership boundaries. Authentication resolves the required business actor through server-validated Clerk privateMetadata.employeeId. Employee UI contains business fields only; account administration belongs to Clerk Dashboard.
 
 
 ## Application Theme

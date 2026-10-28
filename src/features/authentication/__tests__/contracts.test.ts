@@ -52,7 +52,9 @@ describe("authentication public screen contracts", () => {
 		);
 		expect(loginRoute).toContain("beforeLoad:");
 		expect(loginRoute).toContain("validateSearch: loginSearchSchema");
-		expect(loginRoute).toContain("<LoginForm redirectTo={redirect} />");
+		expect(loginRoute).toContain(
+			"<LoginForm redirectTo={redirect} access={access} />",
+		);
 
 		expect(loginRoute).not.toContain("@/features/authentication/components/");
 

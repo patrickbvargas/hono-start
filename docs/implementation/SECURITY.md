@@ -33,7 +33,7 @@ This document defines reusable trust-boundary and authorization rules for the re
 
 ## Session Policy Shape
 
-- Session contains the Clerk identity and current permission grants, an optional business Employee binding, the employee type, and the Firm configured in active Organization privateMetadata.firmId. It carries no local role or duplicate Employee ID in the account profile.
+- Session contains the Clerk identity and current permission grants, a required business Employee binding, the employee type, and the Firm configured in active Organization privateMetadata.firmId. It carries no local role or duplicate Employee ID in the account profile.
 - `server.ts` verifies Clerk state and resolves business context once per request. It never computes grants from business data.
 - Session has four implementation modules: `schema.ts` holds the Zod contract, permission keys and types; `server.ts` holds verification and middleware; `client.tsx` holds route queries, React context and identity-change invalidation; `access.ts` holds resource checks and business scopes. `index.ts` exports browser-safe APIs. Protected server operations import middleware and resolvers directly from `server.ts`.
 - React consumers read `useLoggedUserSession()` from the route provider and use ordinary permission checks. There is no separate session store or local credential lifecycle.
@@ -72,7 +72,7 @@ This document defines reusable trust-boundary and authorization rules for the re
 - The official SDK verifies auth context; `src/start.ts` explicitly includes CSRF middleware for server functions.
 - Every protected request verifies current provider session, user restrictions, Organization membership and private Firm mapping; request-local reuse avoids repeated lookups within that request. Provider failures deny execution.
 - Custom permission grants derive from current Backend API membership state, not stale JWTs, client metadata or webhook delivery.
-- The optional metadata Employee binding establishes the business actor. Active/deleted, assignment and writable-resource constraints remain server-side domain checks; Firm is resolved only from current server-fetched Organization privateMetadata.firmId, strictly validated as a positive integer and an existing Firm. Public/unsafe metadata and client inputs never grant Firm access; no default-Firm fallback exists.
+- The required metadata Employee binding establishes the business actor. Active/deleted, assignment and writable-resource constraints remain server-side domain checks; Firm is resolved only from current server-fetched Organization privateMetadata.firmId, strictly validated as a positive integer and an existing Firm. Public/unsafe metadata and client inputs never grant Firm access; no default-Firm fallback exists.
 - Clerk owns credential policy, email verification, session duration and attack protection.
 - Webhooks verify the raw request signature and deduplicate delivery IDs. They never synchronize authentication data into Employee.
 - Public keys use the Vite public boundary. Secret/webhook keys use validated server env only.
@@ -80,14 +80,20 @@ This document defines reusable trust-boundary and authorization rules for the re
 
 ## Business and authentication isolation
 
-See `docs/domain/DOMAIN_MODEL.md` for ownership boundaries. Authentication resolves the optional business actor through server-validated Clerk privateMetadata.employeeId. Employee UI contains business fields only; account administration belongs to Clerk Dashboard.
+See `docs/domain/DOMAIN_MODEL.md` for ownership boundaries. Authentication resolves the required business actor through server-validated Clerk privateMetadata.employeeId. Employee UI contains business fields only; account administration belongs to Clerk Dashboard.
 
 ## Local attachment storage
 
 ATTACHMENTS_DIR is a private absolute directory outside public assets and build output. Attachment binaries are delivered only through authenticated, firm- and owner-authorized requests. Paths cannot escape the root or traverse symbolic links. Restrict filesystem writers to the application account; do not expose this directory through a web server. Responses use private/no-store caching and nosniff.
 
-Employee is global. The same active Employee ID and type remain bound across authorized Organizations; each membership supplies its own current grants. Missing binding removes own/assigned grants; invalid, inactive or deleted explicit bindings deny the session. Organization changes clear prior-unit caches, and operational scope is derived afresh on the server.
+Employee is global. The same active Employee ID and type remain bound across authorized Organizations; each membership supplies its own current grants. Missing, invalid, inactive or deleted bindings deny the session for every role, including administrators. Organization changes clear prior-unit caches, and operational scope is derived afresh on the server.
 
 ## Company-wide clients and employees
 
 See [Multitenancy](../domain/MULTITENANCY.md) for the authoritative entity-scope matrix, global lifecycle, evidence visibility and current-Firm enforcement.
+
+## Required configuration feedback
+
+The request-local session resolver exposes a Zod-validated ready/configuration_required/unauthenticated result. Only verified active members receive configuration issue codes; private metadata values are never returned in denied results. Both malformed/missing fields are reported together before domain lookup. Optional session readers still return null on denial; required server readers reject configuration failures with a safe configuration message. Provider errors remain errors, rather than configuration findings. Login recovery uses the same resolver and existing Organization selection, retry and logout flows. Defensive nullable actor types remain supported by resource helpers, but server resolution never emits an unbound actor.
+
+Organization selection is hidden whenever any employeeId or firmId configuration issue exists, including combined issues, because required metadata must be corrected in Clerk. Retry and sign-out remain available. Organization selection remains available before selection or for other access denials without configuration findings.

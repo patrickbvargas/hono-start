@@ -181,7 +181,7 @@ See `docs/domain/LOOKUP_VALUES.md` for the canonical allowed values and labels.
 ## Authentication Entity Relationship
 
 - `Employee` is the application user entity referenced by authentication records.
-- Session and account state belong to Clerk; optional privateMetadata.employeeId points to a business collaborator for own/assigned visibility.
+- Session and account state belong to Clerk; required privateMetadata.employeeId points to an active business collaborator for application access.
 
 ## Conceptual Boundaries
 
@@ -198,7 +198,7 @@ Firm is a business unit (unidade/filial). The active Clerk Organization privateM
 
 ## Business and authentication isolation
 
-Employee has no Clerk ID, account email, avatar or access role. Users and invitations are managed in Clerk. Server-validated Clerk privateMetadata.employeeId optionally resolves an active Employee for own and assigned capabilities; missing binding never widens scope. An explicit invalid, inactive or deleted binding denies the session. General capabilities do not require an Employee link. The same valid global Employee remains bound when switching Firm; current Clerk membership grants and operational Firm scopes still apply. Audit actors without an Employee retain their Clerk account name and email with a null employee actor ID. Firm is selected exclusively by the active Organization privateMetadata.firmId fetched server-side for the current request. Switching Organization changes the unit context and clears previous frontend data; every protected operation still enforces its current Firm scope.
+Employee has no Clerk ID, account email, avatar or access role. Users and invitations are managed in Clerk. Server-validated Clerk privateMetadata.employeeId must resolve an active, non-deleted Employee for every role. Missing, invalid, inactive or deleted bindings deny all protected access, including general capabilities. The same valid global Employee remains bound when switching Firm; current Clerk membership grants and operational Firm scopes still apply. Audit actors without an Employee retain their Clerk account name and email with a null employee actor ID. Firm is selected exclusively by the active Organization privateMetadata.firmId fetched server-side for the current request. Switching Organization changes the unit context and clears previous frontend data; every protected operation still enforces its current Firm scope.
 
 ## Company-wide clients and employees
 
