@@ -4,6 +4,7 @@ import type {
 	ContractAssignmentInput,
 	ContractRevenueInput,
 } from "../schemas/form";
+import { getPaymentSummary } from "./payment-summary";
 
 export function getAssignmentSummary(
 	assignment: ContractAssignmentInput,
@@ -39,8 +40,6 @@ export function getRevenueSummary(
 			: "Valor pendente";
 
 	const installments =
-		revenue.totalValue > 0 && revenue.totalInstallments > 0
-			? ` • ${revenue.totalInstallments} ${revenue.totalInstallments === 1 ? "parcela" : "parcelas"}`
-			: "";
+		revenue.totalValue > 0 ? ` • ${getPaymentSummary(revenue)}` : "";
 	return `${typeLabel} • ${totalValue}${installments}`;
 }

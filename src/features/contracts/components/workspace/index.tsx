@@ -223,7 +223,7 @@ export function ContractWorkspace({
 												),
 											},
 											{
-												term: "Recebido (inclui entrada)",
+												term: "Recebido",
 												definition: (
 													<SensitiveValue>
 														{formatter.currency(

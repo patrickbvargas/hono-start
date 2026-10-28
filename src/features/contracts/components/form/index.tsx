@@ -32,6 +32,7 @@ import {
 } from "../../utils/default";
 import { getContractEditOptionDefaults } from "../../utils/edit-options";
 import { getRevenueSummary } from "../../utils/form-summary";
+import { getPaymentSummary } from "../../utils/payment-summary";
 
 interface ContractFormProps {
 	id?: EntityId;
@@ -310,7 +311,7 @@ function ContractFormContent({
 								getSummary={(revenue, index) =>
 									getRevenueSummary(revenue, index, revenueTypes)
 								}
-								renderContent={(_, index) => (
+								renderContent={(revenue, index) => (
 									<div
 										data-contract-row={getRowKey("revenues", index)}
 										className="space-y-4"
@@ -367,12 +368,16 @@ function ContractFormContent({
 												)}
 											</form.AppField>
 										</FieldGroup>
-										<FieldGroup className="grid gap-4 sm:grid-cols-2">
+										<FieldGroup className="grid grid-cols-2 grid-rows-[auto_auto] gap-x-4 gap-y-2">
 											<form.AppField
 												name={`revenues[${index}].totalInstallments`}
 											>
 												{(field) => (
 													<field.Number
+														classNames={{
+															wrapper:
+																"col-start-1 row-span-2 row-start-1 grid grid-rows-subgrid gap-2 has-[[data-slot=field-error]]:row-span-3",
+														}}
 														label="Parcelas"
 														minValue={1}
 														step={1}
@@ -380,19 +385,27 @@ function ContractFormContent({
 													/>
 												)}
 											</form.AppField>
-											<Button
-												type="button"
-												size="icon"
-												variant="outline"
-												className="place-self-end"
-												aria-label={`Remover receita ${index + 1}`}
-												onClick={() => {
-													removeRowKey("revenues", index);
-													subField.removeValue(index);
-												}}
-											>
-												<TrashIcon size={16} />
-											</Button>
+											<div className="col-start-2 row-start-2 flex min-h-8 items-center gap-4">
+												<div
+													className="m-0 flex min-h-8 min-w-0 flex-1 items-center justify-start self-center text-left text-sm text-muted-foreground"
+													aria-live="polite"
+												>
+													{getPaymentSummary(revenue, { includeEntry: false })}
+												</div>
+												<Button
+													type="button"
+													size="icon"
+													variant="outline"
+													className="shrink-0"
+													aria-label={`Remover receita ${index + 1}`}
+													onClick={() => {
+														removeRowKey("revenues", index);
+														subField.removeValue(index);
+													}}
+												>
+													<TrashIcon size={16} />
+												</Button>
+											</div>
 										</FieldGroup>
 									</div>
 								)}
@@ -470,9 +483,17 @@ function ContractFormSkeleton({
 							<FormFieldSkeleton labelWidth="w-32" />
 							<FormFieldSkeleton labelWidth="w-14" />
 						</FieldGroup>
-						<FieldGroup className="grid gap-4 sm:grid-cols-2">
-							<FormFieldSkeleton labelWidth="w-16" />
-							<Skeleton className="size-8 place-self-end rounded-lg" />
+						<FieldGroup className="grid grid-cols-2 grid-rows-[auto_auto] gap-x-4 gap-y-2">
+							<FormFieldSkeleton
+								labelWidth="w-16"
+								className="col-start-1 row-span-2 row-start-1 grid grid-rows-subgrid gap-2"
+							/>
+							<div className="col-start-2 row-start-2 flex h-8 items-center gap-4">
+								<div className="min-w-0 flex-1">
+									<Skeleton className="h-4 w-40 max-w-full rounded-sm" />
+								</div>
+								<Skeleton className="size-8 shrink-0 rounded-lg" />
+							</div>
 						</FieldGroup>
 					</div>
 				</div>

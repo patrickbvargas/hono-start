@@ -368,3 +368,7 @@ Entity pages use contextual identities, shared scroll areas, and attachment visi
 For expense-only dashboard visibility (expenses allowed, revenue and remuneration denied), Despesas por categoria is a primary chart independent of the detailed-analysis preference, including its empty state. The detailed-analysis toggle is hidden only for this visibility combination; mixed-access dashboards retain their existing behavior.
 
 Attachment rows retain the filename title and group size, date and sender on a single metadata line. Long sender names truncate visually and remain available through the full-text tooltip.
+
+### Contract payment summary
+
+Collapsed contract revenue summaries show the total, down payment and installment amounts calculated from the remaining principal. Detail drawers and workspaces show the total with the payment summary in parentheses and retain the separate down-payment field; receipt totals use the label Recebido. Expanded revenue forms show only the installment summary beside the full-column installment input, left-aligned and vertically centered with the input and removal button, because the down-payment input is already visible. Skeletons mirror this layout. Installment summaries divide the remaining principal by the installment count and round the displayed amount to currency precision; full down payment is identified as full payment. Incomplete or invalid form values show a pending payment summary.

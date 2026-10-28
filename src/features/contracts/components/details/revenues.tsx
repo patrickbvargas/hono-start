@@ -7,6 +7,7 @@ import { SensitiveValue } from "@/shared/components/value-visibility";
 import { formatter } from "@/shared/lib/formatter";
 import { hasPermission, useLoggedUserSession } from "@/shared/session";
 import type { ContractDetail } from "../../schemas/model";
+import { getPaymentSummary } from "../../utils/payment-summary";
 import { RevenuePaymentStatus } from "./payment-status";
 
 interface ContractRevenuesProps {
@@ -43,7 +44,8 @@ export function ContractRevenues({
 									term: "Valor contratado",
 									definition: (
 										<SensitiveValue>
-											{formatter.currency(revenue.totalValue)}
+											{formatter.currency(revenue.totalValue)} (
+											{getPaymentSummary(revenue)})
 										</SensitiveValue>
 									),
 								},
@@ -56,7 +58,7 @@ export function ContractRevenues({
 									),
 								},
 								{
-									term: "Recebido (inclui entrada)",
+									term: "Recebido",
 									definition: (
 										<SensitiveValue>
 											{formatter.currency(revenue.paidValue)}
