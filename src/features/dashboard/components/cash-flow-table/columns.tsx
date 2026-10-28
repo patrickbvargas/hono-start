@@ -1,4 +1,5 @@
 import { createColumnHelper } from "@tanstack/react-table";
+import { EqualIcon, TrendingDownIcon, TrendingUpIcon } from "lucide-react";
 import { TableButton } from "@/shared/components/table-button";
 import { SensitiveValue } from "@/shared/components/value-visibility";
 import { formatter } from "@/shared/lib/formatter";
@@ -18,6 +19,33 @@ export interface CashFlowSelectionOptions {
 }
 
 export function getColumns(onSelect?: CashFlowSelectionOptions["onSelect"]) {
+	const renderAmount = (row: DashboardCashFlowRow, column: CashFlowValue) => {
+		const BalanceIcon =
+			row.balance > 0
+				? TrendingUpIcon
+				: row.balance < 0
+					? TrendingDownIcon
+					: EqualIcon;
+		return (
+			<SensitiveValue>
+				<span className="inline-flex items-center justify-end gap-1.5">
+					{column === "balance" && (
+						<BalanceIcon
+							aria-hidden="true"
+							className={
+								row.balance > 0
+									? "size-3.5 shrink-0 text-green-700 dark:text-green-400"
+									: row.balance < 0
+										? "size-3.5 shrink-0 text-red-700 dark:text-red-400"
+										: "size-3.5 shrink-0 text-muted-foreground"
+							}
+						/>
+					)}
+					{formatter.currency(row[column])}
+				</span>
+			</SensitiveValue>
+		);
+	};
 	const renderValue = (row: DashboardCashFlowRow, column: CashFlowValue) =>
 		onSelect ? (
 			<TableButton
@@ -27,10 +55,10 @@ export function getColumns(onSelect?: CashFlowSelectionOptions["onSelect"]) {
 				title={`Ver detalhes: ${labels[column]} · ${row.monthLabel}`}
 				onClick={(event) => onSelect(row, column, event.currentTarget)}
 			>
-				<SensitiveValue>{formatter.currency(row[column])}</SensitiveValue>
+				{renderAmount(row, column)}
 			</TableButton>
 		) : (
-			<SensitiveValue>{formatter.currency(row[column])}</SensitiveValue>
+			renderAmount(row, column)
 		);
 	const columnHelper = createColumnHelper<
 		typeof dataTableFeatures,
