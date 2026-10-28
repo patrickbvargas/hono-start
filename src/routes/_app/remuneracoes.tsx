@@ -26,16 +26,14 @@ import {
 	WrapperBody,
 	WrapperHeader,
 } from "@/shared/components/wrapper";
-import { getPageTitle, ROUTES } from "@/shared/config/routes";
+import { ROUTES } from "@/shared/config/routes";
 import { useEntityOverlay } from "@/shared/hooks/use-entity-overlay";
 import { formatter } from "@/shared/lib/formatter";
 import { entityDetailSearchSchema } from "@/shared/schemas/entity-detail-search";
 import { hasPermission, useLoggedUserSession } from "@/shared/session";
 
 export const Route = createFileRoute("/_app/remuneracoes")({
-	head: () => ({
-		meta: [{ title: getPageTitle(ROUTES.remuneration.title) }],
-	}),
+	staticData: { pageTitle: ROUTES.remuneration.title },
 	validateSearch: remunerationSearchSchema.extend(
 		entityDetailSearchSchema.shape,
 	),

@@ -6,10 +6,9 @@ import {
 	getClientByIdQueryOptions,
 } from "@/features/clients";
 import { RouteError } from "@/shared/components/route-error";
-import { getPageTitle } from "@/shared/config/routes";
 import { entityIdSchema } from "@/shared/schemas/entity";
 export const Route = createFileRoute("/_app/clientes_/$clientId")({
-	head: () => ({ meta: [{ title: getPageTitle("Cliente") }] }),
+	staticData: { pageTitle: "Cliente" },
 	validateSearch: clientWorkspaceSearchSchema,
 	loader: async ({ context: { queryClient }, params }) => {
 		const { id } = entityIdSchema.parse({ id: Number(params.clientId) });

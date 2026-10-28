@@ -23,7 +23,7 @@ import {
 	WrapperBody,
 	WrapperHeader,
 } from "@/shared/components/wrapper";
-import { getPageTitle, ROUTES } from "@/shared/config/routes";
+import { ROUTES } from "@/shared/config/routes";
 import { useEntityOverlay } from "@/shared/hooks/use-entity-overlay";
 import { entityDetailSearchSchema } from "@/shared/schemas/entity-detail-search";
 import {
@@ -33,9 +33,7 @@ import {
 } from "@/shared/session";
 
 export const Route = createFileRoute("/_app/colaboradores")({
-	head: () => ({
-		meta: [{ title: getPageTitle(ROUTES.employee.title) }],
-	}),
+	staticData: { pageTitle: ROUTES.employee.title },
 	validateSearch: employeeSearchSchema.extend(entityDetailSearchSchema.shape),
 	search: {
 		middlewares: [stripSearchParams(employeeSearchDefaults)],

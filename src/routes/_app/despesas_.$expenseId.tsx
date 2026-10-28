@@ -6,10 +6,9 @@ import {
 	getExpenseByIdQueryOptions,
 } from "@/features/expenses";
 import { RouteError } from "@/shared/components/route-error";
-import { getPageTitle } from "@/shared/config/routes";
 import { entityIdSchema } from "@/shared/schemas/entity";
 export const Route = createFileRoute("/_app/despesas_/$expenseId")({
-	head: () => ({ meta: [{ title: getPageTitle("Despesa") }] }),
+	staticData: { pageTitle: "Despesa" },
 	validateSearch: expenseWorkspaceSearchSchema,
 	loader: async ({ context: { queryClient }, params }) => {
 		const { id } = entityIdSchema.parse({ id: Number(params.expenseId) });

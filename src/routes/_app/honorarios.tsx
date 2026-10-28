@@ -25,16 +25,14 @@ import {
 	WrapperBody,
 	WrapperHeader,
 } from "@/shared/components/wrapper";
-import { getPageTitle, ROUTES } from "@/shared/config/routes";
+import { ROUTES } from "@/shared/config/routes";
 import { useEntityOverlay } from "@/shared/hooks/use-entity-overlay";
 import { formatter } from "@/shared/lib/formatter";
 import { entityDetailSearchSchema } from "@/shared/schemas/entity-detail-search";
 import { hasPermission, useLoggedUserSession } from "@/shared/session";
 
 export const Route = createFileRoute("/_app/honorarios")({
-	head: () => ({
-		meta: [{ title: getPageTitle(ROUTES.fee.title) }],
-	}),
+	staticData: { pageTitle: ROUTES.fee.title },
 	validateSearch: feeSearchSchema.extend(entityDetailSearchSchema.shape),
 	search: {
 		middlewares: [stripSearchParams(feeSearchDefaults)],

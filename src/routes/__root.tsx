@@ -12,12 +12,12 @@ import {
 	Scripts,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
+import { ApplicationBrandingHead } from "@/features/application-branding";
 import { RouteError } from "@/shared/components/route-error";
 import { RouteLoading } from "@/shared/components/route-loading";
 import { RouteNotFound } from "@/shared/components/route-not-found";
 import { ThemeProvider } from "@/shared/components/theme-provider";
 import { Toaster } from "@/shared/components/ui";
-import { getPageTitle } from "@/shared/config/routes";
 import { ClerkSessionBoundary } from "@/shared/session/client";
 import appCss from "@/styles/global.css?url";
 
@@ -35,7 +35,6 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 				name: "viewport",
 				content: "width=device-width, initial-scale=1",
 			},
-			{ title: getPageTitle() },
 		],
 		links: [
 			{
@@ -81,6 +80,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 		<html lang="pt-BR" suppressHydrationWarning>
 			<head>
 				<HeadContent />
+				<ApplicationBrandingHead />
 			</head>
 			<body>
 				<ClerkProvider

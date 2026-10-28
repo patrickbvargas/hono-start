@@ -27,18 +27,20 @@ const getApplicationBranding = createServerFn({ method: "GET" }).handler(
 	},
 );
 
-export const sidebarKeys = {
-	all: ["app-sidebar"] as const,
-	branding: (frontendApi: string) =>
-		[...sidebarKeys.all, "branding", frontendApi] as const,
+export const applicationBrandingKeys = {
+	all: ["application-branding"] as const,
+	current: (publishableKey: string) =>
+		[...applicationBrandingKeys.all, publishableKey] as const,
 };
 
-export function getApplicationBrandingQueryOptions(frontendApi: string) {
+export function getApplicationBrandingQueryOptions() {
+	const publishableKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY ?? "";
 	return queryOptions({
-		queryKey: sidebarKeys.branding(frontendApi),
-		enabled: Boolean(frontendApi),
+		queryKey: applicationBrandingKeys.current(publishableKey),
+		enabled: Boolean(publishableKey),
 		staleTime: 0,
 		refetchOnWindowFocus: "always",
+		refetchOnReconnect: "always",
 		queryFn: ({ signal }) => getApplicationBranding({ signal }),
 	});
 }

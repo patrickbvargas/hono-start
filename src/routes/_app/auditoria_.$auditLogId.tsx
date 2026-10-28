@@ -5,10 +5,9 @@ import {
 	getAuditLogByIdQueryOptions,
 } from "@/features/audit-logs";
 import { RouteError } from "@/shared/components/route-error";
-import { getPageTitle } from "@/shared/config/routes";
 import { entityIdSchema } from "@/shared/schemas/entity";
 export const Route = createFileRoute("/_app/auditoria_/$auditLogId")({
-	head: () => ({ meta: [{ title: getPageTitle("Registro de auditoria") }] }),
+	staticData: { pageTitle: "Registro de auditoria" },
 	validateSearch: auditLogWorkspaceSearchSchema,
 	loader: async ({ context: { queryClient }, params }) => {
 		const { id } = entityIdSchema.parse({ id: Number(params.auditLogId) });

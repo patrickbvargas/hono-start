@@ -26,8 +26,17 @@ export interface RouteSection extends RouteItem {
 	items: RouteItem[];
 }
 
-export function getPageTitle(title?: string) {
-	return title ? `${title} | Hono` : "Hono";
+declare module "@tanstack/react-router" {
+	interface StaticDataRouteOption {
+		pageTitle?: string;
+	}
+}
+
+export function getPageTitle(
+	title: string | undefined,
+	applicationName: string,
+) {
+	return title ? `${title} | ${applicationName}` : applicationName;
 }
 
 type RouteName =

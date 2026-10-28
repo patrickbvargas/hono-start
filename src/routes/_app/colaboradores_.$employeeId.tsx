@@ -6,10 +6,9 @@ import {
 	getEmployeeByIdQueryOptions,
 } from "@/features/employees";
 import { RouteError } from "@/shared/components/route-error";
-import { getPageTitle } from "@/shared/config/routes";
 import { entityIdSchema } from "@/shared/schemas/entity";
 export const Route = createFileRoute("/_app/colaboradores_/$employeeId")({
-	head: () => ({ meta: [{ title: getPageTitle("Colaborador") }] }),
+	staticData: { pageTitle: "Colaborador" },
 	validateSearch: employeeWorkspaceSearchSchema,
 	loader: async ({ context: { queryClient }, params }) => {
 		const { id } = entityIdSchema.parse({ id: Number(params.employeeId) });

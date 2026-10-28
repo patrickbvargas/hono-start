@@ -23,11 +23,11 @@ import {
 	WrapperBody,
 	WrapperHeader,
 } from "@/shared/components/wrapper";
-import { getPageTitle, ROUTES } from "@/shared/config/routes";
+import { ROUTES } from "@/shared/config/routes";
 import { assertCan } from "@/shared/session";
 
 export const Route = createFileRoute("/_app/pendencias")({
-	head: () => ({ meta: [{ title: getPageTitle(ROUTES.pendingWork.title) }] }),
+	staticData: { pageTitle: ROUTES.pendingWork.title },
 	validateSearch: pendingWorkSearchSchema,
 	search: { middlewares: [stripSearchParams(pendingWorkSearchDefaults)] },
 	loaderDeps: ({ search }) => ({ search }),

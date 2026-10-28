@@ -1,7 +1,6 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import * as z from "zod";
 import { LoginForm } from "@/features/authentication";
-import { getPageTitle } from "@/shared/config/routes";
 import { getRouteSession } from "@/shared/session/client";
 
 const loginSearchSchema = z.object({
@@ -9,9 +8,7 @@ const loginSearchSchema = z.object({
 });
 
 export const Route = createFileRoute("/_auth/login")({
-	head: () => ({
-		meta: [{ title: getPageTitle("Entrar") }],
-	}),
+	staticData: { pageTitle: "Entrar" },
 	validateSearch: loginSearchSchema,
 	beforeLoad: async ({ context: { queryClient } }) => {
 		const session = await getRouteSession(queryClient);

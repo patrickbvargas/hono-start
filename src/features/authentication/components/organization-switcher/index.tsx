@@ -13,15 +13,15 @@ export function OrganizationSwitcher({
 			afterSelectOrganizationUrl="/"
 			afterLeaveOrganizationUrl="/login"
 			fallback={
-				<span className="truncate text-xs text-muted-foreground">
+				<span className="block h-4.5 truncate text-xs leading-4.5 text-muted-foreground">
 					{organizationName}
 				</span>
 			}
 			appearance={{
 				elements: {
-					rootBox: "w-full min-w-0",
+					rootBox: "h-4.5 w-full min-w-0",
 					organizationSwitcherTrigger:
-						"w-full min-w-0 justify-start gap-1! p-0! text-xs text-muted-foreground",
+						"h-4.5! min-h-0! w-full min-w-0 justify-start gap-1! p-0! text-xs leading-4.5! text-muted-foreground",
 					organizationPreviewAvatarBox__organizationSwitcherTrigger: "hidden!",
 					organizationPreviewAvatarContainer__organizationSwitcherTrigger:
 						"hidden!",
@@ -29,7 +29,7 @@ export function OrganizationSwitcher({
 					organizationPreviewTextContainer__organizationSwitcherTrigger:
 						"min-w-0",
 					organizationPreviewMainIdentifier__organizationSwitcherTrigger:
-						"truncate text-xs font-normal text-muted-foreground",
+						"truncate text-xs leading-4.5! font-normal text-muted-foreground",
 				},
 			}}
 		/>

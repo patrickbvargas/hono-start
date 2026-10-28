@@ -56,7 +56,7 @@ import {
 	WrapperBody,
 	WrapperHeader,
 } from "@/shared/components/wrapper";
-import { getPageTitle, ROUTES } from "@/shared/config/routes";
+import { ROUTES } from "@/shared/config/routes";
 import { useOverlay } from "@/shared/hooks/use-overlay";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
@@ -67,9 +67,7 @@ import {
 } from "@/shared/session";
 
 export const Route = createFileRoute("/_app/")({
-	head: () => ({
-		meta: [{ title: getPageTitle(ROUTES.dashboard.title) }],
-	}),
+	staticData: { pageTitle: ROUTES.dashboard.title },
 	validateSearch: dashboardSearchSchema,
 	search: {
 		middlewares: [stripSearchParams(dashboardSearchDefaults)],

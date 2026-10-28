@@ -6,10 +6,9 @@ import {
 	getContractByIdQueryOptions,
 } from "@/features/contracts";
 import { RouteError } from "@/shared/components/route-error";
-import { getPageTitle } from "@/shared/config/routes";
 import { entityIdSchema } from "@/shared/schemas/entity";
 export const Route = createFileRoute("/_app/contratos_/$contractId")({
-	head: () => ({ meta: [{ title: getPageTitle("Contrato") }] }),
+	staticData: { pageTitle: "Contrato" },
 	validateSearch: contractWorkspaceSearchSchema,
 	loader: async ({ context: { queryClient }, params }) => {
 		const { id } = entityIdSchema.parse({ id: Number(params.contractId) });

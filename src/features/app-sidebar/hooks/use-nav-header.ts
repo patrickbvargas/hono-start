@@ -1,15 +1,11 @@
-import { useClerk, useOrganization } from "@clerk/tanstack-react-start";
-import { useQuery } from "@tanstack/react-query";
+import { useOrganization } from "@clerk/tanstack-react-start";
 import { useEffect } from "react";
+import { useApplicationBranding } from "@/features/application-branding";
 import { useSidebar } from "@/shared/components/ui";
-import { getApplicationBrandingQueryOptions } from "../api/queries";
 
 export function useNavHeader() {
 	const { organization, isLoaded } = useOrganization();
-	const clerk = useClerk();
-	const { data: branding } = useQuery(
-		getApplicationBrandingQueryOptions(clerk.frontendApi),
-	);
+	const branding = useApplicationBranding();
 	const { setOpenMobile } = useSidebar();
 
 	useEffect(() => {
@@ -40,12 +36,12 @@ export function useNavHeader() {
 		};
 	}, [organization]);
 
-	const name = branding?.name || "Hono";
+	const name = branding.name;
 	return {
 		name,
 		organizationName:
 			organization?.name || (isLoaded ? "Organização" : "Carregando…"),
-		imageUrl: branding?.imageUrl,
+		imageUrl: branding.imageUrl,
 		initials: name
 			.split(" ")
 			.filter(Boolean)
