@@ -1,6 +1,7 @@
 export type DashboardPeriodShortcutId =
 	| "last6Months"
 	| "last12Months"
+	| "currentMonth"
 	| "currentYear";
 
 export interface DashboardPeriodShortcut {
@@ -70,6 +71,16 @@ export function getDashboardPeriodShortcuts(
 			label: "12M",
 			dateFrom: formatUtcDate(addUtcMonths(today, -11)),
 			dateTo: formatUtcDate(today),
+		},
+		{
+			id: "currentMonth",
+			label: "Este mês",
+			dateFrom: formatUtcDate(
+				createUtcDate(currentYear, today.getUTCMonth(), 1),
+			),
+			dateTo: formatUtcDate(
+				createUtcDate(currentYear, today.getUTCMonth() + 1, 0),
+			),
 		},
 		{
 			id: "currentYear",

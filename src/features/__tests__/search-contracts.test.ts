@@ -290,7 +290,15 @@ describe("feature search contracts", () => {
 	);
 
 	it("keeps dashboard search defaults safe and validates dates", () => {
-		expect(dashboardSearchSchema.parse({})).toEqual(dashboardSearchDefaults);
+		const {
+			clientId: _clientId,
+			contractId: _contractId,
+			...implicitDefaults
+		} = dashboardSearchDefaults;
+		expect(dashboardSearchSchema.parse({})).toEqual(implicitDefaults);
+		expect(
+			dashboardSearchSchema.parse({ clientId: "42", contractId: "7" }),
+		).toMatchObject({ clientId: "42", contractId: "7" });
 		expect(
 			applyStripSearchParams(dashboardSearchDefaults, dashboardSearchDefaults),
 		).toEqual({});
@@ -312,7 +320,11 @@ describe("feature search contracts", () => {
 				dateFrom: "2026-04-01",
 				dateTo: "2026-04-30",
 			}),
-		).toEqual(customDashboardSearch);
+		).toEqual({
+			...implicitDefaults,
+			dateFrom: "2026-04-01",
+			dateTo: "2026-04-30",
+		});
 
 		expect(() =>
 			dashboardSearchSchema.parse({

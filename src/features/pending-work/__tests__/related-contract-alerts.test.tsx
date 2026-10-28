@@ -152,16 +152,17 @@ describe("related contract alert previews", () => {
 		expect(mocks.retry).toHaveBeenCalledOnce();
 	});
 	it.each(["client", "employee"] as const)(
-		"hides the empty %s alert section",
+		"shows the empty %s alert section",
 		(kind) => {
 			mocks.useAlerts.mockReturnValue({
 				...mocks.useAlerts(),
 				pendingWork: { data: [], total: 0, contracts: 0 },
 			});
-			const { container } = render(
-				<RelatedContractAlerts kind={kind} id={42} />,
-			);
-			expect(container.innerHTML).toBe("");
+			render(<RelatedContractAlerts kind={kind} id={42} />);
+			expect(screen.getByText("Alertas")).toBeDefined();
+			expect(
+				screen.getByText("Nenhum alerta nos contratos vinculados."),
+			).toBeDefined();
 			expect(screen.queryByRole("list")).toBeNull();
 		},
 	);

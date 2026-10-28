@@ -5,14 +5,13 @@ import {
 	createRouter,
 	RouterProvider,
 } from "@tanstack/react-router";
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { cleanup, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it } from "vitest";
 import { PendingWorkAction } from "../components/action";
 import { PendingWorkContractLink } from "../components/contract-link";
 import { PendingWorkDueDate } from "../components/due-date";
 import { PendingWorkSeverity } from "../components/severity";
 import { PendingWorkSummary } from "../components/summary";
-import { usePendingWorkSummary } from "../hooks/use-summary";
 import type { PendingWork } from "../schemas/model";
 import { pendingWorkSearchSchema } from "../schemas/search";
 
@@ -27,12 +26,6 @@ const data = {
 	page: 3,
 	pageSize: 25,
 };
-function Summary() {
-	const { handleSelectSeverity } = usePendingWorkSummary();
-	return (
-		<PendingWorkSummary data={data} onSelectSeverity={handleSelectSeverity} />
-	);
-}
 
 describe("pending work presentation", () => {
 	it.each(["finance", "team"] as const)(
@@ -86,36 +79,13 @@ describe("pending work presentation", () => {
 			});
 		},
 	);
-	it("filters through cards while preserving the other search dimensions", async () => {
-		const router = createRouter({
-			routeTree: createRootRoute({
-				validateSearch: pendingWorkSearchSchema,
-				component: Summary,
-			}),
-			history: createMemoryHistory({
-				initialEntries: ["/?page=3&column=client&direction=desc&query=PROC"],
-			}),
-		});
-		await router.load();
-		render(<RouterProvider router={router} />);
-		fireEvent.click(
-			await screen.findByRole("button", { name: "Filtrar baixa criticidade" }),
-		);
-		await vi.waitFor(() =>
-			expect(router.state.location.search).toMatchObject({
-				severity: ["low"],
-				query: "PROC",
-				column: "client",
-				direction: "desc",
-				page: 1,
-			}),
-		);
-		fireEvent.click(
-			screen.getByRole("button", { name: "Mostrar todas as criticidades" }),
-		);
-		await vi.waitFor(() =>
-			expect(router.state.location.search.severity).toEqual([]),
-		);
+	it("keeps the summary cards hidden from the current UI", () => {
+		render(<PendingWorkSummary data={data} />);
+		const summary = screen.getByLabelText("Resumo das pendências filtradas");
+		expect(summary.hasAttribute("hidden")).toBe(true);
+		expect(
+			screen.queryByRole("button", { name: "Filtrar baixa criticidade" }),
+		).toBeNull();
 	});
 	it("shows calendar delay separately from the formatted date", () => {
 		render(<PendingWorkDueDate date="2026-10-24" overdueDays={1} />);

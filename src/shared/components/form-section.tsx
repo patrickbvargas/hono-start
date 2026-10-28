@@ -39,17 +39,7 @@ export const FormSection = ({
 					}
 				>
 					<div className="space-y-1">
-						{title ? (
-							<SectionTitle
-								className={
-									variant === "card"
-										? "text-sm font-medium normal-case tracking-normal text-foreground leading-none"
-										: undefined
-								}
-							>
-								{title}
-							</SectionTitle>
-						) : null}
+						{title ? <SectionTitle>{title}</SectionTitle> : null}
 						{description ? (
 							<p className="text-muted-foreground text-sm">{description}</p>
 						) : null}

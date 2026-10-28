@@ -1,3 +1,4 @@
+import { renderContractFilterOption } from "@/shared/components/contract-filter-option";
 import { ListFilters } from "@/shared/components/list-filters";
 import {
 	Button,
@@ -145,7 +146,9 @@ export function DashboardFilter({
 											aria-label="Contrato"
 											placeholder="Contrato"
 											options={contracts}
+											renderOption={renderContractFilterOption}
 											classNames={{
+												content: "w-max",
 												wrapper: "w-full md:w-52 md:shrink-0 xl:w-60",
 											}}
 										/>
@@ -188,7 +191,9 @@ export function DashboardFilter({
 											? "6 meses"
 											: shortcut.id === "last12Months"
 												? "12 meses"
-												: "Este ano"}
+												: shortcut.id === "currentMonth"
+													? "Este mês"
+													: "Este ano"}
 									</Button>
 								))}
 								<DateRangePicker

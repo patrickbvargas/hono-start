@@ -10,7 +10,6 @@ import type { dataTableFeatures } from "@/shared/lib/table";
 import { usePendingWorkNavigation } from "../../hooks/use-navigation";
 import type { PendingWork, PendingWorkPage } from "../../schemas/model";
 import { PendingWorkContractSummary } from "../contract-summary";
-import { PendingWorkDueDate } from "../due-date";
 import { PendingWorkRecordActions } from "../record-actions";
 import { PendingWorkSeverity } from "../severity";
 
@@ -47,12 +46,11 @@ export function PendingWorkTable({ data, emptyState }: PendingWorkTableProps) {
 			c.accessor("dueDate", {
 				header: "Vencimento",
 				enableSorting: true,
-				cell: ({ row }) => (
-					<PendingWorkDueDate
-						date={row.original.dueDate}
-						overdueDays={row.original.overdueDays}
-					/>
-				),
+				cell: ({ getValue }) => {
+					const date = getValue();
+					return date ? formatter.calendarDate(date) : "—";
+				},
+				meta: { cellClassName: "whitespace-nowrap" },
 			}),
 			c.accessor("remainingAmount", {
 				header: "Saldo a receber",

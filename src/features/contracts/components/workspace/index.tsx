@@ -153,16 +153,14 @@ export function ContractWorkspace({
 									/>
 								</FormSection>
 							</div>
-							{alerts.length > 0 && (
-								<div className="flex min-h-0 flex-initial flex-col [&>section]:min-h-0 [&>section]:flex-initial [&>section>div:first-child]:shrink-0">
-									<FormSection
-										title="Alertas"
-										className="min-h-0 flex-initial overflow-hidden"
-									>
-										<ContractAlerts alerts={alerts} onNavigate={onTabChange} />
-									</FormSection>
-								</div>
-							)}
+							<div className="flex min-h-0 flex-initial flex-col [&>section]:min-h-0 [&>section]:flex-initial [&>section>div:first-child]:shrink-0">
+								<FormSection
+									title="Alertas"
+									className="min-h-0 flex-initial overflow-hidden"
+								>
+									<ContractAlerts alerts={alerts} onNavigate={onTabChange} />
+								</FormSection>
+							</div>
 						</div>
 					),
 				},

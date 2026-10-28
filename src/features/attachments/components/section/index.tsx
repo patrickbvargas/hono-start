@@ -66,18 +66,9 @@ export const AttachmentSection = ({
 				className,
 			)}
 		>
-			<div className="flex shrink-0 items-start justify-between gap-3">
+			<div className="flex shrink-0 items-center justify-between gap-3">
 				<div className="flex items-center gap-2">
-					<SectionTitle
-						id={headingId}
-						className={
-							layout === "expanded"
-								? "text-sm normal-case tracking-normal text-foreground leading-none"
-								: undefined
-						}
-					>
-						Anexos
-					</SectionTitle>
+					<SectionTitle id={headingId}>Anexos</SectionTitle>
 					{!isPending && !error ? (
 						<span className="text-xs tabular-nums text-muted-foreground">
 							{attachments.length}
@@ -85,7 +76,7 @@ export const AttachmentSection = ({
 					) : null}
 				</div>
 				{canUpload ? (
-					<div className="shrink-0">
+					<div className="-my-1.5 shrink-0">
 						<ButtonNew
 							permission="org:attachments:upload"
 							className="w-fit"
@@ -124,7 +115,7 @@ export const AttachmentSection = ({
 			) : null}
 
 			{!isPending && !error && attachments.length === 0 ? (
-				<p className="text-muted-foreground text-sm leading-5">
+				<p className="flex min-h-16 items-center text-muted-foreground text-sm leading-5">
 					Nenhum anexo cadastrado.
 				</p>
 			) : null}

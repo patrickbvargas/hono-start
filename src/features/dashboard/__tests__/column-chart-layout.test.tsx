@@ -82,10 +82,10 @@ it.each([1, 6, 12])(
 		for (const chart of charts) {
 			expect(chart.classList.contains("h-full")).toBe(true);
 			expect(
-				chart.closest('[data-slot="card"]')?.classList.contains("h-85"),
+				chart.closest('[data-slot="card"]')?.classList.contains("h-80"),
 			).toBe(true);
 			expect(chart.parentElement?.classList.contains("pb-5")).toBe(true);
-			expect(chart.style.minWidth).toBe(`${count * 112 + 48}px`);
+			expect(chart.style.minWidth).toBe(`${count * 132 + 48}px`);
 			const area = chart.closest('[data-slot="scroll-area"]');
 			expect(
 				area?.querySelector('[data-slot="scroll-area-viewport"]'),

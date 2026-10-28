@@ -1,4 +1,5 @@
 import type * as React from "react";
+import { renderContractFilterOption } from "@/shared/components/contract-filter-option";
 import { FinancialPeriodShortcuts } from "@/shared/components/financial-period-shortcuts";
 import { ListFilters } from "@/shared/components/list-filters";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
@@ -55,7 +56,14 @@ export const FeeFilter = ({ controller, summary }: FeeFilterProps) => {
 	const sharedFields = (
 		<>
 			<form.AppField name="contractId">
-				{(field) => <field.Autocomplete label="Contrato" options={contracts} />}
+				{(field) => (
+					<field.Autocomplete
+						label="Contrato"
+						options={contracts}
+						renderOption={renderContractFilterOption}
+						classNames={{ content: "w-max" }}
+					/>
+				)}
 			</form.AppField>
 			<form.AppField name="revenueType">
 				{(field) => (
@@ -104,6 +112,8 @@ export const FeeFilter = ({ controller, summary }: FeeFilterProps) => {
 							aria-label="Contrato"
 							placeholder="Contrato"
 							options={contracts}
+							renderOption={renderContractFilterOption}
+							classNames={{ content: "w-max" }}
 						/>
 					)}
 				</form.AppField>

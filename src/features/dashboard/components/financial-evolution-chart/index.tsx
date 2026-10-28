@@ -83,7 +83,7 @@ export function FinancialEvolutionChart({
 						<ChartContainer
 							config={chartConfig}
 							className="h-full min-h-0 w-full"
-							style={{ minWidth: items.length * 112 + 48 }}
+							style={{ minWidth: items.length * 132 + 48 }}
 						>
 							<ComposedChart
 								accessibilityLayer

@@ -102,9 +102,13 @@ describe("route prefetch and loading checklist", () => {
 				requiredRouteSnippets: [
 					"getFeesQueryOptions(search)",
 					"getSelectableFeeContractsQueryOptions()",
-					"getSelectableFeeRevenuesQueryOptions()",
+					"getFeeRevenueTypesQueryOptions()",
 				],
-				requiredFilterSnippets: ["useFeeOptions({", "contracts", "revenues"],
+				requiredFilterSnippets: [
+					"useFeeFilterOptions()",
+					"contracts",
+					"revenueTypes",
+				],
 			},
 			{
 				file: ["src", "routes", "_app", "remuneracoes.tsx"],

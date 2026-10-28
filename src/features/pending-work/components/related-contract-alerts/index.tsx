@@ -37,9 +37,6 @@ export function RelatedContractAlerts(props: RelatedContractAlertsProps) {
 function RelatedContractAlertsContent(props: RelatedContractAlertsProps) {
 	const { pendingWork, isPending, error, retry, collectionSearch } =
 		useRelatedContractAlerts(props);
-	if (!isPending && !error && !pendingWork?.total) {
-		return null;
-	}
 	return (
 		<section className="flex min-h-0 flex-initial flex-col [&>[data-slot=form-section]]:min-h-0 [&>[data-slot=form-section]]:flex-initial [&>[data-slot=form-section]>div:first-child]:shrink-0 [&>[data-slot=form-section]>div:first-child]:items-center">
 			<FormSection

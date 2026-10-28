@@ -22,10 +22,12 @@ interface FormAutocompleteProps
 			"multiple"
 		> {
 	options: FieldOption[];
+	renderOption?: (option: FieldOption) => React.ReactNode;
 	placeholder?: string;
 	emptyMessage?: string;
 	isClearable?: boolean;
 	classNames?: FieldClassNames & {
+		content?: string;
 		empty?: string;
 		list?: string;
 		item?: string;
@@ -38,6 +40,7 @@ export const FormAutocomplete = ({
 	isRequired,
 	isDisabled,
 	options,
+	renderOption,
 	isClearable = true,
 	placeholder = "Selecionar item...",
 	emptyMessage = "Nenhum item encontrado.",
@@ -95,7 +98,7 @@ export const FormAutocomplete = ({
 					aria-invalid={isInvalid}
 					showClear={isClearable}
 				/>
-				<ComboboxContent>
+				<ComboboxContent className={classNames?.content}>
 					<ComboboxEmpty className={classNames?.empty}>
 						{emptyMessage}
 					</ComboboxEmpty>
@@ -107,7 +110,7 @@ export const FormAutocomplete = ({
 								className={classNames?.item}
 								disabled={option.isDisabled}
 							>
-								{option.label}
+								{renderOption ? renderOption(option) : option.label}
 							</ComboboxItem>
 						)}
 					</ComboboxList>

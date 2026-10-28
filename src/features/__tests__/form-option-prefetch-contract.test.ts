@@ -75,10 +75,7 @@ describe("form option prefetch contract", () => {
 					"form",
 					"index.tsx",
 				],
-				requiredRouteSnippets: [
-					"getSelectableFeeContractsQueryOptions()",
-					"getSelectableFeeRevenuesQueryOptions()",
-				],
+				requiredRouteSnippets: ["getSelectableFeeContractsQueryOptions()"],
 				requiredFormSnippets: ["useFeeFormOptions(", "contracts", "revenues"],
 			},
 			{
