@@ -8,14 +8,16 @@ import {
 } from "@/shared/lib/entity-management";
 import { formatter } from "@/shared/lib/formatter";
 import { useRemunerationOptions } from "../../hooks/use-data";
-import { useRemunerationFilter } from "../../hooks/use-filter";
+import type { useRemunerationFilter } from "../../hooks/use-filter";
 
 interface RemunerationFilterProps {
+	controller: ReturnType<typeof useRemunerationFilter>;
 	isAdmin?: boolean;
 	summary?: React.ReactNode;
 }
 
 export const RemunerationFilter = ({
+	controller,
 	isAdmin = false,
 	summary,
 }: RemunerationFilterProps) => {
@@ -26,7 +28,7 @@ export const RemunerationFilter = ({
 		canClearFilters,
 		handleApplyFilter,
 		handleClearFilters,
-	} = useRemunerationFilter();
+	} = controller;
 	const { contracts, employees } = useRemunerationOptions();
 	const isMobile = useIsMobile();
 

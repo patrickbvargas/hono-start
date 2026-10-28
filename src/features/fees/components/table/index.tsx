@@ -15,6 +15,7 @@ import type { FeeSummary } from "../../schemas/model";
 import { getFeeLifecycleActions } from "../../utils/lifecycle-actions";
 
 interface FeeTableProps {
+	emptyState?: React.ReactNode;
 	canManageLifecycle?: boolean;
 	data: QueryPaginatedReturnType<FeeSummary>;
 	onOpenPage?: (id: EntityId) => void;
@@ -25,6 +26,7 @@ interface FeeTableProps {
 }
 
 export const FeeTable = ({
+	emptyState,
 	canManageLifecycle = false,
 	data: { data, total },
 	onOpenPage,
@@ -131,6 +133,7 @@ export const FeeTable = ({
 
 	return (
 		<DataTable
+			emptyState={emptyState}
 			columns={columns}
 			data={data}
 			renderRowContextMenu={(index) => renderActions(data[index], "context")}

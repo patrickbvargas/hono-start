@@ -12,6 +12,7 @@ import type { ExpenseSummary } from "../../schemas/model";
 import { getExpenseLifecycleActions } from "../../utils/lifecycle-actions";
 
 interface ExpenseListProps {
+	emptyState?: React.ReactNode;
 	canManageLifecycle?: boolean;
 	data: QueryPaginatedReturnType<ExpenseSummary>;
 	onOpenPage?: (id: EntityId) => void;
@@ -22,6 +23,7 @@ interface ExpenseListProps {
 }
 
 export const ExpenseList = ({
+	emptyState,
 	canManageLifecycle = false,
 	data,
 	onOpenPage,
@@ -85,6 +87,7 @@ export const ExpenseList = ({
 
 	return (
 		<DataCardList
+			emptyState={emptyState}
 			data={items}
 			getRowKey={(expense) => expense.id}
 			renderTitle={(expense) => expense.category}

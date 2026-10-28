@@ -11,6 +11,7 @@ import type { EmployeeSummary } from "../../schemas/model";
 import { getEmployeeLifecycleActions } from "../../utils/lifecycle-actions";
 
 interface EmployeeListProps {
+	emptyState?: React.ReactNode;
 	canManageLifecycle?: boolean;
 	data: QueryPaginatedReturnType<EmployeeSummary>;
 	onOpenPage?: (id: EntityId) => void;
@@ -21,6 +22,7 @@ interface EmployeeListProps {
 }
 
 export const EmployeeList = ({
+	emptyState,
 	canManageLifecycle = false,
 	data,
 	onOpenPage,
@@ -91,6 +93,7 @@ export const EmployeeList = ({
 
 	return (
 		<DataCardList
+			emptyState={emptyState}
 			data={items}
 			getRowKey={(employee) => employee.id}
 			renderTitle={(employee) => employee.fullName}

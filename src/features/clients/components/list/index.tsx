@@ -11,6 +11,7 @@ import { formatClientDocument } from "../../utils/format";
 import { getClientLifecycleActions } from "../../utils/lifecycle-actions";
 
 interface ClientListProps {
+	emptyState?: React.ReactNode;
 	canManageLifecycle?: boolean;
 	data: QueryPaginatedReturnType<ClientSummary>;
 	onOpenPage?: (id: EntityId) => void;
@@ -21,6 +22,7 @@ interface ClientListProps {
 }
 
 export const ClientList = ({
+	emptyState,
 	canManageLifecycle = false,
 	data,
 	onOpenPage,
@@ -87,6 +89,7 @@ export const ClientList = ({
 
 	return (
 		<DataCardList
+			emptyState={emptyState}
 			data={items}
 			getRowKey={(client) => client.id}
 			renderTitle={(client) => client.fullName}

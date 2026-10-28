@@ -41,10 +41,10 @@ function RelatedContractAlertsContent(props: RelatedContractAlertsProps) {
 		return null;
 	}
 	return (
-		<section className="flex min-h-0 flex-initial flex-col [&>[data-slot=form-section]]:min-h-0 [&>[data-slot=form-section]]:flex-auto [&>[data-slot=form-section]>div:first-child]:shrink-0 [&>[data-slot=form-section]>div:first-child]:items-center">
+		<section className="flex min-h-0 flex-initial flex-col [&>[data-slot=form-section]]:min-h-0 [&>[data-slot=form-section]]:flex-initial [&>[data-slot=form-section]>div:first-child]:shrink-0 [&>[data-slot=form-section]>div:first-child]:items-center">
 			<FormSection
 				title="Alertas"
-				className="min-h-0 flex-auto gap-3 overflow-hidden"
+				className="min-h-0 flex-initial gap-3 overflow-hidden"
 			>
 				{isPending ? (
 					<div
@@ -60,7 +60,12 @@ function RelatedContractAlertsContent(props: RelatedContractAlertsProps) {
 						<p className="shrink-0 text-sm text-muted-foreground">
 							Não foi possível carregar os alertas dos contratos.
 						</p>
-						<Button variant="outline" onClick={() => void retry()}>
+						<Button
+							type="button"
+							variant="outline"
+							size="sm"
+							onClick={() => void retry()}
+						>
 							Tentar novamente
 						</Button>
 					</div>
@@ -70,15 +75,15 @@ function RelatedContractAlertsContent(props: RelatedContractAlertsProps) {
 					</p>
 				) : (
 					<>
-						<ScrollArea className="min-h-0 flex-auto">
+						<ScrollArea className="min-h-0 flex-initial">
 							<ul
-								className="space-y-3"
+								className="min-w-0 divide-y"
 								aria-label="Alertas dos contratos vinculados"
 							>
 								{pendingWork.data.map((item) => (
 									<li
 										key={item.id}
-										className="flex flex-wrap items-start justify-between gap-3 rounded-lg border p-4"
+										className="flex min-h-16 min-w-0 flex-wrap items-start justify-between gap-3 py-3"
 									>
 										<div className="min-w-0 flex-1 basis-52 space-y-2">
 											<div className="flex flex-wrap items-center gap-2">

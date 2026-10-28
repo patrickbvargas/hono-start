@@ -105,7 +105,12 @@ function DrilldownContent<
 					{props.errorMessage ??
 						"Não foi possível carregar os dados. Verifique seu acesso e tente novamente."}
 				</p>
-				<Button variant="outline" onClick={() => query.refetch()}>
+				<Button
+					type="button"
+					variant="outline"
+					size="sm"
+					onClick={() => query.refetch()}
+				>
 					Tentar novamente
 				</Button>
 			</div>

@@ -24,6 +24,7 @@ import type { Remuneration } from "../../schemas/model";
 import { getRemunerationLifecycleActions } from "../../utils/lifecycle-actions";
 
 interface RemunerationTableProps {
+	emptyState?: React.ReactNode;
 	canManageLifecycle?: boolean;
 	data: QueryPaginatedReturnType<Remuneration>;
 	onOpenPage?: (id: EntityId) => void;
@@ -34,6 +35,7 @@ interface RemunerationTableProps {
 }
 
 export const RemunerationTable = ({
+	emptyState,
 	canManageLifecycle = false,
 	data: { data, total },
 	onOpenPage,
@@ -153,6 +155,7 @@ export const RemunerationTable = ({
 
 	return (
 		<DataTable
+			emptyState={emptyState}
 			columns={columns}
 			data={data}
 			renderRowContextMenu={(index) => renderActions(data[index], "context")}

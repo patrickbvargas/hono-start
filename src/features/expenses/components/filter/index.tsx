@@ -8,12 +8,13 @@ import {
 } from "@/shared/lib/entity-management";
 import { formatter } from "@/shared/lib/formatter";
 import { useExpenseOptions } from "../../hooks/use-data";
-import { useExpenseFilter } from "../../hooks/use-filter";
+import type { useExpenseFilter } from "../../hooks/use-filter";
 
 interface ExpenseFilterProps {
+	controller: ReturnType<typeof useExpenseFilter>;
 	summary?: React.ReactNode;
 }
-export const ExpenseFilter = ({ summary }: ExpenseFilterProps) => {
+export const ExpenseFilter = ({ controller, summary }: ExpenseFilterProps) => {
 	const {
 		filter,
 		defaultFilter,
@@ -21,7 +22,7 @@ export const ExpenseFilter = ({ summary }: ExpenseFilterProps) => {
 		canClearFilters,
 		handleApplyFilter,
 		handleClearFilters,
-	} = useExpenseFilter();
+	} = controller;
 	const { categories } = useExpenseOptions();
 	const isMobile = useIsMobile();
 

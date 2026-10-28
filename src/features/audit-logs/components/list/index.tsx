@@ -9,12 +9,14 @@ import type { AuditLog } from "../../schemas/model";
 import { getAuditLogTitle } from "../../utils/display";
 
 interface AuditLogListProps {
+	emptyState?: React.ReactNode;
 	data: QueryPaginatedReturnType<AuditLog>;
 	onOpenPage?: (id: EntityId) => void;
 	onView?: (id: EntityId) => void;
 }
 
 export const AuditLogList = ({
+	emptyState,
 	data,
 	onView,
 	onOpenPage,
@@ -72,6 +74,7 @@ export const AuditLogList = ({
 
 	return (
 		<DataCardList
+			emptyState={emptyState}
 			data={items}
 			getRowKey={(auditLog) => auditLog.id}
 			onCardAction={

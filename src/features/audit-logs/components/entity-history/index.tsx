@@ -84,7 +84,12 @@ function EntityAuditHistoryContent({
 				<p className="text-sm text-muted-foreground">
 					Não foi possível carregar o histórico deste registro.
 				</p>
-				<Button variant="outline" onClick={() => void retry()}>
+				<Button
+					type="button"
+					variant="outline"
+					size="sm"
+					onClick={() => void retry()}
+				>
 					Tentar novamente
 				</Button>
 			</div>

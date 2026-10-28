@@ -17,6 +17,7 @@ export * from "./components/restore";
 export * from "./components/table";
 export { ContractWorkspace } from "./components/workspace";
 export { useContracts } from "./hooks/use-data";
+export { useContractFilter } from "./hooks/use-filter";
 export type { ContractSummary } from "./schemas/model";
 export * from "./schemas/search";
 export { contractWorkspaceSearchSchema } from "./schemas/workspace";

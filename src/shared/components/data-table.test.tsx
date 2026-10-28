@@ -151,6 +151,40 @@ const columns = [
 	}),
 ];
 const data = Array.from({ length: 5 }, (_, i) => ({ name: `Registro ${i}` }));
+it("keeps headers and renders an actionable empty slot instead of the fallback", () => {
+	const clear = vi.fn();
+	const { rerender } = render(
+		<DataTable
+			data={[]}
+			columns={columns}
+			emptyState={
+				<button type="button" onClick={clear}>
+					Limpar filtros
+				</button>
+			}
+		/>,
+	);
+	expect(screen.getByRole("columnheader", { name: "Nome" })).toBeTruthy();
+	fireEvent.click(screen.getByRole("button", { name: "Limpar filtros" }));
+	expect(clear).toHaveBeenCalledOnce();
+	expect(screen.queryByText("Nenhum registro encontrado.")).toBeNull();
+	rerender(
+		<DataTable
+			data={[]}
+			columns={columns}
+			emptyMessage="Nenhuma alteração registrada."
+		/>,
+	);
+	expect(screen.getByText("Nenhuma alteração registrada.")).toBeTruthy();
+	rerender(
+		<DataTable
+			data={data}
+			columns={columns}
+			emptyState={<button type="button">Limpar filtros</button>}
+		/>,
+	);
+	expect(screen.queryByRole("button", { name: "Limpar filtros" })).toBeNull();
+});
 it("keeps selected page across renders and resets when pageSize changes", () => {
 	const { rerender } = render(
 		<DataTable data={data} columns={columns} pageSize={2} />,

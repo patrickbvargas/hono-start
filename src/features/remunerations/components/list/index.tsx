@@ -12,6 +12,7 @@ import type { Remuneration } from "../../schemas/model";
 import { getRemunerationLifecycleActions } from "../../utils/lifecycle-actions";
 
 interface RemunerationListProps {
+	emptyState?: React.ReactNode;
 	canManageLifecycle?: boolean;
 	data: QueryPaginatedReturnType<Remuneration>;
 	onOpenPage?: (id: EntityId) => void;
@@ -22,6 +23,7 @@ interface RemunerationListProps {
 }
 
 export const RemunerationList = ({
+	emptyState,
 	canManageLifecycle = false,
 	data,
 	onOpenPage,
@@ -97,6 +99,7 @@ export const RemunerationList = ({
 
 	return (
 		<DataCardList
+			emptyState={emptyState}
 			data={items}
 			getRowKey={(remuneration) => remuneration.id}
 			renderTitle={(remuneration) =>

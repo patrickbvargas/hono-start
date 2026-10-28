@@ -10,10 +10,12 @@ import {
 	getAuditLogActorsQueryOptions,
 	getAuditLogEntityTypesQueryOptions,
 	getAuditLogsQueryOptions,
+	useAuditLogFilter,
 	useAuditLogs,
 } from "@/features/audit-logs";
 import { EntityView } from "@/shared/components/entity-view";
 import { RouteError } from "@/shared/components/route-error";
+import { ListEmptyState } from "@/shared/components/ui";
 import {
 	Wrapper,
 	WrapperBody,
@@ -47,6 +49,7 @@ export const Route = createFileRoute("/_app/auditoria")({
 });
 
 function RouteComponent() {
+	const filterController = useAuditLogFilter();
 	const search = Route.useSearch();
 	const navigate = Route.useNavigate();
 	const openAuditLogPage = (id: number) => {
@@ -59,16 +62,30 @@ function RouteComponent() {
 	const { auditLogs } = useAuditLogs(search);
 	const { overlay } = useOverlay<EntityId>();
 
+	const emptyState = (
+		<ListEmptyState
+			title="Nenhuma alteração disponível"
+			description="As alterações nos registros que você pode consultar aparecerão aqui."
+			hasFilters={filterController.canClearFilters}
+			onClearFilters={filterController.handleClearFilters}
+			hasRecords={auditLogs.total > 0}
+			onFirstPage={() =>
+				void navigate({ search: (previous) => ({ ...previous, page: 1 }) })
+			}
+		/>
+	);
+
 	return (
 		<Wrapper title={ROUTES.auditLog.title}>
 			<WrapperHeader>
-				<AuditLogFilter />
+				<AuditLogFilter controller={filterController} />
 			</WrapperHeader>
 			<WrapperBody>
 				<EntityView
 					className="min-h-0 flex-1"
 					list={
 						<AuditLogList
+							emptyState={emptyState}
 							onOpenPage={openAuditLogPage}
 							data={auditLogs}
 							onView={overlay.details.open}
@@ -76,6 +93,7 @@ function RouteComponent() {
 					}
 					table={
 						<AuditLogTable
+							emptyState={emptyState}
 							onOpenPage={openAuditLogPage}
 							data={auditLogs}
 							onView={overlay.details.open}

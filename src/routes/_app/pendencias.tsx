@@ -12,10 +12,12 @@ import {
 	pendingWorkSearchDefaults,
 	pendingWorkSearchSchema,
 	usePendingWork,
+	usePendingWorkFilter,
 	usePendingWorkSummary,
 } from "@/features/pending-work";
 import { EntityView } from "@/shared/components/entity-view";
 import { RouteError } from "@/shared/components/route-error";
+import { ListEmptyState } from "@/shared/components/ui";
 import {
 	Wrapper,
 	WrapperBody,
@@ -47,13 +49,28 @@ export const Route = createFileRoute("/_app/pendencias")({
 });
 
 function RouteComponent() {
+	const navigate = Route.useNavigate();
+	const filterController = usePendingWorkFilter();
 	const search = Route.useSearch();
 	const { pendingWork } = usePendingWork(search);
 	const { handleSelectSeverity } = usePendingWorkSummary();
+	const emptyState = (
+		<ListEmptyState
+			title="Nenhuma pendência no momento"
+			description="Não há pendências nos contratos disponíveis para você."
+			hasFilters={filterController.canClearFilters}
+			onClearFilters={filterController.handleClearFilters}
+			hasRecords={pendingWork.total > 0}
+			onFirstPage={() =>
+				void navigate({ search: (previous) => ({ ...previous, page: 1 }) })
+			}
+		/>
+	);
+
 	return (
 		<Wrapper title={ROUTES.pendingWork.title}>
 			<WrapperHeader>
-				<PendingWorkFilter />
+				<PendingWorkFilter controller={filterController} />
 			</WrapperHeader>
 			<WrapperBody>
 				<div className="flex min-h-0 flex-1 flex-col gap-4 p-0.5">
@@ -63,8 +80,12 @@ function RouteComponent() {
 					/>
 					<EntityView
 						className="min-h-0 flex-1"
-						table={<PendingWorkTable data={pendingWork} />}
-						list={<PendingWorkList data={pendingWork} />}
+						table={
+							<PendingWorkTable emptyState={emptyState} data={pendingWork} />
+						}
+						list={
+							<PendingWorkList emptyState={emptyState} data={pendingWork} />
+						}
 					/>
 				</div>
 			</WrapperBody>

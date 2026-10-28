@@ -42,6 +42,7 @@ export interface DataTableProps<TData extends RowData> {
 	pageSize?: number;
 	initialSorting?: SortingState;
 	emptyMessage?: string;
+	emptyState?: React.ReactNode;
 	className?: string;
 	renderRowContextMenu?: (index: number) => React.ReactNode;
 	onRowAction?: (index: number) => void;
@@ -54,6 +55,7 @@ export const DataTable = <TData extends RowData>({
 	columns,
 	data,
 	emptyMessage = "Nenhum registro encontrado.",
+	emptyState,
 	className,
 	onRowAction,
 	renderRowContextMenu,
@@ -196,9 +198,9 @@ export const DataTable = <TData extends RowData>({
 							<TableRow>
 								<TableCell
 									colSpan={columns.length}
-									className="h-24 text-center text-muted-foreground"
+									className="h-24 whitespace-normal text-center text-muted-foreground"
 								>
-									{emptyMessage}
+									{emptyState ?? emptyMessage}
 								</TableCell>
 							</TableRow>
 						)}

@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { RelatedRecordLink } from "@/features/related-records";
 import { DataCardList } from "@/shared/components/data-card-list";
 import { Pagination } from "@/shared/components/pagination";
@@ -14,16 +15,18 @@ import { PendingWorkRecordActions } from "../record-actions";
 import { PendingWorkSeverity } from "../severity";
 
 interface PendingWorkListProps {
+	emptyState?: ReactNode;
 	data: PendingWorkPage;
 }
 
-export function PendingWorkList({ data }: PendingWorkListProps) {
+export function PendingWorkList({ data, emptyState }: PendingWorkListProps) {
 	const session = useLoggedUserSession();
 	const { overlay } = useOverlay<number>();
 	const canReadClient = hasPermission(session, "org:clients:read");
 	return (
 		<>
 			<DataCardList
+				emptyState={emptyState}
 				data={data.data}
 				getRowKey={(item) => item.id}
 				renderTitle={(item) => item.title}

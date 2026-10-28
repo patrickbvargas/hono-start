@@ -5,9 +5,13 @@ import {
 	ENTITY_DELETED_FILTER_OPTIONS,
 } from "@/shared/lib/entity-management";
 import { useEmployeeOptions } from "../../hooks/use-data";
-import { useEmployeeFilter } from "../../hooks/use-filter";
+import type { useEmployeeFilter } from "../../hooks/use-filter";
 
-export const EmployeeFilter = () => {
+interface EmployeeFilterProps {
+	controller: ReturnType<typeof useEmployeeFilter>;
+}
+
+export const EmployeeFilter = ({ controller }: EmployeeFilterProps) => {
 	const {
 		filter,
 		defaultFilter,
@@ -15,7 +19,7 @@ export const EmployeeFilter = () => {
 		canClearFilters,
 		handleApplyFilter,
 		handleClearFilters,
-	} = useEmployeeFilter();
+	} = controller;
 	const { types } = useEmployeeOptions();
 	const isMobile = useIsMobile();
 

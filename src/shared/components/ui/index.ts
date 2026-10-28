@@ -23,6 +23,7 @@ export * from "./input-group";
 export * from "./input-number";
 export * from "./input-otp";
 export * from "./label";
+export * from "./list-empty-state";
 export * from "./pagination";
 export * from "./popover";
 export * from "./progress";

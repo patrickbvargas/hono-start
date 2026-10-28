@@ -14,6 +14,7 @@ import type { ContractSummary } from "../../schemas/model";
 import { getContractLifecycleActions } from "../../utils/lifecycle-actions";
 
 interface ContractTableProps {
+	emptyState?: React.ReactNode;
 	canManageLifecycle?: boolean;
 	data: QueryPaginatedReturnType<ContractSummary>;
 	onOpenPage?: (id: EntityId) => void;
@@ -24,6 +25,7 @@ interface ContractTableProps {
 }
 
 export const ContractTable = ({
+	emptyState,
 	canManageLifecycle = false,
 	data: { data, total },
 	onOpenPage,
@@ -149,6 +151,7 @@ export const ContractTable = ({
 
 	return (
 		<DataTable
+			emptyState={emptyState}
 			columns={columns}
 			data={data}
 			renderRowContextMenu={(index) => renderActions(data[index], "context")}

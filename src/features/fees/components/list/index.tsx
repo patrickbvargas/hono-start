@@ -12,6 +12,7 @@ import type { FeeSummary } from "../../schemas/model";
 import { getFeeLifecycleActions } from "../../utils/lifecycle-actions";
 
 interface FeeListProps {
+	emptyState?: React.ReactNode;
 	canManageLifecycle?: boolean;
 	data: QueryPaginatedReturnType<FeeSummary>;
 	onOpenPage?: (id: EntityId) => void;
@@ -22,6 +23,7 @@ interface FeeListProps {
 }
 
 export const FeeList = ({
+	emptyState,
 	canManageLifecycle = false,
 	data,
 	onOpenPage,
@@ -95,6 +97,7 @@ export const FeeList = ({
 
 	return (
 		<DataCardList
+			emptyState={emptyState}
 			data={items}
 			getRowKey={(fee) => fee.id}
 			renderTitle={(fee) => `${fee.contractProcessNumber} • ${fee.revenueType}`}

@@ -106,7 +106,7 @@ export const AttachmentSection = ({
 					<p className="text-sm text-destructive">
 						Não foi possível carregar anexos.
 					</p>
-					<Button variant="outline" size="sm" onClick={retry}>
+					<Button type="button" variant="outline" size="sm" onClick={retry}>
 						Tentar novamente
 					</Button>
 				</div>

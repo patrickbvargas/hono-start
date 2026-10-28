@@ -54,6 +54,37 @@ vi.mock("@/shared/components/ui", () => ({
 import { DataCardList } from "../data-card-list";
 
 describe("DataCardList", () => {
+	it("renders the actionable empty slot and hides the empty pagination footer", () => {
+		const clear = vi.fn();
+		const { rerender } = render(
+			<DataCardList
+				data={[]}
+				getRowKey={(_, index) => index}
+				renderTitle={() => null}
+				renderFields={() => []}
+				emptyState={
+					<button type="button" onClick={clear}>
+						Limpar filtros
+					</button>
+				}
+				footerContent={<div>Paginação vazia</div>}
+			/>,
+		);
+		fireEvent.click(screen.getByRole("button", { name: "Limpar filtros" }));
+		expect(clear).toHaveBeenCalledOnce();
+		expect(screen.queryByText("Nenhum registro encontrado.")).toBeNull();
+		expect(screen.queryByText("Paginação vazia")).toBeNull();
+		rerender(
+			<DataCardList
+				data={[{ id: 1 }]}
+				getRowKey={(row) => row.id}
+				renderTitle={() => "Registro"}
+				renderFields={() => []}
+				emptyState={<button type="button">Limpar filtros</button>}
+			/>,
+		);
+		expect(screen.queryByRole("button", { name: "Limpar filtros" })).toBeNull();
+	});
 	it("renders card data and triggers the card action", () => {
 		const onCardAction = vi.fn();
 

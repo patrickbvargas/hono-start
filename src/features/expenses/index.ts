@@ -13,6 +13,7 @@ export * from "./components/table";
 export { getExpenseReadColumns } from "./components/table/columns";
 export { ExpenseWorkspace } from "./components/workspace";
 export { useExpenses } from "./hooks/use-data";
+export { useExpenseFilter } from "./hooks/use-filter";
 export type { ExpenseSummary } from "./schemas/model";
 export * from "./schemas/search";
 export { expenseWorkspaceSearchSchema } from "./schemas/workspace";

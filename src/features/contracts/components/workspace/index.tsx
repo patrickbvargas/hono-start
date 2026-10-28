@@ -12,7 +12,7 @@ import {
 } from "@/shared/components/entity-workspace";
 import { FormSection } from "@/shared/components/form-section";
 import { NavigationLink } from "@/shared/components/navigation-link";
-import { Badge, Button } from "@/shared/components/ui";
+import { Badge } from "@/shared/components/ui";
 import { SensitiveValue } from "@/shared/components/value-visibility";
 import { formatter } from "@/shared/lib/formatter";
 import { hasPermission } from "@/shared/session";
@@ -27,6 +27,7 @@ import { ContractRevenues } from "../details/revenues";
 import { ContractForm } from "../form";
 import { ContractRestore } from "../restore";
 import { ContractAlerts } from "./alerts";
+import { ContractTeam } from "./team";
 
 interface ContractWorkspaceProps {
 	id: number;
@@ -153,10 +154,10 @@ export function ContractWorkspace({
 								</FormSection>
 							</div>
 							{alerts.length > 0 && (
-								<div className="flex min-h-40 flex-1 flex-col [&>section]:min-h-0 [&>section]:flex-1 [&>section>div:first-child]:shrink-0">
+								<div className="flex min-h-0 flex-initial flex-col [&>section]:min-h-0 [&>section]:flex-initial [&>section>div:first-child]:shrink-0">
 									<FormSection
 										title="Alertas"
-										className="min-h-0 flex-1 overflow-hidden"
+										className="min-h-0 flex-initial overflow-hidden"
 									>
 										<ContractAlerts alerts={alerts} onNavigate={onTabChange} />
 									</FormSection>
@@ -266,50 +267,11 @@ export function ContractWorkspace({
 					label: "Equipe",
 					content: (
 						<>
-							<FormSection title="Equipe do contrato">
-								{!contract.assignments.some(
-									(a) => a.isActive && !a.isSoftDeleted,
-								) && (
-									<p className="text-sm text-muted-foreground">
-										Nenhum colaborador vinculado.
-									</p>
-								)}
-								<div className="divide-y rounded-lg border">
-									{contract.assignments
-										.filter((a) => a.isActive && !a.isSoftDeleted)
-										.map((a) => (
-											<div
-												key={a.id}
-												className="flex flex-wrap justify-between gap-3 p-4"
-											>
-												<span>
-													{hasPermission(session, "org:employees:read") ? (
-														<RelatedRecordLink
-															kind="employee"
-															id={a.employeeId}
-														>
-															{a.employeeName}
-														</RelatedRecordLink>
-													) : (
-														a.employeeName
-													)}
-												</span>
-												<span className="text-sm text-muted-foreground">
-													{a.assignmentType}
-												</span>
-											</div>
-										))}
-								</div>
-								{canEdit && (
-									<Button
-										variant="outline"
-										className="w-fit"
-										onClick={() => overlay.edit.open(id)}
-									>
-										Editar equipe
-									</Button>
-								)}
-							</FormSection>
+							<ContractTeam
+								assignments={contract.assignments}
+								canReadEmployees={hasPermission(session, "org:employees:read")}
+								onEdit={canEdit ? () => overlay.edit.open(id) : undefined}
+							/>
 						</>
 					),
 				},

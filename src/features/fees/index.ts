@@ -14,6 +14,7 @@ export * from "./components/restore";
 export * from "./components/table";
 export { FeeWorkspace } from "./components/workspace";
 export { useFees } from "./hooks/use-data";
+export { useFeeFilter } from "./hooks/use-filter";
 export type { FeeSummary } from "./schemas/model";
 export * from "./schemas/search";
 export { feeWorkspaceSearchSchema } from "./schemas/workspace";

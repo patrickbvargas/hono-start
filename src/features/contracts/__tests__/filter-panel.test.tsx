@@ -47,31 +47,37 @@ vi.mock("../hooks/use-filter", () => ({
 }));
 
 import { ContractFilter } from "../components/filter";
+import { useContractFilter } from "../hooks/use-filter";
+
+function FilterHarness() {
+	const controller = useContractFilter();
+	return <ContractFilter controller={controller} />;
+}
 
 afterEach(cleanup);
-describe("advanced contract filters", () => {
-	it("keeps linked filters applied while panel starts closed and only opens manually", () => {
+describe("contract filter popovers", () => {
+	it("keeps linked filters applied while popovers start closed and open manually", () => {
 		state.status = "all";
-		const { rerender } = render(<ContractFilter />);
+		const { rerender } = render(<FilterHarness />);
 
 		expect(
 			screen
-				.getByRole("button", { name: "Mais filtros" })
+				.getByRole("button", { name: "Área" })
 				.getAttribute("aria-expanded"),
 		).toBe("false");
 		expect(screen.getByText("Bruna Farias")).toBeTruthy();
-		fireEvent.click(screen.getByRole("button", { name: "Mais filtros" }));
+		fireEvent.click(screen.getByRole("button", { name: "Área" }));
 		expect(
 			screen
-				.getByRole("button", { name: "Mais filtros" })
+				.getByRole("button", { name: "Área" })
 				.getAttribute("aria-expanded"),
 		).toBe("true");
-		fireEvent.click(screen.getByRole("button", { name: "Mais filtros" }));
+		fireEvent.click(screen.getByRole("button", { name: "Área" }));
 		state.status = "deleted";
-		rerender(<ContractFilter />);
+		rerender(<FilterHarness />);
 		expect(
 			screen
-				.getByRole("button", { name: "Mais filtros" })
+				.getByRole("button", { name: "Área" })
 				.getAttribute("aria-expanded"),
 		).toBe("false");
 	});

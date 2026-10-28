@@ -14,6 +14,7 @@ import { formatClientDocument } from "../../utils/format";
 import { getClientLifecycleActions } from "../../utils/lifecycle-actions";
 
 interface ClientTableProps {
+	emptyState?: React.ReactNode;
 	canManageLifecycle?: boolean;
 	data: QueryPaginatedReturnType<ClientSummary>;
 	onOpenPage?: (id: EntityId) => void;
@@ -24,6 +25,7 @@ interface ClientTableProps {
 }
 
 export const ClientTable = ({
+	emptyState,
 	canManageLifecycle = false,
 	data: { data, total },
 	onOpenPage,
@@ -124,6 +126,7 @@ export const ClientTable = ({
 
 	return (
 		<DataTable
+			emptyState={emptyState}
 			columns={columns}
 			data={data}
 			renderRowContextMenu={(index) => renderActions(data[index], "context")}

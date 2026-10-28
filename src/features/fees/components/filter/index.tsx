@@ -8,12 +8,13 @@ import {
 } from "@/shared/lib/entity-management";
 import { formatter } from "@/shared/lib/formatter";
 import { useFeeFilterOptions } from "../../hooks/use-data";
-import { useFeeFilter } from "../../hooks/use-filter";
+import type { useFeeFilter } from "../../hooks/use-filter";
 
 interface FeeFilterProps {
+	controller: ReturnType<typeof useFeeFilter>;
 	summary?: React.ReactNode;
 }
-export const FeeFilter = ({ summary }: FeeFilterProps) => {
+export const FeeFilter = ({ controller, summary }: FeeFilterProps) => {
 	const {
 		filter,
 		defaultFilter,
@@ -21,7 +22,7 @@ export const FeeFilter = ({ summary }: FeeFilterProps) => {
 		canClearFilters,
 		handleApplyFilter,
 		handleClearFilters,
-	} = useFeeFilter();
+	} = controller;
 	const { contracts, revenueTypes } = useFeeFilterOptions();
 	const isMobile = useIsMobile();
 

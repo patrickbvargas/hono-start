@@ -11,11 +11,13 @@ import {
 	employeeSearchSchema,
 	getEmployeesQueryOptions,
 	getEmployeeTypesQueryOptions,
+	useEmployeeFilter,
 	useEmployees,
 } from "@/features/employees";
 import { ButtonNew } from "@/shared/components/button-new";
 import { EntityView } from "@/shared/components/entity-view";
 import { RouteError } from "@/shared/components/route-error";
+import { ListEmptyState } from "@/shared/components/ui";
 import {
 	Wrapper,
 	WrapperBody,
@@ -53,6 +55,7 @@ export const Route = createFileRoute("/_app/colaboradores")({
 });
 
 function RouteComponent() {
+	const filterController = useEmployeeFilter();
 	const { detailId, ...search } = Route.useSearch();
 	const navigate = Route.useNavigate();
 	const openEmployeePage = (id: number) => {
@@ -72,6 +75,28 @@ function RouteComponent() {
 	const session = useLoggedUserSession();
 	const canManage = hasPermission(session, "org:employees:read");
 
+	const emptyState = (
+		<ListEmptyState
+			title="Nenhum colaborador disponível"
+			description="Os colaboradores disponíveis para consulta aparecerão aqui."
+			hasFilters={filterController.canClearFilters}
+			onClearFilters={filterController.handleClearFilters}
+			hasRecords={employees.total > 0}
+			onFirstPage={() =>
+				void navigate({ search: (previous) => ({ ...previous, page: 1 }) })
+			}
+			createAction={
+				hasPermission(session, "org:employees:create") ? (
+					<ButtonNew
+						permission="org:employees:create"
+						label="Novo colaborador"
+						onClick={() => overlay.create.open()}
+					/>
+				) : null
+			}
+		/>
+	);
+
 	return (
 		<Wrapper
 			title={ROUTES.employee.title}
@@ -86,12 +111,13 @@ function RouteComponent() {
 			}
 		>
 			<WrapperHeader>
-				<EmployeeFilter />
+				<EmployeeFilter controller={filterController} />
 			</WrapperHeader>
 			<WrapperBody>
 				<EntityView
 					list={
 						<EmployeeList
+							emptyState={emptyState}
 							onOpenPage={openEmployeePage}
 							data={employees}
 							onEdit={overlay.edit.open}
@@ -103,6 +129,7 @@ function RouteComponent() {
 					}
 					table={
 						<EmployeeTable
+							emptyState={emptyState}
 							onOpenPage={openEmployeePage}
 							data={employees}
 							onEdit={overlay.edit.open}

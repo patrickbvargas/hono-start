@@ -63,7 +63,7 @@ export async function getPendingWork({
 		WITH visible AS (
 			SELECT c.id, c."processNumber", c."clientId", cl."fullName" AS client,
 				c."isActive", s.value AS status, (${financial}) AS financial
-			FROM contracts c JOIN clients cl ON cl.id = c."clientId" AND cl."firmId" = c."firmId"
+			FROM contracts c JOIN clients cl ON cl.id = c."clientId"
 			JOIN contract_statuses s ON s.id = c."statusId"
 			WHERE c."firmId" = ${scope.firmId} AND c."deletedAt" IS NULL AND (${visible})
 			AND (${search.query} = '' OR strpos(lower(c."processNumber"), lower(${search.query})) > 0

@@ -12,8 +12,11 @@ interface ContractAlertsProps {
 
 export function ContractAlerts({ alerts, onNavigate }: ContractAlertsProps) {
 	return (
-		<ScrollArea aria-label="Alertas do contrato" className="min-h-0 flex-1">
-			<div className="space-y-3">
+		<ScrollArea
+			aria-label="Alertas do contrato"
+			className="min-h-0 flex-initial"
+		>
+			<div className="min-w-0 divide-y">
 				{alerts.length === 0 ? (
 					<p className="py-4 text-muted-foreground">
 						Nenhum alerta identificado neste contrato.
@@ -22,7 +25,7 @@ export function ContractAlerts({ alerts, onNavigate }: ContractAlertsProps) {
 					alerts.map((alert) => (
 						<div
 							key={alert.id}
-							className="flex flex-wrap items-start justify-between gap-3 rounded-lg border p-4"
+							className="flex min-h-16 min-w-0 flex-wrap items-start justify-between gap-3 py-3"
 						>
 							<div className="min-w-0 flex-1 basis-52 space-y-2">
 								<div className="flex flex-wrap items-center gap-2">

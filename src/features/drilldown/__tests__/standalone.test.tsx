@@ -49,9 +49,12 @@ vi.mock("@/shared/components/ui", () => ({
 	Button: ({
 		children,
 		variant: _variant,
+		size,
 		...props
-	}: ComponentProps<"button"> & { variant?: string }) => (
-		<button {...props}>{children}</button>
+	}: ComponentProps<"button"> & { variant?: string; size?: string }) => (
+		<button data-size={size} {...props}>
+			{children}
+		</button>
 	),
 	Skeleton: (props: ComponentProps<"div">) => (
 		<div data-slot="skeleton" {...props} />
@@ -270,6 +273,11 @@ describe("standalone drilldown", () => {
 			await client.invalidateQueries({ queryKey: ["clients", "restricted"] });
 		});
 		expect(await screen.findByRole("alert")).toBeTruthy();
+		const retryButton = screen.getByRole("button", {
+			name: "Tentar novamente",
+		});
+		expect(retryButton.getAttribute("type")).toBe("button");
+		expect(retryButton.getAttribute("data-size")).toBe("sm");
 		expect(screen.queryByText("VÁLIDO")).toBeNull();
 		client.clear();
 	});

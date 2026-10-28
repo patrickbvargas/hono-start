@@ -6,6 +6,7 @@ export { RelatedContractAlerts } from "./components/related-contract-alerts";
 export { PendingWorkSummary } from "./components/summary";
 export { PendingWorkTable } from "./components/table";
 export { usePendingWork } from "./hooks/use-data";
+export { usePendingWorkFilter } from "./hooks/use-filter";
 export { usePendingWorkSummary } from "./hooks/use-summary";
 export {
 	pendingWorkSearchDefaults,

@@ -14,6 +14,7 @@ import type { EmployeeSummary } from "../../schemas/model";
 import { getEmployeeLifecycleActions } from "../../utils/lifecycle-actions";
 
 interface EmployeeTableProps {
+	emptyState?: React.ReactNode;
 	canManageLifecycle?: boolean;
 	data: QueryPaginatedReturnType<EmployeeSummary>;
 	onOpenPage?: (id: EntityId) => void;
@@ -24,6 +25,7 @@ interface EmployeeTableProps {
 }
 
 export const EmployeeTable = ({
+	emptyState,
 	canManageLifecycle = false,
 	data: { data, total },
 	onOpenPage,
@@ -131,6 +133,7 @@ export const EmployeeTable = ({
 
 	return (
 		<DataTable
+			emptyState={emptyState}
 			columns={columns}
 			data={data}
 			renderRowContextMenu={(index) => renderActions(data[index], "context")}

@@ -16,11 +16,13 @@ import {
 	getContractsQueryOptions,
 	getSelectableContractClientsQueryOptions,
 	getSelectableContractEmployeesQueryOptions,
+	useContractFilter,
 	useContracts,
 } from "@/features/contracts";
 import { ButtonNew } from "@/shared/components/button-new";
 import { EntityView } from "@/shared/components/entity-view";
 import { RouteError } from "@/shared/components/route-error";
+import { ListEmptyState } from "@/shared/components/ui";
 import {
 	Wrapper,
 	WrapperBody,
@@ -58,6 +60,7 @@ export const Route = createFileRoute("/_app/contratos")({
 });
 
 function RouteComponent() {
+	const filterController = useContractFilter();
 	const { detailId, ...search } = Route.useSearch();
 	const navigate = Route.useNavigate();
 	const { contracts } = useContracts(search);
@@ -79,6 +82,28 @@ function RouteComponent() {
 		hasPermission(session, "org:contracts:delete") ||
 		hasPermission(session, "org:contracts:restore");
 
+	const emptyState = (
+		<ListEmptyState
+			title="Nenhum contrato disponível"
+			description="Os contratos disponíveis para consulta aparecerão aqui."
+			hasFilters={filterController.canClearFilters}
+			onClearFilters={filterController.handleClearFilters}
+			hasRecords={contracts.total > 0}
+			onFirstPage={() =>
+				void navigate({ search: (previous) => ({ ...previous, page: 1 }) })
+			}
+			createAction={
+				hasPermission(session, "org:contracts:create") ? (
+					<ButtonNew
+						permission="org:contracts:create"
+						label="Novo contrato"
+						onClick={() => overlay.create.open()}
+					/>
+				) : null
+			}
+		/>
+	);
+
 	return (
 		<Wrapper
 			title={ROUTES.contract.title}
@@ -91,12 +116,13 @@ function RouteComponent() {
 			}
 		>
 			<WrapperHeader>
-				<ContractFilter />
+				<ContractFilter controller={filterController} />
 			</WrapperHeader>
 			<WrapperBody>
 				<EntityView
 					list={
 						<ContractList
+							emptyState={emptyState}
 							data={contracts}
 							onOpenPage={openContractPage}
 							onEdit={overlay.edit.open}
@@ -108,6 +134,7 @@ function RouteComponent() {
 					}
 					table={
 						<ContractTable
+							emptyState={emptyState}
 							data={contracts}
 							onOpenPage={openContractPage}
 							onEdit={overlay.edit.open}

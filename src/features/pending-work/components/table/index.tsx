@@ -1,4 +1,5 @@
 import { createColumnHelper } from "@tanstack/react-table";
+import type { ReactNode } from "react";
 import { useMemo } from "react";
 import { DataTable } from "@/shared/components/data-table";
 import { Pagination } from "@/shared/components/pagination";
@@ -14,10 +15,11 @@ import { PendingWorkRecordActions } from "../record-actions";
 import { PendingWorkSeverity } from "../severity";
 
 interface PendingWorkTableProps {
+	emptyState?: ReactNode;
 	data: PendingWorkPage;
 }
 
-export function PendingWorkTable({ data }: PendingWorkTableProps) {
+export function PendingWorkTable({ data, emptyState }: PendingWorkTableProps) {
 	const { openFinance } = usePendingWorkNavigation();
 	const { overlay } = useOverlay<number>();
 	const columns = useMemo(() => {
@@ -70,6 +72,7 @@ export function PendingWorkTable({ data }: PendingWorkTableProps) {
 	return (
 		<>
 			<DataTable
+				emptyState={emptyState}
 				className="min-h-0 flex-1"
 				columns={[
 					...columns,

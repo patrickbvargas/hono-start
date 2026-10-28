@@ -12,6 +12,7 @@ export * from "./components/restore";
 export * from "./components/table";
 export { ClientWorkspace } from "./components/workspace";
 export { useClients } from "./hooks/use-data";
+export { useClientFilter } from "./hooks/use-filter";
 export type { ClientSummary } from "./schemas/model";
 export * from "./schemas/search";
 export { clientWorkspaceSearchSchema } from "./schemas/workspace";

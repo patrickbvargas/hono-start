@@ -143,7 +143,12 @@ describe("related contract alert previews", () => {
 		});
 		rerender(<RelatedContractAlerts kind="client" id={42} />);
 		expect(screen.getByRole("alert").textContent).not.toContain("private SQL");
-		fireEvent.click(screen.getByRole("button", { name: "Tentar novamente" }));
+		const retryButton = screen.getByRole("button", {
+			name: "Tentar novamente",
+		});
+		expect(retryButton.getAttribute("type")).toBe("button");
+		expect(retryButton.className).toContain("h-7");
+		fireEvent.click(retryButton);
 		expect(mocks.retry).toHaveBeenCalledOnce();
 	});
 	it.each(["client", "employee"] as const)(

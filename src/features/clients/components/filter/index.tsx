@@ -5,9 +5,13 @@ import {
 	ENTITY_DELETED_FILTER_OPTIONS,
 } from "@/shared/lib/entity-management";
 import { useClientOptions } from "../../hooks/use-data";
-import { useClientFilter } from "../../hooks/use-filter";
+import type { useClientFilter } from "../../hooks/use-filter";
 
-export const ClientFilter = () => {
+interface ClientFilterProps {
+	controller: ReturnType<typeof useClientFilter>;
+}
+
+export const ClientFilter = ({ controller }: ClientFilterProps) => {
 	const {
 		filter,
 		defaultFilter,
@@ -15,7 +19,7 @@ export const ClientFilter = () => {
 		canClearFilters,
 		handleApplyFilter,
 		handleClearFilters,
-	} = useClientFilter();
+	} = controller;
 	const { types } = useClientOptions();
 	const isMobile = useIsMobile();
 

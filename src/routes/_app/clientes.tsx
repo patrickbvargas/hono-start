@@ -11,11 +11,13 @@ import {
 	clientSearchSchema,
 	getClientsQueryOptions,
 	getClientTypesQueryOptions,
+	useClientFilter,
 	useClients,
 } from "@/features/clients";
 import { ButtonNew } from "@/shared/components/button-new";
 import { EntityView } from "@/shared/components/entity-view";
 import { RouteError } from "@/shared/components/route-error";
+import { ListEmptyState } from "@/shared/components/ui";
 import {
 	Wrapper,
 	WrapperBody,
@@ -48,6 +50,7 @@ export const Route = createFileRoute("/_app/clientes")({
 });
 
 function RouteComponent() {
+	const filterController = useClientFilter();
 	const { detailId, ...search } = Route.useSearch();
 	const navigate = Route.useNavigate();
 	const openClientPage = (id: number) => {
@@ -69,6 +72,28 @@ function RouteComponent() {
 		hasPermission(session, "org:clients:delete") ||
 		hasPermission(session, "org:clients:restore");
 
+	const emptyState = (
+		<ListEmptyState
+			title="Nenhum cliente disponível"
+			description="Os clientes disponíveis para consulta aparecerão aqui."
+			hasFilters={filterController.canClearFilters}
+			onClearFilters={filterController.handleClearFilters}
+			hasRecords={clients.total > 0}
+			onFirstPage={() =>
+				void navigate({ search: (previous) => ({ ...previous, page: 1 }) })
+			}
+			createAction={
+				hasPermission(session, "org:clients:create") ? (
+					<ButtonNew
+						permission="org:clients:create"
+						label="Novo cliente"
+						onClick={() => overlay.create.open()}
+					/>
+				) : null
+			}
+		/>
+	);
+
 	return (
 		<Wrapper
 			title={ROUTES.client.title}
@@ -81,13 +106,14 @@ function RouteComponent() {
 			}
 		>
 			<WrapperHeader>
-				<ClientFilter />
+				<ClientFilter controller={filterController} />
 			</WrapperHeader>
 			<WrapperBody>
 				<EntityView
 					className="min-h-0 flex-1"
 					list={
 						<ClientList
+							emptyState={emptyState}
 							onOpenPage={openClientPage}
 							data={clients}
 							onEdit={overlay.edit.open}
@@ -99,6 +125,7 @@ function RouteComponent() {
 					}
 					table={
 						<ClientTable
+							emptyState={emptyState}
 							onOpenPage={openClientPage}
 							data={clients}
 							onEdit={overlay.edit.open}

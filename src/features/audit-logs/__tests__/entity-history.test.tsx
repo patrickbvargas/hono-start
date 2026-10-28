@@ -126,7 +126,12 @@ describe("embedded entity audit history", () => {
 		expect(screen.getByRole("alert").textContent).not.toContain(
 			"private database detail",
 		);
-		fireEvent.click(screen.getByRole("button", { name: "Tentar novamente" }));
+		const retryButton = screen.getByRole("button", {
+			name: "Tentar novamente",
+		});
+		expect(retryButton.getAttribute("type")).toBe("button");
+		expect(retryButton.className).toContain("h-7");
+		fireEvent.click(retryButton);
 		expect(mocks.retry).toHaveBeenCalledOnce();
 	});
 	it("shows an empty history without pagination controls", () => {

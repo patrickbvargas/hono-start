@@ -12,11 +12,13 @@ import {
 	getFeeRevenueTypesQueryOptions,
 	getFeesQueryOptions,
 	getSelectableFeeContractsQueryOptions,
+	useFeeFilter,
 	useFees,
 } from "@/features/fees";
 import { ButtonNew } from "@/shared/components/button-new";
 import { EntityView } from "@/shared/components/entity-view";
 import { RouteError } from "@/shared/components/route-error";
+import { ListEmptyState } from "@/shared/components/ui";
 import { SensitiveValue } from "@/shared/components/value-visibility";
 import {
 	Wrapper,
@@ -52,6 +54,7 @@ export const Route = createFileRoute("/_app/honorarios")({
 });
 
 function RouteComponent() {
+	const filterController = useFeeFilter();
 	const { detailId, ...search } = Route.useSearch();
 	const navigate = Route.useNavigate();
 	const openFeePage = (id: number) => {
@@ -73,6 +76,28 @@ function RouteComponent() {
 		hasPermission(session, "org:fees:delete") ||
 		hasPermission(session, "org:fees:restore");
 
+	const emptyState = (
+		<ListEmptyState
+			title="Nenhum recebimento disponível"
+			description="Os recebimentos registrados nos contratos aparecerão aqui."
+			hasFilters={filterController.canClearFilters}
+			onClearFilters={filterController.handleClearFilters}
+			hasRecords={fees.total > 0}
+			onFirstPage={() =>
+				void navigate({ search: (previous) => ({ ...previous, page: 1 }) })
+			}
+			createAction={
+				hasPermission(session, "org:fees:create") ? (
+					<ButtonNew
+						permission="org:fees:create"
+						label="Novo recebimento"
+						onClick={() => overlay.create.open()}
+					/>
+				) : null
+			}
+		/>
+	);
+
 	return (
 		<Wrapper
 			title={ROUTES.fee.title}
@@ -86,6 +111,7 @@ function RouteComponent() {
 		>
 			<WrapperHeader className="flex-wrap md:flex-nowrap">
 				<FeeFilter
+					controller={filterController}
 					summary={
 						<p className="shrink-0 whitespace-nowrap text-sm text-muted-foreground">
 							Total filtrado:{" "}
@@ -102,6 +128,7 @@ function RouteComponent() {
 				<EntityView
 					list={
 						<FeeList
+							emptyState={emptyState}
 							onOpenPage={openFeePage}
 							data={fees}
 							onEdit={overlay.edit.open}
@@ -113,6 +140,7 @@ function RouteComponent() {
 					}
 					table={
 						<FeeTable
+							emptyState={emptyState}
 							onOpenPage={openFeePage}
 							data={fees}
 							onEdit={overlay.edit.open}

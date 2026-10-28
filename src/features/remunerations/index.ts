@@ -14,6 +14,7 @@ export * from "./components/table";
 export { RemunerationWorkspace } from "./components/workspace";
 export { useRemunerations } from "./hooks/use-data";
 export { useRemunerationExport } from "./hooks/use-export";
+export { useRemunerationFilter } from "./hooks/use-filter";
 export type { Remuneration } from "./schemas/model";
 export * from "./schemas/search";
 export { remunerationWorkspaceSearchSchema } from "./schemas/workspace";

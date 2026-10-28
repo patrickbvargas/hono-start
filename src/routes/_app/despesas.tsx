@@ -11,11 +11,13 @@ import {
 	expenseSearchSchema,
 	getExpenseCategoriesQueryOptions,
 	getExpensesQueryOptions,
+	useExpenseFilter,
 	useExpenses,
 } from "@/features/expenses";
 import { ButtonNew } from "@/shared/components/button-new";
 import { EntityView } from "@/shared/components/entity-view";
 import { RouteError } from "@/shared/components/route-error";
+import { ListEmptyState } from "@/shared/components/ui";
 import { SensitiveValue } from "@/shared/components/value-visibility";
 import {
 	Wrapper,
@@ -50,6 +52,7 @@ export const Route = createFileRoute("/_app/despesas")({
 });
 
 function RouteComponent() {
+	const filterController = useExpenseFilter();
 	const { detailId, ...search } = Route.useSearch();
 	const navigate = Route.useNavigate();
 	const openExpensePage = (id: number) => {
@@ -71,6 +74,28 @@ function RouteComponent() {
 		hasPermission(session, "org:expenses:delete") ||
 		hasPermission(session, "org:expenses:restore");
 
+	const emptyState = (
+		<ListEmptyState
+			title="Nenhuma despesa disponível"
+			description="As despesas registradas aparecerão aqui."
+			hasFilters={filterController.canClearFilters}
+			onClearFilters={filterController.handleClearFilters}
+			hasRecords={expenses.total > 0}
+			onFirstPage={() =>
+				void navigate({ search: (previous) => ({ ...previous, page: 1 }) })
+			}
+			createAction={
+				hasPermission(session, "org:expenses:create") ? (
+					<ButtonNew
+						permission="org:expenses:create"
+						label="Nova despesa"
+						onClick={() => overlay.create.open()}
+					/>
+				) : null
+			}
+		/>
+	);
+
 	return (
 		<Wrapper
 			title={ROUTES.expense.title}
@@ -84,6 +109,7 @@ function RouteComponent() {
 		>
 			<WrapperHeader className="flex-wrap md:flex-nowrap">
 				<ExpenseFilter
+					controller={filterController}
 					summary={
 						<p className="shrink-0 whitespace-nowrap text-sm text-muted-foreground">
 							Total filtrado:{" "}
@@ -100,6 +126,7 @@ function RouteComponent() {
 				<EntityView
 					list={
 						<ExpenseList
+							emptyState={emptyState}
 							onOpenPage={openExpensePage}
 							data={expenses}
 							onEdit={overlay.edit.open}
@@ -111,6 +138,7 @@ function RouteComponent() {
 					}
 					table={
 						<ExpenseTable
+							emptyState={emptyState}
 							onOpenPage={openExpensePage}
 							data={expenses}
 							onEdit={overlay.edit.open}

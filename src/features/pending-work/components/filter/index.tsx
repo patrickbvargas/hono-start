@@ -5,9 +5,13 @@ import {
 	PENDING_TYPE_OPTIONS,
 } from "../../constants/display";
 import { usePendingWorkOptions } from "../../hooks/use-data";
-import { usePendingWorkFilter } from "../../hooks/use-filter";
+import type { usePendingWorkFilter } from "../../hooks/use-filter";
 
-export function PendingWorkFilter() {
+interface PendingWorkFilterProps {
+	controller: ReturnType<typeof usePendingWorkFilter>;
+}
+
+export function PendingWorkFilter({ controller }: PendingWorkFilterProps) {
 	const { clients, employees } = usePendingWorkOptions();
 	const isMobile = useIsMobile();
 	const {
@@ -17,7 +21,7 @@ export function PendingWorkFilter() {
 		handleApplyFilter,
 		handleClearFilters,
 		canClearFilters,
-	} = usePendingWorkFilter();
+	} = controller;
 	return (
 		<form.Form form={form} className="w-full">
 			<ListFilters>

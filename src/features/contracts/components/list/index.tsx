@@ -11,6 +11,7 @@ import type { ContractSummary } from "../../schemas/model";
 import { getContractLifecycleActions } from "../../utils/lifecycle-actions";
 
 interface ContractListProps {
+	emptyState?: React.ReactNode;
 	canManageLifecycle?: boolean;
 	data: QueryPaginatedReturnType<ContractSummary>;
 	onOpenPage?: (id: EntityId) => void;
@@ -21,6 +22,7 @@ interface ContractListProps {
 }
 
 export const ContractList = ({
+	emptyState,
 	canManageLifecycle = false,
 	data,
 	onOpenPage,
@@ -106,6 +108,7 @@ export const ContractList = ({
 
 	return (
 		<DataCardList
+			emptyState={emptyState}
 			data={items}
 			getRowKey={(contract) => contract.id}
 			renderTitle={(contract) => contract.processNumber}

@@ -14,6 +14,7 @@ import { getExpenseLifecycleActions } from "../../utils/lifecycle-actions";
 import { getExpenseReadColumns } from "./columns";
 
 interface ExpenseTableProps {
+	emptyState?: React.ReactNode;
 	canManageLifecycle?: boolean;
 	data: QueryPaginatedReturnType<ExpenseSummary>;
 	onOpenPage?: (id: EntityId) => void;
@@ -24,6 +25,7 @@ interface ExpenseTableProps {
 }
 
 export const ExpenseTable = ({
+	emptyState,
 	canManageLifecycle = false,
 	data: { data, total },
 	onOpenPage,
@@ -112,6 +114,7 @@ export const ExpenseTable = ({
 
 	return (
 		<DataTable
+			emptyState={emptyState}
 			columns={columns}
 			data={data}
 			renderRowContextMenu={(index) => renderActions(data[index], "context")}

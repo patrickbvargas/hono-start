@@ -1,5 +1,5 @@
+import { Link } from "@tanstack/react-router";
 import { CompassIcon } from "lucide-react";
-import { NavigationLink } from "@/shared/components/navigation-link";
 import { RouteFeedback } from "@/shared/components/route-feedback";
 import { buttonVariants } from "@/shared/components/ui";
 import { ROUTES } from "@/shared/config/routes";
@@ -13,12 +13,12 @@ export function RouteNotFound() {
 			watermark="404"
 			icon={<CompassIcon className="size-12" />}
 			actions={
-				<NavigationLink
+				<Link
 					to={ROUTES.dashboard.url}
-					className={buttonVariants({ size: "lg" })}
+					className={buttonVariants({ size: "sm" })}
 				>
 					Voltar ao início
-				</NavigationLink>
+				</Link>
 			}
 		/>
 	);

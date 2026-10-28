@@ -1,9 +1,13 @@
 import { ListFilters } from "@/shared/components/list-filters";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
 import { useAuditLogOptions } from "../../hooks/use-data";
-import { useAuditLogFilter } from "../../hooks/use-filter";
+import type { useAuditLogFilter } from "../../hooks/use-filter";
 
-export const AuditLogFilter = () => {
+interface AuditLogFilterProps {
+	controller: ReturnType<typeof useAuditLogFilter>;
+}
+
+export const AuditLogFilter = ({ controller }: AuditLogFilterProps) => {
 	const {
 		filter,
 		defaultFilter,
@@ -11,7 +15,7 @@ export const AuditLogFilter = () => {
 		canClearFilters,
 		handleApplyFilter,
 		handleClearFilters,
-	} = useAuditLogFilter();
+	} = controller;
 	const { actions, entityTypes, actors } = useAuditLogOptions();
 	const isMobile = useIsMobile();
 

@@ -12,6 +12,7 @@ export { AuditLogList } from "./components/list";
 export { AuditLogTable } from "./components/table";
 export { AuditLogWorkspace } from "./components/workspace";
 export { useAuditLog, useAuditLogs } from "./hooks/use-data";
+export { useAuditLogFilter } from "./hooks/use-filter";
 export { auditLogSearchSchema } from "./schemas/search";
 export { auditLogWorkspaceSearchSchema } from "./schemas/workspace";
 export { auditLogSearchDefaults } from "./utils/default";

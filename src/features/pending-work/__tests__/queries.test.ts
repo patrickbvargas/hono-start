@@ -26,6 +26,14 @@ const result = {
 };
 
 describe("pending work data boundary", () => {
+	it("joins global clients without a removed firm column and retains operational scope", async () => {
+		await getPendingWork({ scope, search });
+		const sql: Prisma.Sql = queryRaw.mock.calls[0][0];
+		expect(sql.text).toContain('JOIN clients cl ON cl.id = c."clientId"');
+		expect(sql.text).not.toContain('cl."firmId"');
+		expect(sql.text).toContain('WHERE c."firmId" =');
+		expect(sql.values).toContain(scope.firmId);
+	});
 	it("intersects related client and employee IDs with the viewer's assignment visibility", async () => {
 		await getPendingWork({
 			scope: {

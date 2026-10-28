@@ -14,10 +14,12 @@ import {
 	remunerationSearchDefaults,
 	remunerationSearchSchema,
 	useRemunerationExport,
+	useRemunerationFilter,
 	useRemunerations,
 } from "@/features/remunerations";
 import { EntityView } from "@/shared/components/entity-view";
 import { RouteError } from "@/shared/components/route-error";
+import { ListEmptyState } from "@/shared/components/ui";
 import { SensitiveValue } from "@/shared/components/value-visibility";
 import {
 	Wrapper,
@@ -55,6 +57,7 @@ export const Route = createFileRoute("/_app/remuneracoes")({
 });
 
 function RouteComponent() {
+	const filterController = useRemunerationFilter();
 	const { detailId, ...search } = Route.useSearch();
 	const navigate = Route.useNavigate();
 	const openRemunerationPage = (id: number) => {
@@ -82,6 +85,19 @@ function RouteComponent() {
 	const { handleExport, isPending, pendingFormat } =
 		useRemunerationExport(search);
 
+	const emptyState = (
+		<ListEmptyState
+			title="Nenhuma remuneração disponível"
+			description="As remunerações são geradas a partir dos recebimentos e aparecerão aqui quando estiverem disponíveis para você."
+			hasFilters={filterController.canClearFilters}
+			onClearFilters={filterController.handleClearFilters}
+			hasRecords={remunerations.total > 0}
+			onFirstPage={() =>
+				void navigate({ search: (previous) => ({ ...previous, page: 1 }) })
+			}
+		/>
+	);
+
 	return (
 		<Wrapper
 			title={ROUTES.remuneration.title}
@@ -97,6 +113,7 @@ function RouteComponent() {
 		>
 			<WrapperHeader className="flex-wrap md:flex-nowrap">
 				<RemunerationFilter
+					controller={filterController}
 					isAdmin={canReadAll}
 					summary={
 						<p className="shrink-0 whitespace-nowrap text-sm text-muted-foreground">
@@ -114,6 +131,7 @@ function RouteComponent() {
 				<EntityView
 					list={
 						<RemunerationList
+							emptyState={emptyState}
 							onOpenPage={openRemunerationPage}
 							data={remunerations}
 							onEdit={overlay.edit.open}
@@ -125,6 +143,7 @@ function RouteComponent() {
 					}
 					table={
 						<RemunerationTable
+							emptyState={emptyState}
 							onOpenPage={openRemunerationPage}
 							data={remunerations}
 							onEdit={overlay.edit.open}

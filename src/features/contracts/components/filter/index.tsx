@@ -5,9 +5,13 @@ import {
 	ENTITY_DELETED_FILTER_OPTIONS,
 } from "@/shared/lib/entity-management";
 import { useContractFilterOptions } from "../../hooks/use-data";
-import { useContractFilter } from "../../hooks/use-filter";
+import type { useContractFilter } from "../../hooks/use-filter";
 
-export const ContractFilter = () => {
+interface ContractFilterProps {
+	controller: ReturnType<typeof useContractFilter>;
+}
+
+export const ContractFilter = ({ controller }: ContractFilterProps) => {
 	const {
 		filter,
 		defaultFilter,
@@ -15,7 +19,7 @@ export const ContractFilter = () => {
 		canClearFilters,
 		handleApplyFilter,
 		handleClearFilters,
-	} = useContractFilter();
+	} = controller;
 	const { clients, legalAreas, statuses, employees } =
 		useContractFilterOptions();
 	const isMobile = useIsMobile();

@@ -12,12 +12,14 @@ import { AUDIT_LOG_ALLOWED_SORT_COLUMNS } from "../../constants/sort";
 import type { AuditLog } from "../../schemas/model";
 
 interface AuditLogTableProps {
+	emptyState?: React.ReactNode;
 	data: QueryPaginatedReturnType<AuditLog>;
 	onOpenPage?: (id: EntityId) => void;
 	onView?: (id: EntityId) => void;
 }
 
 export const AuditLogTable = ({
+	emptyState,
 	data: { data, total },
 	onOpenPage,
 	onView,
@@ -128,6 +130,7 @@ export const AuditLogTable = ({
 
 	return (
 		<DataTable
+			emptyState={emptyState}
 			columns={columns}
 			data={data}
 			renderRowContextMenu={(index) => renderActions(data[index], "context")}

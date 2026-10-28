@@ -63,6 +63,7 @@ It is meant to survive domain changes as long as the project keeps the same UI a
 - Lists are server-driven.
 - Filtering, sorting, and pagination are URL-driven.
 - Empty, loading, and error states must be explicit.
+- Error recovery actions use the shared small button styling: navigation to the home page uses a plain router Link with buttonVariants({ size: "sm" }), without NavigationLink decoration; local Tentar novamente actions use Button with type="button", variant="outline" and size="sm". This applies to 404, route errors and contextual data-loading errors.
 - Stable sorting must be preserved to avoid pagination drift.
 - Feature routes with filters must render the filter in the header and the table in the body.
 - Overlay state for create, edit, details, delete, and restore must use the shared overlay pattern rather than ad hoc modal state.
@@ -74,6 +75,8 @@ It is meant to survive domain changes as long as the project keeps the same UI a
 - Overlay render callbacks are the canonical bridge from route composition to shared modal, confirmation, and drawer wrappers through `OverlayState`.
 - Loading states use skeleton-style placeholders.
 - Empty states use helpful user-facing copy in the product locale.
+- Primary collection tables and cards use the shared UI ListEmptyState through their optional emptyState slot; contextual consumers retain emptyMessage. Keep table headers and fill the available list height. Use an icon, title, short explanation and one contextual action.
+- Collection routes instantiate the feature filter hook once and pass its controller to the filter component. The empty state's Limpar filtros action uses that same controller to cancel debounced search, reset displayed fields and apply default URL filters. Routes wire the existing permission-checked ButtonNew and create overlay for empty manually created collections. Derived and read-only collections do not expose creation; informational copy describes the authorized scope without claiming global absence.
 - Buttons show loading state and become disabled during submission.
 - The canonical list-management pattern is:
   - route-level loader with validated search state
@@ -225,7 +228,7 @@ RelatedContractAlerts is owned by pending-work and reused in client/employee ove
 
 Record workspace lifecycle actions use the application header action slot. Identity, ID and status share one compact row. The workspace wrapper never scrolls: tabs fill remaining height and their panels own vertical scrolling; expanded attachments retain internal list scrolling.
 
-Client and employee overview alerts use the shared ScrollArea in a flex section that fills remaining tab height, matching attachment scrolling. General fields and alert heading/summary stay outside the list scroller. Very short viewports retain an outer overflow fallback.
+Client and employee overview alerts use the shared ScrollArea in a flex section that fits its content and shrinks to the remaining tab height when needed. General fields and alert heading/summary stay outside the list scroller. Very short viewports retain an outer overflow fallback.
 
 Drawer headers use plain identity titles and a separate Abrir página link, preserving validated list return context. The link sits beside the title on desktop and above body content on mobile. Entity row menus use the same Abrir página label. Row menus label contextual drawers Ver resumo. Workspace status aligns to the right of the identity row.
 
@@ -239,7 +242,7 @@ Table interaction contract: main entity listing rows open the record page and su
 
 Embedded EntityAuditHistory rows open their local audit detail drawer by click or Enter/Space, retaining the entity page URL and selected tab. Descriptions are plain text and there is no actions column. The row context menu exposes Abrir página and Ver resumo through shared EntityActions; audit page navigation retains the scoped audit search as return context.
 
-Expanded workspace panels retain native outer vertical overflow as a fallback. Overview compositions constrain alert lists to the remaining height; expanded attachment sections retain a minimum usable height. Inner lists scroll first and native scroll chaining reaches the tab at their boundaries.
+Expanded workspace panels retain native outer vertical overflow as a fallback. Overview compositions keep alert wrappers at content height and cap alert lists at the remaining height; expanded attachment sections retain a minimum usable height. Inner lists scroll first and native scroll chaining reaches the tab at their boundaries.
 
 Dashboard drilldown modal rows open contextual summaries by click or Enter/Space. Receipts target their persisted fee ID, remunerations and expenses target themselves, and planned/outstanding installments and initial down payments target their contract. The parent modal remains mounted with sorting, pagination, scroll and filters retained. Its dismissal and modal focus trap are suspended while the summary is open; its portal moves below the drawer layer. Existing protected detail queries and safe local error boundaries preserve resource and tenant authorization. Generic Drilldown accepts optional typed row actions, action labels and nested overlay content; entity orchestration stays dashboard-owned.
 
@@ -260,11 +263,13 @@ Dashboard period controls use the same compact shortcut and shared DateRangePick
 
 Dashboard exposes searchable inline Cliente and Contrato selectors alongside Colaborador, with the same bounded widths, removable chips and clear-filter behavior. Options reuse the existing permission-scoped client/contract query factories and route prefetches.
 
-Contract, client and employee overview alerts share bordered rounded rows with p-4 padding and gap-3 spacing. Each row begins with a text-sm medium title followed by its severity chip, with supporting details below and contextual information or actions to the right.
+Contract, client and employee overview alerts follow the attachment-list pattern: min-w-0 divide-y lists with borderless rows, min-h-16, py-3 and gap-3 spacing, without individual rounded cards or horizontal padding. The section retains its card wrapper, heading and internal scrolling. Each row begins with a text-sm medium title followed by its severity chip, with supporting details below and contextual information or actions to the right.
+
+Contract workspace team lists use min-w-0 divide-y lists and compact borderless min-h-12 py-2 rows inside the existing section card. Assignment roles, inactive badges, employee links and the edit action retain their behavior.
 
 Contract overview alerts render due dates and elapsed overdue days through the same PendingWorkDueDate component as related-contract previews, with remaining balance protected by SensitiveValue. Upcoming alerts have no overdue-day label; exhausted installment plans show balance without a fabricated due date.
 
-Record workspace tabs use the shared ScrollArea for fallback overflow and the tab strip. Overview alert lists consume the remaining section height and scroll internally, retaining data and alert headings above them. Tab overflow is reserved for viewports too short to fit the fixed data plus the minimum alert area. Native overflow-y-auto on expanded tab panels is not used.
+Record workspace tabs use the shared ScrollArea for fallback overflow and the tab strip. Overview alert wrappers fit their content up to the remaining available height and scroll internally only when their list exceeds that space, retaining data and alert headings above them. Tab overflow is reserved for viewports too short to fit the fixed data plus the minimum alert area. Native overflow-y-auto on expanded tab panels is not used.
 
 RelatedRecordLink triggers in pages, summaries and table cells retain primary-click summary opening and expose Abrir página followed by Ver resumo through the shared context menu. Right click, Shift+F10 and ContextMenu open it; Escape restores trigger focus. Actions use existing entity read grants and direct navigation uses the same overview destination and validated collection return context as the summary header. Collection links remain outside this behavior.
 

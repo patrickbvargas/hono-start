@@ -11,6 +11,8 @@ This file defines the canonical domain-facing behavior of filtering, sorting, li
 - List behavior must remain shareable and bookmarkable.
 - Paginated list behavior must be deterministic for the same validated search state.
 - When a route defines defaults for page, page size, sort column, or sort direction, those defaults are part of the contract for that route.
+- Primary collections distinguish zero matching records with non-default filters from zero available records at defaults. Search and relationship filters count; sorting, pagination and default lifecycle values do not. Clearing returns filters to defaults and page 1 while preserving sort and page size. If the current page has no rows but the authorized total is positive, offer returning to page 1 while preserving filters instead of claiming the collection is empty.
+- Unfiltered empty clients, employees, contracts, receipts and expenses offer their existing creation flow only with the corresponding create grant. Remunerations explain receipt-based generation, audit explains recorded changes, and pending work communicates no pending work in the visible contract scope; these collections do not offer manual creation.
 
 ## Filter Conventions
 
