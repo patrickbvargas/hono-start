@@ -93,14 +93,21 @@ export const DataTable = <TData extends RowData>({
 
 	return (
 		<div
+			data-slot="data-table"
 			className={cn(
 				"border flex min-h-0 max-h-full flex-col overflow-hidden rounded-lg",
 				className,
 			)}
 		>
-			<ScrollArea className="min-h-0 flex-1">
-				<Table>
-					<TableHeader>
+			<ScrollArea
+				className={cn(
+					"min-h-0 flex-1",
+					rows.length === 0 &&
+						"[&_[data-slot=scroll-area-viewport]>div]:h-full [&_[data-slot=table-container]]:h-full",
+				)}
+			>
+				<Table className={rows.length === 0 ? "h-full" : undefined}>
+					<TableHeader className={rows.length === 0 ? "h-px" : undefined}>
 						<TableRow>
 							{table.getFlatHeaders().map((header) => (
 								<TableHead
@@ -197,7 +204,9 @@ export const DataTable = <TData extends RowData>({
 						)}
 					</TableBody>
 					{tableFooterContent ? (
-						<TableFooter className="border-0">{tableFooterContent}</TableFooter>
+						<TableFooter className="h-px border-0">
+							{tableFooterContent}
+						</TableFooter>
 					) : null}
 				</Table>
 			</ScrollArea>
