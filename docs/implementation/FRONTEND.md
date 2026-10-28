@@ -296,3 +296,6 @@ See [Multitenancy](../domain/MULTITENANCY.md) for the authoritative entity-scope
 - Contract revenue groups use `FormSection` and a wrapping row for related actions. Remuneration calculation summaries use spacing and a divider inside the section instead of a nested card.
 - Desktop collection filters wrap within available width so all controls remain reachable. Search and filter controls share one wrapping row, using `contents` on the desktop action group to keep line starts aligned.
 - Financial labels use `Honorários (%)`, `Remuneração (%)`, `Indicação (%)` and `Percentual efetivo (%)`; remuneration receipt dates use `Data de recebimento` in lists, details and exports.
+
+Multiple-file selection shows a spinner and Carregando arquivos selecionados... while preparing Windows picker or dropped files for the form. Selection and removal controls stay disabled until preparation finishes; upload feedback remains separate.
+

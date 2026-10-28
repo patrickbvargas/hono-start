@@ -49,14 +49,20 @@ export const FormFile = ({
 	browseLabel = "Selecionar arquivo",
 	dropDescription,
 	emptyTitle = "Arraste e solte arquivo aqui",
-	isLoading = false,
-	loadingText = "Preparando arquivo...",
+	isLoading: externalLoading = false,
+	loadingText: externalLoadingText = "Preparando arquivo...",
 	onValueChange,
 	...props
 }: FormFileProps) => {
 	const field = useFieldContext<File | File[] | null>();
 	const inputRef = useRef<HTMLInputElement | null>(null);
 	const [isDragActive, setIsDragActive] = useState(false);
+	const [isSelecting, setIsSelecting] = useState(false);
+	const selectionLock = useRef(false);
+	const isLoading = externalLoading || isSelecting;
+	const loadingText = isSelecting
+		? "Carregando arquivos selecionados..."
+		: externalLoadingText;
 
 	const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 
@@ -71,27 +77,43 @@ export const FormFile = ({
 		? `${selectedFile.name} (${formatSelectedFileSize(selectedFile.size)})`
 		: null;
 
-	function handleFilesChange(files: File[]) {
-		const next = [
-			...selectedFiles,
-			...files.filter(
-				(file) =>
-					!selectedFiles.some(
-						(selected) =>
-							selected.name === file.name &&
-							selected.size === file.size &&
-							selected.lastModified === file.lastModified,
-					),
-			),
-		];
-		setIsDragActive(false);
-		if (maxFiles && next.length > maxFiles) {
-			setSelectionError(`Selecione no máximo ${maxFiles} arquivos por envio.`);
+	async function handleFilesChange(files: File[]) {
+		if (files.length === 0 || selectionLock.current) {
 			return;
 		}
-		setSelectionError(null);
-		field.handleChange(next);
-		field.handleBlur();
+		selectionLock.current = true;
+		setIsSelecting(true);
+		try {
+			// Let the browser paint feedback before validating the selection.
+			await new Promise<void>((resolve) => {
+				requestAnimationFrame(() => setTimeout(resolve, 0));
+			});
+			const next = [
+				...selectedFiles,
+				...files.filter(
+					(file) =>
+						!selectedFiles.some(
+							(selected) =>
+								selected.name === file.name &&
+								selected.size === file.size &&
+								selected.lastModified === file.lastModified,
+						),
+				),
+			];
+			setIsDragActive(false);
+			if (maxFiles && next.length > maxFiles) {
+				setSelectionError(
+					`Selecione no máximo ${maxFiles} arquivos por envio.`,
+				);
+				return;
+			}
+			setSelectionError(null);
+			field.handleChange(next);
+			field.handleBlur();
+		} finally {
+			selectionLock.current = false;
+			setIsSelecting(false);
+		}
 	}
 	function handleFileChange(file: File | null) {
 		field.handleChange(file);
@@ -188,7 +210,9 @@ export const FormFile = ({
 					)}
 				</div>
 				<div className="space-y-1">
-					<p className="font-medium text-sm">{emptyTitle}</p>
+					<p className="font-medium text-sm">
+						{isSelecting ? "Preparando anexos" : emptyTitle}
+					</p>
 					<p className="text-muted-foreground text-sm">
 						{isLoading ? loadingText : (selectedDescription ?? dropDescription)}
 					</p>
