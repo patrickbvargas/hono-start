@@ -101,9 +101,27 @@ it("renders one page with the shared zoom toolbar and bounded page navigation", 
 			}) as HTMLButtonElement
 		).disabled,
 	).toBe(true);
+	await waitFor(() =>
+		expect(
+			(
+				screen.getByRole("button", {
+					name: "Próxima página",
+				}) as HTMLButtonElement
+			).disabled,
+		).toBe(false),
+	);
 	fireEvent.click(screen.getByRole("button", { name: "Próxima página" }));
 	await waitFor(() => expect(onLoad).toHaveBeenCalledTimes(2));
 	expect(mocks.getPage).toHaveBeenLastCalledWith(2);
+	await waitFor(() =>
+		expect(
+			(
+				screen.getByRole("button", {
+					name: "Próxima página",
+				}) as HTMLButtonElement
+			).disabled,
+		).toBe(false),
+	);
 	fireEvent.click(screen.getByRole("button", { name: "Próxima página" }));
 	await waitFor(() => expect(onLoad).toHaveBeenCalledTimes(3));
 	expect(

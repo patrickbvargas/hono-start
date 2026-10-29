@@ -139,7 +139,7 @@ const ExpenseDetailsFallback = () => {
 				)}
 				<EntityDetail.Separator />
 				<EntityDetail.Section title="Registro">
-					<EntityDetail.SkeletonFields columns={2} rows={3} />
+					<EntityDetail.SkeletonFields columns={2} rows={2} />
 				</EntityDetail.Section>
 			</EntityDetail.Body>
 			<EntityDetail.Footer />

@@ -29,7 +29,7 @@ Implementation and deployment verification are tracked under `openspec/changes/m
 Copy names from `.env.example`; keep actual values in ignored `.env`.
 `VITE_CLERK_PUBLISHABLE_KEY` is public. `CLERK_SECRET_KEY` and
 `CLERK_WEBHOOK_SIGNING_SECRET` must remain server-only.
-Attachments require ATTACHMENTS_DIR pointing to private persistent local storage; Supabase storage configuration is no longer used.
+Attachments require private R2 configuration; see ATTACHMENTS.md.
 
 Configure Clerk email or username sign-in, restricted onboarding, Organizations and pt-BR
 widgets. Disable unrestricted user Organization creation. Configure production

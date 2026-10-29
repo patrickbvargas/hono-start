@@ -82,9 +82,9 @@ This document defines reusable trust-boundary and authorization rules for the re
 
 See `docs/domain/DOMAIN_MODEL.md` for ownership boundaries. Authentication resolves the required business actor through server-validated Clerk privateMetadata.employeeId. Employee UI contains business fields only; account administration belongs to Clerk Dashboard.
 
-## Local attachment storage
+## Private attachment storage
 
-ATTACHMENTS_DIR is a private absolute directory outside public assets and build output. Attachment binaries are delivered only through authenticated, firm- and owner-authorized requests. Paths cannot escape the root or traverse symbolic links. Restrict filesystem writers to the application account; do not expose this directory through a web server. Responses use private/no-store caching and nosniff.
+Attachment binaries use private R2 storage. Only authenticated owner-authorized application requests deliver bytes. Server-only credentials have bucket-scoped access; responses use private/no-store and nosniff. See ATTACHMENTS.md.
 
 Employee is global. The same active Employee ID and type remain bound across authorized Organizations; each membership supplies its own current grants. Missing, invalid, inactive or deleted bindings deny the session for every role, including administrators. Organization changes clear prior-unit caches, and operational scope is derived afresh on the server.
 

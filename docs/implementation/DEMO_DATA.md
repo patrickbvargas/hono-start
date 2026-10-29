@@ -2,7 +2,7 @@
 
 ## Recreate the preview
 
-Set DATABASE_URL and DIRECT_URL to the same development business database and configure a private absolute ATTACHMENTS_DIR with read/write/delete and hard-link support. Run:
+Set DATABASE_URL and DIRECT_URL to the same development business database and configure an isolated private R2 bucket and server credentials as described in ATTACHMENTS.md. Run:
 
 ```sh
 pnpm run db:reset
@@ -48,6 +48,6 @@ With reference 2026-10-26, authorized firm-wide YTD receipts (including entries)
 
 ## Repeating and access
 
-`pnpm run db:seed` with the same reference date preserves fixture IDs, file ownership and audit event identities. It reconciles owned business fixtures rather than deleting financial rows. Changing reference dates can retain older cohorts or existing user-added records; reset recreates the exact demo window. Private files from prior resets are not deleted automatically; use a disposable demo attachment directory if a clean filesystem is required.
+`pnpm run db:seed` with the same reference date preserves fixture IDs, file ownership and audit event identities. It reconciles owned business fixtures rather than deleting financial rows. Changing reference dates can retain older cohorts or existing user-added records; reset recreates the exact demo window. Private files from prior resets are not deleted automatically; use an isolated disposable demo R2 bucket when regenerating fixtures.
 
 Clerk credentials, Organization membership and grants remain externally configured. Use an authorized administrator to preview all features. For own/assigned visibility, bind Clerk privateMetadata.employeeId to an active seeded collaborator after reset; never bind an inactive/deleted collaborator. Numeric IDs can change between environments. No local role/email fixture grants access.

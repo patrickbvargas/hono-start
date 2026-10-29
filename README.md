@@ -50,7 +50,7 @@ The Prisma schema includes the core tenant model, lookup catalogs, clients, empl
 - TanStack Table
 - Prisma
 - PostgreSQL
-- Private local attachment storage (`ATTACHMENTS_DIR`)
+- Private Cloudflare R2 attachment storage
 - Clerk Auth
 - shadcn/ui through shared UI re-exports
 - Zod
@@ -81,7 +81,7 @@ Install dependencies:
 pnpm install
 ```
 
-Copy `.env.example` to `.env` and configure database URLs, Clerk keys, `APP_URL` and the private absolute `ATTACHMENTS_DIR`. See [Clerk setup](docs/implementation/CLERK_MIGRATION.md) and [attachment storage](docs/implementation/ATTACHMENTS.md). Minimal database values:
+Copy `.env.example` to `.env` and configure database URLs, Clerk keys, `APP_URL` and server-only R2 credentials and private bucket configuration. See [Clerk setup](docs/implementation/CLERK_MIGRATION.md) and [attachment storage](docs/implementation/ATTACHMENTS.md). Minimal database values:
 
 ```bash
 DATABASE_URL="postgresql://..."
@@ -165,7 +165,7 @@ Feature slices own business behavior. Routes compose feature APIs and UI. Shared
 
 ## Seed Data
 
-`pnpm run db:reset` applies migrations, generates Prisma Client and seeds the complete demo once. Configure database URLs pointing to the same development database and `ATTACHMENTS_DIR` first. Reset deletes that database schema's existing data.
+`pnpm run db:reset` applies migrations, generates Prisma Client and seeds the complete demo once. Configure database URLs pointing to the same development database and R2 configuration first. Reset deletes that database schema's existing data.
 
 The seed creates Matriz, lookup catalogs, 20 clients, 21 collaborators, two full prior years of monthly financial activity and elapsed months of the reference year. It includes lifecycle scenarios, expenses, automatic/manual remunerations, audit history and 18 readable example attachments.
 

@@ -444,3 +444,26 @@ it("restores the binary when deletion transaction fails", async () => {
 		expect.objectContaining({ path: "test.pdf", data: Buffer.from("backup") }),
 	);
 });
+
+it("logs attachment identity when deletion restoration fails", async () => {
+	prismaMock.attachment.findFirst.mockResolvedValue({
+		id: 50,
+		fileName: "test.pdf",
+		firmId: 1,
+		storagePath: "firms/1/client/2/test.pdf",
+	});
+	prismaMock.$transaction.mockRejectedValueOnce(new Error("database offline"));
+	uploadAttachmentFileMock.mockRejectedValueOnce(new Error("R2 unavailable"));
+	const log = vi.spyOn(console, "error").mockImplementation(() => {});
+	await expect(deleteAttachment({ firmId: 1, id: 50 })).rejects.toThrow(
+		ATTACHMENT_ERRORS.DELETE_FAILED,
+	);
+	expect(log).toHaveBeenCalledWith(
+		"[deleteAttachment:restore]",
+		expect.objectContaining({
+			attachmentId: 50,
+			storagePath: "firms/1/client/2/test.pdf",
+		}),
+	);
+	log.mockRestore();
+});

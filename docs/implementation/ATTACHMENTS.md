@@ -1,22 +1,23 @@
-# Local attachments
+# Private R2 attachment storage
 
-Set ATTACHMENTS_DIR to an absolute private path, for example C:/Dev/hono-start/storage/attachments on this PC. The application creates directories on upload; the application account must have read/write/delete permission. Keep the directory outside public, build output and disposable deployment folders. Missing configuration fails attachment operations without disabling unrelated features.
+Configure server-only CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_R2_BUCKET_NAME, CLOUDFLARE_R2_ACCESS_KEY_ID and CLOUDFLARE_R2_SECRET_ACCESS_KEY. Use separate private Standard buckets and credentials for development/test and production. Grant Object Read & Write only for the selected bucket; disable public r2.dev access and custom public domains. Never expose credentials through VITE variables. Missing configuration disables attachment operations without disabling unrelated features.
 
-The storage filesystem must support hard links within this directory. Uploads write a temporary file and publish complete bytes through an exclusive hard link, preventing overwrite during concurrent uploads. Verify this with the actual runtime account; restricted sandboxes can reject hard links with EPERM even when normal host execution succeeds.
+The current Node server uses the S3 API with region auto. storagePath remains the existing relative opaque object key; no SQL migration is needed. All six owner kinds keep the protected application endpoint, current owner authorization, MIME, safe filename, private/no-store caching and nosniff. Origin firm prefix is provenance only. Upload uses If-None-Match: * to avoid overwriting existing identities. Future Workers adoption can replace transport inside attachment-storage.ts with native R2 binding get/put/delete; feature callers remain unchanged. Native conditional put must reject null results.
 
-Upload a PDF, JPG or PNG up to 10 MB, open it from the detail drawer, then delete it with an authorized account. No Supabase configuration, migration or test-data cleanup is needed. Old test records with absent local files return not found.
+Uploads retain file/batch limits and PostgreSQL capacity locking. Failed metadata commits remove staged objects. Failed deletion commits restore captured bytes. These operations are compensation, not a distributed transaction. SDK mutation retries are disabled because a timeout can have an unknown committed outcome. Logs include object identity for reconciliation.
 
-Back up the attachment directory and database together. Restore relative file paths unchanged. For Docker on a VPS, mount a persistent volume (for example /data/attachments), set ATTACHMENTS_DIR to that absolute container path and grant access to the container account. Copy existing local files preserving directory structure. A container filesystem without a volume is disposable. Independent replicas require shared filesystem storage.
+## Fixtures and rollout
 
-Rollback to the old provider cannot serve newly local files automatically; preserve a backup before rollback. Disk and database writes are not a single transaction: failed metadata creation triggers binary cleanup, and file deletion failure retains metadata.
+Before switching, inventory database storagePath values and retained local files by relative key, size and SHA-256. Preserve originals. For disposable demo data, regenerate using the existing seed against a development database and isolated bucket; never reset production. For selected retained files, explicitly copy using the exact storagePath and verify downloaded size and SHA-256 before rollout. Do not delete local originals automatically. No automatic fixture copy or seed is performed by deployment.
 
-Attachment owners are client, employee, contract, expense, fee and remuneration. Financial owners use nullable indexed foreign keys and the database exactly-one-owner constraint. Apply migration `20261025120000_add_financial_attachment_owners` before serving the updated application and regenerate Prisma. Existing files and relative paths remain unchanged. Financial upload authorization uses attachment upload plus scoped financial read, not monetary edit permission; contract completion does not block supporting evidence.
+Deploy configured development integration first. Verify PDF/image preview, download, multi-file upload, permanent deletion, denied access for all owner scopes, and access after replacing the application host with the same database/bucket. Record actual results. Production cutover requires these checks.
 
+## Repair and rollback
 
-## Branch scope
+Monitor structured attachment upload, cleanup and restore logs, R2 operation errors/latency, object storage and Class A/B operations; consult current R2 pricing rather than assuming a free tier. Alert on cleanup/restoration failures and unexpected operation growth.
 
-See [Multitenancy](../domain/MULTITENANCY.md) for the current one-company/multiple-branch model. Client and Employee are global, including employee settings and lifecycle. Current Organization grants and Firm-scoped operations remain independent from shared identity. Attachment and audit firmId retain origin; their owner determines visibility.
+For cleanup failures or unknown upload outcomes, use logged key, database metadata and bucket inventory to identify orphaned objects after in-flight requests settle. Remove only confirmed orphans after review. For restoration failures, recover original bytes from backup at the exact storagePath, verify size/hash and authorized delivery; preserve metadata and audit evidence. Never treat access-denied/service errors as missing objects.
 
-## Preview verification
+Back up database metadata and bucket objects together, preserving keys. Before real writes, rollback may restore previous deployment/configuration and fixture set. After R2 writes, inventory and copy affected objects to the rollback provider and verify checksums first; changing configuration alone loses access to new evidence.
 
-Click an attachment identity in a record page or contextual drawer. Verify PDF page navigation/zoom in the local PDF.js reader and printing in the target browser, JPG/PNG fitting without cropping, filename/metadata and right-aligned actions. The complete native PDF reader remains available in a new tab; Abrir em nova aba and download remain available. Confirm Escape/close returns to the originating trigger, row actions do not open preview, deletion cancellation retains preview, and confirmed deletion closes it. Test missing files and denied access for safe retry feedback. Preview requests use the authenticated delivery endpoint, consume cancellation signals, retain no inactive binary query cache and revoke temporary object URLs on replacement/close.
+Sources: https://developers.cloudflare.com/r2/examples/aws/aws-sdk-js-v3/ and https://developers.cloudflare.com/r2/api/s3/extensions/ .

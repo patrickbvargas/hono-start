@@ -1,51 +1,52 @@
 import {
-	link,
-	lstat,
-	mkdir,
-	readFile,
-	unlink,
-	writeFile,
-} from "node:fs/promises";
-import { dirname, isAbsolute, join, resolve } from "node:path";
+	DeleteObjectCommand,
+	GetObjectCommand,
+	PutObjectCommand,
+	S3Client,
+} from "@aws-sdk/client-s3";
 import { env } from "@/shared/config/env";
 
-function code(error: unknown) {
-	return (error as NodeJS.ErrnoException)?.code;
-}
-export function isAttachmentStorageCapacityError(error: unknown) {
-	return ["ENOSPC", "EDQUOT"].includes(code(error) ?? "");
-}
-async function localPath(path: string) {
-	if (!env.ATTACHMENTS_DIR) {
+function storage() {
+	const {
+		CLOUDFLARE_ACCOUNT_ID,
+		CLOUDFLARE_R2_BUCKET_NAME,
+		CLOUDFLARE_R2_ACCESS_KEY_ID,
+		CLOUDFLARE_R2_SECRET_ACCESS_KEY,
+	} = env;
+	if (
+		!CLOUDFLARE_ACCOUNT_ID ||
+		!CLOUDFLARE_R2_BUCKET_NAME ||
+		!CLOUDFLARE_R2_ACCESS_KEY_ID ||
+		!CLOUDFLARE_R2_SECRET_ACCESS_KEY
+	) {
 		throw new Error("Configuração de armazenamento de anexos indisponível");
 	}
+	return {
+		bucket: CLOUDFLARE_R2_BUCKET_NAME,
+		client: new S3Client({
+			region: "auto",
+			endpoint: `https://${CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com`,
+			credentials: {
+				accessKeyId: CLOUDFLARE_R2_ACCESS_KEY_ID,
+				secretAccessKey: CLOUDFLARE_R2_SECRET_ACCESS_KEY,
+			},
+			maxAttempts: 1,
+		}),
+	};
+}
+function validateKey(path: string) {
 	if (
-		isAbsolute(path) ||
-		path
-			.split(/[\\/]/)
-			.some((part) => !part || part === "." || part === "..") ||
-		path.includes(":")
+		!/^firms\/[1-9]\d*\/(?:demo\/)?(client|employee|contract|expense|fee|remuneration)\/[1-9]\d*\/[\w.-]+$/.test(
+			path,
+		) ||
+		path.split("/").some((part) => part === "." || part === "..")
 	) {
 		throw new Error("Caminho de anexo inválido");
 	}
-	const root = resolve(env.ATTACHMENTS_DIR);
-	// Inspect every existing ancestor, including the root, before any file operation.
-	const target = join(root, path);
-	let current = resolve(root, "/");
-	const parts = target.slice(current.length).split(/[\\/]/).filter(Boolean);
-	for (const part of parts) {
-		current = join(current, part);
-		try {
-			if ((await lstat(current)).isSymbolicLink()) {
-				throw new Error("Links simbólicos não são permitidos nos anexos");
-			}
-		} catch (error) {
-			if (code(error) !== "ENOENT") {
-				throw error;
-			}
-		}
-	}
-	return target;
+	return path;
+}
+export function isAttachmentStorageCapacityError(error: unknown) {
+	return (error as { name?: string })?.name === "QuotaExceeded";
 }
 export function createAttachmentStoragePath(params: {
 	firmId: number;
@@ -76,35 +77,60 @@ export function createAttachmentStoragePath(params: {
 export async function uploadAttachmentFile({
 	data,
 	path,
+	contentType,
 }: {
 	contentType: string;
 	data: Buffer;
 	path: string;
 }) {
-	const target = await localPath(path);
-	await mkdir(dirname(target), { recursive: true });
-	const temporary = `${target}.${crypto.randomUUID()}.tmp`;
+	const Key = validateKey(path);
+	const { client, bucket } = storage();
 	try {
-		await writeFile(temporary, data, { flag: "wx", mode: 0o600 });
-		// Publish complete bytes atomically without replacing another upload.
-		await link(temporary, target);
+		await client.send(
+			new PutObjectCommand({
+				Bucket: bucket,
+				Key,
+				Body: data,
+				ContentType: contentType,
+				IfNoneMatch: "*",
+			}),
+		);
+	} catch (error) {
+		// A network failure can leave a committed object. Retain identity for manual reconciliation.
+		console.error("[attachment:upload]", { storagePath: Key, error });
+		throw error;
 	} finally {
-		await unlink(temporary).catch((error) => {
-			if (code(error) !== "ENOENT") {
-				console.error("[attachment:cleanup]", error);
-			}
-		});
+		client.destroy();
 	}
 }
 export async function readAttachmentFile({ path }: { path: string }) {
-	return readFile(await localPath(path));
+	const Key = validateKey(path);
+	const { client, bucket } = storage();
+	try {
+		const response = await client.send(
+			new GetObjectCommand({ Bucket: bucket, Key }),
+		);
+		if (!response.Body) {
+			throw new Error("Resposta de armazenamento inválida");
+		}
+		return Buffer.from(await response.Body.transformToByteArray());
+	} catch (error) {
+		if ((error as { name?: string })?.name === "NoSuchKey") {
+			throw Object.assign(new Error("Anexo não encontrado"), {
+				code: "ENOENT",
+			});
+		}
+		throw error;
+	} finally {
+		client.destroy();
+	}
 }
 export async function removeAttachmentFile({ path }: { path: string }) {
+	const Key = validateKey(path);
+	const { client, bucket } = storage();
 	try {
-		await unlink(await localPath(path));
-	} catch (error) {
-		if (code(error) !== "ENOENT") {
-			throw error;
-		}
+		await client.send(new DeleteObjectCommand({ Bucket: bucket, Key }));
+	} finally {
+		client.destroy();
 	}
 }

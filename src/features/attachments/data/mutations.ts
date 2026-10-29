@@ -75,7 +75,12 @@ export async function createAttachments(params: {
 			try {
 				await removeAttachmentFile({ path });
 			} catch (error) {
-				console.error("[createAttachments:cleanup]", error);
+				console.error("[createAttachments:cleanup]", {
+					storagePath: path,
+					firmId: params.firmId,
+					owner,
+					error,
+				});
 			}
 		}
 	}
@@ -229,7 +234,11 @@ export async function deleteAttachment(params: {
 					contentType: "application/octet-stream",
 				});
 			} catch (restoreError) {
-				console.error("[deleteAttachment:restore]", restoreError);
+				console.error("[deleteAttachment:restore]", {
+					attachmentId: attachment.id,
+					storagePath: attachment.storagePath,
+					error: restoreError,
+				});
 			}
 		}
 		console.error("[deleteAttachment:persistence]", error);

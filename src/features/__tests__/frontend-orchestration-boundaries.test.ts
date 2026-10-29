@@ -529,7 +529,10 @@ describe("frontend orchestration boundaries", () => {
 					message: "entity table does not expose canManageLifecycle",
 				},
 				{
-					passes: content.includes("EntityIdTrigger"),
+					passes: readFileSync(
+						path.replace("/index.tsx", "/columns.tsx"),
+						"utf8",
+					).includes("EntityIdTrigger"),
 					message: "entity table does not use shared EntityIdTrigger",
 				},
 				{

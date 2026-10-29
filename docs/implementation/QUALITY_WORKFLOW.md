@@ -209,13 +209,13 @@ Near-perfect contract alignment means:
 
 `pnpm verify` runs read-only Biome checks (`pnpm check:ci`), TypeScript (`pnpm typecheck`), the complete Vitest suite and production build in sequence, stopping on failure. `pnpm check` remains the explicit formatting/fix command. Biome covers maintained root configuration as well as application source; generated Prisma and router files remain excluded.
 
-Filesystem tests require a filesystem and execution account that support hard-link publication. A sandbox EPERM is not evidence of a broken upload implementation: rerun the focused storage tests with host filesystem permissions and record the result. Do not replace atomic publication or skip tests to conceal environment restrictions.
+Attachment transport tests mock R2; deployment readiness additionally requires checks against an isolated real bucket, following ATTACHMENTS.md.
 
 Before production release, the operator must verify:
 
 - Production Clerk keys, sign-in settings, Organization permissions, membership revocation and required Employee bindings, following `CLERK_MIGRATION.md`.
 - Reviewed migrations and required lookup/firm bootstrap on the intended database; no demo seed or reset.
-- Private persistent attachment storage with read/write/delete access, hard-link support and joint database/filesystem backup and restore, following `ATTACHMENTS.md`.
+- Private R2 attachment storage with bucket-scoped read/write/delete access and joint database/object backup and restore, following `ATTACHMENTS.md`.
 - Authenticated upload/open/delete, denied cross-scope access, and core financial workflows against the deployment environment.
 - Build and runtime OS/architecture compatibility; build separately for a different target platform.
 
