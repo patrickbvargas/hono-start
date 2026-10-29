@@ -28,7 +28,7 @@ export function ContractTeam({
 					{visibleAssignments.map((assignment) => (
 						<div
 							key={assignment.id}
-							className="flex min-h-12 min-w-0 flex-wrap items-center justify-between gap-3 py-2"
+							className="flex min-h-8 min-w-0 flex-wrap items-center justify-between gap-3 py-1"
 						>
 							<span>
 								{canReadEmployees ? (

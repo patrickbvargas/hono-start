@@ -6,6 +6,7 @@ import {
 	EntityDetail,
 } from "@/shared/components/entity-detail";
 import { FormSection } from "@/shared/components/form-section";
+import { CopyValue } from "@/shared/components/ui";
 import { SensitiveValue } from "@/shared/components/value-visibility";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
@@ -37,15 +38,21 @@ export function RemunerationOverview({
 			},
 			{
 				term: "Processo",
-				definition:
-					hasPermission(session, "org:contracts:read_all") ||
-					hasPermission(session, "org:contracts:read_assigned") ? (
-						<RelatedRecordLink kind="contract" id={remuneration.contractId}>
-							{remuneration.contractProcessNumber}
-						</RelatedRecordLink>
-					) : (
-						remuneration.contractProcessNumber
-					),
+				definition: (
+					<CopyValue
+						value={remuneration.contractProcessNumber}
+						label="número do processo"
+					>
+						{hasPermission(session, "org:contracts:read_all") ||
+						hasPermission(session, "org:contracts:read_assigned") ? (
+							<RelatedRecordLink kind="contract" id={remuneration.contractId}>
+								{remuneration.contractProcessNumber}
+							</RelatedRecordLink>
+						) : (
+							remuneration.contractProcessNumber
+						)}
+					</CopyValue>
+				),
 			},
 			{
 				term: "Cliente",

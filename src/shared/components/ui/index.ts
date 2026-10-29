@@ -12,6 +12,7 @@ export * from "./collapsible";
 export * from "./combobox";
 export * from "./command";
 export * from "./context-menu";
+export * from "./copy-value";
 export * from "./date-picker";
 export * from "./date-range-picker";
 export * from "./dialog";

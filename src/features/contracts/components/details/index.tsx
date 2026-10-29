@@ -12,6 +12,7 @@ import {
 	EntityDetail,
 } from "@/shared/components/entity-detail";
 import { NavigationLink } from "@/shared/components/navigation-link";
+import { CopyValue } from "@/shared/components/ui";
 import { useOverlay } from "@/shared/hooks/use-overlay";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
@@ -160,7 +161,9 @@ const ContractDetailsContent = ({
 		<EntityDetail.Content>
 			<EntityDetail.Header className="flex-row items-center justify-between gap-3">
 				<EntityDetail.Title className="min-w-0 flex-1 truncate">
-					{contract.processNumber}
+					<CopyValue value={contract.processNumber} label="número do processo">
+						{contract.processNumber}
+					</CopyValue>
 				</EntityDetail.Title>
 				<div className="hidden shrink-0 sm:block">{workspaceLink}</div>
 				<EntityActions

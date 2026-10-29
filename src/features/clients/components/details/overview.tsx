@@ -8,6 +8,7 @@ import {
 import { EntityStatus } from "@/shared/components/entity-status";
 import { FormSection } from "@/shared/components/form-section";
 import { NavigationLink } from "@/shared/components/navigation-link";
+import { CopyValue } from "@/shared/components/ui";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
 import { hasPermission, useLoggedUserSession } from "@/shared/session";
@@ -30,7 +31,17 @@ export function ClientOverview({
 
 	const generalInfo = React.useMemo<DetailFieldItem[]>(
 		() => [
-			{ term: "Documento", definition: formatClientDocument(client.document) },
+			{
+				term: "Documento",
+				definition: (
+					<CopyValue
+						value={client.document.replace(/\D/g, "")}
+						label="CPF/CNPJ"
+					>
+						{formatClientDocument(client.document)}
+					</CopyValue>
+				),
+			},
 			{ term: "Tipo", definition: client.type },
 			{
 				term: "Contratos",
@@ -60,8 +71,22 @@ export function ClientOverview({
 
 	const contactInfo = React.useMemo<DetailFieldItem[]>(
 		() => [
-			{ term: "E-mail", definition: client.email ?? "—" },
-			{ term: "Telefone", definition: formatter.phone(client.phone) },
+			{
+				term: "E-mail",
+				definition: (
+					<CopyValue value={client.email} label="e-mail">
+						{client.email ?? "—"}
+					</CopyValue>
+				),
+			},
+			{
+				term: "Telefone",
+				definition: (
+					<CopyValue value={client.phone?.replace(/\D/g, "")} label="telefone">
+						{formatter.phone(client.phone)}
+					</CopyValue>
+				),
+			},
 		],
 		[client],
 	);

@@ -9,6 +9,7 @@ import {
 import { EntityStatus } from "@/shared/components/entity-status";
 import { FormSection } from "@/shared/components/form-section";
 import { NavigationLink } from "@/shared/components/navigation-link";
+import { CopyValue } from "@/shared/components/ui";
 import { SensitiveValue } from "@/shared/components/value-visibility";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
@@ -48,7 +49,14 @@ export function EmployeeOverview({
 
 	const generalInfo = React.useMemo<DetailFieldItem[]>(
 		() => [
-			{ term: "OAB", definition: formatter.oab(employee.oabNumber) },
+			{
+				term: "OAB",
+				definition: (
+					<CopyValue value={employee.oabNumber} label="OAB">
+						{formatter.oab(employee.oabNumber)}
+					</CopyValue>
+				),
+			},
 			{ term: "Função", definition: employee.type },
 			{
 				term: "Contratos",

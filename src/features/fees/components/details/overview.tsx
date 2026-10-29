@@ -8,6 +8,7 @@ import {
 } from "@/shared/components/entity-detail";
 import { FormSection } from "@/shared/components/form-section";
 import { NavigationLink } from "@/shared/components/navigation-link";
+import { CopyValue } from "@/shared/components/ui";
 import { SensitiveValue } from "@/shared/components/value-visibility";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
@@ -26,15 +27,21 @@ export function FeeOverview({ id, section = "all" }: FeeOverviewProps) {
 		() => [
 			{
 				term: "Processo",
-				definition:
-					hasPermission(session, "org:contracts:read_all") ||
-					hasPermission(session, "org:contracts:read_assigned") ? (
-						<RelatedRecordLink kind="contract" id={fee.contractId}>
-							{fee.contractProcessNumber}
-						</RelatedRecordLink>
-					) : (
-						fee.contractProcessNumber
-					),
+				definition: (
+					<CopyValue
+						value={fee.contractProcessNumber}
+						label="número do processo"
+					>
+						{hasPermission(session, "org:contracts:read_all") ||
+						hasPermission(session, "org:contracts:read_assigned") ? (
+							<RelatedRecordLink kind="contract" id={fee.contractId}>
+								{fee.contractProcessNumber}
+							</RelatedRecordLink>
+						) : (
+							fee.contractProcessNumber
+						)}
+					</CopyValue>
+				),
 			},
 			{
 				term: "Cliente",

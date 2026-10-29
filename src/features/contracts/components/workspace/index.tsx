@@ -12,7 +12,7 @@ import {
 } from "@/shared/components/entity-workspace";
 import { FormSection } from "@/shared/components/form-section";
 import { NavigationLink } from "@/shared/components/navigation-link";
-import { Badge } from "@/shared/components/ui";
+import { Badge, CopyValue } from "@/shared/components/ui";
 import { SensitiveValue } from "@/shared/components/value-visibility";
 import { formatter } from "@/shared/lib/formatter";
 import { hasPermission } from "@/shared/session";
@@ -61,7 +61,11 @@ export function ContractWorkspace({
 	return (
 		<EntityWorkspace
 			title="Contrato"
-			identity={contract.processNumber}
+			identity={
+				<CopyValue value={contract.processNumber} label="número do processo">
+					{contract.processNumber}
+				</CopyValue>
+			}
 			subtitle={`#${id}`}
 			status={
 				<>
