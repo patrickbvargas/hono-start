@@ -1,7 +1,6 @@
 import { useUser } from "@clerk/tanstack-react-start";
 import { useTheme } from "next-themes";
-import { useState } from "react";
-import { useLogout } from "@/features/authentication";
+import { useLogout, useUserProfile } from "@/features/authentication";
 import { useSidebar } from "@/shared/components/ui";
 import { useLoggedUserSession } from "@/shared/session";
 
@@ -13,7 +12,7 @@ export function useNavUser() {
 	const email = user?.primaryEmailAddress?.emailAddress ?? session.user.email;
 	const { handleLogout, isPending } = useLogout();
 	const { theme, setTheme } = useTheme();
-	const [isUserProfileOpen, setIsUserProfileOpen] = useState(false);
+	const { handleOpenUserProfile } = useUserProfile();
 	const userInitials = fullName
 		.split(" ")
 		.filter(Boolean)
@@ -30,8 +29,7 @@ export function useNavUser() {
 		isPending,
 		theme,
 		setTheme,
-		isUserProfileOpen,
-		setIsUserProfileOpen,
+		handleOpenUserProfile,
 		userInitials,
 	};
 }

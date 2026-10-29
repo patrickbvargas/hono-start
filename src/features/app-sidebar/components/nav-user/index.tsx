@@ -6,7 +6,6 @@ import {
 	MoonIcon,
 	SunIcon,
 } from "lucide-react";
-import { UserProfileDialog } from "@/features/authentication";
 import {
 	Avatar,
 	AvatarFallback,
@@ -40,18 +39,13 @@ export const NavUser = () => {
 		isPending,
 		theme,
 		setTheme,
-		isUserProfileOpen,
-		setIsUserProfileOpen,
+		handleOpenUserProfile,
 		userInitials,
 	} = useNavUser();
 
 	return (
 		<SidebarMenu>
 			<SidebarMenuItem>
-				<UserProfileDialog
-					open={isUserProfileOpen}
-					onOpenChange={setIsUserProfileOpen}
-				/>
 				<DropdownMenu>
 					<DropdownMenuTrigger
 						render={
@@ -97,11 +91,7 @@ export const NavUser = () => {
 						</DropdownMenuGroup>
 						<DropdownMenuSeparator />
 						<DropdownMenuGroup>
-							<DropdownMenuItem
-								onClick={() => {
-									setIsUserProfileOpen(true);
-								}}
-							>
+							<DropdownMenuItem onClick={handleOpenUserProfile}>
 								<CircleUserIcon size={16} />
 								Conta
 							</DropdownMenuItem>

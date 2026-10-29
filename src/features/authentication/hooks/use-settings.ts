@@ -1,7 +1,7 @@
 import { useTheme } from "next-themes";
-import { useState } from "react";
+import { useUserProfile } from "./use-user-profile";
 export function useSettings() {
-	const [accountOpen, setAccountOpen] = useState(false);
+	const { handleOpenUserProfile } = useUserProfile();
 	const { theme, setTheme } = useTheme();
-	return { accountOpen, setAccountOpen, theme, setTheme };
+	return { handleOpenUserProfile, theme, setTheme };
 }

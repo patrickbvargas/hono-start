@@ -11,10 +11,9 @@ import {
 } from "@/shared/components/ui";
 import { hasPermission, useLoggedUserSession } from "@/shared/session";
 import { useSettings } from "../../hooks/use-settings";
-import { UserProfileDialog } from "../user-profile-dialog";
 export function Settings() {
 	const session = useLoggedUserSession();
-	const { accountOpen, setAccountOpen, theme, setTheme } = useSettings();
+	const { handleOpenUserProfile, theme, setTheme } = useSettings();
 	return (
 		<div className="grid gap-4 p-0.5 lg:grid-cols-2">
 			<Card>
@@ -25,10 +24,9 @@ export function Settings() {
 					<p className="font-medium">{session.user.fullName}</p>
 					<p className="text-sm text-muted-foreground">{session.user.email}</p>
 					<p className="text-sm">Escritório: {session.firm.name}</p>
-					<Button variant="outline" onClick={() => setAccountOpen(true)}>
+					<Button variant="outline" onClick={handleOpenUserProfile}>
 						Gerenciar minha conta
 					</Button>
-					<UserProfileDialog open={accountOpen} onOpenChange={setAccountOpen} />
 				</CardContent>
 			</Card>
 			<Card>

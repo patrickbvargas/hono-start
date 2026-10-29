@@ -16,7 +16,7 @@ describe("authentication public screen contracts", () => {
 			'export { LoginForm } from "./components/login-form";',
 		);
 		expect(content).toContain(
-			'export { UserProfileDialog } from "./components/user-profile-dialog";',
+			'export { useUserProfile } from "./hooks/use-user-profile";',
 		);
 		expect(content).toContain(
 			'export { useLogout } from "./hooks/use-logout";',
@@ -33,10 +33,8 @@ describe("authentication public screen contracts", () => {
 			read("src/features/authentication/components/login-form/index.tsx"),
 		).toContain("export function LoginForm");
 		expect(
-			read(
-				"src/features/authentication/components/user-profile-dialog/index.tsx",
-			),
-		).toContain("export function UserProfileDialog");
+			read("src/features/authentication/hooks/use-user-profile.ts"),
+		).toContain("export function useUserProfile");
 	});
 
 	it("keeps public routes declarative and feature-barrel based", () => {

@@ -4,6 +4,6 @@ export { LoginForm } from "./components/login-form";
 export { OrganizationSwitcher } from "./components/organization-switcher";
 export { AuthenticationScreen } from "./components/screen";
 export { Settings } from "./components/settings";
-export { UserProfileDialog } from "./components/user-profile-dialog";
 export { enrichEmployeeAvatars } from "./data/employee-avatars";
 export { useLogout } from "./hooks/use-logout";
+export { useUserProfile } from "./hooks/use-user-profile";

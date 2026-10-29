@@ -49,7 +49,7 @@ const remunerations = readExports("src/features/remunerations/index.ts");
 describe("feature public barrels", () => {
 	it("keeps the authentication barrel limited to top-level auth surfaces and route hooks", () => {
 		expect(authentication).toHaveProperty("AuthenticationScreen");
-		expect(authentication).toHaveProperty("UserProfileDialog");
+		expect(authentication).toHaveProperty("useUserProfile");
 		expect(authentication).toHaveProperty("LoginForm");
 		expect(authentication).not.toHaveProperty("PasswordResetRequestForm");
 		expect(authentication).not.toHaveProperty("PasswordResetCompleteForm");
