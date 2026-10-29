@@ -76,6 +76,9 @@ export function useFeeFormOptions({
 		contracts: mergeLegacyFeeOption(contracts, currentContract),
 		revenues: mergeLegacyFeeOption(revenues, currentRevenue),
 		isLoadingRevenues: !!contractId && isPending,
+		revenueInstallmentLimits: new Map(
+			revenues.map((revenue) => [revenue.value, revenue.nextInstallmentNumber]),
+		),
 	};
 }
 

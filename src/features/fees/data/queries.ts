@@ -25,8 +25,10 @@ import { FEE_ERRORS } from "../constants/errors";
 import type { FeeFilter } from "../schemas/filter";
 import {
 	type FeeDetail,
+	type FeeRevenueOption,
 	type FeeSummary,
 	feeDetailSchema,
+	feeRevenueOptionSchema,
 	feeSummarySchema,
 } from "../schemas/model";
 import type { FeeSearch } from "../schemas/search";
@@ -407,7 +409,9 @@ export async function getSelectableFeeContracts({
 export async function getSelectableFeeRevenues({
 	scope,
 	contractId,
-}: GetSelectableFeeRevenuesParams): Promise<QueryManyReturnType<Option>> {
+}: GetSelectableFeeRevenuesParams): Promise<
+	QueryManyReturnType<FeeRevenueOption>
+> {
 	const revenues = await prisma.revenue.findMany({
 		where: {
 			firmId: scope.firmId,
@@ -439,6 +443,11 @@ export async function getSelectableFeeRevenues({
 		orderBy: [{ contract: { processNumber: "asc" } }, { id: "asc" }],
 		select: {
 			id: true,
+			totalInstallments: true,
+			fees: {
+				where: { isActive: true, deletedAt: null },
+				select: { installmentNumber: true },
+			},
 			type: {
 				select: {
 					label: true,
@@ -452,12 +461,20 @@ export async function getSelectableFeeRevenues({
 		},
 	});
 
-	return revenues.map((revenue) => ({
-		id: revenue.id,
-		value: String(revenue.id),
-		label: revenue.type.label,
-		isDisabled: false,
-	}));
+	return feeRevenueOptionSchema.array().parse(
+		revenues.map((revenue) => ({
+			id: revenue.id,
+			value: String(revenue.id),
+			label: revenue.type.label,
+			isDisabled: false,
+			totalInstallments: revenue.totalInstallments,
+			nextInstallmentNumber:
+				Array.from({ length: revenue.totalInstallments }, (_, i) => i + 1).find(
+					(number) =>
+						!revenue.fees.some((fee) => fee.installmentNumber === number),
+				) ?? revenue.totalInstallments,
+		})),
+	);
 }
 
 export async function getFeeRevenueAccessResourceById(

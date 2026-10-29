@@ -8,6 +8,7 @@ import { formatter } from "@/shared/lib/formatter";
 import { hasPermission, useLoggedUserSession } from "@/shared/session";
 import type { ContractDetail } from "../../schemas/model";
 import { getPaymentSummary } from "../../utils/payment-summary";
+import { RevenueInstallments } from "./installments";
 import { RevenuePaymentStatus } from "./payment-status";
 
 interface ContractRevenuesProps {
@@ -78,7 +79,7 @@ export function ContractRevenues({
 									definition: `${revenue.installmentsPaid} de ${revenue.totalInstallments}`,
 								},
 								{
-									term: "Próximo vencimento em aberto",
+									term: "Próximo vencimento",
 									definition:
 										revenue.isFullyPaid || !revenue.nextDueDate
 											? "—"
@@ -86,6 +87,7 @@ export function ContractRevenues({
 								},
 							]}
 						/>
+						{canReadFees ? <RevenueInstallments revenue={revenue} /> : null}
 						<div className="flex flex-wrap items-center gap-3">
 							{hasPermission(session, "org:fees:create") &&
 							canReadFees &&

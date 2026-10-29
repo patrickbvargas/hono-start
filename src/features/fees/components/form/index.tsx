@@ -121,11 +121,12 @@ function FeeFormFields({
 	state,
 	title,
 }: FeeFormFieldsProps) {
-	const { contracts, revenues, isLoadingRevenues } = useFeeFormOptions({
-		contractId,
-		currentContract,
-		currentRevenue,
-	});
+	const { contracts, revenues, isLoadingRevenues, revenueInstallmentLimits } =
+		useFeeFormOptions({
+			contractId,
+			currentContract,
+			currentRevenue,
+		});
 
 	return (
 		<EntityForm state={state} title={title} footer={<form.Submit />}>
@@ -172,16 +173,21 @@ function FeeFormFields({
 							<field.DatePicker label="Data de recebimento" isRequired />
 						)}
 					</form.AppField>
-					<form.AppField name="installmentNumber">
-						{(field) => (
-							<field.Number
-								label="Nº da parcela"
-								minValue={1}
-								step={1}
-								isRequired
-							/>
+					<form.Subscribe selector={(current) => current.values.revenueId}>
+						{(revenueId) => (
+							<form.AppField name="installmentNumber">
+								{(field) => (
+									<field.Number
+										label="Nº da parcela"
+										maxValue={revenueInstallmentLimits.get(revenueId)}
+										minValue={1}
+										step={1}
+										isRequired
+									/>
+								)}
+							</form.AppField>
 						)}
-					</form.AppField>
+					</form.Subscribe>
 					<form.AppField name="amount">
 						{(field) => (
 							<field.Number

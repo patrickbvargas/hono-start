@@ -31,6 +31,7 @@ import {
 	contractSummarySchema,
 } from "../schemas/model";
 import type { ContractSearch } from "../schemas/search";
+import { getInstallmentDetails } from "../utils/installment-details";
 import { getNextContractInstallment } from "../utils/payment-plan";
 
 interface ContractAccessParams {
@@ -330,6 +331,7 @@ function mapContractDetail(
 			fees: Array<{
 				amount: { toString(): string };
 				installmentNumber?: number;
+				paymentDate?: Date;
 			}>;
 		}>;
 	},
@@ -379,6 +381,7 @@ function mapContractDetail(
 		revenues: contract.revenues.map((revenue) => ({
 			...getRevenuePaymentState(revenue),
 			...getNextContractInstallment(revenue),
+			installments: getInstallmentDetails(revenue),
 			id: revenue.id,
 			typeId: revenue.typeId,
 			type: revenue.type.label,
@@ -470,6 +473,7 @@ const contractDetailInclude = {
 				select: {
 					amount: true,
 					installmentNumber: true,
+					paymentDate: true,
 				},
 			},
 			type: { select: { label: true, value: true } },

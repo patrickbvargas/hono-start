@@ -1,6 +1,15 @@
 import * as z from "zod";
 import { entityIdSchema } from "@/shared/schemas/entity";
 
+export const revenueInstallmentSchema = z.object({
+	number: z.number().int().positive(),
+	dueDate: z.iso.date(),
+	expectedAmount: z.number(),
+	receivedAmount: z.number(),
+	remainingAmount: z.number(),
+	paymentDate: z.iso.datetime().nullable(),
+});
+
 export const contractAssignmentSchema = entityIdSchema.safeExtend({
 	employeeId: z.number(),
 	employeeName: z.string(),
@@ -22,6 +31,7 @@ export const contractRevenueSchema = entityIdSchema.safeExtend({
 	totalInstallments: z.number(),
 	paidValue: z.number(),
 	installmentsPaid: z.number().int().nonnegative(),
+	installments: z.array(revenueInstallmentSchema).default([]),
 	nextInstallmentNumber: z.number().int().positive().nullable().default(null),
 	nextDueDate: z.iso.date().nullable().default(null),
 	remainingValue: z.number(),

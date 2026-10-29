@@ -12,6 +12,8 @@ export const FEE_ERRORS = {
 	FEE_PARENT_MISMATCH:
 		"A receita selecionada não pertence ao contrato informado",
 	FEE_AMOUNT_TOO_LOW: "Valor deve ser maior que zero",
+	FEE_INSTALLMENT_TOO_HIGH:
+		"Número da parcela não pode exceder o total negociado.",
 	FEE_INSTALLMENT_TOO_LOW: "Parcela deve ser maior que zero",
 	FEE_DUPLICATE_INSTALLMENT: "Já existe um recebimento ativo para esta parcela",
 	FEE_CONTRACT_EXHAUSTED:

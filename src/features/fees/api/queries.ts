@@ -23,7 +23,7 @@ import {
 	getSelectableFeeRevenues,
 } from "../data/queries";
 import { feeIdInputSchema } from "../schemas/form";
-import type { FeeDetail, FeeSummary } from "../schemas/model";
+import type { FeeDetail, FeeRevenueOption, FeeSummary } from "../schemas/model";
 import { type FeeSearch, feeSearchSchema } from "../schemas/search";
 
 export const feeKeys = {
@@ -118,7 +118,7 @@ const getSelectableFeeRevenuesFn = createServerFn({ method: "GET" })
 			contractId: z.string().catch("").default(""),
 		}),
 	)
-	.handler(async ({ data }): Promise<QueryManyReturnType<Option>> => {
+	.handler(async ({ data }): Promise<QueryManyReturnType<FeeRevenueOption>> => {
 		try {
 			const session = await getRequiredServerLoggedUserSession();
 			assertCan(session, ["org:fees:read_all", "org:fees:read_assigned"]);

@@ -25,3 +25,12 @@ export const feeSummarySchema = feeDetailSchema;
 
 export type FeeDetail = z.infer<typeof feeDetailSchema>;
 export type FeeSummary = z.infer<typeof feeSummarySchema>;
+export const feeRevenueOptionSchema = z.object({
+	id: z.number(),
+	value: z.string(),
+	label: z.string(),
+	isDisabled: z.boolean(),
+	totalInstallments: z.number().int().positive(),
+	nextInstallmentNumber: z.number().int().positive(),
+});
+export type FeeRevenueOption = z.infer<typeof feeRevenueOptionSchema>;

@@ -102,6 +102,7 @@ const contractDetail = {
 			paymentStartDate: timestamp,
 			totalInstallments: 10,
 			paidValue: 1000,
+			installments: [],
 			installmentsPaid: 1,
 			nextInstallmentNumber: 2,
 			nextDueDate: "2026-02-01",

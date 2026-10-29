@@ -13,6 +13,8 @@ import {
 import type { MutationReturnType } from "@/shared/types/api";
 import { FEE_ERRORS } from "../constants/errors";
 import {
+	assertFeeInstallmentNumber,
+	assertFeeInstallmentSequence,
 	assertFeeParentConsistency,
 	assertUniqueActiveInstallment,
 } from "../rules/write";
@@ -329,6 +331,15 @@ export async function createFee({
 		throw new Error(FEE_ERRORS.FEE_CONTRACT_EXHAUSTED);
 	}
 
+	assertFeeInstallmentNumber(
+		input.installmentNumber,
+		revenue.totalInstallments,
+	);
+	assertFeeInstallmentSequence({
+		fees: revenue.fees,
+		installmentNumber: input.installmentNumber,
+	});
+
 	await prisma.$transaction(async (tx) => {
 		const fee = await tx.fee.create({
 			data: {
@@ -424,6 +435,16 @@ export async function updateFee({
 			isAdmin: true,
 		},
 		id: input.id,
+	});
+
+	assertFeeInstallmentNumber(
+		input.installmentNumber,
+		nextRevenue.totalInstallments,
+	);
+	assertFeeInstallmentSequence({
+		fees: nextRevenue.fees,
+		installmentNumber: input.installmentNumber,
+		excludeFeeId: input.id,
 	});
 
 	await prisma.$transaction(async (tx) => {

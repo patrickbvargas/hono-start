@@ -25,7 +25,16 @@ export function assertFeeAmountPositive(amount: number) {
 	}
 }
 
-export function assertFeeInstallmentNumber(installmentNumber: number) {
+export function assertFeeInstallmentNumber(
+	installmentNumber: number,
+	totalInstallments?: number,
+) {
+	if (
+		totalInstallments !== undefined &&
+		installmentNumber > totalInstallments
+	) {
+		throw new Error(FEE_ERRORS.FEE_INSTALLMENT_TOO_HIGH);
+	}
 	if (installmentNumber < 1) {
 		throw new Error(FEE_ERRORS.FEE_INSTALLMENT_TOO_LOW);
 	}
@@ -65,4 +74,24 @@ export function assertFeeParentConsistency({
 export function assertFeeWriteRules(input: FeeWriteInput) {
 	assertFeeAmountPositive(input.amount);
 	assertFeeInstallmentNumber(input.installmentNumber);
+}
+
+export function assertFeeInstallmentSequence({
+	fees,
+	installmentNumber,
+	excludeFeeId,
+}: AssertUniqueActiveInstallmentParams) {
+	const recorded = new Set(
+		fees
+			.filter(
+				(fee) =>
+					fee.id !== excludeFeeId && fee.isActive && fee.deletedAt === null,
+			)
+			.map((fee) => fee.installmentNumber),
+	);
+	for (let number = 1; number < installmentNumber; number += 1) {
+		if (!recorded.has(number)) {
+			throw new Error("Registre as parcelas anteriores antes desta parcela.");
+		}
+	}
 }

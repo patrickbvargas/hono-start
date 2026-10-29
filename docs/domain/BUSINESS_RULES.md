@@ -211,3 +211,5 @@ Each attachment owner record (client, employee, contract, expense, fee or remune
 ## Company-wide clients and employees
 
 See [Multitenancy](MULTITENANCY.md) for the authoritative entity-scope matrix, global lifecycle, evidence visibility and current-Firm enforcement.
+
+- Receipt installment numbers must not exceed the revenue total. Creating or changing an installment number requires every preceding installment to have an active, non-deleted receipt; users cannot skip installments.

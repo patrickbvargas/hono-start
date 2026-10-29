@@ -81,3 +81,10 @@ describe("fee side-effect helpers", () => {
 		).toThrow(FEE_ERRORS.FEE_PARENT_MISMATCH);
 	});
 });
+
+it("rejects installment above negotiated total", () => {
+	expect(() => assertFeeInstallmentNumber(7, 6)).toThrow(
+		FEE_ERRORS.FEE_INSTALLMENT_TOO_HIGH,
+	);
+	expect(() => assertFeeInstallmentNumber(6, 6)).not.toThrow();
+});
