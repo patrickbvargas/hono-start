@@ -27,3 +27,7 @@ No unrelated stack redesign, no production migration or reset, no automatic live
 ## Impact
 
 Primary owners: the feature slices and query boundaries described in design.md. Admin/Member remain subject to explicit grants, current Firm scope and the absolute Member remuneration confidentiality invariant. Global Person/catalog changes do not widen operational access.
+
+## Contract dimension reporting
+
+Add origin-derived area, revenue-type and assignment-type filtering/grouping alongside FinancialAnalytic. Keep generic titles concise; prevent assignment joins multiplying values, label overlapping assignment-type groups, retain distinct grand totals and enforce confidentiality on options/exports/drilldown.

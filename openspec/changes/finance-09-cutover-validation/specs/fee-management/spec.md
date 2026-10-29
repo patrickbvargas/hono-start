@@ -43,4 +43,3 @@
 ### Requirement: Reset fee list filters
 **Reason**: Legacy entity semantics are replaced at coordinated financial cutover; confirmed settlements use immutable reversals and obligations are titles.
 **Migration**: Implement financial-receipts and the approved financial contract first. Preserve unrelated list/filter/form accessibility and scoped evidence conventions in the replacement screens; do not archive this removal before phase 09 release gates pass.
-

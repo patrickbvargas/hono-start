@@ -5,6 +5,7 @@ Replace implicit revenue schedules and immediate-expense cash with explicit acer
 ## What Changes
 
 - **BREAKING target behavior:** introduce operational financial generation and editable schedule under the approved financial contract. Preserve baseline code until the coordinated cutover.
+- Require preview titles (including entry) to equal the agreed total exactly before generation; a reason cannot bypass a mismatch. Preserve authorized post-generation adjustments/extras. No month/year competence field in this version.
 - Deliver the narrowly scoped steps described in design/tasks, with feature-owned contracts, authority checks and focused tests.
 - Follow [financial domain rules](../../../docs/domain/FINANCIAL_SYSTEM.md), [authorization](../../../docs/domain/FINANCIAL_AUTHORIZATION.md) and [ordered roadmap](../../../docs/implementation/FINANCIAL_ROADMAP.md).
 

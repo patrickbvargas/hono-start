@@ -15,7 +15,7 @@ Use the fixed TanStack Start/Router/Query/Form/Table, Zod, Prisma/PostgreSQL, sh
 Implementation boundaries:
 
 1. Define Person/PersonType and EmployeeProfile schemas, cumulative roles and document uniqueness using existing normalization rules; map every current client and employee field.
-2. Implement Person/Profile data operations and client/collaborator projections, retaining current UI permissions until phase 02; never expose compensation settings through customer projections.
+2. Implement Person/Profile operations and separate Clientes, Fornecedores and Colaboradores screens/sidebar entries over the same Person, not one generic Pessoas screen. Collaborator management owns professional fields/percentages/access; customer projections exclude privileged profile, role and access data. Keep target surfaces gated until phase02 permissions are enforced.
 3. Rewire Contract customer, assignment/profile, Expense counterparty, attachments, actor references and fixtures through an explicit ID map; never reinterpret old IDs.
 4. Coordinate Clerk employeeId-to-personId binding with verified membership and profile activation; deny both missing and inactive profiles for all roles.
 5. Add field-map and owner-scope tests, same-person multiple-role fixtures, normalized duplicate rejection and organization-switch regression coverage.
@@ -40,3 +40,7 @@ Exercise every scenario in this change and its dependent financial invariants. R
 ## Open Questions
 
 Only technical layout choices consistent with the approved rules remain. Verify Clerk plan/catalog limits before configuration in phase 02. Stop and record any newly discovered business ambiguity instead of inventing a rule; do not reopen already recorded user decisions.
+
+## Seed continuity
+
+Seed compatibility is a completion gate in every phase. Follow the incremental seeds and final reset contract in docs/implementation/FINANCIAL_ROADMAP.md: update fixture generators/assertions with schema/workflow changes, preserve valid dev identity bindings and real monetary/origin invariants, and record reproducible validation. Final clean migration/generate/seed and app-use checks belong to phase09; this design does not run reset or change external providers.

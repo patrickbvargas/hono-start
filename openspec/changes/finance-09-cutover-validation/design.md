@@ -19,7 +19,7 @@ Implementation boundaries:
 3. Replace old fee/remuneration/expense semantics in canonical OpenSpec specs and domain docs, including schedule uniqueness and automatic receipt/entry cash assumptions.
 4. Verify Member/Admin provider setup, Person bindings, exact permissions and all negative access paths; record provider-limit decision without guessing.
 5. Run full pnpm verify plus isolated real PostgreSQL concurrency/reversal/generation checks and private attachment transport checks.
-6. Perform documented walkthroughs for contract and expense handoff, direct titles, partial/full/batch settlement, remuneration, reversals and monthly reconciliation.
+6. Perform documented walkthroughs for contract and expense handoff, direct titles, partial/full settlement, same-debtor receipt grouping, ten payments across lawyers totaling5000 in one atomic action without lots or beneficiary groups, per-Payment proof/reversal and Member confidentiality, remuneration and monthly reconciliation.
 7. Record evidence and remaining blockers; enable target navigation/writes only after preceding gates pass; preserve baseline commit and schema/config rollback recipe.
 
 Read FINANCIAL_SYSTEM.md for monetary equations, reversal semantics and dates; do not redefine them locally. Read FINANCIAL_AUTHORIZATION.md for exact keys and scope. Read FINANCIAL_UML.md for structural intent; concrete FK names may be refined with an explicit implementation ADR and tests, not business-rule drift.
@@ -42,3 +42,15 @@ Exercise every scenario in this change and its dependent financial invariants. R
 ## Open Questions
 
 Only technical layout choices consistent with the approved rules remain. Verify Clerk plan/catalog limits before configuration in phase 02. Stop and record any newly discovered business ambiguity instead of inventing a rule; do not reopen already recorded user decisions.
+
+## Registration UI acceptance
+
+Walk through separate Clientes/Fornecedores/Colaboradores menus with one multi-role Person; verify no identity duplication, authorized collaborator percentage management, Member direct-route/API denial and absence of privileged fields in customer responses/options/exports, while permitted contract-team and own-remuneration views still work.
+
+## Contract dimension walkthrough
+
+Verify title/report area, revenue-type and assignment-type filters/grouping, exact remuneration participation, “Sem vínculo com contrato”, non-additive Receivable assignment groups with distinct grand totals and authorized exports/options/drilldowns; exercise Member and cross-Firm negative cases.
+
+## Seed continuity
+
+Seed compatibility is a completion gate in every phase. Follow the incremental seeds and final reset contract in docs/implementation/FINANCIAL_ROADMAP.md: update fixture generators/assertions with schema/workflow changes, preserve valid dev identity bindings and real monetary/origin invariants, and record reproducible validation. Final clean migration/generate/seed and app-use checks belong to phase09; this design does not run reset or change external providers.

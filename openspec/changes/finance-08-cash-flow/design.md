@@ -16,9 +16,9 @@ Implementation boundaries:
 
 1. Replace legacy scheduled revenue and expense-date cash queries with authorized title/settlement event projections.
 2. Implement monthly remaining-principal forecast, overdue bucket and effective-cash realized streams with signed dated reversal events.
-3. Expose negotiated amount, title financial total, difference, principal abated, cash, discounts/charges and balance with unambiguous labels.
+3. Expose negotiated amount, title financial total, post-generation difference, principal abated, cash, discounts/charges and balance with unambiguous labels. Show separate authorized Person receivable/payable balances per Firm, without automatic offset. Do not introduce competence fields/reports; due dates never create automatic settlements.
 4. Update origin financial status: all active revenue generations plus valid title balances; do not mutate operational status on settlement/reversal.
-5. Update dashboard, pending work, exports, related drawers, batch proof and own remuneration views under pre-aggregation scopes.
+5. Update dashboard, pending work, exports, related drawers, receipt-batch proof, individual Payment proof and own remuneration views under pre-aggregation scopes.
 6. Test partial receipts, full discounts, month-boundary reversals, cancelled origins, ungenerated revenues, out-of-window arrears and Member confidentiality.
 
 Read FINANCIAL_SYSTEM.md for monetary equations, reversal semantics and dates; do not redefine them locally. Read FINANCIAL_AUTHORIZATION.md for exact keys and scope. Read FINANCIAL_UML.md for structural intent; concrete FK names may be refined with an explicit implementation ADR and tests, not business-rule drift.
@@ -41,3 +41,13 @@ Exercise every scenario in this change and its dependent financial invariants. R
 ## Open Questions
 
 Only technical layout choices consistent with the approved rules remain. Verify Clerk plan/catalog limits before configuration in phase 02. Stop and record any newly discovered business ambiguity instead of inventing a rule; do not reopen already recorded user decisions.
+
+## Contract analysis dimensions
+
+Implement feature-owned Zod/query/URL contracts and shared-UI filters/grouping for LegalArea, RevenueType and AssignmentType alongside FinancialAnalytic in title lists and reports. Resolve Receivable via Revenue/Contract and remuneration Payable via its exact calculation/assignment and source receipt. Include “Sem vínculo com contrato” for Expense/direct origins. Use authorized existence predicates/deduplicated title/event identities; preserve stable server pagination and consistent counts/exports/options. AssignmentType grouping for Receivables is explicitly overlapping/non-additive, with distinct grand total; no rateio or extra contract-specific title columns.
+
+Test multiple same-type assignments, multi-type filters, exact remuneration participation, unrelated origins, combined OR/AND filters, partial/reversed cash, no duplicate grand totals and negative Member/cross-Firm options/export/drilldown cases. Preserve immutable monetary calculation snapshots; dimensions resolve existing origin lookups.
+
+## Seed continuity
+
+Seed compatibility is a completion gate in every phase. Follow the incremental seeds and final reset contract in docs/implementation/FINANCIAL_ROADMAP.md: update fixture generators/assertions with schema/workflow changes, preserve valid dev identity bindings and real monetary/origin invariants, and record reproducible validation. Final clean migration/generate/seed and app-use checks belong to phase09; this design does not run reset or change external providers.

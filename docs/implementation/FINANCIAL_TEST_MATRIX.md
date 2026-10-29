@@ -12,19 +12,26 @@ Planning contract, not a passing test report. Implementers must record actual te
 | Generation | Double click/network retry | Single financial generation/title set | 03–04 |
 | Origin integrity | Missing/multiple/wrong-Firm origin | Database/service constraints reject | 03 |
 | Preview | 100 divided by 3 | 33.33/33.33/33.34; no titles before confirm | 04 |
-| Reference | Reference10000/title10500 | Reason required, reference preserved, difference visible | 04 |
+| Reference | Reference10000/preview9500 or10500, with reason | Generation blocked atomically; justification cannot bypass equality | 04 |
+| Entry total | Agreed100, entry20, installments40+40 | All preview titles included; exact equality allows confirmation | 04 |
+| Stale agreement | Agreed amount changes after preview | Transaction revalidates current amount and rejects mismatch | 04 |
+| Later adjustment | Authorized extra/edit after generation with reason | Permitted; visible difference, reference unchanged, audit retained | 03–04 |
+| No competence | Due November, settled October | October actual cash; due-date forecast; no competence field/inference | 04,08 |
+| Person balances | Same Person has receivable and payable balances | Separate authorized Firm totals, no offset or remuneration disclosure | 08 |
 | Calendar | Jan31 monthly sequence | Feb last day then Mar31; no weekend shifts | 04 |
 | Entry | Generate entry without settling | No cash/remuneration until actual receipt | 04–05 |
 | Amount equation | Title100, P50 D5 J2 M0 | Cash47, outstanding50, unchanged due date | 05–06 |
 | Full discount | P100 D100 J0 M0 | Settled title, zero realized cash, no remuneration | 05–08 |
 | Above balance | Principal allocation exceeds locked balance | Rejected, no partial events | 05–06 |
 | Sequence | Future title chosen before overdue title | Allowed within grants; old sequence/fee-slot rule absent | 05 |
-| Group | Different Person/Firm/method/direction | Cannot form one batch | 05–06 |
+| Receipt group | Different Person/Firm/method/direction | Cannot form one ReceiptBatch | 05 |
+| Multiple payments | Ten Payables across lawyers, total5000 | One atomic action, ten Payments, no lot or beneficiary grouping | 06 |
+| Payment boundaries | Cross-Firm, denied or stale line; duplicate Payable IDs | Reject entire selection; no partial cash/audit effects | 06 |
 | Atomicity | Final line denies/fails commission generation | Entire group rolls back, including audit and downstream Payables | 05–07 |
 | Concurrency | Two transactions settle same balance | Lock/revalidation allows only valid total principal, no over-settlement | 05–06 |
-| Retry | Same settlement token submitted twice | One group and no duplicate cash/calculations | 05–07 |
+| Retry | Same settlement token submitted twice | Original result only; no duplicate receipts/payments/calculations; no payment lot introduced | 05–07 |
 | Dates | Future effective date | Rejected using consistent Sao Paulo business date | 05–06 |
-| Evidence | Add proof after partial group reversal | Shared owner and authorization remain intact | 05–06 |
+| Evidence | Receipt group partly reversed; independent Payment proof/reversal | Receipt shared owner preserved; Payment evidence remains individual and cannot expose other beneficiaries | 05–06 |
 | Remuneration | Positive contract receipt with charges | Existing eligible participation formula uses actual cash base | 07 |
 | Non-remunerating | Direct receipt, disabled toggle, zero cash | No generated obligations | 07 |
 | Cutoff | Oct25/Oct26 receipt date; inserted later | Nov5/Dec5 at defaults, based on effective date | 07 |
@@ -63,3 +70,23 @@ Planning contract, not a passing test report. Implementers must record actual te
 - Walkthrough results/screenshots where relevant:
 - Remaining blockers and target enablement status:
 - Baseline rollback code/schema/config procedure verified:
+
+## Contextual registration acceptance
+
+- Admin with explicit grants sees separate Clientes, Fornecedores and Colaboradores; the same multi-role Person keeps one identity/document across screens.
+- Authorized collaborator management can edit professional percentages; existing RemunerationCalculation snapshots remain unchanged.
+- Member cannot access supplier/collaborator menus, direct routes, APIs, options, counts or exports.
+- A readable customer who is also a collaborator exposes no EmployeeProfile, percentages, other role flags or access settings. Assigned-contract customer scope, permitted team projection and own remuneration remain intact.
+- Owning phases: 01 (projections/UI), 02 (authorization) and 09 (end-to-end validation).
+
+## Contract dimension acceptance — phase08
+
+- Receivable100 with two same-type assignments and another type: one filtered row, count1, grand total100; once per distinct type group, visibly overlapping/non-additive, no implicit rateio.
+- Remuneration Payable uses its exact source assignment type and receipt's revenue type/contract area, not every contract participant.
+- Expense/direct titles appear under “Sem vínculo com contrato”; combining dimension filters uses OR within/AND across dimensions.
+- Filtered outstanding principal, actual cash and dated reversals preserve existing measure/date semantics without fan-out.
+- Query options, pagination counts, exports and drilldowns apply Firm/assigned-contract/beneficiary authorization before aggregation and never expose other collaborators' remuneration or professional settings to Member.
+
+## Reset and seed readiness
+
+Each phase verifies updated fixtures against its schema/contracts. Final phase runs `pnpm run db:reset` twice on the verified disposable dev database with the configured Clerk/Storage prerequisites, then verifies seeded counts, FK/origin integrity, calculated balances, immutable calculation evidence and no duplicate financial events. Exercise real Admin/Member login/bindings after both resets, menus, multi-role projections, pending/overdue/partial/settled titles, multi-beneficiary payments, reversals, contract dimensions and monthly forecasts/actual cash. Missing external prerequisite must produce actionable setup feedback; no silent ready claim, manual SQL repair or obsolete hardcoded provider IDs. Final full pnpm verify is required; planning validation is not evidence of successful reset.

@@ -14,11 +14,11 @@ Use the fixed TanStack Start/Router/Query/Form/Table, Zod, Prisma/PostgreSQL, sh
 
 Implementation boundaries:
 
-1. Create PaymentBatch, Payment and unique dated reversal models parallel to receipt semantics, while preserving separate directional tables and policy boundaries.
-2. Build payable selection, grouping, adjustment, optional proof and reversal flows using shared UI and feature-owned orchestration.
+1. Create Payment and unique dated reversal models; store effective date/actual method and proof ownership on each Payment. Do not create PaymentBatch, payment lots or beneficiary subgroups; retain technical request idempotency/audit correlation.
+2. Build multi-selection of authorized Payables across beneficiaries/origins in one Firm, with full remaining principal prefilled, partial amounts/adjustments per line and one common effective date/method. Confirm all lines atomically without a same-person check, using shared UI and feature-owned orchestration; support per-Payment proof and reversal.
 3. Reuse approved formulas and transactional guarantees through proven small helpers only; no new generic engine imposed on all features.
 4. Permit expense/remuneration/direct payments only with action and resource grants; Member read_own never implies ability to pay or view other beneficiaries.
-5. Test discounts/charges on remuneration, zero-cash payments, blocked counterparty edits, partial group reversals and concurrent overpayments.
+5. Test ten Payables across lawyers totaling5000, partial amounts, discounts/charges, zero cash, cross-Firm/denied/stale lines rolling back everything, duplicate title IDs/retries, per-Payment reversal/proof confidentiality and concurrent overpayments.
 
 Read FINANCIAL_SYSTEM.md for monetary equations, reversal semantics and dates; do not redefine them locally. Read FINANCIAL_AUTHORIZATION.md for exact keys and scope. Read FINANCIAL_UML.md for structural intent; concrete FK names may be refined with an explicit implementation ADR and tests, not business-rule drift.
 
@@ -40,3 +40,7 @@ Exercise every scenario in this change and its dependent financial invariants. R
 ## Open Questions
 
 Only technical layout choices consistent with the approved rules remain. Verify Clerk plan/catalog limits before configuration in phase 02. Stop and record any newly discovered business ambiguity instead of inventing a rule; do not reopen already recorded user decisions.
+
+## Seed continuity
+
+Seed compatibility is a completion gate in every phase. Follow the incremental seeds and final reset contract in docs/implementation/FINANCIAL_ROADMAP.md: update fixture generators/assertions with schema/workflow changes, preserve valid dev identity bindings and real monetary/origin invariants, and record reproducible validation. Final clean migration/generate/seed and app-use checks belong to phase09; this design does not run reset or change external providers.

@@ -5,6 +5,7 @@ Settle obligations from expenses, direct entries and remuneration through one co
 ## What Changes
 
 - **BREAKING target behavior:** introduce payable settlement and grouped cash outflow under the approved financial contract. Preserve baseline code until the coordinated cutover.
+- Allow one atomic payment action over selected Payables from multiple beneficiaries; create independent Payments without PaymentBatch, payment lots or beneficiary grouping. Keep one Firm/date/method and validate each title.
 - Deliver the narrowly scoped steps described in design/tasks, with feature-owned contracts, authority checks and focused tests.
 - Follow [financial domain rules](../../../docs/domain/FINANCIAL_SYSTEM.md), [authorization](../../../docs/domain/FINANCIAL_AUTHORIZATION.md) and [ordered roadmap](../../../docs/implementation/FINANCIAL_ROADMAP.md).
 

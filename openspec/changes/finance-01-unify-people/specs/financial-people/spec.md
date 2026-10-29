@@ -24,3 +24,14 @@ Contract, Expense and shared Person evidence SHALL preserve owner authorization 
 #### Scenario: Merged identity
 - **WHEN** client and collaborator views refer to the same Person
 - **THEN** authorized evidence uses global owner policy without exposing other-Firm financial data
+
+### Requirement: Separate contextual registration screens
+The frontend SHALL expose separate Clientes, Fornecedores and Colaboradores screens/sidebar items backed by the same Person identity. Collaborator-specific professional fields and percentages SHALL belong to authorized EmployeeProfile management, without duplicating people.
+
+#### Scenario: Multiple roles
+- **WHEN** an authorized administrator manages a Person who is both customer and collaborator
+- **THEN** both contextual screens reference the same identity/document and only the collaborator management projection exposes professional percentages
+
+#### Scenario: Customer projection
+- **WHEN** a Member reads a customer from an assigned contract who is also a collaborator
+- **THEN** the response excludes EmployeeProfile, compensation percentages, other role flags and access binding settings

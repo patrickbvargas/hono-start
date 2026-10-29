@@ -28,3 +28,7 @@ No unrelated stack redesign, no production migration or reset, no automatic live
 ## Impact
 
 Primary owners: the feature slices and query boundaries described in design.md. Admin/Member remain subject to explicit grants, current Firm scope and the absolute Member remuneration confidentiality invariant. Global Person/catalog changes do not widen operational access.
+
+## Ready-to-use reset acceptance
+
+Deliver a reproducible `pnpm run db:reset` that applies the migration chain, generates the client and seeds a usable app database. Require incremental seed updates in phases01–09, deterministic configured Clerk identity/organization bindings, documented external prerequisites, current scenario fixtures and two real clean-reset/login/use cycles without manual SQL repair. Preserve the existing UI style; no visual redesign is part of cutover.

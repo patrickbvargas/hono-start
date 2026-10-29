@@ -27,3 +27,7 @@ No unrelated stack redesign, no production migration or reset, no automatic live
 ## Impact
 
 Primary owners: the feature slices and query boundaries described in design.md. Admin/Member remain subject to explicit grants, current Firm scope and the absolute Member remuneration confidentiality invariant. Global Person/catalog changes do not widen operational access.
+
+## Registration UI clarification
+
+Preserve separate Clientes, Fornecedores and Colaboradores screens/sidebar entries over one shared Person. Member cannot access supplier/collaborator management; API projections must protect professional fields, percentages and access bindings even when that Person is a readable customer.

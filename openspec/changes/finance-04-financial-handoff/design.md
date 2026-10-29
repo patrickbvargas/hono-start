@@ -16,10 +16,10 @@ Implementation boundaries:
 
 1. Preserve Contract/Expense notes and attachments; add separately stored negotiated amount and generated-title financial projections.
 2. Build TanStack Form acerto preview with inherited amount, optional entry/date, installment count, explicit first due date, method and analytic defaults.
-3. Implement decimal allocation, final-cent remainder, original-day monthly scheduling, row edits/add/remove and reasoned reference difference.
+3. Implement decimal allocation, final-cent remainder, original-day monthly scheduling, row edits/add/remove and exact cent-level equality between agreed total and preview sum (including entry), enforced on client and transactionally on server; justification cannot bypass a mismatch.
 4. Confirm generation once per origin atomically with idempotency token/unique boundary; repeat requests return prior result rather than duplicate obligations.
 5. Expose generation and post-generation adjustments under distinct action grants; keep origin cancellation/status separate from title cancellation.
-6. Test Jan 31 boundaries, entry-only preview, divergent reference, duplicate submissions, access denial and shared-contract evidence.
+6. Test Jan 31 boundaries, entry-only preview, rejection of both shortfall and excess (even with a reason), exact equality including entry, stale agreed amount at confirmation, permitted post-generation adjustments, duplicate submissions, access denial and shared-contract evidence.
 
 Read FINANCIAL_SYSTEM.md for monetary equations, reversal semantics and dates; do not redefine them locally. Read FINANCIAL_AUTHORIZATION.md for exact keys and scope. Read FINANCIAL_UML.md for structural intent; concrete FK names may be refined with an explicit implementation ADR and tests, not business-rule drift.
 
@@ -41,3 +41,7 @@ Exercise every scenario in this change and its dependent financial invariants. R
 ## Open Questions
 
 Only technical layout choices consistent with the approved rules remain. Verify Clerk plan/catalog limits before configuration in phase 02. Stop and record any newly discovered business ambiguity instead of inventing a rule; do not reopen already recorded user decisions.
+
+## Seed continuity
+
+Seed compatibility is a completion gate in every phase. Follow the incremental seeds and final reset contract in docs/implementation/FINANCIAL_ROADMAP.md: update fixture generators/assertions with schema/workflow changes, preserve valid dev identity bindings and real monetary/origin invariants, and record reproducible validation. Final clean migration/generate/seed and app-use checks belong to phase09; this design does not run reset or change external providers.
