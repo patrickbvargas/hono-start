@@ -15,6 +15,7 @@ import type { DashboardRecordTarget } from "../../schemas/drilldown";
 import { dashboardDrilldownResultSchema } from "../../schemas/drilldown";
 import type { DashboardSearch } from "../../schemas/search";
 import { getDashboardDrilldownColumns } from "./columns";
+import { DashboardDrilldownOverview } from "./overview";
 
 const DashboardRecordSummary = lazy(() =>
 	import("./summary").then((module) => ({
@@ -89,6 +90,21 @@ export function DashboardDrilldownModal({
 			renderSummary={(page) => (
 				<DrilldownSummary amount={page.amount} target={target} />
 			)}
+			renderOverview={(page) => (
+				<DashboardDrilldownOverview
+					rows={page.data}
+					selection={target.selection}
+				/>
+			)}
+			overviewSkeletonBlocks={
+				target.selection.kind === "expense" ||
+				(target.selection.kind === "metric" &&
+					["expense", "result"].includes(target.selection.value)) ||
+				(target.selection.kind === "monthly" &&
+					["expense", "result", "output"].includes(target.selection.series))
+					? 1
+					: 2
+			}
 		>
 			{overlay.details.render((record, summaryState) => (
 				<Suspense fallback={null}>

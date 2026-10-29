@@ -61,9 +61,9 @@ vi.mock("@/features/drilldown/hooks/use-data", () => ({
 		query: {
 			data: {
 				data: mocks.rows,
-				total: 4,
-				amount: 400,
-				entries: 400,
+				total: mocks.rows.length,
+				amount: mocks.rows.reduce((sum, row) => sum + row.amount, 0),
+				entries: mocks.rows.reduce((sum, row) => sum + row.amount, 0),
 				deductions: 0,
 			},
 			isFetching: false,
@@ -97,10 +97,11 @@ afterEach(() => {
 	cleanup();
 	mocks.openPage.mockClear();
 	mocks.allowed = true;
+	localStorage.clear();
 });
 
-function mount() {
-	return render(
+function mount(showData = true) {
+	const view = render(
 		<DashboardDrilldownModal
 			target={{
 				selection: { kind: "metric", value: "revenue" },
@@ -113,7 +114,26 @@ function mount() {
 			returnFocus={null}
 		/>,
 	);
+	if (showData) {
+		fireEvent.click(screen.getByRole("tab", { name: "Dados" }));
+	}
+	return view;
 }
+
+it("opens the overview first and remembers the selected tab on reopening", () => {
+	const view = mount(false);
+	expect(
+		screen.getByRole("tab", { name: "Resumo" }).getAttribute("aria-selected"),
+	).toBe("true");
+	expect(screen.getByText(/Total:/).textContent).toContain("400,00");
+	fireEvent.click(screen.getByRole("tab", { name: "Dados" }));
+	expect(screen.getByRole("tabpanel", { name: "Dados" })).toBeTruthy();
+	view.unmount();
+	mount(false);
+	expect(
+		screen.getByRole("tab", { name: "Dados" }).getAttribute("aria-selected"),
+	).toBe("true");
+});
 
 it.each(mocks.rows)(
 	"direct menu access uses persisted target for $id",
@@ -166,7 +186,7 @@ it("retains local pagination when a menu summary is opened and closed", async ()
 	const originalCount = mocks.rows.length;
 	try {
 		mocks.rows.push(
-			...Array.from({ length: 9 }, (_, index) => ({
+			...Array.from({ length: 24 }, (_, index) => ({
 				...mocks.rows[0],
 				id: `extra:${index}`,
 				record: { kind: "fee", id: 200 + index },
@@ -178,14 +198,18 @@ it("retains local pagination when a menu summary is opened and closed", async ()
 		fireEvent.click(
 			screen.getByRole("button", { name: "Ir para a próxima página" }),
 		);
-		const reference = screen.getByText("Extra 6");
+		const reference = screen.getByText("Extra 21");
+		fireEvent.click(screen.getByRole("tab", { name: "Resumo" }));
+		expect(screen.getByText(/Total:/).textContent).toContain("2.800,00");
+		fireEvent.click(screen.getByRole("tab", { name: "Dados" }));
+		expect(screen.getByText("Extra 21")).toBe(reference);
 		fireEvent.contextMenu(reference, { button: 2 });
 		fireEvent.click(
 			await screen.findByRole("menuitem", { name: "Ver resumo" }),
 		);
-		expect(await screen.findByLabelText("Resumo fee 206")).toBeTruthy();
+		expect(await screen.findByLabelText("Resumo fee 221")).toBeTruthy();
 		fireEvent.click(screen.getByRole("button", { name: "Voltar" }));
-		expect(screen.getByText("Extra 6")).toBeTruthy();
+		expect(screen.getByText("Extra 21")).toBeTruthy();
 		expect(screen.queryByText("Recebimento teste")).toBeNull();
 	} finally {
 		mocks.rows.splice(originalCount);

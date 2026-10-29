@@ -227,10 +227,7 @@ describe("standalone drilldown", () => {
 		const rendered = render(view("old"));
 		const loading = screen.getByRole("status", { name: "Carregando detalhes" });
 		expect(loading.querySelectorAll('[data-slot="skeleton"]')).toHaveLength(1);
-		expect(
-			loading.querySelector<HTMLElement>('[data-slot="skeleton"]')?.style
-				.height,
-		).toBe("545px");
+		expect(loading.classList.contains("border")).toBe(false);
 		rendered.rerender(view("new"));
 		expect(await screen.findByText("NOVO")).toBeTruthy();
 		await act(async () =>

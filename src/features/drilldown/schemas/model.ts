@@ -34,6 +34,8 @@ export interface DrilldownProps<
 	columns: DataTableProps<T>["columns"];
 	getRowId: (row: T) => string;
 	renderSummary?: (result: TResult) => ReactNode;
+	renderOverview?: (result: TResult) => ReactNode;
+	overviewSkeletonBlocks?: 1 | 2;
 	pageSize?: number;
 	onRowAction?: (row: T) => void;
 	renderRowContextMenu?: (row: T) => ReactNode;

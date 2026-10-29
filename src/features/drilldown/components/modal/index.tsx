@@ -11,6 +11,10 @@ import {
 	DialogTitle,
 	ScrollArea,
 	Skeleton,
+	Tabs,
+	TabsContent,
+	TabsList,
+	TabsTrigger,
 	Tooltip,
 	TooltipContent,
 	TooltipProvider,
@@ -19,7 +23,9 @@ import {
 import { cn } from "@/shared/lib/utils";
 import { useDrilldownController } from "../../hooks/use-controller";
 import { useDrilldownData } from "../../hooks/use-data";
+import { useDrilldownTab } from "../../hooks/use-tab";
 import type { DrilldownProps, DrilldownResult } from "../../schemas/model";
+import { DrilldownSkeleton } from "./skeleton";
 
 export function Drilldown<
 	T extends RowData,
@@ -45,7 +51,7 @@ export function Drilldown<
 			<DialogContent
 				portalClassName={props.detailOpen ? "z-40" : undefined}
 				className={cn(
-					"flex max-h-[85dvh] flex-col sm:max-w-5xl",
+					"flex h-[80dvh] max-h-[80dvh] flex-col sm:max-w-5xl",
 					props.className,
 				)}
 				finalFocus={
@@ -98,6 +104,7 @@ function DrilldownContent<
 	TKey extends QueryKey,
 >(props: DrilldownProps<T, TContext, TFilters, TResult, TKey>) {
 	const { query } = useDrilldownData(props);
+	const { tab, handleTabChange } = useDrilldownTab();
 	if (query.isError) {
 		return (
 			<div role="alert" className="space-y-3">
@@ -116,33 +123,24 @@ function DrilldownContent<
 			</div>
 		);
 	}
-	if (!query.data || query.isFetching) {
-		return (
-			<ScrollArea className="min-h-0 flex-1">
-				<div
-					role="status"
-					aria-label="Carregando detalhes"
-					className="space-y-4"
-				>
-					{props.renderSummary ? <Skeleton className="h-5 w-40" /> : null}
-					<Skeleton
-						aria-hidden="true"
-						className="w-full shrink-0"
-						style={{ height: 95 + (props.pageSize ?? 10) * 45 }}
-					/>
-				</div>
-			</ScrollArea>
-		);
-	}
 	const data = query.data;
-	return (
-		<>
-			{props.renderSummary?.(data)}
+	const loading = !data || query.isFetching;
+	const summary = props.renderSummary ? (
+		loading || !data ? (
+			<Skeleton className="h-5 w-40 shrink-0" />
+		) : (
+			props.renderSummary(data)
+		)
+	) : null;
+	const table =
+		loading || !data ? (
+			<DrilldownSkeleton />
+		) : (
 			<DataTable
 				columns={props.columns}
 				initialSorting={props.initialSorting}
 				data={data.data}
-				pageSize={props.pageSize ?? 10}
+				pageSize={props.pageSize ?? 25}
 				emptyMessage={props.emptyMessage}
 				getRowId={props.getRowId}
 				rowActionLabel={props.rowActionLabel}
@@ -158,6 +156,42 @@ function DrilldownContent<
 				}
 				className="min-h-0 flex-1"
 			/>
-		</>
+		);
+	if (!props.renderOverview) {
+		return (
+			<>
+				{summary}
+				{table}
+			</>
+		);
+	}
+	return (
+		<Tabs
+			value={tab}
+			onValueChange={handleTabChange}
+			className="min-h-0 flex-1"
+		>
+			<TabsList variant="line" aria-label="Visualização dos detalhes">
+				<TabsTrigger value="summary">Resumo</TabsTrigger>
+				<TabsTrigger value="data">Dados</TabsTrigger>
+			</TabsList>
+			{summary}
+			<TabsContent value="summary" className="flex min-h-0 flex-col">
+				<ScrollArea className="min-h-0 flex-1">
+					{loading || !data ? (
+						<DrilldownSkeleton overview blocks={props.overviewSkeletonBlocks} />
+					) : (
+						props.renderOverview(data)
+					)}
+				</ScrollArea>
+			</TabsContent>
+			<TabsContent
+				value="data"
+				keepMounted
+				className="flex min-h-0 flex-col [&[hidden]]:hidden"
+			>
+				{table}
+			</TabsContent>
+		</Tabs>
 	);
 }

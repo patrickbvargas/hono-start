@@ -115,8 +115,10 @@ export async function getDashboardDrilldown(
 					}
 					const context = {
 						client: revenue.contract.client.fullName,
+						clientId: revenue.contract.client.id,
 						process: revenue.contract.processNumber,
 						type: revenue.type.label,
+						typeValue: revenue.type.value,
 						description: revenue.type.label,
 						record: { kind: "contract" as const, id: revenue.contract.id },
 					};
@@ -237,7 +239,7 @@ export async function getDashboardDrilldown(
 						paymentDate: true,
 						contractEmployee: {
 							select: {
-								employee: { select: { fullName: true } },
+								employee: { select: { id: true, fullName: true } },
 								assignmentType: { select: { label: true, value: true } },
 								contract: { select: { processNumber: true } },
 							},
@@ -258,7 +260,9 @@ export async function getDashboardDrilldown(
 						kind: "Remuneração gerada",
 						description: row.contractEmployee.employee.fullName,
 						employee: row.contractEmployee.employee.fullName,
+						employeeId: row.contractEmployee.employee.id,
 						assignment: row.contractEmployee.assignmentType.label,
+						assignmentValue: row.contractEmployee.assignmentType.value,
 						process: row.contractEmployee.contract.processNumber,
 						amount: Number(row.amount),
 					});
@@ -296,6 +300,7 @@ export async function getDashboardDrilldown(
 						record: { kind: "expense", id: row.id },
 						description: row.notes ?? row.category.label,
 						category: row.category.label,
+						categoryValue: row.category.value,
 						amount:
 							Number(row.amount) *
 							(periodSelection && series === "result" ? -1 : 1),
