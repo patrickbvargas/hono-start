@@ -4,7 +4,7 @@
 Member SHALL NEVER access another collaborator remuneration directly or indirectly; visible contracts SHALL NOT widen beneficiary scope.
 
 #### Scenario: Aggregate inference
-- **WHEN** Member requests contract remuneration totals, audit, options, export or batch attachments
+- **WHEN** Member requests contract remuneration totals, audit, options, export or settlement attachments
 - **THEN** other beneficiaries amounts and identifying financial metadata remain inaccessible
 
 ### Requirement: Optional receipt creation

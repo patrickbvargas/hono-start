@@ -8,7 +8,7 @@ Operational roots are Contract and Expense. Revenue and contract assignments bel
 
 UI language is pt-BR: Duplicatas a receber, Recebimentos, Duplicatas a pagar, Pagamentos, Acerto financeiro, Analíticas, Observações. Code uses English. Fee becomes Receipt. Remuneration ceases to be a second financial obligation; its obligation is a Payable, with separate RemunerationCalculation evidence. See [UML](FINANCIAL_UML.md).
 
-Person is a company-wide master with cumulative customer/supplier/employee flags. PersonType replaces ClientType (INDIVIDUAL/COMPANY). EmployeeProfile holds employee type, OAB and percentages. Flags never grant login or financial authority. Clerk binds to Person with an active, non-deleted EmployeeProfile; all roles require this binding. Membership chooses an existing Firm. Person and catalogs are global; operational documents, financial titles, receipt batches, settlements and calculation records are Firm-scoped. No cross-Firm reference or group is allowed.
+Person is a company-wide master with cumulative customer/supplier/employee flags. PersonType replaces ClientType (INDIVIDUAL/COMPANY). EmployeeProfile holds employee type, OAB and percentages. Flags never grant login or financial authority. Clerk binds to Person with an active, non-deleted EmployeeProfile; all roles require this binding. Membership chooses an existing Firm. Person and catalogs are global; operational documents, financial titles, settlements and calculation records are Firm-scoped. No cross-Firm reference or group is allowed.
 
 ## Operational origins and financial handoff
 
@@ -32,27 +32,27 @@ Finance can also create titles directly. Every title has exactly one identifiabl
 - A title can be cancelled only without valid settlements. Cancellation preserves history; it is not a money reversal. Restoring titles must revalidate origin, Firm, person, grants and current invariants.
 - One analytic per title. Authorized reclassification requires reason/history, does not require settlement reversal, and reclassifies its settlements in reports. Historic classification remains visible through audit.
 
-## Receipts, payments and batches
+## Receipts, payments and multi-selection
 
 Every Receivable identifies a debtor Person; every Payable identifies a beneficiary Person, including taxes, utilities and direct entries. Origin parties must satisfy relevant business-role rules; flags never authorize scope.
 
-Each Receipt belongs to exactly one Receivable; each Payment belongs to exactly one Payable. N valid settlements may abate the same title. Multiple selected titles produce one settlement per title. Receipts retain their same-debtor group; payments use a single atomic multi-selection action without a PaymentBatch, lot entity or beneficiary grouping. There is no installment-count ceiling on settlements and no compulsory installment sequence. Suggest overdue/oldest titles first but allow selection of future titles with balance.
+Each Receipt belongs to exactly one Receivable; each Payment belongs to exactly one Payable. N valid settlements may abate the same title. Select N authorized titles in one direction and Firm, across Persons and origins, adjust each line if needed, and confirm once. Create one independent Receipt or Payment per selected title, atomically. Neither ReceiptBatch nor PaymentBatch, a lot entity or automatic person subgroups exist. There is no installment-count ceiling on settlements or compulsory sequence; suggest oldest/overdue first without blocking future titles with balance.
 
-ReceiptBatch requires one Person, Firm, direction, effective date and actual payment method and may span authorized origins; its optional proof may be shared, with individual or whole-group reversal. Payments may select any authorized Payables with balance in the same Firm, across beneficiaries and origins, without a same-Person check. One effective date and actual method entered in the UI are copied to each independent Payment. Do not create a PaymentBatch/lot or automatic beneficiary subgroups. Optional payment proof belongs to each Payment; never share a document disclosing other beneficiaries with Member. Reversal operates on the selected Payment events, not a persisted payment lot. Receipt grouping remains unchanged.
+Both directions use the global PaymentMethod catalog: expected method is on Receivable/Payable, actual method and effective date are stored on EACH Receipt/Payment. The UI asks for one effective date and actual method per multi-selection action, copying them to every event; expected and actual may differ. Split methods require separate actions. A single Gerar remunerações choice applies to a receipt confirmation and is persisted on each Receipt; only eligible positive contract receipts generate obligations, never direct/non-contract lines. Optional proof and reversal belong to each settlement; a multi-person proof must never leak another party's information. No persisted grouping is required to consult/reverse an event. An explicitly selected set of reversals remains atomic and validates all downstream guards.
 
 Selection checkbox enables an amount prefilled with remaining principal. Advanced adjustments expose principal abated P, discount D, interest J and penalty M. Effective cash C = P - D + J + M. All amounts are nonnegative; 0 <= D <= P; 0 < P <= locked outstanding principal; C must not be negative. Full discount (P=D, J=M=0) is valid with C=0, settles principal, and generates no remuneration. Interest/penalty are manual amounts, not automatic time-based accrual. Discount and adjustments require appropriate authority and reasons.
 
 Example: title 100, P=50, D=5, J=2, M=0 → effective cash 47; balance 50. Financial screens must distinguish net cash received/paid, principal abated, discounts and charges. A discounted fully settled title can have cash lower than financial total; this is explained, not a discrepancy bug.
 
-Amounts above the adjusted amount due are rejected; no customer/supplier credit ledger in this scope. A zero/negative principal allocation is rejected. Expected method on title may differ from actual method. Split Pix/cash requires separate receipt batches or payment confirmation actions. Settlement date may be today or earlier, never future. Use one explicit business date boundary (America/Sao_Paulo) consistently across client, server and reports.
+Amounts above the adjusted amount due are rejected; no customer/supplier credit ledger in this scope. A zero/negative principal allocation is rejected. Expected method on title may differ from actual method. Split Pix/cash requires separate confirmation actions in either direction. Settlement date may be today or earlier, never future. Use one explicit business date boundary (America/Sao_Paulo) consistently across client, server and reports.
 
-Confirmation is 100% or nothing, INCLUDING title changes, settlement rows, derived remuneration obligations and audit. Revalidate authority and balances under transactional locking at commit. A concurrent balance change, denied title or remuneration failure rolls back every line. Retrying the same request must not duplicate money or commissions. Payment multi-selection retains request idempotency and audit correlation as technical metadata, not a user-managed lot or payment grouping entity. Reject repeated Payable IDs within one request; revalidate every selected title under locking, and roll back all Payments if any line fails.
+Confirmation is 100% or nothing, INCLUDING title changes, settlement rows, derived remuneration obligations and audit. Revalidate authority and balances under transactional locking at commit. A concurrent balance change, denied title or remuneration failure rolls back every line. Retrying the same request must not duplicate money or commissions. Receipt/payment multi-selection retains request idempotency and audit correlation as technical metadata, not a user-managed lot or settlement grouping entity. Reject repeated title IDs within one request; revalidate every selected title under locking, and roll back all settlements and downstream remuneration if any line fails.
 
 ## Corrections and reversals
 
 Confirmed settlements are immutable monetary events: corrections are reversal with reason followed by a new settlement, not edit/delete/restore. Retain original record and separate reversal event/date. No undo or deletion of confirmed reversal; accidental reversal is corrected by a new settlement. Reverse principal, discounts, interest and penalty effects exactly once. Reverse cash on the reversal's actual date while preserving original settlement date. Never rewrite historical cash buckets.
 
-Reversal immediately restores outstanding principal and derived partial/pending state, even on an operationally completed/cancelled contract. Statement shows original and reversal events. Group reversal is atomic across requested lines and validates downstream dependencies first.
+Reversal immediately restores outstanding principal and derived partial/pending state, even on an operationally completed/cancelled contract. Statement shows original and reversal events. Multi-event reversal is atomic across requested lines and validates downstream dependencies first.
 
 Receipt reversal with generated remuneration Payables:
 - If ANY corresponding remuneration has a valid Payment, block the receipt reversal. Reverse those payments first; do not generate compensation credit automatically.
@@ -61,7 +61,7 @@ Receipt reversal with generated remuneration Payables:
 
 ## Remuneration obligations
 
-Only a confirmed, positive-effective-cash Receipt originating from a Contract Revenue can generate remuneration, and only if Gerar remunerações is enabled for the batch. Direct entries and other operational origins never implicitly generate it. No accrual on scheduling, generation, completion, or merely marking a title settled.
+Only a confirmed, positive-effective-cash Receipt originating from a Contract Revenue can generate remuneration, and only if Gerar remunerações is enabled for the receipt confirmation, with the choice recorded on each Receipt. Direct entries and other operational origins never implicitly generate it. No accrual on scheduling, generation, completion, or merely marking a title settled.
 
 For each receipt allocation and eligible participant, create a separate Payable and a one-to-one RemunerationCalculation record. Preserve existing participation eligibility and percentage/business formulas unless explicitly changed by this contract; snapshot effective inputs and outcomes at event time. Base is TOTAL actual cash C, including manually entered interest/penalty and after discount. Do not use face value or principal alone. Preserve established percentage scales and rounding; regression-test current formula against target cash base. User can pay multiple obligations for different beneficiaries in one later atomic action, subject to each title authorization and the same-Firm/date/method rules, without payment grouping.
 
@@ -84,11 +84,11 @@ Authorized adjustments may change generated Payable amount/date/analytic with ju
 
 ## Roles, catalogs and evidence
 
-See [Clerk catalog and scope](FINANCIAL_AUTHORIZATION.md). Member NEVER sees another collaborator's remuneration, including amounts inferred by totals, generated-title counts, batch membership, reports, exports, errors, history or attachments. Contract access does not grant that visibility.
+See [Clerk catalog and scope](FINANCIAL_AUTHORIZATION.md). Member NEVER sees another collaborator's remuneration, including amounts inferred by totals, generated-title counts, multi-selection correlation, reports, exports, errors, history or attachments. Contract access does not grant that visibility.
 
 Global catalogs: PersonType, EmployeeType, LegalArea, ContractStatus, AssignmentType, RevenueType, AttachmentType, FinancialAnalytic (evolution of ExpenseCategory), PaymentMethod and TitleKind (DOWN_PAYMENT/INSTALLMENT/EXTRA). Quitada/atraso are derived, not manually toggled lookup flags. PaymentMethod records expected versus actual selection. Catalogs have stable value, pt-BR label and active status; no Firm FK.
 
-Contract and Expense retain attachments; Person evidence is shared; receipt batches retain optional shared settlement proof; each Payment owns its optional proof. Titles and calculations may retain contextual evidence under owner-authorized access. Private storage remains private; no broadened URL access. Audit retains reasons, actor, before/after and reversal/generation identity, while enforcing owner scope.
+Contract and Expense retain attachments; Person evidence is shared; each Receipt and Payment owns its optional settlement proof. Titles and calculations may retain contextual evidence under owner-authorized access. Private storage remains private; no broadened URL access. Audit retains reasons, actor, before/after and reversal/generation identity, while enforcing owner scope.
 
 ## Explicit exclusions and remaining verification
 

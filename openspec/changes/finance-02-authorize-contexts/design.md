@@ -16,7 +16,7 @@ Implementation boundaries:
 
 1. Review provider limits for Member/Admin and exact custom-permission catalog; record verified official evidence when configuring Clerk, with no permanent third-role dependency.
 2. Add explicit key schema and resource policies for receivables, receipts, payables, payments, adjustments, settings, reports and cash; default Member receipt creation OFF.
-3. Enforce Member assigned-contract scope and own beneficiary restriction before serialization, aggregation, filtering, export, options, batch proof and audit.
+3. Enforce Member assigned-contract scope and own beneficiary restriction before serialization, aggregation, filtering, export, options, per-settlement proof and audit.
 4. Prepare dev-only provider configuration/binding checklist; do not mutate production or auto-grant legacy fee creation to Members.
 5. Cover every grant independently and test misconfigured Member broad grants cannot expose another collaborator; document trusted provider-derived confidentiality guard if needed.
 

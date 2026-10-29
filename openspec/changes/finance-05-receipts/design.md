@@ -1,10 +1,10 @@
 ## Context
 
-Phase 05: Receipts, partial settlement and grouped reversal. Predecessor: `finance-04-financial-handoff`. Baseline has separate Client/Employee, Fee installment slots, implicit entry cash and immediate Expense outflows. The approved target intentionally replaces those semantics; this is not a backward-compatible patch. Only development fixtures exist.
+Phase 05: Receipts, partial settlement and atomic multi-selection. Predecessor: `finance-04-financial-handoff`. Baseline has separate Client/Employee, Fee installment slots, implicit entry cash and immediate Expense outflows. The approved target intentionally replaces those semantics; this is not a backward-compatible patch. Only development fixtures exist.
 
 ## Goals / Non-Goals
 
-**Goals:** Replace Fee installment slots with immutable receipts abating real titles; add grouping, adjustments and reversals.
+**Goals:** Replace Fee installment slots with immutable receipts abating real titles; add atomic multi-selection, adjustments and reversals without receipt lots.
 
 **Non-goals:** unrelated architectural abstraction, production historical conversion, provider mutation during planning, and implementation of later phases before their gates.
 
@@ -14,13 +14,13 @@ Use the fixed TanStack Start/Router/Query/Form/Table, Zod, Prisma/PostgreSQL, sh
 
 Implementation boundaries:
 
-1. Create ReceiptBatch, Receipt and unique reversal events with effective date, actual method, principal, discount, interest, penalty, cash and shared proof.
+1. Create independent Receipt and unique reversal events with per-event effective date, actual PaymentMethod, generate-remuneration choice, principal, discount, interest, penalty, cash and optional proof. No ReceiptBatch/lot or person grouping.
 2. Build checkbox allocation UI with full-balance defaults, manual adjustment fields and explicit cash versus principal totals; future titles remain selectable.
-3. Implement same-Person/Firm/direction grouping and all-or-nothing server locking, idempotency, scope validation and downstream generation extension inside the transaction.
+3. Implement cross-Person/origin title multi-selection within one Firm/direction, one common date/actual method copied to each Receipt, all-or-nothing server locking, duplicate-title rejection, idempotency, per-title scope validation and downstream generation inside the transaction.
 4. Reject future effective dates and above-due allocations; permit reasoned full discounts with zero cash and no remuneration.
-5. Implement individual/whole-group reversal with dated immutable events; remove target dependence on Fee uniqueness, sequential installment and exhausted-count rules.
+5. Implement individual/selected-event atomic reversal with dated immutable events; remove target dependence on Fee uniqueness, sequential installment and exhausted-count rules.
 6. Keep target receipt writes disabled in released navigation until phase 07 atomic remuneration integration and phase 09 acceptance pass.
-7. Test concurrent double settlement, inaccessible group member, zero cash, proof ownership and reversal/report reconciliation.
+7. Test concurrent double settlement, inaccessible selected title, zero cash, per-Receipt proof ownership, mixed contract/direct eligibility, actual payment method, and reversal/report reconciliation.
 
 Read FINANCIAL_SYSTEM.md for monetary equations, reversal semantics and dates; do not redefine them locally. Read FINANCIAL_AUTHORIZATION.md for exact keys and scope. Read FINANCIAL_UML.md for structural intent; concrete FK names may be refined with an explicit implementation ADR and tests, not business-rule drift.
 

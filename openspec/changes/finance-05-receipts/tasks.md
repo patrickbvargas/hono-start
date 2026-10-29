@@ -1,12 +1,12 @@
 ## 1. Implementation
 
-- [ ] 1.1 Create ReceiptBatch, Receipt and unique reversal events with effective date, actual method, principal, discount, interest, penalty, cash and shared proof.
+- [ ] 1.1 Create independent Receipt and unique reversal events with per-event effective date, actual PaymentMethod, generate-remuneration choice, principal, discount, interest, penalty, cash and optional proof. No ReceiptBatch/lot or person grouping.
 - [ ] 1.2 Build checkbox allocation UI with full-balance defaults, manual adjustment fields and explicit cash versus principal totals; future titles remain selectable.
-- [ ] 1.3 Implement same-Person/Firm/direction grouping and all-or-nothing server locking, idempotency, scope validation and downstream generation extension inside the transaction.
+- [ ] 1.3 Implement cross-Person/origin title multi-selection within one Firm/direction, one common date/actual method copied to each Receipt, all-or-nothing server locking, duplicate-title rejection, idempotency, per-title scope validation and downstream generation inside the transaction.
 - [ ] 1.4 Reject future effective dates and above-due allocations; permit reasoned full discounts with zero cash and no remuneration.
-- [ ] 1.5 Implement individual/whole-group reversal with dated immutable events; remove target dependence on Fee uniqueness, sequential installment and exhausted-count rules.
+- [ ] 1.5 Implement individual/selected-event atomic reversal with dated immutable events; remove target dependence on Fee uniqueness, sequential installment and exhausted-count rules.
 - [ ] 1.6 Keep target receipt writes disabled in released navigation until phase 07 atomic remuneration integration and phase 09 acceptance pass.
-- [ ] 1.7 Test concurrent double settlement, inaccessible group member, zero cash, proof ownership and reversal/report reconciliation.
+- [ ] 1.7 Test concurrent double settlement, inaccessible selected title, zero cash, per-Receipt proof ownership, mixed contract/direct eligibility, actual payment method, and reversal/report reconciliation.
 
 ## 2. Acceptance
 

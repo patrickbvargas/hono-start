@@ -7,7 +7,7 @@ Planning contract, not a passing test report. Implementers must record actual te
 | Identity | One document with customer/supplier/employee roles | One Person, independent roles, no grants inferred | 01 |
 | Account binding | Admin or Member without active profile | Denied protected access with safe configuration feedback | 01–02 |
 | Shared masters | Same Person used in two Firms | Master shared; operational children never cross scope | 01–03 |
-| Confidentiality | Member knows another beneficiary title ID | Detail, batch, options, counts, sums, export, proof and audit all deny/filter before aggregation | 02,07,08 |
+| Confidentiality | Member knows another beneficiary title ID | Detail, selection correlation, options, counts, sums, export, proof and audit all deny/filter before aggregation | 02,07,08 |
 | Optional mutation | Member receipts:create absent/present | Default deny; explicit grant only permits assigned-contract receipts | 02,05 |
 | Generation | Double click/network retry | Single financial generation/title set | 03–04 |
 | Origin integrity | Missing/multiple/wrong-Firm origin | Database/service constraints reject | 03 |
@@ -24,14 +24,15 @@ Planning contract, not a passing test report. Implementers must record actual te
 | Full discount | P100 D100 J0 M0 | Settled title, zero realized cash, no remuneration | 05–08 |
 | Above balance | Principal allocation exceeds locked balance | Rejected, no partial events | 05–06 |
 | Sequence | Future title chosen before overdue title | Allowed within grants; old sequence/fee-slot rule absent | 05 |
-| Receipt group | Different Person/Firm/method/direction | Cannot form one ReceiptBatch | 05 |
+| Multiple receipts | Different Persons/origins in one Firm/direction, common date/method | One Receipt per title, atomic action without lots; own method/date/proof | 05 |
+| Receipt boundaries | Duplicate title ID, cross-Firm/denied/stale line or retry | Reject invalid whole action; no duplicate events or partial remuneration | 05,07 |
 | Multiple payments | Ten Payables across lawyers, total5000 | One atomic action, ten Payments, no lot or beneficiary grouping | 06 |
 | Payment boundaries | Cross-Firm, denied or stale line; duplicate Payable IDs | Reject entire selection; no partial cash/audit effects | 06 |
-| Atomicity | Final line denies/fails commission generation | Entire group rolls back, including audit and downstream Payables | 05–07 |
+| Atomicity | Final line denies/fails commission generation | Entire selection rolls back, including audit and downstream Payables | 05–07 |
 | Concurrency | Two transactions settle same balance | Lock/revalidation allows only valid total principal, no over-settlement | 05–06 |
 | Retry | Same settlement token submitted twice | Original result only; no duplicate receipts/payments/calculations; no payment lot introduced | 05–07 |
 | Dates | Future effective date | Rejected using consistent Sao Paulo business date | 05–06 |
-| Evidence | Receipt group partly reversed; independent Payment proof/reversal | Receipt shared owner preserved; Payment evidence remains individual and cannot expose other beneficiaries | 05–06 |
+| Evidence | One Receipt/Payment from a multi-selection is reversed | Other events unchanged; each proof remains independently scoped, no lot or cross-person disclosure | 05–06 |
 | Remuneration | Positive contract receipt with charges | Existing eligible participation formula uses actual cash base | 07 |
 | Non-remunerating | Direct receipt, disabled toggle, zero cash | No generated obligations | 07 |
 | Cutoff | Oct25/Oct26 receipt date; inserted later | Nov5/Dec5 at defaults, based on effective date | 07 |
@@ -90,3 +91,7 @@ Planning contract, not a passing test report. Implementers must record actual te
 ## Reset and seed readiness
 
 Each phase verifies updated fixtures against its schema/contracts. Final phase runs `pnpm run db:reset` twice on the verified disposable dev database with the configured Clerk/Storage prerequisites, then verifies seeded counts, FK/origin integrity, calculated balances, immutable calculation evidence and no duplicate financial events. Exercise real Admin/Member login/bindings after both resets, menus, multi-role projections, pending/overdue/partial/settled titles, multi-beneficiary payments, reversals, contract dimensions and monthly forecasts/actual cash. Missing external prerequisite must produce actionable setup feedback; no silent ready claim, manual SQL repair or obsolete hardcoded provider IDs. Final full pnpm verify is required; planning validation is not evidence of successful reset.
+
+## Symmetric receiving/paying selection
+
+Both directions select titles across Persons, with full balance prefilled and partial/adjustments per line, one Firm/direction/date/actual PaymentMethod and one atomic confirmation. Expected methods stay on titles; actual method/date and optional proof stay on each Receipt/Payment. No ReceiptBatch/PaymentBatch or person subgroup. Test duplicate IDs, retry, mixed expected methods with common actual Pix, inaccessible title rollback, per-event reversal, proof isolation and mixed contract/direct receipt remuneration eligibility.

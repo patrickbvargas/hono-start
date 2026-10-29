@@ -19,7 +19,7 @@ Implementation boundaries:
 3. Replace old fee/remuneration/expense semantics in canonical OpenSpec specs and domain docs, including schedule uniqueness and automatic receipt/entry cash assumptions.
 4. Verify Member/Admin provider setup, Person bindings, exact permissions and all negative access paths; record provider-limit decision without guessing.
 5. Run full pnpm verify plus isolated real PostgreSQL concurrency/reversal/generation checks and private attachment transport checks.
-6. Perform documented walkthroughs for contract and expense handoff, direct titles, partial/full settlement, same-debtor receipt grouping, ten payments across lawyers totaling5000 in one atomic action without lots or beneficiary groups, per-Payment proof/reversal and Member confidentiality, remuneration and monthly reconciliation.
+6. Perform documented walkthroughs for contract and expense handoff, direct titles, partial/full settlement, receipts across different debtors without lots, ten payments across lawyers totaling5000 in one atomic action without lots or beneficiary groups, per-Payment proof/reversal and Member confidentiality, remuneration and monthly reconciliation.
 7. Record evidence and remaining blockers; enable target navigation/writes only after preceding gates pass; preserve baseline commit and schema/config rollback recipe.
 
 Read FINANCIAL_SYSTEM.md for monetary equations, reversal semantics and dates; do not redefine them locally. Read FINANCIAL_AUTHORIZATION.md for exact keys and scope. Read FINANCIAL_UML.md for structural intent; concrete FK names may be refined with an explicit implementation ADR and tests, not business-rule drift.

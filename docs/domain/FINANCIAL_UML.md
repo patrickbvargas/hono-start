@@ -76,7 +76,9 @@ class Payable {
 }
 class Receipt {
   receivableId
-  batchId
+  effectiveDate
+  actualPaymentMethodId
+  generatesRemuneration
   principalAbated
   discount
   interest
@@ -92,13 +94,6 @@ class Payment {
   interest
   penalty
   effectiveAmount
-}
-class ReceiptBatch {
-  firmId
-  personId
-  effectiveDate
-  actualPaymentMethodId
-  generatesRemuneration
 }
 class RemunerationCalculation {
   payableId
@@ -130,7 +125,6 @@ Person "1" <-- "0..*" Receivable : debtor
 Person "1" <-- "0..*" Payable : beneficiary
 Receivable "1" --> "0..*" Receipt
 Payable "1" --> "0..*" Payment
-ReceiptBatch "1" --> "1..*" Receipt
 Receipt "1" --> "0..1" ReceiptReversal
 Payment "1" --> "0..1" PaymentReversal
 Payable "1" --> "0..1" RemunerationCalculation
@@ -204,13 +198,13 @@ FinancialAnalytic "1" <-- "0..*" Receivable
 FinancialAnalytic "1" <-- "0..*" Payable
 PaymentMethod "1" <-- "0..*" Receivable : expected
 PaymentMethod "1" <-- "0..*" Payable : expected
-PaymentMethod "1" <-- "0..*" ReceiptBatch : actual
+PaymentMethod "1" <-- "0..*" Receipt : actual
 PaymentMethod "1" <-- "0..*" Payment : actual
 AttachmentType "1" <-- "0..*" Attachment
 Attachment ..> Person : shared owner
 Attachment ..> Contract : owner
 Attachment ..> Expense : owner
-Attachment ..> ReceiptBatch : proof owner
+Attachment ..> Receipt : proof owner
 Attachment ..> Payment : proof owner
 AuditLog ..> Person
 AuditLog ..> Receivable
@@ -237,6 +231,6 @@ CashFlow ..> PaymentReversal : reverse cash
 
 Lookups use id/value/label/isActive; global analytics evolve ExpenseCategory. ADMIN_ASSISTANT and existing PAYROLL_LAWYERS/PAYROLL_STAFF values are preserved. Generated titles require exactly one validated origin; optional Revenue/Expense edges do NOT mean untracked origin is allowed. DirectFinancialEntry and FinancialGeneration are proposed integrity/grouping records, not additional user-facing operational modules. Concrete FK layout is resolved in phase 03 with database-enforced exclusivity. Title kind and origin kind are different concepts.
 
-All operational/financial children retain Firm isolation and timestamps/audit; common fields omitted. Each Attachment has exactly one enforced owner, not multiple simultaneous owners. ReceiptBatch proof is shared by receipt lines. Each Payment owns its proof; there is no PaymentBatch or beneficiary grouping. Multi-selection creates independent Payments atomically across authorized beneficiaries in the same Firm, copying the common effective date/method to each event. Technical idempotency/audit correlation is not a business lot. Other existing owner attachments remain preserved during cutover. Settlement reversals are append-only, unique per settlement, with actor/reason and event date. Financial totals/status are derived, not independently editable flags.
+All operational/financial children retain Firm isolation and timestamps/audit; common fields omitted. Each Attachment has exactly one enforced owner, not multiple simultaneous owners. Each Receipt/Payment owns its proof; neither ReceiptBatch nor PaymentBatch or person grouping exists. Multi-selection creates independent settlements atomically across authorized Persons in one direction and Firm, copying the common effective date and actual PaymentMethod to each event. Receipt also records the remuneration-generation choice. Technical idempotency/audit correlation is not a business lot. Other existing owner attachments remain preserved during cutover. Settlement reversals are append-only, unique per settlement, with actor/reason and event date. Financial totals/status are derived, not independently editable flags.
 
 UI projections remain separate: Clientes, Fornecedores and Colaboradores all reference Person; Colaboradores additionally manages EmployeeProfile under explicit authorization. No separate duplicate customer/supplier/employee identity tables are implied. Member cannot use these shared relationships to read supplier/collaborator management or professional/percentage/access fields.

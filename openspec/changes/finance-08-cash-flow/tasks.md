@@ -4,7 +4,7 @@
 - [ ] 1.2 Implement monthly remaining-principal forecast, overdue bucket and effective-cash realized streams with signed dated reversal events.
 - [ ] 1.3 Expose negotiated amount, title financial total, post-generation difference, principal abated, cash, discounts/charges and balance with unambiguous labels. Show separate authorized Person receivable/payable balances per Firm, without automatic offset. Do not introduce competence fields/reports; due dates never create automatic settlements.
 - [ ] 1.4 Update origin financial status: all active revenue generations plus valid title balances; do not mutate operational status on settlement/reversal.
-- [ ] 1.5 Update dashboard, pending work, exports, related drawers, receipt-batch proof, individual Payment proof and own remuneration views under pre-aggregation scopes.
+- [ ] 1.5 Update dashboard, pending work, exports, related drawers, individual Receipt/Payment proof and own remuneration views under pre-aggregation scopes.
 - [ ] 1.6 Test partial receipts, full discounts, month-boundary reversals, cancelled origins, ungenerated revenues, out-of-window arrears and Member confidentiality.
 
 ## 2. Acceptance

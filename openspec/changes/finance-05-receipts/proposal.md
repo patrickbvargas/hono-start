@@ -1,17 +1,17 @@
 ## Why
 
-Replace Fee installment slots with immutable receipts abating real titles; add grouping, adjustments and reversals.
+Replace Fee installment slots with immutable receipts abating real titles; add atomic multi-selection, adjustments and reversals without receipt lots.
 
 ## What Changes
 
-- **BREAKING target behavior:** introduce receipts, partial settlement and grouped reversal under the approved financial contract. Preserve baseline code until the coordinated cutover.
+- **BREAKING target behavior:** introduce receipts, partial settlement and atomic multi-selection under the approved financial contract. Preserve baseline code until the coordinated cutover.
 - Deliver the narrowly scoped steps described in design/tasks, with feature-owned contracts, authority checks and focused tests.
 - Follow [financial domain rules](../../../docs/domain/FINANCIAL_SYSTEM.md), [authorization](../../../docs/domain/FINANCIAL_AUTHORIZATION.md) and [ordered roadmap](../../../docs/implementation/FINANCIAL_ROADMAP.md).
 
 ## Capabilities
 
 ### New Capabilities
-- `financial-receipts`: Receipts, partial settlement and grouped reversal.
+- `financial-receipts`: Receipts, partial settlement and atomic multi-selection.
 
 ### Modified Capabilities
 None in this phase's delta. Existing legacy finance contracts are explicitly retired/reconciled in phase 09; no legacy rule may override the approved target during this gated transition.
