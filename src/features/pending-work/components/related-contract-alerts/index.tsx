@@ -46,10 +46,25 @@ function RelatedContractAlertsContent(props: RelatedContractAlertsProps) {
 				{isPending ? (
 					<div
 						aria-label="Carregando alertas dos contratos"
-						className="space-y-2"
+						className="min-w-0"
 					>
 						{[1, 2].map((row) => (
-							<Skeleton key={row} className="h-16 w-full" />
+							<div
+								key={row}
+								className="flex min-h-16 min-w-0 flex-wrap items-start justify-between gap-3 py-3"
+							>
+								<div className="min-w-0 flex-1 basis-52 space-y-2">
+									<div className="flex flex-wrap items-center gap-2">
+										<Skeleton className="h-5 w-40 max-w-full" />
+										<Skeleton className="h-5 w-12" />
+									</div>
+									<Skeleton className="h-5 w-36 max-w-full" />
+								</div>
+								<div className="space-y-2">
+									<Skeleton className="h-5 w-32" />
+									<Skeleton className="h-5 w-40" />
+								</div>
+							</div>
 						))}
 					</div>
 				) : error ? (
@@ -74,7 +89,7 @@ function RelatedContractAlertsContent(props: RelatedContractAlertsProps) {
 					<>
 						<ScrollArea className="min-h-0 flex-initial">
 							<ul
-								className="min-w-0 divide-y"
+								className="min-w-0"
 								aria-label="Alertas dos contratos vinculados"
 							>
 								{pendingWork.data.map((item) => (

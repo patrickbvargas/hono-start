@@ -24,7 +24,7 @@ export function ContractTeam({
 					Nenhum colaborador vinculado.
 				</p>
 			) : (
-				<div className="min-w-0 divide-y">
+				<div className="min-w-0">
 					{visibleAssignments.map((assignment) => (
 						<div
 							key={assignment.id}

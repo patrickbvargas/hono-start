@@ -42,7 +42,7 @@ export const AttachmentSection = ({
 	} = useAttachmentSection({ ownerId, ownerKind });
 
 	const attachmentList = (
-		<ul aria-label="Arquivos anexados" className="min-w-0 divide-y">
+		<ul aria-label="Arquivos anexados" className="min-w-0">
 			{attachments.map((attachment) => (
 				<li key={attachment.id} className="min-h-16 min-w-0 py-1">
 					<AttachmentSectionContent

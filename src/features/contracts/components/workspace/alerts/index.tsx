@@ -16,7 +16,7 @@ export function ContractAlerts({ alerts, onNavigate }: ContractAlertsProps) {
 			aria-label="Alertas do contrato"
 			className="min-h-0 flex-initial"
 		>
-			<div className="min-w-0 divide-y">
+			<div className="min-w-0">
 				{alerts.length === 0 ? (
 					<p className="py-4 text-muted-foreground">
 						Nenhum alerta identificado neste contrato.

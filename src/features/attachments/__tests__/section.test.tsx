@@ -99,16 +99,16 @@ describe("AttachmentSection", () => {
 		});
 	});
 
-	it("renders an empty-state-sized detail fallback with upload button space", () => {
+	it("renders a row-sized detail fallback with upload button space", () => {
 		render(<AttachmentSectionFallback canUpload />);
 		expect(useAttachmentsMock).not.toHaveBeenCalled();
 		expect(screen.queryByRole("button")).toBeNull();
-		expect(document.querySelectorAll('[data-slot="skeleton"]').length).toBe(5);
+		expect(document.querySelectorAll('[data-slot="skeleton"]').length).toBe(6);
 	});
 
 	it("omits upload button space when uploads are unavailable", () => {
 		render(<AttachmentSectionFallback canUpload={false} />);
-		expect(document.querySelectorAll('[data-slot="skeleton"]').length).toBe(4);
+		expect(document.querySelectorAll('[data-slot="skeleton"]').length).toBe(5);
 	});
 
 	it("renders one heading and opens upload from the compact header", () => {
@@ -134,8 +134,8 @@ describe("AttachmentSection", () => {
 		});
 		rerender(<AttachmentSection ownerId={1} ownerKind="client" />);
 		expect(
-			container.querySelector('div.h-16[aria-hidden="true"]')?.className,
-		).toContain("py-1");
+			container.querySelector('div.min-h-16[aria-hidden="true"]')?.className,
+		).toContain("py-3");
 	});
 
 	it("expands attachments in the workspace while retaining compact drawer scrolling", () => {
@@ -187,7 +187,7 @@ describe("AttachmentSection", () => {
 		render(<AttachmentSection ownerId={1} ownerKind="contract" />);
 
 		expect(screen.queryByText("Carregando anexos...")).toBeNull();
-		expect(document.querySelectorAll('[data-slot="skeleton"]').length).toBe(4);
+		expect(document.querySelectorAll('[data-slot="skeleton"]').length).toBe(5);
 	});
 
 	it("renders metadata, downloads and opens deletion through the menu", async () => {
