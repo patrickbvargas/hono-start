@@ -40,7 +40,6 @@ export const NavMain = ({ items }: NavMainProps) => {
 					{visibleItems.map((subItem) => (
 						<SidebarMenuItem key={subItem.title}>
 							<SidebarMenuButton
-								className="data-active:text-primary data-active:hover:text-primary"
 								isActive={isSidebarRouteActive(location.pathname, subItem.url)}
 								tooltip={subItem.title}
 								render={

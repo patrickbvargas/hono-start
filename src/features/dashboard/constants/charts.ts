@@ -22,7 +22,7 @@ export const FINANCIAL_EVOLUTION_CHART_CONFIG = {
 	},
 	remuneration: {
 		label: "Remuneração",
-		color: "var(--chart-4)",
+		color: "var(--chart-2)",
 	},
 } satisfies ChartConfig;
 

@@ -36,7 +36,7 @@ export function MonthlyRevenueRemunerationChart({
 		revenue: { label: "Honorários recebidos", color: "var(--chart-1)" },
 		remuneration: {
 			label: isAdmin ? "Remunerações geradas" : "Minhas remunerações geradas",
-			color: "var(--chart-4)",
+			color: "var(--chart-2)",
 		},
 	};
 	const hasValues = items.some(
