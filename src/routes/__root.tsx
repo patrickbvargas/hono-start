@@ -1,5 +1,6 @@
 import { ptBR } from "@clerk/localizations";
 import { ClerkProvider } from "@clerk/tanstack-react-start";
+import { ui } from "@clerk/ui";
 import { shadcn } from "@clerk/ui/themes";
 import { TanStackDevtools } from "@tanstack/react-devtools";
 import { FormDevtoolsPanel } from "@tanstack/react-form-devtools";
@@ -84,6 +85,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 			</head>
 			<body>
 				<ClerkProvider
+					ui={ui}
 					localization={ptBR}
 					appearance={{ theme: shadcn }}
 					signInUrl="/login"
