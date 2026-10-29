@@ -1,38 +1,47 @@
-import {
-	DeleteObjectCommand,
-	GetObjectCommand,
-	PutObjectCommand,
-	S3Client,
-} from "@aws-sdk/client-s3";
+import * as z from "zod";
 import { env } from "@/shared/config/env";
 
 function storage() {
-	const {
-		CLOUDFLARE_ACCOUNT_ID,
-		CLOUDFLARE_R2_BUCKET_NAME,
-		CLOUDFLARE_R2_ACCESS_KEY_ID,
-		CLOUDFLARE_R2_SECRET_ACCESS_KEY,
-	} = env;
-	if (
-		!CLOUDFLARE_ACCOUNT_ID ||
-		!CLOUDFLARE_R2_BUCKET_NAME ||
-		!CLOUDFLARE_R2_ACCESS_KEY_ID ||
-		!CLOUDFLARE_R2_SECRET_ACCESS_KEY
-	) {
+	const { SUPABASE_URL, SUPABASE_STORAGE_BUCKET, SUPABASE_SECRET_KEY } = env;
+	if (!SUPABASE_URL || !SUPABASE_STORAGE_BUCKET || !SUPABASE_SECRET_KEY) {
 		throw new Error("Configuração de armazenamento de anexos indisponível");
 	}
 	return {
-		bucket: CLOUDFLARE_R2_BUCKET_NAME,
-		client: new S3Client({
-			region: "auto",
-			endpoint: `https://${CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com`,
-			credentials: {
-				accessKeyId: CLOUDFLARE_R2_ACCESS_KEY_ID,
-				secretAccessKey: CLOUDFLARE_R2_SECRET_ACCESS_KEY,
-			},
-			maxAttempts: 1,
-		}),
+		url: `${SUPABASE_URL.replace(/\/$/, "")}/storage/v1/object/${encodeURIComponent(SUPABASE_STORAGE_BUCKET)}`,
+		headers: { apikey: SUPABASE_SECRET_KEY },
 	};
+}
+
+const storageErrorSchema = z.object({
+	code: z.string().optional(),
+	error: z.string().optional(),
+	message: z.string().optional(),
+});
+async function assertStorageResponse(response: Response) {
+	if (response.ok) {
+		return;
+	}
+	const payload = storageErrorSchema.safeParse(
+		await response.json().catch(() => null),
+	);
+	const providerCode = payload.success ? payload.data.code : undefined;
+	// Only an explicit object-not-found response is safe to treat as missing.
+	const missing =
+		providerCode === "NoSuchKey" ||
+		(payload.success &&
+			payload.data.error === "not_found" &&
+			payload.data.message === "Object not found");
+	throw Object.assign(
+		new Error("Não foi possível acessar o armazenamento de anexos"),
+		{
+			name: providerCode || "AttachmentStorageError",
+			code: missing ? "ENOENT" : providerCode,
+			status: response.status,
+		},
+	);
+}
+function objectUrl(url: string, path: string) {
+	return `${url}/${path.split("/").map(encodeURIComponent).join("/")}`;
 }
 function validateKey(path: string) {
 	if (
@@ -83,54 +92,51 @@ export async function uploadAttachmentFile({
 	data: Buffer;
 	path: string;
 }) {
-	const Key = validateKey(path);
-	const { client, bucket } = storage();
+	const key = validateKey(path);
+	const { url, headers } = storage();
 	try {
-		await client.send(
-			new PutObjectCommand({
-				Bucket: bucket,
-				Key,
-				Body: data,
-				ContentType: contentType,
-				IfNoneMatch: "*",
+		await assertStorageResponse(
+			await fetch(objectUrl(url, key), {
+				method: "POST",
+				headers: {
+					...headers,
+					"Content-Type": contentType,
+					"x-upsert": "false",
+				},
+				body: new Uint8Array(data),
+				redirect: "error",
 			}),
 		);
 	} catch (error) {
-		// A network failure can leave a committed object. Retain identity for manual reconciliation.
-		console.error("[attachment:upload]", { storagePath: Key, error });
+		console.error("[attachment:upload]", { storagePath: key, error });
 		throw error;
-	} finally {
-		client.destroy();
 	}
 }
 export async function readAttachmentFile({ path }: { path: string }) {
-	const Key = validateKey(path);
-	const { client, bucket } = storage();
-	try {
-		const response = await client.send(
-			new GetObjectCommand({ Bucket: bucket, Key }),
-		);
-		if (!response.Body) {
-			throw new Error("Resposta de armazenamento inválida");
-		}
-		return Buffer.from(await response.Body.transformToByteArray());
-	} catch (error) {
-		if ((error as { name?: string })?.name === "NoSuchKey") {
-			throw Object.assign(new Error("Anexo não encontrado"), {
-				code: "ENOENT",
-			});
-		}
-		throw error;
-	} finally {
-		client.destroy();
-	}
+	const key = validateKey(path);
+	const { url, headers } = storage();
+	const response = await fetch(objectUrl(url, key), {
+		headers,
+		redirect: "error",
+		cache: "no-store",
+	});
+	await assertStorageResponse(response);
+	return Buffer.from(await response.arrayBuffer());
 }
 export async function removeAttachmentFile({ path }: { path: string }) {
-	const Key = validateKey(path);
-	const { client, bucket } = storage();
+	const key = validateKey(path);
+	const { url, headers } = storage();
+	const response = await fetch(url, {
+		method: "DELETE",
+		headers: { ...headers, "Content-Type": "application/json" },
+		body: JSON.stringify({ prefixes: [key] }),
+		redirect: "error",
+	});
 	try {
-		await client.send(new DeleteObjectCommand({ Bucket: bucket, Key }));
-	} finally {
-		client.destroy();
+		await assertStorageResponse(response);
+	} catch (error) {
+		if ((error as { code?: string }).code !== "ENOENT") {
+			throw error;
+		}
 	}
 }

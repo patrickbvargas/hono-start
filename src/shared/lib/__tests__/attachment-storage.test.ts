@@ -1,73 +1,97 @@
-import { beforeEach, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
-	send: vi.fn(),
-	destroy: vi.fn(),
+	fetch: vi.fn(),
 	config: {
-		CLOUDFLARE_ACCOUNT_ID: "a".repeat(32),
-		CLOUDFLARE_R2_BUCKET_NAME: "test-private",
-		CLOUDFLARE_R2_ACCESS_KEY_ID: "test",
-		CLOUDFLARE_R2_SECRET_ACCESS_KEY: "test",
+		SUPABASE_URL: "https://test.supabase.co",
+		SUPABASE_STORAGE_BUCKET: "private",
+		SUPABASE_SECRET_KEY: "sb_secret_test",
 	},
 }));
 vi.mock("@/shared/config/env", () => ({ env: mocks.config }));
-vi.mock("@aws-sdk/client-s3", async (original) => ({
-	...(await original<typeof import("@aws-sdk/client-s3")>()),
-	S3Client: class {
-		send = mocks.send;
-		destroy = mocks.destroy;
-	},
-}));
 
 import {
+	isAttachmentStorageCapacityError,
 	readAttachmentFile,
 	removeAttachmentFile,
 	uploadAttachmentFile,
 } from "../attachment-storage";
 
-beforeEach(() => {
-	vi.clearAllMocks();
-});
 const path = "firms/1/client/2/test.pdf";
-it("uploads privately with conditional publication and recorded MIME", async () => {
-	await uploadAttachmentFile({
+const upload = () =>
+	uploadAttachmentFile({
 		path,
 		data: Buffer.from("pdf"),
 		contentType: "application/pdf",
 	});
-	expect(mocks.send.mock.calls[0][0].input).toMatchObject({
-		Bucket: "test-private",
-		Key: path,
-		ContentType: "application/pdf",
-		IfNoneMatch: "*",
-	});
-	expect(mocks.send.mock.calls[0][0].input.ACL).toBeUndefined();
-	expect(mocks.destroy).toHaveBeenCalled();
+beforeEach(() => {
+	vi.clearAllMocks();
+	vi.stubGlobal("fetch", mocks.fetch);
+	mocks.fetch.mockImplementation(async () => new Response("pdf"));
 });
-it("reads object bytes without filesystem dependency", async () => {
-	mocks.send.mockResolvedValueOnce({
-		Body: { transformToByteArray: async () => new Uint8Array([1, 2]) },
-	});
-	expect(await readAttachmentFile({ path })).toEqual(Buffer.from([1, 2]));
+afterEach(() => {
+	vi.unstubAllGlobals();
+	vi.restoreAllMocks();
 });
-it("maps missing objects to controlled not-found", async () => {
-	mocks.send.mockRejectedValueOnce({ name: "NoSuchKey" });
+it("uploads without overwrite using server secret", async () => {
+	await upload();
+	expect(mocks.fetch).toHaveBeenCalledWith(
+		`https://test.supabase.co/storage/v1/object/private/${path}`,
+		expect.objectContaining({
+			method: "POST",
+			headers: {
+				apikey: "sb_secret_test",
+				"Content-Type": "application/pdf",
+				"x-upsert": "false",
+			},
+			redirect: "error",
+		}),
+	);
+});
+it("reads bytes without caching", async () => {
+	expect(await readAttachmentFile({ path })).toEqual(Buffer.from("pdf"));
+	expect(mocks.fetch.mock.calls[0][1].cache).toBe("no-store");
+});
+it.each([
+	"NoSuchKey",
+	"AccessDenied",
+	"NoSuchBucket",
+	"InternalError",
+	"ResourceAlreadyExists",
+	"QuotaExceeded",
+])("classifies %s safely", async (code) => {
+	mocks.fetch.mockResolvedValueOnce(
+		Response.json(
+			{ code, message: "secret provider detail" },
+			{ status: code === "NoSuchKey" ? 404 : 400 },
+		),
+	);
 	await expect(readAttachmentFile({ path })).rejects.toMatchObject({
-		code: "ENOENT",
+		code: code === "NoSuchKey" ? "ENOENT" : code,
+		message: "Não foi possível acessar o armazenamento de anexos",
 	});
+	expect(isAttachmentStorageCapacityError({ name: code })).toBe(
+		code === "QuotaExceeded",
+	);
 });
-it("does not hide access failures as missing objects", async () => {
-	mocks.send.mockRejectedValueOnce({ name: "AccessDenied" });
-	await expect(readAttachmentFile({ path })).rejects.toMatchObject({
-		name: "AccessDenied",
-	});
-});
-it("deletes through private bucket", async () => {
+it("deletes exact key and accepts missing objects", async () => {
+	mocks.fetch.mockResolvedValueOnce(
+		Response.json({ code: "NoSuchKey" }, { status: 404 }),
+	);
 	await removeAttachmentFile({ path });
-	expect(mocks.send.mock.calls[0][0].input).toEqual({
-		Bucket: "test-private",
-		Key: path,
-	});
+	expect(mocks.fetch.mock.calls[0][1].body).toBe(
+		JSON.stringify({ prefixes: [path] }),
+	);
+});
+it("fails missing configuration before request", async () => {
+	const bucket = mocks.config.SUPABASE_STORAGE_BUCKET;
+	mocks.config.SUPABASE_STORAGE_BUCKET = "";
+	try {
+		await expect(upload()).rejects.toThrow("Configuração");
+		expect(mocks.fetch).not.toHaveBeenCalled();
+	} finally {
+		mocks.config.SUPABASE_STORAGE_BUCKET = bucket;
+	}
 });
 it.each([
 	"../outside",
@@ -77,27 +101,30 @@ it.each([
 	"firms\\1\\client\\2\\test",
 	"firms/1/client/2/a/b",
 	"firms/1/unknown/2/file",
-])("rejects invalid key before accessing R2: %s", async (path) => {
+])("rejects invalid key %s", async (path) => {
 	await expect(readAttachmentFile({ path })).rejects.toThrow("Caminho");
-	expect(mocks.send).not.toHaveBeenCalled();
+	expect(mocks.fetch).not.toHaveBeenCalled();
 });
-it("preserves storage errors for feature compensation", async () => {
-	mocks.send.mockRejectedValueOnce(new Error("unavailable"));
-	await expect(
-		uploadAttachmentFile({
-			path,
-			data: Buffer.from("pdf"),
-			contentType: "application/pdf",
-		}),
-	).rejects.toThrow("unavailable");
-	expect(mocks.destroy).toHaveBeenCalled();
-});
-
-it("accepts existing demo object identities", async () => {
-	await removeAttachmentFile({
-		path: "firms/1/demo/client/2/documento-demonstrativo.png",
-	});
-	expect(mocks.send.mock.calls[0][0].input.Key).toBe(
-		"firms/1/demo/client/2/documento-demonstrativo.png",
+it("records unknown upload outcome without retry", async () => {
+	const log = vi.spyOn(console, "error").mockImplementation(() => {});
+	mocks.fetch.mockRejectedValueOnce(new Error("network unavailable"));
+	await expect(upload()).rejects.toThrow("network unavailable");
+	expect(mocks.fetch).toHaveBeenCalledTimes(1);
+	expect(log).toHaveBeenCalledWith(
+		"[attachment:upload]",
+		expect.objectContaining({ storagePath: path }),
 	);
+});
+it("accepts existing demo keys", async () => {
+	await removeAttachmentFile({ path: "firms/1/demo/client/2/documento.png" });
+	expect(mocks.fetch).toHaveBeenCalledTimes(1);
+});
+it("does not classify ambiguous 404 or malformed failures as missing", async () => {
+	mocks.fetch.mockResolvedValueOnce(
+		new Response("unavailable", { status: 404 }),
+	);
+	await expect(readAttachmentFile({ path })).rejects.toMatchObject({
+		name: "AttachmentStorageError",
+		code: undefined,
+	});
 });

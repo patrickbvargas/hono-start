@@ -84,7 +84,7 @@ See `docs/domain/DOMAIN_MODEL.md` for ownership boundaries. Authentication resol
 
 ## Private attachment storage
 
-Attachment binaries use private R2 storage. Only authenticated owner-authorized application requests deliver bytes. Server-only credentials have bucket-scoped access; responses use private/no-store and nosniff. See ATTACHMENTS.md.
+Attachment binaries use private Supabase Storage storage. Only authenticated owner-authorized application requests deliver bytes. Server-only credentials have bucket-scoped access; responses use private/no-store and nosniff. See ATTACHMENTS.md.
 
 Employee is global. The same active Employee ID and type remain bound across authorized Organizations; each membership supplies its own current grants. Missing, invalid, inactive or deleted bindings deny the session for every role, including administrators. Organization changes clear prior-unit caches, and operational scope is derived afresh on the server.
 

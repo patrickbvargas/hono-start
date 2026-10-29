@@ -374,9 +374,9 @@ async function reconcileContractFinancialFixture(params: {
 
 async function main() {
 	const reference = getSeedReferenceDate(process.env.SEED_REFERENCE_DATE);
-	if (!env.CLOUDFLARE_ACCOUNT_ID || !env.CLOUDFLARE_R2_BUCKET_NAME || !env.CLOUDFLARE_R2_ACCESS_KEY_ID || !env.CLOUDFLARE_R2_SECRET_ACCESS_KEY) {
+	if (!env.SUPABASE_URL || !env.SUPABASE_STORAGE_BUCKET || !env.SUPABASE_SECRET_KEY) {
 		throw new Error(
-			"Configure CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_R2_BUCKET_NAME, CLOUDFLARE_R2_ACCESS_KEY_ID e CLOUDFLARE_R2_SECRET_ACCESS_KEY para criar os anexos demonstrativos.",
+			"Configure SUPABASE_URL, SUPABASE_STORAGE_BUCKET e SUPABASE_SECRET_KEY para criar os anexos demonstrativos.",
 		);
 	}
 	console.log(
