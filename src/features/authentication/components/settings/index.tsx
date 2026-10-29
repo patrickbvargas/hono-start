@@ -77,7 +77,7 @@ export function Settings() {
 								Confira as remunerações geradas e os indicadores da visão geral.
 							</li>
 						</ol>
-						<p className="text-muted-foreground">
+						<p className="text-amber-700 dark:text-amber-400">
 							Receitas são valores previstos. Recebimentos registram entradas
 							realizadas. Remunerações geradas não confirmam pagamento ao
 							colaborador; saídas são registradas em Despesas.

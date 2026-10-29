@@ -145,7 +145,6 @@ export function EmployeeOverview({
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Financeiro">
 				<EntityDetail.Fields columns={2} items={financialInfo} />
-				{remunerationLink && <EmployeeFinanceSummary id={id} />}
 				{remunerationLink && (
 					<div className="mt-3 text-sm">{remunerationLink}</div>
 				)}
@@ -188,7 +187,7 @@ function EmployeeFinanceSummary({ id }: { id: EntityId }) {
 					},
 				]}
 			/>
-			<p className="mt-2 text-sm text-muted-foreground">
+			<p className="mt-2 text-sm text-amber-700 dark:text-amber-400">
 				Remuneração gerada não confirma pagamento ao colaborador.
 			</p>
 		</div>

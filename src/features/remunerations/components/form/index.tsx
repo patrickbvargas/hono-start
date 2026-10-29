@@ -113,6 +113,7 @@ function RemunerationFormSkeleton({
 		<EntityForm
 			state={state}
 			title="Editar remuneração"
+			isLoading
 			footer={<Skeleton className="h-8 w-16 rounded-lg" />}
 		>
 			<div className="space-y-2 rounded-lg border bg-muted/30 p-3">

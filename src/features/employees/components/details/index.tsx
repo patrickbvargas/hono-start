@@ -124,15 +124,7 @@ const EmployeeDetailsFallback = ({ id }: { id: EntityId }) => {
 					{(hasPermission(session, "org:remunerations:read_all") ||
 						(hasPermission(session, "org:remunerations:read_own") &&
 							session.employee.id === id)) && (
-						<>
-							<EntityDetail.SkeletonFields
-								columns={2}
-								rows={1}
-								className="mt-3"
-							/>
-							<EntityDetail.SkeletonTitle className="mt-2 h-10 w-full sm:h-5" />
-							<EntityDetail.SkeletonTitle className="mt-3 h-5 w-36" />
-						</>
+						<EntityDetail.SkeletonTitle className="mt-3 h-5 w-36" />
 					)}
 				</EntityDetail.Section>
 				{hasPermission(session, "org:attachments:read") && (

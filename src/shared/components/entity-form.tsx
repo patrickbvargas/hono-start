@@ -17,6 +17,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 	ScrollArea,
+	Skeleton,
 } from "@/shared/components/ui";
 import { formContext } from "@/shared/hooks/use-app-form";
 import { useFormValidationFocus } from "@/shared/hooks/use-form-validation-focus";
@@ -29,6 +30,7 @@ interface EntityFormProps
 	state: OverlayState;
 	footer?: React.ReactNode;
 	footerStart?: React.ReactNode;
+	isLoading?: boolean;
 	children: React.ReactNode;
 	contentClassName?: string;
 	bodyClassName?: string;
@@ -73,6 +75,7 @@ const EntityFormContent = ({
 	state,
 	footer,
 	footerStart,
+	isLoading = false,
 	children,
 	contentClassName,
 	bodyClassName,
@@ -154,14 +157,18 @@ const EntityFormContent = ({
 								<div className="min-w-0 sm:mr-auto">{footerStart}</div>
 							)}
 							<div className="flex items-center justify-end gap-2">
-								<Button
-									type="button"
-									variant="outline"
-									disabled={submitting}
-									onClick={requestClose}
-								>
-									Cancelar
-								</Button>
+								{isLoading ? (
+									<Skeleton className="h-8 w-20 rounded-lg" />
+								) : (
+									<Button
+										type="button"
+										variant="outline"
+										disabled={submitting}
+										onClick={requestClose}
+									>
+										Cancelar
+									</Button>
+								)}
 								{footer}
 							</div>
 						</DialogFooter>

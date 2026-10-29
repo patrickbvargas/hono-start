@@ -140,7 +140,9 @@ export function RemunerationOverview({
 	);
 
 	const calculationSummary = (
-		<div className="mb-4 space-y-2 border-b pb-4 text-sm">
+		<div
+			className={`space-y-2 border-b pb-4 text-sm ${section === "finance" ? "" : "mb-4"}`}
+		>
 			<p>
 				Base do recebimento:{" "}
 				<strong>
@@ -165,7 +167,7 @@ export function RemunerationOverview({
 					alterar um não recalcula o outro.
 				</p>
 			)}
-			<p className="text-muted-foreground">
+			<p className="text-amber-700 dark:text-amber-400">
 				Remuneração gerada não confirma pagamento ao colaborador.
 			</p>
 		</div>

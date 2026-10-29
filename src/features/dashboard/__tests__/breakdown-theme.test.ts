@@ -11,7 +11,7 @@ describe("breakdown chart theme", () => {
 		expect(source).not.toContain("getBreakdownColor");
 		expect(
 			readFileSync(new URL("../constants/charts.ts", import.meta.url), "utf8"),
-		).toContain('color: "var(--primary)"');
+		).toContain('color: "var(--chart-1)"');
 		expect(
 			readFileSync(
 				new URL("../components/breakdown-chart/donut.tsx", import.meta.url),

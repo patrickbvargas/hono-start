@@ -48,15 +48,6 @@ export const AttachmentForm = ({
 				}
 			>
 				<FormSection variant="plain">
-					<p role="status" className="text-sm text-muted-foreground">
-						{isLoadingAttachments
-							? "Carregando limite de anexos..."
-							: attachmentsError
-								? "Não foi possível verificar o limite. Feche e tente novamente."
-								: remainingSlots === 0
-									? `Limite de ${ATTACHMENT_MAX_OWNER_FILES} anexos atingido. Exclua um anexo para liberar espaço.`
-									: `Você pode adicionar mais ${maxFiles} ${maxFiles === 1 ? "anexo" : "anexos"}.`}
-					</p>
 					<form.AppField name="files">
 						{(field) => (
 							<field.File
@@ -79,6 +70,15 @@ export const AttachmentForm = ({
 							/>
 						)}
 					</form.AppField>
+					<p role="status" className="text-sm text-muted-foreground">
+						{isLoadingAttachments
+							? "Carregando limite de anexos..."
+							: attachmentsError
+								? "Não foi possível verificar o limite. Feche e tente novamente."
+								: remainingSlots === 0
+									? `Limite de ${ATTACHMENT_MAX_OWNER_FILES} anexos atingido. Exclua um anexo para liberar espaço.`
+									: `Você pode adicionar mais ${maxFiles} ${maxFiles === 1 ? "anexo" : "anexos"}.`}
+					</p>
 				</FormSection>
 			</EntityForm>
 		</form.Form>

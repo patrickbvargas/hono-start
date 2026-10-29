@@ -29,7 +29,7 @@ export function CashFlowTooltip({
 					<div className="flex items-center gap-2 text-muted-foreground">
 						<span
 							className="size-2.5 rounded-full"
-							style={{ backgroundColor: "var(--chart-2)" }}
+							style={{ backgroundColor: "var(--chart-1)" }}
 						/>
 						<span>Entrada</span>
 					</div>
@@ -41,7 +41,7 @@ export function CashFlowTooltip({
 					<div className="flex items-center gap-2 text-muted-foreground">
 						<span
 							className="size-2.5 rounded-full"
-							style={{ backgroundColor: "var(--chart-4)" }}
+							style={{ backgroundColor: "var(--chart-2)" }}
 						/>
 						<span>Saída</span>
 					</div>

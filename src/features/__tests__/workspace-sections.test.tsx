@@ -335,3 +335,11 @@ it("shows remuneration origin context in finance and drawer", () => {
 	expect(screen.getByText("Sucumbência")).toBeTruthy();
 	expect(screen.getByText("Responsável")).toBeTruthy();
 });
+
+it("keeps employee totals and warning out of the drawer", () => {
+	render(<EmployeeOverview id={42} />);
+	expect(screen.queryByText("Total de remunerações geradas")).toBeNull();
+	expect(
+		screen.queryByText(/Remuneração gerada não confirma pagamento/),
+	).toBeNull();
+});

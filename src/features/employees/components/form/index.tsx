@@ -183,6 +183,7 @@ function EmployeeFormSkeleton({
 		<EntityForm
 			state={state}
 			title={title}
+			isLoading
 			footer={<Skeleton className="h-8 w-16 rounded-lg" />}
 		>
 			<FormSection variant="plain" title="Dados profissionais">

@@ -33,10 +33,10 @@ export function MonthlyRevenueRemunerationChart({
 	onSelect,
 }: MonthlyRevenueRemunerationChartProps) {
 	const config = {
-		revenue: { label: "Honorários recebidos", color: "var(--primary)" },
+		revenue: { label: "Honorários recebidos", color: "var(--chart-1)" },
 		remuneration: {
 			label: isAdmin ? "Remunerações geradas" : "Minhas remunerações geradas",
-			color: "var(--chart-2)",
+			color: "var(--chart-4)",
 		},
 	};
 	const hasValues = items.some(
