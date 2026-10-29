@@ -1,4 +1,6 @@
 export { handleClerkWebhook } from "./api/clerk-webhooks";
+export { getLoginOrganizationCountQueryOptions } from "./api/queries";
+export { ClerkStatus } from "./components/clerk-status";
 export { InvitationSetup } from "./components/invitation";
 export { LoginForm } from "./components/login-form";
 export { OrganizationSwitcher } from "./components/organization-switcher";

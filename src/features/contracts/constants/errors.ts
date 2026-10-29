@@ -1,4 +1,8 @@
 export const CONTRACT_ERRORS = {
+	CONTRACT_TEAM_FORBIDDEN:
+		"Você não tem permissão para alterar a equipe do contrato.",
+	CONTRACT_TERMS_FORBIDDEN:
+		"Você não tem permissão para alterar as condições financeiras do contrato.",
 	CONTRACT_CREATE_FORBIDDEN: "Você não tem permissão para criar contratos",
 	CONTRACT_CREATE_FAILED: "Erro ao criar contrato",
 	CONTRACT_DELETE_FORBIDDEN: "Apenas administradores podem excluir contratos",

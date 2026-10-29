@@ -1,7 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({ query: vi.fn() }));
-vi.mock("@/features/authentication", () => ({ LoginForm: () => null }));
+vi.mock("@/features/authentication", () => ({
+	LoginForm: () => null,
+	getLoginOrganizationCountQueryOptions: () => ({
+		queryKey: ["organization-count"],
+	}),
+}));
 vi.mock("@/shared/session", () => ({
 	getSessionAccessQueryOptions: () => ({ queryKey: ["session", "access"] }),
 	getSafeInternalRedirectPath: (path?: string) =>
@@ -28,7 +33,7 @@ describe("login access verification", () => {
 		mocks.query.mockResolvedValue(access);
 		await expect(
 			beforeLoad({ context: { queryClient: mocks }, search: {} }),
-		).resolves.toEqual({ access });
+		).resolves.toEqual({ access, organizationSelectionRequired: false });
 	});
 	it.each([
 		"/clientes?page=2",
@@ -38,7 +43,9 @@ describe("login access verification", () => {
 		"//outside.example",
 		"/login",
 	])("resumes a safe destination after correction: %s", async (destination) => {
-		mocks.query.mockResolvedValue({ status: "ready", session: {} });
+		mocks.query
+			.mockResolvedValueOnce({ status: "ready", session: {} })
+			.mockResolvedValueOnce(1);
 		await expect(
 			beforeLoad({
 				context: { queryClient: mocks },

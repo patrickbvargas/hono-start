@@ -177,7 +177,7 @@ unless a route-facing consumer requires the difference.
 
 ## Clerk provider UI exception
 
-Clerk-owned SignIn and account widgets may be imported by authentication feature components. Surrounding product UI continues using shared UI exports. ClerkProvider and request/CSRF middleware are thin framework integration. See CLERK_MIGRATION.md for migration state and deployment prerequisites.
+Clerk-owned SignIn, account widgets and control components may be imported by authentication feature components. Surrounding product UI continues using shared UI exports. ClerkProvider and request/CSRF middleware are thin framework integration. See CLERK_MIGRATION.md for migration state and deployment prerequisites.
 
 ## HTTP endpoint exception
 

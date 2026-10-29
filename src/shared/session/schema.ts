@@ -9,6 +9,10 @@ export const clerkPermissionCatalog = {
 		"create",
 		"update_all",
 		"update_assigned",
+		"manage_assignments",
+		"manage_revenues",
+		"change_status",
+		"manage_status_lock",
 		"delete",
 		"restore",
 	],
@@ -25,7 +29,6 @@ export const clerkPermissionCatalog = {
 	],
 	attachments: ["read", "upload", "delete"],
 	employees: ["read", "create", "update", "delete", "restore"],
-	accounts: ["manage"],
 	audit_logs: ["read"],
 	dashboard: ["read_all", "read_own", "read_cash_flow"],
 } as const;

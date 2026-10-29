@@ -210,7 +210,7 @@ describe("contract data mutations", () => {
 			createContract({
 				actor: { id: 1, name: "Admin", email: "admin@example.com" },
 				scope: { firmId: 1 },
-				isAdmin: true,
+				canManageStatusLock: true,
 				input: createBaseInput(),
 			}),
 		).resolves.toEqual({ success: true });
@@ -245,7 +245,7 @@ describe("contract data mutations", () => {
 		await expect(
 			createContract({
 				scope: { firmId: 1 },
-				isAdmin: false,
+				canManageStatusLock: false,
 				input: { ...createBaseInput(), allowStatusChange: false },
 			}),
 		).rejects.toThrow(CONTRACT_ERRORS.CONTRACT_STATUS_LOCK_FORBIDDEN);
@@ -264,7 +264,7 @@ describe("contract data mutations", () => {
 		await expect(
 			createContract({
 				scope: { firmId: 1 },
-				isAdmin: true,
+				canManageStatusLock: true,
 				input: { ...createBaseInput(), status: "COMPLETED" },
 			}),
 		).rejects.toThrow(CONTRACT_ERRORS.CONTRACT_NEW_STATUS_REQUIRED);
@@ -278,7 +278,7 @@ describe("contract data mutations", () => {
 		await expect(
 			createContract({
 				scope: { firmId: 1 },
-				isAdmin: true,
+				canManageStatusLock: true,
 				input: createBaseInput(),
 			}),
 		).rejects.toThrow(CONTRACT_ERRORS.CONTRACT_CLIENT_INACTIVE);
@@ -318,7 +318,10 @@ describe("contract data mutations", () => {
 		await expect(
 			updateContract({
 				scope: { firmId: 1 },
-				isAdmin: false,
+				canManageStatusLock: false,
+				canChangeStatus: false,
+				canManageAssignments: false,
+				canManageRevenues: false,
 				input: { ...createBaseInput(), id: 99, allowStatusChange: false },
 			}),
 		).rejects.toThrow(CONTRACT_ERRORS.CONTRACT_STATUS_LOCK_FORBIDDEN);
@@ -342,7 +345,10 @@ describe("contract data mutations", () => {
 		await expect(
 			updateContract({
 				scope: { firmId: 1 },
-				isAdmin: true,
+				canManageStatusLock: true,
+				canChangeStatus: true,
+				canManageAssignments: true,
+				canManageRevenues: true,
 				input: { ...createBaseInput(), id: 99, status: "COMPLETED" },
 			}),
 		).rejects.toThrow(CONTRACT_ERRORS.CONTRACT_STATUS_CHANGE_LOCKED);
@@ -361,10 +367,89 @@ describe("contract data mutations", () => {
 		await expect(
 			updateContract({
 				scope: { firmId: 1 },
-				isAdmin: true,
+				canManageStatusLock: true,
+				canChangeStatus: true,
+				canManageAssignments: true,
+				canManageRevenues: true,
 				input: { ...createBaseInput(), id: 99 },
 			}),
 		).rejects.toThrow(CONTRACT_ERRORS.CONTRACT_READ_ONLY);
+	});
+
+	it("rejects status changes without status authority even with other edit powers", async () => {
+		getContractStatusByValueMock.mockResolvedValue(
+			createLookup({ id: 80, value: "CANCELLED" }),
+		);
+		await expect(
+			updateContract({
+				scope: { firmId: 1 },
+				canManageStatusLock: true,
+				canChangeStatus: false,
+				canManageAssignments: true,
+				canManageRevenues: true,
+				input: { ...createBaseInput(), id: 99, status: "CANCELLED" },
+			}),
+		).rejects.toThrow(CONTRACT_ERRORS.CONTRACT_STATUS_CHANGE_FORBIDDEN);
+		expect(prismaMock.$transaction).not.toHaveBeenCalled();
+	});
+
+	it("rejects unauthorized team changes before persistence", async () => {
+		getContractByIdMock.mockResolvedValue({
+			id: 99,
+			clientId: 5,
+			processNumber: "PROC-001",
+			legalAreaValue: "SOCIAL_SECURITY",
+			statusValue: "ACTIVE",
+			feePercentage: 0.3,
+			allowStatusChange: true,
+			isActive: true,
+			assignments: [],
+			revenues: [],
+		});
+		await expect(
+			updateContract({
+				scope: { firmId: 1 },
+				canManageStatusLock: false,
+				canChangeStatus: false,
+				canManageAssignments: false,
+				canManageRevenues: true,
+				input: { ...createBaseInput(), id: 99 },
+			}),
+		).rejects.toThrow(CONTRACT_ERRORS.CONTRACT_TEAM_FORBIDDEN);
+		expect(prismaMock.$transaction).not.toHaveBeenCalled();
+	});
+
+	it("updates general data without rewriting restricted sections", async () => {
+		const input = { ...createBaseInput(), id: 99, notes: "General edit" };
+		getContractByIdMock.mockResolvedValue({
+			...input,
+			legalAreaValue: input.legalArea,
+			statusValue: input.status,
+			assignments: input.assignments.map((item) => ({
+				...item,
+				assignmentTypeValue: item.assignmentType,
+			})),
+			revenues: input.revenues.map((item) => ({
+				...item,
+				typeValue: item.type,
+			})),
+		});
+		prismaMock.employee.findMany.mockResolvedValue([createEmployee()]);
+		await expect(
+			updateContract({
+				scope: { firmId: 1 },
+				canManageStatusLock: false,
+				canChangeStatus: false,
+				canManageAssignments: false,
+				canManageRevenues: false,
+				input,
+			}),
+		).resolves.toEqual({ success: true });
+		expect(prismaMock.contract.update).toHaveBeenCalledOnce();
+		expect(prismaMock.contractEmployee.update).not.toHaveBeenCalled();
+		expect(prismaMock.contractEmployee.create).not.toHaveBeenCalled();
+		expect(prismaMock.revenue.update).not.toHaveBeenCalled();
+		expect(prismaMock.revenue.create).not.toHaveBeenCalled();
 	});
 
 	it("syncs removed assignments and revenues during successful update", async () => {
@@ -376,7 +461,10 @@ describe("contract data mutations", () => {
 			updateContract({
 				actor: { id: 1, name: "Admin", email: "admin@example.com" },
 				scope: { firmId: 1 },
-				isAdmin: true,
+				canManageStatusLock: true,
+				canChangeStatus: true,
+				canManageAssignments: true,
+				canManageRevenues: true,
 				input: {
 					...createBaseInput(),
 					id: 99,

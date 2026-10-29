@@ -45,14 +45,14 @@
 - A contract must have at least one revenue at creation.
 - A contract may have at most three revenues, one per revenue type.
 - Completed and cancelled contracts are read-only except for restore by an administrator.
-- Contract status changes may be locked by administrators.
+- Contract status locks require org:contracts:manage_status_lock.
 - Process number is unique per firm.
 - Contract visibility for non-admin users depends on an active assignment to that contract that grants visibility.
 - Contract forms expose `isActive` as an `Ativo` checkbox.
 - Contract status values are `ACTIVE`, `COMPLETED`, and `CANCELLED`.
-- Administrators may manually cancel a contract when status changes are not locked.
+- Editors with org:contracts:change_status may manually cancel a writable contract when status changes are not locked.
 - Completed and cancelled contracts do not allow fee recording, revenue edits, or team changes.
-- Only administrators may control the allow-status-change setting.
+- The allow-status-change setting requires org:contracts:manage_status_lock independently of general edit scope.
 - A contract is considered writable only when it is active and not blocked by the status-lock semantics relevant to the attempted action.
 
 ## Assignment Rules

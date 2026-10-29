@@ -4,6 +4,7 @@ import { useAppForm } from "@/shared/hooks/use-app-form";
 import { getMutationErrorMessage } from "@/shared/lib/entity-management";
 import { toast } from "@/shared/lib/toast";
 import type { EntityId } from "@/shared/schemas/entity";
+import { hasPermission, useLoggedUserSession } from "@/shared/session";
 import {
 	createContractMutationOptions,
 	updateContractMutationOptions,
@@ -69,5 +70,24 @@ export function useContractForm({
 		},
 	});
 
-	return { form };
+	const session = useLoggedUserSession();
+	const canManageStatusLock = hasPermission(
+		session,
+		"org:contracts:manage_status_lock",
+	);
+	const canChangeStatus =
+		isEditing && hasPermission(session, "org:contracts:change_status");
+	const canManageAssignments =
+		!isEditing || hasPermission(session, "org:contracts:manage_assignments");
+	const canManageRevenues =
+		!isEditing || hasPermission(session, "org:contracts:manage_revenues");
+	return {
+		form,
+		permissions: {
+			canManageStatusLock,
+			canChangeStatus,
+			canManageAssignments,
+			canManageRevenues,
+		},
+	};
 }

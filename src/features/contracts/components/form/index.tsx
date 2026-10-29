@@ -17,7 +17,6 @@ import {
 } from "@/shared/components/ui";
 import { TEXT_LIMITS } from "@/shared/constants/text-limits";
 import type { EntityId } from "@/shared/schemas/entity";
-import { hasPermission, useLoggedUserSession } from "@/shared/session";
 import type { OverlayState } from "@/shared/types/overlay";
 import {
 	CONTRACT_MAX_EMPLOYEES,
@@ -59,11 +58,12 @@ function CreateContractFormContent({
 	onSuccess,
 }: Omit<ContractFormProps, "id">) {
 	const options = useContractOptions();
-	const { form } = useContractForm({ onSuccess });
+	const { form, permissions } = useContractForm({ onSuccess });
 
 	return (
 		<ContractFormContent
 			form={form}
+			permissions={permissions}
 			state={state}
 			title="Novo contrato"
 			{...options}
@@ -78,7 +78,7 @@ function EditContractFormContent({
 }: Required<Pick<ContractFormProps, "id">> & Omit<ContractFormProps, "id">) {
 	const { contract } = useContract(id);
 	const options = useContractOptions(getContractEditOptionDefaults(contract));
-	const { form } = useContractForm({
+	const { form, permissions } = useContractForm({
 		id,
 		initialValue: contract,
 		onSuccess,
@@ -87,6 +87,7 @@ function EditContractFormContent({
 	return (
 		<ContractFormContent
 			form={form}
+			permissions={permissions}
 			state={state}
 			title="Editar contrato"
 			{...options}
@@ -99,12 +100,14 @@ interface ContractFormContentProps
 		ReturnType<typeof useContractOptions> {
 	form: ReturnType<typeof useContractForm>["form"];
 	title: string;
+	permissions: ReturnType<typeof useContractForm>["permissions"];
 }
 
 function ContractFormContent({
 	state,
 	form,
 	title,
+	permissions,
 	clients,
 	legalAreas,
 	statuses,
@@ -112,8 +115,12 @@ function ContractFormContent({
 	revenueTypes,
 	employees,
 }: ContractFormContentProps) {
-	const session = useLoggedUserSession();
-	const isAdmin = hasPermission(session, "org:contracts:update_all");
+	const {
+		canManageStatusLock,
+		canChangeStatus,
+		canManageAssignments,
+		canManageRevenues,
+	} = permissions;
 	const {
 		getRowKey,
 		focusAddedRow,
@@ -159,6 +166,7 @@ function ContractFormContent({
 						<form.AppField name="status">
 							{(field) => (
 								<field.Autocomplete
+									isDisabled={!canChangeStatus}
 									label="Andamento"
 									options={statuses}
 									isRequired
@@ -168,6 +176,7 @@ function ContractFormContent({
 						<form.AppField name="feePercentage">
 							{(field) => (
 								<field.Number
+									isDisabled={!canManageRevenues}
 									label="Honorários (%)"
 									minValue={0}
 									maxValue={1}
@@ -190,7 +199,7 @@ function ContractFormContent({
 					</FieldGroup>
 
 					<FieldGroup className="grid gap-4 sm:grid-cols-2">
-						{isAdmin ? (
+						{canManageStatusLock ? (
 							<form.AppField name="allowStatusChange">
 								{(field) => (
 									<field.Checkbox label="Permitir mudança de status" />
@@ -217,6 +226,7 @@ function ContractFormContent({
 										focusAddedRow("assignments", index);
 									}}
 									disabled={
+										!canManageAssignments ||
 										subField.state.value.length >= CONTRACT_MAX_EMPLOYEES
 									}
 								/>
@@ -235,6 +245,7 @@ function ContractFormContent({
 										<form.AppField name={`assignments[${index}].employeeId`}>
 											{(field) => (
 												<field.Autocomplete
+													isDisabled={!canManageAssignments}
 													label="Colaborador"
 													options={employees}
 													isRequired
@@ -246,6 +257,7 @@ function ContractFormContent({
 										>
 											{(field) => (
 												<field.Autocomplete
+													isDisabled={!canManageAssignments}
 													label="Atribuição"
 													options={assignmentTypes}
 													isRequired
@@ -253,6 +265,7 @@ function ContractFormContent({
 											)}
 										</form.AppField>
 										<Button
+											disabled={!canManageAssignments}
 											type="button"
 											size="icon"
 											variant="outline"
@@ -289,6 +302,7 @@ function ContractFormContent({
 										focusAddedRow("revenues", index);
 									}}
 									disabled={
+										!canManageRevenues ||
 										subField.state.value.length >= CONTRACT_MAX_REVENUES
 									}
 								/>
@@ -315,6 +329,7 @@ function ContractFormContent({
 											<form.AppField name={`revenues[${index}].type`}>
 												{(field) => (
 													<field.Autocomplete
+														isDisabled={!canManageRevenues}
 														label="Tipo"
 														options={revenueTypes}
 														isRequired
@@ -324,6 +339,7 @@ function ContractFormContent({
 											<form.AppField name={`revenues[${index}].totalValue`}>
 												{(field) => (
 													<field.Number
+														isDisabled={!canManageRevenues}
 														label="Valor total"
 														minValue={0}
 														step={0.01}
@@ -342,6 +358,7 @@ function ContractFormContent({
 											>
 												{(field) => (
 													<field.DatePicker
+														isDisabled={!canManageRevenues}
 														label="Início do pagamento"
 														isRequired
 													/>
@@ -352,6 +369,7 @@ function ContractFormContent({
 											>
 												{(field) => (
 													<field.Number
+														isDisabled={!canManageRevenues}
 														label="Entrada"
 														minValue={0}
 														step={0.01}
@@ -369,6 +387,7 @@ function ContractFormContent({
 											>
 												{(field) => (
 													<field.Number
+														isDisabled={!canManageRevenues}
 														classNames={{
 															wrapper:
 																"col-start-1 row-span-2 row-start-1 grid grid-rows-subgrid gap-2 has-[[data-slot=field-error]]:row-span-3",
@@ -388,6 +407,7 @@ function ContractFormContent({
 													{getPaymentSummary(revenue, { includeEntry: false })}
 												</div>
 												<Button
+													disabled={!canManageRevenues}
 													type="button"
 													size="icon"
 													variant="outline"

@@ -123,9 +123,13 @@ export function useOptionalLoggedUserSession() {
 
 interface ClerkSessionBoundaryProps {
 	children: React.ReactNode;
+	fallback?: React.ReactNode;
 }
 
-export function ClerkSessionBoundary({ children }: ClerkSessionBoundaryProps) {
+export function ClerkSessionBoundary({
+	children,
+	fallback = null,
+}: ClerkSessionBoundaryProps) {
 	const { isLoaded, userId, sessionId, orgId, sessionClaims } = useAuth();
 	const queryClient = useQueryClient();
 	const router = useRouter();
@@ -156,7 +160,7 @@ export function ClerkSessionBoundary({ children }: ClerkSessionBoundaryProps) {
 		};
 	}, [fingerprint, isLoaded, queryClient, router]);
 	if (!isLoaded || settled !== fingerprint) {
-		return null;
+		return fallback;
 	}
 	return children;
 }

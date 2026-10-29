@@ -196,15 +196,15 @@ The system SHALL enforce assignment-type compatibility, uniqueness, and team-com
 - **THEN** the system rejects the submission with a Portuguese validation message
 
 ### Requirement: Edit contract within writable boundaries
-The system SHALL allow only writable contract updates according to role, assignment visibility, lifecycle state, and status-lock semantics.
+The system SHALL allow only writable contract updates according to explicit scoped edit grants, assignment visibility, lifecycle state, and status-lock semantics. Sensitive group changes SHALL additionally follow contract-write-permissions; update_all alone SHALL NOT authorize team, financial terms, status or lock changes.
 
 #### Scenario: Administrator can edit firm contract
 - **WHEN** an administrator edits a writable contract in their firm
-- **THEN** the system allows the update if the submitted payload passes validation
+- **THEN** the system allows the update if the submitted payload passes validation and the actor holds the required edit and sensitive-action grants
 
 #### Scenario: Regular user can edit assigned writable contract
 - **WHEN** a regular user edits a contract they are assigned to and the contract remains writable
-- **THEN** the system allows the update if the submitted payload passes validation
+- **THEN** the system allows the update if the submitted payload passes validation and the actor holds the required edit and sensitive-action grants
 
 #### Scenario: Regular user cannot edit unassigned contract
 - **WHEN** a regular user attempts to edit a contract they are not assigned to
@@ -218,8 +218,8 @@ The system SHALL allow only writable contract updates according to role, assignm
 - **WHEN** a user attempts to update a cancelled contract
 - **THEN** the system rejects the update because the contract is read-only
 
-#### Scenario: Only administrators can control status-change locking
-- **WHEN** a regular user submits an update that changes the status-lock setting
+#### Scenario: Status-change locking requires its independent grant
+- **WHEN** an editor without org:contracts:manage_status_lock submits an update that changes the status-lock setting
 - **THEN** the server rejects the update before persistence
 
 ### Requirement: Contract lifecycle actions respect role and dependency rules

@@ -1,10 +1,13 @@
 // @vitest-environment jsdom
 
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import type { ReactNode } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 const state = vi.hoisted(() => ({
 	isLoaded: true,
+	sdkStatus: "ready",
+	session: null as null | { status: string; currentTask?: { key: string } },
 	isSignedIn: true,
 	orgId: "org_unavailable" as string | null,
 	retry: vi.fn(),
@@ -13,6 +16,23 @@ const state = vi.hoisted(() => ({
 }));
 vi.mock("@clerk/tanstack-react-start", () => ({
 	useAuth: () => state,
+	useSession: () => ({ session: state.session }),
+	ClerkLoading: ({ children }: { children: ReactNode }) =>
+		state.sdkStatus === "loading" ? children : null,
+	ClerkFailed: ({ children }: { children: ReactNode }) =>
+		state.sdkStatus === "failed" ? children : null,
+	ClerkDegraded: ({ children }: { children: ReactNode }) =>
+		state.sdkStatus === "degraded" ? children : null,
+	ClerkLoaded: ({ children }: { children: ReactNode }) =>
+		["ready", "degraded"].includes(state.sdkStatus) ? children : null,
+	Show: ({ children, when }: { children: ReactNode; when: string }) =>
+		(when === "signed-in" ? state.isSignedIn : !state.isSignedIn)
+			? children
+			: null,
+	RedirectToTasks: ({ redirectUrl }: { redirectUrl: string }) => (
+		<div data-testid="task-redirect" data-destination={redirectUrl} />
+	),
+
 	OrganizationList: ({
 		hidePersonal,
 		afterSelectOrganizationUrl,
@@ -28,7 +48,11 @@ vi.mock("@clerk/tanstack-react-start", () => ({
 			Escolha sua organização
 		</div>
 	),
-	SignIn: () => <div>Entrar</div>,
+	SignIn: ({ forceRedirectUrl }: { forceRedirectUrl: string }) => (
+		<div data-testid="sign-in" data-destination={forceRedirectUrl}>
+			Entrar
+		</div>
+	),
 }));
 vi.mock("@/shared/session/client", () => ({
 	getSafeInternalRedirectPath: (path?: string) =>
@@ -51,6 +75,10 @@ afterEach(() => {
 	cleanup();
 	vi.clearAllMocks();
 	state.isPending = false;
+	state.sdkStatus = "ready";
+	state.isSignedIn = true;
+	state.session = null;
+	window.history.replaceState(null, "", "/");
 });
 
 describe("organization access recovery", () => {
@@ -184,4 +212,101 @@ describe("required access configuration", () => {
 				.disabled,
 		).toBe(true);
 	});
+});
+
+describe("Clerk control states", () => {
+	it("shows loading instead of a blank login", () => {
+		state.sdkStatus = "loading";
+		render(<LoginForm />);
+		expect(screen.getByRole("status").textContent).toContain(
+			"Carregando acesso",
+		);
+		expect(screen.queryByTestId("organization-list")).toBeNull();
+	});
+	it("shows actionable SDK failure without login controls", () => {
+		state.sdkStatus = "failed";
+		render(<LoginForm />);
+		expect(screen.getByRole("alert").textContent).toContain(
+			"serviço de acesso",
+		);
+		expect(
+			screen.getByRole("button", { name: "Recarregar página" }),
+		).toBeTruthy();
+		expect(screen.queryByTestId("organization-list")).toBeNull();
+	});
+	it("keeps loaded content visible with a degraded-service notice", () => {
+		state.sdkStatus = "degraded";
+		render(<LoginForm />);
+		expect(screen.getByRole("status").textContent).toContain(
+			"parcialmente indisponível",
+		);
+		expect(screen.getByTestId("organization-list")).toBeTruthy();
+	});
+	it("shows sign-in only while signed out", () => {
+		state.isSignedIn = false;
+		render(<LoginForm />);
+		expect(screen.getByText("Entrar")).toBeTruthy();
+		expect(screen.queryByTestId("organization-list")).toBeNull();
+	});
+	it("resumes interrupted pending tasks with a validated return destination", () => {
+		state.session = { status: "pending", currentTask: { key: "setup-mfa" } };
+		render(<LoginForm redirectTo="/clientes?page=2" />);
+		expect(
+			screen.getByTestId("task-redirect").getAttribute("data-destination"),
+		).toBe("/login?selectOrganization=true&redirect=%2Fclientes%3Fpage%3D2");
+		expect(screen.queryByTestId("organization-list")).toBeNull();
+	});
+	it("does not redirect again while already on a task", () => {
+		window.history.replaceState(null, "", "/login#/tasks/reset-password");
+		state.session = {
+			status: "pending",
+			currentTask: { key: "reset-password" },
+		};
+		render(<LoginForm />);
+		expect(screen.queryByTestId("task-redirect")).toBeNull();
+		expect(screen.getByText("Entrar")).toBeTruthy();
+	});
+	it("rejects external destinations during task recovery", () => {
+		state.session = {
+			status: "pending",
+			currentTask: { key: "choose-organization" },
+		};
+		render(<LoginForm redirectTo="https://outside.example" />);
+		expect(
+			screen.getByTestId("task-redirect").getAttribute("data-destination"),
+		).toBe("/login?selectOrganization=true&redirect=%2F");
+	});
+});
+
+it("switches from task redirect to task form on a hash change", () => {
+	state.session = { status: "pending", currentTask: { key: "setup-mfa" } };
+	render(<LoginForm />);
+	expect(screen.getByTestId("task-redirect")).toBeTruthy();
+	window.history.replaceState(null, "", "/login#/tasks/setup-mfa");
+	fireEvent(window, new Event("hashchange"));
+	expect(screen.queryByTestId("task-redirect")).toBeNull();
+	expect(screen.getByText("Entrar")).toBeTruthy();
+});
+
+it("routes completed sign-in through organization selection", () => {
+	state.isSignedIn = false;
+	render(<LoginForm redirectTo="/clientes?page=2" />);
+	expect(screen.getByTestId("sign-in").getAttribute("data-destination")).toBe(
+		"/login?selectOrganization=true&redirect=%2Fclientes%3Fpage%3D2",
+	);
+});
+
+it("allows requested organization selection before resolving active-unit configuration", () => {
+	render(
+		<LoginForm
+			selectOrganization
+			access={{ status: "configuration_required", issues: ["firm_missing"] }}
+			redirectTo="/contratos"
+		/>,
+	);
+	expect(screen.getByTestId("organization-list")).toBeTruthy();
+	expect(screen.queryByRole("alert")).toBeNull();
+	expect(
+		screen.getByTestId("organization-list").getAttribute("data-destination"),
+	).toBe("/contratos");
 });

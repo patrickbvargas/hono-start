@@ -42,7 +42,10 @@ const createContractFn = createServerFn({ method: "POST" })
 				},
 				scope: { firmId: scope.firmId },
 				input: data,
-				isAdmin: hasPermission(session, "org:contracts:update_all"),
+				canManageStatusLock: hasPermission(
+					session,
+					"org:contracts:manage_status_lock",
+				),
 			});
 		} catch (error) {
 			console.error("[createContract]", error);
@@ -91,7 +94,19 @@ const updateContractFn = createServerFn({ method: "POST" })
 				},
 				scope: { firmId: scope.firmId },
 				input: data,
-				isAdmin: hasPermission(session, "org:contracts:update_all"),
+				canManageStatusLock: hasPermission(
+					session,
+					"org:contracts:manage_status_lock",
+				),
+				canChangeStatus: hasPermission(session, "org:contracts:change_status"),
+				canManageAssignments: hasPermission(
+					session,
+					"org:contracts:manage_assignments",
+				),
+				canManageRevenues: hasPermission(
+					session,
+					"org:contracts:manage_revenues",
+				),
 			});
 		} catch (error) {
 			console.error("[updateContract]", error);

@@ -230,14 +230,14 @@ The system SHALL resolve the authorized Firm exclusively from the currently acti
 
 #### Scenario: General account has no Employee binding
 - **WHEN** a member has valid Firm metadata and no employeeId
-- **THEN** all protected access is denied and login shows required Employee configuration guidance without Organization selection
+- **THEN** all protected access is denied and login shows required Employee configuration guidance without Organization selection outside the explicit post-login choice
 
 #### Scenario: Provider unavailable
 - **WHEN** the live Organization lookup fails
 - **THEN** protected execution fails closed without using cached or default Firm authority
 
 ### Requirement: Required configuration failures provide actionable recovery
-The system SHALL distinguish missing or invalid business bindings from unauthenticated state. For a verified active member it SHALL report all malformed or missing metadata fields together, without exposing private values. Login SHALL show a persistent pt-BR configuration notice identifying the affected user or Organization mapping and instructing administrator correction in Clerk. It SHALL offer retry and sign-out. Organization selection SHALL be hidden whenever any Employee or Firm binding issue exists, including combined issues; these mappings require correction in Clerk. Provider outages SHALL NOT be reported as metadata problems.
+The system SHALL distinguish missing or invalid business bindings from unauthenticated state. For a verified active member it SHALL report all malformed or missing metadata fields together, without exposing private values. Login SHALL show a persistent pt-BR configuration notice identifying the affected user or Organization mapping and instructing administrator correction in Clerk. It SHALL offer retry and sign-out. Outside explicit post-login selection for users with multiple memberships, Organization selection SHALL be hidden whenever any Employee or Firm binding issue exists, including combined issues; these mappings require correction in Clerk. Explicit post-login selection SHALL remain available before previous-unit configuration recovery and SHALL never authorize protected data. Provider outages SHALL NOT be reported as metadata problems.
 
 #### Scenario: Both metadata fields are missing
 - **WHEN** an active verified member lacks employeeId and firmId in private metadata
@@ -257,8 +257,8 @@ The system SHALL distinguish missing or invalid business bindings from unauthent
 
 #### Scenario: Employee binding requires correction in Clerk
 - **WHEN** any employeeId issue is present, alone or with a firmId issue
-- **THEN** login hides Organization selection and retains administrator guidance, retry and sign-out
+- **THEN** outside explicit post-login selection, login hides Organization selection and retains administrator guidance, retry and sign-out
 
 #### Scenario: Only Firm configuration is invalid
 - **WHEN** the verified Employee binding has no issue and the Firm mapping is missing or invalid
-- **THEN** login hides Organization selection and retains administrator guidance, retry and sign-out
+- **THEN** outside explicit post-login selection, login hides Organization selection and retains administrator guidance, retry and sign-out

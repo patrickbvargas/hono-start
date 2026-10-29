@@ -24,12 +24,14 @@ import {
 	CONTRACT_STATUS_COMPLETED_VALUE,
 } from "../constants/values";
 import { assertResolvedContractAssignmentRules } from "../rules/assignments";
+import { assertContractSectionChanges } from "../rules/permissions";
 import type {
 	ContractAssignmentInput,
 	ContractCreateInput,
 	ContractRevenueInput,
 	ContractUpdateInput,
 } from "../schemas/form";
+import { defaultContractUpdateValues } from "../utils/default";
 import { normalizeOptionalText } from "../utils/normalization";
 import {
 	getAssignmentTypesByValues,
@@ -48,14 +50,17 @@ interface CreateContractParams {
 	actor?: AuditLogActor;
 	scope: ContractWriteScope;
 	input: ContractCreateInput;
-	isAdmin: boolean;
+	canManageStatusLock: boolean;
 }
 
 interface UpdateContractParams {
 	actor?: AuditLogActor;
 	scope: ContractWriteScope;
 	input: ContractUpdateInput;
-	isAdmin: boolean;
+	canManageStatusLock: boolean;
+	canChangeStatus: boolean;
+	canManageAssignments: boolean;
+	canManageRevenues: boolean;
 }
 
 interface ContractLookupSelectionInput {
@@ -313,9 +318,9 @@ export async function createContract({
 	actor,
 	scope,
 	input,
-	isAdmin,
+	canManageStatusLock,
 }: CreateContractParams): Promise<MutationReturnType> {
-	if (!isAdmin && !input.allowStatusChange) {
+	if (!canManageStatusLock && !input.allowStatusChange) {
 		throw new Error(CONTRACT_ERRORS.CONTRACT_STATUS_LOCK_FORBIDDEN);
 	}
 
@@ -358,7 +363,7 @@ export async function createContract({
 				processNumber: input.processNumber.trim(),
 				feePercentage: input.feePercentage,
 				notes: normalizeOptionalText(input.notes),
-				allowStatusChange: isAdmin ? input.allowStatusChange : true,
+				allowStatusChange: canManageStatusLock ? input.allowStatusChange : true,
 				isActive: input.isActive,
 			},
 		});
@@ -409,7 +414,10 @@ export async function updateContract({
 	actor,
 	scope,
 	input,
-	isAdmin,
+	canManageStatusLock,
+	canChangeStatus,
+	canManageAssignments,
+	canManageRevenues,
 }: UpdateContractParams): Promise<MutationReturnType> {
 	const access = await getContractAccessResourceById(input.id);
 
@@ -432,7 +440,10 @@ export async function updateContract({
 		throw new Error(CONTRACT_ERRORS.CONTRACT_NOT_FOUND);
 	}
 
-	if (!isAdmin && input.allowStatusChange !== existing.allowStatusChange) {
+	if (
+		!canManageStatusLock &&
+		input.allowStatusChange !== existing.allowStatusChange
+	) {
 		throw new Error(CONTRACT_ERRORS.CONTRACT_STATUS_LOCK_FORBIDDEN);
 	}
 
@@ -445,7 +456,7 @@ export async function updateContract({
 		},
 	);
 
-	if (!isAdmin && status.id !== existing.statusId) {
+	if (!canChangeStatus && status.id !== existing.statusId) {
 		throw new Error(CONTRACT_ERRORS.CONTRACT_STATUS_CHANGE_FORBIDDEN);
 	}
 
@@ -467,6 +478,15 @@ export async function updateContract({
 		},
 		id: input.id,
 	});
+
+	if (!canManageAssignments || !canManageRevenues) {
+		assertContractSectionChanges({
+			input,
+			existing: defaultContractUpdateValues(before),
+			canManageAssignments,
+			canManageRevenues,
+		});
+	}
 
 	const clientId = Number(input.clientId);
 	const client = await prisma.client.findFirst({
@@ -500,24 +520,28 @@ export async function updateContract({
 				processNumber: input.processNumber.trim(),
 				feePercentage: input.feePercentage,
 				notes: normalizeOptionalText(input.notes),
-				allowStatusChange: isAdmin
+				allowStatusChange: canManageStatusLock
 					? input.allowStatusChange
 					: existing.allowStatusChange,
 				isActive: input.isActive,
 			},
 		});
 
-		await syncAssignments(tx, {
-			contractId: input.id,
-			firmId: scope.firmId,
-			assignments: resolvedAssignments,
-		});
+		if (canManageAssignments) {
+			await syncAssignments(tx, {
+				contractId: input.id,
+				firmId: scope.firmId,
+				assignments: resolvedAssignments,
+			});
+		}
 
-		await syncRevenues(tx, {
-			contractId: input.id,
-			firmId: scope.firmId,
-			revenues: resolvedRevenues,
-		});
+		if (canManageRevenues) {
+			await syncRevenues(tx, {
+				contractId: input.id,
+				firmId: scope.firmId,
+				revenues: resolvedRevenues,
+			});
+		}
 
 		await createAuditLog(tx, {
 			firmId: scope.firmId,

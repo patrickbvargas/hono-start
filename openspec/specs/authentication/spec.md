@@ -30,8 +30,9 @@ The system SHALL gate `_app` in `beforeLoad` using a verified active Clerk sessi
 - **AND** the user is directed to the appropriate Clerk authentication/task flow
 
 #### Scenario: Authenticated user revisits login
-- **WHEN** a fully authenticated, mapped user visits a public authentication entry
-- **THEN** the route redirects to the safe requested destination or the authenticated home
+- **WHEN** a fully authenticated, mapped user visits login
+- **THEN** users with multiple Organization memberships see the native Organization selector even if a previous Organization is active
+- **AND** users with a single membership continue to the safe requested destination or authenticated home
 
 #### Scenario: Unauthenticated user hits protected route
 - **WHEN** an unauthenticated user navigates to `/clientes`
@@ -129,3 +130,33 @@ The system SHALL configure credentials, session lifetime, enumeration/attack pro
 #### Scenario: Uninvited identity signs in
 - **WHEN** a Clerk identity lacks an authorized firm membership or Employee mapping
 - **THEN** authentication alone does not grant access to product data or self-service firm creation
+
+### Requirement: Clerk control feedback and task recovery
+Authentication surfaces SHALL show loading feedback, SDK initialization failure with reload, and a nonblocking degraded-service notice. Loaded content SHALL remain available in degraded mode subject to server authorization. Show SHALL control signed-in/signed-out presentation only; business permissions SHALL remain server-backed. Interrupted pending tasks SHALL use configured login hash task routes and preserve a validated return destination without redirecting repeatedly while already on a task.
+
+#### Scenario: SDK initialization fails
+- **WHEN** Clerk fails to initialize
+- **THEN** the user sees an access-service failure and reload action instead of blank content
+
+#### Scenario: Degraded provider
+- **WHEN** Clerk loads in degraded mode
+- **THEN** affected authentication surfaces show a service notice alongside loaded content without granting protected access
+
+#### Scenario: Pending task resumes
+- **WHEN** a pending session has an unfinished task
+- **THEN** the user resumes its configured /login#/tasks/<key> flow and the completed flow returns through organization selection
+
+### Requirement: Post-login Organization selection
+The system SHALL determine the current authenticated user's membership count on the server. Multiple memberships SHALL require selection on login even when route revalidation happens before Clerk's post-sign-in redirect. The selector SHALL preserve the safe intended product destination and recheck normal access after selection. Provider failures SHALL NOT silently skip selection. Explicit post-login selection SHALL precede configuration recovery for the previous unit without granting product access.
+
+#### Scenario: Session becomes ready before redirect parameters arrive
+- **WHEN** login is revalidated after authentication with multiple memberships and no selection flag yet
+- **THEN** the selector remains visible rather than redirecting directly to the product
+
+#### Scenario: Organization selected
+- **WHEN** the user selects an Organization
+- **THEN** navigation continues directly to the safe intended product destination and validates the chosen unit without returning to the login gate
+
+#### Scenario: Previous unit has invalid configuration
+- **WHEN** a user with multiple memberships enters the explicit post-login choice with an invalid previous unit mapping
+- **THEN** the user can choose another Organization but cannot access protected data without valid current mappings

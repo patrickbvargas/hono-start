@@ -5,7 +5,7 @@ This file preserves the canonical user workflows of the product. These flows des
 ## Login and account management
 
 1. Open `/login` and authenticate through Clerk email or username sign-in.
-2. Complete any provider verification or session tasks and select an authorized firm.
+2. Complete any provider verification or session tasks. If the user belongs to multiple Organizations, always show the Organization selector after login, even when a previous Organization is active. A single-Organization user with a ready session continues directly. Selection preserves the safe intended destination and resolves access again for the chosen unit.
 3. Enter product screens only with current membership and an active linked Employee.
 4. Recovery is available through Clerk from `/recuperar-senha`; OAB is not a credential.
 5. Open account management from the shell to manage credentials through Clerk.
@@ -17,7 +17,7 @@ This file preserves the canonical user workflows of the product. These flows des
 2. Create or invite users and assign Organization roles in Clerk Dashboard.
 3. Set User privateMetadata.employeeId to an active business Employee ID and Organization privateMetadata.firmId to an existing Firm ID. Both numeric fields are required for every role.
 4. Sign-in validates current provider membership, permissions and both required business links.
-5. Missing or invalid mappings block protected access. Login shows Configuração de acesso incompleta with each missing/malformed field or unavailable reference, administrator guidance, Tentar novamente and Sair, without Organization selection. Retry revalidates current Clerk state and returns to the safe requested destination after correction.
+5. Missing or invalid mappings block protected access. Login shows Configuração de acesso incompleta with each missing/malformed field or unavailable reference, administrator guidance, Tentar novamente and Sair, without Organization selection outside the explicit post-login choice. Retry revalidates current Clerk state and returns to the safe requested destination after correction.
 6. Revoking or deleting a Clerk account leaves Employee and financial/audit history unchanged.
 
 ## Register A Client
@@ -147,4 +147,4 @@ Dashboard drilldown row menus offer Abrir página and Ver resumo through right c
 
 See [Multitenancy](MULTITENANCY.md) for the authoritative entity-scope matrix, global lifecycle, evidence visibility and current-Firm enforcement.
 
-Organization selection is hidden whenever any employeeId or firmId configuration issue exists, including combined issues, because required metadata must be corrected in Clerk. Retry and sign-out remain available. Organization selection remains available before selection or for other access denials without configuration findings.
+Outside the explicit post-login organization-choice step, Organization selection is hidden whenever any employeeId or firmId configuration issue exists, including combined issues, because required metadata must be corrected in Clerk. The post-login step allows members of multiple Organizations to choose a unit before configuration recovery; it never grants protected product access. Retry and sign-out remain available. Organization selection remains available before selection or for other access denials without configuration findings.

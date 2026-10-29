@@ -45,13 +45,12 @@ describe("authentication public screen contracts", () => {
 		expect(authLayoutRoute).toContain('createFileRoute("/_auth")');
 		expect(authLayoutRoute).toContain("items-center justify-center px-4");
 		expect(authLayoutRoute).toContain("<Outlet />");
-		expect(loginRoute).toContain(
-			'import { LoginForm } from "@/features/authentication";',
-		);
+		expect(loginRoute).toContain('from "@/features/authentication";');
+		expect(loginRoute).toContain("getLoginOrganizationCountQueryOptions");
 		expect(loginRoute).toContain("beforeLoad:");
 		expect(loginRoute).toContain("validateSearch: loginSearchSchema");
 		expect(loginRoute).toContain(
-			"<LoginForm redirectTo={redirect} access={access} />",
+			"selectOrganization={organizationSelectionRequired}",
 		);
 
 		expect(loginRoute).not.toContain("@/features/authentication/components/");

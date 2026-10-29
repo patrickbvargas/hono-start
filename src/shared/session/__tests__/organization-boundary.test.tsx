@@ -25,9 +25,25 @@ vi.mock("../server", () => ({ getOptionalServerLoggedUserSession: vi.fn() }));
 
 import { ClerkSessionBoundary } from "../client";
 
-afterEach(cleanup);
+afterEach(() => {
+	cleanup();
+	state.identity.isLoaded = true;
+});
 
 describe("Organization context boundary", () => {
+	it("shows fallback while SDK loads without rendering protected content", () => {
+		state.identity.isLoaded = false;
+		render(
+			<QueryClientProvider client={new QueryClient()}>
+				<ClerkSessionBoundary fallback={<p role="status">Carregando acesso</p>}>
+					<div>Protected content</div>
+				</ClerkSessionBoundary>
+			</QueryClientProvider>,
+		);
+		expect(screen.getByRole("status")).toBeTruthy();
+		expect(screen.queryByText("Protected content")).toBeNull();
+	});
+
 	it("hides old content and clears all cached unit data before revalidating", async () => {
 		state.identity.orgId = "org_one";
 		let finishInvalidation: () => void = () => {};

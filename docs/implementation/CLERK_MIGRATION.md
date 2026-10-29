@@ -42,8 +42,7 @@ actual instance before cutover; no plan availability is assumed.
 `src/shared/session/schema.ts` defines the finite business feature/action names.
 It is a vocabulary for checks, not a role-to-permission grant matrix. Assign
 grants to roles in Clerk. `org:sys_*:*` remains Clerk-owned System Permissions.
-`org:accounts:manage` groups account administration explicitly; it is not a
-wildcard for employee CRUD or any other resource.
+Account administration occurs in Clerk Dashboard. The unused org:accounts:manage application grant is retired.
 
 Contract team changes require `update_all` or `update_assigned` plus persisted
 assignment and writable-contract checks. Lock/status administration requires
@@ -171,3 +170,7 @@ Member audit access: grant `org:audit_logs:read` to the intended Clerk role. The
 Both User privateMetadata.employeeId and Organization privateMetadata.firmId are mandatory numeric positive integers in the target environment. Signed-in verified members with missing or invalid configuration see Configuração de acesso incompleta on login, identifying each affected mapping without its private value. Correct metadata in Clerk, then choose Tentar novamente; the app revalidates current provider state and returns to the safe destination. Sair remains available; Organization selection is hidden for configuration issues. Existing unbound administrator accounts must be configured before deploying this requirement. No database migration is required.
 
 Organization selection is hidden whenever any employeeId or firmId configuration issue exists, including combined issues, because required metadata must be corrected in Clerk. Retry and sign-out remain available. Organization selection remains available before selection or for other access denials without configuration findings.
+
+## Contract permission split
+
+Before deploying split-contract-permissions, add org:contracts:manage_assignments and org:contracts:manage_revenues to roles holding update_all or update_assigned. Add org:contracts:change_status and org:contracts:manage_status_lock to roles holding update_all. Preserve unrelated grants and verify provider read-back. accounts:manage is ignored by the application; remote removal is not required. See ROLES_AND_PERMISSIONS.md for creation and edit semantics.

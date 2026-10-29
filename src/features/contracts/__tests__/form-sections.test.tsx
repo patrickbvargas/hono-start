@@ -16,6 +16,15 @@ import { useContractForm } from "../hooks/use-form";
 import { useContractFormSections } from "../hooks/use-form-sections";
 import { defaultContractRevenueValues } from "../utils/default";
 
+const { permissionKeys } = vi.hoisted(() => ({
+	permissionKeys: [] as string[],
+}));
+
+vi.mock("@/shared/session", () => ({
+	useLoggedUserSession: () => ({ permissions: permissionKeys }),
+	hasPermission: (session: { permissions: string[] }, key: string) =>
+		session.permissions.includes(key),
+}));
 vi.mock("../api/mutations", () => ({
 	createContractMutationOptions: () => ({ mutationFn: vi.fn() }),
 	updateContractMutationOptions: () => ({ mutationFn: vi.fn() }),
@@ -58,9 +67,34 @@ function Harness() {
 
 describe("contract form sections", () => {
 	afterEach(() => {
+		permissionKeys.length = 0;
 		cleanup();
 		vi.unstubAllGlobals();
 	});
+	it("allows required creation sections without sensitive editing grants", () => {
+		const { result } = renderHook(() => useContractForm({}), {
+			wrapper: Wrapper,
+		});
+		expect(result.current.permissions).toEqual({
+			canManageAssignments: true,
+			canManageRevenues: true,
+			canChangeStatus: false,
+			canManageStatusLock: false,
+		});
+	});
+	it("does not infer sensitive editing powers from update_all", () => {
+		permissionKeys.push("org:contracts:update_all");
+		const { result } = renderHook(() => useContractForm({ id: 1 }), {
+			wrapper: Wrapper,
+		});
+		expect(result.current.permissions).toEqual({
+			canManageAssignments: false,
+			canManageRevenues: false,
+			canChangeStatus: false,
+			canManageStatusLock: false,
+		});
+	});
+
 	it("keeps row keys stable on edits and moves them with surviving rows", () => {
 		const { result } = renderHook(useHarness, { wrapper: Wrapper });
 		const first = result.current.getRowKey("assignments", 0);

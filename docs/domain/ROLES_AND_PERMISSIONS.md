@@ -68,7 +68,7 @@ The following matrix describes initial role presets to configure in Clerk, not i
 - Delete and restore actions are administrator-only.
 - Audit access requires `org:audit_logs:read` plus read access to the audited entity. Member/User roles may receive this grant; it never widens entity visibility.
 - Manual remuneration edits are administrator-only.
-- Contract status lock management is administrator-only.
+- Contract status lock management requires org:contracts:manage_status_lock.
 - Employee management is administrator-only.
 - Attachment deletion is administrator-only.
 
@@ -184,3 +184,9 @@ See [Multitenancy](MULTITENANCY.md) for the authoritative entity-scope matrix, g
 ## Audit subject scope
 
 With `org:audit_logs:read`, users can inspect history only for entities they can currently read. Clients and employees follow their company-wide read grants. Contracts follow all/active-assignment scope, fees follow their contract scope, remunerations follow all/own scope and expenses require expense read. Attachment events follow their owner, including deleted attachment snapshots. Event authorship never grants access. Lists, counts, filter options, entity history and direct audit detail URLs enforce the same server-derived scope; search parameters cannot expand it. Missing Employee bindings or revoked assignments grant no assigned/own history. Operational events remain in the current Firm; shared Client/Employee history retains its company-wide scope. Unknown or unresolvable contexts are denied.
+
+## Independent contract editing grants
+
+Existing edits require contracts:update_all or eligible contracts:update_assigned. Additionally, team changes require org:contracts:manage_assignments; revenue plans and feePercentage changes require org:contracts:manage_revenues; andamento changes require org:contracts:change_status; lock changes require org:contracts:manage_status_lock. update_all alone does not grant lifecycle authority. Unchanged restricted sections remain accepted; UI disables their controls and the server rejects unauthorized changes before persistence. Firm, assignment and lifecycle rules remain mandatory. Initial Administrator grants include all four capabilities; initial User grants include team and financial editing.
+
+contracts:create includes initial mandatory team and revenue terms. Every new contract starts ACTIVE; initial locking requires manage_status_lock. accounts:manage is retired from the application catalog; account administration remains in Clerk. No DB migration is required.

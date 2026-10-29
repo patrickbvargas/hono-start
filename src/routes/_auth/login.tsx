@@ -1,6 +1,9 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import * as z from "zod";
-import { LoginForm } from "@/features/authentication";
+import {
+	getLoginOrganizationCountQueryOptions,
+	LoginForm,
+} from "@/features/authentication";
 import {
 	getSafeInternalRedirectPath,
 	getSessionAccessQueryOptions,
@@ -8,6 +11,7 @@ import {
 
 const loginSearchSchema = z.object({
 	redirect: z.string().optional().catch(undefined),
+	selectOrganization: z.boolean().optional().catch(undefined),
 });
 
 export const Route = createFileRoute("/_auth/login")({
@@ -16,19 +20,31 @@ export const Route = createFileRoute("/_auth/login")({
 	beforeLoad: async ({ context: { queryClient }, search }) => {
 		const access = await queryClient.query(getSessionAccessQueryOptions());
 
+		const organizationSelectionRequired =
+			(access.status === "ready" || search.selectOrganization === true) &&
+			(await queryClient.query(getLoginOrganizationCountQueryOptions())) > 1;
+		if (organizationSelectionRequired) {
+			return { access, organizationSelectionRequired };
+		}
 		if (access.status === "ready") {
 			throw redirect({
 				href: getSafeInternalRedirectPath(search.redirect) ?? "/",
 			});
 		}
-		return { access };
+		return { access, organizationSelectionRequired: false };
 	},
 	component: RouteComponent,
 });
 
 function RouteComponent() {
 	const { redirect } = Route.useSearch();
-	const { access } = Route.useRouteContext();
+	const { access, organizationSelectionRequired } = Route.useRouteContext();
 
-	return <LoginForm redirectTo={redirect} access={access} />;
+	return (
+		<LoginForm
+			redirectTo={redirect}
+			access={access}
+			selectOrganization={organizationSelectionRequired}
+		/>
+	);
 }

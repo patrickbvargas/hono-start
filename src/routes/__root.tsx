@@ -14,6 +14,7 @@ import {
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { ApplicationBrandingHead } from "@/features/application-branding";
+import { ClerkStatus } from "@/features/authentication";
 import { RouteError } from "@/shared/components/route-error";
 import { RouteLoading } from "@/shared/components/route-loading";
 import { RouteNotFound } from "@/shared/components/route-not-found";
@@ -69,7 +70,17 @@ function RootLayout() {
 			data-slot="root-container"
 			className="relative mx-auto h-dvh w-dvw overflow-hidden"
 		>
-			<ClerkSessionBoundary>
+			<ClerkSessionBoundary
+				fallback={
+					<div className="flex h-full flex-col items-center justify-center gap-3 px-4">
+						<ClerkStatus>
+							<p role="status" className="text-sm text-muted-foreground">
+								Atualizando acesso...
+							</p>
+						</ClerkStatus>
+					</div>
+				}
+			>
 				<Outlet />
 			</ClerkSessionBoundary>
 		</div>
@@ -89,6 +100,11 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 					localization={ptBR}
 					appearance={{ theme: shadcn }}
 					signInUrl="/login"
+					taskUrls={{
+						"choose-organization": "/login#/tasks/choose-organization",
+						"reset-password": "/login#/tasks/reset-password",
+						"setup-mfa": "/login#/tasks/setup-mfa",
+					}}
 					signInFallbackRedirectUrl="/"
 				>
 					<ThemeProvider>
