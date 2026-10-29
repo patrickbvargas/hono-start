@@ -122,7 +122,7 @@ export const PaginationView = ({
 					{totalRecords === 1 ? "registro" : "registros"}
 				</p>
 				{handlePageSizeChange ? (
-					<div className="flex items-center justify-end gap-2">
+					<div className="hidden sm:flex items-center justify-end gap-2">
 						<span className="text-sm text-muted-foreground">Por página</span>
 						<Select
 							value={pageSizeValue}

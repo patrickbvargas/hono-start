@@ -64,7 +64,7 @@ export function AttachmentPreview({
 				portalClassName={confirmationOpen ? "z-40" : undefined}
 				showCloseButton={false}
 				finalFocus={() => triggerRef.current}
-				className="flex h-[90dvh] max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] min-w-0 flex-col gap-0 overflow-hidden p-0 sm:max-w-6xl"
+				className="flex h-dvh max-h-dvh w-full max-w-full rounded-none sm:h-[90dvh] sm:max-h-[calc(100dvh-2rem)] sm:w-[calc(100%-2rem)] sm:rounded-xl min-w-0 flex-col gap-0 overflow-hidden p-0 sm:max-w-6xl"
 			>
 				<DialogHeader className="shrink-0 border-b px-4 py-3">
 					<div className="flex min-w-0 items-center justify-between gap-3">

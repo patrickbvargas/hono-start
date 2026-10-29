@@ -60,6 +60,24 @@ export function DashboardFilter({
 
 	const sharedFields = (
 		<>
+			{showAllocationFilters && (
+				<>
+					<form.AppField name="clientId">
+						{(field) => (
+							<field.Autocomplete label="Cliente" options={clients} />
+						)}
+					</form.AppField>
+					<form.AppField name="contractId">
+						{(field) => (
+							<field.Autocomplete
+								label="Contrato"
+								options={contracts}
+								renderOption={renderContractFilterOption}
+							/>
+						)}
+					</form.AppField>
+				</>
+			)}
 			{showAllocationFilters ? (
 				<>
 					<form.AppField name="legalArea">
@@ -81,14 +99,9 @@ export function DashboardFilter({
 	);
 
 	const mobileFilters = (
-		<ListFilters.Drawer
-			title="Filtros"
-			label="Filtros"
-			ariaLabel="Abrir filtros"
-			iconOnly
-		>
+		<ListFilters.Popover title="Filtros" label="Mais filtros" iconOnly>
 			{sharedFields}
-		</ListFilters.Drawer>
+		</ListFilters.Popover>
 	);
 
 	const desktopFilterActions = (
@@ -114,7 +127,7 @@ export function DashboardFilter({
 		<form.Form form={form} className="w-full">
 			<ListFilters>
 				<ListFilters.Bar className="w-full flex-col items-stretch md:flex-row md:items-center md:justify-between">
-					<div className="flex w-full flex-col gap-2 md:flex-row md:flex-wrap md:items-center">
+					<div className="flex w-full min-w-0 flex-row items-center gap-2 md:flex-wrap">
 						{isAdmin ? (
 							<form.AppField name="employeeId">
 								{(field) => (
@@ -126,13 +139,13 @@ export function DashboardFilter({
 										placeholder="Colaborador"
 										classNames={{
 											wrapper:
-												"w-full md:w-52 md:shrink-0 xl:w-60 [&_[data-slot=field-label]]:sr-only",
+												"min-w-0 flex-1 md:flex-none md:w-52 md:shrink-0 xl:w-60 [&_[data-slot=field-label]]:sr-only",
 										}}
 									/>
 								)}
 							</form.AppField>
 						) : null}
-						{showAllocationFilters ? (
+						{showAllocationFilters && !isMobile ? (
 							<>
 								<form.AppField name="clientId">
 									{(field) => (
@@ -141,7 +154,8 @@ export function DashboardFilter({
 											placeholder="Cliente"
 											options={clients}
 											classNames={{
-												wrapper: "w-full md:w-52 md:shrink-0 xl:w-60",
+												wrapper:
+													"min-w-0 flex-1 md:flex-none md:w-52 md:shrink-0 xl:w-60",
 											}}
 										/>
 									)}
@@ -155,7 +169,8 @@ export function DashboardFilter({
 											renderOption={renderContractFilterOption}
 											classNames={{
 												content: "w-max",
-												wrapper: "w-full md:w-52 md:shrink-0 xl:w-60",
+												wrapper:
+													"min-w-0 flex-1 md:flex-none md:w-52 md:shrink-0 xl:w-60",
 											}}
 										/>
 									)}

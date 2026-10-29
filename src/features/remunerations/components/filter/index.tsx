@@ -92,14 +92,9 @@ export const RemunerationFilter = ({
 	);
 
 	const mobileFilters = (
-		<ListFilters.Drawer
-			title="Filtros"
-			label="Filtros"
-			ariaLabel="Abrir filtros"
-			iconOnly
-		>
+		<ListFilters.Popover title="Filtros" label="Mais filtros" iconOnly>
 			{sharedFields}
-		</ListFilters.Drawer>
+		</ListFilters.Popover>
 	);
 
 	const desktopFilterActions = (
@@ -145,13 +140,16 @@ export const RemunerationFilter = ({
 	return (
 		<form.Form form={form} className="w-full">
 			<ListFilters>
-				<ListFilters.Bar className="flex-wrap gap-2">
+				<ListFilters.Bar className="flex-nowrap md:flex-wrap gap-2">
 					<form.AppField name="query">
 						{(field) => (
 							<field.Search
 								aria-label="Número do processo ou colaborador"
 								placeholder="Buscar por processo ou colaborador..."
-								classNames={{ wrapper: "w-full md:w-52 md:shrink-0 xl:w-60" }}
+								classNames={{
+									wrapper:
+										"min-w-0 flex-1 md:flex-none md:w-52 md:shrink-0 xl:w-60",
+								}}
 							/>
 						)}
 					</form.AppField>

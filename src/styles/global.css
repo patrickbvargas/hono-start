@@ -133,3 +133,31 @@
 		@apply bg-background text-foreground font-sans antialiased;
 	}
 }
+
+/* Clerk owns the organization modal portal; size only this mobile surface. */
+@media (width < 48rem) {
+	.cl-modalBackdrop:has(.cl-organizationProfile-root) {
+		padding: 0;
+	}
+	.cl-modalContent:has(.cl-organizationProfile-root) {
+		width: 100%;
+		max-width: none;
+		height: 100dvh;
+		max-height: 100dvh;
+		margin: 0;
+		border-radius: 0;
+	}
+	.cl-organizationProfile-root,
+	.cl-organizationProfile-root > .cl-cardBox {
+		width: 100%;
+		max-width: none;
+		height: 100%;
+		max-height: none;
+		border-radius: 0;
+	}
+	.cl-organizationProfile-root .cl-card {
+		min-height: 0;
+		flex: 1;
+		border-radius: 0;
+	}
+}

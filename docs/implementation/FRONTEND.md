@@ -307,3 +307,10 @@ See [Multitenancy](../domain/MULTITENANCY.md) for the authoritative entity-scope
 
 Multiple-file selection shows a spinner and Carregando arquivos selecionados... while preparing Windows picker or dropped files for the form. Selection and removal controls stay disabled until preparation finishes; upload feedback remains separate.
 
+
+## Mobile layout
+
+- Mobile list search and the icon-only Mais filtros popover share one row. Client and collaborator selections belong inside the mobile filter popover, except the dashboard collaborator selection, which stays inline beside its icon-only filter trigger; contract filters place Colaborador immediately after Cliente. Filter popovers constrain both ScrollArea root and viewport so long content scrolls.
+- Business form, drilldown and attachment preview dialogs fill the mobile viewport. Fixed headers and footers remain outside their scrolling content, including loading states. Drilldown tab panels shrink within the modal and pagination never shrinks over rows.
+- Mobile page actions live in the header ellipsis popover. Lists hide the page-size selector. Hover tooltips and informational tooltip icons stay hidden on mobile; navigation controls remain available.
+- Pending-work cards open contract finance; the process-number button opens its summary. Severity occupies the card action area, replacing the explicit navigation button and redundant detail field. Receipt and remuneration relationship sections use one column.

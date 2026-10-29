@@ -105,7 +105,11 @@ export function FeeOverview({ id, section = "all" }: FeeOverviewProps) {
 	if (section === "overview") {
 		return (
 			<FormSection title="Vínculos do recebimento">
-				<EntityDetail.Fields columns={2} items={generalInfo.slice(0, 3)} />
+				<EntityDetail.Fields
+					columns={2}
+					className="grid-cols-1 sm:grid-cols-2"
+					items={generalInfo.slice(0, 3)}
+				/>
 			</FormSection>
 		);
 	}

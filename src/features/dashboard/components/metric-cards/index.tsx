@@ -52,6 +52,7 @@ export function DashboardMetricCards({
 							<TooltipProvider>
 								<Tooltip>
 									<TooltipTrigger
+										className="max-md:hidden [@media(hover:none)]:hidden"
 										render={
 											<button
 												type="button"
@@ -72,6 +73,7 @@ export function DashboardMetricCards({
 							<TooltipProvider>
 								<Tooltip>
 									<TooltipTrigger
+										className="max-md:hidden [@media(hover:none)]:hidden"
 										render={
 											<button
 												type="button"

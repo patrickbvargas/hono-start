@@ -1,4 +1,12 @@
-import { Separator, SidebarTrigger } from "@/shared/components/ui";
+import { EllipsisVerticalIcon } from "lucide-react";
+import {
+	Button,
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+	Separator,
+	SidebarTrigger,
+} from "@/shared/components/ui";
 import { cn } from "@/shared/lib/utils";
 import { ValueVisibilityToggle } from "./value-visibility";
 
@@ -37,7 +45,32 @@ export const Wrapper = ({
 				</div>
 				<div className="flex shrink-0 items-center gap-2">
 					<ValueVisibilityToggle />
-					{actions}
+					{actions && (
+						<>
+							<div className="hidden sm:contents">{actions}</div>
+							<div className="sm:hidden">
+								<Popover>
+									<PopoverTrigger
+										render={
+											<Button
+												variant="ghost"
+												size="icon-sm"
+												aria-label="Ações da página"
+											/>
+										}
+									>
+										<EllipsisVerticalIcon />
+									</PopoverTrigger>
+									<PopoverContent
+										align="end"
+										className="w-auto min-w-40 [&_button]:w-full [&_[data-slot=workspace-actions]]:flex-col [&_[data-slot=workspace-actions]]:items-stretch"
+									>
+										<div className="flex flex-col gap-2">{actions}</div>
+									</PopoverContent>
+								</Popover>
+							</div>
+						</>
+					)}
 				</div>
 			</div>
 			{children}

@@ -213,7 +213,7 @@ export const DataTable = <TData extends RowData>({
 				</Table>
 			</ScrollArea>
 			{pageSize !== undefined && pageCount > 1 ? (
-				<div className="border-t bg-transparent px-3 py-2">
+				<div className="shrink-0 border-t bg-transparent px-3 py-2">
 					<PaginationView
 						totalRecords={data.length}
 						page={pageIndex + 1}

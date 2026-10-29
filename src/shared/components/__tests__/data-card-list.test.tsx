@@ -126,4 +126,31 @@ describe("DataCardList", () => {
 
 		expect(screen.getByText("Nenhum registro encontrado.")).toBeTruthy();
 	});
+	it("keeps nested field actions separate from card navigation", () => {
+		const navigate = vi.fn();
+		const summary = vi.fn();
+		render(
+			<DataCardList
+				data={[{ id: 1 }]}
+				getRowKey={(row) => row.id}
+				renderTitle={() => "Pendência"}
+				renderFields={() => [
+					{
+						term: "Contrato",
+						definition: (
+							<button type="button" onClick={summary}>
+								Ver contrato
+							</button>
+						),
+					},
+				]}
+				onCardAction={navigate}
+			/>,
+		);
+		const button = screen.getByRole("button", { name: "Ver contrato" });
+		fireEvent.click(button);
+		fireEvent.keyDown(button, { key: "Enter" });
+		expect(summary).toHaveBeenCalledOnce();
+		expect(navigate).not.toHaveBeenCalled();
+	});
 });

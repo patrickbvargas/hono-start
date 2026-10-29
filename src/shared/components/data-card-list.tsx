@@ -70,9 +70,21 @@ export const DataCardList = <TData,>({
 									size="sm"
 									role={isInteractive ? "button" : undefined}
 									tabIndex={isInteractive ? 0 : undefined}
-									onClick={() => onCardAction?.(item)}
+									onClick={(event) => {
+										if (
+											(event.target as HTMLElement).closest(
+												"button, a, input, [role=menuitem]",
+											)
+										) {
+											return;
+										}
+										onCardAction?.(item);
+									}}
 									onKeyDown={(event) => {
-										if (!isInteractive) {
+										if (
+											!isInteractive ||
+											event.target !== event.currentTarget
+										) {
 											return;
 										}
 

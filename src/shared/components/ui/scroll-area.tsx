@@ -17,7 +17,7 @@ function ScrollArea({
 			className={cn(
 				"relative",
 				!hideScrollbar &&
-					"md:data-has-overflow-y:**:data-[slot=scroll-area-viewport]:pr-2",
+					"data-has-overflow-y:[&>[data-slot=scroll-area-viewport]]:pr-3",
 				className,
 			)}
 			{...props}

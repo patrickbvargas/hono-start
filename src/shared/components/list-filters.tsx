@@ -26,6 +26,7 @@ interface ListFiltersActionsProps
 	extends React.ComponentPropsWithoutRef<"div"> {}
 
 interface ListFiltersPopoverProps {
+	iconOnly?: boolean;
 	children: React.ReactNode;
 	className?: string;
 	label: string;
@@ -173,17 +174,32 @@ function ListFiltersPopover({
 	className,
 	label,
 	title,
+	iconOnly = false,
 }: ListFiltersPopoverProps) {
 	return (
 		<Popover>
-			<PopoverTrigger render={<ListFiltersButton />}>
-				{label}
-				<ChevronDownIcon size={16} />
+			<PopoverTrigger
+				render={
+					<ListFiltersButton
+						className="shrink-0"
+						size={iconOnly ? "icon" : "default"}
+						aria-label={label}
+					/>
+				}
+			>
+				{iconOnly ? (
+					<Settings2Icon size={16} />
+				) : (
+					<>
+						{label}
+						<ChevronDownIcon size={16} />
+					</>
+				)}
 			</PopoverTrigger>
 			<PopoverContent
 				align="start"
 				className={cn(
-					"w-max max-w-[calc(100vw-2rem)] p-3 [&_*]:[container-type:normal]",
+					"w-80 max-w-[calc(100vw-2rem)] max-h-[var(--available-height)] overflow-hidden p-3 [&_*]:[container-type:normal] [&_[data-slot=field-label]]:leading-5",
 					className,
 				)}
 			>
@@ -192,7 +208,11 @@ function ListFiltersPopover({
 						<PopoverTitle>{title}</PopoverTitle>
 					</PopoverHeader>
 				) : null}
-				{children}
+				<ScrollArea className="min-h-0 max-h-[calc(var(--available-height)-4rem)] [&>[data-slot=scroll-area-viewport]]:max-h-[calc(var(--available-height)-4rem)]">
+					<div className="flex flex-col gap-4 overflow-clip p-1">
+						{children}
+					</div>
+				</ScrollArea>
 			</PopoverContent>
 		</Popover>
 	);

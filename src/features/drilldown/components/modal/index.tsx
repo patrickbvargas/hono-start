@@ -51,7 +51,7 @@ export function Drilldown<
 			<DialogContent
 				portalClassName={props.detailOpen ? "z-40" : undefined}
 				className={cn(
-					"flex h-[80dvh] max-h-[80dvh] flex-col sm:max-w-5xl",
+					"flex h-dvh max-h-dvh max-w-full rounded-none flex-col overflow-hidden sm:h-[80dvh] sm:max-h-[80dvh] sm:rounded-xl sm:max-w-5xl",
 					props.className,
 				)}
 				finalFocus={
@@ -69,6 +69,7 @@ export function Drilldown<
 						<TooltipProvider>
 							<Tooltip>
 								<TooltipTrigger
+									className="max-md:hidden [@media(hover:none)]:hidden"
 									render={
 										<button
 											type="button"
@@ -176,7 +177,10 @@ function DrilldownContent<
 				<TabsTrigger value="data">Dados</TabsTrigger>
 			</TabsList>
 			{summary}
-			<TabsContent value="summary" className="flex min-h-0 flex-col">
+			<TabsContent
+				value="summary"
+				className="flex min-h-0 flex-1 overflow-hidden flex-col"
+			>
 				<ScrollArea className="min-h-0 flex-1">
 					{loading || !data ? (
 						<DrilldownSkeleton overview blocks={props.overviewSkeletonBlocks} />
@@ -188,7 +192,7 @@ function DrilldownContent<
 			<TabsContent
 				value="data"
 				keepMounted
-				className="flex min-h-0 flex-col [&[hidden]]:hidden"
+				className="flex min-h-0 flex-1 overflow-hidden flex-col [&[hidden]]:hidden"
 			>
 				{table}
 			</TabsContent>

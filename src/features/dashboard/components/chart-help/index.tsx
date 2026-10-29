@@ -16,6 +16,7 @@ export function ChartHelp({ title, description }: ChartHelpProps) {
 		<TooltipProvider>
 			<Tooltip>
 				<TooltipTrigger
+					className="max-md:hidden [@media(hover:none)]:hidden"
 					render={
 						<button
 							type="button"

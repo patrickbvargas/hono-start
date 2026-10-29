@@ -166,7 +166,11 @@ export function RemunerationOverview({
 	if (section === "overview") {
 		return (
 			<FormSection title="Vínculos da remuneração">
-				<EntityDetail.Fields columns={2} items={summaryInfo.slice(0, 3)} />
+				<EntityDetail.Fields
+					columns={2}
+					className="grid-cols-1 sm:grid-cols-2"
+					items={summaryInfo.slice(0, 3)}
+				/>
 			</FormSection>
 		);
 	}

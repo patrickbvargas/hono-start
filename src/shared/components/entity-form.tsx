@@ -123,14 +123,14 @@ const EntityFormContent = ({
 				<DialogContent
 					ref={contentRef}
 					className={cn(
-						"flex max-h-[calc(100dvh-2rem)] flex-col gap-0 overflow-hidden p-0 shadow-xl sm:max-w-2xl",
+						"flex h-dvh max-h-dvh max-w-full rounded-none sm:h-auto sm:max-h-[calc(100dvh-2rem)] sm:rounded-xl flex-col gap-0 overflow-hidden p-0 shadow-xl sm:max-w-2xl",
 						contentClassName,
 					)}
 				>
 					<DialogHeader className="shrink-0 gap-1.5 border-b bg-muted/30 px-5 py-4 pr-12">
 						<DialogTitle>{title}</DialogTitle>
 					</DialogHeader>
-					<ScrollArea className="min-h-0 max-h-[calc(100dvh-13rem)] flex-1 [&>[data-slot=scroll-area-viewport]]:max-h-[calc(100dvh-13rem)]">
+					<ScrollArea className="min-h-0 flex-1 sm:max-h-[calc(100dvh-13rem)] sm:[&>[data-slot=scroll-area-viewport]]:max-h-[calc(100dvh-13rem)]">
 						<DialogBody
 							className={cn(
 								"flex flex-col gap-3 p-4 sm:p-5 [&>[data-slot=form-section]~[data-slot=form-section]]:border-t [&>[data-slot=form-section]~[data-slot=form-section]]:pt-3",
