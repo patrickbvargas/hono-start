@@ -1,17 +1,13 @@
-import { createColumnHelper } from "@tanstack/react-table";
 import * as React from "react";
 import { DataTable } from "@/shared/components/data-table";
 import { EntityActions } from "@/shared/components/entity-actions";
-import { EntityIdTrigger } from "@/shared/components/entity-id-trigger";
-import { EntityStatus } from "@/shared/components/entity-status";
 import { Pagination } from "@/shared/components/pagination";
-import type { dataTableFeatures } from "@/shared/lib/table";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { QueryPaginatedReturnType } from "@/shared/types/api";
-import { CLIENT_ALLOWED_SORT_COLUMNS } from "../../constants/sorting";
 import type { ClientSummary } from "../../schemas/model";
-import { formatClientDocument } from "../../utils/format";
 import { getClientLifecycleActions } from "../../utils/lifecycle-actions";
+
+import { getClientTableColumns } from "./columns";
 
 interface ClientTableProps {
 	emptyState?: React.ReactNode;
@@ -65,64 +61,10 @@ export const ClientTable = ({
 		[canManageLifecycle, onOpenPage, onDelete, onEdit, onRestore, onView],
 	);
 
-	const columns = React.useMemo(() => {
-		const c = createColumnHelper<typeof dataTableFeatures, ClientSummary>();
-
-		return [
-			c.accessor("id", {
-				header: "#",
-				cell: ({ row }) => <EntityIdTrigger id={row.original.id} />,
-				enableSorting: CLIENT_ALLOWED_SORT_COLUMNS.includes("id"),
-				meta: {
-					headerClassName: "w-18",
-					cellClassName: "whitespace-nowrap",
-				},
-			}),
-			c.accessor("fullName", {
-				cell: (context) => (
-					<EntityIdTrigger
-						id={context.row.original.id}
-						label={context.getValue()}
-					/>
-				),
-				header: "Nome",
-				enableSorting: CLIENT_ALLOWED_SORT_COLUMNS.includes("fullName"),
-				meta: {
-					minColumnWidth: 280,
-				},
-			}),
-			c.accessor("document", {
-				header: "Documento",
-				cell: ({ row }) => formatClientDocument(row.original.document),
-				enableSorting: CLIENT_ALLOWED_SORT_COLUMNS.includes("document"),
-			}),
-			c.accessor("type", {
-				header: "Tipo",
-				enableSorting: CLIENT_ALLOWED_SORT_COLUMNS.includes("type"),
-			}),
-			c.accessor("contractCount", {
-				header: "Contratos",
-				enableSorting: false,
-			}),
-			c.accessor("isActive", {
-				header: "Situação",
-				cell: ({ row }) => (
-					<EntityStatus
-						isActive={row.original.isActive}
-						isSoftDeleted={row.original.isSoftDeleted}
-					/>
-				),
-				enableSorting: CLIENT_ALLOWED_SORT_COLUMNS.includes("isActive"),
-			}),
-			c.display({
-				id: "actions",
-				cell: ({ row }) => renderActions(row.original),
-				meta: {
-					cellClassName: "w-11",
-				},
-			}),
-		];
-	}, [renderActions]);
+	const columns = React.useMemo(
+		() => getClientTableColumns(renderActions),
+		[renderActions],
+	);
 
 	return (
 		<DataTable

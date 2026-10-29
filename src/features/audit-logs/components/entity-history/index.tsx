@@ -1,14 +1,11 @@
-import { createColumnHelper } from "@tanstack/react-table";
 import { useMemo } from "react";
 import { DataTable } from "@/shared/components/data-table";
 import { EntityActions } from "@/shared/components/entity-actions";
 import { Button, Skeleton } from "@/shared/components/ui";
-import type { dataTableFeatures } from "@/shared/lib/table";
 import { hasPermission, useLoggedUserSession } from "@/shared/session";
-import { AUDIT_ACTION_LABELS } from "../../constants/display";
 import { useEntityHistory } from "../../hooks/use-entity-history";
-import type { AuditLog } from "../../schemas/model";
 import { AuditLogDetails } from "../details";
+import { getEntityAuditHistoryTableColumns } from "./columns";
 
 interface EntityAuditHistoryProps {
 	entityType: string;
@@ -36,41 +33,7 @@ function EntityAuditHistoryContent({
 }: EntityAuditHistoryProps) {
 	const { auditLogs, isPending, error, retry, details, openPage } =
 		useEntityHistory(entityType, entityId);
-	const columns = useMemo(() => {
-		const c = createColumnHelper<typeof dataTableFeatures, AuditLog>();
-		return [
-			c.accessor("id", {
-				header: "#",
-				enableSorting: false,
-				cell: ({ row }) => (
-					<span className="font-mono text-muted-foreground">
-						#{row.original.id}
-					</span>
-				),
-				meta: { headerClassName: "w-18", cellClassName: "whitespace-nowrap" },
-			}),
-			c.accessor("occurredAtLabel", {
-				header: "Ocorrido em",
-				enableSorting: false,
-			}),
-			c.accessor("action", {
-				header: "Ação",
-				enableSorting: false,
-				cell: (context) =>
-					AUDIT_ACTION_LABELS[context.getValue()] ?? context.getValue(),
-			}),
-			c.accessor("actorName", {
-				header: "Usuário",
-				enableSorting: false,
-				cell: (context) => context.getValue() || "Sistema",
-			}),
-			c.accessor("description", {
-				header: "Detalhes",
-				enableSorting: false,
-				cell: (context) => context.getValue() || "Ver resumo",
-			}),
-		];
-	}, []);
+	const columns = useMemo(() => getEntityAuditHistoryTableColumns(), []);
 	if (isPending) {
 		return (
 			<div aria-label="Carregando histórico">

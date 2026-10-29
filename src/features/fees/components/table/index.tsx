@@ -1,17 +1,13 @@
-import { createColumnHelper } from "@tanstack/react-table";
 import * as React from "react";
 import { DataTable } from "@/shared/components/data-table";
 import { EntityActions } from "@/shared/components/entity-actions";
-import { EntityIdTrigger } from "@/shared/components/entity-id-trigger";
 import { Pagination } from "@/shared/components/pagination";
-import { SensitiveValue } from "@/shared/components/value-visibility";
-import { formatter } from "@/shared/lib/formatter";
-import type { dataTableFeatures } from "@/shared/lib/table";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { QueryPaginatedReturnType } from "@/shared/types/api";
-import { FEE_ALLOWED_SORT_COLUMNS } from "../../constants/sorting";
 import type { FeeSummary } from "../../schemas/model";
 import { getFeeLifecycleActions } from "../../utils/lifecycle-actions";
+
+import { getFeeTableColumns } from "./columns";
 
 interface FeeTableProps {
 	emptyState?: React.ReactNode;
@@ -63,63 +59,10 @@ export const FeeTable = ({
 		[canManageLifecycle, onOpenPage, onDelete, onEdit, onRestore, onView],
 	);
 
-	const columns = React.useMemo(() => {
-		const c = createColumnHelper<typeof dataTableFeatures, FeeSummary>();
-
-		return [
-			c.accessor("id", {
-				header: "#",
-				cell: ({ row }) => <EntityIdTrigger id={row.original.id} />,
-				enableSorting: FEE_ALLOWED_SORT_COLUMNS.includes("id"),
-				meta: {
-					headerClassName: "w-18",
-					cellClassName: "whitespace-nowrap",
-				},
-			}),
-			c.accessor("contractProcessNumber", {
-				cell: (context) => (
-					<EntityIdTrigger
-						id={context.row.original.id}
-						label={context.getValue()}
-					/>
-				),
-				header: "Processo",
-				meta: { minColumnWidth: 180 },
-			}),
-			c.accessor("revenueType", {
-				header: "Tipo de honorário",
-				meta: { minColumnWidth: 160 },
-			}),
-			c.accessor("paymentDate", {
-				header: "Data de recebimento",
-				cell: ({ row }) => formatter.calendarDate(row.original.paymentDate),
-				enableSorting: FEE_ALLOWED_SORT_COLUMNS.includes("paymentDate"),
-			}),
-			c.accessor("amount", {
-				header: "Valor",
-				cell: ({ row }) => (
-					<SensitiveValue>
-						{formatter.currency(row.original.amount)}
-					</SensitiveValue>
-				),
-				enableSorting: FEE_ALLOWED_SORT_COLUMNS.includes("amount"),
-				meta: {
-					cellClassName: "text-right",
-				},
-			}),
-			c.accessor("installmentNumber", {
-				header: "Nº da parcela",
-				enableSorting: FEE_ALLOWED_SORT_COLUMNS.includes("installmentNumber"),
-			}),
-			c.display({
-				id: "actions",
-				cell: ({ row }) => renderActions(row.original),
-				meta: {
-					cellClassName: "w-11",
-				},
-			}),
-		];
-	}, [renderActions]);
+	const columns = React.useMemo(
+		() => getFeeTableColumns(renderActions),
+		[renderActions],
+	);
 
 	return (
 		<DataTable

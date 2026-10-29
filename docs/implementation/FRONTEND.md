@@ -56,6 +56,8 @@ It is meant to survive domain changes as long as the project keeps the same UI a
 
 ## Table And List Rules
 
+- Listing tables define columns in a colocated `columns.tsx` factory; table entrypoints own composition and action orchestration. Financial lists place the amount as the last data column, immediately before actions.
+
 - Listing tables fill the remaining WrapperBody height, including empty and short results. Keep rows at their natural height, scrolling inside the table and pagination at the bottom. Contextual tables retain their local height constraints.
 
 - Application-owned scrolling regions use the shared ScrollArea, including form bodies, mobile filter bodies, sidebar content, settings, loading placeholders and technical payloads. Keep height constraints on the root and viewport for content-sized regions and retain fixed headers/footers outside the viewport. Vendor-owned select, combobox, command and menu scrolling remains integrated with those primitives' keyboard navigation and positioning.

@@ -31,7 +31,7 @@ describe("Contract entity view composition contract", () => {
 	it("keeps table and list showing lawyer ownership field", () => {
 		const listContent = readFileSync(contractListPath, "utf8");
 		const tableContent = readFileSync(
-			"src/features/contracts/components/table/index.tsx",
+			"src/features/contracts/components/table/columns.tsx",
 			"utf8",
 		);
 

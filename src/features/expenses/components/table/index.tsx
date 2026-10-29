@@ -1,16 +1,13 @@
-import { createColumnHelper } from "@tanstack/react-table";
 import * as React from "react";
 import { DataTable } from "@/shared/components/data-table";
 import { EntityActions } from "@/shared/components/entity-actions";
-import { EntityIdTrigger } from "@/shared/components/entity-id-trigger";
 import { Pagination } from "@/shared/components/pagination";
-import type { dataTableFeatures } from "@/shared/lib/table";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { QueryPaginatedReturnType } from "@/shared/types/api";
-import { EXPENSE_ALLOWED_SORT_COLUMNS } from "../../constants/sorting";
 import type { ExpenseSummary } from "../../schemas/model";
 import { getExpenseLifecycleActions } from "../../utils/lifecycle-actions";
-import { getExpenseReadColumns } from "./columns";
+
+import { getExpenseTableColumns } from "./columns";
 
 interface ExpenseTableProps {
 	emptyState?: React.ReactNode;
@@ -64,43 +61,10 @@ export const ExpenseTable = ({
 		[canManageLifecycle, onOpenPage, onDelete, onEdit, onRestore, onView],
 	);
 
-	const columns = React.useMemo(() => {
-		const c = createColumnHelper<typeof dataTableFeatures, ExpenseSummary>();
-
-		return [
-			c.accessor("id", {
-				header: "#",
-				cell: ({ row }) => <EntityIdTrigger id={row.original.id} />,
-				enableSorting: EXPENSE_ALLOWED_SORT_COLUMNS.includes("id"),
-				meta: { headerClassName: "w-18", cellClassName: "whitespace-nowrap" },
-			}),
-			...getExpenseReadColumns<ExpenseSummary>({
-				category: (row) => row.category,
-				date: (row) => row.expenseDate,
-				amount: (row) => row.amount,
-				enableSorting: true,
-			}),
-			c.accessor("notes", {
-				header: "Descrição",
-				enableSorting: false,
-				cell: (context) => (
-					<div>
-						<span
-							className="line-clamp-2 max-w-80 whitespace-normal wrap-break-word"
-							title={context.getValue() ?? undefined}
-						>
-							{context.getValue() || "—"}
-						</span>
-					</div>
-				),
-			}),
-			c.display({
-				id: "actions",
-				cell: ({ row }) => renderActions(row.original),
-				meta: { cellClassName: "w-11" },
-			}),
-		];
-	}, [renderActions]);
+	const columns = React.useMemo(
+		() => getExpenseTableColumns(renderActions),
+		[renderActions],
+	);
 
 	return (
 		<DataTable

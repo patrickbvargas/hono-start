@@ -1,9 +1,7 @@
-import { createColumnHelper } from "@tanstack/react-table";
 import { FileDownIcon, FileSpreadsheetIcon, FileTextIcon } from "lucide-react";
 import * as React from "react";
 import { DataTable } from "@/shared/components/data-table";
 import { EntityActions } from "@/shared/components/entity-actions";
-import { EntityIdTrigger } from "@/shared/components/entity-id-trigger";
 import { Pagination } from "@/shared/components/pagination";
 import {
 	Button,
@@ -13,14 +11,12 @@ import {
 	DropdownMenuTrigger,
 	Spinner,
 } from "@/shared/components/ui";
-import { SensitiveValue } from "@/shared/components/value-visibility";
-import { formatter } from "@/shared/lib/formatter";
-import type { dataTableFeatures } from "@/shared/lib/table";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { QueryPaginatedReturnType } from "@/shared/types/api";
-import { REMUNERATION_ALLOWED_SORT_COLUMNS } from "../../constants/sorting";
 import type { Remuneration } from "../../schemas/model";
 import { getRemunerationLifecycleActions } from "../../utils/lifecycle-actions";
+
+import { getRemunerationTableColumns } from "./columns";
 
 interface RemunerationTableProps {
 	emptyState?: React.ReactNode;
@@ -79,69 +75,10 @@ export const RemunerationTable = ({
 		[canManageLifecycle, onOpenPage, onDelete, onEdit, onRestore, onView],
 	);
 
-	const columns = React.useMemo(() => {
-		const c = createColumnHelper<typeof dataTableFeatures, Remuneration>();
-
-		return [
-			c.accessor("id", {
-				header: "#",
-				cell: ({ row }) => <EntityIdTrigger id={row.original.id} />,
-				enableSorting: REMUNERATION_ALLOWED_SORT_COLUMNS.includes("id"),
-				meta: {
-					headerClassName: "w-18",
-					cellClassName: "whitespace-nowrap",
-				},
-			}),
-			c.accessor("employeeName", {
-				cell: (context) => (
-					<EntityIdTrigger
-						id={context.row.original.id}
-						label={context.getValue()}
-					/>
-				),
-				header: "Colaborador",
-				meta: { minColumnWidth: 180 },
-				enableSorting:
-					REMUNERATION_ALLOWED_SORT_COLUMNS.includes("employeeName"),
-			}),
-			c.accessor("contractProcessNumber", {
-				header: "Processo",
-				meta: { minColumnWidth: 180 },
-			}),
-			c.accessor("paymentDate", {
-				header: "Data de recebimento",
-				cell: ({ row }) => formatter.calendarDate(row.original.paymentDate),
-				enableSorting:
-					REMUNERATION_ALLOWED_SORT_COLUMNS.includes("paymentDate"),
-			}),
-			c.accessor("amount", {
-				header: "Valor",
-				cell: ({ row }) => (
-					<SensitiveValue>
-						{formatter.currency(row.original.amount)}
-					</SensitiveValue>
-				),
-				enableSorting: REMUNERATION_ALLOWED_SORT_COLUMNS.includes("amount"),
-				meta: {
-					cellClassName: "text-right",
-				},
-			}),
-			c.accessor("effectivePercentage", {
-				header: "Percentual efetivo (%)",
-				cell: ({ row }) => formatter.percent(row.original.effectivePercentage),
-				enableSorting: REMUNERATION_ALLOWED_SORT_COLUMNS.includes(
-					"effectivePercentage",
-				),
-			}),
-			c.display({
-				id: "actions",
-				cell: ({ row }) => renderActions(row.original),
-				meta: {
-					cellClassName: "w-11",
-				},
-			}),
-		];
-	}, [renderActions]);
+	const columns = React.useMemo(
+		() => getRemunerationTableColumns(renderActions),
+		[renderActions],
+	);
 
 	return (
 		<DataTable
