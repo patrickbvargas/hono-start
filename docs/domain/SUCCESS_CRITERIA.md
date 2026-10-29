@@ -1,5 +1,12 @@
 # Success Criteria
 
+## Approved financial redesign — target precedence
+
+Status: approved plan, not implemented. [Target financial contract](FINANCIAL_SYSTEM.md) and its linked roadmap/UML/authorization supersede conflicting financial and identity semantics below for the ordered redesign. Remaining text describes the preserved running baseline and unchanged house rules; do not infer target implementation from it.
+
+Target acceptance requires all ordered implementation gates, zero unauthorized remuneration disclosure, reconciled principal/cash/reversal reports, transactional batch plus commission writes, and meaningful real-database concurrency tests. Full verification and walkthrough are in FINANCIAL_ROADMAP.md. Planning artifacts alone are not completion.
+
+
 ## Product Success
 
 - The system reliably replaces spreadsheet-based legal fee tracking.

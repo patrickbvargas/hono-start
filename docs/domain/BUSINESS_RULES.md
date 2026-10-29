@@ -1,5 +1,12 @@
 # Business Rules
 
+## Approved financial redesign — target precedence
+
+Status: approved plan, not implemented. [Target financial contract](FINANCIAL_SYSTEM.md) and its linked roadmap/UML/authorization supersede conflicting financial and identity semantics below for the ordered redesign. Remaining text describes the preserved running baseline and unchanged house rules; do not infer target implementation from it.
+
+Target titles allow N settlements; no installment-count exhaustion or mandatory sequence. Entry is forecast until settled. Principal, cash and adjustments differ. Confirmed events are reversed and relaid, not edited/deleted/restored. Contract lifecycle and financial settlement are independent. FINANCIAL_SYSTEM.md governs all target monetary rules, including the 51-decision outcome; baseline rules below do not override it.
+
+
 ## Core Invariants
 
 - Write forms enforce text length limits both in editable fields and server input schemas: names 255 characters, email 254, process number 100, notes 5,000, OAB 8, CPF/CNPJ up to 18 with mask, Brazilian phone up to 15 with mask, and attachment filenames 255. Masked documents and phones are normalized after length validation. These are application limits; PostgreSQL text columns remain unchanged. Existing records are not truncated.

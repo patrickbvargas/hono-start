@@ -1,5 +1,12 @@
 # User Flows
 
+## Approved financial redesign — target precedence
+
+Status: approved plan, not implemented. [Target financial contract](FINANCIAL_SYSTEM.md) and its linked roadmap/UML/authorization supersede conflicting financial and identity semantics below for the ordered redesign. Remaining text describes the preserved running baseline and unchanged house rules; do not infer target implementation from it.
+
+Target flow: Person → Contract/Revenue or Expense → Acerto financeiro → N titles → grouped partial/full settlements. Direct titles are financial-only. Contract receipts may generate remuneration Payables; paying them is a separate workflow. Read complete walkthrough in FINANCIAL_ROADMAP.md.
+
+
 This file preserves the canonical user workflows of the product. These flows describe intended user behavior and expected system reactions, not implementation details.
 
 ## Login and account management

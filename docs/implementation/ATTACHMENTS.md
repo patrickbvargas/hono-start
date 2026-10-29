@@ -1,5 +1,12 @@
 # Private Supabase attachment storage
 
+## Approved financial redesign — target precedence
+
+Status: approved plan, not implemented. [Target financial contract](../domain/FINANCIAL_SYSTEM.md) and its linked roadmap/UML/authorization supersede conflicting financial and identity semantics below for the ordered redesign. Remaining text describes the preserved running baseline and unchanged house rules; do not infer target implementation from it.
+
+Target preserves Contract and Expense attachments, moves shared master ownership to Person, and adds owner-scoped shared proof on ReceiptBatch/PaymentBatch. Reversal preserves proof; a shared group never widens Member beneficiary visibility. Update exactly-one-owner constraints and private transport tests at cutover.
+
+
 Configure server-only SUPABASE_URL, SUPABASE_STORAGE_BUCKET and SUPABASE_SECRET_KEY. Use separate private Supabase Storage buckets and credentials for development/test and production. Server secret keys bypass Storage RLS: Clerk and owner authorization must run before every operation. Keep buckets private; never expose public or signed browser URLs. Never expose credentials through VITE variables. Missing configuration disables attachment operations without disabling unrelated features.
 
 The server uses Supabase Storage HTTP operations. storagePath remains the existing opaque relative key; no application SQL migration is needed. All six owner kinds retain protected delivery, owner authorization, MIME, safe disposition, private/no-store and nosniff. Origin firm prefixes are provenance only. POST uses x-upsert:false; reads and deletion remain server-mediated.

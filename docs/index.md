@@ -1,5 +1,10 @@
 # Hono Documentation Index
 
+## Approved financial redesign (2026-10-29)
+
+Before financial or identity work, read [approved target rules](domain/FINANCIAL_SYSTEM.md), [UML with lookups](domain/FINANCIAL_UML.md), [Clerk authorization](domain/FINANCIAL_AUTHORIZATION.md) and [ordered implementation roadmap](implementation/FINANCIAL_ROADMAP.md). These explicit user-approved target decisions supersede conflicting baseline finance/identity rules in existing docs and legacy OpenSpec specs during this branch. They are not implemented yet. All unchanged stack, import, form, session verification and tenant rules remain binding. No restoration of old fee-slot/automatic-entry-cash semantics into target code.
+
+
 This directory is the canonical project contract for Hono.
 
 For the final organization pass, the user's existing application code defines current behavior. Reconcile stale documentation with that code; do not restore older documented behavior automatically. Functional inconsistencies require an explicit behavior decision.

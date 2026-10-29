@@ -1,5 +1,12 @@
 # Roles And Permissions
 
+## Approved financial redesign — target precedence
+
+Status: approved plan, not implemented. [Target financial contract](FINANCIAL_SYSTEM.md) and its linked roadmap/UML/authorization supersede conflicting financial and identity semantics below for the ordered redesign. Remaining text describes the preserved running baseline and unchanged house rules; do not infer target implementation from it.
+
+Target roles are Member/Admin with explicit grants; see FINANCIAL_AUTHORIZATION.md. Member receipt registration defaults OFF and can be granted only within assigned contracts. Member NEVER sees another collaborator remuneration, including derived data. Person flags grant no authority. Target Person/profile binding replaces employeeId only in coordinated cutover.
+
+
 ## Clerk authority
 
 Clerk exclusively owns authentication, Organization memberships, roles and permission grants. Firm is an independent business unit; Employee is a business entity; Clerk privateMetadata.employeeId must identify an active collaborator for every role, including administrators. The active Organization privateMetadata.firmId defines the existing business unit; no valid mapping means no protected data. Missing membership denies product access. Missing, invalid, inactive or deleted employeeId bindings deny all protected access and produce configuration guidance for verified members. A role name never bypasses a permission check.

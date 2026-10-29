@@ -1,5 +1,12 @@
 # Security
 
+## Approved financial redesign — target precedence
+
+Status: approved plan, not implemented. [Target financial contract](../domain/FINANCIAL_SYSTEM.md) and its linked roadmap/UML/authorization supersede conflicting financial and identity semantics below for the ordered redesign. Remaining text describes the preserved running baseline and unchanged house rules; do not infer target implementation from it.
+
+Target financial scope and exact-key catalog are in FINANCIAL_AUTHORIZATION.md. Member confidentiality covers every response/aggregate/evidence path. Verify Person/profile and current Organization; never trust client authority or polymorphic IDs. Denied batch lines roll back all effects. No provider mutations in planning.
+
+
 Permission membership checks use `hasPermission(session, "org:clients:read")`.
 This function returns the result of an exact `session.permissions.includes(key)`
 check, or false without a session. Call sites use Clerk keys directly; do not add

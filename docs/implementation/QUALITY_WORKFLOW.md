@@ -1,5 +1,12 @@
 # Quality Workflow
 
+## Approved financial redesign — target precedence
+
+Status: approved plan, not implemented. [Target financial contract](../domain/FINANCIAL_SYSTEM.md) and its linked roadmap/UML/authorization supersede conflicting financial and identity semantics below for the ordered redesign. Remaining text describes the preserved running baseline and unchanged house rules; do not infer target implementation from it.
+
+Financial redesign follows the sequential gates in FINANCIAL_ROADMAP.md. Each behavioral phase needs focused regression tests, pnpm check and TypeScript; release requires pnpm verify, real PostgreSQL concurrency/idempotency/reversal checks and evidence-owner walkthroughs. Preserve baseline and matching schema/config rollback.
+
+
 This document defines the repository's reusable implementation sequence,
 reliability expectations, testing rules, and quality rubric.
 

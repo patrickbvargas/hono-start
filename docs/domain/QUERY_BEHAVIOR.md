@@ -1,5 +1,12 @@
 # Query Behavior
 
+## Approved financial redesign — target precedence
+
+Status: approved plan, not implemented. [Target financial contract](FINANCIAL_SYSTEM.md) and its linked roadmap/UML/authorization supersede conflicting financial and identity semantics below for the ordered redesign. Remaining text describes the preserved running baseline and unchanged house rules; do not infer target implementation from it.
+
+Target forecast uses title remaining principal by due date plus explicit overdue visibility; realized uses cash and dated reversals. Apply resource scope before aggregation. Reclassification changes report analytic attribution with preserved audit. See FINANCIAL_SYSTEM.md; keep existing URL, deterministic pagination and empty-state conventions.
+
+
 This file defines the canonical domain-facing behavior of filtering, sorting, list state, and derived list semantics.
 
 ## List-State Principles

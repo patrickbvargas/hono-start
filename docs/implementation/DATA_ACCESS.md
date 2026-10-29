@@ -1,5 +1,12 @@
 # Data Access
 
+## Approved financial redesign — target precedence
+
+Status: approved plan, not implemented. [Target financial contract](../domain/FINANCIAL_SYSTEM.md) and its linked roadmap/UML/authorization supersede conflicting financial and identity semantics below for the ordered redesign. Remaining text describes the preserved running baseline and unchanged house rules; do not infer target implementation from it.
+
+Target monetary state uses exact decimal principal/discount/charges, constrained origins and same-Firm links. Settlement and generation idempotency, locked balance checks and complete transaction rollback include commissions/audit. Confirmed events and reversals are immutable. Reset only verified disposable dev data; no production migration is authorized. Follow FINANCIAL_ROADMAP.md.
+
+
 ## Purpose
 
 This document defines the repository-specific persistence contract. It describes how this repository must implement storage, queries, seeding, and integrity through Prisma and server-side data access.

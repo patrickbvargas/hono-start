@@ -1,5 +1,12 @@
 # Glossary
 
+## Approved financial redesign — target precedence
+
+Status: approved plan, not implemented. [Target financial contract](FINANCIAL_SYSTEM.md) and its linked roadmap/UML/authorization supersede conflicting financial and identity semantics below for the ordered redesign. Remaining text describes the preserved running baseline and unchanged house rules; do not infer target implementation from it.
+
+Target vocabulary: Receivable = duplicata a receber; Receipt = recebimento; Payable = duplicata a pagar; Payment = pagamento; FinancialAnalytic = analítica; financial handoff = acerto financeiro; reversal = estorno; RemunerationCalculation = immutable memory, not a second payable balance.
+
+
 ## Domain Terms
 
 - `Employee` / `Colaborador`: a company-wide lawyer or administrative assistant, independent of branch.

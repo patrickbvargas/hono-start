@@ -1,5 +1,12 @@
 # Feature Behavior
 
+## Approved financial redesign — target precedence
+
+Status: approved plan, not implemented. [Target financial contract](FINANCIAL_SYSTEM.md) and its linked roadmap/UML/authorization supersede conflicting financial and identity semantics below for the ordered redesign. Remaining text describes the preserved running baseline and unchanged house rules; do not infer target implementation from it.
+
+Target operational acerto produces editable title preview then atomic generation. Financial checkboxes create grouped partial/full receipts or payments. Corrections use dated reversals. Details and reports distinguish principal and cash. Contract and Expense retain attachments; shared batch proof is optional.
+
+
 ## Operational usability
 
 - Contract details show each active revenue's contracted amount, received amount including down payment, remaining amount, recorded installments, and next outstanding scheduled due date. The schedule follows the dashboard convention: installment 1 falls one month after paymentStartDate, preserving the original day with month-end clamping. Partial receipts leave the installment outstanding. Recording a new fee preselects the contract, revenue and first unrecorded installment, respects create/read grants and assignment scope, and remains unavailable for inactive, deleted, completed, cancelled or fully paid records.

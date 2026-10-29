@@ -1,5 +1,12 @@
 # Architecture
 
+## Approved financial redesign — target precedence
+
+Status: approved plan, not implemented. [Target financial contract](../domain/FINANCIAL_SYSTEM.md) and its linked roadmap/UML/authorization supersede conflicting financial and identity semantics below for the ordered redesign. Remaining text describes the preserved running baseline and unchanged house rules; do not infer target implementation from it.
+
+Target feature ownership follows existing slices: people and collaborator profile, contracts with revenues/team, expenses, receivables, receipts, payables, payments, financial catalogs/settings and reporting. Separate calculation evidence belongs to contract-receipt remuneration integration. No new generic architecture or vendor UI boundary exception. Read FINANCIAL_ROADMAP.md.
+
+
 This document defines the reusable house architecture of the repository.
 
 It should remain valid even if the domain layer is replaced by another product domain.

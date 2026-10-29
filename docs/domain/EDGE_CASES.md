@@ -1,5 +1,12 @@
 # Edge Cases
 
+## Approved financial redesign — target precedence
+
+Status: approved plan, not implemented. [Target financial contract](FINANCIAL_SYSTEM.md) and its linked roadmap/UML/authorization supersede conflicting financial and identity semantics below for the ordered redesign. Remaining text describes the preserved running baseline and unchanged house rules; do not infer target implementation from it.
+
+Target edge cases include full discount without cash, zero-cash payment blocking source reversal, month-end clamping, cash reversal in another month, already-settled title increase, concurrency and hidden-beneficiary batch evidence. See FINANCIAL_SYSTEM.md and phase scenarios; do not apply old sequence/unique-fee constraints to target receipts.
+
+
 This file preserves canonical edge-case expectations for the product domain.
 
 ## Authentication

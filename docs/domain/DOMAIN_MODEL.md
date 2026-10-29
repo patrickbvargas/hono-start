@@ -1,5 +1,12 @@
 # Domain Model
 
+## Approved financial redesign — target precedence
+
+Status: approved plan, not implemented. [Target financial contract](FINANCIAL_SYSTEM.md) and its linked roadmap/UML/authorization supersede conflicting financial and identity semantics below for the ordered redesign. Remaining text describes the preserved running baseline and unchanged house rules; do not infer target implementation from it.
+
+Target Person replaces separate Client/Employee identities, with EmployeeProfile for professional fields. Fee becomes Receipt. Expense is an operational obligation origin, not cash paid. Payable is the sole remuneration obligation, with separate RemunerationCalculation evidence. Target entities, title origins, batches and reversals are detailed in FINANCIAL_SYSTEM.md and FINANCIAL_UML.md.
+
+
 ## Core Entities
 
 - `Firm`: ownership boundary for operational business data.

@@ -1,5 +1,12 @@
 # Conventions
 
+## Approved financial redesign — target precedence
+
+Status: approved plan, not implemented. [Target financial contract](../domain/FINANCIAL_SYSTEM.md) and its linked roadmap/UML/authorization supersede conflicting financial and identity semantics below for the ordered redesign. Remaining text describes the preserved running baseline and unchanged house rules; do not infer target implementation from it.
+
+Use target Receipt/Payment and Receivable/Payable terminology with feature-local schemas/hooks/data operations. Do not proliferate legacy fee names in new target contracts. Follow existing English code, pt-BR UI, TanStack Form and shared UI imports; no silent framework substitutions.
+
+
 ## Language Policy
 
 - User-facing copy must follow the product locale defined by the domain or product contract.

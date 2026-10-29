@@ -1,5 +1,12 @@
 # Product Sense
 
+## Approved financial redesign — target precedence
+
+Status: approved plan, not implemented. [Target financial contract](FINANCIAL_SYSTEM.md) and its linked roadmap/UML/authorization supersede conflicting financial and identity semantics below for the ordered redesign. Remaining text describes the preserved running baseline and unchanged house rules; do not infer target implementation from it.
+
+Operational roots become Contract (including Revenue/team) and Expense. Financial roots become Receivable, Receipt, Payable and Payment. Global people/catalogs and granular financial access preserve branch isolation. Future modules may generate titles; they are not in current scope.
+
+
 ## Purpose
 
 Hono is an internal legal fee management system for a law firm. It replaces spreadsheet-based operational control for clients, contracts, fees, and remunerations with a multi-tenant web application.

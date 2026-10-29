@@ -1,5 +1,12 @@
 # Frontend
 
+## Approved financial redesign — target precedence
+
+Status: approved plan, not implemented. [Target financial contract](../domain/FINANCIAL_SYSTEM.md) and its linked roadmap/UML/authorization supersede conflicting financial and identity semantics below for the ordered redesign. Remaining text describes the preserved running baseline and unchanged house rules; do not infer target implementation from it.
+
+Target acerto previews rows before generation; grouped settlement uses checkboxes and full-principal defaults with explicit adjustment amounts. Origin financial status differs from andamento. Render only authorized projections; client hiding cannot replace server scope. Keep amounts masked and shared UI/TanStack Table boundaries.
+
+
 This document defines the reusable frontend house pattern of the repository.
 
 It is meant to survive domain changes as long as the project keeps the same UI architecture.

@@ -1,5 +1,12 @@
 # Multitenancy: one company, multiple branches
 
+## Approved financial redesign — target precedence
+
+Status: approved plan, not implemented. [Target financial contract](FINANCIAL_SYSTEM.md) and its linked roadmap/UML/authorization supersede conflicting financial and identity semantics below for the ordered redesign. Remaining text describes the preserved running baseline and unchanged house rules; do not infer target implementation from it.
+
+Target Person, EmployeeProfile and catalogs are company-wide. Contracts, Expenses, titles, settlement batches, settlements, calculation evidence and reversal events remain Firm scoped. Person evidence stays owner-authorized across branches; operational proof stays local and own/assigned restricted. Person/profile Clerk binding replaces current employeeId at coordinated cutover.
+
+
 ## Installation boundary
 
 This installation serves one company with multiple business units (`Firm`, unidade or filial). Firm isolates operational and financial data. Clients, collaborators and lookup options are shared across the company.

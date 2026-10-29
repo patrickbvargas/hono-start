@@ -1,5 +1,12 @@
 # Lookup Values
 
+## Approved financial redesign — target precedence
+
+Status: approved plan, not implemented. [Target financial contract](FINANCIAL_SYSTEM.md) and its linked roadmap/UML/authorization supersede conflicting financial and identity semantics below for the ordered redesign. Remaining text describes the preserved running baseline and unchanged house rules; do not infer target implementation from it.
+
+Target PersonType evolves ClientType; FinancialAnalytic evolves global ExpenseCategory, preserving stable values. Add global PaymentMethod and TitleKind. All catalogs have no Firm FK. LAWYER uses PAYROLL_LAWYERS; ADMIN_ASSISTANT uses PAYROLL_STAFF. Status/quitada are derived. Local UserRole is not target account authority.
+
+
 This file defines the canonical lookup catalogs used by the product domain.
 
 Lookup values are domain truth:
