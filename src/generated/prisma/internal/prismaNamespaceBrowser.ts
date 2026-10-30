@@ -64,6 +64,8 @@ export const ModelName = {
   PaymentMethod: 'PaymentMethod',
   TitleKind: 'TitleKind',
   Person: 'Person',
+  ClientProfile: 'ClientProfile',
+  SupplierProfile: 'SupplierProfile',
   EmployeeProfile: 'EmployeeProfile',
   Contract: 'Contract',
   ContractAssignment: 'ContractAssignment',
@@ -222,9 +224,8 @@ export const PersonScalarFieldEnum = {
   document: 'document',
   email: 'email',
   phone: 'phone',
-  isCustomer: 'isCustomer',
-  isSupplier: 'isSupplier',
-  isEmployee: 'isEmployee',
+  isGeneric: 'isGeneric',
+  seedKey: 'seedKey',
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
@@ -233,6 +234,28 @@ export const PersonScalarFieldEnum = {
 } as const
 
 export type PersonScalarFieldEnum = (typeof PersonScalarFieldEnum)[keyof typeof PersonScalarFieldEnum]
+
+
+export const ClientProfileScalarFieldEnum = {
+  id: 'id',
+  personId: 'personId',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ClientProfileScalarFieldEnum = (typeof ClientProfileScalarFieldEnum)[keyof typeof ClientProfileScalarFieldEnum]
+
+
+export const SupplierProfileScalarFieldEnum = {
+  id: 'id',
+  personId: 'personId',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SupplierProfileScalarFieldEnum = (typeof SupplierProfileScalarFieldEnum)[keyof typeof SupplierProfileScalarFieldEnum]
 
 
 export const EmployeeProfileScalarFieldEnum = {

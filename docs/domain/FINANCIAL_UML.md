@@ -11,14 +11,26 @@ classDiagram
 direction TB
 class Person {
   id
-  personTypeId
+  personTypeId_nullable_for_generic
   name
-  document
-  isCustomer
-  isSupplier
-  isEmployee
+  document_nullable_for_generic
+  isGeneric
+  isCustomer_derived
+  isSupplier_derived
+  isEmployee_derived
+}
+class ClientProfile {
+  id
+  personId_unique
+  isActive
+}
+class SupplierProfile {
+  id
+  personId_unique
+  isActive
 }
 class EmployeeProfile {
+  id
   personId
   employeeTypeId
   oabNumber
@@ -113,16 +125,19 @@ class PaymentReversal {
   reversedAt
   reason
 }
+Person "1" --> "0..1" ClientProfile
+Person "1" --> "0..1" SupplierProfile
 Person "1" --> "0..1" EmployeeProfile
-Person "1" <-- "0..*" Contract : customer
-Person "1" <-- "0..*" Expense : counterparty
+EmployeeProfile ..> SupplierProfile : same Person required when active
+ClientProfile "1" <-- "0..*" Contract : customer
+SupplierProfile "1" <-- "0..*" Expense : counterparty
 Contract "1" --> "0..*" Revenue
 Contract "1" --> "0..*" ContractAssignment
 EmployeeProfile "1" <-- "0..*" ContractAssignment
 Revenue "0..1" --> "0..*" Receivable : current origin
 Expense "0..1" --> "0..*" Payable : current origin
-Person "1" <-- "0..*" Receivable : debtor
-Person "1" <-- "0..*" Payable : beneficiary
+ClientProfile "1" <-- "0..*" Receivable : debtor
+SupplierProfile "1" <-- "0..*" Payable : beneficiary
 Receivable "1" --> "0..*" Receipt
 Payable "1" --> "0..*" Payment
 Receipt "1" --> "0..1" ReceiptReversal
@@ -233,4 +248,8 @@ Lookups use id/value/label/isActive and physical ref_ table names; see [catalog 
 
 All operational/financial children retain Firm isolation and timestamps/audit; common fields omitted. Each Attachment has exactly one enforced owner, not multiple simultaneous owners. Each Receipt/Payment owns its proof; neither ReceiptBatch nor PaymentBatch or person grouping exists. Multi-selection creates independent settlements atomically across authorized Persons in one direction and Firm, copying the common effective date and actual PaymentMethod to each event. Receipt also records the remuneration-generation choice. Technical idempotency/audit correlation is not a business lot. Other existing owner attachments remain preserved during cutover. Settlement reversals are append-only, unique per settlement, with actor/reason and event date. Financial totals/status are derived, not independently editable flags.
 
-UI projections remain separate: Clientes, Fornecedores and Colaboradores all reference Person; Colaboradores additionally manages EmployeeProfile under explicit authorization. No separate duplicate customer/supplier/employee identity tables are implied. Member cannot use these shared relationships to read supplier/collaborator management or professional/percentage/access fields.
+UI uses one Pessoas route with role-filtered projections; professional sections manage EmployeeProfile under explicit authorization. No separate duplicate customer/supplier/employee identity tables are implied. Member cannot use these shared relationships to read supplier/collaborator management or professional/percentage/access fields.
+
+Current target revision: [Person registration](PERSON_REGISTRATION.md). Employee implies Supplier; generic seeded Persons have no fiscal document or EmployeeProfile; titles require Customer/Supplier by direction. ClientProfile/SupplierProfile are required target 1:1 role extensions now, alongside EmployeeProfile; implementation remains pending.
+
+Role profile FK revision: Contract/Receivable → ClientProfile; Expense/Payable → SupplierProfile; ContractAssignment → EmployeeProfile. IDs are not interchangeable with Person. Session/actor/shared identity evidence still use Person. Active EmployeeProfile requires active SupplierProfile for the same Person; checkboxes derive from profiles, not duplicate flags. Future banking/address/family modules remain out of scope.

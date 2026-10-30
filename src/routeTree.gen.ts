@@ -14,23 +14,21 @@ import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as AppAlterarSenhaObrigatoriaRouteImport } from './routes/_app/alterar-senha-obrigatoria'
 import { Route as AppAuditoriaRouteImport } from './routes/_app/auditoria'
-import { Route as AppClientesRouteImport } from './routes/_app/clientes'
-import { Route as AppColaboradoresRouteImport } from './routes/_app/colaboradores'
 import { Route as AppConfiguracoesRouteImport } from './routes/_app/configuracoes'
 import { Route as AppContratosRouteImport } from './routes/_app/contratos'
 import { Route as AppDespesasRouteImport } from './routes/_app/despesas'
 import { Route as AppHonorariosRouteImport } from './routes/_app/honorarios'
 import { Route as AppPendenciasRouteImport } from './routes/_app/pendencias'
+import { Route as AppPessoasRouteImport } from './routes/_app/pessoas'
 import { Route as AppRemuneracoesRouteImport } from './routes/_app/remuneracoes'
 import { Route as AuthConviteRouteImport } from './routes/_auth/convite'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
 import { Route as AuthRecuperarSenhaRouteImport } from './routes/_auth/recuperar-senha'
 import { Route as AppAuditoriaAuditLogIdRouteImport } from './routes/_app/auditoria_.$auditLogId'
-import { Route as AppClientesClientIdRouteImport } from './routes/_app/clientes_.$clientId'
-import { Route as AppColaboradoresEmployeeIdRouteImport } from './routes/_app/colaboradores_.$employeeId'
 import { Route as AppContratosContractIdRouteImport } from './routes/_app/contratos_.$contractId'
 import { Route as AppDespesasExpenseIdRouteImport } from './routes/_app/despesas_.$expenseId'
 import { Route as AppHonorariosFeeIdRouteImport } from './routes/_app/honorarios_.$feeId'
+import { Route as AppPessoasPersonIdRouteImport } from './routes/_app/pessoas_.$personId'
 import { Route as AppRemuneracoesRemunerationIdRouteImport } from './routes/_app/remuneracoes_.$remunerationId'
 import { Route as ApiAttachmentsIdRouteImport } from './routes/api/attachments/$id'
 import { Route as ApiWebhooksClerkRouteImport } from './routes/api/webhooks/clerk'
@@ -59,16 +57,6 @@ const AppAuditoriaRoute = AppAuditoriaRouteImport.update({
   path: '/auditoria',
   getParentRoute: () => AppRouteRoute,
 } as any)
-const AppClientesRoute = AppClientesRouteImport.update({
-  id: '/clientes',
-  path: '/clientes',
-  getParentRoute: () => AppRouteRoute,
-} as any)
-const AppColaboradoresRoute = AppColaboradoresRouteImport.update({
-  id: '/colaboradores',
-  path: '/colaboradores',
-  getParentRoute: () => AppRouteRoute,
-} as any)
 const AppConfiguracoesRoute = AppConfiguracoesRouteImport.update({
   id: '/configuracoes',
   path: '/configuracoes',
@@ -92,6 +80,11 @@ const AppHonorariosRoute = AppHonorariosRouteImport.update({
 const AppPendenciasRoute = AppPendenciasRouteImport.update({
   id: '/pendencias',
   path: '/pendencias',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppPessoasRoute = AppPessoasRouteImport.update({
+  id: '/pessoas',
+  path: '/pessoas',
   getParentRoute: () => AppRouteRoute,
 } as any)
 const AppRemuneracoesRoute = AppRemuneracoesRouteImport.update({
@@ -119,17 +112,6 @@ const AppAuditoriaAuditLogIdRoute = AppAuditoriaAuditLogIdRouteImport.update({
   path: '/auditoria/$auditLogId',
   getParentRoute: () => AppRouteRoute,
 } as any)
-const AppClientesClientIdRoute = AppClientesClientIdRouteImport.update({
-  id: '/clientes_/$clientId',
-  path: '/clientes/$clientId',
-  getParentRoute: () => AppRouteRoute,
-} as any)
-const AppColaboradoresEmployeeIdRoute =
-  AppColaboradoresEmployeeIdRouteImport.update({
-    id: '/colaboradores_/$employeeId',
-    path: '/colaboradores/$employeeId',
-    getParentRoute: () => AppRouteRoute,
-  } as any)
 const AppContratosContractIdRoute = AppContratosContractIdRouteImport.update({
   id: '/contratos_/$contractId',
   path: '/contratos/$contractId',
@@ -143,6 +125,11 @@ const AppDespesasExpenseIdRoute = AppDespesasExpenseIdRouteImport.update({
 const AppHonorariosFeeIdRoute = AppHonorariosFeeIdRouteImport.update({
   id: '/honorarios_/$feeId',
   path: '/honorarios/$feeId',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppPessoasPersonIdRoute = AppPessoasPersonIdRouteImport.update({
+  id: '/pessoas_/$personId',
+  path: '/pessoas/$personId',
   getParentRoute: () => AppRouteRoute,
 } as any)
 const AppRemuneracoesRemunerationIdRoute =
@@ -166,23 +153,21 @@ export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
   '/alterar-senha-obrigatoria': typeof AppAlterarSenhaObrigatoriaRoute
   '/auditoria': typeof AppAuditoriaRoute
-  '/clientes': typeof AppClientesRoute
-  '/colaboradores': typeof AppColaboradoresRoute
   '/configuracoes': typeof AppConfiguracoesRoute
   '/contratos': typeof AppContratosRoute
   '/despesas': typeof AppDespesasRoute
   '/honorarios': typeof AppHonorariosRoute
   '/pendencias': typeof AppPendenciasRoute
+  '/pessoas': typeof AppPessoasRoute
   '/remuneracoes': typeof AppRemuneracoesRoute
   '/convite': typeof AuthConviteRoute
   '/login': typeof AuthLoginRoute
   '/recuperar-senha': typeof AuthRecuperarSenhaRoute
   '/auditoria/$auditLogId': typeof AppAuditoriaAuditLogIdRoute
-  '/clientes/$clientId': typeof AppClientesClientIdRoute
-  '/colaboradores/$employeeId': typeof AppColaboradoresEmployeeIdRoute
   '/contratos/$contractId': typeof AppContratosContractIdRoute
   '/despesas/$expenseId': typeof AppDespesasExpenseIdRoute
   '/honorarios/$feeId': typeof AppHonorariosFeeIdRoute
+  '/pessoas/$personId': typeof AppPessoasPersonIdRoute
   '/remuneracoes/$remunerationId': typeof AppRemuneracoesRemunerationIdRoute
   '/api/attachments/$id': typeof ApiAttachmentsIdRoute
   '/api/webhooks/clerk': typeof ApiWebhooksClerkRoute
@@ -191,23 +176,21 @@ export interface FileRoutesByTo {
   '/': typeof AppIndexRoute
   '/alterar-senha-obrigatoria': typeof AppAlterarSenhaObrigatoriaRoute
   '/auditoria': typeof AppAuditoriaRoute
-  '/clientes': typeof AppClientesRoute
-  '/colaboradores': typeof AppColaboradoresRoute
   '/configuracoes': typeof AppConfiguracoesRoute
   '/contratos': typeof AppContratosRoute
   '/despesas': typeof AppDespesasRoute
   '/honorarios': typeof AppHonorariosRoute
   '/pendencias': typeof AppPendenciasRoute
+  '/pessoas': typeof AppPessoasRoute
   '/remuneracoes': typeof AppRemuneracoesRoute
   '/convite': typeof AuthConviteRoute
   '/login': typeof AuthLoginRoute
   '/recuperar-senha': typeof AuthRecuperarSenhaRoute
   '/auditoria/$auditLogId': typeof AppAuditoriaAuditLogIdRoute
-  '/clientes/$clientId': typeof AppClientesClientIdRoute
-  '/colaboradores/$employeeId': typeof AppColaboradoresEmployeeIdRoute
   '/contratos/$contractId': typeof AppContratosContractIdRoute
   '/despesas/$expenseId': typeof AppDespesasExpenseIdRoute
   '/honorarios/$feeId': typeof AppHonorariosFeeIdRoute
+  '/pessoas/$personId': typeof AppPessoasPersonIdRoute
   '/remuneracoes/$remunerationId': typeof AppRemuneracoesRemunerationIdRoute
   '/api/attachments/$id': typeof ApiAttachmentsIdRoute
   '/api/webhooks/clerk': typeof ApiWebhooksClerkRoute
@@ -218,24 +201,22 @@ export interface FileRoutesById {
   '/_auth': typeof AuthRouteRouteWithChildren
   '/_app/alterar-senha-obrigatoria': typeof AppAlterarSenhaObrigatoriaRoute
   '/_app/auditoria': typeof AppAuditoriaRoute
-  '/_app/clientes': typeof AppClientesRoute
-  '/_app/colaboradores': typeof AppColaboradoresRoute
   '/_app/configuracoes': typeof AppConfiguracoesRoute
   '/_app/contratos': typeof AppContratosRoute
   '/_app/despesas': typeof AppDespesasRoute
   '/_app/honorarios': typeof AppHonorariosRoute
   '/_app/pendencias': typeof AppPendenciasRoute
+  '/_app/pessoas': typeof AppPessoasRoute
   '/_app/remuneracoes': typeof AppRemuneracoesRoute
   '/_auth/convite': typeof AuthConviteRoute
   '/_auth/login': typeof AuthLoginRoute
   '/_auth/recuperar-senha': typeof AuthRecuperarSenhaRoute
   '/_app/': typeof AppIndexRoute
   '/_app/auditoria_/$auditLogId': typeof AppAuditoriaAuditLogIdRoute
-  '/_app/clientes_/$clientId': typeof AppClientesClientIdRoute
-  '/_app/colaboradores_/$employeeId': typeof AppColaboradoresEmployeeIdRoute
   '/_app/contratos_/$contractId': typeof AppContratosContractIdRoute
   '/_app/despesas_/$expenseId': typeof AppDespesasExpenseIdRoute
   '/_app/honorarios_/$feeId': typeof AppHonorariosFeeIdRoute
+  '/_app/pessoas_/$personId': typeof AppPessoasPersonIdRoute
   '/_app/remuneracoes_/$remunerationId': typeof AppRemuneracoesRemunerationIdRoute
   '/api/attachments/$id': typeof ApiAttachmentsIdRoute
   '/api/webhooks/clerk': typeof ApiWebhooksClerkRoute
@@ -246,23 +227,21 @@ export interface FileRouteTypes {
     | '/'
     | '/alterar-senha-obrigatoria'
     | '/auditoria'
-    | '/clientes'
-    | '/colaboradores'
     | '/configuracoes'
     | '/contratos'
     | '/despesas'
     | '/honorarios'
     | '/pendencias'
+    | '/pessoas'
     | '/remuneracoes'
     | '/convite'
     | '/login'
     | '/recuperar-senha'
     | '/auditoria/$auditLogId'
-    | '/clientes/$clientId'
-    | '/colaboradores/$employeeId'
     | '/contratos/$contractId'
     | '/despesas/$expenseId'
     | '/honorarios/$feeId'
+    | '/pessoas/$personId'
     | '/remuneracoes/$remunerationId'
     | '/api/attachments/$id'
     | '/api/webhooks/clerk'
@@ -271,23 +250,21 @@ export interface FileRouteTypes {
     | '/'
     | '/alterar-senha-obrigatoria'
     | '/auditoria'
-    | '/clientes'
-    | '/colaboradores'
     | '/configuracoes'
     | '/contratos'
     | '/despesas'
     | '/honorarios'
     | '/pendencias'
+    | '/pessoas'
     | '/remuneracoes'
     | '/convite'
     | '/login'
     | '/recuperar-senha'
     | '/auditoria/$auditLogId'
-    | '/clientes/$clientId'
-    | '/colaboradores/$employeeId'
     | '/contratos/$contractId'
     | '/despesas/$expenseId'
     | '/honorarios/$feeId'
+    | '/pessoas/$personId'
     | '/remuneracoes/$remunerationId'
     | '/api/attachments/$id'
     | '/api/webhooks/clerk'
@@ -297,24 +274,22 @@ export interface FileRouteTypes {
     | '/_auth'
     | '/_app/alterar-senha-obrigatoria'
     | '/_app/auditoria'
-    | '/_app/clientes'
-    | '/_app/colaboradores'
     | '/_app/configuracoes'
     | '/_app/contratos'
     | '/_app/despesas'
     | '/_app/honorarios'
     | '/_app/pendencias'
+    | '/_app/pessoas'
     | '/_app/remuneracoes'
     | '/_auth/convite'
     | '/_auth/login'
     | '/_auth/recuperar-senha'
     | '/_app/'
     | '/_app/auditoria_/$auditLogId'
-    | '/_app/clientes_/$clientId'
-    | '/_app/colaboradores_/$employeeId'
     | '/_app/contratos_/$contractId'
     | '/_app/despesas_/$expenseId'
     | '/_app/honorarios_/$feeId'
+    | '/_app/pessoas_/$personId'
     | '/_app/remuneracoes_/$remunerationId'
     | '/api/attachments/$id'
     | '/api/webhooks/clerk'
@@ -364,20 +339,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAuditoriaRouteImport
       parentRoute: typeof AppRouteRoute
     }
-    '/_app/clientes': {
-      id: '/_app/clientes'
-      path: '/clientes'
-      fullPath: '/clientes'
-      preLoaderRoute: typeof AppClientesRouteImport
-      parentRoute: typeof AppRouteRoute
-    }
-    '/_app/colaboradores': {
-      id: '/_app/colaboradores'
-      path: '/colaboradores'
-      fullPath: '/colaboradores'
-      preLoaderRoute: typeof AppColaboradoresRouteImport
-      parentRoute: typeof AppRouteRoute
-    }
     '/_app/configuracoes': {
       id: '/_app/configuracoes'
       path: '/configuracoes'
@@ -411,6 +372,13 @@ declare module '@tanstack/react-router' {
       path: '/pendencias'
       fullPath: '/pendencias'
       preLoaderRoute: typeof AppPendenciasRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/pessoas': {
+      id: '/_app/pessoas'
+      path: '/pessoas'
+      fullPath: '/pessoas'
+      preLoaderRoute: typeof AppPessoasRouteImport
       parentRoute: typeof AppRouteRoute
     }
     '/_app/remuneracoes': {
@@ -448,20 +416,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAuditoriaAuditLogIdRouteImport
       parentRoute: typeof AppRouteRoute
     }
-    '/_app/clientes_/$clientId': {
-      id: '/_app/clientes_/$clientId'
-      path: '/clientes/$clientId'
-      fullPath: '/clientes/$clientId'
-      preLoaderRoute: typeof AppClientesClientIdRouteImport
-      parentRoute: typeof AppRouteRoute
-    }
-    '/_app/colaboradores_/$employeeId': {
-      id: '/_app/colaboradores_/$employeeId'
-      path: '/colaboradores/$employeeId'
-      fullPath: '/colaboradores/$employeeId'
-      preLoaderRoute: typeof AppColaboradoresEmployeeIdRouteImport
-      parentRoute: typeof AppRouteRoute
-    }
     '/_app/contratos_/$contractId': {
       id: '/_app/contratos_/$contractId'
       path: '/contratos/$contractId'
@@ -481,6 +435,13 @@ declare module '@tanstack/react-router' {
       path: '/honorarios/$feeId'
       fullPath: '/honorarios/$feeId'
       preLoaderRoute: typeof AppHonorariosFeeIdRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/pessoas_/$personId': {
+      id: '/_app/pessoas_/$personId'
+      path: '/pessoas/$personId'
+      fullPath: '/pessoas/$personId'
+      preLoaderRoute: typeof AppPessoasPersonIdRouteImport
       parentRoute: typeof AppRouteRoute
     }
     '/_app/remuneracoes_/$remunerationId': {
@@ -510,42 +471,38 @@ declare module '@tanstack/react-router' {
 interface AppRouteRouteChildren {
   AppAlterarSenhaObrigatoriaRoute: typeof AppAlterarSenhaObrigatoriaRoute
   AppAuditoriaRoute: typeof AppAuditoriaRoute
-  AppClientesRoute: typeof AppClientesRoute
-  AppColaboradoresRoute: typeof AppColaboradoresRoute
   AppConfiguracoesRoute: typeof AppConfiguracoesRoute
   AppContratosRoute: typeof AppContratosRoute
   AppDespesasRoute: typeof AppDespesasRoute
   AppHonorariosRoute: typeof AppHonorariosRoute
   AppPendenciasRoute: typeof AppPendenciasRoute
+  AppPessoasRoute: typeof AppPessoasRoute
   AppRemuneracoesRoute: typeof AppRemuneracoesRoute
   AppIndexRoute: typeof AppIndexRoute
   AppAuditoriaAuditLogIdRoute: typeof AppAuditoriaAuditLogIdRoute
-  AppClientesClientIdRoute: typeof AppClientesClientIdRoute
-  AppColaboradoresEmployeeIdRoute: typeof AppColaboradoresEmployeeIdRoute
   AppContratosContractIdRoute: typeof AppContratosContractIdRoute
   AppDespesasExpenseIdRoute: typeof AppDespesasExpenseIdRoute
   AppHonorariosFeeIdRoute: typeof AppHonorariosFeeIdRoute
+  AppPessoasPersonIdRoute: typeof AppPessoasPersonIdRoute
   AppRemuneracoesRemunerationIdRoute: typeof AppRemuneracoesRemunerationIdRoute
 }
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppAlterarSenhaObrigatoriaRoute: AppAlterarSenhaObrigatoriaRoute,
   AppAuditoriaRoute: AppAuditoriaRoute,
-  AppClientesRoute: AppClientesRoute,
-  AppColaboradoresRoute: AppColaboradoresRoute,
   AppConfiguracoesRoute: AppConfiguracoesRoute,
   AppContratosRoute: AppContratosRoute,
   AppDespesasRoute: AppDespesasRoute,
   AppHonorariosRoute: AppHonorariosRoute,
   AppPendenciasRoute: AppPendenciasRoute,
+  AppPessoasRoute: AppPessoasRoute,
   AppRemuneracoesRoute: AppRemuneracoesRoute,
   AppIndexRoute: AppIndexRoute,
   AppAuditoriaAuditLogIdRoute: AppAuditoriaAuditLogIdRoute,
-  AppClientesClientIdRoute: AppClientesClientIdRoute,
-  AppColaboradoresEmployeeIdRoute: AppColaboradoresEmployeeIdRoute,
   AppContratosContractIdRoute: AppContratosContractIdRoute,
   AppDespesasExpenseIdRoute: AppDespesasExpenseIdRoute,
   AppHonorariosFeeIdRoute: AppHonorariosFeeIdRoute,
+  AppPessoasPersonIdRoute: AppPessoasPersonIdRoute,
   AppRemuneracoesRemunerationIdRoute: AppRemuneracoesRemunerationIdRoute,
 }
 

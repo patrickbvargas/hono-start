@@ -15,6 +15,14 @@ export function assertAttachmentOwnerSubjectReadAccess(
 	session: Awaited<ReturnType<typeof getRequiredServerLoggedUserSession>>,
 	owner: Awaited<ReturnType<typeof assertAttachmentOwnerExists>>,
 ) {
+	if (owner.owner.ownerKind === "person") {
+		assertCan(session, [
+			"org:people:read",
+			"org:clients:read",
+			"org:suppliers:read",
+			"org:employees:read",
+		]);
+	}
 	if (owner.owner.ownerKind === "fee") {
 		assertCan(
 			session,
@@ -64,6 +72,9 @@ export function assertAttachmentOwnerUploadAccess(
 	});
 
 	assertCan(session, "org:attachments:upload", owner.access.resource);
+	if (owner.owner.ownerKind === "person") {
+		assertCan(session, "org:people:update");
+	}
 	if (
 		owner.owner.ownerKind === "fee" ||
 		owner.owner.ownerKind === "remuneration"

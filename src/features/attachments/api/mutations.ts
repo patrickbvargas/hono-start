@@ -30,13 +30,17 @@ const createAttachmentFn = createServerFn({ method: "POST" })
 		try {
 			const session = await getRequiredServerLoggedUserSession();
 			const { firmId } = await getServerScope("attachment");
-			const owner = await assertAttachmentOwnerExists({ firmId, input: data });
+			const owner = await assertAttachmentOwnerExists({
+				firmId,
+				input: data,
+				session,
+			});
 
 			assertAttachmentOwnerUploadAccess(session, owner);
 
 			return await createAttachments({
 				actor: {
-					id: session.employee.id ?? undefined,
+					id: session.person?.id ?? undefined,
 					name: session.user.fullName,
 					email: session.user.email,
 				},
@@ -70,12 +74,13 @@ const deleteAttachmentFn = createServerFn({ method: "POST" })
 			const owner = await assertAttachmentOwnerExists({
 				firmId,
 				input: access.ownerInput,
+				session,
 			});
 			assertAttachmentOwnerSubjectReadAccess(session, owner);
 
 			return await deleteAttachment({
 				actor: {
-					id: session.employee.id ?? undefined,
+					id: session.person?.id ?? undefined,
 					name: session.user.fullName,
 					email: session.user.email,
 				},

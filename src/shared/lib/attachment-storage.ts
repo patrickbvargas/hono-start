@@ -45,7 +45,7 @@ function objectUrl(url: string, path: string) {
 }
 function validateKey(path: string) {
 	if (
-		!/^firms\/[1-9]\d*\/(?:demo\/)?(client|employee|contract|expense|fee|remuneration)\/[1-9]\d*\/[\w.-]+$/.test(
+		!/^firms\/[1-9]\d*\/(?:demo\/)?(person|client|employee|contract|expense|fee|remuneration|receipt|payment)\/[1-9]\d*\/[\w.-]+$/.test(
 			path,
 		) ||
 		path.split("/").some((part) => part === "." || part === "..")
@@ -61,6 +61,7 @@ export function createAttachmentStoragePath(params: {
 	firmId: number;
 	ownerId: number;
 	ownerKind:
+		| "person"
 		| "client"
 		| "contract"
 		| "employee"

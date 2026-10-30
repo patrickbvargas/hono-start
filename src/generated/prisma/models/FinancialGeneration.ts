@@ -652,14 +652,6 @@ export type FinancialGenerationUncheckedUpdateOneWithoutExpenseNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.FinancialGenerationUpdateToOneWithWhereWithoutExpenseInput, Prisma.FinancialGenerationUpdateWithoutExpenseInput>, Prisma.FinancialGenerationUncheckedUpdateWithoutExpenseInput>
 }
 
-export type NullableIntFieldUpdateOperationsInput = {
-  set?: number | null
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type FinancialGenerationCreateNestedOneWithoutReceivablesInput = {
   create?: Prisma.XOR<Prisma.FinancialGenerationCreateWithoutReceivablesInput, Prisma.FinancialGenerationUncheckedCreateWithoutReceivablesInput>
   connectOrCreate?: Prisma.FinancialGenerationCreateOrConnectWithoutReceivablesInput

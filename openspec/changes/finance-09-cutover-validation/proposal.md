@@ -32,3 +32,7 @@ Primary owners: the feature slices and query boundaries described in design.md. 
 ## Ready-to-use reset acceptance
 
 Deliver a reproducible `pnpm run db:reset` that applies the migration chain, generates the client and seeds a usable app database. Require incremental seed updates in phases01–09, deterministic configured Clerk identity/organization bindings, documented external prerequisites, current scenario fixtures and two real clean-reset/login/use cycles without manual SQL repair. Preserve the existing UI style; no visual redesign is part of cutover.
+
+## Person revision — 2026-10-30
+
+Follow docs/domain/PERSON_REGISTRATION.md over prior separate-screen/document assumptions. Unified Pessoas route with role checkboxes/filters; employee implies supplier; optional 1:1 ClientProfile, SupplierProfile and EmployeeProfile from this revision; receivable customer/payable supplier eligibility; seeded Pagamentos diversos/Recebimentos diversos generic counterparties without fiscal documents or professional profiles. Ordinary documents stay required/unique. Apply role/document constraints and deterministic generic seed keys first, verify database/seed, then review Clerk/session/projections. Preserve explicit grants, Member field/record confidentiality, real employee commission origin and existing UI style. Record new implementation evidence separately from commits8c0718b/d0cb812; do not mark whole phases done from foundation work.

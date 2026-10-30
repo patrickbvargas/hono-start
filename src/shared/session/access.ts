@@ -152,7 +152,7 @@ export function can(
 		const financial = resource as FinancialAccessResource;
 		return (
 			!!session.person &&
-			financial.beneficiaryId === session.person.id &&
+			financial.beneficiaryPersonId === session.person.id &&
 			financial.isRemuneration === true &&
 			!!financial.contract &&
 			financial.contract.firmId === session.firm.id &&

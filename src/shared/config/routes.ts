@@ -41,6 +41,7 @@ export function getPageTitle(
 
 type RouteName =
 	| "dashboard"
+	| "person"
 	| "client"
 	| "contract"
 	| "fee"
@@ -73,9 +74,20 @@ export const ROUTES: Record<RouteName, RouteItem> = {
 			"org:expenses:read",
 		],
 	},
+	person: {
+		title: "Pessoas",
+		url: "/pessoas",
+		icon: UsersIcon,
+		permission: [
+			"org:people:read",
+			"org:clients:read",
+			"org:suppliers:read",
+			"org:employees:read",
+		],
+	},
 	client: {
 		title: "Clientes",
-		url: "/clientes",
+		url: "/pessoas",
 		icon: UserIcon,
 		permission: "org:clients:read",
 	},
@@ -105,7 +117,7 @@ export const ROUTES: Record<RouteName, RouteItem> = {
 	},
 	employee: {
 		title: "Colaboradores",
-		url: "/colaboradores",
+		url: "/pessoas",
 		icon: UsersIcon,
 		permission: "org:employees:read",
 	},

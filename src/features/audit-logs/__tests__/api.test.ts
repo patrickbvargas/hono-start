@@ -10,6 +10,8 @@ const mocks = vi.hoisted(() => ({
 	actions: vi.fn(),
 	actors: vi.fn(),
 	types: vi.fn(),
+	personAccess: vi.fn(),
+	personEventAccess: vi.fn(),
 }));
 vi.mock("@tanstack/react-start", () => ({
 	createServerFn: () => ({
@@ -28,6 +30,10 @@ vi.mock("@/shared/session/server", () => ({
 	getServerScope: mocks.scope,
 }));
 vi.mock("../data/access", () => ({ getAuditAccessWhere: mocks.access }));
+vi.mock("../data/person-access", () => ({
+	getPersonAuditAccessWhere: mocks.personAccess,
+	getPersonAuditEventAccessWhere: mocks.personEventAccess,
+}));
 vi.mock("../data/queries", () => ({
 	getAuditLogs: mocks.list,
 	getAuditLogById: mocks.detail,
@@ -99,6 +105,7 @@ beforeEach(() => {
 	});
 	mocks.scope.mockResolvedValue({ firmId: 2 });
 	mocks.access.mockResolvedValue(accessWhere);
+	mocks.personEventAccess.mockResolvedValue(null);
 });
 
 it.each(cases)(

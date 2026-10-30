@@ -29,7 +29,7 @@ const items: RouteSection[] = [
 		icon: DollarSignIcon,
 		items: [ROUTES.fee, ROUTES.remuneration, ROUTES.expense],
 	},
-	{ title: "Cadastros", url: "#", items: [ROUTES.client, ROUTES.employee] },
+	{ title: "Cadastros", url: "#", items: [ROUTES.person] },
 	{
 		title: "Administração",
 		url: "#",

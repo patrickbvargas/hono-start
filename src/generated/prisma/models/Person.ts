@@ -42,9 +42,8 @@ export type PersonMinAggregateOutputType = {
   document: string | null
   email: string | null
   phone: string | null
-  isCustomer: boolean | null
-  isSupplier: boolean | null
-  isEmployee: boolean | null
+  isGeneric: boolean | null
+  seedKey: string | null
   isActive: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -58,9 +57,8 @@ export type PersonMaxAggregateOutputType = {
   document: string | null
   email: string | null
   phone: string | null
-  isCustomer: boolean | null
-  isSupplier: boolean | null
-  isEmployee: boolean | null
+  isGeneric: boolean | null
+  seedKey: string | null
   isActive: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -74,9 +72,8 @@ export type PersonCountAggregateOutputType = {
   document: number
   email: number
   phone: number
-  isCustomer: number
-  isSupplier: number
-  isEmployee: number
+  isGeneric: number
+  seedKey: number
   isActive: number
   createdAt: number
   updatedAt: number
@@ -102,9 +99,8 @@ export type PersonMinAggregateInputType = {
   document?: true
   email?: true
   phone?: true
-  isCustomer?: true
-  isSupplier?: true
-  isEmployee?: true
+  isGeneric?: true
+  seedKey?: true
   isActive?: true
   createdAt?: true
   updatedAt?: true
@@ -118,9 +114,8 @@ export type PersonMaxAggregateInputType = {
   document?: true
   email?: true
   phone?: true
-  isCustomer?: true
-  isSupplier?: true
-  isEmployee?: true
+  isGeneric?: true
+  seedKey?: true
   isActive?: true
   createdAt?: true
   updatedAt?: true
@@ -134,9 +129,8 @@ export type PersonCountAggregateInputType = {
   document?: true
   email?: true
   phone?: true
-  isCustomer?: true
-  isSupplier?: true
-  isEmployee?: true
+  isGeneric?: true
+  seedKey?: true
   isActive?: true
   createdAt?: true
   updatedAt?: true
@@ -234,17 +228,16 @@ export type PersonGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 export type PersonGroupByOutputType = {
   id: number
   fullName: string
-  document: string
+  document: string | null
   email: string | null
   phone: string | null
-  isCustomer: boolean
-  isSupplier: boolean
-  isEmployee: boolean
+  isGeneric: boolean
+  seedKey: string | null
   isActive: boolean
   createdAt: Date
   updatedAt: Date
   deletedAt: Date | null
-  personTypeId: number
+  personTypeId: number | null
   _count: PersonCountAggregateOutputType | null
   _avg: PersonAvgAggregateOutputType | null
   _sum: PersonSumAggregateOutputType | null
@@ -273,25 +266,22 @@ export type PersonWhereInput = {
   NOT?: Prisma.PersonWhereInput | Prisma.PersonWhereInput[]
   id?: Prisma.IntFilter<"Person"> | number
   fullName?: Prisma.StringFilter<"Person"> | string
-  document?: Prisma.StringFilter<"Person"> | string
+  document?: Prisma.StringNullableFilter<"Person"> | string | null
   email?: Prisma.StringNullableFilter<"Person"> | string | null
   phone?: Prisma.StringNullableFilter<"Person"> | string | null
-  isCustomer?: Prisma.BoolFilter<"Person"> | boolean
-  isSupplier?: Prisma.BoolFilter<"Person"> | boolean
-  isEmployee?: Prisma.BoolFilter<"Person"> | boolean
+  isGeneric?: Prisma.BoolFilter<"Person"> | boolean
+  seedKey?: Prisma.StringNullableFilter<"Person"> | string | null
   isActive?: Prisma.BoolFilter<"Person"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Person"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Person"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Person"> | Date | string | null
-  personTypeId?: Prisma.IntFilter<"Person"> | number
-  personType?: Prisma.XOR<Prisma.PersonTypeScalarRelationFilter, Prisma.PersonTypeWhereInput>
+  personTypeId?: Prisma.IntNullableFilter<"Person"> | number | null
+  personType?: Prisma.XOR<Prisma.PersonTypeNullableScalarRelationFilter, Prisma.PersonTypeWhereInput> | null
   employeeProfile?: Prisma.XOR<Prisma.EmployeeProfileNullableScalarRelationFilter, Prisma.EmployeeProfileWhereInput> | null
-  customerContracts?: Prisma.ContractListRelationFilter
-  expenses?: Prisma.ExpenseListRelationFilter
+  clientProfile?: Prisma.XOR<Prisma.ClientProfileNullableScalarRelationFilter, Prisma.ClientProfileWhereInput> | null
+  supplierProfile?: Prisma.XOR<Prisma.SupplierProfileNullableScalarRelationFilter, Prisma.SupplierProfileWhereInput> | null
   generations?: Prisma.FinancialGenerationListRelationFilter
   directEntries?: Prisma.DirectFinancialEntryListRelationFilter
-  receivables?: Prisma.ReceivableListRelationFilter
-  payables?: Prisma.PayableListRelationFilter
   receipts?: Prisma.ReceiptListRelationFilter
   receiptsReversed?: Prisma.ReceiptReversalListRelationFilter
   payments?: Prisma.PaymentListRelationFilter
@@ -304,25 +294,22 @@ export type PersonWhereInput = {
 export type PersonOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   fullName?: Prisma.SortOrder
-  document?: Prisma.SortOrder
+  document?: Prisma.SortOrderInput | Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
-  isCustomer?: Prisma.SortOrder
-  isSupplier?: Prisma.SortOrder
-  isEmployee?: Prisma.SortOrder
+  isGeneric?: Prisma.SortOrder
+  seedKey?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  personTypeId?: Prisma.SortOrder
+  personTypeId?: Prisma.SortOrderInput | Prisma.SortOrder
   personType?: Prisma.PersonTypeOrderByWithRelationInput
   employeeProfile?: Prisma.EmployeeProfileOrderByWithRelationInput
-  customerContracts?: Prisma.ContractOrderByRelationAggregateInput
-  expenses?: Prisma.ExpenseOrderByRelationAggregateInput
+  clientProfile?: Prisma.ClientProfileOrderByWithRelationInput
+  supplierProfile?: Prisma.SupplierProfileOrderByWithRelationInput
   generations?: Prisma.FinancialGenerationOrderByRelationAggregateInput
   directEntries?: Prisma.DirectFinancialEntryOrderByRelationAggregateInput
-  receivables?: Prisma.ReceivableOrderByRelationAggregateInput
-  payables?: Prisma.PayableOrderByRelationAggregateInput
   receipts?: Prisma.ReceiptOrderByRelationAggregateInput
   receiptsReversed?: Prisma.ReceiptReversalOrderByRelationAggregateInput
   payments?: Prisma.PaymentOrderByRelationAggregateInput
@@ -335,28 +322,25 @@ export type PersonOrderByWithRelationInput = {
 export type PersonWhereUniqueInput = Prisma.AtLeast<{
   id?: number
   document?: string
+  seedKey?: string
   AND?: Prisma.PersonWhereInput | Prisma.PersonWhereInput[]
   OR?: Prisma.PersonWhereInput[]
   NOT?: Prisma.PersonWhereInput | Prisma.PersonWhereInput[]
   fullName?: Prisma.StringFilter<"Person"> | string
   email?: Prisma.StringNullableFilter<"Person"> | string | null
   phone?: Prisma.StringNullableFilter<"Person"> | string | null
-  isCustomer?: Prisma.BoolFilter<"Person"> | boolean
-  isSupplier?: Prisma.BoolFilter<"Person"> | boolean
-  isEmployee?: Prisma.BoolFilter<"Person"> | boolean
+  isGeneric?: Prisma.BoolFilter<"Person"> | boolean
   isActive?: Prisma.BoolFilter<"Person"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Person"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Person"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Person"> | Date | string | null
-  personTypeId?: Prisma.IntFilter<"Person"> | number
-  personType?: Prisma.XOR<Prisma.PersonTypeScalarRelationFilter, Prisma.PersonTypeWhereInput>
+  personTypeId?: Prisma.IntNullableFilter<"Person"> | number | null
+  personType?: Prisma.XOR<Prisma.PersonTypeNullableScalarRelationFilter, Prisma.PersonTypeWhereInput> | null
   employeeProfile?: Prisma.XOR<Prisma.EmployeeProfileNullableScalarRelationFilter, Prisma.EmployeeProfileWhereInput> | null
-  customerContracts?: Prisma.ContractListRelationFilter
-  expenses?: Prisma.ExpenseListRelationFilter
+  clientProfile?: Prisma.XOR<Prisma.ClientProfileNullableScalarRelationFilter, Prisma.ClientProfileWhereInput> | null
+  supplierProfile?: Prisma.XOR<Prisma.SupplierProfileNullableScalarRelationFilter, Prisma.SupplierProfileWhereInput> | null
   generations?: Prisma.FinancialGenerationListRelationFilter
   directEntries?: Prisma.DirectFinancialEntryListRelationFilter
-  receivables?: Prisma.ReceivableListRelationFilter
-  payables?: Prisma.PayableListRelationFilter
   receipts?: Prisma.ReceiptListRelationFilter
   receiptsReversed?: Prisma.ReceiptReversalListRelationFilter
   payments?: Prisma.PaymentListRelationFilter
@@ -364,22 +348,21 @@ export type PersonWhereUniqueInput = Prisma.AtLeast<{
   attachments?: Prisma.AttachmentListRelationFilter
   actedAuditLogs?: Prisma.AuditLogListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
-}, "id" | "document">
+}, "id" | "document" | "seedKey">
 
 export type PersonOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   fullName?: Prisma.SortOrder
-  document?: Prisma.SortOrder
+  document?: Prisma.SortOrderInput | Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
-  isCustomer?: Prisma.SortOrder
-  isSupplier?: Prisma.SortOrder
-  isEmployee?: Prisma.SortOrder
+  isGeneric?: Prisma.SortOrder
+  seedKey?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  personTypeId?: Prisma.SortOrder
+  personTypeId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.PersonCountOrderByAggregateInput
   _avg?: Prisma.PersonAvgOrderByAggregateInput
   _max?: Prisma.PersonMaxOrderByAggregateInput
@@ -393,39 +376,35 @@ export type PersonScalarWhereWithAggregatesInput = {
   NOT?: Prisma.PersonScalarWhereWithAggregatesInput | Prisma.PersonScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Person"> | number
   fullName?: Prisma.StringWithAggregatesFilter<"Person"> | string
-  document?: Prisma.StringWithAggregatesFilter<"Person"> | string
+  document?: Prisma.StringNullableWithAggregatesFilter<"Person"> | string | null
   email?: Prisma.StringNullableWithAggregatesFilter<"Person"> | string | null
   phone?: Prisma.StringNullableWithAggregatesFilter<"Person"> | string | null
-  isCustomer?: Prisma.BoolWithAggregatesFilter<"Person"> | boolean
-  isSupplier?: Prisma.BoolWithAggregatesFilter<"Person"> | boolean
-  isEmployee?: Prisma.BoolWithAggregatesFilter<"Person"> | boolean
+  isGeneric?: Prisma.BoolWithAggregatesFilter<"Person"> | boolean
+  seedKey?: Prisma.StringNullableWithAggregatesFilter<"Person"> | string | null
   isActive?: Prisma.BoolWithAggregatesFilter<"Person"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Person"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Person"> | Date | string
   deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Person"> | Date | string | null
-  personTypeId?: Prisma.IntWithAggregatesFilter<"Person"> | number
+  personTypeId?: Prisma.IntNullableWithAggregatesFilter<"Person"> | number | null
 }
 
 export type PersonCreateInput = {
   fullName: string
-  document: string
+  document?: string | null
   email?: string | null
   phone?: string | null
-  isCustomer?: boolean
-  isSupplier?: boolean
-  isEmployee?: boolean
+  isGeneric?: boolean
+  seedKey?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  personType: Prisma.PersonTypeCreateNestedOneWithoutPeopleInput
+  personType?: Prisma.PersonTypeCreateNestedOneWithoutPeopleInput
   employeeProfile?: Prisma.EmployeeProfileCreateNestedOneWithoutPersonInput
-  customerContracts?: Prisma.ContractCreateNestedManyWithoutCustomerInput
-  expenses?: Prisma.ExpenseCreateNestedManyWithoutSupplierInput
+  clientProfile?: Prisma.ClientProfileCreateNestedOneWithoutPersonInput
+  supplierProfile?: Prisma.SupplierProfileCreateNestedOneWithoutPersonInput
   generations?: Prisma.FinancialGenerationCreateNestedManyWithoutActorInput
   directEntries?: Prisma.DirectFinancialEntryCreateNestedManyWithoutActorInput
-  receivables?: Prisma.ReceivableCreateNestedManyWithoutDebtorInput
-  payables?: Prisma.PayableCreateNestedManyWithoutBeneficiaryInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutActorInput
   receiptsReversed?: Prisma.ReceiptReversalCreateNestedManyWithoutActorInput
   payments?: Prisma.PaymentCreateNestedManyWithoutActorInput
@@ -438,24 +417,21 @@ export type PersonCreateInput = {
 export type PersonUncheckedCreateInput = {
   id?: number
   fullName: string
-  document: string
+  document?: string | null
   email?: string | null
   phone?: string | null
-  isCustomer?: boolean
-  isSupplier?: boolean
-  isEmployee?: boolean
+  isGeneric?: boolean
+  seedKey?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  personTypeId: number
+  personTypeId?: number | null
   employeeProfile?: Prisma.EmployeeProfileUncheckedCreateNestedOneWithoutPersonInput
-  customerContracts?: Prisma.ContractUncheckedCreateNestedManyWithoutCustomerInput
-  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutSupplierInput
+  clientProfile?: Prisma.ClientProfileUncheckedCreateNestedOneWithoutPersonInput
+  supplierProfile?: Prisma.SupplierProfileUncheckedCreateNestedOneWithoutPersonInput
   generations?: Prisma.FinancialGenerationUncheckedCreateNestedManyWithoutActorInput
   directEntries?: Prisma.DirectFinancialEntryUncheckedCreateNestedManyWithoutActorInput
-  receivables?: Prisma.ReceivableUncheckedCreateNestedManyWithoutDebtorInput
-  payables?: Prisma.PayableUncheckedCreateNestedManyWithoutBeneficiaryInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutActorInput
   receiptsReversed?: Prisma.ReceiptReversalUncheckedCreateNestedManyWithoutActorInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutActorInput
@@ -467,24 +443,21 @@ export type PersonUncheckedCreateInput = {
 
 export type PersonUpdateInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  document?: Prisma.StringFieldUpdateOperationsInput | string
+  document?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSupplier?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isEmployee?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isGeneric?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  seedKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  personType?: Prisma.PersonTypeUpdateOneRequiredWithoutPeopleNestedInput
+  personType?: Prisma.PersonTypeUpdateOneWithoutPeopleNestedInput
   employeeProfile?: Prisma.EmployeeProfileUpdateOneWithoutPersonNestedInput
-  customerContracts?: Prisma.ContractUpdateManyWithoutCustomerNestedInput
-  expenses?: Prisma.ExpenseUpdateManyWithoutSupplierNestedInput
+  clientProfile?: Prisma.ClientProfileUpdateOneWithoutPersonNestedInput
+  supplierProfile?: Prisma.SupplierProfileUpdateOneWithoutPersonNestedInput
   generations?: Prisma.FinancialGenerationUpdateManyWithoutActorNestedInput
   directEntries?: Prisma.DirectFinancialEntryUpdateManyWithoutActorNestedInput
-  receivables?: Prisma.ReceivableUpdateManyWithoutDebtorNestedInput
-  payables?: Prisma.PayableUpdateManyWithoutBeneficiaryNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutActorNestedInput
   receiptsReversed?: Prisma.ReceiptReversalUpdateManyWithoutActorNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutActorNestedInput
@@ -497,24 +470,21 @@ export type PersonUpdateInput = {
 export type PersonUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  document?: Prisma.StringFieldUpdateOperationsInput | string
+  document?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSupplier?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isEmployee?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isGeneric?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  seedKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  personTypeId?: Prisma.IntFieldUpdateOperationsInput | number
+  personTypeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   employeeProfile?: Prisma.EmployeeProfileUncheckedUpdateOneWithoutPersonNestedInput
-  customerContracts?: Prisma.ContractUncheckedUpdateManyWithoutCustomerNestedInput
-  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutSupplierNestedInput
+  clientProfile?: Prisma.ClientProfileUncheckedUpdateOneWithoutPersonNestedInput
+  supplierProfile?: Prisma.SupplierProfileUncheckedUpdateOneWithoutPersonNestedInput
   generations?: Prisma.FinancialGenerationUncheckedUpdateManyWithoutActorNestedInput
   directEntries?: Prisma.DirectFinancialEntryUncheckedUpdateManyWithoutActorNestedInput
-  receivables?: Prisma.ReceivableUncheckedUpdateManyWithoutDebtorNestedInput
-  payables?: Prisma.PayableUncheckedUpdateManyWithoutBeneficiaryNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutActorNestedInput
   receiptsReversed?: Prisma.ReceiptReversalUncheckedUpdateManyWithoutActorNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutActorNestedInput
@@ -527,27 +497,25 @@ export type PersonUncheckedUpdateInput = {
 export type PersonCreateManyInput = {
   id?: number
   fullName: string
-  document: string
+  document?: string | null
   email?: string | null
   phone?: string | null
-  isCustomer?: boolean
-  isSupplier?: boolean
-  isEmployee?: boolean
+  isGeneric?: boolean
+  seedKey?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  personTypeId: number
+  personTypeId?: number | null
 }
 
 export type PersonUpdateManyMutationInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  document?: Prisma.StringFieldUpdateOperationsInput | string
+  document?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSupplier?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isEmployee?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isGeneric?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  seedKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -557,17 +525,16 @@ export type PersonUpdateManyMutationInput = {
 export type PersonUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  document?: Prisma.StringFieldUpdateOperationsInput | string
+  document?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSupplier?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isEmployee?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isGeneric?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  seedKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  personTypeId?: Prisma.IntFieldUpdateOperationsInput | number
+  personTypeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type PersonListRelationFilter = {
@@ -586,9 +553,8 @@ export type PersonCountOrderByAggregateInput = {
   document?: Prisma.SortOrder
   email?: Prisma.SortOrder
   phone?: Prisma.SortOrder
-  isCustomer?: Prisma.SortOrder
-  isSupplier?: Prisma.SortOrder
-  isEmployee?: Prisma.SortOrder
+  isGeneric?: Prisma.SortOrder
+  seedKey?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -607,9 +573,8 @@ export type PersonMaxOrderByAggregateInput = {
   document?: Prisma.SortOrder
   email?: Prisma.SortOrder
   phone?: Prisma.SortOrder
-  isCustomer?: Prisma.SortOrder
-  isSupplier?: Prisma.SortOrder
-  isEmployee?: Prisma.SortOrder
+  isGeneric?: Prisma.SortOrder
+  seedKey?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -623,9 +588,8 @@ export type PersonMinOrderByAggregateInput = {
   document?: Prisma.SortOrder
   email?: Prisma.SortOrder
   phone?: Prisma.SortOrder
-  isCustomer?: Prisma.SortOrder
-  isSupplier?: Prisma.SortOrder
-  isEmployee?: Prisma.SortOrder
+  isGeneric?: Prisma.SortOrder
+  seedKey?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -698,6 +662,42 @@ export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null
 }
 
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type PersonCreateNestedOneWithoutClientProfileInput = {
+  create?: Prisma.XOR<Prisma.PersonCreateWithoutClientProfileInput, Prisma.PersonUncheckedCreateWithoutClientProfileInput>
+  connectOrCreate?: Prisma.PersonCreateOrConnectWithoutClientProfileInput
+  connect?: Prisma.PersonWhereUniqueInput
+}
+
+export type PersonUpdateOneRequiredWithoutClientProfileNestedInput = {
+  create?: Prisma.XOR<Prisma.PersonCreateWithoutClientProfileInput, Prisma.PersonUncheckedCreateWithoutClientProfileInput>
+  connectOrCreate?: Prisma.PersonCreateOrConnectWithoutClientProfileInput
+  upsert?: Prisma.PersonUpsertWithoutClientProfileInput
+  connect?: Prisma.PersonWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PersonUpdateToOneWithWhereWithoutClientProfileInput, Prisma.PersonUpdateWithoutClientProfileInput>, Prisma.PersonUncheckedUpdateWithoutClientProfileInput>
+}
+
+export type PersonCreateNestedOneWithoutSupplierProfileInput = {
+  create?: Prisma.XOR<Prisma.PersonCreateWithoutSupplierProfileInput, Prisma.PersonUncheckedCreateWithoutSupplierProfileInput>
+  connectOrCreate?: Prisma.PersonCreateOrConnectWithoutSupplierProfileInput
+  connect?: Prisma.PersonWhereUniqueInput
+}
+
+export type PersonUpdateOneRequiredWithoutSupplierProfileNestedInput = {
+  create?: Prisma.XOR<Prisma.PersonCreateWithoutSupplierProfileInput, Prisma.PersonUncheckedCreateWithoutSupplierProfileInput>
+  connectOrCreate?: Prisma.PersonCreateOrConnectWithoutSupplierProfileInput
+  upsert?: Prisma.PersonUpsertWithoutSupplierProfileInput
+  connect?: Prisma.PersonWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PersonUpdateToOneWithWhereWithoutSupplierProfileInput, Prisma.PersonUpdateWithoutSupplierProfileInput>, Prisma.PersonUncheckedUpdateWithoutSupplierProfileInput>
+}
+
 export type PersonCreateNestedOneWithoutEmployeeProfileInput = {
   create?: Prisma.XOR<Prisma.PersonCreateWithoutEmployeeProfileInput, Prisma.PersonUncheckedCreateWithoutEmployeeProfileInput>
   connectOrCreate?: Prisma.PersonCreateOrConnectWithoutEmployeeProfileInput
@@ -710,34 +710,6 @@ export type PersonUpdateOneRequiredWithoutEmployeeProfileNestedInput = {
   upsert?: Prisma.PersonUpsertWithoutEmployeeProfileInput
   connect?: Prisma.PersonWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.PersonUpdateToOneWithWhereWithoutEmployeeProfileInput, Prisma.PersonUpdateWithoutEmployeeProfileInput>, Prisma.PersonUncheckedUpdateWithoutEmployeeProfileInput>
-}
-
-export type PersonCreateNestedOneWithoutCustomerContractsInput = {
-  create?: Prisma.XOR<Prisma.PersonCreateWithoutCustomerContractsInput, Prisma.PersonUncheckedCreateWithoutCustomerContractsInput>
-  connectOrCreate?: Prisma.PersonCreateOrConnectWithoutCustomerContractsInput
-  connect?: Prisma.PersonWhereUniqueInput
-}
-
-export type PersonUpdateOneRequiredWithoutCustomerContractsNestedInput = {
-  create?: Prisma.XOR<Prisma.PersonCreateWithoutCustomerContractsInput, Prisma.PersonUncheckedCreateWithoutCustomerContractsInput>
-  connectOrCreate?: Prisma.PersonCreateOrConnectWithoutCustomerContractsInput
-  upsert?: Prisma.PersonUpsertWithoutCustomerContractsInput
-  connect?: Prisma.PersonWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.PersonUpdateToOneWithWhereWithoutCustomerContractsInput, Prisma.PersonUpdateWithoutCustomerContractsInput>, Prisma.PersonUncheckedUpdateWithoutCustomerContractsInput>
-}
-
-export type PersonCreateNestedOneWithoutExpensesInput = {
-  create?: Prisma.XOR<Prisma.PersonCreateWithoutExpensesInput, Prisma.PersonUncheckedCreateWithoutExpensesInput>
-  connectOrCreate?: Prisma.PersonCreateOrConnectWithoutExpensesInput
-  connect?: Prisma.PersonWhereUniqueInput
-}
-
-export type PersonUpdateOneRequiredWithoutExpensesNestedInput = {
-  create?: Prisma.XOR<Prisma.PersonCreateWithoutExpensesInput, Prisma.PersonUncheckedCreateWithoutExpensesInput>
-  connectOrCreate?: Prisma.PersonCreateOrConnectWithoutExpensesInput
-  upsert?: Prisma.PersonUpsertWithoutExpensesInput
-  connect?: Prisma.PersonWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.PersonUpdateToOneWithWhereWithoutExpensesInput, Prisma.PersonUpdateWithoutExpensesInput>, Prisma.PersonUncheckedUpdateWithoutExpensesInput>
 }
 
 export type PersonCreateNestedOneWithoutGenerationsInput = {
@@ -766,34 +738,6 @@ export type PersonUpdateOneRequiredWithoutDirectEntriesNestedInput = {
   upsert?: Prisma.PersonUpsertWithoutDirectEntriesInput
   connect?: Prisma.PersonWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.PersonUpdateToOneWithWhereWithoutDirectEntriesInput, Prisma.PersonUpdateWithoutDirectEntriesInput>, Prisma.PersonUncheckedUpdateWithoutDirectEntriesInput>
-}
-
-export type PersonCreateNestedOneWithoutReceivablesInput = {
-  create?: Prisma.XOR<Prisma.PersonCreateWithoutReceivablesInput, Prisma.PersonUncheckedCreateWithoutReceivablesInput>
-  connectOrCreate?: Prisma.PersonCreateOrConnectWithoutReceivablesInput
-  connect?: Prisma.PersonWhereUniqueInput
-}
-
-export type PersonUpdateOneRequiredWithoutReceivablesNestedInput = {
-  create?: Prisma.XOR<Prisma.PersonCreateWithoutReceivablesInput, Prisma.PersonUncheckedCreateWithoutReceivablesInput>
-  connectOrCreate?: Prisma.PersonCreateOrConnectWithoutReceivablesInput
-  upsert?: Prisma.PersonUpsertWithoutReceivablesInput
-  connect?: Prisma.PersonWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.PersonUpdateToOneWithWhereWithoutReceivablesInput, Prisma.PersonUpdateWithoutReceivablesInput>, Prisma.PersonUncheckedUpdateWithoutReceivablesInput>
-}
-
-export type PersonCreateNestedOneWithoutPayablesInput = {
-  create?: Prisma.XOR<Prisma.PersonCreateWithoutPayablesInput, Prisma.PersonUncheckedCreateWithoutPayablesInput>
-  connectOrCreate?: Prisma.PersonCreateOrConnectWithoutPayablesInput
-  connect?: Prisma.PersonWhereUniqueInput
-}
-
-export type PersonUpdateOneRequiredWithoutPayablesNestedInput = {
-  create?: Prisma.XOR<Prisma.PersonCreateWithoutPayablesInput, Prisma.PersonUncheckedCreateWithoutPayablesInput>
-  connectOrCreate?: Prisma.PersonCreateOrConnectWithoutPayablesInput
-  upsert?: Prisma.PersonUpsertWithoutPayablesInput
-  connect?: Prisma.PersonWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.PersonUpdateToOneWithWhereWithoutPayablesInput, Prisma.PersonUpdateWithoutPayablesInput>, Prisma.PersonUncheckedUpdateWithoutPayablesInput>
 }
 
 export type PersonCreateNestedOneWithoutReceiptsInput = {
@@ -902,23 +846,20 @@ export type PersonUpdateOneWithoutAuditLogsNestedInput = {
 
 export type PersonCreateWithoutPersonTypeInput = {
   fullName: string
-  document: string
+  document?: string | null
   email?: string | null
   phone?: string | null
-  isCustomer?: boolean
-  isSupplier?: boolean
-  isEmployee?: boolean
+  isGeneric?: boolean
+  seedKey?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   employeeProfile?: Prisma.EmployeeProfileCreateNestedOneWithoutPersonInput
-  customerContracts?: Prisma.ContractCreateNestedManyWithoutCustomerInput
-  expenses?: Prisma.ExpenseCreateNestedManyWithoutSupplierInput
+  clientProfile?: Prisma.ClientProfileCreateNestedOneWithoutPersonInput
+  supplierProfile?: Prisma.SupplierProfileCreateNestedOneWithoutPersonInput
   generations?: Prisma.FinancialGenerationCreateNestedManyWithoutActorInput
   directEntries?: Prisma.DirectFinancialEntryCreateNestedManyWithoutActorInput
-  receivables?: Prisma.ReceivableCreateNestedManyWithoutDebtorInput
-  payables?: Prisma.PayableCreateNestedManyWithoutBeneficiaryInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutActorInput
   receiptsReversed?: Prisma.ReceiptReversalCreateNestedManyWithoutActorInput
   payments?: Prisma.PaymentCreateNestedManyWithoutActorInput
@@ -931,23 +872,20 @@ export type PersonCreateWithoutPersonTypeInput = {
 export type PersonUncheckedCreateWithoutPersonTypeInput = {
   id?: number
   fullName: string
-  document: string
+  document?: string | null
   email?: string | null
   phone?: string | null
-  isCustomer?: boolean
-  isSupplier?: boolean
-  isEmployee?: boolean
+  isGeneric?: boolean
+  seedKey?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   employeeProfile?: Prisma.EmployeeProfileUncheckedCreateNestedOneWithoutPersonInput
-  customerContracts?: Prisma.ContractUncheckedCreateNestedManyWithoutCustomerInput
-  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutSupplierInput
+  clientProfile?: Prisma.ClientProfileUncheckedCreateNestedOneWithoutPersonInput
+  supplierProfile?: Prisma.SupplierProfileUncheckedCreateNestedOneWithoutPersonInput
   generations?: Prisma.FinancialGenerationUncheckedCreateNestedManyWithoutActorInput
   directEntries?: Prisma.DirectFinancialEntryUncheckedCreateNestedManyWithoutActorInput
-  receivables?: Prisma.ReceivableUncheckedCreateNestedManyWithoutDebtorInput
-  payables?: Prisma.PayableUncheckedCreateNestedManyWithoutBeneficiaryInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutActorInput
   receiptsReversed?: Prisma.ReceiptReversalUncheckedCreateNestedManyWithoutActorInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutActorInput
@@ -989,38 +927,270 @@ export type PersonScalarWhereInput = {
   NOT?: Prisma.PersonScalarWhereInput | Prisma.PersonScalarWhereInput[]
   id?: Prisma.IntFilter<"Person"> | number
   fullName?: Prisma.StringFilter<"Person"> | string
-  document?: Prisma.StringFilter<"Person"> | string
+  document?: Prisma.StringNullableFilter<"Person"> | string | null
   email?: Prisma.StringNullableFilter<"Person"> | string | null
   phone?: Prisma.StringNullableFilter<"Person"> | string | null
-  isCustomer?: Prisma.BoolFilter<"Person"> | boolean
-  isSupplier?: Prisma.BoolFilter<"Person"> | boolean
-  isEmployee?: Prisma.BoolFilter<"Person"> | boolean
+  isGeneric?: Prisma.BoolFilter<"Person"> | boolean
+  seedKey?: Prisma.StringNullableFilter<"Person"> | string | null
   isActive?: Prisma.BoolFilter<"Person"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Person"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Person"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Person"> | Date | string | null
-  personTypeId?: Prisma.IntFilter<"Person"> | number
+  personTypeId?: Prisma.IntNullableFilter<"Person"> | number | null
 }
 
-export type PersonCreateWithoutEmployeeProfileInput = {
+export type PersonCreateWithoutClientProfileInput = {
   fullName: string
-  document: string
+  document?: string | null
   email?: string | null
   phone?: string | null
-  isCustomer?: boolean
-  isSupplier?: boolean
-  isEmployee?: boolean
+  isGeneric?: boolean
+  seedKey?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  personType: Prisma.PersonTypeCreateNestedOneWithoutPeopleInput
-  customerContracts?: Prisma.ContractCreateNestedManyWithoutCustomerInput
-  expenses?: Prisma.ExpenseCreateNestedManyWithoutSupplierInput
+  personType?: Prisma.PersonTypeCreateNestedOneWithoutPeopleInput
+  employeeProfile?: Prisma.EmployeeProfileCreateNestedOneWithoutPersonInput
+  supplierProfile?: Prisma.SupplierProfileCreateNestedOneWithoutPersonInput
   generations?: Prisma.FinancialGenerationCreateNestedManyWithoutActorInput
   directEntries?: Prisma.DirectFinancialEntryCreateNestedManyWithoutActorInput
-  receivables?: Prisma.ReceivableCreateNestedManyWithoutDebtorInput
-  payables?: Prisma.PayableCreateNestedManyWithoutBeneficiaryInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutActorInput
+  receiptsReversed?: Prisma.ReceiptReversalCreateNestedManyWithoutActorInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutActorInput
+  paymentsReversed?: Prisma.PaymentReversalCreateNestedManyWithoutActorInput
+  attachments?: Prisma.AttachmentCreateNestedManyWithoutPersonInput
+  actedAuditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
+}
+
+export type PersonUncheckedCreateWithoutClientProfileInput = {
+  id?: number
+  fullName: string
+  document?: string | null
+  email?: string | null
+  phone?: string | null
+  isGeneric?: boolean
+  seedKey?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  personTypeId?: number | null
+  employeeProfile?: Prisma.EmployeeProfileUncheckedCreateNestedOneWithoutPersonInput
+  supplierProfile?: Prisma.SupplierProfileUncheckedCreateNestedOneWithoutPersonInput
+  generations?: Prisma.FinancialGenerationUncheckedCreateNestedManyWithoutActorInput
+  directEntries?: Prisma.DirectFinancialEntryUncheckedCreateNestedManyWithoutActorInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutActorInput
+  receiptsReversed?: Prisma.ReceiptReversalUncheckedCreateNestedManyWithoutActorInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutActorInput
+  paymentsReversed?: Prisma.PaymentReversalUncheckedCreateNestedManyWithoutActorInput
+  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutPersonInput
+  actedAuditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
+}
+
+export type PersonCreateOrConnectWithoutClientProfileInput = {
+  where: Prisma.PersonWhereUniqueInput
+  create: Prisma.XOR<Prisma.PersonCreateWithoutClientProfileInput, Prisma.PersonUncheckedCreateWithoutClientProfileInput>
+}
+
+export type PersonUpsertWithoutClientProfileInput = {
+  update: Prisma.XOR<Prisma.PersonUpdateWithoutClientProfileInput, Prisma.PersonUncheckedUpdateWithoutClientProfileInput>
+  create: Prisma.XOR<Prisma.PersonCreateWithoutClientProfileInput, Prisma.PersonUncheckedCreateWithoutClientProfileInput>
+  where?: Prisma.PersonWhereInput
+}
+
+export type PersonUpdateToOneWithWhereWithoutClientProfileInput = {
+  where?: Prisma.PersonWhereInput
+  data: Prisma.XOR<Prisma.PersonUpdateWithoutClientProfileInput, Prisma.PersonUncheckedUpdateWithoutClientProfileInput>
+}
+
+export type PersonUpdateWithoutClientProfileInput = {
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  document?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isGeneric?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  seedKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  personType?: Prisma.PersonTypeUpdateOneWithoutPeopleNestedInput
+  employeeProfile?: Prisma.EmployeeProfileUpdateOneWithoutPersonNestedInput
+  supplierProfile?: Prisma.SupplierProfileUpdateOneWithoutPersonNestedInput
+  generations?: Prisma.FinancialGenerationUpdateManyWithoutActorNestedInput
+  directEntries?: Prisma.DirectFinancialEntryUpdateManyWithoutActorNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutActorNestedInput
+  receiptsReversed?: Prisma.ReceiptReversalUpdateManyWithoutActorNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutActorNestedInput
+  paymentsReversed?: Prisma.PaymentReversalUpdateManyWithoutActorNestedInput
+  attachments?: Prisma.AttachmentUpdateManyWithoutPersonNestedInput
+  actedAuditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
+}
+
+export type PersonUncheckedUpdateWithoutClientProfileInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  document?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isGeneric?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  seedKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  personTypeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  employeeProfile?: Prisma.EmployeeProfileUncheckedUpdateOneWithoutPersonNestedInput
+  supplierProfile?: Prisma.SupplierProfileUncheckedUpdateOneWithoutPersonNestedInput
+  generations?: Prisma.FinancialGenerationUncheckedUpdateManyWithoutActorNestedInput
+  directEntries?: Prisma.DirectFinancialEntryUncheckedUpdateManyWithoutActorNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutActorNestedInput
+  receiptsReversed?: Prisma.ReceiptReversalUncheckedUpdateManyWithoutActorNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutActorNestedInput
+  paymentsReversed?: Prisma.PaymentReversalUncheckedUpdateManyWithoutActorNestedInput
+  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutPersonNestedInput
+  actedAuditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
+}
+
+export type PersonCreateWithoutSupplierProfileInput = {
+  fullName: string
+  document?: string | null
+  email?: string | null
+  phone?: string | null
+  isGeneric?: boolean
+  seedKey?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  personType?: Prisma.PersonTypeCreateNestedOneWithoutPeopleInput
+  employeeProfile?: Prisma.EmployeeProfileCreateNestedOneWithoutPersonInput
+  clientProfile?: Prisma.ClientProfileCreateNestedOneWithoutPersonInput
+  generations?: Prisma.FinancialGenerationCreateNestedManyWithoutActorInput
+  directEntries?: Prisma.DirectFinancialEntryCreateNestedManyWithoutActorInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutActorInput
+  receiptsReversed?: Prisma.ReceiptReversalCreateNestedManyWithoutActorInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutActorInput
+  paymentsReversed?: Prisma.PaymentReversalCreateNestedManyWithoutActorInput
+  attachments?: Prisma.AttachmentCreateNestedManyWithoutPersonInput
+  actedAuditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
+}
+
+export type PersonUncheckedCreateWithoutSupplierProfileInput = {
+  id?: number
+  fullName: string
+  document?: string | null
+  email?: string | null
+  phone?: string | null
+  isGeneric?: boolean
+  seedKey?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  personTypeId?: number | null
+  employeeProfile?: Prisma.EmployeeProfileUncheckedCreateNestedOneWithoutPersonInput
+  clientProfile?: Prisma.ClientProfileUncheckedCreateNestedOneWithoutPersonInput
+  generations?: Prisma.FinancialGenerationUncheckedCreateNestedManyWithoutActorInput
+  directEntries?: Prisma.DirectFinancialEntryUncheckedCreateNestedManyWithoutActorInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutActorInput
+  receiptsReversed?: Prisma.ReceiptReversalUncheckedCreateNestedManyWithoutActorInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutActorInput
+  paymentsReversed?: Prisma.PaymentReversalUncheckedCreateNestedManyWithoutActorInput
+  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutPersonInput
+  actedAuditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
+}
+
+export type PersonCreateOrConnectWithoutSupplierProfileInput = {
+  where: Prisma.PersonWhereUniqueInput
+  create: Prisma.XOR<Prisma.PersonCreateWithoutSupplierProfileInput, Prisma.PersonUncheckedCreateWithoutSupplierProfileInput>
+}
+
+export type PersonUpsertWithoutSupplierProfileInput = {
+  update: Prisma.XOR<Prisma.PersonUpdateWithoutSupplierProfileInput, Prisma.PersonUncheckedUpdateWithoutSupplierProfileInput>
+  create: Prisma.XOR<Prisma.PersonCreateWithoutSupplierProfileInput, Prisma.PersonUncheckedCreateWithoutSupplierProfileInput>
+  where?: Prisma.PersonWhereInput
+}
+
+export type PersonUpdateToOneWithWhereWithoutSupplierProfileInput = {
+  where?: Prisma.PersonWhereInput
+  data: Prisma.XOR<Prisma.PersonUpdateWithoutSupplierProfileInput, Prisma.PersonUncheckedUpdateWithoutSupplierProfileInput>
+}
+
+export type PersonUpdateWithoutSupplierProfileInput = {
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  document?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isGeneric?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  seedKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  personType?: Prisma.PersonTypeUpdateOneWithoutPeopleNestedInput
+  employeeProfile?: Prisma.EmployeeProfileUpdateOneWithoutPersonNestedInput
+  clientProfile?: Prisma.ClientProfileUpdateOneWithoutPersonNestedInput
+  generations?: Prisma.FinancialGenerationUpdateManyWithoutActorNestedInput
+  directEntries?: Prisma.DirectFinancialEntryUpdateManyWithoutActorNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutActorNestedInput
+  receiptsReversed?: Prisma.ReceiptReversalUpdateManyWithoutActorNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutActorNestedInput
+  paymentsReversed?: Prisma.PaymentReversalUpdateManyWithoutActorNestedInput
+  attachments?: Prisma.AttachmentUpdateManyWithoutPersonNestedInput
+  actedAuditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
+}
+
+export type PersonUncheckedUpdateWithoutSupplierProfileInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  document?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isGeneric?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  seedKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  personTypeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  employeeProfile?: Prisma.EmployeeProfileUncheckedUpdateOneWithoutPersonNestedInput
+  clientProfile?: Prisma.ClientProfileUncheckedUpdateOneWithoutPersonNestedInput
+  generations?: Prisma.FinancialGenerationUncheckedUpdateManyWithoutActorNestedInput
+  directEntries?: Prisma.DirectFinancialEntryUncheckedUpdateManyWithoutActorNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutActorNestedInput
+  receiptsReversed?: Prisma.ReceiptReversalUncheckedUpdateManyWithoutActorNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutActorNestedInput
+  paymentsReversed?: Prisma.PaymentReversalUncheckedUpdateManyWithoutActorNestedInput
+  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutPersonNestedInput
+  actedAuditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
+}
+
+export type PersonCreateWithoutEmployeeProfileInput = {
+  fullName: string
+  document?: string | null
+  email?: string | null
+  phone?: string | null
+  isGeneric?: boolean
+  seedKey?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  personType?: Prisma.PersonTypeCreateNestedOneWithoutPeopleInput
+  clientProfile?: Prisma.ClientProfileCreateNestedOneWithoutPersonInput
+  supplierProfile?: Prisma.SupplierProfileCreateNestedOneWithoutPersonInput
+  generations?: Prisma.FinancialGenerationCreateNestedManyWithoutActorInput
+  directEntries?: Prisma.DirectFinancialEntryCreateNestedManyWithoutActorInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutActorInput
   receiptsReversed?: Prisma.ReceiptReversalCreateNestedManyWithoutActorInput
   payments?: Prisma.PaymentCreateNestedManyWithoutActorInput
@@ -1033,23 +1203,20 @@ export type PersonCreateWithoutEmployeeProfileInput = {
 export type PersonUncheckedCreateWithoutEmployeeProfileInput = {
   id?: number
   fullName: string
-  document: string
+  document?: string | null
   email?: string | null
   phone?: string | null
-  isCustomer?: boolean
-  isSupplier?: boolean
-  isEmployee?: boolean
+  isGeneric?: boolean
+  seedKey?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  personTypeId: number
-  customerContracts?: Prisma.ContractUncheckedCreateNestedManyWithoutCustomerInput
-  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutSupplierInput
+  personTypeId?: number | null
+  clientProfile?: Prisma.ClientProfileUncheckedCreateNestedOneWithoutPersonInput
+  supplierProfile?: Prisma.SupplierProfileUncheckedCreateNestedOneWithoutPersonInput
   generations?: Prisma.FinancialGenerationUncheckedCreateNestedManyWithoutActorInput
   directEntries?: Prisma.DirectFinancialEntryUncheckedCreateNestedManyWithoutActorInput
-  receivables?: Prisma.ReceivableUncheckedCreateNestedManyWithoutDebtorInput
-  payables?: Prisma.PayableUncheckedCreateNestedManyWithoutBeneficiaryInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutActorInput
   receiptsReversed?: Prisma.ReceiptReversalUncheckedCreateNestedManyWithoutActorInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutActorInput
@@ -1077,23 +1244,20 @@ export type PersonUpdateToOneWithWhereWithoutEmployeeProfileInput = {
 
 export type PersonUpdateWithoutEmployeeProfileInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  document?: Prisma.StringFieldUpdateOperationsInput | string
+  document?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSupplier?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isEmployee?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isGeneric?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  seedKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  personType?: Prisma.PersonTypeUpdateOneRequiredWithoutPeopleNestedInput
-  customerContracts?: Prisma.ContractUpdateManyWithoutCustomerNestedInput
-  expenses?: Prisma.ExpenseUpdateManyWithoutSupplierNestedInput
+  personType?: Prisma.PersonTypeUpdateOneWithoutPeopleNestedInput
+  clientProfile?: Prisma.ClientProfileUpdateOneWithoutPersonNestedInput
+  supplierProfile?: Prisma.SupplierProfileUpdateOneWithoutPersonNestedInput
   generations?: Prisma.FinancialGenerationUpdateManyWithoutActorNestedInput
   directEntries?: Prisma.DirectFinancialEntryUpdateManyWithoutActorNestedInput
-  receivables?: Prisma.ReceivableUpdateManyWithoutDebtorNestedInput
-  payables?: Prisma.PayableUpdateManyWithoutBeneficiaryNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutActorNestedInput
   receiptsReversed?: Prisma.ReceiptReversalUpdateManyWithoutActorNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutActorNestedInput
@@ -1106,283 +1270,20 @@ export type PersonUpdateWithoutEmployeeProfileInput = {
 export type PersonUncheckedUpdateWithoutEmployeeProfileInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  document?: Prisma.StringFieldUpdateOperationsInput | string
+  document?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSupplier?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isEmployee?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isGeneric?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  seedKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  personTypeId?: Prisma.IntFieldUpdateOperationsInput | number
-  customerContracts?: Prisma.ContractUncheckedUpdateManyWithoutCustomerNestedInput
-  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutSupplierNestedInput
+  personTypeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  clientProfile?: Prisma.ClientProfileUncheckedUpdateOneWithoutPersonNestedInput
+  supplierProfile?: Prisma.SupplierProfileUncheckedUpdateOneWithoutPersonNestedInput
   generations?: Prisma.FinancialGenerationUncheckedUpdateManyWithoutActorNestedInput
   directEntries?: Prisma.DirectFinancialEntryUncheckedUpdateManyWithoutActorNestedInput
-  receivables?: Prisma.ReceivableUncheckedUpdateManyWithoutDebtorNestedInput
-  payables?: Prisma.PayableUncheckedUpdateManyWithoutBeneficiaryNestedInput
-  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutActorNestedInput
-  receiptsReversed?: Prisma.ReceiptReversalUncheckedUpdateManyWithoutActorNestedInput
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutActorNestedInput
-  paymentsReversed?: Prisma.PaymentReversalUncheckedUpdateManyWithoutActorNestedInput
-  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutPersonNestedInput
-  actedAuditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
-}
-
-export type PersonCreateWithoutCustomerContractsInput = {
-  fullName: string
-  document: string
-  email?: string | null
-  phone?: string | null
-  isCustomer?: boolean
-  isSupplier?: boolean
-  isEmployee?: boolean
-  isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-  personType: Prisma.PersonTypeCreateNestedOneWithoutPeopleInput
-  employeeProfile?: Prisma.EmployeeProfileCreateNestedOneWithoutPersonInput
-  expenses?: Prisma.ExpenseCreateNestedManyWithoutSupplierInput
-  generations?: Prisma.FinancialGenerationCreateNestedManyWithoutActorInput
-  directEntries?: Prisma.DirectFinancialEntryCreateNestedManyWithoutActorInput
-  receivables?: Prisma.ReceivableCreateNestedManyWithoutDebtorInput
-  payables?: Prisma.PayableCreateNestedManyWithoutBeneficiaryInput
-  receipts?: Prisma.ReceiptCreateNestedManyWithoutActorInput
-  receiptsReversed?: Prisma.ReceiptReversalCreateNestedManyWithoutActorInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutActorInput
-  paymentsReversed?: Prisma.PaymentReversalCreateNestedManyWithoutActorInput
-  attachments?: Prisma.AttachmentCreateNestedManyWithoutPersonInput
-  actedAuditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
-}
-
-export type PersonUncheckedCreateWithoutCustomerContractsInput = {
-  id?: number
-  fullName: string
-  document: string
-  email?: string | null
-  phone?: string | null
-  isCustomer?: boolean
-  isSupplier?: boolean
-  isEmployee?: boolean
-  isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-  personTypeId: number
-  employeeProfile?: Prisma.EmployeeProfileUncheckedCreateNestedOneWithoutPersonInput
-  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutSupplierInput
-  generations?: Prisma.FinancialGenerationUncheckedCreateNestedManyWithoutActorInput
-  directEntries?: Prisma.DirectFinancialEntryUncheckedCreateNestedManyWithoutActorInput
-  receivables?: Prisma.ReceivableUncheckedCreateNestedManyWithoutDebtorInput
-  payables?: Prisma.PayableUncheckedCreateNestedManyWithoutBeneficiaryInput
-  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutActorInput
-  receiptsReversed?: Prisma.ReceiptReversalUncheckedCreateNestedManyWithoutActorInput
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutActorInput
-  paymentsReversed?: Prisma.PaymentReversalUncheckedCreateNestedManyWithoutActorInput
-  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutPersonInput
-  actedAuditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
-}
-
-export type PersonCreateOrConnectWithoutCustomerContractsInput = {
-  where: Prisma.PersonWhereUniqueInput
-  create: Prisma.XOR<Prisma.PersonCreateWithoutCustomerContractsInput, Prisma.PersonUncheckedCreateWithoutCustomerContractsInput>
-}
-
-export type PersonUpsertWithoutCustomerContractsInput = {
-  update: Prisma.XOR<Prisma.PersonUpdateWithoutCustomerContractsInput, Prisma.PersonUncheckedUpdateWithoutCustomerContractsInput>
-  create: Prisma.XOR<Prisma.PersonCreateWithoutCustomerContractsInput, Prisma.PersonUncheckedCreateWithoutCustomerContractsInput>
-  where?: Prisma.PersonWhereInput
-}
-
-export type PersonUpdateToOneWithWhereWithoutCustomerContractsInput = {
-  where?: Prisma.PersonWhereInput
-  data: Prisma.XOR<Prisma.PersonUpdateWithoutCustomerContractsInput, Prisma.PersonUncheckedUpdateWithoutCustomerContractsInput>
-}
-
-export type PersonUpdateWithoutCustomerContractsInput = {
-  fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  document?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSupplier?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isEmployee?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  personType?: Prisma.PersonTypeUpdateOneRequiredWithoutPeopleNestedInput
-  employeeProfile?: Prisma.EmployeeProfileUpdateOneWithoutPersonNestedInput
-  expenses?: Prisma.ExpenseUpdateManyWithoutSupplierNestedInput
-  generations?: Prisma.FinancialGenerationUpdateManyWithoutActorNestedInput
-  directEntries?: Prisma.DirectFinancialEntryUpdateManyWithoutActorNestedInput
-  receivables?: Prisma.ReceivableUpdateManyWithoutDebtorNestedInput
-  payables?: Prisma.PayableUpdateManyWithoutBeneficiaryNestedInput
-  receipts?: Prisma.ReceiptUpdateManyWithoutActorNestedInput
-  receiptsReversed?: Prisma.ReceiptReversalUpdateManyWithoutActorNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutActorNestedInput
-  paymentsReversed?: Prisma.PaymentReversalUpdateManyWithoutActorNestedInput
-  attachments?: Prisma.AttachmentUpdateManyWithoutPersonNestedInput
-  actedAuditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
-}
-
-export type PersonUncheckedUpdateWithoutCustomerContractsInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  document?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSupplier?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isEmployee?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  personTypeId?: Prisma.IntFieldUpdateOperationsInput | number
-  employeeProfile?: Prisma.EmployeeProfileUncheckedUpdateOneWithoutPersonNestedInput
-  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutSupplierNestedInput
-  generations?: Prisma.FinancialGenerationUncheckedUpdateManyWithoutActorNestedInput
-  directEntries?: Prisma.DirectFinancialEntryUncheckedUpdateManyWithoutActorNestedInput
-  receivables?: Prisma.ReceivableUncheckedUpdateManyWithoutDebtorNestedInput
-  payables?: Prisma.PayableUncheckedUpdateManyWithoutBeneficiaryNestedInput
-  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutActorNestedInput
-  receiptsReversed?: Prisma.ReceiptReversalUncheckedUpdateManyWithoutActorNestedInput
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutActorNestedInput
-  paymentsReversed?: Prisma.PaymentReversalUncheckedUpdateManyWithoutActorNestedInput
-  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutPersonNestedInput
-  actedAuditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
-}
-
-export type PersonCreateWithoutExpensesInput = {
-  fullName: string
-  document: string
-  email?: string | null
-  phone?: string | null
-  isCustomer?: boolean
-  isSupplier?: boolean
-  isEmployee?: boolean
-  isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-  personType: Prisma.PersonTypeCreateNestedOneWithoutPeopleInput
-  employeeProfile?: Prisma.EmployeeProfileCreateNestedOneWithoutPersonInput
-  customerContracts?: Prisma.ContractCreateNestedManyWithoutCustomerInput
-  generations?: Prisma.FinancialGenerationCreateNestedManyWithoutActorInput
-  directEntries?: Prisma.DirectFinancialEntryCreateNestedManyWithoutActorInput
-  receivables?: Prisma.ReceivableCreateNestedManyWithoutDebtorInput
-  payables?: Prisma.PayableCreateNestedManyWithoutBeneficiaryInput
-  receipts?: Prisma.ReceiptCreateNestedManyWithoutActorInput
-  receiptsReversed?: Prisma.ReceiptReversalCreateNestedManyWithoutActorInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutActorInput
-  paymentsReversed?: Prisma.PaymentReversalCreateNestedManyWithoutActorInput
-  attachments?: Prisma.AttachmentCreateNestedManyWithoutPersonInput
-  actedAuditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
-}
-
-export type PersonUncheckedCreateWithoutExpensesInput = {
-  id?: number
-  fullName: string
-  document: string
-  email?: string | null
-  phone?: string | null
-  isCustomer?: boolean
-  isSupplier?: boolean
-  isEmployee?: boolean
-  isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-  personTypeId: number
-  employeeProfile?: Prisma.EmployeeProfileUncheckedCreateNestedOneWithoutPersonInput
-  customerContracts?: Prisma.ContractUncheckedCreateNestedManyWithoutCustomerInput
-  generations?: Prisma.FinancialGenerationUncheckedCreateNestedManyWithoutActorInput
-  directEntries?: Prisma.DirectFinancialEntryUncheckedCreateNestedManyWithoutActorInput
-  receivables?: Prisma.ReceivableUncheckedCreateNestedManyWithoutDebtorInput
-  payables?: Prisma.PayableUncheckedCreateNestedManyWithoutBeneficiaryInput
-  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutActorInput
-  receiptsReversed?: Prisma.ReceiptReversalUncheckedCreateNestedManyWithoutActorInput
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutActorInput
-  paymentsReversed?: Prisma.PaymentReversalUncheckedCreateNestedManyWithoutActorInput
-  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutPersonInput
-  actedAuditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
-}
-
-export type PersonCreateOrConnectWithoutExpensesInput = {
-  where: Prisma.PersonWhereUniqueInput
-  create: Prisma.XOR<Prisma.PersonCreateWithoutExpensesInput, Prisma.PersonUncheckedCreateWithoutExpensesInput>
-}
-
-export type PersonUpsertWithoutExpensesInput = {
-  update: Prisma.XOR<Prisma.PersonUpdateWithoutExpensesInput, Prisma.PersonUncheckedUpdateWithoutExpensesInput>
-  create: Prisma.XOR<Prisma.PersonCreateWithoutExpensesInput, Prisma.PersonUncheckedCreateWithoutExpensesInput>
-  where?: Prisma.PersonWhereInput
-}
-
-export type PersonUpdateToOneWithWhereWithoutExpensesInput = {
-  where?: Prisma.PersonWhereInput
-  data: Prisma.XOR<Prisma.PersonUpdateWithoutExpensesInput, Prisma.PersonUncheckedUpdateWithoutExpensesInput>
-}
-
-export type PersonUpdateWithoutExpensesInput = {
-  fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  document?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSupplier?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isEmployee?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  personType?: Prisma.PersonTypeUpdateOneRequiredWithoutPeopleNestedInput
-  employeeProfile?: Prisma.EmployeeProfileUpdateOneWithoutPersonNestedInput
-  customerContracts?: Prisma.ContractUpdateManyWithoutCustomerNestedInput
-  generations?: Prisma.FinancialGenerationUpdateManyWithoutActorNestedInput
-  directEntries?: Prisma.DirectFinancialEntryUpdateManyWithoutActorNestedInput
-  receivables?: Prisma.ReceivableUpdateManyWithoutDebtorNestedInput
-  payables?: Prisma.PayableUpdateManyWithoutBeneficiaryNestedInput
-  receipts?: Prisma.ReceiptUpdateManyWithoutActorNestedInput
-  receiptsReversed?: Prisma.ReceiptReversalUpdateManyWithoutActorNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutActorNestedInput
-  paymentsReversed?: Prisma.PaymentReversalUpdateManyWithoutActorNestedInput
-  attachments?: Prisma.AttachmentUpdateManyWithoutPersonNestedInput
-  actedAuditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
-}
-
-export type PersonUncheckedUpdateWithoutExpensesInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  document?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSupplier?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isEmployee?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  personTypeId?: Prisma.IntFieldUpdateOperationsInput | number
-  employeeProfile?: Prisma.EmployeeProfileUncheckedUpdateOneWithoutPersonNestedInput
-  customerContracts?: Prisma.ContractUncheckedUpdateManyWithoutCustomerNestedInput
-  generations?: Prisma.FinancialGenerationUncheckedUpdateManyWithoutActorNestedInput
-  directEntries?: Prisma.DirectFinancialEntryUncheckedUpdateManyWithoutActorNestedInput
-  receivables?: Prisma.ReceivableUncheckedUpdateManyWithoutDebtorNestedInput
-  payables?: Prisma.PayableUncheckedUpdateManyWithoutBeneficiaryNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutActorNestedInput
   receiptsReversed?: Prisma.ReceiptReversalUncheckedUpdateManyWithoutActorNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutActorNestedInput
@@ -1394,23 +1295,20 @@ export type PersonUncheckedUpdateWithoutExpensesInput = {
 
 export type PersonCreateWithoutGenerationsInput = {
   fullName: string
-  document: string
+  document?: string | null
   email?: string | null
   phone?: string | null
-  isCustomer?: boolean
-  isSupplier?: boolean
-  isEmployee?: boolean
+  isGeneric?: boolean
+  seedKey?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  personType: Prisma.PersonTypeCreateNestedOneWithoutPeopleInput
+  personType?: Prisma.PersonTypeCreateNestedOneWithoutPeopleInput
   employeeProfile?: Prisma.EmployeeProfileCreateNestedOneWithoutPersonInput
-  customerContracts?: Prisma.ContractCreateNestedManyWithoutCustomerInput
-  expenses?: Prisma.ExpenseCreateNestedManyWithoutSupplierInput
+  clientProfile?: Prisma.ClientProfileCreateNestedOneWithoutPersonInput
+  supplierProfile?: Prisma.SupplierProfileCreateNestedOneWithoutPersonInput
   directEntries?: Prisma.DirectFinancialEntryCreateNestedManyWithoutActorInput
-  receivables?: Prisma.ReceivableCreateNestedManyWithoutDebtorInput
-  payables?: Prisma.PayableCreateNestedManyWithoutBeneficiaryInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutActorInput
   receiptsReversed?: Prisma.ReceiptReversalCreateNestedManyWithoutActorInput
   payments?: Prisma.PaymentCreateNestedManyWithoutActorInput
@@ -1423,23 +1321,20 @@ export type PersonCreateWithoutGenerationsInput = {
 export type PersonUncheckedCreateWithoutGenerationsInput = {
   id?: number
   fullName: string
-  document: string
+  document?: string | null
   email?: string | null
   phone?: string | null
-  isCustomer?: boolean
-  isSupplier?: boolean
-  isEmployee?: boolean
+  isGeneric?: boolean
+  seedKey?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  personTypeId: number
+  personTypeId?: number | null
   employeeProfile?: Prisma.EmployeeProfileUncheckedCreateNestedOneWithoutPersonInput
-  customerContracts?: Prisma.ContractUncheckedCreateNestedManyWithoutCustomerInput
-  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutSupplierInput
+  clientProfile?: Prisma.ClientProfileUncheckedCreateNestedOneWithoutPersonInput
+  supplierProfile?: Prisma.SupplierProfileUncheckedCreateNestedOneWithoutPersonInput
   directEntries?: Prisma.DirectFinancialEntryUncheckedCreateNestedManyWithoutActorInput
-  receivables?: Prisma.ReceivableUncheckedCreateNestedManyWithoutDebtorInput
-  payables?: Prisma.PayableUncheckedCreateNestedManyWithoutBeneficiaryInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutActorInput
   receiptsReversed?: Prisma.ReceiptReversalUncheckedCreateNestedManyWithoutActorInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutActorInput
@@ -1467,23 +1362,20 @@ export type PersonUpdateToOneWithWhereWithoutGenerationsInput = {
 
 export type PersonUpdateWithoutGenerationsInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  document?: Prisma.StringFieldUpdateOperationsInput | string
+  document?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSupplier?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isEmployee?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isGeneric?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  seedKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  personType?: Prisma.PersonTypeUpdateOneRequiredWithoutPeopleNestedInput
+  personType?: Prisma.PersonTypeUpdateOneWithoutPeopleNestedInput
   employeeProfile?: Prisma.EmployeeProfileUpdateOneWithoutPersonNestedInput
-  customerContracts?: Prisma.ContractUpdateManyWithoutCustomerNestedInput
-  expenses?: Prisma.ExpenseUpdateManyWithoutSupplierNestedInput
+  clientProfile?: Prisma.ClientProfileUpdateOneWithoutPersonNestedInput
+  supplierProfile?: Prisma.SupplierProfileUpdateOneWithoutPersonNestedInput
   directEntries?: Prisma.DirectFinancialEntryUpdateManyWithoutActorNestedInput
-  receivables?: Prisma.ReceivableUpdateManyWithoutDebtorNestedInput
-  payables?: Prisma.PayableUpdateManyWithoutBeneficiaryNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutActorNestedInput
   receiptsReversed?: Prisma.ReceiptReversalUpdateManyWithoutActorNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutActorNestedInput
@@ -1496,23 +1388,20 @@ export type PersonUpdateWithoutGenerationsInput = {
 export type PersonUncheckedUpdateWithoutGenerationsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  document?: Prisma.StringFieldUpdateOperationsInput | string
+  document?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSupplier?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isEmployee?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isGeneric?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  seedKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  personTypeId?: Prisma.IntFieldUpdateOperationsInput | number
+  personTypeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   employeeProfile?: Prisma.EmployeeProfileUncheckedUpdateOneWithoutPersonNestedInput
-  customerContracts?: Prisma.ContractUncheckedUpdateManyWithoutCustomerNestedInput
-  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutSupplierNestedInput
+  clientProfile?: Prisma.ClientProfileUncheckedUpdateOneWithoutPersonNestedInput
+  supplierProfile?: Prisma.SupplierProfileUncheckedUpdateOneWithoutPersonNestedInput
   directEntries?: Prisma.DirectFinancialEntryUncheckedUpdateManyWithoutActorNestedInput
-  receivables?: Prisma.ReceivableUncheckedUpdateManyWithoutDebtorNestedInput
-  payables?: Prisma.PayableUncheckedUpdateManyWithoutBeneficiaryNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutActorNestedInput
   receiptsReversed?: Prisma.ReceiptReversalUncheckedUpdateManyWithoutActorNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutActorNestedInput
@@ -1524,23 +1413,20 @@ export type PersonUncheckedUpdateWithoutGenerationsInput = {
 
 export type PersonCreateWithoutDirectEntriesInput = {
   fullName: string
-  document: string
+  document?: string | null
   email?: string | null
   phone?: string | null
-  isCustomer?: boolean
-  isSupplier?: boolean
-  isEmployee?: boolean
+  isGeneric?: boolean
+  seedKey?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  personType: Prisma.PersonTypeCreateNestedOneWithoutPeopleInput
+  personType?: Prisma.PersonTypeCreateNestedOneWithoutPeopleInput
   employeeProfile?: Prisma.EmployeeProfileCreateNestedOneWithoutPersonInput
-  customerContracts?: Prisma.ContractCreateNestedManyWithoutCustomerInput
-  expenses?: Prisma.ExpenseCreateNestedManyWithoutSupplierInput
+  clientProfile?: Prisma.ClientProfileCreateNestedOneWithoutPersonInput
+  supplierProfile?: Prisma.SupplierProfileCreateNestedOneWithoutPersonInput
   generations?: Prisma.FinancialGenerationCreateNestedManyWithoutActorInput
-  receivables?: Prisma.ReceivableCreateNestedManyWithoutDebtorInput
-  payables?: Prisma.PayableCreateNestedManyWithoutBeneficiaryInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutActorInput
   receiptsReversed?: Prisma.ReceiptReversalCreateNestedManyWithoutActorInput
   payments?: Prisma.PaymentCreateNestedManyWithoutActorInput
@@ -1553,23 +1439,20 @@ export type PersonCreateWithoutDirectEntriesInput = {
 export type PersonUncheckedCreateWithoutDirectEntriesInput = {
   id?: number
   fullName: string
-  document: string
+  document?: string | null
   email?: string | null
   phone?: string | null
-  isCustomer?: boolean
-  isSupplier?: boolean
-  isEmployee?: boolean
+  isGeneric?: boolean
+  seedKey?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  personTypeId: number
+  personTypeId?: number | null
   employeeProfile?: Prisma.EmployeeProfileUncheckedCreateNestedOneWithoutPersonInput
-  customerContracts?: Prisma.ContractUncheckedCreateNestedManyWithoutCustomerInput
-  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutSupplierInput
+  clientProfile?: Prisma.ClientProfileUncheckedCreateNestedOneWithoutPersonInput
+  supplierProfile?: Prisma.SupplierProfileUncheckedCreateNestedOneWithoutPersonInput
   generations?: Prisma.FinancialGenerationUncheckedCreateNestedManyWithoutActorInput
-  receivables?: Prisma.ReceivableUncheckedCreateNestedManyWithoutDebtorInput
-  payables?: Prisma.PayableUncheckedCreateNestedManyWithoutBeneficiaryInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutActorInput
   receiptsReversed?: Prisma.ReceiptReversalUncheckedCreateNestedManyWithoutActorInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutActorInput
@@ -1597,23 +1480,20 @@ export type PersonUpdateToOneWithWhereWithoutDirectEntriesInput = {
 
 export type PersonUpdateWithoutDirectEntriesInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  document?: Prisma.StringFieldUpdateOperationsInput | string
+  document?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSupplier?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isEmployee?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isGeneric?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  seedKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  personType?: Prisma.PersonTypeUpdateOneRequiredWithoutPeopleNestedInput
+  personType?: Prisma.PersonTypeUpdateOneWithoutPeopleNestedInput
   employeeProfile?: Prisma.EmployeeProfileUpdateOneWithoutPersonNestedInput
-  customerContracts?: Prisma.ContractUpdateManyWithoutCustomerNestedInput
-  expenses?: Prisma.ExpenseUpdateManyWithoutSupplierNestedInput
+  clientProfile?: Prisma.ClientProfileUpdateOneWithoutPersonNestedInput
+  supplierProfile?: Prisma.SupplierProfileUpdateOneWithoutPersonNestedInput
   generations?: Prisma.FinancialGenerationUpdateManyWithoutActorNestedInput
-  receivables?: Prisma.ReceivableUpdateManyWithoutDebtorNestedInput
-  payables?: Prisma.PayableUpdateManyWithoutBeneficiaryNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutActorNestedInput
   receiptsReversed?: Prisma.ReceiptReversalUpdateManyWithoutActorNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutActorNestedInput
@@ -1626,283 +1506,20 @@ export type PersonUpdateWithoutDirectEntriesInput = {
 export type PersonUncheckedUpdateWithoutDirectEntriesInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  document?: Prisma.StringFieldUpdateOperationsInput | string
+  document?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSupplier?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isEmployee?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isGeneric?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  seedKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  personTypeId?: Prisma.IntFieldUpdateOperationsInput | number
+  personTypeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   employeeProfile?: Prisma.EmployeeProfileUncheckedUpdateOneWithoutPersonNestedInput
-  customerContracts?: Prisma.ContractUncheckedUpdateManyWithoutCustomerNestedInput
-  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutSupplierNestedInput
+  clientProfile?: Prisma.ClientProfileUncheckedUpdateOneWithoutPersonNestedInput
+  supplierProfile?: Prisma.SupplierProfileUncheckedUpdateOneWithoutPersonNestedInput
   generations?: Prisma.FinancialGenerationUncheckedUpdateManyWithoutActorNestedInput
-  receivables?: Prisma.ReceivableUncheckedUpdateManyWithoutDebtorNestedInput
-  payables?: Prisma.PayableUncheckedUpdateManyWithoutBeneficiaryNestedInput
-  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutActorNestedInput
-  receiptsReversed?: Prisma.ReceiptReversalUncheckedUpdateManyWithoutActorNestedInput
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutActorNestedInput
-  paymentsReversed?: Prisma.PaymentReversalUncheckedUpdateManyWithoutActorNestedInput
-  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutPersonNestedInput
-  actedAuditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
-}
-
-export type PersonCreateWithoutReceivablesInput = {
-  fullName: string
-  document: string
-  email?: string | null
-  phone?: string | null
-  isCustomer?: boolean
-  isSupplier?: boolean
-  isEmployee?: boolean
-  isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-  personType: Prisma.PersonTypeCreateNestedOneWithoutPeopleInput
-  employeeProfile?: Prisma.EmployeeProfileCreateNestedOneWithoutPersonInput
-  customerContracts?: Prisma.ContractCreateNestedManyWithoutCustomerInput
-  expenses?: Prisma.ExpenseCreateNestedManyWithoutSupplierInput
-  generations?: Prisma.FinancialGenerationCreateNestedManyWithoutActorInput
-  directEntries?: Prisma.DirectFinancialEntryCreateNestedManyWithoutActorInput
-  payables?: Prisma.PayableCreateNestedManyWithoutBeneficiaryInput
-  receipts?: Prisma.ReceiptCreateNestedManyWithoutActorInput
-  receiptsReversed?: Prisma.ReceiptReversalCreateNestedManyWithoutActorInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutActorInput
-  paymentsReversed?: Prisma.PaymentReversalCreateNestedManyWithoutActorInput
-  attachments?: Prisma.AttachmentCreateNestedManyWithoutPersonInput
-  actedAuditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
-}
-
-export type PersonUncheckedCreateWithoutReceivablesInput = {
-  id?: number
-  fullName: string
-  document: string
-  email?: string | null
-  phone?: string | null
-  isCustomer?: boolean
-  isSupplier?: boolean
-  isEmployee?: boolean
-  isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-  personTypeId: number
-  employeeProfile?: Prisma.EmployeeProfileUncheckedCreateNestedOneWithoutPersonInput
-  customerContracts?: Prisma.ContractUncheckedCreateNestedManyWithoutCustomerInput
-  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutSupplierInput
-  generations?: Prisma.FinancialGenerationUncheckedCreateNestedManyWithoutActorInput
-  directEntries?: Prisma.DirectFinancialEntryUncheckedCreateNestedManyWithoutActorInput
-  payables?: Prisma.PayableUncheckedCreateNestedManyWithoutBeneficiaryInput
-  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutActorInput
-  receiptsReversed?: Prisma.ReceiptReversalUncheckedCreateNestedManyWithoutActorInput
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutActorInput
-  paymentsReversed?: Prisma.PaymentReversalUncheckedCreateNestedManyWithoutActorInput
-  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutPersonInput
-  actedAuditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
-}
-
-export type PersonCreateOrConnectWithoutReceivablesInput = {
-  where: Prisma.PersonWhereUniqueInput
-  create: Prisma.XOR<Prisma.PersonCreateWithoutReceivablesInput, Prisma.PersonUncheckedCreateWithoutReceivablesInput>
-}
-
-export type PersonUpsertWithoutReceivablesInput = {
-  update: Prisma.XOR<Prisma.PersonUpdateWithoutReceivablesInput, Prisma.PersonUncheckedUpdateWithoutReceivablesInput>
-  create: Prisma.XOR<Prisma.PersonCreateWithoutReceivablesInput, Prisma.PersonUncheckedCreateWithoutReceivablesInput>
-  where?: Prisma.PersonWhereInput
-}
-
-export type PersonUpdateToOneWithWhereWithoutReceivablesInput = {
-  where?: Prisma.PersonWhereInput
-  data: Prisma.XOR<Prisma.PersonUpdateWithoutReceivablesInput, Prisma.PersonUncheckedUpdateWithoutReceivablesInput>
-}
-
-export type PersonUpdateWithoutReceivablesInput = {
-  fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  document?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSupplier?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isEmployee?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  personType?: Prisma.PersonTypeUpdateOneRequiredWithoutPeopleNestedInput
-  employeeProfile?: Prisma.EmployeeProfileUpdateOneWithoutPersonNestedInput
-  customerContracts?: Prisma.ContractUpdateManyWithoutCustomerNestedInput
-  expenses?: Prisma.ExpenseUpdateManyWithoutSupplierNestedInput
-  generations?: Prisma.FinancialGenerationUpdateManyWithoutActorNestedInput
-  directEntries?: Prisma.DirectFinancialEntryUpdateManyWithoutActorNestedInput
-  payables?: Prisma.PayableUpdateManyWithoutBeneficiaryNestedInput
-  receipts?: Prisma.ReceiptUpdateManyWithoutActorNestedInput
-  receiptsReversed?: Prisma.ReceiptReversalUpdateManyWithoutActorNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutActorNestedInput
-  paymentsReversed?: Prisma.PaymentReversalUpdateManyWithoutActorNestedInput
-  attachments?: Prisma.AttachmentUpdateManyWithoutPersonNestedInput
-  actedAuditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
-}
-
-export type PersonUncheckedUpdateWithoutReceivablesInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  document?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSupplier?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isEmployee?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  personTypeId?: Prisma.IntFieldUpdateOperationsInput | number
-  employeeProfile?: Prisma.EmployeeProfileUncheckedUpdateOneWithoutPersonNestedInput
-  customerContracts?: Prisma.ContractUncheckedUpdateManyWithoutCustomerNestedInput
-  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutSupplierNestedInput
-  generations?: Prisma.FinancialGenerationUncheckedUpdateManyWithoutActorNestedInput
-  directEntries?: Prisma.DirectFinancialEntryUncheckedUpdateManyWithoutActorNestedInput
-  payables?: Prisma.PayableUncheckedUpdateManyWithoutBeneficiaryNestedInput
-  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutActorNestedInput
-  receiptsReversed?: Prisma.ReceiptReversalUncheckedUpdateManyWithoutActorNestedInput
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutActorNestedInput
-  paymentsReversed?: Prisma.PaymentReversalUncheckedUpdateManyWithoutActorNestedInput
-  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutPersonNestedInput
-  actedAuditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
-}
-
-export type PersonCreateWithoutPayablesInput = {
-  fullName: string
-  document: string
-  email?: string | null
-  phone?: string | null
-  isCustomer?: boolean
-  isSupplier?: boolean
-  isEmployee?: boolean
-  isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-  personType: Prisma.PersonTypeCreateNestedOneWithoutPeopleInput
-  employeeProfile?: Prisma.EmployeeProfileCreateNestedOneWithoutPersonInput
-  customerContracts?: Prisma.ContractCreateNestedManyWithoutCustomerInput
-  expenses?: Prisma.ExpenseCreateNestedManyWithoutSupplierInput
-  generations?: Prisma.FinancialGenerationCreateNestedManyWithoutActorInput
-  directEntries?: Prisma.DirectFinancialEntryCreateNestedManyWithoutActorInput
-  receivables?: Prisma.ReceivableCreateNestedManyWithoutDebtorInput
-  receipts?: Prisma.ReceiptCreateNestedManyWithoutActorInput
-  receiptsReversed?: Prisma.ReceiptReversalCreateNestedManyWithoutActorInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutActorInput
-  paymentsReversed?: Prisma.PaymentReversalCreateNestedManyWithoutActorInput
-  attachments?: Prisma.AttachmentCreateNestedManyWithoutPersonInput
-  actedAuditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
-}
-
-export type PersonUncheckedCreateWithoutPayablesInput = {
-  id?: number
-  fullName: string
-  document: string
-  email?: string | null
-  phone?: string | null
-  isCustomer?: boolean
-  isSupplier?: boolean
-  isEmployee?: boolean
-  isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-  personTypeId: number
-  employeeProfile?: Prisma.EmployeeProfileUncheckedCreateNestedOneWithoutPersonInput
-  customerContracts?: Prisma.ContractUncheckedCreateNestedManyWithoutCustomerInput
-  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutSupplierInput
-  generations?: Prisma.FinancialGenerationUncheckedCreateNestedManyWithoutActorInput
-  directEntries?: Prisma.DirectFinancialEntryUncheckedCreateNestedManyWithoutActorInput
-  receivables?: Prisma.ReceivableUncheckedCreateNestedManyWithoutDebtorInput
-  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutActorInput
-  receiptsReversed?: Prisma.ReceiptReversalUncheckedCreateNestedManyWithoutActorInput
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutActorInput
-  paymentsReversed?: Prisma.PaymentReversalUncheckedCreateNestedManyWithoutActorInput
-  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutPersonInput
-  actedAuditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
-}
-
-export type PersonCreateOrConnectWithoutPayablesInput = {
-  where: Prisma.PersonWhereUniqueInput
-  create: Prisma.XOR<Prisma.PersonCreateWithoutPayablesInput, Prisma.PersonUncheckedCreateWithoutPayablesInput>
-}
-
-export type PersonUpsertWithoutPayablesInput = {
-  update: Prisma.XOR<Prisma.PersonUpdateWithoutPayablesInput, Prisma.PersonUncheckedUpdateWithoutPayablesInput>
-  create: Prisma.XOR<Prisma.PersonCreateWithoutPayablesInput, Prisma.PersonUncheckedCreateWithoutPayablesInput>
-  where?: Prisma.PersonWhereInput
-}
-
-export type PersonUpdateToOneWithWhereWithoutPayablesInput = {
-  where?: Prisma.PersonWhereInput
-  data: Prisma.XOR<Prisma.PersonUpdateWithoutPayablesInput, Prisma.PersonUncheckedUpdateWithoutPayablesInput>
-}
-
-export type PersonUpdateWithoutPayablesInput = {
-  fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  document?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSupplier?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isEmployee?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  personType?: Prisma.PersonTypeUpdateOneRequiredWithoutPeopleNestedInput
-  employeeProfile?: Prisma.EmployeeProfileUpdateOneWithoutPersonNestedInput
-  customerContracts?: Prisma.ContractUpdateManyWithoutCustomerNestedInput
-  expenses?: Prisma.ExpenseUpdateManyWithoutSupplierNestedInput
-  generations?: Prisma.FinancialGenerationUpdateManyWithoutActorNestedInput
-  directEntries?: Prisma.DirectFinancialEntryUpdateManyWithoutActorNestedInput
-  receivables?: Prisma.ReceivableUpdateManyWithoutDebtorNestedInput
-  receipts?: Prisma.ReceiptUpdateManyWithoutActorNestedInput
-  receiptsReversed?: Prisma.ReceiptReversalUpdateManyWithoutActorNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutActorNestedInput
-  paymentsReversed?: Prisma.PaymentReversalUpdateManyWithoutActorNestedInput
-  attachments?: Prisma.AttachmentUpdateManyWithoutPersonNestedInput
-  actedAuditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
-}
-
-export type PersonUncheckedUpdateWithoutPayablesInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  document?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSupplier?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isEmployee?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  personTypeId?: Prisma.IntFieldUpdateOperationsInput | number
-  employeeProfile?: Prisma.EmployeeProfileUncheckedUpdateOneWithoutPersonNestedInput
-  customerContracts?: Prisma.ContractUncheckedUpdateManyWithoutCustomerNestedInput
-  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutSupplierNestedInput
-  generations?: Prisma.FinancialGenerationUncheckedUpdateManyWithoutActorNestedInput
-  directEntries?: Prisma.DirectFinancialEntryUncheckedUpdateManyWithoutActorNestedInput
-  receivables?: Prisma.ReceivableUncheckedUpdateManyWithoutDebtorNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutActorNestedInput
   receiptsReversed?: Prisma.ReceiptReversalUncheckedUpdateManyWithoutActorNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutActorNestedInput
@@ -1914,24 +1531,21 @@ export type PersonUncheckedUpdateWithoutPayablesInput = {
 
 export type PersonCreateWithoutReceiptsInput = {
   fullName: string
-  document: string
+  document?: string | null
   email?: string | null
   phone?: string | null
-  isCustomer?: boolean
-  isSupplier?: boolean
-  isEmployee?: boolean
+  isGeneric?: boolean
+  seedKey?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  personType: Prisma.PersonTypeCreateNestedOneWithoutPeopleInput
+  personType?: Prisma.PersonTypeCreateNestedOneWithoutPeopleInput
   employeeProfile?: Prisma.EmployeeProfileCreateNestedOneWithoutPersonInput
-  customerContracts?: Prisma.ContractCreateNestedManyWithoutCustomerInput
-  expenses?: Prisma.ExpenseCreateNestedManyWithoutSupplierInput
+  clientProfile?: Prisma.ClientProfileCreateNestedOneWithoutPersonInput
+  supplierProfile?: Prisma.SupplierProfileCreateNestedOneWithoutPersonInput
   generations?: Prisma.FinancialGenerationCreateNestedManyWithoutActorInput
   directEntries?: Prisma.DirectFinancialEntryCreateNestedManyWithoutActorInput
-  receivables?: Prisma.ReceivableCreateNestedManyWithoutDebtorInput
-  payables?: Prisma.PayableCreateNestedManyWithoutBeneficiaryInput
   receiptsReversed?: Prisma.ReceiptReversalCreateNestedManyWithoutActorInput
   payments?: Prisma.PaymentCreateNestedManyWithoutActorInput
   paymentsReversed?: Prisma.PaymentReversalCreateNestedManyWithoutActorInput
@@ -1943,24 +1557,21 @@ export type PersonCreateWithoutReceiptsInput = {
 export type PersonUncheckedCreateWithoutReceiptsInput = {
   id?: number
   fullName: string
-  document: string
+  document?: string | null
   email?: string | null
   phone?: string | null
-  isCustomer?: boolean
-  isSupplier?: boolean
-  isEmployee?: boolean
+  isGeneric?: boolean
+  seedKey?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  personTypeId: number
+  personTypeId?: number | null
   employeeProfile?: Prisma.EmployeeProfileUncheckedCreateNestedOneWithoutPersonInput
-  customerContracts?: Prisma.ContractUncheckedCreateNestedManyWithoutCustomerInput
-  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutSupplierInput
+  clientProfile?: Prisma.ClientProfileUncheckedCreateNestedOneWithoutPersonInput
+  supplierProfile?: Prisma.SupplierProfileUncheckedCreateNestedOneWithoutPersonInput
   generations?: Prisma.FinancialGenerationUncheckedCreateNestedManyWithoutActorInput
   directEntries?: Prisma.DirectFinancialEntryUncheckedCreateNestedManyWithoutActorInput
-  receivables?: Prisma.ReceivableUncheckedCreateNestedManyWithoutDebtorInput
-  payables?: Prisma.PayableUncheckedCreateNestedManyWithoutBeneficiaryInput
   receiptsReversed?: Prisma.ReceiptReversalUncheckedCreateNestedManyWithoutActorInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutActorInput
   paymentsReversed?: Prisma.PaymentReversalUncheckedCreateNestedManyWithoutActorInput
@@ -1987,24 +1598,21 @@ export type PersonUpdateToOneWithWhereWithoutReceiptsInput = {
 
 export type PersonUpdateWithoutReceiptsInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  document?: Prisma.StringFieldUpdateOperationsInput | string
+  document?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSupplier?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isEmployee?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isGeneric?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  seedKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  personType?: Prisma.PersonTypeUpdateOneRequiredWithoutPeopleNestedInput
+  personType?: Prisma.PersonTypeUpdateOneWithoutPeopleNestedInput
   employeeProfile?: Prisma.EmployeeProfileUpdateOneWithoutPersonNestedInput
-  customerContracts?: Prisma.ContractUpdateManyWithoutCustomerNestedInput
-  expenses?: Prisma.ExpenseUpdateManyWithoutSupplierNestedInput
+  clientProfile?: Prisma.ClientProfileUpdateOneWithoutPersonNestedInput
+  supplierProfile?: Prisma.SupplierProfileUpdateOneWithoutPersonNestedInput
   generations?: Prisma.FinancialGenerationUpdateManyWithoutActorNestedInput
   directEntries?: Prisma.DirectFinancialEntryUpdateManyWithoutActorNestedInput
-  receivables?: Prisma.ReceivableUpdateManyWithoutDebtorNestedInput
-  payables?: Prisma.PayableUpdateManyWithoutBeneficiaryNestedInput
   receiptsReversed?: Prisma.ReceiptReversalUpdateManyWithoutActorNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutActorNestedInput
   paymentsReversed?: Prisma.PaymentReversalUpdateManyWithoutActorNestedInput
@@ -2016,24 +1624,21 @@ export type PersonUpdateWithoutReceiptsInput = {
 export type PersonUncheckedUpdateWithoutReceiptsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  document?: Prisma.StringFieldUpdateOperationsInput | string
+  document?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSupplier?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isEmployee?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isGeneric?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  seedKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  personTypeId?: Prisma.IntFieldUpdateOperationsInput | number
+  personTypeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   employeeProfile?: Prisma.EmployeeProfileUncheckedUpdateOneWithoutPersonNestedInput
-  customerContracts?: Prisma.ContractUncheckedUpdateManyWithoutCustomerNestedInput
-  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutSupplierNestedInput
+  clientProfile?: Prisma.ClientProfileUncheckedUpdateOneWithoutPersonNestedInput
+  supplierProfile?: Prisma.SupplierProfileUncheckedUpdateOneWithoutPersonNestedInput
   generations?: Prisma.FinancialGenerationUncheckedUpdateManyWithoutActorNestedInput
   directEntries?: Prisma.DirectFinancialEntryUncheckedUpdateManyWithoutActorNestedInput
-  receivables?: Prisma.ReceivableUncheckedUpdateManyWithoutDebtorNestedInput
-  payables?: Prisma.PayableUncheckedUpdateManyWithoutBeneficiaryNestedInput
   receiptsReversed?: Prisma.ReceiptReversalUncheckedUpdateManyWithoutActorNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutActorNestedInput
   paymentsReversed?: Prisma.PaymentReversalUncheckedUpdateManyWithoutActorNestedInput
@@ -2044,24 +1649,21 @@ export type PersonUncheckedUpdateWithoutReceiptsInput = {
 
 export type PersonCreateWithoutReceiptsReversedInput = {
   fullName: string
-  document: string
+  document?: string | null
   email?: string | null
   phone?: string | null
-  isCustomer?: boolean
-  isSupplier?: boolean
-  isEmployee?: boolean
+  isGeneric?: boolean
+  seedKey?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  personType: Prisma.PersonTypeCreateNestedOneWithoutPeopleInput
+  personType?: Prisma.PersonTypeCreateNestedOneWithoutPeopleInput
   employeeProfile?: Prisma.EmployeeProfileCreateNestedOneWithoutPersonInput
-  customerContracts?: Prisma.ContractCreateNestedManyWithoutCustomerInput
-  expenses?: Prisma.ExpenseCreateNestedManyWithoutSupplierInput
+  clientProfile?: Prisma.ClientProfileCreateNestedOneWithoutPersonInput
+  supplierProfile?: Prisma.SupplierProfileCreateNestedOneWithoutPersonInput
   generations?: Prisma.FinancialGenerationCreateNestedManyWithoutActorInput
   directEntries?: Prisma.DirectFinancialEntryCreateNestedManyWithoutActorInput
-  receivables?: Prisma.ReceivableCreateNestedManyWithoutDebtorInput
-  payables?: Prisma.PayableCreateNestedManyWithoutBeneficiaryInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutActorInput
   payments?: Prisma.PaymentCreateNestedManyWithoutActorInput
   paymentsReversed?: Prisma.PaymentReversalCreateNestedManyWithoutActorInput
@@ -2073,24 +1675,21 @@ export type PersonCreateWithoutReceiptsReversedInput = {
 export type PersonUncheckedCreateWithoutReceiptsReversedInput = {
   id?: number
   fullName: string
-  document: string
+  document?: string | null
   email?: string | null
   phone?: string | null
-  isCustomer?: boolean
-  isSupplier?: boolean
-  isEmployee?: boolean
+  isGeneric?: boolean
+  seedKey?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  personTypeId: number
+  personTypeId?: number | null
   employeeProfile?: Prisma.EmployeeProfileUncheckedCreateNestedOneWithoutPersonInput
-  customerContracts?: Prisma.ContractUncheckedCreateNestedManyWithoutCustomerInput
-  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutSupplierInput
+  clientProfile?: Prisma.ClientProfileUncheckedCreateNestedOneWithoutPersonInput
+  supplierProfile?: Prisma.SupplierProfileUncheckedCreateNestedOneWithoutPersonInput
   generations?: Prisma.FinancialGenerationUncheckedCreateNestedManyWithoutActorInput
   directEntries?: Prisma.DirectFinancialEntryUncheckedCreateNestedManyWithoutActorInput
-  receivables?: Prisma.ReceivableUncheckedCreateNestedManyWithoutDebtorInput
-  payables?: Prisma.PayableUncheckedCreateNestedManyWithoutBeneficiaryInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutActorInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutActorInput
   paymentsReversed?: Prisma.PaymentReversalUncheckedCreateNestedManyWithoutActorInput
@@ -2117,24 +1716,21 @@ export type PersonUpdateToOneWithWhereWithoutReceiptsReversedInput = {
 
 export type PersonUpdateWithoutReceiptsReversedInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  document?: Prisma.StringFieldUpdateOperationsInput | string
+  document?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSupplier?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isEmployee?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isGeneric?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  seedKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  personType?: Prisma.PersonTypeUpdateOneRequiredWithoutPeopleNestedInput
+  personType?: Prisma.PersonTypeUpdateOneWithoutPeopleNestedInput
   employeeProfile?: Prisma.EmployeeProfileUpdateOneWithoutPersonNestedInput
-  customerContracts?: Prisma.ContractUpdateManyWithoutCustomerNestedInput
-  expenses?: Prisma.ExpenseUpdateManyWithoutSupplierNestedInput
+  clientProfile?: Prisma.ClientProfileUpdateOneWithoutPersonNestedInput
+  supplierProfile?: Prisma.SupplierProfileUpdateOneWithoutPersonNestedInput
   generations?: Prisma.FinancialGenerationUpdateManyWithoutActorNestedInput
   directEntries?: Prisma.DirectFinancialEntryUpdateManyWithoutActorNestedInput
-  receivables?: Prisma.ReceivableUpdateManyWithoutDebtorNestedInput
-  payables?: Prisma.PayableUpdateManyWithoutBeneficiaryNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutActorNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutActorNestedInput
   paymentsReversed?: Prisma.PaymentReversalUpdateManyWithoutActorNestedInput
@@ -2146,24 +1742,21 @@ export type PersonUpdateWithoutReceiptsReversedInput = {
 export type PersonUncheckedUpdateWithoutReceiptsReversedInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  document?: Prisma.StringFieldUpdateOperationsInput | string
+  document?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSupplier?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isEmployee?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isGeneric?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  seedKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  personTypeId?: Prisma.IntFieldUpdateOperationsInput | number
+  personTypeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   employeeProfile?: Prisma.EmployeeProfileUncheckedUpdateOneWithoutPersonNestedInput
-  customerContracts?: Prisma.ContractUncheckedUpdateManyWithoutCustomerNestedInput
-  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutSupplierNestedInput
+  clientProfile?: Prisma.ClientProfileUncheckedUpdateOneWithoutPersonNestedInput
+  supplierProfile?: Prisma.SupplierProfileUncheckedUpdateOneWithoutPersonNestedInput
   generations?: Prisma.FinancialGenerationUncheckedUpdateManyWithoutActorNestedInput
   directEntries?: Prisma.DirectFinancialEntryUncheckedUpdateManyWithoutActorNestedInput
-  receivables?: Prisma.ReceivableUncheckedUpdateManyWithoutDebtorNestedInput
-  payables?: Prisma.PayableUncheckedUpdateManyWithoutBeneficiaryNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutActorNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutActorNestedInput
   paymentsReversed?: Prisma.PaymentReversalUncheckedUpdateManyWithoutActorNestedInput
@@ -2174,24 +1767,21 @@ export type PersonUncheckedUpdateWithoutReceiptsReversedInput = {
 
 export type PersonCreateWithoutPaymentsInput = {
   fullName: string
-  document: string
+  document?: string | null
   email?: string | null
   phone?: string | null
-  isCustomer?: boolean
-  isSupplier?: boolean
-  isEmployee?: boolean
+  isGeneric?: boolean
+  seedKey?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  personType: Prisma.PersonTypeCreateNestedOneWithoutPeopleInput
+  personType?: Prisma.PersonTypeCreateNestedOneWithoutPeopleInput
   employeeProfile?: Prisma.EmployeeProfileCreateNestedOneWithoutPersonInput
-  customerContracts?: Prisma.ContractCreateNestedManyWithoutCustomerInput
-  expenses?: Prisma.ExpenseCreateNestedManyWithoutSupplierInput
+  clientProfile?: Prisma.ClientProfileCreateNestedOneWithoutPersonInput
+  supplierProfile?: Prisma.SupplierProfileCreateNestedOneWithoutPersonInput
   generations?: Prisma.FinancialGenerationCreateNestedManyWithoutActorInput
   directEntries?: Prisma.DirectFinancialEntryCreateNestedManyWithoutActorInput
-  receivables?: Prisma.ReceivableCreateNestedManyWithoutDebtorInput
-  payables?: Prisma.PayableCreateNestedManyWithoutBeneficiaryInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutActorInput
   receiptsReversed?: Prisma.ReceiptReversalCreateNestedManyWithoutActorInput
   paymentsReversed?: Prisma.PaymentReversalCreateNestedManyWithoutActorInput
@@ -2203,24 +1793,21 @@ export type PersonCreateWithoutPaymentsInput = {
 export type PersonUncheckedCreateWithoutPaymentsInput = {
   id?: number
   fullName: string
-  document: string
+  document?: string | null
   email?: string | null
   phone?: string | null
-  isCustomer?: boolean
-  isSupplier?: boolean
-  isEmployee?: boolean
+  isGeneric?: boolean
+  seedKey?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  personTypeId: number
+  personTypeId?: number | null
   employeeProfile?: Prisma.EmployeeProfileUncheckedCreateNestedOneWithoutPersonInput
-  customerContracts?: Prisma.ContractUncheckedCreateNestedManyWithoutCustomerInput
-  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutSupplierInput
+  clientProfile?: Prisma.ClientProfileUncheckedCreateNestedOneWithoutPersonInput
+  supplierProfile?: Prisma.SupplierProfileUncheckedCreateNestedOneWithoutPersonInput
   generations?: Prisma.FinancialGenerationUncheckedCreateNestedManyWithoutActorInput
   directEntries?: Prisma.DirectFinancialEntryUncheckedCreateNestedManyWithoutActorInput
-  receivables?: Prisma.ReceivableUncheckedCreateNestedManyWithoutDebtorInput
-  payables?: Prisma.PayableUncheckedCreateNestedManyWithoutBeneficiaryInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutActorInput
   receiptsReversed?: Prisma.ReceiptReversalUncheckedCreateNestedManyWithoutActorInput
   paymentsReversed?: Prisma.PaymentReversalUncheckedCreateNestedManyWithoutActorInput
@@ -2247,24 +1834,21 @@ export type PersonUpdateToOneWithWhereWithoutPaymentsInput = {
 
 export type PersonUpdateWithoutPaymentsInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  document?: Prisma.StringFieldUpdateOperationsInput | string
+  document?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSupplier?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isEmployee?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isGeneric?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  seedKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  personType?: Prisma.PersonTypeUpdateOneRequiredWithoutPeopleNestedInput
+  personType?: Prisma.PersonTypeUpdateOneWithoutPeopleNestedInput
   employeeProfile?: Prisma.EmployeeProfileUpdateOneWithoutPersonNestedInput
-  customerContracts?: Prisma.ContractUpdateManyWithoutCustomerNestedInput
-  expenses?: Prisma.ExpenseUpdateManyWithoutSupplierNestedInput
+  clientProfile?: Prisma.ClientProfileUpdateOneWithoutPersonNestedInput
+  supplierProfile?: Prisma.SupplierProfileUpdateOneWithoutPersonNestedInput
   generations?: Prisma.FinancialGenerationUpdateManyWithoutActorNestedInput
   directEntries?: Prisma.DirectFinancialEntryUpdateManyWithoutActorNestedInput
-  receivables?: Prisma.ReceivableUpdateManyWithoutDebtorNestedInput
-  payables?: Prisma.PayableUpdateManyWithoutBeneficiaryNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutActorNestedInput
   receiptsReversed?: Prisma.ReceiptReversalUpdateManyWithoutActorNestedInput
   paymentsReversed?: Prisma.PaymentReversalUpdateManyWithoutActorNestedInput
@@ -2276,24 +1860,21 @@ export type PersonUpdateWithoutPaymentsInput = {
 export type PersonUncheckedUpdateWithoutPaymentsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  document?: Prisma.StringFieldUpdateOperationsInput | string
+  document?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSupplier?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isEmployee?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isGeneric?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  seedKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  personTypeId?: Prisma.IntFieldUpdateOperationsInput | number
+  personTypeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   employeeProfile?: Prisma.EmployeeProfileUncheckedUpdateOneWithoutPersonNestedInput
-  customerContracts?: Prisma.ContractUncheckedUpdateManyWithoutCustomerNestedInput
-  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutSupplierNestedInput
+  clientProfile?: Prisma.ClientProfileUncheckedUpdateOneWithoutPersonNestedInput
+  supplierProfile?: Prisma.SupplierProfileUncheckedUpdateOneWithoutPersonNestedInput
   generations?: Prisma.FinancialGenerationUncheckedUpdateManyWithoutActorNestedInput
   directEntries?: Prisma.DirectFinancialEntryUncheckedUpdateManyWithoutActorNestedInput
-  receivables?: Prisma.ReceivableUncheckedUpdateManyWithoutDebtorNestedInput
-  payables?: Prisma.PayableUncheckedUpdateManyWithoutBeneficiaryNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutActorNestedInput
   receiptsReversed?: Prisma.ReceiptReversalUncheckedUpdateManyWithoutActorNestedInput
   paymentsReversed?: Prisma.PaymentReversalUncheckedUpdateManyWithoutActorNestedInput
@@ -2304,24 +1885,21 @@ export type PersonUncheckedUpdateWithoutPaymentsInput = {
 
 export type PersonCreateWithoutPaymentsReversedInput = {
   fullName: string
-  document: string
+  document?: string | null
   email?: string | null
   phone?: string | null
-  isCustomer?: boolean
-  isSupplier?: boolean
-  isEmployee?: boolean
+  isGeneric?: boolean
+  seedKey?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  personType: Prisma.PersonTypeCreateNestedOneWithoutPeopleInput
+  personType?: Prisma.PersonTypeCreateNestedOneWithoutPeopleInput
   employeeProfile?: Prisma.EmployeeProfileCreateNestedOneWithoutPersonInput
-  customerContracts?: Prisma.ContractCreateNestedManyWithoutCustomerInput
-  expenses?: Prisma.ExpenseCreateNestedManyWithoutSupplierInput
+  clientProfile?: Prisma.ClientProfileCreateNestedOneWithoutPersonInput
+  supplierProfile?: Prisma.SupplierProfileCreateNestedOneWithoutPersonInput
   generations?: Prisma.FinancialGenerationCreateNestedManyWithoutActorInput
   directEntries?: Prisma.DirectFinancialEntryCreateNestedManyWithoutActorInput
-  receivables?: Prisma.ReceivableCreateNestedManyWithoutDebtorInput
-  payables?: Prisma.PayableCreateNestedManyWithoutBeneficiaryInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutActorInput
   receiptsReversed?: Prisma.ReceiptReversalCreateNestedManyWithoutActorInput
   payments?: Prisma.PaymentCreateNestedManyWithoutActorInput
@@ -2333,24 +1911,21 @@ export type PersonCreateWithoutPaymentsReversedInput = {
 export type PersonUncheckedCreateWithoutPaymentsReversedInput = {
   id?: number
   fullName: string
-  document: string
+  document?: string | null
   email?: string | null
   phone?: string | null
-  isCustomer?: boolean
-  isSupplier?: boolean
-  isEmployee?: boolean
+  isGeneric?: boolean
+  seedKey?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  personTypeId: number
+  personTypeId?: number | null
   employeeProfile?: Prisma.EmployeeProfileUncheckedCreateNestedOneWithoutPersonInput
-  customerContracts?: Prisma.ContractUncheckedCreateNestedManyWithoutCustomerInput
-  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutSupplierInput
+  clientProfile?: Prisma.ClientProfileUncheckedCreateNestedOneWithoutPersonInput
+  supplierProfile?: Prisma.SupplierProfileUncheckedCreateNestedOneWithoutPersonInput
   generations?: Prisma.FinancialGenerationUncheckedCreateNestedManyWithoutActorInput
   directEntries?: Prisma.DirectFinancialEntryUncheckedCreateNestedManyWithoutActorInput
-  receivables?: Prisma.ReceivableUncheckedCreateNestedManyWithoutDebtorInput
-  payables?: Prisma.PayableUncheckedCreateNestedManyWithoutBeneficiaryInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutActorInput
   receiptsReversed?: Prisma.ReceiptReversalUncheckedCreateNestedManyWithoutActorInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutActorInput
@@ -2377,24 +1952,21 @@ export type PersonUpdateToOneWithWhereWithoutPaymentsReversedInput = {
 
 export type PersonUpdateWithoutPaymentsReversedInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  document?: Prisma.StringFieldUpdateOperationsInput | string
+  document?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSupplier?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isEmployee?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isGeneric?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  seedKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  personType?: Prisma.PersonTypeUpdateOneRequiredWithoutPeopleNestedInput
+  personType?: Prisma.PersonTypeUpdateOneWithoutPeopleNestedInput
   employeeProfile?: Prisma.EmployeeProfileUpdateOneWithoutPersonNestedInput
-  customerContracts?: Prisma.ContractUpdateManyWithoutCustomerNestedInput
-  expenses?: Prisma.ExpenseUpdateManyWithoutSupplierNestedInput
+  clientProfile?: Prisma.ClientProfileUpdateOneWithoutPersonNestedInput
+  supplierProfile?: Prisma.SupplierProfileUpdateOneWithoutPersonNestedInput
   generations?: Prisma.FinancialGenerationUpdateManyWithoutActorNestedInput
   directEntries?: Prisma.DirectFinancialEntryUpdateManyWithoutActorNestedInput
-  receivables?: Prisma.ReceivableUpdateManyWithoutDebtorNestedInput
-  payables?: Prisma.PayableUpdateManyWithoutBeneficiaryNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutActorNestedInput
   receiptsReversed?: Prisma.ReceiptReversalUpdateManyWithoutActorNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutActorNestedInput
@@ -2406,24 +1978,21 @@ export type PersonUpdateWithoutPaymentsReversedInput = {
 export type PersonUncheckedUpdateWithoutPaymentsReversedInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  document?: Prisma.StringFieldUpdateOperationsInput | string
+  document?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSupplier?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isEmployee?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isGeneric?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  seedKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  personTypeId?: Prisma.IntFieldUpdateOperationsInput | number
+  personTypeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   employeeProfile?: Prisma.EmployeeProfileUncheckedUpdateOneWithoutPersonNestedInput
-  customerContracts?: Prisma.ContractUncheckedUpdateManyWithoutCustomerNestedInput
-  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutSupplierNestedInput
+  clientProfile?: Prisma.ClientProfileUncheckedUpdateOneWithoutPersonNestedInput
+  supplierProfile?: Prisma.SupplierProfileUncheckedUpdateOneWithoutPersonNestedInput
   generations?: Prisma.FinancialGenerationUncheckedUpdateManyWithoutActorNestedInput
   directEntries?: Prisma.DirectFinancialEntryUncheckedUpdateManyWithoutActorNestedInput
-  receivables?: Prisma.ReceivableUncheckedUpdateManyWithoutDebtorNestedInput
-  payables?: Prisma.PayableUncheckedUpdateManyWithoutBeneficiaryNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutActorNestedInput
   receiptsReversed?: Prisma.ReceiptReversalUncheckedUpdateManyWithoutActorNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutActorNestedInput
@@ -2434,24 +2003,21 @@ export type PersonUncheckedUpdateWithoutPaymentsReversedInput = {
 
 export type PersonCreateWithoutAttachmentsInput = {
   fullName: string
-  document: string
+  document?: string | null
   email?: string | null
   phone?: string | null
-  isCustomer?: boolean
-  isSupplier?: boolean
-  isEmployee?: boolean
+  isGeneric?: boolean
+  seedKey?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  personType: Prisma.PersonTypeCreateNestedOneWithoutPeopleInput
+  personType?: Prisma.PersonTypeCreateNestedOneWithoutPeopleInput
   employeeProfile?: Prisma.EmployeeProfileCreateNestedOneWithoutPersonInput
-  customerContracts?: Prisma.ContractCreateNestedManyWithoutCustomerInput
-  expenses?: Prisma.ExpenseCreateNestedManyWithoutSupplierInput
+  clientProfile?: Prisma.ClientProfileCreateNestedOneWithoutPersonInput
+  supplierProfile?: Prisma.SupplierProfileCreateNestedOneWithoutPersonInput
   generations?: Prisma.FinancialGenerationCreateNestedManyWithoutActorInput
   directEntries?: Prisma.DirectFinancialEntryCreateNestedManyWithoutActorInput
-  receivables?: Prisma.ReceivableCreateNestedManyWithoutDebtorInput
-  payables?: Prisma.PayableCreateNestedManyWithoutBeneficiaryInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutActorInput
   receiptsReversed?: Prisma.ReceiptReversalCreateNestedManyWithoutActorInput
   payments?: Prisma.PaymentCreateNestedManyWithoutActorInput
@@ -2463,24 +2029,21 @@ export type PersonCreateWithoutAttachmentsInput = {
 export type PersonUncheckedCreateWithoutAttachmentsInput = {
   id?: number
   fullName: string
-  document: string
+  document?: string | null
   email?: string | null
   phone?: string | null
-  isCustomer?: boolean
-  isSupplier?: boolean
-  isEmployee?: boolean
+  isGeneric?: boolean
+  seedKey?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  personTypeId: number
+  personTypeId?: number | null
   employeeProfile?: Prisma.EmployeeProfileUncheckedCreateNestedOneWithoutPersonInput
-  customerContracts?: Prisma.ContractUncheckedCreateNestedManyWithoutCustomerInput
-  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutSupplierInput
+  clientProfile?: Prisma.ClientProfileUncheckedCreateNestedOneWithoutPersonInput
+  supplierProfile?: Prisma.SupplierProfileUncheckedCreateNestedOneWithoutPersonInput
   generations?: Prisma.FinancialGenerationUncheckedCreateNestedManyWithoutActorInput
   directEntries?: Prisma.DirectFinancialEntryUncheckedCreateNestedManyWithoutActorInput
-  receivables?: Prisma.ReceivableUncheckedCreateNestedManyWithoutDebtorInput
-  payables?: Prisma.PayableUncheckedCreateNestedManyWithoutBeneficiaryInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutActorInput
   receiptsReversed?: Prisma.ReceiptReversalUncheckedCreateNestedManyWithoutActorInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutActorInput
@@ -2507,24 +2070,21 @@ export type PersonUpdateToOneWithWhereWithoutAttachmentsInput = {
 
 export type PersonUpdateWithoutAttachmentsInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  document?: Prisma.StringFieldUpdateOperationsInput | string
+  document?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSupplier?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isEmployee?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isGeneric?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  seedKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  personType?: Prisma.PersonTypeUpdateOneRequiredWithoutPeopleNestedInput
+  personType?: Prisma.PersonTypeUpdateOneWithoutPeopleNestedInput
   employeeProfile?: Prisma.EmployeeProfileUpdateOneWithoutPersonNestedInput
-  customerContracts?: Prisma.ContractUpdateManyWithoutCustomerNestedInput
-  expenses?: Prisma.ExpenseUpdateManyWithoutSupplierNestedInput
+  clientProfile?: Prisma.ClientProfileUpdateOneWithoutPersonNestedInput
+  supplierProfile?: Prisma.SupplierProfileUpdateOneWithoutPersonNestedInput
   generations?: Prisma.FinancialGenerationUpdateManyWithoutActorNestedInput
   directEntries?: Prisma.DirectFinancialEntryUpdateManyWithoutActorNestedInput
-  receivables?: Prisma.ReceivableUpdateManyWithoutDebtorNestedInput
-  payables?: Prisma.PayableUpdateManyWithoutBeneficiaryNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutActorNestedInput
   receiptsReversed?: Prisma.ReceiptReversalUpdateManyWithoutActorNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutActorNestedInput
@@ -2536,24 +2096,21 @@ export type PersonUpdateWithoutAttachmentsInput = {
 export type PersonUncheckedUpdateWithoutAttachmentsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  document?: Prisma.StringFieldUpdateOperationsInput | string
+  document?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSupplier?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isEmployee?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isGeneric?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  seedKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  personTypeId?: Prisma.IntFieldUpdateOperationsInput | number
+  personTypeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   employeeProfile?: Prisma.EmployeeProfileUncheckedUpdateOneWithoutPersonNestedInput
-  customerContracts?: Prisma.ContractUncheckedUpdateManyWithoutCustomerNestedInput
-  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutSupplierNestedInput
+  clientProfile?: Prisma.ClientProfileUncheckedUpdateOneWithoutPersonNestedInput
+  supplierProfile?: Prisma.SupplierProfileUncheckedUpdateOneWithoutPersonNestedInput
   generations?: Prisma.FinancialGenerationUncheckedUpdateManyWithoutActorNestedInput
   directEntries?: Prisma.DirectFinancialEntryUncheckedUpdateManyWithoutActorNestedInput
-  receivables?: Prisma.ReceivableUncheckedUpdateManyWithoutDebtorNestedInput
-  payables?: Prisma.PayableUncheckedUpdateManyWithoutBeneficiaryNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutActorNestedInput
   receiptsReversed?: Prisma.ReceiptReversalUncheckedUpdateManyWithoutActorNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutActorNestedInput
@@ -2564,24 +2121,21 @@ export type PersonUncheckedUpdateWithoutAttachmentsInput = {
 
 export type PersonCreateWithoutActedAuditLogsInput = {
   fullName: string
-  document: string
+  document?: string | null
   email?: string | null
   phone?: string | null
-  isCustomer?: boolean
-  isSupplier?: boolean
-  isEmployee?: boolean
+  isGeneric?: boolean
+  seedKey?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  personType: Prisma.PersonTypeCreateNestedOneWithoutPeopleInput
+  personType?: Prisma.PersonTypeCreateNestedOneWithoutPeopleInput
   employeeProfile?: Prisma.EmployeeProfileCreateNestedOneWithoutPersonInput
-  customerContracts?: Prisma.ContractCreateNestedManyWithoutCustomerInput
-  expenses?: Prisma.ExpenseCreateNestedManyWithoutSupplierInput
+  clientProfile?: Prisma.ClientProfileCreateNestedOneWithoutPersonInput
+  supplierProfile?: Prisma.SupplierProfileCreateNestedOneWithoutPersonInput
   generations?: Prisma.FinancialGenerationCreateNestedManyWithoutActorInput
   directEntries?: Prisma.DirectFinancialEntryCreateNestedManyWithoutActorInput
-  receivables?: Prisma.ReceivableCreateNestedManyWithoutDebtorInput
-  payables?: Prisma.PayableCreateNestedManyWithoutBeneficiaryInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutActorInput
   receiptsReversed?: Prisma.ReceiptReversalCreateNestedManyWithoutActorInput
   payments?: Prisma.PaymentCreateNestedManyWithoutActorInput
@@ -2593,24 +2147,21 @@ export type PersonCreateWithoutActedAuditLogsInput = {
 export type PersonUncheckedCreateWithoutActedAuditLogsInput = {
   id?: number
   fullName: string
-  document: string
+  document?: string | null
   email?: string | null
   phone?: string | null
-  isCustomer?: boolean
-  isSupplier?: boolean
-  isEmployee?: boolean
+  isGeneric?: boolean
+  seedKey?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  personTypeId: number
+  personTypeId?: number | null
   employeeProfile?: Prisma.EmployeeProfileUncheckedCreateNestedOneWithoutPersonInput
-  customerContracts?: Prisma.ContractUncheckedCreateNestedManyWithoutCustomerInput
-  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutSupplierInput
+  clientProfile?: Prisma.ClientProfileUncheckedCreateNestedOneWithoutPersonInput
+  supplierProfile?: Prisma.SupplierProfileUncheckedCreateNestedOneWithoutPersonInput
   generations?: Prisma.FinancialGenerationUncheckedCreateNestedManyWithoutActorInput
   directEntries?: Prisma.DirectFinancialEntryUncheckedCreateNestedManyWithoutActorInput
-  receivables?: Prisma.ReceivableUncheckedCreateNestedManyWithoutDebtorInput
-  payables?: Prisma.PayableUncheckedCreateNestedManyWithoutBeneficiaryInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutActorInput
   receiptsReversed?: Prisma.ReceiptReversalUncheckedCreateNestedManyWithoutActorInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutActorInput
@@ -2626,24 +2177,21 @@ export type PersonCreateOrConnectWithoutActedAuditLogsInput = {
 
 export type PersonCreateWithoutAuditLogsInput = {
   fullName: string
-  document: string
+  document?: string | null
   email?: string | null
   phone?: string | null
-  isCustomer?: boolean
-  isSupplier?: boolean
-  isEmployee?: boolean
+  isGeneric?: boolean
+  seedKey?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  personType: Prisma.PersonTypeCreateNestedOneWithoutPeopleInput
+  personType?: Prisma.PersonTypeCreateNestedOneWithoutPeopleInput
   employeeProfile?: Prisma.EmployeeProfileCreateNestedOneWithoutPersonInput
-  customerContracts?: Prisma.ContractCreateNestedManyWithoutCustomerInput
-  expenses?: Prisma.ExpenseCreateNestedManyWithoutSupplierInput
+  clientProfile?: Prisma.ClientProfileCreateNestedOneWithoutPersonInput
+  supplierProfile?: Prisma.SupplierProfileCreateNestedOneWithoutPersonInput
   generations?: Prisma.FinancialGenerationCreateNestedManyWithoutActorInput
   directEntries?: Prisma.DirectFinancialEntryCreateNestedManyWithoutActorInput
-  receivables?: Prisma.ReceivableCreateNestedManyWithoutDebtorInput
-  payables?: Prisma.PayableCreateNestedManyWithoutBeneficiaryInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutActorInput
   receiptsReversed?: Prisma.ReceiptReversalCreateNestedManyWithoutActorInput
   payments?: Prisma.PaymentCreateNestedManyWithoutActorInput
@@ -2655,24 +2203,21 @@ export type PersonCreateWithoutAuditLogsInput = {
 export type PersonUncheckedCreateWithoutAuditLogsInput = {
   id?: number
   fullName: string
-  document: string
+  document?: string | null
   email?: string | null
   phone?: string | null
-  isCustomer?: boolean
-  isSupplier?: boolean
-  isEmployee?: boolean
+  isGeneric?: boolean
+  seedKey?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  personTypeId: number
+  personTypeId?: number | null
   employeeProfile?: Prisma.EmployeeProfileUncheckedCreateNestedOneWithoutPersonInput
-  customerContracts?: Prisma.ContractUncheckedCreateNestedManyWithoutCustomerInput
-  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutSupplierInput
+  clientProfile?: Prisma.ClientProfileUncheckedCreateNestedOneWithoutPersonInput
+  supplierProfile?: Prisma.SupplierProfileUncheckedCreateNestedOneWithoutPersonInput
   generations?: Prisma.FinancialGenerationUncheckedCreateNestedManyWithoutActorInput
   directEntries?: Prisma.DirectFinancialEntryUncheckedCreateNestedManyWithoutActorInput
-  receivables?: Prisma.ReceivableUncheckedCreateNestedManyWithoutDebtorInput
-  payables?: Prisma.PayableUncheckedCreateNestedManyWithoutBeneficiaryInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutActorInput
   receiptsReversed?: Prisma.ReceiptReversalUncheckedCreateNestedManyWithoutActorInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutActorInput
@@ -2699,24 +2244,21 @@ export type PersonUpdateToOneWithWhereWithoutActedAuditLogsInput = {
 
 export type PersonUpdateWithoutActedAuditLogsInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  document?: Prisma.StringFieldUpdateOperationsInput | string
+  document?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSupplier?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isEmployee?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isGeneric?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  seedKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  personType?: Prisma.PersonTypeUpdateOneRequiredWithoutPeopleNestedInput
+  personType?: Prisma.PersonTypeUpdateOneWithoutPeopleNestedInput
   employeeProfile?: Prisma.EmployeeProfileUpdateOneWithoutPersonNestedInput
-  customerContracts?: Prisma.ContractUpdateManyWithoutCustomerNestedInput
-  expenses?: Prisma.ExpenseUpdateManyWithoutSupplierNestedInput
+  clientProfile?: Prisma.ClientProfileUpdateOneWithoutPersonNestedInput
+  supplierProfile?: Prisma.SupplierProfileUpdateOneWithoutPersonNestedInput
   generations?: Prisma.FinancialGenerationUpdateManyWithoutActorNestedInput
   directEntries?: Prisma.DirectFinancialEntryUpdateManyWithoutActorNestedInput
-  receivables?: Prisma.ReceivableUpdateManyWithoutDebtorNestedInput
-  payables?: Prisma.PayableUpdateManyWithoutBeneficiaryNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutActorNestedInput
   receiptsReversed?: Prisma.ReceiptReversalUpdateManyWithoutActorNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutActorNestedInput
@@ -2728,24 +2270,21 @@ export type PersonUpdateWithoutActedAuditLogsInput = {
 export type PersonUncheckedUpdateWithoutActedAuditLogsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  document?: Prisma.StringFieldUpdateOperationsInput | string
+  document?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSupplier?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isEmployee?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isGeneric?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  seedKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  personTypeId?: Prisma.IntFieldUpdateOperationsInput | number
+  personTypeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   employeeProfile?: Prisma.EmployeeProfileUncheckedUpdateOneWithoutPersonNestedInput
-  customerContracts?: Prisma.ContractUncheckedUpdateManyWithoutCustomerNestedInput
-  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutSupplierNestedInput
+  clientProfile?: Prisma.ClientProfileUncheckedUpdateOneWithoutPersonNestedInput
+  supplierProfile?: Prisma.SupplierProfileUncheckedUpdateOneWithoutPersonNestedInput
   generations?: Prisma.FinancialGenerationUncheckedUpdateManyWithoutActorNestedInput
   directEntries?: Prisma.DirectFinancialEntryUncheckedUpdateManyWithoutActorNestedInput
-  receivables?: Prisma.ReceivableUncheckedUpdateManyWithoutDebtorNestedInput
-  payables?: Prisma.PayableUncheckedUpdateManyWithoutBeneficiaryNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutActorNestedInput
   receiptsReversed?: Prisma.ReceiptReversalUncheckedUpdateManyWithoutActorNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutActorNestedInput
@@ -2767,24 +2306,21 @@ export type PersonUpdateToOneWithWhereWithoutAuditLogsInput = {
 
 export type PersonUpdateWithoutAuditLogsInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  document?: Prisma.StringFieldUpdateOperationsInput | string
+  document?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSupplier?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isEmployee?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isGeneric?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  seedKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  personType?: Prisma.PersonTypeUpdateOneRequiredWithoutPeopleNestedInput
+  personType?: Prisma.PersonTypeUpdateOneWithoutPeopleNestedInput
   employeeProfile?: Prisma.EmployeeProfileUpdateOneWithoutPersonNestedInput
-  customerContracts?: Prisma.ContractUpdateManyWithoutCustomerNestedInput
-  expenses?: Prisma.ExpenseUpdateManyWithoutSupplierNestedInput
+  clientProfile?: Prisma.ClientProfileUpdateOneWithoutPersonNestedInput
+  supplierProfile?: Prisma.SupplierProfileUpdateOneWithoutPersonNestedInput
   generations?: Prisma.FinancialGenerationUpdateManyWithoutActorNestedInput
   directEntries?: Prisma.DirectFinancialEntryUpdateManyWithoutActorNestedInput
-  receivables?: Prisma.ReceivableUpdateManyWithoutDebtorNestedInput
-  payables?: Prisma.PayableUpdateManyWithoutBeneficiaryNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutActorNestedInput
   receiptsReversed?: Prisma.ReceiptReversalUpdateManyWithoutActorNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutActorNestedInput
@@ -2796,24 +2332,21 @@ export type PersonUpdateWithoutAuditLogsInput = {
 export type PersonUncheckedUpdateWithoutAuditLogsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  document?: Prisma.StringFieldUpdateOperationsInput | string
+  document?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSupplier?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isEmployee?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isGeneric?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  seedKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  personTypeId?: Prisma.IntFieldUpdateOperationsInput | number
+  personTypeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   employeeProfile?: Prisma.EmployeeProfileUncheckedUpdateOneWithoutPersonNestedInput
-  customerContracts?: Prisma.ContractUncheckedUpdateManyWithoutCustomerNestedInput
-  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutSupplierNestedInput
+  clientProfile?: Prisma.ClientProfileUncheckedUpdateOneWithoutPersonNestedInput
+  supplierProfile?: Prisma.SupplierProfileUncheckedUpdateOneWithoutPersonNestedInput
   generations?: Prisma.FinancialGenerationUncheckedUpdateManyWithoutActorNestedInput
   directEntries?: Prisma.DirectFinancialEntryUncheckedUpdateManyWithoutActorNestedInput
-  receivables?: Prisma.ReceivableUncheckedUpdateManyWithoutDebtorNestedInput
-  payables?: Prisma.PayableUncheckedUpdateManyWithoutBeneficiaryNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutActorNestedInput
   receiptsReversed?: Prisma.ReceiptReversalUncheckedUpdateManyWithoutActorNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutActorNestedInput
@@ -2825,12 +2358,11 @@ export type PersonUncheckedUpdateWithoutAuditLogsInput = {
 export type PersonCreateManyPersonTypeInput = {
   id?: number
   fullName: string
-  document: string
+  document?: string | null
   email?: string | null
   phone?: string | null
-  isCustomer?: boolean
-  isSupplier?: boolean
-  isEmployee?: boolean
+  isGeneric?: boolean
+  seedKey?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2839,23 +2371,20 @@ export type PersonCreateManyPersonTypeInput = {
 
 export type PersonUpdateWithoutPersonTypeInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  document?: Prisma.StringFieldUpdateOperationsInput | string
+  document?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSupplier?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isEmployee?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isGeneric?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  seedKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeProfile?: Prisma.EmployeeProfileUpdateOneWithoutPersonNestedInput
-  customerContracts?: Prisma.ContractUpdateManyWithoutCustomerNestedInput
-  expenses?: Prisma.ExpenseUpdateManyWithoutSupplierNestedInput
+  clientProfile?: Prisma.ClientProfileUpdateOneWithoutPersonNestedInput
+  supplierProfile?: Prisma.SupplierProfileUpdateOneWithoutPersonNestedInput
   generations?: Prisma.FinancialGenerationUpdateManyWithoutActorNestedInput
   directEntries?: Prisma.DirectFinancialEntryUpdateManyWithoutActorNestedInput
-  receivables?: Prisma.ReceivableUpdateManyWithoutDebtorNestedInput
-  payables?: Prisma.PayableUpdateManyWithoutBeneficiaryNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutActorNestedInput
   receiptsReversed?: Prisma.ReceiptReversalUpdateManyWithoutActorNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutActorNestedInput
@@ -2868,23 +2397,20 @@ export type PersonUpdateWithoutPersonTypeInput = {
 export type PersonUncheckedUpdateWithoutPersonTypeInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  document?: Prisma.StringFieldUpdateOperationsInput | string
+  document?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSupplier?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isEmployee?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isGeneric?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  seedKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeProfile?: Prisma.EmployeeProfileUncheckedUpdateOneWithoutPersonNestedInput
-  customerContracts?: Prisma.ContractUncheckedUpdateManyWithoutCustomerNestedInput
-  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutSupplierNestedInput
+  clientProfile?: Prisma.ClientProfileUncheckedUpdateOneWithoutPersonNestedInput
+  supplierProfile?: Prisma.SupplierProfileUncheckedUpdateOneWithoutPersonNestedInput
   generations?: Prisma.FinancialGenerationUncheckedUpdateManyWithoutActorNestedInput
   directEntries?: Prisma.DirectFinancialEntryUncheckedUpdateManyWithoutActorNestedInput
-  receivables?: Prisma.ReceivableUncheckedUpdateManyWithoutDebtorNestedInput
-  payables?: Prisma.PayableUncheckedUpdateManyWithoutBeneficiaryNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutActorNestedInput
   receiptsReversed?: Prisma.ReceiptReversalUncheckedUpdateManyWithoutActorNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutActorNestedInput
@@ -2897,12 +2423,11 @@ export type PersonUncheckedUpdateWithoutPersonTypeInput = {
 export type PersonUncheckedUpdateManyWithoutPersonTypeInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  document?: Prisma.StringFieldUpdateOperationsInput | string
+  document?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isCustomer?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSupplier?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isEmployee?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isGeneric?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  seedKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2915,12 +2440,8 @@ export type PersonUncheckedUpdateManyWithoutPersonTypeInput = {
  */
 
 export type PersonCountOutputType = {
-  customerContracts: number
-  expenses: number
   generations: number
   directEntries: number
-  receivables: number
-  payables: number
   receipts: number
   receiptsReversed: number
   payments: number
@@ -2931,12 +2452,8 @@ export type PersonCountOutputType = {
 }
 
 export type PersonCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  customerContracts?: boolean | PersonCountOutputTypeCountCustomerContractsArgs
-  expenses?: boolean | PersonCountOutputTypeCountExpensesArgs
   generations?: boolean | PersonCountOutputTypeCountGenerationsArgs
   directEntries?: boolean | PersonCountOutputTypeCountDirectEntriesArgs
-  receivables?: boolean | PersonCountOutputTypeCountReceivablesArgs
-  payables?: boolean | PersonCountOutputTypeCountPayablesArgs
   receipts?: boolean | PersonCountOutputTypeCountReceiptsArgs
   receiptsReversed?: boolean | PersonCountOutputTypeCountReceiptsReversedArgs
   payments?: boolean | PersonCountOutputTypeCountPaymentsArgs
@@ -2959,20 +2476,6 @@ export type PersonCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exten
 /**
  * PersonCountOutputType without action
  */
-export type PersonCountOutputTypeCountCustomerContractsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ContractWhereInput
-}
-
-/**
- * PersonCountOutputType without action
- */
-export type PersonCountOutputTypeCountExpensesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ExpenseWhereInput
-}
-
-/**
- * PersonCountOutputType without action
- */
 export type PersonCountOutputTypeCountGenerationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.FinancialGenerationWhereInput
 }
@@ -2982,20 +2485,6 @@ export type PersonCountOutputTypeCountGenerationsArgs<ExtArgs extends runtime.Ty
  */
 export type PersonCountOutputTypeCountDirectEntriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.DirectFinancialEntryWhereInput
-}
-
-/**
- * PersonCountOutputType without action
- */
-export type PersonCountOutputTypeCountReceivablesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ReceivableWhereInput
-}
-
-/**
- * PersonCountOutputType without action
- */
-export type PersonCountOutputTypeCountPayablesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.PayableWhereInput
 }
 
 /**
@@ -3054,22 +2543,19 @@ export type PersonSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   document?: boolean
   email?: boolean
   phone?: boolean
-  isCustomer?: boolean
-  isSupplier?: boolean
-  isEmployee?: boolean
+  isGeneric?: boolean
+  seedKey?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
   personTypeId?: boolean
-  personType?: boolean | Prisma.PersonTypeDefaultArgs<ExtArgs>
+  personType?: boolean | Prisma.Person$personTypeArgs<ExtArgs>
   employeeProfile?: boolean | Prisma.Person$employeeProfileArgs<ExtArgs>
-  customerContracts?: boolean | Prisma.Person$customerContractsArgs<ExtArgs>
-  expenses?: boolean | Prisma.Person$expensesArgs<ExtArgs>
+  clientProfile?: boolean | Prisma.Person$clientProfileArgs<ExtArgs>
+  supplierProfile?: boolean | Prisma.Person$supplierProfileArgs<ExtArgs>
   generations?: boolean | Prisma.Person$generationsArgs<ExtArgs>
   directEntries?: boolean | Prisma.Person$directEntriesArgs<ExtArgs>
-  receivables?: boolean | Prisma.Person$receivablesArgs<ExtArgs>
-  payables?: boolean | Prisma.Person$payablesArgs<ExtArgs>
   receipts?: boolean | Prisma.Person$receiptsArgs<ExtArgs>
   receiptsReversed?: boolean | Prisma.Person$receiptsReversedArgs<ExtArgs>
   payments?: boolean | Prisma.Person$paymentsArgs<ExtArgs>
@@ -3086,15 +2572,14 @@ export type PersonSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   document?: boolean
   email?: boolean
   phone?: boolean
-  isCustomer?: boolean
-  isSupplier?: boolean
-  isEmployee?: boolean
+  isGeneric?: boolean
+  seedKey?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
   personTypeId?: boolean
-  personType?: boolean | Prisma.PersonTypeDefaultArgs<ExtArgs>
+  personType?: boolean | Prisma.Person$personTypeArgs<ExtArgs>
 }, ExtArgs["result"]["person"]>
 
 export type PersonSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -3103,15 +2588,14 @@ export type PersonSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   document?: boolean
   email?: boolean
   phone?: boolean
-  isCustomer?: boolean
-  isSupplier?: boolean
-  isEmployee?: boolean
+  isGeneric?: boolean
+  seedKey?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
   personTypeId?: boolean
-  personType?: boolean | Prisma.PersonTypeDefaultArgs<ExtArgs>
+  personType?: boolean | Prisma.Person$personTypeArgs<ExtArgs>
 }, ExtArgs["result"]["person"]>
 
 export type PersonSelectScalar = {
@@ -3120,9 +2604,8 @@ export type PersonSelectScalar = {
   document?: boolean
   email?: boolean
   phone?: boolean
-  isCustomer?: boolean
-  isSupplier?: boolean
-  isEmployee?: boolean
+  isGeneric?: boolean
+  seedKey?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -3130,16 +2613,14 @@ export type PersonSelectScalar = {
   personTypeId?: boolean
 }
 
-export type PersonOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "fullName" | "document" | "email" | "phone" | "isCustomer" | "isSupplier" | "isEmployee" | "isActive" | "createdAt" | "updatedAt" | "deletedAt" | "personTypeId", ExtArgs["result"]["person"]>
+export type PersonOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "fullName" | "document" | "email" | "phone" | "isGeneric" | "seedKey" | "isActive" | "createdAt" | "updatedAt" | "deletedAt" | "personTypeId", ExtArgs["result"]["person"]>
 export type PersonInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  personType?: boolean | Prisma.PersonTypeDefaultArgs<ExtArgs>
+  personType?: boolean | Prisma.Person$personTypeArgs<ExtArgs>
   employeeProfile?: boolean | Prisma.Person$employeeProfileArgs<ExtArgs>
-  customerContracts?: boolean | Prisma.Person$customerContractsArgs<ExtArgs>
-  expenses?: boolean | Prisma.Person$expensesArgs<ExtArgs>
+  clientProfile?: boolean | Prisma.Person$clientProfileArgs<ExtArgs>
+  supplierProfile?: boolean | Prisma.Person$supplierProfileArgs<ExtArgs>
   generations?: boolean | Prisma.Person$generationsArgs<ExtArgs>
   directEntries?: boolean | Prisma.Person$directEntriesArgs<ExtArgs>
-  receivables?: boolean | Prisma.Person$receivablesArgs<ExtArgs>
-  payables?: boolean | Prisma.Person$payablesArgs<ExtArgs>
   receipts?: boolean | Prisma.Person$receiptsArgs<ExtArgs>
   receiptsReversed?: boolean | Prisma.Person$receiptsReversedArgs<ExtArgs>
   payments?: boolean | Prisma.Person$paymentsArgs<ExtArgs>
@@ -3150,23 +2631,21 @@ export type PersonInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   _count?: boolean | Prisma.PersonCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type PersonIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  personType?: boolean | Prisma.PersonTypeDefaultArgs<ExtArgs>
+  personType?: boolean | Prisma.Person$personTypeArgs<ExtArgs>
 }
 export type PersonIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  personType?: boolean | Prisma.PersonTypeDefaultArgs<ExtArgs>
+  personType?: boolean | Prisma.Person$personTypeArgs<ExtArgs>
 }
 
 export type $PersonPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Person"
   objects: {
-    personType: Prisma.$PersonTypePayload<ExtArgs>
+    personType: Prisma.$PersonTypePayload<ExtArgs> | null
     employeeProfile: Prisma.$EmployeeProfilePayload<ExtArgs> | null
-    customerContracts: Prisma.$ContractPayload<ExtArgs>[]
-    expenses: Prisma.$ExpensePayload<ExtArgs>[]
+    clientProfile: Prisma.$ClientProfilePayload<ExtArgs> | null
+    supplierProfile: Prisma.$SupplierProfilePayload<ExtArgs> | null
     generations: Prisma.$FinancialGenerationPayload<ExtArgs>[]
     directEntries: Prisma.$DirectFinancialEntryPayload<ExtArgs>[]
-    receivables: Prisma.$ReceivablePayload<ExtArgs>[]
-    payables: Prisma.$PayablePayload<ExtArgs>[]
     receipts: Prisma.$ReceiptPayload<ExtArgs>[]
     receiptsReversed: Prisma.$ReceiptReversalPayload<ExtArgs>[]
     payments: Prisma.$PaymentPayload<ExtArgs>[]
@@ -3178,17 +2657,16 @@ export type $PersonPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     fullName: string
-    document: string
+    document: string | null
     email: string | null
     phone: string | null
-    isCustomer: boolean
-    isSupplier: boolean
-    isEmployee: boolean
+    isGeneric: boolean
+    seedKey: string | null
     isActive: boolean
     createdAt: Date
     updatedAt: Date
     deletedAt: Date | null
-    personTypeId: number
+    personTypeId: number | null
   }, ExtArgs["result"]["person"]>
   composites: {}
 }
@@ -3583,14 +3061,12 @@ readonly fields: PersonFieldRefs;
  */
 export interface Prisma__PersonClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  personType<T extends Prisma.PersonTypeDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PersonTypeDefaultArgs<ExtArgs>>): Prisma.Prisma__PersonTypeClient<runtime.Types.Result.GetResult<Prisma.$PersonTypePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  personType<T extends Prisma.Person$personTypeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$personTypeArgs<ExtArgs>>): Prisma.Prisma__PersonTypeClient<runtime.Types.Result.GetResult<Prisma.$PersonTypePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   employeeProfile<T extends Prisma.Person$employeeProfileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$employeeProfileArgs<ExtArgs>>): Prisma.Prisma__EmployeeProfileClient<runtime.Types.Result.GetResult<Prisma.$EmployeeProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  customerContracts<T extends Prisma.Person$customerContractsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$customerContractsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ContractPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  expenses<T extends Prisma.Person$expensesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$expensesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExpensePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  clientProfile<T extends Prisma.Person$clientProfileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$clientProfileArgs<ExtArgs>>): Prisma.Prisma__ClientProfileClient<runtime.Types.Result.GetResult<Prisma.$ClientProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  supplierProfile<T extends Prisma.Person$supplierProfileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$supplierProfileArgs<ExtArgs>>): Prisma.Prisma__SupplierProfileClient<runtime.Types.Result.GetResult<Prisma.$SupplierProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   generations<T extends Prisma.Person$generationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$generationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FinancialGenerationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   directEntries<T extends Prisma.Person$directEntriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$directEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DirectFinancialEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  receivables<T extends Prisma.Person$receivablesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$receivablesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReceivablePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  payables<T extends Prisma.Person$payablesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$payablesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PayablePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   receipts<T extends Prisma.Person$receiptsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$receiptsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReceiptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   receiptsReversed<T extends Prisma.Person$receiptsReversedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$receiptsReversedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReceiptReversalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   payments<T extends Prisma.Person$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -3632,9 +3108,8 @@ export interface PersonFieldRefs {
   readonly document: Prisma.FieldRef<"Person", 'String'>
   readonly email: Prisma.FieldRef<"Person", 'String'>
   readonly phone: Prisma.FieldRef<"Person", 'String'>
-  readonly isCustomer: Prisma.FieldRef<"Person", 'Boolean'>
-  readonly isSupplier: Prisma.FieldRef<"Person", 'Boolean'>
-  readonly isEmployee: Prisma.FieldRef<"Person", 'Boolean'>
+  readonly isGeneric: Prisma.FieldRef<"Person", 'Boolean'>
+  readonly seedKey: Prisma.FieldRef<"Person", 'String'>
   readonly isActive: Prisma.FieldRef<"Person", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Person", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Person", 'DateTime'>
@@ -4041,6 +3516,25 @@ export type PersonDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
 }
 
 /**
+ * Person.personType
+ */
+export type Person$personTypeArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PersonType
+   */
+  select?: Prisma.PersonTypeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PersonType
+   */
+  omit?: Prisma.PersonTypeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PersonTypeInclude<ExtArgs> | null
+  where?: Prisma.PersonTypeWhereInput
+}
+
+/**
  * Person.employeeProfile
  */
 export type Person$employeeProfileArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -4060,51 +3554,41 @@ export type Person$employeeProfileArgs<ExtArgs extends runtime.Types.Extensions.
 }
 
 /**
- * Person.customerContracts
+ * Person.clientProfile
  */
-export type Person$customerContractsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Person$clientProfileArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Contract
+   * Select specific fields to fetch from the ClientProfile
    */
-  select?: Prisma.ContractSelect<ExtArgs> | null
+  select?: Prisma.ClientProfileSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Contract
+   * Omit specific fields from the ClientProfile
    */
-  omit?: Prisma.ContractOmit<ExtArgs> | null
+  omit?: Prisma.ClientProfileOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ContractInclude<ExtArgs> | null
-  where?: Prisma.ContractWhereInput
-  orderBy?: Prisma.ContractOrderByWithRelationInput | Prisma.ContractOrderByWithRelationInput[]
-  cursor?: Prisma.ContractWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.ContractScalarFieldEnum | Prisma.ContractScalarFieldEnum[]
+  include?: Prisma.ClientProfileInclude<ExtArgs> | null
+  where?: Prisma.ClientProfileWhereInput
 }
 
 /**
- * Person.expenses
+ * Person.supplierProfile
  */
-export type Person$expensesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Person$supplierProfileArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Expense
+   * Select specific fields to fetch from the SupplierProfile
    */
-  select?: Prisma.ExpenseSelect<ExtArgs> | null
+  select?: Prisma.SupplierProfileSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Expense
+   * Omit specific fields from the SupplierProfile
    */
-  omit?: Prisma.ExpenseOmit<ExtArgs> | null
+  omit?: Prisma.SupplierProfileOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ExpenseInclude<ExtArgs> | null
-  where?: Prisma.ExpenseWhereInput
-  orderBy?: Prisma.ExpenseOrderByWithRelationInput | Prisma.ExpenseOrderByWithRelationInput[]
-  cursor?: Prisma.ExpenseWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.ExpenseScalarFieldEnum | Prisma.ExpenseScalarFieldEnum[]
+  include?: Prisma.SupplierProfileInclude<ExtArgs> | null
+  where?: Prisma.SupplierProfileWhereInput
 }
 
 /**
@@ -4153,54 +3637,6 @@ export type Person$directEntriesArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   distinct?: Prisma.DirectFinancialEntryScalarFieldEnum | Prisma.DirectFinancialEntryScalarFieldEnum[]
-}
-
-/**
- * Person.receivables
- */
-export type Person$receivablesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Receivable
-   */
-  select?: Prisma.ReceivableSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Receivable
-   */
-  omit?: Prisma.ReceivableOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ReceivableInclude<ExtArgs> | null
-  where?: Prisma.ReceivableWhereInput
-  orderBy?: Prisma.ReceivableOrderByWithRelationInput | Prisma.ReceivableOrderByWithRelationInput[]
-  cursor?: Prisma.ReceivableWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.ReceivableScalarFieldEnum | Prisma.ReceivableScalarFieldEnum[]
-}
-
-/**
- * Person.payables
- */
-export type Person$payablesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Payable
-   */
-  select?: Prisma.PayableSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Payable
-   */
-  omit?: Prisma.PayableOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.PayableInclude<ExtArgs> | null
-  where?: Prisma.PayableWhereInput
-  orderBy?: Prisma.PayableOrderByWithRelationInput | Prisma.PayableOrderByWithRelationInput[]
-  cursor?: Prisma.PayableWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.PayableScalarFieldEnum | Prisma.PayableScalarFieldEnum[]
 }
 
 /**

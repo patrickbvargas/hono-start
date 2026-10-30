@@ -74,7 +74,7 @@ Planning contract, not a passing test report. Implementers must record actual te
 
 ## Contextual registration acceptance
 
-- Admin with explicit grants sees separate Clientes, Fornecedores and Colaboradores; the same multi-role Person keeps one identity/document across screens.
+- Admin with explicit grants uses Pessoas with role checkboxes and filters; the same multi-role Person keeps one identity/document across screens.
 - Authorized collaborator management can edit professional percentages; existing RemunerationCalculation snapshots remain unchanged.
 - Member cannot access supplier/collaborator menus, direct routes, APIs, options, counts or exports.
 - A readable customer who is also a collaborator exposes no EmployeeProfile, percentages, other role flags or access settings. Assigned-contract customer scope, permitted team projection and own remuneration remain intact.
@@ -95,3 +95,22 @@ Each phase verifies updated fixtures against its schema/contracts. Final phase r
 ## Symmetric receiving/paying selection
 
 Both directions select titles across Persons, with full balance prefilled and partial/adjustments per line, one Firm/direction/date/actual PaymentMethod and one atomic confirmation. Expected methods stay on titles; actual method/date and optional proof stay on each Receipt/Payment. No ReceiptBatch/PaymentBatch or person subgroup. Test duplicate IDs, retry, mixed expected methods with common actual Pix, inaccessible title rollback, per-event reversal, proof isolation and mixed contract/direct receipt remuneration eligibility.
+
+## Person revision acceptance — 2026-10-30
+
+- Unified Pessoas form role checkboxes and filter label Papéis; marking employee implies supplier; server/database deny inconsistent employee/supplier state.
+- Ordinary Person requires normalized valid unique CPF/CNPJ and matching PersonType. Generic seed counterparties accept null document/type, never fake values, no EmployeeProfile/login/assignment.
+- Pagamentos diversos and Recebimentos diversos seed deterministically via stable keys without upsert(document=null); repeated seed does not duplicate generic Persons or monetary events; all employee fixtures including1000 are suppliers.
+- Receivable creation/generation/extra/reassignment rejects non-customer; Payable rejects non-supplier. Existing valid settlement remains possible when operational origin is inactive; required role cannot be removed while obligations depend on it.
+- Generic consolidated titles use analytics/notes, no inferred individual payroll/commission. Automatic contract remuneration always uses exact real employee profile.
+- ClientProfile, SupplierProfile and EmployeeProfile use independent personId-unique extensions; roles derive from profiles. Future bank/address/family extensions remain out of scope. Member unified-route response/options/counts/export never expose supplier/professional/percentage/access data.
+- Owners: 01/03 for Prisma/seed, 02 after database validation for Clerk, 04–06 for generating/settling APIs, 09 for final reset/use evidence.
+
+## Role-profile FK acceptance
+
+- Creating employee atomically creates/activates same-Person SupplierProfile; missing supplier state is rejected in database integrity checks. Checkboxes and filters derive from profiles.
+- Contract/Receivable FK rejects an arbitrary Person/EmployeeProfile/SupplierProfile ID with no matching ClientProfile; Expense/Payable analogously requires SupplierProfile. Use deliberately differing IDs to detect accidental equality assumptions.
+- Generic seed counterparties receive correct profiles, without CPF/CNPJ or EmployeeProfile; repeated seed does not duplicate profiles.
+- Member own remuneration resolves SupplierProfile.personId to session Person.id, not raw beneficiaryId equality; calculations compare EmployeeProfile.personId to supplier Person. Cross-person/cross-Firm writes and disclosure fail.
+- Removing referenced profiles fails; inactive profiles cannot create new obligations, existing history/authorized settlements remain usable. Role removal cannot orphan obligations or break employee supplier dependency.
+- No bank account, address or family module/table/UI is added in this step.

@@ -14,8 +14,16 @@
 
 ## Additional implementation gate
 
-- [ ] Enforce separate registration navigation and server projections: deny Member supplier/collaborator management routes/APIs/options/counts/exports; preserve assigned-customer scope and strip professional/percentage/access fields from customer payloads. Verify explicit Admin action grants and resolve supplier permission catalog keys before enabling the screens.
+- [ ] Enforce unified registration navigation with contextual permissions and server projections: deny Member supplier/collaborator management routes/APIs/options/counts/exports; preserve assigned-customer scope and strip professional/percentage/access fields from customer payloads. Verify explicit Admin action grants and resolve supplier permission catalog keys before enabling the screens.
 
 ## Incremental development seed gate
 
 - [ ] Update seed entrypoint, fixtures/scenarios/evidence and seed assertions alongside this phase's schema/catalog/identity/workflow changes; verify compatibility even if no new fixtures are needed. Preserve deterministic IDs/bindings where configured, domain invariants, Member confidentiality, current UI style and a reproducible final `pnpm run db:reset` path. Record actual validation and external Clerk/Storage prerequisites; do not defer a broken seed to the final phase or execute an unverified database reset.
+
+## Person revision gate — 2026-10-30
+
+- [ ] Follow docs/domain/PERSON_REGISTRATION.md over prior separate-screen/document assumptions. Unified Pessoas route with role checkboxes/filters; employee implies supplier; optional 1:1 ClientProfile, SupplierProfile and EmployeeProfile from this revision; receivable customer/payable supplier eligibility; seeded Pagamentos diversos/Recebimentos diversos generic counterparties without fiscal documents or professional profiles. Ordinary documents stay required/unique. Apply role/document constraints and deterministic generic seed keys first, verify database/seed, then review Clerk/session/projections. Preserve explicit grants, Member field/record confidentiality, real employee commission origin and existing UI style. Record new implementation evidence separately from commits8c0718b/d0cb812; do not mark whole phases done from foundation work.
+
+## Role-profile FK gate
+
+- [ ] Implement/verify the approved ClientProfile/SupplierProfile/EmployeeProfile 1:1 extensions now, derive role checkboxes from active profiles, atomically enforce employee→supplier for the same Person. Explicitly map Contract/Receivable to ClientProfile and Expense/Payable to SupplierProfile. Keep Clerk actor identity as Person, assignment as EmployeeProfile, and resolve beneficiary Person via SupplierProfile in own-scope/calculation checks. Update migrations, seeds (including documentless generic role profiles), FK/lifecycle/ID-mismatch tests and API projections; no duplicate personal fields or independent role-flag truth. Prisma/seed validation precedes Clerk policy work. No bank/address/family implementation now; reference docs/domain/PERSON_REGISTRATION.md.

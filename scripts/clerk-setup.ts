@@ -74,7 +74,7 @@ async function main() {
 				id: personId,
 				isActive: true,
 				deletedAt: null,
-				isEmployee: true,
+				isGeneric: false, supplierProfile:{is:{isActive:true}},
 				employeeProfile: { is: { isActive: true, deletedAt: null } },
 			},
 			select: { id: true },

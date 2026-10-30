@@ -1,5 +1,7 @@
 # Hono Documentation Index
 
+> Revisão vigente 30/10/2026: [Pessoas, papéis, extensões e genéricos](domain/PERSON_REGISTRATION.md). Substitui telas separadas por rota Pessoas; exige Cliente no receber, Fornecedor no pagar e Colaborador implica Fornecedor. CRUD Pessoas e perfis implementados; ver [evidências e limites](implementation/PERSON_IMPLEMENTATION.md).
+
 ## Current financial implementation stage
 
 The user approved schema-and-seed-first execution with temporary application unavailability. Target persistence and seeded development data are implemented; see [database evidence](implementation/FINANCIAL_DATABASE_EVIDENCE.md) and the roadmap execution revision. Clerk session binding now uses Person and active EmployeeProfile, with independent receivable/payable grants configured in development; see [Clerk cutover](implementation/CLERK_MIGRATION.md). Existing feature API/UI code still targets legacy models and is not yet adapted. Historical “not implemented” markers below mean application workflow readiness, not absence of the new database schema.

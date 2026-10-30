@@ -44,7 +44,7 @@ Required negative tests: cross-Firm ID, unassigned contract, recommending-only a
 
 ## Registration navigation and field boundaries
 
-Render separate Clientes, Fornecedores and Colaboradores navigation/screens over shared Person. Member has no supplier/collaborator management access; customer reads remain assigned-contract scoped. Explicit subject/action permissions govern Admin management and collaborator profile/percentage/access fields. Enforce boundaries server-side before serialization, options, counts and exports, not only through hidden menu items. A readable customer identity must not expose EmployeeProfile, compensation percentages, other role flags or access bindings. Already-permitted assigned-contract team projections and own remuneration do not grant collaborator-directory access. Development supplier keys now use org:suppliers with independent action grants. Resource APIs and owner-scoped projections remain future implementation gates.
+Render one Pessoas navigation/screen with permission-scoped role filters over shared Person. Member has no supplier/collaborator management access; customer reads remain assigned-contract scoped. Explicit subject/action permissions govern Admin management and collaborator profile/percentage/access fields. Enforce boundaries server-side before serialization, options, counts and exports, not only through hidden menu items. A readable customer identity must not expose EmployeeProfile, compensation percentages, other role flags or access bindings. Already-permitted assigned-contract team projections and own remuneration do not grant collaborator-directory access. Development supplier keys now use org:suppliers with independent action grants. Resource APIs and owner-scoped projections remain future implementation gates.
 
 ## Independent financial directions — implemented development catalog
 
@@ -55,3 +55,11 @@ Development presets currently assign Admin all 77 target keys and Member only cu
 The narrow Member confidentiality guard rejects misconfigured broad/directory/financial-management grants using current verified provider membership role; it never grants permission. Client UI hiding and role labels never replace individual keys. Other future roles or production settings require the existing contract review.
 
 Development user Patrick Vargas is explicitly bound to Person 1000 with fictitious CPF/OAB/percentages and active EmployeeProfile 1000; Matriz is bound to Firm 1. No credential, account email or provider role is copied into Person. Both fixtures survive seed repetition without recreating money. Legacy employeeId metadata was removed from this account and is not a fallback. Session exposes person.id and employeeProfile.id; transitional employee.id means EmployeeProfile ID only and must not be used as Person/audit actor ID. Legacy recovery issue-code names remain stable, while messages now explain personId and active profile requirements.
+
+## Person revision precedence — 2026-10-30
+
+Read [Pessoas revision](PERSON_REGISTRATION.md). Unified route retains independent role/field gates; no blanket Member people grant. Revisit Clerk only after revised Prisma/seed validation.
+
+## Profile identity resolution — pending implementation revision
+
+ClientProfile/SupplierProfile are target role FKs now. Clerk identity remains Person, and EmployeeProfile remains professional identity. Before own-beneficiary checks resolve Payable.beneficiary SupplierProfile.personId, never compare supplier profile ID with session Person ID. Assigned customer reads resolve ClientProfile.personId. Member's access to one role never grants the others. Amend policy-helper query projections, SQL scopes, options/aggregates and tests before enabling target routes. No live grant changes occur in this documentation pass.

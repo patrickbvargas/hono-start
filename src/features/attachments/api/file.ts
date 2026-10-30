@@ -33,9 +33,11 @@ export async function handleAttachmentFile(id: string) {
 			return new Response("Anexo não encontrado", { status: 404, headers });
 		}
 
+		failureStatus = 403;
 		const owner = await assertAttachmentOwnerExists({
 			firmId,
 			input: attachment.ownerInput,
+			session,
 		});
 
 		failureStatus = 403;

@@ -214,13 +214,25 @@
     }
   ],
   "employeeType": [
+    { "value": "COORDINATOR", "label": "Coordenador" },
+    { "value": "MANAGER", "label": "Gerente" },
+    { "value": "ACCOUNTANT", "label": "Contador" },
+    { "value": "LEGAL_ASSISTANT", "label": "Assistente Jurídico" },
+    {
+      "value": "INTERN",
+      "label": "Estagiário"
+    },
+    {
+      "value": "OTHER",
+      "label": "Outro"
+    },
     {
       "value": "LAWYER",
       "label": "Advogado"
     },
     {
       "value": "ADMIN_ASSISTANT",
-      "label": "Assistente Administrativo"
+      "label": "Auxiliar Administrativo"
     }
   ]
 }

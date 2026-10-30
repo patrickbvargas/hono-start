@@ -144,39 +144,62 @@ model TitleKind {
 }
 
 model Person {
-  id                Int                    @id @default(autoincrement())
-  fullName          String
-  document          String                 @unique
-  email             String?
-  phone             String?
-  isCustomer        Boolean                @default(false)
-  isSupplier        Boolean                @default(false)
-  isEmployee        Boolean                @default(false)
-  isActive          Boolean                @default(true)
-  createdAt         DateTime               @default(now())
-  updatedAt         DateTime               @updatedAt
-  deletedAt         DateTime?
-  personTypeId      Int
-  personType        PersonType             @relation("Person_personTypeId", fields: [personTypeId], references: [id], onDelete: Restrict, onUpdate: Cascade)
-  employeeProfile   EmployeeProfile?       @relation("EmployeeProfile_personId")
-  customerContracts Contract[]             @relation("Contract_customerId")
-  expenses          Expense[]              @relation("Expense_supplierId")
-  generations       FinancialGeneration[]  @relation("FinancialGeneration_actorId")
-  directEntries     DirectFinancialEntry[] @relation("DirectFinancialEntry_actorId")
-  receivables       Receivable[]           @relation("Receivable_debtorId")
-  payables          Payable[]              @relation("Payable_beneficiaryId")
-  receipts          Receipt[]              @relation("Receipt_actorId")
-  receiptsReversed  ReceiptReversal[]      @relation("ReceiptReversal_actorId")
-  payments          Payment[]              @relation("Payment_actorId")
-  paymentsReversed  PaymentReversal[]      @relation("PaymentReversal_actorId")
-  attachments       Attachment[]           @relation("Attachment_personId")
-  actedAuditLogs    AuditLog[]             @relation("AuditLog_actorId")
-  auditLogs         AuditLog[]             @relation("AuditLog_personId")
+  id               Int                    @id @default(autoincrement())
+  fullName         String
+  document         String?                @unique
+  email            String?
+  phone            String?
+  isGeneric        Boolean                @default(false)
+  seedKey          String?                @unique
+  isActive         Boolean                @default(true)
+  createdAt        DateTime               @default(now())
+  updatedAt        DateTime               @updatedAt
+  deletedAt        DateTime?
+  personTypeId     Int?
+  personType       PersonType?            @relation("Person_personTypeId", fields: [personTypeId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  employeeProfile  EmployeeProfile?       @relation("EmployeeProfile_personId")
+  clientProfile    ClientProfile?
+  supplierProfile  SupplierProfile?
+  generations      FinancialGeneration[]  @relation("FinancialGeneration_actorId")
+  directEntries    DirectFinancialEntry[] @relation("DirectFinancialEntry_actorId")
+  receipts         Receipt[]              @relation("Receipt_actorId")
+  receiptsReversed ReceiptReversal[]      @relation("ReceiptReversal_actorId")
+  payments         Payment[]              @relation("Payment_actorId")
+  paymentsReversed PaymentReversal[]      @relation("PaymentReversal_actorId")
+  attachments      Attachment[]           @relation("Attachment_personId")
+  actedAuditLogs   AuditLog[]             @relation("AuditLog_actorId")
+  auditLogs        AuditLog[]             @relation("AuditLog_personId")
 
   @@index([fullName, id])
   @@index([deletedAt])
   @@index([personTypeId])
   @@map("people")
+}
+
+model ClientProfile {
+  id          Int          @id @default(autoincrement())
+  personId    Int          @unique
+  person      Person       @relation(fields: [personId], references: [id], onDelete: Restrict)
+  isActive    Boolean      @default(true)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  contracts   Contract[]   @relation("Contract_customerId")
+  receivables Receivable[] @relation("Receivable_debtorId")
+
+  @@map("client_profiles")
+}
+
+model SupplierProfile {
+  id        Int       @id @default(autoincrement())
+  personId  Int       @unique
+  person    Person    @relation(fields: [personId], references: [id], onDelete: Restrict)
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  expenses  Expense[] @relation("Expense_supplierId")
+  payables  Payable[] @relation("Payable_beneficiaryId")
+
+  @@map("supplier_profiles")
 }
 
 model EmployeeProfile {
@@ -213,7 +236,7 @@ model Contract {
   firmId            Int
   firm              Firm                 @relation("Contract_firmId", fields: [firmId], references: [id], onDelete: Restrict, onUpdate: Cascade)
   customerId        Int
-  customer          Person               @relation("Contract_customerId", fields: [customerId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  customer          ClientProfile        @relation("Contract_customerId", fields: [customerId], references: [id], onDelete: Restrict, onUpdate: Cascade)
   legalAreaId       Int
   legalArea         LegalArea            @relation("Contract_legalAreaId", fields: [legalAreaId], references: [id], onDelete: Restrict, onUpdate: Cascade)
   statusId          Int
@@ -292,7 +315,7 @@ model Expense {
   firmId           Int
   firm             Firm                 @relation("Expense_firmId", fields: [firmId], references: [id], onDelete: Restrict, onUpdate: Cascade)
   supplierId       Int
-  supplier         Person               @relation("Expense_supplierId", fields: [supplierId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  supplier         SupplierProfile      @relation("Expense_supplierId", fields: [supplierId], references: [id], onDelete: Restrict, onUpdate: Cascade)
   generation       FinancialGeneration? @relation("FinancialGeneration_expenseId")
   payables         Payable[]            @relation("Payable_expenseId")
   attachments      Attachment[]         @relation("Attachment_expenseId")
@@ -362,7 +385,7 @@ model Receivable {
   firmId                  Int
   firm                    Firm                  @relation("Receivable_firmId", fields: [firmId], references: [id], onDelete: Restrict, onUpdate: Cascade)
   debtorId                Int
-  debtor                  Person                @relation("Receivable_debtorId", fields: [debtorId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  debtor                  ClientProfile         @relation("Receivable_debtorId", fields: [debtorId], references: [id], onDelete: Restrict, onUpdate: Cascade)
   analyticId              Int
   analytic                FinancialAnalytic     @relation("Receivable_analyticId", fields: [analyticId], references: [id], onDelete: Restrict, onUpdate: Cascade)
   expectedPaymentMethodId Int
@@ -404,7 +427,7 @@ model Payable {
   firmId                    Int
   firm                      Firm                     @relation("Payable_firmId", fields: [firmId], references: [id], onDelete: Restrict, onUpdate: Cascade)
   beneficiaryId             Int
-  beneficiary               Person                   @relation("Payable_beneficiaryId", fields: [beneficiaryId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  beneficiary               SupplierProfile          @relation("Payable_beneficiaryId", fields: [beneficiaryId], references: [id], onDelete: Restrict, onUpdate: Cascade)
   analyticId                Int
   analytic                  FinancialAnalytic        @relation("Payable_analyticId", fields: [analyticId], references: [id], onDelete: Restrict, onUpdate: Cascade)
   expectedPaymentMethodId   Int

@@ -30,4 +30,8 @@ Primary owners: the feature slices and query boundaries described in design.md. 
 
 ## Registration UI clarification
 
-Preserve separate Clientes, Fornecedores and Colaboradores screens/sidebar entries over one shared Person. Member cannot access supplier/collaborator management; API projections must protect professional fields, percentages and access bindings even when that Person is a readable customer.
+Preserve one Pessoas route/sidebar entry with role checkboxes and permission-scoped role filters over one shared Person. Member cannot access supplier/collaborator management; API projections must protect professional fields, percentages and access bindings even when that Person is a readable customer.
+
+## Person revision — 2026-10-30
+
+Follow docs/domain/PERSON_REGISTRATION.md over prior separate-screen/document assumptions. Unified Pessoas route with role checkboxes/filters; employee implies supplier; optional 1:1 ClientProfile, SupplierProfile and EmployeeProfile from this revision; receivable customer/payable supplier eligibility; seeded Pagamentos diversos/Recebimentos diversos generic counterparties without fiscal documents or professional profiles. Ordinary documents stay required/unique. Apply role/document constraints and deterministic generic seed keys first, verify database/seed, then review Clerk/session/projections. Preserve explicit grants, Member field/record confidentiality, real employee commission origin and existing UI style. Record new implementation evidence separately from commits8c0718b/d0cb812; do not mark whole phases done from foundation work.

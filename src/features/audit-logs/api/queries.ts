@@ -17,6 +17,10 @@ import type {
 import { AUDIT_LOG_ERRORS } from "../constants/errors";
 import { getAuditAccessWhere } from "../data/access";
 import {
+	getPersonAuditAccessWhere,
+	getPersonAuditEventAccessWhere,
+} from "../data/person-access";
+import {
 	getAuditHistory,
 	getAuditLogActions,
 	getAuditLogActors,
@@ -68,7 +72,9 @@ const getAuditLogByIdFn = createServerFn({ method: "GET" })
 			const session = await getRequiredServerLoggedUserSession();
 			assertCan(session, "org:audit_logs:read");
 			const { firmId } = await getServerScope("audit-log");
-			const accessWhere = await getAuditAccessWhere(session);
+			const accessWhere =
+				(await getPersonAuditEventAccessWhere(session, data.id)) ??
+				(await getAuditAccessWhere(session));
 
 			return await getAuditLogById({ firmId, id: data.id, accessWhere });
 		} catch (error) {
@@ -169,7 +175,10 @@ const getAuditHistoryFn = createServerFn({ method: "GET" })
 			const session = await getRequiredServerLoggedUserSession();
 			assertCan(session, "org:audit_logs:read");
 			const { firmId } = await getServerScope("audit-log");
-			const accessWhere = await getAuditAccessWhere(session);
+			const accessWhere =
+				data.entityType === "Person"
+					? await getPersonAuditAccessWhere(session, data.entityId)
+					: await getAuditAccessWhere(session);
 			return await getAuditHistory({ firmId, ...data, accessWhere });
 		} catch (error) {
 			console.error("[getAuditHistory]", error);

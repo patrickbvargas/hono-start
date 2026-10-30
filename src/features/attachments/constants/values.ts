@@ -3,6 +3,7 @@ export const ATTACHMENT_MAX_BATCH_FILES = ATTACHMENT_MAX_OWNER_FILES;
 export const ATTACHMENT_MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024;
 export const ATTACHMENT_ACCEPT_ATTRIBUTE = ".pdf,.jpg,.jpeg,.png";
 export const ATTACHMENT_OWNER_KINDS = [
+	"person",
 	"client",
 	"employee",
 	"contract",

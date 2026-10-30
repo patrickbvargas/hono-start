@@ -88,9 +88,9 @@ Selecionar N duplicatas a pagar de quaisquer beneficiários autorizados, conferi
 
 Implementação, reset de banco, alteração de provider/roles no Clerk, publicação ou substituição silenciosa da main. Trabalho atual é documentação e propostas em branch separada. Etapas futuras exigem seguir contratos, dependências e verificações; não precisam rediscutir decisões já registradas.
 
-## Cadastros separados visualmente — 29/10/2026
+## Cadastros separados visualmente — 29/10/2026 (substituído em 30/10)
 
-Clientes, Fornecedores e Colaboradores permanecem telas e itens separados no sidebar. Banco mantém uma Person com papéis acumuláveis e EmployeeProfile opcional. Gestão de percentuais/OAB/acesso pertence à tela autorizada de Colaboradores. Member não acessa Fornecedores/Colaboradores nem seus endpoints/opções/totais/exportações. Projeção de Cliente não expõe perfil profissional, percentuais ou dados de acesso da mesma pessoa. Preservar apenas os dados de equipe já permitidos no contrato atribuído e a própria remuneração; isso não abre o cadastro de colaboradores.
+Decisão histórica, substituída pela rota única Pessoas em [PERSON_REGISTRATION.md](PERSON_REGISTRATION.md): Clientes, Fornecedores e Colaboradores eram telas e itens separados no sidebar. Banco mantém uma Person com papéis acumuláveis e EmployeeProfile opcional. Gestão de percentuais/OAB/acesso pertence à tela autorizada de Colaboradores. Member não acessa Fornecedores/Colaboradores nem seus endpoints/opções/totais/exportações. Projeção de Cliente não expõe perfil profissional, percentuais ou dados de acesso da mesma pessoa. Preservar apenas os dados de equipe já permitidos no contrato atribuído e a própria remuneração; isso não abre o cadastro de colaboradores.
 
 ## Dimensões dos contratos no financeiro — 29/10/2026
 
@@ -99,3 +99,11 @@ Permitir filtros/agrupamentos por área do contrato, tipo da receita e tipo de p
 ## Receber e pagar simétricos, sem lotes — decisão final
 
 Selecionar N duplicatas de pessoas/origens diferentes, ajustar principal/desconto/juros/multa por linha e confirmar tudo ou nada; uma direção e filial por ação. Cada título gera seu próprio Receipt ou Payment. Ambos têm forma/tipo de pagamento efetiva e data da baixa, além da forma prevista no título, usando PaymentMethod global. Forma/data comuns informadas na ação são copiadas para cada evento. Não há ReceiptBatch nem PaymentBatch, subgrupos por pessoa ou comprovante de lote. Comprovantes/estornos são individuais; idempotência/correlação de auditoria são técnicas. Gerar remunerações na confirmação de receber persiste a opção em cada Receipt, mas somente linhas elegíveis de contrato geram obrigações. Esta decisão substitui quaisquer referências anteriores a lotes/grupos de recebimentos.
+
+## Revisão de pessoas — 30/10/2026
+
+[Contrato vigente](PERSON_REGISTRATION.md): rota única Pessoas com checkboxes/filtros por papéis acumuláveis derivados dos perfis; Colaborador implica Fornecedor; ClientProfile/SupplierProfile/EmployeeProfile opcionais 1:1 existem desde agora. Receber somente de Cliente, pagar somente a Fornecedor. Seed fornece Pagamentos diversos/Recebimentos diversos como genéricos sem documento nem perfil profissional. Pessoa comum mantém CPF/CNPJ obrigatório/único; genérico nunca é colaborador/conta. Ajustar Prisma/seed primeiro, Clerk depois. As novas deltas não estão implementadas nos commits revisados.
+
+## Perfis por papel com FKs — revisão final de 30/10/2026
+
+Criar ClientProfile e SupplierProfile agora, além de EmployeeProfile, todos opcionais 1:1 por Person, sem duplicação de dados pessoais. Contract/Receivable referenciam ClientProfile; Expense/Payable referenciam SupplierProfile. Papéis/checkboxes derivam dos perfis ativos e alterações ocorrem atomicamente, sem duas fontes de verdade. Colaborador requer SupplierProfile da mesma pessoa. Genéricos do seed têm o perfil Cliente/Fornecedor correspondente, nunca EmployeeProfile. Remuneração e sigilo comparam a Person resolvida pelos perfis. Preparar relações futuras para bancos, endereços e família sem implementá-las agora. Esta decisão substitui o adiamento anterior de ClientProfile/SupplierProfile.

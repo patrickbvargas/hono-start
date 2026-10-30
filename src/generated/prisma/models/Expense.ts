@@ -261,7 +261,7 @@ export type ExpenseWhereInput = {
   firmId?: Prisma.IntFilter<"Expense"> | number
   supplierId?: Prisma.IntFilter<"Expense"> | number
   firm?: Prisma.XOR<Prisma.FirmScalarRelationFilter, Prisma.FirmWhereInput>
-  supplier?: Prisma.XOR<Prisma.PersonScalarRelationFilter, Prisma.PersonWhereInput>
+  supplier?: Prisma.XOR<Prisma.SupplierProfileScalarRelationFilter, Prisma.SupplierProfileWhereInput>
   generation?: Prisma.XOR<Prisma.FinancialGenerationNullableScalarRelationFilter, Prisma.FinancialGenerationWhereInput> | null
   payables?: Prisma.PayableListRelationFilter
   attachments?: Prisma.AttachmentListRelationFilter
@@ -279,7 +279,7 @@ export type ExpenseOrderByWithRelationInput = {
   firmId?: Prisma.SortOrder
   supplierId?: Prisma.SortOrder
   firm?: Prisma.FirmOrderByWithRelationInput
-  supplier?: Prisma.PersonOrderByWithRelationInput
+  supplier?: Prisma.SupplierProfileOrderByWithRelationInput
   generation?: Prisma.FinancialGenerationOrderByWithRelationInput
   payables?: Prisma.PayableOrderByRelationAggregateInput
   attachments?: Prisma.AttachmentOrderByRelationAggregateInput
@@ -301,7 +301,7 @@ export type ExpenseWhereUniqueInput = Prisma.AtLeast<{
   firmId?: Prisma.IntFilter<"Expense"> | number
   supplierId?: Prisma.IntFilter<"Expense"> | number
   firm?: Prisma.XOR<Prisma.FirmScalarRelationFilter, Prisma.FirmWhereInput>
-  supplier?: Prisma.XOR<Prisma.PersonScalarRelationFilter, Prisma.PersonWhereInput>
+  supplier?: Prisma.XOR<Prisma.SupplierProfileScalarRelationFilter, Prisma.SupplierProfileWhereInput>
   generation?: Prisma.XOR<Prisma.FinancialGenerationNullableScalarRelationFilter, Prisma.FinancialGenerationWhereInput> | null
   payables?: Prisma.PayableListRelationFilter
   attachments?: Prisma.AttachmentListRelationFilter
@@ -348,7 +348,7 @@ export type ExpenseCreateInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   firm: Prisma.FirmCreateNestedOneWithoutExpensesInput
-  supplier: Prisma.PersonCreateNestedOneWithoutExpensesInput
+  supplier: Prisma.SupplierProfileCreateNestedOneWithoutExpensesInput
   generation?: Prisma.FinancialGenerationCreateNestedOneWithoutExpenseInput
   payables?: Prisma.PayableCreateNestedManyWithoutExpenseInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutExpenseInput
@@ -379,7 +379,7 @@ export type ExpenseUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   firm?: Prisma.FirmUpdateOneRequiredWithoutExpensesNestedInput
-  supplier?: Prisma.PersonUpdateOneRequiredWithoutExpensesNestedInput
+  supplier?: Prisma.SupplierProfileUpdateOneRequiredWithoutExpensesNestedInput
   generation?: Prisma.FinancialGenerationUpdateOneWithoutExpenseNestedInput
   payables?: Prisma.PayableUpdateManyWithoutExpenseNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutExpenseNestedInput
@@ -660,7 +660,7 @@ export type ExpenseCreateWithoutFirmInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  supplier: Prisma.PersonCreateNestedOneWithoutExpensesInput
+  supplier: Prisma.SupplierProfileCreateNestedOneWithoutExpensesInput
   generation?: Prisma.FinancialGenerationCreateNestedOneWithoutExpenseInput
   payables?: Prisma.PayableCreateNestedManyWithoutExpenseInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutExpenseInput
@@ -786,7 +786,7 @@ export type ExpenseCreateWithoutGenerationInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   firm: Prisma.FirmCreateNestedOneWithoutExpensesInput
-  supplier: Prisma.PersonCreateNestedOneWithoutExpensesInput
+  supplier: Prisma.SupplierProfileCreateNestedOneWithoutExpensesInput
   payables?: Prisma.PayableCreateNestedManyWithoutExpenseInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutExpenseInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutExpenseInput
@@ -831,7 +831,7 @@ export type ExpenseUpdateWithoutGenerationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   firm?: Prisma.FirmUpdateOneRequiredWithoutExpensesNestedInput
-  supplier?: Prisma.PersonUpdateOneRequiredWithoutExpensesNestedInput
+  supplier?: Prisma.SupplierProfileUpdateOneRequiredWithoutExpensesNestedInput
   payables?: Prisma.PayableUpdateManyWithoutExpenseNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutExpenseNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutExpenseNestedInput
@@ -860,7 +860,7 @@ export type ExpenseCreateWithoutPayablesInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   firm: Prisma.FirmCreateNestedOneWithoutExpensesInput
-  supplier: Prisma.PersonCreateNestedOneWithoutExpensesInput
+  supplier: Prisma.SupplierProfileCreateNestedOneWithoutExpensesInput
   generation?: Prisma.FinancialGenerationCreateNestedOneWithoutExpenseInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutExpenseInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutExpenseInput
@@ -905,7 +905,7 @@ export type ExpenseUpdateWithoutPayablesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   firm?: Prisma.FirmUpdateOneRequiredWithoutExpensesNestedInput
-  supplier?: Prisma.PersonUpdateOneRequiredWithoutExpensesNestedInput
+  supplier?: Prisma.SupplierProfileUpdateOneRequiredWithoutExpensesNestedInput
   generation?: Prisma.FinancialGenerationUpdateOneWithoutExpenseNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutExpenseNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutExpenseNestedInput
@@ -934,7 +934,7 @@ export type ExpenseCreateWithoutAttachmentsInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   firm: Prisma.FirmCreateNestedOneWithoutExpensesInput
-  supplier: Prisma.PersonCreateNestedOneWithoutExpensesInput
+  supplier: Prisma.SupplierProfileCreateNestedOneWithoutExpensesInput
   generation?: Prisma.FinancialGenerationCreateNestedOneWithoutExpenseInput
   payables?: Prisma.PayableCreateNestedManyWithoutExpenseInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutExpenseInput
@@ -979,7 +979,7 @@ export type ExpenseUpdateWithoutAttachmentsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   firm?: Prisma.FirmUpdateOneRequiredWithoutExpensesNestedInput
-  supplier?: Prisma.PersonUpdateOneRequiredWithoutExpensesNestedInput
+  supplier?: Prisma.SupplierProfileUpdateOneRequiredWithoutExpensesNestedInput
   generation?: Prisma.FinancialGenerationUpdateOneWithoutExpenseNestedInput
   payables?: Prisma.PayableUpdateManyWithoutExpenseNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutExpenseNestedInput
@@ -1008,7 +1008,7 @@ export type ExpenseCreateWithoutAuditLogsInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   firm: Prisma.FirmCreateNestedOneWithoutExpensesInput
-  supplier: Prisma.PersonCreateNestedOneWithoutExpensesInput
+  supplier: Prisma.SupplierProfileCreateNestedOneWithoutExpensesInput
   generation?: Prisma.FinancialGenerationCreateNestedOneWithoutExpenseInput
   payables?: Prisma.PayableCreateNestedManyWithoutExpenseInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutExpenseInput
@@ -1053,7 +1053,7 @@ export type ExpenseUpdateWithoutAuditLogsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   firm?: Prisma.FirmUpdateOneRequiredWithoutExpensesNestedInput
-  supplier?: Prisma.PersonUpdateOneRequiredWithoutExpensesNestedInput
+  supplier?: Prisma.SupplierProfileUpdateOneRequiredWithoutExpensesNestedInput
   generation?: Prisma.FinancialGenerationUpdateOneWithoutExpenseNestedInput
   payables?: Prisma.PayableUpdateManyWithoutExpenseNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutExpenseNestedInput
@@ -1092,7 +1092,7 @@ export type ExpenseUpdateWithoutFirmInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  supplier?: Prisma.PersonUpdateOneRequiredWithoutExpensesNestedInput
+  supplier?: Prisma.SupplierProfileUpdateOneRequiredWithoutExpensesNestedInput
   generation?: Prisma.FinancialGenerationUpdateOneWithoutExpenseNestedInput
   payables?: Prisma.PayableUpdateManyWithoutExpenseNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutExpenseNestedInput
@@ -1236,7 +1236,7 @@ export type ExpenseSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   firmId?: boolean
   supplierId?: boolean
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
-  supplier?: boolean | Prisma.PersonDefaultArgs<ExtArgs>
+  supplier?: boolean | Prisma.SupplierProfileDefaultArgs<ExtArgs>
   generation?: boolean | Prisma.Expense$generationArgs<ExtArgs>
   payables?: boolean | Prisma.Expense$payablesArgs<ExtArgs>
   attachments?: boolean | Prisma.Expense$attachmentsArgs<ExtArgs>
@@ -1255,7 +1255,7 @@ export type ExpenseSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   firmId?: boolean
   supplierId?: boolean
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
-  supplier?: boolean | Prisma.PersonDefaultArgs<ExtArgs>
+  supplier?: boolean | Prisma.SupplierProfileDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["expense"]>
 
 export type ExpenseSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1269,7 +1269,7 @@ export type ExpenseSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   firmId?: boolean
   supplierId?: boolean
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
-  supplier?: boolean | Prisma.PersonDefaultArgs<ExtArgs>
+  supplier?: boolean | Prisma.SupplierProfileDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["expense"]>
 
 export type ExpenseSelectScalar = {
@@ -1287,7 +1287,7 @@ export type ExpenseSelectScalar = {
 export type ExpenseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "negotiatedAmount" | "notes" | "isActive" | "createdAt" | "updatedAt" | "deletedAt" | "firmId" | "supplierId", ExtArgs["result"]["expense"]>
 export type ExpenseInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
-  supplier?: boolean | Prisma.PersonDefaultArgs<ExtArgs>
+  supplier?: boolean | Prisma.SupplierProfileDefaultArgs<ExtArgs>
   generation?: boolean | Prisma.Expense$generationArgs<ExtArgs>
   payables?: boolean | Prisma.Expense$payablesArgs<ExtArgs>
   attachments?: boolean | Prisma.Expense$attachmentsArgs<ExtArgs>
@@ -1296,18 +1296,18 @@ export type ExpenseInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
 }
 export type ExpenseIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
-  supplier?: boolean | Prisma.PersonDefaultArgs<ExtArgs>
+  supplier?: boolean | Prisma.SupplierProfileDefaultArgs<ExtArgs>
 }
 export type ExpenseIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
-  supplier?: boolean | Prisma.PersonDefaultArgs<ExtArgs>
+  supplier?: boolean | Prisma.SupplierProfileDefaultArgs<ExtArgs>
 }
 
 export type $ExpensePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Expense"
   objects: {
     firm: Prisma.$FirmPayload<ExtArgs>
-    supplier: Prisma.$PersonPayload<ExtArgs>
+    supplier: Prisma.$SupplierProfilePayload<ExtArgs>
     generation: Prisma.$FinancialGenerationPayload<ExtArgs> | null
     payables: Prisma.$PayablePayload<ExtArgs>[]
     attachments: Prisma.$AttachmentPayload<ExtArgs>[]
@@ -1718,7 +1718,7 @@ readonly fields: ExpenseFieldRefs;
 export interface Prisma__ExpenseClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   firm<T extends Prisma.FirmDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FirmDefaultArgs<ExtArgs>>): Prisma.Prisma__FirmClient<runtime.Types.Result.GetResult<Prisma.$FirmPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  supplier<T extends Prisma.PersonDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PersonDefaultArgs<ExtArgs>>): Prisma.Prisma__PersonClient<runtime.Types.Result.GetResult<Prisma.$PersonPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  supplier<T extends Prisma.SupplierProfileDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SupplierProfileDefaultArgs<ExtArgs>>): Prisma.Prisma__SupplierProfileClient<runtime.Types.Result.GetResult<Prisma.$SupplierProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   generation<T extends Prisma.Expense$generationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Expense$generationArgs<ExtArgs>>): Prisma.Prisma__FinancialGenerationClient<runtime.Types.Result.GetResult<Prisma.$FinancialGenerationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   payables<T extends Prisma.Expense$payablesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Expense$payablesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PayablePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   attachments<T extends Prisma.Expense$attachmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Expense$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>

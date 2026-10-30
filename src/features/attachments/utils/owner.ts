@@ -7,6 +7,9 @@ export function getAttachmentOwnerContext(input: AttachmentOwnerInput): {
 	ownerId: number;
 	ownerKind: AttachmentOwnerKind;
 } {
+	if (input.personId) {
+		return { ownerKind: "person", ownerId: input.personId };
+	}
 	if (input.clientId) {
 		return { ownerKind: "client", ownerId: input.clientId };
 	}
@@ -33,6 +36,8 @@ export function getAttachmentOwnerInput(params: {
 	ownerKind: AttachmentOwnerKind;
 }): AttachmentOwnerInput {
 	switch (params.ownerKind) {
+		case "person":
+			return { personId: params.ownerId };
 		case "client":
 			return { clientId: params.ownerId };
 		case "employee":

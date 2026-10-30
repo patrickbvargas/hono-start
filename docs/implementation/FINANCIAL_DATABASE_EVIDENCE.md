@@ -53,3 +53,11 @@ Migration `20261030060000_prefix_reference_catalogs` renames all ten physical ca
 ## Clerk-linked development fixture extension
 
 The user requested Patrick Vargas with fictitious professional/document data. Idempotent seed now maintains Person/Profile 1000 with explicit independent references; current totals are 16 Persons and 12 profiles. Financial fixture totals are unchanged. Clerk development private metadata now points explicitly to this Person, and Matriz to Firm 1; the old account employeeId was removed. The earlier no-provider-change note describes the database-only stage. See CLERK_MIGRATION.md for the subsequently authorized setup and verification.
+
+## Review on 2026-10-30 — new deltas not yet implemented
+
+Commits reviewed: 8c0718b (schema/seed) and d0cb812 (Person Clerk binding/grants). This is source inspection, not a new database test report. New [Person rules](../domain/PERSON_REGISTRATION.md) require further Prisma/seed work: document nullable for generic Persons, generic marker and stable seed keys, two consolidated counterparties, employee-implies-supplier and customer/supplier title eligibility. Current schema requires document/personType and lacks isGeneric; current seed has employees without supplier flag. Do not claim old foundation evidence covers these deltas. No SQL/provider/reset was executed in this documentation review; previous evidence remains historical.
+
+## Role-profile revision — not applied
+
+The user approved ClientProfile/SupplierProfile creation now, role-derived checkboxes, and operational/title FKs to the matching profile. Current reviewed implementation still has direct Person FKs and independent flags. Migrations must explicitly map IDs, seeds must materialize profiles (including generic counterparties and all employees as suppliers), and beneficiary validations must resolve common Person across EmployeeProfile and SupplierProfile. None of these additional deltas has been run or verified by this documentation update.

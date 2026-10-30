@@ -353,7 +353,7 @@ export type PayableWhereInput = {
   expenseId?: Prisma.IntNullableFilter<"Payable"> | number | null
   remunerationCalculationId?: Prisma.IntNullableFilter<"Payable"> | number | null
   firm?: Prisma.XOR<Prisma.FirmScalarRelationFilter, Prisma.FirmWhereInput>
-  beneficiary?: Prisma.XOR<Prisma.PersonScalarRelationFilter, Prisma.PersonWhereInput>
+  beneficiary?: Prisma.XOR<Prisma.SupplierProfileScalarRelationFilter, Prisma.SupplierProfileWhereInput>
   analytic?: Prisma.XOR<Prisma.FinancialAnalyticScalarRelationFilter, Prisma.FinancialAnalyticWhereInput>
   expectedPaymentMethod?: Prisma.XOR<Prisma.PaymentMethodScalarRelationFilter, Prisma.PaymentMethodWhereInput>
   titleKind?: Prisma.XOR<Prisma.TitleKindScalarRelationFilter, Prisma.TitleKindWhereInput>
@@ -385,7 +385,7 @@ export type PayableOrderByWithRelationInput = {
   expenseId?: Prisma.SortOrderInput | Prisma.SortOrder
   remunerationCalculationId?: Prisma.SortOrderInput | Prisma.SortOrder
   firm?: Prisma.FirmOrderByWithRelationInput
-  beneficiary?: Prisma.PersonOrderByWithRelationInput
+  beneficiary?: Prisma.SupplierProfileOrderByWithRelationInput
   analytic?: Prisma.FinancialAnalyticOrderByWithRelationInput
   expectedPaymentMethod?: Prisma.PaymentMethodOrderByWithRelationInput
   titleKind?: Prisma.TitleKindOrderByWithRelationInput
@@ -422,7 +422,7 @@ export type PayableWhereUniqueInput = Prisma.AtLeast<{
   directEntryId?: Prisma.IntNullableFilter<"Payable"> | number | null
   expenseId?: Prisma.IntNullableFilter<"Payable"> | number | null
   firm?: Prisma.XOR<Prisma.FirmScalarRelationFilter, Prisma.FirmWhereInput>
-  beneficiary?: Prisma.XOR<Prisma.PersonScalarRelationFilter, Prisma.PersonWhereInput>
+  beneficiary?: Prisma.XOR<Prisma.SupplierProfileScalarRelationFilter, Prisma.SupplierProfileWhereInput>
   analytic?: Prisma.XOR<Prisma.FinancialAnalyticScalarRelationFilter, Prisma.FinancialAnalyticWhereInput>
   expectedPaymentMethod?: Prisma.XOR<Prisma.PaymentMethodScalarRelationFilter, Prisma.PaymentMethodWhereInput>
   titleKind?: Prisma.XOR<Prisma.TitleKindScalarRelationFilter, Prisma.TitleKindWhereInput>
@@ -492,7 +492,7 @@ export type PayableCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   firm: Prisma.FirmCreateNestedOneWithoutPayablesInput
-  beneficiary: Prisma.PersonCreateNestedOneWithoutPayablesInput
+  beneficiary: Prisma.SupplierProfileCreateNestedOneWithoutPayablesInput
   analytic: Prisma.FinancialAnalyticCreateNestedOneWithoutPayablesInput
   expectedPaymentMethod: Prisma.PaymentMethodCreateNestedOneWithoutPayablesInput
   titleKind: Prisma.TitleKindCreateNestedOneWithoutPayablesInput
@@ -537,7 +537,7 @@ export type PayableUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   firm?: Prisma.FirmUpdateOneRequiredWithoutPayablesNestedInput
-  beneficiary?: Prisma.PersonUpdateOneRequiredWithoutPayablesNestedInput
+  beneficiary?: Prisma.SupplierProfileUpdateOneRequiredWithoutPayablesNestedInput
   analytic?: Prisma.FinancialAnalyticUpdateOneRequiredWithoutPayablesNestedInput
   expectedPaymentMethod?: Prisma.PaymentMethodUpdateOneRequiredWithoutPayablesNestedInput
   titleKind?: Prisma.TitleKindUpdateOneRequiredWithoutPayablesNestedInput
@@ -1163,7 +1163,7 @@ export type PayableCreateWithoutFirmInput = {
   cancellationReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  beneficiary: Prisma.PersonCreateNestedOneWithoutPayablesInput
+  beneficiary: Prisma.SupplierProfileCreateNestedOneWithoutPayablesInput
   analytic: Prisma.FinancialAnalyticCreateNestedOneWithoutPayablesInput
   expectedPaymentMethod: Prisma.PaymentMethodCreateNestedOneWithoutPayablesInput
   titleKind: Prisma.TitleKindCreateNestedOneWithoutPayablesInput
@@ -1256,7 +1256,7 @@ export type PayableCreateWithoutAnalyticInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   firm: Prisma.FirmCreateNestedOneWithoutPayablesInput
-  beneficiary: Prisma.PersonCreateNestedOneWithoutPayablesInput
+  beneficiary: Prisma.SupplierProfileCreateNestedOneWithoutPayablesInput
   expectedPaymentMethod: Prisma.PaymentMethodCreateNestedOneWithoutPayablesInput
   titleKind: Prisma.TitleKindCreateNestedOneWithoutPayablesInput
   generation?: Prisma.FinancialGenerationCreateNestedOneWithoutPayablesInput
@@ -1325,7 +1325,7 @@ export type PayableCreateWithoutExpectedPaymentMethodInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   firm: Prisma.FirmCreateNestedOneWithoutPayablesInput
-  beneficiary: Prisma.PersonCreateNestedOneWithoutPayablesInput
+  beneficiary: Prisma.SupplierProfileCreateNestedOneWithoutPayablesInput
   analytic: Prisma.FinancialAnalyticCreateNestedOneWithoutPayablesInput
   titleKind: Prisma.TitleKindCreateNestedOneWithoutPayablesInput
   generation?: Prisma.FinancialGenerationCreateNestedOneWithoutPayablesInput
@@ -1394,7 +1394,7 @@ export type PayableCreateWithoutTitleKindInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   firm: Prisma.FirmCreateNestedOneWithoutPayablesInput
-  beneficiary: Prisma.PersonCreateNestedOneWithoutPayablesInput
+  beneficiary: Prisma.SupplierProfileCreateNestedOneWithoutPayablesInput
   analytic: Prisma.FinancialAnalyticCreateNestedOneWithoutPayablesInput
   expectedPaymentMethod: Prisma.PaymentMethodCreateNestedOneWithoutPayablesInput
   generation?: Prisma.FinancialGenerationCreateNestedOneWithoutPayablesInput
@@ -1532,7 +1532,7 @@ export type PayableCreateWithoutExpenseInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   firm: Prisma.FirmCreateNestedOneWithoutPayablesInput
-  beneficiary: Prisma.PersonCreateNestedOneWithoutPayablesInput
+  beneficiary: Prisma.SupplierProfileCreateNestedOneWithoutPayablesInput
   analytic: Prisma.FinancialAnalyticCreateNestedOneWithoutPayablesInput
   expectedPaymentMethod: Prisma.PaymentMethodCreateNestedOneWithoutPayablesInput
   titleKind: Prisma.TitleKindCreateNestedOneWithoutPayablesInput
@@ -1600,7 +1600,7 @@ export type PayableCreateWithoutGenerationInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   firm: Prisma.FirmCreateNestedOneWithoutPayablesInput
-  beneficiary: Prisma.PersonCreateNestedOneWithoutPayablesInput
+  beneficiary: Prisma.SupplierProfileCreateNestedOneWithoutPayablesInput
   analytic: Prisma.FinancialAnalyticCreateNestedOneWithoutPayablesInput
   expectedPaymentMethod: Prisma.PaymentMethodCreateNestedOneWithoutPayablesInput
   titleKind: Prisma.TitleKindCreateNestedOneWithoutPayablesInput
@@ -1668,7 +1668,7 @@ export type PayableCreateWithoutDirectEntryInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   firm: Prisma.FirmCreateNestedOneWithoutPayablesInput
-  beneficiary: Prisma.PersonCreateNestedOneWithoutPayablesInput
+  beneficiary: Prisma.SupplierProfileCreateNestedOneWithoutPayablesInput
   analytic: Prisma.FinancialAnalyticCreateNestedOneWithoutPayablesInput
   expectedPaymentMethod: Prisma.PaymentMethodCreateNestedOneWithoutPayablesInput
   titleKind: Prisma.TitleKindCreateNestedOneWithoutPayablesInput
@@ -1736,7 +1736,7 @@ export type PayableCreateWithoutPaymentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   firm: Prisma.FirmCreateNestedOneWithoutPayablesInput
-  beneficiary: Prisma.PersonCreateNestedOneWithoutPayablesInput
+  beneficiary: Prisma.SupplierProfileCreateNestedOneWithoutPayablesInput
   analytic: Prisma.FinancialAnalyticCreateNestedOneWithoutPayablesInput
   expectedPaymentMethod: Prisma.PaymentMethodCreateNestedOneWithoutPayablesInput
   titleKind: Prisma.TitleKindCreateNestedOneWithoutPayablesInput
@@ -1795,7 +1795,7 @@ export type PayableUpdateWithoutPaymentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   firm?: Prisma.FirmUpdateOneRequiredWithoutPayablesNestedInput
-  beneficiary?: Prisma.PersonUpdateOneRequiredWithoutPayablesNestedInput
+  beneficiary?: Prisma.SupplierProfileUpdateOneRequiredWithoutPayablesNestedInput
   analytic?: Prisma.FinancialAnalyticUpdateOneRequiredWithoutPayablesNestedInput
   expectedPaymentMethod?: Prisma.PaymentMethodUpdateOneRequiredWithoutPayablesNestedInput
   titleKind?: Prisma.TitleKindUpdateOneRequiredWithoutPayablesNestedInput
@@ -1838,7 +1838,7 @@ export type PayableCreateWithoutRemunerationCalculationInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   firm: Prisma.FirmCreateNestedOneWithoutPayablesInput
-  beneficiary: Prisma.PersonCreateNestedOneWithoutPayablesInput
+  beneficiary: Prisma.SupplierProfileCreateNestedOneWithoutPayablesInput
   analytic: Prisma.FinancialAnalyticCreateNestedOneWithoutPayablesInput
   expectedPaymentMethod: Prisma.PaymentMethodCreateNestedOneWithoutPayablesInput
   titleKind: Prisma.TitleKindCreateNestedOneWithoutPayablesInput
@@ -1896,7 +1896,7 @@ export type PayableUpdateWithoutRemunerationCalculationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   firm?: Prisma.FirmUpdateOneRequiredWithoutPayablesNestedInput
-  beneficiary?: Prisma.PersonUpdateOneRequiredWithoutPayablesNestedInput
+  beneficiary?: Prisma.SupplierProfileUpdateOneRequiredWithoutPayablesNestedInput
   analytic?: Prisma.FinancialAnalyticUpdateOneRequiredWithoutPayablesNestedInput
   expectedPaymentMethod?: Prisma.PaymentMethodUpdateOneRequiredWithoutPayablesNestedInput
   titleKind?: Prisma.TitleKindUpdateOneRequiredWithoutPayablesNestedInput
@@ -1938,7 +1938,7 @@ export type PayableCreateWithoutAttachmentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   firm: Prisma.FirmCreateNestedOneWithoutPayablesInput
-  beneficiary: Prisma.PersonCreateNestedOneWithoutPayablesInput
+  beneficiary: Prisma.SupplierProfileCreateNestedOneWithoutPayablesInput
   analytic: Prisma.FinancialAnalyticCreateNestedOneWithoutPayablesInput
   expectedPaymentMethod: Prisma.PaymentMethodCreateNestedOneWithoutPayablesInput
   titleKind: Prisma.TitleKindCreateNestedOneWithoutPayablesInput
@@ -1997,7 +1997,7 @@ export type PayableUpdateWithoutAttachmentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   firm?: Prisma.FirmUpdateOneRequiredWithoutPayablesNestedInput
-  beneficiary?: Prisma.PersonUpdateOneRequiredWithoutPayablesNestedInput
+  beneficiary?: Prisma.SupplierProfileUpdateOneRequiredWithoutPayablesNestedInput
   analytic?: Prisma.FinancialAnalyticUpdateOneRequiredWithoutPayablesNestedInput
   expectedPaymentMethod?: Prisma.PaymentMethodUpdateOneRequiredWithoutPayablesNestedInput
   titleKind?: Prisma.TitleKindUpdateOneRequiredWithoutPayablesNestedInput
@@ -2040,7 +2040,7 @@ export type PayableCreateWithoutAuditLogsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   firm: Prisma.FirmCreateNestedOneWithoutPayablesInput
-  beneficiary: Prisma.PersonCreateNestedOneWithoutPayablesInput
+  beneficiary: Prisma.SupplierProfileCreateNestedOneWithoutPayablesInput
   analytic: Prisma.FinancialAnalyticCreateNestedOneWithoutPayablesInput
   expectedPaymentMethod: Prisma.PaymentMethodCreateNestedOneWithoutPayablesInput
   titleKind: Prisma.TitleKindCreateNestedOneWithoutPayablesInput
@@ -2099,7 +2099,7 @@ export type PayableUpdateWithoutAuditLogsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   firm?: Prisma.FirmUpdateOneRequiredWithoutPayablesNestedInput
-  beneficiary?: Prisma.PersonUpdateOneRequiredWithoutPayablesNestedInput
+  beneficiary?: Prisma.SupplierProfileUpdateOneRequiredWithoutPayablesNestedInput
   analytic?: Prisma.FinancialAnalyticUpdateOneRequiredWithoutPayablesNestedInput
   expectedPaymentMethod?: Prisma.PaymentMethodUpdateOneRequiredWithoutPayablesNestedInput
   titleKind?: Prisma.TitleKindUpdateOneRequiredWithoutPayablesNestedInput
@@ -2160,7 +2160,7 @@ export type PayableUpdateWithoutFirmInput = {
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  beneficiary?: Prisma.PersonUpdateOneRequiredWithoutPayablesNestedInput
+  beneficiary?: Prisma.SupplierProfileUpdateOneRequiredWithoutPayablesNestedInput
   analytic?: Prisma.FinancialAnalyticUpdateOneRequiredWithoutPayablesNestedInput
   expectedPaymentMethod?: Prisma.PaymentMethodUpdateOneRequiredWithoutPayablesNestedInput
   titleKind?: Prisma.TitleKindUpdateOneRequiredWithoutPayablesNestedInput
@@ -2242,7 +2242,7 @@ export type PayableUpdateWithoutAnalyticInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   firm?: Prisma.FirmUpdateOneRequiredWithoutPayablesNestedInput
-  beneficiary?: Prisma.PersonUpdateOneRequiredWithoutPayablesNestedInput
+  beneficiary?: Prisma.SupplierProfileUpdateOneRequiredWithoutPayablesNestedInput
   expectedPaymentMethod?: Prisma.PaymentMethodUpdateOneRequiredWithoutPayablesNestedInput
   titleKind?: Prisma.TitleKindUpdateOneRequiredWithoutPayablesNestedInput
   generation?: Prisma.FinancialGenerationUpdateOneWithoutPayablesNestedInput
@@ -2323,7 +2323,7 @@ export type PayableUpdateWithoutExpectedPaymentMethodInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   firm?: Prisma.FirmUpdateOneRequiredWithoutPayablesNestedInput
-  beneficiary?: Prisma.PersonUpdateOneRequiredWithoutPayablesNestedInput
+  beneficiary?: Prisma.SupplierProfileUpdateOneRequiredWithoutPayablesNestedInput
   analytic?: Prisma.FinancialAnalyticUpdateOneRequiredWithoutPayablesNestedInput
   titleKind?: Prisma.TitleKindUpdateOneRequiredWithoutPayablesNestedInput
   generation?: Prisma.FinancialGenerationUpdateOneWithoutPayablesNestedInput
@@ -2404,7 +2404,7 @@ export type PayableUpdateWithoutTitleKindInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   firm?: Prisma.FirmUpdateOneRequiredWithoutPayablesNestedInput
-  beneficiary?: Prisma.PersonUpdateOneRequiredWithoutPayablesNestedInput
+  beneficiary?: Prisma.SupplierProfileUpdateOneRequiredWithoutPayablesNestedInput
   analytic?: Prisma.FinancialAnalyticUpdateOneRequiredWithoutPayablesNestedInput
   expectedPaymentMethod?: Prisma.PaymentMethodUpdateOneRequiredWithoutPayablesNestedInput
   generation?: Prisma.FinancialGenerationUpdateOneWithoutPayablesNestedInput
@@ -2565,7 +2565,7 @@ export type PayableUpdateWithoutExpenseInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   firm?: Prisma.FirmUpdateOneRequiredWithoutPayablesNestedInput
-  beneficiary?: Prisma.PersonUpdateOneRequiredWithoutPayablesNestedInput
+  beneficiary?: Prisma.SupplierProfileUpdateOneRequiredWithoutPayablesNestedInput
   analytic?: Prisma.FinancialAnalyticUpdateOneRequiredWithoutPayablesNestedInput
   expectedPaymentMethod?: Prisma.PaymentMethodUpdateOneRequiredWithoutPayablesNestedInput
   titleKind?: Prisma.TitleKindUpdateOneRequiredWithoutPayablesNestedInput
@@ -2643,7 +2643,7 @@ export type PayableUpdateWithoutGenerationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   firm?: Prisma.FirmUpdateOneRequiredWithoutPayablesNestedInput
-  beneficiary?: Prisma.PersonUpdateOneRequiredWithoutPayablesNestedInput
+  beneficiary?: Prisma.SupplierProfileUpdateOneRequiredWithoutPayablesNestedInput
   analytic?: Prisma.FinancialAnalyticUpdateOneRequiredWithoutPayablesNestedInput
   expectedPaymentMethod?: Prisma.PaymentMethodUpdateOneRequiredWithoutPayablesNestedInput
   titleKind?: Prisma.TitleKindUpdateOneRequiredWithoutPayablesNestedInput
@@ -2721,7 +2721,7 @@ export type PayableUpdateWithoutDirectEntryInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   firm?: Prisma.FirmUpdateOneRequiredWithoutPayablesNestedInput
-  beneficiary?: Prisma.PersonUpdateOneRequiredWithoutPayablesNestedInput
+  beneficiary?: Prisma.SupplierProfileUpdateOneRequiredWithoutPayablesNestedInput
   analytic?: Prisma.FinancialAnalyticUpdateOneRequiredWithoutPayablesNestedInput
   expectedPaymentMethod?: Prisma.PaymentMethodUpdateOneRequiredWithoutPayablesNestedInput
   titleKind?: Prisma.TitleKindUpdateOneRequiredWithoutPayablesNestedInput
@@ -2840,7 +2840,7 @@ export type PayableSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   expenseId?: boolean
   remunerationCalculationId?: boolean
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
-  beneficiary?: boolean | Prisma.PersonDefaultArgs<ExtArgs>
+  beneficiary?: boolean | Prisma.SupplierProfileDefaultArgs<ExtArgs>
   analytic?: boolean | Prisma.FinancialAnalyticDefaultArgs<ExtArgs>
   expectedPaymentMethod?: boolean | Prisma.PaymentMethodDefaultArgs<ExtArgs>
   titleKind?: boolean | Prisma.TitleKindDefaultArgs<ExtArgs>
@@ -2873,7 +2873,7 @@ export type PayableSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   expenseId?: boolean
   remunerationCalculationId?: boolean
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
-  beneficiary?: boolean | Prisma.PersonDefaultArgs<ExtArgs>
+  beneficiary?: boolean | Prisma.SupplierProfileDefaultArgs<ExtArgs>
   analytic?: boolean | Prisma.FinancialAnalyticDefaultArgs<ExtArgs>
   expectedPaymentMethod?: boolean | Prisma.PaymentMethodDefaultArgs<ExtArgs>
   titleKind?: boolean | Prisma.TitleKindDefaultArgs<ExtArgs>
@@ -2902,7 +2902,7 @@ export type PayableSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   expenseId?: boolean
   remunerationCalculationId?: boolean
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
-  beneficiary?: boolean | Prisma.PersonDefaultArgs<ExtArgs>
+  beneficiary?: boolean | Prisma.SupplierProfileDefaultArgs<ExtArgs>
   analytic?: boolean | Prisma.FinancialAnalyticDefaultArgs<ExtArgs>
   expectedPaymentMethod?: boolean | Prisma.PaymentMethodDefaultArgs<ExtArgs>
   titleKind?: boolean | Prisma.TitleKindDefaultArgs<ExtArgs>
@@ -2935,7 +2935,7 @@ export type PayableSelectScalar = {
 export type PayableOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "amount" | "dueDate" | "notes" | "cancelledAt" | "cancellationReason" | "createdAt" | "updatedAt" | "firmId" | "beneficiaryId" | "analyticId" | "expectedPaymentMethodId" | "titleKindId" | "generationId" | "directEntryId" | "expenseId" | "remunerationCalculationId", ExtArgs["result"]["payable"]>
 export type PayableInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
-  beneficiary?: boolean | Prisma.PersonDefaultArgs<ExtArgs>
+  beneficiary?: boolean | Prisma.SupplierProfileDefaultArgs<ExtArgs>
   analytic?: boolean | Prisma.FinancialAnalyticDefaultArgs<ExtArgs>
   expectedPaymentMethod?: boolean | Prisma.PaymentMethodDefaultArgs<ExtArgs>
   titleKind?: boolean | Prisma.TitleKindDefaultArgs<ExtArgs>
@@ -2950,7 +2950,7 @@ export type PayableInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
 }
 export type PayableIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
-  beneficiary?: boolean | Prisma.PersonDefaultArgs<ExtArgs>
+  beneficiary?: boolean | Prisma.SupplierProfileDefaultArgs<ExtArgs>
   analytic?: boolean | Prisma.FinancialAnalyticDefaultArgs<ExtArgs>
   expectedPaymentMethod?: boolean | Prisma.PaymentMethodDefaultArgs<ExtArgs>
   titleKind?: boolean | Prisma.TitleKindDefaultArgs<ExtArgs>
@@ -2961,7 +2961,7 @@ export type PayableIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
 }
 export type PayableIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
-  beneficiary?: boolean | Prisma.PersonDefaultArgs<ExtArgs>
+  beneficiary?: boolean | Prisma.SupplierProfileDefaultArgs<ExtArgs>
   analytic?: boolean | Prisma.FinancialAnalyticDefaultArgs<ExtArgs>
   expectedPaymentMethod?: boolean | Prisma.PaymentMethodDefaultArgs<ExtArgs>
   titleKind?: boolean | Prisma.TitleKindDefaultArgs<ExtArgs>
@@ -2975,7 +2975,7 @@ export type $PayablePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   name: "Payable"
   objects: {
     firm: Prisma.$FirmPayload<ExtArgs>
-    beneficiary: Prisma.$PersonPayload<ExtArgs>
+    beneficiary: Prisma.$SupplierProfilePayload<ExtArgs>
     analytic: Prisma.$FinancialAnalyticPayload<ExtArgs>
     expectedPaymentMethod: Prisma.$PaymentMethodPayload<ExtArgs>
     titleKind: Prisma.$TitleKindPayload<ExtArgs>
@@ -3400,7 +3400,7 @@ readonly fields: PayableFieldRefs;
 export interface Prisma__PayableClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   firm<T extends Prisma.FirmDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FirmDefaultArgs<ExtArgs>>): Prisma.Prisma__FirmClient<runtime.Types.Result.GetResult<Prisma.$FirmPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  beneficiary<T extends Prisma.PersonDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PersonDefaultArgs<ExtArgs>>): Prisma.Prisma__PersonClient<runtime.Types.Result.GetResult<Prisma.$PersonPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  beneficiary<T extends Prisma.SupplierProfileDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SupplierProfileDefaultArgs<ExtArgs>>): Prisma.Prisma__SupplierProfileClient<runtime.Types.Result.GetResult<Prisma.$SupplierProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   analytic<T extends Prisma.FinancialAnalyticDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FinancialAnalyticDefaultArgs<ExtArgs>>): Prisma.Prisma__FinancialAnalyticClient<runtime.Types.Result.GetResult<Prisma.$FinancialAnalyticPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   expectedPaymentMethod<T extends Prisma.PaymentMethodDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PaymentMethodDefaultArgs<ExtArgs>>): Prisma.Prisma__PaymentMethodClient<runtime.Types.Result.GetResult<Prisma.$PaymentMethodPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   titleKind<T extends Prisma.TitleKindDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TitleKindDefaultArgs<ExtArgs>>): Prisma.Prisma__TitleKindClient<runtime.Types.Result.GetResult<Prisma.$TitleKindPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>

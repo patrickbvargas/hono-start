@@ -341,7 +341,7 @@ export type ReceivableWhereInput = {
   directEntryId?: Prisma.IntNullableFilter<"Receivable"> | number | null
   revenueId?: Prisma.IntNullableFilter<"Receivable"> | number | null
   firm?: Prisma.XOR<Prisma.FirmScalarRelationFilter, Prisma.FirmWhereInput>
-  debtor?: Prisma.XOR<Prisma.PersonScalarRelationFilter, Prisma.PersonWhereInput>
+  debtor?: Prisma.XOR<Prisma.ClientProfileScalarRelationFilter, Prisma.ClientProfileWhereInput>
   analytic?: Prisma.XOR<Prisma.FinancialAnalyticScalarRelationFilter, Prisma.FinancialAnalyticWhereInput>
   expectedPaymentMethod?: Prisma.XOR<Prisma.PaymentMethodScalarRelationFilter, Prisma.PaymentMethodWhereInput>
   titleKind?: Prisma.XOR<Prisma.TitleKindScalarRelationFilter, Prisma.TitleKindWhereInput>
@@ -371,7 +371,7 @@ export type ReceivableOrderByWithRelationInput = {
   directEntryId?: Prisma.SortOrderInput | Prisma.SortOrder
   revenueId?: Prisma.SortOrderInput | Prisma.SortOrder
   firm?: Prisma.FirmOrderByWithRelationInput
-  debtor?: Prisma.PersonOrderByWithRelationInput
+  debtor?: Prisma.ClientProfileOrderByWithRelationInput
   analytic?: Prisma.FinancialAnalyticOrderByWithRelationInput
   expectedPaymentMethod?: Prisma.PaymentMethodOrderByWithRelationInput
   titleKind?: Prisma.TitleKindOrderByWithRelationInput
@@ -405,7 +405,7 @@ export type ReceivableWhereUniqueInput = Prisma.AtLeast<{
   directEntryId?: Prisma.IntNullableFilter<"Receivable"> | number | null
   revenueId?: Prisma.IntNullableFilter<"Receivable"> | number | null
   firm?: Prisma.XOR<Prisma.FirmScalarRelationFilter, Prisma.FirmWhereInput>
-  debtor?: Prisma.XOR<Prisma.PersonScalarRelationFilter, Prisma.PersonWhereInput>
+  debtor?: Prisma.XOR<Prisma.ClientProfileScalarRelationFilter, Prisma.ClientProfileWhereInput>
   analytic?: Prisma.XOR<Prisma.FinancialAnalyticScalarRelationFilter, Prisma.FinancialAnalyticWhereInput>
   expectedPaymentMethod?: Prisma.XOR<Prisma.PaymentMethodScalarRelationFilter, Prisma.PaymentMethodWhereInput>
   titleKind?: Prisma.XOR<Prisma.TitleKindScalarRelationFilter, Prisma.TitleKindWhereInput>
@@ -472,7 +472,7 @@ export type ReceivableCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   firm: Prisma.FirmCreateNestedOneWithoutReceivablesInput
-  debtor: Prisma.PersonCreateNestedOneWithoutReceivablesInput
+  debtor: Prisma.ClientProfileCreateNestedOneWithoutReceivablesInput
   analytic: Prisma.FinancialAnalyticCreateNestedOneWithoutReceivablesInput
   expectedPaymentMethod: Prisma.PaymentMethodCreateNestedOneWithoutReceivablesInput
   titleKind: Prisma.TitleKindCreateNestedOneWithoutReceivablesInput
@@ -515,7 +515,7 @@ export type ReceivableUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   firm?: Prisma.FirmUpdateOneRequiredWithoutReceivablesNestedInput
-  debtor?: Prisma.PersonUpdateOneRequiredWithoutReceivablesNestedInput
+  debtor?: Prisma.ClientProfileUpdateOneRequiredWithoutReceivablesNestedInput
   analytic?: Prisma.FinancialAnalyticUpdateOneRequiredWithoutReceivablesNestedInput
   expectedPaymentMethod?: Prisma.PaymentMethodUpdateOneRequiredWithoutReceivablesNestedInput
   titleKind?: Prisma.TitleKindUpdateOneRequiredWithoutReceivablesNestedInput
@@ -1095,7 +1095,7 @@ export type ReceivableCreateWithoutFirmInput = {
   cancellationReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  debtor: Prisma.PersonCreateNestedOneWithoutReceivablesInput
+  debtor: Prisma.ClientProfileCreateNestedOneWithoutReceivablesInput
   analytic: Prisma.FinancialAnalyticCreateNestedOneWithoutReceivablesInput
   expectedPaymentMethod: Prisma.PaymentMethodCreateNestedOneWithoutReceivablesInput
   titleKind: Prisma.TitleKindCreateNestedOneWithoutReceivablesInput
@@ -1185,7 +1185,7 @@ export type ReceivableCreateWithoutAnalyticInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   firm: Prisma.FirmCreateNestedOneWithoutReceivablesInput
-  debtor: Prisma.PersonCreateNestedOneWithoutReceivablesInput
+  debtor: Prisma.ClientProfileCreateNestedOneWithoutReceivablesInput
   expectedPaymentMethod: Prisma.PaymentMethodCreateNestedOneWithoutReceivablesInput
   titleKind: Prisma.TitleKindCreateNestedOneWithoutReceivablesInput
   generation?: Prisma.FinancialGenerationCreateNestedOneWithoutReceivablesInput
@@ -1252,7 +1252,7 @@ export type ReceivableCreateWithoutExpectedPaymentMethodInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   firm: Prisma.FirmCreateNestedOneWithoutReceivablesInput
-  debtor: Prisma.PersonCreateNestedOneWithoutReceivablesInput
+  debtor: Prisma.ClientProfileCreateNestedOneWithoutReceivablesInput
   analytic: Prisma.FinancialAnalyticCreateNestedOneWithoutReceivablesInput
   titleKind: Prisma.TitleKindCreateNestedOneWithoutReceivablesInput
   generation?: Prisma.FinancialGenerationCreateNestedOneWithoutReceivablesInput
@@ -1319,7 +1319,7 @@ export type ReceivableCreateWithoutTitleKindInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   firm: Prisma.FirmCreateNestedOneWithoutReceivablesInput
-  debtor: Prisma.PersonCreateNestedOneWithoutReceivablesInput
+  debtor: Prisma.ClientProfileCreateNestedOneWithoutReceivablesInput
   analytic: Prisma.FinancialAnalyticCreateNestedOneWithoutReceivablesInput
   expectedPaymentMethod: Prisma.PaymentMethodCreateNestedOneWithoutReceivablesInput
   generation?: Prisma.FinancialGenerationCreateNestedOneWithoutReceivablesInput
@@ -1453,7 +1453,7 @@ export type ReceivableCreateWithoutRevenueInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   firm: Prisma.FirmCreateNestedOneWithoutReceivablesInput
-  debtor: Prisma.PersonCreateNestedOneWithoutReceivablesInput
+  debtor: Prisma.ClientProfileCreateNestedOneWithoutReceivablesInput
   analytic: Prisma.FinancialAnalyticCreateNestedOneWithoutReceivablesInput
   expectedPaymentMethod: Prisma.PaymentMethodCreateNestedOneWithoutReceivablesInput
   titleKind: Prisma.TitleKindCreateNestedOneWithoutReceivablesInput
@@ -1519,7 +1519,7 @@ export type ReceivableCreateWithoutGenerationInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   firm: Prisma.FirmCreateNestedOneWithoutReceivablesInput
-  debtor: Prisma.PersonCreateNestedOneWithoutReceivablesInput
+  debtor: Prisma.ClientProfileCreateNestedOneWithoutReceivablesInput
   analytic: Prisma.FinancialAnalyticCreateNestedOneWithoutReceivablesInput
   expectedPaymentMethod: Prisma.PaymentMethodCreateNestedOneWithoutReceivablesInput
   titleKind: Prisma.TitleKindCreateNestedOneWithoutReceivablesInput
@@ -1585,7 +1585,7 @@ export type ReceivableCreateWithoutDirectEntryInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   firm: Prisma.FirmCreateNestedOneWithoutReceivablesInput
-  debtor: Prisma.PersonCreateNestedOneWithoutReceivablesInput
+  debtor: Prisma.ClientProfileCreateNestedOneWithoutReceivablesInput
   analytic: Prisma.FinancialAnalyticCreateNestedOneWithoutReceivablesInput
   expectedPaymentMethod: Prisma.PaymentMethodCreateNestedOneWithoutReceivablesInput
   titleKind: Prisma.TitleKindCreateNestedOneWithoutReceivablesInput
@@ -1651,7 +1651,7 @@ export type ReceivableCreateWithoutReceiptsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   firm: Prisma.FirmCreateNestedOneWithoutReceivablesInput
-  debtor: Prisma.PersonCreateNestedOneWithoutReceivablesInput
+  debtor: Prisma.ClientProfileCreateNestedOneWithoutReceivablesInput
   analytic: Prisma.FinancialAnalyticCreateNestedOneWithoutReceivablesInput
   expectedPaymentMethod: Prisma.PaymentMethodCreateNestedOneWithoutReceivablesInput
   titleKind: Prisma.TitleKindCreateNestedOneWithoutReceivablesInput
@@ -1708,7 +1708,7 @@ export type ReceivableUpdateWithoutReceiptsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   firm?: Prisma.FirmUpdateOneRequiredWithoutReceivablesNestedInput
-  debtor?: Prisma.PersonUpdateOneRequiredWithoutReceivablesNestedInput
+  debtor?: Prisma.ClientProfileUpdateOneRequiredWithoutReceivablesNestedInput
   analytic?: Prisma.FinancialAnalyticUpdateOneRequiredWithoutReceivablesNestedInput
   expectedPaymentMethod?: Prisma.PaymentMethodUpdateOneRequiredWithoutReceivablesNestedInput
   titleKind?: Prisma.TitleKindUpdateOneRequiredWithoutReceivablesNestedInput
@@ -1749,7 +1749,7 @@ export type ReceivableCreateWithoutAttachmentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   firm: Prisma.FirmCreateNestedOneWithoutReceivablesInput
-  debtor: Prisma.PersonCreateNestedOneWithoutReceivablesInput
+  debtor: Prisma.ClientProfileCreateNestedOneWithoutReceivablesInput
   analytic: Prisma.FinancialAnalyticCreateNestedOneWithoutReceivablesInput
   expectedPaymentMethod: Prisma.PaymentMethodCreateNestedOneWithoutReceivablesInput
   titleKind: Prisma.TitleKindCreateNestedOneWithoutReceivablesInput
@@ -1806,7 +1806,7 @@ export type ReceivableUpdateWithoutAttachmentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   firm?: Prisma.FirmUpdateOneRequiredWithoutReceivablesNestedInput
-  debtor?: Prisma.PersonUpdateOneRequiredWithoutReceivablesNestedInput
+  debtor?: Prisma.ClientProfileUpdateOneRequiredWithoutReceivablesNestedInput
   analytic?: Prisma.FinancialAnalyticUpdateOneRequiredWithoutReceivablesNestedInput
   expectedPaymentMethod?: Prisma.PaymentMethodUpdateOneRequiredWithoutReceivablesNestedInput
   titleKind?: Prisma.TitleKindUpdateOneRequiredWithoutReceivablesNestedInput
@@ -1847,7 +1847,7 @@ export type ReceivableCreateWithoutAuditLogsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   firm: Prisma.FirmCreateNestedOneWithoutReceivablesInput
-  debtor: Prisma.PersonCreateNestedOneWithoutReceivablesInput
+  debtor: Prisma.ClientProfileCreateNestedOneWithoutReceivablesInput
   analytic: Prisma.FinancialAnalyticCreateNestedOneWithoutReceivablesInput
   expectedPaymentMethod: Prisma.PaymentMethodCreateNestedOneWithoutReceivablesInput
   titleKind: Prisma.TitleKindCreateNestedOneWithoutReceivablesInput
@@ -1904,7 +1904,7 @@ export type ReceivableUpdateWithoutAuditLogsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   firm?: Prisma.FirmUpdateOneRequiredWithoutReceivablesNestedInput
-  debtor?: Prisma.PersonUpdateOneRequiredWithoutReceivablesNestedInput
+  debtor?: Prisma.ClientProfileUpdateOneRequiredWithoutReceivablesNestedInput
   analytic?: Prisma.FinancialAnalyticUpdateOneRequiredWithoutReceivablesNestedInput
   expectedPaymentMethod?: Prisma.PaymentMethodUpdateOneRequiredWithoutReceivablesNestedInput
   titleKind?: Prisma.TitleKindUpdateOneRequiredWithoutReceivablesNestedInput
@@ -1962,7 +1962,7 @@ export type ReceivableUpdateWithoutFirmInput = {
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  debtor?: Prisma.PersonUpdateOneRequiredWithoutReceivablesNestedInput
+  debtor?: Prisma.ClientProfileUpdateOneRequiredWithoutReceivablesNestedInput
   analytic?: Prisma.FinancialAnalyticUpdateOneRequiredWithoutReceivablesNestedInput
   expectedPaymentMethod?: Prisma.PaymentMethodUpdateOneRequiredWithoutReceivablesNestedInput
   titleKind?: Prisma.TitleKindUpdateOneRequiredWithoutReceivablesNestedInput
@@ -2040,7 +2040,7 @@ export type ReceivableUpdateWithoutAnalyticInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   firm?: Prisma.FirmUpdateOneRequiredWithoutReceivablesNestedInput
-  debtor?: Prisma.PersonUpdateOneRequiredWithoutReceivablesNestedInput
+  debtor?: Prisma.ClientProfileUpdateOneRequiredWithoutReceivablesNestedInput
   expectedPaymentMethod?: Prisma.PaymentMethodUpdateOneRequiredWithoutReceivablesNestedInput
   titleKind?: Prisma.TitleKindUpdateOneRequiredWithoutReceivablesNestedInput
   generation?: Prisma.FinancialGenerationUpdateOneWithoutReceivablesNestedInput
@@ -2117,7 +2117,7 @@ export type ReceivableUpdateWithoutExpectedPaymentMethodInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   firm?: Prisma.FirmUpdateOneRequiredWithoutReceivablesNestedInput
-  debtor?: Prisma.PersonUpdateOneRequiredWithoutReceivablesNestedInput
+  debtor?: Prisma.ClientProfileUpdateOneRequiredWithoutReceivablesNestedInput
   analytic?: Prisma.FinancialAnalyticUpdateOneRequiredWithoutReceivablesNestedInput
   titleKind?: Prisma.TitleKindUpdateOneRequiredWithoutReceivablesNestedInput
   generation?: Prisma.FinancialGenerationUpdateOneWithoutReceivablesNestedInput
@@ -2194,7 +2194,7 @@ export type ReceivableUpdateWithoutTitleKindInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   firm?: Prisma.FirmUpdateOneRequiredWithoutReceivablesNestedInput
-  debtor?: Prisma.PersonUpdateOneRequiredWithoutReceivablesNestedInput
+  debtor?: Prisma.ClientProfileUpdateOneRequiredWithoutReceivablesNestedInput
   analytic?: Prisma.FinancialAnalyticUpdateOneRequiredWithoutReceivablesNestedInput
   expectedPaymentMethod?: Prisma.PaymentMethodUpdateOneRequiredWithoutReceivablesNestedInput
   generation?: Prisma.FinancialGenerationUpdateOneWithoutReceivablesNestedInput
@@ -2347,7 +2347,7 @@ export type ReceivableUpdateWithoutRevenueInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   firm?: Prisma.FirmUpdateOneRequiredWithoutReceivablesNestedInput
-  debtor?: Prisma.PersonUpdateOneRequiredWithoutReceivablesNestedInput
+  debtor?: Prisma.ClientProfileUpdateOneRequiredWithoutReceivablesNestedInput
   analytic?: Prisma.FinancialAnalyticUpdateOneRequiredWithoutReceivablesNestedInput
   expectedPaymentMethod?: Prisma.PaymentMethodUpdateOneRequiredWithoutReceivablesNestedInput
   titleKind?: Prisma.TitleKindUpdateOneRequiredWithoutReceivablesNestedInput
@@ -2421,7 +2421,7 @@ export type ReceivableUpdateWithoutGenerationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   firm?: Prisma.FirmUpdateOneRequiredWithoutReceivablesNestedInput
-  debtor?: Prisma.PersonUpdateOneRequiredWithoutReceivablesNestedInput
+  debtor?: Prisma.ClientProfileUpdateOneRequiredWithoutReceivablesNestedInput
   analytic?: Prisma.FinancialAnalyticUpdateOneRequiredWithoutReceivablesNestedInput
   expectedPaymentMethod?: Prisma.PaymentMethodUpdateOneRequiredWithoutReceivablesNestedInput
   titleKind?: Prisma.TitleKindUpdateOneRequiredWithoutReceivablesNestedInput
@@ -2495,7 +2495,7 @@ export type ReceivableUpdateWithoutDirectEntryInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   firm?: Prisma.FirmUpdateOneRequiredWithoutReceivablesNestedInput
-  debtor?: Prisma.PersonUpdateOneRequiredWithoutReceivablesNestedInput
+  debtor?: Prisma.ClientProfileUpdateOneRequiredWithoutReceivablesNestedInput
   analytic?: Prisma.FinancialAnalyticUpdateOneRequiredWithoutReceivablesNestedInput
   expectedPaymentMethod?: Prisma.PaymentMethodUpdateOneRequiredWithoutReceivablesNestedInput
   titleKind?: Prisma.TitleKindUpdateOneRequiredWithoutReceivablesNestedInput
@@ -2610,7 +2610,7 @@ export type ReceivableSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   directEntryId?: boolean
   revenueId?: boolean
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
-  debtor?: boolean | Prisma.PersonDefaultArgs<ExtArgs>
+  debtor?: boolean | Prisma.ClientProfileDefaultArgs<ExtArgs>
   analytic?: boolean | Prisma.FinancialAnalyticDefaultArgs<ExtArgs>
   expectedPaymentMethod?: boolean | Prisma.PaymentMethodDefaultArgs<ExtArgs>
   titleKind?: boolean | Prisma.TitleKindDefaultArgs<ExtArgs>
@@ -2641,7 +2641,7 @@ export type ReceivableSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   directEntryId?: boolean
   revenueId?: boolean
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
-  debtor?: boolean | Prisma.PersonDefaultArgs<ExtArgs>
+  debtor?: boolean | Prisma.ClientProfileDefaultArgs<ExtArgs>
   analytic?: boolean | Prisma.FinancialAnalyticDefaultArgs<ExtArgs>
   expectedPaymentMethod?: boolean | Prisma.PaymentMethodDefaultArgs<ExtArgs>
   titleKind?: boolean | Prisma.TitleKindDefaultArgs<ExtArgs>
@@ -2668,7 +2668,7 @@ export type ReceivableSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   directEntryId?: boolean
   revenueId?: boolean
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
-  debtor?: boolean | Prisma.PersonDefaultArgs<ExtArgs>
+  debtor?: boolean | Prisma.ClientProfileDefaultArgs<ExtArgs>
   analytic?: boolean | Prisma.FinancialAnalyticDefaultArgs<ExtArgs>
   expectedPaymentMethod?: boolean | Prisma.PaymentMethodDefaultArgs<ExtArgs>
   titleKind?: boolean | Prisma.TitleKindDefaultArgs<ExtArgs>
@@ -2699,7 +2699,7 @@ export type ReceivableSelectScalar = {
 export type ReceivableOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "amount" | "dueDate" | "notes" | "cancelledAt" | "cancellationReason" | "createdAt" | "updatedAt" | "firmId" | "debtorId" | "analyticId" | "expectedPaymentMethodId" | "titleKindId" | "generationId" | "directEntryId" | "revenueId", ExtArgs["result"]["receivable"]>
 export type ReceivableInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
-  debtor?: boolean | Prisma.PersonDefaultArgs<ExtArgs>
+  debtor?: boolean | Prisma.ClientProfileDefaultArgs<ExtArgs>
   analytic?: boolean | Prisma.FinancialAnalyticDefaultArgs<ExtArgs>
   expectedPaymentMethod?: boolean | Prisma.PaymentMethodDefaultArgs<ExtArgs>
   titleKind?: boolean | Prisma.TitleKindDefaultArgs<ExtArgs>
@@ -2713,7 +2713,7 @@ export type ReceivableInclude<ExtArgs extends runtime.Types.Extensions.InternalA
 }
 export type ReceivableIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
-  debtor?: boolean | Prisma.PersonDefaultArgs<ExtArgs>
+  debtor?: boolean | Prisma.ClientProfileDefaultArgs<ExtArgs>
   analytic?: boolean | Prisma.FinancialAnalyticDefaultArgs<ExtArgs>
   expectedPaymentMethod?: boolean | Prisma.PaymentMethodDefaultArgs<ExtArgs>
   titleKind?: boolean | Prisma.TitleKindDefaultArgs<ExtArgs>
@@ -2723,7 +2723,7 @@ export type ReceivableIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.E
 }
 export type ReceivableIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
-  debtor?: boolean | Prisma.PersonDefaultArgs<ExtArgs>
+  debtor?: boolean | Prisma.ClientProfileDefaultArgs<ExtArgs>
   analytic?: boolean | Prisma.FinancialAnalyticDefaultArgs<ExtArgs>
   expectedPaymentMethod?: boolean | Prisma.PaymentMethodDefaultArgs<ExtArgs>
   titleKind?: boolean | Prisma.TitleKindDefaultArgs<ExtArgs>
@@ -2736,7 +2736,7 @@ export type $ReceivablePayload<ExtArgs extends runtime.Types.Extensions.Internal
   name: "Receivable"
   objects: {
     firm: Prisma.$FirmPayload<ExtArgs>
-    debtor: Prisma.$PersonPayload<ExtArgs>
+    debtor: Prisma.$ClientProfilePayload<ExtArgs>
     analytic: Prisma.$FinancialAnalyticPayload<ExtArgs>
     expectedPaymentMethod: Prisma.$PaymentMethodPayload<ExtArgs>
     titleKind: Prisma.$TitleKindPayload<ExtArgs>
@@ -3159,7 +3159,7 @@ readonly fields: ReceivableFieldRefs;
 export interface Prisma__ReceivableClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   firm<T extends Prisma.FirmDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FirmDefaultArgs<ExtArgs>>): Prisma.Prisma__FirmClient<runtime.Types.Result.GetResult<Prisma.$FirmPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  debtor<T extends Prisma.PersonDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PersonDefaultArgs<ExtArgs>>): Prisma.Prisma__PersonClient<runtime.Types.Result.GetResult<Prisma.$PersonPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  debtor<T extends Prisma.ClientProfileDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ClientProfileDefaultArgs<ExtArgs>>): Prisma.Prisma__ClientProfileClient<runtime.Types.Result.GetResult<Prisma.$ClientProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   analytic<T extends Prisma.FinancialAnalyticDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FinancialAnalyticDefaultArgs<ExtArgs>>): Prisma.Prisma__FinancialAnalyticClient<runtime.Types.Result.GetResult<Prisma.$FinancialAnalyticPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   expectedPaymentMethod<T extends Prisma.PaymentMethodDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PaymentMethodDefaultArgs<ExtArgs>>): Prisma.Prisma__PaymentMethodClient<runtime.Types.Result.GetResult<Prisma.$PaymentMethodPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   titleKind<T extends Prisma.TitleKindDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TitleKindDefaultArgs<ExtArgs>>): Prisma.Prisma__TitleKindClient<runtime.Types.Result.GetResult<Prisma.$TitleKindPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>

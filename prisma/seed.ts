@@ -10,6 +10,7 @@ import { SEED_MARKER } from "./seed-financial-fixtures.js";
 import {
 	completeFinancialFixtures,
 	seedFinancialScenarios,
+ seedGenericPeople,
 } from "./seed-financial-scenarios.js";
 
 const connectionString = process.env.DIRECT_URL;
@@ -34,6 +35,19 @@ async function main() {
 				where: { entityType: "Seed", entityId: SEED_MARKER },
 			});
 			if (existing) {
+				for (const row of catalogs.employeeType) {
+					await tx.employeeType.upsert({
+						where: { value: row.value },
+						update: { label: row.label },
+						create: row,
+					});
+				}
+				const formerStaff = await tx.employeeType.findUnique({ where: { value: "STAFF" } });
+				if (formerStaff) {
+					const other = await tx.employeeType.findUniqueOrThrow({ where: { value: "OTHER" } });
+					await tx.employeeProfile.updateMany({ where: { employeeTypeId: formerStaff.id }, data: { employeeTypeId: other.id } });
+					await tx.employeeType.delete({ where: { id: formerStaff.id } });
+				}
 				const companyType = await tx.personType.findUniqueOrThrow({
 					where: { value: "COMPANY" },
 				});
@@ -44,11 +58,12 @@ async function main() {
 						fullName: "Empresa demonstrativa",
 						document: "11222333000181",
 						personTypeId: companyType.id,
-						isCustomer: true,
-						isSupplier: true,
+						clientProfile: { create: { id:15 } },
+ supplierProfile: { create: { id:15 } },
 					},
 				});
 				await completeFinancialFixtures(tx);
+ await seedGenericPeople(tx);
 				console.log(
 					"Seed existente: validando sem duplicar eventos financeiros.",
 				);
@@ -90,6 +105,7 @@ async function main() {
 			}
 			await seedFinancialScenarios(tx, lookups);
 			await completeFinancialFixtures(tx);
+ await seedGenericPeople(tx);
 		},
 		{ timeout: 120000, maxWait: 15000 },
 	);

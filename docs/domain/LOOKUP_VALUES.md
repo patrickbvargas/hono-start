@@ -41,7 +41,15 @@ Rename migrations preserve rows, IDs, FK relationships, RLS and grants. Raw SQL 
 | Value | Label |
 |---|---|
 | `LAWYER` | Advogado |
-| `ADMIN_ASSISTANT` | Assistente Administrativo |
+| `ADMIN_ASSISTANT` | Auxiliar Administrativo |
+| `INTERN` | Estagiário |
+| `COORDINATOR` | Coordenador |
+| `MANAGER` | Gerente |
+| `ACCOUNTANT` | Contador |
+| `LEGAL_ASSISTANT` | Assistente Jurídico |
+| `OTHER` | Outro |
+
+EmployeeType é a função do colaborador, distinta dos papéis cumulativos Cliente/Fornecedor/Colaborador. Novas funções não concedem acesso a contratos nem geram remuneração automaticamente. Somente Advogado exige OAB. O identificador ADMIN_ASSISTANT permanece estável para preservar os vínculos existentes; o rótulo de AssignmentType não é alterado.
 
 ## User Roles
 
@@ -128,3 +136,5 @@ Rename migrations preserve rows, IDs, FK relationships, RLS and grants. Raw SQL 
 ## Legacy user roles
 
 The local UserRole lookup remains for historical compatibility during migration. It is not selectable authority for accounts. Current roles and grants are configured in Clerk; employee business forms do not assign access.
+
+Outro inclui funcionários sem função específica neste catálogo. Função não define role Clerk nem autorização.

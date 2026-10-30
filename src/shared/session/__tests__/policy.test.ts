@@ -198,13 +198,16 @@ describe("Clerk-granted authorization", () => {
 		});
 		const resource = {
 			firmId: 100,
-			beneficiaryId: 900,
+			beneficiaryPersonId: 900,
 			isRemuneration: true,
 			contract: { firmId: 100, isAssignedToActor: true },
 		};
 		expect(can(session, "org:payables:read_own", resource)).toBe(true);
 		expect(
-			can(session, "org:payables:read_own", { ...resource, beneficiaryId: 10 }),
+			can(session, "org:payables:read_own", {
+				...resource,
+				beneficiaryPersonId: 10,
+			}),
 		).toBe(false);
 		expect(
 			can(session, "org:payables:read_own", {

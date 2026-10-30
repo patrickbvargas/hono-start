@@ -2,6 +2,10 @@
 
 Status: approved design; target Prisma persistence and development fixtures implemented, application workflows pending. See [database evidence](../implementation/FINANCIAL_DATABASE_EVIDENCE.md). Decision date: 2026-10-29. This document is self-contained and normative for the ordered financial redesign. Existing code remains the development baseline until the implementation gates in [the roadmap](../implementation/FINANCIAL_ROADMAP.md) pass. It must not be mistaken for evidence that any target feature is live.
 
+## Revision precedence — 2026-10-30
+
+[Person registration](PERSON_REGISTRATION.md) supersedes earlier navigation/document/role assumptions: one Pessoas route, cumulative role checkboxes, employee implies supplier, receivable customer/payable supplier, seeded generic Persons with null document. These new deltas are pending implementation, including contextual Clerk review after Prisma/seed.
+
 ## Scope and vocabulary
 
 Operational roots are Contract and Expense. Revenue and contract assignments belong to Contract. Financial roots are Receivable, Receipt, Payable and Payment. There is no new Order or Invoice module in this scope; their addition later must not require adding origin-specific calculation columns to financial titles.
@@ -34,7 +38,7 @@ Finance can also create titles directly. Every title has exactly one identifiabl
 
 ## Receipts, payments and multi-selection
 
-Every Receivable identifies a debtor Person; every Payable identifies a beneficiary Person, including taxes, utilities and direct entries. Origin parties must satisfy relevant business-role rules; flags never authorize scope.
+Every Receivable identifies a customer Person; every Payable identifies a supplier Person, including employees, taxes, utilities and direct entries. Employees also require supplier role. Seeded generic customer/supplier Persons allow consolidated entries without fiscal document under PERSON_REGISTRATION.md. Origin parties must satisfy relevant business-role rules; flags never authorize scope.
 
 Each Receipt belongs to exactly one Receivable; each Payment belongs to exactly one Payable. N valid settlements may abate the same title. Select N authorized titles in one direction and Firm, across Persons and origins, adjust each line if needed, and confirm once. Create one independent Receipt or Payment per selected title, atomically. Neither ReceiptBatch nor PaymentBatch, a lot entity or automatic person subgroups exist. There is no installment-count ceiling on settlements or compulsory sequence; suggest oldest/overdue first without blocking future titles with balance.
 
@@ -102,9 +106,9 @@ Verify Clerk production plan/role/custom-permission limits before provider confi
 
 The [decision register](FINANCIAL_DECISIONS.md) records all 51 approved answers. The [test matrix](../implementation/FINANCIAL_TEST_MATRIX.md) maps them to implementation evidence. Title face values are positive decimal currency amounts; settlement principal is strictly positive, although effective cash may be zero for an authorized full discount. Do not use floating point for persisted arithmetic.
 
-## Separate registration screens over shared Person
+## Unified registration over shared Person
 
-The frontend SHALL retain separate Clientes, Fornecedores and Colaboradores screens and sidebar entries, each exposing only its contextual fields/actions under explicit permissions. Do not replace them with a single generic Pessoas menu. They project the same global Person: cumulative customer/supplier/employee roles do not duplicate identity or documents. Authorized collaborator management exposes EmployeeProfile type, applicable OAB, remuneration/referral percentages and access binding. Existing calculation snapshots are never recalculated by a profile percentage edit.
+The frontend SHALL retain one Pessoas screen/sidebar entry with contextual role checkboxes and filters, each exposing only its contextual fields/actions under explicit permissions. This supersedes the earlier separate-menu decision; preserve per-role and per-field authorization in the unified route. They project the same global Person: cumulative customer/supplier/employee roles do not duplicate identity or documents. Authorized collaborator management exposes EmployeeProfile type, applicable OAB, remuneration/referral percentages and access binding. Existing calculation snapshots are never recalculated by a profile percentage edit.
 
 Member SHALL NOT access supplier or collaborator management, including routes, APIs, options, counts, exports, profile fields and compensation percentages. Customer access remains limited to assigned-contract scope. A shared Person readable as customer SHALL NOT serialize its EmployeeProfile, other role flags, access settings or privileged relationships. This restriction does not remove already-approved own-remuneration access or the permitted team participation display inside assigned contracts; neither grants collaborator-directory access. Hiding sidebar entries alone is insufficient.
 

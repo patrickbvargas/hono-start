@@ -107,6 +107,16 @@ export type TitleKind = Prisma.TitleKindModel
  */
 export type Person = Prisma.PersonModel
 /**
+ * Model ClientProfile
+ * 
+ */
+export type ClientProfile = Prisma.ClientProfileModel
+/**
+ * Model SupplierProfile
+ * 
+ */
+export type SupplierProfile = Prisma.SupplierProfileModel
+/**
  * Model EmployeeProfile
  * 
  */

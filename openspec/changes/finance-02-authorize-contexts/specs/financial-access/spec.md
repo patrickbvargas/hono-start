@@ -35,3 +35,10 @@ Member SHALL NOT access supplier or collaborator management, independently of sh
 #### Scenario: Contract team is not collaborator-directory access
 - **WHEN** Member reads already-permitted team participation on an assigned contract or their own remuneration
 - **THEN** existing contextual access is preserved without granting the collaborator directory or another participant's compensation settings
+
+### Requirement: Unified Pessoas context isolation
+A unified Pessoas route SHALL preserve independent customer, supplier and professional permissions. A readable customer who has additional roles SHALL not expose those roles, EmployeeProfile percentages or access configuration to Member. Generic seeded Persons SHALL not authenticate. Revisit Clerk/session projections only after the revised Prisma/seed validation; role names SHALL not grant broad directory access.
+
+#### Scenario: Role filter forgery
+- **WHEN** Member requests supplier/employee role filters, privileged profile fields, or a generic identity as their account
+- **THEN** server denies the forbidden scope without leaking records or granting access through the unified route

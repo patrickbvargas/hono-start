@@ -15,7 +15,7 @@ Use the fixed TanStack Start/Router/Query/Form/Table, Zod, Prisma/PostgreSQL, sh
 Implementation boundaries:
 
 1. Define Person/PersonType and EmployeeProfile schemas, cumulative roles and document uniqueness using existing normalization rules; map every current client and employee field.
-2. Implement Person/Profile operations and separate Clientes, Fornecedores and Colaboradores screens/sidebar entries over the same Person, not one generic Pessoas screen. Collaborator management owns professional fields/percentages/access; customer projections exclude privileged profile, role and access data. Keep target surfaces gated until phase02 permissions are enforced.
+2. Implement Person/Profile operations and one Pessoas route/sidebar entry with role checkboxes and permission-scoped role filters over the same Person, as revised in docs/domain/PERSON_REGISTRATION.md. Collaborator management owns professional fields/percentages/access; customer projections exclude privileged profile, role and access data. Keep target surfaces gated until phase02 permissions are enforced.
 3. Rewire Contract customer, assignment/profile, Expense counterparty, attachments, actor references and fixtures through an explicit ID map; never reinterpret old IDs.
 4. Coordinate Clerk employeeId-to-personId binding with verified membership and profile activation; deny both missing and inactive profiles for all roles.
 5. Add field-map and owner-scope tests, same-person multiple-role fixtures, normalized duplicate rejection and organization-switch regression coverage.
@@ -44,3 +44,11 @@ Only technical layout choices consistent with the approved rules remain. Verify 
 ## Seed continuity
 
 Seed compatibility is a completion gate in every phase. Follow the incremental seeds and final reset contract in docs/implementation/FINANCIAL_ROADMAP.md: update fixture generators/assertions with schema/workflow changes, preserve valid dev identity bindings and real monetary/origin invariants, and record reproducible validation. Final clean migration/generate/seed and app-use checks belong to phase09; this design does not run reset or change external providers.
+
+## Person revision — 2026-10-30
+
+Follow docs/domain/PERSON_REGISTRATION.md over prior separate-screen/document assumptions. Unified Pessoas route with role checkboxes/filters; employee implies supplier; optional 1:1 ClientProfile, SupplierProfile and EmployeeProfile from this revision; receivable customer/payable supplier eligibility; seeded Pagamentos diversos/Recebimentos diversos generic counterparties without fiscal documents or professional profiles. Ordinary documents stay required/unique. Apply role/document constraints and deterministic generic seed keys first, verify database/seed, then review Clerk/session/projections. Preserve explicit grants, Member field/record confidentiality, real employee commission origin and existing UI style. Record new implementation evidence separately from commits8c0718b/d0cb812; do not mark whole phases done from foundation work.
+
+## Role-profile FK revision
+
+Implement/verify the approved ClientProfile/SupplierProfile/EmployeeProfile 1:1 extensions now, derive role checkboxes from active profiles, atomically enforce employee→supplier for the same Person. Explicitly map Contract/Receivable to ClientProfile and Expense/Payable to SupplierProfile. Keep Clerk actor identity as Person, assignment as EmployeeProfile, and resolve beneficiary Person via SupplierProfile in own-scope/calculation checks. Update migrations, seeds (including documentless generic role profiles), FK/lifecycle/ID-mismatch tests and API projections; no duplicate personal fields or independent role-flag truth. Prisma/seed validation precedes Clerk policy work. No bank/address/family implementation now; reference docs/domain/PERSON_REGISTRATION.md.

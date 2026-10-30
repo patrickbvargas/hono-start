@@ -1,19 +1,20 @@
 import { createFileRoute, stripSearchParams } from "@tanstack/react-router";
 import {
-	ClientDelete,
-	ClientDetails,
-	ClientFilter,
-	ClientForm,
-	ClientList,
-	ClientRestore,
-	ClientTable,
-	clientSearchDefaults,
-	clientSearchSchema,
-	getClientsQueryOptions,
-	getClientTypesQueryOptions,
-	useClientFilter,
-	useClients,
-} from "@/features/clients";
+	getEmployeeTypesQueryOptions,
+	getPeopleQueryOptions,
+	getPersonTypesQueryOptions,
+	PersonDelete,
+	PersonDetails,
+	PersonFilter,
+	PersonForm,
+	PersonList,
+	PersonRestore,
+	PersonTable,
+	personSearchDefaults,
+	personSearchSchema,
+	usePeople,
+	usePersonFilter,
+} from "@/features/people";
 import { ButtonNew } from "@/shared/components/button-new";
 import { EntityView } from "@/shared/components/entity-view";
 import { RouteError } from "@/shared/components/route-error";
@@ -28,37 +29,38 @@ import { useEntityOverlay } from "@/shared/hooks/use-entity-overlay";
 import { entityDetailSearchSchema } from "@/shared/schemas/entity-detail-search";
 import { hasPermission, useLoggedUserSession } from "@/shared/session";
 
-export const Route = createFileRoute("/_app/clientes")({
-	staticData: { pageTitle: ROUTES.client.title },
-	validateSearch: clientSearchSchema.extend(entityDetailSearchSchema.shape),
+export const Route = createFileRoute("/_app/pessoas")({
+	staticData: { pageTitle: ROUTES.person.title },
+	validateSearch: personSearchSchema.extend(entityDetailSearchSchema.shape),
 	search: {
-		middlewares: [stripSearchParams(clientSearchDefaults)],
+		middlewares: [stripSearchParams(personSearchDefaults)],
 	},
 	loaderDeps: ({ search: { detailId: _detailId, ...search } }) => ({ search }),
 	loader: async ({ context: { queryClient }, deps: { search } }) => {
 		await Promise.all([
-			queryClient.query(getClientsQueryOptions(search)),
-			queryClient.query(getClientTypesQueryOptions()),
+			queryClient.query(getPeopleQueryOptions(search)),
+			queryClient.query(getPersonTypesQueryOptions()),
+			queryClient.query(getEmployeeTypesQueryOptions()),
 		]);
 	},
 	component: RouteComponent,
 	errorComponent: ({ error }) => (
-		<RouteError title={ROUTES.client.title} error={error} />
+		<RouteError title={ROUTES.person.title} error={error} />
 	),
 });
 
 function RouteComponent() {
-	const filterController = useClientFilter();
+	const filterController = usePersonFilter();
 	const { detailId, ...search } = Route.useSearch();
 	const navigate = Route.useNavigate();
-	const openClientPage = (id: number) => {
+	const openPersonPage = (id: number) => {
 		void navigate({
-			to: "/clientes/$clientId",
-			params: { clientId: String(id) },
+			to: "/pessoas/$personId",
+			params: { personId: String(id) },
 			search: { tab: "overview", returnTo: search },
 		});
 	};
-	const { clients } = useClients(search);
+	const { people } = usePeople(search);
 	const { overlay } = useEntityOverlay(detailId, (id) => {
 		void navigate({
 			search: (previous) => ({ ...previous, detailId: id }),
@@ -67,24 +69,24 @@ function RouteComponent() {
 	});
 	const session = useLoggedUserSession();
 	const isAdmin =
-		hasPermission(session, "org:clients:delete") ||
-		hasPermission(session, "org:clients:restore");
+		hasPermission(session, "org:people:delete") ||
+		hasPermission(session, "org:people:restore");
 
 	const emptyState = (
 		<ListEmptyState
-			title="Nenhum cliente disponível"
-			description="Os clientes disponíveis para consulta aparecerão aqui."
+			title="Nenhuma pessoa disponível"
+			description="Os pessoas disponíveis para consulta aparecerão aqui."
 			hasFilters={filterController.canClearFilters}
 			onClearFilters={filterController.handleClearFilters}
-			hasRecords={clients.total > 0}
+			hasRecords={people.total > 0}
 			onFirstPage={() =>
 				void navigate({ search: (previous) => ({ ...previous, page: 1 }) })
 			}
 			createAction={
-				hasPermission(session, "org:clients:create") ? (
+				hasPermission(session, "org:people:create") ? (
 					<ButtonNew
-						permission="org:clients:create"
-						label="Novo cliente"
+						permission="org:people:create"
+						label="Nova pessoa"
 						onClick={() => overlay.create.open()}
 					/>
 				) : null
@@ -94,26 +96,26 @@ function RouteComponent() {
 
 	return (
 		<Wrapper
-			title={ROUTES.client.title}
+			title={ROUTES.person.title}
 			actions={
 				<ButtonNew
-					permission="org:clients:create"
-					label="Novo cliente"
+					permission="org:people:create"
+					label="Nova pessoa"
 					onClick={() => overlay.create.open()}
 				/>
 			}
 		>
 			<WrapperHeader>
-				<ClientFilter controller={filterController} />
+				<PersonFilter controller={filterController} />
 			</WrapperHeader>
 			<WrapperBody>
 				<EntityView
 					className="min-h-0 flex-1"
 					list={
-						<ClientList
+						<PersonList
 							emptyState={emptyState}
-							onOpenPage={openClientPage}
-							data={clients}
+							onOpenPage={openPersonPage}
+							data={people}
 							onEdit={overlay.edit.open}
 							onView={overlay.details.open}
 							onDelete={overlay.delete.open}
@@ -122,10 +124,10 @@ function RouteComponent() {
 						/>
 					}
 					table={
-						<ClientTable
+						<PersonTable
 							emptyState={emptyState}
-							onOpenPage={openClientPage}
-							data={clients}
+							onOpenPage={openPersonPage}
+							data={people}
 							onEdit={overlay.edit.open}
 							onView={overlay.details.open}
 							onDelete={overlay.delete.open}
@@ -135,7 +137,7 @@ function RouteComponent() {
 					}
 				/>
 				{overlay.details.render((id, state) => (
-					<ClientDetails
+					<PersonDetails
 						id={id}
 						state={state}
 						onEdit={overlay.edit.open}
@@ -145,16 +147,16 @@ function RouteComponent() {
 					/>
 				))}
 				{overlay.create.render((state) => (
-					<ClientForm state={state} onSuccess={state.close} />
+					<PersonForm state={state} onSuccess={state.close} />
 				))}
 				{overlay.edit.render((id, state) => (
-					<ClientForm state={state} id={id} onSuccess={state.close} />
+					<PersonForm state={state} id={id} onSuccess={state.close} />
 				))}
 				{overlay.delete.render((id, state) => (
-					<ClientDelete id={id} state={state} onSuccess={state.close} />
+					<PersonDelete id={id} state={state} onSuccess={state.close} />
 				))}
 				{overlay.restore.render((id, state) => (
-					<ClientRestore id={id} state={state} onSuccess={state.close} />
+					<PersonRestore id={id} state={state} onSuccess={state.close} />
 				))}
 			</WrapperBody>
 		</Wrapper>

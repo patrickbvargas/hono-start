@@ -16,7 +16,7 @@
 
 ## Additional implementation gate
 
-- [ ] Walk through separate Clientes/Fornecedores/Colaboradores menus with one multi-role Person; verify no identity duplication, authorized collaborator percentage management, Member direct-route/API denial and absence of privileged fields in customer responses/options/exports, while permitted contract-team and own-remuneration views still work.
+- [ ] Walk through the unified Pessoas menu with Cliente/Fornecedor/Colaborador role filters with one multi-role Person; verify no identity duplication, authorized collaborator percentage management, Member direct-route/API denial and absence of privileged fields in customer responses/options/exports, while permitted contract-team and own-remuneration views still work.
 
 ## Additional acceptance task
 
@@ -31,3 +31,11 @@
 - [ ] Inspect and fix db:reset orchestration/migration history and seed invocation as needed for the installed Prisma version; verify seed assertions for catalogs, multi-role people, valid origins, money/balances, remuneration, proofs and current/overdue/future scenarios without future actual cash.
 - [ ] Document and verify dev Clerk users/memberships/grants/Firm/Person mappings and Storage prerequisites; ensure configured bindings survive repeated reset without stale IDs, hardcoded secrets or manual database repair.
 - [ ] Run two clean `pnpm run db:reset` cycles against the explicitly verified disposable target; after each, log in as Admin/Member and exercise registration, generation, receipts/payments, confidentiality and reports. Record actual evidence and run full pnpm verify. Do not mark complete on seed exit code alone.
+
+## Person revision gate — 2026-10-30
+
+- [ ] Follow docs/domain/PERSON_REGISTRATION.md over prior separate-screen/document assumptions. Unified Pessoas route with role checkboxes/filters; employee implies supplier; optional 1:1 ClientProfile, SupplierProfile and EmployeeProfile from this revision; receivable customer/payable supplier eligibility; seeded Pagamentos diversos/Recebimentos diversos generic counterparties without fiscal documents or professional profiles. Ordinary documents stay required/unique. Apply role/document constraints and deterministic generic seed keys first, verify database/seed, then review Clerk/session/projections. Preserve explicit grants, Member field/record confidentiality, real employee commission origin and existing UI style. Record new implementation evidence separately from commits8c0718b/d0cb812; do not mark whole phases done from foundation work.
+
+## Role-profile FK gate
+
+- [ ] Implement/verify the approved ClientProfile/SupplierProfile/EmployeeProfile 1:1 extensions now, derive role checkboxes from active profiles, atomically enforce employee→supplier for the same Person. Explicitly map Contract/Receivable to ClientProfile and Expense/Payable to SupplierProfile. Keep Clerk actor identity as Person, assignment as EmployeeProfile, and resolve beneficiary Person via SupplierProfile in own-scope/calculation checks. Update migrations, seeds (including documentless generic role profiles), FK/lifecycle/ID-mismatch tests and API projections; no duplicate personal fields or independent role-flag truth. Prisma/seed validation precedes Clerk policy work. No bank/address/family implementation now; reference docs/domain/PERSON_REGISTRATION.md.

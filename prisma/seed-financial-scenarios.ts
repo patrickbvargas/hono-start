@@ -43,9 +43,8 @@ export async function seedFinancialScenarios(
 							: `Pessoa demonstrativa ${i}`,
 				document: seedCpf(i),
 				personTypeId: id("personType", "INDIVIDUAL"),
-				isCustomer: true,
-				isSupplier: i >= 3,
-				isEmployee: i <= 11,
+				clientProfile: { create: { id: i } },
+				supplierProfile: { create: { id: i } },
 				isActive: i !== 14,
 			},
 		});
@@ -71,8 +70,8 @@ export async function seedFinancialScenarios(
 			fullName: "Empresa demonstrativa",
 			document: "11222333000181",
 			personTypeId: id("personType", "COMPANY"),
-			isCustomer: true,
-			isSupplier: true,
+			clientProfile: { create: { id: 15 } },
+			supplierProfile: { create: { id: 15 } },
 		},
 	});
 	let serial = 0;
@@ -337,7 +336,7 @@ export async function seedFinancialScenarios(
 					data: {
 						...titleBase,
 						firmId,
-						beneficiaryId: assignment.employeeProfileId,
+						beneficiaryId: (await tx.supplierProfile.findUniqueOrThrow({ where: { personId: (await tx.employeeProfile.findUniqueOrThrow({ where: { id: assignment.employeeProfileId } })).personId } })).id,
 						remunerationCalculationId: calc.id,
 						amount,
 						dueDate: calc.computedDueDate,
@@ -597,7 +596,7 @@ export async function completeFinancialFixtures(tx: SeedTransaction) {
 			fullName: "Patrick Vargas",
 			document: seedCpf(1000),
 			personTypeId: personType.id,
-			isEmployee: true,
+			supplierProfile: { create: { id: 1000 } },
 		},
 	});
 	await tx.employeeProfile.upsert({
@@ -711,4 +710,22 @@ export async function completeFinancialFixtures(tx: SeedTransaction) {
 			},
 		});
 	}
+}
+
+export async function seedGenericPeople(tx: SeedTransaction) {
+ for (const table of ["client_profiles","supplier_profiles"] as const) {
+  await tx.$executeRawUnsafe(`SELECT setval(pg_get_serial_sequence('${table}','id'),COALESCE((SELECT max(id) FROM ${table}),1),EXISTS(SELECT 1 FROM ${table}))`);
+ }
+
+ for (const [seedKey, fullName, role] of [
+  ["generic-payments", "Pagamentos diversos", "supplier"],
+  ["generic-receipts", "Recebimentos diversos", "client"],
+ ] as const) {
+  const person = await tx.person.upsert({where:{seedKey},update:{},create:{seedKey,fullName,isGeneric:true}});
+  if (role === "supplier") {
+   await tx.supplierProfile.upsert({where:{personId:person.id},update:{},create:{personId:person.id}});
+  } else {
+   await tx.clientProfile.upsert({where:{personId:person.id},update:{},create:{personId:person.id}});
+  }
+ }
 }

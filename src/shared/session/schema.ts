@@ -177,7 +177,7 @@ export interface RemunerationAccessResource extends SessionFirmResource {
 
 export interface FinancialAccessResource extends SessionFirmResource {
 	contract?: ContractAccessResource;
-	beneficiaryId?: number;
+	beneficiaryPersonId?: number;
 	isRemuneration?: boolean;
 }
 

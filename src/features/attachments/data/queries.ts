@@ -1,7 +1,9 @@
+import { getPersonById } from "@/features/people/data/queries";
 import { env } from "@/shared/config/env";
 import { prisma } from "@/shared/lib/prisma";
 import type {
 	ContractAccessResource,
+	LoggedUserSession,
 	RemunerationAccessResource,
 } from "@/shared/session";
 import type {
@@ -245,11 +247,14 @@ export async function getAttachmentsByOwner(params: {
 	const owner = getAttachmentOwnerContext(params.input);
 	const rows = await prisma.attachment.findMany({
 		where: {
-			...(owner.ownerKind === "client" || owner.ownerKind === "employee"
+			...(owner.ownerKind === "person" ||
+			owner.ownerKind === "client" ||
+			owner.ownerKind === "employee"
 				? {}
 				: { firmId: params.firmId }),
 			deletedAt: null,
-			...(owner.ownerKind === "client" ? { clientId: owner.ownerId } : {}),
+			...(owner.ownerKind === "person" ? { personId: owner.ownerId } : {}),
+			...(owner.ownerKind === "client" ? { personId: owner.ownerId } : {}),
 			...(owner.ownerKind === "employee" ? { employeeId: owner.ownerId } : {}),
 			...(owner.ownerKind === "contract" ? { contractId: owner.ownerId } : {}),
 			...(owner.ownerKind === "expense" ? { expenseId: owner.ownerId } : {}),
@@ -332,12 +337,11 @@ export async function getAttachmentAccessById(
 			storagePath: true,
 			mimeType: true,
 			deletedAt: true,
-			clientId: true,
-			employeeId: true,
+			personId: true,
 			contractId: true,
 			expenseId: true,
-			feeId: true,
-			remunerationId: true,
+			receiptId: true,
+			payableId: true,
 		},
 	});
 
@@ -352,18 +356,14 @@ export async function getAttachmentAccessById(
 		mimeType: attachment.mimeType,
 		deletedAt: attachment.deletedAt,
 		resource: {
-			firmId:
-				attachment.clientId || attachment.employeeId
-					? firmId
-					: attachment.firmId,
+			firmId: attachment.personId ? firmId : attachment.firmId,
 		},
 		ownerInput: {
-			clientId: attachment.clientId ?? undefined,
-			employeeId: attachment.employeeId ?? undefined,
+			personId: attachment.personId ?? undefined,
 			contractId: attachment.contractId ?? undefined,
 			expenseId: attachment.expenseId ?? undefined,
-			feeId: attachment.feeId ?? undefined,
-			remunerationId: attachment.remunerationId ?? undefined,
+			feeId: attachment.receiptId ?? undefined,
+			remunerationId: attachment.payableId ?? undefined,
 		},
 	};
 }
@@ -371,10 +371,31 @@ export async function getAttachmentAccessById(
 export async function assertAttachmentOwnerExists(params: {
 	firmId: number;
 	input: AttachmentOwnerInput;
+	session?: LoggedUserSession;
 }) {
 	const owner = getAttachmentOwnerContext(params.input);
 
 	switch (owner.ownerKind) {
+		case "person": {
+			if (!params.session) {
+				throw new Error(ATTACHMENT_ERRORS.OWNER_NOT_FOUND);
+			}
+			const person = await getPersonById({
+				session: params.session,
+				id: owner.ownerId,
+			});
+			return {
+				owner,
+				access: {
+					id: person.id,
+					deletedAt: person.isSoftDeleted
+						? new Date(person.updatedAt ?? person.createdAt)
+						: null,
+					firmId: params.firmId,
+					resource: { firmId: params.firmId },
+				},
+			};
+		}
 		case "fee": {
 			const fee = await getAttachmentFeeOwnerResource(
 				params.firmId,
@@ -448,10 +469,6 @@ export async function assertAttachmentOwnerExists(params: {
 
 export function getAttachmentVisibilityWhere(firmId: number) {
 	return {
-		OR: [
-			{ firmId },
-			{ clientId: { not: null } },
-			{ employeeId: { not: null } },
-		],
+		OR: [{ firmId }, { personId: { not: null } }],
 	};
 }

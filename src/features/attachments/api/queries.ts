@@ -24,6 +24,7 @@ export const attachmentKeys = {
 		[...attachmentKeys.all, "file", id, url] as const,
 	list: (input: AttachmentListInput) => {
 		const owner =
+			input.personId ??
 			input.clientId ??
 			input.employeeId ??
 			input.contractId ??
@@ -80,6 +81,7 @@ const getAttachmentsByOwnerFn = createServerFn({ method: "GET" })
 				const owner = await assertAttachmentOwnerExists({
 					firmId,
 					input: data,
+					session,
 				});
 
 				assertAttachmentOwnerReadAccess(session, owner);

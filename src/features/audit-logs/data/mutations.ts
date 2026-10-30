@@ -7,6 +7,7 @@ export interface AuditLogActor {
 }
 
 export interface CreateAuditLogInput {
+	personId?: number;
 	clientId?: number;
 	employeeId?: number;
 	firmId: number;
@@ -183,6 +184,7 @@ export async function createAuditLog(
 	db: AuditLogDb,
 	{
 		firmId,
+		personId,
 		clientId,
 		employeeId,
 		actor,
@@ -196,16 +198,28 @@ export async function createAuditLog(
 		userAgent = null,
 	}: CreateAuditLogInput,
 ) {
+	let ownerPersonId = personId;
+	if (!ownerPersonId && clientId) {
+		ownerPersonId = (
+			await db.clientProfile.findUnique({
+				where: { id: clientId },
+				select: { personId: true },
+			})
+		)?.personId;
+	}
+	if (!ownerPersonId && employeeId) {
+		ownerPersonId = (
+			await db.employeeProfile.findUnique({
+				where: { id: employeeId },
+				select: { personId: true },
+			})
+		)?.personId;
+	}
 	await db.auditLog.create({
 		data: {
-			clientId:
-				clientId ??
-				(entityType === "Client" && entityId != null
-					? Number(entityId)
-					: undefined),
-			employeeId:
-				employeeId ??
-				(entityType === "Employee" && entityId != null
+			personId:
+				ownerPersonId ??
+				(entityType === "Person" && entityId != null
 					? Number(entityId)
 					: undefined),
 			firmId,

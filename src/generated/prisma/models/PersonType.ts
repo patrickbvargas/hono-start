@@ -331,9 +331,9 @@ export type PersonTypeSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
 }
 
-export type PersonTypeScalarRelationFilter = {
-  is?: Prisma.PersonTypeWhereInput
-  isNot?: Prisma.PersonTypeWhereInput
+export type PersonTypeNullableScalarRelationFilter = {
+  is?: Prisma.PersonTypeWhereInput | null
+  isNot?: Prisma.PersonTypeWhereInput | null
 }
 
 export type BoolFieldUpdateOperationsInput = {
@@ -346,10 +346,12 @@ export type PersonTypeCreateNestedOneWithoutPeopleInput = {
   connect?: Prisma.PersonTypeWhereUniqueInput
 }
 
-export type PersonTypeUpdateOneRequiredWithoutPeopleNestedInput = {
+export type PersonTypeUpdateOneWithoutPeopleNestedInput = {
   create?: Prisma.XOR<Prisma.PersonTypeCreateWithoutPeopleInput, Prisma.PersonTypeUncheckedCreateWithoutPeopleInput>
   connectOrCreate?: Prisma.PersonTypeCreateOrConnectWithoutPeopleInput
   upsert?: Prisma.PersonTypeUpsertWithoutPeopleInput
+  disconnect?: Prisma.PersonTypeWhereInput | boolean
+  delete?: Prisma.PersonTypeWhereInput | boolean
   connect?: Prisma.PersonTypeWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.PersonTypeUpdateToOneWithWhereWithoutPeopleInput, Prisma.PersonTypeUpdateWithoutPeopleInput>, Prisma.PersonTypeUncheckedUpdateWithoutPeopleInput>
 }

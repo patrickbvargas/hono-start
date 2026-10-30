@@ -96,7 +96,8 @@ async function resolveDomainSession(): Promise<SessionAccess> {
 			id: metadata.data.personId,
 			deletedAt: null,
 			isActive: true,
-			isEmployee: true,
+			isGeneric: false,
+			supplierProfile: { is: { isActive: true } },
 			employeeProfile: { is: { isActive: true, deletedAt: null } },
 		},
 		select: {

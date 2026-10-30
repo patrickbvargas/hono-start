@@ -2,6 +2,7 @@ import { AUDIT_ACTION_LABELS } from "../constants/display";
 
 const ENTITY_TYPE_LABELS: Record<string, string> = {
 	Attachment: "Anexo",
+	Person: "Pessoa",
 	Client: "Cliente",
 	Contract: "Contrato",
 	Employee: "Colaborador",

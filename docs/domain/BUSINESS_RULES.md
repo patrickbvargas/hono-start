@@ -1,5 +1,7 @@
 # Business Rules
 
+> Revisão vigente 30/10/2026: [Pessoas, papéis, extensões e genéricos](PERSON_REGISTRATION.md). Substitui telas separadas por rota Pessoas; exige Cliente no receber, Fornecedor no pagar e Colaborador implica Fornecedor. Ajustes novos ainda pendentes no código.
+
 ## Approved financial redesign — target precedence
 
 Status: approved plan, not implemented. [Target financial contract](FINANCIAL_SYSTEM.md) and its linked roadmap/UML/authorization supersede conflicting financial and identity semantics below for the ordered redesign. Remaining text describes the preserved running baseline and unchanged house rules; do not infer target implementation from it.

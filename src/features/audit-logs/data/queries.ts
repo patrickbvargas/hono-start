@@ -295,11 +295,13 @@ export async function getAuditHistory({
 	const rows = await prisma.auditLog.findMany({
 		where: {
 			...(accessWhere ? { AND: [accessWhere] } : {}),
-			...(entityType === "Client"
-				? { clientId: entityId }
-				: entityType === "Employee"
-					? { employeeId: entityId }
-					: { firmId, entityType, entityId: String(entityId) }),
+			...(entityType === "Person"
+				? { personId: entityId, entityType: { in: ["Person", "Attachment"] } }
+				: entityType === "Client"
+					? { clientId: entityId }
+					: entityType === "Employee"
+						? { employeeId: entityId }
+						: { firmId, entityType, entityId: String(entityId) }),
 		},
 		orderBy: [{ createdAt: "desc" }, { id: "asc" }],
 	});
