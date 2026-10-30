@@ -28,50 +28,70 @@ export type AggregateFirm = {
 
 export type FirmAvgAggregateOutputType = {
   id: number | null
+  remunerationCutoffDay: number | null
+  remunerationDueDay: number | null
 }
 
 export type FirmSumAggregateOutputType = {
   id: number | null
+  remunerationCutoffDay: number | null
+  remunerationDueDay: number | null
 }
 
 export type FirmMinAggregateOutputType = {
   id: number | null
   name: string | null
+  remunerationCutoffDay: number | null
+  remunerationDueDay: number | null
 }
 
 export type FirmMaxAggregateOutputType = {
   id: number | null
   name: string | null
+  remunerationCutoffDay: number | null
+  remunerationDueDay: number | null
 }
 
 export type FirmCountAggregateOutputType = {
   id: number
   name: number
+  remunerationCutoffDay: number
+  remunerationDueDay: number
   _all: number
 }
 
 
 export type FirmAvgAggregateInputType = {
   id?: true
+  remunerationCutoffDay?: true
+  remunerationDueDay?: true
 }
 
 export type FirmSumAggregateInputType = {
   id?: true
+  remunerationCutoffDay?: true
+  remunerationDueDay?: true
 }
 
 export type FirmMinAggregateInputType = {
   id?: true
   name?: true
+  remunerationCutoffDay?: true
+  remunerationDueDay?: true
 }
 
 export type FirmMaxAggregateInputType = {
   id?: true
   name?: true
+  remunerationCutoffDay?: true
+  remunerationDueDay?: true
 }
 
 export type FirmCountAggregateInputType = {
   id?: true
   name?: true
+  remunerationCutoffDay?: true
+  remunerationDueDay?: true
   _all?: true
 }
 
@@ -164,6 +184,8 @@ export type FirmGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 export type FirmGroupByOutputType = {
   id: number
   name: string
+  remunerationCutoffDay: number
+  remunerationDueDay: number
   _count: FirmCountAggregateOutputType | null
   _avg: FirmAvgAggregateOutputType | null
   _sum: FirmSumAggregateOutputType | null
@@ -192,27 +214,45 @@ export type FirmWhereInput = {
   NOT?: Prisma.FirmWhereInput | Prisma.FirmWhereInput[]
   id?: Prisma.IntFilter<"Firm"> | number
   name?: Prisma.StringFilter<"Firm"> | string
-  auditLogs?: Prisma.AuditLogListRelationFilter
-  attachments?: Prisma.AttachmentListRelationFilter
+  remunerationCutoffDay?: Prisma.IntFilter<"Firm"> | number
+  remunerationDueDay?: Prisma.IntFilter<"Firm"> | number
   contracts?: Prisma.ContractListRelationFilter
-  contractEmployees?: Prisma.ContractEmployeeListRelationFilter
+  contractAssignments?: Prisma.ContractAssignmentListRelationFilter
   revenues?: Prisma.RevenueListRelationFilter
-  fees?: Prisma.FeeListRelationFilter
   expenses?: Prisma.ExpenseListRelationFilter
-  remunerations?: Prisma.RemunerationListRelationFilter
+  financialGenerations?: Prisma.FinancialGenerationListRelationFilter
+  directFinancialEntries?: Prisma.DirectFinancialEntryListRelationFilter
+  receivables?: Prisma.ReceivableListRelationFilter
+  payables?: Prisma.PayableListRelationFilter
+  receipts?: Prisma.ReceiptListRelationFilter
+  receiptReversals?: Prisma.ReceiptReversalListRelationFilter
+  payments?: Prisma.PaymentListRelationFilter
+  paymentReversals?: Prisma.PaymentReversalListRelationFilter
+  remunerationCalculations?: Prisma.RemunerationCalculationListRelationFilter
+  attachments?: Prisma.AttachmentListRelationFilter
+  auditLogs?: Prisma.AuditLogListRelationFilter
 }
 
 export type FirmOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
-  attachments?: Prisma.AttachmentOrderByRelationAggregateInput
+  remunerationCutoffDay?: Prisma.SortOrder
+  remunerationDueDay?: Prisma.SortOrder
   contracts?: Prisma.ContractOrderByRelationAggregateInput
-  contractEmployees?: Prisma.ContractEmployeeOrderByRelationAggregateInput
+  contractAssignments?: Prisma.ContractAssignmentOrderByRelationAggregateInput
   revenues?: Prisma.RevenueOrderByRelationAggregateInput
-  fees?: Prisma.FeeOrderByRelationAggregateInput
   expenses?: Prisma.ExpenseOrderByRelationAggregateInput
-  remunerations?: Prisma.RemunerationOrderByRelationAggregateInput
+  financialGenerations?: Prisma.FinancialGenerationOrderByRelationAggregateInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryOrderByRelationAggregateInput
+  receivables?: Prisma.ReceivableOrderByRelationAggregateInput
+  payables?: Prisma.PayableOrderByRelationAggregateInput
+  receipts?: Prisma.ReceiptOrderByRelationAggregateInput
+  receiptReversals?: Prisma.ReceiptReversalOrderByRelationAggregateInput
+  payments?: Prisma.PaymentOrderByRelationAggregateInput
+  paymentReversals?: Prisma.PaymentReversalOrderByRelationAggregateInput
+  remunerationCalculations?: Prisma.RemunerationCalculationOrderByRelationAggregateInput
+  attachments?: Prisma.AttachmentOrderByRelationAggregateInput
+  auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
 }
 
 export type FirmWhereUniqueInput = Prisma.AtLeast<{
@@ -221,19 +261,30 @@ export type FirmWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.FirmWhereInput[]
   NOT?: Prisma.FirmWhereInput | Prisma.FirmWhereInput[]
   name?: Prisma.StringFilter<"Firm"> | string
-  auditLogs?: Prisma.AuditLogListRelationFilter
-  attachments?: Prisma.AttachmentListRelationFilter
+  remunerationCutoffDay?: Prisma.IntFilter<"Firm"> | number
+  remunerationDueDay?: Prisma.IntFilter<"Firm"> | number
   contracts?: Prisma.ContractListRelationFilter
-  contractEmployees?: Prisma.ContractEmployeeListRelationFilter
+  contractAssignments?: Prisma.ContractAssignmentListRelationFilter
   revenues?: Prisma.RevenueListRelationFilter
-  fees?: Prisma.FeeListRelationFilter
   expenses?: Prisma.ExpenseListRelationFilter
-  remunerations?: Prisma.RemunerationListRelationFilter
+  financialGenerations?: Prisma.FinancialGenerationListRelationFilter
+  directFinancialEntries?: Prisma.DirectFinancialEntryListRelationFilter
+  receivables?: Prisma.ReceivableListRelationFilter
+  payables?: Prisma.PayableListRelationFilter
+  receipts?: Prisma.ReceiptListRelationFilter
+  receiptReversals?: Prisma.ReceiptReversalListRelationFilter
+  payments?: Prisma.PaymentListRelationFilter
+  paymentReversals?: Prisma.PaymentReversalListRelationFilter
+  remunerationCalculations?: Prisma.RemunerationCalculationListRelationFilter
+  attachments?: Prisma.AttachmentListRelationFilter
+  auditLogs?: Prisma.AuditLogListRelationFilter
 }, "id">
 
 export type FirmOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  remunerationCutoffDay?: Prisma.SortOrder
+  remunerationDueDay?: Prisma.SortOrder
   _count?: Prisma.FirmCountOrderByAggregateInput
   _avg?: Prisma.FirmAvgOrderByAggregateInput
   _max?: Prisma.FirmMaxOrderByAggregateInput
@@ -247,93 +298,147 @@ export type FirmScalarWhereWithAggregatesInput = {
   NOT?: Prisma.FirmScalarWhereWithAggregatesInput | Prisma.FirmScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Firm"> | number
   name?: Prisma.StringWithAggregatesFilter<"Firm"> | string
+  remunerationCutoffDay?: Prisma.IntWithAggregatesFilter<"Firm"> | number
+  remunerationDueDay?: Prisma.IntWithAggregatesFilter<"Firm"> | number
 }
 
 export type FirmCreateInput = {
   name: string
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutFirmInput
-  attachments?: Prisma.AttachmentCreateNestedManyWithoutFirmInput
+  remunerationCutoffDay?: number
+  remunerationDueDay?: number
   contracts?: Prisma.ContractCreateNestedManyWithoutFirmInput
-  contractEmployees?: Prisma.ContractEmployeeCreateNestedManyWithoutFirmInput
+  contractAssignments?: Prisma.ContractAssignmentCreateNestedManyWithoutFirmInput
   revenues?: Prisma.RevenueCreateNestedManyWithoutFirmInput
-  fees?: Prisma.FeeCreateNestedManyWithoutFirmInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutFirmInput
-  remunerations?: Prisma.RemunerationCreateNestedManyWithoutFirmInput
+  financialGenerations?: Prisma.FinancialGenerationCreateNestedManyWithoutFirmInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryCreateNestedManyWithoutFirmInput
+  receivables?: Prisma.ReceivableCreateNestedManyWithoutFirmInput
+  payables?: Prisma.PayableCreateNestedManyWithoutFirmInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutFirmInput
+  receiptReversals?: Prisma.ReceiptReversalCreateNestedManyWithoutFirmInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutFirmInput
+  paymentReversals?: Prisma.PaymentReversalCreateNestedManyWithoutFirmInput
+  remunerationCalculations?: Prisma.RemunerationCalculationCreateNestedManyWithoutFirmInput
+  attachments?: Prisma.AttachmentCreateNestedManyWithoutFirmInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutFirmInput
 }
 
 export type FirmUncheckedCreateInput = {
   id?: number
   name: string
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutFirmInput
-  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutFirmInput
+  remunerationCutoffDay?: number
+  remunerationDueDay?: number
   contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutFirmInput
-  contractEmployees?: Prisma.ContractEmployeeUncheckedCreateNestedManyWithoutFirmInput
+  contractAssignments?: Prisma.ContractAssignmentUncheckedCreateNestedManyWithoutFirmInput
   revenues?: Prisma.RevenueUncheckedCreateNestedManyWithoutFirmInput
-  fees?: Prisma.FeeUncheckedCreateNestedManyWithoutFirmInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutFirmInput
-  remunerations?: Prisma.RemunerationUncheckedCreateNestedManyWithoutFirmInput
+  financialGenerations?: Prisma.FinancialGenerationUncheckedCreateNestedManyWithoutFirmInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryUncheckedCreateNestedManyWithoutFirmInput
+  receivables?: Prisma.ReceivableUncheckedCreateNestedManyWithoutFirmInput
+  payables?: Prisma.PayableUncheckedCreateNestedManyWithoutFirmInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutFirmInput
+  receiptReversals?: Prisma.ReceiptReversalUncheckedCreateNestedManyWithoutFirmInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutFirmInput
+  paymentReversals?: Prisma.PaymentReversalUncheckedCreateNestedManyWithoutFirmInput
+  remunerationCalculations?: Prisma.RemunerationCalculationUncheckedCreateNestedManyWithoutFirmInput
+  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutFirmInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutFirmInput
 }
 
 export type FirmUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutFirmNestedInput
-  attachments?: Prisma.AttachmentUpdateManyWithoutFirmNestedInput
+  remunerationCutoffDay?: Prisma.IntFieldUpdateOperationsInput | number
+  remunerationDueDay?: Prisma.IntFieldUpdateOperationsInput | number
   contracts?: Prisma.ContractUpdateManyWithoutFirmNestedInput
-  contractEmployees?: Prisma.ContractEmployeeUpdateManyWithoutFirmNestedInput
+  contractAssignments?: Prisma.ContractAssignmentUpdateManyWithoutFirmNestedInput
   revenues?: Prisma.RevenueUpdateManyWithoutFirmNestedInput
-  fees?: Prisma.FeeUpdateManyWithoutFirmNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutFirmNestedInput
-  remunerations?: Prisma.RemunerationUpdateManyWithoutFirmNestedInput
+  financialGenerations?: Prisma.FinancialGenerationUpdateManyWithoutFirmNestedInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryUpdateManyWithoutFirmNestedInput
+  receivables?: Prisma.ReceivableUpdateManyWithoutFirmNestedInput
+  payables?: Prisma.PayableUpdateManyWithoutFirmNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutFirmNestedInput
+  receiptReversals?: Prisma.ReceiptReversalUpdateManyWithoutFirmNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutFirmNestedInput
+  paymentReversals?: Prisma.PaymentReversalUpdateManyWithoutFirmNestedInput
+  remunerationCalculations?: Prisma.RemunerationCalculationUpdateManyWithoutFirmNestedInput
+  attachments?: Prisma.AttachmentUpdateManyWithoutFirmNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutFirmNestedInput
 }
 
 export type FirmUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutFirmNestedInput
-  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutFirmNestedInput
+  remunerationCutoffDay?: Prisma.IntFieldUpdateOperationsInput | number
+  remunerationDueDay?: Prisma.IntFieldUpdateOperationsInput | number
   contracts?: Prisma.ContractUncheckedUpdateManyWithoutFirmNestedInput
-  contractEmployees?: Prisma.ContractEmployeeUncheckedUpdateManyWithoutFirmNestedInput
+  contractAssignments?: Prisma.ContractAssignmentUncheckedUpdateManyWithoutFirmNestedInput
   revenues?: Prisma.RevenueUncheckedUpdateManyWithoutFirmNestedInput
-  fees?: Prisma.FeeUncheckedUpdateManyWithoutFirmNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutFirmNestedInput
-  remunerations?: Prisma.RemunerationUncheckedUpdateManyWithoutFirmNestedInput
+  financialGenerations?: Prisma.FinancialGenerationUncheckedUpdateManyWithoutFirmNestedInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryUncheckedUpdateManyWithoutFirmNestedInput
+  receivables?: Prisma.ReceivableUncheckedUpdateManyWithoutFirmNestedInput
+  payables?: Prisma.PayableUncheckedUpdateManyWithoutFirmNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutFirmNestedInput
+  receiptReversals?: Prisma.ReceiptReversalUncheckedUpdateManyWithoutFirmNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutFirmNestedInput
+  paymentReversals?: Prisma.PaymentReversalUncheckedUpdateManyWithoutFirmNestedInput
+  remunerationCalculations?: Prisma.RemunerationCalculationUncheckedUpdateManyWithoutFirmNestedInput
+  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutFirmNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutFirmNestedInput
 }
 
 export type FirmCreateManyInput = {
   id?: number
   name: string
+  remunerationCutoffDay?: number
+  remunerationDueDay?: number
 }
 
 export type FirmUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  remunerationCutoffDay?: Prisma.IntFieldUpdateOperationsInput | number
+  remunerationDueDay?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type FirmUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  remunerationCutoffDay?: Prisma.IntFieldUpdateOperationsInput | number
+  remunerationDueDay?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type FirmCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  remunerationCutoffDay?: Prisma.SortOrder
+  remunerationDueDay?: Prisma.SortOrder
 }
 
 export type FirmAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  remunerationCutoffDay?: Prisma.SortOrder
+  remunerationDueDay?: Prisma.SortOrder
 }
 
 export type FirmMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  remunerationCutoffDay?: Prisma.SortOrder
+  remunerationDueDay?: Prisma.SortOrder
 }
 
 export type FirmMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  remunerationCutoffDay?: Prisma.SortOrder
+  remunerationDueDay?: Prisma.SortOrder
 }
 
 export type FirmSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  remunerationCutoffDay?: Prisma.SortOrder
+  remunerationDueDay?: Prisma.SortOrder
 }
 
 export type FirmScalarRelationFilter = {
@@ -347,20 +452,6 @@ export type IntFieldUpdateOperationsInput = {
   decrement?: number
   multiply?: number
   divide?: number
-}
-
-export type FirmCreateNestedOneWithoutAuditLogsInput = {
-  create?: Prisma.XOR<Prisma.FirmCreateWithoutAuditLogsInput, Prisma.FirmUncheckedCreateWithoutAuditLogsInput>
-  connectOrCreate?: Prisma.FirmCreateOrConnectWithoutAuditLogsInput
-  connect?: Prisma.FirmWhereUniqueInput
-}
-
-export type FirmUpdateOneRequiredWithoutAuditLogsNestedInput = {
-  create?: Prisma.XOR<Prisma.FirmCreateWithoutAuditLogsInput, Prisma.FirmUncheckedCreateWithoutAuditLogsInput>
-  connectOrCreate?: Prisma.FirmCreateOrConnectWithoutAuditLogsInput
-  upsert?: Prisma.FirmUpsertWithoutAuditLogsInput
-  connect?: Prisma.FirmWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.FirmUpdateToOneWithWhereWithoutAuditLogsInput, Prisma.FirmUpdateWithoutAuditLogsInput>, Prisma.FirmUncheckedUpdateWithoutAuditLogsInput>
 }
 
 export type FirmCreateNestedOneWithoutContractsInput = {
@@ -377,18 +468,18 @@ export type FirmUpdateOneRequiredWithoutContractsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.FirmUpdateToOneWithWhereWithoutContractsInput, Prisma.FirmUpdateWithoutContractsInput>, Prisma.FirmUncheckedUpdateWithoutContractsInput>
 }
 
-export type FirmCreateNestedOneWithoutContractEmployeesInput = {
-  create?: Prisma.XOR<Prisma.FirmCreateWithoutContractEmployeesInput, Prisma.FirmUncheckedCreateWithoutContractEmployeesInput>
-  connectOrCreate?: Prisma.FirmCreateOrConnectWithoutContractEmployeesInput
+export type FirmCreateNestedOneWithoutContractAssignmentsInput = {
+  create?: Prisma.XOR<Prisma.FirmCreateWithoutContractAssignmentsInput, Prisma.FirmUncheckedCreateWithoutContractAssignmentsInput>
+  connectOrCreate?: Prisma.FirmCreateOrConnectWithoutContractAssignmentsInput
   connect?: Prisma.FirmWhereUniqueInput
 }
 
-export type FirmUpdateOneRequiredWithoutContractEmployeesNestedInput = {
-  create?: Prisma.XOR<Prisma.FirmCreateWithoutContractEmployeesInput, Prisma.FirmUncheckedCreateWithoutContractEmployeesInput>
-  connectOrCreate?: Prisma.FirmCreateOrConnectWithoutContractEmployeesInput
-  upsert?: Prisma.FirmUpsertWithoutContractEmployeesInput
+export type FirmUpdateOneRequiredWithoutContractAssignmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.FirmCreateWithoutContractAssignmentsInput, Prisma.FirmUncheckedCreateWithoutContractAssignmentsInput>
+  connectOrCreate?: Prisma.FirmCreateOrConnectWithoutContractAssignmentsInput
+  upsert?: Prisma.FirmUpsertWithoutContractAssignmentsInput
   connect?: Prisma.FirmWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.FirmUpdateToOneWithWhereWithoutContractEmployeesInput, Prisma.FirmUpdateWithoutContractEmployeesInput>, Prisma.FirmUncheckedUpdateWithoutContractEmployeesInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.FirmUpdateToOneWithWhereWithoutContractAssignmentsInput, Prisma.FirmUpdateWithoutContractAssignmentsInput>, Prisma.FirmUncheckedUpdateWithoutContractAssignmentsInput>
 }
 
 export type FirmCreateNestedOneWithoutRevenuesInput = {
@@ -405,20 +496,6 @@ export type FirmUpdateOneRequiredWithoutRevenuesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.FirmUpdateToOneWithWhereWithoutRevenuesInput, Prisma.FirmUpdateWithoutRevenuesInput>, Prisma.FirmUncheckedUpdateWithoutRevenuesInput>
 }
 
-export type FirmCreateNestedOneWithoutFeesInput = {
-  create?: Prisma.XOR<Prisma.FirmCreateWithoutFeesInput, Prisma.FirmUncheckedCreateWithoutFeesInput>
-  connectOrCreate?: Prisma.FirmCreateOrConnectWithoutFeesInput
-  connect?: Prisma.FirmWhereUniqueInput
-}
-
-export type FirmUpdateOneRequiredWithoutFeesNestedInput = {
-  create?: Prisma.XOR<Prisma.FirmCreateWithoutFeesInput, Prisma.FirmUncheckedCreateWithoutFeesInput>
-  connectOrCreate?: Prisma.FirmCreateOrConnectWithoutFeesInput
-  upsert?: Prisma.FirmUpsertWithoutFeesInput
-  connect?: Prisma.FirmWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.FirmUpdateToOneWithWhereWithoutFeesInput, Prisma.FirmUpdateWithoutFeesInput>, Prisma.FirmUncheckedUpdateWithoutFeesInput>
-}
-
 export type FirmCreateNestedOneWithoutExpensesInput = {
   create?: Prisma.XOR<Prisma.FirmCreateWithoutExpensesInput, Prisma.FirmUncheckedCreateWithoutExpensesInput>
   connectOrCreate?: Prisma.FirmCreateOrConnectWithoutExpensesInput
@@ -433,18 +510,130 @@ export type FirmUpdateOneRequiredWithoutExpensesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.FirmUpdateToOneWithWhereWithoutExpensesInput, Prisma.FirmUpdateWithoutExpensesInput>, Prisma.FirmUncheckedUpdateWithoutExpensesInput>
 }
 
-export type FirmCreateNestedOneWithoutRemunerationsInput = {
-  create?: Prisma.XOR<Prisma.FirmCreateWithoutRemunerationsInput, Prisma.FirmUncheckedCreateWithoutRemunerationsInput>
-  connectOrCreate?: Prisma.FirmCreateOrConnectWithoutRemunerationsInput
+export type FirmCreateNestedOneWithoutFinancialGenerationsInput = {
+  create?: Prisma.XOR<Prisma.FirmCreateWithoutFinancialGenerationsInput, Prisma.FirmUncheckedCreateWithoutFinancialGenerationsInput>
+  connectOrCreate?: Prisma.FirmCreateOrConnectWithoutFinancialGenerationsInput
   connect?: Prisma.FirmWhereUniqueInput
 }
 
-export type FirmUpdateOneRequiredWithoutRemunerationsNestedInput = {
-  create?: Prisma.XOR<Prisma.FirmCreateWithoutRemunerationsInput, Prisma.FirmUncheckedCreateWithoutRemunerationsInput>
-  connectOrCreate?: Prisma.FirmCreateOrConnectWithoutRemunerationsInput
-  upsert?: Prisma.FirmUpsertWithoutRemunerationsInput
+export type FirmUpdateOneRequiredWithoutFinancialGenerationsNestedInput = {
+  create?: Prisma.XOR<Prisma.FirmCreateWithoutFinancialGenerationsInput, Prisma.FirmUncheckedCreateWithoutFinancialGenerationsInput>
+  connectOrCreate?: Prisma.FirmCreateOrConnectWithoutFinancialGenerationsInput
+  upsert?: Prisma.FirmUpsertWithoutFinancialGenerationsInput
   connect?: Prisma.FirmWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.FirmUpdateToOneWithWhereWithoutRemunerationsInput, Prisma.FirmUpdateWithoutRemunerationsInput>, Prisma.FirmUncheckedUpdateWithoutRemunerationsInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.FirmUpdateToOneWithWhereWithoutFinancialGenerationsInput, Prisma.FirmUpdateWithoutFinancialGenerationsInput>, Prisma.FirmUncheckedUpdateWithoutFinancialGenerationsInput>
+}
+
+export type FirmCreateNestedOneWithoutDirectFinancialEntriesInput = {
+  create?: Prisma.XOR<Prisma.FirmCreateWithoutDirectFinancialEntriesInput, Prisma.FirmUncheckedCreateWithoutDirectFinancialEntriesInput>
+  connectOrCreate?: Prisma.FirmCreateOrConnectWithoutDirectFinancialEntriesInput
+  connect?: Prisma.FirmWhereUniqueInput
+}
+
+export type FirmUpdateOneRequiredWithoutDirectFinancialEntriesNestedInput = {
+  create?: Prisma.XOR<Prisma.FirmCreateWithoutDirectFinancialEntriesInput, Prisma.FirmUncheckedCreateWithoutDirectFinancialEntriesInput>
+  connectOrCreate?: Prisma.FirmCreateOrConnectWithoutDirectFinancialEntriesInput
+  upsert?: Prisma.FirmUpsertWithoutDirectFinancialEntriesInput
+  connect?: Prisma.FirmWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.FirmUpdateToOneWithWhereWithoutDirectFinancialEntriesInput, Prisma.FirmUpdateWithoutDirectFinancialEntriesInput>, Prisma.FirmUncheckedUpdateWithoutDirectFinancialEntriesInput>
+}
+
+export type FirmCreateNestedOneWithoutReceivablesInput = {
+  create?: Prisma.XOR<Prisma.FirmCreateWithoutReceivablesInput, Prisma.FirmUncheckedCreateWithoutReceivablesInput>
+  connectOrCreate?: Prisma.FirmCreateOrConnectWithoutReceivablesInput
+  connect?: Prisma.FirmWhereUniqueInput
+}
+
+export type FirmUpdateOneRequiredWithoutReceivablesNestedInput = {
+  create?: Prisma.XOR<Prisma.FirmCreateWithoutReceivablesInput, Prisma.FirmUncheckedCreateWithoutReceivablesInput>
+  connectOrCreate?: Prisma.FirmCreateOrConnectWithoutReceivablesInput
+  upsert?: Prisma.FirmUpsertWithoutReceivablesInput
+  connect?: Prisma.FirmWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.FirmUpdateToOneWithWhereWithoutReceivablesInput, Prisma.FirmUpdateWithoutReceivablesInput>, Prisma.FirmUncheckedUpdateWithoutReceivablesInput>
+}
+
+export type FirmCreateNestedOneWithoutPayablesInput = {
+  create?: Prisma.XOR<Prisma.FirmCreateWithoutPayablesInput, Prisma.FirmUncheckedCreateWithoutPayablesInput>
+  connectOrCreate?: Prisma.FirmCreateOrConnectWithoutPayablesInput
+  connect?: Prisma.FirmWhereUniqueInput
+}
+
+export type FirmUpdateOneRequiredWithoutPayablesNestedInput = {
+  create?: Prisma.XOR<Prisma.FirmCreateWithoutPayablesInput, Prisma.FirmUncheckedCreateWithoutPayablesInput>
+  connectOrCreate?: Prisma.FirmCreateOrConnectWithoutPayablesInput
+  upsert?: Prisma.FirmUpsertWithoutPayablesInput
+  connect?: Prisma.FirmWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.FirmUpdateToOneWithWhereWithoutPayablesInput, Prisma.FirmUpdateWithoutPayablesInput>, Prisma.FirmUncheckedUpdateWithoutPayablesInput>
+}
+
+export type FirmCreateNestedOneWithoutReceiptsInput = {
+  create?: Prisma.XOR<Prisma.FirmCreateWithoutReceiptsInput, Prisma.FirmUncheckedCreateWithoutReceiptsInput>
+  connectOrCreate?: Prisma.FirmCreateOrConnectWithoutReceiptsInput
+  connect?: Prisma.FirmWhereUniqueInput
+}
+
+export type FirmUpdateOneRequiredWithoutReceiptsNestedInput = {
+  create?: Prisma.XOR<Prisma.FirmCreateWithoutReceiptsInput, Prisma.FirmUncheckedCreateWithoutReceiptsInput>
+  connectOrCreate?: Prisma.FirmCreateOrConnectWithoutReceiptsInput
+  upsert?: Prisma.FirmUpsertWithoutReceiptsInput
+  connect?: Prisma.FirmWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.FirmUpdateToOneWithWhereWithoutReceiptsInput, Prisma.FirmUpdateWithoutReceiptsInput>, Prisma.FirmUncheckedUpdateWithoutReceiptsInput>
+}
+
+export type FirmCreateNestedOneWithoutReceiptReversalsInput = {
+  create?: Prisma.XOR<Prisma.FirmCreateWithoutReceiptReversalsInput, Prisma.FirmUncheckedCreateWithoutReceiptReversalsInput>
+  connectOrCreate?: Prisma.FirmCreateOrConnectWithoutReceiptReversalsInput
+  connect?: Prisma.FirmWhereUniqueInput
+}
+
+export type FirmUpdateOneRequiredWithoutReceiptReversalsNestedInput = {
+  create?: Prisma.XOR<Prisma.FirmCreateWithoutReceiptReversalsInput, Prisma.FirmUncheckedCreateWithoutReceiptReversalsInput>
+  connectOrCreate?: Prisma.FirmCreateOrConnectWithoutReceiptReversalsInput
+  upsert?: Prisma.FirmUpsertWithoutReceiptReversalsInput
+  connect?: Prisma.FirmWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.FirmUpdateToOneWithWhereWithoutReceiptReversalsInput, Prisma.FirmUpdateWithoutReceiptReversalsInput>, Prisma.FirmUncheckedUpdateWithoutReceiptReversalsInput>
+}
+
+export type FirmCreateNestedOneWithoutPaymentsInput = {
+  create?: Prisma.XOR<Prisma.FirmCreateWithoutPaymentsInput, Prisma.FirmUncheckedCreateWithoutPaymentsInput>
+  connectOrCreate?: Prisma.FirmCreateOrConnectWithoutPaymentsInput
+  connect?: Prisma.FirmWhereUniqueInput
+}
+
+export type FirmUpdateOneRequiredWithoutPaymentsNestedInput = {
+  create?: Prisma.XOR<Prisma.FirmCreateWithoutPaymentsInput, Prisma.FirmUncheckedCreateWithoutPaymentsInput>
+  connectOrCreate?: Prisma.FirmCreateOrConnectWithoutPaymentsInput
+  upsert?: Prisma.FirmUpsertWithoutPaymentsInput
+  connect?: Prisma.FirmWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.FirmUpdateToOneWithWhereWithoutPaymentsInput, Prisma.FirmUpdateWithoutPaymentsInput>, Prisma.FirmUncheckedUpdateWithoutPaymentsInput>
+}
+
+export type FirmCreateNestedOneWithoutPaymentReversalsInput = {
+  create?: Prisma.XOR<Prisma.FirmCreateWithoutPaymentReversalsInput, Prisma.FirmUncheckedCreateWithoutPaymentReversalsInput>
+  connectOrCreate?: Prisma.FirmCreateOrConnectWithoutPaymentReversalsInput
+  connect?: Prisma.FirmWhereUniqueInput
+}
+
+export type FirmUpdateOneRequiredWithoutPaymentReversalsNestedInput = {
+  create?: Prisma.XOR<Prisma.FirmCreateWithoutPaymentReversalsInput, Prisma.FirmUncheckedCreateWithoutPaymentReversalsInput>
+  connectOrCreate?: Prisma.FirmCreateOrConnectWithoutPaymentReversalsInput
+  upsert?: Prisma.FirmUpsertWithoutPaymentReversalsInput
+  connect?: Prisma.FirmWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.FirmUpdateToOneWithWhereWithoutPaymentReversalsInput, Prisma.FirmUpdateWithoutPaymentReversalsInput>, Prisma.FirmUncheckedUpdateWithoutPaymentReversalsInput>
+}
+
+export type FirmCreateNestedOneWithoutRemunerationCalculationsInput = {
+  create?: Prisma.XOR<Prisma.FirmCreateWithoutRemunerationCalculationsInput, Prisma.FirmUncheckedCreateWithoutRemunerationCalculationsInput>
+  connectOrCreate?: Prisma.FirmCreateOrConnectWithoutRemunerationCalculationsInput
+  connect?: Prisma.FirmWhereUniqueInput
+}
+
+export type FirmUpdateOneRequiredWithoutRemunerationCalculationsNestedInput = {
+  create?: Prisma.XOR<Prisma.FirmCreateWithoutRemunerationCalculationsInput, Prisma.FirmUncheckedCreateWithoutRemunerationCalculationsInput>
+  connectOrCreate?: Prisma.FirmCreateOrConnectWithoutRemunerationCalculationsInput
+  upsert?: Prisma.FirmUpsertWithoutRemunerationCalculationsInput
+  connect?: Prisma.FirmWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.FirmUpdateToOneWithWhereWithoutRemunerationCalculationsInput, Prisma.FirmUpdateWithoutRemunerationCalculationsInput>, Prisma.FirmUncheckedUpdateWithoutRemunerationCalculationsInput>
 }
 
 export type FirmCreateNestedOneWithoutAttachmentsInput = {
@@ -461,89 +650,59 @@ export type FirmUpdateOneRequiredWithoutAttachmentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.FirmUpdateToOneWithWhereWithoutAttachmentsInput, Prisma.FirmUpdateWithoutAttachmentsInput>, Prisma.FirmUncheckedUpdateWithoutAttachmentsInput>
 }
 
-export type FirmCreateWithoutAuditLogsInput = {
-  name: string
-  attachments?: Prisma.AttachmentCreateNestedManyWithoutFirmInput
-  contracts?: Prisma.ContractCreateNestedManyWithoutFirmInput
-  contractEmployees?: Prisma.ContractEmployeeCreateNestedManyWithoutFirmInput
-  revenues?: Prisma.RevenueCreateNestedManyWithoutFirmInput
-  fees?: Prisma.FeeCreateNestedManyWithoutFirmInput
-  expenses?: Prisma.ExpenseCreateNestedManyWithoutFirmInput
-  remunerations?: Prisma.RemunerationCreateNestedManyWithoutFirmInput
+export type FirmCreateNestedOneWithoutAuditLogsInput = {
+  create?: Prisma.XOR<Prisma.FirmCreateWithoutAuditLogsInput, Prisma.FirmUncheckedCreateWithoutAuditLogsInput>
+  connectOrCreate?: Prisma.FirmCreateOrConnectWithoutAuditLogsInput
+  connect?: Prisma.FirmWhereUniqueInput
 }
 
-export type FirmUncheckedCreateWithoutAuditLogsInput = {
-  id?: number
-  name: string
-  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutFirmInput
-  contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutFirmInput
-  contractEmployees?: Prisma.ContractEmployeeUncheckedCreateNestedManyWithoutFirmInput
-  revenues?: Prisma.RevenueUncheckedCreateNestedManyWithoutFirmInput
-  fees?: Prisma.FeeUncheckedCreateNestedManyWithoutFirmInput
-  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutFirmInput
-  remunerations?: Prisma.RemunerationUncheckedCreateNestedManyWithoutFirmInput
-}
-
-export type FirmCreateOrConnectWithoutAuditLogsInput = {
-  where: Prisma.FirmWhereUniqueInput
-  create: Prisma.XOR<Prisma.FirmCreateWithoutAuditLogsInput, Prisma.FirmUncheckedCreateWithoutAuditLogsInput>
-}
-
-export type FirmUpsertWithoutAuditLogsInput = {
-  update: Prisma.XOR<Prisma.FirmUpdateWithoutAuditLogsInput, Prisma.FirmUncheckedUpdateWithoutAuditLogsInput>
-  create: Prisma.XOR<Prisma.FirmCreateWithoutAuditLogsInput, Prisma.FirmUncheckedCreateWithoutAuditLogsInput>
-  where?: Prisma.FirmWhereInput
-}
-
-export type FirmUpdateToOneWithWhereWithoutAuditLogsInput = {
-  where?: Prisma.FirmWhereInput
-  data: Prisma.XOR<Prisma.FirmUpdateWithoutAuditLogsInput, Prisma.FirmUncheckedUpdateWithoutAuditLogsInput>
-}
-
-export type FirmUpdateWithoutAuditLogsInput = {
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  attachments?: Prisma.AttachmentUpdateManyWithoutFirmNestedInput
-  contracts?: Prisma.ContractUpdateManyWithoutFirmNestedInput
-  contractEmployees?: Prisma.ContractEmployeeUpdateManyWithoutFirmNestedInput
-  revenues?: Prisma.RevenueUpdateManyWithoutFirmNestedInput
-  fees?: Prisma.FeeUpdateManyWithoutFirmNestedInput
-  expenses?: Prisma.ExpenseUpdateManyWithoutFirmNestedInput
-  remunerations?: Prisma.RemunerationUpdateManyWithoutFirmNestedInput
-}
-
-export type FirmUncheckedUpdateWithoutAuditLogsInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutFirmNestedInput
-  contracts?: Prisma.ContractUncheckedUpdateManyWithoutFirmNestedInput
-  contractEmployees?: Prisma.ContractEmployeeUncheckedUpdateManyWithoutFirmNestedInput
-  revenues?: Prisma.RevenueUncheckedUpdateManyWithoutFirmNestedInput
-  fees?: Prisma.FeeUncheckedUpdateManyWithoutFirmNestedInput
-  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutFirmNestedInput
-  remunerations?: Prisma.RemunerationUncheckedUpdateManyWithoutFirmNestedInput
+export type FirmUpdateOneRequiredWithoutAuditLogsNestedInput = {
+  create?: Prisma.XOR<Prisma.FirmCreateWithoutAuditLogsInput, Prisma.FirmUncheckedCreateWithoutAuditLogsInput>
+  connectOrCreate?: Prisma.FirmCreateOrConnectWithoutAuditLogsInput
+  upsert?: Prisma.FirmUpsertWithoutAuditLogsInput
+  connect?: Prisma.FirmWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.FirmUpdateToOneWithWhereWithoutAuditLogsInput, Prisma.FirmUpdateWithoutAuditLogsInput>, Prisma.FirmUncheckedUpdateWithoutAuditLogsInput>
 }
 
 export type FirmCreateWithoutContractsInput = {
   name: string
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutFirmInput
-  attachments?: Prisma.AttachmentCreateNestedManyWithoutFirmInput
-  contractEmployees?: Prisma.ContractEmployeeCreateNestedManyWithoutFirmInput
+  remunerationCutoffDay?: number
+  remunerationDueDay?: number
+  contractAssignments?: Prisma.ContractAssignmentCreateNestedManyWithoutFirmInput
   revenues?: Prisma.RevenueCreateNestedManyWithoutFirmInput
-  fees?: Prisma.FeeCreateNestedManyWithoutFirmInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutFirmInput
-  remunerations?: Prisma.RemunerationCreateNestedManyWithoutFirmInput
+  financialGenerations?: Prisma.FinancialGenerationCreateNestedManyWithoutFirmInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryCreateNestedManyWithoutFirmInput
+  receivables?: Prisma.ReceivableCreateNestedManyWithoutFirmInput
+  payables?: Prisma.PayableCreateNestedManyWithoutFirmInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutFirmInput
+  receiptReversals?: Prisma.ReceiptReversalCreateNestedManyWithoutFirmInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutFirmInput
+  paymentReversals?: Prisma.PaymentReversalCreateNestedManyWithoutFirmInput
+  remunerationCalculations?: Prisma.RemunerationCalculationCreateNestedManyWithoutFirmInput
+  attachments?: Prisma.AttachmentCreateNestedManyWithoutFirmInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutFirmInput
 }
 
 export type FirmUncheckedCreateWithoutContractsInput = {
   id?: number
   name: string
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutFirmInput
-  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutFirmInput
-  contractEmployees?: Prisma.ContractEmployeeUncheckedCreateNestedManyWithoutFirmInput
+  remunerationCutoffDay?: number
+  remunerationDueDay?: number
+  contractAssignments?: Prisma.ContractAssignmentUncheckedCreateNestedManyWithoutFirmInput
   revenues?: Prisma.RevenueUncheckedCreateNestedManyWithoutFirmInput
-  fees?: Prisma.FeeUncheckedCreateNestedManyWithoutFirmInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutFirmInput
-  remunerations?: Prisma.RemunerationUncheckedCreateNestedManyWithoutFirmInput
+  financialGenerations?: Prisma.FinancialGenerationUncheckedCreateNestedManyWithoutFirmInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryUncheckedCreateNestedManyWithoutFirmInput
+  receivables?: Prisma.ReceivableUncheckedCreateNestedManyWithoutFirmInput
+  payables?: Prisma.PayableUncheckedCreateNestedManyWithoutFirmInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutFirmInput
+  receiptReversals?: Prisma.ReceiptReversalUncheckedCreateNestedManyWithoutFirmInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutFirmInput
+  paymentReversals?: Prisma.PaymentReversalUncheckedCreateNestedManyWithoutFirmInput
+  remunerationCalculations?: Prisma.RemunerationCalculationUncheckedCreateNestedManyWithoutFirmInput
+  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutFirmInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutFirmInput
 }
 
 export type FirmCreateOrConnectWithoutContractsInput = {
@@ -564,110 +723,182 @@ export type FirmUpdateToOneWithWhereWithoutContractsInput = {
 
 export type FirmUpdateWithoutContractsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutFirmNestedInput
-  attachments?: Prisma.AttachmentUpdateManyWithoutFirmNestedInput
-  contractEmployees?: Prisma.ContractEmployeeUpdateManyWithoutFirmNestedInput
+  remunerationCutoffDay?: Prisma.IntFieldUpdateOperationsInput | number
+  remunerationDueDay?: Prisma.IntFieldUpdateOperationsInput | number
+  contractAssignments?: Prisma.ContractAssignmentUpdateManyWithoutFirmNestedInput
   revenues?: Prisma.RevenueUpdateManyWithoutFirmNestedInput
-  fees?: Prisma.FeeUpdateManyWithoutFirmNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutFirmNestedInput
-  remunerations?: Prisma.RemunerationUpdateManyWithoutFirmNestedInput
+  financialGenerations?: Prisma.FinancialGenerationUpdateManyWithoutFirmNestedInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryUpdateManyWithoutFirmNestedInput
+  receivables?: Prisma.ReceivableUpdateManyWithoutFirmNestedInput
+  payables?: Prisma.PayableUpdateManyWithoutFirmNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutFirmNestedInput
+  receiptReversals?: Prisma.ReceiptReversalUpdateManyWithoutFirmNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutFirmNestedInput
+  paymentReversals?: Prisma.PaymentReversalUpdateManyWithoutFirmNestedInput
+  remunerationCalculations?: Prisma.RemunerationCalculationUpdateManyWithoutFirmNestedInput
+  attachments?: Prisma.AttachmentUpdateManyWithoutFirmNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutFirmNestedInput
 }
 
 export type FirmUncheckedUpdateWithoutContractsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutFirmNestedInput
-  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutFirmNestedInput
-  contractEmployees?: Prisma.ContractEmployeeUncheckedUpdateManyWithoutFirmNestedInput
+  remunerationCutoffDay?: Prisma.IntFieldUpdateOperationsInput | number
+  remunerationDueDay?: Prisma.IntFieldUpdateOperationsInput | number
+  contractAssignments?: Prisma.ContractAssignmentUncheckedUpdateManyWithoutFirmNestedInput
   revenues?: Prisma.RevenueUncheckedUpdateManyWithoutFirmNestedInput
-  fees?: Prisma.FeeUncheckedUpdateManyWithoutFirmNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutFirmNestedInput
-  remunerations?: Prisma.RemunerationUncheckedUpdateManyWithoutFirmNestedInput
+  financialGenerations?: Prisma.FinancialGenerationUncheckedUpdateManyWithoutFirmNestedInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryUncheckedUpdateManyWithoutFirmNestedInput
+  receivables?: Prisma.ReceivableUncheckedUpdateManyWithoutFirmNestedInput
+  payables?: Prisma.PayableUncheckedUpdateManyWithoutFirmNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutFirmNestedInput
+  receiptReversals?: Prisma.ReceiptReversalUncheckedUpdateManyWithoutFirmNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutFirmNestedInput
+  paymentReversals?: Prisma.PaymentReversalUncheckedUpdateManyWithoutFirmNestedInput
+  remunerationCalculations?: Prisma.RemunerationCalculationUncheckedUpdateManyWithoutFirmNestedInput
+  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutFirmNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutFirmNestedInput
 }
 
-export type FirmCreateWithoutContractEmployeesInput = {
+export type FirmCreateWithoutContractAssignmentsInput = {
   name: string
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutFirmInput
-  attachments?: Prisma.AttachmentCreateNestedManyWithoutFirmInput
+  remunerationCutoffDay?: number
+  remunerationDueDay?: number
   contracts?: Prisma.ContractCreateNestedManyWithoutFirmInput
   revenues?: Prisma.RevenueCreateNestedManyWithoutFirmInput
-  fees?: Prisma.FeeCreateNestedManyWithoutFirmInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutFirmInput
-  remunerations?: Prisma.RemunerationCreateNestedManyWithoutFirmInput
+  financialGenerations?: Prisma.FinancialGenerationCreateNestedManyWithoutFirmInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryCreateNestedManyWithoutFirmInput
+  receivables?: Prisma.ReceivableCreateNestedManyWithoutFirmInput
+  payables?: Prisma.PayableCreateNestedManyWithoutFirmInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutFirmInput
+  receiptReversals?: Prisma.ReceiptReversalCreateNestedManyWithoutFirmInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutFirmInput
+  paymentReversals?: Prisma.PaymentReversalCreateNestedManyWithoutFirmInput
+  remunerationCalculations?: Prisma.RemunerationCalculationCreateNestedManyWithoutFirmInput
+  attachments?: Prisma.AttachmentCreateNestedManyWithoutFirmInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutFirmInput
 }
 
-export type FirmUncheckedCreateWithoutContractEmployeesInput = {
+export type FirmUncheckedCreateWithoutContractAssignmentsInput = {
   id?: number
   name: string
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutFirmInput
-  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutFirmInput
+  remunerationCutoffDay?: number
+  remunerationDueDay?: number
   contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutFirmInput
   revenues?: Prisma.RevenueUncheckedCreateNestedManyWithoutFirmInput
-  fees?: Prisma.FeeUncheckedCreateNestedManyWithoutFirmInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutFirmInput
-  remunerations?: Prisma.RemunerationUncheckedCreateNestedManyWithoutFirmInput
+  financialGenerations?: Prisma.FinancialGenerationUncheckedCreateNestedManyWithoutFirmInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryUncheckedCreateNestedManyWithoutFirmInput
+  receivables?: Prisma.ReceivableUncheckedCreateNestedManyWithoutFirmInput
+  payables?: Prisma.PayableUncheckedCreateNestedManyWithoutFirmInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutFirmInput
+  receiptReversals?: Prisma.ReceiptReversalUncheckedCreateNestedManyWithoutFirmInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutFirmInput
+  paymentReversals?: Prisma.PaymentReversalUncheckedCreateNestedManyWithoutFirmInput
+  remunerationCalculations?: Prisma.RemunerationCalculationUncheckedCreateNestedManyWithoutFirmInput
+  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutFirmInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutFirmInput
 }
 
-export type FirmCreateOrConnectWithoutContractEmployeesInput = {
+export type FirmCreateOrConnectWithoutContractAssignmentsInput = {
   where: Prisma.FirmWhereUniqueInput
-  create: Prisma.XOR<Prisma.FirmCreateWithoutContractEmployeesInput, Prisma.FirmUncheckedCreateWithoutContractEmployeesInput>
+  create: Prisma.XOR<Prisma.FirmCreateWithoutContractAssignmentsInput, Prisma.FirmUncheckedCreateWithoutContractAssignmentsInput>
 }
 
-export type FirmUpsertWithoutContractEmployeesInput = {
-  update: Prisma.XOR<Prisma.FirmUpdateWithoutContractEmployeesInput, Prisma.FirmUncheckedUpdateWithoutContractEmployeesInput>
-  create: Prisma.XOR<Prisma.FirmCreateWithoutContractEmployeesInput, Prisma.FirmUncheckedCreateWithoutContractEmployeesInput>
+export type FirmUpsertWithoutContractAssignmentsInput = {
+  update: Prisma.XOR<Prisma.FirmUpdateWithoutContractAssignmentsInput, Prisma.FirmUncheckedUpdateWithoutContractAssignmentsInput>
+  create: Prisma.XOR<Prisma.FirmCreateWithoutContractAssignmentsInput, Prisma.FirmUncheckedCreateWithoutContractAssignmentsInput>
   where?: Prisma.FirmWhereInput
 }
 
-export type FirmUpdateToOneWithWhereWithoutContractEmployeesInput = {
+export type FirmUpdateToOneWithWhereWithoutContractAssignmentsInput = {
   where?: Prisma.FirmWhereInput
-  data: Prisma.XOR<Prisma.FirmUpdateWithoutContractEmployeesInput, Prisma.FirmUncheckedUpdateWithoutContractEmployeesInput>
+  data: Prisma.XOR<Prisma.FirmUpdateWithoutContractAssignmentsInput, Prisma.FirmUncheckedUpdateWithoutContractAssignmentsInput>
 }
 
-export type FirmUpdateWithoutContractEmployeesInput = {
+export type FirmUpdateWithoutContractAssignmentsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutFirmNestedInput
-  attachments?: Prisma.AttachmentUpdateManyWithoutFirmNestedInput
+  remunerationCutoffDay?: Prisma.IntFieldUpdateOperationsInput | number
+  remunerationDueDay?: Prisma.IntFieldUpdateOperationsInput | number
   contracts?: Prisma.ContractUpdateManyWithoutFirmNestedInput
   revenues?: Prisma.RevenueUpdateManyWithoutFirmNestedInput
-  fees?: Prisma.FeeUpdateManyWithoutFirmNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutFirmNestedInput
-  remunerations?: Prisma.RemunerationUpdateManyWithoutFirmNestedInput
+  financialGenerations?: Prisma.FinancialGenerationUpdateManyWithoutFirmNestedInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryUpdateManyWithoutFirmNestedInput
+  receivables?: Prisma.ReceivableUpdateManyWithoutFirmNestedInput
+  payables?: Prisma.PayableUpdateManyWithoutFirmNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutFirmNestedInput
+  receiptReversals?: Prisma.ReceiptReversalUpdateManyWithoutFirmNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutFirmNestedInput
+  paymentReversals?: Prisma.PaymentReversalUpdateManyWithoutFirmNestedInput
+  remunerationCalculations?: Prisma.RemunerationCalculationUpdateManyWithoutFirmNestedInput
+  attachments?: Prisma.AttachmentUpdateManyWithoutFirmNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutFirmNestedInput
 }
 
-export type FirmUncheckedUpdateWithoutContractEmployeesInput = {
+export type FirmUncheckedUpdateWithoutContractAssignmentsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutFirmNestedInput
-  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutFirmNestedInput
+  remunerationCutoffDay?: Prisma.IntFieldUpdateOperationsInput | number
+  remunerationDueDay?: Prisma.IntFieldUpdateOperationsInput | number
   contracts?: Prisma.ContractUncheckedUpdateManyWithoutFirmNestedInput
   revenues?: Prisma.RevenueUncheckedUpdateManyWithoutFirmNestedInput
-  fees?: Prisma.FeeUncheckedUpdateManyWithoutFirmNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutFirmNestedInput
-  remunerations?: Prisma.RemunerationUncheckedUpdateManyWithoutFirmNestedInput
+  financialGenerations?: Prisma.FinancialGenerationUncheckedUpdateManyWithoutFirmNestedInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryUncheckedUpdateManyWithoutFirmNestedInput
+  receivables?: Prisma.ReceivableUncheckedUpdateManyWithoutFirmNestedInput
+  payables?: Prisma.PayableUncheckedUpdateManyWithoutFirmNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutFirmNestedInput
+  receiptReversals?: Prisma.ReceiptReversalUncheckedUpdateManyWithoutFirmNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutFirmNestedInput
+  paymentReversals?: Prisma.PaymentReversalUncheckedUpdateManyWithoutFirmNestedInput
+  remunerationCalculations?: Prisma.RemunerationCalculationUncheckedUpdateManyWithoutFirmNestedInput
+  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutFirmNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutFirmNestedInput
 }
 
 export type FirmCreateWithoutRevenuesInput = {
   name: string
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutFirmInput
-  attachments?: Prisma.AttachmentCreateNestedManyWithoutFirmInput
+  remunerationCutoffDay?: number
+  remunerationDueDay?: number
   contracts?: Prisma.ContractCreateNestedManyWithoutFirmInput
-  contractEmployees?: Prisma.ContractEmployeeCreateNestedManyWithoutFirmInput
-  fees?: Prisma.FeeCreateNestedManyWithoutFirmInput
+  contractAssignments?: Prisma.ContractAssignmentCreateNestedManyWithoutFirmInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutFirmInput
-  remunerations?: Prisma.RemunerationCreateNestedManyWithoutFirmInput
+  financialGenerations?: Prisma.FinancialGenerationCreateNestedManyWithoutFirmInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryCreateNestedManyWithoutFirmInput
+  receivables?: Prisma.ReceivableCreateNestedManyWithoutFirmInput
+  payables?: Prisma.PayableCreateNestedManyWithoutFirmInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutFirmInput
+  receiptReversals?: Prisma.ReceiptReversalCreateNestedManyWithoutFirmInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutFirmInput
+  paymentReversals?: Prisma.PaymentReversalCreateNestedManyWithoutFirmInput
+  remunerationCalculations?: Prisma.RemunerationCalculationCreateNestedManyWithoutFirmInput
+  attachments?: Prisma.AttachmentCreateNestedManyWithoutFirmInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutFirmInput
 }
 
 export type FirmUncheckedCreateWithoutRevenuesInput = {
   id?: number
   name: string
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutFirmInput
-  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutFirmInput
+  remunerationCutoffDay?: number
+  remunerationDueDay?: number
   contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutFirmInput
-  contractEmployees?: Prisma.ContractEmployeeUncheckedCreateNestedManyWithoutFirmInput
-  fees?: Prisma.FeeUncheckedCreateNestedManyWithoutFirmInput
+  contractAssignments?: Prisma.ContractAssignmentUncheckedCreateNestedManyWithoutFirmInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutFirmInput
-  remunerations?: Prisma.RemunerationUncheckedCreateNestedManyWithoutFirmInput
+  financialGenerations?: Prisma.FinancialGenerationUncheckedCreateNestedManyWithoutFirmInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryUncheckedCreateNestedManyWithoutFirmInput
+  receivables?: Prisma.ReceivableUncheckedCreateNestedManyWithoutFirmInput
+  payables?: Prisma.PayableUncheckedCreateNestedManyWithoutFirmInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutFirmInput
+  receiptReversals?: Prisma.ReceiptReversalUncheckedCreateNestedManyWithoutFirmInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutFirmInput
+  paymentReversals?: Prisma.PaymentReversalUncheckedCreateNestedManyWithoutFirmInput
+  remunerationCalculations?: Prisma.RemunerationCalculationUncheckedCreateNestedManyWithoutFirmInput
+  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutFirmInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutFirmInput
 }
 
 export type FirmCreateOrConnectWithoutRevenuesInput = {
@@ -688,110 +919,84 @@ export type FirmUpdateToOneWithWhereWithoutRevenuesInput = {
 
 export type FirmUpdateWithoutRevenuesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutFirmNestedInput
-  attachments?: Prisma.AttachmentUpdateManyWithoutFirmNestedInput
+  remunerationCutoffDay?: Prisma.IntFieldUpdateOperationsInput | number
+  remunerationDueDay?: Prisma.IntFieldUpdateOperationsInput | number
   contracts?: Prisma.ContractUpdateManyWithoutFirmNestedInput
-  contractEmployees?: Prisma.ContractEmployeeUpdateManyWithoutFirmNestedInput
-  fees?: Prisma.FeeUpdateManyWithoutFirmNestedInput
+  contractAssignments?: Prisma.ContractAssignmentUpdateManyWithoutFirmNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutFirmNestedInput
-  remunerations?: Prisma.RemunerationUpdateManyWithoutFirmNestedInput
+  financialGenerations?: Prisma.FinancialGenerationUpdateManyWithoutFirmNestedInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryUpdateManyWithoutFirmNestedInput
+  receivables?: Prisma.ReceivableUpdateManyWithoutFirmNestedInput
+  payables?: Prisma.PayableUpdateManyWithoutFirmNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutFirmNestedInput
+  receiptReversals?: Prisma.ReceiptReversalUpdateManyWithoutFirmNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutFirmNestedInput
+  paymentReversals?: Prisma.PaymentReversalUpdateManyWithoutFirmNestedInput
+  remunerationCalculations?: Prisma.RemunerationCalculationUpdateManyWithoutFirmNestedInput
+  attachments?: Prisma.AttachmentUpdateManyWithoutFirmNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutFirmNestedInput
 }
 
 export type FirmUncheckedUpdateWithoutRevenuesInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutFirmNestedInput
-  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutFirmNestedInput
+  remunerationCutoffDay?: Prisma.IntFieldUpdateOperationsInput | number
+  remunerationDueDay?: Prisma.IntFieldUpdateOperationsInput | number
   contracts?: Prisma.ContractUncheckedUpdateManyWithoutFirmNestedInput
-  contractEmployees?: Prisma.ContractEmployeeUncheckedUpdateManyWithoutFirmNestedInput
-  fees?: Prisma.FeeUncheckedUpdateManyWithoutFirmNestedInput
+  contractAssignments?: Prisma.ContractAssignmentUncheckedUpdateManyWithoutFirmNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutFirmNestedInput
-  remunerations?: Prisma.RemunerationUncheckedUpdateManyWithoutFirmNestedInput
-}
-
-export type FirmCreateWithoutFeesInput = {
-  name: string
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutFirmInput
-  attachments?: Prisma.AttachmentCreateNestedManyWithoutFirmInput
-  contracts?: Prisma.ContractCreateNestedManyWithoutFirmInput
-  contractEmployees?: Prisma.ContractEmployeeCreateNestedManyWithoutFirmInput
-  revenues?: Prisma.RevenueCreateNestedManyWithoutFirmInput
-  expenses?: Prisma.ExpenseCreateNestedManyWithoutFirmInput
-  remunerations?: Prisma.RemunerationCreateNestedManyWithoutFirmInput
-}
-
-export type FirmUncheckedCreateWithoutFeesInput = {
-  id?: number
-  name: string
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutFirmInput
-  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutFirmInput
-  contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutFirmInput
-  contractEmployees?: Prisma.ContractEmployeeUncheckedCreateNestedManyWithoutFirmInput
-  revenues?: Prisma.RevenueUncheckedCreateNestedManyWithoutFirmInput
-  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutFirmInput
-  remunerations?: Prisma.RemunerationUncheckedCreateNestedManyWithoutFirmInput
-}
-
-export type FirmCreateOrConnectWithoutFeesInput = {
-  where: Prisma.FirmWhereUniqueInput
-  create: Prisma.XOR<Prisma.FirmCreateWithoutFeesInput, Prisma.FirmUncheckedCreateWithoutFeesInput>
-}
-
-export type FirmUpsertWithoutFeesInput = {
-  update: Prisma.XOR<Prisma.FirmUpdateWithoutFeesInput, Prisma.FirmUncheckedUpdateWithoutFeesInput>
-  create: Prisma.XOR<Prisma.FirmCreateWithoutFeesInput, Prisma.FirmUncheckedCreateWithoutFeesInput>
-  where?: Prisma.FirmWhereInput
-}
-
-export type FirmUpdateToOneWithWhereWithoutFeesInput = {
-  where?: Prisma.FirmWhereInput
-  data: Prisma.XOR<Prisma.FirmUpdateWithoutFeesInput, Prisma.FirmUncheckedUpdateWithoutFeesInput>
-}
-
-export type FirmUpdateWithoutFeesInput = {
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutFirmNestedInput
-  attachments?: Prisma.AttachmentUpdateManyWithoutFirmNestedInput
-  contracts?: Prisma.ContractUpdateManyWithoutFirmNestedInput
-  contractEmployees?: Prisma.ContractEmployeeUpdateManyWithoutFirmNestedInput
-  revenues?: Prisma.RevenueUpdateManyWithoutFirmNestedInput
-  expenses?: Prisma.ExpenseUpdateManyWithoutFirmNestedInput
-  remunerations?: Prisma.RemunerationUpdateManyWithoutFirmNestedInput
-}
-
-export type FirmUncheckedUpdateWithoutFeesInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutFirmNestedInput
+  financialGenerations?: Prisma.FinancialGenerationUncheckedUpdateManyWithoutFirmNestedInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryUncheckedUpdateManyWithoutFirmNestedInput
+  receivables?: Prisma.ReceivableUncheckedUpdateManyWithoutFirmNestedInput
+  payables?: Prisma.PayableUncheckedUpdateManyWithoutFirmNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutFirmNestedInput
+  receiptReversals?: Prisma.ReceiptReversalUncheckedUpdateManyWithoutFirmNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutFirmNestedInput
+  paymentReversals?: Prisma.PaymentReversalUncheckedUpdateManyWithoutFirmNestedInput
+  remunerationCalculations?: Prisma.RemunerationCalculationUncheckedUpdateManyWithoutFirmNestedInput
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutFirmNestedInput
-  contracts?: Prisma.ContractUncheckedUpdateManyWithoutFirmNestedInput
-  contractEmployees?: Prisma.ContractEmployeeUncheckedUpdateManyWithoutFirmNestedInput
-  revenues?: Prisma.RevenueUncheckedUpdateManyWithoutFirmNestedInput
-  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutFirmNestedInput
-  remunerations?: Prisma.RemunerationUncheckedUpdateManyWithoutFirmNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutFirmNestedInput
 }
 
 export type FirmCreateWithoutExpensesInput = {
   name: string
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutFirmInput
-  attachments?: Prisma.AttachmentCreateNestedManyWithoutFirmInput
+  remunerationCutoffDay?: number
+  remunerationDueDay?: number
   contracts?: Prisma.ContractCreateNestedManyWithoutFirmInput
-  contractEmployees?: Prisma.ContractEmployeeCreateNestedManyWithoutFirmInput
+  contractAssignments?: Prisma.ContractAssignmentCreateNestedManyWithoutFirmInput
   revenues?: Prisma.RevenueCreateNestedManyWithoutFirmInput
-  fees?: Prisma.FeeCreateNestedManyWithoutFirmInput
-  remunerations?: Prisma.RemunerationCreateNestedManyWithoutFirmInput
+  financialGenerations?: Prisma.FinancialGenerationCreateNestedManyWithoutFirmInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryCreateNestedManyWithoutFirmInput
+  receivables?: Prisma.ReceivableCreateNestedManyWithoutFirmInput
+  payables?: Prisma.PayableCreateNestedManyWithoutFirmInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutFirmInput
+  receiptReversals?: Prisma.ReceiptReversalCreateNestedManyWithoutFirmInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutFirmInput
+  paymentReversals?: Prisma.PaymentReversalCreateNestedManyWithoutFirmInput
+  remunerationCalculations?: Prisma.RemunerationCalculationCreateNestedManyWithoutFirmInput
+  attachments?: Prisma.AttachmentCreateNestedManyWithoutFirmInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutFirmInput
 }
 
 export type FirmUncheckedCreateWithoutExpensesInput = {
   id?: number
   name: string
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutFirmInput
-  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutFirmInput
+  remunerationCutoffDay?: number
+  remunerationDueDay?: number
   contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutFirmInput
-  contractEmployees?: Prisma.ContractEmployeeUncheckedCreateNestedManyWithoutFirmInput
+  contractAssignments?: Prisma.ContractAssignmentUncheckedCreateNestedManyWithoutFirmInput
   revenues?: Prisma.RevenueUncheckedCreateNestedManyWithoutFirmInput
-  fees?: Prisma.FeeUncheckedCreateNestedManyWithoutFirmInput
-  remunerations?: Prisma.RemunerationUncheckedCreateNestedManyWithoutFirmInput
+  financialGenerations?: Prisma.FinancialGenerationUncheckedCreateNestedManyWithoutFirmInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryUncheckedCreateNestedManyWithoutFirmInput
+  receivables?: Prisma.ReceivableUncheckedCreateNestedManyWithoutFirmInput
+  payables?: Prisma.PayableUncheckedCreateNestedManyWithoutFirmInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutFirmInput
+  receiptReversals?: Prisma.ReceiptReversalUncheckedCreateNestedManyWithoutFirmInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutFirmInput
+  paymentReversals?: Prisma.PaymentReversalUncheckedCreateNestedManyWithoutFirmInput
+  remunerationCalculations?: Prisma.RemunerationCalculationUncheckedCreateNestedManyWithoutFirmInput
+  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutFirmInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutFirmInput
 }
 
 export type FirmCreateOrConnectWithoutExpensesInput = {
@@ -812,110 +1017,966 @@ export type FirmUpdateToOneWithWhereWithoutExpensesInput = {
 
 export type FirmUpdateWithoutExpensesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutFirmNestedInput
-  attachments?: Prisma.AttachmentUpdateManyWithoutFirmNestedInput
+  remunerationCutoffDay?: Prisma.IntFieldUpdateOperationsInput | number
+  remunerationDueDay?: Prisma.IntFieldUpdateOperationsInput | number
   contracts?: Prisma.ContractUpdateManyWithoutFirmNestedInput
-  contractEmployees?: Prisma.ContractEmployeeUpdateManyWithoutFirmNestedInput
+  contractAssignments?: Prisma.ContractAssignmentUpdateManyWithoutFirmNestedInput
   revenues?: Prisma.RevenueUpdateManyWithoutFirmNestedInput
-  fees?: Prisma.FeeUpdateManyWithoutFirmNestedInput
-  remunerations?: Prisma.RemunerationUpdateManyWithoutFirmNestedInput
+  financialGenerations?: Prisma.FinancialGenerationUpdateManyWithoutFirmNestedInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryUpdateManyWithoutFirmNestedInput
+  receivables?: Prisma.ReceivableUpdateManyWithoutFirmNestedInput
+  payables?: Prisma.PayableUpdateManyWithoutFirmNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutFirmNestedInput
+  receiptReversals?: Prisma.ReceiptReversalUpdateManyWithoutFirmNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutFirmNestedInput
+  paymentReversals?: Prisma.PaymentReversalUpdateManyWithoutFirmNestedInput
+  remunerationCalculations?: Prisma.RemunerationCalculationUpdateManyWithoutFirmNestedInput
+  attachments?: Prisma.AttachmentUpdateManyWithoutFirmNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutFirmNestedInput
 }
 
 export type FirmUncheckedUpdateWithoutExpensesInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutFirmNestedInput
-  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutFirmNestedInput
+  remunerationCutoffDay?: Prisma.IntFieldUpdateOperationsInput | number
+  remunerationDueDay?: Prisma.IntFieldUpdateOperationsInput | number
   contracts?: Prisma.ContractUncheckedUpdateManyWithoutFirmNestedInput
-  contractEmployees?: Prisma.ContractEmployeeUncheckedUpdateManyWithoutFirmNestedInput
+  contractAssignments?: Prisma.ContractAssignmentUncheckedUpdateManyWithoutFirmNestedInput
   revenues?: Prisma.RevenueUncheckedUpdateManyWithoutFirmNestedInput
-  fees?: Prisma.FeeUncheckedUpdateManyWithoutFirmNestedInput
-  remunerations?: Prisma.RemunerationUncheckedUpdateManyWithoutFirmNestedInput
+  financialGenerations?: Prisma.FinancialGenerationUncheckedUpdateManyWithoutFirmNestedInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryUncheckedUpdateManyWithoutFirmNestedInput
+  receivables?: Prisma.ReceivableUncheckedUpdateManyWithoutFirmNestedInput
+  payables?: Prisma.PayableUncheckedUpdateManyWithoutFirmNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutFirmNestedInput
+  receiptReversals?: Prisma.ReceiptReversalUncheckedUpdateManyWithoutFirmNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutFirmNestedInput
+  paymentReversals?: Prisma.PaymentReversalUncheckedUpdateManyWithoutFirmNestedInput
+  remunerationCalculations?: Prisma.RemunerationCalculationUncheckedUpdateManyWithoutFirmNestedInput
+  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutFirmNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutFirmNestedInput
 }
 
-export type FirmCreateWithoutRemunerationsInput = {
+export type FirmCreateWithoutFinancialGenerationsInput = {
   name: string
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutFirmInput
-  attachments?: Prisma.AttachmentCreateNestedManyWithoutFirmInput
+  remunerationCutoffDay?: number
+  remunerationDueDay?: number
   contracts?: Prisma.ContractCreateNestedManyWithoutFirmInput
-  contractEmployees?: Prisma.ContractEmployeeCreateNestedManyWithoutFirmInput
+  contractAssignments?: Prisma.ContractAssignmentCreateNestedManyWithoutFirmInput
   revenues?: Prisma.RevenueCreateNestedManyWithoutFirmInput
-  fees?: Prisma.FeeCreateNestedManyWithoutFirmInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutFirmInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryCreateNestedManyWithoutFirmInput
+  receivables?: Prisma.ReceivableCreateNestedManyWithoutFirmInput
+  payables?: Prisma.PayableCreateNestedManyWithoutFirmInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutFirmInput
+  receiptReversals?: Prisma.ReceiptReversalCreateNestedManyWithoutFirmInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutFirmInput
+  paymentReversals?: Prisma.PaymentReversalCreateNestedManyWithoutFirmInput
+  remunerationCalculations?: Prisma.RemunerationCalculationCreateNestedManyWithoutFirmInput
+  attachments?: Prisma.AttachmentCreateNestedManyWithoutFirmInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutFirmInput
 }
 
-export type FirmUncheckedCreateWithoutRemunerationsInput = {
+export type FirmUncheckedCreateWithoutFinancialGenerationsInput = {
   id?: number
   name: string
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutFirmInput
-  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutFirmInput
+  remunerationCutoffDay?: number
+  remunerationDueDay?: number
   contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutFirmInput
-  contractEmployees?: Prisma.ContractEmployeeUncheckedCreateNestedManyWithoutFirmInput
+  contractAssignments?: Prisma.ContractAssignmentUncheckedCreateNestedManyWithoutFirmInput
   revenues?: Prisma.RevenueUncheckedCreateNestedManyWithoutFirmInput
-  fees?: Prisma.FeeUncheckedCreateNestedManyWithoutFirmInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutFirmInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryUncheckedCreateNestedManyWithoutFirmInput
+  receivables?: Prisma.ReceivableUncheckedCreateNestedManyWithoutFirmInput
+  payables?: Prisma.PayableUncheckedCreateNestedManyWithoutFirmInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutFirmInput
+  receiptReversals?: Prisma.ReceiptReversalUncheckedCreateNestedManyWithoutFirmInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutFirmInput
+  paymentReversals?: Prisma.PaymentReversalUncheckedCreateNestedManyWithoutFirmInput
+  remunerationCalculations?: Prisma.RemunerationCalculationUncheckedCreateNestedManyWithoutFirmInput
+  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutFirmInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutFirmInput
 }
 
-export type FirmCreateOrConnectWithoutRemunerationsInput = {
+export type FirmCreateOrConnectWithoutFinancialGenerationsInput = {
   where: Prisma.FirmWhereUniqueInput
-  create: Prisma.XOR<Prisma.FirmCreateWithoutRemunerationsInput, Prisma.FirmUncheckedCreateWithoutRemunerationsInput>
+  create: Prisma.XOR<Prisma.FirmCreateWithoutFinancialGenerationsInput, Prisma.FirmUncheckedCreateWithoutFinancialGenerationsInput>
 }
 
-export type FirmUpsertWithoutRemunerationsInput = {
-  update: Prisma.XOR<Prisma.FirmUpdateWithoutRemunerationsInput, Prisma.FirmUncheckedUpdateWithoutRemunerationsInput>
-  create: Prisma.XOR<Prisma.FirmCreateWithoutRemunerationsInput, Prisma.FirmUncheckedCreateWithoutRemunerationsInput>
+export type FirmUpsertWithoutFinancialGenerationsInput = {
+  update: Prisma.XOR<Prisma.FirmUpdateWithoutFinancialGenerationsInput, Prisma.FirmUncheckedUpdateWithoutFinancialGenerationsInput>
+  create: Prisma.XOR<Prisma.FirmCreateWithoutFinancialGenerationsInput, Prisma.FirmUncheckedCreateWithoutFinancialGenerationsInput>
   where?: Prisma.FirmWhereInput
 }
 
-export type FirmUpdateToOneWithWhereWithoutRemunerationsInput = {
+export type FirmUpdateToOneWithWhereWithoutFinancialGenerationsInput = {
   where?: Prisma.FirmWhereInput
-  data: Prisma.XOR<Prisma.FirmUpdateWithoutRemunerationsInput, Prisma.FirmUncheckedUpdateWithoutRemunerationsInput>
+  data: Prisma.XOR<Prisma.FirmUpdateWithoutFinancialGenerationsInput, Prisma.FirmUncheckedUpdateWithoutFinancialGenerationsInput>
 }
 
-export type FirmUpdateWithoutRemunerationsInput = {
+export type FirmUpdateWithoutFinancialGenerationsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutFirmNestedInput
-  attachments?: Prisma.AttachmentUpdateManyWithoutFirmNestedInput
+  remunerationCutoffDay?: Prisma.IntFieldUpdateOperationsInput | number
+  remunerationDueDay?: Prisma.IntFieldUpdateOperationsInput | number
   contracts?: Prisma.ContractUpdateManyWithoutFirmNestedInput
-  contractEmployees?: Prisma.ContractEmployeeUpdateManyWithoutFirmNestedInput
+  contractAssignments?: Prisma.ContractAssignmentUpdateManyWithoutFirmNestedInput
   revenues?: Prisma.RevenueUpdateManyWithoutFirmNestedInput
-  fees?: Prisma.FeeUpdateManyWithoutFirmNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutFirmNestedInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryUpdateManyWithoutFirmNestedInput
+  receivables?: Prisma.ReceivableUpdateManyWithoutFirmNestedInput
+  payables?: Prisma.PayableUpdateManyWithoutFirmNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutFirmNestedInput
+  receiptReversals?: Prisma.ReceiptReversalUpdateManyWithoutFirmNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutFirmNestedInput
+  paymentReversals?: Prisma.PaymentReversalUpdateManyWithoutFirmNestedInput
+  remunerationCalculations?: Prisma.RemunerationCalculationUpdateManyWithoutFirmNestedInput
+  attachments?: Prisma.AttachmentUpdateManyWithoutFirmNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutFirmNestedInput
 }
 
-export type FirmUncheckedUpdateWithoutRemunerationsInput = {
+export type FirmUncheckedUpdateWithoutFinancialGenerationsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutFirmNestedInput
-  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutFirmNestedInput
+  remunerationCutoffDay?: Prisma.IntFieldUpdateOperationsInput | number
+  remunerationDueDay?: Prisma.IntFieldUpdateOperationsInput | number
   contracts?: Prisma.ContractUncheckedUpdateManyWithoutFirmNestedInput
-  contractEmployees?: Prisma.ContractEmployeeUncheckedUpdateManyWithoutFirmNestedInput
+  contractAssignments?: Prisma.ContractAssignmentUncheckedUpdateManyWithoutFirmNestedInput
   revenues?: Prisma.RevenueUncheckedUpdateManyWithoutFirmNestedInput
-  fees?: Prisma.FeeUncheckedUpdateManyWithoutFirmNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutFirmNestedInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryUncheckedUpdateManyWithoutFirmNestedInput
+  receivables?: Prisma.ReceivableUncheckedUpdateManyWithoutFirmNestedInput
+  payables?: Prisma.PayableUncheckedUpdateManyWithoutFirmNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutFirmNestedInput
+  receiptReversals?: Prisma.ReceiptReversalUncheckedUpdateManyWithoutFirmNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutFirmNestedInput
+  paymentReversals?: Prisma.PaymentReversalUncheckedUpdateManyWithoutFirmNestedInput
+  remunerationCalculations?: Prisma.RemunerationCalculationUncheckedUpdateManyWithoutFirmNestedInput
+  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutFirmNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutFirmNestedInput
+}
+
+export type FirmCreateWithoutDirectFinancialEntriesInput = {
+  name: string
+  remunerationCutoffDay?: number
+  remunerationDueDay?: number
+  contracts?: Prisma.ContractCreateNestedManyWithoutFirmInput
+  contractAssignments?: Prisma.ContractAssignmentCreateNestedManyWithoutFirmInput
+  revenues?: Prisma.RevenueCreateNestedManyWithoutFirmInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutFirmInput
+  financialGenerations?: Prisma.FinancialGenerationCreateNestedManyWithoutFirmInput
+  receivables?: Prisma.ReceivableCreateNestedManyWithoutFirmInput
+  payables?: Prisma.PayableCreateNestedManyWithoutFirmInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutFirmInput
+  receiptReversals?: Prisma.ReceiptReversalCreateNestedManyWithoutFirmInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutFirmInput
+  paymentReversals?: Prisma.PaymentReversalCreateNestedManyWithoutFirmInput
+  remunerationCalculations?: Prisma.RemunerationCalculationCreateNestedManyWithoutFirmInput
+  attachments?: Prisma.AttachmentCreateNestedManyWithoutFirmInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutFirmInput
+}
+
+export type FirmUncheckedCreateWithoutDirectFinancialEntriesInput = {
+  id?: number
+  name: string
+  remunerationCutoffDay?: number
+  remunerationDueDay?: number
+  contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutFirmInput
+  contractAssignments?: Prisma.ContractAssignmentUncheckedCreateNestedManyWithoutFirmInput
+  revenues?: Prisma.RevenueUncheckedCreateNestedManyWithoutFirmInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutFirmInput
+  financialGenerations?: Prisma.FinancialGenerationUncheckedCreateNestedManyWithoutFirmInput
+  receivables?: Prisma.ReceivableUncheckedCreateNestedManyWithoutFirmInput
+  payables?: Prisma.PayableUncheckedCreateNestedManyWithoutFirmInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutFirmInput
+  receiptReversals?: Prisma.ReceiptReversalUncheckedCreateNestedManyWithoutFirmInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutFirmInput
+  paymentReversals?: Prisma.PaymentReversalUncheckedCreateNestedManyWithoutFirmInput
+  remunerationCalculations?: Prisma.RemunerationCalculationUncheckedCreateNestedManyWithoutFirmInput
+  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutFirmInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutFirmInput
+}
+
+export type FirmCreateOrConnectWithoutDirectFinancialEntriesInput = {
+  where: Prisma.FirmWhereUniqueInput
+  create: Prisma.XOR<Prisma.FirmCreateWithoutDirectFinancialEntriesInput, Prisma.FirmUncheckedCreateWithoutDirectFinancialEntriesInput>
+}
+
+export type FirmUpsertWithoutDirectFinancialEntriesInput = {
+  update: Prisma.XOR<Prisma.FirmUpdateWithoutDirectFinancialEntriesInput, Prisma.FirmUncheckedUpdateWithoutDirectFinancialEntriesInput>
+  create: Prisma.XOR<Prisma.FirmCreateWithoutDirectFinancialEntriesInput, Prisma.FirmUncheckedCreateWithoutDirectFinancialEntriesInput>
+  where?: Prisma.FirmWhereInput
+}
+
+export type FirmUpdateToOneWithWhereWithoutDirectFinancialEntriesInput = {
+  where?: Prisma.FirmWhereInput
+  data: Prisma.XOR<Prisma.FirmUpdateWithoutDirectFinancialEntriesInput, Prisma.FirmUncheckedUpdateWithoutDirectFinancialEntriesInput>
+}
+
+export type FirmUpdateWithoutDirectFinancialEntriesInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  remunerationCutoffDay?: Prisma.IntFieldUpdateOperationsInput | number
+  remunerationDueDay?: Prisma.IntFieldUpdateOperationsInput | number
+  contracts?: Prisma.ContractUpdateManyWithoutFirmNestedInput
+  contractAssignments?: Prisma.ContractAssignmentUpdateManyWithoutFirmNestedInput
+  revenues?: Prisma.RevenueUpdateManyWithoutFirmNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutFirmNestedInput
+  financialGenerations?: Prisma.FinancialGenerationUpdateManyWithoutFirmNestedInput
+  receivables?: Prisma.ReceivableUpdateManyWithoutFirmNestedInput
+  payables?: Prisma.PayableUpdateManyWithoutFirmNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutFirmNestedInput
+  receiptReversals?: Prisma.ReceiptReversalUpdateManyWithoutFirmNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutFirmNestedInput
+  paymentReversals?: Prisma.PaymentReversalUpdateManyWithoutFirmNestedInput
+  remunerationCalculations?: Prisma.RemunerationCalculationUpdateManyWithoutFirmNestedInput
+  attachments?: Prisma.AttachmentUpdateManyWithoutFirmNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutFirmNestedInput
+}
+
+export type FirmUncheckedUpdateWithoutDirectFinancialEntriesInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  remunerationCutoffDay?: Prisma.IntFieldUpdateOperationsInput | number
+  remunerationDueDay?: Prisma.IntFieldUpdateOperationsInput | number
+  contracts?: Prisma.ContractUncheckedUpdateManyWithoutFirmNestedInput
+  contractAssignments?: Prisma.ContractAssignmentUncheckedUpdateManyWithoutFirmNestedInput
+  revenues?: Prisma.RevenueUncheckedUpdateManyWithoutFirmNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutFirmNestedInput
+  financialGenerations?: Prisma.FinancialGenerationUncheckedUpdateManyWithoutFirmNestedInput
+  receivables?: Prisma.ReceivableUncheckedUpdateManyWithoutFirmNestedInput
+  payables?: Prisma.PayableUncheckedUpdateManyWithoutFirmNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutFirmNestedInput
+  receiptReversals?: Prisma.ReceiptReversalUncheckedUpdateManyWithoutFirmNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutFirmNestedInput
+  paymentReversals?: Prisma.PaymentReversalUncheckedUpdateManyWithoutFirmNestedInput
+  remunerationCalculations?: Prisma.RemunerationCalculationUncheckedUpdateManyWithoutFirmNestedInput
+  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutFirmNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutFirmNestedInput
+}
+
+export type FirmCreateWithoutReceivablesInput = {
+  name: string
+  remunerationCutoffDay?: number
+  remunerationDueDay?: number
+  contracts?: Prisma.ContractCreateNestedManyWithoutFirmInput
+  contractAssignments?: Prisma.ContractAssignmentCreateNestedManyWithoutFirmInput
+  revenues?: Prisma.RevenueCreateNestedManyWithoutFirmInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutFirmInput
+  financialGenerations?: Prisma.FinancialGenerationCreateNestedManyWithoutFirmInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryCreateNestedManyWithoutFirmInput
+  payables?: Prisma.PayableCreateNestedManyWithoutFirmInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutFirmInput
+  receiptReversals?: Prisma.ReceiptReversalCreateNestedManyWithoutFirmInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutFirmInput
+  paymentReversals?: Prisma.PaymentReversalCreateNestedManyWithoutFirmInput
+  remunerationCalculations?: Prisma.RemunerationCalculationCreateNestedManyWithoutFirmInput
+  attachments?: Prisma.AttachmentCreateNestedManyWithoutFirmInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutFirmInput
+}
+
+export type FirmUncheckedCreateWithoutReceivablesInput = {
+  id?: number
+  name: string
+  remunerationCutoffDay?: number
+  remunerationDueDay?: number
+  contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutFirmInput
+  contractAssignments?: Prisma.ContractAssignmentUncheckedCreateNestedManyWithoutFirmInput
+  revenues?: Prisma.RevenueUncheckedCreateNestedManyWithoutFirmInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutFirmInput
+  financialGenerations?: Prisma.FinancialGenerationUncheckedCreateNestedManyWithoutFirmInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryUncheckedCreateNestedManyWithoutFirmInput
+  payables?: Prisma.PayableUncheckedCreateNestedManyWithoutFirmInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutFirmInput
+  receiptReversals?: Prisma.ReceiptReversalUncheckedCreateNestedManyWithoutFirmInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutFirmInput
+  paymentReversals?: Prisma.PaymentReversalUncheckedCreateNestedManyWithoutFirmInput
+  remunerationCalculations?: Prisma.RemunerationCalculationUncheckedCreateNestedManyWithoutFirmInput
+  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutFirmInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutFirmInput
+}
+
+export type FirmCreateOrConnectWithoutReceivablesInput = {
+  where: Prisma.FirmWhereUniqueInput
+  create: Prisma.XOR<Prisma.FirmCreateWithoutReceivablesInput, Prisma.FirmUncheckedCreateWithoutReceivablesInput>
+}
+
+export type FirmUpsertWithoutReceivablesInput = {
+  update: Prisma.XOR<Prisma.FirmUpdateWithoutReceivablesInput, Prisma.FirmUncheckedUpdateWithoutReceivablesInput>
+  create: Prisma.XOR<Prisma.FirmCreateWithoutReceivablesInput, Prisma.FirmUncheckedCreateWithoutReceivablesInput>
+  where?: Prisma.FirmWhereInput
+}
+
+export type FirmUpdateToOneWithWhereWithoutReceivablesInput = {
+  where?: Prisma.FirmWhereInput
+  data: Prisma.XOR<Prisma.FirmUpdateWithoutReceivablesInput, Prisma.FirmUncheckedUpdateWithoutReceivablesInput>
+}
+
+export type FirmUpdateWithoutReceivablesInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  remunerationCutoffDay?: Prisma.IntFieldUpdateOperationsInput | number
+  remunerationDueDay?: Prisma.IntFieldUpdateOperationsInput | number
+  contracts?: Prisma.ContractUpdateManyWithoutFirmNestedInput
+  contractAssignments?: Prisma.ContractAssignmentUpdateManyWithoutFirmNestedInput
+  revenues?: Prisma.RevenueUpdateManyWithoutFirmNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutFirmNestedInput
+  financialGenerations?: Prisma.FinancialGenerationUpdateManyWithoutFirmNestedInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryUpdateManyWithoutFirmNestedInput
+  payables?: Prisma.PayableUpdateManyWithoutFirmNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutFirmNestedInput
+  receiptReversals?: Prisma.ReceiptReversalUpdateManyWithoutFirmNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutFirmNestedInput
+  paymentReversals?: Prisma.PaymentReversalUpdateManyWithoutFirmNestedInput
+  remunerationCalculations?: Prisma.RemunerationCalculationUpdateManyWithoutFirmNestedInput
+  attachments?: Prisma.AttachmentUpdateManyWithoutFirmNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutFirmNestedInput
+}
+
+export type FirmUncheckedUpdateWithoutReceivablesInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  remunerationCutoffDay?: Prisma.IntFieldUpdateOperationsInput | number
+  remunerationDueDay?: Prisma.IntFieldUpdateOperationsInput | number
+  contracts?: Prisma.ContractUncheckedUpdateManyWithoutFirmNestedInput
+  contractAssignments?: Prisma.ContractAssignmentUncheckedUpdateManyWithoutFirmNestedInput
+  revenues?: Prisma.RevenueUncheckedUpdateManyWithoutFirmNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutFirmNestedInput
+  financialGenerations?: Prisma.FinancialGenerationUncheckedUpdateManyWithoutFirmNestedInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryUncheckedUpdateManyWithoutFirmNestedInput
+  payables?: Prisma.PayableUncheckedUpdateManyWithoutFirmNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutFirmNestedInput
+  receiptReversals?: Prisma.ReceiptReversalUncheckedUpdateManyWithoutFirmNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutFirmNestedInput
+  paymentReversals?: Prisma.PaymentReversalUncheckedUpdateManyWithoutFirmNestedInput
+  remunerationCalculations?: Prisma.RemunerationCalculationUncheckedUpdateManyWithoutFirmNestedInput
+  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutFirmNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutFirmNestedInput
+}
+
+export type FirmCreateWithoutPayablesInput = {
+  name: string
+  remunerationCutoffDay?: number
+  remunerationDueDay?: number
+  contracts?: Prisma.ContractCreateNestedManyWithoutFirmInput
+  contractAssignments?: Prisma.ContractAssignmentCreateNestedManyWithoutFirmInput
+  revenues?: Prisma.RevenueCreateNestedManyWithoutFirmInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutFirmInput
+  financialGenerations?: Prisma.FinancialGenerationCreateNestedManyWithoutFirmInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryCreateNestedManyWithoutFirmInput
+  receivables?: Prisma.ReceivableCreateNestedManyWithoutFirmInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutFirmInput
+  receiptReversals?: Prisma.ReceiptReversalCreateNestedManyWithoutFirmInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutFirmInput
+  paymentReversals?: Prisma.PaymentReversalCreateNestedManyWithoutFirmInput
+  remunerationCalculations?: Prisma.RemunerationCalculationCreateNestedManyWithoutFirmInput
+  attachments?: Prisma.AttachmentCreateNestedManyWithoutFirmInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutFirmInput
+}
+
+export type FirmUncheckedCreateWithoutPayablesInput = {
+  id?: number
+  name: string
+  remunerationCutoffDay?: number
+  remunerationDueDay?: number
+  contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutFirmInput
+  contractAssignments?: Prisma.ContractAssignmentUncheckedCreateNestedManyWithoutFirmInput
+  revenues?: Prisma.RevenueUncheckedCreateNestedManyWithoutFirmInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutFirmInput
+  financialGenerations?: Prisma.FinancialGenerationUncheckedCreateNestedManyWithoutFirmInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryUncheckedCreateNestedManyWithoutFirmInput
+  receivables?: Prisma.ReceivableUncheckedCreateNestedManyWithoutFirmInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutFirmInput
+  receiptReversals?: Prisma.ReceiptReversalUncheckedCreateNestedManyWithoutFirmInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutFirmInput
+  paymentReversals?: Prisma.PaymentReversalUncheckedCreateNestedManyWithoutFirmInput
+  remunerationCalculations?: Prisma.RemunerationCalculationUncheckedCreateNestedManyWithoutFirmInput
+  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutFirmInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutFirmInput
+}
+
+export type FirmCreateOrConnectWithoutPayablesInput = {
+  where: Prisma.FirmWhereUniqueInput
+  create: Prisma.XOR<Prisma.FirmCreateWithoutPayablesInput, Prisma.FirmUncheckedCreateWithoutPayablesInput>
+}
+
+export type FirmUpsertWithoutPayablesInput = {
+  update: Prisma.XOR<Prisma.FirmUpdateWithoutPayablesInput, Prisma.FirmUncheckedUpdateWithoutPayablesInput>
+  create: Prisma.XOR<Prisma.FirmCreateWithoutPayablesInput, Prisma.FirmUncheckedCreateWithoutPayablesInput>
+  where?: Prisma.FirmWhereInput
+}
+
+export type FirmUpdateToOneWithWhereWithoutPayablesInput = {
+  where?: Prisma.FirmWhereInput
+  data: Prisma.XOR<Prisma.FirmUpdateWithoutPayablesInput, Prisma.FirmUncheckedUpdateWithoutPayablesInput>
+}
+
+export type FirmUpdateWithoutPayablesInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  remunerationCutoffDay?: Prisma.IntFieldUpdateOperationsInput | number
+  remunerationDueDay?: Prisma.IntFieldUpdateOperationsInput | number
+  contracts?: Prisma.ContractUpdateManyWithoutFirmNestedInput
+  contractAssignments?: Prisma.ContractAssignmentUpdateManyWithoutFirmNestedInput
+  revenues?: Prisma.RevenueUpdateManyWithoutFirmNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutFirmNestedInput
+  financialGenerations?: Prisma.FinancialGenerationUpdateManyWithoutFirmNestedInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryUpdateManyWithoutFirmNestedInput
+  receivables?: Prisma.ReceivableUpdateManyWithoutFirmNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutFirmNestedInput
+  receiptReversals?: Prisma.ReceiptReversalUpdateManyWithoutFirmNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutFirmNestedInput
+  paymentReversals?: Prisma.PaymentReversalUpdateManyWithoutFirmNestedInput
+  remunerationCalculations?: Prisma.RemunerationCalculationUpdateManyWithoutFirmNestedInput
+  attachments?: Prisma.AttachmentUpdateManyWithoutFirmNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutFirmNestedInput
+}
+
+export type FirmUncheckedUpdateWithoutPayablesInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  remunerationCutoffDay?: Prisma.IntFieldUpdateOperationsInput | number
+  remunerationDueDay?: Prisma.IntFieldUpdateOperationsInput | number
+  contracts?: Prisma.ContractUncheckedUpdateManyWithoutFirmNestedInput
+  contractAssignments?: Prisma.ContractAssignmentUncheckedUpdateManyWithoutFirmNestedInput
+  revenues?: Prisma.RevenueUncheckedUpdateManyWithoutFirmNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutFirmNestedInput
+  financialGenerations?: Prisma.FinancialGenerationUncheckedUpdateManyWithoutFirmNestedInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryUncheckedUpdateManyWithoutFirmNestedInput
+  receivables?: Prisma.ReceivableUncheckedUpdateManyWithoutFirmNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutFirmNestedInput
+  receiptReversals?: Prisma.ReceiptReversalUncheckedUpdateManyWithoutFirmNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutFirmNestedInput
+  paymentReversals?: Prisma.PaymentReversalUncheckedUpdateManyWithoutFirmNestedInput
+  remunerationCalculations?: Prisma.RemunerationCalculationUncheckedUpdateManyWithoutFirmNestedInput
+  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutFirmNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutFirmNestedInput
+}
+
+export type FirmCreateWithoutReceiptsInput = {
+  name: string
+  remunerationCutoffDay?: number
+  remunerationDueDay?: number
+  contracts?: Prisma.ContractCreateNestedManyWithoutFirmInput
+  contractAssignments?: Prisma.ContractAssignmentCreateNestedManyWithoutFirmInput
+  revenues?: Prisma.RevenueCreateNestedManyWithoutFirmInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutFirmInput
+  financialGenerations?: Prisma.FinancialGenerationCreateNestedManyWithoutFirmInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryCreateNestedManyWithoutFirmInput
+  receivables?: Prisma.ReceivableCreateNestedManyWithoutFirmInput
+  payables?: Prisma.PayableCreateNestedManyWithoutFirmInput
+  receiptReversals?: Prisma.ReceiptReversalCreateNestedManyWithoutFirmInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutFirmInput
+  paymentReversals?: Prisma.PaymentReversalCreateNestedManyWithoutFirmInput
+  remunerationCalculations?: Prisma.RemunerationCalculationCreateNestedManyWithoutFirmInput
+  attachments?: Prisma.AttachmentCreateNestedManyWithoutFirmInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutFirmInput
+}
+
+export type FirmUncheckedCreateWithoutReceiptsInput = {
+  id?: number
+  name: string
+  remunerationCutoffDay?: number
+  remunerationDueDay?: number
+  contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutFirmInput
+  contractAssignments?: Prisma.ContractAssignmentUncheckedCreateNestedManyWithoutFirmInput
+  revenues?: Prisma.RevenueUncheckedCreateNestedManyWithoutFirmInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutFirmInput
+  financialGenerations?: Prisma.FinancialGenerationUncheckedCreateNestedManyWithoutFirmInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryUncheckedCreateNestedManyWithoutFirmInput
+  receivables?: Prisma.ReceivableUncheckedCreateNestedManyWithoutFirmInput
+  payables?: Prisma.PayableUncheckedCreateNestedManyWithoutFirmInput
+  receiptReversals?: Prisma.ReceiptReversalUncheckedCreateNestedManyWithoutFirmInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutFirmInput
+  paymentReversals?: Prisma.PaymentReversalUncheckedCreateNestedManyWithoutFirmInput
+  remunerationCalculations?: Prisma.RemunerationCalculationUncheckedCreateNestedManyWithoutFirmInput
+  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutFirmInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutFirmInput
+}
+
+export type FirmCreateOrConnectWithoutReceiptsInput = {
+  where: Prisma.FirmWhereUniqueInput
+  create: Prisma.XOR<Prisma.FirmCreateWithoutReceiptsInput, Prisma.FirmUncheckedCreateWithoutReceiptsInput>
+}
+
+export type FirmUpsertWithoutReceiptsInput = {
+  update: Prisma.XOR<Prisma.FirmUpdateWithoutReceiptsInput, Prisma.FirmUncheckedUpdateWithoutReceiptsInput>
+  create: Prisma.XOR<Prisma.FirmCreateWithoutReceiptsInput, Prisma.FirmUncheckedCreateWithoutReceiptsInput>
+  where?: Prisma.FirmWhereInput
+}
+
+export type FirmUpdateToOneWithWhereWithoutReceiptsInput = {
+  where?: Prisma.FirmWhereInput
+  data: Prisma.XOR<Prisma.FirmUpdateWithoutReceiptsInput, Prisma.FirmUncheckedUpdateWithoutReceiptsInput>
+}
+
+export type FirmUpdateWithoutReceiptsInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  remunerationCutoffDay?: Prisma.IntFieldUpdateOperationsInput | number
+  remunerationDueDay?: Prisma.IntFieldUpdateOperationsInput | number
+  contracts?: Prisma.ContractUpdateManyWithoutFirmNestedInput
+  contractAssignments?: Prisma.ContractAssignmentUpdateManyWithoutFirmNestedInput
+  revenues?: Prisma.RevenueUpdateManyWithoutFirmNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutFirmNestedInput
+  financialGenerations?: Prisma.FinancialGenerationUpdateManyWithoutFirmNestedInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryUpdateManyWithoutFirmNestedInput
+  receivables?: Prisma.ReceivableUpdateManyWithoutFirmNestedInput
+  payables?: Prisma.PayableUpdateManyWithoutFirmNestedInput
+  receiptReversals?: Prisma.ReceiptReversalUpdateManyWithoutFirmNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutFirmNestedInput
+  paymentReversals?: Prisma.PaymentReversalUpdateManyWithoutFirmNestedInput
+  remunerationCalculations?: Prisma.RemunerationCalculationUpdateManyWithoutFirmNestedInput
+  attachments?: Prisma.AttachmentUpdateManyWithoutFirmNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutFirmNestedInput
+}
+
+export type FirmUncheckedUpdateWithoutReceiptsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  remunerationCutoffDay?: Prisma.IntFieldUpdateOperationsInput | number
+  remunerationDueDay?: Prisma.IntFieldUpdateOperationsInput | number
+  contracts?: Prisma.ContractUncheckedUpdateManyWithoutFirmNestedInput
+  contractAssignments?: Prisma.ContractAssignmentUncheckedUpdateManyWithoutFirmNestedInput
+  revenues?: Prisma.RevenueUncheckedUpdateManyWithoutFirmNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutFirmNestedInput
+  financialGenerations?: Prisma.FinancialGenerationUncheckedUpdateManyWithoutFirmNestedInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryUncheckedUpdateManyWithoutFirmNestedInput
+  receivables?: Prisma.ReceivableUncheckedUpdateManyWithoutFirmNestedInput
+  payables?: Prisma.PayableUncheckedUpdateManyWithoutFirmNestedInput
+  receiptReversals?: Prisma.ReceiptReversalUncheckedUpdateManyWithoutFirmNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutFirmNestedInput
+  paymentReversals?: Prisma.PaymentReversalUncheckedUpdateManyWithoutFirmNestedInput
+  remunerationCalculations?: Prisma.RemunerationCalculationUncheckedUpdateManyWithoutFirmNestedInput
+  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutFirmNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutFirmNestedInput
+}
+
+export type FirmCreateWithoutReceiptReversalsInput = {
+  name: string
+  remunerationCutoffDay?: number
+  remunerationDueDay?: number
+  contracts?: Prisma.ContractCreateNestedManyWithoutFirmInput
+  contractAssignments?: Prisma.ContractAssignmentCreateNestedManyWithoutFirmInput
+  revenues?: Prisma.RevenueCreateNestedManyWithoutFirmInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutFirmInput
+  financialGenerations?: Prisma.FinancialGenerationCreateNestedManyWithoutFirmInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryCreateNestedManyWithoutFirmInput
+  receivables?: Prisma.ReceivableCreateNestedManyWithoutFirmInput
+  payables?: Prisma.PayableCreateNestedManyWithoutFirmInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutFirmInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutFirmInput
+  paymentReversals?: Prisma.PaymentReversalCreateNestedManyWithoutFirmInput
+  remunerationCalculations?: Prisma.RemunerationCalculationCreateNestedManyWithoutFirmInput
+  attachments?: Prisma.AttachmentCreateNestedManyWithoutFirmInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutFirmInput
+}
+
+export type FirmUncheckedCreateWithoutReceiptReversalsInput = {
+  id?: number
+  name: string
+  remunerationCutoffDay?: number
+  remunerationDueDay?: number
+  contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutFirmInput
+  contractAssignments?: Prisma.ContractAssignmentUncheckedCreateNestedManyWithoutFirmInput
+  revenues?: Prisma.RevenueUncheckedCreateNestedManyWithoutFirmInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutFirmInput
+  financialGenerations?: Prisma.FinancialGenerationUncheckedCreateNestedManyWithoutFirmInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryUncheckedCreateNestedManyWithoutFirmInput
+  receivables?: Prisma.ReceivableUncheckedCreateNestedManyWithoutFirmInput
+  payables?: Prisma.PayableUncheckedCreateNestedManyWithoutFirmInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutFirmInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutFirmInput
+  paymentReversals?: Prisma.PaymentReversalUncheckedCreateNestedManyWithoutFirmInput
+  remunerationCalculations?: Prisma.RemunerationCalculationUncheckedCreateNestedManyWithoutFirmInput
+  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutFirmInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutFirmInput
+}
+
+export type FirmCreateOrConnectWithoutReceiptReversalsInput = {
+  where: Prisma.FirmWhereUniqueInput
+  create: Prisma.XOR<Prisma.FirmCreateWithoutReceiptReversalsInput, Prisma.FirmUncheckedCreateWithoutReceiptReversalsInput>
+}
+
+export type FirmUpsertWithoutReceiptReversalsInput = {
+  update: Prisma.XOR<Prisma.FirmUpdateWithoutReceiptReversalsInput, Prisma.FirmUncheckedUpdateWithoutReceiptReversalsInput>
+  create: Prisma.XOR<Prisma.FirmCreateWithoutReceiptReversalsInput, Prisma.FirmUncheckedCreateWithoutReceiptReversalsInput>
+  where?: Prisma.FirmWhereInput
+}
+
+export type FirmUpdateToOneWithWhereWithoutReceiptReversalsInput = {
+  where?: Prisma.FirmWhereInput
+  data: Prisma.XOR<Prisma.FirmUpdateWithoutReceiptReversalsInput, Prisma.FirmUncheckedUpdateWithoutReceiptReversalsInput>
+}
+
+export type FirmUpdateWithoutReceiptReversalsInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  remunerationCutoffDay?: Prisma.IntFieldUpdateOperationsInput | number
+  remunerationDueDay?: Prisma.IntFieldUpdateOperationsInput | number
+  contracts?: Prisma.ContractUpdateManyWithoutFirmNestedInput
+  contractAssignments?: Prisma.ContractAssignmentUpdateManyWithoutFirmNestedInput
+  revenues?: Prisma.RevenueUpdateManyWithoutFirmNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutFirmNestedInput
+  financialGenerations?: Prisma.FinancialGenerationUpdateManyWithoutFirmNestedInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryUpdateManyWithoutFirmNestedInput
+  receivables?: Prisma.ReceivableUpdateManyWithoutFirmNestedInput
+  payables?: Prisma.PayableUpdateManyWithoutFirmNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutFirmNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutFirmNestedInput
+  paymentReversals?: Prisma.PaymentReversalUpdateManyWithoutFirmNestedInput
+  remunerationCalculations?: Prisma.RemunerationCalculationUpdateManyWithoutFirmNestedInput
+  attachments?: Prisma.AttachmentUpdateManyWithoutFirmNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutFirmNestedInput
+}
+
+export type FirmUncheckedUpdateWithoutReceiptReversalsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  remunerationCutoffDay?: Prisma.IntFieldUpdateOperationsInput | number
+  remunerationDueDay?: Prisma.IntFieldUpdateOperationsInput | number
+  contracts?: Prisma.ContractUncheckedUpdateManyWithoutFirmNestedInput
+  contractAssignments?: Prisma.ContractAssignmentUncheckedUpdateManyWithoutFirmNestedInput
+  revenues?: Prisma.RevenueUncheckedUpdateManyWithoutFirmNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutFirmNestedInput
+  financialGenerations?: Prisma.FinancialGenerationUncheckedUpdateManyWithoutFirmNestedInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryUncheckedUpdateManyWithoutFirmNestedInput
+  receivables?: Prisma.ReceivableUncheckedUpdateManyWithoutFirmNestedInput
+  payables?: Prisma.PayableUncheckedUpdateManyWithoutFirmNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutFirmNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutFirmNestedInput
+  paymentReversals?: Prisma.PaymentReversalUncheckedUpdateManyWithoutFirmNestedInput
+  remunerationCalculations?: Prisma.RemunerationCalculationUncheckedUpdateManyWithoutFirmNestedInput
+  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutFirmNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutFirmNestedInput
+}
+
+export type FirmCreateWithoutPaymentsInput = {
+  name: string
+  remunerationCutoffDay?: number
+  remunerationDueDay?: number
+  contracts?: Prisma.ContractCreateNestedManyWithoutFirmInput
+  contractAssignments?: Prisma.ContractAssignmentCreateNestedManyWithoutFirmInput
+  revenues?: Prisma.RevenueCreateNestedManyWithoutFirmInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutFirmInput
+  financialGenerations?: Prisma.FinancialGenerationCreateNestedManyWithoutFirmInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryCreateNestedManyWithoutFirmInput
+  receivables?: Prisma.ReceivableCreateNestedManyWithoutFirmInput
+  payables?: Prisma.PayableCreateNestedManyWithoutFirmInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutFirmInput
+  receiptReversals?: Prisma.ReceiptReversalCreateNestedManyWithoutFirmInput
+  paymentReversals?: Prisma.PaymentReversalCreateNestedManyWithoutFirmInput
+  remunerationCalculations?: Prisma.RemunerationCalculationCreateNestedManyWithoutFirmInput
+  attachments?: Prisma.AttachmentCreateNestedManyWithoutFirmInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutFirmInput
+}
+
+export type FirmUncheckedCreateWithoutPaymentsInput = {
+  id?: number
+  name: string
+  remunerationCutoffDay?: number
+  remunerationDueDay?: number
+  contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutFirmInput
+  contractAssignments?: Prisma.ContractAssignmentUncheckedCreateNestedManyWithoutFirmInput
+  revenues?: Prisma.RevenueUncheckedCreateNestedManyWithoutFirmInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutFirmInput
+  financialGenerations?: Prisma.FinancialGenerationUncheckedCreateNestedManyWithoutFirmInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryUncheckedCreateNestedManyWithoutFirmInput
+  receivables?: Prisma.ReceivableUncheckedCreateNestedManyWithoutFirmInput
+  payables?: Prisma.PayableUncheckedCreateNestedManyWithoutFirmInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutFirmInput
+  receiptReversals?: Prisma.ReceiptReversalUncheckedCreateNestedManyWithoutFirmInput
+  paymentReversals?: Prisma.PaymentReversalUncheckedCreateNestedManyWithoutFirmInput
+  remunerationCalculations?: Prisma.RemunerationCalculationUncheckedCreateNestedManyWithoutFirmInput
+  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutFirmInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutFirmInput
+}
+
+export type FirmCreateOrConnectWithoutPaymentsInput = {
+  where: Prisma.FirmWhereUniqueInput
+  create: Prisma.XOR<Prisma.FirmCreateWithoutPaymentsInput, Prisma.FirmUncheckedCreateWithoutPaymentsInput>
+}
+
+export type FirmUpsertWithoutPaymentsInput = {
+  update: Prisma.XOR<Prisma.FirmUpdateWithoutPaymentsInput, Prisma.FirmUncheckedUpdateWithoutPaymentsInput>
+  create: Prisma.XOR<Prisma.FirmCreateWithoutPaymentsInput, Prisma.FirmUncheckedCreateWithoutPaymentsInput>
+  where?: Prisma.FirmWhereInput
+}
+
+export type FirmUpdateToOneWithWhereWithoutPaymentsInput = {
+  where?: Prisma.FirmWhereInput
+  data: Prisma.XOR<Prisma.FirmUpdateWithoutPaymentsInput, Prisma.FirmUncheckedUpdateWithoutPaymentsInput>
+}
+
+export type FirmUpdateWithoutPaymentsInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  remunerationCutoffDay?: Prisma.IntFieldUpdateOperationsInput | number
+  remunerationDueDay?: Prisma.IntFieldUpdateOperationsInput | number
+  contracts?: Prisma.ContractUpdateManyWithoutFirmNestedInput
+  contractAssignments?: Prisma.ContractAssignmentUpdateManyWithoutFirmNestedInput
+  revenues?: Prisma.RevenueUpdateManyWithoutFirmNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutFirmNestedInput
+  financialGenerations?: Prisma.FinancialGenerationUpdateManyWithoutFirmNestedInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryUpdateManyWithoutFirmNestedInput
+  receivables?: Prisma.ReceivableUpdateManyWithoutFirmNestedInput
+  payables?: Prisma.PayableUpdateManyWithoutFirmNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutFirmNestedInput
+  receiptReversals?: Prisma.ReceiptReversalUpdateManyWithoutFirmNestedInput
+  paymentReversals?: Prisma.PaymentReversalUpdateManyWithoutFirmNestedInput
+  remunerationCalculations?: Prisma.RemunerationCalculationUpdateManyWithoutFirmNestedInput
+  attachments?: Prisma.AttachmentUpdateManyWithoutFirmNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutFirmNestedInput
+}
+
+export type FirmUncheckedUpdateWithoutPaymentsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  remunerationCutoffDay?: Prisma.IntFieldUpdateOperationsInput | number
+  remunerationDueDay?: Prisma.IntFieldUpdateOperationsInput | number
+  contracts?: Prisma.ContractUncheckedUpdateManyWithoutFirmNestedInput
+  contractAssignments?: Prisma.ContractAssignmentUncheckedUpdateManyWithoutFirmNestedInput
+  revenues?: Prisma.RevenueUncheckedUpdateManyWithoutFirmNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutFirmNestedInput
+  financialGenerations?: Prisma.FinancialGenerationUncheckedUpdateManyWithoutFirmNestedInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryUncheckedUpdateManyWithoutFirmNestedInput
+  receivables?: Prisma.ReceivableUncheckedUpdateManyWithoutFirmNestedInput
+  payables?: Prisma.PayableUncheckedUpdateManyWithoutFirmNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutFirmNestedInput
+  receiptReversals?: Prisma.ReceiptReversalUncheckedUpdateManyWithoutFirmNestedInput
+  paymentReversals?: Prisma.PaymentReversalUncheckedUpdateManyWithoutFirmNestedInput
+  remunerationCalculations?: Prisma.RemunerationCalculationUncheckedUpdateManyWithoutFirmNestedInput
+  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutFirmNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutFirmNestedInput
+}
+
+export type FirmCreateWithoutPaymentReversalsInput = {
+  name: string
+  remunerationCutoffDay?: number
+  remunerationDueDay?: number
+  contracts?: Prisma.ContractCreateNestedManyWithoutFirmInput
+  contractAssignments?: Prisma.ContractAssignmentCreateNestedManyWithoutFirmInput
+  revenues?: Prisma.RevenueCreateNestedManyWithoutFirmInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutFirmInput
+  financialGenerations?: Prisma.FinancialGenerationCreateNestedManyWithoutFirmInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryCreateNestedManyWithoutFirmInput
+  receivables?: Prisma.ReceivableCreateNestedManyWithoutFirmInput
+  payables?: Prisma.PayableCreateNestedManyWithoutFirmInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutFirmInput
+  receiptReversals?: Prisma.ReceiptReversalCreateNestedManyWithoutFirmInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutFirmInput
+  remunerationCalculations?: Prisma.RemunerationCalculationCreateNestedManyWithoutFirmInput
+  attachments?: Prisma.AttachmentCreateNestedManyWithoutFirmInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutFirmInput
+}
+
+export type FirmUncheckedCreateWithoutPaymentReversalsInput = {
+  id?: number
+  name: string
+  remunerationCutoffDay?: number
+  remunerationDueDay?: number
+  contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutFirmInput
+  contractAssignments?: Prisma.ContractAssignmentUncheckedCreateNestedManyWithoutFirmInput
+  revenues?: Prisma.RevenueUncheckedCreateNestedManyWithoutFirmInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutFirmInput
+  financialGenerations?: Prisma.FinancialGenerationUncheckedCreateNestedManyWithoutFirmInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryUncheckedCreateNestedManyWithoutFirmInput
+  receivables?: Prisma.ReceivableUncheckedCreateNestedManyWithoutFirmInput
+  payables?: Prisma.PayableUncheckedCreateNestedManyWithoutFirmInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutFirmInput
+  receiptReversals?: Prisma.ReceiptReversalUncheckedCreateNestedManyWithoutFirmInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutFirmInput
+  remunerationCalculations?: Prisma.RemunerationCalculationUncheckedCreateNestedManyWithoutFirmInput
+  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutFirmInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutFirmInput
+}
+
+export type FirmCreateOrConnectWithoutPaymentReversalsInput = {
+  where: Prisma.FirmWhereUniqueInput
+  create: Prisma.XOR<Prisma.FirmCreateWithoutPaymentReversalsInput, Prisma.FirmUncheckedCreateWithoutPaymentReversalsInput>
+}
+
+export type FirmUpsertWithoutPaymentReversalsInput = {
+  update: Prisma.XOR<Prisma.FirmUpdateWithoutPaymentReversalsInput, Prisma.FirmUncheckedUpdateWithoutPaymentReversalsInput>
+  create: Prisma.XOR<Prisma.FirmCreateWithoutPaymentReversalsInput, Prisma.FirmUncheckedCreateWithoutPaymentReversalsInput>
+  where?: Prisma.FirmWhereInput
+}
+
+export type FirmUpdateToOneWithWhereWithoutPaymentReversalsInput = {
+  where?: Prisma.FirmWhereInput
+  data: Prisma.XOR<Prisma.FirmUpdateWithoutPaymentReversalsInput, Prisma.FirmUncheckedUpdateWithoutPaymentReversalsInput>
+}
+
+export type FirmUpdateWithoutPaymentReversalsInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  remunerationCutoffDay?: Prisma.IntFieldUpdateOperationsInput | number
+  remunerationDueDay?: Prisma.IntFieldUpdateOperationsInput | number
+  contracts?: Prisma.ContractUpdateManyWithoutFirmNestedInput
+  contractAssignments?: Prisma.ContractAssignmentUpdateManyWithoutFirmNestedInput
+  revenues?: Prisma.RevenueUpdateManyWithoutFirmNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutFirmNestedInput
+  financialGenerations?: Prisma.FinancialGenerationUpdateManyWithoutFirmNestedInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryUpdateManyWithoutFirmNestedInput
+  receivables?: Prisma.ReceivableUpdateManyWithoutFirmNestedInput
+  payables?: Prisma.PayableUpdateManyWithoutFirmNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutFirmNestedInput
+  receiptReversals?: Prisma.ReceiptReversalUpdateManyWithoutFirmNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutFirmNestedInput
+  remunerationCalculations?: Prisma.RemunerationCalculationUpdateManyWithoutFirmNestedInput
+  attachments?: Prisma.AttachmentUpdateManyWithoutFirmNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutFirmNestedInput
+}
+
+export type FirmUncheckedUpdateWithoutPaymentReversalsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  remunerationCutoffDay?: Prisma.IntFieldUpdateOperationsInput | number
+  remunerationDueDay?: Prisma.IntFieldUpdateOperationsInput | number
+  contracts?: Prisma.ContractUncheckedUpdateManyWithoutFirmNestedInput
+  contractAssignments?: Prisma.ContractAssignmentUncheckedUpdateManyWithoutFirmNestedInput
+  revenues?: Prisma.RevenueUncheckedUpdateManyWithoutFirmNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutFirmNestedInput
+  financialGenerations?: Prisma.FinancialGenerationUncheckedUpdateManyWithoutFirmNestedInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryUncheckedUpdateManyWithoutFirmNestedInput
+  receivables?: Prisma.ReceivableUncheckedUpdateManyWithoutFirmNestedInput
+  payables?: Prisma.PayableUncheckedUpdateManyWithoutFirmNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutFirmNestedInput
+  receiptReversals?: Prisma.ReceiptReversalUncheckedUpdateManyWithoutFirmNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutFirmNestedInput
+  remunerationCalculations?: Prisma.RemunerationCalculationUncheckedUpdateManyWithoutFirmNestedInput
+  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutFirmNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutFirmNestedInput
+}
+
+export type FirmCreateWithoutRemunerationCalculationsInput = {
+  name: string
+  remunerationCutoffDay?: number
+  remunerationDueDay?: number
+  contracts?: Prisma.ContractCreateNestedManyWithoutFirmInput
+  contractAssignments?: Prisma.ContractAssignmentCreateNestedManyWithoutFirmInput
+  revenues?: Prisma.RevenueCreateNestedManyWithoutFirmInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutFirmInput
+  financialGenerations?: Prisma.FinancialGenerationCreateNestedManyWithoutFirmInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryCreateNestedManyWithoutFirmInput
+  receivables?: Prisma.ReceivableCreateNestedManyWithoutFirmInput
+  payables?: Prisma.PayableCreateNestedManyWithoutFirmInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutFirmInput
+  receiptReversals?: Prisma.ReceiptReversalCreateNestedManyWithoutFirmInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutFirmInput
+  paymentReversals?: Prisma.PaymentReversalCreateNestedManyWithoutFirmInput
+  attachments?: Prisma.AttachmentCreateNestedManyWithoutFirmInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutFirmInput
+}
+
+export type FirmUncheckedCreateWithoutRemunerationCalculationsInput = {
+  id?: number
+  name: string
+  remunerationCutoffDay?: number
+  remunerationDueDay?: number
+  contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutFirmInput
+  contractAssignments?: Prisma.ContractAssignmentUncheckedCreateNestedManyWithoutFirmInput
+  revenues?: Prisma.RevenueUncheckedCreateNestedManyWithoutFirmInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutFirmInput
+  financialGenerations?: Prisma.FinancialGenerationUncheckedCreateNestedManyWithoutFirmInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryUncheckedCreateNestedManyWithoutFirmInput
+  receivables?: Prisma.ReceivableUncheckedCreateNestedManyWithoutFirmInput
+  payables?: Prisma.PayableUncheckedCreateNestedManyWithoutFirmInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutFirmInput
+  receiptReversals?: Prisma.ReceiptReversalUncheckedCreateNestedManyWithoutFirmInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutFirmInput
+  paymentReversals?: Prisma.PaymentReversalUncheckedCreateNestedManyWithoutFirmInput
+  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutFirmInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutFirmInput
+}
+
+export type FirmCreateOrConnectWithoutRemunerationCalculationsInput = {
+  where: Prisma.FirmWhereUniqueInput
+  create: Prisma.XOR<Prisma.FirmCreateWithoutRemunerationCalculationsInput, Prisma.FirmUncheckedCreateWithoutRemunerationCalculationsInput>
+}
+
+export type FirmUpsertWithoutRemunerationCalculationsInput = {
+  update: Prisma.XOR<Prisma.FirmUpdateWithoutRemunerationCalculationsInput, Prisma.FirmUncheckedUpdateWithoutRemunerationCalculationsInput>
+  create: Prisma.XOR<Prisma.FirmCreateWithoutRemunerationCalculationsInput, Prisma.FirmUncheckedCreateWithoutRemunerationCalculationsInput>
+  where?: Prisma.FirmWhereInput
+}
+
+export type FirmUpdateToOneWithWhereWithoutRemunerationCalculationsInput = {
+  where?: Prisma.FirmWhereInput
+  data: Prisma.XOR<Prisma.FirmUpdateWithoutRemunerationCalculationsInput, Prisma.FirmUncheckedUpdateWithoutRemunerationCalculationsInput>
+}
+
+export type FirmUpdateWithoutRemunerationCalculationsInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  remunerationCutoffDay?: Prisma.IntFieldUpdateOperationsInput | number
+  remunerationDueDay?: Prisma.IntFieldUpdateOperationsInput | number
+  contracts?: Prisma.ContractUpdateManyWithoutFirmNestedInput
+  contractAssignments?: Prisma.ContractAssignmentUpdateManyWithoutFirmNestedInput
+  revenues?: Prisma.RevenueUpdateManyWithoutFirmNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutFirmNestedInput
+  financialGenerations?: Prisma.FinancialGenerationUpdateManyWithoutFirmNestedInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryUpdateManyWithoutFirmNestedInput
+  receivables?: Prisma.ReceivableUpdateManyWithoutFirmNestedInput
+  payables?: Prisma.PayableUpdateManyWithoutFirmNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutFirmNestedInput
+  receiptReversals?: Prisma.ReceiptReversalUpdateManyWithoutFirmNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutFirmNestedInput
+  paymentReversals?: Prisma.PaymentReversalUpdateManyWithoutFirmNestedInput
+  attachments?: Prisma.AttachmentUpdateManyWithoutFirmNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutFirmNestedInput
+}
+
+export type FirmUncheckedUpdateWithoutRemunerationCalculationsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  remunerationCutoffDay?: Prisma.IntFieldUpdateOperationsInput | number
+  remunerationDueDay?: Prisma.IntFieldUpdateOperationsInput | number
+  contracts?: Prisma.ContractUncheckedUpdateManyWithoutFirmNestedInput
+  contractAssignments?: Prisma.ContractAssignmentUncheckedUpdateManyWithoutFirmNestedInput
+  revenues?: Prisma.RevenueUncheckedUpdateManyWithoutFirmNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutFirmNestedInput
+  financialGenerations?: Prisma.FinancialGenerationUncheckedUpdateManyWithoutFirmNestedInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryUncheckedUpdateManyWithoutFirmNestedInput
+  receivables?: Prisma.ReceivableUncheckedUpdateManyWithoutFirmNestedInput
+  payables?: Prisma.PayableUncheckedUpdateManyWithoutFirmNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutFirmNestedInput
+  receiptReversals?: Prisma.ReceiptReversalUncheckedUpdateManyWithoutFirmNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutFirmNestedInput
+  paymentReversals?: Prisma.PaymentReversalUncheckedUpdateManyWithoutFirmNestedInput
+  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutFirmNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutFirmNestedInput
 }
 
 export type FirmCreateWithoutAttachmentsInput = {
   name: string
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutFirmInput
+  remunerationCutoffDay?: number
+  remunerationDueDay?: number
   contracts?: Prisma.ContractCreateNestedManyWithoutFirmInput
-  contractEmployees?: Prisma.ContractEmployeeCreateNestedManyWithoutFirmInput
+  contractAssignments?: Prisma.ContractAssignmentCreateNestedManyWithoutFirmInput
   revenues?: Prisma.RevenueCreateNestedManyWithoutFirmInput
-  fees?: Prisma.FeeCreateNestedManyWithoutFirmInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutFirmInput
-  remunerations?: Prisma.RemunerationCreateNestedManyWithoutFirmInput
+  financialGenerations?: Prisma.FinancialGenerationCreateNestedManyWithoutFirmInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryCreateNestedManyWithoutFirmInput
+  receivables?: Prisma.ReceivableCreateNestedManyWithoutFirmInput
+  payables?: Prisma.PayableCreateNestedManyWithoutFirmInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutFirmInput
+  receiptReversals?: Prisma.ReceiptReversalCreateNestedManyWithoutFirmInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutFirmInput
+  paymentReversals?: Prisma.PaymentReversalCreateNestedManyWithoutFirmInput
+  remunerationCalculations?: Prisma.RemunerationCalculationCreateNestedManyWithoutFirmInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutFirmInput
 }
 
 export type FirmUncheckedCreateWithoutAttachmentsInput = {
   id?: number
   name: string
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutFirmInput
+  remunerationCutoffDay?: number
+  remunerationDueDay?: number
   contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutFirmInput
-  contractEmployees?: Prisma.ContractEmployeeUncheckedCreateNestedManyWithoutFirmInput
+  contractAssignments?: Prisma.ContractAssignmentUncheckedCreateNestedManyWithoutFirmInput
   revenues?: Prisma.RevenueUncheckedCreateNestedManyWithoutFirmInput
-  fees?: Prisma.FeeUncheckedCreateNestedManyWithoutFirmInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutFirmInput
-  remunerations?: Prisma.RemunerationUncheckedCreateNestedManyWithoutFirmInput
+  financialGenerations?: Prisma.FinancialGenerationUncheckedCreateNestedManyWithoutFirmInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryUncheckedCreateNestedManyWithoutFirmInput
+  receivables?: Prisma.ReceivableUncheckedCreateNestedManyWithoutFirmInput
+  payables?: Prisma.PayableUncheckedCreateNestedManyWithoutFirmInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutFirmInput
+  receiptReversals?: Prisma.ReceiptReversalUncheckedCreateNestedManyWithoutFirmInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutFirmInput
+  paymentReversals?: Prisma.PaymentReversalUncheckedCreateNestedManyWithoutFirmInput
+  remunerationCalculations?: Prisma.RemunerationCalculationUncheckedCreateNestedManyWithoutFirmInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutFirmInput
 }
 
 export type FirmCreateOrConnectWithoutAttachmentsInput = {
@@ -936,25 +1997,141 @@ export type FirmUpdateToOneWithWhereWithoutAttachmentsInput = {
 
 export type FirmUpdateWithoutAttachmentsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutFirmNestedInput
+  remunerationCutoffDay?: Prisma.IntFieldUpdateOperationsInput | number
+  remunerationDueDay?: Prisma.IntFieldUpdateOperationsInput | number
   contracts?: Prisma.ContractUpdateManyWithoutFirmNestedInput
-  contractEmployees?: Prisma.ContractEmployeeUpdateManyWithoutFirmNestedInput
+  contractAssignments?: Prisma.ContractAssignmentUpdateManyWithoutFirmNestedInput
   revenues?: Prisma.RevenueUpdateManyWithoutFirmNestedInput
-  fees?: Prisma.FeeUpdateManyWithoutFirmNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutFirmNestedInput
-  remunerations?: Prisma.RemunerationUpdateManyWithoutFirmNestedInput
+  financialGenerations?: Prisma.FinancialGenerationUpdateManyWithoutFirmNestedInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryUpdateManyWithoutFirmNestedInput
+  receivables?: Prisma.ReceivableUpdateManyWithoutFirmNestedInput
+  payables?: Prisma.PayableUpdateManyWithoutFirmNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutFirmNestedInput
+  receiptReversals?: Prisma.ReceiptReversalUpdateManyWithoutFirmNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutFirmNestedInput
+  paymentReversals?: Prisma.PaymentReversalUpdateManyWithoutFirmNestedInput
+  remunerationCalculations?: Prisma.RemunerationCalculationUpdateManyWithoutFirmNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutFirmNestedInput
 }
 
 export type FirmUncheckedUpdateWithoutAttachmentsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutFirmNestedInput
+  remunerationCutoffDay?: Prisma.IntFieldUpdateOperationsInput | number
+  remunerationDueDay?: Prisma.IntFieldUpdateOperationsInput | number
   contracts?: Prisma.ContractUncheckedUpdateManyWithoutFirmNestedInput
-  contractEmployees?: Prisma.ContractEmployeeUncheckedUpdateManyWithoutFirmNestedInput
+  contractAssignments?: Prisma.ContractAssignmentUncheckedUpdateManyWithoutFirmNestedInput
   revenues?: Prisma.RevenueUncheckedUpdateManyWithoutFirmNestedInput
-  fees?: Prisma.FeeUncheckedUpdateManyWithoutFirmNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutFirmNestedInput
-  remunerations?: Prisma.RemunerationUncheckedUpdateManyWithoutFirmNestedInput
+  financialGenerations?: Prisma.FinancialGenerationUncheckedUpdateManyWithoutFirmNestedInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryUncheckedUpdateManyWithoutFirmNestedInput
+  receivables?: Prisma.ReceivableUncheckedUpdateManyWithoutFirmNestedInput
+  payables?: Prisma.PayableUncheckedUpdateManyWithoutFirmNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutFirmNestedInput
+  receiptReversals?: Prisma.ReceiptReversalUncheckedUpdateManyWithoutFirmNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutFirmNestedInput
+  paymentReversals?: Prisma.PaymentReversalUncheckedUpdateManyWithoutFirmNestedInput
+  remunerationCalculations?: Prisma.RemunerationCalculationUncheckedUpdateManyWithoutFirmNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutFirmNestedInput
+}
+
+export type FirmCreateWithoutAuditLogsInput = {
+  name: string
+  remunerationCutoffDay?: number
+  remunerationDueDay?: number
+  contracts?: Prisma.ContractCreateNestedManyWithoutFirmInput
+  contractAssignments?: Prisma.ContractAssignmentCreateNestedManyWithoutFirmInput
+  revenues?: Prisma.RevenueCreateNestedManyWithoutFirmInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutFirmInput
+  financialGenerations?: Prisma.FinancialGenerationCreateNestedManyWithoutFirmInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryCreateNestedManyWithoutFirmInput
+  receivables?: Prisma.ReceivableCreateNestedManyWithoutFirmInput
+  payables?: Prisma.PayableCreateNestedManyWithoutFirmInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutFirmInput
+  receiptReversals?: Prisma.ReceiptReversalCreateNestedManyWithoutFirmInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutFirmInput
+  paymentReversals?: Prisma.PaymentReversalCreateNestedManyWithoutFirmInput
+  remunerationCalculations?: Prisma.RemunerationCalculationCreateNestedManyWithoutFirmInput
+  attachments?: Prisma.AttachmentCreateNestedManyWithoutFirmInput
+}
+
+export type FirmUncheckedCreateWithoutAuditLogsInput = {
+  id?: number
+  name: string
+  remunerationCutoffDay?: number
+  remunerationDueDay?: number
+  contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutFirmInput
+  contractAssignments?: Prisma.ContractAssignmentUncheckedCreateNestedManyWithoutFirmInput
+  revenues?: Prisma.RevenueUncheckedCreateNestedManyWithoutFirmInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutFirmInput
+  financialGenerations?: Prisma.FinancialGenerationUncheckedCreateNestedManyWithoutFirmInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryUncheckedCreateNestedManyWithoutFirmInput
+  receivables?: Prisma.ReceivableUncheckedCreateNestedManyWithoutFirmInput
+  payables?: Prisma.PayableUncheckedCreateNestedManyWithoutFirmInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutFirmInput
+  receiptReversals?: Prisma.ReceiptReversalUncheckedCreateNestedManyWithoutFirmInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutFirmInput
+  paymentReversals?: Prisma.PaymentReversalUncheckedCreateNestedManyWithoutFirmInput
+  remunerationCalculations?: Prisma.RemunerationCalculationUncheckedCreateNestedManyWithoutFirmInput
+  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutFirmInput
+}
+
+export type FirmCreateOrConnectWithoutAuditLogsInput = {
+  where: Prisma.FirmWhereUniqueInput
+  create: Prisma.XOR<Prisma.FirmCreateWithoutAuditLogsInput, Prisma.FirmUncheckedCreateWithoutAuditLogsInput>
+}
+
+export type FirmUpsertWithoutAuditLogsInput = {
+  update: Prisma.XOR<Prisma.FirmUpdateWithoutAuditLogsInput, Prisma.FirmUncheckedUpdateWithoutAuditLogsInput>
+  create: Prisma.XOR<Prisma.FirmCreateWithoutAuditLogsInput, Prisma.FirmUncheckedCreateWithoutAuditLogsInput>
+  where?: Prisma.FirmWhereInput
+}
+
+export type FirmUpdateToOneWithWhereWithoutAuditLogsInput = {
+  where?: Prisma.FirmWhereInput
+  data: Prisma.XOR<Prisma.FirmUpdateWithoutAuditLogsInput, Prisma.FirmUncheckedUpdateWithoutAuditLogsInput>
+}
+
+export type FirmUpdateWithoutAuditLogsInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  remunerationCutoffDay?: Prisma.IntFieldUpdateOperationsInput | number
+  remunerationDueDay?: Prisma.IntFieldUpdateOperationsInput | number
+  contracts?: Prisma.ContractUpdateManyWithoutFirmNestedInput
+  contractAssignments?: Prisma.ContractAssignmentUpdateManyWithoutFirmNestedInput
+  revenues?: Prisma.RevenueUpdateManyWithoutFirmNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutFirmNestedInput
+  financialGenerations?: Prisma.FinancialGenerationUpdateManyWithoutFirmNestedInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryUpdateManyWithoutFirmNestedInput
+  receivables?: Prisma.ReceivableUpdateManyWithoutFirmNestedInput
+  payables?: Prisma.PayableUpdateManyWithoutFirmNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutFirmNestedInput
+  receiptReversals?: Prisma.ReceiptReversalUpdateManyWithoutFirmNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutFirmNestedInput
+  paymentReversals?: Prisma.PaymentReversalUpdateManyWithoutFirmNestedInput
+  remunerationCalculations?: Prisma.RemunerationCalculationUpdateManyWithoutFirmNestedInput
+  attachments?: Prisma.AttachmentUpdateManyWithoutFirmNestedInput
+}
+
+export type FirmUncheckedUpdateWithoutAuditLogsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  remunerationCutoffDay?: Prisma.IntFieldUpdateOperationsInput | number
+  remunerationDueDay?: Prisma.IntFieldUpdateOperationsInput | number
+  contracts?: Prisma.ContractUncheckedUpdateManyWithoutFirmNestedInput
+  contractAssignments?: Prisma.ContractAssignmentUncheckedUpdateManyWithoutFirmNestedInput
+  revenues?: Prisma.RevenueUncheckedUpdateManyWithoutFirmNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutFirmNestedInput
+  financialGenerations?: Prisma.FinancialGenerationUncheckedUpdateManyWithoutFirmNestedInput
+  directFinancialEntries?: Prisma.DirectFinancialEntryUncheckedUpdateManyWithoutFirmNestedInput
+  receivables?: Prisma.ReceivableUncheckedUpdateManyWithoutFirmNestedInput
+  payables?: Prisma.PayableUncheckedUpdateManyWithoutFirmNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutFirmNestedInput
+  receiptReversals?: Prisma.ReceiptReversalUncheckedUpdateManyWithoutFirmNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutFirmNestedInput
+  paymentReversals?: Prisma.PaymentReversalUncheckedUpdateManyWithoutFirmNestedInput
+  remunerationCalculations?: Prisma.RemunerationCalculationUncheckedUpdateManyWithoutFirmNestedInput
+  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutFirmNestedInput
 }
 
 
@@ -963,25 +2140,39 @@ export type FirmUncheckedUpdateWithoutAttachmentsInput = {
  */
 
 export type FirmCountOutputType = {
-  auditLogs: number
-  attachments: number
   contracts: number
-  contractEmployees: number
+  contractAssignments: number
   revenues: number
-  fees: number
   expenses: number
-  remunerations: number
+  financialGenerations: number
+  directFinancialEntries: number
+  receivables: number
+  payables: number
+  receipts: number
+  receiptReversals: number
+  payments: number
+  paymentReversals: number
+  remunerationCalculations: number
+  attachments: number
+  auditLogs: number
 }
 
 export type FirmCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  auditLogs?: boolean | FirmCountOutputTypeCountAuditLogsArgs
-  attachments?: boolean | FirmCountOutputTypeCountAttachmentsArgs
   contracts?: boolean | FirmCountOutputTypeCountContractsArgs
-  contractEmployees?: boolean | FirmCountOutputTypeCountContractEmployeesArgs
+  contractAssignments?: boolean | FirmCountOutputTypeCountContractAssignmentsArgs
   revenues?: boolean | FirmCountOutputTypeCountRevenuesArgs
-  fees?: boolean | FirmCountOutputTypeCountFeesArgs
   expenses?: boolean | FirmCountOutputTypeCountExpensesArgs
-  remunerations?: boolean | FirmCountOutputTypeCountRemunerationsArgs
+  financialGenerations?: boolean | FirmCountOutputTypeCountFinancialGenerationsArgs
+  directFinancialEntries?: boolean | FirmCountOutputTypeCountDirectFinancialEntriesArgs
+  receivables?: boolean | FirmCountOutputTypeCountReceivablesArgs
+  payables?: boolean | FirmCountOutputTypeCountPayablesArgs
+  receipts?: boolean | FirmCountOutputTypeCountReceiptsArgs
+  receiptReversals?: boolean | FirmCountOutputTypeCountReceiptReversalsArgs
+  payments?: boolean | FirmCountOutputTypeCountPaymentsArgs
+  paymentReversals?: boolean | FirmCountOutputTypeCountPaymentReversalsArgs
+  remunerationCalculations?: boolean | FirmCountOutputTypeCountRemunerationCalculationsArgs
+  attachments?: boolean | FirmCountOutputTypeCountAttachmentsArgs
+  auditLogs?: boolean | FirmCountOutputTypeCountAuditLogsArgs
 }
 
 /**
@@ -997,20 +2188,6 @@ export type FirmCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensi
 /**
  * FirmCountOutputType without action
  */
-export type FirmCountOutputTypeCountAuditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.AuditLogWhereInput
-}
-
-/**
- * FirmCountOutputType without action
- */
-export type FirmCountOutputTypeCountAttachmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.AttachmentWhereInput
-}
-
-/**
- * FirmCountOutputType without action
- */
 export type FirmCountOutputTypeCountContractsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.ContractWhereInput
 }
@@ -1018,8 +2195,8 @@ export type FirmCountOutputTypeCountContractsArgs<ExtArgs extends runtime.Types.
 /**
  * FirmCountOutputType without action
  */
-export type FirmCountOutputTypeCountContractEmployeesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ContractEmployeeWhereInput
+export type FirmCountOutputTypeCountContractAssignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ContractAssignmentWhereInput
 }
 
 /**
@@ -1032,13 +2209,6 @@ export type FirmCountOutputTypeCountRevenuesArgs<ExtArgs extends runtime.Types.E
 /**
  * FirmCountOutputType without action
  */
-export type FirmCountOutputTypeCountFeesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.FeeWhereInput
-}
-
-/**
- * FirmCountOutputType without action
- */
 export type FirmCountOutputTypeCountExpensesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.ExpenseWhereInput
 }
@@ -1046,50 +2216,142 @@ export type FirmCountOutputTypeCountExpensesArgs<ExtArgs extends runtime.Types.E
 /**
  * FirmCountOutputType without action
  */
-export type FirmCountOutputTypeCountRemunerationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.RemunerationWhereInput
+export type FirmCountOutputTypeCountFinancialGenerationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FinancialGenerationWhereInput
+}
+
+/**
+ * FirmCountOutputType without action
+ */
+export type FirmCountOutputTypeCountDirectFinancialEntriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DirectFinancialEntryWhereInput
+}
+
+/**
+ * FirmCountOutputType without action
+ */
+export type FirmCountOutputTypeCountReceivablesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ReceivableWhereInput
+}
+
+/**
+ * FirmCountOutputType without action
+ */
+export type FirmCountOutputTypeCountPayablesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PayableWhereInput
+}
+
+/**
+ * FirmCountOutputType without action
+ */
+export type FirmCountOutputTypeCountReceiptsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ReceiptWhereInput
+}
+
+/**
+ * FirmCountOutputType without action
+ */
+export type FirmCountOutputTypeCountReceiptReversalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ReceiptReversalWhereInput
+}
+
+/**
+ * FirmCountOutputType without action
+ */
+export type FirmCountOutputTypeCountPaymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PaymentWhereInput
+}
+
+/**
+ * FirmCountOutputType without action
+ */
+export type FirmCountOutputTypeCountPaymentReversalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PaymentReversalWhereInput
+}
+
+/**
+ * FirmCountOutputType without action
+ */
+export type FirmCountOutputTypeCountRemunerationCalculationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RemunerationCalculationWhereInput
+}
+
+/**
+ * FirmCountOutputType without action
+ */
+export type FirmCountOutputTypeCountAttachmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AttachmentWhereInput
+}
+
+/**
+ * FirmCountOutputType without action
+ */
+export type FirmCountOutputTypeCountAuditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AuditLogWhereInput
 }
 
 
 export type FirmSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
-  auditLogs?: boolean | Prisma.Firm$auditLogsArgs<ExtArgs>
-  attachments?: boolean | Prisma.Firm$attachmentsArgs<ExtArgs>
+  remunerationCutoffDay?: boolean
+  remunerationDueDay?: boolean
   contracts?: boolean | Prisma.Firm$contractsArgs<ExtArgs>
-  contractEmployees?: boolean | Prisma.Firm$contractEmployeesArgs<ExtArgs>
+  contractAssignments?: boolean | Prisma.Firm$contractAssignmentsArgs<ExtArgs>
   revenues?: boolean | Prisma.Firm$revenuesArgs<ExtArgs>
-  fees?: boolean | Prisma.Firm$feesArgs<ExtArgs>
   expenses?: boolean | Prisma.Firm$expensesArgs<ExtArgs>
-  remunerations?: boolean | Prisma.Firm$remunerationsArgs<ExtArgs>
+  financialGenerations?: boolean | Prisma.Firm$financialGenerationsArgs<ExtArgs>
+  directFinancialEntries?: boolean | Prisma.Firm$directFinancialEntriesArgs<ExtArgs>
+  receivables?: boolean | Prisma.Firm$receivablesArgs<ExtArgs>
+  payables?: boolean | Prisma.Firm$payablesArgs<ExtArgs>
+  receipts?: boolean | Prisma.Firm$receiptsArgs<ExtArgs>
+  receiptReversals?: boolean | Prisma.Firm$receiptReversalsArgs<ExtArgs>
+  payments?: boolean | Prisma.Firm$paymentsArgs<ExtArgs>
+  paymentReversals?: boolean | Prisma.Firm$paymentReversalsArgs<ExtArgs>
+  remunerationCalculations?: boolean | Prisma.Firm$remunerationCalculationsArgs<ExtArgs>
+  attachments?: boolean | Prisma.Firm$attachmentsArgs<ExtArgs>
+  auditLogs?: boolean | Prisma.Firm$auditLogsArgs<ExtArgs>
   _count?: boolean | Prisma.FirmCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["firm"]>
 
 export type FirmSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  remunerationCutoffDay?: boolean
+  remunerationDueDay?: boolean
 }, ExtArgs["result"]["firm"]>
 
 export type FirmSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  remunerationCutoffDay?: boolean
+  remunerationDueDay?: boolean
 }, ExtArgs["result"]["firm"]>
 
 export type FirmSelectScalar = {
   id?: boolean
   name?: boolean
+  remunerationCutoffDay?: boolean
+  remunerationDueDay?: boolean
 }
 
-export type FirmOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name", ExtArgs["result"]["firm"]>
+export type FirmOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "remunerationCutoffDay" | "remunerationDueDay", ExtArgs["result"]["firm"]>
 export type FirmInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  auditLogs?: boolean | Prisma.Firm$auditLogsArgs<ExtArgs>
-  attachments?: boolean | Prisma.Firm$attachmentsArgs<ExtArgs>
   contracts?: boolean | Prisma.Firm$contractsArgs<ExtArgs>
-  contractEmployees?: boolean | Prisma.Firm$contractEmployeesArgs<ExtArgs>
+  contractAssignments?: boolean | Prisma.Firm$contractAssignmentsArgs<ExtArgs>
   revenues?: boolean | Prisma.Firm$revenuesArgs<ExtArgs>
-  fees?: boolean | Prisma.Firm$feesArgs<ExtArgs>
   expenses?: boolean | Prisma.Firm$expensesArgs<ExtArgs>
-  remunerations?: boolean | Prisma.Firm$remunerationsArgs<ExtArgs>
+  financialGenerations?: boolean | Prisma.Firm$financialGenerationsArgs<ExtArgs>
+  directFinancialEntries?: boolean | Prisma.Firm$directFinancialEntriesArgs<ExtArgs>
+  receivables?: boolean | Prisma.Firm$receivablesArgs<ExtArgs>
+  payables?: boolean | Prisma.Firm$payablesArgs<ExtArgs>
+  receipts?: boolean | Prisma.Firm$receiptsArgs<ExtArgs>
+  receiptReversals?: boolean | Prisma.Firm$receiptReversalsArgs<ExtArgs>
+  payments?: boolean | Prisma.Firm$paymentsArgs<ExtArgs>
+  paymentReversals?: boolean | Prisma.Firm$paymentReversalsArgs<ExtArgs>
+  remunerationCalculations?: boolean | Prisma.Firm$remunerationCalculationsArgs<ExtArgs>
+  attachments?: boolean | Prisma.Firm$attachmentsArgs<ExtArgs>
+  auditLogs?: boolean | Prisma.Firm$auditLogsArgs<ExtArgs>
   _count?: boolean | Prisma.FirmCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type FirmIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1098,18 +2360,27 @@ export type FirmIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type $FirmPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Firm"
   objects: {
-    auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
-    attachments: Prisma.$AttachmentPayload<ExtArgs>[]
     contracts: Prisma.$ContractPayload<ExtArgs>[]
-    contractEmployees: Prisma.$ContractEmployeePayload<ExtArgs>[]
+    contractAssignments: Prisma.$ContractAssignmentPayload<ExtArgs>[]
     revenues: Prisma.$RevenuePayload<ExtArgs>[]
-    fees: Prisma.$FeePayload<ExtArgs>[]
     expenses: Prisma.$ExpensePayload<ExtArgs>[]
-    remunerations: Prisma.$RemunerationPayload<ExtArgs>[]
+    financialGenerations: Prisma.$FinancialGenerationPayload<ExtArgs>[]
+    directFinancialEntries: Prisma.$DirectFinancialEntryPayload<ExtArgs>[]
+    receivables: Prisma.$ReceivablePayload<ExtArgs>[]
+    payables: Prisma.$PayablePayload<ExtArgs>[]
+    receipts: Prisma.$ReceiptPayload<ExtArgs>[]
+    receiptReversals: Prisma.$ReceiptReversalPayload<ExtArgs>[]
+    payments: Prisma.$PaymentPayload<ExtArgs>[]
+    paymentReversals: Prisma.$PaymentReversalPayload<ExtArgs>[]
+    remunerationCalculations: Prisma.$RemunerationCalculationPayload<ExtArgs>[]
+    attachments: Prisma.$AttachmentPayload<ExtArgs>[]
+    auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     name: string
+    remunerationCutoffDay: number
+    remunerationDueDay: number
   }, ExtArgs["result"]["firm"]>
   composites: {}
 }
@@ -1504,14 +2775,21 @@ readonly fields: FirmFieldRefs;
  */
 export interface Prisma__FirmClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  auditLogs<T extends Prisma.Firm$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Firm$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  attachments<T extends Prisma.Firm$attachmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Firm$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   contracts<T extends Prisma.Firm$contractsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Firm$contractsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ContractPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  contractEmployees<T extends Prisma.Firm$contractEmployeesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Firm$contractEmployeesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ContractEmployeePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  contractAssignments<T extends Prisma.Firm$contractAssignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Firm$contractAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ContractAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   revenues<T extends Prisma.Firm$revenuesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Firm$revenuesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RevenuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  fees<T extends Prisma.Firm$feesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Firm$feesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FeePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   expenses<T extends Prisma.Firm$expensesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Firm$expensesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExpensePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  remunerations<T extends Prisma.Firm$remunerationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Firm$remunerationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RemunerationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  financialGenerations<T extends Prisma.Firm$financialGenerationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Firm$financialGenerationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FinancialGenerationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  directFinancialEntries<T extends Prisma.Firm$directFinancialEntriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Firm$directFinancialEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DirectFinancialEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  receivables<T extends Prisma.Firm$receivablesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Firm$receivablesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReceivablePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  payables<T extends Prisma.Firm$payablesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Firm$payablesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PayablePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  receipts<T extends Prisma.Firm$receiptsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Firm$receiptsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReceiptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  receiptReversals<T extends Prisma.Firm$receiptReversalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Firm$receiptReversalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReceiptReversalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  payments<T extends Prisma.Firm$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Firm$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  paymentReversals<T extends Prisma.Firm$paymentReversalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Firm$paymentReversalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentReversalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  remunerationCalculations<T extends Prisma.Firm$remunerationCalculationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Firm$remunerationCalculationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RemunerationCalculationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  attachments<T extends Prisma.Firm$attachmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Firm$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  auditLogs<T extends Prisma.Firm$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Firm$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1543,6 +2821,8 @@ export interface Prisma__FirmClient<T, Null = never, ExtArgs extends runtime.Typ
 export interface FirmFieldRefs {
   readonly id: Prisma.FieldRef<"Firm", 'Int'>
   readonly name: Prisma.FieldRef<"Firm", 'String'>
+  readonly remunerationCutoffDay: Prisma.FieldRef<"Firm", 'Int'>
+  readonly remunerationDueDay: Prisma.FieldRef<"Firm", 'Int'>
 }
     
 
@@ -1936,54 +3216,6 @@ export type FirmDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
- * Firm.auditLogs
- */
-export type Firm$auditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the AuditLog
-   */
-  select?: Prisma.AuditLogSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the AuditLog
-   */
-  omit?: Prisma.AuditLogOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.AuditLogInclude<ExtArgs> | null
-  where?: Prisma.AuditLogWhereInput
-  orderBy?: Prisma.AuditLogOrderByWithRelationInput | Prisma.AuditLogOrderByWithRelationInput[]
-  cursor?: Prisma.AuditLogWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.AuditLogScalarFieldEnum | Prisma.AuditLogScalarFieldEnum[]
-}
-
-/**
- * Firm.attachments
- */
-export type Firm$attachmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Attachment
-   */
-  select?: Prisma.AttachmentSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Attachment
-   */
-  omit?: Prisma.AttachmentOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.AttachmentInclude<ExtArgs> | null
-  where?: Prisma.AttachmentWhereInput
-  orderBy?: Prisma.AttachmentOrderByWithRelationInput | Prisma.AttachmentOrderByWithRelationInput[]
-  cursor?: Prisma.AttachmentWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.AttachmentScalarFieldEnum | Prisma.AttachmentScalarFieldEnum[]
-}
-
-/**
  * Firm.contracts
  */
 export type Firm$contractsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2008,27 +3240,27 @@ export type Firm$contractsArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
- * Firm.contractEmployees
+ * Firm.contractAssignments
  */
-export type Firm$contractEmployeesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Firm$contractAssignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the ContractEmployee
+   * Select specific fields to fetch from the ContractAssignment
    */
-  select?: Prisma.ContractEmployeeSelect<ExtArgs> | null
+  select?: Prisma.ContractAssignmentSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the ContractEmployee
+   * Omit specific fields from the ContractAssignment
    */
-  omit?: Prisma.ContractEmployeeOmit<ExtArgs> | null
+  omit?: Prisma.ContractAssignmentOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ContractEmployeeInclude<ExtArgs> | null
-  where?: Prisma.ContractEmployeeWhereInput
-  orderBy?: Prisma.ContractEmployeeOrderByWithRelationInput | Prisma.ContractEmployeeOrderByWithRelationInput[]
-  cursor?: Prisma.ContractEmployeeWhereUniqueInput
+  include?: Prisma.ContractAssignmentInclude<ExtArgs> | null
+  where?: Prisma.ContractAssignmentWhereInput
+  orderBy?: Prisma.ContractAssignmentOrderByWithRelationInput | Prisma.ContractAssignmentOrderByWithRelationInput[]
+  cursor?: Prisma.ContractAssignmentWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.ContractEmployeeScalarFieldEnum | Prisma.ContractEmployeeScalarFieldEnum[]
+  distinct?: Prisma.ContractAssignmentScalarFieldEnum | Prisma.ContractAssignmentScalarFieldEnum[]
 }
 
 /**
@@ -2056,30 +3288,6 @@ export type Firm$revenuesArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 }
 
 /**
- * Firm.fees
- */
-export type Firm$feesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Fee
-   */
-  select?: Prisma.FeeSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Fee
-   */
-  omit?: Prisma.FeeOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.FeeInclude<ExtArgs> | null
-  where?: Prisma.FeeWhereInput
-  orderBy?: Prisma.FeeOrderByWithRelationInput | Prisma.FeeOrderByWithRelationInput[]
-  cursor?: Prisma.FeeWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.FeeScalarFieldEnum | Prisma.FeeScalarFieldEnum[]
-}
-
-/**
  * Firm.expenses
  */
 export type Firm$expensesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2104,27 +3312,267 @@ export type Firm$expensesArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 }
 
 /**
- * Firm.remunerations
+ * Firm.financialGenerations
  */
-export type Firm$remunerationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Firm$financialGenerationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Remuneration
+   * Select specific fields to fetch from the FinancialGeneration
    */
-  select?: Prisma.RemunerationSelect<ExtArgs> | null
+  select?: Prisma.FinancialGenerationSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Remuneration
+   * Omit specific fields from the FinancialGeneration
    */
-  omit?: Prisma.RemunerationOmit<ExtArgs> | null
+  omit?: Prisma.FinancialGenerationOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.RemunerationInclude<ExtArgs> | null
-  where?: Prisma.RemunerationWhereInput
-  orderBy?: Prisma.RemunerationOrderByWithRelationInput | Prisma.RemunerationOrderByWithRelationInput[]
-  cursor?: Prisma.RemunerationWhereUniqueInput
+  include?: Prisma.FinancialGenerationInclude<ExtArgs> | null
+  where?: Prisma.FinancialGenerationWhereInput
+  orderBy?: Prisma.FinancialGenerationOrderByWithRelationInput | Prisma.FinancialGenerationOrderByWithRelationInput[]
+  cursor?: Prisma.FinancialGenerationWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.RemunerationScalarFieldEnum | Prisma.RemunerationScalarFieldEnum[]
+  distinct?: Prisma.FinancialGenerationScalarFieldEnum | Prisma.FinancialGenerationScalarFieldEnum[]
+}
+
+/**
+ * Firm.directFinancialEntries
+ */
+export type Firm$directFinancialEntriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DirectFinancialEntry
+   */
+  select?: Prisma.DirectFinancialEntrySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DirectFinancialEntry
+   */
+  omit?: Prisma.DirectFinancialEntryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DirectFinancialEntryInclude<ExtArgs> | null
+  where?: Prisma.DirectFinancialEntryWhereInput
+  orderBy?: Prisma.DirectFinancialEntryOrderByWithRelationInput | Prisma.DirectFinancialEntryOrderByWithRelationInput[]
+  cursor?: Prisma.DirectFinancialEntryWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DirectFinancialEntryScalarFieldEnum | Prisma.DirectFinancialEntryScalarFieldEnum[]
+}
+
+/**
+ * Firm.receivables
+ */
+export type Firm$receivablesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Receivable
+   */
+  select?: Prisma.ReceivableSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Receivable
+   */
+  omit?: Prisma.ReceivableOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReceivableInclude<ExtArgs> | null
+  where?: Prisma.ReceivableWhereInput
+  orderBy?: Prisma.ReceivableOrderByWithRelationInput | Prisma.ReceivableOrderByWithRelationInput[]
+  cursor?: Prisma.ReceivableWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ReceivableScalarFieldEnum | Prisma.ReceivableScalarFieldEnum[]
+}
+
+/**
+ * Firm.payables
+ */
+export type Firm$payablesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Payable
+   */
+  select?: Prisma.PayableSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Payable
+   */
+  omit?: Prisma.PayableOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PayableInclude<ExtArgs> | null
+  where?: Prisma.PayableWhereInput
+  orderBy?: Prisma.PayableOrderByWithRelationInput | Prisma.PayableOrderByWithRelationInput[]
+  cursor?: Prisma.PayableWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PayableScalarFieldEnum | Prisma.PayableScalarFieldEnum[]
+}
+
+/**
+ * Firm.receipts
+ */
+export type Firm$receiptsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Receipt
+   */
+  select?: Prisma.ReceiptSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Receipt
+   */
+  omit?: Prisma.ReceiptOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReceiptInclude<ExtArgs> | null
+  where?: Prisma.ReceiptWhereInput
+  orderBy?: Prisma.ReceiptOrderByWithRelationInput | Prisma.ReceiptOrderByWithRelationInput[]
+  cursor?: Prisma.ReceiptWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ReceiptScalarFieldEnum | Prisma.ReceiptScalarFieldEnum[]
+}
+
+/**
+ * Firm.receiptReversals
+ */
+export type Firm$receiptReversalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ReceiptReversal
+   */
+  select?: Prisma.ReceiptReversalSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ReceiptReversal
+   */
+  omit?: Prisma.ReceiptReversalOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReceiptReversalInclude<ExtArgs> | null
+  where?: Prisma.ReceiptReversalWhereInput
+  orderBy?: Prisma.ReceiptReversalOrderByWithRelationInput | Prisma.ReceiptReversalOrderByWithRelationInput[]
+  cursor?: Prisma.ReceiptReversalWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ReceiptReversalScalarFieldEnum | Prisma.ReceiptReversalScalarFieldEnum[]
+}
+
+/**
+ * Firm.payments
+ */
+export type Firm$paymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Payment
+   */
+  select?: Prisma.PaymentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Payment
+   */
+  omit?: Prisma.PaymentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PaymentInclude<ExtArgs> | null
+  where?: Prisma.PaymentWhereInput
+  orderBy?: Prisma.PaymentOrderByWithRelationInput | Prisma.PaymentOrderByWithRelationInput[]
+  cursor?: Prisma.PaymentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PaymentScalarFieldEnum | Prisma.PaymentScalarFieldEnum[]
+}
+
+/**
+ * Firm.paymentReversals
+ */
+export type Firm$paymentReversalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PaymentReversal
+   */
+  select?: Prisma.PaymentReversalSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PaymentReversal
+   */
+  omit?: Prisma.PaymentReversalOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PaymentReversalInclude<ExtArgs> | null
+  where?: Prisma.PaymentReversalWhereInput
+  orderBy?: Prisma.PaymentReversalOrderByWithRelationInput | Prisma.PaymentReversalOrderByWithRelationInput[]
+  cursor?: Prisma.PaymentReversalWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PaymentReversalScalarFieldEnum | Prisma.PaymentReversalScalarFieldEnum[]
+}
+
+/**
+ * Firm.remunerationCalculations
+ */
+export type Firm$remunerationCalculationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the RemunerationCalculation
+   */
+  select?: Prisma.RemunerationCalculationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the RemunerationCalculation
+   */
+  omit?: Prisma.RemunerationCalculationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RemunerationCalculationInclude<ExtArgs> | null
+  where?: Prisma.RemunerationCalculationWhereInput
+  orderBy?: Prisma.RemunerationCalculationOrderByWithRelationInput | Prisma.RemunerationCalculationOrderByWithRelationInput[]
+  cursor?: Prisma.RemunerationCalculationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RemunerationCalculationScalarFieldEnum | Prisma.RemunerationCalculationScalarFieldEnum[]
+}
+
+/**
+ * Firm.attachments
+ */
+export type Firm$attachmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Attachment
+   */
+  select?: Prisma.AttachmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Attachment
+   */
+  omit?: Prisma.AttachmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AttachmentInclude<ExtArgs> | null
+  where?: Prisma.AttachmentWhereInput
+  orderBy?: Prisma.AttachmentOrderByWithRelationInput | Prisma.AttachmentOrderByWithRelationInput[]
+  cursor?: Prisma.AttachmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AttachmentScalarFieldEnum | Prisma.AttachmentScalarFieldEnum[]
+}
+
+/**
+ * Firm.auditLogs
+ */
+export type Firm$auditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AuditLog
+   */
+  select?: Prisma.AuditLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AuditLog
+   */
+  omit?: Prisma.AuditLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AuditLogInclude<ExtArgs> | null
+  where?: Prisma.AuditLogWhereInput
+  orderBy?: Prisma.AuditLogOrderByWithRelationInput | Prisma.AuditLogOrderByWithRelationInput[]
+  cursor?: Prisma.AuditLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AuditLogScalarFieldEnum | Prisma.AuditLogScalarFieldEnum[]
 }
 
 /**

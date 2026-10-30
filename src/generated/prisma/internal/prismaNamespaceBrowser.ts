@@ -53,25 +53,33 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   ClerkWebhookReceipt: 'ClerkWebhookReceipt',
   Firm: 'Firm',
-  ClientType: 'ClientType',
+  PersonType: 'PersonType',
   EmployeeType: 'EmployeeType',
-  UserRole: 'UserRole',
   LegalArea: 'LegalArea',
   ContractStatus: 'ContractStatus',
   AssignmentType: 'AssignmentType',
   RevenueType: 'RevenueType',
   AttachmentType: 'AttachmentType',
-  ExpenseCategory: 'ExpenseCategory',
-  Employee: 'Employee',
-  AuditLog: 'AuditLog',
-  Client: 'Client',
+  FinancialAnalytic: 'FinancialAnalytic',
+  PaymentMethod: 'PaymentMethod',
+  TitleKind: 'TitleKind',
+  Person: 'Person',
+  EmployeeProfile: 'EmployeeProfile',
   Contract: 'Contract',
-  ContractEmployee: 'ContractEmployee',
+  ContractAssignment: 'ContractAssignment',
   Revenue: 'Revenue',
-  Fee: 'Fee',
   Expense: 'Expense',
-  Remuneration: 'Remuneration',
-  Attachment: 'Attachment'
+  FinancialGeneration: 'FinancialGeneration',
+  DirectFinancialEntry: 'DirectFinancialEntry',
+  Receivable: 'Receivable',
+  Payable: 'Payable',
+  Receipt: 'Receipt',
+  ReceiptReversal: 'ReceiptReversal',
+  Payment: 'Payment',
+  PaymentReversal: 'PaymentReversal',
+  RemunerationCalculation: 'RemunerationCalculation',
+  Attachment: 'Attachment',
+  AuditLog: 'AuditLog'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -100,20 +108,22 @@ export type ClerkWebhookReceiptScalarFieldEnum = (typeof ClerkWebhookReceiptScal
 
 export const FirmScalarFieldEnum = {
   id: 'id',
-  name: 'name'
+  name: 'name',
+  remunerationCutoffDay: 'remunerationCutoffDay',
+  remunerationDueDay: 'remunerationDueDay'
 } as const
 
 export type FirmScalarFieldEnum = (typeof FirmScalarFieldEnum)[keyof typeof FirmScalarFieldEnum]
 
 
-export const ClientTypeScalarFieldEnum = {
+export const PersonTypeScalarFieldEnum = {
   id: 'id',
   value: 'value',
   label: 'label',
   isActive: 'isActive'
 } as const
 
-export type ClientTypeScalarFieldEnum = (typeof ClientTypeScalarFieldEnum)[keyof typeof ClientTypeScalarFieldEnum]
+export type PersonTypeScalarFieldEnum = (typeof PersonTypeScalarFieldEnum)[keyof typeof PersonTypeScalarFieldEnum]
 
 
 export const EmployeeTypeScalarFieldEnum = {
@@ -124,16 +134,6 @@ export const EmployeeTypeScalarFieldEnum = {
 } as const
 
 export type EmployeeTypeScalarFieldEnum = (typeof EmployeeTypeScalarFieldEnum)[keyof typeof EmployeeTypeScalarFieldEnum]
-
-
-export const UserRoleScalarFieldEnum = {
-  id: 'id',
-  value: 'value',
-  label: 'label',
-  isActive: 'isActive'
-} as const
-
-export type UserRoleScalarFieldEnum = (typeof UserRoleScalarFieldEnum)[keyof typeof UserRoleScalarFieldEnum]
 
 
 export const LegalAreaScalarFieldEnum = {
@@ -186,38 +186,319 @@ export const AttachmentTypeScalarFieldEnum = {
 export type AttachmentTypeScalarFieldEnum = (typeof AttachmentTypeScalarFieldEnum)[keyof typeof AttachmentTypeScalarFieldEnum]
 
 
-export const ExpenseCategoryScalarFieldEnum = {
+export const FinancialAnalyticScalarFieldEnum = {
   id: 'id',
   value: 'value',
   label: 'label',
   isActive: 'isActive'
 } as const
 
-export type ExpenseCategoryScalarFieldEnum = (typeof ExpenseCategoryScalarFieldEnum)[keyof typeof ExpenseCategoryScalarFieldEnum]
+export type FinancialAnalyticScalarFieldEnum = (typeof FinancialAnalyticScalarFieldEnum)[keyof typeof FinancialAnalyticScalarFieldEnum]
 
 
-export const EmployeeScalarFieldEnum = {
+export const PaymentMethodScalarFieldEnum = {
   id: 'id',
-  typeId: 'typeId',
+  value: 'value',
+  label: 'label',
+  isActive: 'isActive'
+} as const
+
+export type PaymentMethodScalarFieldEnum = (typeof PaymentMethodScalarFieldEnum)[keyof typeof PaymentMethodScalarFieldEnum]
+
+
+export const TitleKindScalarFieldEnum = {
+  id: 'id',
+  value: 'value',
+  label: 'label',
+  isActive: 'isActive'
+} as const
+
+export type TitleKindScalarFieldEnum = (typeof TitleKindScalarFieldEnum)[keyof typeof TitleKindScalarFieldEnum]
+
+
+export const PersonScalarFieldEnum = {
+  id: 'id',
   fullName: 'fullName',
+  document: 'document',
+  email: 'email',
+  phone: 'phone',
+  isCustomer: 'isCustomer',
+  isSupplier: 'isSupplier',
+  isEmployee: 'isEmployee',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt',
+  personTypeId: 'personTypeId'
+} as const
+
+export type PersonScalarFieldEnum = (typeof PersonScalarFieldEnum)[keyof typeof PersonScalarFieldEnum]
+
+
+export const EmployeeProfileScalarFieldEnum = {
+  id: 'id',
   oabNumber: 'oabNumber',
   remunerationPercentage: 'remunerationPercentage',
   referralPercentage: 'referralPercentage',
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  deletedAt: 'deletedAt'
+  deletedAt: 'deletedAt',
+  personId: 'personId',
+  employeeTypeId: 'employeeTypeId'
 } as const
 
-export type EmployeeScalarFieldEnum = (typeof EmployeeScalarFieldEnum)[keyof typeof EmployeeScalarFieldEnum]
+export type EmployeeProfileScalarFieldEnum = (typeof EmployeeProfileScalarFieldEnum)[keyof typeof EmployeeProfileScalarFieldEnum]
+
+
+export const ContractScalarFieldEnum = {
+  id: 'id',
+  processNumber: 'processNumber',
+  feePercentage: 'feePercentage',
+  notes: 'notes',
+  allowStatusChange: 'allowStatusChange',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt',
+  firmId: 'firmId',
+  customerId: 'customerId',
+  legalAreaId: 'legalAreaId',
+  statusId: 'statusId'
+} as const
+
+export type ContractScalarFieldEnum = (typeof ContractScalarFieldEnum)[keyof typeof ContractScalarFieldEnum]
+
+
+export const ContractAssignmentScalarFieldEnum = {
+  id: 'id',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt',
+  firmId: 'firmId',
+  contractId: 'contractId',
+  employeeProfileId: 'employeeProfileId',
+  assignmentTypeId: 'assignmentTypeId'
+} as const
+
+export type ContractAssignmentScalarFieldEnum = (typeof ContractAssignmentScalarFieldEnum)[keyof typeof ContractAssignmentScalarFieldEnum]
+
+
+export const RevenueScalarFieldEnum = {
+  id: 'id',
+  negotiatedAmount: 'negotiatedAmount',
+  notes: 'notes',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt',
+  firmId: 'firmId',
+  contractId: 'contractId',
+  revenueTypeId: 'revenueTypeId'
+} as const
+
+export type RevenueScalarFieldEnum = (typeof RevenueScalarFieldEnum)[keyof typeof RevenueScalarFieldEnum]
+
+
+export const ExpenseScalarFieldEnum = {
+  id: 'id',
+  negotiatedAmount: 'negotiatedAmount',
+  notes: 'notes',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt',
+  firmId: 'firmId',
+  supplierId: 'supplierId'
+} as const
+
+export type ExpenseScalarFieldEnum = (typeof ExpenseScalarFieldEnum)[keyof typeof ExpenseScalarFieldEnum]
+
+
+export const FinancialGenerationScalarFieldEnum = {
+  id: 'id',
+  requestKey: 'requestKey',
+  agreedAmount: 'agreedAmount',
+  createdAt: 'createdAt',
+  firmId: 'firmId',
+  revenueId: 'revenueId',
+  expenseId: 'expenseId',
+  actorId: 'actorId'
+} as const
+
+export type FinancialGenerationScalarFieldEnum = (typeof FinancialGenerationScalarFieldEnum)[keyof typeof FinancialGenerationScalarFieldEnum]
+
+
+export const DirectFinancialEntryScalarFieldEnum = {
+  id: 'id',
+  reason: 'reason',
+  createdAt: 'createdAt',
+  firmId: 'firmId',
+  actorId: 'actorId'
+} as const
+
+export type DirectFinancialEntryScalarFieldEnum = (typeof DirectFinancialEntryScalarFieldEnum)[keyof typeof DirectFinancialEntryScalarFieldEnum]
+
+
+export const ReceivableScalarFieldEnum = {
+  id: 'id',
+  amount: 'amount',
+  dueDate: 'dueDate',
+  notes: 'notes',
+  cancelledAt: 'cancelledAt',
+  cancellationReason: 'cancellationReason',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  firmId: 'firmId',
+  debtorId: 'debtorId',
+  analyticId: 'analyticId',
+  expectedPaymentMethodId: 'expectedPaymentMethodId',
+  titleKindId: 'titleKindId',
+  generationId: 'generationId',
+  directEntryId: 'directEntryId',
+  revenueId: 'revenueId'
+} as const
+
+export type ReceivableScalarFieldEnum = (typeof ReceivableScalarFieldEnum)[keyof typeof ReceivableScalarFieldEnum]
+
+
+export const PayableScalarFieldEnum = {
+  id: 'id',
+  amount: 'amount',
+  dueDate: 'dueDate',
+  notes: 'notes',
+  cancelledAt: 'cancelledAt',
+  cancellationReason: 'cancellationReason',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  firmId: 'firmId',
+  beneficiaryId: 'beneficiaryId',
+  analyticId: 'analyticId',
+  expectedPaymentMethodId: 'expectedPaymentMethodId',
+  titleKindId: 'titleKindId',
+  generationId: 'generationId',
+  directEntryId: 'directEntryId',
+  expenseId: 'expenseId',
+  remunerationCalculationId: 'remunerationCalculationId'
+} as const
+
+export type PayableScalarFieldEnum = (typeof PayableScalarFieldEnum)[keyof typeof PayableScalarFieldEnum]
+
+
+export const ReceiptScalarFieldEnum = {
+  id: 'id',
+  effectiveDate: 'effectiveDate',
+  principalAbated: 'principalAbated',
+  discount: 'discount',
+  interest: 'interest',
+  penalty: 'penalty',
+  effectiveAmount: 'effectiveAmount',
+  reason: 'reason',
+  requestKey: 'requestKey',
+  generatesRemuneration: 'generatesRemuneration',
+  createdAt: 'createdAt',
+  firmId: 'firmId',
+  receivableId: 'receivableId',
+  actualPaymentMethodId: 'actualPaymentMethodId',
+  actorId: 'actorId'
+} as const
+
+export type ReceiptScalarFieldEnum = (typeof ReceiptScalarFieldEnum)[keyof typeof ReceiptScalarFieldEnum]
+
+
+export const ReceiptReversalScalarFieldEnum = {
+  id: 'id',
+  effectiveDate: 'effectiveDate',
+  reason: 'reason',
+  requestKey: 'requestKey',
+  createdAt: 'createdAt',
+  firmId: 'firmId',
+  receiptId: 'receiptId',
+  actorId: 'actorId'
+} as const
+
+export type ReceiptReversalScalarFieldEnum = (typeof ReceiptReversalScalarFieldEnum)[keyof typeof ReceiptReversalScalarFieldEnum]
+
+
+export const PaymentScalarFieldEnum = {
+  id: 'id',
+  effectiveDate: 'effectiveDate',
+  principalAbated: 'principalAbated',
+  discount: 'discount',
+  interest: 'interest',
+  penalty: 'penalty',
+  effectiveAmount: 'effectiveAmount',
+  reason: 'reason',
+  requestKey: 'requestKey',
+  createdAt: 'createdAt',
+  firmId: 'firmId',
+  payableId: 'payableId',
+  actualPaymentMethodId: 'actualPaymentMethodId',
+  actorId: 'actorId'
+} as const
+
+export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
+
+
+export const PaymentReversalScalarFieldEnum = {
+  id: 'id',
+  effectiveDate: 'effectiveDate',
+  reason: 'reason',
+  requestKey: 'requestKey',
+  createdAt: 'createdAt',
+  firmId: 'firmId',
+  paymentId: 'paymentId',
+  actorId: 'actorId'
+} as const
+
+export type PaymentReversalScalarFieldEnum = (typeof PaymentReversalScalarFieldEnum)[keyof typeof PaymentReversalScalarFieldEnum]
+
+
+export const RemunerationCalculationScalarFieldEnum = {
+  id: 'id',
+  calculationBase: 'calculationBase',
+  effectivePercentage: 'effectivePercentage',
+  calculatedAmount: 'calculatedAmount',
+  computedDueDate: 'computedDueDate',
+  generationMode: 'generationMode',
+  ruleSnapshot: 'ruleSnapshot',
+  createdAt: 'createdAt',
+  firmId: 'firmId',
+  receiptId: 'receiptId',
+  contractAssignmentId: 'contractAssignmentId'
+} as const
+
+export type RemunerationCalculationScalarFieldEnum = (typeof RemunerationCalculationScalarFieldEnum)[keyof typeof RemunerationCalculationScalarFieldEnum]
+
+
+export const AttachmentScalarFieldEnum = {
+  id: 'id',
+  fileName: 'fileName',
+  storagePath: 'storagePath',
+  mimeType: 'mimeType',
+  fileSize: 'fileSize',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt',
+  firmId: 'firmId',
+  typeId: 'typeId',
+  personId: 'personId',
+  contractId: 'contractId',
+  expenseId: 'expenseId',
+  receivableId: 'receivableId',
+  payableId: 'payableId',
+  receiptId: 'receiptId',
+  paymentId: 'paymentId',
+  remunerationCalculationId: 'remunerationCalculationId'
+} as const
+
+export type AttachmentScalarFieldEnum = (typeof AttachmentScalarFieldEnum)[keyof typeof AttachmentScalarFieldEnum]
 
 
 export const AuditLogScalarFieldEnum = {
-  clientId: 'clientId',
-  employeeId: 'employeeId',
   id: 'id',
-  firmId: 'firmId',
-  actorId: 'actorId',
   actorName: 'actorName',
   actorEmail: 'actorEmail',
   action: 'action',
@@ -228,152 +509,21 @@ export const AuditLogScalarFieldEnum = {
   ipAddress: 'ipAddress',
   userAgent: 'userAgent',
   description: 'description',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  firmId: 'firmId',
+  actorId: 'actorId',
+  personId: 'personId',
+  contractId: 'contractId',
+  expenseId: 'expenseId',
+  receivableId: 'receivableId',
+  payableId: 'payableId',
+  receiptId: 'receiptId',
+  paymentId: 'paymentId',
+  financialGenerationId: 'financialGenerationId',
+  remunerationCalculationId: 'remunerationCalculationId'
 } as const
 
 export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
-
-
-export const ClientScalarFieldEnum = {
-  id: 'id',
-  typeId: 'typeId',
-  fullName: 'fullName',
-  document: 'document',
-  email: 'email',
-  phone: 'phone',
-  isActive: 'isActive',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  deletedAt: 'deletedAt'
-} as const
-
-export type ClientScalarFieldEnum = (typeof ClientScalarFieldEnum)[keyof typeof ClientScalarFieldEnum]
-
-
-export const ContractScalarFieldEnum = {
-  id: 'id',
-  firmId: 'firmId',
-  clientId: 'clientId',
-  legalAreaId: 'legalAreaId',
-  statusId: 'statusId',
-  processNumber: 'processNumber',
-  feePercentage: 'feePercentage',
-  notes: 'notes',
-  allowStatusChange: 'allowStatusChange',
-  isActive: 'isActive',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  deletedAt: 'deletedAt'
-} as const
-
-export type ContractScalarFieldEnum = (typeof ContractScalarFieldEnum)[keyof typeof ContractScalarFieldEnum]
-
-
-export const ContractEmployeeScalarFieldEnum = {
-  id: 'id',
-  firmId: 'firmId',
-  contractId: 'contractId',
-  employeeId: 'employeeId',
-  assignmentTypeId: 'assignmentTypeId',
-  isActive: 'isActive',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  deletedAt: 'deletedAt'
-} as const
-
-export type ContractEmployeeScalarFieldEnum = (typeof ContractEmployeeScalarFieldEnum)[keyof typeof ContractEmployeeScalarFieldEnum]
-
-
-export const RevenueScalarFieldEnum = {
-  id: 'id',
-  firmId: 'firmId',
-  contractId: 'contractId',
-  typeId: 'typeId',
-  totalValue: 'totalValue',
-  downPaymentValue: 'downPaymentValue',
-  paymentStartDate: 'paymentStartDate',
-  totalInstallments: 'totalInstallments',
-  isActive: 'isActive',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  deletedAt: 'deletedAt'
-} as const
-
-export type RevenueScalarFieldEnum = (typeof RevenueScalarFieldEnum)[keyof typeof RevenueScalarFieldEnum]
-
-
-export const FeeScalarFieldEnum = {
-  id: 'id',
-  firmId: 'firmId',
-  revenueId: 'revenueId',
-  paymentDate: 'paymentDate',
-  amount: 'amount',
-  installmentNumber: 'installmentNumber',
-  generatesRemuneration: 'generatesRemuneration',
-  isActive: 'isActive',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  deletedAt: 'deletedAt'
-} as const
-
-export type FeeScalarFieldEnum = (typeof FeeScalarFieldEnum)[keyof typeof FeeScalarFieldEnum]
-
-
-export const ExpenseScalarFieldEnum = {
-  id: 'id',
-  firmId: 'firmId',
-  categoryId: 'categoryId',
-  expenseDate: 'expenseDate',
-  amount: 'amount',
-  notes: 'notes',
-  isActive: 'isActive',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  deletedAt: 'deletedAt'
-} as const
-
-export type ExpenseScalarFieldEnum = (typeof ExpenseScalarFieldEnum)[keyof typeof ExpenseScalarFieldEnum]
-
-
-export const RemunerationScalarFieldEnum = {
-  id: 'id',
-  firmId: 'firmId',
-  feeId: 'feeId',
-  contractEmployeeId: 'contractEmployeeId',
-  effectivePercentage: 'effectivePercentage',
-  amount: 'amount',
-  paymentDate: 'paymentDate',
-  isSystemGenerated: 'isSystemGenerated',
-  isActive: 'isActive',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  deletedAt: 'deletedAt'
-} as const
-
-export type RemunerationScalarFieldEnum = (typeof RemunerationScalarFieldEnum)[keyof typeof RemunerationScalarFieldEnum]
-
-
-export const AttachmentScalarFieldEnum = {
-  id: 'id',
-  firmId: 'firmId',
-  clientId: 'clientId',
-  employeeId: 'employeeId',
-  contractId: 'contractId',
-  expenseId: 'expenseId',
-  feeId: 'feeId',
-  remunerationId: 'remunerationId',
-  typeId: 'typeId',
-  fileName: 'fileName',
-  storagePath: 'storagePath',
-  mimeType: 'mimeType',
-  fileSize: 'fileSize',
-  isActive: 'isActive',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  deletedAt: 'deletedAt'
-} as const
-
-export type AttachmentScalarFieldEnum = (typeof AttachmentScalarFieldEnum)[keyof typeof AttachmentScalarFieldEnum]
 
 
 export const SortOrder = {

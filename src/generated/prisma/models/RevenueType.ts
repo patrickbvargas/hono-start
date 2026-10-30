@@ -256,7 +256,7 @@ export type RevenueTypeCreateInput = {
   value: string
   label: string
   isActive?: boolean
-  revenues?: Prisma.RevenueCreateNestedManyWithoutTypeInput
+  revenues?: Prisma.RevenueCreateNestedManyWithoutRevenueTypeInput
 }
 
 export type RevenueTypeUncheckedCreateInput = {
@@ -264,14 +264,14 @@ export type RevenueTypeUncheckedCreateInput = {
   value: string
   label: string
   isActive?: boolean
-  revenues?: Prisma.RevenueUncheckedCreateNestedManyWithoutTypeInput
+  revenues?: Prisma.RevenueUncheckedCreateNestedManyWithoutRevenueTypeInput
 }
 
 export type RevenueTypeUpdateInput = {
   value?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  revenues?: Prisma.RevenueUpdateManyWithoutTypeNestedInput
+  revenues?: Prisma.RevenueUpdateManyWithoutRevenueTypeNestedInput
 }
 
 export type RevenueTypeUncheckedUpdateInput = {
@@ -279,7 +279,7 @@ export type RevenueTypeUncheckedUpdateInput = {
   value?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  revenues?: Prisma.RevenueUncheckedUpdateManyWithoutTypeNestedInput
+  revenues?: Prisma.RevenueUncheckedUpdateManyWithoutRevenueTypeNestedInput
 }
 
 export type RevenueTypeCreateManyInput = {

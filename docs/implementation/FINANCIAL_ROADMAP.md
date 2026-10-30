@@ -1,6 +1,12 @@
 # Financial redesign implementation roadmap
 
-Status: planning only, 2026-10-29. Branch `codex/financial-titles-redesign`. Existing working state preserved at `36a4fc8b5cbec3faa4e63006e8229cefb9ccb0d9`; main remains `4c5716bdb7ab81e875ed6a85303d8a2b5c0f2ad1`. No implementation/reset/provider changes are part of this documentation task.
+Status: database foundation implemented and seeded in development; application migration pending, 2026-10-29. Branch `codex/financial-titles-redesign`. Existing working state preserved at `36a4fc8b5cbec3faa4e63006e8229cefb9ccb0d9`; main remains `4c5716bdb7ab81e875ed6a85303d8a2b5c0f2ad1`. The original baseline references below are historical. Current implementation evidence is linked below; no reset or provider identity changes were performed.
+
+## Execution revision approved in chat — 2026-10-29
+
+The user changed delivery order: finish the entire target Prisma schema and development seed, apply migrations and persist verified fixtures before API/mutation/screens. Temporary application unavailability is accepted. Maintaining simultaneously usable legacy and target finance paths is not required. This supersedes phase-order/baseline-continuity constraints below for this database foundation; domain invariants and authorization still apply. The nine proposals remain requirement traceability, not evidence of completed application work. No production reset or provider grant mutation is implied.
+
+Database implementation and actual verification are recorded in [database evidence](FINANCIAL_DATABASE_EVIDENCE.md). APIs, session binding, UI, reports and final release gates remain pending. This is not a usable-app or phase09 completion claim.
 
 ## Required reading
 
@@ -22,7 +28,7 @@ Read docs/index.md, the existing architecture contract, [approved financial rule
 
 ## Safety and release gates
 
-- All nine changes are planning artifacts with unchecked implementation tasks. Do not implement them in parallel against shared persistence boundaries. No application code changes in this documentation pass.
+- The nine changes remain application delivery references; database work is already implemented under the execution revision above. Their unchecked tasks do not imply missing target persistence. Do not implement them in parallel against shared persistence boundaries.
 - Phase order is authoritative. OpenSpec does not enforce cross-change prerequisites; verify them manually before apply. Individual artifact readiness is not permission to release an incomplete financial system.
 - Keep baseline behavior working until coordinated cutover; stage additions or use a clearly gated isolated target path. No production release of partial settlement without atomic commission generation.
 - Disposable development data can be recreated; do not invent historical entry payments or maintain unnecessary permanent legacy adapters. Never run reset against an unverified or production connection.

@@ -17,6 +17,25 @@ Lookup values are domain truth:
 - lookup values are immutable through the product UI
 - lookup values are global rather than firm-scoped
 
+## Physical database naming
+
+All global catalog tables use the `ref_` prefix, with `id`, `value`, `label` and `isActive`. Prisma model names remain unchanged through `@@map`. TitleKind follows the same table pattern; it is not an enum.
+
+| Prisma model | Physical table |
+|---|---|
+| PersonType | ref_person_types |
+| EmployeeType | ref_employee_types |
+| LegalArea | ref_legal_areas |
+| ContractStatus | ref_contract_statuses |
+| AssignmentType | ref_assignment_types |
+| RevenueType | ref_revenue_types |
+| AttachmentType | ref_attachment_types |
+| FinancialAnalytic | ref_financial_analytics |
+| PaymentMethod | ref_payment_methods |
+| TitleKind | ref_title_kinds |
+
+Rename migrations preserve rows, IDs, FK relationships, RLS and grants. Raw SQL in seeds and verification scripts must use physical names. Historical migration files retain their original names and checksums; never edit applied migrations to retrofit the prefix.
+
 ## Employee Types
 
 | Value | Label |

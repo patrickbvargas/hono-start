@@ -27,27 +27,37 @@ export type AggregateAuditLog = {
 }
 
 export type AuditLogAvgAggregateOutputType = {
-  clientId: number | null
-  employeeId: number | null
   id: number | null
   firmId: number | null
   actorId: number | null
+  personId: number | null
+  contractId: number | null
+  expenseId: number | null
+  receivableId: number | null
+  payableId: number | null
+  receiptId: number | null
+  paymentId: number | null
+  financialGenerationId: number | null
+  remunerationCalculationId: number | null
 }
 
 export type AuditLogSumAggregateOutputType = {
-  clientId: number | null
-  employeeId: number | null
   id: number | null
   firmId: number | null
   actorId: number | null
+  personId: number | null
+  contractId: number | null
+  expenseId: number | null
+  receivableId: number | null
+  payableId: number | null
+  receiptId: number | null
+  paymentId: number | null
+  financialGenerationId: number | null
+  remunerationCalculationId: number | null
 }
 
 export type AuditLogMinAggregateOutputType = {
-  clientId: number | null
-  employeeId: number | null
   id: number | null
-  firmId: number | null
-  actorId: number | null
   actorName: string | null
   actorEmail: string | null
   action: string | null
@@ -58,14 +68,21 @@ export type AuditLogMinAggregateOutputType = {
   userAgent: string | null
   description: string | null
   createdAt: Date | null
+  firmId: number | null
+  actorId: number | null
+  personId: number | null
+  contractId: number | null
+  expenseId: number | null
+  receivableId: number | null
+  payableId: number | null
+  receiptId: number | null
+  paymentId: number | null
+  financialGenerationId: number | null
+  remunerationCalculationId: number | null
 }
 
 export type AuditLogMaxAggregateOutputType = {
-  clientId: number | null
-  employeeId: number | null
   id: number | null
-  firmId: number | null
-  actorId: number | null
   actorName: string | null
   actorEmail: string | null
   action: string | null
@@ -76,14 +93,21 @@ export type AuditLogMaxAggregateOutputType = {
   userAgent: string | null
   description: string | null
   createdAt: Date | null
+  firmId: number | null
+  actorId: number | null
+  personId: number | null
+  contractId: number | null
+  expenseId: number | null
+  receivableId: number | null
+  payableId: number | null
+  receiptId: number | null
+  paymentId: number | null
+  financialGenerationId: number | null
+  remunerationCalculationId: number | null
 }
 
 export type AuditLogCountAggregateOutputType = {
-  clientId: number
-  employeeId: number
   id: number
-  firmId: number
-  actorId: number
   actorName: number
   actorEmail: number
   action: number
@@ -95,32 +119,53 @@ export type AuditLogCountAggregateOutputType = {
   userAgent: number
   description: number
   createdAt: number
+  firmId: number
+  actorId: number
+  personId: number
+  contractId: number
+  expenseId: number
+  receivableId: number
+  payableId: number
+  receiptId: number
+  paymentId: number
+  financialGenerationId: number
+  remunerationCalculationId: number
   _all: number
 }
 
 
 export type AuditLogAvgAggregateInputType = {
-  clientId?: true
-  employeeId?: true
   id?: true
   firmId?: true
   actorId?: true
+  personId?: true
+  contractId?: true
+  expenseId?: true
+  receivableId?: true
+  payableId?: true
+  receiptId?: true
+  paymentId?: true
+  financialGenerationId?: true
+  remunerationCalculationId?: true
 }
 
 export type AuditLogSumAggregateInputType = {
-  clientId?: true
-  employeeId?: true
   id?: true
   firmId?: true
   actorId?: true
+  personId?: true
+  contractId?: true
+  expenseId?: true
+  receivableId?: true
+  payableId?: true
+  receiptId?: true
+  paymentId?: true
+  financialGenerationId?: true
+  remunerationCalculationId?: true
 }
 
 export type AuditLogMinAggregateInputType = {
-  clientId?: true
-  employeeId?: true
   id?: true
-  firmId?: true
-  actorId?: true
   actorName?: true
   actorEmail?: true
   action?: true
@@ -131,14 +176,21 @@ export type AuditLogMinAggregateInputType = {
   userAgent?: true
   description?: true
   createdAt?: true
+  firmId?: true
+  actorId?: true
+  personId?: true
+  contractId?: true
+  expenseId?: true
+  receivableId?: true
+  payableId?: true
+  receiptId?: true
+  paymentId?: true
+  financialGenerationId?: true
+  remunerationCalculationId?: true
 }
 
 export type AuditLogMaxAggregateInputType = {
-  clientId?: true
-  employeeId?: true
   id?: true
-  firmId?: true
-  actorId?: true
   actorName?: true
   actorEmail?: true
   action?: true
@@ -149,14 +201,21 @@ export type AuditLogMaxAggregateInputType = {
   userAgent?: true
   description?: true
   createdAt?: true
+  firmId?: true
+  actorId?: true
+  personId?: true
+  contractId?: true
+  expenseId?: true
+  receivableId?: true
+  payableId?: true
+  receiptId?: true
+  paymentId?: true
+  financialGenerationId?: true
+  remunerationCalculationId?: true
 }
 
 export type AuditLogCountAggregateInputType = {
-  clientId?: true
-  employeeId?: true
   id?: true
-  firmId?: true
-  actorId?: true
   actorName?: true
   actorEmail?: true
   action?: true
@@ -168,6 +227,17 @@ export type AuditLogCountAggregateInputType = {
   userAgent?: true
   description?: true
   createdAt?: true
+  firmId?: true
+  actorId?: true
+  personId?: true
+  contractId?: true
+  expenseId?: true
+  receivableId?: true
+  payableId?: true
+  receiptId?: true
+  paymentId?: true
+  financialGenerationId?: true
+  remunerationCalculationId?: true
   _all?: true
 }
 
@@ -258,11 +328,7 @@ export type AuditLogGroupByArgs<ExtArgs extends runtime.Types.Extensions.Interna
 }
 
 export type AuditLogGroupByOutputType = {
-  clientId: number | null
-  employeeId: number | null
   id: number
-  firmId: number
-  actorId: number | null
   actorName: string
   actorEmail: string | null
   action: string
@@ -274,6 +340,17 @@ export type AuditLogGroupByOutputType = {
   userAgent: string | null
   description: string
   createdAt: Date
+  firmId: number
+  actorId: number | null
+  personId: number | null
+  contractId: number | null
+  expenseId: number | null
+  receivableId: number | null
+  payableId: number | null
+  receiptId: number | null
+  paymentId: number | null
+  financialGenerationId: number | null
+  remunerationCalculationId: number | null
   _count: AuditLogCountAggregateOutputType | null
   _avg: AuditLogAvgAggregateOutputType | null
   _sum: AuditLogSumAggregateOutputType | null
@@ -300,11 +377,7 @@ export type AuditLogWhereInput = {
   AND?: Prisma.AuditLogWhereInput | Prisma.AuditLogWhereInput[]
   OR?: Prisma.AuditLogWhereInput[]
   NOT?: Prisma.AuditLogWhereInput | Prisma.AuditLogWhereInput[]
-  clientId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
-  employeeId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
   id?: Prisma.IntFilter<"AuditLog"> | number
-  firmId?: Prisma.IntFilter<"AuditLog"> | number
-  actorId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
   actorName?: Prisma.StringFilter<"AuditLog"> | string
   actorEmail?: Prisma.StringNullableFilter<"AuditLog"> | string | null
   action?: Prisma.StringFilter<"AuditLog"> | string
@@ -316,18 +389,32 @@ export type AuditLogWhereInput = {
   userAgent?: Prisma.StringNullableFilter<"AuditLog"> | string | null
   description?: Prisma.StringFilter<"AuditLog"> | string
   createdAt?: Prisma.DateTimeFilter<"AuditLog"> | Date | string
-  client?: Prisma.XOR<Prisma.ClientNullableScalarRelationFilter, Prisma.ClientWhereInput> | null
-  employee?: Prisma.XOR<Prisma.EmployeeNullableScalarRelationFilter, Prisma.EmployeeWhereInput> | null
-  actor?: Prisma.XOR<Prisma.EmployeeNullableScalarRelationFilter, Prisma.EmployeeWhereInput> | null
+  firmId?: Prisma.IntFilter<"AuditLog"> | number
+  actorId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
+  personId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
+  contractId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
+  expenseId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
+  receivableId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
+  payableId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
+  receiptId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
+  paymentId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
+  financialGenerationId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
+  remunerationCalculationId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
   firm?: Prisma.XOR<Prisma.FirmScalarRelationFilter, Prisma.FirmWhereInput>
+  actor?: Prisma.XOR<Prisma.PersonNullableScalarRelationFilter, Prisma.PersonWhereInput> | null
+  person?: Prisma.XOR<Prisma.PersonNullableScalarRelationFilter, Prisma.PersonWhereInput> | null
+  contract?: Prisma.XOR<Prisma.ContractNullableScalarRelationFilter, Prisma.ContractWhereInput> | null
+  expense?: Prisma.XOR<Prisma.ExpenseNullableScalarRelationFilter, Prisma.ExpenseWhereInput> | null
+  receivable?: Prisma.XOR<Prisma.ReceivableNullableScalarRelationFilter, Prisma.ReceivableWhereInput> | null
+  payable?: Prisma.XOR<Prisma.PayableNullableScalarRelationFilter, Prisma.PayableWhereInput> | null
+  receipt?: Prisma.XOR<Prisma.ReceiptNullableScalarRelationFilter, Prisma.ReceiptWhereInput> | null
+  payment?: Prisma.XOR<Prisma.PaymentNullableScalarRelationFilter, Prisma.PaymentWhereInput> | null
+  financialGeneration?: Prisma.XOR<Prisma.FinancialGenerationNullableScalarRelationFilter, Prisma.FinancialGenerationWhereInput> | null
+  remunerationCalculation?: Prisma.XOR<Prisma.RemunerationCalculationNullableScalarRelationFilter, Prisma.RemunerationCalculationWhereInput> | null
 }
 
 export type AuditLogOrderByWithRelationInput = {
-  clientId?: Prisma.SortOrderInput | Prisma.SortOrder
-  employeeId?: Prisma.SortOrderInput | Prisma.SortOrder
   id?: Prisma.SortOrder
-  firmId?: Prisma.SortOrder
-  actorId?: Prisma.SortOrderInput | Prisma.SortOrder
   actorName?: Prisma.SortOrder
   actorEmail?: Prisma.SortOrderInput | Prisma.SortOrder
   action?: Prisma.SortOrder
@@ -339,21 +426,36 @@ export type AuditLogOrderByWithRelationInput = {
   userAgent?: Prisma.SortOrderInput | Prisma.SortOrder
   description?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  client?: Prisma.ClientOrderByWithRelationInput
-  employee?: Prisma.EmployeeOrderByWithRelationInput
-  actor?: Prisma.EmployeeOrderByWithRelationInput
+  firmId?: Prisma.SortOrder
+  actorId?: Prisma.SortOrderInput | Prisma.SortOrder
+  personId?: Prisma.SortOrderInput | Prisma.SortOrder
+  contractId?: Prisma.SortOrderInput | Prisma.SortOrder
+  expenseId?: Prisma.SortOrderInput | Prisma.SortOrder
+  receivableId?: Prisma.SortOrderInput | Prisma.SortOrder
+  payableId?: Prisma.SortOrderInput | Prisma.SortOrder
+  receiptId?: Prisma.SortOrderInput | Prisma.SortOrder
+  paymentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  financialGenerationId?: Prisma.SortOrderInput | Prisma.SortOrder
+  remunerationCalculationId?: Prisma.SortOrderInput | Prisma.SortOrder
   firm?: Prisma.FirmOrderByWithRelationInput
+  actor?: Prisma.PersonOrderByWithRelationInput
+  person?: Prisma.PersonOrderByWithRelationInput
+  contract?: Prisma.ContractOrderByWithRelationInput
+  expense?: Prisma.ExpenseOrderByWithRelationInput
+  receivable?: Prisma.ReceivableOrderByWithRelationInput
+  payable?: Prisma.PayableOrderByWithRelationInput
+  receipt?: Prisma.ReceiptOrderByWithRelationInput
+  payment?: Prisma.PaymentOrderByWithRelationInput
+  financialGeneration?: Prisma.FinancialGenerationOrderByWithRelationInput
+  remunerationCalculation?: Prisma.RemunerationCalculationOrderByWithRelationInput
 }
 
 export type AuditLogWhereUniqueInput = Prisma.AtLeast<{
   id?: number
+  firmId_id?: Prisma.AuditLogFirmIdIdCompoundUniqueInput
   AND?: Prisma.AuditLogWhereInput | Prisma.AuditLogWhereInput[]
   OR?: Prisma.AuditLogWhereInput[]
   NOT?: Prisma.AuditLogWhereInput | Prisma.AuditLogWhereInput[]
-  clientId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
-  employeeId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
-  firmId?: Prisma.IntFilter<"AuditLog"> | number
-  actorId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
   actorName?: Prisma.StringFilter<"AuditLog"> | string
   actorEmail?: Prisma.StringNullableFilter<"AuditLog"> | string | null
   action?: Prisma.StringFilter<"AuditLog"> | string
@@ -365,18 +467,32 @@ export type AuditLogWhereUniqueInput = Prisma.AtLeast<{
   userAgent?: Prisma.StringNullableFilter<"AuditLog"> | string | null
   description?: Prisma.StringFilter<"AuditLog"> | string
   createdAt?: Prisma.DateTimeFilter<"AuditLog"> | Date | string
-  client?: Prisma.XOR<Prisma.ClientNullableScalarRelationFilter, Prisma.ClientWhereInput> | null
-  employee?: Prisma.XOR<Prisma.EmployeeNullableScalarRelationFilter, Prisma.EmployeeWhereInput> | null
-  actor?: Prisma.XOR<Prisma.EmployeeNullableScalarRelationFilter, Prisma.EmployeeWhereInput> | null
+  firmId?: Prisma.IntFilter<"AuditLog"> | number
+  actorId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
+  personId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
+  contractId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
+  expenseId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
+  receivableId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
+  payableId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
+  receiptId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
+  paymentId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
+  financialGenerationId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
+  remunerationCalculationId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
   firm?: Prisma.XOR<Prisma.FirmScalarRelationFilter, Prisma.FirmWhereInput>
-}, "id">
+  actor?: Prisma.XOR<Prisma.PersonNullableScalarRelationFilter, Prisma.PersonWhereInput> | null
+  person?: Prisma.XOR<Prisma.PersonNullableScalarRelationFilter, Prisma.PersonWhereInput> | null
+  contract?: Prisma.XOR<Prisma.ContractNullableScalarRelationFilter, Prisma.ContractWhereInput> | null
+  expense?: Prisma.XOR<Prisma.ExpenseNullableScalarRelationFilter, Prisma.ExpenseWhereInput> | null
+  receivable?: Prisma.XOR<Prisma.ReceivableNullableScalarRelationFilter, Prisma.ReceivableWhereInput> | null
+  payable?: Prisma.XOR<Prisma.PayableNullableScalarRelationFilter, Prisma.PayableWhereInput> | null
+  receipt?: Prisma.XOR<Prisma.ReceiptNullableScalarRelationFilter, Prisma.ReceiptWhereInput> | null
+  payment?: Prisma.XOR<Prisma.PaymentNullableScalarRelationFilter, Prisma.PaymentWhereInput> | null
+  financialGeneration?: Prisma.XOR<Prisma.FinancialGenerationNullableScalarRelationFilter, Prisma.FinancialGenerationWhereInput> | null
+  remunerationCalculation?: Prisma.XOR<Prisma.RemunerationCalculationNullableScalarRelationFilter, Prisma.RemunerationCalculationWhereInput> | null
+}, "id" | "firmId_id">
 
 export type AuditLogOrderByWithAggregationInput = {
-  clientId?: Prisma.SortOrderInput | Prisma.SortOrder
-  employeeId?: Prisma.SortOrderInput | Prisma.SortOrder
   id?: Prisma.SortOrder
-  firmId?: Prisma.SortOrder
-  actorId?: Prisma.SortOrderInput | Prisma.SortOrder
   actorName?: Prisma.SortOrder
   actorEmail?: Prisma.SortOrderInput | Prisma.SortOrder
   action?: Prisma.SortOrder
@@ -388,6 +504,17 @@ export type AuditLogOrderByWithAggregationInput = {
   userAgent?: Prisma.SortOrderInput | Prisma.SortOrder
   description?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  firmId?: Prisma.SortOrder
+  actorId?: Prisma.SortOrderInput | Prisma.SortOrder
+  personId?: Prisma.SortOrderInput | Prisma.SortOrder
+  contractId?: Prisma.SortOrderInput | Prisma.SortOrder
+  expenseId?: Prisma.SortOrderInput | Prisma.SortOrder
+  receivableId?: Prisma.SortOrderInput | Prisma.SortOrder
+  payableId?: Prisma.SortOrderInput | Prisma.SortOrder
+  receiptId?: Prisma.SortOrderInput | Prisma.SortOrder
+  paymentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  financialGenerationId?: Prisma.SortOrderInput | Prisma.SortOrder
+  remunerationCalculationId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.AuditLogCountOrderByAggregateInput
   _avg?: Prisma.AuditLogAvgOrderByAggregateInput
   _max?: Prisma.AuditLogMaxOrderByAggregateInput
@@ -399,11 +526,7 @@ export type AuditLogScalarWhereWithAggregatesInput = {
   AND?: Prisma.AuditLogScalarWhereWithAggregatesInput | Prisma.AuditLogScalarWhereWithAggregatesInput[]
   OR?: Prisma.AuditLogScalarWhereWithAggregatesInput[]
   NOT?: Prisma.AuditLogScalarWhereWithAggregatesInput | Prisma.AuditLogScalarWhereWithAggregatesInput[]
-  clientId?: Prisma.IntNullableWithAggregatesFilter<"AuditLog"> | number | null
-  employeeId?: Prisma.IntNullableWithAggregatesFilter<"AuditLog"> | number | null
   id?: Prisma.IntWithAggregatesFilter<"AuditLog"> | number
-  firmId?: Prisma.IntWithAggregatesFilter<"AuditLog"> | number
-  actorId?: Prisma.IntNullableWithAggregatesFilter<"AuditLog"> | number | null
   actorName?: Prisma.StringWithAggregatesFilter<"AuditLog"> | string
   actorEmail?: Prisma.StringNullableWithAggregatesFilter<"AuditLog"> | string | null
   action?: Prisma.StringWithAggregatesFilter<"AuditLog"> | string
@@ -415,6 +538,17 @@ export type AuditLogScalarWhereWithAggregatesInput = {
   userAgent?: Prisma.StringNullableWithAggregatesFilter<"AuditLog"> | string | null
   description?: Prisma.StringWithAggregatesFilter<"AuditLog"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"AuditLog"> | Date | string
+  firmId?: Prisma.IntWithAggregatesFilter<"AuditLog"> | number
+  actorId?: Prisma.IntNullableWithAggregatesFilter<"AuditLog"> | number | null
+  personId?: Prisma.IntNullableWithAggregatesFilter<"AuditLog"> | number | null
+  contractId?: Prisma.IntNullableWithAggregatesFilter<"AuditLog"> | number | null
+  expenseId?: Prisma.IntNullableWithAggregatesFilter<"AuditLog"> | number | null
+  receivableId?: Prisma.IntNullableWithAggregatesFilter<"AuditLog"> | number | null
+  payableId?: Prisma.IntNullableWithAggregatesFilter<"AuditLog"> | number | null
+  receiptId?: Prisma.IntNullableWithAggregatesFilter<"AuditLog"> | number | null
+  paymentId?: Prisma.IntNullableWithAggregatesFilter<"AuditLog"> | number | null
+  financialGenerationId?: Prisma.IntNullableWithAggregatesFilter<"AuditLog"> | number | null
+  remunerationCalculationId?: Prisma.IntNullableWithAggregatesFilter<"AuditLog"> | number | null
 }
 
 export type AuditLogCreateInput = {
@@ -429,18 +563,21 @@ export type AuditLogCreateInput = {
   userAgent?: string | null
   description: string
   createdAt?: Date | string
-  client?: Prisma.ClientCreateNestedOneWithoutAuditLogsInput
-  employee?: Prisma.EmployeeCreateNestedOneWithoutSharedAuditLogsInput
-  actor?: Prisma.EmployeeCreateNestedOneWithoutAuditLogsInput
   firm: Prisma.FirmCreateNestedOneWithoutAuditLogsInput
+  actor?: Prisma.PersonCreateNestedOneWithoutActedAuditLogsInput
+  person?: Prisma.PersonCreateNestedOneWithoutAuditLogsInput
+  contract?: Prisma.ContractCreateNestedOneWithoutAuditLogsInput
+  expense?: Prisma.ExpenseCreateNestedOneWithoutAuditLogsInput
+  receivable?: Prisma.ReceivableCreateNestedOneWithoutAuditLogsInput
+  payable?: Prisma.PayableCreateNestedOneWithoutAuditLogsInput
+  receipt?: Prisma.ReceiptCreateNestedOneWithoutAuditLogsInput
+  payment?: Prisma.PaymentCreateNestedOneWithoutAuditLogsInput
+  financialGeneration?: Prisma.FinancialGenerationCreateNestedOneWithoutAuditLogsInput
+  remunerationCalculation?: Prisma.RemunerationCalculationCreateNestedOneWithoutAuditLogsInput
 }
 
 export type AuditLogUncheckedCreateInput = {
-  clientId?: number | null
-  employeeId?: number | null
   id?: number
-  firmId: number
-  actorId?: number | null
   actorName: string
   actorEmail?: string | null
   action: string
@@ -452,6 +589,17 @@ export type AuditLogUncheckedCreateInput = {
   userAgent?: string | null
   description: string
   createdAt?: Date | string
+  firmId: number
+  actorId?: number | null
+  personId?: number | null
+  contractId?: number | null
+  expenseId?: number | null
+  receivableId?: number | null
+  payableId?: number | null
+  receiptId?: number | null
+  paymentId?: number | null
+  financialGenerationId?: number | null
+  remunerationCalculationId?: number | null
 }
 
 export type AuditLogUpdateInput = {
@@ -466,18 +614,21 @@ export type AuditLogUpdateInput = {
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  client?: Prisma.ClientUpdateOneWithoutAuditLogsNestedInput
-  employee?: Prisma.EmployeeUpdateOneWithoutSharedAuditLogsNestedInput
-  actor?: Prisma.EmployeeUpdateOneWithoutAuditLogsNestedInput
   firm?: Prisma.FirmUpdateOneRequiredWithoutAuditLogsNestedInput
+  actor?: Prisma.PersonUpdateOneWithoutActedAuditLogsNestedInput
+  person?: Prisma.PersonUpdateOneWithoutAuditLogsNestedInput
+  contract?: Prisma.ContractUpdateOneWithoutAuditLogsNestedInput
+  expense?: Prisma.ExpenseUpdateOneWithoutAuditLogsNestedInput
+  receivable?: Prisma.ReceivableUpdateOneWithoutAuditLogsNestedInput
+  payable?: Prisma.PayableUpdateOneWithoutAuditLogsNestedInput
+  receipt?: Prisma.ReceiptUpdateOneWithoutAuditLogsNestedInput
+  payment?: Prisma.PaymentUpdateOneWithoutAuditLogsNestedInput
+  financialGeneration?: Prisma.FinancialGenerationUpdateOneWithoutAuditLogsNestedInput
+  remunerationCalculation?: Prisma.RemunerationCalculationUpdateOneWithoutAuditLogsNestedInput
 }
 
 export type AuditLogUncheckedUpdateInput = {
-  clientId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  employeeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  firmId?: Prisma.IntFieldUpdateOperationsInput | number
-  actorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actorName?: Prisma.StringFieldUpdateOperationsInput | string
   actorEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   action?: Prisma.StringFieldUpdateOperationsInput | string
@@ -489,14 +640,21 @@ export type AuditLogUncheckedUpdateInput = {
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  firmId?: Prisma.IntFieldUpdateOperationsInput | number
+  actorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  personId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  contractId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  receivableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  payableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  receiptId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  paymentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  financialGenerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type AuditLogCreateManyInput = {
-  clientId?: number | null
-  employeeId?: number | null
   id?: number
-  firmId: number
-  actorId?: number | null
   actorName: string
   actorEmail?: string | null
   action: string
@@ -508,6 +666,17 @@ export type AuditLogCreateManyInput = {
   userAgent?: string | null
   description: string
   createdAt?: Date | string
+  firmId: number
+  actorId?: number | null
+  personId?: number | null
+  contractId?: number | null
+  expenseId?: number | null
+  receivableId?: number | null
+  payableId?: number | null
+  receiptId?: number | null
+  paymentId?: number | null
+  financialGenerationId?: number | null
+  remunerationCalculationId?: number | null
 }
 
 export type AuditLogUpdateManyMutationInput = {
@@ -525,11 +694,7 @@ export type AuditLogUpdateManyMutationInput = {
 }
 
 export type AuditLogUncheckedUpdateManyInput = {
-  clientId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  employeeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  firmId?: Prisma.IntFieldUpdateOperationsInput | number
-  actorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actorName?: Prisma.StringFieldUpdateOperationsInput | string
   actorEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   action?: Prisma.StringFieldUpdateOperationsInput | string
@@ -541,6 +706,17 @@ export type AuditLogUncheckedUpdateManyInput = {
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  firmId?: Prisma.IntFieldUpdateOperationsInput | number
+  actorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  personId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  contractId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  receivableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  payableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  receiptId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  paymentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  financialGenerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type AuditLogListRelationFilter = {
@@ -553,12 +729,13 @@ export type AuditLogOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type AuditLogFirmIdIdCompoundUniqueInput = {
+  firmId: number
+  id: number
+}
+
 export type AuditLogCountOrderByAggregateInput = {
-  clientId?: Prisma.SortOrder
-  employeeId?: Prisma.SortOrder
   id?: Prisma.SortOrder
-  firmId?: Prisma.SortOrder
-  actorId?: Prisma.SortOrder
   actorName?: Prisma.SortOrder
   actorEmail?: Prisma.SortOrder
   action?: Prisma.SortOrder
@@ -570,22 +747,36 @@ export type AuditLogCountOrderByAggregateInput = {
   userAgent?: Prisma.SortOrder
   description?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  firmId?: Prisma.SortOrder
+  actorId?: Prisma.SortOrder
+  personId?: Prisma.SortOrder
+  contractId?: Prisma.SortOrder
+  expenseId?: Prisma.SortOrder
+  receivableId?: Prisma.SortOrder
+  payableId?: Prisma.SortOrder
+  receiptId?: Prisma.SortOrder
+  paymentId?: Prisma.SortOrder
+  financialGenerationId?: Prisma.SortOrder
+  remunerationCalculationId?: Prisma.SortOrder
 }
 
 export type AuditLogAvgOrderByAggregateInput = {
-  clientId?: Prisma.SortOrder
-  employeeId?: Prisma.SortOrder
   id?: Prisma.SortOrder
   firmId?: Prisma.SortOrder
   actorId?: Prisma.SortOrder
+  personId?: Prisma.SortOrder
+  contractId?: Prisma.SortOrder
+  expenseId?: Prisma.SortOrder
+  receivableId?: Prisma.SortOrder
+  payableId?: Prisma.SortOrder
+  receiptId?: Prisma.SortOrder
+  paymentId?: Prisma.SortOrder
+  financialGenerationId?: Prisma.SortOrder
+  remunerationCalculationId?: Prisma.SortOrder
 }
 
 export type AuditLogMaxOrderByAggregateInput = {
-  clientId?: Prisma.SortOrder
-  employeeId?: Prisma.SortOrder
   id?: Prisma.SortOrder
-  firmId?: Prisma.SortOrder
-  actorId?: Prisma.SortOrder
   actorName?: Prisma.SortOrder
   actorEmail?: Prisma.SortOrder
   action?: Prisma.SortOrder
@@ -596,14 +787,21 @@ export type AuditLogMaxOrderByAggregateInput = {
   userAgent?: Prisma.SortOrder
   description?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  firmId?: Prisma.SortOrder
+  actorId?: Prisma.SortOrder
+  personId?: Prisma.SortOrder
+  contractId?: Prisma.SortOrder
+  expenseId?: Prisma.SortOrder
+  receivableId?: Prisma.SortOrder
+  payableId?: Prisma.SortOrder
+  receiptId?: Prisma.SortOrder
+  paymentId?: Prisma.SortOrder
+  financialGenerationId?: Prisma.SortOrder
+  remunerationCalculationId?: Prisma.SortOrder
 }
 
 export type AuditLogMinOrderByAggregateInput = {
-  clientId?: Prisma.SortOrder
-  employeeId?: Prisma.SortOrder
   id?: Prisma.SortOrder
-  firmId?: Prisma.SortOrder
-  actorId?: Prisma.SortOrder
   actorName?: Prisma.SortOrder
   actorEmail?: Prisma.SortOrder
   action?: Prisma.SortOrder
@@ -614,14 +812,32 @@ export type AuditLogMinOrderByAggregateInput = {
   userAgent?: Prisma.SortOrder
   description?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  firmId?: Prisma.SortOrder
+  actorId?: Prisma.SortOrder
+  personId?: Prisma.SortOrder
+  contractId?: Prisma.SortOrder
+  expenseId?: Prisma.SortOrder
+  receivableId?: Prisma.SortOrder
+  payableId?: Prisma.SortOrder
+  receiptId?: Prisma.SortOrder
+  paymentId?: Prisma.SortOrder
+  financialGenerationId?: Prisma.SortOrder
+  remunerationCalculationId?: Prisma.SortOrder
 }
 
 export type AuditLogSumOrderByAggregateInput = {
-  clientId?: Prisma.SortOrder
-  employeeId?: Prisma.SortOrder
   id?: Prisma.SortOrder
   firmId?: Prisma.SortOrder
   actorId?: Prisma.SortOrder
+  personId?: Prisma.SortOrder
+  contractId?: Prisma.SortOrder
+  expenseId?: Prisma.SortOrder
+  receivableId?: Prisma.SortOrder
+  payableId?: Prisma.SortOrder
+  receiptId?: Prisma.SortOrder
+  paymentId?: Prisma.SortOrder
+  financialGenerationId?: Prisma.SortOrder
+  remunerationCalculationId?: Prisma.SortOrder
 }
 
 export type AuditLogCreateNestedManyWithoutFirmInput = {
@@ -673,10 +889,10 @@ export type AuditLogCreateNestedManyWithoutActorInput = {
   connect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
 }
 
-export type AuditLogCreateNestedManyWithoutEmployeeInput = {
-  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutEmployeeInput, Prisma.AuditLogUncheckedCreateWithoutEmployeeInput> | Prisma.AuditLogCreateWithoutEmployeeInput[] | Prisma.AuditLogUncheckedCreateWithoutEmployeeInput[]
-  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutEmployeeInput | Prisma.AuditLogCreateOrConnectWithoutEmployeeInput[]
-  createMany?: Prisma.AuditLogCreateManyEmployeeInputEnvelope
+export type AuditLogCreateNestedManyWithoutPersonInput = {
+  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutPersonInput, Prisma.AuditLogUncheckedCreateWithoutPersonInput> | Prisma.AuditLogCreateWithoutPersonInput[] | Prisma.AuditLogUncheckedCreateWithoutPersonInput[]
+  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutPersonInput | Prisma.AuditLogCreateOrConnectWithoutPersonInput[]
+  createMany?: Prisma.AuditLogCreateManyPersonInputEnvelope
   connect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
 }
 
@@ -687,10 +903,10 @@ export type AuditLogUncheckedCreateNestedManyWithoutActorInput = {
   connect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
 }
 
-export type AuditLogUncheckedCreateNestedManyWithoutEmployeeInput = {
-  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutEmployeeInput, Prisma.AuditLogUncheckedCreateWithoutEmployeeInput> | Prisma.AuditLogCreateWithoutEmployeeInput[] | Prisma.AuditLogUncheckedCreateWithoutEmployeeInput[]
-  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutEmployeeInput | Prisma.AuditLogCreateOrConnectWithoutEmployeeInput[]
-  createMany?: Prisma.AuditLogCreateManyEmployeeInputEnvelope
+export type AuditLogUncheckedCreateNestedManyWithoutPersonInput = {
+  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutPersonInput, Prisma.AuditLogUncheckedCreateWithoutPersonInput> | Prisma.AuditLogCreateWithoutPersonInput[] | Prisma.AuditLogUncheckedCreateWithoutPersonInput[]
+  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutPersonInput | Prisma.AuditLogCreateOrConnectWithoutPersonInput[]
+  createMany?: Prisma.AuditLogCreateManyPersonInputEnvelope
   connect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
 }
 
@@ -708,17 +924,17 @@ export type AuditLogUpdateManyWithoutActorNestedInput = {
   deleteMany?: Prisma.AuditLogScalarWhereInput | Prisma.AuditLogScalarWhereInput[]
 }
 
-export type AuditLogUpdateManyWithoutEmployeeNestedInput = {
-  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutEmployeeInput, Prisma.AuditLogUncheckedCreateWithoutEmployeeInput> | Prisma.AuditLogCreateWithoutEmployeeInput[] | Prisma.AuditLogUncheckedCreateWithoutEmployeeInput[]
-  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutEmployeeInput | Prisma.AuditLogCreateOrConnectWithoutEmployeeInput[]
-  upsert?: Prisma.AuditLogUpsertWithWhereUniqueWithoutEmployeeInput | Prisma.AuditLogUpsertWithWhereUniqueWithoutEmployeeInput[]
-  createMany?: Prisma.AuditLogCreateManyEmployeeInputEnvelope
+export type AuditLogUpdateManyWithoutPersonNestedInput = {
+  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutPersonInput, Prisma.AuditLogUncheckedCreateWithoutPersonInput> | Prisma.AuditLogCreateWithoutPersonInput[] | Prisma.AuditLogUncheckedCreateWithoutPersonInput[]
+  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutPersonInput | Prisma.AuditLogCreateOrConnectWithoutPersonInput[]
+  upsert?: Prisma.AuditLogUpsertWithWhereUniqueWithoutPersonInput | Prisma.AuditLogUpsertWithWhereUniqueWithoutPersonInput[]
+  createMany?: Prisma.AuditLogCreateManyPersonInputEnvelope
   set?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
   disconnect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
   delete?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
   connect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
-  update?: Prisma.AuditLogUpdateWithWhereUniqueWithoutEmployeeInput | Prisma.AuditLogUpdateWithWhereUniqueWithoutEmployeeInput[]
-  updateMany?: Prisma.AuditLogUpdateManyWithWhereWithoutEmployeeInput | Prisma.AuditLogUpdateManyWithWhereWithoutEmployeeInput[]
+  update?: Prisma.AuditLogUpdateWithWhereUniqueWithoutPersonInput | Prisma.AuditLogUpdateWithWhereUniqueWithoutPersonInput[]
+  updateMany?: Prisma.AuditLogUpdateManyWithWhereWithoutPersonInput | Prisma.AuditLogUpdateManyWithWhereWithoutPersonInput[]
   deleteMany?: Prisma.AuditLogScalarWhereInput | Prisma.AuditLogScalarWhereInput[]
 }
 
@@ -736,67 +952,353 @@ export type AuditLogUncheckedUpdateManyWithoutActorNestedInput = {
   deleteMany?: Prisma.AuditLogScalarWhereInput | Prisma.AuditLogScalarWhereInput[]
 }
 
-export type AuditLogUncheckedUpdateManyWithoutEmployeeNestedInput = {
-  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutEmployeeInput, Prisma.AuditLogUncheckedCreateWithoutEmployeeInput> | Prisma.AuditLogCreateWithoutEmployeeInput[] | Prisma.AuditLogUncheckedCreateWithoutEmployeeInput[]
-  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutEmployeeInput | Prisma.AuditLogCreateOrConnectWithoutEmployeeInput[]
-  upsert?: Prisma.AuditLogUpsertWithWhereUniqueWithoutEmployeeInput | Prisma.AuditLogUpsertWithWhereUniqueWithoutEmployeeInput[]
-  createMany?: Prisma.AuditLogCreateManyEmployeeInputEnvelope
+export type AuditLogUncheckedUpdateManyWithoutPersonNestedInput = {
+  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutPersonInput, Prisma.AuditLogUncheckedCreateWithoutPersonInput> | Prisma.AuditLogCreateWithoutPersonInput[] | Prisma.AuditLogUncheckedCreateWithoutPersonInput[]
+  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutPersonInput | Prisma.AuditLogCreateOrConnectWithoutPersonInput[]
+  upsert?: Prisma.AuditLogUpsertWithWhereUniqueWithoutPersonInput | Prisma.AuditLogUpsertWithWhereUniqueWithoutPersonInput[]
+  createMany?: Prisma.AuditLogCreateManyPersonInputEnvelope
   set?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
   disconnect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
   delete?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
   connect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
-  update?: Prisma.AuditLogUpdateWithWhereUniqueWithoutEmployeeInput | Prisma.AuditLogUpdateWithWhereUniqueWithoutEmployeeInput[]
-  updateMany?: Prisma.AuditLogUpdateManyWithWhereWithoutEmployeeInput | Prisma.AuditLogUpdateManyWithWhereWithoutEmployeeInput[]
+  update?: Prisma.AuditLogUpdateWithWhereUniqueWithoutPersonInput | Prisma.AuditLogUpdateWithWhereUniqueWithoutPersonInput[]
+  updateMany?: Prisma.AuditLogUpdateManyWithWhereWithoutPersonInput | Prisma.AuditLogUpdateManyWithWhereWithoutPersonInput[]
   deleteMany?: Prisma.AuditLogScalarWhereInput | Prisma.AuditLogScalarWhereInput[]
 }
 
-export type NullableIntFieldUpdateOperationsInput = {
-  set?: number | null
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
-export type AuditLogCreateNestedManyWithoutClientInput = {
-  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutClientInput, Prisma.AuditLogUncheckedCreateWithoutClientInput> | Prisma.AuditLogCreateWithoutClientInput[] | Prisma.AuditLogUncheckedCreateWithoutClientInput[]
-  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutClientInput | Prisma.AuditLogCreateOrConnectWithoutClientInput[]
-  createMany?: Prisma.AuditLogCreateManyClientInputEnvelope
+export type AuditLogCreateNestedManyWithoutContractInput = {
+  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutContractInput, Prisma.AuditLogUncheckedCreateWithoutContractInput> | Prisma.AuditLogCreateWithoutContractInput[] | Prisma.AuditLogUncheckedCreateWithoutContractInput[]
+  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutContractInput | Prisma.AuditLogCreateOrConnectWithoutContractInput[]
+  createMany?: Prisma.AuditLogCreateManyContractInputEnvelope
   connect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
 }
 
-export type AuditLogUncheckedCreateNestedManyWithoutClientInput = {
-  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutClientInput, Prisma.AuditLogUncheckedCreateWithoutClientInput> | Prisma.AuditLogCreateWithoutClientInput[] | Prisma.AuditLogUncheckedCreateWithoutClientInput[]
-  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutClientInput | Prisma.AuditLogCreateOrConnectWithoutClientInput[]
-  createMany?: Prisma.AuditLogCreateManyClientInputEnvelope
+export type AuditLogUncheckedCreateNestedManyWithoutContractInput = {
+  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutContractInput, Prisma.AuditLogUncheckedCreateWithoutContractInput> | Prisma.AuditLogCreateWithoutContractInput[] | Prisma.AuditLogUncheckedCreateWithoutContractInput[]
+  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutContractInput | Prisma.AuditLogCreateOrConnectWithoutContractInput[]
+  createMany?: Prisma.AuditLogCreateManyContractInputEnvelope
   connect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
 }
 
-export type AuditLogUpdateManyWithoutClientNestedInput = {
-  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutClientInput, Prisma.AuditLogUncheckedCreateWithoutClientInput> | Prisma.AuditLogCreateWithoutClientInput[] | Prisma.AuditLogUncheckedCreateWithoutClientInput[]
-  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutClientInput | Prisma.AuditLogCreateOrConnectWithoutClientInput[]
-  upsert?: Prisma.AuditLogUpsertWithWhereUniqueWithoutClientInput | Prisma.AuditLogUpsertWithWhereUniqueWithoutClientInput[]
-  createMany?: Prisma.AuditLogCreateManyClientInputEnvelope
+export type AuditLogUpdateManyWithoutContractNestedInput = {
+  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutContractInput, Prisma.AuditLogUncheckedCreateWithoutContractInput> | Prisma.AuditLogCreateWithoutContractInput[] | Prisma.AuditLogUncheckedCreateWithoutContractInput[]
+  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutContractInput | Prisma.AuditLogCreateOrConnectWithoutContractInput[]
+  upsert?: Prisma.AuditLogUpsertWithWhereUniqueWithoutContractInput | Prisma.AuditLogUpsertWithWhereUniqueWithoutContractInput[]
+  createMany?: Prisma.AuditLogCreateManyContractInputEnvelope
   set?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
   disconnect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
   delete?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
   connect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
-  update?: Prisma.AuditLogUpdateWithWhereUniqueWithoutClientInput | Prisma.AuditLogUpdateWithWhereUniqueWithoutClientInput[]
-  updateMany?: Prisma.AuditLogUpdateManyWithWhereWithoutClientInput | Prisma.AuditLogUpdateManyWithWhereWithoutClientInput[]
+  update?: Prisma.AuditLogUpdateWithWhereUniqueWithoutContractInput | Prisma.AuditLogUpdateWithWhereUniqueWithoutContractInput[]
+  updateMany?: Prisma.AuditLogUpdateManyWithWhereWithoutContractInput | Prisma.AuditLogUpdateManyWithWhereWithoutContractInput[]
   deleteMany?: Prisma.AuditLogScalarWhereInput | Prisma.AuditLogScalarWhereInput[]
 }
 
-export type AuditLogUncheckedUpdateManyWithoutClientNestedInput = {
-  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutClientInput, Prisma.AuditLogUncheckedCreateWithoutClientInput> | Prisma.AuditLogCreateWithoutClientInput[] | Prisma.AuditLogUncheckedCreateWithoutClientInput[]
-  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutClientInput | Prisma.AuditLogCreateOrConnectWithoutClientInput[]
-  upsert?: Prisma.AuditLogUpsertWithWhereUniqueWithoutClientInput | Prisma.AuditLogUpsertWithWhereUniqueWithoutClientInput[]
-  createMany?: Prisma.AuditLogCreateManyClientInputEnvelope
+export type AuditLogUncheckedUpdateManyWithoutContractNestedInput = {
+  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutContractInput, Prisma.AuditLogUncheckedCreateWithoutContractInput> | Prisma.AuditLogCreateWithoutContractInput[] | Prisma.AuditLogUncheckedCreateWithoutContractInput[]
+  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutContractInput | Prisma.AuditLogCreateOrConnectWithoutContractInput[]
+  upsert?: Prisma.AuditLogUpsertWithWhereUniqueWithoutContractInput | Prisma.AuditLogUpsertWithWhereUniqueWithoutContractInput[]
+  createMany?: Prisma.AuditLogCreateManyContractInputEnvelope
   set?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
   disconnect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
   delete?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
   connect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
-  update?: Prisma.AuditLogUpdateWithWhereUniqueWithoutClientInput | Prisma.AuditLogUpdateWithWhereUniqueWithoutClientInput[]
-  updateMany?: Prisma.AuditLogUpdateManyWithWhereWithoutClientInput | Prisma.AuditLogUpdateManyWithWhereWithoutClientInput[]
+  update?: Prisma.AuditLogUpdateWithWhereUniqueWithoutContractInput | Prisma.AuditLogUpdateWithWhereUniqueWithoutContractInput[]
+  updateMany?: Prisma.AuditLogUpdateManyWithWhereWithoutContractInput | Prisma.AuditLogUpdateManyWithWhereWithoutContractInput[]
+  deleteMany?: Prisma.AuditLogScalarWhereInput | Prisma.AuditLogScalarWhereInput[]
+}
+
+export type AuditLogCreateNestedManyWithoutExpenseInput = {
+  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutExpenseInput, Prisma.AuditLogUncheckedCreateWithoutExpenseInput> | Prisma.AuditLogCreateWithoutExpenseInput[] | Prisma.AuditLogUncheckedCreateWithoutExpenseInput[]
+  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutExpenseInput | Prisma.AuditLogCreateOrConnectWithoutExpenseInput[]
+  createMany?: Prisma.AuditLogCreateManyExpenseInputEnvelope
+  connect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+}
+
+export type AuditLogUncheckedCreateNestedManyWithoutExpenseInput = {
+  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutExpenseInput, Prisma.AuditLogUncheckedCreateWithoutExpenseInput> | Prisma.AuditLogCreateWithoutExpenseInput[] | Prisma.AuditLogUncheckedCreateWithoutExpenseInput[]
+  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutExpenseInput | Prisma.AuditLogCreateOrConnectWithoutExpenseInput[]
+  createMany?: Prisma.AuditLogCreateManyExpenseInputEnvelope
+  connect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+}
+
+export type AuditLogUpdateManyWithoutExpenseNestedInput = {
+  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutExpenseInput, Prisma.AuditLogUncheckedCreateWithoutExpenseInput> | Prisma.AuditLogCreateWithoutExpenseInput[] | Prisma.AuditLogUncheckedCreateWithoutExpenseInput[]
+  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutExpenseInput | Prisma.AuditLogCreateOrConnectWithoutExpenseInput[]
+  upsert?: Prisma.AuditLogUpsertWithWhereUniqueWithoutExpenseInput | Prisma.AuditLogUpsertWithWhereUniqueWithoutExpenseInput[]
+  createMany?: Prisma.AuditLogCreateManyExpenseInputEnvelope
+  set?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  disconnect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  delete?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  connect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  update?: Prisma.AuditLogUpdateWithWhereUniqueWithoutExpenseInput | Prisma.AuditLogUpdateWithWhereUniqueWithoutExpenseInput[]
+  updateMany?: Prisma.AuditLogUpdateManyWithWhereWithoutExpenseInput | Prisma.AuditLogUpdateManyWithWhereWithoutExpenseInput[]
+  deleteMany?: Prisma.AuditLogScalarWhereInput | Prisma.AuditLogScalarWhereInput[]
+}
+
+export type AuditLogUncheckedUpdateManyWithoutExpenseNestedInput = {
+  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutExpenseInput, Prisma.AuditLogUncheckedCreateWithoutExpenseInput> | Prisma.AuditLogCreateWithoutExpenseInput[] | Prisma.AuditLogUncheckedCreateWithoutExpenseInput[]
+  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutExpenseInput | Prisma.AuditLogCreateOrConnectWithoutExpenseInput[]
+  upsert?: Prisma.AuditLogUpsertWithWhereUniqueWithoutExpenseInput | Prisma.AuditLogUpsertWithWhereUniqueWithoutExpenseInput[]
+  createMany?: Prisma.AuditLogCreateManyExpenseInputEnvelope
+  set?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  disconnect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  delete?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  connect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  update?: Prisma.AuditLogUpdateWithWhereUniqueWithoutExpenseInput | Prisma.AuditLogUpdateWithWhereUniqueWithoutExpenseInput[]
+  updateMany?: Prisma.AuditLogUpdateManyWithWhereWithoutExpenseInput | Prisma.AuditLogUpdateManyWithWhereWithoutExpenseInput[]
+  deleteMany?: Prisma.AuditLogScalarWhereInput | Prisma.AuditLogScalarWhereInput[]
+}
+
+export type AuditLogCreateNestedManyWithoutFinancialGenerationInput = {
+  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutFinancialGenerationInput, Prisma.AuditLogUncheckedCreateWithoutFinancialGenerationInput> | Prisma.AuditLogCreateWithoutFinancialGenerationInput[] | Prisma.AuditLogUncheckedCreateWithoutFinancialGenerationInput[]
+  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutFinancialGenerationInput | Prisma.AuditLogCreateOrConnectWithoutFinancialGenerationInput[]
+  createMany?: Prisma.AuditLogCreateManyFinancialGenerationInputEnvelope
+  connect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+}
+
+export type AuditLogUncheckedCreateNestedManyWithoutFinancialGenerationInput = {
+  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutFinancialGenerationInput, Prisma.AuditLogUncheckedCreateWithoutFinancialGenerationInput> | Prisma.AuditLogCreateWithoutFinancialGenerationInput[] | Prisma.AuditLogUncheckedCreateWithoutFinancialGenerationInput[]
+  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutFinancialGenerationInput | Prisma.AuditLogCreateOrConnectWithoutFinancialGenerationInput[]
+  createMany?: Prisma.AuditLogCreateManyFinancialGenerationInputEnvelope
+  connect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+}
+
+export type AuditLogUpdateManyWithoutFinancialGenerationNestedInput = {
+  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutFinancialGenerationInput, Prisma.AuditLogUncheckedCreateWithoutFinancialGenerationInput> | Prisma.AuditLogCreateWithoutFinancialGenerationInput[] | Prisma.AuditLogUncheckedCreateWithoutFinancialGenerationInput[]
+  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutFinancialGenerationInput | Prisma.AuditLogCreateOrConnectWithoutFinancialGenerationInput[]
+  upsert?: Prisma.AuditLogUpsertWithWhereUniqueWithoutFinancialGenerationInput | Prisma.AuditLogUpsertWithWhereUniqueWithoutFinancialGenerationInput[]
+  createMany?: Prisma.AuditLogCreateManyFinancialGenerationInputEnvelope
+  set?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  disconnect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  delete?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  connect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  update?: Prisma.AuditLogUpdateWithWhereUniqueWithoutFinancialGenerationInput | Prisma.AuditLogUpdateWithWhereUniqueWithoutFinancialGenerationInput[]
+  updateMany?: Prisma.AuditLogUpdateManyWithWhereWithoutFinancialGenerationInput | Prisma.AuditLogUpdateManyWithWhereWithoutFinancialGenerationInput[]
+  deleteMany?: Prisma.AuditLogScalarWhereInput | Prisma.AuditLogScalarWhereInput[]
+}
+
+export type AuditLogUncheckedUpdateManyWithoutFinancialGenerationNestedInput = {
+  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutFinancialGenerationInput, Prisma.AuditLogUncheckedCreateWithoutFinancialGenerationInput> | Prisma.AuditLogCreateWithoutFinancialGenerationInput[] | Prisma.AuditLogUncheckedCreateWithoutFinancialGenerationInput[]
+  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutFinancialGenerationInput | Prisma.AuditLogCreateOrConnectWithoutFinancialGenerationInput[]
+  upsert?: Prisma.AuditLogUpsertWithWhereUniqueWithoutFinancialGenerationInput | Prisma.AuditLogUpsertWithWhereUniqueWithoutFinancialGenerationInput[]
+  createMany?: Prisma.AuditLogCreateManyFinancialGenerationInputEnvelope
+  set?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  disconnect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  delete?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  connect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  update?: Prisma.AuditLogUpdateWithWhereUniqueWithoutFinancialGenerationInput | Prisma.AuditLogUpdateWithWhereUniqueWithoutFinancialGenerationInput[]
+  updateMany?: Prisma.AuditLogUpdateManyWithWhereWithoutFinancialGenerationInput | Prisma.AuditLogUpdateManyWithWhereWithoutFinancialGenerationInput[]
+  deleteMany?: Prisma.AuditLogScalarWhereInput | Prisma.AuditLogScalarWhereInput[]
+}
+
+export type AuditLogCreateNestedManyWithoutReceivableInput = {
+  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutReceivableInput, Prisma.AuditLogUncheckedCreateWithoutReceivableInput> | Prisma.AuditLogCreateWithoutReceivableInput[] | Prisma.AuditLogUncheckedCreateWithoutReceivableInput[]
+  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutReceivableInput | Prisma.AuditLogCreateOrConnectWithoutReceivableInput[]
+  createMany?: Prisma.AuditLogCreateManyReceivableInputEnvelope
+  connect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+}
+
+export type AuditLogUncheckedCreateNestedManyWithoutReceivableInput = {
+  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutReceivableInput, Prisma.AuditLogUncheckedCreateWithoutReceivableInput> | Prisma.AuditLogCreateWithoutReceivableInput[] | Prisma.AuditLogUncheckedCreateWithoutReceivableInput[]
+  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutReceivableInput | Prisma.AuditLogCreateOrConnectWithoutReceivableInput[]
+  createMany?: Prisma.AuditLogCreateManyReceivableInputEnvelope
+  connect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+}
+
+export type AuditLogUpdateManyWithoutReceivableNestedInput = {
+  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutReceivableInput, Prisma.AuditLogUncheckedCreateWithoutReceivableInput> | Prisma.AuditLogCreateWithoutReceivableInput[] | Prisma.AuditLogUncheckedCreateWithoutReceivableInput[]
+  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutReceivableInput | Prisma.AuditLogCreateOrConnectWithoutReceivableInput[]
+  upsert?: Prisma.AuditLogUpsertWithWhereUniqueWithoutReceivableInput | Prisma.AuditLogUpsertWithWhereUniqueWithoutReceivableInput[]
+  createMany?: Prisma.AuditLogCreateManyReceivableInputEnvelope
+  set?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  disconnect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  delete?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  connect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  update?: Prisma.AuditLogUpdateWithWhereUniqueWithoutReceivableInput | Prisma.AuditLogUpdateWithWhereUniqueWithoutReceivableInput[]
+  updateMany?: Prisma.AuditLogUpdateManyWithWhereWithoutReceivableInput | Prisma.AuditLogUpdateManyWithWhereWithoutReceivableInput[]
+  deleteMany?: Prisma.AuditLogScalarWhereInput | Prisma.AuditLogScalarWhereInput[]
+}
+
+export type AuditLogUncheckedUpdateManyWithoutReceivableNestedInput = {
+  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutReceivableInput, Prisma.AuditLogUncheckedCreateWithoutReceivableInput> | Prisma.AuditLogCreateWithoutReceivableInput[] | Prisma.AuditLogUncheckedCreateWithoutReceivableInput[]
+  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutReceivableInput | Prisma.AuditLogCreateOrConnectWithoutReceivableInput[]
+  upsert?: Prisma.AuditLogUpsertWithWhereUniqueWithoutReceivableInput | Prisma.AuditLogUpsertWithWhereUniqueWithoutReceivableInput[]
+  createMany?: Prisma.AuditLogCreateManyReceivableInputEnvelope
+  set?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  disconnect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  delete?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  connect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  update?: Prisma.AuditLogUpdateWithWhereUniqueWithoutReceivableInput | Prisma.AuditLogUpdateWithWhereUniqueWithoutReceivableInput[]
+  updateMany?: Prisma.AuditLogUpdateManyWithWhereWithoutReceivableInput | Prisma.AuditLogUpdateManyWithWhereWithoutReceivableInput[]
+  deleteMany?: Prisma.AuditLogScalarWhereInput | Prisma.AuditLogScalarWhereInput[]
+}
+
+export type AuditLogCreateNestedManyWithoutPayableInput = {
+  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutPayableInput, Prisma.AuditLogUncheckedCreateWithoutPayableInput> | Prisma.AuditLogCreateWithoutPayableInput[] | Prisma.AuditLogUncheckedCreateWithoutPayableInput[]
+  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutPayableInput | Prisma.AuditLogCreateOrConnectWithoutPayableInput[]
+  createMany?: Prisma.AuditLogCreateManyPayableInputEnvelope
+  connect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+}
+
+export type AuditLogUncheckedCreateNestedManyWithoutPayableInput = {
+  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutPayableInput, Prisma.AuditLogUncheckedCreateWithoutPayableInput> | Prisma.AuditLogCreateWithoutPayableInput[] | Prisma.AuditLogUncheckedCreateWithoutPayableInput[]
+  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutPayableInput | Prisma.AuditLogCreateOrConnectWithoutPayableInput[]
+  createMany?: Prisma.AuditLogCreateManyPayableInputEnvelope
+  connect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+}
+
+export type AuditLogUpdateManyWithoutPayableNestedInput = {
+  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutPayableInput, Prisma.AuditLogUncheckedCreateWithoutPayableInput> | Prisma.AuditLogCreateWithoutPayableInput[] | Prisma.AuditLogUncheckedCreateWithoutPayableInput[]
+  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutPayableInput | Prisma.AuditLogCreateOrConnectWithoutPayableInput[]
+  upsert?: Prisma.AuditLogUpsertWithWhereUniqueWithoutPayableInput | Prisma.AuditLogUpsertWithWhereUniqueWithoutPayableInput[]
+  createMany?: Prisma.AuditLogCreateManyPayableInputEnvelope
+  set?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  disconnect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  delete?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  connect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  update?: Prisma.AuditLogUpdateWithWhereUniqueWithoutPayableInput | Prisma.AuditLogUpdateWithWhereUniqueWithoutPayableInput[]
+  updateMany?: Prisma.AuditLogUpdateManyWithWhereWithoutPayableInput | Prisma.AuditLogUpdateManyWithWhereWithoutPayableInput[]
+  deleteMany?: Prisma.AuditLogScalarWhereInput | Prisma.AuditLogScalarWhereInput[]
+}
+
+export type AuditLogUncheckedUpdateManyWithoutPayableNestedInput = {
+  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutPayableInput, Prisma.AuditLogUncheckedCreateWithoutPayableInput> | Prisma.AuditLogCreateWithoutPayableInput[] | Prisma.AuditLogUncheckedCreateWithoutPayableInput[]
+  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutPayableInput | Prisma.AuditLogCreateOrConnectWithoutPayableInput[]
+  upsert?: Prisma.AuditLogUpsertWithWhereUniqueWithoutPayableInput | Prisma.AuditLogUpsertWithWhereUniqueWithoutPayableInput[]
+  createMany?: Prisma.AuditLogCreateManyPayableInputEnvelope
+  set?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  disconnect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  delete?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  connect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  update?: Prisma.AuditLogUpdateWithWhereUniqueWithoutPayableInput | Prisma.AuditLogUpdateWithWhereUniqueWithoutPayableInput[]
+  updateMany?: Prisma.AuditLogUpdateManyWithWhereWithoutPayableInput | Prisma.AuditLogUpdateManyWithWhereWithoutPayableInput[]
+  deleteMany?: Prisma.AuditLogScalarWhereInput | Prisma.AuditLogScalarWhereInput[]
+}
+
+export type AuditLogCreateNestedManyWithoutReceiptInput = {
+  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutReceiptInput, Prisma.AuditLogUncheckedCreateWithoutReceiptInput> | Prisma.AuditLogCreateWithoutReceiptInput[] | Prisma.AuditLogUncheckedCreateWithoutReceiptInput[]
+  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutReceiptInput | Prisma.AuditLogCreateOrConnectWithoutReceiptInput[]
+  createMany?: Prisma.AuditLogCreateManyReceiptInputEnvelope
+  connect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+}
+
+export type AuditLogUncheckedCreateNestedManyWithoutReceiptInput = {
+  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutReceiptInput, Prisma.AuditLogUncheckedCreateWithoutReceiptInput> | Prisma.AuditLogCreateWithoutReceiptInput[] | Prisma.AuditLogUncheckedCreateWithoutReceiptInput[]
+  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutReceiptInput | Prisma.AuditLogCreateOrConnectWithoutReceiptInput[]
+  createMany?: Prisma.AuditLogCreateManyReceiptInputEnvelope
+  connect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+}
+
+export type AuditLogUpdateManyWithoutReceiptNestedInput = {
+  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutReceiptInput, Prisma.AuditLogUncheckedCreateWithoutReceiptInput> | Prisma.AuditLogCreateWithoutReceiptInput[] | Prisma.AuditLogUncheckedCreateWithoutReceiptInput[]
+  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutReceiptInput | Prisma.AuditLogCreateOrConnectWithoutReceiptInput[]
+  upsert?: Prisma.AuditLogUpsertWithWhereUniqueWithoutReceiptInput | Prisma.AuditLogUpsertWithWhereUniqueWithoutReceiptInput[]
+  createMany?: Prisma.AuditLogCreateManyReceiptInputEnvelope
+  set?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  disconnect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  delete?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  connect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  update?: Prisma.AuditLogUpdateWithWhereUniqueWithoutReceiptInput | Prisma.AuditLogUpdateWithWhereUniqueWithoutReceiptInput[]
+  updateMany?: Prisma.AuditLogUpdateManyWithWhereWithoutReceiptInput | Prisma.AuditLogUpdateManyWithWhereWithoutReceiptInput[]
+  deleteMany?: Prisma.AuditLogScalarWhereInput | Prisma.AuditLogScalarWhereInput[]
+}
+
+export type AuditLogUncheckedUpdateManyWithoutReceiptNestedInput = {
+  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutReceiptInput, Prisma.AuditLogUncheckedCreateWithoutReceiptInput> | Prisma.AuditLogCreateWithoutReceiptInput[] | Prisma.AuditLogUncheckedCreateWithoutReceiptInput[]
+  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutReceiptInput | Prisma.AuditLogCreateOrConnectWithoutReceiptInput[]
+  upsert?: Prisma.AuditLogUpsertWithWhereUniqueWithoutReceiptInput | Prisma.AuditLogUpsertWithWhereUniqueWithoutReceiptInput[]
+  createMany?: Prisma.AuditLogCreateManyReceiptInputEnvelope
+  set?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  disconnect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  delete?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  connect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  update?: Prisma.AuditLogUpdateWithWhereUniqueWithoutReceiptInput | Prisma.AuditLogUpdateWithWhereUniqueWithoutReceiptInput[]
+  updateMany?: Prisma.AuditLogUpdateManyWithWhereWithoutReceiptInput | Prisma.AuditLogUpdateManyWithWhereWithoutReceiptInput[]
+  deleteMany?: Prisma.AuditLogScalarWhereInput | Prisma.AuditLogScalarWhereInput[]
+}
+
+export type AuditLogCreateNestedManyWithoutPaymentInput = {
+  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutPaymentInput, Prisma.AuditLogUncheckedCreateWithoutPaymentInput> | Prisma.AuditLogCreateWithoutPaymentInput[] | Prisma.AuditLogUncheckedCreateWithoutPaymentInput[]
+  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutPaymentInput | Prisma.AuditLogCreateOrConnectWithoutPaymentInput[]
+  createMany?: Prisma.AuditLogCreateManyPaymentInputEnvelope
+  connect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+}
+
+export type AuditLogUncheckedCreateNestedManyWithoutPaymentInput = {
+  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutPaymentInput, Prisma.AuditLogUncheckedCreateWithoutPaymentInput> | Prisma.AuditLogCreateWithoutPaymentInput[] | Prisma.AuditLogUncheckedCreateWithoutPaymentInput[]
+  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutPaymentInput | Prisma.AuditLogCreateOrConnectWithoutPaymentInput[]
+  createMany?: Prisma.AuditLogCreateManyPaymentInputEnvelope
+  connect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+}
+
+export type AuditLogUpdateManyWithoutPaymentNestedInput = {
+  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutPaymentInput, Prisma.AuditLogUncheckedCreateWithoutPaymentInput> | Prisma.AuditLogCreateWithoutPaymentInput[] | Prisma.AuditLogUncheckedCreateWithoutPaymentInput[]
+  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutPaymentInput | Prisma.AuditLogCreateOrConnectWithoutPaymentInput[]
+  upsert?: Prisma.AuditLogUpsertWithWhereUniqueWithoutPaymentInput | Prisma.AuditLogUpsertWithWhereUniqueWithoutPaymentInput[]
+  createMany?: Prisma.AuditLogCreateManyPaymentInputEnvelope
+  set?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  disconnect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  delete?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  connect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  update?: Prisma.AuditLogUpdateWithWhereUniqueWithoutPaymentInput | Prisma.AuditLogUpdateWithWhereUniqueWithoutPaymentInput[]
+  updateMany?: Prisma.AuditLogUpdateManyWithWhereWithoutPaymentInput | Prisma.AuditLogUpdateManyWithWhereWithoutPaymentInput[]
+  deleteMany?: Prisma.AuditLogScalarWhereInput | Prisma.AuditLogScalarWhereInput[]
+}
+
+export type AuditLogUncheckedUpdateManyWithoutPaymentNestedInput = {
+  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutPaymentInput, Prisma.AuditLogUncheckedCreateWithoutPaymentInput> | Prisma.AuditLogCreateWithoutPaymentInput[] | Prisma.AuditLogUncheckedCreateWithoutPaymentInput[]
+  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutPaymentInput | Prisma.AuditLogCreateOrConnectWithoutPaymentInput[]
+  upsert?: Prisma.AuditLogUpsertWithWhereUniqueWithoutPaymentInput | Prisma.AuditLogUpsertWithWhereUniqueWithoutPaymentInput[]
+  createMany?: Prisma.AuditLogCreateManyPaymentInputEnvelope
+  set?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  disconnect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  delete?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  connect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  update?: Prisma.AuditLogUpdateWithWhereUniqueWithoutPaymentInput | Prisma.AuditLogUpdateWithWhereUniqueWithoutPaymentInput[]
+  updateMany?: Prisma.AuditLogUpdateManyWithWhereWithoutPaymentInput | Prisma.AuditLogUpdateManyWithWhereWithoutPaymentInput[]
+  deleteMany?: Prisma.AuditLogScalarWhereInput | Prisma.AuditLogScalarWhereInput[]
+}
+
+export type AuditLogCreateNestedManyWithoutRemunerationCalculationInput = {
+  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutRemunerationCalculationInput, Prisma.AuditLogUncheckedCreateWithoutRemunerationCalculationInput> | Prisma.AuditLogCreateWithoutRemunerationCalculationInput[] | Prisma.AuditLogUncheckedCreateWithoutRemunerationCalculationInput[]
+  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutRemunerationCalculationInput | Prisma.AuditLogCreateOrConnectWithoutRemunerationCalculationInput[]
+  createMany?: Prisma.AuditLogCreateManyRemunerationCalculationInputEnvelope
+  connect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+}
+
+export type AuditLogUncheckedCreateNestedManyWithoutRemunerationCalculationInput = {
+  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutRemunerationCalculationInput, Prisma.AuditLogUncheckedCreateWithoutRemunerationCalculationInput> | Prisma.AuditLogCreateWithoutRemunerationCalculationInput[] | Prisma.AuditLogUncheckedCreateWithoutRemunerationCalculationInput[]
+  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutRemunerationCalculationInput | Prisma.AuditLogCreateOrConnectWithoutRemunerationCalculationInput[]
+  createMany?: Prisma.AuditLogCreateManyRemunerationCalculationInputEnvelope
+  connect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+}
+
+export type AuditLogUpdateManyWithoutRemunerationCalculationNestedInput = {
+  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutRemunerationCalculationInput, Prisma.AuditLogUncheckedCreateWithoutRemunerationCalculationInput> | Prisma.AuditLogCreateWithoutRemunerationCalculationInput[] | Prisma.AuditLogUncheckedCreateWithoutRemunerationCalculationInput[]
+  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutRemunerationCalculationInput | Prisma.AuditLogCreateOrConnectWithoutRemunerationCalculationInput[]
+  upsert?: Prisma.AuditLogUpsertWithWhereUniqueWithoutRemunerationCalculationInput | Prisma.AuditLogUpsertWithWhereUniqueWithoutRemunerationCalculationInput[]
+  createMany?: Prisma.AuditLogCreateManyRemunerationCalculationInputEnvelope
+  set?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  disconnect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  delete?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  connect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  update?: Prisma.AuditLogUpdateWithWhereUniqueWithoutRemunerationCalculationInput | Prisma.AuditLogUpdateWithWhereUniqueWithoutRemunerationCalculationInput[]
+  updateMany?: Prisma.AuditLogUpdateManyWithWhereWithoutRemunerationCalculationInput | Prisma.AuditLogUpdateManyWithWhereWithoutRemunerationCalculationInput[]
+  deleteMany?: Prisma.AuditLogScalarWhereInput | Prisma.AuditLogScalarWhereInput[]
+}
+
+export type AuditLogUncheckedUpdateManyWithoutRemunerationCalculationNestedInput = {
+  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutRemunerationCalculationInput, Prisma.AuditLogUncheckedCreateWithoutRemunerationCalculationInput> | Prisma.AuditLogCreateWithoutRemunerationCalculationInput[] | Prisma.AuditLogUncheckedCreateWithoutRemunerationCalculationInput[]
+  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutRemunerationCalculationInput | Prisma.AuditLogCreateOrConnectWithoutRemunerationCalculationInput[]
+  upsert?: Prisma.AuditLogUpsertWithWhereUniqueWithoutRemunerationCalculationInput | Prisma.AuditLogUpsertWithWhereUniqueWithoutRemunerationCalculationInput[]
+  createMany?: Prisma.AuditLogCreateManyRemunerationCalculationInputEnvelope
+  set?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  disconnect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  delete?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  connect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
+  update?: Prisma.AuditLogUpdateWithWhereUniqueWithoutRemunerationCalculationInput | Prisma.AuditLogUpdateWithWhereUniqueWithoutRemunerationCalculationInput[]
+  updateMany?: Prisma.AuditLogUpdateManyWithWhereWithoutRemunerationCalculationInput | Prisma.AuditLogUpdateManyWithWhereWithoutRemunerationCalculationInput[]
   deleteMany?: Prisma.AuditLogScalarWhereInput | Prisma.AuditLogScalarWhereInput[]
 }
 
@@ -812,16 +1314,20 @@ export type AuditLogCreateWithoutFirmInput = {
   userAgent?: string | null
   description: string
   createdAt?: Date | string
-  client?: Prisma.ClientCreateNestedOneWithoutAuditLogsInput
-  employee?: Prisma.EmployeeCreateNestedOneWithoutSharedAuditLogsInput
-  actor?: Prisma.EmployeeCreateNestedOneWithoutAuditLogsInput
+  actor?: Prisma.PersonCreateNestedOneWithoutActedAuditLogsInput
+  person?: Prisma.PersonCreateNestedOneWithoutAuditLogsInput
+  contract?: Prisma.ContractCreateNestedOneWithoutAuditLogsInput
+  expense?: Prisma.ExpenseCreateNestedOneWithoutAuditLogsInput
+  receivable?: Prisma.ReceivableCreateNestedOneWithoutAuditLogsInput
+  payable?: Prisma.PayableCreateNestedOneWithoutAuditLogsInput
+  receipt?: Prisma.ReceiptCreateNestedOneWithoutAuditLogsInput
+  payment?: Prisma.PaymentCreateNestedOneWithoutAuditLogsInput
+  financialGeneration?: Prisma.FinancialGenerationCreateNestedOneWithoutAuditLogsInput
+  remunerationCalculation?: Prisma.RemunerationCalculationCreateNestedOneWithoutAuditLogsInput
 }
 
 export type AuditLogUncheckedCreateWithoutFirmInput = {
-  clientId?: number | null
-  employeeId?: number | null
   id?: number
-  actorId?: number | null
   actorName: string
   actorEmail?: string | null
   action: string
@@ -833,6 +1339,16 @@ export type AuditLogUncheckedCreateWithoutFirmInput = {
   userAgent?: string | null
   description: string
   createdAt?: Date | string
+  actorId?: number | null
+  personId?: number | null
+  contractId?: number | null
+  expenseId?: number | null
+  receivableId?: number | null
+  payableId?: number | null
+  receiptId?: number | null
+  paymentId?: number | null
+  financialGenerationId?: number | null
+  remunerationCalculationId?: number | null
 }
 
 export type AuditLogCreateOrConnectWithoutFirmInput = {
@@ -865,11 +1381,7 @@ export type AuditLogScalarWhereInput = {
   AND?: Prisma.AuditLogScalarWhereInput | Prisma.AuditLogScalarWhereInput[]
   OR?: Prisma.AuditLogScalarWhereInput[]
   NOT?: Prisma.AuditLogScalarWhereInput | Prisma.AuditLogScalarWhereInput[]
-  clientId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
-  employeeId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
   id?: Prisma.IntFilter<"AuditLog"> | number
-  firmId?: Prisma.IntFilter<"AuditLog"> | number
-  actorId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
   actorName?: Prisma.StringFilter<"AuditLog"> | string
   actorEmail?: Prisma.StringNullableFilter<"AuditLog"> | string | null
   action?: Prisma.StringFilter<"AuditLog"> | string
@@ -881,6 +1393,17 @@ export type AuditLogScalarWhereInput = {
   userAgent?: Prisma.StringNullableFilter<"AuditLog"> | string | null
   description?: Prisma.StringFilter<"AuditLog"> | string
   createdAt?: Prisma.DateTimeFilter<"AuditLog"> | Date | string
+  firmId?: Prisma.IntFilter<"AuditLog"> | number
+  actorId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
+  personId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
+  contractId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
+  expenseId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
+  receivableId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
+  payableId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
+  receiptId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
+  paymentId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
+  financialGenerationId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
+  remunerationCalculationId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
 }
 
 export type AuditLogCreateWithoutActorInput = {
@@ -895,16 +1418,20 @@ export type AuditLogCreateWithoutActorInput = {
   userAgent?: string | null
   description: string
   createdAt?: Date | string
-  client?: Prisma.ClientCreateNestedOneWithoutAuditLogsInput
-  employee?: Prisma.EmployeeCreateNestedOneWithoutSharedAuditLogsInput
   firm: Prisma.FirmCreateNestedOneWithoutAuditLogsInput
+  person?: Prisma.PersonCreateNestedOneWithoutAuditLogsInput
+  contract?: Prisma.ContractCreateNestedOneWithoutAuditLogsInput
+  expense?: Prisma.ExpenseCreateNestedOneWithoutAuditLogsInput
+  receivable?: Prisma.ReceivableCreateNestedOneWithoutAuditLogsInput
+  payable?: Prisma.PayableCreateNestedOneWithoutAuditLogsInput
+  receipt?: Prisma.ReceiptCreateNestedOneWithoutAuditLogsInput
+  payment?: Prisma.PaymentCreateNestedOneWithoutAuditLogsInput
+  financialGeneration?: Prisma.FinancialGenerationCreateNestedOneWithoutAuditLogsInput
+  remunerationCalculation?: Prisma.RemunerationCalculationCreateNestedOneWithoutAuditLogsInput
 }
 
 export type AuditLogUncheckedCreateWithoutActorInput = {
-  clientId?: number | null
-  employeeId?: number | null
   id?: number
-  firmId: number
   actorName: string
   actorEmail?: string | null
   action: string
@@ -916,6 +1443,16 @@ export type AuditLogUncheckedCreateWithoutActorInput = {
   userAgent?: string | null
   description: string
   createdAt?: Date | string
+  firmId: number
+  personId?: number | null
+  contractId?: number | null
+  expenseId?: number | null
+  receivableId?: number | null
+  payableId?: number | null
+  receiptId?: number | null
+  paymentId?: number | null
+  financialGenerationId?: number | null
+  remunerationCalculationId?: number | null
 }
 
 export type AuditLogCreateOrConnectWithoutActorInput = {
@@ -928,7 +1465,7 @@ export type AuditLogCreateManyActorInputEnvelope = {
   skipDuplicates?: boolean
 }
 
-export type AuditLogCreateWithoutEmployeeInput = {
+export type AuditLogCreateWithoutPersonInput = {
   actorName: string
   actorEmail?: string | null
   action: string
@@ -940,36 +1477,50 @@ export type AuditLogCreateWithoutEmployeeInput = {
   userAgent?: string | null
   description: string
   createdAt?: Date | string
-  client?: Prisma.ClientCreateNestedOneWithoutAuditLogsInput
-  actor?: Prisma.EmployeeCreateNestedOneWithoutAuditLogsInput
   firm: Prisma.FirmCreateNestedOneWithoutAuditLogsInput
+  actor?: Prisma.PersonCreateNestedOneWithoutActedAuditLogsInput
+  contract?: Prisma.ContractCreateNestedOneWithoutAuditLogsInput
+  expense?: Prisma.ExpenseCreateNestedOneWithoutAuditLogsInput
+  receivable?: Prisma.ReceivableCreateNestedOneWithoutAuditLogsInput
+  payable?: Prisma.PayableCreateNestedOneWithoutAuditLogsInput
+  receipt?: Prisma.ReceiptCreateNestedOneWithoutAuditLogsInput
+  payment?: Prisma.PaymentCreateNestedOneWithoutAuditLogsInput
+  financialGeneration?: Prisma.FinancialGenerationCreateNestedOneWithoutAuditLogsInput
+  remunerationCalculation?: Prisma.RemunerationCalculationCreateNestedOneWithoutAuditLogsInput
 }
 
-export type AuditLogUncheckedCreateWithoutEmployeeInput = {
-  clientId?: number | null
+export type AuditLogUncheckedCreateWithoutPersonInput = {
   id?: number
+  actorName: string
+  actorEmail?: string | null
+  action: string
+  entityType: string
+  entityId?: string | null
+  entityName: string
+  changeData: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ipAddress?: string | null
+  userAgent?: string | null
+  description: string
+  createdAt?: Date | string
   firmId: number
   actorId?: number | null
-  actorName: string
-  actorEmail?: string | null
-  action: string
-  entityType: string
-  entityId?: string | null
-  entityName: string
-  changeData: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  ipAddress?: string | null
-  userAgent?: string | null
-  description: string
-  createdAt?: Date | string
+  contractId?: number | null
+  expenseId?: number | null
+  receivableId?: number | null
+  payableId?: number | null
+  receiptId?: number | null
+  paymentId?: number | null
+  financialGenerationId?: number | null
+  remunerationCalculationId?: number | null
 }
 
-export type AuditLogCreateOrConnectWithoutEmployeeInput = {
+export type AuditLogCreateOrConnectWithoutPersonInput = {
   where: Prisma.AuditLogWhereUniqueInput
-  create: Prisma.XOR<Prisma.AuditLogCreateWithoutEmployeeInput, Prisma.AuditLogUncheckedCreateWithoutEmployeeInput>
+  create: Prisma.XOR<Prisma.AuditLogCreateWithoutPersonInput, Prisma.AuditLogUncheckedCreateWithoutPersonInput>
 }
 
-export type AuditLogCreateManyEmployeeInputEnvelope = {
-  data: Prisma.AuditLogCreateManyEmployeeInput | Prisma.AuditLogCreateManyEmployeeInput[]
+export type AuditLogCreateManyPersonInputEnvelope = {
+  data: Prisma.AuditLogCreateManyPersonInput | Prisma.AuditLogCreateManyPersonInput[]
   skipDuplicates?: boolean
 }
 
@@ -989,23 +1540,23 @@ export type AuditLogUpdateManyWithWhereWithoutActorInput = {
   data: Prisma.XOR<Prisma.AuditLogUpdateManyMutationInput, Prisma.AuditLogUncheckedUpdateManyWithoutActorInput>
 }
 
-export type AuditLogUpsertWithWhereUniqueWithoutEmployeeInput = {
+export type AuditLogUpsertWithWhereUniqueWithoutPersonInput = {
   where: Prisma.AuditLogWhereUniqueInput
-  update: Prisma.XOR<Prisma.AuditLogUpdateWithoutEmployeeInput, Prisma.AuditLogUncheckedUpdateWithoutEmployeeInput>
-  create: Prisma.XOR<Prisma.AuditLogCreateWithoutEmployeeInput, Prisma.AuditLogUncheckedCreateWithoutEmployeeInput>
+  update: Prisma.XOR<Prisma.AuditLogUpdateWithoutPersonInput, Prisma.AuditLogUncheckedUpdateWithoutPersonInput>
+  create: Prisma.XOR<Prisma.AuditLogCreateWithoutPersonInput, Prisma.AuditLogUncheckedCreateWithoutPersonInput>
 }
 
-export type AuditLogUpdateWithWhereUniqueWithoutEmployeeInput = {
+export type AuditLogUpdateWithWhereUniqueWithoutPersonInput = {
   where: Prisma.AuditLogWhereUniqueInput
-  data: Prisma.XOR<Prisma.AuditLogUpdateWithoutEmployeeInput, Prisma.AuditLogUncheckedUpdateWithoutEmployeeInput>
+  data: Prisma.XOR<Prisma.AuditLogUpdateWithoutPersonInput, Prisma.AuditLogUncheckedUpdateWithoutPersonInput>
 }
 
-export type AuditLogUpdateManyWithWhereWithoutEmployeeInput = {
+export type AuditLogUpdateManyWithWhereWithoutPersonInput = {
   where: Prisma.AuditLogScalarWhereInput
-  data: Prisma.XOR<Prisma.AuditLogUpdateManyMutationInput, Prisma.AuditLogUncheckedUpdateManyWithoutEmployeeInput>
+  data: Prisma.XOR<Prisma.AuditLogUpdateManyMutationInput, Prisma.AuditLogUncheckedUpdateManyWithoutPersonInput>
 }
 
-export type AuditLogCreateWithoutClientInput = {
+export type AuditLogCreateWithoutContractInput = {
   actorName: string
   actorEmail?: string | null
   action: string
@@ -1017,16 +1568,20 @@ export type AuditLogCreateWithoutClientInput = {
   userAgent?: string | null
   description: string
   createdAt?: Date | string
-  employee?: Prisma.EmployeeCreateNestedOneWithoutSharedAuditLogsInput
-  actor?: Prisma.EmployeeCreateNestedOneWithoutAuditLogsInput
   firm: Prisma.FirmCreateNestedOneWithoutAuditLogsInput
+  actor?: Prisma.PersonCreateNestedOneWithoutActedAuditLogsInput
+  person?: Prisma.PersonCreateNestedOneWithoutAuditLogsInput
+  expense?: Prisma.ExpenseCreateNestedOneWithoutAuditLogsInput
+  receivable?: Prisma.ReceivableCreateNestedOneWithoutAuditLogsInput
+  payable?: Prisma.PayableCreateNestedOneWithoutAuditLogsInput
+  receipt?: Prisma.ReceiptCreateNestedOneWithoutAuditLogsInput
+  payment?: Prisma.PaymentCreateNestedOneWithoutAuditLogsInput
+  financialGeneration?: Prisma.FinancialGenerationCreateNestedOneWithoutAuditLogsInput
+  remunerationCalculation?: Prisma.RemunerationCalculationCreateNestedOneWithoutAuditLogsInput
 }
 
-export type AuditLogUncheckedCreateWithoutClientInput = {
-  employeeId?: number | null
+export type AuditLogUncheckedCreateWithoutContractInput = {
   id?: number
-  firmId: number
-  actorId?: number | null
   actorName: string
   actorEmail?: string | null
   action: string
@@ -1038,39 +1593,44 @@ export type AuditLogUncheckedCreateWithoutClientInput = {
   userAgent?: string | null
   description: string
   createdAt?: Date | string
+  actorId?: number | null
+  personId?: number | null
+  expenseId?: number | null
+  receivableId?: number | null
+  payableId?: number | null
+  receiptId?: number | null
+  paymentId?: number | null
+  financialGenerationId?: number | null
+  remunerationCalculationId?: number | null
 }
 
-export type AuditLogCreateOrConnectWithoutClientInput = {
+export type AuditLogCreateOrConnectWithoutContractInput = {
   where: Prisma.AuditLogWhereUniqueInput
-  create: Prisma.XOR<Prisma.AuditLogCreateWithoutClientInput, Prisma.AuditLogUncheckedCreateWithoutClientInput>
+  create: Prisma.XOR<Prisma.AuditLogCreateWithoutContractInput, Prisma.AuditLogUncheckedCreateWithoutContractInput>
 }
 
-export type AuditLogCreateManyClientInputEnvelope = {
-  data: Prisma.AuditLogCreateManyClientInput | Prisma.AuditLogCreateManyClientInput[]
+export type AuditLogCreateManyContractInputEnvelope = {
+  data: Prisma.AuditLogCreateManyContractInput | Prisma.AuditLogCreateManyContractInput[]
   skipDuplicates?: boolean
 }
 
-export type AuditLogUpsertWithWhereUniqueWithoutClientInput = {
+export type AuditLogUpsertWithWhereUniqueWithoutContractInput = {
   where: Prisma.AuditLogWhereUniqueInput
-  update: Prisma.XOR<Prisma.AuditLogUpdateWithoutClientInput, Prisma.AuditLogUncheckedUpdateWithoutClientInput>
-  create: Prisma.XOR<Prisma.AuditLogCreateWithoutClientInput, Prisma.AuditLogUncheckedCreateWithoutClientInput>
+  update: Prisma.XOR<Prisma.AuditLogUpdateWithoutContractInput, Prisma.AuditLogUncheckedUpdateWithoutContractInput>
+  create: Prisma.XOR<Prisma.AuditLogCreateWithoutContractInput, Prisma.AuditLogUncheckedCreateWithoutContractInput>
 }
 
-export type AuditLogUpdateWithWhereUniqueWithoutClientInput = {
+export type AuditLogUpdateWithWhereUniqueWithoutContractInput = {
   where: Prisma.AuditLogWhereUniqueInput
-  data: Prisma.XOR<Prisma.AuditLogUpdateWithoutClientInput, Prisma.AuditLogUncheckedUpdateWithoutClientInput>
+  data: Prisma.XOR<Prisma.AuditLogUpdateWithoutContractInput, Prisma.AuditLogUncheckedUpdateWithoutContractInput>
 }
 
-export type AuditLogUpdateManyWithWhereWithoutClientInput = {
+export type AuditLogUpdateManyWithWhereWithoutContractInput = {
   where: Prisma.AuditLogScalarWhereInput
-  data: Prisma.XOR<Prisma.AuditLogUpdateManyMutationInput, Prisma.AuditLogUncheckedUpdateManyWithoutClientInput>
+  data: Prisma.XOR<Prisma.AuditLogUpdateManyMutationInput, Prisma.AuditLogUncheckedUpdateManyWithoutContractInput>
 }
 
-export type AuditLogCreateManyFirmInput = {
-  clientId?: number | null
-  employeeId?: number | null
-  id?: number
-  actorId?: number | null
+export type AuditLogCreateWithoutExpenseInput = {
   actorName: string
   actorEmail?: string | null
   action: string
@@ -1082,6 +1642,535 @@ export type AuditLogCreateManyFirmInput = {
   userAgent?: string | null
   description: string
   createdAt?: Date | string
+  firm: Prisma.FirmCreateNestedOneWithoutAuditLogsInput
+  actor?: Prisma.PersonCreateNestedOneWithoutActedAuditLogsInput
+  person?: Prisma.PersonCreateNestedOneWithoutAuditLogsInput
+  contract?: Prisma.ContractCreateNestedOneWithoutAuditLogsInput
+  receivable?: Prisma.ReceivableCreateNestedOneWithoutAuditLogsInput
+  payable?: Prisma.PayableCreateNestedOneWithoutAuditLogsInput
+  receipt?: Prisma.ReceiptCreateNestedOneWithoutAuditLogsInput
+  payment?: Prisma.PaymentCreateNestedOneWithoutAuditLogsInput
+  financialGeneration?: Prisma.FinancialGenerationCreateNestedOneWithoutAuditLogsInput
+  remunerationCalculation?: Prisma.RemunerationCalculationCreateNestedOneWithoutAuditLogsInput
+}
+
+export type AuditLogUncheckedCreateWithoutExpenseInput = {
+  id?: number
+  actorName: string
+  actorEmail?: string | null
+  action: string
+  entityType: string
+  entityId?: string | null
+  entityName: string
+  changeData: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ipAddress?: string | null
+  userAgent?: string | null
+  description: string
+  createdAt?: Date | string
+  actorId?: number | null
+  personId?: number | null
+  contractId?: number | null
+  receivableId?: number | null
+  payableId?: number | null
+  receiptId?: number | null
+  paymentId?: number | null
+  financialGenerationId?: number | null
+  remunerationCalculationId?: number | null
+}
+
+export type AuditLogCreateOrConnectWithoutExpenseInput = {
+  where: Prisma.AuditLogWhereUniqueInput
+  create: Prisma.XOR<Prisma.AuditLogCreateWithoutExpenseInput, Prisma.AuditLogUncheckedCreateWithoutExpenseInput>
+}
+
+export type AuditLogCreateManyExpenseInputEnvelope = {
+  data: Prisma.AuditLogCreateManyExpenseInput | Prisma.AuditLogCreateManyExpenseInput[]
+  skipDuplicates?: boolean
+}
+
+export type AuditLogUpsertWithWhereUniqueWithoutExpenseInput = {
+  where: Prisma.AuditLogWhereUniqueInput
+  update: Prisma.XOR<Prisma.AuditLogUpdateWithoutExpenseInput, Prisma.AuditLogUncheckedUpdateWithoutExpenseInput>
+  create: Prisma.XOR<Prisma.AuditLogCreateWithoutExpenseInput, Prisma.AuditLogUncheckedCreateWithoutExpenseInput>
+}
+
+export type AuditLogUpdateWithWhereUniqueWithoutExpenseInput = {
+  where: Prisma.AuditLogWhereUniqueInput
+  data: Prisma.XOR<Prisma.AuditLogUpdateWithoutExpenseInput, Prisma.AuditLogUncheckedUpdateWithoutExpenseInput>
+}
+
+export type AuditLogUpdateManyWithWhereWithoutExpenseInput = {
+  where: Prisma.AuditLogScalarWhereInput
+  data: Prisma.XOR<Prisma.AuditLogUpdateManyMutationInput, Prisma.AuditLogUncheckedUpdateManyWithoutExpenseInput>
+}
+
+export type AuditLogCreateWithoutFinancialGenerationInput = {
+  actorName: string
+  actorEmail?: string | null
+  action: string
+  entityType: string
+  entityId?: string | null
+  entityName: string
+  changeData: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ipAddress?: string | null
+  userAgent?: string | null
+  description: string
+  createdAt?: Date | string
+  firm: Prisma.FirmCreateNestedOneWithoutAuditLogsInput
+  actor?: Prisma.PersonCreateNestedOneWithoutActedAuditLogsInput
+  person?: Prisma.PersonCreateNestedOneWithoutAuditLogsInput
+  contract?: Prisma.ContractCreateNestedOneWithoutAuditLogsInput
+  expense?: Prisma.ExpenseCreateNestedOneWithoutAuditLogsInput
+  receivable?: Prisma.ReceivableCreateNestedOneWithoutAuditLogsInput
+  payable?: Prisma.PayableCreateNestedOneWithoutAuditLogsInput
+  receipt?: Prisma.ReceiptCreateNestedOneWithoutAuditLogsInput
+  payment?: Prisma.PaymentCreateNestedOneWithoutAuditLogsInput
+  remunerationCalculation?: Prisma.RemunerationCalculationCreateNestedOneWithoutAuditLogsInput
+}
+
+export type AuditLogUncheckedCreateWithoutFinancialGenerationInput = {
+  id?: number
+  actorName: string
+  actorEmail?: string | null
+  action: string
+  entityType: string
+  entityId?: string | null
+  entityName: string
+  changeData: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ipAddress?: string | null
+  userAgent?: string | null
+  description: string
+  createdAt?: Date | string
+  actorId?: number | null
+  personId?: number | null
+  contractId?: number | null
+  expenseId?: number | null
+  receivableId?: number | null
+  payableId?: number | null
+  receiptId?: number | null
+  paymentId?: number | null
+  remunerationCalculationId?: number | null
+}
+
+export type AuditLogCreateOrConnectWithoutFinancialGenerationInput = {
+  where: Prisma.AuditLogWhereUniqueInput
+  create: Prisma.XOR<Prisma.AuditLogCreateWithoutFinancialGenerationInput, Prisma.AuditLogUncheckedCreateWithoutFinancialGenerationInput>
+}
+
+export type AuditLogCreateManyFinancialGenerationInputEnvelope = {
+  data: Prisma.AuditLogCreateManyFinancialGenerationInput | Prisma.AuditLogCreateManyFinancialGenerationInput[]
+  skipDuplicates?: boolean
+}
+
+export type AuditLogUpsertWithWhereUniqueWithoutFinancialGenerationInput = {
+  where: Prisma.AuditLogWhereUniqueInput
+  update: Prisma.XOR<Prisma.AuditLogUpdateWithoutFinancialGenerationInput, Prisma.AuditLogUncheckedUpdateWithoutFinancialGenerationInput>
+  create: Prisma.XOR<Prisma.AuditLogCreateWithoutFinancialGenerationInput, Prisma.AuditLogUncheckedCreateWithoutFinancialGenerationInput>
+}
+
+export type AuditLogUpdateWithWhereUniqueWithoutFinancialGenerationInput = {
+  where: Prisma.AuditLogWhereUniqueInput
+  data: Prisma.XOR<Prisma.AuditLogUpdateWithoutFinancialGenerationInput, Prisma.AuditLogUncheckedUpdateWithoutFinancialGenerationInput>
+}
+
+export type AuditLogUpdateManyWithWhereWithoutFinancialGenerationInput = {
+  where: Prisma.AuditLogScalarWhereInput
+  data: Prisma.XOR<Prisma.AuditLogUpdateManyMutationInput, Prisma.AuditLogUncheckedUpdateManyWithoutFinancialGenerationInput>
+}
+
+export type AuditLogCreateWithoutReceivableInput = {
+  actorName: string
+  actorEmail?: string | null
+  action: string
+  entityType: string
+  entityId?: string | null
+  entityName: string
+  changeData: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ipAddress?: string | null
+  userAgent?: string | null
+  description: string
+  createdAt?: Date | string
+  firm: Prisma.FirmCreateNestedOneWithoutAuditLogsInput
+  actor?: Prisma.PersonCreateNestedOneWithoutActedAuditLogsInput
+  person?: Prisma.PersonCreateNestedOneWithoutAuditLogsInput
+  contract?: Prisma.ContractCreateNestedOneWithoutAuditLogsInput
+  expense?: Prisma.ExpenseCreateNestedOneWithoutAuditLogsInput
+  payable?: Prisma.PayableCreateNestedOneWithoutAuditLogsInput
+  receipt?: Prisma.ReceiptCreateNestedOneWithoutAuditLogsInput
+  payment?: Prisma.PaymentCreateNestedOneWithoutAuditLogsInput
+  financialGeneration?: Prisma.FinancialGenerationCreateNestedOneWithoutAuditLogsInput
+  remunerationCalculation?: Prisma.RemunerationCalculationCreateNestedOneWithoutAuditLogsInput
+}
+
+export type AuditLogUncheckedCreateWithoutReceivableInput = {
+  id?: number
+  actorName: string
+  actorEmail?: string | null
+  action: string
+  entityType: string
+  entityId?: string | null
+  entityName: string
+  changeData: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ipAddress?: string | null
+  userAgent?: string | null
+  description: string
+  createdAt?: Date | string
+  actorId?: number | null
+  personId?: number | null
+  contractId?: number | null
+  expenseId?: number | null
+  payableId?: number | null
+  receiptId?: number | null
+  paymentId?: number | null
+  financialGenerationId?: number | null
+  remunerationCalculationId?: number | null
+}
+
+export type AuditLogCreateOrConnectWithoutReceivableInput = {
+  where: Prisma.AuditLogWhereUniqueInput
+  create: Prisma.XOR<Prisma.AuditLogCreateWithoutReceivableInput, Prisma.AuditLogUncheckedCreateWithoutReceivableInput>
+}
+
+export type AuditLogCreateManyReceivableInputEnvelope = {
+  data: Prisma.AuditLogCreateManyReceivableInput | Prisma.AuditLogCreateManyReceivableInput[]
+  skipDuplicates?: boolean
+}
+
+export type AuditLogUpsertWithWhereUniqueWithoutReceivableInput = {
+  where: Prisma.AuditLogWhereUniqueInput
+  update: Prisma.XOR<Prisma.AuditLogUpdateWithoutReceivableInput, Prisma.AuditLogUncheckedUpdateWithoutReceivableInput>
+  create: Prisma.XOR<Prisma.AuditLogCreateWithoutReceivableInput, Prisma.AuditLogUncheckedCreateWithoutReceivableInput>
+}
+
+export type AuditLogUpdateWithWhereUniqueWithoutReceivableInput = {
+  where: Prisma.AuditLogWhereUniqueInput
+  data: Prisma.XOR<Prisma.AuditLogUpdateWithoutReceivableInput, Prisma.AuditLogUncheckedUpdateWithoutReceivableInput>
+}
+
+export type AuditLogUpdateManyWithWhereWithoutReceivableInput = {
+  where: Prisma.AuditLogScalarWhereInput
+  data: Prisma.XOR<Prisma.AuditLogUpdateManyMutationInput, Prisma.AuditLogUncheckedUpdateManyWithoutReceivableInput>
+}
+
+export type AuditLogCreateWithoutPayableInput = {
+  actorName: string
+  actorEmail?: string | null
+  action: string
+  entityType: string
+  entityId?: string | null
+  entityName: string
+  changeData: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ipAddress?: string | null
+  userAgent?: string | null
+  description: string
+  createdAt?: Date | string
+  firm: Prisma.FirmCreateNestedOneWithoutAuditLogsInput
+  actor?: Prisma.PersonCreateNestedOneWithoutActedAuditLogsInput
+  person?: Prisma.PersonCreateNestedOneWithoutAuditLogsInput
+  contract?: Prisma.ContractCreateNestedOneWithoutAuditLogsInput
+  expense?: Prisma.ExpenseCreateNestedOneWithoutAuditLogsInput
+  receivable?: Prisma.ReceivableCreateNestedOneWithoutAuditLogsInput
+  receipt?: Prisma.ReceiptCreateNestedOneWithoutAuditLogsInput
+  payment?: Prisma.PaymentCreateNestedOneWithoutAuditLogsInput
+  financialGeneration?: Prisma.FinancialGenerationCreateNestedOneWithoutAuditLogsInput
+  remunerationCalculation?: Prisma.RemunerationCalculationCreateNestedOneWithoutAuditLogsInput
+}
+
+export type AuditLogUncheckedCreateWithoutPayableInput = {
+  id?: number
+  actorName: string
+  actorEmail?: string | null
+  action: string
+  entityType: string
+  entityId?: string | null
+  entityName: string
+  changeData: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ipAddress?: string | null
+  userAgent?: string | null
+  description: string
+  createdAt?: Date | string
+  actorId?: number | null
+  personId?: number | null
+  contractId?: number | null
+  expenseId?: number | null
+  receivableId?: number | null
+  receiptId?: number | null
+  paymentId?: number | null
+  financialGenerationId?: number | null
+  remunerationCalculationId?: number | null
+}
+
+export type AuditLogCreateOrConnectWithoutPayableInput = {
+  where: Prisma.AuditLogWhereUniqueInput
+  create: Prisma.XOR<Prisma.AuditLogCreateWithoutPayableInput, Prisma.AuditLogUncheckedCreateWithoutPayableInput>
+}
+
+export type AuditLogCreateManyPayableInputEnvelope = {
+  data: Prisma.AuditLogCreateManyPayableInput | Prisma.AuditLogCreateManyPayableInput[]
+  skipDuplicates?: boolean
+}
+
+export type AuditLogUpsertWithWhereUniqueWithoutPayableInput = {
+  where: Prisma.AuditLogWhereUniqueInput
+  update: Prisma.XOR<Prisma.AuditLogUpdateWithoutPayableInput, Prisma.AuditLogUncheckedUpdateWithoutPayableInput>
+  create: Prisma.XOR<Prisma.AuditLogCreateWithoutPayableInput, Prisma.AuditLogUncheckedCreateWithoutPayableInput>
+}
+
+export type AuditLogUpdateWithWhereUniqueWithoutPayableInput = {
+  where: Prisma.AuditLogWhereUniqueInput
+  data: Prisma.XOR<Prisma.AuditLogUpdateWithoutPayableInput, Prisma.AuditLogUncheckedUpdateWithoutPayableInput>
+}
+
+export type AuditLogUpdateManyWithWhereWithoutPayableInput = {
+  where: Prisma.AuditLogScalarWhereInput
+  data: Prisma.XOR<Prisma.AuditLogUpdateManyMutationInput, Prisma.AuditLogUncheckedUpdateManyWithoutPayableInput>
+}
+
+export type AuditLogCreateWithoutReceiptInput = {
+  actorName: string
+  actorEmail?: string | null
+  action: string
+  entityType: string
+  entityId?: string | null
+  entityName: string
+  changeData: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ipAddress?: string | null
+  userAgent?: string | null
+  description: string
+  createdAt?: Date | string
+  firm: Prisma.FirmCreateNestedOneWithoutAuditLogsInput
+  actor?: Prisma.PersonCreateNestedOneWithoutActedAuditLogsInput
+  person?: Prisma.PersonCreateNestedOneWithoutAuditLogsInput
+  contract?: Prisma.ContractCreateNestedOneWithoutAuditLogsInput
+  expense?: Prisma.ExpenseCreateNestedOneWithoutAuditLogsInput
+  receivable?: Prisma.ReceivableCreateNestedOneWithoutAuditLogsInput
+  payable?: Prisma.PayableCreateNestedOneWithoutAuditLogsInput
+  payment?: Prisma.PaymentCreateNestedOneWithoutAuditLogsInput
+  financialGeneration?: Prisma.FinancialGenerationCreateNestedOneWithoutAuditLogsInput
+  remunerationCalculation?: Prisma.RemunerationCalculationCreateNestedOneWithoutAuditLogsInput
+}
+
+export type AuditLogUncheckedCreateWithoutReceiptInput = {
+  id?: number
+  actorName: string
+  actorEmail?: string | null
+  action: string
+  entityType: string
+  entityId?: string | null
+  entityName: string
+  changeData: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ipAddress?: string | null
+  userAgent?: string | null
+  description: string
+  createdAt?: Date | string
+  actorId?: number | null
+  personId?: number | null
+  contractId?: number | null
+  expenseId?: number | null
+  receivableId?: number | null
+  payableId?: number | null
+  paymentId?: number | null
+  financialGenerationId?: number | null
+  remunerationCalculationId?: number | null
+}
+
+export type AuditLogCreateOrConnectWithoutReceiptInput = {
+  where: Prisma.AuditLogWhereUniqueInput
+  create: Prisma.XOR<Prisma.AuditLogCreateWithoutReceiptInput, Prisma.AuditLogUncheckedCreateWithoutReceiptInput>
+}
+
+export type AuditLogCreateManyReceiptInputEnvelope = {
+  data: Prisma.AuditLogCreateManyReceiptInput | Prisma.AuditLogCreateManyReceiptInput[]
+  skipDuplicates?: boolean
+}
+
+export type AuditLogUpsertWithWhereUniqueWithoutReceiptInput = {
+  where: Prisma.AuditLogWhereUniqueInput
+  update: Prisma.XOR<Prisma.AuditLogUpdateWithoutReceiptInput, Prisma.AuditLogUncheckedUpdateWithoutReceiptInput>
+  create: Prisma.XOR<Prisma.AuditLogCreateWithoutReceiptInput, Prisma.AuditLogUncheckedCreateWithoutReceiptInput>
+}
+
+export type AuditLogUpdateWithWhereUniqueWithoutReceiptInput = {
+  where: Prisma.AuditLogWhereUniqueInput
+  data: Prisma.XOR<Prisma.AuditLogUpdateWithoutReceiptInput, Prisma.AuditLogUncheckedUpdateWithoutReceiptInput>
+}
+
+export type AuditLogUpdateManyWithWhereWithoutReceiptInput = {
+  where: Prisma.AuditLogScalarWhereInput
+  data: Prisma.XOR<Prisma.AuditLogUpdateManyMutationInput, Prisma.AuditLogUncheckedUpdateManyWithoutReceiptInput>
+}
+
+export type AuditLogCreateWithoutPaymentInput = {
+  actorName: string
+  actorEmail?: string | null
+  action: string
+  entityType: string
+  entityId?: string | null
+  entityName: string
+  changeData: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ipAddress?: string | null
+  userAgent?: string | null
+  description: string
+  createdAt?: Date | string
+  firm: Prisma.FirmCreateNestedOneWithoutAuditLogsInput
+  actor?: Prisma.PersonCreateNestedOneWithoutActedAuditLogsInput
+  person?: Prisma.PersonCreateNestedOneWithoutAuditLogsInput
+  contract?: Prisma.ContractCreateNestedOneWithoutAuditLogsInput
+  expense?: Prisma.ExpenseCreateNestedOneWithoutAuditLogsInput
+  receivable?: Prisma.ReceivableCreateNestedOneWithoutAuditLogsInput
+  payable?: Prisma.PayableCreateNestedOneWithoutAuditLogsInput
+  receipt?: Prisma.ReceiptCreateNestedOneWithoutAuditLogsInput
+  financialGeneration?: Prisma.FinancialGenerationCreateNestedOneWithoutAuditLogsInput
+  remunerationCalculation?: Prisma.RemunerationCalculationCreateNestedOneWithoutAuditLogsInput
+}
+
+export type AuditLogUncheckedCreateWithoutPaymentInput = {
+  id?: number
+  actorName: string
+  actorEmail?: string | null
+  action: string
+  entityType: string
+  entityId?: string | null
+  entityName: string
+  changeData: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ipAddress?: string | null
+  userAgent?: string | null
+  description: string
+  createdAt?: Date | string
+  actorId?: number | null
+  personId?: number | null
+  contractId?: number | null
+  expenseId?: number | null
+  receivableId?: number | null
+  payableId?: number | null
+  receiptId?: number | null
+  financialGenerationId?: number | null
+  remunerationCalculationId?: number | null
+}
+
+export type AuditLogCreateOrConnectWithoutPaymentInput = {
+  where: Prisma.AuditLogWhereUniqueInput
+  create: Prisma.XOR<Prisma.AuditLogCreateWithoutPaymentInput, Prisma.AuditLogUncheckedCreateWithoutPaymentInput>
+}
+
+export type AuditLogCreateManyPaymentInputEnvelope = {
+  data: Prisma.AuditLogCreateManyPaymentInput | Prisma.AuditLogCreateManyPaymentInput[]
+  skipDuplicates?: boolean
+}
+
+export type AuditLogUpsertWithWhereUniqueWithoutPaymentInput = {
+  where: Prisma.AuditLogWhereUniqueInput
+  update: Prisma.XOR<Prisma.AuditLogUpdateWithoutPaymentInput, Prisma.AuditLogUncheckedUpdateWithoutPaymentInput>
+  create: Prisma.XOR<Prisma.AuditLogCreateWithoutPaymentInput, Prisma.AuditLogUncheckedCreateWithoutPaymentInput>
+}
+
+export type AuditLogUpdateWithWhereUniqueWithoutPaymentInput = {
+  where: Prisma.AuditLogWhereUniqueInput
+  data: Prisma.XOR<Prisma.AuditLogUpdateWithoutPaymentInput, Prisma.AuditLogUncheckedUpdateWithoutPaymentInput>
+}
+
+export type AuditLogUpdateManyWithWhereWithoutPaymentInput = {
+  where: Prisma.AuditLogScalarWhereInput
+  data: Prisma.XOR<Prisma.AuditLogUpdateManyMutationInput, Prisma.AuditLogUncheckedUpdateManyWithoutPaymentInput>
+}
+
+export type AuditLogCreateWithoutRemunerationCalculationInput = {
+  actorName: string
+  actorEmail?: string | null
+  action: string
+  entityType: string
+  entityId?: string | null
+  entityName: string
+  changeData: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ipAddress?: string | null
+  userAgent?: string | null
+  description: string
+  createdAt?: Date | string
+  firm: Prisma.FirmCreateNestedOneWithoutAuditLogsInput
+  actor?: Prisma.PersonCreateNestedOneWithoutActedAuditLogsInput
+  person?: Prisma.PersonCreateNestedOneWithoutAuditLogsInput
+  contract?: Prisma.ContractCreateNestedOneWithoutAuditLogsInput
+  expense?: Prisma.ExpenseCreateNestedOneWithoutAuditLogsInput
+  receivable?: Prisma.ReceivableCreateNestedOneWithoutAuditLogsInput
+  payable?: Prisma.PayableCreateNestedOneWithoutAuditLogsInput
+  receipt?: Prisma.ReceiptCreateNestedOneWithoutAuditLogsInput
+  payment?: Prisma.PaymentCreateNestedOneWithoutAuditLogsInput
+  financialGeneration?: Prisma.FinancialGenerationCreateNestedOneWithoutAuditLogsInput
+}
+
+export type AuditLogUncheckedCreateWithoutRemunerationCalculationInput = {
+  id?: number
+  actorName: string
+  actorEmail?: string | null
+  action: string
+  entityType: string
+  entityId?: string | null
+  entityName: string
+  changeData: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ipAddress?: string | null
+  userAgent?: string | null
+  description: string
+  createdAt?: Date | string
+  actorId?: number | null
+  personId?: number | null
+  contractId?: number | null
+  expenseId?: number | null
+  receivableId?: number | null
+  payableId?: number | null
+  receiptId?: number | null
+  paymentId?: number | null
+  financialGenerationId?: number | null
+}
+
+export type AuditLogCreateOrConnectWithoutRemunerationCalculationInput = {
+  where: Prisma.AuditLogWhereUniqueInput
+  create: Prisma.XOR<Prisma.AuditLogCreateWithoutRemunerationCalculationInput, Prisma.AuditLogUncheckedCreateWithoutRemunerationCalculationInput>
+}
+
+export type AuditLogCreateManyRemunerationCalculationInputEnvelope = {
+  data: Prisma.AuditLogCreateManyRemunerationCalculationInput | Prisma.AuditLogCreateManyRemunerationCalculationInput[]
+  skipDuplicates?: boolean
+}
+
+export type AuditLogUpsertWithWhereUniqueWithoutRemunerationCalculationInput = {
+  where: Prisma.AuditLogWhereUniqueInput
+  update: Prisma.XOR<Prisma.AuditLogUpdateWithoutRemunerationCalculationInput, Prisma.AuditLogUncheckedUpdateWithoutRemunerationCalculationInput>
+  create: Prisma.XOR<Prisma.AuditLogCreateWithoutRemunerationCalculationInput, Prisma.AuditLogUncheckedCreateWithoutRemunerationCalculationInput>
+}
+
+export type AuditLogUpdateWithWhereUniqueWithoutRemunerationCalculationInput = {
+  where: Prisma.AuditLogWhereUniqueInput
+  data: Prisma.XOR<Prisma.AuditLogUpdateWithoutRemunerationCalculationInput, Prisma.AuditLogUncheckedUpdateWithoutRemunerationCalculationInput>
+}
+
+export type AuditLogUpdateManyWithWhereWithoutRemunerationCalculationInput = {
+  where: Prisma.AuditLogScalarWhereInput
+  data: Prisma.XOR<Prisma.AuditLogUpdateManyMutationInput, Prisma.AuditLogUncheckedUpdateManyWithoutRemunerationCalculationInput>
+}
+
+export type AuditLogCreateManyFirmInput = {
+  id?: number
+  actorName: string
+  actorEmail?: string | null
+  action: string
+  entityType: string
+  entityId?: string | null
+  entityName: string
+  changeData: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ipAddress?: string | null
+  userAgent?: string | null
+  description: string
+  createdAt?: Date | string
+  actorId?: number | null
+  personId?: number | null
+  contractId?: number | null
+  expenseId?: number | null
+  receivableId?: number | null
+  payableId?: number | null
+  receiptId?: number | null
+  paymentId?: number | null
+  financialGenerationId?: number | null
+  remunerationCalculationId?: number | null
 }
 
 export type AuditLogUpdateWithoutFirmInput = {
@@ -1096,16 +2185,20 @@ export type AuditLogUpdateWithoutFirmInput = {
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  client?: Prisma.ClientUpdateOneWithoutAuditLogsNestedInput
-  employee?: Prisma.EmployeeUpdateOneWithoutSharedAuditLogsNestedInput
-  actor?: Prisma.EmployeeUpdateOneWithoutAuditLogsNestedInput
+  actor?: Prisma.PersonUpdateOneWithoutActedAuditLogsNestedInput
+  person?: Prisma.PersonUpdateOneWithoutAuditLogsNestedInput
+  contract?: Prisma.ContractUpdateOneWithoutAuditLogsNestedInput
+  expense?: Prisma.ExpenseUpdateOneWithoutAuditLogsNestedInput
+  receivable?: Prisma.ReceivableUpdateOneWithoutAuditLogsNestedInput
+  payable?: Prisma.PayableUpdateOneWithoutAuditLogsNestedInput
+  receipt?: Prisma.ReceiptUpdateOneWithoutAuditLogsNestedInput
+  payment?: Prisma.PaymentUpdateOneWithoutAuditLogsNestedInput
+  financialGeneration?: Prisma.FinancialGenerationUpdateOneWithoutAuditLogsNestedInput
+  remunerationCalculation?: Prisma.RemunerationCalculationUpdateOneWithoutAuditLogsNestedInput
 }
 
 export type AuditLogUncheckedUpdateWithoutFirmInput = {
-  clientId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  employeeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  actorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actorName?: Prisma.StringFieldUpdateOperationsInput | string
   actorEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   action?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1117,13 +2210,20 @@ export type AuditLogUncheckedUpdateWithoutFirmInput = {
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  actorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  personId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  contractId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  receivableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  payableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  receiptId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  paymentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  financialGenerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type AuditLogUncheckedUpdateManyWithoutFirmInput = {
-  clientId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  employeeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  actorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actorName?: Prisma.StringFieldUpdateOperationsInput | string
   actorEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   action?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1135,13 +2235,20 @@ export type AuditLogUncheckedUpdateManyWithoutFirmInput = {
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  actorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  personId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  contractId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  receivableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  payableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  receiptId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  paymentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  financialGenerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type AuditLogCreateManyActorInput = {
-  clientId?: number | null
-  employeeId?: number | null
   id?: number
-  firmId: number
   actorName: string
   actorEmail?: string | null
   action: string
@@ -1153,13 +2260,20 @@ export type AuditLogCreateManyActorInput = {
   userAgent?: string | null
   description: string
   createdAt?: Date | string
+  firmId: number
+  personId?: number | null
+  contractId?: number | null
+  expenseId?: number | null
+  receivableId?: number | null
+  payableId?: number | null
+  receiptId?: number | null
+  paymentId?: number | null
+  financialGenerationId?: number | null
+  remunerationCalculationId?: number | null
 }
 
-export type AuditLogCreateManyEmployeeInput = {
-  clientId?: number | null
+export type AuditLogCreateManyPersonInput = {
   id?: number
-  firmId: number
-  actorId?: number | null
   actorName: string
   actorEmail?: string | null
   action: string
@@ -1171,6 +2285,16 @@ export type AuditLogCreateManyEmployeeInput = {
   userAgent?: string | null
   description: string
   createdAt?: Date | string
+  firmId: number
+  actorId?: number | null
+  contractId?: number | null
+  expenseId?: number | null
+  receivableId?: number | null
+  payableId?: number | null
+  receiptId?: number | null
+  paymentId?: number | null
+  financialGenerationId?: number | null
+  remunerationCalculationId?: number | null
 }
 
 export type AuditLogUpdateWithoutActorInput = {
@@ -1185,16 +2309,20 @@ export type AuditLogUpdateWithoutActorInput = {
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  client?: Prisma.ClientUpdateOneWithoutAuditLogsNestedInput
-  employee?: Prisma.EmployeeUpdateOneWithoutSharedAuditLogsNestedInput
   firm?: Prisma.FirmUpdateOneRequiredWithoutAuditLogsNestedInput
+  person?: Prisma.PersonUpdateOneWithoutAuditLogsNestedInput
+  contract?: Prisma.ContractUpdateOneWithoutAuditLogsNestedInput
+  expense?: Prisma.ExpenseUpdateOneWithoutAuditLogsNestedInput
+  receivable?: Prisma.ReceivableUpdateOneWithoutAuditLogsNestedInput
+  payable?: Prisma.PayableUpdateOneWithoutAuditLogsNestedInput
+  receipt?: Prisma.ReceiptUpdateOneWithoutAuditLogsNestedInput
+  payment?: Prisma.PaymentUpdateOneWithoutAuditLogsNestedInput
+  financialGeneration?: Prisma.FinancialGenerationUpdateOneWithoutAuditLogsNestedInput
+  remunerationCalculation?: Prisma.RemunerationCalculationUpdateOneWithoutAuditLogsNestedInput
 }
 
 export type AuditLogUncheckedUpdateWithoutActorInput = {
-  clientId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  employeeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  firmId?: Prisma.IntFieldUpdateOperationsInput | number
   actorName?: Prisma.StringFieldUpdateOperationsInput | string
   actorEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   action?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1206,13 +2334,20 @@ export type AuditLogUncheckedUpdateWithoutActorInput = {
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  firmId?: Prisma.IntFieldUpdateOperationsInput | number
+  personId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  contractId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  receivableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  payableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  receiptId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  paymentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  financialGenerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type AuditLogUncheckedUpdateManyWithoutActorInput = {
-  clientId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  employeeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  firmId?: Prisma.IntFieldUpdateOperationsInput | number
   actorName?: Prisma.StringFieldUpdateOperationsInput | string
   actorEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   action?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1224,9 +2359,19 @@ export type AuditLogUncheckedUpdateManyWithoutActorInput = {
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  firmId?: Prisma.IntFieldUpdateOperationsInput | number
+  personId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  contractId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  receivableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  payableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  receiptId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  paymentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  financialGenerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
-export type AuditLogUpdateWithoutEmployeeInput = {
+export type AuditLogUpdateWithoutPersonInput = {
   actorName?: Prisma.StringFieldUpdateOperationsInput | string
   actorEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   action?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1238,16 +2383,20 @@ export type AuditLogUpdateWithoutEmployeeInput = {
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  client?: Prisma.ClientUpdateOneWithoutAuditLogsNestedInput
-  actor?: Prisma.EmployeeUpdateOneWithoutAuditLogsNestedInput
   firm?: Prisma.FirmUpdateOneRequiredWithoutAuditLogsNestedInput
+  actor?: Prisma.PersonUpdateOneWithoutActedAuditLogsNestedInput
+  contract?: Prisma.ContractUpdateOneWithoutAuditLogsNestedInput
+  expense?: Prisma.ExpenseUpdateOneWithoutAuditLogsNestedInput
+  receivable?: Prisma.ReceivableUpdateOneWithoutAuditLogsNestedInput
+  payable?: Prisma.PayableUpdateOneWithoutAuditLogsNestedInput
+  receipt?: Prisma.ReceiptUpdateOneWithoutAuditLogsNestedInput
+  payment?: Prisma.PaymentUpdateOneWithoutAuditLogsNestedInput
+  financialGeneration?: Prisma.FinancialGenerationUpdateOneWithoutAuditLogsNestedInput
+  remunerationCalculation?: Prisma.RemunerationCalculationUpdateOneWithoutAuditLogsNestedInput
 }
 
-export type AuditLogUncheckedUpdateWithoutEmployeeInput = {
-  clientId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+export type AuditLogUncheckedUpdateWithoutPersonInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  firmId?: Prisma.IntFieldUpdateOperationsInput | number
-  actorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actorName?: Prisma.StringFieldUpdateOperationsInput | string
   actorEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   action?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1259,13 +2408,20 @@ export type AuditLogUncheckedUpdateWithoutEmployeeInput = {
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type AuditLogUncheckedUpdateManyWithoutEmployeeInput = {
-  clientId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  id?: Prisma.IntFieldUpdateOperationsInput | number
   firmId?: Prisma.IntFieldUpdateOperationsInput | number
   actorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  contractId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  receivableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  payableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  receiptId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  paymentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  financialGenerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+}
+
+export type AuditLogUncheckedUpdateManyWithoutPersonInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
   actorName?: Prisma.StringFieldUpdateOperationsInput | string
   actorEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   action?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1277,13 +2433,20 @@ export type AuditLogUncheckedUpdateManyWithoutEmployeeInput = {
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  firmId?: Prisma.IntFieldUpdateOperationsInput | number
+  actorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  contractId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  receivableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  payableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  receiptId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  paymentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  financialGenerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
-export type AuditLogCreateManyClientInput = {
-  employeeId?: number | null
+export type AuditLogCreateManyContractInput = {
   id?: number
-  firmId: number
-  actorId?: number | null
   actorName: string
   actorEmail?: string | null
   action: string
@@ -1295,9 +2458,18 @@ export type AuditLogCreateManyClientInput = {
   userAgent?: string | null
   description: string
   createdAt?: Date | string
+  actorId?: number | null
+  personId?: number | null
+  expenseId?: number | null
+  receivableId?: number | null
+  payableId?: number | null
+  receiptId?: number | null
+  paymentId?: number | null
+  financialGenerationId?: number | null
+  remunerationCalculationId?: number | null
 }
 
-export type AuditLogUpdateWithoutClientInput = {
+export type AuditLogUpdateWithoutContractInput = {
   actorName?: Prisma.StringFieldUpdateOperationsInput | string
   actorEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   action?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1309,16 +2481,20 @@ export type AuditLogUpdateWithoutClientInput = {
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  employee?: Prisma.EmployeeUpdateOneWithoutSharedAuditLogsNestedInput
-  actor?: Prisma.EmployeeUpdateOneWithoutAuditLogsNestedInput
   firm?: Prisma.FirmUpdateOneRequiredWithoutAuditLogsNestedInput
+  actor?: Prisma.PersonUpdateOneWithoutActedAuditLogsNestedInput
+  person?: Prisma.PersonUpdateOneWithoutAuditLogsNestedInput
+  expense?: Prisma.ExpenseUpdateOneWithoutAuditLogsNestedInput
+  receivable?: Prisma.ReceivableUpdateOneWithoutAuditLogsNestedInput
+  payable?: Prisma.PayableUpdateOneWithoutAuditLogsNestedInput
+  receipt?: Prisma.ReceiptUpdateOneWithoutAuditLogsNestedInput
+  payment?: Prisma.PaymentUpdateOneWithoutAuditLogsNestedInput
+  financialGeneration?: Prisma.FinancialGenerationUpdateOneWithoutAuditLogsNestedInput
+  remunerationCalculation?: Prisma.RemunerationCalculationUpdateOneWithoutAuditLogsNestedInput
 }
 
-export type AuditLogUncheckedUpdateWithoutClientInput = {
-  employeeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+export type AuditLogUncheckedUpdateWithoutContractInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  firmId?: Prisma.IntFieldUpdateOperationsInput | number
-  actorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actorName?: Prisma.StringFieldUpdateOperationsInput | string
   actorEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   action?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1330,13 +2506,19 @@ export type AuditLogUncheckedUpdateWithoutClientInput = {
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  actorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  personId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  receivableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  payableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  receiptId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  paymentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  financialGenerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
-export type AuditLogUncheckedUpdateManyWithoutClientInput = {
-  employeeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+export type AuditLogUncheckedUpdateManyWithoutContractInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  firmId?: Prisma.IntFieldUpdateOperationsInput | number
-  actorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actorName?: Prisma.StringFieldUpdateOperationsInput | string
   actorEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   action?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1348,16 +2530,693 @@ export type AuditLogUncheckedUpdateManyWithoutClientInput = {
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  actorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  personId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  receivableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  payableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  receiptId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  paymentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  financialGenerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+}
+
+export type AuditLogCreateManyExpenseInput = {
+  id?: number
+  actorName: string
+  actorEmail?: string | null
+  action: string
+  entityType: string
+  entityId?: string | null
+  entityName: string
+  changeData: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ipAddress?: string | null
+  userAgent?: string | null
+  description: string
+  createdAt?: Date | string
+  actorId?: number | null
+  personId?: number | null
+  contractId?: number | null
+  receivableId?: number | null
+  payableId?: number | null
+  receiptId?: number | null
+  paymentId?: number | null
+  financialGenerationId?: number | null
+  remunerationCalculationId?: number | null
+}
+
+export type AuditLogUpdateWithoutExpenseInput = {
+  actorName?: Prisma.StringFieldUpdateOperationsInput | string
+  actorEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  entityType?: Prisma.StringFieldUpdateOperationsInput | string
+  entityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  entityName?: Prisma.StringFieldUpdateOperationsInput | string
+  changeData?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  firm?: Prisma.FirmUpdateOneRequiredWithoutAuditLogsNestedInput
+  actor?: Prisma.PersonUpdateOneWithoutActedAuditLogsNestedInput
+  person?: Prisma.PersonUpdateOneWithoutAuditLogsNestedInput
+  contract?: Prisma.ContractUpdateOneWithoutAuditLogsNestedInput
+  receivable?: Prisma.ReceivableUpdateOneWithoutAuditLogsNestedInput
+  payable?: Prisma.PayableUpdateOneWithoutAuditLogsNestedInput
+  receipt?: Prisma.ReceiptUpdateOneWithoutAuditLogsNestedInput
+  payment?: Prisma.PaymentUpdateOneWithoutAuditLogsNestedInput
+  financialGeneration?: Prisma.FinancialGenerationUpdateOneWithoutAuditLogsNestedInput
+  remunerationCalculation?: Prisma.RemunerationCalculationUpdateOneWithoutAuditLogsNestedInput
+}
+
+export type AuditLogUncheckedUpdateWithoutExpenseInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  actorName?: Prisma.StringFieldUpdateOperationsInput | string
+  actorEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  entityType?: Prisma.StringFieldUpdateOperationsInput | string
+  entityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  entityName?: Prisma.StringFieldUpdateOperationsInput | string
+  changeData?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  actorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  personId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  contractId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  receivableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  payableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  receiptId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  paymentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  financialGenerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+}
+
+export type AuditLogUncheckedUpdateManyWithoutExpenseInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  actorName?: Prisma.StringFieldUpdateOperationsInput | string
+  actorEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  entityType?: Prisma.StringFieldUpdateOperationsInput | string
+  entityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  entityName?: Prisma.StringFieldUpdateOperationsInput | string
+  changeData?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  actorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  personId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  contractId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  receivableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  payableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  receiptId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  paymentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  financialGenerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+}
+
+export type AuditLogCreateManyFinancialGenerationInput = {
+  id?: number
+  actorName: string
+  actorEmail?: string | null
+  action: string
+  entityType: string
+  entityId?: string | null
+  entityName: string
+  changeData: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ipAddress?: string | null
+  userAgent?: string | null
+  description: string
+  createdAt?: Date | string
+  actorId?: number | null
+  personId?: number | null
+  contractId?: number | null
+  expenseId?: number | null
+  receivableId?: number | null
+  payableId?: number | null
+  receiptId?: number | null
+  paymentId?: number | null
+  remunerationCalculationId?: number | null
+}
+
+export type AuditLogUpdateWithoutFinancialGenerationInput = {
+  actorName?: Prisma.StringFieldUpdateOperationsInput | string
+  actorEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  entityType?: Prisma.StringFieldUpdateOperationsInput | string
+  entityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  entityName?: Prisma.StringFieldUpdateOperationsInput | string
+  changeData?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  firm?: Prisma.FirmUpdateOneRequiredWithoutAuditLogsNestedInput
+  actor?: Prisma.PersonUpdateOneWithoutActedAuditLogsNestedInput
+  person?: Prisma.PersonUpdateOneWithoutAuditLogsNestedInput
+  contract?: Prisma.ContractUpdateOneWithoutAuditLogsNestedInput
+  expense?: Prisma.ExpenseUpdateOneWithoutAuditLogsNestedInput
+  receivable?: Prisma.ReceivableUpdateOneWithoutAuditLogsNestedInput
+  payable?: Prisma.PayableUpdateOneWithoutAuditLogsNestedInput
+  receipt?: Prisma.ReceiptUpdateOneWithoutAuditLogsNestedInput
+  payment?: Prisma.PaymentUpdateOneWithoutAuditLogsNestedInput
+  remunerationCalculation?: Prisma.RemunerationCalculationUpdateOneWithoutAuditLogsNestedInput
+}
+
+export type AuditLogUncheckedUpdateWithoutFinancialGenerationInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  actorName?: Prisma.StringFieldUpdateOperationsInput | string
+  actorEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  entityType?: Prisma.StringFieldUpdateOperationsInput | string
+  entityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  entityName?: Prisma.StringFieldUpdateOperationsInput | string
+  changeData?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  actorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  personId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  contractId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  receivableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  payableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  receiptId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  paymentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+}
+
+export type AuditLogUncheckedUpdateManyWithoutFinancialGenerationInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  actorName?: Prisma.StringFieldUpdateOperationsInput | string
+  actorEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  entityType?: Prisma.StringFieldUpdateOperationsInput | string
+  entityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  entityName?: Prisma.StringFieldUpdateOperationsInput | string
+  changeData?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  actorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  personId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  contractId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  receivableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  payableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  receiptId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  paymentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+}
+
+export type AuditLogCreateManyReceivableInput = {
+  id?: number
+  actorName: string
+  actorEmail?: string | null
+  action: string
+  entityType: string
+  entityId?: string | null
+  entityName: string
+  changeData: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ipAddress?: string | null
+  userAgent?: string | null
+  description: string
+  createdAt?: Date | string
+  actorId?: number | null
+  personId?: number | null
+  contractId?: number | null
+  expenseId?: number | null
+  payableId?: number | null
+  receiptId?: number | null
+  paymentId?: number | null
+  financialGenerationId?: number | null
+  remunerationCalculationId?: number | null
+}
+
+export type AuditLogUpdateWithoutReceivableInput = {
+  actorName?: Prisma.StringFieldUpdateOperationsInput | string
+  actorEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  entityType?: Prisma.StringFieldUpdateOperationsInput | string
+  entityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  entityName?: Prisma.StringFieldUpdateOperationsInput | string
+  changeData?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  firm?: Prisma.FirmUpdateOneRequiredWithoutAuditLogsNestedInput
+  actor?: Prisma.PersonUpdateOneWithoutActedAuditLogsNestedInput
+  person?: Prisma.PersonUpdateOneWithoutAuditLogsNestedInput
+  contract?: Prisma.ContractUpdateOneWithoutAuditLogsNestedInput
+  expense?: Prisma.ExpenseUpdateOneWithoutAuditLogsNestedInput
+  payable?: Prisma.PayableUpdateOneWithoutAuditLogsNestedInput
+  receipt?: Prisma.ReceiptUpdateOneWithoutAuditLogsNestedInput
+  payment?: Prisma.PaymentUpdateOneWithoutAuditLogsNestedInput
+  financialGeneration?: Prisma.FinancialGenerationUpdateOneWithoutAuditLogsNestedInput
+  remunerationCalculation?: Prisma.RemunerationCalculationUpdateOneWithoutAuditLogsNestedInput
+}
+
+export type AuditLogUncheckedUpdateWithoutReceivableInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  actorName?: Prisma.StringFieldUpdateOperationsInput | string
+  actorEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  entityType?: Prisma.StringFieldUpdateOperationsInput | string
+  entityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  entityName?: Prisma.StringFieldUpdateOperationsInput | string
+  changeData?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  actorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  personId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  contractId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  payableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  receiptId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  paymentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  financialGenerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+}
+
+export type AuditLogUncheckedUpdateManyWithoutReceivableInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  actorName?: Prisma.StringFieldUpdateOperationsInput | string
+  actorEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  entityType?: Prisma.StringFieldUpdateOperationsInput | string
+  entityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  entityName?: Prisma.StringFieldUpdateOperationsInput | string
+  changeData?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  actorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  personId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  contractId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  payableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  receiptId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  paymentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  financialGenerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+}
+
+export type AuditLogCreateManyPayableInput = {
+  id?: number
+  actorName: string
+  actorEmail?: string | null
+  action: string
+  entityType: string
+  entityId?: string | null
+  entityName: string
+  changeData: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ipAddress?: string | null
+  userAgent?: string | null
+  description: string
+  createdAt?: Date | string
+  actorId?: number | null
+  personId?: number | null
+  contractId?: number | null
+  expenseId?: number | null
+  receivableId?: number | null
+  receiptId?: number | null
+  paymentId?: number | null
+  financialGenerationId?: number | null
+  remunerationCalculationId?: number | null
+}
+
+export type AuditLogUpdateWithoutPayableInput = {
+  actorName?: Prisma.StringFieldUpdateOperationsInput | string
+  actorEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  entityType?: Prisma.StringFieldUpdateOperationsInput | string
+  entityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  entityName?: Prisma.StringFieldUpdateOperationsInput | string
+  changeData?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  firm?: Prisma.FirmUpdateOneRequiredWithoutAuditLogsNestedInput
+  actor?: Prisma.PersonUpdateOneWithoutActedAuditLogsNestedInput
+  person?: Prisma.PersonUpdateOneWithoutAuditLogsNestedInput
+  contract?: Prisma.ContractUpdateOneWithoutAuditLogsNestedInput
+  expense?: Prisma.ExpenseUpdateOneWithoutAuditLogsNestedInput
+  receivable?: Prisma.ReceivableUpdateOneWithoutAuditLogsNestedInput
+  receipt?: Prisma.ReceiptUpdateOneWithoutAuditLogsNestedInput
+  payment?: Prisma.PaymentUpdateOneWithoutAuditLogsNestedInput
+  financialGeneration?: Prisma.FinancialGenerationUpdateOneWithoutAuditLogsNestedInput
+  remunerationCalculation?: Prisma.RemunerationCalculationUpdateOneWithoutAuditLogsNestedInput
+}
+
+export type AuditLogUncheckedUpdateWithoutPayableInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  actorName?: Prisma.StringFieldUpdateOperationsInput | string
+  actorEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  entityType?: Prisma.StringFieldUpdateOperationsInput | string
+  entityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  entityName?: Prisma.StringFieldUpdateOperationsInput | string
+  changeData?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  actorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  personId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  contractId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  receivableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  receiptId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  paymentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  financialGenerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+}
+
+export type AuditLogUncheckedUpdateManyWithoutPayableInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  actorName?: Prisma.StringFieldUpdateOperationsInput | string
+  actorEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  entityType?: Prisma.StringFieldUpdateOperationsInput | string
+  entityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  entityName?: Prisma.StringFieldUpdateOperationsInput | string
+  changeData?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  actorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  personId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  contractId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  receivableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  receiptId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  paymentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  financialGenerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+}
+
+export type AuditLogCreateManyReceiptInput = {
+  id?: number
+  actorName: string
+  actorEmail?: string | null
+  action: string
+  entityType: string
+  entityId?: string | null
+  entityName: string
+  changeData: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ipAddress?: string | null
+  userAgent?: string | null
+  description: string
+  createdAt?: Date | string
+  actorId?: number | null
+  personId?: number | null
+  contractId?: number | null
+  expenseId?: number | null
+  receivableId?: number | null
+  payableId?: number | null
+  paymentId?: number | null
+  financialGenerationId?: number | null
+  remunerationCalculationId?: number | null
+}
+
+export type AuditLogUpdateWithoutReceiptInput = {
+  actorName?: Prisma.StringFieldUpdateOperationsInput | string
+  actorEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  entityType?: Prisma.StringFieldUpdateOperationsInput | string
+  entityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  entityName?: Prisma.StringFieldUpdateOperationsInput | string
+  changeData?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  firm?: Prisma.FirmUpdateOneRequiredWithoutAuditLogsNestedInput
+  actor?: Prisma.PersonUpdateOneWithoutActedAuditLogsNestedInput
+  person?: Prisma.PersonUpdateOneWithoutAuditLogsNestedInput
+  contract?: Prisma.ContractUpdateOneWithoutAuditLogsNestedInput
+  expense?: Prisma.ExpenseUpdateOneWithoutAuditLogsNestedInput
+  receivable?: Prisma.ReceivableUpdateOneWithoutAuditLogsNestedInput
+  payable?: Prisma.PayableUpdateOneWithoutAuditLogsNestedInput
+  payment?: Prisma.PaymentUpdateOneWithoutAuditLogsNestedInput
+  financialGeneration?: Prisma.FinancialGenerationUpdateOneWithoutAuditLogsNestedInput
+  remunerationCalculation?: Prisma.RemunerationCalculationUpdateOneWithoutAuditLogsNestedInput
+}
+
+export type AuditLogUncheckedUpdateWithoutReceiptInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  actorName?: Prisma.StringFieldUpdateOperationsInput | string
+  actorEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  entityType?: Prisma.StringFieldUpdateOperationsInput | string
+  entityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  entityName?: Prisma.StringFieldUpdateOperationsInput | string
+  changeData?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  actorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  personId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  contractId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  receivableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  payableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  paymentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  financialGenerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+}
+
+export type AuditLogUncheckedUpdateManyWithoutReceiptInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  actorName?: Prisma.StringFieldUpdateOperationsInput | string
+  actorEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  entityType?: Prisma.StringFieldUpdateOperationsInput | string
+  entityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  entityName?: Prisma.StringFieldUpdateOperationsInput | string
+  changeData?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  actorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  personId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  contractId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  receivableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  payableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  paymentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  financialGenerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+}
+
+export type AuditLogCreateManyPaymentInput = {
+  id?: number
+  actorName: string
+  actorEmail?: string | null
+  action: string
+  entityType: string
+  entityId?: string | null
+  entityName: string
+  changeData: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ipAddress?: string | null
+  userAgent?: string | null
+  description: string
+  createdAt?: Date | string
+  actorId?: number | null
+  personId?: number | null
+  contractId?: number | null
+  expenseId?: number | null
+  receivableId?: number | null
+  payableId?: number | null
+  receiptId?: number | null
+  financialGenerationId?: number | null
+  remunerationCalculationId?: number | null
+}
+
+export type AuditLogUpdateWithoutPaymentInput = {
+  actorName?: Prisma.StringFieldUpdateOperationsInput | string
+  actorEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  entityType?: Prisma.StringFieldUpdateOperationsInput | string
+  entityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  entityName?: Prisma.StringFieldUpdateOperationsInput | string
+  changeData?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  firm?: Prisma.FirmUpdateOneRequiredWithoutAuditLogsNestedInput
+  actor?: Prisma.PersonUpdateOneWithoutActedAuditLogsNestedInput
+  person?: Prisma.PersonUpdateOneWithoutAuditLogsNestedInput
+  contract?: Prisma.ContractUpdateOneWithoutAuditLogsNestedInput
+  expense?: Prisma.ExpenseUpdateOneWithoutAuditLogsNestedInput
+  receivable?: Prisma.ReceivableUpdateOneWithoutAuditLogsNestedInput
+  payable?: Prisma.PayableUpdateOneWithoutAuditLogsNestedInput
+  receipt?: Prisma.ReceiptUpdateOneWithoutAuditLogsNestedInput
+  financialGeneration?: Prisma.FinancialGenerationUpdateOneWithoutAuditLogsNestedInput
+  remunerationCalculation?: Prisma.RemunerationCalculationUpdateOneWithoutAuditLogsNestedInput
+}
+
+export type AuditLogUncheckedUpdateWithoutPaymentInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  actorName?: Prisma.StringFieldUpdateOperationsInput | string
+  actorEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  entityType?: Prisma.StringFieldUpdateOperationsInput | string
+  entityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  entityName?: Prisma.StringFieldUpdateOperationsInput | string
+  changeData?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  actorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  personId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  contractId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  receivableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  payableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  receiptId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  financialGenerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+}
+
+export type AuditLogUncheckedUpdateManyWithoutPaymentInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  actorName?: Prisma.StringFieldUpdateOperationsInput | string
+  actorEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  entityType?: Prisma.StringFieldUpdateOperationsInput | string
+  entityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  entityName?: Prisma.StringFieldUpdateOperationsInput | string
+  changeData?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  actorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  personId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  contractId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  receivableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  payableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  receiptId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  financialGenerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+}
+
+export type AuditLogCreateManyRemunerationCalculationInput = {
+  id?: number
+  actorName: string
+  actorEmail?: string | null
+  action: string
+  entityType: string
+  entityId?: string | null
+  entityName: string
+  changeData: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ipAddress?: string | null
+  userAgent?: string | null
+  description: string
+  createdAt?: Date | string
+  actorId?: number | null
+  personId?: number | null
+  contractId?: number | null
+  expenseId?: number | null
+  receivableId?: number | null
+  payableId?: number | null
+  receiptId?: number | null
+  paymentId?: number | null
+  financialGenerationId?: number | null
+}
+
+export type AuditLogUpdateWithoutRemunerationCalculationInput = {
+  actorName?: Prisma.StringFieldUpdateOperationsInput | string
+  actorEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  entityType?: Prisma.StringFieldUpdateOperationsInput | string
+  entityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  entityName?: Prisma.StringFieldUpdateOperationsInput | string
+  changeData?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  firm?: Prisma.FirmUpdateOneRequiredWithoutAuditLogsNestedInput
+  actor?: Prisma.PersonUpdateOneWithoutActedAuditLogsNestedInput
+  person?: Prisma.PersonUpdateOneWithoutAuditLogsNestedInput
+  contract?: Prisma.ContractUpdateOneWithoutAuditLogsNestedInput
+  expense?: Prisma.ExpenseUpdateOneWithoutAuditLogsNestedInput
+  receivable?: Prisma.ReceivableUpdateOneWithoutAuditLogsNestedInput
+  payable?: Prisma.PayableUpdateOneWithoutAuditLogsNestedInput
+  receipt?: Prisma.ReceiptUpdateOneWithoutAuditLogsNestedInput
+  payment?: Prisma.PaymentUpdateOneWithoutAuditLogsNestedInput
+  financialGeneration?: Prisma.FinancialGenerationUpdateOneWithoutAuditLogsNestedInput
+}
+
+export type AuditLogUncheckedUpdateWithoutRemunerationCalculationInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  actorName?: Prisma.StringFieldUpdateOperationsInput | string
+  actorEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  entityType?: Prisma.StringFieldUpdateOperationsInput | string
+  entityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  entityName?: Prisma.StringFieldUpdateOperationsInput | string
+  changeData?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  actorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  personId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  contractId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  receivableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  payableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  receiptId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  paymentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  financialGenerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+}
+
+export type AuditLogUncheckedUpdateManyWithoutRemunerationCalculationInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  actorName?: Prisma.StringFieldUpdateOperationsInput | string
+  actorEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  entityType?: Prisma.StringFieldUpdateOperationsInput | string
+  entityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  entityName?: Prisma.StringFieldUpdateOperationsInput | string
+  changeData?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  actorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  personId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  contractId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  receivableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  payableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  receiptId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  paymentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  financialGenerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 
 
 export type AuditLogSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  clientId?: boolean
-  employeeId?: boolean
   id?: boolean
-  firmId?: boolean
-  actorId?: boolean
   actorName?: boolean
   actorEmail?: boolean
   action?: boolean
@@ -1369,18 +3228,32 @@ export type AuditLogSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   userAgent?: boolean
   description?: boolean
   createdAt?: boolean
-  client?: boolean | Prisma.AuditLog$clientArgs<ExtArgs>
-  employee?: boolean | Prisma.AuditLog$employeeArgs<ExtArgs>
-  actor?: boolean | Prisma.AuditLog$actorArgs<ExtArgs>
+  firmId?: boolean
+  actorId?: boolean
+  personId?: boolean
+  contractId?: boolean
+  expenseId?: boolean
+  receivableId?: boolean
+  payableId?: boolean
+  receiptId?: boolean
+  paymentId?: boolean
+  financialGenerationId?: boolean
+  remunerationCalculationId?: boolean
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
+  actor?: boolean | Prisma.AuditLog$actorArgs<ExtArgs>
+  person?: boolean | Prisma.AuditLog$personArgs<ExtArgs>
+  contract?: boolean | Prisma.AuditLog$contractArgs<ExtArgs>
+  expense?: boolean | Prisma.AuditLog$expenseArgs<ExtArgs>
+  receivable?: boolean | Prisma.AuditLog$receivableArgs<ExtArgs>
+  payable?: boolean | Prisma.AuditLog$payableArgs<ExtArgs>
+  receipt?: boolean | Prisma.AuditLog$receiptArgs<ExtArgs>
+  payment?: boolean | Prisma.AuditLog$paymentArgs<ExtArgs>
+  financialGeneration?: boolean | Prisma.AuditLog$financialGenerationArgs<ExtArgs>
+  remunerationCalculation?: boolean | Prisma.AuditLog$remunerationCalculationArgs<ExtArgs>
 }, ExtArgs["result"]["auditLog"]>
 
 export type AuditLogSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  clientId?: boolean
-  employeeId?: boolean
   id?: boolean
-  firmId?: boolean
-  actorId?: boolean
   actorName?: boolean
   actorEmail?: boolean
   action?: boolean
@@ -1392,18 +3265,32 @@ export type AuditLogSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   userAgent?: boolean
   description?: boolean
   createdAt?: boolean
-  client?: boolean | Prisma.AuditLog$clientArgs<ExtArgs>
-  employee?: boolean | Prisma.AuditLog$employeeArgs<ExtArgs>
-  actor?: boolean | Prisma.AuditLog$actorArgs<ExtArgs>
+  firmId?: boolean
+  actorId?: boolean
+  personId?: boolean
+  contractId?: boolean
+  expenseId?: boolean
+  receivableId?: boolean
+  payableId?: boolean
+  receiptId?: boolean
+  paymentId?: boolean
+  financialGenerationId?: boolean
+  remunerationCalculationId?: boolean
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
+  actor?: boolean | Prisma.AuditLog$actorArgs<ExtArgs>
+  person?: boolean | Prisma.AuditLog$personArgs<ExtArgs>
+  contract?: boolean | Prisma.AuditLog$contractArgs<ExtArgs>
+  expense?: boolean | Prisma.AuditLog$expenseArgs<ExtArgs>
+  receivable?: boolean | Prisma.AuditLog$receivableArgs<ExtArgs>
+  payable?: boolean | Prisma.AuditLog$payableArgs<ExtArgs>
+  receipt?: boolean | Prisma.AuditLog$receiptArgs<ExtArgs>
+  payment?: boolean | Prisma.AuditLog$paymentArgs<ExtArgs>
+  financialGeneration?: boolean | Prisma.AuditLog$financialGenerationArgs<ExtArgs>
+  remunerationCalculation?: boolean | Prisma.AuditLog$remunerationCalculationArgs<ExtArgs>
 }, ExtArgs["result"]["auditLog"]>
 
 export type AuditLogSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  clientId?: boolean
-  employeeId?: boolean
   id?: boolean
-  firmId?: boolean
-  actorId?: boolean
   actorName?: boolean
   actorEmail?: boolean
   action?: boolean
@@ -1415,18 +3302,32 @@ export type AuditLogSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   userAgent?: boolean
   description?: boolean
   createdAt?: boolean
-  client?: boolean | Prisma.AuditLog$clientArgs<ExtArgs>
-  employee?: boolean | Prisma.AuditLog$employeeArgs<ExtArgs>
-  actor?: boolean | Prisma.AuditLog$actorArgs<ExtArgs>
+  firmId?: boolean
+  actorId?: boolean
+  personId?: boolean
+  contractId?: boolean
+  expenseId?: boolean
+  receivableId?: boolean
+  payableId?: boolean
+  receiptId?: boolean
+  paymentId?: boolean
+  financialGenerationId?: boolean
+  remunerationCalculationId?: boolean
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
+  actor?: boolean | Prisma.AuditLog$actorArgs<ExtArgs>
+  person?: boolean | Prisma.AuditLog$personArgs<ExtArgs>
+  contract?: boolean | Prisma.AuditLog$contractArgs<ExtArgs>
+  expense?: boolean | Prisma.AuditLog$expenseArgs<ExtArgs>
+  receivable?: boolean | Prisma.AuditLog$receivableArgs<ExtArgs>
+  payable?: boolean | Prisma.AuditLog$payableArgs<ExtArgs>
+  receipt?: boolean | Prisma.AuditLog$receiptArgs<ExtArgs>
+  payment?: boolean | Prisma.AuditLog$paymentArgs<ExtArgs>
+  financialGeneration?: boolean | Prisma.AuditLog$financialGenerationArgs<ExtArgs>
+  remunerationCalculation?: boolean | Prisma.AuditLog$remunerationCalculationArgs<ExtArgs>
 }, ExtArgs["result"]["auditLog"]>
 
 export type AuditLogSelectScalar = {
-  clientId?: boolean
-  employeeId?: boolean
   id?: boolean
-  firmId?: boolean
-  actorId?: boolean
   actorName?: boolean
   actorEmail?: boolean
   action?: boolean
@@ -1438,42 +3339,77 @@ export type AuditLogSelectScalar = {
   userAgent?: boolean
   description?: boolean
   createdAt?: boolean
+  firmId?: boolean
+  actorId?: boolean
+  personId?: boolean
+  contractId?: boolean
+  expenseId?: boolean
+  receivableId?: boolean
+  payableId?: boolean
+  receiptId?: boolean
+  paymentId?: boolean
+  financialGenerationId?: boolean
+  remunerationCalculationId?: boolean
 }
 
-export type AuditLogOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"clientId" | "employeeId" | "id" | "firmId" | "actorId" | "actorName" | "actorEmail" | "action" | "entityType" | "entityId" | "entityName" | "changeData" | "ipAddress" | "userAgent" | "description" | "createdAt", ExtArgs["result"]["auditLog"]>
+export type AuditLogOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "actorName" | "actorEmail" | "action" | "entityType" | "entityId" | "entityName" | "changeData" | "ipAddress" | "userAgent" | "description" | "createdAt" | "firmId" | "actorId" | "personId" | "contractId" | "expenseId" | "receivableId" | "payableId" | "receiptId" | "paymentId" | "financialGenerationId" | "remunerationCalculationId", ExtArgs["result"]["auditLog"]>
 export type AuditLogInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  client?: boolean | Prisma.AuditLog$clientArgs<ExtArgs>
-  employee?: boolean | Prisma.AuditLog$employeeArgs<ExtArgs>
-  actor?: boolean | Prisma.AuditLog$actorArgs<ExtArgs>
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
+  actor?: boolean | Prisma.AuditLog$actorArgs<ExtArgs>
+  person?: boolean | Prisma.AuditLog$personArgs<ExtArgs>
+  contract?: boolean | Prisma.AuditLog$contractArgs<ExtArgs>
+  expense?: boolean | Prisma.AuditLog$expenseArgs<ExtArgs>
+  receivable?: boolean | Prisma.AuditLog$receivableArgs<ExtArgs>
+  payable?: boolean | Prisma.AuditLog$payableArgs<ExtArgs>
+  receipt?: boolean | Prisma.AuditLog$receiptArgs<ExtArgs>
+  payment?: boolean | Prisma.AuditLog$paymentArgs<ExtArgs>
+  financialGeneration?: boolean | Prisma.AuditLog$financialGenerationArgs<ExtArgs>
+  remunerationCalculation?: boolean | Prisma.AuditLog$remunerationCalculationArgs<ExtArgs>
 }
 export type AuditLogIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  client?: boolean | Prisma.AuditLog$clientArgs<ExtArgs>
-  employee?: boolean | Prisma.AuditLog$employeeArgs<ExtArgs>
-  actor?: boolean | Prisma.AuditLog$actorArgs<ExtArgs>
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
+  actor?: boolean | Prisma.AuditLog$actorArgs<ExtArgs>
+  person?: boolean | Prisma.AuditLog$personArgs<ExtArgs>
+  contract?: boolean | Prisma.AuditLog$contractArgs<ExtArgs>
+  expense?: boolean | Prisma.AuditLog$expenseArgs<ExtArgs>
+  receivable?: boolean | Prisma.AuditLog$receivableArgs<ExtArgs>
+  payable?: boolean | Prisma.AuditLog$payableArgs<ExtArgs>
+  receipt?: boolean | Prisma.AuditLog$receiptArgs<ExtArgs>
+  payment?: boolean | Prisma.AuditLog$paymentArgs<ExtArgs>
+  financialGeneration?: boolean | Prisma.AuditLog$financialGenerationArgs<ExtArgs>
+  remunerationCalculation?: boolean | Prisma.AuditLog$remunerationCalculationArgs<ExtArgs>
 }
 export type AuditLogIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  client?: boolean | Prisma.AuditLog$clientArgs<ExtArgs>
-  employee?: boolean | Prisma.AuditLog$employeeArgs<ExtArgs>
-  actor?: boolean | Prisma.AuditLog$actorArgs<ExtArgs>
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
+  actor?: boolean | Prisma.AuditLog$actorArgs<ExtArgs>
+  person?: boolean | Prisma.AuditLog$personArgs<ExtArgs>
+  contract?: boolean | Prisma.AuditLog$contractArgs<ExtArgs>
+  expense?: boolean | Prisma.AuditLog$expenseArgs<ExtArgs>
+  receivable?: boolean | Prisma.AuditLog$receivableArgs<ExtArgs>
+  payable?: boolean | Prisma.AuditLog$payableArgs<ExtArgs>
+  receipt?: boolean | Prisma.AuditLog$receiptArgs<ExtArgs>
+  payment?: boolean | Prisma.AuditLog$paymentArgs<ExtArgs>
+  financialGeneration?: boolean | Prisma.AuditLog$financialGenerationArgs<ExtArgs>
+  remunerationCalculation?: boolean | Prisma.AuditLog$remunerationCalculationArgs<ExtArgs>
 }
 
 export type $AuditLogPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "AuditLog"
   objects: {
-    client: Prisma.$ClientPayload<ExtArgs> | null
-    employee: Prisma.$EmployeePayload<ExtArgs> | null
-    actor: Prisma.$EmployeePayload<ExtArgs> | null
     firm: Prisma.$FirmPayload<ExtArgs>
+    actor: Prisma.$PersonPayload<ExtArgs> | null
+    person: Prisma.$PersonPayload<ExtArgs> | null
+    contract: Prisma.$ContractPayload<ExtArgs> | null
+    expense: Prisma.$ExpensePayload<ExtArgs> | null
+    receivable: Prisma.$ReceivablePayload<ExtArgs> | null
+    payable: Prisma.$PayablePayload<ExtArgs> | null
+    receipt: Prisma.$ReceiptPayload<ExtArgs> | null
+    payment: Prisma.$PaymentPayload<ExtArgs> | null
+    financialGeneration: Prisma.$FinancialGenerationPayload<ExtArgs> | null
+    remunerationCalculation: Prisma.$RemunerationCalculationPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
-    clientId: number | null
-    employeeId: number | null
     id: number
-    firmId: number
-    actorId: number | null
     actorName: string
     actorEmail: string | null
     action: string
@@ -1485,6 +3421,17 @@ export type $AuditLogPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     userAgent: string | null
     description: string
     createdAt: Date
+    firmId: number
+    actorId: number | null
+    personId: number | null
+    contractId: number | null
+    expenseId: number | null
+    receivableId: number | null
+    payableId: number | null
+    receiptId: number | null
+    paymentId: number | null
+    financialGenerationId: number | null
+    remunerationCalculationId: number | null
   }, ExtArgs["result"]["auditLog"]>
   composites: {}
 }
@@ -1568,8 +3515,8 @@ export interface AuditLogDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    * // Get first 10 AuditLogs
    * const auditLogs = await prisma.auditLog.findMany({ take: 10 })
    * 
-   * // Only select the `clientId`
-   * const auditLogWithClientIdOnly = await prisma.auditLog.findMany({ select: { clientId: true } })
+   * // Only select the `id`
+   * const auditLogWithIdOnly = await prisma.auditLog.findMany({ select: { id: true } })
    * 
    */
   findMany<T extends AuditLogFindManyArgs>(args?: Prisma.SelectSubset<T, AuditLogFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
@@ -1613,9 +3560,9 @@ export interface AuditLogDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    *   ]
    * })
    * 
-   * // Create many AuditLogs and only return the `clientId`
-   * const auditLogWithClientIdOnly = await prisma.auditLog.createManyAndReturn({
-   *   select: { clientId: true },
+   * // Create many AuditLogs and only return the `id`
+   * const auditLogWithIdOnly = await prisma.auditLog.createManyAndReturn({
+   *   select: { id: true },
    *   data: [
    *     // ... provide data here
    *   ]
@@ -1704,9 +3651,9 @@ export interface AuditLogDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    *   ]
    * })
    * 
-   * // Update zero or more AuditLogs and only return the `clientId`
-   * const auditLogWithClientIdOnly = await prisma.auditLog.updateManyAndReturn({
-   *   select: { clientId: true },
+   * // Update zero or more AuditLogs and only return the `id`
+   * const auditLogWithIdOnly = await prisma.auditLog.updateManyAndReturn({
+   *   select: { id: true },
    *   where: {
    *     // ... provide filter here
    *   },
@@ -1879,10 +3826,17 @@ readonly fields: AuditLogFieldRefs;
  */
 export interface Prisma__AuditLogClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  client<T extends Prisma.AuditLog$clientArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AuditLog$clientArgs<ExtArgs>>): Prisma.Prisma__ClientClient<runtime.Types.Result.GetResult<Prisma.$ClientPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  employee<T extends Prisma.AuditLog$employeeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AuditLog$employeeArgs<ExtArgs>>): Prisma.Prisma__EmployeeClient<runtime.Types.Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  actor<T extends Prisma.AuditLog$actorArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AuditLog$actorArgs<ExtArgs>>): Prisma.Prisma__EmployeeClient<runtime.Types.Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   firm<T extends Prisma.FirmDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FirmDefaultArgs<ExtArgs>>): Prisma.Prisma__FirmClient<runtime.Types.Result.GetResult<Prisma.$FirmPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  actor<T extends Prisma.AuditLog$actorArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AuditLog$actorArgs<ExtArgs>>): Prisma.Prisma__PersonClient<runtime.Types.Result.GetResult<Prisma.$PersonPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  person<T extends Prisma.AuditLog$personArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AuditLog$personArgs<ExtArgs>>): Prisma.Prisma__PersonClient<runtime.Types.Result.GetResult<Prisma.$PersonPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  contract<T extends Prisma.AuditLog$contractArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AuditLog$contractArgs<ExtArgs>>): Prisma.Prisma__ContractClient<runtime.Types.Result.GetResult<Prisma.$ContractPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  expense<T extends Prisma.AuditLog$expenseArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AuditLog$expenseArgs<ExtArgs>>): Prisma.Prisma__ExpenseClient<runtime.Types.Result.GetResult<Prisma.$ExpensePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  receivable<T extends Prisma.AuditLog$receivableArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AuditLog$receivableArgs<ExtArgs>>): Prisma.Prisma__ReceivableClient<runtime.Types.Result.GetResult<Prisma.$ReceivablePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  payable<T extends Prisma.AuditLog$payableArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AuditLog$payableArgs<ExtArgs>>): Prisma.Prisma__PayableClient<runtime.Types.Result.GetResult<Prisma.$PayablePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  receipt<T extends Prisma.AuditLog$receiptArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AuditLog$receiptArgs<ExtArgs>>): Prisma.Prisma__ReceiptClient<runtime.Types.Result.GetResult<Prisma.$ReceiptPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  payment<T extends Prisma.AuditLog$paymentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AuditLog$paymentArgs<ExtArgs>>): Prisma.Prisma__PaymentClient<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  financialGeneration<T extends Prisma.AuditLog$financialGenerationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AuditLog$financialGenerationArgs<ExtArgs>>): Prisma.Prisma__FinancialGenerationClient<runtime.Types.Result.GetResult<Prisma.$FinancialGenerationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  remunerationCalculation<T extends Prisma.AuditLog$remunerationCalculationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AuditLog$remunerationCalculationArgs<ExtArgs>>): Prisma.Prisma__RemunerationCalculationClient<runtime.Types.Result.GetResult<Prisma.$RemunerationCalculationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1912,11 +3866,7 @@ export interface Prisma__AuditLogClient<T, Null = never, ExtArgs extends runtime
  * Fields of the AuditLog model
  */
 export interface AuditLogFieldRefs {
-  readonly clientId: Prisma.FieldRef<"AuditLog", 'Int'>
-  readonly employeeId: Prisma.FieldRef<"AuditLog", 'Int'>
   readonly id: Prisma.FieldRef<"AuditLog", 'Int'>
-  readonly firmId: Prisma.FieldRef<"AuditLog", 'Int'>
-  readonly actorId: Prisma.FieldRef<"AuditLog", 'Int'>
   readonly actorName: Prisma.FieldRef<"AuditLog", 'String'>
   readonly actorEmail: Prisma.FieldRef<"AuditLog", 'String'>
   readonly action: Prisma.FieldRef<"AuditLog", 'String'>
@@ -1928,6 +3878,17 @@ export interface AuditLogFieldRefs {
   readonly userAgent: Prisma.FieldRef<"AuditLog", 'String'>
   readonly description: Prisma.FieldRef<"AuditLog", 'String'>
   readonly createdAt: Prisma.FieldRef<"AuditLog", 'DateTime'>
+  readonly firmId: Prisma.FieldRef<"AuditLog", 'Int'>
+  readonly actorId: Prisma.FieldRef<"AuditLog", 'Int'>
+  readonly personId: Prisma.FieldRef<"AuditLog", 'Int'>
+  readonly contractId: Prisma.FieldRef<"AuditLog", 'Int'>
+  readonly expenseId: Prisma.FieldRef<"AuditLog", 'Int'>
+  readonly receivableId: Prisma.FieldRef<"AuditLog", 'Int'>
+  readonly payableId: Prisma.FieldRef<"AuditLog", 'Int'>
+  readonly receiptId: Prisma.FieldRef<"AuditLog", 'Int'>
+  readonly paymentId: Prisma.FieldRef<"AuditLog", 'Int'>
+  readonly financialGenerationId: Prisma.FieldRef<"AuditLog", 'Int'>
+  readonly remunerationCalculationId: Prisma.FieldRef<"AuditLog", 'Int'>
 }
     
 
@@ -2329,60 +4290,193 @@ export type AuditLogDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
 }
 
 /**
- * AuditLog.client
- */
-export type AuditLog$clientArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Client
-   */
-  select?: Prisma.ClientSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Client
-   */
-  omit?: Prisma.ClientOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ClientInclude<ExtArgs> | null
-  where?: Prisma.ClientWhereInput
-}
-
-/**
- * AuditLog.employee
- */
-export type AuditLog$employeeArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Employee
-   */
-  select?: Prisma.EmployeeSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Employee
-   */
-  omit?: Prisma.EmployeeOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.EmployeeInclude<ExtArgs> | null
-  where?: Prisma.EmployeeWhereInput
-}
-
-/**
  * AuditLog.actor
  */
 export type AuditLog$actorArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Employee
+   * Select specific fields to fetch from the Person
    */
-  select?: Prisma.EmployeeSelect<ExtArgs> | null
+  select?: Prisma.PersonSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Employee
+   * Omit specific fields from the Person
    */
-  omit?: Prisma.EmployeeOmit<ExtArgs> | null
+  omit?: Prisma.PersonOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.EmployeeInclude<ExtArgs> | null
-  where?: Prisma.EmployeeWhereInput
+  include?: Prisma.PersonInclude<ExtArgs> | null
+  where?: Prisma.PersonWhereInput
+}
+
+/**
+ * AuditLog.person
+ */
+export type AuditLog$personArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Person
+   */
+  select?: Prisma.PersonSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Person
+   */
+  omit?: Prisma.PersonOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PersonInclude<ExtArgs> | null
+  where?: Prisma.PersonWhereInput
+}
+
+/**
+ * AuditLog.contract
+ */
+export type AuditLog$contractArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Contract
+   */
+  select?: Prisma.ContractSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Contract
+   */
+  omit?: Prisma.ContractOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ContractInclude<ExtArgs> | null
+  where?: Prisma.ContractWhereInput
+}
+
+/**
+ * AuditLog.expense
+ */
+export type AuditLog$expenseArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Expense
+   */
+  select?: Prisma.ExpenseSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Expense
+   */
+  omit?: Prisma.ExpenseOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ExpenseInclude<ExtArgs> | null
+  where?: Prisma.ExpenseWhereInput
+}
+
+/**
+ * AuditLog.receivable
+ */
+export type AuditLog$receivableArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Receivable
+   */
+  select?: Prisma.ReceivableSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Receivable
+   */
+  omit?: Prisma.ReceivableOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReceivableInclude<ExtArgs> | null
+  where?: Prisma.ReceivableWhereInput
+}
+
+/**
+ * AuditLog.payable
+ */
+export type AuditLog$payableArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Payable
+   */
+  select?: Prisma.PayableSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Payable
+   */
+  omit?: Prisma.PayableOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PayableInclude<ExtArgs> | null
+  where?: Prisma.PayableWhereInput
+}
+
+/**
+ * AuditLog.receipt
+ */
+export type AuditLog$receiptArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Receipt
+   */
+  select?: Prisma.ReceiptSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Receipt
+   */
+  omit?: Prisma.ReceiptOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReceiptInclude<ExtArgs> | null
+  where?: Prisma.ReceiptWhereInput
+}
+
+/**
+ * AuditLog.payment
+ */
+export type AuditLog$paymentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Payment
+   */
+  select?: Prisma.PaymentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Payment
+   */
+  omit?: Prisma.PaymentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PaymentInclude<ExtArgs> | null
+  where?: Prisma.PaymentWhereInput
+}
+
+/**
+ * AuditLog.financialGeneration
+ */
+export type AuditLog$financialGenerationArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FinancialGeneration
+   */
+  select?: Prisma.FinancialGenerationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the FinancialGeneration
+   */
+  omit?: Prisma.FinancialGenerationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FinancialGenerationInclude<ExtArgs> | null
+  where?: Prisma.FinancialGenerationWhereInput
+}
+
+/**
+ * AuditLog.remunerationCalculation
+ */
+export type AuditLog$remunerationCalculationArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the RemunerationCalculation
+   */
+  select?: Prisma.RemunerationCalculationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the RemunerationCalculation
+   */
+  omit?: Prisma.RemunerationCalculationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RemunerationCalculationInclude<ExtArgs> | null
+  where?: Prisma.RemunerationCalculationWhereInput
 }
 
 /**

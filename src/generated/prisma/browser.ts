@@ -28,20 +28,15 @@ export type ClerkWebhookReceipt = Prisma.ClerkWebhookReceiptModel
  */
 export type Firm = Prisma.FirmModel
 /**
- * Model ClientType
+ * Model PersonType
  * 
  */
-export type ClientType = Prisma.ClientTypeModel
+export type PersonType = Prisma.PersonTypeModel
 /**
  * Model EmployeeType
  * 
  */
 export type EmployeeType = Prisma.EmployeeTypeModel
-/**
- * Model UserRole
- * 
- */
-export type UserRole = Prisma.UserRoleModel
 /**
  * Model LegalArea
  * 
@@ -68,57 +63,102 @@ export type RevenueType = Prisma.RevenueTypeModel
  */
 export type AttachmentType = Prisma.AttachmentTypeModel
 /**
- * Model ExpenseCategory
+ * Model FinancialAnalytic
  * 
  */
-export type ExpenseCategory = Prisma.ExpenseCategoryModel
+export type FinancialAnalytic = Prisma.FinancialAnalyticModel
 /**
- * Model Employee
+ * Model PaymentMethod
  * 
  */
-export type Employee = Prisma.EmployeeModel
+export type PaymentMethod = Prisma.PaymentMethodModel
 /**
- * Model AuditLog
+ * Model TitleKind
  * 
  */
-export type AuditLog = Prisma.AuditLogModel
+export type TitleKind = Prisma.TitleKindModel
 /**
- * Model Client
+ * Model Person
  * 
  */
-export type Client = Prisma.ClientModel
+export type Person = Prisma.PersonModel
+/**
+ * Model EmployeeProfile
+ * 
+ */
+export type EmployeeProfile = Prisma.EmployeeProfileModel
 /**
  * Model Contract
  * 
  */
 export type Contract = Prisma.ContractModel
 /**
- * Model ContractEmployee
+ * Model ContractAssignment
  * 
  */
-export type ContractEmployee = Prisma.ContractEmployeeModel
+export type ContractAssignment = Prisma.ContractAssignmentModel
 /**
  * Model Revenue
  * 
  */
 export type Revenue = Prisma.RevenueModel
 /**
- * Model Fee
- * 
- */
-export type Fee = Prisma.FeeModel
-/**
  * Model Expense
  * 
  */
 export type Expense = Prisma.ExpenseModel
 /**
- * Model Remuneration
+ * Model FinancialGeneration
  * 
  */
-export type Remuneration = Prisma.RemunerationModel
+export type FinancialGeneration = Prisma.FinancialGenerationModel
+/**
+ * Model DirectFinancialEntry
+ * 
+ */
+export type DirectFinancialEntry = Prisma.DirectFinancialEntryModel
+/**
+ * Model Receivable
+ * 
+ */
+export type Receivable = Prisma.ReceivableModel
+/**
+ * Model Payable
+ * 
+ */
+export type Payable = Prisma.PayableModel
+/**
+ * Model Receipt
+ * 
+ */
+export type Receipt = Prisma.ReceiptModel
+/**
+ * Model ReceiptReversal
+ * 
+ */
+export type ReceiptReversal = Prisma.ReceiptReversalModel
+/**
+ * Model Payment
+ * 
+ */
+export type Payment = Prisma.PaymentModel
+/**
+ * Model PaymentReversal
+ * 
+ */
+export type PaymentReversal = Prisma.PaymentReversalModel
+/**
+ * Model RemunerationCalculation
+ * 
+ */
+export type RemunerationCalculation = Prisma.RemunerationCalculationModel
 /**
  * Model Attachment
  * 
  */
 export type Attachment = Prisma.AttachmentModel
+/**
+ * Model AuditLog
+ * 
+ */
+export type AuditLog = Prisma.AuditLogModel

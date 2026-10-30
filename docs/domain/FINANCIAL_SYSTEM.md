@@ -1,6 +1,6 @@
 # Financial system — approved target contract
 
-Status: approved design, not implemented. Decision date: 2026-10-29. This document is self-contained and normative for the ordered financial redesign. Existing code remains the development baseline until the implementation gates in [the roadmap](../implementation/FINANCIAL_ROADMAP.md) pass. It must not be mistaken for evidence that any target feature is live.
+Status: approved design; target Prisma persistence and development fixtures implemented, application workflows pending. See [database evidence](../implementation/FINANCIAL_DATABASE_EVIDENCE.md). Decision date: 2026-10-29. This document is self-contained and normative for the ordered financial redesign. Existing code remains the development baseline until the implementation gates in [the roadmap](../implementation/FINANCIAL_ROADMAP.md) pass. It must not be mistaken for evidence that any target feature is live.
 
 ## Scope and vocabulary
 

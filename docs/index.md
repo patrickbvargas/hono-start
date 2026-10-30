@@ -1,8 +1,12 @@
 # Hono Documentation Index
 
+## Current financial implementation stage
+
+The user approved schema-and-seed-first execution with temporary application unavailability. Target persistence and seeded development data are implemented; see [database evidence](implementation/FINANCIAL_DATABASE_EVIDENCE.md) and the roadmap execution revision. Existing API/UI code still targets legacy models and is not yet adapted. Historical “not implemented” markers below mean application workflow readiness, not absence of the new database schema.
+
 ## Approved financial redesign (2026-10-29)
 
-Before financial or identity work, read [approved target rules](domain/FINANCIAL_SYSTEM.md), [UML with lookups](domain/FINANCIAL_UML.md), [Clerk authorization](domain/FINANCIAL_AUTHORIZATION.md) and [ordered implementation roadmap](implementation/FINANCIAL_ROADMAP.md). These explicit user-approved target decisions supersede conflicting baseline finance/identity rules in existing docs and legacy OpenSpec specs during this branch. They are not implemented yet. All unchanged stack, import, form, session verification and tenant rules remain binding. No restoration of old fee-slot/automatic-entry-cash semantics into target code.
+Before financial or identity work, read [approved target rules](domain/FINANCIAL_SYSTEM.md), [UML with lookups](domain/FINANCIAL_UML.md), [Clerk authorization](domain/FINANCIAL_AUTHORIZATION.md) and [ordered implementation roadmap](implementation/FINANCIAL_ROADMAP.md). These explicit user-approved target decisions supersede conflicting baseline finance/identity rules in existing docs and legacy OpenSpec specs during this branch. Target database structures and development seed are implemented; API/session/UI workflows remain pending. All unchanged stack, import, form, session verification and tenant rules remain binding. No restoration of old fee-slot/automatic-entry-cash semantics into target code.
 
 
 This directory is the canonical project contract for Hono.

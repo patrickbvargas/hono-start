@@ -28,134 +28,114 @@ export type AggregateRevenue = {
 
 export type RevenueAvgAggregateOutputType = {
   id: number | null
+  negotiatedAmount: runtime.Decimal | null
   firmId: number | null
   contractId: number | null
-  typeId: number | null
-  totalValue: runtime.Decimal | null
-  downPaymentValue: runtime.Decimal | null
-  totalInstallments: number | null
+  revenueTypeId: number | null
 }
 
 export type RevenueSumAggregateOutputType = {
   id: number | null
+  negotiatedAmount: runtime.Decimal | null
   firmId: number | null
   contractId: number | null
-  typeId: number | null
-  totalValue: runtime.Decimal | null
-  downPaymentValue: runtime.Decimal | null
-  totalInstallments: number | null
+  revenueTypeId: number | null
 }
 
 export type RevenueMinAggregateOutputType = {
   id: number | null
-  firmId: number | null
-  contractId: number | null
-  typeId: number | null
-  totalValue: runtime.Decimal | null
-  downPaymentValue: runtime.Decimal | null
-  paymentStartDate: Date | null
-  totalInstallments: number | null
+  negotiatedAmount: runtime.Decimal | null
+  notes: string | null
   isActive: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
   deletedAt: Date | null
+  firmId: number | null
+  contractId: number | null
+  revenueTypeId: number | null
 }
 
 export type RevenueMaxAggregateOutputType = {
   id: number | null
-  firmId: number | null
-  contractId: number | null
-  typeId: number | null
-  totalValue: runtime.Decimal | null
-  downPaymentValue: runtime.Decimal | null
-  paymentStartDate: Date | null
-  totalInstallments: number | null
+  negotiatedAmount: runtime.Decimal | null
+  notes: string | null
   isActive: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
   deletedAt: Date | null
+  firmId: number | null
+  contractId: number | null
+  revenueTypeId: number | null
 }
 
 export type RevenueCountAggregateOutputType = {
   id: number
-  firmId: number
-  contractId: number
-  typeId: number
-  totalValue: number
-  downPaymentValue: number
-  paymentStartDate: number
-  totalInstallments: number
+  negotiatedAmount: number
+  notes: number
   isActive: number
   createdAt: number
   updatedAt: number
   deletedAt: number
+  firmId: number
+  contractId: number
+  revenueTypeId: number
   _all: number
 }
 
 
 export type RevenueAvgAggregateInputType = {
   id?: true
+  negotiatedAmount?: true
   firmId?: true
   contractId?: true
-  typeId?: true
-  totalValue?: true
-  downPaymentValue?: true
-  totalInstallments?: true
+  revenueTypeId?: true
 }
 
 export type RevenueSumAggregateInputType = {
   id?: true
+  negotiatedAmount?: true
   firmId?: true
   contractId?: true
-  typeId?: true
-  totalValue?: true
-  downPaymentValue?: true
-  totalInstallments?: true
+  revenueTypeId?: true
 }
 
 export type RevenueMinAggregateInputType = {
   id?: true
-  firmId?: true
-  contractId?: true
-  typeId?: true
-  totalValue?: true
-  downPaymentValue?: true
-  paymentStartDate?: true
-  totalInstallments?: true
+  negotiatedAmount?: true
+  notes?: true
   isActive?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
+  firmId?: true
+  contractId?: true
+  revenueTypeId?: true
 }
 
 export type RevenueMaxAggregateInputType = {
   id?: true
-  firmId?: true
-  contractId?: true
-  typeId?: true
-  totalValue?: true
-  downPaymentValue?: true
-  paymentStartDate?: true
-  totalInstallments?: true
+  negotiatedAmount?: true
+  notes?: true
   isActive?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
+  firmId?: true
+  contractId?: true
+  revenueTypeId?: true
 }
 
 export type RevenueCountAggregateInputType = {
   id?: true
-  firmId?: true
-  contractId?: true
-  typeId?: true
-  totalValue?: true
-  downPaymentValue?: true
-  paymentStartDate?: true
-  totalInstallments?: true
+  negotiatedAmount?: true
+  notes?: true
   isActive?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
+  firmId?: true
+  contractId?: true
+  revenueTypeId?: true
   _all?: true
 }
 
@@ -247,17 +227,15 @@ export type RevenueGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 
 export type RevenueGroupByOutputType = {
   id: number
-  firmId: number
-  contractId: number
-  typeId: number
-  totalValue: runtime.Decimal
-  downPaymentValue: runtime.Decimal | null
-  paymentStartDate: Date
-  totalInstallments: number
+  negotiatedAmount: runtime.Decimal
+  notes: string | null
   isActive: boolean
   createdAt: Date
   updatedAt: Date
   deletedAt: Date | null
+  firmId: number
+  contractId: number
+  revenueTypeId: number
   _count: RevenueCountAggregateOutputType | null
   _avg: RevenueAvgAggregateOutputType | null
   _sum: RevenueSumAggregateOutputType | null
@@ -285,77 +263,73 @@ export type RevenueWhereInput = {
   OR?: Prisma.RevenueWhereInput[]
   NOT?: Prisma.RevenueWhereInput | Prisma.RevenueWhereInput[]
   id?: Prisma.IntFilter<"Revenue"> | number
-  firmId?: Prisma.IntFilter<"Revenue"> | number
-  contractId?: Prisma.IntFilter<"Revenue"> | number
-  typeId?: Prisma.IntFilter<"Revenue"> | number
-  totalValue?: Prisma.DecimalFilter<"Revenue"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  downPaymentValue?: Prisma.DecimalNullableFilter<"Revenue"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  paymentStartDate?: Prisma.DateTimeFilter<"Revenue"> | Date | string
-  totalInstallments?: Prisma.IntFilter<"Revenue"> | number
+  negotiatedAmount?: Prisma.DecimalFilter<"Revenue"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: Prisma.StringNullableFilter<"Revenue"> | string | null
   isActive?: Prisma.BoolFilter<"Revenue"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Revenue"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Revenue"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Revenue"> | Date | string | null
-  contract?: Prisma.XOR<Prisma.ContractScalarRelationFilter, Prisma.ContractWhereInput>
+  firmId?: Prisma.IntFilter<"Revenue"> | number
+  contractId?: Prisma.IntFilter<"Revenue"> | number
+  revenueTypeId?: Prisma.IntFilter<"Revenue"> | number
   firm?: Prisma.XOR<Prisma.FirmScalarRelationFilter, Prisma.FirmWhereInput>
-  type?: Prisma.XOR<Prisma.RevenueTypeScalarRelationFilter, Prisma.RevenueTypeWhereInput>
-  fees?: Prisma.FeeListRelationFilter
+  contract?: Prisma.XOR<Prisma.ContractScalarRelationFilter, Prisma.ContractWhereInput>
+  revenueType?: Prisma.XOR<Prisma.RevenueTypeScalarRelationFilter, Prisma.RevenueTypeWhereInput>
+  generation?: Prisma.XOR<Prisma.FinancialGenerationNullableScalarRelationFilter, Prisma.FinancialGenerationWhereInput> | null
+  receivables?: Prisma.ReceivableListRelationFilter
 }
 
 export type RevenueOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  firmId?: Prisma.SortOrder
-  contractId?: Prisma.SortOrder
-  typeId?: Prisma.SortOrder
-  totalValue?: Prisma.SortOrder
-  downPaymentValue?: Prisma.SortOrderInput | Prisma.SortOrder
-  paymentStartDate?: Prisma.SortOrder
-  totalInstallments?: Prisma.SortOrder
+  negotiatedAmount?: Prisma.SortOrder
+  notes?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  contract?: Prisma.ContractOrderByWithRelationInput
+  firmId?: Prisma.SortOrder
+  contractId?: Prisma.SortOrder
+  revenueTypeId?: Prisma.SortOrder
   firm?: Prisma.FirmOrderByWithRelationInput
-  type?: Prisma.RevenueTypeOrderByWithRelationInput
-  fees?: Prisma.FeeOrderByRelationAggregateInput
+  contract?: Prisma.ContractOrderByWithRelationInput
+  revenueType?: Prisma.RevenueTypeOrderByWithRelationInput
+  generation?: Prisma.FinancialGenerationOrderByWithRelationInput
+  receivables?: Prisma.ReceivableOrderByRelationAggregateInput
 }
 
 export type RevenueWhereUniqueInput = Prisma.AtLeast<{
   id?: number
+  firmId_id?: Prisma.RevenueFirmIdIdCompoundUniqueInput
   AND?: Prisma.RevenueWhereInput | Prisma.RevenueWhereInput[]
   OR?: Prisma.RevenueWhereInput[]
   NOT?: Prisma.RevenueWhereInput | Prisma.RevenueWhereInput[]
-  firmId?: Prisma.IntFilter<"Revenue"> | number
-  contractId?: Prisma.IntFilter<"Revenue"> | number
-  typeId?: Prisma.IntFilter<"Revenue"> | number
-  totalValue?: Prisma.DecimalFilter<"Revenue"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  downPaymentValue?: Prisma.DecimalNullableFilter<"Revenue"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  paymentStartDate?: Prisma.DateTimeFilter<"Revenue"> | Date | string
-  totalInstallments?: Prisma.IntFilter<"Revenue"> | number
+  negotiatedAmount?: Prisma.DecimalFilter<"Revenue"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: Prisma.StringNullableFilter<"Revenue"> | string | null
   isActive?: Prisma.BoolFilter<"Revenue"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Revenue"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Revenue"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Revenue"> | Date | string | null
-  contract?: Prisma.XOR<Prisma.ContractScalarRelationFilter, Prisma.ContractWhereInput>
+  firmId?: Prisma.IntFilter<"Revenue"> | number
+  contractId?: Prisma.IntFilter<"Revenue"> | number
+  revenueTypeId?: Prisma.IntFilter<"Revenue"> | number
   firm?: Prisma.XOR<Prisma.FirmScalarRelationFilter, Prisma.FirmWhereInput>
-  type?: Prisma.XOR<Prisma.RevenueTypeScalarRelationFilter, Prisma.RevenueTypeWhereInput>
-  fees?: Prisma.FeeListRelationFilter
-}, "id">
+  contract?: Prisma.XOR<Prisma.ContractScalarRelationFilter, Prisma.ContractWhereInput>
+  revenueType?: Prisma.XOR<Prisma.RevenueTypeScalarRelationFilter, Prisma.RevenueTypeWhereInput>
+  generation?: Prisma.XOR<Prisma.FinancialGenerationNullableScalarRelationFilter, Prisma.FinancialGenerationWhereInput> | null
+  receivables?: Prisma.ReceivableListRelationFilter
+}, "id" | "firmId_id">
 
 export type RevenueOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  firmId?: Prisma.SortOrder
-  contractId?: Prisma.SortOrder
-  typeId?: Prisma.SortOrder
-  totalValue?: Prisma.SortOrder
-  downPaymentValue?: Prisma.SortOrderInput | Prisma.SortOrder
-  paymentStartDate?: Prisma.SortOrder
-  totalInstallments?: Prisma.SortOrder
+  negotiatedAmount?: Prisma.SortOrder
+  notes?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  firmId?: Prisma.SortOrder
+  contractId?: Prisma.SortOrder
+  revenueTypeId?: Prisma.SortOrder
   _count?: Prisma.RevenueCountOrderByAggregateInput
   _avg?: Prisma.RevenueAvgOrderByAggregateInput
   _max?: Prisma.RevenueMaxOrderByAggregateInput
@@ -368,101 +342,91 @@ export type RevenueScalarWhereWithAggregatesInput = {
   OR?: Prisma.RevenueScalarWhereWithAggregatesInput[]
   NOT?: Prisma.RevenueScalarWhereWithAggregatesInput | Prisma.RevenueScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Revenue"> | number
-  firmId?: Prisma.IntWithAggregatesFilter<"Revenue"> | number
-  contractId?: Prisma.IntWithAggregatesFilter<"Revenue"> | number
-  typeId?: Prisma.IntWithAggregatesFilter<"Revenue"> | number
-  totalValue?: Prisma.DecimalWithAggregatesFilter<"Revenue"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  downPaymentValue?: Prisma.DecimalNullableWithAggregatesFilter<"Revenue"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  paymentStartDate?: Prisma.DateTimeWithAggregatesFilter<"Revenue"> | Date | string
-  totalInstallments?: Prisma.IntWithAggregatesFilter<"Revenue"> | number
+  negotiatedAmount?: Prisma.DecimalWithAggregatesFilter<"Revenue"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: Prisma.StringNullableWithAggregatesFilter<"Revenue"> | string | null
   isActive?: Prisma.BoolWithAggregatesFilter<"Revenue"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Revenue"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Revenue"> | Date | string
   deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Revenue"> | Date | string | null
+  firmId?: Prisma.IntWithAggregatesFilter<"Revenue"> | number
+  contractId?: Prisma.IntWithAggregatesFilter<"Revenue"> | number
+  revenueTypeId?: Prisma.IntWithAggregatesFilter<"Revenue"> | number
 }
 
 export type RevenueCreateInput = {
-  totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
-  downPaymentValue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  paymentStartDate: Date | string
-  totalInstallments: number
+  negotiatedAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  contract: Prisma.ContractCreateNestedOneWithoutRevenuesInput
   firm: Prisma.FirmCreateNestedOneWithoutRevenuesInput
-  type: Prisma.RevenueTypeCreateNestedOneWithoutRevenuesInput
-  fees?: Prisma.FeeCreateNestedManyWithoutRevenueInput
+  contract: Prisma.ContractCreateNestedOneWithoutRevenuesInput
+  revenueType: Prisma.RevenueTypeCreateNestedOneWithoutRevenuesInput
+  generation?: Prisma.FinancialGenerationCreateNestedOneWithoutRevenueInput
+  receivables?: Prisma.ReceivableCreateNestedManyWithoutRevenueInput
 }
 
 export type RevenueUncheckedCreateInput = {
   id?: number
-  firmId: number
-  contractId: number
-  typeId: number
-  totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
-  downPaymentValue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  paymentStartDate: Date | string
-  totalInstallments: number
+  negotiatedAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  fees?: Prisma.FeeUncheckedCreateNestedManyWithoutRevenueInput
+  firmId: number
+  contractId: number
+  revenueTypeId: number
+  generation?: Prisma.FinancialGenerationUncheckedCreateNestedOneWithoutRevenueInput
+  receivables?: Prisma.ReceivableUncheckedCreateNestedManyWithoutRevenueInput
 }
 
 export type RevenueUpdateInput = {
-  totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  downPaymentValue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  paymentStartDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  totalInstallments?: Prisma.IntFieldUpdateOperationsInput | number
+  negotiatedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  contract?: Prisma.ContractUpdateOneRequiredWithoutRevenuesNestedInput
   firm?: Prisma.FirmUpdateOneRequiredWithoutRevenuesNestedInput
-  type?: Prisma.RevenueTypeUpdateOneRequiredWithoutRevenuesNestedInput
-  fees?: Prisma.FeeUpdateManyWithoutRevenueNestedInput
+  contract?: Prisma.ContractUpdateOneRequiredWithoutRevenuesNestedInput
+  revenueType?: Prisma.RevenueTypeUpdateOneRequiredWithoutRevenuesNestedInput
+  generation?: Prisma.FinancialGenerationUpdateOneWithoutRevenueNestedInput
+  receivables?: Prisma.ReceivableUpdateManyWithoutRevenueNestedInput
 }
 
 export type RevenueUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  firmId?: Prisma.IntFieldUpdateOperationsInput | number
-  contractId?: Prisma.IntFieldUpdateOperationsInput | number
-  typeId?: Prisma.IntFieldUpdateOperationsInput | number
-  totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  downPaymentValue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  paymentStartDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  totalInstallments?: Prisma.IntFieldUpdateOperationsInput | number
+  negotiatedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  fees?: Prisma.FeeUncheckedUpdateManyWithoutRevenueNestedInput
+  firmId?: Prisma.IntFieldUpdateOperationsInput | number
+  contractId?: Prisma.IntFieldUpdateOperationsInput | number
+  revenueTypeId?: Prisma.IntFieldUpdateOperationsInput | number
+  generation?: Prisma.FinancialGenerationUncheckedUpdateOneWithoutRevenueNestedInput
+  receivables?: Prisma.ReceivableUncheckedUpdateManyWithoutRevenueNestedInput
 }
 
 export type RevenueCreateManyInput = {
   id?: number
-  firmId: number
-  contractId: number
-  typeId: number
-  totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
-  downPaymentValue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  paymentStartDate: Date | string
-  totalInstallments: number
+  negotiatedAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  firmId: number
+  contractId: number
+  revenueTypeId: number
 }
 
 export type RevenueUpdateManyMutationInput = {
-  totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  downPaymentValue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  paymentStartDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  totalInstallments?: Prisma.IntFieldUpdateOperationsInput | number
+  negotiatedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -471,17 +435,15 @@ export type RevenueUpdateManyMutationInput = {
 
 export type RevenueUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  firmId?: Prisma.IntFieldUpdateOperationsInput | number
-  contractId?: Prisma.IntFieldUpdateOperationsInput | number
-  typeId?: Prisma.IntFieldUpdateOperationsInput | number
-  totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  downPaymentValue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  paymentStartDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  totalInstallments?: Prisma.IntFieldUpdateOperationsInput | number
+  negotiatedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  firmId?: Prisma.IntFieldUpdateOperationsInput | number
+  contractId?: Prisma.IntFieldUpdateOperationsInput | number
+  revenueTypeId?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type RevenueListRelationFilter = {
@@ -494,74 +456,69 @@ export type RevenueOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type RevenueFirmIdIdCompoundUniqueInput = {
+  firmId: number
+  id: number
+}
+
 export type RevenueCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  firmId?: Prisma.SortOrder
-  contractId?: Prisma.SortOrder
-  typeId?: Prisma.SortOrder
-  totalValue?: Prisma.SortOrder
-  downPaymentValue?: Prisma.SortOrder
-  paymentStartDate?: Prisma.SortOrder
-  totalInstallments?: Prisma.SortOrder
+  negotiatedAmount?: Prisma.SortOrder
+  notes?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
+  firmId?: Prisma.SortOrder
+  contractId?: Prisma.SortOrder
+  revenueTypeId?: Prisma.SortOrder
 }
 
 export type RevenueAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  negotiatedAmount?: Prisma.SortOrder
   firmId?: Prisma.SortOrder
   contractId?: Prisma.SortOrder
-  typeId?: Prisma.SortOrder
-  totalValue?: Prisma.SortOrder
-  downPaymentValue?: Prisma.SortOrder
-  totalInstallments?: Prisma.SortOrder
+  revenueTypeId?: Prisma.SortOrder
 }
 
 export type RevenueMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  firmId?: Prisma.SortOrder
-  contractId?: Prisma.SortOrder
-  typeId?: Prisma.SortOrder
-  totalValue?: Prisma.SortOrder
-  downPaymentValue?: Prisma.SortOrder
-  paymentStartDate?: Prisma.SortOrder
-  totalInstallments?: Prisma.SortOrder
+  negotiatedAmount?: Prisma.SortOrder
+  notes?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
+  firmId?: Prisma.SortOrder
+  contractId?: Prisma.SortOrder
+  revenueTypeId?: Prisma.SortOrder
 }
 
 export type RevenueMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  firmId?: Prisma.SortOrder
-  contractId?: Prisma.SortOrder
-  typeId?: Prisma.SortOrder
-  totalValue?: Prisma.SortOrder
-  downPaymentValue?: Prisma.SortOrder
-  paymentStartDate?: Prisma.SortOrder
-  totalInstallments?: Prisma.SortOrder
+  negotiatedAmount?: Prisma.SortOrder
+  notes?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
+  firmId?: Prisma.SortOrder
+  contractId?: Prisma.SortOrder
+  revenueTypeId?: Prisma.SortOrder
 }
 
 export type RevenueSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  negotiatedAmount?: Prisma.SortOrder
   firmId?: Prisma.SortOrder
   contractId?: Prisma.SortOrder
-  typeId?: Prisma.SortOrder
-  totalValue?: Prisma.SortOrder
-  downPaymentValue?: Prisma.SortOrder
-  totalInstallments?: Prisma.SortOrder
+  revenueTypeId?: Prisma.SortOrder
 }
 
-export type RevenueScalarRelationFilter = {
-  is?: Prisma.RevenueWhereInput
-  isNot?: Prisma.RevenueWhereInput
+export type RevenueNullableScalarRelationFilter = {
+  is?: Prisma.RevenueWhereInput | null
+  isNot?: Prisma.RevenueWhereInput | null
 }
 
 export type RevenueCreateNestedManyWithoutFirmInput = {
@@ -606,45 +563,45 @@ export type RevenueUncheckedUpdateManyWithoutFirmNestedInput = {
   deleteMany?: Prisma.RevenueScalarWhereInput | Prisma.RevenueScalarWhereInput[]
 }
 
-export type RevenueCreateNestedManyWithoutTypeInput = {
-  create?: Prisma.XOR<Prisma.RevenueCreateWithoutTypeInput, Prisma.RevenueUncheckedCreateWithoutTypeInput> | Prisma.RevenueCreateWithoutTypeInput[] | Prisma.RevenueUncheckedCreateWithoutTypeInput[]
-  connectOrCreate?: Prisma.RevenueCreateOrConnectWithoutTypeInput | Prisma.RevenueCreateOrConnectWithoutTypeInput[]
-  createMany?: Prisma.RevenueCreateManyTypeInputEnvelope
+export type RevenueCreateNestedManyWithoutRevenueTypeInput = {
+  create?: Prisma.XOR<Prisma.RevenueCreateWithoutRevenueTypeInput, Prisma.RevenueUncheckedCreateWithoutRevenueTypeInput> | Prisma.RevenueCreateWithoutRevenueTypeInput[] | Prisma.RevenueUncheckedCreateWithoutRevenueTypeInput[]
+  connectOrCreate?: Prisma.RevenueCreateOrConnectWithoutRevenueTypeInput | Prisma.RevenueCreateOrConnectWithoutRevenueTypeInput[]
+  createMany?: Prisma.RevenueCreateManyRevenueTypeInputEnvelope
   connect?: Prisma.RevenueWhereUniqueInput | Prisma.RevenueWhereUniqueInput[]
 }
 
-export type RevenueUncheckedCreateNestedManyWithoutTypeInput = {
-  create?: Prisma.XOR<Prisma.RevenueCreateWithoutTypeInput, Prisma.RevenueUncheckedCreateWithoutTypeInput> | Prisma.RevenueCreateWithoutTypeInput[] | Prisma.RevenueUncheckedCreateWithoutTypeInput[]
-  connectOrCreate?: Prisma.RevenueCreateOrConnectWithoutTypeInput | Prisma.RevenueCreateOrConnectWithoutTypeInput[]
-  createMany?: Prisma.RevenueCreateManyTypeInputEnvelope
+export type RevenueUncheckedCreateNestedManyWithoutRevenueTypeInput = {
+  create?: Prisma.XOR<Prisma.RevenueCreateWithoutRevenueTypeInput, Prisma.RevenueUncheckedCreateWithoutRevenueTypeInput> | Prisma.RevenueCreateWithoutRevenueTypeInput[] | Prisma.RevenueUncheckedCreateWithoutRevenueTypeInput[]
+  connectOrCreate?: Prisma.RevenueCreateOrConnectWithoutRevenueTypeInput | Prisma.RevenueCreateOrConnectWithoutRevenueTypeInput[]
+  createMany?: Prisma.RevenueCreateManyRevenueTypeInputEnvelope
   connect?: Prisma.RevenueWhereUniqueInput | Prisma.RevenueWhereUniqueInput[]
 }
 
-export type RevenueUpdateManyWithoutTypeNestedInput = {
-  create?: Prisma.XOR<Prisma.RevenueCreateWithoutTypeInput, Prisma.RevenueUncheckedCreateWithoutTypeInput> | Prisma.RevenueCreateWithoutTypeInput[] | Prisma.RevenueUncheckedCreateWithoutTypeInput[]
-  connectOrCreate?: Prisma.RevenueCreateOrConnectWithoutTypeInput | Prisma.RevenueCreateOrConnectWithoutTypeInput[]
-  upsert?: Prisma.RevenueUpsertWithWhereUniqueWithoutTypeInput | Prisma.RevenueUpsertWithWhereUniqueWithoutTypeInput[]
-  createMany?: Prisma.RevenueCreateManyTypeInputEnvelope
+export type RevenueUpdateManyWithoutRevenueTypeNestedInput = {
+  create?: Prisma.XOR<Prisma.RevenueCreateWithoutRevenueTypeInput, Prisma.RevenueUncheckedCreateWithoutRevenueTypeInput> | Prisma.RevenueCreateWithoutRevenueTypeInput[] | Prisma.RevenueUncheckedCreateWithoutRevenueTypeInput[]
+  connectOrCreate?: Prisma.RevenueCreateOrConnectWithoutRevenueTypeInput | Prisma.RevenueCreateOrConnectWithoutRevenueTypeInput[]
+  upsert?: Prisma.RevenueUpsertWithWhereUniqueWithoutRevenueTypeInput | Prisma.RevenueUpsertWithWhereUniqueWithoutRevenueTypeInput[]
+  createMany?: Prisma.RevenueCreateManyRevenueTypeInputEnvelope
   set?: Prisma.RevenueWhereUniqueInput | Prisma.RevenueWhereUniqueInput[]
   disconnect?: Prisma.RevenueWhereUniqueInput | Prisma.RevenueWhereUniqueInput[]
   delete?: Prisma.RevenueWhereUniqueInput | Prisma.RevenueWhereUniqueInput[]
   connect?: Prisma.RevenueWhereUniqueInput | Prisma.RevenueWhereUniqueInput[]
-  update?: Prisma.RevenueUpdateWithWhereUniqueWithoutTypeInput | Prisma.RevenueUpdateWithWhereUniqueWithoutTypeInput[]
-  updateMany?: Prisma.RevenueUpdateManyWithWhereWithoutTypeInput | Prisma.RevenueUpdateManyWithWhereWithoutTypeInput[]
+  update?: Prisma.RevenueUpdateWithWhereUniqueWithoutRevenueTypeInput | Prisma.RevenueUpdateWithWhereUniqueWithoutRevenueTypeInput[]
+  updateMany?: Prisma.RevenueUpdateManyWithWhereWithoutRevenueTypeInput | Prisma.RevenueUpdateManyWithWhereWithoutRevenueTypeInput[]
   deleteMany?: Prisma.RevenueScalarWhereInput | Prisma.RevenueScalarWhereInput[]
 }
 
-export type RevenueUncheckedUpdateManyWithoutTypeNestedInput = {
-  create?: Prisma.XOR<Prisma.RevenueCreateWithoutTypeInput, Prisma.RevenueUncheckedCreateWithoutTypeInput> | Prisma.RevenueCreateWithoutTypeInput[] | Prisma.RevenueUncheckedCreateWithoutTypeInput[]
-  connectOrCreate?: Prisma.RevenueCreateOrConnectWithoutTypeInput | Prisma.RevenueCreateOrConnectWithoutTypeInput[]
-  upsert?: Prisma.RevenueUpsertWithWhereUniqueWithoutTypeInput | Prisma.RevenueUpsertWithWhereUniqueWithoutTypeInput[]
-  createMany?: Prisma.RevenueCreateManyTypeInputEnvelope
+export type RevenueUncheckedUpdateManyWithoutRevenueTypeNestedInput = {
+  create?: Prisma.XOR<Prisma.RevenueCreateWithoutRevenueTypeInput, Prisma.RevenueUncheckedCreateWithoutRevenueTypeInput> | Prisma.RevenueCreateWithoutRevenueTypeInput[] | Prisma.RevenueUncheckedCreateWithoutRevenueTypeInput[]
+  connectOrCreate?: Prisma.RevenueCreateOrConnectWithoutRevenueTypeInput | Prisma.RevenueCreateOrConnectWithoutRevenueTypeInput[]
+  upsert?: Prisma.RevenueUpsertWithWhereUniqueWithoutRevenueTypeInput | Prisma.RevenueUpsertWithWhereUniqueWithoutRevenueTypeInput[]
+  createMany?: Prisma.RevenueCreateManyRevenueTypeInputEnvelope
   set?: Prisma.RevenueWhereUniqueInput | Prisma.RevenueWhereUniqueInput[]
   disconnect?: Prisma.RevenueWhereUniqueInput | Prisma.RevenueWhereUniqueInput[]
   delete?: Prisma.RevenueWhereUniqueInput | Prisma.RevenueWhereUniqueInput[]
   connect?: Prisma.RevenueWhereUniqueInput | Prisma.RevenueWhereUniqueInput[]
-  update?: Prisma.RevenueUpdateWithWhereUniqueWithoutTypeInput | Prisma.RevenueUpdateWithWhereUniqueWithoutTypeInput[]
-  updateMany?: Prisma.RevenueUpdateManyWithWhereWithoutTypeInput | Prisma.RevenueUpdateManyWithWhereWithoutTypeInput[]
+  update?: Prisma.RevenueUpdateWithWhereUniqueWithoutRevenueTypeInput | Prisma.RevenueUpdateWithWhereUniqueWithoutRevenueTypeInput[]
+  updateMany?: Prisma.RevenueUpdateManyWithWhereWithoutRevenueTypeInput | Prisma.RevenueUpdateManyWithWhereWithoutRevenueTypeInput[]
   deleteMany?: Prisma.RevenueScalarWhereInput | Prisma.RevenueScalarWhereInput[]
 }
 
@@ -690,55 +647,63 @@ export type RevenueUncheckedUpdateManyWithoutContractNestedInput = {
   deleteMany?: Prisma.RevenueScalarWhereInput | Prisma.RevenueScalarWhereInput[]
 }
 
-export type NullableDecimalFieldUpdateOperationsInput = {
-  set?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  increment?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
-}
-
-export type RevenueCreateNestedOneWithoutFeesInput = {
-  create?: Prisma.XOR<Prisma.RevenueCreateWithoutFeesInput, Prisma.RevenueUncheckedCreateWithoutFeesInput>
-  connectOrCreate?: Prisma.RevenueCreateOrConnectWithoutFeesInput
+export type RevenueCreateNestedOneWithoutGenerationInput = {
+  create?: Prisma.XOR<Prisma.RevenueCreateWithoutGenerationInput, Prisma.RevenueUncheckedCreateWithoutGenerationInput>
+  connectOrCreate?: Prisma.RevenueCreateOrConnectWithoutGenerationInput
   connect?: Prisma.RevenueWhereUniqueInput
 }
 
-export type RevenueUpdateOneRequiredWithoutFeesNestedInput = {
-  create?: Prisma.XOR<Prisma.RevenueCreateWithoutFeesInput, Prisma.RevenueUncheckedCreateWithoutFeesInput>
-  connectOrCreate?: Prisma.RevenueCreateOrConnectWithoutFeesInput
-  upsert?: Prisma.RevenueUpsertWithoutFeesInput
+export type RevenueUpdateOneWithoutGenerationNestedInput = {
+  create?: Prisma.XOR<Prisma.RevenueCreateWithoutGenerationInput, Prisma.RevenueUncheckedCreateWithoutGenerationInput>
+  connectOrCreate?: Prisma.RevenueCreateOrConnectWithoutGenerationInput
+  upsert?: Prisma.RevenueUpsertWithoutGenerationInput
+  disconnect?: Prisma.RevenueWhereInput | boolean
+  delete?: Prisma.RevenueWhereInput | boolean
   connect?: Prisma.RevenueWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.RevenueUpdateToOneWithWhereWithoutFeesInput, Prisma.RevenueUpdateWithoutFeesInput>, Prisma.RevenueUncheckedUpdateWithoutFeesInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.RevenueUpdateToOneWithWhereWithoutGenerationInput, Prisma.RevenueUpdateWithoutGenerationInput>, Prisma.RevenueUncheckedUpdateWithoutGenerationInput>
+}
+
+export type RevenueCreateNestedOneWithoutReceivablesInput = {
+  create?: Prisma.XOR<Prisma.RevenueCreateWithoutReceivablesInput, Prisma.RevenueUncheckedCreateWithoutReceivablesInput>
+  connectOrCreate?: Prisma.RevenueCreateOrConnectWithoutReceivablesInput
+  connect?: Prisma.RevenueWhereUniqueInput
+}
+
+export type RevenueUpdateOneWithoutReceivablesNestedInput = {
+  create?: Prisma.XOR<Prisma.RevenueCreateWithoutReceivablesInput, Prisma.RevenueUncheckedCreateWithoutReceivablesInput>
+  connectOrCreate?: Prisma.RevenueCreateOrConnectWithoutReceivablesInput
+  upsert?: Prisma.RevenueUpsertWithoutReceivablesInput
+  disconnect?: Prisma.RevenueWhereInput | boolean
+  delete?: Prisma.RevenueWhereInput | boolean
+  connect?: Prisma.RevenueWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.RevenueUpdateToOneWithWhereWithoutReceivablesInput, Prisma.RevenueUpdateWithoutReceivablesInput>, Prisma.RevenueUncheckedUpdateWithoutReceivablesInput>
 }
 
 export type RevenueCreateWithoutFirmInput = {
-  totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
-  downPaymentValue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  paymentStartDate: Date | string
-  totalInstallments: number
+  negotiatedAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   contract: Prisma.ContractCreateNestedOneWithoutRevenuesInput
-  type: Prisma.RevenueTypeCreateNestedOneWithoutRevenuesInput
-  fees?: Prisma.FeeCreateNestedManyWithoutRevenueInput
+  revenueType: Prisma.RevenueTypeCreateNestedOneWithoutRevenuesInput
+  generation?: Prisma.FinancialGenerationCreateNestedOneWithoutRevenueInput
+  receivables?: Prisma.ReceivableCreateNestedManyWithoutRevenueInput
 }
 
 export type RevenueUncheckedCreateWithoutFirmInput = {
   id?: number
-  contractId: number
-  typeId: number
-  totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
-  downPaymentValue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  paymentStartDate: Date | string
-  totalInstallments: number
+  negotiatedAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  fees?: Prisma.FeeUncheckedCreateNestedManyWithoutRevenueInput
+  contractId: number
+  revenueTypeId: number
+  generation?: Prisma.FinancialGenerationUncheckedCreateNestedOneWithoutRevenueInput
+  receivables?: Prisma.ReceivableUncheckedCreateNestedManyWithoutRevenueInput
 }
 
 export type RevenueCreateOrConnectWithoutFirmInput = {
@@ -772,101 +737,94 @@ export type RevenueScalarWhereInput = {
   OR?: Prisma.RevenueScalarWhereInput[]
   NOT?: Prisma.RevenueScalarWhereInput | Prisma.RevenueScalarWhereInput[]
   id?: Prisma.IntFilter<"Revenue"> | number
-  firmId?: Prisma.IntFilter<"Revenue"> | number
-  contractId?: Prisma.IntFilter<"Revenue"> | number
-  typeId?: Prisma.IntFilter<"Revenue"> | number
-  totalValue?: Prisma.DecimalFilter<"Revenue"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  downPaymentValue?: Prisma.DecimalNullableFilter<"Revenue"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  paymentStartDate?: Prisma.DateTimeFilter<"Revenue"> | Date | string
-  totalInstallments?: Prisma.IntFilter<"Revenue"> | number
+  negotiatedAmount?: Prisma.DecimalFilter<"Revenue"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: Prisma.StringNullableFilter<"Revenue"> | string | null
   isActive?: Prisma.BoolFilter<"Revenue"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Revenue"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Revenue"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Revenue"> | Date | string | null
+  firmId?: Prisma.IntFilter<"Revenue"> | number
+  contractId?: Prisma.IntFilter<"Revenue"> | number
+  revenueTypeId?: Prisma.IntFilter<"Revenue"> | number
 }
 
-export type RevenueCreateWithoutTypeInput = {
-  totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
-  downPaymentValue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  paymentStartDate: Date | string
-  totalInstallments: number
+export type RevenueCreateWithoutRevenueTypeInput = {
+  negotiatedAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  contract: Prisma.ContractCreateNestedOneWithoutRevenuesInput
   firm: Prisma.FirmCreateNestedOneWithoutRevenuesInput
-  fees?: Prisma.FeeCreateNestedManyWithoutRevenueInput
+  contract: Prisma.ContractCreateNestedOneWithoutRevenuesInput
+  generation?: Prisma.FinancialGenerationCreateNestedOneWithoutRevenueInput
+  receivables?: Prisma.ReceivableCreateNestedManyWithoutRevenueInput
 }
 
-export type RevenueUncheckedCreateWithoutTypeInput = {
+export type RevenueUncheckedCreateWithoutRevenueTypeInput = {
   id?: number
+  negotiatedAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   firmId: number
   contractId: number
-  totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
-  downPaymentValue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  paymentStartDate: Date | string
-  totalInstallments: number
-  isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-  fees?: Prisma.FeeUncheckedCreateNestedManyWithoutRevenueInput
+  generation?: Prisma.FinancialGenerationUncheckedCreateNestedOneWithoutRevenueInput
+  receivables?: Prisma.ReceivableUncheckedCreateNestedManyWithoutRevenueInput
 }
 
-export type RevenueCreateOrConnectWithoutTypeInput = {
+export type RevenueCreateOrConnectWithoutRevenueTypeInput = {
   where: Prisma.RevenueWhereUniqueInput
-  create: Prisma.XOR<Prisma.RevenueCreateWithoutTypeInput, Prisma.RevenueUncheckedCreateWithoutTypeInput>
+  create: Prisma.XOR<Prisma.RevenueCreateWithoutRevenueTypeInput, Prisma.RevenueUncheckedCreateWithoutRevenueTypeInput>
 }
 
-export type RevenueCreateManyTypeInputEnvelope = {
-  data: Prisma.RevenueCreateManyTypeInput | Prisma.RevenueCreateManyTypeInput[]
+export type RevenueCreateManyRevenueTypeInputEnvelope = {
+  data: Prisma.RevenueCreateManyRevenueTypeInput | Prisma.RevenueCreateManyRevenueTypeInput[]
   skipDuplicates?: boolean
 }
 
-export type RevenueUpsertWithWhereUniqueWithoutTypeInput = {
+export type RevenueUpsertWithWhereUniqueWithoutRevenueTypeInput = {
   where: Prisma.RevenueWhereUniqueInput
-  update: Prisma.XOR<Prisma.RevenueUpdateWithoutTypeInput, Prisma.RevenueUncheckedUpdateWithoutTypeInput>
-  create: Prisma.XOR<Prisma.RevenueCreateWithoutTypeInput, Prisma.RevenueUncheckedCreateWithoutTypeInput>
+  update: Prisma.XOR<Prisma.RevenueUpdateWithoutRevenueTypeInput, Prisma.RevenueUncheckedUpdateWithoutRevenueTypeInput>
+  create: Prisma.XOR<Prisma.RevenueCreateWithoutRevenueTypeInput, Prisma.RevenueUncheckedCreateWithoutRevenueTypeInput>
 }
 
-export type RevenueUpdateWithWhereUniqueWithoutTypeInput = {
+export type RevenueUpdateWithWhereUniqueWithoutRevenueTypeInput = {
   where: Prisma.RevenueWhereUniqueInput
-  data: Prisma.XOR<Prisma.RevenueUpdateWithoutTypeInput, Prisma.RevenueUncheckedUpdateWithoutTypeInput>
+  data: Prisma.XOR<Prisma.RevenueUpdateWithoutRevenueTypeInput, Prisma.RevenueUncheckedUpdateWithoutRevenueTypeInput>
 }
 
-export type RevenueUpdateManyWithWhereWithoutTypeInput = {
+export type RevenueUpdateManyWithWhereWithoutRevenueTypeInput = {
   where: Prisma.RevenueScalarWhereInput
-  data: Prisma.XOR<Prisma.RevenueUpdateManyMutationInput, Prisma.RevenueUncheckedUpdateManyWithoutTypeInput>
+  data: Prisma.XOR<Prisma.RevenueUpdateManyMutationInput, Prisma.RevenueUncheckedUpdateManyWithoutRevenueTypeInput>
 }
 
 export type RevenueCreateWithoutContractInput = {
-  totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
-  downPaymentValue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  paymentStartDate: Date | string
-  totalInstallments: number
+  negotiatedAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   firm: Prisma.FirmCreateNestedOneWithoutRevenuesInput
-  type: Prisma.RevenueTypeCreateNestedOneWithoutRevenuesInput
-  fees?: Prisma.FeeCreateNestedManyWithoutRevenueInput
+  revenueType: Prisma.RevenueTypeCreateNestedOneWithoutRevenuesInput
+  generation?: Prisma.FinancialGenerationCreateNestedOneWithoutRevenueInput
+  receivables?: Prisma.ReceivableCreateNestedManyWithoutRevenueInput
 }
 
 export type RevenueUncheckedCreateWithoutContractInput = {
   id?: number
-  firmId: number
-  typeId: number
-  totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
-  downPaymentValue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  paymentStartDate: Date | string
-  totalInstallments: number
+  negotiatedAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  fees?: Prisma.FeeUncheckedCreateNestedManyWithoutRevenueInput
+  revenueTypeId: number
+  generation?: Prisma.FinancialGenerationUncheckedCreateNestedOneWithoutRevenueInput
+  receivables?: Prisma.ReceivableUncheckedCreateNestedManyWithoutRevenueInput
 }
 
 export type RevenueCreateOrConnectWithoutContractInput = {
@@ -895,249 +853,294 @@ export type RevenueUpdateManyWithWhereWithoutContractInput = {
   data: Prisma.XOR<Prisma.RevenueUpdateManyMutationInput, Prisma.RevenueUncheckedUpdateManyWithoutContractInput>
 }
 
-export type RevenueCreateWithoutFeesInput = {
-  totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
-  downPaymentValue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  paymentStartDate: Date | string
-  totalInstallments: number
+export type RevenueCreateWithoutGenerationInput = {
+  negotiatedAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  contract: Prisma.ContractCreateNestedOneWithoutRevenuesInput
   firm: Prisma.FirmCreateNestedOneWithoutRevenuesInput
-  type: Prisma.RevenueTypeCreateNestedOneWithoutRevenuesInput
+  contract: Prisma.ContractCreateNestedOneWithoutRevenuesInput
+  revenueType: Prisma.RevenueTypeCreateNestedOneWithoutRevenuesInput
+  receivables?: Prisma.ReceivableCreateNestedManyWithoutRevenueInput
 }
 
-export type RevenueUncheckedCreateWithoutFeesInput = {
+export type RevenueUncheckedCreateWithoutGenerationInput = {
   id?: number
+  negotiatedAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   firmId: number
   contractId: number
-  typeId: number
-  totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
-  downPaymentValue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  paymentStartDate: Date | string
-  totalInstallments: number
+  revenueTypeId: number
+  receivables?: Prisma.ReceivableUncheckedCreateNestedManyWithoutRevenueInput
+}
+
+export type RevenueCreateOrConnectWithoutGenerationInput = {
+  where: Prisma.RevenueWhereUniqueInput
+  create: Prisma.XOR<Prisma.RevenueCreateWithoutGenerationInput, Prisma.RevenueUncheckedCreateWithoutGenerationInput>
+}
+
+export type RevenueUpsertWithoutGenerationInput = {
+  update: Prisma.XOR<Prisma.RevenueUpdateWithoutGenerationInput, Prisma.RevenueUncheckedUpdateWithoutGenerationInput>
+  create: Prisma.XOR<Prisma.RevenueCreateWithoutGenerationInput, Prisma.RevenueUncheckedCreateWithoutGenerationInput>
+  where?: Prisma.RevenueWhereInput
+}
+
+export type RevenueUpdateToOneWithWhereWithoutGenerationInput = {
+  where?: Prisma.RevenueWhereInput
+  data: Prisma.XOR<Prisma.RevenueUpdateWithoutGenerationInput, Prisma.RevenueUncheckedUpdateWithoutGenerationInput>
+}
+
+export type RevenueUpdateWithoutGenerationInput = {
+  negotiatedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  firm?: Prisma.FirmUpdateOneRequiredWithoutRevenuesNestedInput
+  contract?: Prisma.ContractUpdateOneRequiredWithoutRevenuesNestedInput
+  revenueType?: Prisma.RevenueTypeUpdateOneRequiredWithoutRevenuesNestedInput
+  receivables?: Prisma.ReceivableUpdateManyWithoutRevenueNestedInput
+}
+
+export type RevenueUncheckedUpdateWithoutGenerationInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  negotiatedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  firmId?: Prisma.IntFieldUpdateOperationsInput | number
+  contractId?: Prisma.IntFieldUpdateOperationsInput | number
+  revenueTypeId?: Prisma.IntFieldUpdateOperationsInput | number
+  receivables?: Prisma.ReceivableUncheckedUpdateManyWithoutRevenueNestedInput
+}
+
+export type RevenueCreateWithoutReceivablesInput = {
+  negotiatedAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  firm: Prisma.FirmCreateNestedOneWithoutRevenuesInput
+  contract: Prisma.ContractCreateNestedOneWithoutRevenuesInput
+  revenueType: Prisma.RevenueTypeCreateNestedOneWithoutRevenuesInput
+  generation?: Prisma.FinancialGenerationCreateNestedOneWithoutRevenueInput
 }
 
-export type RevenueCreateOrConnectWithoutFeesInput = {
+export type RevenueUncheckedCreateWithoutReceivablesInput = {
+  id?: number
+  negotiatedAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  firmId: number
+  contractId: number
+  revenueTypeId: number
+  generation?: Prisma.FinancialGenerationUncheckedCreateNestedOneWithoutRevenueInput
+}
+
+export type RevenueCreateOrConnectWithoutReceivablesInput = {
   where: Prisma.RevenueWhereUniqueInput
-  create: Prisma.XOR<Prisma.RevenueCreateWithoutFeesInput, Prisma.RevenueUncheckedCreateWithoutFeesInput>
+  create: Prisma.XOR<Prisma.RevenueCreateWithoutReceivablesInput, Prisma.RevenueUncheckedCreateWithoutReceivablesInput>
 }
 
-export type RevenueUpsertWithoutFeesInput = {
-  update: Prisma.XOR<Prisma.RevenueUpdateWithoutFeesInput, Prisma.RevenueUncheckedUpdateWithoutFeesInput>
-  create: Prisma.XOR<Prisma.RevenueCreateWithoutFeesInput, Prisma.RevenueUncheckedCreateWithoutFeesInput>
+export type RevenueUpsertWithoutReceivablesInput = {
+  update: Prisma.XOR<Prisma.RevenueUpdateWithoutReceivablesInput, Prisma.RevenueUncheckedUpdateWithoutReceivablesInput>
+  create: Prisma.XOR<Prisma.RevenueCreateWithoutReceivablesInput, Prisma.RevenueUncheckedCreateWithoutReceivablesInput>
   where?: Prisma.RevenueWhereInput
 }
 
-export type RevenueUpdateToOneWithWhereWithoutFeesInput = {
+export type RevenueUpdateToOneWithWhereWithoutReceivablesInput = {
   where?: Prisma.RevenueWhereInput
-  data: Prisma.XOR<Prisma.RevenueUpdateWithoutFeesInput, Prisma.RevenueUncheckedUpdateWithoutFeesInput>
+  data: Prisma.XOR<Prisma.RevenueUpdateWithoutReceivablesInput, Prisma.RevenueUncheckedUpdateWithoutReceivablesInput>
 }
 
-export type RevenueUpdateWithoutFeesInput = {
-  totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  downPaymentValue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  paymentStartDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  totalInstallments?: Prisma.IntFieldUpdateOperationsInput | number
+export type RevenueUpdateWithoutReceivablesInput = {
+  negotiatedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  contract?: Prisma.ContractUpdateOneRequiredWithoutRevenuesNestedInput
   firm?: Prisma.FirmUpdateOneRequiredWithoutRevenuesNestedInput
-  type?: Prisma.RevenueTypeUpdateOneRequiredWithoutRevenuesNestedInput
+  contract?: Prisma.ContractUpdateOneRequiredWithoutRevenuesNestedInput
+  revenueType?: Prisma.RevenueTypeUpdateOneRequiredWithoutRevenuesNestedInput
+  generation?: Prisma.FinancialGenerationUpdateOneWithoutRevenueNestedInput
 }
 
-export type RevenueUncheckedUpdateWithoutFeesInput = {
+export type RevenueUncheckedUpdateWithoutReceivablesInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  negotiatedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   firmId?: Prisma.IntFieldUpdateOperationsInput | number
   contractId?: Prisma.IntFieldUpdateOperationsInput | number
-  typeId?: Prisma.IntFieldUpdateOperationsInput | number
-  totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  downPaymentValue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  paymentStartDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  totalInstallments?: Prisma.IntFieldUpdateOperationsInput | number
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  revenueTypeId?: Prisma.IntFieldUpdateOperationsInput | number
+  generation?: Prisma.FinancialGenerationUncheckedUpdateOneWithoutRevenueNestedInput
 }
 
 export type RevenueCreateManyFirmInput = {
   id?: number
-  contractId: number
-  typeId: number
-  totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
-  downPaymentValue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  paymentStartDate: Date | string
-  totalInstallments: number
+  negotiatedAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  contractId: number
+  revenueTypeId: number
 }
 
 export type RevenueUpdateWithoutFirmInput = {
-  totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  downPaymentValue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  paymentStartDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  totalInstallments?: Prisma.IntFieldUpdateOperationsInput | number
+  negotiatedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   contract?: Prisma.ContractUpdateOneRequiredWithoutRevenuesNestedInput
-  type?: Prisma.RevenueTypeUpdateOneRequiredWithoutRevenuesNestedInput
-  fees?: Prisma.FeeUpdateManyWithoutRevenueNestedInput
+  revenueType?: Prisma.RevenueTypeUpdateOneRequiredWithoutRevenuesNestedInput
+  generation?: Prisma.FinancialGenerationUpdateOneWithoutRevenueNestedInput
+  receivables?: Prisma.ReceivableUpdateManyWithoutRevenueNestedInput
 }
 
 export type RevenueUncheckedUpdateWithoutFirmInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  contractId?: Prisma.IntFieldUpdateOperationsInput | number
-  typeId?: Prisma.IntFieldUpdateOperationsInput | number
-  totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  downPaymentValue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  paymentStartDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  totalInstallments?: Prisma.IntFieldUpdateOperationsInput | number
+  negotiatedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  fees?: Prisma.FeeUncheckedUpdateManyWithoutRevenueNestedInput
+  contractId?: Prisma.IntFieldUpdateOperationsInput | number
+  revenueTypeId?: Prisma.IntFieldUpdateOperationsInput | number
+  generation?: Prisma.FinancialGenerationUncheckedUpdateOneWithoutRevenueNestedInput
+  receivables?: Prisma.ReceivableUncheckedUpdateManyWithoutRevenueNestedInput
 }
 
 export type RevenueUncheckedUpdateManyWithoutFirmInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  contractId?: Prisma.IntFieldUpdateOperationsInput | number
-  typeId?: Prisma.IntFieldUpdateOperationsInput | number
-  totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  downPaymentValue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  paymentStartDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  totalInstallments?: Prisma.IntFieldUpdateOperationsInput | number
+  negotiatedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  contractId?: Prisma.IntFieldUpdateOperationsInput | number
+  revenueTypeId?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
-export type RevenueCreateManyTypeInput = {
+export type RevenueCreateManyRevenueTypeInput = {
   id?: number
-  firmId: number
-  contractId: number
-  totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
-  downPaymentValue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  paymentStartDate: Date | string
-  totalInstallments: number
+  negotiatedAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  firmId: number
+  contractId: number
 }
 
-export type RevenueUpdateWithoutTypeInput = {
-  totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  downPaymentValue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  paymentStartDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  totalInstallments?: Prisma.IntFieldUpdateOperationsInput | number
+export type RevenueUpdateWithoutRevenueTypeInput = {
+  negotiatedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  contract?: Prisma.ContractUpdateOneRequiredWithoutRevenuesNestedInput
   firm?: Prisma.FirmUpdateOneRequiredWithoutRevenuesNestedInput
-  fees?: Prisma.FeeUpdateManyWithoutRevenueNestedInput
+  contract?: Prisma.ContractUpdateOneRequiredWithoutRevenuesNestedInput
+  generation?: Prisma.FinancialGenerationUpdateOneWithoutRevenueNestedInput
+  receivables?: Prisma.ReceivableUpdateManyWithoutRevenueNestedInput
 }
 
-export type RevenueUncheckedUpdateWithoutTypeInput = {
+export type RevenueUncheckedUpdateWithoutRevenueTypeInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  firmId?: Prisma.IntFieldUpdateOperationsInput | number
-  contractId?: Prisma.IntFieldUpdateOperationsInput | number
-  totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  downPaymentValue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  paymentStartDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  totalInstallments?: Prisma.IntFieldUpdateOperationsInput | number
+  negotiatedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  fees?: Prisma.FeeUncheckedUpdateManyWithoutRevenueNestedInput
-}
-
-export type RevenueUncheckedUpdateManyWithoutTypeInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
   firmId?: Prisma.IntFieldUpdateOperationsInput | number
   contractId?: Prisma.IntFieldUpdateOperationsInput | number
-  totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  downPaymentValue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  paymentStartDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  totalInstallments?: Prisma.IntFieldUpdateOperationsInput | number
+  generation?: Prisma.FinancialGenerationUncheckedUpdateOneWithoutRevenueNestedInput
+  receivables?: Prisma.ReceivableUncheckedUpdateManyWithoutRevenueNestedInput
+}
+
+export type RevenueUncheckedUpdateManyWithoutRevenueTypeInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  negotiatedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  firmId?: Prisma.IntFieldUpdateOperationsInput | number
+  contractId?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type RevenueCreateManyContractInput = {
   id?: number
-  firmId: number
-  typeId: number
-  totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
-  downPaymentValue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  paymentStartDate: Date | string
-  totalInstallments: number
+  negotiatedAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  revenueTypeId: number
 }
 
 export type RevenueUpdateWithoutContractInput = {
-  totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  downPaymentValue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  paymentStartDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  totalInstallments?: Prisma.IntFieldUpdateOperationsInput | number
+  negotiatedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   firm?: Prisma.FirmUpdateOneRequiredWithoutRevenuesNestedInput
-  type?: Prisma.RevenueTypeUpdateOneRequiredWithoutRevenuesNestedInput
-  fees?: Prisma.FeeUpdateManyWithoutRevenueNestedInput
+  revenueType?: Prisma.RevenueTypeUpdateOneRequiredWithoutRevenuesNestedInput
+  generation?: Prisma.FinancialGenerationUpdateOneWithoutRevenueNestedInput
+  receivables?: Prisma.ReceivableUpdateManyWithoutRevenueNestedInput
 }
 
 export type RevenueUncheckedUpdateWithoutContractInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  firmId?: Prisma.IntFieldUpdateOperationsInput | number
-  typeId?: Prisma.IntFieldUpdateOperationsInput | number
-  totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  downPaymentValue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  paymentStartDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  totalInstallments?: Prisma.IntFieldUpdateOperationsInput | number
+  negotiatedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  fees?: Prisma.FeeUncheckedUpdateManyWithoutRevenueNestedInput
+  revenueTypeId?: Prisma.IntFieldUpdateOperationsInput | number
+  generation?: Prisma.FinancialGenerationUncheckedUpdateOneWithoutRevenueNestedInput
+  receivables?: Prisma.ReceivableUncheckedUpdateManyWithoutRevenueNestedInput
 }
 
 export type RevenueUncheckedUpdateManyWithoutContractInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  firmId?: Prisma.IntFieldUpdateOperationsInput | number
-  typeId?: Prisma.IntFieldUpdateOperationsInput | number
-  totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  downPaymentValue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  paymentStartDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  totalInstallments?: Prisma.IntFieldUpdateOperationsInput | number
+  negotiatedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  revenueTypeId?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 
@@ -1146,11 +1149,11 @@ export type RevenueUncheckedUpdateManyWithoutContractInput = {
  */
 
 export type RevenueCountOutputType = {
-  fees: number
+  receivables: number
 }
 
 export type RevenueCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  fees?: boolean | RevenueCountOutputTypeCountFeesArgs
+  receivables?: boolean | RevenueCountOutputTypeCountReceivablesArgs
 }
 
 /**
@@ -1166,122 +1169,115 @@ export type RevenueCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exte
 /**
  * RevenueCountOutputType without action
  */
-export type RevenueCountOutputTypeCountFeesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.FeeWhereInput
+export type RevenueCountOutputTypeCountReceivablesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ReceivableWhereInput
 }
 
 
 export type RevenueSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  firmId?: boolean
-  contractId?: boolean
-  typeId?: boolean
-  totalValue?: boolean
-  downPaymentValue?: boolean
-  paymentStartDate?: boolean
-  totalInstallments?: boolean
+  negotiatedAmount?: boolean
+  notes?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
-  contract?: boolean | Prisma.ContractDefaultArgs<ExtArgs>
+  firmId?: boolean
+  contractId?: boolean
+  revenueTypeId?: boolean
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
-  type?: boolean | Prisma.RevenueTypeDefaultArgs<ExtArgs>
-  fees?: boolean | Prisma.Revenue$feesArgs<ExtArgs>
+  contract?: boolean | Prisma.ContractDefaultArgs<ExtArgs>
+  revenueType?: boolean | Prisma.RevenueTypeDefaultArgs<ExtArgs>
+  generation?: boolean | Prisma.Revenue$generationArgs<ExtArgs>
+  receivables?: boolean | Prisma.Revenue$receivablesArgs<ExtArgs>
   _count?: boolean | Prisma.RevenueCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["revenue"]>
 
 export type RevenueSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  firmId?: boolean
-  contractId?: boolean
-  typeId?: boolean
-  totalValue?: boolean
-  downPaymentValue?: boolean
-  paymentStartDate?: boolean
-  totalInstallments?: boolean
+  negotiatedAmount?: boolean
+  notes?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
-  contract?: boolean | Prisma.ContractDefaultArgs<ExtArgs>
+  firmId?: boolean
+  contractId?: boolean
+  revenueTypeId?: boolean
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
-  type?: boolean | Prisma.RevenueTypeDefaultArgs<ExtArgs>
+  contract?: boolean | Prisma.ContractDefaultArgs<ExtArgs>
+  revenueType?: boolean | Prisma.RevenueTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["revenue"]>
 
 export type RevenueSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  firmId?: boolean
-  contractId?: boolean
-  typeId?: boolean
-  totalValue?: boolean
-  downPaymentValue?: boolean
-  paymentStartDate?: boolean
-  totalInstallments?: boolean
+  negotiatedAmount?: boolean
+  notes?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
-  contract?: boolean | Prisma.ContractDefaultArgs<ExtArgs>
+  firmId?: boolean
+  contractId?: boolean
+  revenueTypeId?: boolean
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
-  type?: boolean | Prisma.RevenueTypeDefaultArgs<ExtArgs>
+  contract?: boolean | Prisma.ContractDefaultArgs<ExtArgs>
+  revenueType?: boolean | Prisma.RevenueTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["revenue"]>
 
 export type RevenueSelectScalar = {
   id?: boolean
-  firmId?: boolean
-  contractId?: boolean
-  typeId?: boolean
-  totalValue?: boolean
-  downPaymentValue?: boolean
-  paymentStartDate?: boolean
-  totalInstallments?: boolean
+  negotiatedAmount?: boolean
+  notes?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
+  firmId?: boolean
+  contractId?: boolean
+  revenueTypeId?: boolean
 }
 
-export type RevenueOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "firmId" | "contractId" | "typeId" | "totalValue" | "downPaymentValue" | "paymentStartDate" | "totalInstallments" | "isActive" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["revenue"]>
+export type RevenueOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "negotiatedAmount" | "notes" | "isActive" | "createdAt" | "updatedAt" | "deletedAt" | "firmId" | "contractId" | "revenueTypeId", ExtArgs["result"]["revenue"]>
 export type RevenueInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  contract?: boolean | Prisma.ContractDefaultArgs<ExtArgs>
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
-  type?: boolean | Prisma.RevenueTypeDefaultArgs<ExtArgs>
-  fees?: boolean | Prisma.Revenue$feesArgs<ExtArgs>
+  contract?: boolean | Prisma.ContractDefaultArgs<ExtArgs>
+  revenueType?: boolean | Prisma.RevenueTypeDefaultArgs<ExtArgs>
+  generation?: boolean | Prisma.Revenue$generationArgs<ExtArgs>
+  receivables?: boolean | Prisma.Revenue$receivablesArgs<ExtArgs>
   _count?: boolean | Prisma.RevenueCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type RevenueIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  contract?: boolean | Prisma.ContractDefaultArgs<ExtArgs>
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
-  type?: boolean | Prisma.RevenueTypeDefaultArgs<ExtArgs>
+  contract?: boolean | Prisma.ContractDefaultArgs<ExtArgs>
+  revenueType?: boolean | Prisma.RevenueTypeDefaultArgs<ExtArgs>
 }
 export type RevenueIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  contract?: boolean | Prisma.ContractDefaultArgs<ExtArgs>
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
-  type?: boolean | Prisma.RevenueTypeDefaultArgs<ExtArgs>
+  contract?: boolean | Prisma.ContractDefaultArgs<ExtArgs>
+  revenueType?: boolean | Prisma.RevenueTypeDefaultArgs<ExtArgs>
 }
 
 export type $RevenuePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Revenue"
   objects: {
-    contract: Prisma.$ContractPayload<ExtArgs>
     firm: Prisma.$FirmPayload<ExtArgs>
-    type: Prisma.$RevenueTypePayload<ExtArgs>
-    fees: Prisma.$FeePayload<ExtArgs>[]
+    contract: Prisma.$ContractPayload<ExtArgs>
+    revenueType: Prisma.$RevenueTypePayload<ExtArgs>
+    generation: Prisma.$FinancialGenerationPayload<ExtArgs> | null
+    receivables: Prisma.$ReceivablePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
-    firmId: number
-    contractId: number
-    typeId: number
-    totalValue: runtime.Decimal
-    downPaymentValue: runtime.Decimal | null
-    paymentStartDate: Date
-    totalInstallments: number
+    negotiatedAmount: runtime.Decimal
+    notes: string | null
     isActive: boolean
     createdAt: Date
     updatedAt: Date
     deletedAt: Date | null
+    firmId: number
+    contractId: number
+    revenueTypeId: number
   }, ExtArgs["result"]["revenue"]>
   composites: {}
 }
@@ -1676,10 +1672,11 @@ readonly fields: RevenueFieldRefs;
  */
 export interface Prisma__RevenueClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  contract<T extends Prisma.ContractDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ContractDefaultArgs<ExtArgs>>): Prisma.Prisma__ContractClient<runtime.Types.Result.GetResult<Prisma.$ContractPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   firm<T extends Prisma.FirmDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FirmDefaultArgs<ExtArgs>>): Prisma.Prisma__FirmClient<runtime.Types.Result.GetResult<Prisma.$FirmPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  type<T extends Prisma.RevenueTypeDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RevenueTypeDefaultArgs<ExtArgs>>): Prisma.Prisma__RevenueTypeClient<runtime.Types.Result.GetResult<Prisma.$RevenueTypePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  fees<T extends Prisma.Revenue$feesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Revenue$feesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FeePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  contract<T extends Prisma.ContractDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ContractDefaultArgs<ExtArgs>>): Prisma.Prisma__ContractClient<runtime.Types.Result.GetResult<Prisma.$ContractPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  revenueType<T extends Prisma.RevenueTypeDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RevenueTypeDefaultArgs<ExtArgs>>): Prisma.Prisma__RevenueTypeClient<runtime.Types.Result.GetResult<Prisma.$RevenueTypePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  generation<T extends Prisma.Revenue$generationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Revenue$generationArgs<ExtArgs>>): Prisma.Prisma__FinancialGenerationClient<runtime.Types.Result.GetResult<Prisma.$FinancialGenerationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  receivables<T extends Prisma.Revenue$receivablesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Revenue$receivablesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReceivablePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1710,17 +1707,15 @@ export interface Prisma__RevenueClient<T, Null = never, ExtArgs extends runtime.
  */
 export interface RevenueFieldRefs {
   readonly id: Prisma.FieldRef<"Revenue", 'Int'>
-  readonly firmId: Prisma.FieldRef<"Revenue", 'Int'>
-  readonly contractId: Prisma.FieldRef<"Revenue", 'Int'>
-  readonly typeId: Prisma.FieldRef<"Revenue", 'Int'>
-  readonly totalValue: Prisma.FieldRef<"Revenue", 'Decimal'>
-  readonly downPaymentValue: Prisma.FieldRef<"Revenue", 'Decimal'>
-  readonly paymentStartDate: Prisma.FieldRef<"Revenue", 'DateTime'>
-  readonly totalInstallments: Prisma.FieldRef<"Revenue", 'Int'>
+  readonly negotiatedAmount: Prisma.FieldRef<"Revenue", 'Decimal'>
+  readonly notes: Prisma.FieldRef<"Revenue", 'String'>
   readonly isActive: Prisma.FieldRef<"Revenue", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Revenue", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Revenue", 'DateTime'>
   readonly deletedAt: Prisma.FieldRef<"Revenue", 'DateTime'>
+  readonly firmId: Prisma.FieldRef<"Revenue", 'Int'>
+  readonly contractId: Prisma.FieldRef<"Revenue", 'Int'>
+  readonly revenueTypeId: Prisma.FieldRef<"Revenue", 'Int'>
 }
     
 
@@ -2122,27 +2117,46 @@ export type RevenueDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
 }
 
 /**
- * Revenue.fees
+ * Revenue.generation
  */
-export type Revenue$feesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Revenue$generationArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Fee
+   * Select specific fields to fetch from the FinancialGeneration
    */
-  select?: Prisma.FeeSelect<ExtArgs> | null
+  select?: Prisma.FinancialGenerationSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Fee
+   * Omit specific fields from the FinancialGeneration
    */
-  omit?: Prisma.FeeOmit<ExtArgs> | null
+  omit?: Prisma.FinancialGenerationOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.FeeInclude<ExtArgs> | null
-  where?: Prisma.FeeWhereInput
-  orderBy?: Prisma.FeeOrderByWithRelationInput | Prisma.FeeOrderByWithRelationInput[]
-  cursor?: Prisma.FeeWhereUniqueInput
+  include?: Prisma.FinancialGenerationInclude<ExtArgs> | null
+  where?: Prisma.FinancialGenerationWhereInput
+}
+
+/**
+ * Revenue.receivables
+ */
+export type Revenue$receivablesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Receivable
+   */
+  select?: Prisma.ReceivableSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Receivable
+   */
+  omit?: Prisma.ReceivableOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReceivableInclude<ExtArgs> | null
+  where?: Prisma.ReceivableWhereInput
+  orderBy?: Prisma.ReceivableOrderByWithRelationInput | Prisma.ReceivableOrderByWithRelationInput[]
+  cursor?: Prisma.ReceivableWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.FeeScalarFieldEnum | Prisma.FeeScalarFieldEnum[]
+  distinct?: Prisma.ReceivableScalarFieldEnum | Prisma.ReceivableScalarFieldEnum[]
 }
 
 /**

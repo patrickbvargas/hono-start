@@ -15,47 +15,47 @@ model ClerkWebhookReceipt {
 }
 
 model Firm {
-  id                Int                @id @default(autoincrement())
-  name              String
-  auditLogs         AuditLog[]
-  attachments       Attachment[]
-  contracts         Contract[]
-  contractEmployees ContractEmployee[]
-  revenues          Revenue[]
-  fees              Fee[]
-  expenses          Expense[]
-  remunerations     Remuneration[]
+  id                       Int                       @id @default(autoincrement())
+  name                     String
+  remunerationCutoffDay    Int                       @default(25)
+  remunerationDueDay       Int                       @default(5)
+  contracts                Contract[]                @relation("Contract_firmId")
+  contractAssignments      ContractAssignment[]      @relation("ContractAssignment_firmId")
+  revenues                 Revenue[]                 @relation("Revenue_firmId")
+  expenses                 Expense[]                 @relation("Expense_firmId")
+  financialGenerations     FinancialGeneration[]     @relation("FinancialGeneration_firmId")
+  directFinancialEntries   DirectFinancialEntry[]    @relation("DirectFinancialEntry_firmId")
+  receivables              Receivable[]              @relation("Receivable_firmId")
+  payables                 Payable[]                 @relation("Payable_firmId")
+  receipts                 Receipt[]                 @relation("Receipt_firmId")
+  receiptReversals         ReceiptReversal[]         @relation("ReceiptReversal_firmId")
+  payments                 Payment[]                 @relation("Payment_firmId")
+  paymentReversals         PaymentReversal[]         @relation("PaymentReversal_firmId")
+  remunerationCalculations RemunerationCalculation[] @relation("RemunerationCalculation_firmId")
+  attachments              Attachment[]              @relation("Attachment_firmId")
+  auditLogs                AuditLog[]                @relation("AuditLog_firmId")
 
   @@map("firms")
 }
 
-model ClientType {
+model PersonType {
   id       Int      @id @default(autoincrement())
   value    String   @unique
   label    String
   isActive Boolean  @default(true)
-  clients  Client[]
+  people   Person[] @relation("Person_personTypeId")
 
-  @@map("client_types")
+  @@map("ref_person_types")
 }
 
 model EmployeeType {
-  id        Int        @id @default(autoincrement())
-  value     String     @unique
-  label     String
-  isActive  Boolean    @default(true)
-  employees Employee[]
-
-  @@map("employee_types")
-}
-
-model UserRole {
-  id       Int     @id @default(autoincrement())
-  value    String  @unique
+  id       Int               @id @default(autoincrement())
+  value    String            @unique
   label    String
-  isActive Boolean @default(true)
+  isActive Boolean           @default(true)
+  profiles EmployeeProfile[] @relation("EmployeeProfile_employeeTypeId")
 
-  @@map("user_roles")
+  @@map("ref_employee_types")
 }
 
 model LegalArea {
@@ -63,9 +63,9 @@ model LegalArea {
   value     String     @unique
   label     String
   isActive  Boolean    @default(true)
-  contracts Contract[]
+  contracts Contract[] @relation("Contract_legalAreaId")
 
-  @@map("legal_areas")
+  @@map("ref_legal_areas")
 }
 
 model ContractStatus {
@@ -73,19 +73,19 @@ model ContractStatus {
   value     String     @unique
   label     String
   isActive  Boolean    @default(true)
-  contracts Contract[]
+  contracts Contract[] @relation("Contract_statusId")
 
-  @@map("contract_statuses")
+  @@map("ref_contract_statuses")
 }
 
 model AssignmentType {
-  id                Int                @id @default(autoincrement())
-  value             String             @unique
-  label             String
-  isActive          Boolean            @default(true)
-  contractEmployees ContractEmployee[]
+  id          Int                  @id @default(autoincrement())
+  value       String               @unique
+  label       String
+  isActive    Boolean              @default(true)
+  assignments ContractAssignment[] @relation("ContractAssignment_assignmentTypeId")
 
-  @@map("assignment_types")
+  @@map("ref_assignment_types")
 }
 
 model RevenueType {
@@ -93,9 +93,9 @@ model RevenueType {
   value    String    @unique
   label    String
   isActive Boolean   @default(true)
-  revenues Revenue[]
+  revenues Revenue[] @relation("Revenue_revenueTypeId")
 
-  @@map("revenue_types")
+  @@map("ref_revenue_types")
 }
 
 model AttachmentType {
@@ -103,302 +103,575 @@ model AttachmentType {
   value       String       @unique
   label       String
   isActive    Boolean      @default(true)
-  attachments Attachment[]
+  attachments Attachment[] @relation("Attachment_typeId")
 
-  @@map("attachment_types")
+  @@map("ref_attachment_types")
 }
 
-model ExpenseCategory {
-  id       Int       @id @default(autoincrement())
-  value    String    @unique
-  label    String
-  isActive Boolean   @default(true)
-  expenses Expense[]
+model FinancialAnalytic {
+  id          Int          @id @default(autoincrement())
+  value       String       @unique
+  label       String
+  isActive    Boolean      @default(true)
+  receivables Receivable[] @relation("Receivable_analyticId")
+  payables    Payable[]    @relation("Payable_analyticId")
 
-  @@map("expense_categories")
+  @@map("ref_financial_analytics")
 }
 
-model Employee {
-  id              Int        @id @default(autoincrement())
+model PaymentMethod {
+  id          Int          @id @default(autoincrement())
+  value       String       @unique
+  label       String
+  isActive    Boolean      @default(true)
+  receivables Receivable[] @relation("Receivable_expectedPaymentMethodId")
+  payables    Payable[]    @relation("Payable_expectedPaymentMethodId")
+  receipts    Receipt[]    @relation("Receipt_actualPaymentMethodId")
+  payments    Payment[]    @relation("Payment_actualPaymentMethodId")
 
-  typeId                 Int
-  fullName               String
-  oabNumber              String?
-  remunerationPercentage Decimal   @db.Decimal(5, 4)
-  referralPercentage     Decimal   @db.Decimal(5, 4)
-  isActive               Boolean   @default(true)
-  createdAt              DateTime  @default(now())
-  updatedAt              DateTime  @updatedAt
+  @@map("ref_payment_methods")
+}
+
+model TitleKind {
+  id          Int          @id @default(autoincrement())
+  value       String       @unique
+  label       String
+  isActive    Boolean      @default(true)
+  receivables Receivable[] @relation("Receivable_titleKindId")
+  payables    Payable[]    @relation("Payable_titleKindId")
+
+  @@map("ref_title_kinds")
+}
+
+model Person {
+  id                Int                    @id @default(autoincrement())
+  fullName          String
+  document          String                 @unique
+  email             String?
+  phone             String?
+  isCustomer        Boolean                @default(false)
+  isSupplier        Boolean                @default(false)
+  isEmployee        Boolean                @default(false)
+  isActive          Boolean                @default(true)
+  createdAt         DateTime               @default(now())
+  updatedAt         DateTime               @updatedAt
+  deletedAt         DateTime?
+  personTypeId      Int
+  personType        PersonType             @relation("Person_personTypeId", fields: [personTypeId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  employeeProfile   EmployeeProfile?       @relation("EmployeeProfile_personId")
+  customerContracts Contract[]             @relation("Contract_customerId")
+  expenses          Expense[]              @relation("Expense_supplierId")
+  generations       FinancialGeneration[]  @relation("FinancialGeneration_actorId")
+  directEntries     DirectFinancialEntry[] @relation("DirectFinancialEntry_actorId")
+  receivables       Receivable[]           @relation("Receivable_debtorId")
+  payables          Payable[]              @relation("Payable_beneficiaryId")
+  receipts          Receipt[]              @relation("Receipt_actorId")
+  receiptsReversed  ReceiptReversal[]      @relation("ReceiptReversal_actorId")
+  payments          Payment[]              @relation("Payment_actorId")
+  paymentsReversed  PaymentReversal[]      @relation("PaymentReversal_actorId")
+  attachments       Attachment[]           @relation("Attachment_personId")
+  actedAuditLogs    AuditLog[]             @relation("AuditLog_actorId")
+  auditLogs         AuditLog[]             @relation("AuditLog_personId")
+
+  @@index([fullName, id])
+  @@index([deletedAt])
+  @@index([personTypeId])
+  @@map("people")
+}
+
+model EmployeeProfile {
+  id                     Int                  @id @default(autoincrement())
+  oabNumber              String?              @unique
+  remunerationPercentage Decimal              @db.Decimal(5, 4)
+  referralPercentage     Decimal              @db.Decimal(5, 4)
+  isActive               Boolean              @default(true)
+  createdAt              DateTime             @default(now())
+  updatedAt              DateTime             @updatedAt
   deletedAt              DateTime?
+  personId               Int
+  person                 Person               @relation("EmployeeProfile_personId", fields: [personId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  employeeTypeId         Int
+  employeeType           EmployeeType         @relation("EmployeeProfile_employeeTypeId", fields: [employeeTypeId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  assignments            ContractAssignment[] @relation("ContractAssignment_employeeProfileId")
 
-  type                EmployeeType       @relation(fields: [typeId], references: [id])
-  auditLogs           AuditLog[]
-  attachments         Attachment[]
-  contractAssignments ContractEmployee[]
-  sharedAuditLogs AuditLog[] @relation("EmployeeAuditOwner")
-
-  @@unique([oabNumber])
-  @@index([deletedAt])
-  @@index([isActive])
-  @@map("employees")
-}
-
-model AuditLog {
-  clientId    Int?
-  employeeId  Int?
-  client      Client?   @relation(fields: [clientId], references: [id])
-  employee    Employee? @relation("EmployeeAuditOwner", fields: [employeeId], references: [id])
-  id          Int       @id @default(autoincrement())
-  firmId      Int
-  actorId     Int?
-  actorName   String
-  actorEmail  String?
-  action      String
-  entityType  String
-  entityId    String?
-  entityName  String
-  changeData  Json
-  ipAddress   String?
-  userAgent   String?
-  description String
-  createdAt   DateTime  @default(now())
-  actor       Employee? @relation(fields: [actorId], references: [id])
-  firm        Firm      @relation(fields: [firmId], references: [id])
-
-  @@index([firmId, createdAt])
-  @@index([firmId, action])
-  @@index([firmId, entityType])
-  @@index([actorId])
-  @@index([clientId, createdAt])
-  @@index([employeeId, createdAt])
-  @@map("audit_logs")
-}
-
-model Client {
-  auditLogs AuditLog[]
-  id        Int        @id @default(autoincrement())
-
-  typeId    Int
-  fullName  String
-  document  String
-  email     String?
-  phone     String?
-  isActive  Boolean   @default(true)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
-
-  type        ClientType   @relation(fields: [typeId], references: [id])
-  attachments Attachment[]
-  contracts   Contract[]
-
-  @@unique([document])
-  @@index([deletedAt])
-  @@index([isActive])
-  @@map("clients")
+  @@unique([personId])
+  @@index([personId])
+  @@index([employeeTypeId])
+  @@map("employee_profiles")
 }
 
 model Contract {
-  id                Int                @id @default(autoincrement())
-  firmId            Int
-  clientId          Int
-  legalAreaId       Int
-  statusId          Int
+  id                Int                  @id @default(autoincrement())
   processNumber     String
-  feePercentage     Decimal            @db.Decimal(5, 4)
+  feePercentage     Decimal              @db.Decimal(5, 4)
   notes             String?
-  allowStatusChange Boolean            @default(true)
-  isActive          Boolean            @default(true)
-  createdAt         DateTime           @default(now())
-  updatedAt         DateTime           @updatedAt
+  allowStatusChange Boolean              @default(true)
+  isActive          Boolean              @default(true)
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
   deletedAt         DateTime?
-  client            Client             @relation(fields: [clientId], references: [id])
-  firm              Firm               @relation(fields: [firmId], references: [id])
-  legalArea         LegalArea          @relation(fields: [legalAreaId], references: [id])
-  status            ContractStatus     @relation(fields: [statusId], references: [id])
-  attachments       Attachment[]
-  assignments       ContractEmployee[]
-  revenues          Revenue[]
+  firmId            Int
+  firm              Firm                 @relation("Contract_firmId", fields: [firmId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  customerId        Int
+  customer          Person               @relation("Contract_customerId", fields: [customerId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  legalAreaId       Int
+  legalArea         LegalArea            @relation("Contract_legalAreaId", fields: [legalAreaId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  statusId          Int
+  status            ContractStatus       @relation("Contract_statusId", fields: [statusId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  assignments       ContractAssignment[] @relation("ContractAssignment_contractId")
+  revenues          Revenue[]            @relation("Revenue_contractId")
+  attachments       Attachment[]         @relation("Attachment_contractId")
+  auditLogs         AuditLog[]           @relation("AuditLog_contractId")
 
+  @@unique([firmId, id])
   @@unique([firmId, processNumber])
   @@index([firmId])
-  @@index([clientId])
+  @@index([customerId])
   @@index([legalAreaId])
   @@index([statusId])
-  @@index([deletedAt])
-  @@index([isActive])
-  @@index([createdAt])
   @@map("contracts")
 }
 
-model ContractEmployee {
-  id               Int            @id @default(autoincrement())
-  firmId           Int
-  contractId       Int
-  employeeId       Int
-  assignmentTypeId Int
-  isActive         Boolean        @default(true)
-  createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @updatedAt
-  deletedAt        DateTime?
-  assignmentType   AssignmentType @relation(fields: [assignmentTypeId], references: [id])
-  contract         Contract       @relation(fields: [contractId], references: [id])
-  employee         Employee       @relation(fields: [employeeId], references: [id])
-  firm             Firm           @relation(fields: [firmId], references: [id])
-  remunerations    Remuneration[]
+model ContractAssignment {
+  id                Int                       @id @default(autoincrement())
+  isActive          Boolean                   @default(true)
+  createdAt         DateTime                  @default(now())
+  updatedAt         DateTime                  @updatedAt
+  deletedAt         DateTime?
+  firmId            Int
+  firm              Firm                      @relation("ContractAssignment_firmId", fields: [firmId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  contractId        Int
+  contract          Contract                  @relation("ContractAssignment_contractId", fields: [firmId, contractId], references: [firmId, id], onDelete: Restrict, onUpdate: Cascade)
+  employeeProfileId Int
+  employeeProfile   EmployeeProfile           @relation("ContractAssignment_employeeProfileId", fields: [employeeProfileId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  assignmentTypeId  Int
+  assignmentType    AssignmentType            @relation("ContractAssignment_assignmentTypeId", fields: [assignmentTypeId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  calculations      RemunerationCalculation[] @relation("RemunerationCalculation_contractAssignmentId")
 
+  @@unique([firmId, id])
+  @@unique([contractId, employeeProfileId, assignmentTypeId])
   @@index([firmId])
   @@index([contractId])
-  @@index([employeeId])
+  @@index([employeeProfileId])
   @@index([assignmentTypeId])
-  @@index([deletedAt])
-  @@index([isActive])
-  @@index([createdAt])
-  @@map("contract_employees")
+  @@map("contract_assignments")
 }
 
 model Revenue {
-  id                Int         @id @default(autoincrement())
-  firmId            Int
-  contractId        Int
-  typeId            Int
-  totalValue        Decimal     @db.Decimal(14, 2)
-  downPaymentValue  Decimal?    @db.Decimal(14, 2)
-  paymentStartDate  DateTime
-  totalInstallments Int
-  isActive          Boolean     @default(true)
-  createdAt         DateTime    @default(now())
-  updatedAt         DateTime    @updatedAt
-  deletedAt         DateTime?
-  contract          Contract    @relation(fields: [contractId], references: [id])
-  firm              Firm        @relation(fields: [firmId], references: [id])
-  type              RevenueType @relation(fields: [typeId], references: [id])
-  fees              Fee[]
+  id               Int                  @id @default(autoincrement())
+  negotiatedAmount Decimal              @db.Decimal(14, 2)
+  notes            String?
+  isActive         Boolean              @default(true)
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+  deletedAt        DateTime?
+  firmId           Int
+  firm             Firm                 @relation("Revenue_firmId", fields: [firmId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  contractId       Int
+  contract         Contract             @relation("Revenue_contractId", fields: [firmId, contractId], references: [firmId, id], onDelete: Restrict, onUpdate: Cascade)
+  revenueTypeId    Int
+  revenueType      RevenueType          @relation("Revenue_revenueTypeId", fields: [revenueTypeId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  generation       FinancialGeneration? @relation("FinancialGeneration_revenueId")
+  receivables      Receivable[]         @relation("Receivable_revenueId")
 
+  @@unique([firmId, id])
   @@index([firmId])
   @@index([contractId])
-  @@index([typeId])
-  @@index([deletedAt])
-  @@index([isActive])
-  @@index([createdAt])
+  @@index([revenueTypeId])
   @@map("revenues")
 }
 
-model Fee {
-  id                    Int            @id @default(autoincrement())
-  firmId                Int
-  revenueId             Int
-  paymentDate           DateTime
-  amount                Decimal        @db.Decimal(14, 2)
-  installmentNumber     Int
-  generatesRemuneration Boolean        @default(true)
-  isActive              Boolean        @default(true)
-  createdAt             DateTime       @default(now())
-  updatedAt             DateTime       @updatedAt
-  deletedAt             DateTime?
-  firm                  Firm           @relation(fields: [firmId], references: [id])
-  revenue               Revenue        @relation(fields: [revenueId], references: [id])
-  remunerations         Remuneration[]
-  attachments           Attachment[]
-
-  @@index([firmId])
-  @@index([revenueId])
-  @@index([paymentDate])
-  @@index([deletedAt])
-  @@index([isActive])
-  @@index([createdAt])
-  @@map("fees")
-}
-
 model Expense {
-  id          Int             @id @default(autoincrement())
-  firmId      Int
-  categoryId  Int
-  expenseDate DateTime
-  amount      Decimal         @db.Decimal(14, 2)
-  notes       String?
-  isActive    Boolean         @default(true)
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt
-  deletedAt   DateTime?
-  attachments Attachment[]
-  category    ExpenseCategory @relation(fields: [categoryId], references: [id])
-  firm        Firm            @relation(fields: [firmId], references: [id])
+  id               Int                  @id @default(autoincrement())
+  negotiatedAmount Decimal              @db.Decimal(14, 2)
+  notes            String?
+  isActive         Boolean              @default(true)
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+  deletedAt        DateTime?
+  firmId           Int
+  firm             Firm                 @relation("Expense_firmId", fields: [firmId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  supplierId       Int
+  supplier         Person               @relation("Expense_supplierId", fields: [supplierId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  generation       FinancialGeneration? @relation("FinancialGeneration_expenseId")
+  payables         Payable[]            @relation("Payable_expenseId")
+  attachments      Attachment[]         @relation("Attachment_expenseId")
+  auditLogs        AuditLog[]           @relation("AuditLog_expenseId")
 
+  @@unique([firmId, id])
   @@index([firmId])
-  @@index([categoryId])
-  @@index([expenseDate])
-  @@index([deletedAt])
-  @@index([isActive])
-  @@index([createdAt])
+  @@index([supplierId])
   @@map("expenses")
 }
 
-model Remuneration {
-  id                  Int              @id @default(autoincrement())
-  firmId              Int
-  feeId               Int
-  contractEmployeeId  Int
-  effectivePercentage Decimal          @db.Decimal(5, 4)
-  amount              Decimal          @db.Decimal(14, 2)
-  paymentDate         DateTime
-  isSystemGenerated   Boolean          @default(true)
-  attachments         Attachment[]
-  isActive            Boolean          @default(true)
-  createdAt           DateTime         @default(now())
-  updatedAt           DateTime         @updatedAt
-  deletedAt           DateTime?
-  contractEmployee    ContractEmployee @relation(fields: [contractEmployeeId], references: [id])
-  fee                 Fee              @relation(fields: [feeId], references: [id])
-  firm                Firm             @relation(fields: [firmId], references: [id])
+model FinancialGeneration {
+  id           Int          @id @default(autoincrement())
+  requestKey   String       @unique
+  agreedAmount Decimal      @db.Decimal(14, 2)
+  createdAt    DateTime     @default(now())
+  firmId       Int
+  firm         Firm         @relation("FinancialGeneration_firmId", fields: [firmId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  revenueId    Int?
+  revenue      Revenue?     @relation("FinancialGeneration_revenueId", fields: [firmId, revenueId], references: [firmId, id], onDelete: Restrict, onUpdate: Cascade)
+  expenseId    Int?
+  expense      Expense?     @relation("FinancialGeneration_expenseId", fields: [firmId, expenseId], references: [firmId, id], onDelete: Restrict, onUpdate: Cascade)
+  actorId      Int
+  actor        Person       @relation("FinancialGeneration_actorId", fields: [actorId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  receivables  Receivable[] @relation("Receivable_generationId")
+  payables     Payable[]    @relation("Payable_generationId")
+  auditLogs    AuditLog[]   @relation("AuditLog_financialGenerationId")
 
+  @@unique([firmId, id])
+  @@unique([revenueId])
+  @@unique([expenseId])
+  @@unique([firmId, revenueId])
+  @@unique([firmId, expenseId])
   @@index([firmId])
-  @@index([feeId])
-  @@index([contractEmployeeId])
-  @@index([paymentDate])
-  @@index([deletedAt])
-  @@index([isActive])
-  @@index([createdAt])
-  @@map("remunerations")
+  @@index([revenueId])
+  @@index([expenseId])
+  @@index([actorId])
+  @@map("financial_generations")
+}
+
+model DirectFinancialEntry {
+  id          Int          @id @default(autoincrement())
+  reason      String
+  createdAt   DateTime     @default(now())
+  firmId      Int
+  firm        Firm         @relation("DirectFinancialEntry_firmId", fields: [firmId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  actorId     Int
+  actor       Person       @relation("DirectFinancialEntry_actorId", fields: [actorId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  receivables Receivable[] @relation("Receivable_directEntryId")
+  payables    Payable[]    @relation("Payable_directEntryId")
+
+  @@unique([firmId, id])
+  @@index([firmId])
+  @@index([actorId])
+  @@map("direct_financial_entries")
+}
+
+model Receivable {
+  id                      Int                   @id @default(autoincrement())
+  amount                  Decimal               @db.Decimal(14, 2)
+  dueDate                 DateTime              @db.Date
+  notes                   String?
+  cancelledAt             DateTime?
+  cancellationReason      String?
+  createdAt               DateTime              @default(now())
+  updatedAt               DateTime              @updatedAt
+  firmId                  Int
+  firm                    Firm                  @relation("Receivable_firmId", fields: [firmId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  debtorId                Int
+  debtor                  Person                @relation("Receivable_debtorId", fields: [debtorId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  analyticId              Int
+  analytic                FinancialAnalytic     @relation("Receivable_analyticId", fields: [analyticId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  expectedPaymentMethodId Int
+  expectedPaymentMethod   PaymentMethod         @relation("Receivable_expectedPaymentMethodId", fields: [expectedPaymentMethodId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  titleKindId             Int
+  titleKind               TitleKind             @relation("Receivable_titleKindId", fields: [titleKindId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  generationId            Int?
+  generation              FinancialGeneration?  @relation("Receivable_generationId", fields: [firmId, generationId], references: [firmId, id], onDelete: Restrict, onUpdate: Cascade)
+  directEntryId           Int?
+  directEntry             DirectFinancialEntry? @relation("Receivable_directEntryId", fields: [firmId, directEntryId], references: [firmId, id], onDelete: Restrict, onUpdate: Cascade)
+  revenueId               Int?
+  revenue                 Revenue?              @relation("Receivable_revenueId", fields: [firmId, revenueId], references: [firmId, id], onDelete: Restrict, onUpdate: Cascade)
+  receipts                Receipt[]             @relation("Receipt_receivableId")
+  attachments             Attachment[]          @relation("Attachment_receivableId")
+  auditLogs               AuditLog[]            @relation("AuditLog_receivableId")
+
+  @@unique([firmId, id])
+  @@index([firmId, dueDate, id])
+  @@index([firmId])
+  @@index([debtorId])
+  @@index([analyticId])
+  @@index([expectedPaymentMethodId])
+  @@index([titleKindId])
+  @@index([generationId])
+  @@index([directEntryId])
+  @@index([revenueId])
+  @@map("receivables")
+}
+
+model Payable {
+  id                        Int                      @id @default(autoincrement())
+  amount                    Decimal                  @db.Decimal(14, 2)
+  dueDate                   DateTime                 @db.Date
+  notes                     String?
+  cancelledAt               DateTime?
+  cancellationReason        String?
+  createdAt                 DateTime                 @default(now())
+  updatedAt                 DateTime                 @updatedAt
+  firmId                    Int
+  firm                      Firm                     @relation("Payable_firmId", fields: [firmId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  beneficiaryId             Int
+  beneficiary               Person                   @relation("Payable_beneficiaryId", fields: [beneficiaryId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  analyticId                Int
+  analytic                  FinancialAnalytic        @relation("Payable_analyticId", fields: [analyticId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  expectedPaymentMethodId   Int
+  expectedPaymentMethod     PaymentMethod            @relation("Payable_expectedPaymentMethodId", fields: [expectedPaymentMethodId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  titleKindId               Int
+  titleKind                 TitleKind                @relation("Payable_titleKindId", fields: [titleKindId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  generationId              Int?
+  generation                FinancialGeneration?     @relation("Payable_generationId", fields: [firmId, generationId], references: [firmId, id], onDelete: Restrict, onUpdate: Cascade)
+  directEntryId             Int?
+  directEntry               DirectFinancialEntry?    @relation("Payable_directEntryId", fields: [firmId, directEntryId], references: [firmId, id], onDelete: Restrict, onUpdate: Cascade)
+  expenseId                 Int?
+  expense                   Expense?                 @relation("Payable_expenseId", fields: [firmId, expenseId], references: [firmId, id], onDelete: Restrict, onUpdate: Cascade)
+  payments                  Payment[]                @relation("Payment_payableId")
+  remunerationCalculationId Int?
+  remunerationCalculation   RemunerationCalculation? @relation("Payable_remunerationCalculationId", fields: [firmId, remunerationCalculationId], references: [firmId, id], onDelete: Restrict, onUpdate: Cascade)
+  attachments               Attachment[]             @relation("Attachment_payableId")
+  auditLogs                 AuditLog[]               @relation("AuditLog_payableId")
+
+  @@unique([firmId, id])
+  @@unique([remunerationCalculationId])
+  @@unique([firmId, remunerationCalculationId])
+  @@index([firmId, dueDate, id])
+  @@index([firmId])
+  @@index([beneficiaryId])
+  @@index([analyticId])
+  @@index([expectedPaymentMethodId])
+  @@index([titleKindId])
+  @@index([generationId])
+  @@index([directEntryId])
+  @@index([expenseId])
+  @@index([remunerationCalculationId])
+  @@map("payables")
+}
+
+model Receipt {
+  id                    Int                       @id @default(autoincrement())
+  effectiveDate         DateTime                  @db.Date
+  principalAbated       Decimal                   @db.Decimal(14, 2)
+  discount              Decimal                   @default(0) @db.Decimal(14, 2)
+  interest              Decimal                   @default(0) @db.Decimal(14, 2)
+  penalty               Decimal                   @default(0) @db.Decimal(14, 2)
+  effectiveAmount       Decimal                   @db.Decimal(14, 2)
+  reason                String?
+  requestKey            String
+  generatesRemuneration Boolean                   @default(false)
+  createdAt             DateTime                  @default(now())
+  firmId                Int
+  firm                  Firm                      @relation("Receipt_firmId", fields: [firmId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  receivableId          Int
+  receivable            Receivable                @relation("Receipt_receivableId", fields: [firmId, receivableId], references: [firmId, id], onDelete: Restrict, onUpdate: Cascade)
+  actualPaymentMethodId Int
+  actualPaymentMethod   PaymentMethod             @relation("Receipt_actualPaymentMethodId", fields: [actualPaymentMethodId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  actorId               Int
+  actor                 Person                    @relation("Receipt_actorId", fields: [actorId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  reversal              ReceiptReversal?          @relation("ReceiptReversal_receiptId")
+  calculations          RemunerationCalculation[] @relation("RemunerationCalculation_receiptId")
+  attachments           Attachment[]              @relation("Attachment_receiptId")
+  auditLogs             AuditLog[]                @relation("AuditLog_receiptId")
+
+  @@unique([firmId, id])
+  @@unique([firmId, requestKey, receivableId])
+  @@index([firmId, effectiveDate, id])
+  @@index([firmId])
+  @@index([receivableId])
+  @@index([actualPaymentMethodId])
+  @@index([actorId])
+  @@map("receipts")
+}
+
+model ReceiptReversal {
+  id            Int      @id @default(autoincrement())
+  effectiveDate DateTime @db.Date
+  reason        String
+  requestKey    String   @unique
+  createdAt     DateTime @default(now())
+  firmId        Int
+  firm          Firm     @relation("ReceiptReversal_firmId", fields: [firmId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  receiptId     Int
+  receipt       Receipt  @relation("ReceiptReversal_receiptId", fields: [firmId, receiptId], references: [firmId, id], onDelete: Restrict, onUpdate: Cascade)
+  actorId       Int
+  actor         Person   @relation("ReceiptReversal_actorId", fields: [actorId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@unique([firmId, id])
+  @@unique([receiptId])
+  @@unique([firmId, receiptId])
+  @@index([firmId])
+  @@index([receiptId])
+  @@index([actorId])
+  @@map("receipt_reversals")
+}
+
+model Payment {
+  id              Int      @id @default(autoincrement())
+  effectiveDate   DateTime @db.Date
+  principalAbated Decimal  @db.Decimal(14, 2)
+  discount        Decimal  @default(0) @db.Decimal(14, 2)
+  interest        Decimal  @default(0) @db.Decimal(14, 2)
+  penalty         Decimal  @default(0) @db.Decimal(14, 2)
+  effectiveAmount Decimal  @db.Decimal(14, 2)
+  reason          String?
+  requestKey      String
+
+  createdAt             DateTime         @default(now())
+  firmId                Int
+  firm                  Firm             @relation("Payment_firmId", fields: [firmId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  payableId             Int
+  payable               Payable          @relation("Payment_payableId", fields: [firmId, payableId], references: [firmId, id], onDelete: Restrict, onUpdate: Cascade)
+  actualPaymentMethodId Int
+  actualPaymentMethod   PaymentMethod    @relation("Payment_actualPaymentMethodId", fields: [actualPaymentMethodId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  actorId               Int
+  actor                 Person           @relation("Payment_actorId", fields: [actorId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  reversal              PaymentReversal? @relation("PaymentReversal_paymentId")
+  attachments           Attachment[]     @relation("Attachment_paymentId")
+  auditLogs             AuditLog[]       @relation("AuditLog_paymentId")
+
+  @@unique([firmId, id])
+  @@unique([firmId, requestKey, payableId])
+  @@index([firmId, effectiveDate, id])
+  @@index([firmId])
+  @@index([payableId])
+  @@index([actualPaymentMethodId])
+  @@index([actorId])
+  @@map("payments")
+}
+
+model PaymentReversal {
+  id            Int      @id @default(autoincrement())
+  effectiveDate DateTime @db.Date
+  reason        String
+  requestKey    String   @unique
+  createdAt     DateTime @default(now())
+  firmId        Int
+  firm          Firm     @relation("PaymentReversal_firmId", fields: [firmId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  paymentId     Int
+  payment       Payment  @relation("PaymentReversal_paymentId", fields: [firmId, paymentId], references: [firmId, id], onDelete: Restrict, onUpdate: Cascade)
+  actorId       Int
+  actor         Person   @relation("PaymentReversal_actorId", fields: [actorId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@unique([firmId, id])
+  @@unique([paymentId])
+  @@unique([firmId, paymentId])
+  @@index([firmId])
+  @@index([paymentId])
+  @@index([actorId])
+  @@map("payment_reversals")
+}
+
+model RemunerationCalculation {
+  id                   Int                @id @default(autoincrement())
+  calculationBase      Decimal            @db.Decimal(14, 2)
+  effectivePercentage  Decimal            @db.Decimal(5, 4)
+  calculatedAmount     Decimal            @db.Decimal(14, 2)
+  computedDueDate      DateTime           @db.Date
+  generationMode       String             @default("AUTOMATIC")
+  ruleSnapshot         Json
+  createdAt            DateTime           @default(now())
+  firmId               Int
+  firm                 Firm               @relation("RemunerationCalculation_firmId", fields: [firmId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  receiptId            Int
+  receipt              Receipt            @relation("RemunerationCalculation_receiptId", fields: [firmId, receiptId], references: [firmId, id], onDelete: Restrict, onUpdate: Cascade)
+  contractAssignmentId Int
+  contractAssignment   ContractAssignment @relation("RemunerationCalculation_contractAssignmentId", fields: [firmId, contractAssignmentId], references: [firmId, id], onDelete: Restrict, onUpdate: Cascade)
+  payable              Payable?           @relation("Payable_remunerationCalculationId")
+  attachments          Attachment[]       @relation("Attachment_remunerationCalculationId")
+  auditLogs            AuditLog[]         @relation("AuditLog_remunerationCalculationId")
+
+  @@unique([firmId, id])
+  @@unique([receiptId, contractAssignmentId])
+  @@index([firmId])
+  @@index([receiptId])
+  @@index([contractAssignmentId])
+  @@map("remuneration_calculations")
 }
 
 model Attachment {
-  id             Int            @id @default(autoincrement())
-  firmId         Int
-  clientId       Int?
-  employeeId     Int?
-  contractId     Int?
-  expenseId      Int?
-  feeId          Int?
-  remunerationId Int?
-  typeId         Int
-  fileName       String
-  storagePath    String         @unique
-  mimeType       String
-  fileSize       Int
-  isActive       Boolean        @default(true)
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
-  deletedAt      DateTime?
-  client         Client?        @relation(fields: [clientId], references: [id])
-  contract       Contract?      @relation(fields: [contractId], references: [id])
-  employee       Employee?      @relation(fields: [employeeId], references: [id])
-  expense        Expense?       @relation(fields: [expenseId], references: [id])
-  fee            Fee?           @relation(fields: [feeId], references: [id])
-  remuneration   Remuneration?  @relation(fields: [remunerationId], references: [id])
-  firm           Firm           @relation(fields: [firmId], references: [id])
-  type           AttachmentType @relation(fields: [typeId], references: [id])
+  id                        Int                      @id @default(autoincrement())
+  fileName                  String
+  storagePath               String                   @unique
+  mimeType                  String
+  fileSize                  Int
+  isActive                  Boolean                  @default(true)
+  createdAt                 DateTime                 @default(now())
+  updatedAt                 DateTime                 @updatedAt
+  deletedAt                 DateTime?
+  firmId                    Int
+  firm                      Firm                     @relation("Attachment_firmId", fields: [firmId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  typeId                    Int
+  type                      AttachmentType           @relation("Attachment_typeId", fields: [typeId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  personId                  Int?
+  person                    Person?                  @relation("Attachment_personId", fields: [personId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  contractId                Int?
+  contract                  Contract?                @relation("Attachment_contractId", fields: [firmId, contractId], references: [firmId, id], onDelete: Restrict, onUpdate: Cascade)
+  expenseId                 Int?
+  expense                   Expense?                 @relation("Attachment_expenseId", fields: [firmId, expenseId], references: [firmId, id], onDelete: Restrict, onUpdate: Cascade)
+  receivableId              Int?
+  receivable                Receivable?              @relation("Attachment_receivableId", fields: [firmId, receivableId], references: [firmId, id], onDelete: Restrict, onUpdate: Cascade)
+  payableId                 Int?
+  payable                   Payable?                 @relation("Attachment_payableId", fields: [firmId, payableId], references: [firmId, id], onDelete: Restrict, onUpdate: Cascade)
+  receiptId                 Int?
+  receipt                   Receipt?                 @relation("Attachment_receiptId", fields: [firmId, receiptId], references: [firmId, id], onDelete: Restrict, onUpdate: Cascade)
+  paymentId                 Int?
+  payment                   Payment?                 @relation("Attachment_paymentId", fields: [firmId, paymentId], references: [firmId, id], onDelete: Restrict, onUpdate: Cascade)
+  remunerationCalculationId Int?
+  remunerationCalculation   RemunerationCalculation? @relation("Attachment_remunerationCalculationId", fields: [firmId, remunerationCalculationId], references: [firmId, id], onDelete: Restrict, onUpdate: Cascade)
 
+  @@unique([firmId, id])
   @@index([firmId])
-  @@index([clientId])
-  @@index([employeeId])
+  @@index([typeId])
+  @@index([personId])
   @@index([contractId])
   @@index([expenseId])
-  @@index([feeId])
-  @@index([remunerationId])
-  @@index([typeId])
-  @@index([deletedAt])
-  @@index([isActive])
-  @@index([createdAt])
+  @@index([receivableId])
+  @@index([payableId])
+  @@index([receiptId])
+  @@index([paymentId])
+  @@index([remunerationCalculationId])
   @@map("attachments")
+}
+
+model AuditLog {
+  id                        Int                      @id @default(autoincrement())
+  actorName                 String
+  actorEmail                String?
+  action                    String
+  entityType                String
+  entityId                  String?
+  entityName                String
+  changeData                Json
+  ipAddress                 String?
+  userAgent                 String?
+  description               String
+  createdAt                 DateTime                 @default(now())
+  firmId                    Int
+  firm                      Firm                     @relation("AuditLog_firmId", fields: [firmId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  actorId                   Int?
+  actor                     Person?                  @relation("AuditLog_actorId", fields: [actorId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  personId                  Int?
+  person                    Person?                  @relation("AuditLog_personId", fields: [personId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  contractId                Int?
+  contract                  Contract?                @relation("AuditLog_contractId", fields: [firmId, contractId], references: [firmId, id], onDelete: Restrict, onUpdate: Cascade)
+  expenseId                 Int?
+  expense                   Expense?                 @relation("AuditLog_expenseId", fields: [firmId, expenseId], references: [firmId, id], onDelete: Restrict, onUpdate: Cascade)
+  receivableId              Int?
+  receivable                Receivable?              @relation("AuditLog_receivableId", fields: [firmId, receivableId], references: [firmId, id], onDelete: Restrict, onUpdate: Cascade)
+  payableId                 Int?
+  payable                   Payable?                 @relation("AuditLog_payableId", fields: [firmId, payableId], references: [firmId, id], onDelete: Restrict, onUpdate: Cascade)
+  receiptId                 Int?
+  receipt                   Receipt?                 @relation("AuditLog_receiptId", fields: [firmId, receiptId], references: [firmId, id], onDelete: Restrict, onUpdate: Cascade)
+  paymentId                 Int?
+  payment                   Payment?                 @relation("AuditLog_paymentId", fields: [firmId, paymentId], references: [firmId, id], onDelete: Restrict, onUpdate: Cascade)
+  financialGenerationId     Int?
+  financialGeneration       FinancialGeneration?     @relation("AuditLog_financialGenerationId", fields: [firmId, financialGenerationId], references: [firmId, id], onDelete: Restrict, onUpdate: Cascade)
+  remunerationCalculationId Int?
+  remunerationCalculation   RemunerationCalculation? @relation("AuditLog_remunerationCalculationId", fields: [firmId, remunerationCalculationId], references: [firmId, id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@unique([firmId, id])
+  @@index([firmId, createdAt, id])
+  @@index([firmId])
+  @@index([actorId])
+  @@index([personId])
+  @@index([contractId])
+  @@index([expenseId])
+  @@index([receivableId])
+  @@index([payableId])
+  @@index([receiptId])
+  @@index([paymentId])
+  @@index([financialGenerationId])
+  @@index([remunerationCalculationId])
+  @@map("audit_logs")
 }

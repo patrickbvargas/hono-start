@@ -208,7 +208,7 @@ export type AssignmentTypeWhereInput = {
   value?: Prisma.StringFilter<"AssignmentType"> | string
   label?: Prisma.StringFilter<"AssignmentType"> | string
   isActive?: Prisma.BoolFilter<"AssignmentType"> | boolean
-  contractEmployees?: Prisma.ContractEmployeeListRelationFilter
+  assignments?: Prisma.ContractAssignmentListRelationFilter
 }
 
 export type AssignmentTypeOrderByWithRelationInput = {
@@ -216,7 +216,7 @@ export type AssignmentTypeOrderByWithRelationInput = {
   value?: Prisma.SortOrder
   label?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
-  contractEmployees?: Prisma.ContractEmployeeOrderByRelationAggregateInput
+  assignments?: Prisma.ContractAssignmentOrderByRelationAggregateInput
 }
 
 export type AssignmentTypeWhereUniqueInput = Prisma.AtLeast<{
@@ -227,7 +227,7 @@ export type AssignmentTypeWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.AssignmentTypeWhereInput | Prisma.AssignmentTypeWhereInput[]
   label?: Prisma.StringFilter<"AssignmentType"> | string
   isActive?: Prisma.BoolFilter<"AssignmentType"> | boolean
-  contractEmployees?: Prisma.ContractEmployeeListRelationFilter
+  assignments?: Prisma.ContractAssignmentListRelationFilter
 }, "id" | "value">
 
 export type AssignmentTypeOrderByWithAggregationInput = {
@@ -256,7 +256,7 @@ export type AssignmentTypeCreateInput = {
   value: string
   label: string
   isActive?: boolean
-  contractEmployees?: Prisma.ContractEmployeeCreateNestedManyWithoutAssignmentTypeInput
+  assignments?: Prisma.ContractAssignmentCreateNestedManyWithoutAssignmentTypeInput
 }
 
 export type AssignmentTypeUncheckedCreateInput = {
@@ -264,14 +264,14 @@ export type AssignmentTypeUncheckedCreateInput = {
   value: string
   label: string
   isActive?: boolean
-  contractEmployees?: Prisma.ContractEmployeeUncheckedCreateNestedManyWithoutAssignmentTypeInput
+  assignments?: Prisma.ContractAssignmentUncheckedCreateNestedManyWithoutAssignmentTypeInput
 }
 
 export type AssignmentTypeUpdateInput = {
   value?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  contractEmployees?: Prisma.ContractEmployeeUpdateManyWithoutAssignmentTypeNestedInput
+  assignments?: Prisma.ContractAssignmentUpdateManyWithoutAssignmentTypeNestedInput
 }
 
 export type AssignmentTypeUncheckedUpdateInput = {
@@ -279,7 +279,7 @@ export type AssignmentTypeUncheckedUpdateInput = {
   value?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  contractEmployees?: Prisma.ContractEmployeeUncheckedUpdateManyWithoutAssignmentTypeNestedInput
+  assignments?: Prisma.ContractAssignmentUncheckedUpdateManyWithoutAssignmentTypeNestedInput
 }
 
 export type AssignmentTypeCreateManyInput = {
@@ -336,56 +336,56 @@ export type AssignmentTypeScalarRelationFilter = {
   isNot?: Prisma.AssignmentTypeWhereInput
 }
 
-export type AssignmentTypeCreateNestedOneWithoutContractEmployeesInput = {
-  create?: Prisma.XOR<Prisma.AssignmentTypeCreateWithoutContractEmployeesInput, Prisma.AssignmentTypeUncheckedCreateWithoutContractEmployeesInput>
-  connectOrCreate?: Prisma.AssignmentTypeCreateOrConnectWithoutContractEmployeesInput
+export type AssignmentTypeCreateNestedOneWithoutAssignmentsInput = {
+  create?: Prisma.XOR<Prisma.AssignmentTypeCreateWithoutAssignmentsInput, Prisma.AssignmentTypeUncheckedCreateWithoutAssignmentsInput>
+  connectOrCreate?: Prisma.AssignmentTypeCreateOrConnectWithoutAssignmentsInput
   connect?: Prisma.AssignmentTypeWhereUniqueInput
 }
 
-export type AssignmentTypeUpdateOneRequiredWithoutContractEmployeesNestedInput = {
-  create?: Prisma.XOR<Prisma.AssignmentTypeCreateWithoutContractEmployeesInput, Prisma.AssignmentTypeUncheckedCreateWithoutContractEmployeesInput>
-  connectOrCreate?: Prisma.AssignmentTypeCreateOrConnectWithoutContractEmployeesInput
-  upsert?: Prisma.AssignmentTypeUpsertWithoutContractEmployeesInput
+export type AssignmentTypeUpdateOneRequiredWithoutAssignmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.AssignmentTypeCreateWithoutAssignmentsInput, Prisma.AssignmentTypeUncheckedCreateWithoutAssignmentsInput>
+  connectOrCreate?: Prisma.AssignmentTypeCreateOrConnectWithoutAssignmentsInput
+  upsert?: Prisma.AssignmentTypeUpsertWithoutAssignmentsInput
   connect?: Prisma.AssignmentTypeWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.AssignmentTypeUpdateToOneWithWhereWithoutContractEmployeesInput, Prisma.AssignmentTypeUpdateWithoutContractEmployeesInput>, Prisma.AssignmentTypeUncheckedUpdateWithoutContractEmployeesInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AssignmentTypeUpdateToOneWithWhereWithoutAssignmentsInput, Prisma.AssignmentTypeUpdateWithoutAssignmentsInput>, Prisma.AssignmentTypeUncheckedUpdateWithoutAssignmentsInput>
 }
 
-export type AssignmentTypeCreateWithoutContractEmployeesInput = {
+export type AssignmentTypeCreateWithoutAssignmentsInput = {
   value: string
   label: string
   isActive?: boolean
 }
 
-export type AssignmentTypeUncheckedCreateWithoutContractEmployeesInput = {
+export type AssignmentTypeUncheckedCreateWithoutAssignmentsInput = {
   id?: number
   value: string
   label: string
   isActive?: boolean
 }
 
-export type AssignmentTypeCreateOrConnectWithoutContractEmployeesInput = {
+export type AssignmentTypeCreateOrConnectWithoutAssignmentsInput = {
   where: Prisma.AssignmentTypeWhereUniqueInput
-  create: Prisma.XOR<Prisma.AssignmentTypeCreateWithoutContractEmployeesInput, Prisma.AssignmentTypeUncheckedCreateWithoutContractEmployeesInput>
+  create: Prisma.XOR<Prisma.AssignmentTypeCreateWithoutAssignmentsInput, Prisma.AssignmentTypeUncheckedCreateWithoutAssignmentsInput>
 }
 
-export type AssignmentTypeUpsertWithoutContractEmployeesInput = {
-  update: Prisma.XOR<Prisma.AssignmentTypeUpdateWithoutContractEmployeesInput, Prisma.AssignmentTypeUncheckedUpdateWithoutContractEmployeesInput>
-  create: Prisma.XOR<Prisma.AssignmentTypeCreateWithoutContractEmployeesInput, Prisma.AssignmentTypeUncheckedCreateWithoutContractEmployeesInput>
+export type AssignmentTypeUpsertWithoutAssignmentsInput = {
+  update: Prisma.XOR<Prisma.AssignmentTypeUpdateWithoutAssignmentsInput, Prisma.AssignmentTypeUncheckedUpdateWithoutAssignmentsInput>
+  create: Prisma.XOR<Prisma.AssignmentTypeCreateWithoutAssignmentsInput, Prisma.AssignmentTypeUncheckedCreateWithoutAssignmentsInput>
   where?: Prisma.AssignmentTypeWhereInput
 }
 
-export type AssignmentTypeUpdateToOneWithWhereWithoutContractEmployeesInput = {
+export type AssignmentTypeUpdateToOneWithWhereWithoutAssignmentsInput = {
   where?: Prisma.AssignmentTypeWhereInput
-  data: Prisma.XOR<Prisma.AssignmentTypeUpdateWithoutContractEmployeesInput, Prisma.AssignmentTypeUncheckedUpdateWithoutContractEmployeesInput>
+  data: Prisma.XOR<Prisma.AssignmentTypeUpdateWithoutAssignmentsInput, Prisma.AssignmentTypeUncheckedUpdateWithoutAssignmentsInput>
 }
 
-export type AssignmentTypeUpdateWithoutContractEmployeesInput = {
+export type AssignmentTypeUpdateWithoutAssignmentsInput = {
   value?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
-export type AssignmentTypeUncheckedUpdateWithoutContractEmployeesInput = {
+export type AssignmentTypeUncheckedUpdateWithoutAssignmentsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   value?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
@@ -398,11 +398,11 @@ export type AssignmentTypeUncheckedUpdateWithoutContractEmployeesInput = {
  */
 
 export type AssignmentTypeCountOutputType = {
-  contractEmployees: number
+  assignments: number
 }
 
 export type AssignmentTypeCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  contractEmployees?: boolean | AssignmentTypeCountOutputTypeCountContractEmployeesArgs
+  assignments?: boolean | AssignmentTypeCountOutputTypeCountAssignmentsArgs
 }
 
 /**
@@ -418,8 +418,8 @@ export type AssignmentTypeCountOutputTypeDefaultArgs<ExtArgs extends runtime.Typ
 /**
  * AssignmentTypeCountOutputType without action
  */
-export type AssignmentTypeCountOutputTypeCountContractEmployeesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ContractEmployeeWhereInput
+export type AssignmentTypeCountOutputTypeCountAssignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ContractAssignmentWhereInput
 }
 
 
@@ -428,7 +428,7 @@ export type AssignmentTypeSelect<ExtArgs extends runtime.Types.Extensions.Intern
   value?: boolean
   label?: boolean
   isActive?: boolean
-  contractEmployees?: boolean | Prisma.AssignmentType$contractEmployeesArgs<ExtArgs>
+  assignments?: boolean | Prisma.AssignmentType$assignmentsArgs<ExtArgs>
   _count?: boolean | Prisma.AssignmentTypeCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["assignmentType"]>
 
@@ -455,7 +455,7 @@ export type AssignmentTypeSelectScalar = {
 
 export type AssignmentTypeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "value" | "label" | "isActive", ExtArgs["result"]["assignmentType"]>
 export type AssignmentTypeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  contractEmployees?: boolean | Prisma.AssignmentType$contractEmployeesArgs<ExtArgs>
+  assignments?: boolean | Prisma.AssignmentType$assignmentsArgs<ExtArgs>
   _count?: boolean | Prisma.AssignmentTypeCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type AssignmentTypeIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -464,7 +464,7 @@ export type AssignmentTypeIncludeUpdateManyAndReturn<ExtArgs extends runtime.Typ
 export type $AssignmentTypePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "AssignmentType"
   objects: {
-    contractEmployees: Prisma.$ContractEmployeePayload<ExtArgs>[]
+    assignments: Prisma.$ContractAssignmentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -865,7 +865,7 @@ readonly fields: AssignmentTypeFieldRefs;
  */
 export interface Prisma__AssignmentTypeClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  contractEmployees<T extends Prisma.AssignmentType$contractEmployeesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AssignmentType$contractEmployeesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ContractEmployeePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  assignments<T extends Prisma.AssignmentType$assignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AssignmentType$assignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ContractAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1292,27 +1292,27 @@ export type AssignmentTypeDeleteManyArgs<ExtArgs extends runtime.Types.Extension
 }
 
 /**
- * AssignmentType.contractEmployees
+ * AssignmentType.assignments
  */
-export type AssignmentType$contractEmployeesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type AssignmentType$assignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the ContractEmployee
+   * Select specific fields to fetch from the ContractAssignment
    */
-  select?: Prisma.ContractEmployeeSelect<ExtArgs> | null
+  select?: Prisma.ContractAssignmentSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the ContractEmployee
+   * Omit specific fields from the ContractAssignment
    */
-  omit?: Prisma.ContractEmployeeOmit<ExtArgs> | null
+  omit?: Prisma.ContractAssignmentOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ContractEmployeeInclude<ExtArgs> | null
-  where?: Prisma.ContractEmployeeWhereInput
-  orderBy?: Prisma.ContractEmployeeOrderByWithRelationInput | Prisma.ContractEmployeeOrderByWithRelationInput[]
-  cursor?: Prisma.ContractEmployeeWhereUniqueInput
+  include?: Prisma.ContractAssignmentInclude<ExtArgs> | null
+  where?: Prisma.ContractAssignmentWhereInput
+  orderBy?: Prisma.ContractAssignmentOrderByWithRelationInput | Prisma.ContractAssignmentOrderByWithRelationInput[]
+  cursor?: Prisma.ContractAssignmentWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.ContractEmployeeScalarFieldEnum | Prisma.ContractEmployeeScalarFieldEnum[]
+  distinct?: Prisma.ContractAssignmentScalarFieldEnum | Prisma.ContractAssignmentScalarFieldEnum[]
 }
 
 /**

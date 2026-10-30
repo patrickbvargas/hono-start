@@ -28,28 +28,24 @@ export type AggregateContract = {
 
 export type ContractAvgAggregateOutputType = {
   id: number | null
+  feePercentage: runtime.Decimal | null
   firmId: number | null
-  clientId: number | null
+  customerId: number | null
   legalAreaId: number | null
   statusId: number | null
-  feePercentage: runtime.Decimal | null
 }
 
 export type ContractSumAggregateOutputType = {
   id: number | null
+  feePercentage: runtime.Decimal | null
   firmId: number | null
-  clientId: number | null
+  customerId: number | null
   legalAreaId: number | null
   statusId: number | null
-  feePercentage: runtime.Decimal | null
 }
 
 export type ContractMinAggregateOutputType = {
   id: number | null
-  firmId: number | null
-  clientId: number | null
-  legalAreaId: number | null
-  statusId: number | null
   processNumber: string | null
   feePercentage: runtime.Decimal | null
   notes: string | null
@@ -58,14 +54,14 @@ export type ContractMinAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   deletedAt: Date | null
+  firmId: number | null
+  customerId: number | null
+  legalAreaId: number | null
+  statusId: number | null
 }
 
 export type ContractMaxAggregateOutputType = {
   id: number | null
-  firmId: number | null
-  clientId: number | null
-  legalAreaId: number | null
-  statusId: number | null
   processNumber: string | null
   feePercentage: runtime.Decimal | null
   notes: string | null
@@ -74,14 +70,14 @@ export type ContractMaxAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   deletedAt: Date | null
+  firmId: number | null
+  customerId: number | null
+  legalAreaId: number | null
+  statusId: number | null
 }
 
 export type ContractCountAggregateOutputType = {
   id: number
-  firmId: number
-  clientId: number
-  legalAreaId: number
-  statusId: number
   processNumber: number
   feePercentage: number
   notes: number
@@ -90,34 +86,34 @@ export type ContractCountAggregateOutputType = {
   createdAt: number
   updatedAt: number
   deletedAt: number
+  firmId: number
+  customerId: number
+  legalAreaId: number
+  statusId: number
   _all: number
 }
 
 
 export type ContractAvgAggregateInputType = {
   id?: true
+  feePercentage?: true
   firmId?: true
-  clientId?: true
+  customerId?: true
   legalAreaId?: true
   statusId?: true
-  feePercentage?: true
 }
 
 export type ContractSumAggregateInputType = {
   id?: true
+  feePercentage?: true
   firmId?: true
-  clientId?: true
+  customerId?: true
   legalAreaId?: true
   statusId?: true
-  feePercentage?: true
 }
 
 export type ContractMinAggregateInputType = {
   id?: true
-  firmId?: true
-  clientId?: true
-  legalAreaId?: true
-  statusId?: true
   processNumber?: true
   feePercentage?: true
   notes?: true
@@ -126,14 +122,14 @@ export type ContractMinAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
+  firmId?: true
+  customerId?: true
+  legalAreaId?: true
+  statusId?: true
 }
 
 export type ContractMaxAggregateInputType = {
   id?: true
-  firmId?: true
-  clientId?: true
-  legalAreaId?: true
-  statusId?: true
   processNumber?: true
   feePercentage?: true
   notes?: true
@@ -142,14 +138,14 @@ export type ContractMaxAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
+  firmId?: true
+  customerId?: true
+  legalAreaId?: true
+  statusId?: true
 }
 
 export type ContractCountAggregateInputType = {
   id?: true
-  firmId?: true
-  clientId?: true
-  legalAreaId?: true
-  statusId?: true
   processNumber?: true
   feePercentage?: true
   notes?: true
@@ -158,6 +154,10 @@ export type ContractCountAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
+  firmId?: true
+  customerId?: true
+  legalAreaId?: true
+  statusId?: true
   _all?: true
 }
 
@@ -249,10 +249,6 @@ export type ContractGroupByArgs<ExtArgs extends runtime.Types.Extensions.Interna
 
 export type ContractGroupByOutputType = {
   id: number
-  firmId: number
-  clientId: number
-  legalAreaId: number
-  statusId: number
   processNumber: string
   feePercentage: runtime.Decimal
   notes: string | null
@@ -261,6 +257,10 @@ export type ContractGroupByOutputType = {
   createdAt: Date
   updatedAt: Date
   deletedAt: Date | null
+  firmId: number
+  customerId: number
+  legalAreaId: number
+  statusId: number
   _count: ContractCountAggregateOutputType | null
   _avg: ContractAvgAggregateOutputType | null
   _sum: ContractSumAggregateOutputType | null
@@ -288,10 +288,6 @@ export type ContractWhereInput = {
   OR?: Prisma.ContractWhereInput[]
   NOT?: Prisma.ContractWhereInput | Prisma.ContractWhereInput[]
   id?: Prisma.IntFilter<"Contract"> | number
-  firmId?: Prisma.IntFilter<"Contract"> | number
-  clientId?: Prisma.IntFilter<"Contract"> | number
-  legalAreaId?: Prisma.IntFilter<"Contract"> | number
-  statusId?: Prisma.IntFilter<"Contract"> | number
   processNumber?: Prisma.StringFilter<"Contract"> | string
   feePercentage?: Prisma.DecimalFilter<"Contract"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: Prisma.StringNullableFilter<"Contract"> | string | null
@@ -300,21 +296,22 @@ export type ContractWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Contract"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Contract"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Contract"> | Date | string | null
-  client?: Prisma.XOR<Prisma.ClientScalarRelationFilter, Prisma.ClientWhereInput>
+  firmId?: Prisma.IntFilter<"Contract"> | number
+  customerId?: Prisma.IntFilter<"Contract"> | number
+  legalAreaId?: Prisma.IntFilter<"Contract"> | number
+  statusId?: Prisma.IntFilter<"Contract"> | number
   firm?: Prisma.XOR<Prisma.FirmScalarRelationFilter, Prisma.FirmWhereInput>
+  customer?: Prisma.XOR<Prisma.PersonScalarRelationFilter, Prisma.PersonWhereInput>
   legalArea?: Prisma.XOR<Prisma.LegalAreaScalarRelationFilter, Prisma.LegalAreaWhereInput>
   status?: Prisma.XOR<Prisma.ContractStatusScalarRelationFilter, Prisma.ContractStatusWhereInput>
-  attachments?: Prisma.AttachmentListRelationFilter
-  assignments?: Prisma.ContractEmployeeListRelationFilter
+  assignments?: Prisma.ContractAssignmentListRelationFilter
   revenues?: Prisma.RevenueListRelationFilter
+  attachments?: Prisma.AttachmentListRelationFilter
+  auditLogs?: Prisma.AuditLogListRelationFilter
 }
 
 export type ContractOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  firmId?: Prisma.SortOrder
-  clientId?: Prisma.SortOrder
-  legalAreaId?: Prisma.SortOrder
-  statusId?: Prisma.SortOrder
   processNumber?: Prisma.SortOrder
   feePercentage?: Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -323,25 +320,27 @@ export type ContractOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  client?: Prisma.ClientOrderByWithRelationInput
+  firmId?: Prisma.SortOrder
+  customerId?: Prisma.SortOrder
+  legalAreaId?: Prisma.SortOrder
+  statusId?: Prisma.SortOrder
   firm?: Prisma.FirmOrderByWithRelationInput
+  customer?: Prisma.PersonOrderByWithRelationInput
   legalArea?: Prisma.LegalAreaOrderByWithRelationInput
   status?: Prisma.ContractStatusOrderByWithRelationInput
-  attachments?: Prisma.AttachmentOrderByRelationAggregateInput
-  assignments?: Prisma.ContractEmployeeOrderByRelationAggregateInput
+  assignments?: Prisma.ContractAssignmentOrderByRelationAggregateInput
   revenues?: Prisma.RevenueOrderByRelationAggregateInput
+  attachments?: Prisma.AttachmentOrderByRelationAggregateInput
+  auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
 }
 
 export type ContractWhereUniqueInput = Prisma.AtLeast<{
   id?: number
+  firmId_id?: Prisma.ContractFirmIdIdCompoundUniqueInput
   firmId_processNumber?: Prisma.ContractFirmIdProcessNumberCompoundUniqueInput
   AND?: Prisma.ContractWhereInput | Prisma.ContractWhereInput[]
   OR?: Prisma.ContractWhereInput[]
   NOT?: Prisma.ContractWhereInput | Prisma.ContractWhereInput[]
-  firmId?: Prisma.IntFilter<"Contract"> | number
-  clientId?: Prisma.IntFilter<"Contract"> | number
-  legalAreaId?: Prisma.IntFilter<"Contract"> | number
-  statusId?: Prisma.IntFilter<"Contract"> | number
   processNumber?: Prisma.StringFilter<"Contract"> | string
   feePercentage?: Prisma.DecimalFilter<"Contract"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: Prisma.StringNullableFilter<"Contract"> | string | null
@@ -350,21 +349,22 @@ export type ContractWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Contract"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Contract"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Contract"> | Date | string | null
-  client?: Prisma.XOR<Prisma.ClientScalarRelationFilter, Prisma.ClientWhereInput>
+  firmId?: Prisma.IntFilter<"Contract"> | number
+  customerId?: Prisma.IntFilter<"Contract"> | number
+  legalAreaId?: Prisma.IntFilter<"Contract"> | number
+  statusId?: Prisma.IntFilter<"Contract"> | number
   firm?: Prisma.XOR<Prisma.FirmScalarRelationFilter, Prisma.FirmWhereInput>
+  customer?: Prisma.XOR<Prisma.PersonScalarRelationFilter, Prisma.PersonWhereInput>
   legalArea?: Prisma.XOR<Prisma.LegalAreaScalarRelationFilter, Prisma.LegalAreaWhereInput>
   status?: Prisma.XOR<Prisma.ContractStatusScalarRelationFilter, Prisma.ContractStatusWhereInput>
-  attachments?: Prisma.AttachmentListRelationFilter
-  assignments?: Prisma.ContractEmployeeListRelationFilter
+  assignments?: Prisma.ContractAssignmentListRelationFilter
   revenues?: Prisma.RevenueListRelationFilter
-}, "id" | "firmId_processNumber">
+  attachments?: Prisma.AttachmentListRelationFilter
+  auditLogs?: Prisma.AuditLogListRelationFilter
+}, "id" | "firmId_id" | "firmId_processNumber">
 
 export type ContractOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  firmId?: Prisma.SortOrder
-  clientId?: Prisma.SortOrder
-  legalAreaId?: Prisma.SortOrder
-  statusId?: Prisma.SortOrder
   processNumber?: Prisma.SortOrder
   feePercentage?: Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -373,6 +373,10 @@ export type ContractOrderByWithAggregationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  firmId?: Prisma.SortOrder
+  customerId?: Prisma.SortOrder
+  legalAreaId?: Prisma.SortOrder
+  statusId?: Prisma.SortOrder
   _count?: Prisma.ContractCountOrderByAggregateInput
   _avg?: Prisma.ContractAvgOrderByAggregateInput
   _max?: Prisma.ContractMaxOrderByAggregateInput
@@ -385,10 +389,6 @@ export type ContractScalarWhereWithAggregatesInput = {
   OR?: Prisma.ContractScalarWhereWithAggregatesInput[]
   NOT?: Prisma.ContractScalarWhereWithAggregatesInput | Prisma.ContractScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Contract"> | number
-  firmId?: Prisma.IntWithAggregatesFilter<"Contract"> | number
-  clientId?: Prisma.IntWithAggregatesFilter<"Contract"> | number
-  legalAreaId?: Prisma.IntWithAggregatesFilter<"Contract"> | number
-  statusId?: Prisma.IntWithAggregatesFilter<"Contract"> | number
   processNumber?: Prisma.StringWithAggregatesFilter<"Contract"> | string
   feePercentage?: Prisma.DecimalWithAggregatesFilter<"Contract"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: Prisma.StringNullableWithAggregatesFilter<"Contract"> | string | null
@@ -397,6 +397,10 @@ export type ContractScalarWhereWithAggregatesInput = {
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Contract"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Contract"> | Date | string
   deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Contract"> | Date | string | null
+  firmId?: Prisma.IntWithAggregatesFilter<"Contract"> | number
+  customerId?: Prisma.IntWithAggregatesFilter<"Contract"> | number
+  legalAreaId?: Prisma.IntWithAggregatesFilter<"Contract"> | number
+  statusId?: Prisma.IntWithAggregatesFilter<"Contract"> | number
 }
 
 export type ContractCreateInput = {
@@ -408,21 +412,18 @@ export type ContractCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  client: Prisma.ClientCreateNestedOneWithoutContractsInput
   firm: Prisma.FirmCreateNestedOneWithoutContractsInput
+  customer: Prisma.PersonCreateNestedOneWithoutCustomerContractsInput
   legalArea: Prisma.LegalAreaCreateNestedOneWithoutContractsInput
   status: Prisma.ContractStatusCreateNestedOneWithoutContractsInput
-  attachments?: Prisma.AttachmentCreateNestedManyWithoutContractInput
-  assignments?: Prisma.ContractEmployeeCreateNestedManyWithoutContractInput
+  assignments?: Prisma.ContractAssignmentCreateNestedManyWithoutContractInput
   revenues?: Prisma.RevenueCreateNestedManyWithoutContractInput
+  attachments?: Prisma.AttachmentCreateNestedManyWithoutContractInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutContractInput
 }
 
 export type ContractUncheckedCreateInput = {
   id?: number
-  firmId: number
-  clientId: number
-  legalAreaId: number
-  statusId: number
   processNumber: string
   feePercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: string | null
@@ -431,9 +432,14 @@ export type ContractUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutContractInput
-  assignments?: Prisma.ContractEmployeeUncheckedCreateNestedManyWithoutContractInput
+  firmId: number
+  customerId: number
+  legalAreaId: number
+  statusId: number
+  assignments?: Prisma.ContractAssignmentUncheckedCreateNestedManyWithoutContractInput
   revenues?: Prisma.RevenueUncheckedCreateNestedManyWithoutContractInput
+  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutContractInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutContractInput
 }
 
 export type ContractUpdateInput = {
@@ -445,21 +451,18 @@ export type ContractUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  client?: Prisma.ClientUpdateOneRequiredWithoutContractsNestedInput
   firm?: Prisma.FirmUpdateOneRequiredWithoutContractsNestedInput
+  customer?: Prisma.PersonUpdateOneRequiredWithoutCustomerContractsNestedInput
   legalArea?: Prisma.LegalAreaUpdateOneRequiredWithoutContractsNestedInput
   status?: Prisma.ContractStatusUpdateOneRequiredWithoutContractsNestedInput
-  attachments?: Prisma.AttachmentUpdateManyWithoutContractNestedInput
-  assignments?: Prisma.ContractEmployeeUpdateManyWithoutContractNestedInput
+  assignments?: Prisma.ContractAssignmentUpdateManyWithoutContractNestedInput
   revenues?: Prisma.RevenueUpdateManyWithoutContractNestedInput
+  attachments?: Prisma.AttachmentUpdateManyWithoutContractNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutContractNestedInput
 }
 
 export type ContractUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  firmId?: Prisma.IntFieldUpdateOperationsInput | number
-  clientId?: Prisma.IntFieldUpdateOperationsInput | number
-  legalAreaId?: Prisma.IntFieldUpdateOperationsInput | number
-  statusId?: Prisma.IntFieldUpdateOperationsInput | number
   processNumber?: Prisma.StringFieldUpdateOperationsInput | string
   feePercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -468,17 +471,18 @@ export type ContractUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutContractNestedInput
-  assignments?: Prisma.ContractEmployeeUncheckedUpdateManyWithoutContractNestedInput
+  firmId?: Prisma.IntFieldUpdateOperationsInput | number
+  customerId?: Prisma.IntFieldUpdateOperationsInput | number
+  legalAreaId?: Prisma.IntFieldUpdateOperationsInput | number
+  statusId?: Prisma.IntFieldUpdateOperationsInput | number
+  assignments?: Prisma.ContractAssignmentUncheckedUpdateManyWithoutContractNestedInput
   revenues?: Prisma.RevenueUncheckedUpdateManyWithoutContractNestedInput
+  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutContractNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutContractNestedInput
 }
 
 export type ContractCreateManyInput = {
   id?: number
-  firmId: number
-  clientId: number
-  legalAreaId: number
-  statusId: number
   processNumber: string
   feePercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: string | null
@@ -487,6 +491,10 @@ export type ContractCreateManyInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  firmId: number
+  customerId: number
+  legalAreaId: number
+  statusId: number
 }
 
 export type ContractUpdateManyMutationInput = {
@@ -502,10 +510,6 @@ export type ContractUpdateManyMutationInput = {
 
 export type ContractUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  firmId?: Prisma.IntFieldUpdateOperationsInput | number
-  clientId?: Prisma.IntFieldUpdateOperationsInput | number
-  legalAreaId?: Prisma.IntFieldUpdateOperationsInput | number
-  statusId?: Prisma.IntFieldUpdateOperationsInput | number
   processNumber?: Prisma.StringFieldUpdateOperationsInput | string
   feePercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -514,6 +518,10 @@ export type ContractUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  firmId?: Prisma.IntFieldUpdateOperationsInput | number
+  customerId?: Prisma.IntFieldUpdateOperationsInput | number
+  legalAreaId?: Prisma.IntFieldUpdateOperationsInput | number
+  statusId?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type ContractListRelationFilter = {
@@ -526,6 +534,11 @@ export type ContractOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type ContractFirmIdIdCompoundUniqueInput = {
+  firmId: number
+  id: number
+}
+
 export type ContractFirmIdProcessNumberCompoundUniqueInput = {
   firmId: number
   processNumber: string
@@ -533,10 +546,6 @@ export type ContractFirmIdProcessNumberCompoundUniqueInput = {
 
 export type ContractCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  firmId?: Prisma.SortOrder
-  clientId?: Prisma.SortOrder
-  legalAreaId?: Prisma.SortOrder
-  statusId?: Prisma.SortOrder
   processNumber?: Prisma.SortOrder
   feePercentage?: Prisma.SortOrder
   notes?: Prisma.SortOrder
@@ -545,23 +554,23 @@ export type ContractCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
+  firmId?: Prisma.SortOrder
+  customerId?: Prisma.SortOrder
+  legalAreaId?: Prisma.SortOrder
+  statusId?: Prisma.SortOrder
 }
 
 export type ContractAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  feePercentage?: Prisma.SortOrder
   firmId?: Prisma.SortOrder
-  clientId?: Prisma.SortOrder
+  customerId?: Prisma.SortOrder
   legalAreaId?: Prisma.SortOrder
   statusId?: Prisma.SortOrder
-  feePercentage?: Prisma.SortOrder
 }
 
 export type ContractMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  firmId?: Prisma.SortOrder
-  clientId?: Prisma.SortOrder
-  legalAreaId?: Prisma.SortOrder
-  statusId?: Prisma.SortOrder
   processNumber?: Prisma.SortOrder
   feePercentage?: Prisma.SortOrder
   notes?: Prisma.SortOrder
@@ -570,14 +579,14 @@ export type ContractMaxOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
+  firmId?: Prisma.SortOrder
+  customerId?: Prisma.SortOrder
+  legalAreaId?: Prisma.SortOrder
+  statusId?: Prisma.SortOrder
 }
 
 export type ContractMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  firmId?: Prisma.SortOrder
-  clientId?: Prisma.SortOrder
-  legalAreaId?: Prisma.SortOrder
-  statusId?: Prisma.SortOrder
   processNumber?: Prisma.SortOrder
   feePercentage?: Prisma.SortOrder
   notes?: Prisma.SortOrder
@@ -586,15 +595,19 @@ export type ContractMinOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
+  firmId?: Prisma.SortOrder
+  customerId?: Prisma.SortOrder
+  legalAreaId?: Prisma.SortOrder
+  statusId?: Prisma.SortOrder
 }
 
 export type ContractSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  feePercentage?: Prisma.SortOrder
   firmId?: Prisma.SortOrder
-  clientId?: Prisma.SortOrder
+  customerId?: Prisma.SortOrder
   legalAreaId?: Prisma.SortOrder
   statusId?: Prisma.SortOrder
-  feePercentage?: Prisma.SortOrder
 }
 
 export type ContractScalarRelationFilter = {
@@ -733,45 +746,45 @@ export type ContractUncheckedUpdateManyWithoutStatusNestedInput = {
   deleteMany?: Prisma.ContractScalarWhereInput | Prisma.ContractScalarWhereInput[]
 }
 
-export type ContractCreateNestedManyWithoutClientInput = {
-  create?: Prisma.XOR<Prisma.ContractCreateWithoutClientInput, Prisma.ContractUncheckedCreateWithoutClientInput> | Prisma.ContractCreateWithoutClientInput[] | Prisma.ContractUncheckedCreateWithoutClientInput[]
-  connectOrCreate?: Prisma.ContractCreateOrConnectWithoutClientInput | Prisma.ContractCreateOrConnectWithoutClientInput[]
-  createMany?: Prisma.ContractCreateManyClientInputEnvelope
+export type ContractCreateNestedManyWithoutCustomerInput = {
+  create?: Prisma.XOR<Prisma.ContractCreateWithoutCustomerInput, Prisma.ContractUncheckedCreateWithoutCustomerInput> | Prisma.ContractCreateWithoutCustomerInput[] | Prisma.ContractUncheckedCreateWithoutCustomerInput[]
+  connectOrCreate?: Prisma.ContractCreateOrConnectWithoutCustomerInput | Prisma.ContractCreateOrConnectWithoutCustomerInput[]
+  createMany?: Prisma.ContractCreateManyCustomerInputEnvelope
   connect?: Prisma.ContractWhereUniqueInput | Prisma.ContractWhereUniqueInput[]
 }
 
-export type ContractUncheckedCreateNestedManyWithoutClientInput = {
-  create?: Prisma.XOR<Prisma.ContractCreateWithoutClientInput, Prisma.ContractUncheckedCreateWithoutClientInput> | Prisma.ContractCreateWithoutClientInput[] | Prisma.ContractUncheckedCreateWithoutClientInput[]
-  connectOrCreate?: Prisma.ContractCreateOrConnectWithoutClientInput | Prisma.ContractCreateOrConnectWithoutClientInput[]
-  createMany?: Prisma.ContractCreateManyClientInputEnvelope
+export type ContractUncheckedCreateNestedManyWithoutCustomerInput = {
+  create?: Prisma.XOR<Prisma.ContractCreateWithoutCustomerInput, Prisma.ContractUncheckedCreateWithoutCustomerInput> | Prisma.ContractCreateWithoutCustomerInput[] | Prisma.ContractUncheckedCreateWithoutCustomerInput[]
+  connectOrCreate?: Prisma.ContractCreateOrConnectWithoutCustomerInput | Prisma.ContractCreateOrConnectWithoutCustomerInput[]
+  createMany?: Prisma.ContractCreateManyCustomerInputEnvelope
   connect?: Prisma.ContractWhereUniqueInput | Prisma.ContractWhereUniqueInput[]
 }
 
-export type ContractUpdateManyWithoutClientNestedInput = {
-  create?: Prisma.XOR<Prisma.ContractCreateWithoutClientInput, Prisma.ContractUncheckedCreateWithoutClientInput> | Prisma.ContractCreateWithoutClientInput[] | Prisma.ContractUncheckedCreateWithoutClientInput[]
-  connectOrCreate?: Prisma.ContractCreateOrConnectWithoutClientInput | Prisma.ContractCreateOrConnectWithoutClientInput[]
-  upsert?: Prisma.ContractUpsertWithWhereUniqueWithoutClientInput | Prisma.ContractUpsertWithWhereUniqueWithoutClientInput[]
-  createMany?: Prisma.ContractCreateManyClientInputEnvelope
+export type ContractUpdateManyWithoutCustomerNestedInput = {
+  create?: Prisma.XOR<Prisma.ContractCreateWithoutCustomerInput, Prisma.ContractUncheckedCreateWithoutCustomerInput> | Prisma.ContractCreateWithoutCustomerInput[] | Prisma.ContractUncheckedCreateWithoutCustomerInput[]
+  connectOrCreate?: Prisma.ContractCreateOrConnectWithoutCustomerInput | Prisma.ContractCreateOrConnectWithoutCustomerInput[]
+  upsert?: Prisma.ContractUpsertWithWhereUniqueWithoutCustomerInput | Prisma.ContractUpsertWithWhereUniqueWithoutCustomerInput[]
+  createMany?: Prisma.ContractCreateManyCustomerInputEnvelope
   set?: Prisma.ContractWhereUniqueInput | Prisma.ContractWhereUniqueInput[]
   disconnect?: Prisma.ContractWhereUniqueInput | Prisma.ContractWhereUniqueInput[]
   delete?: Prisma.ContractWhereUniqueInput | Prisma.ContractWhereUniqueInput[]
   connect?: Prisma.ContractWhereUniqueInput | Prisma.ContractWhereUniqueInput[]
-  update?: Prisma.ContractUpdateWithWhereUniqueWithoutClientInput | Prisma.ContractUpdateWithWhereUniqueWithoutClientInput[]
-  updateMany?: Prisma.ContractUpdateManyWithWhereWithoutClientInput | Prisma.ContractUpdateManyWithWhereWithoutClientInput[]
+  update?: Prisma.ContractUpdateWithWhereUniqueWithoutCustomerInput | Prisma.ContractUpdateWithWhereUniqueWithoutCustomerInput[]
+  updateMany?: Prisma.ContractUpdateManyWithWhereWithoutCustomerInput | Prisma.ContractUpdateManyWithWhereWithoutCustomerInput[]
   deleteMany?: Prisma.ContractScalarWhereInput | Prisma.ContractScalarWhereInput[]
 }
 
-export type ContractUncheckedUpdateManyWithoutClientNestedInput = {
-  create?: Prisma.XOR<Prisma.ContractCreateWithoutClientInput, Prisma.ContractUncheckedCreateWithoutClientInput> | Prisma.ContractCreateWithoutClientInput[] | Prisma.ContractUncheckedCreateWithoutClientInput[]
-  connectOrCreate?: Prisma.ContractCreateOrConnectWithoutClientInput | Prisma.ContractCreateOrConnectWithoutClientInput[]
-  upsert?: Prisma.ContractUpsertWithWhereUniqueWithoutClientInput | Prisma.ContractUpsertWithWhereUniqueWithoutClientInput[]
-  createMany?: Prisma.ContractCreateManyClientInputEnvelope
+export type ContractUncheckedUpdateManyWithoutCustomerNestedInput = {
+  create?: Prisma.XOR<Prisma.ContractCreateWithoutCustomerInput, Prisma.ContractUncheckedCreateWithoutCustomerInput> | Prisma.ContractCreateWithoutCustomerInput[] | Prisma.ContractUncheckedCreateWithoutCustomerInput[]
+  connectOrCreate?: Prisma.ContractCreateOrConnectWithoutCustomerInput | Prisma.ContractCreateOrConnectWithoutCustomerInput[]
+  upsert?: Prisma.ContractUpsertWithWhereUniqueWithoutCustomerInput | Prisma.ContractUpsertWithWhereUniqueWithoutCustomerInput[]
+  createMany?: Prisma.ContractCreateManyCustomerInputEnvelope
   set?: Prisma.ContractWhereUniqueInput | Prisma.ContractWhereUniqueInput[]
   disconnect?: Prisma.ContractWhereUniqueInput | Prisma.ContractWhereUniqueInput[]
   delete?: Prisma.ContractWhereUniqueInput | Prisma.ContractWhereUniqueInput[]
   connect?: Prisma.ContractWhereUniqueInput | Prisma.ContractWhereUniqueInput[]
-  update?: Prisma.ContractUpdateWithWhereUniqueWithoutClientInput | Prisma.ContractUpdateWithWhereUniqueWithoutClientInput[]
-  updateMany?: Prisma.ContractUpdateManyWithWhereWithoutClientInput | Prisma.ContractUpdateManyWithWhereWithoutClientInput[]
+  update?: Prisma.ContractUpdateWithWhereUniqueWithoutCustomerInput | Prisma.ContractUpdateWithWhereUniqueWithoutCustomerInput[]
+  updateMany?: Prisma.ContractUpdateManyWithWhereWithoutCustomerInput | Prisma.ContractUpdateManyWithWhereWithoutCustomerInput[]
   deleteMany?: Prisma.ContractScalarWhereInput | Prisma.ContractScalarWhereInput[]
 }
 
@@ -819,6 +832,22 @@ export type ContractUpdateOneWithoutAttachmentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ContractUpdateToOneWithWhereWithoutAttachmentsInput, Prisma.ContractUpdateWithoutAttachmentsInput>, Prisma.ContractUncheckedUpdateWithoutAttachmentsInput>
 }
 
+export type ContractCreateNestedOneWithoutAuditLogsInput = {
+  create?: Prisma.XOR<Prisma.ContractCreateWithoutAuditLogsInput, Prisma.ContractUncheckedCreateWithoutAuditLogsInput>
+  connectOrCreate?: Prisma.ContractCreateOrConnectWithoutAuditLogsInput
+  connect?: Prisma.ContractWhereUniqueInput
+}
+
+export type ContractUpdateOneWithoutAuditLogsNestedInput = {
+  create?: Prisma.XOR<Prisma.ContractCreateWithoutAuditLogsInput, Prisma.ContractUncheckedCreateWithoutAuditLogsInput>
+  connectOrCreate?: Prisma.ContractCreateOrConnectWithoutAuditLogsInput
+  upsert?: Prisma.ContractUpsertWithoutAuditLogsInput
+  disconnect?: Prisma.ContractWhereInput | boolean
+  delete?: Prisma.ContractWhereInput | boolean
+  connect?: Prisma.ContractWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ContractUpdateToOneWithWhereWithoutAuditLogsInput, Prisma.ContractUpdateWithoutAuditLogsInput>, Prisma.ContractUncheckedUpdateWithoutAuditLogsInput>
+}
+
 export type ContractCreateWithoutFirmInput = {
   processNumber: string
   feePercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -828,19 +857,17 @@ export type ContractCreateWithoutFirmInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  client: Prisma.ClientCreateNestedOneWithoutContractsInput
+  customer: Prisma.PersonCreateNestedOneWithoutCustomerContractsInput
   legalArea: Prisma.LegalAreaCreateNestedOneWithoutContractsInput
   status: Prisma.ContractStatusCreateNestedOneWithoutContractsInput
-  attachments?: Prisma.AttachmentCreateNestedManyWithoutContractInput
-  assignments?: Prisma.ContractEmployeeCreateNestedManyWithoutContractInput
+  assignments?: Prisma.ContractAssignmentCreateNestedManyWithoutContractInput
   revenues?: Prisma.RevenueCreateNestedManyWithoutContractInput
+  attachments?: Prisma.AttachmentCreateNestedManyWithoutContractInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutContractInput
 }
 
 export type ContractUncheckedCreateWithoutFirmInput = {
   id?: number
-  clientId: number
-  legalAreaId: number
-  statusId: number
   processNumber: string
   feePercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: string | null
@@ -849,9 +876,13 @@ export type ContractUncheckedCreateWithoutFirmInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutContractInput
-  assignments?: Prisma.ContractEmployeeUncheckedCreateNestedManyWithoutContractInput
+  customerId: number
+  legalAreaId: number
+  statusId: number
+  assignments?: Prisma.ContractAssignmentUncheckedCreateNestedManyWithoutContractInput
   revenues?: Prisma.RevenueUncheckedCreateNestedManyWithoutContractInput
+  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutContractInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutContractInput
 }
 
 export type ContractCreateOrConnectWithoutFirmInput = {
@@ -885,10 +916,6 @@ export type ContractScalarWhereInput = {
   OR?: Prisma.ContractScalarWhereInput[]
   NOT?: Prisma.ContractScalarWhereInput | Prisma.ContractScalarWhereInput[]
   id?: Prisma.IntFilter<"Contract"> | number
-  firmId?: Prisma.IntFilter<"Contract"> | number
-  clientId?: Prisma.IntFilter<"Contract"> | number
-  legalAreaId?: Prisma.IntFilter<"Contract"> | number
-  statusId?: Prisma.IntFilter<"Contract"> | number
   processNumber?: Prisma.StringFilter<"Contract"> | string
   feePercentage?: Prisma.DecimalFilter<"Contract"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: Prisma.StringNullableFilter<"Contract"> | string | null
@@ -897,6 +924,10 @@ export type ContractScalarWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Contract"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Contract"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Contract"> | Date | string | null
+  firmId?: Prisma.IntFilter<"Contract"> | number
+  customerId?: Prisma.IntFilter<"Contract"> | number
+  legalAreaId?: Prisma.IntFilter<"Contract"> | number
+  statusId?: Prisma.IntFilter<"Contract"> | number
 }
 
 export type ContractCreateWithoutLegalAreaInput = {
@@ -908,19 +939,17 @@ export type ContractCreateWithoutLegalAreaInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  client: Prisma.ClientCreateNestedOneWithoutContractsInput
   firm: Prisma.FirmCreateNestedOneWithoutContractsInput
+  customer: Prisma.PersonCreateNestedOneWithoutCustomerContractsInput
   status: Prisma.ContractStatusCreateNestedOneWithoutContractsInput
-  attachments?: Prisma.AttachmentCreateNestedManyWithoutContractInput
-  assignments?: Prisma.ContractEmployeeCreateNestedManyWithoutContractInput
+  assignments?: Prisma.ContractAssignmentCreateNestedManyWithoutContractInput
   revenues?: Prisma.RevenueCreateNestedManyWithoutContractInput
+  attachments?: Prisma.AttachmentCreateNestedManyWithoutContractInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutContractInput
 }
 
 export type ContractUncheckedCreateWithoutLegalAreaInput = {
   id?: number
-  firmId: number
-  clientId: number
-  statusId: number
   processNumber: string
   feePercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: string | null
@@ -929,9 +958,13 @@ export type ContractUncheckedCreateWithoutLegalAreaInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutContractInput
-  assignments?: Prisma.ContractEmployeeUncheckedCreateNestedManyWithoutContractInput
+  firmId: number
+  customerId: number
+  statusId: number
+  assignments?: Prisma.ContractAssignmentUncheckedCreateNestedManyWithoutContractInput
   revenues?: Prisma.RevenueUncheckedCreateNestedManyWithoutContractInput
+  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutContractInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutContractInput
 }
 
 export type ContractCreateOrConnectWithoutLegalAreaInput = {
@@ -969,19 +1002,17 @@ export type ContractCreateWithoutStatusInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  client: Prisma.ClientCreateNestedOneWithoutContractsInput
   firm: Prisma.FirmCreateNestedOneWithoutContractsInput
+  customer: Prisma.PersonCreateNestedOneWithoutCustomerContractsInput
   legalArea: Prisma.LegalAreaCreateNestedOneWithoutContractsInput
-  attachments?: Prisma.AttachmentCreateNestedManyWithoutContractInput
-  assignments?: Prisma.ContractEmployeeCreateNestedManyWithoutContractInput
+  assignments?: Prisma.ContractAssignmentCreateNestedManyWithoutContractInput
   revenues?: Prisma.RevenueCreateNestedManyWithoutContractInput
+  attachments?: Prisma.AttachmentCreateNestedManyWithoutContractInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutContractInput
 }
 
 export type ContractUncheckedCreateWithoutStatusInput = {
   id?: number
-  firmId: number
-  clientId: number
-  legalAreaId: number
   processNumber: string
   feePercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: string | null
@@ -990,9 +1021,13 @@ export type ContractUncheckedCreateWithoutStatusInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutContractInput
-  assignments?: Prisma.ContractEmployeeUncheckedCreateNestedManyWithoutContractInput
+  firmId: number
+  customerId: number
+  legalAreaId: number
+  assignments?: Prisma.ContractAssignmentUncheckedCreateNestedManyWithoutContractInput
   revenues?: Prisma.RevenueUncheckedCreateNestedManyWithoutContractInput
+  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutContractInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutContractInput
 }
 
 export type ContractCreateOrConnectWithoutStatusInput = {
@@ -1021,7 +1056,7 @@ export type ContractUpdateManyWithWhereWithoutStatusInput = {
   data: Prisma.XOR<Prisma.ContractUpdateManyMutationInput, Prisma.ContractUncheckedUpdateManyWithoutStatusInput>
 }
 
-export type ContractCreateWithoutClientInput = {
+export type ContractCreateWithoutCustomerInput = {
   processNumber: string
   feePercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: string | null
@@ -1033,16 +1068,14 @@ export type ContractCreateWithoutClientInput = {
   firm: Prisma.FirmCreateNestedOneWithoutContractsInput
   legalArea: Prisma.LegalAreaCreateNestedOneWithoutContractsInput
   status: Prisma.ContractStatusCreateNestedOneWithoutContractsInput
-  attachments?: Prisma.AttachmentCreateNestedManyWithoutContractInput
-  assignments?: Prisma.ContractEmployeeCreateNestedManyWithoutContractInput
+  assignments?: Prisma.ContractAssignmentCreateNestedManyWithoutContractInput
   revenues?: Prisma.RevenueCreateNestedManyWithoutContractInput
+  attachments?: Prisma.AttachmentCreateNestedManyWithoutContractInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutContractInput
 }
 
-export type ContractUncheckedCreateWithoutClientInput = {
+export type ContractUncheckedCreateWithoutCustomerInput = {
   id?: number
-  firmId: number
-  legalAreaId: number
-  statusId: number
   processNumber: string
   feePercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: string | null
@@ -1051,35 +1084,39 @@ export type ContractUncheckedCreateWithoutClientInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutContractInput
-  assignments?: Prisma.ContractEmployeeUncheckedCreateNestedManyWithoutContractInput
+  firmId: number
+  legalAreaId: number
+  statusId: number
+  assignments?: Prisma.ContractAssignmentUncheckedCreateNestedManyWithoutContractInput
   revenues?: Prisma.RevenueUncheckedCreateNestedManyWithoutContractInput
+  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutContractInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutContractInput
 }
 
-export type ContractCreateOrConnectWithoutClientInput = {
+export type ContractCreateOrConnectWithoutCustomerInput = {
   where: Prisma.ContractWhereUniqueInput
-  create: Prisma.XOR<Prisma.ContractCreateWithoutClientInput, Prisma.ContractUncheckedCreateWithoutClientInput>
+  create: Prisma.XOR<Prisma.ContractCreateWithoutCustomerInput, Prisma.ContractUncheckedCreateWithoutCustomerInput>
 }
 
-export type ContractCreateManyClientInputEnvelope = {
-  data: Prisma.ContractCreateManyClientInput | Prisma.ContractCreateManyClientInput[]
+export type ContractCreateManyCustomerInputEnvelope = {
+  data: Prisma.ContractCreateManyCustomerInput | Prisma.ContractCreateManyCustomerInput[]
   skipDuplicates?: boolean
 }
 
-export type ContractUpsertWithWhereUniqueWithoutClientInput = {
+export type ContractUpsertWithWhereUniqueWithoutCustomerInput = {
   where: Prisma.ContractWhereUniqueInput
-  update: Prisma.XOR<Prisma.ContractUpdateWithoutClientInput, Prisma.ContractUncheckedUpdateWithoutClientInput>
-  create: Prisma.XOR<Prisma.ContractCreateWithoutClientInput, Prisma.ContractUncheckedCreateWithoutClientInput>
+  update: Prisma.XOR<Prisma.ContractUpdateWithoutCustomerInput, Prisma.ContractUncheckedUpdateWithoutCustomerInput>
+  create: Prisma.XOR<Prisma.ContractCreateWithoutCustomerInput, Prisma.ContractUncheckedCreateWithoutCustomerInput>
 }
 
-export type ContractUpdateWithWhereUniqueWithoutClientInput = {
+export type ContractUpdateWithWhereUniqueWithoutCustomerInput = {
   where: Prisma.ContractWhereUniqueInput
-  data: Prisma.XOR<Prisma.ContractUpdateWithoutClientInput, Prisma.ContractUncheckedUpdateWithoutClientInput>
+  data: Prisma.XOR<Prisma.ContractUpdateWithoutCustomerInput, Prisma.ContractUncheckedUpdateWithoutCustomerInput>
 }
 
-export type ContractUpdateManyWithWhereWithoutClientInput = {
+export type ContractUpdateManyWithWhereWithoutCustomerInput = {
   where: Prisma.ContractScalarWhereInput
-  data: Prisma.XOR<Prisma.ContractUpdateManyMutationInput, Prisma.ContractUncheckedUpdateManyWithoutClientInput>
+  data: Prisma.XOR<Prisma.ContractUpdateManyMutationInput, Prisma.ContractUncheckedUpdateManyWithoutCustomerInput>
 }
 
 export type ContractCreateWithoutAssignmentsInput = {
@@ -1091,20 +1128,17 @@ export type ContractCreateWithoutAssignmentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  client: Prisma.ClientCreateNestedOneWithoutContractsInput
   firm: Prisma.FirmCreateNestedOneWithoutContractsInput
+  customer: Prisma.PersonCreateNestedOneWithoutCustomerContractsInput
   legalArea: Prisma.LegalAreaCreateNestedOneWithoutContractsInput
   status: Prisma.ContractStatusCreateNestedOneWithoutContractsInput
-  attachments?: Prisma.AttachmentCreateNestedManyWithoutContractInput
   revenues?: Prisma.RevenueCreateNestedManyWithoutContractInput
+  attachments?: Prisma.AttachmentCreateNestedManyWithoutContractInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutContractInput
 }
 
 export type ContractUncheckedCreateWithoutAssignmentsInput = {
   id?: number
-  firmId: number
-  clientId: number
-  legalAreaId: number
-  statusId: number
   processNumber: string
   feePercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: string | null
@@ -1113,8 +1147,13 @@ export type ContractUncheckedCreateWithoutAssignmentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutContractInput
+  firmId: number
+  customerId: number
+  legalAreaId: number
+  statusId: number
   revenues?: Prisma.RevenueUncheckedCreateNestedManyWithoutContractInput
+  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutContractInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutContractInput
 }
 
 export type ContractCreateOrConnectWithoutAssignmentsInput = {
@@ -1142,20 +1181,17 @@ export type ContractUpdateWithoutAssignmentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  client?: Prisma.ClientUpdateOneRequiredWithoutContractsNestedInput
   firm?: Prisma.FirmUpdateOneRequiredWithoutContractsNestedInput
+  customer?: Prisma.PersonUpdateOneRequiredWithoutCustomerContractsNestedInput
   legalArea?: Prisma.LegalAreaUpdateOneRequiredWithoutContractsNestedInput
   status?: Prisma.ContractStatusUpdateOneRequiredWithoutContractsNestedInput
-  attachments?: Prisma.AttachmentUpdateManyWithoutContractNestedInput
   revenues?: Prisma.RevenueUpdateManyWithoutContractNestedInput
+  attachments?: Prisma.AttachmentUpdateManyWithoutContractNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutContractNestedInput
 }
 
 export type ContractUncheckedUpdateWithoutAssignmentsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  firmId?: Prisma.IntFieldUpdateOperationsInput | number
-  clientId?: Prisma.IntFieldUpdateOperationsInput | number
-  legalAreaId?: Prisma.IntFieldUpdateOperationsInput | number
-  statusId?: Prisma.IntFieldUpdateOperationsInput | number
   processNumber?: Prisma.StringFieldUpdateOperationsInput | string
   feePercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1164,8 +1200,13 @@ export type ContractUncheckedUpdateWithoutAssignmentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutContractNestedInput
+  firmId?: Prisma.IntFieldUpdateOperationsInput | number
+  customerId?: Prisma.IntFieldUpdateOperationsInput | number
+  legalAreaId?: Prisma.IntFieldUpdateOperationsInput | number
+  statusId?: Prisma.IntFieldUpdateOperationsInput | number
   revenues?: Prisma.RevenueUncheckedUpdateManyWithoutContractNestedInput
+  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutContractNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutContractNestedInput
 }
 
 export type ContractCreateWithoutRevenuesInput = {
@@ -1177,20 +1218,17 @@ export type ContractCreateWithoutRevenuesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  client: Prisma.ClientCreateNestedOneWithoutContractsInput
   firm: Prisma.FirmCreateNestedOneWithoutContractsInput
+  customer: Prisma.PersonCreateNestedOneWithoutCustomerContractsInput
   legalArea: Prisma.LegalAreaCreateNestedOneWithoutContractsInput
   status: Prisma.ContractStatusCreateNestedOneWithoutContractsInput
+  assignments?: Prisma.ContractAssignmentCreateNestedManyWithoutContractInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutContractInput
-  assignments?: Prisma.ContractEmployeeCreateNestedManyWithoutContractInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutContractInput
 }
 
 export type ContractUncheckedCreateWithoutRevenuesInput = {
   id?: number
-  firmId: number
-  clientId: number
-  legalAreaId: number
-  statusId: number
   processNumber: string
   feePercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: string | null
@@ -1199,8 +1237,13 @@ export type ContractUncheckedCreateWithoutRevenuesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  firmId: number
+  customerId: number
+  legalAreaId: number
+  statusId: number
+  assignments?: Prisma.ContractAssignmentUncheckedCreateNestedManyWithoutContractInput
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutContractInput
-  assignments?: Prisma.ContractEmployeeUncheckedCreateNestedManyWithoutContractInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutContractInput
 }
 
 export type ContractCreateOrConnectWithoutRevenuesInput = {
@@ -1228,20 +1271,17 @@ export type ContractUpdateWithoutRevenuesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  client?: Prisma.ClientUpdateOneRequiredWithoutContractsNestedInput
   firm?: Prisma.FirmUpdateOneRequiredWithoutContractsNestedInput
+  customer?: Prisma.PersonUpdateOneRequiredWithoutCustomerContractsNestedInput
   legalArea?: Prisma.LegalAreaUpdateOneRequiredWithoutContractsNestedInput
   status?: Prisma.ContractStatusUpdateOneRequiredWithoutContractsNestedInput
+  assignments?: Prisma.ContractAssignmentUpdateManyWithoutContractNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutContractNestedInput
-  assignments?: Prisma.ContractEmployeeUpdateManyWithoutContractNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutContractNestedInput
 }
 
 export type ContractUncheckedUpdateWithoutRevenuesInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  firmId?: Prisma.IntFieldUpdateOperationsInput | number
-  clientId?: Prisma.IntFieldUpdateOperationsInput | number
-  legalAreaId?: Prisma.IntFieldUpdateOperationsInput | number
-  statusId?: Prisma.IntFieldUpdateOperationsInput | number
   processNumber?: Prisma.StringFieldUpdateOperationsInput | string
   feePercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1250,8 +1290,13 @@ export type ContractUncheckedUpdateWithoutRevenuesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  firmId?: Prisma.IntFieldUpdateOperationsInput | number
+  customerId?: Prisma.IntFieldUpdateOperationsInput | number
+  legalAreaId?: Prisma.IntFieldUpdateOperationsInput | number
+  statusId?: Prisma.IntFieldUpdateOperationsInput | number
+  assignments?: Prisma.ContractAssignmentUncheckedUpdateManyWithoutContractNestedInput
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutContractNestedInput
-  assignments?: Prisma.ContractEmployeeUncheckedUpdateManyWithoutContractNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutContractNestedInput
 }
 
 export type ContractCreateWithoutAttachmentsInput = {
@@ -1263,20 +1308,17 @@ export type ContractCreateWithoutAttachmentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  client: Prisma.ClientCreateNestedOneWithoutContractsInput
   firm: Prisma.FirmCreateNestedOneWithoutContractsInput
+  customer: Prisma.PersonCreateNestedOneWithoutCustomerContractsInput
   legalArea: Prisma.LegalAreaCreateNestedOneWithoutContractsInput
   status: Prisma.ContractStatusCreateNestedOneWithoutContractsInput
-  assignments?: Prisma.ContractEmployeeCreateNestedManyWithoutContractInput
+  assignments?: Prisma.ContractAssignmentCreateNestedManyWithoutContractInput
   revenues?: Prisma.RevenueCreateNestedManyWithoutContractInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutContractInput
 }
 
 export type ContractUncheckedCreateWithoutAttachmentsInput = {
   id?: number
-  firmId: number
-  clientId: number
-  legalAreaId: number
-  statusId: number
   processNumber: string
   feePercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: string | null
@@ -1285,8 +1327,13 @@ export type ContractUncheckedCreateWithoutAttachmentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  assignments?: Prisma.ContractEmployeeUncheckedCreateNestedManyWithoutContractInput
+  firmId: number
+  customerId: number
+  legalAreaId: number
+  statusId: number
+  assignments?: Prisma.ContractAssignmentUncheckedCreateNestedManyWithoutContractInput
   revenues?: Prisma.RevenueUncheckedCreateNestedManyWithoutContractInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutContractInput
 }
 
 export type ContractCreateOrConnectWithoutAttachmentsInput = {
@@ -1314,20 +1361,17 @@ export type ContractUpdateWithoutAttachmentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  client?: Prisma.ClientUpdateOneRequiredWithoutContractsNestedInput
   firm?: Prisma.FirmUpdateOneRequiredWithoutContractsNestedInput
+  customer?: Prisma.PersonUpdateOneRequiredWithoutCustomerContractsNestedInput
   legalArea?: Prisma.LegalAreaUpdateOneRequiredWithoutContractsNestedInput
   status?: Prisma.ContractStatusUpdateOneRequiredWithoutContractsNestedInput
-  assignments?: Prisma.ContractEmployeeUpdateManyWithoutContractNestedInput
+  assignments?: Prisma.ContractAssignmentUpdateManyWithoutContractNestedInput
   revenues?: Prisma.RevenueUpdateManyWithoutContractNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutContractNestedInput
 }
 
 export type ContractUncheckedUpdateWithoutAttachmentsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  firmId?: Prisma.IntFieldUpdateOperationsInput | number
-  clientId?: Prisma.IntFieldUpdateOperationsInput | number
-  legalAreaId?: Prisma.IntFieldUpdateOperationsInput | number
-  statusId?: Prisma.IntFieldUpdateOperationsInput | number
   processNumber?: Prisma.StringFieldUpdateOperationsInput | string
   feePercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1336,15 +1380,16 @@ export type ContractUncheckedUpdateWithoutAttachmentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  assignments?: Prisma.ContractEmployeeUncheckedUpdateManyWithoutContractNestedInput
+  firmId?: Prisma.IntFieldUpdateOperationsInput | number
+  customerId?: Prisma.IntFieldUpdateOperationsInput | number
+  legalAreaId?: Prisma.IntFieldUpdateOperationsInput | number
+  statusId?: Prisma.IntFieldUpdateOperationsInput | number
+  assignments?: Prisma.ContractAssignmentUncheckedUpdateManyWithoutContractNestedInput
   revenues?: Prisma.RevenueUncheckedUpdateManyWithoutContractNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutContractNestedInput
 }
 
-export type ContractCreateManyFirmInput = {
-  id?: number
-  clientId: number
-  legalAreaId: number
-  statusId: number
+export type ContractCreateWithoutAuditLogsInput = {
   processNumber: string
   feePercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: string | null
@@ -1353,6 +1398,100 @@ export type ContractCreateManyFirmInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  firm: Prisma.FirmCreateNestedOneWithoutContractsInput
+  customer: Prisma.PersonCreateNestedOneWithoutCustomerContractsInput
+  legalArea: Prisma.LegalAreaCreateNestedOneWithoutContractsInput
+  status: Prisma.ContractStatusCreateNestedOneWithoutContractsInput
+  assignments?: Prisma.ContractAssignmentCreateNestedManyWithoutContractInput
+  revenues?: Prisma.RevenueCreateNestedManyWithoutContractInput
+  attachments?: Prisma.AttachmentCreateNestedManyWithoutContractInput
+}
+
+export type ContractUncheckedCreateWithoutAuditLogsInput = {
+  id?: number
+  processNumber: string
+  feePercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: string | null
+  allowStatusChange?: boolean
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  firmId: number
+  customerId: number
+  legalAreaId: number
+  statusId: number
+  assignments?: Prisma.ContractAssignmentUncheckedCreateNestedManyWithoutContractInput
+  revenues?: Prisma.RevenueUncheckedCreateNestedManyWithoutContractInput
+  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutContractInput
+}
+
+export type ContractCreateOrConnectWithoutAuditLogsInput = {
+  where: Prisma.ContractWhereUniqueInput
+  create: Prisma.XOR<Prisma.ContractCreateWithoutAuditLogsInput, Prisma.ContractUncheckedCreateWithoutAuditLogsInput>
+}
+
+export type ContractUpsertWithoutAuditLogsInput = {
+  update: Prisma.XOR<Prisma.ContractUpdateWithoutAuditLogsInput, Prisma.ContractUncheckedUpdateWithoutAuditLogsInput>
+  create: Prisma.XOR<Prisma.ContractCreateWithoutAuditLogsInput, Prisma.ContractUncheckedCreateWithoutAuditLogsInput>
+  where?: Prisma.ContractWhereInput
+}
+
+export type ContractUpdateToOneWithWhereWithoutAuditLogsInput = {
+  where?: Prisma.ContractWhereInput
+  data: Prisma.XOR<Prisma.ContractUpdateWithoutAuditLogsInput, Prisma.ContractUncheckedUpdateWithoutAuditLogsInput>
+}
+
+export type ContractUpdateWithoutAuditLogsInput = {
+  processNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  feePercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  allowStatusChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  firm?: Prisma.FirmUpdateOneRequiredWithoutContractsNestedInput
+  customer?: Prisma.PersonUpdateOneRequiredWithoutCustomerContractsNestedInput
+  legalArea?: Prisma.LegalAreaUpdateOneRequiredWithoutContractsNestedInput
+  status?: Prisma.ContractStatusUpdateOneRequiredWithoutContractsNestedInput
+  assignments?: Prisma.ContractAssignmentUpdateManyWithoutContractNestedInput
+  revenues?: Prisma.RevenueUpdateManyWithoutContractNestedInput
+  attachments?: Prisma.AttachmentUpdateManyWithoutContractNestedInput
+}
+
+export type ContractUncheckedUpdateWithoutAuditLogsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  processNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  feePercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  allowStatusChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  firmId?: Prisma.IntFieldUpdateOperationsInput | number
+  customerId?: Prisma.IntFieldUpdateOperationsInput | number
+  legalAreaId?: Prisma.IntFieldUpdateOperationsInput | number
+  statusId?: Prisma.IntFieldUpdateOperationsInput | number
+  assignments?: Prisma.ContractAssignmentUncheckedUpdateManyWithoutContractNestedInput
+  revenues?: Prisma.RevenueUncheckedUpdateManyWithoutContractNestedInput
+  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutContractNestedInput
+}
+
+export type ContractCreateManyFirmInput = {
+  id?: number
+  processNumber: string
+  feePercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: string | null
+  allowStatusChange?: boolean
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  customerId: number
+  legalAreaId: number
+  statusId: number
 }
 
 export type ContractUpdateWithoutFirmInput = {
@@ -1364,19 +1503,17 @@ export type ContractUpdateWithoutFirmInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  client?: Prisma.ClientUpdateOneRequiredWithoutContractsNestedInput
+  customer?: Prisma.PersonUpdateOneRequiredWithoutCustomerContractsNestedInput
   legalArea?: Prisma.LegalAreaUpdateOneRequiredWithoutContractsNestedInput
   status?: Prisma.ContractStatusUpdateOneRequiredWithoutContractsNestedInput
-  attachments?: Prisma.AttachmentUpdateManyWithoutContractNestedInput
-  assignments?: Prisma.ContractEmployeeUpdateManyWithoutContractNestedInput
+  assignments?: Prisma.ContractAssignmentUpdateManyWithoutContractNestedInput
   revenues?: Prisma.RevenueUpdateManyWithoutContractNestedInput
+  attachments?: Prisma.AttachmentUpdateManyWithoutContractNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutContractNestedInput
 }
 
 export type ContractUncheckedUpdateWithoutFirmInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  clientId?: Prisma.IntFieldUpdateOperationsInput | number
-  legalAreaId?: Prisma.IntFieldUpdateOperationsInput | number
-  statusId?: Prisma.IntFieldUpdateOperationsInput | number
   processNumber?: Prisma.StringFieldUpdateOperationsInput | string
   feePercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1385,16 +1522,17 @@ export type ContractUncheckedUpdateWithoutFirmInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutContractNestedInput
-  assignments?: Prisma.ContractEmployeeUncheckedUpdateManyWithoutContractNestedInput
+  customerId?: Prisma.IntFieldUpdateOperationsInput | number
+  legalAreaId?: Prisma.IntFieldUpdateOperationsInput | number
+  statusId?: Prisma.IntFieldUpdateOperationsInput | number
+  assignments?: Prisma.ContractAssignmentUncheckedUpdateManyWithoutContractNestedInput
   revenues?: Prisma.RevenueUncheckedUpdateManyWithoutContractNestedInput
+  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutContractNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutContractNestedInput
 }
 
 export type ContractUncheckedUpdateManyWithoutFirmInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  clientId?: Prisma.IntFieldUpdateOperationsInput | number
-  legalAreaId?: Prisma.IntFieldUpdateOperationsInput | number
-  statusId?: Prisma.IntFieldUpdateOperationsInput | number
   processNumber?: Prisma.StringFieldUpdateOperationsInput | string
   feePercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1403,13 +1541,13 @@ export type ContractUncheckedUpdateManyWithoutFirmInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  customerId?: Prisma.IntFieldUpdateOperationsInput | number
+  legalAreaId?: Prisma.IntFieldUpdateOperationsInput | number
+  statusId?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type ContractCreateManyLegalAreaInput = {
   id?: number
-  firmId: number
-  clientId: number
-  statusId: number
   processNumber: string
   feePercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: string | null
@@ -1418,6 +1556,9 @@ export type ContractCreateManyLegalAreaInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  firmId: number
+  customerId: number
+  statusId: number
 }
 
 export type ContractUpdateWithoutLegalAreaInput = {
@@ -1429,19 +1570,17 @@ export type ContractUpdateWithoutLegalAreaInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  client?: Prisma.ClientUpdateOneRequiredWithoutContractsNestedInput
   firm?: Prisma.FirmUpdateOneRequiredWithoutContractsNestedInput
+  customer?: Prisma.PersonUpdateOneRequiredWithoutCustomerContractsNestedInput
   status?: Prisma.ContractStatusUpdateOneRequiredWithoutContractsNestedInput
-  attachments?: Prisma.AttachmentUpdateManyWithoutContractNestedInput
-  assignments?: Prisma.ContractEmployeeUpdateManyWithoutContractNestedInput
+  assignments?: Prisma.ContractAssignmentUpdateManyWithoutContractNestedInput
   revenues?: Prisma.RevenueUpdateManyWithoutContractNestedInput
+  attachments?: Prisma.AttachmentUpdateManyWithoutContractNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutContractNestedInput
 }
 
 export type ContractUncheckedUpdateWithoutLegalAreaInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  firmId?: Prisma.IntFieldUpdateOperationsInput | number
-  clientId?: Prisma.IntFieldUpdateOperationsInput | number
-  statusId?: Prisma.IntFieldUpdateOperationsInput | number
   processNumber?: Prisma.StringFieldUpdateOperationsInput | string
   feePercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1450,16 +1589,17 @@ export type ContractUncheckedUpdateWithoutLegalAreaInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutContractNestedInput
-  assignments?: Prisma.ContractEmployeeUncheckedUpdateManyWithoutContractNestedInput
+  firmId?: Prisma.IntFieldUpdateOperationsInput | number
+  customerId?: Prisma.IntFieldUpdateOperationsInput | number
+  statusId?: Prisma.IntFieldUpdateOperationsInput | number
+  assignments?: Prisma.ContractAssignmentUncheckedUpdateManyWithoutContractNestedInput
   revenues?: Prisma.RevenueUncheckedUpdateManyWithoutContractNestedInput
+  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutContractNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutContractNestedInput
 }
 
 export type ContractUncheckedUpdateManyWithoutLegalAreaInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  firmId?: Prisma.IntFieldUpdateOperationsInput | number
-  clientId?: Prisma.IntFieldUpdateOperationsInput | number
-  statusId?: Prisma.IntFieldUpdateOperationsInput | number
   processNumber?: Prisma.StringFieldUpdateOperationsInput | string
   feePercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1468,13 +1608,13 @@ export type ContractUncheckedUpdateManyWithoutLegalAreaInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  firmId?: Prisma.IntFieldUpdateOperationsInput | number
+  customerId?: Prisma.IntFieldUpdateOperationsInput | number
+  statusId?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type ContractCreateManyStatusInput = {
   id?: number
-  firmId: number
-  clientId: number
-  legalAreaId: number
   processNumber: string
   feePercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: string | null
@@ -1483,6 +1623,9 @@ export type ContractCreateManyStatusInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  firmId: number
+  customerId: number
+  legalAreaId: number
 }
 
 export type ContractUpdateWithoutStatusInput = {
@@ -1494,19 +1637,17 @@ export type ContractUpdateWithoutStatusInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  client?: Prisma.ClientUpdateOneRequiredWithoutContractsNestedInput
   firm?: Prisma.FirmUpdateOneRequiredWithoutContractsNestedInput
+  customer?: Prisma.PersonUpdateOneRequiredWithoutCustomerContractsNestedInput
   legalArea?: Prisma.LegalAreaUpdateOneRequiredWithoutContractsNestedInput
-  attachments?: Prisma.AttachmentUpdateManyWithoutContractNestedInput
-  assignments?: Prisma.ContractEmployeeUpdateManyWithoutContractNestedInput
+  assignments?: Prisma.ContractAssignmentUpdateManyWithoutContractNestedInput
   revenues?: Prisma.RevenueUpdateManyWithoutContractNestedInput
+  attachments?: Prisma.AttachmentUpdateManyWithoutContractNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutContractNestedInput
 }
 
 export type ContractUncheckedUpdateWithoutStatusInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  firmId?: Prisma.IntFieldUpdateOperationsInput | number
-  clientId?: Prisma.IntFieldUpdateOperationsInput | number
-  legalAreaId?: Prisma.IntFieldUpdateOperationsInput | number
   processNumber?: Prisma.StringFieldUpdateOperationsInput | string
   feePercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1515,16 +1656,17 @@ export type ContractUncheckedUpdateWithoutStatusInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutContractNestedInput
-  assignments?: Prisma.ContractEmployeeUncheckedUpdateManyWithoutContractNestedInput
+  firmId?: Prisma.IntFieldUpdateOperationsInput | number
+  customerId?: Prisma.IntFieldUpdateOperationsInput | number
+  legalAreaId?: Prisma.IntFieldUpdateOperationsInput | number
+  assignments?: Prisma.ContractAssignmentUncheckedUpdateManyWithoutContractNestedInput
   revenues?: Prisma.RevenueUncheckedUpdateManyWithoutContractNestedInput
+  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutContractNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutContractNestedInput
 }
 
 export type ContractUncheckedUpdateManyWithoutStatusInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  firmId?: Prisma.IntFieldUpdateOperationsInput | number
-  clientId?: Prisma.IntFieldUpdateOperationsInput | number
-  legalAreaId?: Prisma.IntFieldUpdateOperationsInput | number
   processNumber?: Prisma.StringFieldUpdateOperationsInput | string
   feePercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1533,13 +1675,13 @@ export type ContractUncheckedUpdateManyWithoutStatusInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  firmId?: Prisma.IntFieldUpdateOperationsInput | number
+  customerId?: Prisma.IntFieldUpdateOperationsInput | number
+  legalAreaId?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
-export type ContractCreateManyClientInput = {
+export type ContractCreateManyCustomerInput = {
   id?: number
-  firmId: number
-  legalAreaId: number
-  statusId: number
   processNumber: string
   feePercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: string | null
@@ -1548,9 +1690,12 @@ export type ContractCreateManyClientInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  firmId: number
+  legalAreaId: number
+  statusId: number
 }
 
-export type ContractUpdateWithoutClientInput = {
+export type ContractUpdateWithoutCustomerInput = {
   processNumber?: Prisma.StringFieldUpdateOperationsInput | string
   feePercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1562,16 +1707,14 @@ export type ContractUpdateWithoutClientInput = {
   firm?: Prisma.FirmUpdateOneRequiredWithoutContractsNestedInput
   legalArea?: Prisma.LegalAreaUpdateOneRequiredWithoutContractsNestedInput
   status?: Prisma.ContractStatusUpdateOneRequiredWithoutContractsNestedInput
-  attachments?: Prisma.AttachmentUpdateManyWithoutContractNestedInput
-  assignments?: Prisma.ContractEmployeeUpdateManyWithoutContractNestedInput
+  assignments?: Prisma.ContractAssignmentUpdateManyWithoutContractNestedInput
   revenues?: Prisma.RevenueUpdateManyWithoutContractNestedInput
+  attachments?: Prisma.AttachmentUpdateManyWithoutContractNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutContractNestedInput
 }
 
-export type ContractUncheckedUpdateWithoutClientInput = {
+export type ContractUncheckedUpdateWithoutCustomerInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  firmId?: Prisma.IntFieldUpdateOperationsInput | number
-  legalAreaId?: Prisma.IntFieldUpdateOperationsInput | number
-  statusId?: Prisma.IntFieldUpdateOperationsInput | number
   processNumber?: Prisma.StringFieldUpdateOperationsInput | string
   feePercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1580,16 +1723,17 @@ export type ContractUncheckedUpdateWithoutClientInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutContractNestedInput
-  assignments?: Prisma.ContractEmployeeUncheckedUpdateManyWithoutContractNestedInput
+  firmId?: Prisma.IntFieldUpdateOperationsInput | number
+  legalAreaId?: Prisma.IntFieldUpdateOperationsInput | number
+  statusId?: Prisma.IntFieldUpdateOperationsInput | number
+  assignments?: Prisma.ContractAssignmentUncheckedUpdateManyWithoutContractNestedInput
   revenues?: Prisma.RevenueUncheckedUpdateManyWithoutContractNestedInput
+  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutContractNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutContractNestedInput
 }
 
-export type ContractUncheckedUpdateManyWithoutClientInput = {
+export type ContractUncheckedUpdateManyWithoutCustomerInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  firmId?: Prisma.IntFieldUpdateOperationsInput | number
-  legalAreaId?: Prisma.IntFieldUpdateOperationsInput | number
-  statusId?: Prisma.IntFieldUpdateOperationsInput | number
   processNumber?: Prisma.StringFieldUpdateOperationsInput | string
   feePercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1598,6 +1742,9 @@ export type ContractUncheckedUpdateManyWithoutClientInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  firmId?: Prisma.IntFieldUpdateOperationsInput | number
+  legalAreaId?: Prisma.IntFieldUpdateOperationsInput | number
+  statusId?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 
@@ -1606,15 +1753,17 @@ export type ContractUncheckedUpdateManyWithoutClientInput = {
  */
 
 export type ContractCountOutputType = {
-  attachments: number
   assignments: number
   revenues: number
+  attachments: number
+  auditLogs: number
 }
 
 export type ContractCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  attachments?: boolean | ContractCountOutputTypeCountAttachmentsArgs
   assignments?: boolean | ContractCountOutputTypeCountAssignmentsArgs
   revenues?: boolean | ContractCountOutputTypeCountRevenuesArgs
+  attachments?: boolean | ContractCountOutputTypeCountAttachmentsArgs
+  auditLogs?: boolean | ContractCountOutputTypeCountAuditLogsArgs
 }
 
 /**
@@ -1630,15 +1779,8 @@ export type ContractCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Ext
 /**
  * ContractCountOutputType without action
  */
-export type ContractCountOutputTypeCountAttachmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.AttachmentWhereInput
-}
-
-/**
- * ContractCountOutputType without action
- */
 export type ContractCountOutputTypeCountAssignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ContractEmployeeWhereInput
+  where?: Prisma.ContractAssignmentWhereInput
 }
 
 /**
@@ -1648,13 +1790,23 @@ export type ContractCountOutputTypeCountRevenuesArgs<ExtArgs extends runtime.Typ
   where?: Prisma.RevenueWhereInput
 }
 
+/**
+ * ContractCountOutputType without action
+ */
+export type ContractCountOutputTypeCountAttachmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AttachmentWhereInput
+}
+
+/**
+ * ContractCountOutputType without action
+ */
+export type ContractCountOutputTypeCountAuditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AuditLogWhereInput
+}
+
 
 export type ContractSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  firmId?: boolean
-  clientId?: boolean
-  legalAreaId?: boolean
-  statusId?: boolean
   processNumber?: boolean
   feePercentage?: boolean
   notes?: boolean
@@ -1663,22 +1815,23 @@ export type ContractSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
-  client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
+  firmId?: boolean
+  customerId?: boolean
+  legalAreaId?: boolean
+  statusId?: boolean
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
+  customer?: boolean | Prisma.PersonDefaultArgs<ExtArgs>
   legalArea?: boolean | Prisma.LegalAreaDefaultArgs<ExtArgs>
   status?: boolean | Prisma.ContractStatusDefaultArgs<ExtArgs>
-  attachments?: boolean | Prisma.Contract$attachmentsArgs<ExtArgs>
   assignments?: boolean | Prisma.Contract$assignmentsArgs<ExtArgs>
   revenues?: boolean | Prisma.Contract$revenuesArgs<ExtArgs>
+  attachments?: boolean | Prisma.Contract$attachmentsArgs<ExtArgs>
+  auditLogs?: boolean | Prisma.Contract$auditLogsArgs<ExtArgs>
   _count?: boolean | Prisma.ContractCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["contract"]>
 
 export type ContractSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  firmId?: boolean
-  clientId?: boolean
-  legalAreaId?: boolean
-  statusId?: boolean
   processNumber?: boolean
   feePercentage?: boolean
   notes?: boolean
@@ -1687,18 +1840,18 @@ export type ContractSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
-  client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
+  firmId?: boolean
+  customerId?: boolean
+  legalAreaId?: boolean
+  statusId?: boolean
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
+  customer?: boolean | Prisma.PersonDefaultArgs<ExtArgs>
   legalArea?: boolean | Prisma.LegalAreaDefaultArgs<ExtArgs>
   status?: boolean | Prisma.ContractStatusDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["contract"]>
 
 export type ContractSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  firmId?: boolean
-  clientId?: boolean
-  legalAreaId?: boolean
-  statusId?: boolean
   processNumber?: boolean
   feePercentage?: boolean
   notes?: boolean
@@ -1707,18 +1860,18 @@ export type ContractSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
-  client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
+  firmId?: boolean
+  customerId?: boolean
+  legalAreaId?: boolean
+  statusId?: boolean
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
+  customer?: boolean | Prisma.PersonDefaultArgs<ExtArgs>
   legalArea?: boolean | Prisma.LegalAreaDefaultArgs<ExtArgs>
   status?: boolean | Prisma.ContractStatusDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["contract"]>
 
 export type ContractSelectScalar = {
   id?: boolean
-  firmId?: boolean
-  clientId?: boolean
-  legalAreaId?: boolean
-  statusId?: boolean
   processNumber?: boolean
   feePercentage?: boolean
   notes?: boolean
@@ -1727,28 +1880,33 @@ export type ContractSelectScalar = {
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
+  firmId?: boolean
+  customerId?: boolean
+  legalAreaId?: boolean
+  statusId?: boolean
 }
 
-export type ContractOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "firmId" | "clientId" | "legalAreaId" | "statusId" | "processNumber" | "feePercentage" | "notes" | "allowStatusChange" | "isActive" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["contract"]>
+export type ContractOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "processNumber" | "feePercentage" | "notes" | "allowStatusChange" | "isActive" | "createdAt" | "updatedAt" | "deletedAt" | "firmId" | "customerId" | "legalAreaId" | "statusId", ExtArgs["result"]["contract"]>
 export type ContractInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
+  customer?: boolean | Prisma.PersonDefaultArgs<ExtArgs>
   legalArea?: boolean | Prisma.LegalAreaDefaultArgs<ExtArgs>
   status?: boolean | Prisma.ContractStatusDefaultArgs<ExtArgs>
-  attachments?: boolean | Prisma.Contract$attachmentsArgs<ExtArgs>
   assignments?: boolean | Prisma.Contract$assignmentsArgs<ExtArgs>
   revenues?: boolean | Prisma.Contract$revenuesArgs<ExtArgs>
+  attachments?: boolean | Prisma.Contract$attachmentsArgs<ExtArgs>
+  auditLogs?: boolean | Prisma.Contract$auditLogsArgs<ExtArgs>
   _count?: boolean | Prisma.ContractCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ContractIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
+  customer?: boolean | Prisma.PersonDefaultArgs<ExtArgs>
   legalArea?: boolean | Prisma.LegalAreaDefaultArgs<ExtArgs>
   status?: boolean | Prisma.ContractStatusDefaultArgs<ExtArgs>
 }
 export type ContractIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
+  customer?: boolean | Prisma.PersonDefaultArgs<ExtArgs>
   legalArea?: boolean | Prisma.LegalAreaDefaultArgs<ExtArgs>
   status?: boolean | Prisma.ContractStatusDefaultArgs<ExtArgs>
 }
@@ -1756,20 +1914,17 @@ export type ContractIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
 export type $ContractPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Contract"
   objects: {
-    client: Prisma.$ClientPayload<ExtArgs>
     firm: Prisma.$FirmPayload<ExtArgs>
+    customer: Prisma.$PersonPayload<ExtArgs>
     legalArea: Prisma.$LegalAreaPayload<ExtArgs>
     status: Prisma.$ContractStatusPayload<ExtArgs>
-    attachments: Prisma.$AttachmentPayload<ExtArgs>[]
-    assignments: Prisma.$ContractEmployeePayload<ExtArgs>[]
+    assignments: Prisma.$ContractAssignmentPayload<ExtArgs>[]
     revenues: Prisma.$RevenuePayload<ExtArgs>[]
+    attachments: Prisma.$AttachmentPayload<ExtArgs>[]
+    auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
-    firmId: number
-    clientId: number
-    legalAreaId: number
-    statusId: number
     processNumber: string
     feePercentage: runtime.Decimal
     notes: string | null
@@ -1778,6 +1933,10 @@ export type $ContractPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     createdAt: Date
     updatedAt: Date
     deletedAt: Date | null
+    firmId: number
+    customerId: number
+    legalAreaId: number
+    statusId: number
   }, ExtArgs["result"]["contract"]>
   composites: {}
 }
@@ -2172,13 +2331,14 @@ readonly fields: ContractFieldRefs;
  */
 export interface Prisma__ContractClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  client<T extends Prisma.ClientDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ClientDefaultArgs<ExtArgs>>): Prisma.Prisma__ClientClient<runtime.Types.Result.GetResult<Prisma.$ClientPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   firm<T extends Prisma.FirmDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FirmDefaultArgs<ExtArgs>>): Prisma.Prisma__FirmClient<runtime.Types.Result.GetResult<Prisma.$FirmPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  customer<T extends Prisma.PersonDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PersonDefaultArgs<ExtArgs>>): Prisma.Prisma__PersonClient<runtime.Types.Result.GetResult<Prisma.$PersonPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   legalArea<T extends Prisma.LegalAreaDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LegalAreaDefaultArgs<ExtArgs>>): Prisma.Prisma__LegalAreaClient<runtime.Types.Result.GetResult<Prisma.$LegalAreaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   status<T extends Prisma.ContractStatusDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ContractStatusDefaultArgs<ExtArgs>>): Prisma.Prisma__ContractStatusClient<runtime.Types.Result.GetResult<Prisma.$ContractStatusPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  attachments<T extends Prisma.Contract$attachmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Contract$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  assignments<T extends Prisma.Contract$assignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Contract$assignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ContractEmployeePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  assignments<T extends Prisma.Contract$assignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Contract$assignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ContractAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   revenues<T extends Prisma.Contract$revenuesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Contract$revenuesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RevenuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  attachments<T extends Prisma.Contract$attachmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Contract$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  auditLogs<T extends Prisma.Contract$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Contract$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2209,10 +2369,6 @@ export interface Prisma__ContractClient<T, Null = never, ExtArgs extends runtime
  */
 export interface ContractFieldRefs {
   readonly id: Prisma.FieldRef<"Contract", 'Int'>
-  readonly firmId: Prisma.FieldRef<"Contract", 'Int'>
-  readonly clientId: Prisma.FieldRef<"Contract", 'Int'>
-  readonly legalAreaId: Prisma.FieldRef<"Contract", 'Int'>
-  readonly statusId: Prisma.FieldRef<"Contract", 'Int'>
   readonly processNumber: Prisma.FieldRef<"Contract", 'String'>
   readonly feePercentage: Prisma.FieldRef<"Contract", 'Decimal'>
   readonly notes: Prisma.FieldRef<"Contract", 'String'>
@@ -2221,6 +2377,10 @@ export interface ContractFieldRefs {
   readonly createdAt: Prisma.FieldRef<"Contract", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Contract", 'DateTime'>
   readonly deletedAt: Prisma.FieldRef<"Contract", 'DateTime'>
+  readonly firmId: Prisma.FieldRef<"Contract", 'Int'>
+  readonly customerId: Prisma.FieldRef<"Contract", 'Int'>
+  readonly legalAreaId: Prisma.FieldRef<"Contract", 'Int'>
+  readonly statusId: Prisma.FieldRef<"Contract", 'Int'>
 }
     
 
@@ -2622,51 +2782,27 @@ export type ContractDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
 }
 
 /**
- * Contract.attachments
- */
-export type Contract$attachmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Attachment
-   */
-  select?: Prisma.AttachmentSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Attachment
-   */
-  omit?: Prisma.AttachmentOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.AttachmentInclude<ExtArgs> | null
-  where?: Prisma.AttachmentWhereInput
-  orderBy?: Prisma.AttachmentOrderByWithRelationInput | Prisma.AttachmentOrderByWithRelationInput[]
-  cursor?: Prisma.AttachmentWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.AttachmentScalarFieldEnum | Prisma.AttachmentScalarFieldEnum[]
-}
-
-/**
  * Contract.assignments
  */
 export type Contract$assignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the ContractEmployee
+   * Select specific fields to fetch from the ContractAssignment
    */
-  select?: Prisma.ContractEmployeeSelect<ExtArgs> | null
+  select?: Prisma.ContractAssignmentSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the ContractEmployee
+   * Omit specific fields from the ContractAssignment
    */
-  omit?: Prisma.ContractEmployeeOmit<ExtArgs> | null
+  omit?: Prisma.ContractAssignmentOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ContractEmployeeInclude<ExtArgs> | null
-  where?: Prisma.ContractEmployeeWhereInput
-  orderBy?: Prisma.ContractEmployeeOrderByWithRelationInput | Prisma.ContractEmployeeOrderByWithRelationInput[]
-  cursor?: Prisma.ContractEmployeeWhereUniqueInput
+  include?: Prisma.ContractAssignmentInclude<ExtArgs> | null
+  where?: Prisma.ContractAssignmentWhereInput
+  orderBy?: Prisma.ContractAssignmentOrderByWithRelationInput | Prisma.ContractAssignmentOrderByWithRelationInput[]
+  cursor?: Prisma.ContractAssignmentWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.ContractEmployeeScalarFieldEnum | Prisma.ContractEmployeeScalarFieldEnum[]
+  distinct?: Prisma.ContractAssignmentScalarFieldEnum | Prisma.ContractAssignmentScalarFieldEnum[]
 }
 
 /**
@@ -2691,6 +2827,54 @@ export type Contract$revenuesArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.RevenueScalarFieldEnum | Prisma.RevenueScalarFieldEnum[]
+}
+
+/**
+ * Contract.attachments
+ */
+export type Contract$attachmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Attachment
+   */
+  select?: Prisma.AttachmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Attachment
+   */
+  omit?: Prisma.AttachmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AttachmentInclude<ExtArgs> | null
+  where?: Prisma.AttachmentWhereInput
+  orderBy?: Prisma.AttachmentOrderByWithRelationInput | Prisma.AttachmentOrderByWithRelationInput[]
+  cursor?: Prisma.AttachmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AttachmentScalarFieldEnum | Prisma.AttachmentScalarFieldEnum[]
+}
+
+/**
+ * Contract.auditLogs
+ */
+export type Contract$auditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AuditLog
+   */
+  select?: Prisma.AuditLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AuditLog
+   */
+  omit?: Prisma.AuditLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AuditLogInclude<ExtArgs> | null
+  where?: Prisma.AuditLogWhereInput
+  orderBy?: Prisma.AuditLogOrderByWithRelationInput | Prisma.AuditLogOrderByWithRelationInput[]
+  cursor?: Prisma.AuditLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AuditLogScalarFieldEnum | Prisma.AuditLogScalarFieldEnum[]
 }
 
 /**

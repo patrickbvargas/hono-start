@@ -1,0 +1,226 @@
+{
+  "legalArea": [
+    {
+      "value": "SOCIAL_SECURITY",
+      "label": "Previdenciário"
+    },
+    {
+      "value": "CIVIL",
+      "label": "Cível"
+    },
+    {
+      "value": "FAMILY",
+      "label": "Família"
+    },
+    {
+      "value": "LABOR",
+      "label": "Trabalhista"
+    },
+    {
+      "value": "OTHER",
+      "label": "Outros"
+    }
+  ],
+  "contractStatus": [
+    {
+      "value": "ACTIVE",
+      "label": "Ativo"
+    },
+    {
+      "value": "COMPLETED",
+      "label": "Concluído"
+    },
+    {
+      "value": "CANCELLED",
+      "label": "Cancelado"
+    }
+  ],
+  "assignmentType": [
+    {
+      "value": "RESPONSIBLE",
+      "label": "Responsável"
+    },
+    {
+      "value": "RECOMMENDING",
+      "label": "Indicante"
+    },
+    {
+      "value": "RECOMMENDED",
+      "label": "Indicado"
+    },
+    {
+      "value": "ADMIN_ASSISTANT",
+      "label": "Assistente Administrativo"
+    }
+  ],
+  "revenueType": [
+    {
+      "value": "ADMINISTRATIVE",
+      "label": "Administrativo"
+    },
+    {
+      "value": "JUDICIAL",
+      "label": "Judicial"
+    },
+    {
+      "value": "SUCCUMBENCY",
+      "label": "Sucumbência"
+    }
+  ],
+  "attachmentType": [
+    {
+      "value": "PDF",
+      "label": "PDF"
+    },
+    {
+      "value": "JPG",
+      "label": "JPG"
+    },
+    {
+      "value": "PNG",
+      "label": "PNG"
+    }
+  ],
+  "personType": [
+    {
+      "value": "INDIVIDUAL",
+      "label": "Pessoa Física"
+    },
+    {
+      "value": "COMPANY",
+      "label": "Pessoa Jurídica"
+    }
+  ],
+  "financialAnalytic": [
+    {
+      "value": "PAYROLL_LAWYERS",
+      "label": "Folha Advogados"
+    },
+    {
+      "value": "PAYROLL_INTERNS",
+      "label": "Folha Estagiários"
+    },
+    {
+      "value": "PAYROLL_STAFF",
+      "label": "Folha Funcionários"
+    },
+    {
+      "value": "TAX_PIS",
+      "label": "PIS"
+    },
+    {
+      "value": "TAX_IRPJ",
+      "label": "IRPJ"
+    },
+    {
+      "value": "TAX_COFINS",
+      "label": "COFINS"
+    },
+    {
+      "value": "TAX_ISSQN",
+      "label": "ISSQN"
+    },
+    {
+      "value": "TAX_CSLL",
+      "label": "CSLL"
+    },
+    {
+      "value": "TAX_OTHER",
+      "label": "Outros Impostos"
+    },
+    {
+      "value": "PHONE",
+      "label": "Telefone"
+    },
+    {
+      "value": "MEDIA",
+      "label": "Mídia"
+    },
+    {
+      "value": "POSTAGE",
+      "label": "Correio"
+    },
+    {
+      "value": "CONDOMINIUM",
+      "label": "Condomínio"
+    },
+    {
+      "value": "ELECTRICITY",
+      "label": "RGE"
+    },
+    {
+      "value": "MEALS",
+      "label": "Refeitório"
+    },
+    {
+      "value": "ASSETS",
+      "label": "Patrimônio"
+    },
+    {
+      "value": "SUPPLIES",
+      "label": "Insumos"
+    },
+    {
+      "value": "NOTARY",
+      "label": "Tabelionato"
+    },
+    {
+      "value": "COURT_COSTS",
+      "label": "Custos Judiciais"
+    },
+    {
+      "value": "OTHER",
+      "label": "Outros"
+    }
+  ],
+  "paymentMethod": [
+    {
+      "value": "PIX",
+      "label": "Pix"
+    },
+    {
+      "value": "CASH",
+      "label": "Dinheiro"
+    },
+    {
+      "value": "BANK_TRANSFER",
+      "label": "Transferência bancária"
+    },
+    {
+      "value": "BANK_SLIP",
+      "label": "Boleto"
+    },
+    {
+      "value": "CREDIT_CARD",
+      "label": "Cartão de crédito"
+    },
+    {
+      "value": "DEBIT_CARD",
+      "label": "Cartão de débito"
+    }
+  ],
+  "titleKind": [
+    {
+      "value": "DOWN_PAYMENT",
+      "label": "Entrada"
+    },
+    {
+      "value": "INSTALLMENT",
+      "label": "Parcela"
+    },
+    {
+      "value": "EXTRA",
+      "label": "Extra"
+    }
+  ],
+  "employeeType": [
+    {
+      "value": "LAWYER",
+      "label": "Advogado"
+    },
+    {
+      "value": "ADMIN_ASSISTANT",
+      "label": "Assistente Administrativo"
+    }
+  ]
+}
