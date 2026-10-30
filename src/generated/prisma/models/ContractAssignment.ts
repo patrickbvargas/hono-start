@@ -268,7 +268,7 @@ export type ContractAssignmentWhereInput = {
   contract?: Prisma.XOR<Prisma.ContractScalarRelationFilter, Prisma.ContractWhereInput>
   employeeProfile?: Prisma.XOR<Prisma.EmployeeProfileScalarRelationFilter, Prisma.EmployeeProfileWhereInput>
   assignmentType?: Prisma.XOR<Prisma.AssignmentTypeScalarRelationFilter, Prisma.AssignmentTypeWhereInput>
-  calculations?: Prisma.RemunerationCalculationListRelationFilter
+  remunerationPayables?: Prisma.RemunerationPayableListRelationFilter
 }
 
 export type ContractAssignmentOrderByWithRelationInput = {
@@ -285,7 +285,7 @@ export type ContractAssignmentOrderByWithRelationInput = {
   contract?: Prisma.ContractOrderByWithRelationInput
   employeeProfile?: Prisma.EmployeeProfileOrderByWithRelationInput
   assignmentType?: Prisma.AssignmentTypeOrderByWithRelationInput
-  calculations?: Prisma.RemunerationCalculationOrderByRelationAggregateInput
+  remunerationPayables?: Prisma.RemunerationPayableOrderByRelationAggregateInput
 }
 
 export type ContractAssignmentWhereUniqueInput = Prisma.AtLeast<{
@@ -307,7 +307,7 @@ export type ContractAssignmentWhereUniqueInput = Prisma.AtLeast<{
   contract?: Prisma.XOR<Prisma.ContractScalarRelationFilter, Prisma.ContractWhereInput>
   employeeProfile?: Prisma.XOR<Prisma.EmployeeProfileScalarRelationFilter, Prisma.EmployeeProfileWhereInput>
   assignmentType?: Prisma.XOR<Prisma.AssignmentTypeScalarRelationFilter, Prisma.AssignmentTypeWhereInput>
-  calculations?: Prisma.RemunerationCalculationListRelationFilter
+  remunerationPayables?: Prisma.RemunerationPayableListRelationFilter
 }, "id" | "firmId_id" | "contractId_employeeProfileId_assignmentTypeId">
 
 export type ContractAssignmentOrderByWithAggregationInput = {
@@ -351,7 +351,7 @@ export type ContractAssignmentCreateInput = {
   contract: Prisma.ContractCreateNestedOneWithoutAssignmentsInput
   employeeProfile: Prisma.EmployeeProfileCreateNestedOneWithoutAssignmentsInput
   assignmentType: Prisma.AssignmentTypeCreateNestedOneWithoutAssignmentsInput
-  calculations?: Prisma.RemunerationCalculationCreateNestedManyWithoutContractAssignmentInput
+  remunerationPayables?: Prisma.RemunerationPayableCreateNestedManyWithoutContractAssignmentInput
 }
 
 export type ContractAssignmentUncheckedCreateInput = {
@@ -364,7 +364,7 @@ export type ContractAssignmentUncheckedCreateInput = {
   contractId: number
   employeeProfileId: number
   assignmentTypeId: number
-  calculations?: Prisma.RemunerationCalculationUncheckedCreateNestedManyWithoutContractAssignmentInput
+  remunerationPayables?: Prisma.RemunerationPayableUncheckedCreateNestedManyWithoutContractAssignmentInput
 }
 
 export type ContractAssignmentUpdateInput = {
@@ -376,7 +376,7 @@ export type ContractAssignmentUpdateInput = {
   contract?: Prisma.ContractUpdateOneRequiredWithoutAssignmentsNestedInput
   employeeProfile?: Prisma.EmployeeProfileUpdateOneRequiredWithoutAssignmentsNestedInput
   assignmentType?: Prisma.AssignmentTypeUpdateOneRequiredWithoutAssignmentsNestedInput
-  calculations?: Prisma.RemunerationCalculationUpdateManyWithoutContractAssignmentNestedInput
+  remunerationPayables?: Prisma.RemunerationPayableUpdateManyWithoutContractAssignmentNestedInput
 }
 
 export type ContractAssignmentUncheckedUpdateInput = {
@@ -389,7 +389,7 @@ export type ContractAssignmentUncheckedUpdateInput = {
   contractId?: Prisma.IntFieldUpdateOperationsInput | number
   employeeProfileId?: Prisma.IntFieldUpdateOperationsInput | number
   assignmentTypeId?: Prisma.IntFieldUpdateOperationsInput | number
-  calculations?: Prisma.RemunerationCalculationUncheckedUpdateManyWithoutContractAssignmentNestedInput
+  remunerationPayables?: Prisma.RemunerationPayableUncheckedUpdateManyWithoutContractAssignmentNestedInput
 }
 
 export type ContractAssignmentCreateManyInput = {
@@ -669,18 +669,18 @@ export type ContractAssignmentUncheckedUpdateManyWithoutContractNestedInput = {
   deleteMany?: Prisma.ContractAssignmentScalarWhereInput | Prisma.ContractAssignmentScalarWhereInput[]
 }
 
-export type ContractAssignmentCreateNestedOneWithoutCalculationsInput = {
-  create?: Prisma.XOR<Prisma.ContractAssignmentCreateWithoutCalculationsInput, Prisma.ContractAssignmentUncheckedCreateWithoutCalculationsInput>
-  connectOrCreate?: Prisma.ContractAssignmentCreateOrConnectWithoutCalculationsInput
+export type ContractAssignmentCreateNestedOneWithoutRemunerationPayablesInput = {
+  create?: Prisma.XOR<Prisma.ContractAssignmentCreateWithoutRemunerationPayablesInput, Prisma.ContractAssignmentUncheckedCreateWithoutRemunerationPayablesInput>
+  connectOrCreate?: Prisma.ContractAssignmentCreateOrConnectWithoutRemunerationPayablesInput
   connect?: Prisma.ContractAssignmentWhereUniqueInput
 }
 
-export type ContractAssignmentUpdateOneRequiredWithoutCalculationsNestedInput = {
-  create?: Prisma.XOR<Prisma.ContractAssignmentCreateWithoutCalculationsInput, Prisma.ContractAssignmentUncheckedCreateWithoutCalculationsInput>
-  connectOrCreate?: Prisma.ContractAssignmentCreateOrConnectWithoutCalculationsInput
-  upsert?: Prisma.ContractAssignmentUpsertWithoutCalculationsInput
+export type ContractAssignmentUpdateOneRequiredWithoutRemunerationPayablesNestedInput = {
+  create?: Prisma.XOR<Prisma.ContractAssignmentCreateWithoutRemunerationPayablesInput, Prisma.ContractAssignmentUncheckedCreateWithoutRemunerationPayablesInput>
+  connectOrCreate?: Prisma.ContractAssignmentCreateOrConnectWithoutRemunerationPayablesInput
+  upsert?: Prisma.ContractAssignmentUpsertWithoutRemunerationPayablesInput
   connect?: Prisma.ContractAssignmentWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.ContractAssignmentUpdateToOneWithWhereWithoutCalculationsInput, Prisma.ContractAssignmentUpdateWithoutCalculationsInput>, Prisma.ContractAssignmentUncheckedUpdateWithoutCalculationsInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ContractAssignmentUpdateToOneWithWhereWithoutRemunerationPayablesInput, Prisma.ContractAssignmentUpdateWithoutRemunerationPayablesInput>, Prisma.ContractAssignmentUncheckedUpdateWithoutRemunerationPayablesInput>
 }
 
 export type ContractAssignmentCreateWithoutFirmInput = {
@@ -691,7 +691,7 @@ export type ContractAssignmentCreateWithoutFirmInput = {
   contract: Prisma.ContractCreateNestedOneWithoutAssignmentsInput
   employeeProfile: Prisma.EmployeeProfileCreateNestedOneWithoutAssignmentsInput
   assignmentType: Prisma.AssignmentTypeCreateNestedOneWithoutAssignmentsInput
-  calculations?: Prisma.RemunerationCalculationCreateNestedManyWithoutContractAssignmentInput
+  remunerationPayables?: Prisma.RemunerationPayableCreateNestedManyWithoutContractAssignmentInput
 }
 
 export type ContractAssignmentUncheckedCreateWithoutFirmInput = {
@@ -703,7 +703,7 @@ export type ContractAssignmentUncheckedCreateWithoutFirmInput = {
   contractId: number
   employeeProfileId: number
   assignmentTypeId: number
-  calculations?: Prisma.RemunerationCalculationUncheckedCreateNestedManyWithoutContractAssignmentInput
+  remunerationPayables?: Prisma.RemunerationPayableUncheckedCreateNestedManyWithoutContractAssignmentInput
 }
 
 export type ContractAssignmentCreateOrConnectWithoutFirmInput = {
@@ -755,7 +755,7 @@ export type ContractAssignmentCreateWithoutAssignmentTypeInput = {
   firm: Prisma.FirmCreateNestedOneWithoutContractAssignmentsInput
   contract: Prisma.ContractCreateNestedOneWithoutAssignmentsInput
   employeeProfile: Prisma.EmployeeProfileCreateNestedOneWithoutAssignmentsInput
-  calculations?: Prisma.RemunerationCalculationCreateNestedManyWithoutContractAssignmentInput
+  remunerationPayables?: Prisma.RemunerationPayableCreateNestedManyWithoutContractAssignmentInput
 }
 
 export type ContractAssignmentUncheckedCreateWithoutAssignmentTypeInput = {
@@ -767,7 +767,7 @@ export type ContractAssignmentUncheckedCreateWithoutAssignmentTypeInput = {
   firmId: number
   contractId: number
   employeeProfileId: number
-  calculations?: Prisma.RemunerationCalculationUncheckedCreateNestedManyWithoutContractAssignmentInput
+  remunerationPayables?: Prisma.RemunerationPayableUncheckedCreateNestedManyWithoutContractAssignmentInput
 }
 
 export type ContractAssignmentCreateOrConnectWithoutAssignmentTypeInput = {
@@ -804,7 +804,7 @@ export type ContractAssignmentCreateWithoutEmployeeProfileInput = {
   firm: Prisma.FirmCreateNestedOneWithoutContractAssignmentsInput
   contract: Prisma.ContractCreateNestedOneWithoutAssignmentsInput
   assignmentType: Prisma.AssignmentTypeCreateNestedOneWithoutAssignmentsInput
-  calculations?: Prisma.RemunerationCalculationCreateNestedManyWithoutContractAssignmentInput
+  remunerationPayables?: Prisma.RemunerationPayableCreateNestedManyWithoutContractAssignmentInput
 }
 
 export type ContractAssignmentUncheckedCreateWithoutEmployeeProfileInput = {
@@ -816,7 +816,7 @@ export type ContractAssignmentUncheckedCreateWithoutEmployeeProfileInput = {
   firmId: number
   contractId: number
   assignmentTypeId: number
-  calculations?: Prisma.RemunerationCalculationUncheckedCreateNestedManyWithoutContractAssignmentInput
+  remunerationPayables?: Prisma.RemunerationPayableUncheckedCreateNestedManyWithoutContractAssignmentInput
 }
 
 export type ContractAssignmentCreateOrConnectWithoutEmployeeProfileInput = {
@@ -853,7 +853,7 @@ export type ContractAssignmentCreateWithoutContractInput = {
   firm: Prisma.FirmCreateNestedOneWithoutContractAssignmentsInput
   employeeProfile: Prisma.EmployeeProfileCreateNestedOneWithoutAssignmentsInput
   assignmentType: Prisma.AssignmentTypeCreateNestedOneWithoutAssignmentsInput
-  calculations?: Prisma.RemunerationCalculationCreateNestedManyWithoutContractAssignmentInput
+  remunerationPayables?: Prisma.RemunerationPayableCreateNestedManyWithoutContractAssignmentInput
 }
 
 export type ContractAssignmentUncheckedCreateWithoutContractInput = {
@@ -864,7 +864,7 @@ export type ContractAssignmentUncheckedCreateWithoutContractInput = {
   deletedAt?: Date | string | null
   employeeProfileId: number
   assignmentTypeId: number
-  calculations?: Prisma.RemunerationCalculationUncheckedCreateNestedManyWithoutContractAssignmentInput
+  remunerationPayables?: Prisma.RemunerationPayableUncheckedCreateNestedManyWithoutContractAssignmentInput
 }
 
 export type ContractAssignmentCreateOrConnectWithoutContractInput = {
@@ -893,7 +893,7 @@ export type ContractAssignmentUpdateManyWithWhereWithoutContractInput = {
   data: Prisma.XOR<Prisma.ContractAssignmentUpdateManyMutationInput, Prisma.ContractAssignmentUncheckedUpdateManyWithoutContractInput>
 }
 
-export type ContractAssignmentCreateWithoutCalculationsInput = {
+export type ContractAssignmentCreateWithoutRemunerationPayablesInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -904,7 +904,7 @@ export type ContractAssignmentCreateWithoutCalculationsInput = {
   assignmentType: Prisma.AssignmentTypeCreateNestedOneWithoutAssignmentsInput
 }
 
-export type ContractAssignmentUncheckedCreateWithoutCalculationsInput = {
+export type ContractAssignmentUncheckedCreateWithoutRemunerationPayablesInput = {
   id?: number
   isActive?: boolean
   createdAt?: Date | string
@@ -916,23 +916,23 @@ export type ContractAssignmentUncheckedCreateWithoutCalculationsInput = {
   assignmentTypeId: number
 }
 
-export type ContractAssignmentCreateOrConnectWithoutCalculationsInput = {
+export type ContractAssignmentCreateOrConnectWithoutRemunerationPayablesInput = {
   where: Prisma.ContractAssignmentWhereUniqueInput
-  create: Prisma.XOR<Prisma.ContractAssignmentCreateWithoutCalculationsInput, Prisma.ContractAssignmentUncheckedCreateWithoutCalculationsInput>
+  create: Prisma.XOR<Prisma.ContractAssignmentCreateWithoutRemunerationPayablesInput, Prisma.ContractAssignmentUncheckedCreateWithoutRemunerationPayablesInput>
 }
 
-export type ContractAssignmentUpsertWithoutCalculationsInput = {
-  update: Prisma.XOR<Prisma.ContractAssignmentUpdateWithoutCalculationsInput, Prisma.ContractAssignmentUncheckedUpdateWithoutCalculationsInput>
-  create: Prisma.XOR<Prisma.ContractAssignmentCreateWithoutCalculationsInput, Prisma.ContractAssignmentUncheckedCreateWithoutCalculationsInput>
+export type ContractAssignmentUpsertWithoutRemunerationPayablesInput = {
+  update: Prisma.XOR<Prisma.ContractAssignmentUpdateWithoutRemunerationPayablesInput, Prisma.ContractAssignmentUncheckedUpdateWithoutRemunerationPayablesInput>
+  create: Prisma.XOR<Prisma.ContractAssignmentCreateWithoutRemunerationPayablesInput, Prisma.ContractAssignmentUncheckedCreateWithoutRemunerationPayablesInput>
   where?: Prisma.ContractAssignmentWhereInput
 }
 
-export type ContractAssignmentUpdateToOneWithWhereWithoutCalculationsInput = {
+export type ContractAssignmentUpdateToOneWithWhereWithoutRemunerationPayablesInput = {
   where?: Prisma.ContractAssignmentWhereInput
-  data: Prisma.XOR<Prisma.ContractAssignmentUpdateWithoutCalculationsInput, Prisma.ContractAssignmentUncheckedUpdateWithoutCalculationsInput>
+  data: Prisma.XOR<Prisma.ContractAssignmentUpdateWithoutRemunerationPayablesInput, Prisma.ContractAssignmentUncheckedUpdateWithoutRemunerationPayablesInput>
 }
 
-export type ContractAssignmentUpdateWithoutCalculationsInput = {
+export type ContractAssignmentUpdateWithoutRemunerationPayablesInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -943,7 +943,7 @@ export type ContractAssignmentUpdateWithoutCalculationsInput = {
   assignmentType?: Prisma.AssignmentTypeUpdateOneRequiredWithoutAssignmentsNestedInput
 }
 
-export type ContractAssignmentUncheckedUpdateWithoutCalculationsInput = {
+export type ContractAssignmentUncheckedUpdateWithoutRemunerationPayablesInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -974,7 +974,7 @@ export type ContractAssignmentUpdateWithoutFirmInput = {
   contract?: Prisma.ContractUpdateOneRequiredWithoutAssignmentsNestedInput
   employeeProfile?: Prisma.EmployeeProfileUpdateOneRequiredWithoutAssignmentsNestedInput
   assignmentType?: Prisma.AssignmentTypeUpdateOneRequiredWithoutAssignmentsNestedInput
-  calculations?: Prisma.RemunerationCalculationUpdateManyWithoutContractAssignmentNestedInput
+  remunerationPayables?: Prisma.RemunerationPayableUpdateManyWithoutContractAssignmentNestedInput
 }
 
 export type ContractAssignmentUncheckedUpdateWithoutFirmInput = {
@@ -986,7 +986,7 @@ export type ContractAssignmentUncheckedUpdateWithoutFirmInput = {
   contractId?: Prisma.IntFieldUpdateOperationsInput | number
   employeeProfileId?: Prisma.IntFieldUpdateOperationsInput | number
   assignmentTypeId?: Prisma.IntFieldUpdateOperationsInput | number
-  calculations?: Prisma.RemunerationCalculationUncheckedUpdateManyWithoutContractAssignmentNestedInput
+  remunerationPayables?: Prisma.RemunerationPayableUncheckedUpdateManyWithoutContractAssignmentNestedInput
 }
 
 export type ContractAssignmentUncheckedUpdateManyWithoutFirmInput = {
@@ -1019,7 +1019,7 @@ export type ContractAssignmentUpdateWithoutAssignmentTypeInput = {
   firm?: Prisma.FirmUpdateOneRequiredWithoutContractAssignmentsNestedInput
   contract?: Prisma.ContractUpdateOneRequiredWithoutAssignmentsNestedInput
   employeeProfile?: Prisma.EmployeeProfileUpdateOneRequiredWithoutAssignmentsNestedInput
-  calculations?: Prisma.RemunerationCalculationUpdateManyWithoutContractAssignmentNestedInput
+  remunerationPayables?: Prisma.RemunerationPayableUpdateManyWithoutContractAssignmentNestedInput
 }
 
 export type ContractAssignmentUncheckedUpdateWithoutAssignmentTypeInput = {
@@ -1031,7 +1031,7 @@ export type ContractAssignmentUncheckedUpdateWithoutAssignmentTypeInput = {
   firmId?: Prisma.IntFieldUpdateOperationsInput | number
   contractId?: Prisma.IntFieldUpdateOperationsInput | number
   employeeProfileId?: Prisma.IntFieldUpdateOperationsInput | number
-  calculations?: Prisma.RemunerationCalculationUncheckedUpdateManyWithoutContractAssignmentNestedInput
+  remunerationPayables?: Prisma.RemunerationPayableUncheckedUpdateManyWithoutContractAssignmentNestedInput
 }
 
 export type ContractAssignmentUncheckedUpdateManyWithoutAssignmentTypeInput = {
@@ -1064,7 +1064,7 @@ export type ContractAssignmentUpdateWithoutEmployeeProfileInput = {
   firm?: Prisma.FirmUpdateOneRequiredWithoutContractAssignmentsNestedInput
   contract?: Prisma.ContractUpdateOneRequiredWithoutAssignmentsNestedInput
   assignmentType?: Prisma.AssignmentTypeUpdateOneRequiredWithoutAssignmentsNestedInput
-  calculations?: Prisma.RemunerationCalculationUpdateManyWithoutContractAssignmentNestedInput
+  remunerationPayables?: Prisma.RemunerationPayableUpdateManyWithoutContractAssignmentNestedInput
 }
 
 export type ContractAssignmentUncheckedUpdateWithoutEmployeeProfileInput = {
@@ -1076,7 +1076,7 @@ export type ContractAssignmentUncheckedUpdateWithoutEmployeeProfileInput = {
   firmId?: Prisma.IntFieldUpdateOperationsInput | number
   contractId?: Prisma.IntFieldUpdateOperationsInput | number
   assignmentTypeId?: Prisma.IntFieldUpdateOperationsInput | number
-  calculations?: Prisma.RemunerationCalculationUncheckedUpdateManyWithoutContractAssignmentNestedInput
+  remunerationPayables?: Prisma.RemunerationPayableUncheckedUpdateManyWithoutContractAssignmentNestedInput
 }
 
 export type ContractAssignmentUncheckedUpdateManyWithoutEmployeeProfileInput = {
@@ -1108,7 +1108,7 @@ export type ContractAssignmentUpdateWithoutContractInput = {
   firm?: Prisma.FirmUpdateOneRequiredWithoutContractAssignmentsNestedInput
   employeeProfile?: Prisma.EmployeeProfileUpdateOneRequiredWithoutAssignmentsNestedInput
   assignmentType?: Prisma.AssignmentTypeUpdateOneRequiredWithoutAssignmentsNestedInput
-  calculations?: Prisma.RemunerationCalculationUpdateManyWithoutContractAssignmentNestedInput
+  remunerationPayables?: Prisma.RemunerationPayableUpdateManyWithoutContractAssignmentNestedInput
 }
 
 export type ContractAssignmentUncheckedUpdateWithoutContractInput = {
@@ -1119,7 +1119,7 @@ export type ContractAssignmentUncheckedUpdateWithoutContractInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeProfileId?: Prisma.IntFieldUpdateOperationsInput | number
   assignmentTypeId?: Prisma.IntFieldUpdateOperationsInput | number
-  calculations?: Prisma.RemunerationCalculationUncheckedUpdateManyWithoutContractAssignmentNestedInput
+  remunerationPayables?: Prisma.RemunerationPayableUncheckedUpdateManyWithoutContractAssignmentNestedInput
 }
 
 export type ContractAssignmentUncheckedUpdateManyWithoutContractInput = {
@@ -1138,11 +1138,11 @@ export type ContractAssignmentUncheckedUpdateManyWithoutContractInput = {
  */
 
 export type ContractAssignmentCountOutputType = {
-  calculations: number
+  remunerationPayables: number
 }
 
 export type ContractAssignmentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  calculations?: boolean | ContractAssignmentCountOutputTypeCountCalculationsArgs
+  remunerationPayables?: boolean | ContractAssignmentCountOutputTypeCountRemunerationPayablesArgs
 }
 
 /**
@@ -1158,8 +1158,8 @@ export type ContractAssignmentCountOutputTypeDefaultArgs<ExtArgs extends runtime
 /**
  * ContractAssignmentCountOutputType without action
  */
-export type ContractAssignmentCountOutputTypeCountCalculationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.RemunerationCalculationWhereInput
+export type ContractAssignmentCountOutputTypeCountRemunerationPayablesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RemunerationPayableWhereInput
 }
 
 
@@ -1177,7 +1177,7 @@ export type ContractAssignmentSelect<ExtArgs extends runtime.Types.Extensions.In
   contract?: boolean | Prisma.ContractDefaultArgs<ExtArgs>
   employeeProfile?: boolean | Prisma.EmployeeProfileDefaultArgs<ExtArgs>
   assignmentType?: boolean | Prisma.AssignmentTypeDefaultArgs<ExtArgs>
-  calculations?: boolean | Prisma.ContractAssignment$calculationsArgs<ExtArgs>
+  remunerationPayables?: boolean | Prisma.ContractAssignment$remunerationPayablesArgs<ExtArgs>
   _count?: boolean | Prisma.ContractAssignmentCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["contractAssignment"]>
 
@@ -1231,7 +1231,7 @@ export type ContractAssignmentInclude<ExtArgs extends runtime.Types.Extensions.I
   contract?: boolean | Prisma.ContractDefaultArgs<ExtArgs>
   employeeProfile?: boolean | Prisma.EmployeeProfileDefaultArgs<ExtArgs>
   assignmentType?: boolean | Prisma.AssignmentTypeDefaultArgs<ExtArgs>
-  calculations?: boolean | Prisma.ContractAssignment$calculationsArgs<ExtArgs>
+  remunerationPayables?: boolean | Prisma.ContractAssignment$remunerationPayablesArgs<ExtArgs>
   _count?: boolean | Prisma.ContractAssignmentCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ContractAssignmentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1254,7 +1254,7 @@ export type $ContractAssignmentPayload<ExtArgs extends runtime.Types.Extensions.
     contract: Prisma.$ContractPayload<ExtArgs>
     employeeProfile: Prisma.$EmployeeProfilePayload<ExtArgs>
     assignmentType: Prisma.$AssignmentTypePayload<ExtArgs>
-    calculations: Prisma.$RemunerationCalculationPayload<ExtArgs>[]
+    remunerationPayables: Prisma.$RemunerationPayablePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1664,7 +1664,7 @@ export interface Prisma__ContractAssignmentClient<T, Null = never, ExtArgs exten
   contract<T extends Prisma.ContractDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ContractDefaultArgs<ExtArgs>>): Prisma.Prisma__ContractClient<runtime.Types.Result.GetResult<Prisma.$ContractPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   employeeProfile<T extends Prisma.EmployeeProfileDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmployeeProfileDefaultArgs<ExtArgs>>): Prisma.Prisma__EmployeeProfileClient<runtime.Types.Result.GetResult<Prisma.$EmployeeProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   assignmentType<T extends Prisma.AssignmentTypeDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AssignmentTypeDefaultArgs<ExtArgs>>): Prisma.Prisma__AssignmentTypeClient<runtime.Types.Result.GetResult<Prisma.$AssignmentTypePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  calculations<T extends Prisma.ContractAssignment$calculationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ContractAssignment$calculationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RemunerationCalculationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  remunerationPayables<T extends Prisma.ContractAssignment$remunerationPayablesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ContractAssignment$remunerationPayablesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RemunerationPayablePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2104,27 +2104,27 @@ export type ContractAssignmentDeleteManyArgs<ExtArgs extends runtime.Types.Exten
 }
 
 /**
- * ContractAssignment.calculations
+ * ContractAssignment.remunerationPayables
  */
-export type ContractAssignment$calculationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type ContractAssignment$remunerationPayablesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the RemunerationCalculation
+   * Select specific fields to fetch from the RemunerationPayable
    */
-  select?: Prisma.RemunerationCalculationSelect<ExtArgs> | null
+  select?: Prisma.RemunerationPayableSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the RemunerationCalculation
+   * Omit specific fields from the RemunerationPayable
    */
-  omit?: Prisma.RemunerationCalculationOmit<ExtArgs> | null
+  omit?: Prisma.RemunerationPayableOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.RemunerationCalculationInclude<ExtArgs> | null
-  where?: Prisma.RemunerationCalculationWhereInput
-  orderBy?: Prisma.RemunerationCalculationOrderByWithRelationInput | Prisma.RemunerationCalculationOrderByWithRelationInput[]
-  cursor?: Prisma.RemunerationCalculationWhereUniqueInput
+  include?: Prisma.RemunerationPayableInclude<ExtArgs> | null
+  where?: Prisma.RemunerationPayableWhereInput
+  orderBy?: Prisma.RemunerationPayableOrderByWithRelationInput | Prisma.RemunerationPayableOrderByWithRelationInput[]
+  cursor?: Prisma.RemunerationPayableWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.RemunerationCalculationScalarFieldEnum | Prisma.RemunerationCalculationScalarFieldEnum[]
+  distinct?: Prisma.RemunerationPayableScalarFieldEnum | Prisma.RemunerationPayableScalarFieldEnum[]
 }
 
 /**

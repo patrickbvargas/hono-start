@@ -306,6 +306,7 @@ export type ContractWhereInput = {
   status?: Prisma.XOR<Prisma.ContractStatusScalarRelationFilter, Prisma.ContractStatusWhereInput>
   assignments?: Prisma.ContractAssignmentListRelationFilter
   revenues?: Prisma.RevenueListRelationFilter
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableListRelationFilter
   attachments?: Prisma.AttachmentListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
 }
@@ -330,6 +331,7 @@ export type ContractOrderByWithRelationInput = {
   status?: Prisma.ContractStatusOrderByWithRelationInput
   assignments?: Prisma.ContractAssignmentOrderByRelationAggregateInput
   revenues?: Prisma.RevenueOrderByRelationAggregateInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableOrderByRelationAggregateInput
   attachments?: Prisma.AttachmentOrderByRelationAggregateInput
   auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
 }
@@ -359,6 +361,7 @@ export type ContractWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.XOR<Prisma.ContractStatusScalarRelationFilter, Prisma.ContractStatusWhereInput>
   assignments?: Prisma.ContractAssignmentListRelationFilter
   revenues?: Prisma.RevenueListRelationFilter
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableListRelationFilter
   attachments?: Prisma.AttachmentListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
 }, "id" | "firmId_id" | "firmId_processNumber">
@@ -418,6 +421,7 @@ export type ContractCreateInput = {
   status: Prisma.ContractStatusCreateNestedOneWithoutContractsInput
   assignments?: Prisma.ContractAssignmentCreateNestedManyWithoutContractInput
   revenues?: Prisma.RevenueCreateNestedManyWithoutContractInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableCreateNestedManyWithoutContractInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutContractInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutContractInput
 }
@@ -438,6 +442,7 @@ export type ContractUncheckedCreateInput = {
   statusId: number
   assignments?: Prisma.ContractAssignmentUncheckedCreateNestedManyWithoutContractInput
   revenues?: Prisma.RevenueUncheckedCreateNestedManyWithoutContractInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableUncheckedCreateNestedManyWithoutContractInput
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutContractInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutContractInput
 }
@@ -457,6 +462,7 @@ export type ContractUpdateInput = {
   status?: Prisma.ContractStatusUpdateOneRequiredWithoutContractsNestedInput
   assignments?: Prisma.ContractAssignmentUpdateManyWithoutContractNestedInput
   revenues?: Prisma.RevenueUpdateManyWithoutContractNestedInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableUpdateManyWithoutContractNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutContractNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutContractNestedInput
 }
@@ -477,6 +483,7 @@ export type ContractUncheckedUpdateInput = {
   statusId?: Prisma.IntFieldUpdateOperationsInput | number
   assignments?: Prisma.ContractAssignmentUncheckedUpdateManyWithoutContractNestedInput
   revenues?: Prisma.RevenueUncheckedUpdateManyWithoutContractNestedInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableUncheckedUpdateManyWithoutContractNestedInput
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutContractNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutContractNestedInput
 }
@@ -816,6 +823,20 @@ export type ContractUpdateOneRequiredWithoutRevenuesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ContractUpdateToOneWithWhereWithoutRevenuesInput, Prisma.ContractUpdateWithoutRevenuesInput>, Prisma.ContractUncheckedUpdateWithoutRevenuesInput>
 }
 
+export type ContractCreateNestedOneWithoutContractRevenueReceivablesInput = {
+  create?: Prisma.XOR<Prisma.ContractCreateWithoutContractRevenueReceivablesInput, Prisma.ContractUncheckedCreateWithoutContractRevenueReceivablesInput>
+  connectOrCreate?: Prisma.ContractCreateOrConnectWithoutContractRevenueReceivablesInput
+  connect?: Prisma.ContractWhereUniqueInput
+}
+
+export type ContractUpdateOneRequiredWithoutContractRevenueReceivablesNestedInput = {
+  create?: Prisma.XOR<Prisma.ContractCreateWithoutContractRevenueReceivablesInput, Prisma.ContractUncheckedCreateWithoutContractRevenueReceivablesInput>
+  connectOrCreate?: Prisma.ContractCreateOrConnectWithoutContractRevenueReceivablesInput
+  upsert?: Prisma.ContractUpsertWithoutContractRevenueReceivablesInput
+  connect?: Prisma.ContractWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ContractUpdateToOneWithWhereWithoutContractRevenueReceivablesInput, Prisma.ContractUpdateWithoutContractRevenueReceivablesInput>, Prisma.ContractUncheckedUpdateWithoutContractRevenueReceivablesInput>
+}
+
 export type ContractCreateNestedOneWithoutAttachmentsInput = {
   create?: Prisma.XOR<Prisma.ContractCreateWithoutAttachmentsInput, Prisma.ContractUncheckedCreateWithoutAttachmentsInput>
   connectOrCreate?: Prisma.ContractCreateOrConnectWithoutAttachmentsInput
@@ -862,6 +883,7 @@ export type ContractCreateWithoutFirmInput = {
   status: Prisma.ContractStatusCreateNestedOneWithoutContractsInput
   assignments?: Prisma.ContractAssignmentCreateNestedManyWithoutContractInput
   revenues?: Prisma.RevenueCreateNestedManyWithoutContractInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableCreateNestedManyWithoutContractInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutContractInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutContractInput
 }
@@ -881,6 +903,7 @@ export type ContractUncheckedCreateWithoutFirmInput = {
   statusId: number
   assignments?: Prisma.ContractAssignmentUncheckedCreateNestedManyWithoutContractInput
   revenues?: Prisma.RevenueUncheckedCreateNestedManyWithoutContractInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableUncheckedCreateNestedManyWithoutContractInput
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutContractInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutContractInput
 }
@@ -944,6 +967,7 @@ export type ContractCreateWithoutLegalAreaInput = {
   status: Prisma.ContractStatusCreateNestedOneWithoutContractsInput
   assignments?: Prisma.ContractAssignmentCreateNestedManyWithoutContractInput
   revenues?: Prisma.RevenueCreateNestedManyWithoutContractInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableCreateNestedManyWithoutContractInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutContractInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutContractInput
 }
@@ -963,6 +987,7 @@ export type ContractUncheckedCreateWithoutLegalAreaInput = {
   statusId: number
   assignments?: Prisma.ContractAssignmentUncheckedCreateNestedManyWithoutContractInput
   revenues?: Prisma.RevenueUncheckedCreateNestedManyWithoutContractInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableUncheckedCreateNestedManyWithoutContractInput
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutContractInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutContractInput
 }
@@ -1007,6 +1032,7 @@ export type ContractCreateWithoutStatusInput = {
   legalArea: Prisma.LegalAreaCreateNestedOneWithoutContractsInput
   assignments?: Prisma.ContractAssignmentCreateNestedManyWithoutContractInput
   revenues?: Prisma.RevenueCreateNestedManyWithoutContractInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableCreateNestedManyWithoutContractInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutContractInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutContractInput
 }
@@ -1026,6 +1052,7 @@ export type ContractUncheckedCreateWithoutStatusInput = {
   legalAreaId: number
   assignments?: Prisma.ContractAssignmentUncheckedCreateNestedManyWithoutContractInput
   revenues?: Prisma.RevenueUncheckedCreateNestedManyWithoutContractInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableUncheckedCreateNestedManyWithoutContractInput
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutContractInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutContractInput
 }
@@ -1070,6 +1097,7 @@ export type ContractCreateWithoutCustomerInput = {
   status: Prisma.ContractStatusCreateNestedOneWithoutContractsInput
   assignments?: Prisma.ContractAssignmentCreateNestedManyWithoutContractInput
   revenues?: Prisma.RevenueCreateNestedManyWithoutContractInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableCreateNestedManyWithoutContractInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutContractInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutContractInput
 }
@@ -1089,6 +1117,7 @@ export type ContractUncheckedCreateWithoutCustomerInput = {
   statusId: number
   assignments?: Prisma.ContractAssignmentUncheckedCreateNestedManyWithoutContractInput
   revenues?: Prisma.RevenueUncheckedCreateNestedManyWithoutContractInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableUncheckedCreateNestedManyWithoutContractInput
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutContractInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutContractInput
 }
@@ -1133,6 +1162,7 @@ export type ContractCreateWithoutAssignmentsInput = {
   legalArea: Prisma.LegalAreaCreateNestedOneWithoutContractsInput
   status: Prisma.ContractStatusCreateNestedOneWithoutContractsInput
   revenues?: Prisma.RevenueCreateNestedManyWithoutContractInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableCreateNestedManyWithoutContractInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutContractInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutContractInput
 }
@@ -1152,6 +1182,7 @@ export type ContractUncheckedCreateWithoutAssignmentsInput = {
   legalAreaId: number
   statusId: number
   revenues?: Prisma.RevenueUncheckedCreateNestedManyWithoutContractInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableUncheckedCreateNestedManyWithoutContractInput
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutContractInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutContractInput
 }
@@ -1186,6 +1217,7 @@ export type ContractUpdateWithoutAssignmentsInput = {
   legalArea?: Prisma.LegalAreaUpdateOneRequiredWithoutContractsNestedInput
   status?: Prisma.ContractStatusUpdateOneRequiredWithoutContractsNestedInput
   revenues?: Prisma.RevenueUpdateManyWithoutContractNestedInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableUpdateManyWithoutContractNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutContractNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutContractNestedInput
 }
@@ -1205,6 +1237,7 @@ export type ContractUncheckedUpdateWithoutAssignmentsInput = {
   legalAreaId?: Prisma.IntFieldUpdateOperationsInput | number
   statusId?: Prisma.IntFieldUpdateOperationsInput | number
   revenues?: Prisma.RevenueUncheckedUpdateManyWithoutContractNestedInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableUncheckedUpdateManyWithoutContractNestedInput
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutContractNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutContractNestedInput
 }
@@ -1223,6 +1256,7 @@ export type ContractCreateWithoutRevenuesInput = {
   legalArea: Prisma.LegalAreaCreateNestedOneWithoutContractsInput
   status: Prisma.ContractStatusCreateNestedOneWithoutContractsInput
   assignments?: Prisma.ContractAssignmentCreateNestedManyWithoutContractInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableCreateNestedManyWithoutContractInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutContractInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutContractInput
 }
@@ -1242,6 +1276,7 @@ export type ContractUncheckedCreateWithoutRevenuesInput = {
   legalAreaId: number
   statusId: number
   assignments?: Prisma.ContractAssignmentUncheckedCreateNestedManyWithoutContractInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableUncheckedCreateNestedManyWithoutContractInput
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutContractInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutContractInput
 }
@@ -1276,6 +1311,7 @@ export type ContractUpdateWithoutRevenuesInput = {
   legalArea?: Prisma.LegalAreaUpdateOneRequiredWithoutContractsNestedInput
   status?: Prisma.ContractStatusUpdateOneRequiredWithoutContractsNestedInput
   assignments?: Prisma.ContractAssignmentUpdateManyWithoutContractNestedInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableUpdateManyWithoutContractNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutContractNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutContractNestedInput
 }
@@ -1295,6 +1331,101 @@ export type ContractUncheckedUpdateWithoutRevenuesInput = {
   legalAreaId?: Prisma.IntFieldUpdateOperationsInput | number
   statusId?: Prisma.IntFieldUpdateOperationsInput | number
   assignments?: Prisma.ContractAssignmentUncheckedUpdateManyWithoutContractNestedInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableUncheckedUpdateManyWithoutContractNestedInput
+  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutContractNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutContractNestedInput
+}
+
+export type ContractCreateWithoutContractRevenueReceivablesInput = {
+  processNumber: string
+  feePercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: string | null
+  allowStatusChange?: boolean
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  firm: Prisma.FirmCreateNestedOneWithoutContractsInput
+  customer: Prisma.ClientProfileCreateNestedOneWithoutContractsInput
+  legalArea: Prisma.LegalAreaCreateNestedOneWithoutContractsInput
+  status: Prisma.ContractStatusCreateNestedOneWithoutContractsInput
+  assignments?: Prisma.ContractAssignmentCreateNestedManyWithoutContractInput
+  revenues?: Prisma.RevenueCreateNestedManyWithoutContractInput
+  attachments?: Prisma.AttachmentCreateNestedManyWithoutContractInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutContractInput
+}
+
+export type ContractUncheckedCreateWithoutContractRevenueReceivablesInput = {
+  id?: number
+  processNumber: string
+  feePercentage: runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: string | null
+  allowStatusChange?: boolean
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  firmId: number
+  customerId: number
+  legalAreaId: number
+  statusId: number
+  assignments?: Prisma.ContractAssignmentUncheckedCreateNestedManyWithoutContractInput
+  revenues?: Prisma.RevenueUncheckedCreateNestedManyWithoutContractInput
+  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutContractInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutContractInput
+}
+
+export type ContractCreateOrConnectWithoutContractRevenueReceivablesInput = {
+  where: Prisma.ContractWhereUniqueInput
+  create: Prisma.XOR<Prisma.ContractCreateWithoutContractRevenueReceivablesInput, Prisma.ContractUncheckedCreateWithoutContractRevenueReceivablesInput>
+}
+
+export type ContractUpsertWithoutContractRevenueReceivablesInput = {
+  update: Prisma.XOR<Prisma.ContractUpdateWithoutContractRevenueReceivablesInput, Prisma.ContractUncheckedUpdateWithoutContractRevenueReceivablesInput>
+  create: Prisma.XOR<Prisma.ContractCreateWithoutContractRevenueReceivablesInput, Prisma.ContractUncheckedCreateWithoutContractRevenueReceivablesInput>
+  where?: Prisma.ContractWhereInput
+}
+
+export type ContractUpdateToOneWithWhereWithoutContractRevenueReceivablesInput = {
+  where?: Prisma.ContractWhereInput
+  data: Prisma.XOR<Prisma.ContractUpdateWithoutContractRevenueReceivablesInput, Prisma.ContractUncheckedUpdateWithoutContractRevenueReceivablesInput>
+}
+
+export type ContractUpdateWithoutContractRevenueReceivablesInput = {
+  processNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  feePercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  allowStatusChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  firm?: Prisma.FirmUpdateOneRequiredWithoutContractsNestedInput
+  customer?: Prisma.ClientProfileUpdateOneRequiredWithoutContractsNestedInput
+  legalArea?: Prisma.LegalAreaUpdateOneRequiredWithoutContractsNestedInput
+  status?: Prisma.ContractStatusUpdateOneRequiredWithoutContractsNestedInput
+  assignments?: Prisma.ContractAssignmentUpdateManyWithoutContractNestedInput
+  revenues?: Prisma.RevenueUpdateManyWithoutContractNestedInput
+  attachments?: Prisma.AttachmentUpdateManyWithoutContractNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutContractNestedInput
+}
+
+export type ContractUncheckedUpdateWithoutContractRevenueReceivablesInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  processNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  feePercentage?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  allowStatusChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  firmId?: Prisma.IntFieldUpdateOperationsInput | number
+  customerId?: Prisma.IntFieldUpdateOperationsInput | number
+  legalAreaId?: Prisma.IntFieldUpdateOperationsInput | number
+  statusId?: Prisma.IntFieldUpdateOperationsInput | number
+  assignments?: Prisma.ContractAssignmentUncheckedUpdateManyWithoutContractNestedInput
+  revenues?: Prisma.RevenueUncheckedUpdateManyWithoutContractNestedInput
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutContractNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutContractNestedInput
 }
@@ -1314,6 +1445,7 @@ export type ContractCreateWithoutAttachmentsInput = {
   status: Prisma.ContractStatusCreateNestedOneWithoutContractsInput
   assignments?: Prisma.ContractAssignmentCreateNestedManyWithoutContractInput
   revenues?: Prisma.RevenueCreateNestedManyWithoutContractInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableCreateNestedManyWithoutContractInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutContractInput
 }
 
@@ -1333,6 +1465,7 @@ export type ContractUncheckedCreateWithoutAttachmentsInput = {
   statusId: number
   assignments?: Prisma.ContractAssignmentUncheckedCreateNestedManyWithoutContractInput
   revenues?: Prisma.RevenueUncheckedCreateNestedManyWithoutContractInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableUncheckedCreateNestedManyWithoutContractInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutContractInput
 }
 
@@ -1367,6 +1500,7 @@ export type ContractUpdateWithoutAttachmentsInput = {
   status?: Prisma.ContractStatusUpdateOneRequiredWithoutContractsNestedInput
   assignments?: Prisma.ContractAssignmentUpdateManyWithoutContractNestedInput
   revenues?: Prisma.RevenueUpdateManyWithoutContractNestedInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableUpdateManyWithoutContractNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutContractNestedInput
 }
 
@@ -1386,6 +1520,7 @@ export type ContractUncheckedUpdateWithoutAttachmentsInput = {
   statusId?: Prisma.IntFieldUpdateOperationsInput | number
   assignments?: Prisma.ContractAssignmentUncheckedUpdateManyWithoutContractNestedInput
   revenues?: Prisma.RevenueUncheckedUpdateManyWithoutContractNestedInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableUncheckedUpdateManyWithoutContractNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutContractNestedInput
 }
 
@@ -1404,6 +1539,7 @@ export type ContractCreateWithoutAuditLogsInput = {
   status: Prisma.ContractStatusCreateNestedOneWithoutContractsInput
   assignments?: Prisma.ContractAssignmentCreateNestedManyWithoutContractInput
   revenues?: Prisma.RevenueCreateNestedManyWithoutContractInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableCreateNestedManyWithoutContractInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutContractInput
 }
 
@@ -1423,6 +1559,7 @@ export type ContractUncheckedCreateWithoutAuditLogsInput = {
   statusId: number
   assignments?: Prisma.ContractAssignmentUncheckedCreateNestedManyWithoutContractInput
   revenues?: Prisma.RevenueUncheckedCreateNestedManyWithoutContractInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableUncheckedCreateNestedManyWithoutContractInput
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutContractInput
 }
 
@@ -1457,6 +1594,7 @@ export type ContractUpdateWithoutAuditLogsInput = {
   status?: Prisma.ContractStatusUpdateOneRequiredWithoutContractsNestedInput
   assignments?: Prisma.ContractAssignmentUpdateManyWithoutContractNestedInput
   revenues?: Prisma.RevenueUpdateManyWithoutContractNestedInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableUpdateManyWithoutContractNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutContractNestedInput
 }
 
@@ -1476,6 +1614,7 @@ export type ContractUncheckedUpdateWithoutAuditLogsInput = {
   statusId?: Prisma.IntFieldUpdateOperationsInput | number
   assignments?: Prisma.ContractAssignmentUncheckedUpdateManyWithoutContractNestedInput
   revenues?: Prisma.RevenueUncheckedUpdateManyWithoutContractNestedInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableUncheckedUpdateManyWithoutContractNestedInput
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutContractNestedInput
 }
 
@@ -1508,6 +1647,7 @@ export type ContractUpdateWithoutFirmInput = {
   status?: Prisma.ContractStatusUpdateOneRequiredWithoutContractsNestedInput
   assignments?: Prisma.ContractAssignmentUpdateManyWithoutContractNestedInput
   revenues?: Prisma.RevenueUpdateManyWithoutContractNestedInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableUpdateManyWithoutContractNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutContractNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutContractNestedInput
 }
@@ -1527,6 +1667,7 @@ export type ContractUncheckedUpdateWithoutFirmInput = {
   statusId?: Prisma.IntFieldUpdateOperationsInput | number
   assignments?: Prisma.ContractAssignmentUncheckedUpdateManyWithoutContractNestedInput
   revenues?: Prisma.RevenueUncheckedUpdateManyWithoutContractNestedInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableUncheckedUpdateManyWithoutContractNestedInput
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutContractNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutContractNestedInput
 }
@@ -1575,6 +1716,7 @@ export type ContractUpdateWithoutLegalAreaInput = {
   status?: Prisma.ContractStatusUpdateOneRequiredWithoutContractsNestedInput
   assignments?: Prisma.ContractAssignmentUpdateManyWithoutContractNestedInput
   revenues?: Prisma.RevenueUpdateManyWithoutContractNestedInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableUpdateManyWithoutContractNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutContractNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutContractNestedInput
 }
@@ -1594,6 +1736,7 @@ export type ContractUncheckedUpdateWithoutLegalAreaInput = {
   statusId?: Prisma.IntFieldUpdateOperationsInput | number
   assignments?: Prisma.ContractAssignmentUncheckedUpdateManyWithoutContractNestedInput
   revenues?: Prisma.RevenueUncheckedUpdateManyWithoutContractNestedInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableUncheckedUpdateManyWithoutContractNestedInput
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutContractNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutContractNestedInput
 }
@@ -1642,6 +1785,7 @@ export type ContractUpdateWithoutStatusInput = {
   legalArea?: Prisma.LegalAreaUpdateOneRequiredWithoutContractsNestedInput
   assignments?: Prisma.ContractAssignmentUpdateManyWithoutContractNestedInput
   revenues?: Prisma.RevenueUpdateManyWithoutContractNestedInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableUpdateManyWithoutContractNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutContractNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutContractNestedInput
 }
@@ -1661,6 +1805,7 @@ export type ContractUncheckedUpdateWithoutStatusInput = {
   legalAreaId?: Prisma.IntFieldUpdateOperationsInput | number
   assignments?: Prisma.ContractAssignmentUncheckedUpdateManyWithoutContractNestedInput
   revenues?: Prisma.RevenueUncheckedUpdateManyWithoutContractNestedInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableUncheckedUpdateManyWithoutContractNestedInput
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutContractNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutContractNestedInput
 }
@@ -1709,6 +1854,7 @@ export type ContractUpdateWithoutCustomerInput = {
   status?: Prisma.ContractStatusUpdateOneRequiredWithoutContractsNestedInput
   assignments?: Prisma.ContractAssignmentUpdateManyWithoutContractNestedInput
   revenues?: Prisma.RevenueUpdateManyWithoutContractNestedInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableUpdateManyWithoutContractNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutContractNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutContractNestedInput
 }
@@ -1728,6 +1874,7 @@ export type ContractUncheckedUpdateWithoutCustomerInput = {
   statusId?: Prisma.IntFieldUpdateOperationsInput | number
   assignments?: Prisma.ContractAssignmentUncheckedUpdateManyWithoutContractNestedInput
   revenues?: Prisma.RevenueUncheckedUpdateManyWithoutContractNestedInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableUncheckedUpdateManyWithoutContractNestedInput
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutContractNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutContractNestedInput
 }
@@ -1755,6 +1902,7 @@ export type ContractUncheckedUpdateManyWithoutCustomerInput = {
 export type ContractCountOutputType = {
   assignments: number
   revenues: number
+  contractRevenueReceivables: number
   attachments: number
   auditLogs: number
 }
@@ -1762,6 +1910,7 @@ export type ContractCountOutputType = {
 export type ContractCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   assignments?: boolean | ContractCountOutputTypeCountAssignmentsArgs
   revenues?: boolean | ContractCountOutputTypeCountRevenuesArgs
+  contractRevenueReceivables?: boolean | ContractCountOutputTypeCountContractRevenueReceivablesArgs
   attachments?: boolean | ContractCountOutputTypeCountAttachmentsArgs
   auditLogs?: boolean | ContractCountOutputTypeCountAuditLogsArgs
 }
@@ -1788,6 +1937,13 @@ export type ContractCountOutputTypeCountAssignmentsArgs<ExtArgs extends runtime.
  */
 export type ContractCountOutputTypeCountRevenuesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.RevenueWhereInput
+}
+
+/**
+ * ContractCountOutputType without action
+ */
+export type ContractCountOutputTypeCountContractRevenueReceivablesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ContractRevenueReceivableWhereInput
 }
 
 /**
@@ -1825,6 +1981,7 @@ export type ContractSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   status?: boolean | Prisma.ContractStatusDefaultArgs<ExtArgs>
   assignments?: boolean | Prisma.Contract$assignmentsArgs<ExtArgs>
   revenues?: boolean | Prisma.Contract$revenuesArgs<ExtArgs>
+  contractRevenueReceivables?: boolean | Prisma.Contract$contractRevenueReceivablesArgs<ExtArgs>
   attachments?: boolean | Prisma.Contract$attachmentsArgs<ExtArgs>
   auditLogs?: boolean | Prisma.Contract$auditLogsArgs<ExtArgs>
   _count?: boolean | Prisma.ContractCountOutputTypeDefaultArgs<ExtArgs>
@@ -1894,6 +2051,7 @@ export type ContractInclude<ExtArgs extends runtime.Types.Extensions.InternalArg
   status?: boolean | Prisma.ContractStatusDefaultArgs<ExtArgs>
   assignments?: boolean | Prisma.Contract$assignmentsArgs<ExtArgs>
   revenues?: boolean | Prisma.Contract$revenuesArgs<ExtArgs>
+  contractRevenueReceivables?: boolean | Prisma.Contract$contractRevenueReceivablesArgs<ExtArgs>
   attachments?: boolean | Prisma.Contract$attachmentsArgs<ExtArgs>
   auditLogs?: boolean | Prisma.Contract$auditLogsArgs<ExtArgs>
   _count?: boolean | Prisma.ContractCountOutputTypeDefaultArgs<ExtArgs>
@@ -1920,6 +2078,7 @@ export type $ContractPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     status: Prisma.$ContractStatusPayload<ExtArgs>
     assignments: Prisma.$ContractAssignmentPayload<ExtArgs>[]
     revenues: Prisma.$RevenuePayload<ExtArgs>[]
+    contractRevenueReceivables: Prisma.$ContractRevenueReceivablePayload<ExtArgs>[]
     attachments: Prisma.$AttachmentPayload<ExtArgs>[]
     auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
   }
@@ -2337,6 +2496,7 @@ export interface Prisma__ContractClient<T, Null = never, ExtArgs extends runtime
   status<T extends Prisma.ContractStatusDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ContractStatusDefaultArgs<ExtArgs>>): Prisma.Prisma__ContractStatusClient<runtime.Types.Result.GetResult<Prisma.$ContractStatusPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   assignments<T extends Prisma.Contract$assignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Contract$assignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ContractAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   revenues<T extends Prisma.Contract$revenuesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Contract$revenuesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RevenuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  contractRevenueReceivables<T extends Prisma.Contract$contractRevenueReceivablesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Contract$contractRevenueReceivablesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ContractRevenueReceivablePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   attachments<T extends Prisma.Contract$attachmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Contract$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   auditLogs<T extends Prisma.Contract$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Contract$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -2827,6 +2987,30 @@ export type Contract$revenuesArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.RevenueScalarFieldEnum | Prisma.RevenueScalarFieldEnum[]
+}
+
+/**
+ * Contract.contractRevenueReceivables
+ */
+export type Contract$contractRevenueReceivablesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ContractRevenueReceivable
+   */
+  select?: Prisma.ContractRevenueReceivableSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ContractRevenueReceivable
+   */
+  omit?: Prisma.ContractRevenueReceivableOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ContractRevenueReceivableInclude<ExtArgs> | null
+  where?: Prisma.ContractRevenueReceivableWhereInput
+  orderBy?: Prisma.ContractRevenueReceivableOrderByWithRelationInput | Prisma.ContractRevenueReceivableOrderByWithRelationInput[]
+  cursor?: Prisma.ContractRevenueReceivableWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ContractRevenueReceivableScalarFieldEnum | Prisma.ContractRevenueReceivableScalarFieldEnum[]
 }
 
 /**

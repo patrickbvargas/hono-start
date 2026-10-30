@@ -37,8 +37,7 @@ export type AuditLogAvgAggregateOutputType = {
   payableId: number | null
   receiptId: number | null
   paymentId: number | null
-  financialGenerationId: number | null
-  remunerationCalculationId: number | null
+  remunerationPayableId: number | null
 }
 
 export type AuditLogSumAggregateOutputType = {
@@ -52,8 +51,7 @@ export type AuditLogSumAggregateOutputType = {
   payableId: number | null
   receiptId: number | null
   paymentId: number | null
-  financialGenerationId: number | null
-  remunerationCalculationId: number | null
+  remunerationPayableId: number | null
 }
 
 export type AuditLogMinAggregateOutputType = {
@@ -77,8 +75,7 @@ export type AuditLogMinAggregateOutputType = {
   payableId: number | null
   receiptId: number | null
   paymentId: number | null
-  financialGenerationId: number | null
-  remunerationCalculationId: number | null
+  remunerationPayableId: number | null
 }
 
 export type AuditLogMaxAggregateOutputType = {
@@ -102,8 +99,7 @@ export type AuditLogMaxAggregateOutputType = {
   payableId: number | null
   receiptId: number | null
   paymentId: number | null
-  financialGenerationId: number | null
-  remunerationCalculationId: number | null
+  remunerationPayableId: number | null
 }
 
 export type AuditLogCountAggregateOutputType = {
@@ -128,8 +124,7 @@ export type AuditLogCountAggregateOutputType = {
   payableId: number
   receiptId: number
   paymentId: number
-  financialGenerationId: number
-  remunerationCalculationId: number
+  remunerationPayableId: number
   _all: number
 }
 
@@ -145,8 +140,7 @@ export type AuditLogAvgAggregateInputType = {
   payableId?: true
   receiptId?: true
   paymentId?: true
-  financialGenerationId?: true
-  remunerationCalculationId?: true
+  remunerationPayableId?: true
 }
 
 export type AuditLogSumAggregateInputType = {
@@ -160,8 +154,7 @@ export type AuditLogSumAggregateInputType = {
   payableId?: true
   receiptId?: true
   paymentId?: true
-  financialGenerationId?: true
-  remunerationCalculationId?: true
+  remunerationPayableId?: true
 }
 
 export type AuditLogMinAggregateInputType = {
@@ -185,8 +178,7 @@ export type AuditLogMinAggregateInputType = {
   payableId?: true
   receiptId?: true
   paymentId?: true
-  financialGenerationId?: true
-  remunerationCalculationId?: true
+  remunerationPayableId?: true
 }
 
 export type AuditLogMaxAggregateInputType = {
@@ -210,8 +202,7 @@ export type AuditLogMaxAggregateInputType = {
   payableId?: true
   receiptId?: true
   paymentId?: true
-  financialGenerationId?: true
-  remunerationCalculationId?: true
+  remunerationPayableId?: true
 }
 
 export type AuditLogCountAggregateInputType = {
@@ -236,8 +227,7 @@ export type AuditLogCountAggregateInputType = {
   payableId?: true
   receiptId?: true
   paymentId?: true
-  financialGenerationId?: true
-  remunerationCalculationId?: true
+  remunerationPayableId?: true
   _all?: true
 }
 
@@ -349,8 +339,7 @@ export type AuditLogGroupByOutputType = {
   payableId: number | null
   receiptId: number | null
   paymentId: number | null
-  financialGenerationId: number | null
-  remunerationCalculationId: number | null
+  remunerationPayableId: number | null
   _count: AuditLogCountAggregateOutputType | null
   _avg: AuditLogAvgAggregateOutputType | null
   _sum: AuditLogSumAggregateOutputType | null
@@ -398,8 +387,7 @@ export type AuditLogWhereInput = {
   payableId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
   receiptId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
   paymentId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
-  financialGenerationId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
-  remunerationCalculationId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
+  remunerationPayableId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
   firm?: Prisma.XOR<Prisma.FirmScalarRelationFilter, Prisma.FirmWhereInput>
   actor?: Prisma.XOR<Prisma.PersonNullableScalarRelationFilter, Prisma.PersonWhereInput> | null
   person?: Prisma.XOR<Prisma.PersonNullableScalarRelationFilter, Prisma.PersonWhereInput> | null
@@ -409,8 +397,7 @@ export type AuditLogWhereInput = {
   payable?: Prisma.XOR<Prisma.PayableNullableScalarRelationFilter, Prisma.PayableWhereInput> | null
   receipt?: Prisma.XOR<Prisma.ReceiptNullableScalarRelationFilter, Prisma.ReceiptWhereInput> | null
   payment?: Prisma.XOR<Prisma.PaymentNullableScalarRelationFilter, Prisma.PaymentWhereInput> | null
-  financialGeneration?: Prisma.XOR<Prisma.FinancialGenerationNullableScalarRelationFilter, Prisma.FinancialGenerationWhereInput> | null
-  remunerationCalculation?: Prisma.XOR<Prisma.RemunerationCalculationNullableScalarRelationFilter, Prisma.RemunerationCalculationWhereInput> | null
+  remunerationPayable?: Prisma.XOR<Prisma.RemunerationPayableNullableScalarRelationFilter, Prisma.RemunerationPayableWhereInput> | null
 }
 
 export type AuditLogOrderByWithRelationInput = {
@@ -435,8 +422,7 @@ export type AuditLogOrderByWithRelationInput = {
   payableId?: Prisma.SortOrderInput | Prisma.SortOrder
   receiptId?: Prisma.SortOrderInput | Prisma.SortOrder
   paymentId?: Prisma.SortOrderInput | Prisma.SortOrder
-  financialGenerationId?: Prisma.SortOrderInput | Prisma.SortOrder
-  remunerationCalculationId?: Prisma.SortOrderInput | Prisma.SortOrder
+  remunerationPayableId?: Prisma.SortOrderInput | Prisma.SortOrder
   firm?: Prisma.FirmOrderByWithRelationInput
   actor?: Prisma.PersonOrderByWithRelationInput
   person?: Prisma.PersonOrderByWithRelationInput
@@ -446,8 +432,7 @@ export type AuditLogOrderByWithRelationInput = {
   payable?: Prisma.PayableOrderByWithRelationInput
   receipt?: Prisma.ReceiptOrderByWithRelationInput
   payment?: Prisma.PaymentOrderByWithRelationInput
-  financialGeneration?: Prisma.FinancialGenerationOrderByWithRelationInput
-  remunerationCalculation?: Prisma.RemunerationCalculationOrderByWithRelationInput
+  remunerationPayable?: Prisma.RemunerationPayableOrderByWithRelationInput
 }
 
 export type AuditLogWhereUniqueInput = Prisma.AtLeast<{
@@ -476,8 +461,7 @@ export type AuditLogWhereUniqueInput = Prisma.AtLeast<{
   payableId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
   receiptId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
   paymentId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
-  financialGenerationId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
-  remunerationCalculationId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
+  remunerationPayableId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
   firm?: Prisma.XOR<Prisma.FirmScalarRelationFilter, Prisma.FirmWhereInput>
   actor?: Prisma.XOR<Prisma.PersonNullableScalarRelationFilter, Prisma.PersonWhereInput> | null
   person?: Prisma.XOR<Prisma.PersonNullableScalarRelationFilter, Prisma.PersonWhereInput> | null
@@ -487,8 +471,7 @@ export type AuditLogWhereUniqueInput = Prisma.AtLeast<{
   payable?: Prisma.XOR<Prisma.PayableNullableScalarRelationFilter, Prisma.PayableWhereInput> | null
   receipt?: Prisma.XOR<Prisma.ReceiptNullableScalarRelationFilter, Prisma.ReceiptWhereInput> | null
   payment?: Prisma.XOR<Prisma.PaymentNullableScalarRelationFilter, Prisma.PaymentWhereInput> | null
-  financialGeneration?: Prisma.XOR<Prisma.FinancialGenerationNullableScalarRelationFilter, Prisma.FinancialGenerationWhereInput> | null
-  remunerationCalculation?: Prisma.XOR<Prisma.RemunerationCalculationNullableScalarRelationFilter, Prisma.RemunerationCalculationWhereInput> | null
+  remunerationPayable?: Prisma.XOR<Prisma.RemunerationPayableNullableScalarRelationFilter, Prisma.RemunerationPayableWhereInput> | null
 }, "id" | "firmId_id">
 
 export type AuditLogOrderByWithAggregationInput = {
@@ -513,8 +496,7 @@ export type AuditLogOrderByWithAggregationInput = {
   payableId?: Prisma.SortOrderInput | Prisma.SortOrder
   receiptId?: Prisma.SortOrderInput | Prisma.SortOrder
   paymentId?: Prisma.SortOrderInput | Prisma.SortOrder
-  financialGenerationId?: Prisma.SortOrderInput | Prisma.SortOrder
-  remunerationCalculationId?: Prisma.SortOrderInput | Prisma.SortOrder
+  remunerationPayableId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.AuditLogCountOrderByAggregateInput
   _avg?: Prisma.AuditLogAvgOrderByAggregateInput
   _max?: Prisma.AuditLogMaxOrderByAggregateInput
@@ -547,8 +529,7 @@ export type AuditLogScalarWhereWithAggregatesInput = {
   payableId?: Prisma.IntNullableWithAggregatesFilter<"AuditLog"> | number | null
   receiptId?: Prisma.IntNullableWithAggregatesFilter<"AuditLog"> | number | null
   paymentId?: Prisma.IntNullableWithAggregatesFilter<"AuditLog"> | number | null
-  financialGenerationId?: Prisma.IntNullableWithAggregatesFilter<"AuditLog"> | number | null
-  remunerationCalculationId?: Prisma.IntNullableWithAggregatesFilter<"AuditLog"> | number | null
+  remunerationPayableId?: Prisma.IntNullableWithAggregatesFilter<"AuditLog"> | number | null
 }
 
 export type AuditLogCreateInput = {
@@ -572,8 +553,7 @@ export type AuditLogCreateInput = {
   payable?: Prisma.PayableCreateNestedOneWithoutAuditLogsInput
   receipt?: Prisma.ReceiptCreateNestedOneWithoutAuditLogsInput
   payment?: Prisma.PaymentCreateNestedOneWithoutAuditLogsInput
-  financialGeneration?: Prisma.FinancialGenerationCreateNestedOneWithoutAuditLogsInput
-  remunerationCalculation?: Prisma.RemunerationCalculationCreateNestedOneWithoutAuditLogsInput
+  remunerationPayable?: Prisma.RemunerationPayableCreateNestedOneWithoutAuditLogsInput
 }
 
 export type AuditLogUncheckedCreateInput = {
@@ -598,8 +578,7 @@ export type AuditLogUncheckedCreateInput = {
   payableId?: number | null
   receiptId?: number | null
   paymentId?: number | null
-  financialGenerationId?: number | null
-  remunerationCalculationId?: number | null
+  remunerationPayableId?: number | null
 }
 
 export type AuditLogUpdateInput = {
@@ -623,8 +602,7 @@ export type AuditLogUpdateInput = {
   payable?: Prisma.PayableUpdateOneWithoutAuditLogsNestedInput
   receipt?: Prisma.ReceiptUpdateOneWithoutAuditLogsNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutAuditLogsNestedInput
-  financialGeneration?: Prisma.FinancialGenerationUpdateOneWithoutAuditLogsNestedInput
-  remunerationCalculation?: Prisma.RemunerationCalculationUpdateOneWithoutAuditLogsNestedInput
+  remunerationPayable?: Prisma.RemunerationPayableUpdateOneWithoutAuditLogsNestedInput
 }
 
 export type AuditLogUncheckedUpdateInput = {
@@ -649,8 +627,7 @@ export type AuditLogUncheckedUpdateInput = {
   payableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   receiptId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  financialGenerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationPayableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type AuditLogCreateManyInput = {
@@ -675,8 +652,7 @@ export type AuditLogCreateManyInput = {
   payableId?: number | null
   receiptId?: number | null
   paymentId?: number | null
-  financialGenerationId?: number | null
-  remunerationCalculationId?: number | null
+  remunerationPayableId?: number | null
 }
 
 export type AuditLogUpdateManyMutationInput = {
@@ -715,8 +691,7 @@ export type AuditLogUncheckedUpdateManyInput = {
   payableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   receiptId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  financialGenerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationPayableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type AuditLogListRelationFilter = {
@@ -756,8 +731,7 @@ export type AuditLogCountOrderByAggregateInput = {
   payableId?: Prisma.SortOrder
   receiptId?: Prisma.SortOrder
   paymentId?: Prisma.SortOrder
-  financialGenerationId?: Prisma.SortOrder
-  remunerationCalculationId?: Prisma.SortOrder
+  remunerationPayableId?: Prisma.SortOrder
 }
 
 export type AuditLogAvgOrderByAggregateInput = {
@@ -771,8 +745,7 @@ export type AuditLogAvgOrderByAggregateInput = {
   payableId?: Prisma.SortOrder
   receiptId?: Prisma.SortOrder
   paymentId?: Prisma.SortOrder
-  financialGenerationId?: Prisma.SortOrder
-  remunerationCalculationId?: Prisma.SortOrder
+  remunerationPayableId?: Prisma.SortOrder
 }
 
 export type AuditLogMaxOrderByAggregateInput = {
@@ -796,8 +769,7 @@ export type AuditLogMaxOrderByAggregateInput = {
   payableId?: Prisma.SortOrder
   receiptId?: Prisma.SortOrder
   paymentId?: Prisma.SortOrder
-  financialGenerationId?: Prisma.SortOrder
-  remunerationCalculationId?: Prisma.SortOrder
+  remunerationPayableId?: Prisma.SortOrder
 }
 
 export type AuditLogMinOrderByAggregateInput = {
@@ -821,8 +793,7 @@ export type AuditLogMinOrderByAggregateInput = {
   payableId?: Prisma.SortOrder
   receiptId?: Prisma.SortOrder
   paymentId?: Prisma.SortOrder
-  financialGenerationId?: Prisma.SortOrder
-  remunerationCalculationId?: Prisma.SortOrder
+  remunerationPayableId?: Prisma.SortOrder
 }
 
 export type AuditLogSumOrderByAggregateInput = {
@@ -836,8 +807,7 @@ export type AuditLogSumOrderByAggregateInput = {
   payableId?: Prisma.SortOrder
   receiptId?: Prisma.SortOrder
   paymentId?: Prisma.SortOrder
-  financialGenerationId?: Prisma.SortOrder
-  remunerationCalculationId?: Prisma.SortOrder
+  remunerationPayableId?: Prisma.SortOrder
 }
 
 export type AuditLogCreateNestedManyWithoutFirmInput = {
@@ -1050,45 +1020,45 @@ export type AuditLogUncheckedUpdateManyWithoutExpenseNestedInput = {
   deleteMany?: Prisma.AuditLogScalarWhereInput | Prisma.AuditLogScalarWhereInput[]
 }
 
-export type AuditLogCreateNestedManyWithoutFinancialGenerationInput = {
-  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutFinancialGenerationInput, Prisma.AuditLogUncheckedCreateWithoutFinancialGenerationInput> | Prisma.AuditLogCreateWithoutFinancialGenerationInput[] | Prisma.AuditLogUncheckedCreateWithoutFinancialGenerationInput[]
-  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutFinancialGenerationInput | Prisma.AuditLogCreateOrConnectWithoutFinancialGenerationInput[]
-  createMany?: Prisma.AuditLogCreateManyFinancialGenerationInputEnvelope
+export type AuditLogCreateNestedManyWithoutRemunerationPayableInput = {
+  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutRemunerationPayableInput, Prisma.AuditLogUncheckedCreateWithoutRemunerationPayableInput> | Prisma.AuditLogCreateWithoutRemunerationPayableInput[] | Prisma.AuditLogUncheckedCreateWithoutRemunerationPayableInput[]
+  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutRemunerationPayableInput | Prisma.AuditLogCreateOrConnectWithoutRemunerationPayableInput[]
+  createMany?: Prisma.AuditLogCreateManyRemunerationPayableInputEnvelope
   connect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
 }
 
-export type AuditLogUncheckedCreateNestedManyWithoutFinancialGenerationInput = {
-  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutFinancialGenerationInput, Prisma.AuditLogUncheckedCreateWithoutFinancialGenerationInput> | Prisma.AuditLogCreateWithoutFinancialGenerationInput[] | Prisma.AuditLogUncheckedCreateWithoutFinancialGenerationInput[]
-  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutFinancialGenerationInput | Prisma.AuditLogCreateOrConnectWithoutFinancialGenerationInput[]
-  createMany?: Prisma.AuditLogCreateManyFinancialGenerationInputEnvelope
+export type AuditLogUncheckedCreateNestedManyWithoutRemunerationPayableInput = {
+  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutRemunerationPayableInput, Prisma.AuditLogUncheckedCreateWithoutRemunerationPayableInput> | Prisma.AuditLogCreateWithoutRemunerationPayableInput[] | Prisma.AuditLogUncheckedCreateWithoutRemunerationPayableInput[]
+  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutRemunerationPayableInput | Prisma.AuditLogCreateOrConnectWithoutRemunerationPayableInput[]
+  createMany?: Prisma.AuditLogCreateManyRemunerationPayableInputEnvelope
   connect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
 }
 
-export type AuditLogUpdateManyWithoutFinancialGenerationNestedInput = {
-  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutFinancialGenerationInput, Prisma.AuditLogUncheckedCreateWithoutFinancialGenerationInput> | Prisma.AuditLogCreateWithoutFinancialGenerationInput[] | Prisma.AuditLogUncheckedCreateWithoutFinancialGenerationInput[]
-  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutFinancialGenerationInput | Prisma.AuditLogCreateOrConnectWithoutFinancialGenerationInput[]
-  upsert?: Prisma.AuditLogUpsertWithWhereUniqueWithoutFinancialGenerationInput | Prisma.AuditLogUpsertWithWhereUniqueWithoutFinancialGenerationInput[]
-  createMany?: Prisma.AuditLogCreateManyFinancialGenerationInputEnvelope
+export type AuditLogUpdateManyWithoutRemunerationPayableNestedInput = {
+  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutRemunerationPayableInput, Prisma.AuditLogUncheckedCreateWithoutRemunerationPayableInput> | Prisma.AuditLogCreateWithoutRemunerationPayableInput[] | Prisma.AuditLogUncheckedCreateWithoutRemunerationPayableInput[]
+  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutRemunerationPayableInput | Prisma.AuditLogCreateOrConnectWithoutRemunerationPayableInput[]
+  upsert?: Prisma.AuditLogUpsertWithWhereUniqueWithoutRemunerationPayableInput | Prisma.AuditLogUpsertWithWhereUniqueWithoutRemunerationPayableInput[]
+  createMany?: Prisma.AuditLogCreateManyRemunerationPayableInputEnvelope
   set?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
   disconnect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
   delete?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
   connect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
-  update?: Prisma.AuditLogUpdateWithWhereUniqueWithoutFinancialGenerationInput | Prisma.AuditLogUpdateWithWhereUniqueWithoutFinancialGenerationInput[]
-  updateMany?: Prisma.AuditLogUpdateManyWithWhereWithoutFinancialGenerationInput | Prisma.AuditLogUpdateManyWithWhereWithoutFinancialGenerationInput[]
+  update?: Prisma.AuditLogUpdateWithWhereUniqueWithoutRemunerationPayableInput | Prisma.AuditLogUpdateWithWhereUniqueWithoutRemunerationPayableInput[]
+  updateMany?: Prisma.AuditLogUpdateManyWithWhereWithoutRemunerationPayableInput | Prisma.AuditLogUpdateManyWithWhereWithoutRemunerationPayableInput[]
   deleteMany?: Prisma.AuditLogScalarWhereInput | Prisma.AuditLogScalarWhereInput[]
 }
 
-export type AuditLogUncheckedUpdateManyWithoutFinancialGenerationNestedInput = {
-  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutFinancialGenerationInput, Prisma.AuditLogUncheckedCreateWithoutFinancialGenerationInput> | Prisma.AuditLogCreateWithoutFinancialGenerationInput[] | Prisma.AuditLogUncheckedCreateWithoutFinancialGenerationInput[]
-  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutFinancialGenerationInput | Prisma.AuditLogCreateOrConnectWithoutFinancialGenerationInput[]
-  upsert?: Prisma.AuditLogUpsertWithWhereUniqueWithoutFinancialGenerationInput | Prisma.AuditLogUpsertWithWhereUniqueWithoutFinancialGenerationInput[]
-  createMany?: Prisma.AuditLogCreateManyFinancialGenerationInputEnvelope
+export type AuditLogUncheckedUpdateManyWithoutRemunerationPayableNestedInput = {
+  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutRemunerationPayableInput, Prisma.AuditLogUncheckedCreateWithoutRemunerationPayableInput> | Prisma.AuditLogCreateWithoutRemunerationPayableInput[] | Prisma.AuditLogUncheckedCreateWithoutRemunerationPayableInput[]
+  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutRemunerationPayableInput | Prisma.AuditLogCreateOrConnectWithoutRemunerationPayableInput[]
+  upsert?: Prisma.AuditLogUpsertWithWhereUniqueWithoutRemunerationPayableInput | Prisma.AuditLogUpsertWithWhereUniqueWithoutRemunerationPayableInput[]
+  createMany?: Prisma.AuditLogCreateManyRemunerationPayableInputEnvelope
   set?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
   disconnect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
   delete?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
   connect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
-  update?: Prisma.AuditLogUpdateWithWhereUniqueWithoutFinancialGenerationInput | Prisma.AuditLogUpdateWithWhereUniqueWithoutFinancialGenerationInput[]
-  updateMany?: Prisma.AuditLogUpdateManyWithWhereWithoutFinancialGenerationInput | Prisma.AuditLogUpdateManyWithWhereWithoutFinancialGenerationInput[]
+  update?: Prisma.AuditLogUpdateWithWhereUniqueWithoutRemunerationPayableInput | Prisma.AuditLogUpdateWithWhereUniqueWithoutRemunerationPayableInput[]
+  updateMany?: Prisma.AuditLogUpdateManyWithWhereWithoutRemunerationPayableInput | Prisma.AuditLogUpdateManyWithWhereWithoutRemunerationPayableInput[]
   deleteMany?: Prisma.AuditLogScalarWhereInput | Prisma.AuditLogScalarWhereInput[]
 }
 
@@ -1260,48 +1230,6 @@ export type AuditLogUncheckedUpdateManyWithoutPaymentNestedInput = {
   deleteMany?: Prisma.AuditLogScalarWhereInput | Prisma.AuditLogScalarWhereInput[]
 }
 
-export type AuditLogCreateNestedManyWithoutRemunerationCalculationInput = {
-  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutRemunerationCalculationInput, Prisma.AuditLogUncheckedCreateWithoutRemunerationCalculationInput> | Prisma.AuditLogCreateWithoutRemunerationCalculationInput[] | Prisma.AuditLogUncheckedCreateWithoutRemunerationCalculationInput[]
-  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutRemunerationCalculationInput | Prisma.AuditLogCreateOrConnectWithoutRemunerationCalculationInput[]
-  createMany?: Prisma.AuditLogCreateManyRemunerationCalculationInputEnvelope
-  connect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
-}
-
-export type AuditLogUncheckedCreateNestedManyWithoutRemunerationCalculationInput = {
-  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutRemunerationCalculationInput, Prisma.AuditLogUncheckedCreateWithoutRemunerationCalculationInput> | Prisma.AuditLogCreateWithoutRemunerationCalculationInput[] | Prisma.AuditLogUncheckedCreateWithoutRemunerationCalculationInput[]
-  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutRemunerationCalculationInput | Prisma.AuditLogCreateOrConnectWithoutRemunerationCalculationInput[]
-  createMany?: Prisma.AuditLogCreateManyRemunerationCalculationInputEnvelope
-  connect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
-}
-
-export type AuditLogUpdateManyWithoutRemunerationCalculationNestedInput = {
-  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutRemunerationCalculationInput, Prisma.AuditLogUncheckedCreateWithoutRemunerationCalculationInput> | Prisma.AuditLogCreateWithoutRemunerationCalculationInput[] | Prisma.AuditLogUncheckedCreateWithoutRemunerationCalculationInput[]
-  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutRemunerationCalculationInput | Prisma.AuditLogCreateOrConnectWithoutRemunerationCalculationInput[]
-  upsert?: Prisma.AuditLogUpsertWithWhereUniqueWithoutRemunerationCalculationInput | Prisma.AuditLogUpsertWithWhereUniqueWithoutRemunerationCalculationInput[]
-  createMany?: Prisma.AuditLogCreateManyRemunerationCalculationInputEnvelope
-  set?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
-  disconnect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
-  delete?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
-  connect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
-  update?: Prisma.AuditLogUpdateWithWhereUniqueWithoutRemunerationCalculationInput | Prisma.AuditLogUpdateWithWhereUniqueWithoutRemunerationCalculationInput[]
-  updateMany?: Prisma.AuditLogUpdateManyWithWhereWithoutRemunerationCalculationInput | Prisma.AuditLogUpdateManyWithWhereWithoutRemunerationCalculationInput[]
-  deleteMany?: Prisma.AuditLogScalarWhereInput | Prisma.AuditLogScalarWhereInput[]
-}
-
-export type AuditLogUncheckedUpdateManyWithoutRemunerationCalculationNestedInput = {
-  create?: Prisma.XOR<Prisma.AuditLogCreateWithoutRemunerationCalculationInput, Prisma.AuditLogUncheckedCreateWithoutRemunerationCalculationInput> | Prisma.AuditLogCreateWithoutRemunerationCalculationInput[] | Prisma.AuditLogUncheckedCreateWithoutRemunerationCalculationInput[]
-  connectOrCreate?: Prisma.AuditLogCreateOrConnectWithoutRemunerationCalculationInput | Prisma.AuditLogCreateOrConnectWithoutRemunerationCalculationInput[]
-  upsert?: Prisma.AuditLogUpsertWithWhereUniqueWithoutRemunerationCalculationInput | Prisma.AuditLogUpsertWithWhereUniqueWithoutRemunerationCalculationInput[]
-  createMany?: Prisma.AuditLogCreateManyRemunerationCalculationInputEnvelope
-  set?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
-  disconnect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
-  delete?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
-  connect?: Prisma.AuditLogWhereUniqueInput | Prisma.AuditLogWhereUniqueInput[]
-  update?: Prisma.AuditLogUpdateWithWhereUniqueWithoutRemunerationCalculationInput | Prisma.AuditLogUpdateWithWhereUniqueWithoutRemunerationCalculationInput[]
-  updateMany?: Prisma.AuditLogUpdateManyWithWhereWithoutRemunerationCalculationInput | Prisma.AuditLogUpdateManyWithWhereWithoutRemunerationCalculationInput[]
-  deleteMany?: Prisma.AuditLogScalarWhereInput | Prisma.AuditLogScalarWhereInput[]
-}
-
 export type AuditLogCreateWithoutFirmInput = {
   actorName: string
   actorEmail?: string | null
@@ -1322,8 +1250,7 @@ export type AuditLogCreateWithoutFirmInput = {
   payable?: Prisma.PayableCreateNestedOneWithoutAuditLogsInput
   receipt?: Prisma.ReceiptCreateNestedOneWithoutAuditLogsInput
   payment?: Prisma.PaymentCreateNestedOneWithoutAuditLogsInput
-  financialGeneration?: Prisma.FinancialGenerationCreateNestedOneWithoutAuditLogsInput
-  remunerationCalculation?: Prisma.RemunerationCalculationCreateNestedOneWithoutAuditLogsInput
+  remunerationPayable?: Prisma.RemunerationPayableCreateNestedOneWithoutAuditLogsInput
 }
 
 export type AuditLogUncheckedCreateWithoutFirmInput = {
@@ -1347,8 +1274,7 @@ export type AuditLogUncheckedCreateWithoutFirmInput = {
   payableId?: number | null
   receiptId?: number | null
   paymentId?: number | null
-  financialGenerationId?: number | null
-  remunerationCalculationId?: number | null
+  remunerationPayableId?: number | null
 }
 
 export type AuditLogCreateOrConnectWithoutFirmInput = {
@@ -1402,8 +1328,7 @@ export type AuditLogScalarWhereInput = {
   payableId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
   receiptId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
   paymentId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
-  financialGenerationId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
-  remunerationCalculationId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
+  remunerationPayableId?: Prisma.IntNullableFilter<"AuditLog"> | number | null
 }
 
 export type AuditLogCreateWithoutActorInput = {
@@ -1426,8 +1351,7 @@ export type AuditLogCreateWithoutActorInput = {
   payable?: Prisma.PayableCreateNestedOneWithoutAuditLogsInput
   receipt?: Prisma.ReceiptCreateNestedOneWithoutAuditLogsInput
   payment?: Prisma.PaymentCreateNestedOneWithoutAuditLogsInput
-  financialGeneration?: Prisma.FinancialGenerationCreateNestedOneWithoutAuditLogsInput
-  remunerationCalculation?: Prisma.RemunerationCalculationCreateNestedOneWithoutAuditLogsInput
+  remunerationPayable?: Prisma.RemunerationPayableCreateNestedOneWithoutAuditLogsInput
 }
 
 export type AuditLogUncheckedCreateWithoutActorInput = {
@@ -1451,8 +1375,7 @@ export type AuditLogUncheckedCreateWithoutActorInput = {
   payableId?: number | null
   receiptId?: number | null
   paymentId?: number | null
-  financialGenerationId?: number | null
-  remunerationCalculationId?: number | null
+  remunerationPayableId?: number | null
 }
 
 export type AuditLogCreateOrConnectWithoutActorInput = {
@@ -1485,8 +1408,7 @@ export type AuditLogCreateWithoutPersonInput = {
   payable?: Prisma.PayableCreateNestedOneWithoutAuditLogsInput
   receipt?: Prisma.ReceiptCreateNestedOneWithoutAuditLogsInput
   payment?: Prisma.PaymentCreateNestedOneWithoutAuditLogsInput
-  financialGeneration?: Prisma.FinancialGenerationCreateNestedOneWithoutAuditLogsInput
-  remunerationCalculation?: Prisma.RemunerationCalculationCreateNestedOneWithoutAuditLogsInput
+  remunerationPayable?: Prisma.RemunerationPayableCreateNestedOneWithoutAuditLogsInput
 }
 
 export type AuditLogUncheckedCreateWithoutPersonInput = {
@@ -1510,8 +1432,7 @@ export type AuditLogUncheckedCreateWithoutPersonInput = {
   payableId?: number | null
   receiptId?: number | null
   paymentId?: number | null
-  financialGenerationId?: number | null
-  remunerationCalculationId?: number | null
+  remunerationPayableId?: number | null
 }
 
 export type AuditLogCreateOrConnectWithoutPersonInput = {
@@ -1576,8 +1497,7 @@ export type AuditLogCreateWithoutContractInput = {
   payable?: Prisma.PayableCreateNestedOneWithoutAuditLogsInput
   receipt?: Prisma.ReceiptCreateNestedOneWithoutAuditLogsInput
   payment?: Prisma.PaymentCreateNestedOneWithoutAuditLogsInput
-  financialGeneration?: Prisma.FinancialGenerationCreateNestedOneWithoutAuditLogsInput
-  remunerationCalculation?: Prisma.RemunerationCalculationCreateNestedOneWithoutAuditLogsInput
+  remunerationPayable?: Prisma.RemunerationPayableCreateNestedOneWithoutAuditLogsInput
 }
 
 export type AuditLogUncheckedCreateWithoutContractInput = {
@@ -1600,8 +1520,7 @@ export type AuditLogUncheckedCreateWithoutContractInput = {
   payableId?: number | null
   receiptId?: number | null
   paymentId?: number | null
-  financialGenerationId?: number | null
-  remunerationCalculationId?: number | null
+  remunerationPayableId?: number | null
 }
 
 export type AuditLogCreateOrConnectWithoutContractInput = {
@@ -1650,8 +1569,7 @@ export type AuditLogCreateWithoutExpenseInput = {
   payable?: Prisma.PayableCreateNestedOneWithoutAuditLogsInput
   receipt?: Prisma.ReceiptCreateNestedOneWithoutAuditLogsInput
   payment?: Prisma.PaymentCreateNestedOneWithoutAuditLogsInput
-  financialGeneration?: Prisma.FinancialGenerationCreateNestedOneWithoutAuditLogsInput
-  remunerationCalculation?: Prisma.RemunerationCalculationCreateNestedOneWithoutAuditLogsInput
+  remunerationPayable?: Prisma.RemunerationPayableCreateNestedOneWithoutAuditLogsInput
 }
 
 export type AuditLogUncheckedCreateWithoutExpenseInput = {
@@ -1674,8 +1592,7 @@ export type AuditLogUncheckedCreateWithoutExpenseInput = {
   payableId?: number | null
   receiptId?: number | null
   paymentId?: number | null
-  financialGenerationId?: number | null
-  remunerationCalculationId?: number | null
+  remunerationPayableId?: number | null
 }
 
 export type AuditLogCreateOrConnectWithoutExpenseInput = {
@@ -1704,7 +1621,7 @@ export type AuditLogUpdateManyWithWhereWithoutExpenseInput = {
   data: Prisma.XOR<Prisma.AuditLogUpdateManyMutationInput, Prisma.AuditLogUncheckedUpdateManyWithoutExpenseInput>
 }
 
-export type AuditLogCreateWithoutFinancialGenerationInput = {
+export type AuditLogCreateWithoutRemunerationPayableInput = {
   actorName: string
   actorEmail?: string | null
   action: string
@@ -1725,10 +1642,9 @@ export type AuditLogCreateWithoutFinancialGenerationInput = {
   payable?: Prisma.PayableCreateNestedOneWithoutAuditLogsInput
   receipt?: Prisma.ReceiptCreateNestedOneWithoutAuditLogsInput
   payment?: Prisma.PaymentCreateNestedOneWithoutAuditLogsInput
-  remunerationCalculation?: Prisma.RemunerationCalculationCreateNestedOneWithoutAuditLogsInput
 }
 
-export type AuditLogUncheckedCreateWithoutFinancialGenerationInput = {
+export type AuditLogUncheckedCreateWithoutRemunerationPayableInput = {
   id?: number
   actorName: string
   actorEmail?: string | null
@@ -1749,33 +1665,32 @@ export type AuditLogUncheckedCreateWithoutFinancialGenerationInput = {
   payableId?: number | null
   receiptId?: number | null
   paymentId?: number | null
-  remunerationCalculationId?: number | null
 }
 
-export type AuditLogCreateOrConnectWithoutFinancialGenerationInput = {
+export type AuditLogCreateOrConnectWithoutRemunerationPayableInput = {
   where: Prisma.AuditLogWhereUniqueInput
-  create: Prisma.XOR<Prisma.AuditLogCreateWithoutFinancialGenerationInput, Prisma.AuditLogUncheckedCreateWithoutFinancialGenerationInput>
+  create: Prisma.XOR<Prisma.AuditLogCreateWithoutRemunerationPayableInput, Prisma.AuditLogUncheckedCreateWithoutRemunerationPayableInput>
 }
 
-export type AuditLogCreateManyFinancialGenerationInputEnvelope = {
-  data: Prisma.AuditLogCreateManyFinancialGenerationInput | Prisma.AuditLogCreateManyFinancialGenerationInput[]
+export type AuditLogCreateManyRemunerationPayableInputEnvelope = {
+  data: Prisma.AuditLogCreateManyRemunerationPayableInput | Prisma.AuditLogCreateManyRemunerationPayableInput[]
   skipDuplicates?: boolean
 }
 
-export type AuditLogUpsertWithWhereUniqueWithoutFinancialGenerationInput = {
+export type AuditLogUpsertWithWhereUniqueWithoutRemunerationPayableInput = {
   where: Prisma.AuditLogWhereUniqueInput
-  update: Prisma.XOR<Prisma.AuditLogUpdateWithoutFinancialGenerationInput, Prisma.AuditLogUncheckedUpdateWithoutFinancialGenerationInput>
-  create: Prisma.XOR<Prisma.AuditLogCreateWithoutFinancialGenerationInput, Prisma.AuditLogUncheckedCreateWithoutFinancialGenerationInput>
+  update: Prisma.XOR<Prisma.AuditLogUpdateWithoutRemunerationPayableInput, Prisma.AuditLogUncheckedUpdateWithoutRemunerationPayableInput>
+  create: Prisma.XOR<Prisma.AuditLogCreateWithoutRemunerationPayableInput, Prisma.AuditLogUncheckedCreateWithoutRemunerationPayableInput>
 }
 
-export type AuditLogUpdateWithWhereUniqueWithoutFinancialGenerationInput = {
+export type AuditLogUpdateWithWhereUniqueWithoutRemunerationPayableInput = {
   where: Prisma.AuditLogWhereUniqueInput
-  data: Prisma.XOR<Prisma.AuditLogUpdateWithoutFinancialGenerationInput, Prisma.AuditLogUncheckedUpdateWithoutFinancialGenerationInput>
+  data: Prisma.XOR<Prisma.AuditLogUpdateWithoutRemunerationPayableInput, Prisma.AuditLogUncheckedUpdateWithoutRemunerationPayableInput>
 }
 
-export type AuditLogUpdateManyWithWhereWithoutFinancialGenerationInput = {
+export type AuditLogUpdateManyWithWhereWithoutRemunerationPayableInput = {
   where: Prisma.AuditLogScalarWhereInput
-  data: Prisma.XOR<Prisma.AuditLogUpdateManyMutationInput, Prisma.AuditLogUncheckedUpdateManyWithoutFinancialGenerationInput>
+  data: Prisma.XOR<Prisma.AuditLogUpdateManyMutationInput, Prisma.AuditLogUncheckedUpdateManyWithoutRemunerationPayableInput>
 }
 
 export type AuditLogCreateWithoutReceivableInput = {
@@ -1798,8 +1713,7 @@ export type AuditLogCreateWithoutReceivableInput = {
   payable?: Prisma.PayableCreateNestedOneWithoutAuditLogsInput
   receipt?: Prisma.ReceiptCreateNestedOneWithoutAuditLogsInput
   payment?: Prisma.PaymentCreateNestedOneWithoutAuditLogsInput
-  financialGeneration?: Prisma.FinancialGenerationCreateNestedOneWithoutAuditLogsInput
-  remunerationCalculation?: Prisma.RemunerationCalculationCreateNestedOneWithoutAuditLogsInput
+  remunerationPayable?: Prisma.RemunerationPayableCreateNestedOneWithoutAuditLogsInput
 }
 
 export type AuditLogUncheckedCreateWithoutReceivableInput = {
@@ -1822,8 +1736,7 @@ export type AuditLogUncheckedCreateWithoutReceivableInput = {
   payableId?: number | null
   receiptId?: number | null
   paymentId?: number | null
-  financialGenerationId?: number | null
-  remunerationCalculationId?: number | null
+  remunerationPayableId?: number | null
 }
 
 export type AuditLogCreateOrConnectWithoutReceivableInput = {
@@ -1872,8 +1785,7 @@ export type AuditLogCreateWithoutPayableInput = {
   receivable?: Prisma.ReceivableCreateNestedOneWithoutAuditLogsInput
   receipt?: Prisma.ReceiptCreateNestedOneWithoutAuditLogsInput
   payment?: Prisma.PaymentCreateNestedOneWithoutAuditLogsInput
-  financialGeneration?: Prisma.FinancialGenerationCreateNestedOneWithoutAuditLogsInput
-  remunerationCalculation?: Prisma.RemunerationCalculationCreateNestedOneWithoutAuditLogsInput
+  remunerationPayable?: Prisma.RemunerationPayableCreateNestedOneWithoutAuditLogsInput
 }
 
 export type AuditLogUncheckedCreateWithoutPayableInput = {
@@ -1896,8 +1808,7 @@ export type AuditLogUncheckedCreateWithoutPayableInput = {
   receivableId?: number | null
   receiptId?: number | null
   paymentId?: number | null
-  financialGenerationId?: number | null
-  remunerationCalculationId?: number | null
+  remunerationPayableId?: number | null
 }
 
 export type AuditLogCreateOrConnectWithoutPayableInput = {
@@ -1946,8 +1857,7 @@ export type AuditLogCreateWithoutReceiptInput = {
   receivable?: Prisma.ReceivableCreateNestedOneWithoutAuditLogsInput
   payable?: Prisma.PayableCreateNestedOneWithoutAuditLogsInput
   payment?: Prisma.PaymentCreateNestedOneWithoutAuditLogsInput
-  financialGeneration?: Prisma.FinancialGenerationCreateNestedOneWithoutAuditLogsInput
-  remunerationCalculation?: Prisma.RemunerationCalculationCreateNestedOneWithoutAuditLogsInput
+  remunerationPayable?: Prisma.RemunerationPayableCreateNestedOneWithoutAuditLogsInput
 }
 
 export type AuditLogUncheckedCreateWithoutReceiptInput = {
@@ -1970,8 +1880,7 @@ export type AuditLogUncheckedCreateWithoutReceiptInput = {
   receivableId?: number | null
   payableId?: number | null
   paymentId?: number | null
-  financialGenerationId?: number | null
-  remunerationCalculationId?: number | null
+  remunerationPayableId?: number | null
 }
 
 export type AuditLogCreateOrConnectWithoutReceiptInput = {
@@ -2020,8 +1929,7 @@ export type AuditLogCreateWithoutPaymentInput = {
   receivable?: Prisma.ReceivableCreateNestedOneWithoutAuditLogsInput
   payable?: Prisma.PayableCreateNestedOneWithoutAuditLogsInput
   receipt?: Prisma.ReceiptCreateNestedOneWithoutAuditLogsInput
-  financialGeneration?: Prisma.FinancialGenerationCreateNestedOneWithoutAuditLogsInput
-  remunerationCalculation?: Prisma.RemunerationCalculationCreateNestedOneWithoutAuditLogsInput
+  remunerationPayable?: Prisma.RemunerationPayableCreateNestedOneWithoutAuditLogsInput
 }
 
 export type AuditLogUncheckedCreateWithoutPaymentInput = {
@@ -2044,8 +1952,7 @@ export type AuditLogUncheckedCreateWithoutPaymentInput = {
   receivableId?: number | null
   payableId?: number | null
   receiptId?: number | null
-  financialGenerationId?: number | null
-  remunerationCalculationId?: number | null
+  remunerationPayableId?: number | null
 }
 
 export type AuditLogCreateOrConnectWithoutPaymentInput = {
@@ -2074,80 +1981,6 @@ export type AuditLogUpdateManyWithWhereWithoutPaymentInput = {
   data: Prisma.XOR<Prisma.AuditLogUpdateManyMutationInput, Prisma.AuditLogUncheckedUpdateManyWithoutPaymentInput>
 }
 
-export type AuditLogCreateWithoutRemunerationCalculationInput = {
-  actorName: string
-  actorEmail?: string | null
-  action: string
-  entityType: string
-  entityId?: string | null
-  entityName: string
-  changeData: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  ipAddress?: string | null
-  userAgent?: string | null
-  description: string
-  createdAt?: Date | string
-  firm: Prisma.FirmCreateNestedOneWithoutAuditLogsInput
-  actor?: Prisma.PersonCreateNestedOneWithoutActedAuditLogsInput
-  person?: Prisma.PersonCreateNestedOneWithoutAuditLogsInput
-  contract?: Prisma.ContractCreateNestedOneWithoutAuditLogsInput
-  expense?: Prisma.ExpenseCreateNestedOneWithoutAuditLogsInput
-  receivable?: Prisma.ReceivableCreateNestedOneWithoutAuditLogsInput
-  payable?: Prisma.PayableCreateNestedOneWithoutAuditLogsInput
-  receipt?: Prisma.ReceiptCreateNestedOneWithoutAuditLogsInput
-  payment?: Prisma.PaymentCreateNestedOneWithoutAuditLogsInput
-  financialGeneration?: Prisma.FinancialGenerationCreateNestedOneWithoutAuditLogsInput
-}
-
-export type AuditLogUncheckedCreateWithoutRemunerationCalculationInput = {
-  id?: number
-  actorName: string
-  actorEmail?: string | null
-  action: string
-  entityType: string
-  entityId?: string | null
-  entityName: string
-  changeData: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  ipAddress?: string | null
-  userAgent?: string | null
-  description: string
-  createdAt?: Date | string
-  actorId?: number | null
-  personId?: number | null
-  contractId?: number | null
-  expenseId?: number | null
-  receivableId?: number | null
-  payableId?: number | null
-  receiptId?: number | null
-  paymentId?: number | null
-  financialGenerationId?: number | null
-}
-
-export type AuditLogCreateOrConnectWithoutRemunerationCalculationInput = {
-  where: Prisma.AuditLogWhereUniqueInput
-  create: Prisma.XOR<Prisma.AuditLogCreateWithoutRemunerationCalculationInput, Prisma.AuditLogUncheckedCreateWithoutRemunerationCalculationInput>
-}
-
-export type AuditLogCreateManyRemunerationCalculationInputEnvelope = {
-  data: Prisma.AuditLogCreateManyRemunerationCalculationInput | Prisma.AuditLogCreateManyRemunerationCalculationInput[]
-  skipDuplicates?: boolean
-}
-
-export type AuditLogUpsertWithWhereUniqueWithoutRemunerationCalculationInput = {
-  where: Prisma.AuditLogWhereUniqueInput
-  update: Prisma.XOR<Prisma.AuditLogUpdateWithoutRemunerationCalculationInput, Prisma.AuditLogUncheckedUpdateWithoutRemunerationCalculationInput>
-  create: Prisma.XOR<Prisma.AuditLogCreateWithoutRemunerationCalculationInput, Prisma.AuditLogUncheckedCreateWithoutRemunerationCalculationInput>
-}
-
-export type AuditLogUpdateWithWhereUniqueWithoutRemunerationCalculationInput = {
-  where: Prisma.AuditLogWhereUniqueInput
-  data: Prisma.XOR<Prisma.AuditLogUpdateWithoutRemunerationCalculationInput, Prisma.AuditLogUncheckedUpdateWithoutRemunerationCalculationInput>
-}
-
-export type AuditLogUpdateManyWithWhereWithoutRemunerationCalculationInput = {
-  where: Prisma.AuditLogScalarWhereInput
-  data: Prisma.XOR<Prisma.AuditLogUpdateManyMutationInput, Prisma.AuditLogUncheckedUpdateManyWithoutRemunerationCalculationInput>
-}
-
 export type AuditLogCreateManyFirmInput = {
   id?: number
   actorName: string
@@ -2169,8 +2002,7 @@ export type AuditLogCreateManyFirmInput = {
   payableId?: number | null
   receiptId?: number | null
   paymentId?: number | null
-  financialGenerationId?: number | null
-  remunerationCalculationId?: number | null
+  remunerationPayableId?: number | null
 }
 
 export type AuditLogUpdateWithoutFirmInput = {
@@ -2193,8 +2025,7 @@ export type AuditLogUpdateWithoutFirmInput = {
   payable?: Prisma.PayableUpdateOneWithoutAuditLogsNestedInput
   receipt?: Prisma.ReceiptUpdateOneWithoutAuditLogsNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutAuditLogsNestedInput
-  financialGeneration?: Prisma.FinancialGenerationUpdateOneWithoutAuditLogsNestedInput
-  remunerationCalculation?: Prisma.RemunerationCalculationUpdateOneWithoutAuditLogsNestedInput
+  remunerationPayable?: Prisma.RemunerationPayableUpdateOneWithoutAuditLogsNestedInput
 }
 
 export type AuditLogUncheckedUpdateWithoutFirmInput = {
@@ -2218,8 +2049,7 @@ export type AuditLogUncheckedUpdateWithoutFirmInput = {
   payableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   receiptId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  financialGenerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationPayableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type AuditLogUncheckedUpdateManyWithoutFirmInput = {
@@ -2243,8 +2073,7 @@ export type AuditLogUncheckedUpdateManyWithoutFirmInput = {
   payableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   receiptId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  financialGenerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationPayableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type AuditLogCreateManyActorInput = {
@@ -2268,8 +2097,7 @@ export type AuditLogCreateManyActorInput = {
   payableId?: number | null
   receiptId?: number | null
   paymentId?: number | null
-  financialGenerationId?: number | null
-  remunerationCalculationId?: number | null
+  remunerationPayableId?: number | null
 }
 
 export type AuditLogCreateManyPersonInput = {
@@ -2293,8 +2121,7 @@ export type AuditLogCreateManyPersonInput = {
   payableId?: number | null
   receiptId?: number | null
   paymentId?: number | null
-  financialGenerationId?: number | null
-  remunerationCalculationId?: number | null
+  remunerationPayableId?: number | null
 }
 
 export type AuditLogUpdateWithoutActorInput = {
@@ -2317,8 +2144,7 @@ export type AuditLogUpdateWithoutActorInput = {
   payable?: Prisma.PayableUpdateOneWithoutAuditLogsNestedInput
   receipt?: Prisma.ReceiptUpdateOneWithoutAuditLogsNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutAuditLogsNestedInput
-  financialGeneration?: Prisma.FinancialGenerationUpdateOneWithoutAuditLogsNestedInput
-  remunerationCalculation?: Prisma.RemunerationCalculationUpdateOneWithoutAuditLogsNestedInput
+  remunerationPayable?: Prisma.RemunerationPayableUpdateOneWithoutAuditLogsNestedInput
 }
 
 export type AuditLogUncheckedUpdateWithoutActorInput = {
@@ -2342,8 +2168,7 @@ export type AuditLogUncheckedUpdateWithoutActorInput = {
   payableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   receiptId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  financialGenerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationPayableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type AuditLogUncheckedUpdateManyWithoutActorInput = {
@@ -2367,8 +2192,7 @@ export type AuditLogUncheckedUpdateManyWithoutActorInput = {
   payableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   receiptId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  financialGenerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationPayableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type AuditLogUpdateWithoutPersonInput = {
@@ -2391,8 +2215,7 @@ export type AuditLogUpdateWithoutPersonInput = {
   payable?: Prisma.PayableUpdateOneWithoutAuditLogsNestedInput
   receipt?: Prisma.ReceiptUpdateOneWithoutAuditLogsNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutAuditLogsNestedInput
-  financialGeneration?: Prisma.FinancialGenerationUpdateOneWithoutAuditLogsNestedInput
-  remunerationCalculation?: Prisma.RemunerationCalculationUpdateOneWithoutAuditLogsNestedInput
+  remunerationPayable?: Prisma.RemunerationPayableUpdateOneWithoutAuditLogsNestedInput
 }
 
 export type AuditLogUncheckedUpdateWithoutPersonInput = {
@@ -2416,8 +2239,7 @@ export type AuditLogUncheckedUpdateWithoutPersonInput = {
   payableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   receiptId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  financialGenerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationPayableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type AuditLogUncheckedUpdateManyWithoutPersonInput = {
@@ -2441,8 +2263,7 @@ export type AuditLogUncheckedUpdateManyWithoutPersonInput = {
   payableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   receiptId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  financialGenerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationPayableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type AuditLogCreateManyContractInput = {
@@ -2465,8 +2286,7 @@ export type AuditLogCreateManyContractInput = {
   payableId?: number | null
   receiptId?: number | null
   paymentId?: number | null
-  financialGenerationId?: number | null
-  remunerationCalculationId?: number | null
+  remunerationPayableId?: number | null
 }
 
 export type AuditLogUpdateWithoutContractInput = {
@@ -2489,8 +2309,7 @@ export type AuditLogUpdateWithoutContractInput = {
   payable?: Prisma.PayableUpdateOneWithoutAuditLogsNestedInput
   receipt?: Prisma.ReceiptUpdateOneWithoutAuditLogsNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutAuditLogsNestedInput
-  financialGeneration?: Prisma.FinancialGenerationUpdateOneWithoutAuditLogsNestedInput
-  remunerationCalculation?: Prisma.RemunerationCalculationUpdateOneWithoutAuditLogsNestedInput
+  remunerationPayable?: Prisma.RemunerationPayableUpdateOneWithoutAuditLogsNestedInput
 }
 
 export type AuditLogUncheckedUpdateWithoutContractInput = {
@@ -2513,8 +2332,7 @@ export type AuditLogUncheckedUpdateWithoutContractInput = {
   payableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   receiptId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  financialGenerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationPayableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type AuditLogUncheckedUpdateManyWithoutContractInput = {
@@ -2537,8 +2355,7 @@ export type AuditLogUncheckedUpdateManyWithoutContractInput = {
   payableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   receiptId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  financialGenerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationPayableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type AuditLogCreateManyExpenseInput = {
@@ -2561,8 +2378,7 @@ export type AuditLogCreateManyExpenseInput = {
   payableId?: number | null
   receiptId?: number | null
   paymentId?: number | null
-  financialGenerationId?: number | null
-  remunerationCalculationId?: number | null
+  remunerationPayableId?: number | null
 }
 
 export type AuditLogUpdateWithoutExpenseInput = {
@@ -2585,8 +2401,7 @@ export type AuditLogUpdateWithoutExpenseInput = {
   payable?: Prisma.PayableUpdateOneWithoutAuditLogsNestedInput
   receipt?: Prisma.ReceiptUpdateOneWithoutAuditLogsNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutAuditLogsNestedInput
-  financialGeneration?: Prisma.FinancialGenerationUpdateOneWithoutAuditLogsNestedInput
-  remunerationCalculation?: Prisma.RemunerationCalculationUpdateOneWithoutAuditLogsNestedInput
+  remunerationPayable?: Prisma.RemunerationPayableUpdateOneWithoutAuditLogsNestedInput
 }
 
 export type AuditLogUncheckedUpdateWithoutExpenseInput = {
@@ -2609,8 +2424,7 @@ export type AuditLogUncheckedUpdateWithoutExpenseInput = {
   payableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   receiptId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  financialGenerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationPayableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type AuditLogUncheckedUpdateManyWithoutExpenseInput = {
@@ -2633,11 +2447,10 @@ export type AuditLogUncheckedUpdateManyWithoutExpenseInput = {
   payableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   receiptId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  financialGenerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationPayableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
-export type AuditLogCreateManyFinancialGenerationInput = {
+export type AuditLogCreateManyRemunerationPayableInput = {
   id?: number
   actorName: string
   actorEmail?: string | null
@@ -2658,10 +2471,9 @@ export type AuditLogCreateManyFinancialGenerationInput = {
   payableId?: number | null
   receiptId?: number | null
   paymentId?: number | null
-  remunerationCalculationId?: number | null
 }
 
-export type AuditLogUpdateWithoutFinancialGenerationInput = {
+export type AuditLogUpdateWithoutRemunerationPayableInput = {
   actorName?: Prisma.StringFieldUpdateOperationsInput | string
   actorEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   action?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2682,10 +2494,9 @@ export type AuditLogUpdateWithoutFinancialGenerationInput = {
   payable?: Prisma.PayableUpdateOneWithoutAuditLogsNestedInput
   receipt?: Prisma.ReceiptUpdateOneWithoutAuditLogsNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutAuditLogsNestedInput
-  remunerationCalculation?: Prisma.RemunerationCalculationUpdateOneWithoutAuditLogsNestedInput
 }
 
-export type AuditLogUncheckedUpdateWithoutFinancialGenerationInput = {
+export type AuditLogUncheckedUpdateWithoutRemunerationPayableInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   actorName?: Prisma.StringFieldUpdateOperationsInput | string
   actorEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2706,10 +2517,9 @@ export type AuditLogUncheckedUpdateWithoutFinancialGenerationInput = {
   payableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   receiptId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
-export type AuditLogUncheckedUpdateManyWithoutFinancialGenerationInput = {
+export type AuditLogUncheckedUpdateManyWithoutRemunerationPayableInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   actorName?: Prisma.StringFieldUpdateOperationsInput | string
   actorEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2730,7 +2540,6 @@ export type AuditLogUncheckedUpdateManyWithoutFinancialGenerationInput = {
   payableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   receiptId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type AuditLogCreateManyReceivableInput = {
@@ -2753,8 +2562,7 @@ export type AuditLogCreateManyReceivableInput = {
   payableId?: number | null
   receiptId?: number | null
   paymentId?: number | null
-  financialGenerationId?: number | null
-  remunerationCalculationId?: number | null
+  remunerationPayableId?: number | null
 }
 
 export type AuditLogUpdateWithoutReceivableInput = {
@@ -2777,8 +2585,7 @@ export type AuditLogUpdateWithoutReceivableInput = {
   payable?: Prisma.PayableUpdateOneWithoutAuditLogsNestedInput
   receipt?: Prisma.ReceiptUpdateOneWithoutAuditLogsNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutAuditLogsNestedInput
-  financialGeneration?: Prisma.FinancialGenerationUpdateOneWithoutAuditLogsNestedInput
-  remunerationCalculation?: Prisma.RemunerationCalculationUpdateOneWithoutAuditLogsNestedInput
+  remunerationPayable?: Prisma.RemunerationPayableUpdateOneWithoutAuditLogsNestedInput
 }
 
 export type AuditLogUncheckedUpdateWithoutReceivableInput = {
@@ -2801,8 +2608,7 @@ export type AuditLogUncheckedUpdateWithoutReceivableInput = {
   payableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   receiptId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  financialGenerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationPayableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type AuditLogUncheckedUpdateManyWithoutReceivableInput = {
@@ -2825,8 +2631,7 @@ export type AuditLogUncheckedUpdateManyWithoutReceivableInput = {
   payableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   receiptId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  financialGenerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationPayableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type AuditLogCreateManyPayableInput = {
@@ -2849,8 +2654,7 @@ export type AuditLogCreateManyPayableInput = {
   receivableId?: number | null
   receiptId?: number | null
   paymentId?: number | null
-  financialGenerationId?: number | null
-  remunerationCalculationId?: number | null
+  remunerationPayableId?: number | null
 }
 
 export type AuditLogUpdateWithoutPayableInput = {
@@ -2873,8 +2677,7 @@ export type AuditLogUpdateWithoutPayableInput = {
   receivable?: Prisma.ReceivableUpdateOneWithoutAuditLogsNestedInput
   receipt?: Prisma.ReceiptUpdateOneWithoutAuditLogsNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutAuditLogsNestedInput
-  financialGeneration?: Prisma.FinancialGenerationUpdateOneWithoutAuditLogsNestedInput
-  remunerationCalculation?: Prisma.RemunerationCalculationUpdateOneWithoutAuditLogsNestedInput
+  remunerationPayable?: Prisma.RemunerationPayableUpdateOneWithoutAuditLogsNestedInput
 }
 
 export type AuditLogUncheckedUpdateWithoutPayableInput = {
@@ -2897,8 +2700,7 @@ export type AuditLogUncheckedUpdateWithoutPayableInput = {
   receivableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   receiptId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  financialGenerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationPayableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type AuditLogUncheckedUpdateManyWithoutPayableInput = {
@@ -2921,8 +2723,7 @@ export type AuditLogUncheckedUpdateManyWithoutPayableInput = {
   receivableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   receiptId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  financialGenerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationPayableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type AuditLogCreateManyReceiptInput = {
@@ -2945,8 +2746,7 @@ export type AuditLogCreateManyReceiptInput = {
   receivableId?: number | null
   payableId?: number | null
   paymentId?: number | null
-  financialGenerationId?: number | null
-  remunerationCalculationId?: number | null
+  remunerationPayableId?: number | null
 }
 
 export type AuditLogUpdateWithoutReceiptInput = {
@@ -2969,8 +2769,7 @@ export type AuditLogUpdateWithoutReceiptInput = {
   receivable?: Prisma.ReceivableUpdateOneWithoutAuditLogsNestedInput
   payable?: Prisma.PayableUpdateOneWithoutAuditLogsNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutAuditLogsNestedInput
-  financialGeneration?: Prisma.FinancialGenerationUpdateOneWithoutAuditLogsNestedInput
-  remunerationCalculation?: Prisma.RemunerationCalculationUpdateOneWithoutAuditLogsNestedInput
+  remunerationPayable?: Prisma.RemunerationPayableUpdateOneWithoutAuditLogsNestedInput
 }
 
 export type AuditLogUncheckedUpdateWithoutReceiptInput = {
@@ -2993,8 +2792,7 @@ export type AuditLogUncheckedUpdateWithoutReceiptInput = {
   receivableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   payableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  financialGenerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationPayableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type AuditLogUncheckedUpdateManyWithoutReceiptInput = {
@@ -3017,8 +2815,7 @@ export type AuditLogUncheckedUpdateManyWithoutReceiptInput = {
   receivableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   payableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  financialGenerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationPayableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type AuditLogCreateManyPaymentInput = {
@@ -3041,8 +2838,7 @@ export type AuditLogCreateManyPaymentInput = {
   receivableId?: number | null
   payableId?: number | null
   receiptId?: number | null
-  financialGenerationId?: number | null
-  remunerationCalculationId?: number | null
+  remunerationPayableId?: number | null
 }
 
 export type AuditLogUpdateWithoutPaymentInput = {
@@ -3065,8 +2861,7 @@ export type AuditLogUpdateWithoutPaymentInput = {
   receivable?: Prisma.ReceivableUpdateOneWithoutAuditLogsNestedInput
   payable?: Prisma.PayableUpdateOneWithoutAuditLogsNestedInput
   receipt?: Prisma.ReceiptUpdateOneWithoutAuditLogsNestedInput
-  financialGeneration?: Prisma.FinancialGenerationUpdateOneWithoutAuditLogsNestedInput
-  remunerationCalculation?: Prisma.RemunerationCalculationUpdateOneWithoutAuditLogsNestedInput
+  remunerationPayable?: Prisma.RemunerationPayableUpdateOneWithoutAuditLogsNestedInput
 }
 
 export type AuditLogUncheckedUpdateWithoutPaymentInput = {
@@ -3089,8 +2884,7 @@ export type AuditLogUncheckedUpdateWithoutPaymentInput = {
   receivableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   payableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   receiptId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  financialGenerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationPayableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type AuditLogUncheckedUpdateManyWithoutPaymentInput = {
@@ -3113,104 +2907,7 @@ export type AuditLogUncheckedUpdateManyWithoutPaymentInput = {
   receivableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   payableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   receiptId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  financialGenerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-}
-
-export type AuditLogCreateManyRemunerationCalculationInput = {
-  id?: number
-  actorName: string
-  actorEmail?: string | null
-  action: string
-  entityType: string
-  entityId?: string | null
-  entityName: string
-  changeData: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  ipAddress?: string | null
-  userAgent?: string | null
-  description: string
-  createdAt?: Date | string
-  actorId?: number | null
-  personId?: number | null
-  contractId?: number | null
-  expenseId?: number | null
-  receivableId?: number | null
-  payableId?: number | null
-  receiptId?: number | null
-  paymentId?: number | null
-  financialGenerationId?: number | null
-}
-
-export type AuditLogUpdateWithoutRemunerationCalculationInput = {
-  actorName?: Prisma.StringFieldUpdateOperationsInput | string
-  actorEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  action?: Prisma.StringFieldUpdateOperationsInput | string
-  entityType?: Prisma.StringFieldUpdateOperationsInput | string
-  entityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  entityName?: Prisma.StringFieldUpdateOperationsInput | string
-  changeData?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  firm?: Prisma.FirmUpdateOneRequiredWithoutAuditLogsNestedInput
-  actor?: Prisma.PersonUpdateOneWithoutActedAuditLogsNestedInput
-  person?: Prisma.PersonUpdateOneWithoutAuditLogsNestedInput
-  contract?: Prisma.ContractUpdateOneWithoutAuditLogsNestedInput
-  expense?: Prisma.ExpenseUpdateOneWithoutAuditLogsNestedInput
-  receivable?: Prisma.ReceivableUpdateOneWithoutAuditLogsNestedInput
-  payable?: Prisma.PayableUpdateOneWithoutAuditLogsNestedInput
-  receipt?: Prisma.ReceiptUpdateOneWithoutAuditLogsNestedInput
-  payment?: Prisma.PaymentUpdateOneWithoutAuditLogsNestedInput
-  financialGeneration?: Prisma.FinancialGenerationUpdateOneWithoutAuditLogsNestedInput
-}
-
-export type AuditLogUncheckedUpdateWithoutRemunerationCalculationInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  actorName?: Prisma.StringFieldUpdateOperationsInput | string
-  actorEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  action?: Prisma.StringFieldUpdateOperationsInput | string
-  entityType?: Prisma.StringFieldUpdateOperationsInput | string
-  entityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  entityName?: Prisma.StringFieldUpdateOperationsInput | string
-  changeData?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  actorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  personId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  contractId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  receivableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  payableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  receiptId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  paymentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  financialGenerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-}
-
-export type AuditLogUncheckedUpdateManyWithoutRemunerationCalculationInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  actorName?: Prisma.StringFieldUpdateOperationsInput | string
-  actorEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  action?: Prisma.StringFieldUpdateOperationsInput | string
-  entityType?: Prisma.StringFieldUpdateOperationsInput | string
-  entityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  entityName?: Prisma.StringFieldUpdateOperationsInput | string
-  changeData?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  actorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  personId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  contractId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  receivableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  payableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  receiptId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  paymentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  financialGenerationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remunerationPayableId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 
@@ -3237,8 +2934,7 @@ export type AuditLogSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   payableId?: boolean
   receiptId?: boolean
   paymentId?: boolean
-  financialGenerationId?: boolean
-  remunerationCalculationId?: boolean
+  remunerationPayableId?: boolean
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
   actor?: boolean | Prisma.AuditLog$actorArgs<ExtArgs>
   person?: boolean | Prisma.AuditLog$personArgs<ExtArgs>
@@ -3248,8 +2944,7 @@ export type AuditLogSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   payable?: boolean | Prisma.AuditLog$payableArgs<ExtArgs>
   receipt?: boolean | Prisma.AuditLog$receiptArgs<ExtArgs>
   payment?: boolean | Prisma.AuditLog$paymentArgs<ExtArgs>
-  financialGeneration?: boolean | Prisma.AuditLog$financialGenerationArgs<ExtArgs>
-  remunerationCalculation?: boolean | Prisma.AuditLog$remunerationCalculationArgs<ExtArgs>
+  remunerationPayable?: boolean | Prisma.AuditLog$remunerationPayableArgs<ExtArgs>
 }, ExtArgs["result"]["auditLog"]>
 
 export type AuditLogSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -3274,8 +2969,7 @@ export type AuditLogSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   payableId?: boolean
   receiptId?: boolean
   paymentId?: boolean
-  financialGenerationId?: boolean
-  remunerationCalculationId?: boolean
+  remunerationPayableId?: boolean
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
   actor?: boolean | Prisma.AuditLog$actorArgs<ExtArgs>
   person?: boolean | Prisma.AuditLog$personArgs<ExtArgs>
@@ -3285,8 +2979,7 @@ export type AuditLogSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   payable?: boolean | Prisma.AuditLog$payableArgs<ExtArgs>
   receipt?: boolean | Prisma.AuditLog$receiptArgs<ExtArgs>
   payment?: boolean | Prisma.AuditLog$paymentArgs<ExtArgs>
-  financialGeneration?: boolean | Prisma.AuditLog$financialGenerationArgs<ExtArgs>
-  remunerationCalculation?: boolean | Prisma.AuditLog$remunerationCalculationArgs<ExtArgs>
+  remunerationPayable?: boolean | Prisma.AuditLog$remunerationPayableArgs<ExtArgs>
 }, ExtArgs["result"]["auditLog"]>
 
 export type AuditLogSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -3311,8 +3004,7 @@ export type AuditLogSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   payableId?: boolean
   receiptId?: boolean
   paymentId?: boolean
-  financialGenerationId?: boolean
-  remunerationCalculationId?: boolean
+  remunerationPayableId?: boolean
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
   actor?: boolean | Prisma.AuditLog$actorArgs<ExtArgs>
   person?: boolean | Prisma.AuditLog$personArgs<ExtArgs>
@@ -3322,8 +3014,7 @@ export type AuditLogSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   payable?: boolean | Prisma.AuditLog$payableArgs<ExtArgs>
   receipt?: boolean | Prisma.AuditLog$receiptArgs<ExtArgs>
   payment?: boolean | Prisma.AuditLog$paymentArgs<ExtArgs>
-  financialGeneration?: boolean | Prisma.AuditLog$financialGenerationArgs<ExtArgs>
-  remunerationCalculation?: boolean | Prisma.AuditLog$remunerationCalculationArgs<ExtArgs>
+  remunerationPayable?: boolean | Prisma.AuditLog$remunerationPayableArgs<ExtArgs>
 }, ExtArgs["result"]["auditLog"]>
 
 export type AuditLogSelectScalar = {
@@ -3348,11 +3039,10 @@ export type AuditLogSelectScalar = {
   payableId?: boolean
   receiptId?: boolean
   paymentId?: boolean
-  financialGenerationId?: boolean
-  remunerationCalculationId?: boolean
+  remunerationPayableId?: boolean
 }
 
-export type AuditLogOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "actorName" | "actorEmail" | "action" | "entityType" | "entityId" | "entityName" | "changeData" | "ipAddress" | "userAgent" | "description" | "createdAt" | "firmId" | "actorId" | "personId" | "contractId" | "expenseId" | "receivableId" | "payableId" | "receiptId" | "paymentId" | "financialGenerationId" | "remunerationCalculationId", ExtArgs["result"]["auditLog"]>
+export type AuditLogOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "actorName" | "actorEmail" | "action" | "entityType" | "entityId" | "entityName" | "changeData" | "ipAddress" | "userAgent" | "description" | "createdAt" | "firmId" | "actorId" | "personId" | "contractId" | "expenseId" | "receivableId" | "payableId" | "receiptId" | "paymentId" | "remunerationPayableId", ExtArgs["result"]["auditLog"]>
 export type AuditLogInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
   actor?: boolean | Prisma.AuditLog$actorArgs<ExtArgs>
@@ -3363,8 +3053,7 @@ export type AuditLogInclude<ExtArgs extends runtime.Types.Extensions.InternalArg
   payable?: boolean | Prisma.AuditLog$payableArgs<ExtArgs>
   receipt?: boolean | Prisma.AuditLog$receiptArgs<ExtArgs>
   payment?: boolean | Prisma.AuditLog$paymentArgs<ExtArgs>
-  financialGeneration?: boolean | Prisma.AuditLog$financialGenerationArgs<ExtArgs>
-  remunerationCalculation?: boolean | Prisma.AuditLog$remunerationCalculationArgs<ExtArgs>
+  remunerationPayable?: boolean | Prisma.AuditLog$remunerationPayableArgs<ExtArgs>
 }
 export type AuditLogIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
@@ -3376,8 +3065,7 @@ export type AuditLogIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   payable?: boolean | Prisma.AuditLog$payableArgs<ExtArgs>
   receipt?: boolean | Prisma.AuditLog$receiptArgs<ExtArgs>
   payment?: boolean | Prisma.AuditLog$paymentArgs<ExtArgs>
-  financialGeneration?: boolean | Prisma.AuditLog$financialGenerationArgs<ExtArgs>
-  remunerationCalculation?: boolean | Prisma.AuditLog$remunerationCalculationArgs<ExtArgs>
+  remunerationPayable?: boolean | Prisma.AuditLog$remunerationPayableArgs<ExtArgs>
 }
 export type AuditLogIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
@@ -3389,8 +3077,7 @@ export type AuditLogIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   payable?: boolean | Prisma.AuditLog$payableArgs<ExtArgs>
   receipt?: boolean | Prisma.AuditLog$receiptArgs<ExtArgs>
   payment?: boolean | Prisma.AuditLog$paymentArgs<ExtArgs>
-  financialGeneration?: boolean | Prisma.AuditLog$financialGenerationArgs<ExtArgs>
-  remunerationCalculation?: boolean | Prisma.AuditLog$remunerationCalculationArgs<ExtArgs>
+  remunerationPayable?: boolean | Prisma.AuditLog$remunerationPayableArgs<ExtArgs>
 }
 
 export type $AuditLogPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3405,8 +3092,7 @@ export type $AuditLogPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     payable: Prisma.$PayablePayload<ExtArgs> | null
     receipt: Prisma.$ReceiptPayload<ExtArgs> | null
     payment: Prisma.$PaymentPayload<ExtArgs> | null
-    financialGeneration: Prisma.$FinancialGenerationPayload<ExtArgs> | null
-    remunerationCalculation: Prisma.$RemunerationCalculationPayload<ExtArgs> | null
+    remunerationPayable: Prisma.$RemunerationPayablePayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -3430,8 +3116,7 @@ export type $AuditLogPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     payableId: number | null
     receiptId: number | null
     paymentId: number | null
-    financialGenerationId: number | null
-    remunerationCalculationId: number | null
+    remunerationPayableId: number | null
   }, ExtArgs["result"]["auditLog"]>
   composites: {}
 }
@@ -3835,8 +3520,7 @@ export interface Prisma__AuditLogClient<T, Null = never, ExtArgs extends runtime
   payable<T extends Prisma.AuditLog$payableArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AuditLog$payableArgs<ExtArgs>>): Prisma.Prisma__PayableClient<runtime.Types.Result.GetResult<Prisma.$PayablePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   receipt<T extends Prisma.AuditLog$receiptArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AuditLog$receiptArgs<ExtArgs>>): Prisma.Prisma__ReceiptClient<runtime.Types.Result.GetResult<Prisma.$ReceiptPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   payment<T extends Prisma.AuditLog$paymentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AuditLog$paymentArgs<ExtArgs>>): Prisma.Prisma__PaymentClient<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  financialGeneration<T extends Prisma.AuditLog$financialGenerationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AuditLog$financialGenerationArgs<ExtArgs>>): Prisma.Prisma__FinancialGenerationClient<runtime.Types.Result.GetResult<Prisma.$FinancialGenerationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  remunerationCalculation<T extends Prisma.AuditLog$remunerationCalculationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AuditLog$remunerationCalculationArgs<ExtArgs>>): Prisma.Prisma__RemunerationCalculationClient<runtime.Types.Result.GetResult<Prisma.$RemunerationCalculationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  remunerationPayable<T extends Prisma.AuditLog$remunerationPayableArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AuditLog$remunerationPayableArgs<ExtArgs>>): Prisma.Prisma__RemunerationPayableClient<runtime.Types.Result.GetResult<Prisma.$RemunerationPayablePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3887,8 +3571,7 @@ export interface AuditLogFieldRefs {
   readonly payableId: Prisma.FieldRef<"AuditLog", 'Int'>
   readonly receiptId: Prisma.FieldRef<"AuditLog", 'Int'>
   readonly paymentId: Prisma.FieldRef<"AuditLog", 'Int'>
-  readonly financialGenerationId: Prisma.FieldRef<"AuditLog", 'Int'>
-  readonly remunerationCalculationId: Prisma.FieldRef<"AuditLog", 'Int'>
+  readonly remunerationPayableId: Prisma.FieldRef<"AuditLog", 'Int'>
 }
     
 
@@ -4442,41 +4125,22 @@ export type AuditLog$paymentArgs<ExtArgs extends runtime.Types.Extensions.Intern
 }
 
 /**
- * AuditLog.financialGeneration
+ * AuditLog.remunerationPayable
  */
-export type AuditLog$financialGenerationArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type AuditLog$remunerationPayableArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the FinancialGeneration
+   * Select specific fields to fetch from the RemunerationPayable
    */
-  select?: Prisma.FinancialGenerationSelect<ExtArgs> | null
+  select?: Prisma.RemunerationPayableSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the FinancialGeneration
+   * Omit specific fields from the RemunerationPayable
    */
-  omit?: Prisma.FinancialGenerationOmit<ExtArgs> | null
+  omit?: Prisma.RemunerationPayableOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.FinancialGenerationInclude<ExtArgs> | null
-  where?: Prisma.FinancialGenerationWhereInput
-}
-
-/**
- * AuditLog.remunerationCalculation
- */
-export type AuditLog$remunerationCalculationArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the RemunerationCalculation
-   */
-  select?: Prisma.RemunerationCalculationSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the RemunerationCalculation
-   */
-  omit?: Prisma.RemunerationCalculationOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.RemunerationCalculationInclude<ExtArgs> | null
-  where?: Prisma.RemunerationCalculationWhereInput
+  include?: Prisma.RemunerationPayableInclude<ExtArgs> | null
+  where?: Prisma.RemunerationPayableWhereInput
 }
 
 /**

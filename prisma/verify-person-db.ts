@@ -25,10 +25,9 @@ try {
  const pid=person.rows[0].id;
  await client.query(`INSERT INTO client_profiles(id,"personId","updatedAt") VALUES(810000,$1,now())`,[pid]);
  await client.query(`INSERT INTO supplier_profiles(id,"personId","updatedAt") VALUES(820000,$1,now())`,[pid]);
- const direct=await client.query(`INSERT INTO direct_financial_entries("firmId","actorId",reason) VALUES(1,1,'Rolled-back profile verification') RETURNING id`);
- const ref=await client.query(`SELECT "analyticId","expectedPaymentMethodId","titleKindId" FROM receivables LIMIT 1`);const x=ref.rows[0];
- await client.query(`INSERT INTO receivables("firmId","debtorId","directEntryId","analyticId","expectedPaymentMethodId","titleKindId",amount,"dueDate","updatedAt") VALUES(1,810000,$1,$2,$3,$4,100,CURRENT_DATE,now())`,[direct.rows[0].id,x.analyticId,x.expectedPaymentMethodId,x.titleKindId]);
- await client.query(`INSERT INTO payables("firmId","beneficiaryId","directEntryId","analyticId","expectedPaymentMethodId","titleKindId",amount,"dueDate","updatedAt") VALUES(1,820000,$1,$2,$3,$4,100,CURRENT_DATE,now())`,[direct.rows[0].id,x.analyticId,x.expectedPaymentMethodId,x.titleKindId]);
+ const ref=await client.query(`SELECT "analyticId","expectedPaymentMethodId",kind FROM receivables LIMIT 1`);const x=ref.rows[0];
+ await client.query(`INSERT INTO receivables("firmId","debtorId","analyticId","expectedPaymentMethodId",kind,amount,"dueDate","updatedAt") VALUES(1,810000,$1,$2,$3,100,CURRENT_DATE,now())`,[x.analyticId,x.expectedPaymentMethodId,x.kind]);
+ await client.query(`INSERT INTO payables("firmId","beneficiaryId","analyticId","expectedPaymentMethodId",kind,amount,"dueDate","updatedAt") VALUES(1,820000,$1,$2,$3,100,CURRENT_DATE,now())`,[x.analyticId,x.expectedPaymentMethodId,x.kind]);
  await client.query('SET CONSTRAINTS ALL IMMEDIATE');checks++;
  } finally {await client.query('ROLLBACK');}
  console.log(JSON.stringify({checks,allPassed:true,writeTests:'rolled back'}));

@@ -408,7 +408,6 @@ export const ModelName = {
   AttachmentType: 'AttachmentType',
   FinancialAnalytic: 'FinancialAnalytic',
   PaymentMethod: 'PaymentMethod',
-  TitleKind: 'TitleKind',
   Person: 'Person',
   ClientProfile: 'ClientProfile',
   SupplierProfile: 'SupplierProfile',
@@ -417,15 +416,15 @@ export const ModelName = {
   ContractAssignment: 'ContractAssignment',
   Revenue: 'Revenue',
   Expense: 'Expense',
-  FinancialGeneration: 'FinancialGeneration',
-  DirectFinancialEntry: 'DirectFinancialEntry',
+  ContractRevenueReceivable: 'ContractRevenueReceivable',
+  ExpensePayable: 'ExpensePayable',
+  RemunerationPayable: 'RemunerationPayable',
   Receivable: 'Receivable',
   Payable: 'Payable',
   Receipt: 'Receipt',
   ReceiptReversal: 'ReceiptReversal',
   Payment: 'Payment',
   PaymentReversal: 'PaymentReversal',
-  RemunerationCalculation: 'RemunerationCalculation',
   Attachment: 'Attachment',
   AuditLog: 'AuditLog'
 } as const
@@ -443,7 +442,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "clerkWebhookReceipt" | "firm" | "personType" | "employeeType" | "legalArea" | "contractStatus" | "assignmentType" | "revenueType" | "attachmentType" | "financialAnalytic" | "paymentMethod" | "titleKind" | "person" | "clientProfile" | "supplierProfile" | "employeeProfile" | "contract" | "contractAssignment" | "revenue" | "expense" | "financialGeneration" | "directFinancialEntry" | "receivable" | "payable" | "receipt" | "receiptReversal" | "payment" | "paymentReversal" | "remunerationCalculation" | "attachment" | "auditLog"
+    modelProps: "clerkWebhookReceipt" | "firm" | "personType" | "employeeType" | "legalArea" | "contractStatus" | "assignmentType" | "revenueType" | "attachmentType" | "financialAnalytic" | "paymentMethod" | "person" | "clientProfile" | "supplierProfile" | "employeeProfile" | "contract" | "contractAssignment" | "revenue" | "expense" | "contractRevenueReceivable" | "expensePayable" | "remunerationPayable" | "receivable" | "payable" | "receipt" | "receiptReversal" | "payment" | "paymentReversal" | "attachment" | "auditLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1261,80 +1260,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    TitleKind: {
-      payload: Prisma.$TitleKindPayload<ExtArgs>
-      fields: Prisma.TitleKindFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.TitleKindFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TitleKindPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.TitleKindFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TitleKindPayload>
-        }
-        findFirst: {
-          args: Prisma.TitleKindFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TitleKindPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.TitleKindFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TitleKindPayload>
-        }
-        findMany: {
-          args: Prisma.TitleKindFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TitleKindPayload>[]
-        }
-        create: {
-          args: Prisma.TitleKindCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TitleKindPayload>
-        }
-        createMany: {
-          args: Prisma.TitleKindCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.TitleKindCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TitleKindPayload>[]
-        }
-        delete: {
-          args: Prisma.TitleKindDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TitleKindPayload>
-        }
-        update: {
-          args: Prisma.TitleKindUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TitleKindPayload>
-        }
-        deleteMany: {
-          args: Prisma.TitleKindDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.TitleKindUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.TitleKindUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TitleKindPayload>[]
-        }
-        upsert: {
-          args: Prisma.TitleKindUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TitleKindPayload>
-        }
-        aggregate: {
-          args: Prisma.TitleKindAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateTitleKind>
-        }
-        groupBy: {
-          args: Prisma.TitleKindGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.TitleKindGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.TitleKindCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.TitleKindCountAggregateOutputType> | number
-        }
-      }
-    }
     Person: {
       payload: Prisma.$PersonPayload<ExtArgs>
       fields: Prisma.PersonFieldRefs
@@ -1927,151 +1852,225 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    FinancialGeneration: {
-      payload: Prisma.$FinancialGenerationPayload<ExtArgs>
-      fields: Prisma.FinancialGenerationFieldRefs
+    ContractRevenueReceivable: {
+      payload: Prisma.$ContractRevenueReceivablePayload<ExtArgs>
+      fields: Prisma.ContractRevenueReceivableFieldRefs
       operations: {
         findUnique: {
-          args: Prisma.FinancialGenerationFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FinancialGenerationPayload> | null
+          args: Prisma.ContractRevenueReceivableFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContractRevenueReceivablePayload> | null
         }
         findUniqueOrThrow: {
-          args: Prisma.FinancialGenerationFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FinancialGenerationPayload>
+          args: Prisma.ContractRevenueReceivableFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContractRevenueReceivablePayload>
         }
         findFirst: {
-          args: Prisma.FinancialGenerationFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FinancialGenerationPayload> | null
+          args: Prisma.ContractRevenueReceivableFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContractRevenueReceivablePayload> | null
         }
         findFirstOrThrow: {
-          args: Prisma.FinancialGenerationFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FinancialGenerationPayload>
+          args: Prisma.ContractRevenueReceivableFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContractRevenueReceivablePayload>
         }
         findMany: {
-          args: Prisma.FinancialGenerationFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FinancialGenerationPayload>[]
+          args: Prisma.ContractRevenueReceivableFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContractRevenueReceivablePayload>[]
         }
         create: {
-          args: Prisma.FinancialGenerationCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FinancialGenerationPayload>
+          args: Prisma.ContractRevenueReceivableCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContractRevenueReceivablePayload>
         }
         createMany: {
-          args: Prisma.FinancialGenerationCreateManyArgs<ExtArgs>
+          args: Prisma.ContractRevenueReceivableCreateManyArgs<ExtArgs>
           result: BatchPayload
         }
         createManyAndReturn: {
-          args: Prisma.FinancialGenerationCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FinancialGenerationPayload>[]
+          args: Prisma.ContractRevenueReceivableCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContractRevenueReceivablePayload>[]
         }
         delete: {
-          args: Prisma.FinancialGenerationDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FinancialGenerationPayload>
+          args: Prisma.ContractRevenueReceivableDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContractRevenueReceivablePayload>
         }
         update: {
-          args: Prisma.FinancialGenerationUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FinancialGenerationPayload>
+          args: Prisma.ContractRevenueReceivableUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContractRevenueReceivablePayload>
         }
         deleteMany: {
-          args: Prisma.FinancialGenerationDeleteManyArgs<ExtArgs>
+          args: Prisma.ContractRevenueReceivableDeleteManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateMany: {
-          args: Prisma.FinancialGenerationUpdateManyArgs<ExtArgs>
+          args: Prisma.ContractRevenueReceivableUpdateManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateManyAndReturn: {
-          args: Prisma.FinancialGenerationUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FinancialGenerationPayload>[]
+          args: Prisma.ContractRevenueReceivableUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContractRevenueReceivablePayload>[]
         }
         upsert: {
-          args: Prisma.FinancialGenerationUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FinancialGenerationPayload>
+          args: Prisma.ContractRevenueReceivableUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContractRevenueReceivablePayload>
         }
         aggregate: {
-          args: Prisma.FinancialGenerationAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateFinancialGeneration>
+          args: Prisma.ContractRevenueReceivableAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateContractRevenueReceivable>
         }
         groupBy: {
-          args: Prisma.FinancialGenerationGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.FinancialGenerationGroupByOutputType>[]
+          args: Prisma.ContractRevenueReceivableGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ContractRevenueReceivableGroupByOutputType>[]
         }
         count: {
-          args: Prisma.FinancialGenerationCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.FinancialGenerationCountAggregateOutputType> | number
+          args: Prisma.ContractRevenueReceivableCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ContractRevenueReceivableCountAggregateOutputType> | number
         }
       }
     }
-    DirectFinancialEntry: {
-      payload: Prisma.$DirectFinancialEntryPayload<ExtArgs>
-      fields: Prisma.DirectFinancialEntryFieldRefs
+    ExpensePayable: {
+      payload: Prisma.$ExpensePayablePayload<ExtArgs>
+      fields: Prisma.ExpensePayableFieldRefs
       operations: {
         findUnique: {
-          args: Prisma.DirectFinancialEntryFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DirectFinancialEntryPayload> | null
+          args: Prisma.ExpensePayableFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpensePayablePayload> | null
         }
         findUniqueOrThrow: {
-          args: Prisma.DirectFinancialEntryFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DirectFinancialEntryPayload>
+          args: Prisma.ExpensePayableFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpensePayablePayload>
         }
         findFirst: {
-          args: Prisma.DirectFinancialEntryFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DirectFinancialEntryPayload> | null
+          args: Prisma.ExpensePayableFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpensePayablePayload> | null
         }
         findFirstOrThrow: {
-          args: Prisma.DirectFinancialEntryFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DirectFinancialEntryPayload>
+          args: Prisma.ExpensePayableFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpensePayablePayload>
         }
         findMany: {
-          args: Prisma.DirectFinancialEntryFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DirectFinancialEntryPayload>[]
+          args: Prisma.ExpensePayableFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpensePayablePayload>[]
         }
         create: {
-          args: Prisma.DirectFinancialEntryCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DirectFinancialEntryPayload>
+          args: Prisma.ExpensePayableCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpensePayablePayload>
         }
         createMany: {
-          args: Prisma.DirectFinancialEntryCreateManyArgs<ExtArgs>
+          args: Prisma.ExpensePayableCreateManyArgs<ExtArgs>
           result: BatchPayload
         }
         createManyAndReturn: {
-          args: Prisma.DirectFinancialEntryCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DirectFinancialEntryPayload>[]
+          args: Prisma.ExpensePayableCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpensePayablePayload>[]
         }
         delete: {
-          args: Prisma.DirectFinancialEntryDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DirectFinancialEntryPayload>
+          args: Prisma.ExpensePayableDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpensePayablePayload>
         }
         update: {
-          args: Prisma.DirectFinancialEntryUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DirectFinancialEntryPayload>
+          args: Prisma.ExpensePayableUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpensePayablePayload>
         }
         deleteMany: {
-          args: Prisma.DirectFinancialEntryDeleteManyArgs<ExtArgs>
+          args: Prisma.ExpensePayableDeleteManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateMany: {
-          args: Prisma.DirectFinancialEntryUpdateManyArgs<ExtArgs>
+          args: Prisma.ExpensePayableUpdateManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateManyAndReturn: {
-          args: Prisma.DirectFinancialEntryUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DirectFinancialEntryPayload>[]
+          args: Prisma.ExpensePayableUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpensePayablePayload>[]
         }
         upsert: {
-          args: Prisma.DirectFinancialEntryUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DirectFinancialEntryPayload>
+          args: Prisma.ExpensePayableUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpensePayablePayload>
         }
         aggregate: {
-          args: Prisma.DirectFinancialEntryAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateDirectFinancialEntry>
+          args: Prisma.ExpensePayableAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateExpensePayable>
         }
         groupBy: {
-          args: Prisma.DirectFinancialEntryGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.DirectFinancialEntryGroupByOutputType>[]
+          args: Prisma.ExpensePayableGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ExpensePayableGroupByOutputType>[]
         }
         count: {
-          args: Prisma.DirectFinancialEntryCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.DirectFinancialEntryCountAggregateOutputType> | number
+          args: Prisma.ExpensePayableCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ExpensePayableCountAggregateOutputType> | number
+        }
+      }
+    }
+    RemunerationPayable: {
+      payload: Prisma.$RemunerationPayablePayload<ExtArgs>
+      fields: Prisma.RemunerationPayableFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.RemunerationPayableFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RemunerationPayablePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.RemunerationPayableFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RemunerationPayablePayload>
+        }
+        findFirst: {
+          args: Prisma.RemunerationPayableFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RemunerationPayablePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.RemunerationPayableFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RemunerationPayablePayload>
+        }
+        findMany: {
+          args: Prisma.RemunerationPayableFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RemunerationPayablePayload>[]
+        }
+        create: {
+          args: Prisma.RemunerationPayableCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RemunerationPayablePayload>
+        }
+        createMany: {
+          args: Prisma.RemunerationPayableCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.RemunerationPayableCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RemunerationPayablePayload>[]
+        }
+        delete: {
+          args: Prisma.RemunerationPayableDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RemunerationPayablePayload>
+        }
+        update: {
+          args: Prisma.RemunerationPayableUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RemunerationPayablePayload>
+        }
+        deleteMany: {
+          args: Prisma.RemunerationPayableDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.RemunerationPayableUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.RemunerationPayableUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RemunerationPayablePayload>[]
+        }
+        upsert: {
+          args: Prisma.RemunerationPayableUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RemunerationPayablePayload>
+        }
+        aggregate: {
+          args: Prisma.RemunerationPayableAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateRemunerationPayable>
+        }
+        groupBy: {
+          args: Prisma.RemunerationPayableGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RemunerationPayableGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.RemunerationPayableCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RemunerationPayableCountAggregateOutputType> | number
         }
       }
     }
@@ -2519,80 +2518,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    RemunerationCalculation: {
-      payload: Prisma.$RemunerationCalculationPayload<ExtArgs>
-      fields: Prisma.RemunerationCalculationFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.RemunerationCalculationFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RemunerationCalculationPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.RemunerationCalculationFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RemunerationCalculationPayload>
-        }
-        findFirst: {
-          args: Prisma.RemunerationCalculationFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RemunerationCalculationPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.RemunerationCalculationFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RemunerationCalculationPayload>
-        }
-        findMany: {
-          args: Prisma.RemunerationCalculationFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RemunerationCalculationPayload>[]
-        }
-        create: {
-          args: Prisma.RemunerationCalculationCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RemunerationCalculationPayload>
-        }
-        createMany: {
-          args: Prisma.RemunerationCalculationCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.RemunerationCalculationCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RemunerationCalculationPayload>[]
-        }
-        delete: {
-          args: Prisma.RemunerationCalculationDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RemunerationCalculationPayload>
-        }
-        update: {
-          args: Prisma.RemunerationCalculationUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RemunerationCalculationPayload>
-        }
-        deleteMany: {
-          args: Prisma.RemunerationCalculationDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.RemunerationCalculationUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.RemunerationCalculationUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RemunerationCalculationPayload>[]
-        }
-        upsert: {
-          args: Prisma.RemunerationCalculationUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RemunerationCalculationPayload>
-        }
-        aggregate: {
-          args: Prisma.RemunerationCalculationAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateRemunerationCalculation>
-        }
-        groupBy: {
-          args: Prisma.RemunerationCalculationGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.RemunerationCalculationGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.RemunerationCalculationCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.RemunerationCalculationCountAggregateOutputType> | number
-        }
-      }
-    }
     Attachment: {
       payload: Prisma.$AttachmentPayload<ExtArgs>
       fields: Prisma.AttachmentFieldRefs
@@ -2888,16 +2813,6 @@ export const PaymentMethodScalarFieldEnum = {
 export type PaymentMethodScalarFieldEnum = (typeof PaymentMethodScalarFieldEnum)[keyof typeof PaymentMethodScalarFieldEnum]
 
 
-export const TitleKindScalarFieldEnum = {
-  id: 'id',
-  value: 'value',
-  label: 'label',
-  isActive: 'isActive'
-} as const
-
-export type TitleKindScalarFieldEnum = (typeof TitleKindScalarFieldEnum)[keyof typeof TitleKindScalarFieldEnum]
-
-
 export const PersonScalarFieldEnum = {
   id: 'id',
   fullName: 'fullName',
@@ -3019,29 +2934,44 @@ export const ExpenseScalarFieldEnum = {
 export type ExpenseScalarFieldEnum = (typeof ExpenseScalarFieldEnum)[keyof typeof ExpenseScalarFieldEnum]
 
 
-export const FinancialGenerationScalarFieldEnum = {
+export const ContractRevenueReceivableScalarFieldEnum = {
   id: 'id',
-  requestKey: 'requestKey',
-  agreedAmount: 'agreedAmount',
   createdAt: 'createdAt',
   firmId: 'firmId',
+  contractId: 'contractId',
   revenueId: 'revenueId',
-  expenseId: 'expenseId',
-  actorId: 'actorId'
+  receivableId: 'receivableId'
 } as const
 
-export type FinancialGenerationScalarFieldEnum = (typeof FinancialGenerationScalarFieldEnum)[keyof typeof FinancialGenerationScalarFieldEnum]
+export type ContractRevenueReceivableScalarFieldEnum = (typeof ContractRevenueReceivableScalarFieldEnum)[keyof typeof ContractRevenueReceivableScalarFieldEnum]
 
 
-export const DirectFinancialEntryScalarFieldEnum = {
+export const ExpensePayableScalarFieldEnum = {
   id: 'id',
-  reason: 'reason',
   createdAt: 'createdAt',
   firmId: 'firmId',
-  actorId: 'actorId'
+  expenseId: 'expenseId',
+  payableId: 'payableId'
 } as const
 
-export type DirectFinancialEntryScalarFieldEnum = (typeof DirectFinancialEntryScalarFieldEnum)[keyof typeof DirectFinancialEntryScalarFieldEnum]
+export type ExpensePayableScalarFieldEnum = (typeof ExpensePayableScalarFieldEnum)[keyof typeof ExpensePayableScalarFieldEnum]
+
+
+export const RemunerationPayableScalarFieldEnum = {
+  id: 'id',
+  calculationBase: 'calculationBase',
+  effectivePercentage: 'effectivePercentage',
+  calculatedAmount: 'calculatedAmount',
+  computedDueDate: 'computedDueDate',
+  ruleSnapshot: 'ruleSnapshot',
+  createdAt: 'createdAt',
+  firmId: 'firmId',
+  receiptId: 'receiptId',
+  contractAssignmentId: 'contractAssignmentId',
+  payableId: 'payableId'
+} as const
+
+export type RemunerationPayableScalarFieldEnum = (typeof RemunerationPayableScalarFieldEnum)[keyof typeof RemunerationPayableScalarFieldEnum]
 
 
 export const ReceivableScalarFieldEnum = {
@@ -3051,16 +2981,13 @@ export const ReceivableScalarFieldEnum = {
   notes: 'notes',
   cancelledAt: 'cancelledAt',
   cancellationReason: 'cancellationReason',
+  kind: 'kind',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   firmId: 'firmId',
   debtorId: 'debtorId',
   analyticId: 'analyticId',
-  expectedPaymentMethodId: 'expectedPaymentMethodId',
-  titleKindId: 'titleKindId',
-  generationId: 'generationId',
-  directEntryId: 'directEntryId',
-  revenueId: 'revenueId'
+  expectedPaymentMethodId: 'expectedPaymentMethodId'
 } as const
 
 export type ReceivableScalarFieldEnum = (typeof ReceivableScalarFieldEnum)[keyof typeof ReceivableScalarFieldEnum]
@@ -3073,17 +3000,13 @@ export const PayableScalarFieldEnum = {
   notes: 'notes',
   cancelledAt: 'cancelledAt',
   cancellationReason: 'cancellationReason',
+  kind: 'kind',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   firmId: 'firmId',
   beneficiaryId: 'beneficiaryId',
   analyticId: 'analyticId',
-  expectedPaymentMethodId: 'expectedPaymentMethodId',
-  titleKindId: 'titleKindId',
-  generationId: 'generationId',
-  directEntryId: 'directEntryId',
-  expenseId: 'expenseId',
-  remunerationCalculationId: 'remunerationCalculationId'
+  expectedPaymentMethodId: 'expectedPaymentMethodId'
 } as const
 
 export type PayableScalarFieldEnum = (typeof PayableScalarFieldEnum)[keyof typeof PayableScalarFieldEnum]
@@ -3158,23 +3081,6 @@ export const PaymentReversalScalarFieldEnum = {
 export type PaymentReversalScalarFieldEnum = (typeof PaymentReversalScalarFieldEnum)[keyof typeof PaymentReversalScalarFieldEnum]
 
 
-export const RemunerationCalculationScalarFieldEnum = {
-  id: 'id',
-  calculationBase: 'calculationBase',
-  effectivePercentage: 'effectivePercentage',
-  calculatedAmount: 'calculatedAmount',
-  computedDueDate: 'computedDueDate',
-  generationMode: 'generationMode',
-  ruleSnapshot: 'ruleSnapshot',
-  createdAt: 'createdAt',
-  firmId: 'firmId',
-  receiptId: 'receiptId',
-  contractAssignmentId: 'contractAssignmentId'
-} as const
-
-export type RemunerationCalculationScalarFieldEnum = (typeof RemunerationCalculationScalarFieldEnum)[keyof typeof RemunerationCalculationScalarFieldEnum]
-
-
 export const AttachmentScalarFieldEnum = {
   id: 'id',
   fileName: 'fileName',
@@ -3194,7 +3100,7 @@ export const AttachmentScalarFieldEnum = {
   payableId: 'payableId',
   receiptId: 'receiptId',
   paymentId: 'paymentId',
-  remunerationCalculationId: 'remunerationCalculationId'
+  remunerationPayableId: 'remunerationPayableId'
 } as const
 
 export type AttachmentScalarFieldEnum = (typeof AttachmentScalarFieldEnum)[keyof typeof AttachmentScalarFieldEnum]
@@ -3222,8 +3128,7 @@ export const AuditLogScalarFieldEnum = {
   payableId: 'payableId',
   receiptId: 'receiptId',
   paymentId: 'paymentId',
-  financialGenerationId: 'financialGenerationId',
-  remunerationCalculationId: 'remunerationCalculationId'
+  remunerationPayableId: 'remunerationPayableId'
 } as const
 
 export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
@@ -3349,6 +3254,20 @@ export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'J
  * Reference to a field of type 'QueryMode'
  */
 export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+/**
+ * Reference to a field of type 'TitleKind'
+ */
+export type EnumTitleKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TitleKind'>
+    
+
+
+/**
+ * Reference to a field of type 'TitleKind[]'
+ */
+export type ListEnumTitleKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TitleKind[]'>
     
 
 
@@ -3527,7 +3446,6 @@ export type GlobalOmitConfig = {
   attachmentType?: Prisma.AttachmentTypeOmit
   financialAnalytic?: Prisma.FinancialAnalyticOmit
   paymentMethod?: Prisma.PaymentMethodOmit
-  titleKind?: Prisma.TitleKindOmit
   person?: Prisma.PersonOmit
   clientProfile?: Prisma.ClientProfileOmit
   supplierProfile?: Prisma.SupplierProfileOmit
@@ -3536,15 +3454,15 @@ export type GlobalOmitConfig = {
   contractAssignment?: Prisma.ContractAssignmentOmit
   revenue?: Prisma.RevenueOmit
   expense?: Prisma.ExpenseOmit
-  financialGeneration?: Prisma.FinancialGenerationOmit
-  directFinancialEntry?: Prisma.DirectFinancialEntryOmit
+  contractRevenueReceivable?: Prisma.ContractRevenueReceivableOmit
+  expensePayable?: Prisma.ExpensePayableOmit
+  remunerationPayable?: Prisma.RemunerationPayableOmit
   receivable?: Prisma.ReceivableOmit
   payable?: Prisma.PayableOmit
   receipt?: Prisma.ReceiptOmit
   receiptReversal?: Prisma.ReceiptReversalOmit
   payment?: Prisma.PaymentOmit
   paymentReversal?: Prisma.PaymentReversalOmit
-  remunerationCalculation?: Prisma.RemunerationCalculationOmit
   attachment?: Prisma.AttachmentOmit
   auditLog?: Prisma.AuditLogOmit
 }

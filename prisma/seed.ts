@@ -88,7 +88,6 @@ async function main() {
 					attachmentType: "ref_attachment_types",
 					financialAnalytic: "ref_financial_analytics",
 					paymentMethod: "ref_payment_methods",
-					titleKind: "ref_title_kinds",
 				};
 				const table = tables[catalog];
 				if (!table) {

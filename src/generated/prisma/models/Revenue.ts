@@ -275,8 +275,7 @@ export type RevenueWhereInput = {
   firm?: Prisma.XOR<Prisma.FirmScalarRelationFilter, Prisma.FirmWhereInput>
   contract?: Prisma.XOR<Prisma.ContractScalarRelationFilter, Prisma.ContractWhereInput>
   revenueType?: Prisma.XOR<Prisma.RevenueTypeScalarRelationFilter, Prisma.RevenueTypeWhereInput>
-  generation?: Prisma.XOR<Prisma.FinancialGenerationNullableScalarRelationFilter, Prisma.FinancialGenerationWhereInput> | null
-  receivables?: Prisma.ReceivableListRelationFilter
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableListRelationFilter
 }
 
 export type RevenueOrderByWithRelationInput = {
@@ -293,8 +292,7 @@ export type RevenueOrderByWithRelationInput = {
   firm?: Prisma.FirmOrderByWithRelationInput
   contract?: Prisma.ContractOrderByWithRelationInput
   revenueType?: Prisma.RevenueTypeOrderByWithRelationInput
-  generation?: Prisma.FinancialGenerationOrderByWithRelationInput
-  receivables?: Prisma.ReceivableOrderByRelationAggregateInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableOrderByRelationAggregateInput
 }
 
 export type RevenueWhereUniqueInput = Prisma.AtLeast<{
@@ -315,8 +313,7 @@ export type RevenueWhereUniqueInput = Prisma.AtLeast<{
   firm?: Prisma.XOR<Prisma.FirmScalarRelationFilter, Prisma.FirmWhereInput>
   contract?: Prisma.XOR<Prisma.ContractScalarRelationFilter, Prisma.ContractWhereInput>
   revenueType?: Prisma.XOR<Prisma.RevenueTypeScalarRelationFilter, Prisma.RevenueTypeWhereInput>
-  generation?: Prisma.XOR<Prisma.FinancialGenerationNullableScalarRelationFilter, Prisma.FinancialGenerationWhereInput> | null
-  receivables?: Prisma.ReceivableListRelationFilter
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableListRelationFilter
 }, "id" | "firmId_id">
 
 export type RevenueOrderByWithAggregationInput = {
@@ -363,8 +360,7 @@ export type RevenueCreateInput = {
   firm: Prisma.FirmCreateNestedOneWithoutRevenuesInput
   contract: Prisma.ContractCreateNestedOneWithoutRevenuesInput
   revenueType: Prisma.RevenueTypeCreateNestedOneWithoutRevenuesInput
-  generation?: Prisma.FinancialGenerationCreateNestedOneWithoutRevenueInput
-  receivables?: Prisma.ReceivableCreateNestedManyWithoutRevenueInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableCreateNestedManyWithoutRevenueInput
 }
 
 export type RevenueUncheckedCreateInput = {
@@ -378,8 +374,7 @@ export type RevenueUncheckedCreateInput = {
   firmId: number
   contractId: number
   revenueTypeId: number
-  generation?: Prisma.FinancialGenerationUncheckedCreateNestedOneWithoutRevenueInput
-  receivables?: Prisma.ReceivableUncheckedCreateNestedManyWithoutRevenueInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableUncheckedCreateNestedManyWithoutRevenueInput
 }
 
 export type RevenueUpdateInput = {
@@ -392,8 +387,7 @@ export type RevenueUpdateInput = {
   firm?: Prisma.FirmUpdateOneRequiredWithoutRevenuesNestedInput
   contract?: Prisma.ContractUpdateOneRequiredWithoutRevenuesNestedInput
   revenueType?: Prisma.RevenueTypeUpdateOneRequiredWithoutRevenuesNestedInput
-  generation?: Prisma.FinancialGenerationUpdateOneWithoutRevenueNestedInput
-  receivables?: Prisma.ReceivableUpdateManyWithoutRevenueNestedInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableUpdateManyWithoutRevenueNestedInput
 }
 
 export type RevenueUncheckedUpdateInput = {
@@ -407,8 +401,7 @@ export type RevenueUncheckedUpdateInput = {
   firmId?: Prisma.IntFieldUpdateOperationsInput | number
   contractId?: Prisma.IntFieldUpdateOperationsInput | number
   revenueTypeId?: Prisma.IntFieldUpdateOperationsInput | number
-  generation?: Prisma.FinancialGenerationUncheckedUpdateOneWithoutRevenueNestedInput
-  receivables?: Prisma.ReceivableUncheckedUpdateManyWithoutRevenueNestedInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableUncheckedUpdateManyWithoutRevenueNestedInput
 }
 
 export type RevenueCreateManyInput = {
@@ -516,9 +509,9 @@ export type RevenueSumOrderByAggregateInput = {
   revenueTypeId?: Prisma.SortOrder
 }
 
-export type RevenueNullableScalarRelationFilter = {
-  is?: Prisma.RevenueWhereInput | null
-  isNot?: Prisma.RevenueWhereInput | null
+export type RevenueScalarRelationFilter = {
+  is?: Prisma.RevenueWhereInput
+  isNot?: Prisma.RevenueWhereInput
 }
 
 export type RevenueCreateNestedManyWithoutFirmInput = {
@@ -647,36 +640,18 @@ export type RevenueUncheckedUpdateManyWithoutContractNestedInput = {
   deleteMany?: Prisma.RevenueScalarWhereInput | Prisma.RevenueScalarWhereInput[]
 }
 
-export type RevenueCreateNestedOneWithoutGenerationInput = {
-  create?: Prisma.XOR<Prisma.RevenueCreateWithoutGenerationInput, Prisma.RevenueUncheckedCreateWithoutGenerationInput>
-  connectOrCreate?: Prisma.RevenueCreateOrConnectWithoutGenerationInput
+export type RevenueCreateNestedOneWithoutContractRevenueReceivablesInput = {
+  create?: Prisma.XOR<Prisma.RevenueCreateWithoutContractRevenueReceivablesInput, Prisma.RevenueUncheckedCreateWithoutContractRevenueReceivablesInput>
+  connectOrCreate?: Prisma.RevenueCreateOrConnectWithoutContractRevenueReceivablesInput
   connect?: Prisma.RevenueWhereUniqueInput
 }
 
-export type RevenueUpdateOneWithoutGenerationNestedInput = {
-  create?: Prisma.XOR<Prisma.RevenueCreateWithoutGenerationInput, Prisma.RevenueUncheckedCreateWithoutGenerationInput>
-  connectOrCreate?: Prisma.RevenueCreateOrConnectWithoutGenerationInput
-  upsert?: Prisma.RevenueUpsertWithoutGenerationInput
-  disconnect?: Prisma.RevenueWhereInput | boolean
-  delete?: Prisma.RevenueWhereInput | boolean
+export type RevenueUpdateOneRequiredWithoutContractRevenueReceivablesNestedInput = {
+  create?: Prisma.XOR<Prisma.RevenueCreateWithoutContractRevenueReceivablesInput, Prisma.RevenueUncheckedCreateWithoutContractRevenueReceivablesInput>
+  connectOrCreate?: Prisma.RevenueCreateOrConnectWithoutContractRevenueReceivablesInput
+  upsert?: Prisma.RevenueUpsertWithoutContractRevenueReceivablesInput
   connect?: Prisma.RevenueWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.RevenueUpdateToOneWithWhereWithoutGenerationInput, Prisma.RevenueUpdateWithoutGenerationInput>, Prisma.RevenueUncheckedUpdateWithoutGenerationInput>
-}
-
-export type RevenueCreateNestedOneWithoutReceivablesInput = {
-  create?: Prisma.XOR<Prisma.RevenueCreateWithoutReceivablesInput, Prisma.RevenueUncheckedCreateWithoutReceivablesInput>
-  connectOrCreate?: Prisma.RevenueCreateOrConnectWithoutReceivablesInput
-  connect?: Prisma.RevenueWhereUniqueInput
-}
-
-export type RevenueUpdateOneWithoutReceivablesNestedInput = {
-  create?: Prisma.XOR<Prisma.RevenueCreateWithoutReceivablesInput, Prisma.RevenueUncheckedCreateWithoutReceivablesInput>
-  connectOrCreate?: Prisma.RevenueCreateOrConnectWithoutReceivablesInput
-  upsert?: Prisma.RevenueUpsertWithoutReceivablesInput
-  disconnect?: Prisma.RevenueWhereInput | boolean
-  delete?: Prisma.RevenueWhereInput | boolean
-  connect?: Prisma.RevenueWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.RevenueUpdateToOneWithWhereWithoutReceivablesInput, Prisma.RevenueUpdateWithoutReceivablesInput>, Prisma.RevenueUncheckedUpdateWithoutReceivablesInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.RevenueUpdateToOneWithWhereWithoutContractRevenueReceivablesInput, Prisma.RevenueUpdateWithoutContractRevenueReceivablesInput>, Prisma.RevenueUncheckedUpdateWithoutContractRevenueReceivablesInput>
 }
 
 export type RevenueCreateWithoutFirmInput = {
@@ -688,8 +663,7 @@ export type RevenueCreateWithoutFirmInput = {
   deletedAt?: Date | string | null
   contract: Prisma.ContractCreateNestedOneWithoutRevenuesInput
   revenueType: Prisma.RevenueTypeCreateNestedOneWithoutRevenuesInput
-  generation?: Prisma.FinancialGenerationCreateNestedOneWithoutRevenueInput
-  receivables?: Prisma.ReceivableCreateNestedManyWithoutRevenueInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableCreateNestedManyWithoutRevenueInput
 }
 
 export type RevenueUncheckedCreateWithoutFirmInput = {
@@ -702,8 +676,7 @@ export type RevenueUncheckedCreateWithoutFirmInput = {
   deletedAt?: Date | string | null
   contractId: number
   revenueTypeId: number
-  generation?: Prisma.FinancialGenerationUncheckedCreateNestedOneWithoutRevenueInput
-  receivables?: Prisma.ReceivableUncheckedCreateNestedManyWithoutRevenueInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableUncheckedCreateNestedManyWithoutRevenueInput
 }
 
 export type RevenueCreateOrConnectWithoutFirmInput = {
@@ -757,8 +730,7 @@ export type RevenueCreateWithoutRevenueTypeInput = {
   deletedAt?: Date | string | null
   firm: Prisma.FirmCreateNestedOneWithoutRevenuesInput
   contract: Prisma.ContractCreateNestedOneWithoutRevenuesInput
-  generation?: Prisma.FinancialGenerationCreateNestedOneWithoutRevenueInput
-  receivables?: Prisma.ReceivableCreateNestedManyWithoutRevenueInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableCreateNestedManyWithoutRevenueInput
 }
 
 export type RevenueUncheckedCreateWithoutRevenueTypeInput = {
@@ -771,8 +743,7 @@ export type RevenueUncheckedCreateWithoutRevenueTypeInput = {
   deletedAt?: Date | string | null
   firmId: number
   contractId: number
-  generation?: Prisma.FinancialGenerationUncheckedCreateNestedOneWithoutRevenueInput
-  receivables?: Prisma.ReceivableUncheckedCreateNestedManyWithoutRevenueInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableUncheckedCreateNestedManyWithoutRevenueInput
 }
 
 export type RevenueCreateOrConnectWithoutRevenueTypeInput = {
@@ -810,8 +781,7 @@ export type RevenueCreateWithoutContractInput = {
   deletedAt?: Date | string | null
   firm: Prisma.FirmCreateNestedOneWithoutRevenuesInput
   revenueType: Prisma.RevenueTypeCreateNestedOneWithoutRevenuesInput
-  generation?: Prisma.FinancialGenerationCreateNestedOneWithoutRevenueInput
-  receivables?: Prisma.ReceivableCreateNestedManyWithoutRevenueInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableCreateNestedManyWithoutRevenueInput
 }
 
 export type RevenueUncheckedCreateWithoutContractInput = {
@@ -823,8 +793,7 @@ export type RevenueUncheckedCreateWithoutContractInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   revenueTypeId: number
-  generation?: Prisma.FinancialGenerationUncheckedCreateNestedOneWithoutRevenueInput
-  receivables?: Prisma.ReceivableUncheckedCreateNestedManyWithoutRevenueInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableUncheckedCreateNestedManyWithoutRevenueInput
 }
 
 export type RevenueCreateOrConnectWithoutContractInput = {
@@ -853,7 +822,7 @@ export type RevenueUpdateManyWithWhereWithoutContractInput = {
   data: Prisma.XOR<Prisma.RevenueUpdateManyMutationInput, Prisma.RevenueUncheckedUpdateManyWithoutContractInput>
 }
 
-export type RevenueCreateWithoutGenerationInput = {
+export type RevenueCreateWithoutContractRevenueReceivablesInput = {
   negotiatedAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: string | null
   isActive?: boolean
@@ -863,10 +832,9 @@ export type RevenueCreateWithoutGenerationInput = {
   firm: Prisma.FirmCreateNestedOneWithoutRevenuesInput
   contract: Prisma.ContractCreateNestedOneWithoutRevenuesInput
   revenueType: Prisma.RevenueTypeCreateNestedOneWithoutRevenuesInput
-  receivables?: Prisma.ReceivableCreateNestedManyWithoutRevenueInput
 }
 
-export type RevenueUncheckedCreateWithoutGenerationInput = {
+export type RevenueUncheckedCreateWithoutContractRevenueReceivablesInput = {
   id?: number
   negotiatedAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: string | null
@@ -877,26 +845,25 @@ export type RevenueUncheckedCreateWithoutGenerationInput = {
   firmId: number
   contractId: number
   revenueTypeId: number
-  receivables?: Prisma.ReceivableUncheckedCreateNestedManyWithoutRevenueInput
 }
 
-export type RevenueCreateOrConnectWithoutGenerationInput = {
+export type RevenueCreateOrConnectWithoutContractRevenueReceivablesInput = {
   where: Prisma.RevenueWhereUniqueInput
-  create: Prisma.XOR<Prisma.RevenueCreateWithoutGenerationInput, Prisma.RevenueUncheckedCreateWithoutGenerationInput>
+  create: Prisma.XOR<Prisma.RevenueCreateWithoutContractRevenueReceivablesInput, Prisma.RevenueUncheckedCreateWithoutContractRevenueReceivablesInput>
 }
 
-export type RevenueUpsertWithoutGenerationInput = {
-  update: Prisma.XOR<Prisma.RevenueUpdateWithoutGenerationInput, Prisma.RevenueUncheckedUpdateWithoutGenerationInput>
-  create: Prisma.XOR<Prisma.RevenueCreateWithoutGenerationInput, Prisma.RevenueUncheckedCreateWithoutGenerationInput>
+export type RevenueUpsertWithoutContractRevenueReceivablesInput = {
+  update: Prisma.XOR<Prisma.RevenueUpdateWithoutContractRevenueReceivablesInput, Prisma.RevenueUncheckedUpdateWithoutContractRevenueReceivablesInput>
+  create: Prisma.XOR<Prisma.RevenueCreateWithoutContractRevenueReceivablesInput, Prisma.RevenueUncheckedCreateWithoutContractRevenueReceivablesInput>
   where?: Prisma.RevenueWhereInput
 }
 
-export type RevenueUpdateToOneWithWhereWithoutGenerationInput = {
+export type RevenueUpdateToOneWithWhereWithoutContractRevenueReceivablesInput = {
   where?: Prisma.RevenueWhereInput
-  data: Prisma.XOR<Prisma.RevenueUpdateWithoutGenerationInput, Prisma.RevenueUncheckedUpdateWithoutGenerationInput>
+  data: Prisma.XOR<Prisma.RevenueUpdateWithoutContractRevenueReceivablesInput, Prisma.RevenueUncheckedUpdateWithoutContractRevenueReceivablesInput>
 }
 
-export type RevenueUpdateWithoutGenerationInput = {
+export type RevenueUpdateWithoutContractRevenueReceivablesInput = {
   negotiatedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -906,10 +873,9 @@ export type RevenueUpdateWithoutGenerationInput = {
   firm?: Prisma.FirmUpdateOneRequiredWithoutRevenuesNestedInput
   contract?: Prisma.ContractUpdateOneRequiredWithoutRevenuesNestedInput
   revenueType?: Prisma.RevenueTypeUpdateOneRequiredWithoutRevenuesNestedInput
-  receivables?: Prisma.ReceivableUpdateManyWithoutRevenueNestedInput
 }
 
-export type RevenueUncheckedUpdateWithoutGenerationInput = {
+export type RevenueUncheckedUpdateWithoutContractRevenueReceivablesInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   negotiatedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -920,77 +886,6 @@ export type RevenueUncheckedUpdateWithoutGenerationInput = {
   firmId?: Prisma.IntFieldUpdateOperationsInput | number
   contractId?: Prisma.IntFieldUpdateOperationsInput | number
   revenueTypeId?: Prisma.IntFieldUpdateOperationsInput | number
-  receivables?: Prisma.ReceivableUncheckedUpdateManyWithoutRevenueNestedInput
-}
-
-export type RevenueCreateWithoutReceivablesInput = {
-  negotiatedAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  notes?: string | null
-  isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-  firm: Prisma.FirmCreateNestedOneWithoutRevenuesInput
-  contract: Prisma.ContractCreateNestedOneWithoutRevenuesInput
-  revenueType: Prisma.RevenueTypeCreateNestedOneWithoutRevenuesInput
-  generation?: Prisma.FinancialGenerationCreateNestedOneWithoutRevenueInput
-}
-
-export type RevenueUncheckedCreateWithoutReceivablesInput = {
-  id?: number
-  negotiatedAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  notes?: string | null
-  isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-  firmId: number
-  contractId: number
-  revenueTypeId: number
-  generation?: Prisma.FinancialGenerationUncheckedCreateNestedOneWithoutRevenueInput
-}
-
-export type RevenueCreateOrConnectWithoutReceivablesInput = {
-  where: Prisma.RevenueWhereUniqueInput
-  create: Prisma.XOR<Prisma.RevenueCreateWithoutReceivablesInput, Prisma.RevenueUncheckedCreateWithoutReceivablesInput>
-}
-
-export type RevenueUpsertWithoutReceivablesInput = {
-  update: Prisma.XOR<Prisma.RevenueUpdateWithoutReceivablesInput, Prisma.RevenueUncheckedUpdateWithoutReceivablesInput>
-  create: Prisma.XOR<Prisma.RevenueCreateWithoutReceivablesInput, Prisma.RevenueUncheckedCreateWithoutReceivablesInput>
-  where?: Prisma.RevenueWhereInput
-}
-
-export type RevenueUpdateToOneWithWhereWithoutReceivablesInput = {
-  where?: Prisma.RevenueWhereInput
-  data: Prisma.XOR<Prisma.RevenueUpdateWithoutReceivablesInput, Prisma.RevenueUncheckedUpdateWithoutReceivablesInput>
-}
-
-export type RevenueUpdateWithoutReceivablesInput = {
-  negotiatedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  firm?: Prisma.FirmUpdateOneRequiredWithoutRevenuesNestedInput
-  contract?: Prisma.ContractUpdateOneRequiredWithoutRevenuesNestedInput
-  revenueType?: Prisma.RevenueTypeUpdateOneRequiredWithoutRevenuesNestedInput
-  generation?: Prisma.FinancialGenerationUpdateOneWithoutRevenueNestedInput
-}
-
-export type RevenueUncheckedUpdateWithoutReceivablesInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  negotiatedAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  firmId?: Prisma.IntFieldUpdateOperationsInput | number
-  contractId?: Prisma.IntFieldUpdateOperationsInput | number
-  revenueTypeId?: Prisma.IntFieldUpdateOperationsInput | number
-  generation?: Prisma.FinancialGenerationUncheckedUpdateOneWithoutRevenueNestedInput
 }
 
 export type RevenueCreateManyFirmInput = {
@@ -1014,8 +909,7 @@ export type RevenueUpdateWithoutFirmInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   contract?: Prisma.ContractUpdateOneRequiredWithoutRevenuesNestedInput
   revenueType?: Prisma.RevenueTypeUpdateOneRequiredWithoutRevenuesNestedInput
-  generation?: Prisma.FinancialGenerationUpdateOneWithoutRevenueNestedInput
-  receivables?: Prisma.ReceivableUpdateManyWithoutRevenueNestedInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableUpdateManyWithoutRevenueNestedInput
 }
 
 export type RevenueUncheckedUpdateWithoutFirmInput = {
@@ -1028,8 +922,7 @@ export type RevenueUncheckedUpdateWithoutFirmInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   contractId?: Prisma.IntFieldUpdateOperationsInput | number
   revenueTypeId?: Prisma.IntFieldUpdateOperationsInput | number
-  generation?: Prisma.FinancialGenerationUncheckedUpdateOneWithoutRevenueNestedInput
-  receivables?: Prisma.ReceivableUncheckedUpdateManyWithoutRevenueNestedInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableUncheckedUpdateManyWithoutRevenueNestedInput
 }
 
 export type RevenueUncheckedUpdateManyWithoutFirmInput = {
@@ -1065,8 +958,7 @@ export type RevenueUpdateWithoutRevenueTypeInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   firm?: Prisma.FirmUpdateOneRequiredWithoutRevenuesNestedInput
   contract?: Prisma.ContractUpdateOneRequiredWithoutRevenuesNestedInput
-  generation?: Prisma.FinancialGenerationUpdateOneWithoutRevenueNestedInput
-  receivables?: Prisma.ReceivableUpdateManyWithoutRevenueNestedInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableUpdateManyWithoutRevenueNestedInput
 }
 
 export type RevenueUncheckedUpdateWithoutRevenueTypeInput = {
@@ -1079,8 +971,7 @@ export type RevenueUncheckedUpdateWithoutRevenueTypeInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   firmId?: Prisma.IntFieldUpdateOperationsInput | number
   contractId?: Prisma.IntFieldUpdateOperationsInput | number
-  generation?: Prisma.FinancialGenerationUncheckedUpdateOneWithoutRevenueNestedInput
-  receivables?: Prisma.ReceivableUncheckedUpdateManyWithoutRevenueNestedInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableUncheckedUpdateManyWithoutRevenueNestedInput
 }
 
 export type RevenueUncheckedUpdateManyWithoutRevenueTypeInput = {
@@ -1115,8 +1006,7 @@ export type RevenueUpdateWithoutContractInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   firm?: Prisma.FirmUpdateOneRequiredWithoutRevenuesNestedInput
   revenueType?: Prisma.RevenueTypeUpdateOneRequiredWithoutRevenuesNestedInput
-  generation?: Prisma.FinancialGenerationUpdateOneWithoutRevenueNestedInput
-  receivables?: Prisma.ReceivableUpdateManyWithoutRevenueNestedInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableUpdateManyWithoutRevenueNestedInput
 }
 
 export type RevenueUncheckedUpdateWithoutContractInput = {
@@ -1128,8 +1018,7 @@ export type RevenueUncheckedUpdateWithoutContractInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   revenueTypeId?: Prisma.IntFieldUpdateOperationsInput | number
-  generation?: Prisma.FinancialGenerationUncheckedUpdateOneWithoutRevenueNestedInput
-  receivables?: Prisma.ReceivableUncheckedUpdateManyWithoutRevenueNestedInput
+  contractRevenueReceivables?: Prisma.ContractRevenueReceivableUncheckedUpdateManyWithoutRevenueNestedInput
 }
 
 export type RevenueUncheckedUpdateManyWithoutContractInput = {
@@ -1149,11 +1038,11 @@ export type RevenueUncheckedUpdateManyWithoutContractInput = {
  */
 
 export type RevenueCountOutputType = {
-  receivables: number
+  contractRevenueReceivables: number
 }
 
 export type RevenueCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  receivables?: boolean | RevenueCountOutputTypeCountReceivablesArgs
+  contractRevenueReceivables?: boolean | RevenueCountOutputTypeCountContractRevenueReceivablesArgs
 }
 
 /**
@@ -1169,8 +1058,8 @@ export type RevenueCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exte
 /**
  * RevenueCountOutputType without action
  */
-export type RevenueCountOutputTypeCountReceivablesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ReceivableWhereInput
+export type RevenueCountOutputTypeCountContractRevenueReceivablesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ContractRevenueReceivableWhereInput
 }
 
 
@@ -1188,8 +1077,7 @@ export type RevenueSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
   contract?: boolean | Prisma.ContractDefaultArgs<ExtArgs>
   revenueType?: boolean | Prisma.RevenueTypeDefaultArgs<ExtArgs>
-  generation?: boolean | Prisma.Revenue$generationArgs<ExtArgs>
-  receivables?: boolean | Prisma.Revenue$receivablesArgs<ExtArgs>
+  contractRevenueReceivables?: boolean | Prisma.Revenue$contractRevenueReceivablesArgs<ExtArgs>
   _count?: boolean | Prisma.RevenueCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["revenue"]>
 
@@ -1243,8 +1131,7 @@ export type RevenueInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
   contract?: boolean | Prisma.ContractDefaultArgs<ExtArgs>
   revenueType?: boolean | Prisma.RevenueTypeDefaultArgs<ExtArgs>
-  generation?: boolean | Prisma.Revenue$generationArgs<ExtArgs>
-  receivables?: boolean | Prisma.Revenue$receivablesArgs<ExtArgs>
+  contractRevenueReceivables?: boolean | Prisma.Revenue$contractRevenueReceivablesArgs<ExtArgs>
   _count?: boolean | Prisma.RevenueCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type RevenueIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1264,8 +1151,7 @@ export type $RevenuePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     firm: Prisma.$FirmPayload<ExtArgs>
     contract: Prisma.$ContractPayload<ExtArgs>
     revenueType: Prisma.$RevenueTypePayload<ExtArgs>
-    generation: Prisma.$FinancialGenerationPayload<ExtArgs> | null
-    receivables: Prisma.$ReceivablePayload<ExtArgs>[]
+    contractRevenueReceivables: Prisma.$ContractRevenueReceivablePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1675,8 +1561,7 @@ export interface Prisma__RevenueClient<T, Null = never, ExtArgs extends runtime.
   firm<T extends Prisma.FirmDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FirmDefaultArgs<ExtArgs>>): Prisma.Prisma__FirmClient<runtime.Types.Result.GetResult<Prisma.$FirmPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   contract<T extends Prisma.ContractDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ContractDefaultArgs<ExtArgs>>): Prisma.Prisma__ContractClient<runtime.Types.Result.GetResult<Prisma.$ContractPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   revenueType<T extends Prisma.RevenueTypeDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RevenueTypeDefaultArgs<ExtArgs>>): Prisma.Prisma__RevenueTypeClient<runtime.Types.Result.GetResult<Prisma.$RevenueTypePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  generation<T extends Prisma.Revenue$generationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Revenue$generationArgs<ExtArgs>>): Prisma.Prisma__FinancialGenerationClient<runtime.Types.Result.GetResult<Prisma.$FinancialGenerationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  receivables<T extends Prisma.Revenue$receivablesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Revenue$receivablesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReceivablePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  contractRevenueReceivables<T extends Prisma.Revenue$contractRevenueReceivablesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Revenue$contractRevenueReceivablesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ContractRevenueReceivablePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2117,46 +2002,27 @@ export type RevenueDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
 }
 
 /**
- * Revenue.generation
+ * Revenue.contractRevenueReceivables
  */
-export type Revenue$generationArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Revenue$contractRevenueReceivablesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the FinancialGeneration
+   * Select specific fields to fetch from the ContractRevenueReceivable
    */
-  select?: Prisma.FinancialGenerationSelect<ExtArgs> | null
+  select?: Prisma.ContractRevenueReceivableSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the FinancialGeneration
+   * Omit specific fields from the ContractRevenueReceivable
    */
-  omit?: Prisma.FinancialGenerationOmit<ExtArgs> | null
+  omit?: Prisma.ContractRevenueReceivableOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.FinancialGenerationInclude<ExtArgs> | null
-  where?: Prisma.FinancialGenerationWhereInput
-}
-
-/**
- * Revenue.receivables
- */
-export type Revenue$receivablesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Receivable
-   */
-  select?: Prisma.ReceivableSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Receivable
-   */
-  omit?: Prisma.ReceivableOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ReceivableInclude<ExtArgs> | null
-  where?: Prisma.ReceivableWhereInput
-  orderBy?: Prisma.ReceivableOrderByWithRelationInput | Prisma.ReceivableOrderByWithRelationInput[]
-  cursor?: Prisma.ReceivableWhereUniqueInput
+  include?: Prisma.ContractRevenueReceivableInclude<ExtArgs> | null
+  where?: Prisma.ContractRevenueReceivableWhereInput
+  orderBy?: Prisma.ContractRevenueReceivableOrderByWithRelationInput | Prisma.ContractRevenueReceivableOrderByWithRelationInput[]
+  cursor?: Prisma.ContractRevenueReceivableWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.ReceivableScalarFieldEnum | Prisma.ReceivableScalarFieldEnum[]
+  distinct?: Prisma.ContractRevenueReceivableScalarFieldEnum | Prisma.ContractRevenueReceivableScalarFieldEnum[]
 }
 
 /**

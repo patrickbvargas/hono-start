@@ -77,12 +77,11 @@ export async function seedFinancialScenarios(
 	let serial = 0;
 	const key = (label: string) => `${SEED_MARKER}:${label}:${++serial}`;
 	const analytic = id("financialAnalytic", "OTHER"),
-		method = id("paymentMethod", "PIX"),
-		kind = id("titleKind", "INSTALLMENT");
+		method = id("paymentMethod", "PIX");
 	const titleBase = {
 		analyticId: analytic,
 		expectedPaymentMethodId: method,
-		titleKindId: kind,
+		kind: "INSTALLMENT" as const,
 	};
 	const receipt = async (
 		receivableId: number,
@@ -113,6 +112,7 @@ export async function seedFinancialScenarios(
 				requestKey: key("receipt"),
 			},
 		});
+
 	for (const firmId of [1, 2]) {
 		const contract = await tx.contract.create({
 			data: {
@@ -166,15 +166,7 @@ export async function seedFinancialScenarios(
 				notes: "Entrada e parcelas com datas explícitas",
 			},
 		});
-		const generation = await tx.financialGeneration.create({
-			data: {
-				firmId,
-				revenueId: revenue.id,
-				actorId: 1,
-				requestKey: key("generation"),
-				agreedAmount: "10000.00",
-			},
-		});
+
 		const amounts = [
 			"5000.00",
 			"1000.00",
@@ -185,25 +177,28 @@ export async function seedFinancialScenarios(
 		];
 		const titles = [];
 		for (let i = 0; i < amounts.length; i++) {
-			titles.push(
-				await tx.receivable.create({
-					data: {
-						...titleBase,
-						firmId,
-						debtorId: 12,
-						revenueId: revenue.id,
-						generationId: generation.id,
-						amount: amounts[i],
-						dueDate: i < 4 ? past : future,
-						titleKindId: id(
-							"titleKind",
-							i === 0 ? "DOWN_PAYMENT" : "INSTALLMENT",
-						),
-						notes: `Cenário ${i}`,
-					},
-				}),
-			);
+			const rec = await tx.receivable.create({
+				data: {
+					...titleBase,
+					firmId,
+					debtorId: 12,
+					amount: amounts[i],
+					dueDate: i < 4 ? past : future,
+					kind: i === 0 ? "DOWN_PAYMENT" : "INSTALLMENT",
+					notes: `Cenário ${i}`,
+				},
+			});
+			await tx.contractRevenueReceivable.create({
+				data: {
+					firmId,
+					contractId: contract.id,
+					revenueId: revenue.id,
+					receivableId: rec.id,
+				},
+			});
+			titles.push(rec);
 		}
+
 		if (firmId === 1) {
 			const source = await receipt(
 				titles[0].id,
@@ -214,8 +209,6 @@ export async function seedFinancialScenarios(
 				true,
 			);
 			// Ten distinct lawyers with formula snapshots; total face value exactly 5000.
-			// RECOMMENDING = .02; RECOMMENDED = .10-.02; other lawyers = .10.
-			// Dedicated all-responsible assignments below produce ten 500 obligations.
 			const bonusContract = await tx.contract.create({
 				data: {
 					firmId,
@@ -235,24 +228,22 @@ export async function seedFinancialScenarios(
 					negotiatedAmount: "5000.00",
 				},
 			});
-			const bonusGen = await tx.financialGeneration.create({
-				data: {
-					firmId,
-					revenueId: bonusRevenue.id,
-					actorId: 1,
-					agreedAmount: "5000.00",
-					requestKey: key("generation"),
-				},
-			});
 			const bonusTitle = await tx.receivable.create({
 				data: {
 					...titleBase,
 					firmId,
 					debtorId: 13,
-					revenueId: bonusRevenue.id,
-					generationId: bonusGen.id,
 					amount: "5000.00",
 					dueDate: past,
+					kind: "INSTALLMENT",
+				},
+			});
+			await tx.contractRevenueReceivable.create({
+				data: {
+					firmId,
+					contractId: bonusContract.id,
+					revenueId: bonusRevenue.id,
+					receivableId: bonusTitle.id,
 				},
 			});
 			const bonusReceipt = await receipt(
@@ -263,6 +254,7 @@ export async function seedFinancialScenarios(
 				"5000.00",
 				true,
 			);
+
 			for (let i = 1; i <= 10; i++) {
 				const assignment = await tx.contractAssignment.create({
 					data: {
@@ -272,11 +264,23 @@ export async function seedFinancialScenarios(
 						assignmentTypeId: id("assignmentType", "RESPONSIBLE"),
 					},
 				});
-				const calc = await tx.remunerationCalculation.create({
+				const payable = await tx.payable.create({
+					data: {
+						...titleBase,
+						firmId,
+						beneficiaryId: i,
+						amount: "500.00",
+						dueDate: remunerationDueDate(past),
+						analyticId: id("financialAnalytic", "PAYROLL_LAWYERS"),
+						notes: "Dez advogados: seleção de R$ 5.000",
+					},
+				});
+				await tx.remunerationPayable.create({
 					data: {
 						firmId,
 						receiptId: bonusReceipt.id,
 						contractAssignmentId: assignment.id,
+						payableId: payable.id,
 						calculationBase: "5000.00",
 						effectivePercentage: "0.1000",
 						calculatedAmount: "500.00",
@@ -289,19 +293,8 @@ export async function seedFinancialScenarios(
 						},
 					},
 				});
-				await tx.payable.create({
-					data: {
-						...titleBase,
-						firmId,
-						beneficiaryId: i,
-						remunerationCalculationId: calc.id,
-						amount: "500.00",
-						dueDate: calc.computedDueDate,
-						analyticId: id("financialAnalytic", "PAYROLL_LAWYERS"),
-						notes: "Dez advogados: seleção de R$ 5.000",
-					},
-				});
 			}
+
 			for (const assignment of assignments) {
 				const isReferral =
 						assignment.assignmentTypeId ===
@@ -314,15 +307,38 @@ export async function seedFinancialScenarios(
 					: isRecommended
 						? "400.00"
 						: "500.00";
-				const calc = await tx.remunerationCalculation.create({
+				const employee = await tx.employeeProfile.findUniqueOrThrow({
+					where: { id: assignment.employeeProfileId },
+				});
+				const supplier = await tx.supplierProfile.findUniqueOrThrow({
+					where: { personId: employee.personId },
+				});
+				const computedDueDate = remunerationDueDate(past);
+				const payable = await tx.payable.create({
+					data: {
+						...titleBase,
+						firmId,
+						beneficiaryId: supplier.id,
+						amount,
+						dueDate: computedDueDate,
+						analyticId: id(
+							"financialAnalytic",
+							assignment.employeeProfileId === 11
+								? "PAYROLL_STAFF"
+								: "PAYROLL_LAWYERS",
+						),
+					},
+				});
+				await tx.remunerationPayable.create({
 					data: {
 						firmId,
 						receiptId: source.id,
 						contractAssignmentId: assignment.id,
+						payableId: payable.id,
 						calculationBase: "5000.00",
 						effectivePercentage: pct,
 						calculatedAmount: amount,
-						computedDueDate: remunerationDueDate(past),
+						computedDueDate,
 						ruleSnapshot: {
 							employeePercentage: "0.1000",
 							referralPercentage: "0.0200",
@@ -330,22 +346,6 @@ export async function seedFinancialScenarios(
 							cutoffDay: 25,
 							dueDay: 5,
 						},
-					},
-				});
-				const payable = await tx.payable.create({
-					data: {
-						...titleBase,
-						firmId,
-						beneficiaryId: (await tx.supplierProfile.findUniqueOrThrow({ where: { personId: (await tx.employeeProfile.findUniqueOrThrow({ where: { id: assignment.employeeProfileId } })).personId } })).id,
-						remunerationCalculationId: calc.id,
-						amount,
-						dueDate: calc.computedDueDate,
-						analyticId: id(
-							"financialAnalytic",
-							assignment.employeeProfileId === 11
-								? "PAYROLL_STAFF"
-								: "PAYROLL_LAWYERS",
-						),
 					},
 				});
 				if (assignment.employeeProfileId === 1) {
@@ -363,6 +363,7 @@ export async function seedFinancialScenarios(
 					});
 				}
 			}
+
 			await receipt(titles[1].id, "400.00", "20.00", "10.00", "390.00");
 			await receipt(titles[1].id, "100.00");
 			await receipt(titles[2].id, "1000.00", "1000.00", "0.00", "0.00");
@@ -385,18 +386,26 @@ export async function seedFinancialScenarios(
 					requestKey: key("reversal"),
 				},
 			});
+
 			const extra = await tx.receivable.create({
 				data: {
 					...titleBase,
 					firmId,
 					debtorId: 12,
-					revenueId: revenue.id,
 					amount: "200.00",
 					dueDate: future,
 					notes: "Extra autorizado após geração",
-					titleKindId: id("titleKind", "EXTRA"),
+					kind: "EXTRA",
 					cancelledAt: today,
 					cancellationReason: "Cancelamento demonstrativo sem liquidação",
+				},
+			});
+			await tx.contractRevenueReceivable.create({
+				data: {
+					firmId,
+					contractId: contract.id,
+					revenueId: revenue.id,
+					receivableId: extra.id,
 				},
 			});
 			await tx.auditLog.create({
@@ -414,6 +423,7 @@ export async function seedFinancialScenarios(
 				},
 			});
 		}
+
 		const expense = await tx.expense.create({
 			data: {
 				firmId,
@@ -422,26 +432,23 @@ export async function seedFinancialScenarios(
 				notes: "Despesa operacional: dinheiro sai somente pelo pagamento",
 			},
 		});
-		const generationExpense = await tx.financialGeneration.create({
-			data: {
-				firmId,
-				expenseId: expense.id,
-				actorId: 1,
-				requestKey: key("generation"),
-				agreedAmount: "1000.00",
-			},
-		});
 		const payable = await tx.payable.create({
 			data: {
 				...titleBase,
 				firmId,
 				beneficiaryId: 13,
-				expenseId: expense.id,
-				generationId: generationExpense.id,
 				amount: "1000.00",
 				dueDate: past,
 			},
 		});
+		await tx.expensePayable.create({
+			data: {
+				firmId,
+				expenseId: expense.id,
+				payableId: payable.id,
+			},
+		});
+
 		if (firmId === 1) {
 			const payment = await tx.payment.create({
 				data: {
@@ -469,23 +476,17 @@ export async function seedFinancialScenarios(
 				},
 			});
 		}
+
 		for (const direction of ["in", "out"]) {
-			const origin = await tx.directFinancialEntry.create({
-				data: {
-					firmId,
-					reason: "Lançamento financeiro direto demonstrativo",
-					actorId: 1,
-				},
-			});
 			if (direction === "in") {
 				await tx.receivable.create({
 					data: {
 						...titleBase,
 						firmId,
 						debtorId: 12,
-						directEntryId: origin.id,
 						amount: "300.00",
 						dueDate: future,
+						notes: "Lançamento avulso a receber",
 					},
 				});
 			} else {
@@ -494,14 +495,15 @@ export async function seedFinancialScenarios(
 						...titleBase,
 						firmId,
 						beneficiaryId: 13,
-						directEntryId: origin.id,
 						amount: "250.00",
 						dueDate: past,
+						notes: "Lançamento avulso a pagar",
 					},
 				});
 			}
 		}
 	}
+
 	const roundingContract = await tx.contract.create({
 		data: {
 			firmId: 1,
@@ -521,29 +523,27 @@ export async function seedFinancialScenarios(
 			negotiatedAmount: "100.00",
 		},
 	});
-	const roundingGeneration = await tx.financialGeneration.create({
-		data: {
-			firmId: 1,
-			revenueId: roundingRevenue.id,
-			actorId: 1,
-			agreedAmount: "100.00",
-			requestKey: key("rounding"),
-		},
-	});
 	for (const [i, amount] of ["33.33", "33.33", "33.34"].entries()) {
-		await tx.receivable.create({
+		const rec = await tx.receivable.create({
 			data: {
 				...titleBase,
 				firmId: 1,
 				debtorId: 12,
-				revenueId: roundingRevenue.id,
-				generationId: roundingGeneration.id,
 				amount,
 				dueDate: shiftedDate(future, 30 * i),
 				notes: "Arredondamento: resto na última parcela",
 			},
 		});
+		await tx.contractRevenueReceivable.create({
+			data: {
+				firmId: 1,
+				contractId: roundingContract.id,
+				revenueId: roundingRevenue.id,
+				receivableId: rec.id,
+			},
+		});
 	}
+
 	await tx.contract.create({
 		data: {
 			firmId: 1,
@@ -555,6 +555,7 @@ export async function seedFinancialScenarios(
 			notes: "Origem cancelada não cancela títulos automaticamente",
 		},
 	});
+
 	await tx.auditLog.create({
 		data: {
 			firmId: 1,
@@ -568,6 +569,7 @@ export async function seedFinancialScenarios(
 			changeData: { referenceDate: today.toISOString(), version: 1 },
 		},
 	});
+
 	// Explicit fixture IDs must not collide with the next application insert.
 	await tx.$executeRawUnsafe(
 		`SELECT setval(pg_get_serial_sequence('people','id'),(SELECT max(id) FROM people))`,
@@ -630,17 +632,20 @@ export async function completeFinancialFixtures(tx: SeedTransaction) {
 	const method = await tx.paymentMethod.findUniqueOrThrow({
 		where: { value: "PIX" },
 	});
-	const kind = await tx.titleKind.findUniqueOrThrow({
-		where: { value: "INSTALLMENT" },
-	});
 	const base = {
 		firmId: 1,
 		analyticId: analytic.id,
 		expectedPaymentMethodId: method.id,
-		titleKindId: kind.id,
+		kind: "INSTALLMENT" as const,
 	};
-	const requestKey = `${SEED_MARKER}:cancelled-origin`;
-	if (!(await tx.financialGeneration.findUnique({ where: { requestKey } }))) {
+	const existingReceivable = await tx.contractRevenueReceivable.findFirst({
+		where: {
+			firmId: 1,
+			contractId: contract.id,
+			revenue: { notes: "Cancelamento operacional preserva dívida" },
+		},
+	});
+	if (!existingReceivable) {
 		const type = await tx.revenueType.findUniqueOrThrow({
 			where: { value: "JUDICIAL" },
 		});
@@ -653,23 +658,20 @@ export async function completeFinancialFixtures(tx: SeedTransaction) {
 				notes: "Cancelamento operacional preserva dívida",
 			},
 		});
-		const generation = await tx.financialGeneration.create({
-			data: {
-				firmId: 1,
-				revenueId: revenue.id,
-				actorId: 1,
-				requestKey,
-				agreedAmount: "100.00",
-			},
-		});
-		await tx.receivable.create({
+		const receivable = await tx.receivable.create({
 			data: {
 				...base,
 				debtorId: 13,
-				revenueId: revenue.id,
-				generationId: generation.id,
 				amount: "100.00",
 				dueDate: shiftedDate(today, -10),
+			},
+		});
+		await tx.contractRevenueReceivable.create({
+			data: {
+				firmId: 1,
+				contractId: contract.id,
+				revenueId: revenue.id,
+				receivableId: receivable.id,
 			},
 		});
 	}
@@ -679,20 +681,13 @@ export async function completeFinancialFixtures(tx: SeedTransaction) {
 			where: { firmId: 1, requestKey: paymentKey },
 		}))
 	) {
-		const direct = await tx.directFinancialEntry.create({
-			data: {
-				firmId: 1,
-				actorId: 1,
-				reason: "Pagamento antecipado com desconto integral demonstrativo",
-			},
-		});
 		const payable = await tx.payable.create({
 			data: {
 				...base,
 				beneficiaryId: 13,
-				directEntryId: direct.id,
 				amount: "100.00",
 				dueDate: shiftedDate(today, 10),
+				notes: "Pagamento antecipado com desconto integral demonstrativo",
 			},
 		});
 		await tx.payment.create({
@@ -713,19 +708,33 @@ export async function completeFinancialFixtures(tx: SeedTransaction) {
 }
 
 export async function seedGenericPeople(tx: SeedTransaction) {
- for (const table of ["client_profiles","supplier_profiles"] as const) {
-  await tx.$executeRawUnsafe(`SELECT setval(pg_get_serial_sequence('${table}','id'),COALESCE((SELECT max(id) FROM ${table}),1),EXISTS(SELECT 1 FROM ${table}))`);
- }
+	for (const table of ["client_profiles", "supplier_profiles"] as const) {
+		await tx.$executeRawUnsafe(
+			`SELECT setval(pg_get_serial_sequence('${table}','id'),COALESCE((SELECT max(id) FROM ${table}),1),EXISTS(SELECT 1 FROM ${table}))`,
+		);
+	}
 
- for (const [seedKey, fullName, role] of [
-  ["generic-payments", "Pagamentos diversos", "supplier"],
-  ["generic-receipts", "Recebimentos diversos", "client"],
- ] as const) {
-  const person = await tx.person.upsert({where:{seedKey},update:{},create:{seedKey,fullName,isGeneric:true}});
-  if (role === "supplier") {
-   await tx.supplierProfile.upsert({where:{personId:person.id},update:{},create:{personId:person.id}});
-  } else {
-   await tx.clientProfile.upsert({where:{personId:person.id},update:{},create:{personId:person.id}});
-  }
- }
+	for (const [seedKey, fullName, role] of [
+		["generic-payments", "Pagamentos diversos", "supplier"],
+		["generic-receipts", "Recebimentos diversos", "client"],
+	] as const) {
+		const person = await tx.person.upsert({
+			where: { seedKey },
+			update: {},
+			create: { seedKey, fullName, isGeneric: true },
+		});
+		if (role === "supplier") {
+			await tx.supplierProfile.upsert({
+				where: { personId: person.id },
+				update: {},
+				create: { personId: person.id },
+			});
+		} else {
+			await tx.clientProfile.upsert({
+				where: { personId: person.id },
+				update: {},
+				create: { personId: person.id },
+			});
+		}
+	}
 }

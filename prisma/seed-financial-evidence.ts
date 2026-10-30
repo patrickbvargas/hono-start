@@ -11,18 +11,18 @@ export async function verifyFinancialSeed(prisma: PrismaClient) {
 			payments: number;
 			calculations: number;
 		}>
-	>`SELECT (SELECT count(*)::int FROM people) people,(SELECT count(*)::int FROM employee_profiles) profiles,(SELECT count(*)::int FROM contracts) contracts,(SELECT count(*)::int FROM receivables) receivables,(SELECT count(*)::int FROM payables) payables,(SELECT count(*)::int FROM receipts) receipts,(SELECT count(*)::int FROM payments) payments,(SELECT count(*)::int FROM remuneration_calculations) calculations`;
+	>`SELECT (SELECT count(*)::int FROM people) people,(SELECT count(*)::int FROM employee_profiles) profiles,(SELECT count(*)::int FROM contracts) contracts,(SELECT count(*)::int FROM receivables) receivables,(SELECT count(*)::int FROM payables) payables,(SELECT count(*)::int FROM receipts) receipts,(SELECT count(*)::int FROM payments) payments,(SELECT count(*)::int FROM remuneration_payables) calculations`;
 	const invalid = await prisma.$queryRaw<
 		Array<{ issue: string; count: bigint }>
 	>`
  SELECT 'overpaid_receivables' issue,count(*) FROM receivables t WHERE t.amount<(SELECT coalesce(sum(s."principalAbated"),0) FROM receipts s WHERE s."receivableId"=t.id AND NOT EXISTS(SELECT 1 FROM receipt_reversals r WHERE r."receiptId"=s.id))
  UNION ALL SELECT 'overpaid_payables',count(*) FROM payables t WHERE t.amount<(SELECT coalesce(sum(s."principalAbated"),0) FROM payments s WHERE s."payableId"=t.id AND NOT EXISTS(SELECT 1 FROM payment_reversals r WHERE r."paymentId"=s.id))
- UNION ALL SELECT 'orphan_calculations',count(*) FROM remuneration_calculations c LEFT JOIN payables p ON p."remunerationCalculationId"=c.id WHERE p.id IS NULL
- UNION ALL SELECT 'wrong_beneficiary',count(*) FROM payables p JOIN remuneration_calculations c ON c.id=p."remunerationCalculationId" JOIN contract_assignments a ON a.id=c."contractAssignmentId" JOIN employee_profiles e ON e.id=a."employeeProfileId" JOIN supplier_profiles s ON s.id=p."beneficiaryId" WHERE s."personId"<>e."personId"
+ UNION ALL SELECT 'orphan_calculations',count(*) FROM remuneration_payables c LEFT JOIN payables p ON p.id=c."payableId" WHERE p.id IS NULL
+ UNION ALL SELECT 'wrong_beneficiary',count(*) FROM payables p JOIN remuneration_payables c ON c."payableId"=p.id JOIN contract_assignments a ON a.id=c."contractAssignmentId" JOIN employee_profiles e ON e.id=a."employeeProfileId" JOIN supplier_profiles s ON s.id=p."beneficiaryId" WHERE s."personId"<>e."personId"
  UNION ALL SELECT 'missing_supplier_profile',count(*) FROM employee_profiles e WHERE e."isActive" AND e."deletedAt" IS NULL AND NOT EXISTS(SELECT 1 FROM supplier_profiles s WHERE s."personId"=e."personId" AND s."isActive")
  UNION ALL SELECT 'generic_profile_or_document',count(*) FROM people p WHERE p."isGeneric" AND (p.document IS NOT NULL OR p."personTypeId" IS NOT NULL OR EXISTS(SELECT 1 FROM employee_profiles e WHERE e."personId"=p.id))
  UNION ALL SELECT 'future_cash' ,count(*) FROM (SELECT "effectiveDate" FROM receipts UNION ALL SELECT "effectiveDate" FROM payments UNION ALL SELECT "effectiveDate" FROM receipt_reversals UNION ALL SELECT "effectiveDate" FROM payment_reversals) s WHERE s."effectiveDate">(CURRENT_TIMESTAMP AT TIME ZONE 'America/Sao_Paulo')::date
- UNION ALL SELECT 'missing_remuneration',count(*) FROM receipts s JOIN receivables t ON t.id=s."receivableId" JOIN revenues r ON r.id=t."revenueId" JOIN contract_assignments a ON a."contractId"=r."contractId" WHERE s."generatesRemuneration" AND s."effectiveAmount">0 AND a."isActive" AND a."deletedAt" IS NULL AND NOT EXISTS(SELECT 1 FROM remuneration_calculations c WHERE c."receiptId"=s.id AND c."contractAssignmentId"=a.id)
+ UNION ALL SELECT 'missing_remuneration',count(*) FROM receipts s JOIN receivables t ON t.id=s."receivableId" JOIN contract_revenue_receivables crr ON crr."receivableId"=t.id JOIN revenues r ON r.id=crr."revenueId" JOIN contract_assignments a ON a."contractId"=r."contractId" WHERE s."generatesRemuneration" AND s."effectiveAmount">0 AND a."isActive" AND a."deletedAt" IS NULL AND NOT EXISTS(SELECT 1 FROM remuneration_payables c WHERE c."receiptId"=s.id AND c."contractAssignmentId"=a.id)
  `;
 	for (const row of invalid) {
 		if (Number(row.count) !== 0) {

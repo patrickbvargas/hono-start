@@ -34,5 +34,5 @@ export function seedCpf(index: number) {
 	}
 	return base;
 }
-export const SEED_MARKER = "financial-target-seed-v1";
+export const SEED_MARKER = "financial-bridge-seed-v1";
 export type SeedTransaction = Prisma.TransactionClient;

@@ -280,8 +280,6 @@ export type PersonWhereInput = {
   employeeProfile?: Prisma.XOR<Prisma.EmployeeProfileNullableScalarRelationFilter, Prisma.EmployeeProfileWhereInput> | null
   clientProfile?: Prisma.XOR<Prisma.ClientProfileNullableScalarRelationFilter, Prisma.ClientProfileWhereInput> | null
   supplierProfile?: Prisma.XOR<Prisma.SupplierProfileNullableScalarRelationFilter, Prisma.SupplierProfileWhereInput> | null
-  generations?: Prisma.FinancialGenerationListRelationFilter
-  directEntries?: Prisma.DirectFinancialEntryListRelationFilter
   receipts?: Prisma.ReceiptListRelationFilter
   receiptsReversed?: Prisma.ReceiptReversalListRelationFilter
   payments?: Prisma.PaymentListRelationFilter
@@ -308,8 +306,6 @@ export type PersonOrderByWithRelationInput = {
   employeeProfile?: Prisma.EmployeeProfileOrderByWithRelationInput
   clientProfile?: Prisma.ClientProfileOrderByWithRelationInput
   supplierProfile?: Prisma.SupplierProfileOrderByWithRelationInput
-  generations?: Prisma.FinancialGenerationOrderByRelationAggregateInput
-  directEntries?: Prisma.DirectFinancialEntryOrderByRelationAggregateInput
   receipts?: Prisma.ReceiptOrderByRelationAggregateInput
   receiptsReversed?: Prisma.ReceiptReversalOrderByRelationAggregateInput
   payments?: Prisma.PaymentOrderByRelationAggregateInput
@@ -339,8 +335,6 @@ export type PersonWhereUniqueInput = Prisma.AtLeast<{
   employeeProfile?: Prisma.XOR<Prisma.EmployeeProfileNullableScalarRelationFilter, Prisma.EmployeeProfileWhereInput> | null
   clientProfile?: Prisma.XOR<Prisma.ClientProfileNullableScalarRelationFilter, Prisma.ClientProfileWhereInput> | null
   supplierProfile?: Prisma.XOR<Prisma.SupplierProfileNullableScalarRelationFilter, Prisma.SupplierProfileWhereInput> | null
-  generations?: Prisma.FinancialGenerationListRelationFilter
-  directEntries?: Prisma.DirectFinancialEntryListRelationFilter
   receipts?: Prisma.ReceiptListRelationFilter
   receiptsReversed?: Prisma.ReceiptReversalListRelationFilter
   payments?: Prisma.PaymentListRelationFilter
@@ -403,8 +397,6 @@ export type PersonCreateInput = {
   employeeProfile?: Prisma.EmployeeProfileCreateNestedOneWithoutPersonInput
   clientProfile?: Prisma.ClientProfileCreateNestedOneWithoutPersonInput
   supplierProfile?: Prisma.SupplierProfileCreateNestedOneWithoutPersonInput
-  generations?: Prisma.FinancialGenerationCreateNestedManyWithoutActorInput
-  directEntries?: Prisma.DirectFinancialEntryCreateNestedManyWithoutActorInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutActorInput
   receiptsReversed?: Prisma.ReceiptReversalCreateNestedManyWithoutActorInput
   payments?: Prisma.PaymentCreateNestedManyWithoutActorInput
@@ -430,8 +422,6 @@ export type PersonUncheckedCreateInput = {
   employeeProfile?: Prisma.EmployeeProfileUncheckedCreateNestedOneWithoutPersonInput
   clientProfile?: Prisma.ClientProfileUncheckedCreateNestedOneWithoutPersonInput
   supplierProfile?: Prisma.SupplierProfileUncheckedCreateNestedOneWithoutPersonInput
-  generations?: Prisma.FinancialGenerationUncheckedCreateNestedManyWithoutActorInput
-  directEntries?: Prisma.DirectFinancialEntryUncheckedCreateNestedManyWithoutActorInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutActorInput
   receiptsReversed?: Prisma.ReceiptReversalUncheckedCreateNestedManyWithoutActorInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutActorInput
@@ -456,8 +446,6 @@ export type PersonUpdateInput = {
   employeeProfile?: Prisma.EmployeeProfileUpdateOneWithoutPersonNestedInput
   clientProfile?: Prisma.ClientProfileUpdateOneWithoutPersonNestedInput
   supplierProfile?: Prisma.SupplierProfileUpdateOneWithoutPersonNestedInput
-  generations?: Prisma.FinancialGenerationUpdateManyWithoutActorNestedInput
-  directEntries?: Prisma.DirectFinancialEntryUpdateManyWithoutActorNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutActorNestedInput
   receiptsReversed?: Prisma.ReceiptReversalUpdateManyWithoutActorNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutActorNestedInput
@@ -483,8 +471,6 @@ export type PersonUncheckedUpdateInput = {
   employeeProfile?: Prisma.EmployeeProfileUncheckedUpdateOneWithoutPersonNestedInput
   clientProfile?: Prisma.ClientProfileUncheckedUpdateOneWithoutPersonNestedInput
   supplierProfile?: Prisma.SupplierProfileUncheckedUpdateOneWithoutPersonNestedInput
-  generations?: Prisma.FinancialGenerationUncheckedUpdateManyWithoutActorNestedInput
-  directEntries?: Prisma.DirectFinancialEntryUncheckedUpdateManyWithoutActorNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutActorNestedInput
   receiptsReversed?: Prisma.ReceiptReversalUncheckedUpdateManyWithoutActorNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutActorNestedInput
@@ -712,34 +698,6 @@ export type PersonUpdateOneRequiredWithoutEmployeeProfileNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.PersonUpdateToOneWithWhereWithoutEmployeeProfileInput, Prisma.PersonUpdateWithoutEmployeeProfileInput>, Prisma.PersonUncheckedUpdateWithoutEmployeeProfileInput>
 }
 
-export type PersonCreateNestedOneWithoutGenerationsInput = {
-  create?: Prisma.XOR<Prisma.PersonCreateWithoutGenerationsInput, Prisma.PersonUncheckedCreateWithoutGenerationsInput>
-  connectOrCreate?: Prisma.PersonCreateOrConnectWithoutGenerationsInput
-  connect?: Prisma.PersonWhereUniqueInput
-}
-
-export type PersonUpdateOneRequiredWithoutGenerationsNestedInput = {
-  create?: Prisma.XOR<Prisma.PersonCreateWithoutGenerationsInput, Prisma.PersonUncheckedCreateWithoutGenerationsInput>
-  connectOrCreate?: Prisma.PersonCreateOrConnectWithoutGenerationsInput
-  upsert?: Prisma.PersonUpsertWithoutGenerationsInput
-  connect?: Prisma.PersonWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.PersonUpdateToOneWithWhereWithoutGenerationsInput, Prisma.PersonUpdateWithoutGenerationsInput>, Prisma.PersonUncheckedUpdateWithoutGenerationsInput>
-}
-
-export type PersonCreateNestedOneWithoutDirectEntriesInput = {
-  create?: Prisma.XOR<Prisma.PersonCreateWithoutDirectEntriesInput, Prisma.PersonUncheckedCreateWithoutDirectEntriesInput>
-  connectOrCreate?: Prisma.PersonCreateOrConnectWithoutDirectEntriesInput
-  connect?: Prisma.PersonWhereUniqueInput
-}
-
-export type PersonUpdateOneRequiredWithoutDirectEntriesNestedInput = {
-  create?: Prisma.XOR<Prisma.PersonCreateWithoutDirectEntriesInput, Prisma.PersonUncheckedCreateWithoutDirectEntriesInput>
-  connectOrCreate?: Prisma.PersonCreateOrConnectWithoutDirectEntriesInput
-  upsert?: Prisma.PersonUpsertWithoutDirectEntriesInput
-  connect?: Prisma.PersonWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.PersonUpdateToOneWithWhereWithoutDirectEntriesInput, Prisma.PersonUpdateWithoutDirectEntriesInput>, Prisma.PersonUncheckedUpdateWithoutDirectEntriesInput>
-}
-
 export type PersonCreateNestedOneWithoutReceiptsInput = {
   create?: Prisma.XOR<Prisma.PersonCreateWithoutReceiptsInput, Prisma.PersonUncheckedCreateWithoutReceiptsInput>
   connectOrCreate?: Prisma.PersonCreateOrConnectWithoutReceiptsInput
@@ -858,8 +816,6 @@ export type PersonCreateWithoutPersonTypeInput = {
   employeeProfile?: Prisma.EmployeeProfileCreateNestedOneWithoutPersonInput
   clientProfile?: Prisma.ClientProfileCreateNestedOneWithoutPersonInput
   supplierProfile?: Prisma.SupplierProfileCreateNestedOneWithoutPersonInput
-  generations?: Prisma.FinancialGenerationCreateNestedManyWithoutActorInput
-  directEntries?: Prisma.DirectFinancialEntryCreateNestedManyWithoutActorInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutActorInput
   receiptsReversed?: Prisma.ReceiptReversalCreateNestedManyWithoutActorInput
   payments?: Prisma.PaymentCreateNestedManyWithoutActorInput
@@ -884,8 +840,6 @@ export type PersonUncheckedCreateWithoutPersonTypeInput = {
   employeeProfile?: Prisma.EmployeeProfileUncheckedCreateNestedOneWithoutPersonInput
   clientProfile?: Prisma.ClientProfileUncheckedCreateNestedOneWithoutPersonInput
   supplierProfile?: Prisma.SupplierProfileUncheckedCreateNestedOneWithoutPersonInput
-  generations?: Prisma.FinancialGenerationUncheckedCreateNestedManyWithoutActorInput
-  directEntries?: Prisma.DirectFinancialEntryUncheckedCreateNestedManyWithoutActorInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutActorInput
   receiptsReversed?: Prisma.ReceiptReversalUncheckedCreateNestedManyWithoutActorInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutActorInput
@@ -953,8 +907,6 @@ export type PersonCreateWithoutClientProfileInput = {
   personType?: Prisma.PersonTypeCreateNestedOneWithoutPeopleInput
   employeeProfile?: Prisma.EmployeeProfileCreateNestedOneWithoutPersonInput
   supplierProfile?: Prisma.SupplierProfileCreateNestedOneWithoutPersonInput
-  generations?: Prisma.FinancialGenerationCreateNestedManyWithoutActorInput
-  directEntries?: Prisma.DirectFinancialEntryCreateNestedManyWithoutActorInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutActorInput
   receiptsReversed?: Prisma.ReceiptReversalCreateNestedManyWithoutActorInput
   payments?: Prisma.PaymentCreateNestedManyWithoutActorInput
@@ -979,8 +931,6 @@ export type PersonUncheckedCreateWithoutClientProfileInput = {
   personTypeId?: number | null
   employeeProfile?: Prisma.EmployeeProfileUncheckedCreateNestedOneWithoutPersonInput
   supplierProfile?: Prisma.SupplierProfileUncheckedCreateNestedOneWithoutPersonInput
-  generations?: Prisma.FinancialGenerationUncheckedCreateNestedManyWithoutActorInput
-  directEntries?: Prisma.DirectFinancialEntryUncheckedCreateNestedManyWithoutActorInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutActorInput
   receiptsReversed?: Prisma.ReceiptReversalUncheckedCreateNestedManyWithoutActorInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutActorInput
@@ -1020,8 +970,6 @@ export type PersonUpdateWithoutClientProfileInput = {
   personType?: Prisma.PersonTypeUpdateOneWithoutPeopleNestedInput
   employeeProfile?: Prisma.EmployeeProfileUpdateOneWithoutPersonNestedInput
   supplierProfile?: Prisma.SupplierProfileUpdateOneWithoutPersonNestedInput
-  generations?: Prisma.FinancialGenerationUpdateManyWithoutActorNestedInput
-  directEntries?: Prisma.DirectFinancialEntryUpdateManyWithoutActorNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutActorNestedInput
   receiptsReversed?: Prisma.ReceiptReversalUpdateManyWithoutActorNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutActorNestedInput
@@ -1046,8 +994,6 @@ export type PersonUncheckedUpdateWithoutClientProfileInput = {
   personTypeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   employeeProfile?: Prisma.EmployeeProfileUncheckedUpdateOneWithoutPersonNestedInput
   supplierProfile?: Prisma.SupplierProfileUncheckedUpdateOneWithoutPersonNestedInput
-  generations?: Prisma.FinancialGenerationUncheckedUpdateManyWithoutActorNestedInput
-  directEntries?: Prisma.DirectFinancialEntryUncheckedUpdateManyWithoutActorNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutActorNestedInput
   receiptsReversed?: Prisma.ReceiptReversalUncheckedUpdateManyWithoutActorNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutActorNestedInput
@@ -1071,8 +1017,6 @@ export type PersonCreateWithoutSupplierProfileInput = {
   personType?: Prisma.PersonTypeCreateNestedOneWithoutPeopleInput
   employeeProfile?: Prisma.EmployeeProfileCreateNestedOneWithoutPersonInput
   clientProfile?: Prisma.ClientProfileCreateNestedOneWithoutPersonInput
-  generations?: Prisma.FinancialGenerationCreateNestedManyWithoutActorInput
-  directEntries?: Prisma.DirectFinancialEntryCreateNestedManyWithoutActorInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutActorInput
   receiptsReversed?: Prisma.ReceiptReversalCreateNestedManyWithoutActorInput
   payments?: Prisma.PaymentCreateNestedManyWithoutActorInput
@@ -1097,8 +1041,6 @@ export type PersonUncheckedCreateWithoutSupplierProfileInput = {
   personTypeId?: number | null
   employeeProfile?: Prisma.EmployeeProfileUncheckedCreateNestedOneWithoutPersonInput
   clientProfile?: Prisma.ClientProfileUncheckedCreateNestedOneWithoutPersonInput
-  generations?: Prisma.FinancialGenerationUncheckedCreateNestedManyWithoutActorInput
-  directEntries?: Prisma.DirectFinancialEntryUncheckedCreateNestedManyWithoutActorInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutActorInput
   receiptsReversed?: Prisma.ReceiptReversalUncheckedCreateNestedManyWithoutActorInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutActorInput
@@ -1138,8 +1080,6 @@ export type PersonUpdateWithoutSupplierProfileInput = {
   personType?: Prisma.PersonTypeUpdateOneWithoutPeopleNestedInput
   employeeProfile?: Prisma.EmployeeProfileUpdateOneWithoutPersonNestedInput
   clientProfile?: Prisma.ClientProfileUpdateOneWithoutPersonNestedInput
-  generations?: Prisma.FinancialGenerationUpdateManyWithoutActorNestedInput
-  directEntries?: Prisma.DirectFinancialEntryUpdateManyWithoutActorNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutActorNestedInput
   receiptsReversed?: Prisma.ReceiptReversalUpdateManyWithoutActorNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutActorNestedInput
@@ -1164,8 +1104,6 @@ export type PersonUncheckedUpdateWithoutSupplierProfileInput = {
   personTypeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   employeeProfile?: Prisma.EmployeeProfileUncheckedUpdateOneWithoutPersonNestedInput
   clientProfile?: Prisma.ClientProfileUncheckedUpdateOneWithoutPersonNestedInput
-  generations?: Prisma.FinancialGenerationUncheckedUpdateManyWithoutActorNestedInput
-  directEntries?: Prisma.DirectFinancialEntryUncheckedUpdateManyWithoutActorNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutActorNestedInput
   receiptsReversed?: Prisma.ReceiptReversalUncheckedUpdateManyWithoutActorNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutActorNestedInput
@@ -1189,8 +1127,6 @@ export type PersonCreateWithoutEmployeeProfileInput = {
   personType?: Prisma.PersonTypeCreateNestedOneWithoutPeopleInput
   clientProfile?: Prisma.ClientProfileCreateNestedOneWithoutPersonInput
   supplierProfile?: Prisma.SupplierProfileCreateNestedOneWithoutPersonInput
-  generations?: Prisma.FinancialGenerationCreateNestedManyWithoutActorInput
-  directEntries?: Prisma.DirectFinancialEntryCreateNestedManyWithoutActorInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutActorInput
   receiptsReversed?: Prisma.ReceiptReversalCreateNestedManyWithoutActorInput
   payments?: Prisma.PaymentCreateNestedManyWithoutActorInput
@@ -1215,8 +1151,6 @@ export type PersonUncheckedCreateWithoutEmployeeProfileInput = {
   personTypeId?: number | null
   clientProfile?: Prisma.ClientProfileUncheckedCreateNestedOneWithoutPersonInput
   supplierProfile?: Prisma.SupplierProfileUncheckedCreateNestedOneWithoutPersonInput
-  generations?: Prisma.FinancialGenerationUncheckedCreateNestedManyWithoutActorInput
-  directEntries?: Prisma.DirectFinancialEntryUncheckedCreateNestedManyWithoutActorInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutActorInput
   receiptsReversed?: Prisma.ReceiptReversalUncheckedCreateNestedManyWithoutActorInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutActorInput
@@ -1256,8 +1190,6 @@ export type PersonUpdateWithoutEmployeeProfileInput = {
   personType?: Prisma.PersonTypeUpdateOneWithoutPeopleNestedInput
   clientProfile?: Prisma.ClientProfileUpdateOneWithoutPersonNestedInput
   supplierProfile?: Prisma.SupplierProfileUpdateOneWithoutPersonNestedInput
-  generations?: Prisma.FinancialGenerationUpdateManyWithoutActorNestedInput
-  directEntries?: Prisma.DirectFinancialEntryUpdateManyWithoutActorNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutActorNestedInput
   receiptsReversed?: Prisma.ReceiptReversalUpdateManyWithoutActorNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutActorNestedInput
@@ -1282,244 +1214,6 @@ export type PersonUncheckedUpdateWithoutEmployeeProfileInput = {
   personTypeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   clientProfile?: Prisma.ClientProfileUncheckedUpdateOneWithoutPersonNestedInput
   supplierProfile?: Prisma.SupplierProfileUncheckedUpdateOneWithoutPersonNestedInput
-  generations?: Prisma.FinancialGenerationUncheckedUpdateManyWithoutActorNestedInput
-  directEntries?: Prisma.DirectFinancialEntryUncheckedUpdateManyWithoutActorNestedInput
-  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutActorNestedInput
-  receiptsReversed?: Prisma.ReceiptReversalUncheckedUpdateManyWithoutActorNestedInput
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutActorNestedInput
-  paymentsReversed?: Prisma.PaymentReversalUncheckedUpdateManyWithoutActorNestedInput
-  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutPersonNestedInput
-  actedAuditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
-}
-
-export type PersonCreateWithoutGenerationsInput = {
-  fullName: string
-  document?: string | null
-  email?: string | null
-  phone?: string | null
-  isGeneric?: boolean
-  seedKey?: string | null
-  isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-  personType?: Prisma.PersonTypeCreateNestedOneWithoutPeopleInput
-  employeeProfile?: Prisma.EmployeeProfileCreateNestedOneWithoutPersonInput
-  clientProfile?: Prisma.ClientProfileCreateNestedOneWithoutPersonInput
-  supplierProfile?: Prisma.SupplierProfileCreateNestedOneWithoutPersonInput
-  directEntries?: Prisma.DirectFinancialEntryCreateNestedManyWithoutActorInput
-  receipts?: Prisma.ReceiptCreateNestedManyWithoutActorInput
-  receiptsReversed?: Prisma.ReceiptReversalCreateNestedManyWithoutActorInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutActorInput
-  paymentsReversed?: Prisma.PaymentReversalCreateNestedManyWithoutActorInput
-  attachments?: Prisma.AttachmentCreateNestedManyWithoutPersonInput
-  actedAuditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
-}
-
-export type PersonUncheckedCreateWithoutGenerationsInput = {
-  id?: number
-  fullName: string
-  document?: string | null
-  email?: string | null
-  phone?: string | null
-  isGeneric?: boolean
-  seedKey?: string | null
-  isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-  personTypeId?: number | null
-  employeeProfile?: Prisma.EmployeeProfileUncheckedCreateNestedOneWithoutPersonInput
-  clientProfile?: Prisma.ClientProfileUncheckedCreateNestedOneWithoutPersonInput
-  supplierProfile?: Prisma.SupplierProfileUncheckedCreateNestedOneWithoutPersonInput
-  directEntries?: Prisma.DirectFinancialEntryUncheckedCreateNestedManyWithoutActorInput
-  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutActorInput
-  receiptsReversed?: Prisma.ReceiptReversalUncheckedCreateNestedManyWithoutActorInput
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutActorInput
-  paymentsReversed?: Prisma.PaymentReversalUncheckedCreateNestedManyWithoutActorInput
-  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutPersonInput
-  actedAuditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
-}
-
-export type PersonCreateOrConnectWithoutGenerationsInput = {
-  where: Prisma.PersonWhereUniqueInput
-  create: Prisma.XOR<Prisma.PersonCreateWithoutGenerationsInput, Prisma.PersonUncheckedCreateWithoutGenerationsInput>
-}
-
-export type PersonUpsertWithoutGenerationsInput = {
-  update: Prisma.XOR<Prisma.PersonUpdateWithoutGenerationsInput, Prisma.PersonUncheckedUpdateWithoutGenerationsInput>
-  create: Prisma.XOR<Prisma.PersonCreateWithoutGenerationsInput, Prisma.PersonUncheckedCreateWithoutGenerationsInput>
-  where?: Prisma.PersonWhereInput
-}
-
-export type PersonUpdateToOneWithWhereWithoutGenerationsInput = {
-  where?: Prisma.PersonWhereInput
-  data: Prisma.XOR<Prisma.PersonUpdateWithoutGenerationsInput, Prisma.PersonUncheckedUpdateWithoutGenerationsInput>
-}
-
-export type PersonUpdateWithoutGenerationsInput = {
-  fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  document?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isGeneric?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  seedKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  personType?: Prisma.PersonTypeUpdateOneWithoutPeopleNestedInput
-  employeeProfile?: Prisma.EmployeeProfileUpdateOneWithoutPersonNestedInput
-  clientProfile?: Prisma.ClientProfileUpdateOneWithoutPersonNestedInput
-  supplierProfile?: Prisma.SupplierProfileUpdateOneWithoutPersonNestedInput
-  directEntries?: Prisma.DirectFinancialEntryUpdateManyWithoutActorNestedInput
-  receipts?: Prisma.ReceiptUpdateManyWithoutActorNestedInput
-  receiptsReversed?: Prisma.ReceiptReversalUpdateManyWithoutActorNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutActorNestedInput
-  paymentsReversed?: Prisma.PaymentReversalUpdateManyWithoutActorNestedInput
-  attachments?: Prisma.AttachmentUpdateManyWithoutPersonNestedInput
-  actedAuditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
-}
-
-export type PersonUncheckedUpdateWithoutGenerationsInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  document?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isGeneric?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  seedKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  personTypeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  employeeProfile?: Prisma.EmployeeProfileUncheckedUpdateOneWithoutPersonNestedInput
-  clientProfile?: Prisma.ClientProfileUncheckedUpdateOneWithoutPersonNestedInput
-  supplierProfile?: Prisma.SupplierProfileUncheckedUpdateOneWithoutPersonNestedInput
-  directEntries?: Prisma.DirectFinancialEntryUncheckedUpdateManyWithoutActorNestedInput
-  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutActorNestedInput
-  receiptsReversed?: Prisma.ReceiptReversalUncheckedUpdateManyWithoutActorNestedInput
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutActorNestedInput
-  paymentsReversed?: Prisma.PaymentReversalUncheckedUpdateManyWithoutActorNestedInput
-  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutPersonNestedInput
-  actedAuditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPersonNestedInput
-}
-
-export type PersonCreateWithoutDirectEntriesInput = {
-  fullName: string
-  document?: string | null
-  email?: string | null
-  phone?: string | null
-  isGeneric?: boolean
-  seedKey?: string | null
-  isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-  personType?: Prisma.PersonTypeCreateNestedOneWithoutPeopleInput
-  employeeProfile?: Prisma.EmployeeProfileCreateNestedOneWithoutPersonInput
-  clientProfile?: Prisma.ClientProfileCreateNestedOneWithoutPersonInput
-  supplierProfile?: Prisma.SupplierProfileCreateNestedOneWithoutPersonInput
-  generations?: Prisma.FinancialGenerationCreateNestedManyWithoutActorInput
-  receipts?: Prisma.ReceiptCreateNestedManyWithoutActorInput
-  receiptsReversed?: Prisma.ReceiptReversalCreateNestedManyWithoutActorInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutActorInput
-  paymentsReversed?: Prisma.PaymentReversalCreateNestedManyWithoutActorInput
-  attachments?: Prisma.AttachmentCreateNestedManyWithoutPersonInput
-  actedAuditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPersonInput
-}
-
-export type PersonUncheckedCreateWithoutDirectEntriesInput = {
-  id?: number
-  fullName: string
-  document?: string | null
-  email?: string | null
-  phone?: string | null
-  isGeneric?: boolean
-  seedKey?: string | null
-  isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-  personTypeId?: number | null
-  employeeProfile?: Prisma.EmployeeProfileUncheckedCreateNestedOneWithoutPersonInput
-  clientProfile?: Prisma.ClientProfileUncheckedCreateNestedOneWithoutPersonInput
-  supplierProfile?: Prisma.SupplierProfileUncheckedCreateNestedOneWithoutPersonInput
-  generations?: Prisma.FinancialGenerationUncheckedCreateNestedManyWithoutActorInput
-  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutActorInput
-  receiptsReversed?: Prisma.ReceiptReversalUncheckedCreateNestedManyWithoutActorInput
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutActorInput
-  paymentsReversed?: Prisma.PaymentReversalUncheckedCreateNestedManyWithoutActorInput
-  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutPersonInput
-  actedAuditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPersonInput
-}
-
-export type PersonCreateOrConnectWithoutDirectEntriesInput = {
-  where: Prisma.PersonWhereUniqueInput
-  create: Prisma.XOR<Prisma.PersonCreateWithoutDirectEntriesInput, Prisma.PersonUncheckedCreateWithoutDirectEntriesInput>
-}
-
-export type PersonUpsertWithoutDirectEntriesInput = {
-  update: Prisma.XOR<Prisma.PersonUpdateWithoutDirectEntriesInput, Prisma.PersonUncheckedUpdateWithoutDirectEntriesInput>
-  create: Prisma.XOR<Prisma.PersonCreateWithoutDirectEntriesInput, Prisma.PersonUncheckedCreateWithoutDirectEntriesInput>
-  where?: Prisma.PersonWhereInput
-}
-
-export type PersonUpdateToOneWithWhereWithoutDirectEntriesInput = {
-  where?: Prisma.PersonWhereInput
-  data: Prisma.XOR<Prisma.PersonUpdateWithoutDirectEntriesInput, Prisma.PersonUncheckedUpdateWithoutDirectEntriesInput>
-}
-
-export type PersonUpdateWithoutDirectEntriesInput = {
-  fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  document?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isGeneric?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  seedKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  personType?: Prisma.PersonTypeUpdateOneWithoutPeopleNestedInput
-  employeeProfile?: Prisma.EmployeeProfileUpdateOneWithoutPersonNestedInput
-  clientProfile?: Prisma.ClientProfileUpdateOneWithoutPersonNestedInput
-  supplierProfile?: Prisma.SupplierProfileUpdateOneWithoutPersonNestedInput
-  generations?: Prisma.FinancialGenerationUpdateManyWithoutActorNestedInput
-  receipts?: Prisma.ReceiptUpdateManyWithoutActorNestedInput
-  receiptsReversed?: Prisma.ReceiptReversalUpdateManyWithoutActorNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutActorNestedInput
-  paymentsReversed?: Prisma.PaymentReversalUpdateManyWithoutActorNestedInput
-  attachments?: Prisma.AttachmentUpdateManyWithoutPersonNestedInput
-  actedAuditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutPersonNestedInput
-}
-
-export type PersonUncheckedUpdateWithoutDirectEntriesInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  document?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isGeneric?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  seedKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  personTypeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  employeeProfile?: Prisma.EmployeeProfileUncheckedUpdateOneWithoutPersonNestedInput
-  clientProfile?: Prisma.ClientProfileUncheckedUpdateOneWithoutPersonNestedInput
-  supplierProfile?: Prisma.SupplierProfileUncheckedUpdateOneWithoutPersonNestedInput
-  generations?: Prisma.FinancialGenerationUncheckedUpdateManyWithoutActorNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutActorNestedInput
   receiptsReversed?: Prisma.ReceiptReversalUncheckedUpdateManyWithoutActorNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutActorNestedInput
@@ -1544,8 +1238,6 @@ export type PersonCreateWithoutReceiptsInput = {
   employeeProfile?: Prisma.EmployeeProfileCreateNestedOneWithoutPersonInput
   clientProfile?: Prisma.ClientProfileCreateNestedOneWithoutPersonInput
   supplierProfile?: Prisma.SupplierProfileCreateNestedOneWithoutPersonInput
-  generations?: Prisma.FinancialGenerationCreateNestedManyWithoutActorInput
-  directEntries?: Prisma.DirectFinancialEntryCreateNestedManyWithoutActorInput
   receiptsReversed?: Prisma.ReceiptReversalCreateNestedManyWithoutActorInput
   payments?: Prisma.PaymentCreateNestedManyWithoutActorInput
   paymentsReversed?: Prisma.PaymentReversalCreateNestedManyWithoutActorInput
@@ -1570,8 +1262,6 @@ export type PersonUncheckedCreateWithoutReceiptsInput = {
   employeeProfile?: Prisma.EmployeeProfileUncheckedCreateNestedOneWithoutPersonInput
   clientProfile?: Prisma.ClientProfileUncheckedCreateNestedOneWithoutPersonInput
   supplierProfile?: Prisma.SupplierProfileUncheckedCreateNestedOneWithoutPersonInput
-  generations?: Prisma.FinancialGenerationUncheckedCreateNestedManyWithoutActorInput
-  directEntries?: Prisma.DirectFinancialEntryUncheckedCreateNestedManyWithoutActorInput
   receiptsReversed?: Prisma.ReceiptReversalUncheckedCreateNestedManyWithoutActorInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutActorInput
   paymentsReversed?: Prisma.PaymentReversalUncheckedCreateNestedManyWithoutActorInput
@@ -1611,8 +1301,6 @@ export type PersonUpdateWithoutReceiptsInput = {
   employeeProfile?: Prisma.EmployeeProfileUpdateOneWithoutPersonNestedInput
   clientProfile?: Prisma.ClientProfileUpdateOneWithoutPersonNestedInput
   supplierProfile?: Prisma.SupplierProfileUpdateOneWithoutPersonNestedInput
-  generations?: Prisma.FinancialGenerationUpdateManyWithoutActorNestedInput
-  directEntries?: Prisma.DirectFinancialEntryUpdateManyWithoutActorNestedInput
   receiptsReversed?: Prisma.ReceiptReversalUpdateManyWithoutActorNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutActorNestedInput
   paymentsReversed?: Prisma.PaymentReversalUpdateManyWithoutActorNestedInput
@@ -1637,8 +1325,6 @@ export type PersonUncheckedUpdateWithoutReceiptsInput = {
   employeeProfile?: Prisma.EmployeeProfileUncheckedUpdateOneWithoutPersonNestedInput
   clientProfile?: Prisma.ClientProfileUncheckedUpdateOneWithoutPersonNestedInput
   supplierProfile?: Prisma.SupplierProfileUncheckedUpdateOneWithoutPersonNestedInput
-  generations?: Prisma.FinancialGenerationUncheckedUpdateManyWithoutActorNestedInput
-  directEntries?: Prisma.DirectFinancialEntryUncheckedUpdateManyWithoutActorNestedInput
   receiptsReversed?: Prisma.ReceiptReversalUncheckedUpdateManyWithoutActorNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutActorNestedInput
   paymentsReversed?: Prisma.PaymentReversalUncheckedUpdateManyWithoutActorNestedInput
@@ -1662,8 +1348,6 @@ export type PersonCreateWithoutReceiptsReversedInput = {
   employeeProfile?: Prisma.EmployeeProfileCreateNestedOneWithoutPersonInput
   clientProfile?: Prisma.ClientProfileCreateNestedOneWithoutPersonInput
   supplierProfile?: Prisma.SupplierProfileCreateNestedOneWithoutPersonInput
-  generations?: Prisma.FinancialGenerationCreateNestedManyWithoutActorInput
-  directEntries?: Prisma.DirectFinancialEntryCreateNestedManyWithoutActorInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutActorInput
   payments?: Prisma.PaymentCreateNestedManyWithoutActorInput
   paymentsReversed?: Prisma.PaymentReversalCreateNestedManyWithoutActorInput
@@ -1688,8 +1372,6 @@ export type PersonUncheckedCreateWithoutReceiptsReversedInput = {
   employeeProfile?: Prisma.EmployeeProfileUncheckedCreateNestedOneWithoutPersonInput
   clientProfile?: Prisma.ClientProfileUncheckedCreateNestedOneWithoutPersonInput
   supplierProfile?: Prisma.SupplierProfileUncheckedCreateNestedOneWithoutPersonInput
-  generations?: Prisma.FinancialGenerationUncheckedCreateNestedManyWithoutActorInput
-  directEntries?: Prisma.DirectFinancialEntryUncheckedCreateNestedManyWithoutActorInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutActorInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutActorInput
   paymentsReversed?: Prisma.PaymentReversalUncheckedCreateNestedManyWithoutActorInput
@@ -1729,8 +1411,6 @@ export type PersonUpdateWithoutReceiptsReversedInput = {
   employeeProfile?: Prisma.EmployeeProfileUpdateOneWithoutPersonNestedInput
   clientProfile?: Prisma.ClientProfileUpdateOneWithoutPersonNestedInput
   supplierProfile?: Prisma.SupplierProfileUpdateOneWithoutPersonNestedInput
-  generations?: Prisma.FinancialGenerationUpdateManyWithoutActorNestedInput
-  directEntries?: Prisma.DirectFinancialEntryUpdateManyWithoutActorNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutActorNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutActorNestedInput
   paymentsReversed?: Prisma.PaymentReversalUpdateManyWithoutActorNestedInput
@@ -1755,8 +1435,6 @@ export type PersonUncheckedUpdateWithoutReceiptsReversedInput = {
   employeeProfile?: Prisma.EmployeeProfileUncheckedUpdateOneWithoutPersonNestedInput
   clientProfile?: Prisma.ClientProfileUncheckedUpdateOneWithoutPersonNestedInput
   supplierProfile?: Prisma.SupplierProfileUncheckedUpdateOneWithoutPersonNestedInput
-  generations?: Prisma.FinancialGenerationUncheckedUpdateManyWithoutActorNestedInput
-  directEntries?: Prisma.DirectFinancialEntryUncheckedUpdateManyWithoutActorNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutActorNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutActorNestedInput
   paymentsReversed?: Prisma.PaymentReversalUncheckedUpdateManyWithoutActorNestedInput
@@ -1780,8 +1458,6 @@ export type PersonCreateWithoutPaymentsInput = {
   employeeProfile?: Prisma.EmployeeProfileCreateNestedOneWithoutPersonInput
   clientProfile?: Prisma.ClientProfileCreateNestedOneWithoutPersonInput
   supplierProfile?: Prisma.SupplierProfileCreateNestedOneWithoutPersonInput
-  generations?: Prisma.FinancialGenerationCreateNestedManyWithoutActorInput
-  directEntries?: Prisma.DirectFinancialEntryCreateNestedManyWithoutActorInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutActorInput
   receiptsReversed?: Prisma.ReceiptReversalCreateNestedManyWithoutActorInput
   paymentsReversed?: Prisma.PaymentReversalCreateNestedManyWithoutActorInput
@@ -1806,8 +1482,6 @@ export type PersonUncheckedCreateWithoutPaymentsInput = {
   employeeProfile?: Prisma.EmployeeProfileUncheckedCreateNestedOneWithoutPersonInput
   clientProfile?: Prisma.ClientProfileUncheckedCreateNestedOneWithoutPersonInput
   supplierProfile?: Prisma.SupplierProfileUncheckedCreateNestedOneWithoutPersonInput
-  generations?: Prisma.FinancialGenerationUncheckedCreateNestedManyWithoutActorInput
-  directEntries?: Prisma.DirectFinancialEntryUncheckedCreateNestedManyWithoutActorInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutActorInput
   receiptsReversed?: Prisma.ReceiptReversalUncheckedCreateNestedManyWithoutActorInput
   paymentsReversed?: Prisma.PaymentReversalUncheckedCreateNestedManyWithoutActorInput
@@ -1847,8 +1521,6 @@ export type PersonUpdateWithoutPaymentsInput = {
   employeeProfile?: Prisma.EmployeeProfileUpdateOneWithoutPersonNestedInput
   clientProfile?: Prisma.ClientProfileUpdateOneWithoutPersonNestedInput
   supplierProfile?: Prisma.SupplierProfileUpdateOneWithoutPersonNestedInput
-  generations?: Prisma.FinancialGenerationUpdateManyWithoutActorNestedInput
-  directEntries?: Prisma.DirectFinancialEntryUpdateManyWithoutActorNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutActorNestedInput
   receiptsReversed?: Prisma.ReceiptReversalUpdateManyWithoutActorNestedInput
   paymentsReversed?: Prisma.PaymentReversalUpdateManyWithoutActorNestedInput
@@ -1873,8 +1545,6 @@ export type PersonUncheckedUpdateWithoutPaymentsInput = {
   employeeProfile?: Prisma.EmployeeProfileUncheckedUpdateOneWithoutPersonNestedInput
   clientProfile?: Prisma.ClientProfileUncheckedUpdateOneWithoutPersonNestedInput
   supplierProfile?: Prisma.SupplierProfileUncheckedUpdateOneWithoutPersonNestedInput
-  generations?: Prisma.FinancialGenerationUncheckedUpdateManyWithoutActorNestedInput
-  directEntries?: Prisma.DirectFinancialEntryUncheckedUpdateManyWithoutActorNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutActorNestedInput
   receiptsReversed?: Prisma.ReceiptReversalUncheckedUpdateManyWithoutActorNestedInput
   paymentsReversed?: Prisma.PaymentReversalUncheckedUpdateManyWithoutActorNestedInput
@@ -1898,8 +1568,6 @@ export type PersonCreateWithoutPaymentsReversedInput = {
   employeeProfile?: Prisma.EmployeeProfileCreateNestedOneWithoutPersonInput
   clientProfile?: Prisma.ClientProfileCreateNestedOneWithoutPersonInput
   supplierProfile?: Prisma.SupplierProfileCreateNestedOneWithoutPersonInput
-  generations?: Prisma.FinancialGenerationCreateNestedManyWithoutActorInput
-  directEntries?: Prisma.DirectFinancialEntryCreateNestedManyWithoutActorInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutActorInput
   receiptsReversed?: Prisma.ReceiptReversalCreateNestedManyWithoutActorInput
   payments?: Prisma.PaymentCreateNestedManyWithoutActorInput
@@ -1924,8 +1592,6 @@ export type PersonUncheckedCreateWithoutPaymentsReversedInput = {
   employeeProfile?: Prisma.EmployeeProfileUncheckedCreateNestedOneWithoutPersonInput
   clientProfile?: Prisma.ClientProfileUncheckedCreateNestedOneWithoutPersonInput
   supplierProfile?: Prisma.SupplierProfileUncheckedCreateNestedOneWithoutPersonInput
-  generations?: Prisma.FinancialGenerationUncheckedCreateNestedManyWithoutActorInput
-  directEntries?: Prisma.DirectFinancialEntryUncheckedCreateNestedManyWithoutActorInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutActorInput
   receiptsReversed?: Prisma.ReceiptReversalUncheckedCreateNestedManyWithoutActorInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutActorInput
@@ -1965,8 +1631,6 @@ export type PersonUpdateWithoutPaymentsReversedInput = {
   employeeProfile?: Prisma.EmployeeProfileUpdateOneWithoutPersonNestedInput
   clientProfile?: Prisma.ClientProfileUpdateOneWithoutPersonNestedInput
   supplierProfile?: Prisma.SupplierProfileUpdateOneWithoutPersonNestedInput
-  generations?: Prisma.FinancialGenerationUpdateManyWithoutActorNestedInput
-  directEntries?: Prisma.DirectFinancialEntryUpdateManyWithoutActorNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutActorNestedInput
   receiptsReversed?: Prisma.ReceiptReversalUpdateManyWithoutActorNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutActorNestedInput
@@ -1991,8 +1655,6 @@ export type PersonUncheckedUpdateWithoutPaymentsReversedInput = {
   employeeProfile?: Prisma.EmployeeProfileUncheckedUpdateOneWithoutPersonNestedInput
   clientProfile?: Prisma.ClientProfileUncheckedUpdateOneWithoutPersonNestedInput
   supplierProfile?: Prisma.SupplierProfileUncheckedUpdateOneWithoutPersonNestedInput
-  generations?: Prisma.FinancialGenerationUncheckedUpdateManyWithoutActorNestedInput
-  directEntries?: Prisma.DirectFinancialEntryUncheckedUpdateManyWithoutActorNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutActorNestedInput
   receiptsReversed?: Prisma.ReceiptReversalUncheckedUpdateManyWithoutActorNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutActorNestedInput
@@ -2016,8 +1678,6 @@ export type PersonCreateWithoutAttachmentsInput = {
   employeeProfile?: Prisma.EmployeeProfileCreateNestedOneWithoutPersonInput
   clientProfile?: Prisma.ClientProfileCreateNestedOneWithoutPersonInput
   supplierProfile?: Prisma.SupplierProfileCreateNestedOneWithoutPersonInput
-  generations?: Prisma.FinancialGenerationCreateNestedManyWithoutActorInput
-  directEntries?: Prisma.DirectFinancialEntryCreateNestedManyWithoutActorInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutActorInput
   receiptsReversed?: Prisma.ReceiptReversalCreateNestedManyWithoutActorInput
   payments?: Prisma.PaymentCreateNestedManyWithoutActorInput
@@ -2042,8 +1702,6 @@ export type PersonUncheckedCreateWithoutAttachmentsInput = {
   employeeProfile?: Prisma.EmployeeProfileUncheckedCreateNestedOneWithoutPersonInput
   clientProfile?: Prisma.ClientProfileUncheckedCreateNestedOneWithoutPersonInput
   supplierProfile?: Prisma.SupplierProfileUncheckedCreateNestedOneWithoutPersonInput
-  generations?: Prisma.FinancialGenerationUncheckedCreateNestedManyWithoutActorInput
-  directEntries?: Prisma.DirectFinancialEntryUncheckedCreateNestedManyWithoutActorInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutActorInput
   receiptsReversed?: Prisma.ReceiptReversalUncheckedCreateNestedManyWithoutActorInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutActorInput
@@ -2083,8 +1741,6 @@ export type PersonUpdateWithoutAttachmentsInput = {
   employeeProfile?: Prisma.EmployeeProfileUpdateOneWithoutPersonNestedInput
   clientProfile?: Prisma.ClientProfileUpdateOneWithoutPersonNestedInput
   supplierProfile?: Prisma.SupplierProfileUpdateOneWithoutPersonNestedInput
-  generations?: Prisma.FinancialGenerationUpdateManyWithoutActorNestedInput
-  directEntries?: Prisma.DirectFinancialEntryUpdateManyWithoutActorNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutActorNestedInput
   receiptsReversed?: Prisma.ReceiptReversalUpdateManyWithoutActorNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutActorNestedInput
@@ -2109,8 +1765,6 @@ export type PersonUncheckedUpdateWithoutAttachmentsInput = {
   employeeProfile?: Prisma.EmployeeProfileUncheckedUpdateOneWithoutPersonNestedInput
   clientProfile?: Prisma.ClientProfileUncheckedUpdateOneWithoutPersonNestedInput
   supplierProfile?: Prisma.SupplierProfileUncheckedUpdateOneWithoutPersonNestedInput
-  generations?: Prisma.FinancialGenerationUncheckedUpdateManyWithoutActorNestedInput
-  directEntries?: Prisma.DirectFinancialEntryUncheckedUpdateManyWithoutActorNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutActorNestedInput
   receiptsReversed?: Prisma.ReceiptReversalUncheckedUpdateManyWithoutActorNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutActorNestedInput
@@ -2134,8 +1788,6 @@ export type PersonCreateWithoutActedAuditLogsInput = {
   employeeProfile?: Prisma.EmployeeProfileCreateNestedOneWithoutPersonInput
   clientProfile?: Prisma.ClientProfileCreateNestedOneWithoutPersonInput
   supplierProfile?: Prisma.SupplierProfileCreateNestedOneWithoutPersonInput
-  generations?: Prisma.FinancialGenerationCreateNestedManyWithoutActorInput
-  directEntries?: Prisma.DirectFinancialEntryCreateNestedManyWithoutActorInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutActorInput
   receiptsReversed?: Prisma.ReceiptReversalCreateNestedManyWithoutActorInput
   payments?: Prisma.PaymentCreateNestedManyWithoutActorInput
@@ -2160,8 +1812,6 @@ export type PersonUncheckedCreateWithoutActedAuditLogsInput = {
   employeeProfile?: Prisma.EmployeeProfileUncheckedCreateNestedOneWithoutPersonInput
   clientProfile?: Prisma.ClientProfileUncheckedCreateNestedOneWithoutPersonInput
   supplierProfile?: Prisma.SupplierProfileUncheckedCreateNestedOneWithoutPersonInput
-  generations?: Prisma.FinancialGenerationUncheckedCreateNestedManyWithoutActorInput
-  directEntries?: Prisma.DirectFinancialEntryUncheckedCreateNestedManyWithoutActorInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutActorInput
   receiptsReversed?: Prisma.ReceiptReversalUncheckedCreateNestedManyWithoutActorInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutActorInput
@@ -2190,8 +1840,6 @@ export type PersonCreateWithoutAuditLogsInput = {
   employeeProfile?: Prisma.EmployeeProfileCreateNestedOneWithoutPersonInput
   clientProfile?: Prisma.ClientProfileCreateNestedOneWithoutPersonInput
   supplierProfile?: Prisma.SupplierProfileCreateNestedOneWithoutPersonInput
-  generations?: Prisma.FinancialGenerationCreateNestedManyWithoutActorInput
-  directEntries?: Prisma.DirectFinancialEntryCreateNestedManyWithoutActorInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutActorInput
   receiptsReversed?: Prisma.ReceiptReversalCreateNestedManyWithoutActorInput
   payments?: Prisma.PaymentCreateNestedManyWithoutActorInput
@@ -2216,8 +1864,6 @@ export type PersonUncheckedCreateWithoutAuditLogsInput = {
   employeeProfile?: Prisma.EmployeeProfileUncheckedCreateNestedOneWithoutPersonInput
   clientProfile?: Prisma.ClientProfileUncheckedCreateNestedOneWithoutPersonInput
   supplierProfile?: Prisma.SupplierProfileUncheckedCreateNestedOneWithoutPersonInput
-  generations?: Prisma.FinancialGenerationUncheckedCreateNestedManyWithoutActorInput
-  directEntries?: Prisma.DirectFinancialEntryUncheckedCreateNestedManyWithoutActorInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutActorInput
   receiptsReversed?: Prisma.ReceiptReversalUncheckedCreateNestedManyWithoutActorInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutActorInput
@@ -2257,8 +1903,6 @@ export type PersonUpdateWithoutActedAuditLogsInput = {
   employeeProfile?: Prisma.EmployeeProfileUpdateOneWithoutPersonNestedInput
   clientProfile?: Prisma.ClientProfileUpdateOneWithoutPersonNestedInput
   supplierProfile?: Prisma.SupplierProfileUpdateOneWithoutPersonNestedInput
-  generations?: Prisma.FinancialGenerationUpdateManyWithoutActorNestedInput
-  directEntries?: Prisma.DirectFinancialEntryUpdateManyWithoutActorNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutActorNestedInput
   receiptsReversed?: Prisma.ReceiptReversalUpdateManyWithoutActorNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutActorNestedInput
@@ -2283,8 +1927,6 @@ export type PersonUncheckedUpdateWithoutActedAuditLogsInput = {
   employeeProfile?: Prisma.EmployeeProfileUncheckedUpdateOneWithoutPersonNestedInput
   clientProfile?: Prisma.ClientProfileUncheckedUpdateOneWithoutPersonNestedInput
   supplierProfile?: Prisma.SupplierProfileUncheckedUpdateOneWithoutPersonNestedInput
-  generations?: Prisma.FinancialGenerationUncheckedUpdateManyWithoutActorNestedInput
-  directEntries?: Prisma.DirectFinancialEntryUncheckedUpdateManyWithoutActorNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutActorNestedInput
   receiptsReversed?: Prisma.ReceiptReversalUncheckedUpdateManyWithoutActorNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutActorNestedInput
@@ -2319,8 +1961,6 @@ export type PersonUpdateWithoutAuditLogsInput = {
   employeeProfile?: Prisma.EmployeeProfileUpdateOneWithoutPersonNestedInput
   clientProfile?: Prisma.ClientProfileUpdateOneWithoutPersonNestedInput
   supplierProfile?: Prisma.SupplierProfileUpdateOneWithoutPersonNestedInput
-  generations?: Prisma.FinancialGenerationUpdateManyWithoutActorNestedInput
-  directEntries?: Prisma.DirectFinancialEntryUpdateManyWithoutActorNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutActorNestedInput
   receiptsReversed?: Prisma.ReceiptReversalUpdateManyWithoutActorNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutActorNestedInput
@@ -2345,8 +1985,6 @@ export type PersonUncheckedUpdateWithoutAuditLogsInput = {
   employeeProfile?: Prisma.EmployeeProfileUncheckedUpdateOneWithoutPersonNestedInput
   clientProfile?: Prisma.ClientProfileUncheckedUpdateOneWithoutPersonNestedInput
   supplierProfile?: Prisma.SupplierProfileUncheckedUpdateOneWithoutPersonNestedInput
-  generations?: Prisma.FinancialGenerationUncheckedUpdateManyWithoutActorNestedInput
-  directEntries?: Prisma.DirectFinancialEntryUncheckedUpdateManyWithoutActorNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutActorNestedInput
   receiptsReversed?: Prisma.ReceiptReversalUncheckedUpdateManyWithoutActorNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutActorNestedInput
@@ -2383,8 +2021,6 @@ export type PersonUpdateWithoutPersonTypeInput = {
   employeeProfile?: Prisma.EmployeeProfileUpdateOneWithoutPersonNestedInput
   clientProfile?: Prisma.ClientProfileUpdateOneWithoutPersonNestedInput
   supplierProfile?: Prisma.SupplierProfileUpdateOneWithoutPersonNestedInput
-  generations?: Prisma.FinancialGenerationUpdateManyWithoutActorNestedInput
-  directEntries?: Prisma.DirectFinancialEntryUpdateManyWithoutActorNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutActorNestedInput
   receiptsReversed?: Prisma.ReceiptReversalUpdateManyWithoutActorNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutActorNestedInput
@@ -2409,8 +2045,6 @@ export type PersonUncheckedUpdateWithoutPersonTypeInput = {
   employeeProfile?: Prisma.EmployeeProfileUncheckedUpdateOneWithoutPersonNestedInput
   clientProfile?: Prisma.ClientProfileUncheckedUpdateOneWithoutPersonNestedInput
   supplierProfile?: Prisma.SupplierProfileUncheckedUpdateOneWithoutPersonNestedInput
-  generations?: Prisma.FinancialGenerationUncheckedUpdateManyWithoutActorNestedInput
-  directEntries?: Prisma.DirectFinancialEntryUncheckedUpdateManyWithoutActorNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutActorNestedInput
   receiptsReversed?: Prisma.ReceiptReversalUncheckedUpdateManyWithoutActorNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutActorNestedInput
@@ -2440,8 +2074,6 @@ export type PersonUncheckedUpdateManyWithoutPersonTypeInput = {
  */
 
 export type PersonCountOutputType = {
-  generations: number
-  directEntries: number
   receipts: number
   receiptsReversed: number
   payments: number
@@ -2452,8 +2084,6 @@ export type PersonCountOutputType = {
 }
 
 export type PersonCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  generations?: boolean | PersonCountOutputTypeCountGenerationsArgs
-  directEntries?: boolean | PersonCountOutputTypeCountDirectEntriesArgs
   receipts?: boolean | PersonCountOutputTypeCountReceiptsArgs
   receiptsReversed?: boolean | PersonCountOutputTypeCountReceiptsReversedArgs
   payments?: boolean | PersonCountOutputTypeCountPaymentsArgs
@@ -2471,20 +2101,6 @@ export type PersonCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exten
    * Select specific fields to fetch from the PersonCountOutputType
    */
   select?: Prisma.PersonCountOutputTypeSelect<ExtArgs> | null
-}
-
-/**
- * PersonCountOutputType without action
- */
-export type PersonCountOutputTypeCountGenerationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.FinancialGenerationWhereInput
-}
-
-/**
- * PersonCountOutputType without action
- */
-export type PersonCountOutputTypeCountDirectEntriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.DirectFinancialEntryWhereInput
 }
 
 /**
@@ -2554,8 +2170,6 @@ export type PersonSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   employeeProfile?: boolean | Prisma.Person$employeeProfileArgs<ExtArgs>
   clientProfile?: boolean | Prisma.Person$clientProfileArgs<ExtArgs>
   supplierProfile?: boolean | Prisma.Person$supplierProfileArgs<ExtArgs>
-  generations?: boolean | Prisma.Person$generationsArgs<ExtArgs>
-  directEntries?: boolean | Prisma.Person$directEntriesArgs<ExtArgs>
   receipts?: boolean | Prisma.Person$receiptsArgs<ExtArgs>
   receiptsReversed?: boolean | Prisma.Person$receiptsReversedArgs<ExtArgs>
   payments?: boolean | Prisma.Person$paymentsArgs<ExtArgs>
@@ -2619,8 +2233,6 @@ export type PersonInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   employeeProfile?: boolean | Prisma.Person$employeeProfileArgs<ExtArgs>
   clientProfile?: boolean | Prisma.Person$clientProfileArgs<ExtArgs>
   supplierProfile?: boolean | Prisma.Person$supplierProfileArgs<ExtArgs>
-  generations?: boolean | Prisma.Person$generationsArgs<ExtArgs>
-  directEntries?: boolean | Prisma.Person$directEntriesArgs<ExtArgs>
   receipts?: boolean | Prisma.Person$receiptsArgs<ExtArgs>
   receiptsReversed?: boolean | Prisma.Person$receiptsReversedArgs<ExtArgs>
   payments?: boolean | Prisma.Person$paymentsArgs<ExtArgs>
@@ -2644,8 +2256,6 @@ export type $PersonPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     employeeProfile: Prisma.$EmployeeProfilePayload<ExtArgs> | null
     clientProfile: Prisma.$ClientProfilePayload<ExtArgs> | null
     supplierProfile: Prisma.$SupplierProfilePayload<ExtArgs> | null
-    generations: Prisma.$FinancialGenerationPayload<ExtArgs>[]
-    directEntries: Prisma.$DirectFinancialEntryPayload<ExtArgs>[]
     receipts: Prisma.$ReceiptPayload<ExtArgs>[]
     receiptsReversed: Prisma.$ReceiptReversalPayload<ExtArgs>[]
     payments: Prisma.$PaymentPayload<ExtArgs>[]
@@ -3065,8 +2675,6 @@ export interface Prisma__PersonClient<T, Null = never, ExtArgs extends runtime.T
   employeeProfile<T extends Prisma.Person$employeeProfileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$employeeProfileArgs<ExtArgs>>): Prisma.Prisma__EmployeeProfileClient<runtime.Types.Result.GetResult<Prisma.$EmployeeProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   clientProfile<T extends Prisma.Person$clientProfileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$clientProfileArgs<ExtArgs>>): Prisma.Prisma__ClientProfileClient<runtime.Types.Result.GetResult<Prisma.$ClientProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   supplierProfile<T extends Prisma.Person$supplierProfileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$supplierProfileArgs<ExtArgs>>): Prisma.Prisma__SupplierProfileClient<runtime.Types.Result.GetResult<Prisma.$SupplierProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  generations<T extends Prisma.Person$generationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$generationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FinancialGenerationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  directEntries<T extends Prisma.Person$directEntriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$directEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DirectFinancialEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   receipts<T extends Prisma.Person$receiptsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$receiptsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReceiptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   receiptsReversed<T extends Prisma.Person$receiptsReversedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$receiptsReversedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReceiptReversalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   payments<T extends Prisma.Person$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Person$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -3589,54 +3197,6 @@ export type Person$supplierProfileArgs<ExtArgs extends runtime.Types.Extensions.
    */
   include?: Prisma.SupplierProfileInclude<ExtArgs> | null
   where?: Prisma.SupplierProfileWhereInput
-}
-
-/**
- * Person.generations
- */
-export type Person$generationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the FinancialGeneration
-   */
-  select?: Prisma.FinancialGenerationSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the FinancialGeneration
-   */
-  omit?: Prisma.FinancialGenerationOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.FinancialGenerationInclude<ExtArgs> | null
-  where?: Prisma.FinancialGenerationWhereInput
-  orderBy?: Prisma.FinancialGenerationOrderByWithRelationInput | Prisma.FinancialGenerationOrderByWithRelationInput[]
-  cursor?: Prisma.FinancialGenerationWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.FinancialGenerationScalarFieldEnum | Prisma.FinancialGenerationScalarFieldEnum[]
-}
-
-/**
- * Person.directEntries
- */
-export type Person$directEntriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the DirectFinancialEntry
-   */
-  select?: Prisma.DirectFinancialEntrySelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the DirectFinancialEntry
-   */
-  omit?: Prisma.DirectFinancialEntryOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.DirectFinancialEntryInclude<ExtArgs> | null
-  where?: Prisma.DirectFinancialEntryWhereInput
-  orderBy?: Prisma.DirectFinancialEntryOrderByWithRelationInput | Prisma.DirectFinancialEntryOrderByWithRelationInput[]
-  cursor?: Prisma.DirectFinancialEntryWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.DirectFinancialEntryScalarFieldEnum | Prisma.DirectFinancialEntryScalarFieldEnum[]
 }
 
 /**

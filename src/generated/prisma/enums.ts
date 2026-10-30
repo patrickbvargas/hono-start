@@ -9,7 +9,10 @@
 * 🟢 You can import this file directly.
 */
 
+export const TitleKind = {
+  DOWN_PAYMENT: 'DOWN_PAYMENT',
+  INSTALLMENT: 'INSTALLMENT',
+  EXTRA: 'EXTRA'
+} as const
 
-
-// This file is empty because there are no enums in the schema.
-export {}
+export type TitleKind = (typeof TitleKind)[keyof typeof TitleKind]

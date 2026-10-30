@@ -97,11 +97,6 @@ export type FinancialAnalytic = Prisma.FinancialAnalyticModel
  */
 export type PaymentMethod = Prisma.PaymentMethodModel
 /**
- * Model TitleKind
- * 
- */
-export type TitleKind = Prisma.TitleKindModel
-/**
  * Model Person
  * 
  */
@@ -142,15 +137,20 @@ export type Revenue = Prisma.RevenueModel
  */
 export type Expense = Prisma.ExpenseModel
 /**
- * Model FinancialGeneration
+ * Model ContractRevenueReceivable
  * 
  */
-export type FinancialGeneration = Prisma.FinancialGenerationModel
+export type ContractRevenueReceivable = Prisma.ContractRevenueReceivableModel
 /**
- * Model DirectFinancialEntry
+ * Model ExpensePayable
  * 
  */
-export type DirectFinancialEntry = Prisma.DirectFinancialEntryModel
+export type ExpensePayable = Prisma.ExpensePayableModel
+/**
+ * Model RemunerationPayable
+ * 
+ */
+export type RemunerationPayable = Prisma.RemunerationPayableModel
 /**
  * Model Receivable
  * 
@@ -181,11 +181,6 @@ export type Payment = Prisma.PaymentModel
  * 
  */
 export type PaymentReversal = Prisma.PaymentReversalModel
-/**
- * Model RemunerationCalculation
- * 
- */
-export type RemunerationCalculation = Prisma.RemunerationCalculationModel
 /**
  * Model Attachment
  * 

@@ -337,7 +337,7 @@ export type ReceiptWhereInput = {
   actualPaymentMethod?: Prisma.XOR<Prisma.PaymentMethodScalarRelationFilter, Prisma.PaymentMethodWhereInput>
   actor?: Prisma.XOR<Prisma.PersonScalarRelationFilter, Prisma.PersonWhereInput>
   reversal?: Prisma.XOR<Prisma.ReceiptReversalNullableScalarRelationFilter, Prisma.ReceiptReversalWhereInput> | null
-  calculations?: Prisma.RemunerationCalculationListRelationFilter
+  remunerationPayables?: Prisma.RemunerationPayableListRelationFilter
   attachments?: Prisma.AttachmentListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
 }
@@ -363,7 +363,7 @@ export type ReceiptOrderByWithRelationInput = {
   actualPaymentMethod?: Prisma.PaymentMethodOrderByWithRelationInput
   actor?: Prisma.PersonOrderByWithRelationInput
   reversal?: Prisma.ReceiptReversalOrderByWithRelationInput
-  calculations?: Prisma.RemunerationCalculationOrderByRelationAggregateInput
+  remunerationPayables?: Prisma.RemunerationPayableOrderByRelationAggregateInput
   attachments?: Prisma.AttachmentOrderByRelationAggregateInput
   auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
 }
@@ -394,7 +394,7 @@ export type ReceiptWhereUniqueInput = Prisma.AtLeast<{
   actualPaymentMethod?: Prisma.XOR<Prisma.PaymentMethodScalarRelationFilter, Prisma.PaymentMethodWhereInput>
   actor?: Prisma.XOR<Prisma.PersonScalarRelationFilter, Prisma.PersonWhereInput>
   reversal?: Prisma.XOR<Prisma.ReceiptReversalNullableScalarRelationFilter, Prisma.ReceiptReversalWhereInput> | null
-  calculations?: Prisma.RemunerationCalculationListRelationFilter
+  remunerationPayables?: Prisma.RemunerationPayableListRelationFilter
   attachments?: Prisma.AttachmentListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
 }, "id" | "firmId_id" | "firmId_requestKey_receivableId">
@@ -459,7 +459,7 @@ export type ReceiptCreateInput = {
   actualPaymentMethod: Prisma.PaymentMethodCreateNestedOneWithoutReceiptsInput
   actor: Prisma.PersonCreateNestedOneWithoutReceiptsInput
   reversal?: Prisma.ReceiptReversalCreateNestedOneWithoutReceiptInput
-  calculations?: Prisma.RemunerationCalculationCreateNestedManyWithoutReceiptInput
+  remunerationPayables?: Prisma.RemunerationPayableCreateNestedManyWithoutReceiptInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutReceiptInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutReceiptInput
 }
@@ -481,7 +481,7 @@ export type ReceiptUncheckedCreateInput = {
   actualPaymentMethodId: number
   actorId: number
   reversal?: Prisma.ReceiptReversalUncheckedCreateNestedOneWithoutReceiptInput
-  calculations?: Prisma.RemunerationCalculationUncheckedCreateNestedManyWithoutReceiptInput
+  remunerationPayables?: Prisma.RemunerationPayableUncheckedCreateNestedManyWithoutReceiptInput
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutReceiptInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutReceiptInput
 }
@@ -502,7 +502,7 @@ export type ReceiptUpdateInput = {
   actualPaymentMethod?: Prisma.PaymentMethodUpdateOneRequiredWithoutReceiptsNestedInput
   actor?: Prisma.PersonUpdateOneRequiredWithoutReceiptsNestedInput
   reversal?: Prisma.ReceiptReversalUpdateOneWithoutReceiptNestedInput
-  calculations?: Prisma.RemunerationCalculationUpdateManyWithoutReceiptNestedInput
+  remunerationPayables?: Prisma.RemunerationPayableUpdateManyWithoutReceiptNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutReceiptNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutReceiptNestedInput
 }
@@ -524,7 +524,7 @@ export type ReceiptUncheckedUpdateInput = {
   actualPaymentMethodId?: Prisma.IntFieldUpdateOperationsInput | number
   actorId?: Prisma.IntFieldUpdateOperationsInput | number
   reversal?: Prisma.ReceiptReversalUncheckedUpdateOneWithoutReceiptNestedInput
-  calculations?: Prisma.RemunerationCalculationUncheckedUpdateManyWithoutReceiptNestedInput
+  remunerationPayables?: Prisma.RemunerationPayableUncheckedUpdateManyWithoutReceiptNestedInput
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutReceiptNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutReceiptNestedInput
 }
@@ -586,6 +586,11 @@ export type ReceiptListRelationFilter = {
 
 export type ReceiptOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type ReceiptScalarRelationFilter = {
+  is?: Prisma.ReceiptWhereInput
+  isNot?: Prisma.ReceiptWhereInput
 }
 
 export type ReceiptFirmIdIdCompoundUniqueInput = {
@@ -677,11 +682,6 @@ export type ReceiptSumOrderByAggregateInput = {
   receivableId?: Prisma.SortOrder
   actualPaymentMethodId?: Prisma.SortOrder
   actorId?: Prisma.SortOrder
-}
-
-export type ReceiptScalarRelationFilter = {
-  is?: Prisma.ReceiptWhereInput
-  isNot?: Prisma.ReceiptWhereInput
 }
 
 export type ReceiptNullableScalarRelationFilter = {
@@ -815,6 +815,20 @@ export type ReceiptUncheckedUpdateManyWithoutActorNestedInput = {
   deleteMany?: Prisma.ReceiptScalarWhereInput | Prisma.ReceiptScalarWhereInput[]
 }
 
+export type ReceiptCreateNestedOneWithoutRemunerationPayablesInput = {
+  create?: Prisma.XOR<Prisma.ReceiptCreateWithoutRemunerationPayablesInput, Prisma.ReceiptUncheckedCreateWithoutRemunerationPayablesInput>
+  connectOrCreate?: Prisma.ReceiptCreateOrConnectWithoutRemunerationPayablesInput
+  connect?: Prisma.ReceiptWhereUniqueInput
+}
+
+export type ReceiptUpdateOneRequiredWithoutRemunerationPayablesNestedInput = {
+  create?: Prisma.XOR<Prisma.ReceiptCreateWithoutRemunerationPayablesInput, Prisma.ReceiptUncheckedCreateWithoutRemunerationPayablesInput>
+  connectOrCreate?: Prisma.ReceiptCreateOrConnectWithoutRemunerationPayablesInput
+  upsert?: Prisma.ReceiptUpsertWithoutRemunerationPayablesInput
+  connect?: Prisma.ReceiptWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ReceiptUpdateToOneWithWhereWithoutRemunerationPayablesInput, Prisma.ReceiptUpdateWithoutRemunerationPayablesInput>, Prisma.ReceiptUncheckedUpdateWithoutRemunerationPayablesInput>
+}
+
 export type ReceiptCreateNestedManyWithoutReceivableInput = {
   create?: Prisma.XOR<Prisma.ReceiptCreateWithoutReceivableInput, Prisma.ReceiptUncheckedCreateWithoutReceivableInput> | Prisma.ReceiptCreateWithoutReceivableInput[] | Prisma.ReceiptUncheckedCreateWithoutReceivableInput[]
   connectOrCreate?: Prisma.ReceiptCreateOrConnectWithoutReceivableInput | Prisma.ReceiptCreateOrConnectWithoutReceivableInput[]
@@ -871,20 +885,6 @@ export type ReceiptUpdateOneRequiredWithoutReversalNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ReceiptUpdateToOneWithWhereWithoutReversalInput, Prisma.ReceiptUpdateWithoutReversalInput>, Prisma.ReceiptUncheckedUpdateWithoutReversalInput>
 }
 
-export type ReceiptCreateNestedOneWithoutCalculationsInput = {
-  create?: Prisma.XOR<Prisma.ReceiptCreateWithoutCalculationsInput, Prisma.ReceiptUncheckedCreateWithoutCalculationsInput>
-  connectOrCreate?: Prisma.ReceiptCreateOrConnectWithoutCalculationsInput
-  connect?: Prisma.ReceiptWhereUniqueInput
-}
-
-export type ReceiptUpdateOneRequiredWithoutCalculationsNestedInput = {
-  create?: Prisma.XOR<Prisma.ReceiptCreateWithoutCalculationsInput, Prisma.ReceiptUncheckedCreateWithoutCalculationsInput>
-  connectOrCreate?: Prisma.ReceiptCreateOrConnectWithoutCalculationsInput
-  upsert?: Prisma.ReceiptUpsertWithoutCalculationsInput
-  connect?: Prisma.ReceiptWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.ReceiptUpdateToOneWithWhereWithoutCalculationsInput, Prisma.ReceiptUpdateWithoutCalculationsInput>, Prisma.ReceiptUncheckedUpdateWithoutCalculationsInput>
-}
-
 export type ReceiptCreateNestedOneWithoutAttachmentsInput = {
   create?: Prisma.XOR<Prisma.ReceiptCreateWithoutAttachmentsInput, Prisma.ReceiptUncheckedCreateWithoutAttachmentsInput>
   connectOrCreate?: Prisma.ReceiptCreateOrConnectWithoutAttachmentsInput
@@ -932,7 +932,7 @@ export type ReceiptCreateWithoutFirmInput = {
   actualPaymentMethod: Prisma.PaymentMethodCreateNestedOneWithoutReceiptsInput
   actor: Prisma.PersonCreateNestedOneWithoutReceiptsInput
   reversal?: Prisma.ReceiptReversalCreateNestedOneWithoutReceiptInput
-  calculations?: Prisma.RemunerationCalculationCreateNestedManyWithoutReceiptInput
+  remunerationPayables?: Prisma.RemunerationPayableCreateNestedManyWithoutReceiptInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutReceiptInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutReceiptInput
 }
@@ -953,7 +953,7 @@ export type ReceiptUncheckedCreateWithoutFirmInput = {
   actualPaymentMethodId: number
   actorId: number
   reversal?: Prisma.ReceiptReversalUncheckedCreateNestedOneWithoutReceiptInput
-  calculations?: Prisma.RemunerationCalculationUncheckedCreateNestedManyWithoutReceiptInput
+  remunerationPayables?: Prisma.RemunerationPayableUncheckedCreateNestedManyWithoutReceiptInput
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutReceiptInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutReceiptInput
 }
@@ -1020,7 +1020,7 @@ export type ReceiptCreateWithoutActualPaymentMethodInput = {
   receivable: Prisma.ReceivableCreateNestedOneWithoutReceiptsInput
   actor: Prisma.PersonCreateNestedOneWithoutReceiptsInput
   reversal?: Prisma.ReceiptReversalCreateNestedOneWithoutReceiptInput
-  calculations?: Prisma.RemunerationCalculationCreateNestedManyWithoutReceiptInput
+  remunerationPayables?: Prisma.RemunerationPayableCreateNestedManyWithoutReceiptInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutReceiptInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutReceiptInput
 }
@@ -1041,7 +1041,7 @@ export type ReceiptUncheckedCreateWithoutActualPaymentMethodInput = {
   receivableId: number
   actorId: number
   reversal?: Prisma.ReceiptReversalUncheckedCreateNestedOneWithoutReceiptInput
-  calculations?: Prisma.RemunerationCalculationUncheckedCreateNestedManyWithoutReceiptInput
+  remunerationPayables?: Prisma.RemunerationPayableUncheckedCreateNestedManyWithoutReceiptInput
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutReceiptInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutReceiptInput
 }
@@ -1087,7 +1087,7 @@ export type ReceiptCreateWithoutActorInput = {
   receivable: Prisma.ReceivableCreateNestedOneWithoutReceiptsInput
   actualPaymentMethod: Prisma.PaymentMethodCreateNestedOneWithoutReceiptsInput
   reversal?: Prisma.ReceiptReversalCreateNestedOneWithoutReceiptInput
-  calculations?: Prisma.RemunerationCalculationCreateNestedManyWithoutReceiptInput
+  remunerationPayables?: Prisma.RemunerationPayableCreateNestedManyWithoutReceiptInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutReceiptInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutReceiptInput
 }
@@ -1108,7 +1108,7 @@ export type ReceiptUncheckedCreateWithoutActorInput = {
   receivableId: number
   actualPaymentMethodId: number
   reversal?: Prisma.ReceiptReversalUncheckedCreateNestedOneWithoutReceiptInput
-  calculations?: Prisma.RemunerationCalculationUncheckedCreateNestedManyWithoutReceiptInput
+  remunerationPayables?: Prisma.RemunerationPayableUncheckedCreateNestedManyWithoutReceiptInput
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutReceiptInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutReceiptInput
 }
@@ -1139,6 +1139,104 @@ export type ReceiptUpdateManyWithWhereWithoutActorInput = {
   data: Prisma.XOR<Prisma.ReceiptUpdateManyMutationInput, Prisma.ReceiptUncheckedUpdateManyWithoutActorInput>
 }
 
+export type ReceiptCreateWithoutRemunerationPayablesInput = {
+  effectiveDate: Date | string
+  principalAbated: runtime.Decimal | runtime.DecimalJsLike | number | string
+  discount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  interest?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  penalty?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  effectiveAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  reason?: string | null
+  requestKey: string
+  generatesRemuneration?: boolean
+  createdAt?: Date | string
+  firm: Prisma.FirmCreateNestedOneWithoutReceiptsInput
+  receivable: Prisma.ReceivableCreateNestedOneWithoutReceiptsInput
+  actualPaymentMethod: Prisma.PaymentMethodCreateNestedOneWithoutReceiptsInput
+  actor: Prisma.PersonCreateNestedOneWithoutReceiptsInput
+  reversal?: Prisma.ReceiptReversalCreateNestedOneWithoutReceiptInput
+  attachments?: Prisma.AttachmentCreateNestedManyWithoutReceiptInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutReceiptInput
+}
+
+export type ReceiptUncheckedCreateWithoutRemunerationPayablesInput = {
+  id?: number
+  effectiveDate: Date | string
+  principalAbated: runtime.Decimal | runtime.DecimalJsLike | number | string
+  discount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  interest?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  penalty?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  effectiveAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  reason?: string | null
+  requestKey: string
+  generatesRemuneration?: boolean
+  createdAt?: Date | string
+  firmId: number
+  receivableId: number
+  actualPaymentMethodId: number
+  actorId: number
+  reversal?: Prisma.ReceiptReversalUncheckedCreateNestedOneWithoutReceiptInput
+  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutReceiptInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutReceiptInput
+}
+
+export type ReceiptCreateOrConnectWithoutRemunerationPayablesInput = {
+  where: Prisma.ReceiptWhereUniqueInput
+  create: Prisma.XOR<Prisma.ReceiptCreateWithoutRemunerationPayablesInput, Prisma.ReceiptUncheckedCreateWithoutRemunerationPayablesInput>
+}
+
+export type ReceiptUpsertWithoutRemunerationPayablesInput = {
+  update: Prisma.XOR<Prisma.ReceiptUpdateWithoutRemunerationPayablesInput, Prisma.ReceiptUncheckedUpdateWithoutRemunerationPayablesInput>
+  create: Prisma.XOR<Prisma.ReceiptCreateWithoutRemunerationPayablesInput, Prisma.ReceiptUncheckedCreateWithoutRemunerationPayablesInput>
+  where?: Prisma.ReceiptWhereInput
+}
+
+export type ReceiptUpdateToOneWithWhereWithoutRemunerationPayablesInput = {
+  where?: Prisma.ReceiptWhereInput
+  data: Prisma.XOR<Prisma.ReceiptUpdateWithoutRemunerationPayablesInput, Prisma.ReceiptUncheckedUpdateWithoutRemunerationPayablesInput>
+}
+
+export type ReceiptUpdateWithoutRemunerationPayablesInput = {
+  effectiveDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  principalAbated?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  interest?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  penalty?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  effectiveAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestKey?: Prisma.StringFieldUpdateOperationsInput | string
+  generatesRemuneration?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  firm?: Prisma.FirmUpdateOneRequiredWithoutReceiptsNestedInput
+  receivable?: Prisma.ReceivableUpdateOneRequiredWithoutReceiptsNestedInput
+  actualPaymentMethod?: Prisma.PaymentMethodUpdateOneRequiredWithoutReceiptsNestedInput
+  actor?: Prisma.PersonUpdateOneRequiredWithoutReceiptsNestedInput
+  reversal?: Prisma.ReceiptReversalUpdateOneWithoutReceiptNestedInput
+  attachments?: Prisma.AttachmentUpdateManyWithoutReceiptNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutReceiptNestedInput
+}
+
+export type ReceiptUncheckedUpdateWithoutRemunerationPayablesInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  effectiveDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  principalAbated?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  interest?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  penalty?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  effectiveAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestKey?: Prisma.StringFieldUpdateOperationsInput | string
+  generatesRemuneration?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  firmId?: Prisma.IntFieldUpdateOperationsInput | number
+  receivableId?: Prisma.IntFieldUpdateOperationsInput | number
+  actualPaymentMethodId?: Prisma.IntFieldUpdateOperationsInput | number
+  actorId?: Prisma.IntFieldUpdateOperationsInput | number
+  reversal?: Prisma.ReceiptReversalUncheckedUpdateOneWithoutReceiptNestedInput
+  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutReceiptNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutReceiptNestedInput
+}
+
 export type ReceiptCreateWithoutReceivableInput = {
   effectiveDate: Date | string
   principalAbated: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1154,7 +1252,7 @@ export type ReceiptCreateWithoutReceivableInput = {
   actualPaymentMethod: Prisma.PaymentMethodCreateNestedOneWithoutReceiptsInput
   actor: Prisma.PersonCreateNestedOneWithoutReceiptsInput
   reversal?: Prisma.ReceiptReversalCreateNestedOneWithoutReceiptInput
-  calculations?: Prisma.RemunerationCalculationCreateNestedManyWithoutReceiptInput
+  remunerationPayables?: Prisma.RemunerationPayableCreateNestedManyWithoutReceiptInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutReceiptInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutReceiptInput
 }
@@ -1174,7 +1272,7 @@ export type ReceiptUncheckedCreateWithoutReceivableInput = {
   actualPaymentMethodId: number
   actorId: number
   reversal?: Prisma.ReceiptReversalUncheckedCreateNestedOneWithoutReceiptInput
-  calculations?: Prisma.RemunerationCalculationUncheckedCreateNestedManyWithoutReceiptInput
+  remunerationPayables?: Prisma.RemunerationPayableUncheckedCreateNestedManyWithoutReceiptInput
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutReceiptInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutReceiptInput
 }
@@ -1220,7 +1318,7 @@ export type ReceiptCreateWithoutReversalInput = {
   receivable: Prisma.ReceivableCreateNestedOneWithoutReceiptsInput
   actualPaymentMethod: Prisma.PaymentMethodCreateNestedOneWithoutReceiptsInput
   actor: Prisma.PersonCreateNestedOneWithoutReceiptsInput
-  calculations?: Prisma.RemunerationCalculationCreateNestedManyWithoutReceiptInput
+  remunerationPayables?: Prisma.RemunerationPayableCreateNestedManyWithoutReceiptInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutReceiptInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutReceiptInput
 }
@@ -1241,7 +1339,7 @@ export type ReceiptUncheckedCreateWithoutReversalInput = {
   receivableId: number
   actualPaymentMethodId: number
   actorId: number
-  calculations?: Prisma.RemunerationCalculationUncheckedCreateNestedManyWithoutReceiptInput
+  remunerationPayables?: Prisma.RemunerationPayableUncheckedCreateNestedManyWithoutReceiptInput
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutReceiptInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutReceiptInput
 }
@@ -1277,7 +1375,7 @@ export type ReceiptUpdateWithoutReversalInput = {
   receivable?: Prisma.ReceivableUpdateOneRequiredWithoutReceiptsNestedInput
   actualPaymentMethod?: Prisma.PaymentMethodUpdateOneRequiredWithoutReceiptsNestedInput
   actor?: Prisma.PersonUpdateOneRequiredWithoutReceiptsNestedInput
-  calculations?: Prisma.RemunerationCalculationUpdateManyWithoutReceiptNestedInput
+  remunerationPayables?: Prisma.RemunerationPayableUpdateManyWithoutReceiptNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutReceiptNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutReceiptNestedInput
 }
@@ -1298,105 +1396,7 @@ export type ReceiptUncheckedUpdateWithoutReversalInput = {
   receivableId?: Prisma.IntFieldUpdateOperationsInput | number
   actualPaymentMethodId?: Prisma.IntFieldUpdateOperationsInput | number
   actorId?: Prisma.IntFieldUpdateOperationsInput | number
-  calculations?: Prisma.RemunerationCalculationUncheckedUpdateManyWithoutReceiptNestedInput
-  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutReceiptNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutReceiptNestedInput
-}
-
-export type ReceiptCreateWithoutCalculationsInput = {
-  effectiveDate: Date | string
-  principalAbated: runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  interest?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  penalty?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  effectiveAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  reason?: string | null
-  requestKey: string
-  generatesRemuneration?: boolean
-  createdAt?: Date | string
-  firm: Prisma.FirmCreateNestedOneWithoutReceiptsInput
-  receivable: Prisma.ReceivableCreateNestedOneWithoutReceiptsInput
-  actualPaymentMethod: Prisma.PaymentMethodCreateNestedOneWithoutReceiptsInput
-  actor: Prisma.PersonCreateNestedOneWithoutReceiptsInput
-  reversal?: Prisma.ReceiptReversalCreateNestedOneWithoutReceiptInput
-  attachments?: Prisma.AttachmentCreateNestedManyWithoutReceiptInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutReceiptInput
-}
-
-export type ReceiptUncheckedCreateWithoutCalculationsInput = {
-  id?: number
-  effectiveDate: Date | string
-  principalAbated: runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  interest?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  penalty?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  effectiveAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  reason?: string | null
-  requestKey: string
-  generatesRemuneration?: boolean
-  createdAt?: Date | string
-  firmId: number
-  receivableId: number
-  actualPaymentMethodId: number
-  actorId: number
-  reversal?: Prisma.ReceiptReversalUncheckedCreateNestedOneWithoutReceiptInput
-  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutReceiptInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutReceiptInput
-}
-
-export type ReceiptCreateOrConnectWithoutCalculationsInput = {
-  where: Prisma.ReceiptWhereUniqueInput
-  create: Prisma.XOR<Prisma.ReceiptCreateWithoutCalculationsInput, Prisma.ReceiptUncheckedCreateWithoutCalculationsInput>
-}
-
-export type ReceiptUpsertWithoutCalculationsInput = {
-  update: Prisma.XOR<Prisma.ReceiptUpdateWithoutCalculationsInput, Prisma.ReceiptUncheckedUpdateWithoutCalculationsInput>
-  create: Prisma.XOR<Prisma.ReceiptCreateWithoutCalculationsInput, Prisma.ReceiptUncheckedCreateWithoutCalculationsInput>
-  where?: Prisma.ReceiptWhereInput
-}
-
-export type ReceiptUpdateToOneWithWhereWithoutCalculationsInput = {
-  where?: Prisma.ReceiptWhereInput
-  data: Prisma.XOR<Prisma.ReceiptUpdateWithoutCalculationsInput, Prisma.ReceiptUncheckedUpdateWithoutCalculationsInput>
-}
-
-export type ReceiptUpdateWithoutCalculationsInput = {
-  effectiveDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  principalAbated?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  interest?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  penalty?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  effectiveAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  requestKey?: Prisma.StringFieldUpdateOperationsInput | string
-  generatesRemuneration?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  firm?: Prisma.FirmUpdateOneRequiredWithoutReceiptsNestedInput
-  receivable?: Prisma.ReceivableUpdateOneRequiredWithoutReceiptsNestedInput
-  actualPaymentMethod?: Prisma.PaymentMethodUpdateOneRequiredWithoutReceiptsNestedInput
-  actor?: Prisma.PersonUpdateOneRequiredWithoutReceiptsNestedInput
-  reversal?: Prisma.ReceiptReversalUpdateOneWithoutReceiptNestedInput
-  attachments?: Prisma.AttachmentUpdateManyWithoutReceiptNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutReceiptNestedInput
-}
-
-export type ReceiptUncheckedUpdateWithoutCalculationsInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  effectiveDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  principalAbated?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  interest?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  penalty?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  effectiveAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  requestKey?: Prisma.StringFieldUpdateOperationsInput | string
-  generatesRemuneration?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  firmId?: Prisma.IntFieldUpdateOperationsInput | number
-  receivableId?: Prisma.IntFieldUpdateOperationsInput | number
-  actualPaymentMethodId?: Prisma.IntFieldUpdateOperationsInput | number
-  actorId?: Prisma.IntFieldUpdateOperationsInput | number
-  reversal?: Prisma.ReceiptReversalUncheckedUpdateOneWithoutReceiptNestedInput
+  remunerationPayables?: Prisma.RemunerationPayableUncheckedUpdateManyWithoutReceiptNestedInput
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutReceiptNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutReceiptNestedInput
 }
@@ -1417,7 +1417,7 @@ export type ReceiptCreateWithoutAttachmentsInput = {
   actualPaymentMethod: Prisma.PaymentMethodCreateNestedOneWithoutReceiptsInput
   actor: Prisma.PersonCreateNestedOneWithoutReceiptsInput
   reversal?: Prisma.ReceiptReversalCreateNestedOneWithoutReceiptInput
-  calculations?: Prisma.RemunerationCalculationCreateNestedManyWithoutReceiptInput
+  remunerationPayables?: Prisma.RemunerationPayableCreateNestedManyWithoutReceiptInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutReceiptInput
 }
 
@@ -1438,7 +1438,7 @@ export type ReceiptUncheckedCreateWithoutAttachmentsInput = {
   actualPaymentMethodId: number
   actorId: number
   reversal?: Prisma.ReceiptReversalUncheckedCreateNestedOneWithoutReceiptInput
-  calculations?: Prisma.RemunerationCalculationUncheckedCreateNestedManyWithoutReceiptInput
+  remunerationPayables?: Prisma.RemunerationPayableUncheckedCreateNestedManyWithoutReceiptInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutReceiptInput
 }
 
@@ -1474,7 +1474,7 @@ export type ReceiptUpdateWithoutAttachmentsInput = {
   actualPaymentMethod?: Prisma.PaymentMethodUpdateOneRequiredWithoutReceiptsNestedInput
   actor?: Prisma.PersonUpdateOneRequiredWithoutReceiptsNestedInput
   reversal?: Prisma.ReceiptReversalUpdateOneWithoutReceiptNestedInput
-  calculations?: Prisma.RemunerationCalculationUpdateManyWithoutReceiptNestedInput
+  remunerationPayables?: Prisma.RemunerationPayableUpdateManyWithoutReceiptNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutReceiptNestedInput
 }
 
@@ -1495,7 +1495,7 @@ export type ReceiptUncheckedUpdateWithoutAttachmentsInput = {
   actualPaymentMethodId?: Prisma.IntFieldUpdateOperationsInput | number
   actorId?: Prisma.IntFieldUpdateOperationsInput | number
   reversal?: Prisma.ReceiptReversalUncheckedUpdateOneWithoutReceiptNestedInput
-  calculations?: Prisma.RemunerationCalculationUncheckedUpdateManyWithoutReceiptNestedInput
+  remunerationPayables?: Prisma.RemunerationPayableUncheckedUpdateManyWithoutReceiptNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutReceiptNestedInput
 }
 
@@ -1515,7 +1515,7 @@ export type ReceiptCreateWithoutAuditLogsInput = {
   actualPaymentMethod: Prisma.PaymentMethodCreateNestedOneWithoutReceiptsInput
   actor: Prisma.PersonCreateNestedOneWithoutReceiptsInput
   reversal?: Prisma.ReceiptReversalCreateNestedOneWithoutReceiptInput
-  calculations?: Prisma.RemunerationCalculationCreateNestedManyWithoutReceiptInput
+  remunerationPayables?: Prisma.RemunerationPayableCreateNestedManyWithoutReceiptInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutReceiptInput
 }
 
@@ -1536,7 +1536,7 @@ export type ReceiptUncheckedCreateWithoutAuditLogsInput = {
   actualPaymentMethodId: number
   actorId: number
   reversal?: Prisma.ReceiptReversalUncheckedCreateNestedOneWithoutReceiptInput
-  calculations?: Prisma.RemunerationCalculationUncheckedCreateNestedManyWithoutReceiptInput
+  remunerationPayables?: Prisma.RemunerationPayableUncheckedCreateNestedManyWithoutReceiptInput
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutReceiptInput
 }
 
@@ -1572,7 +1572,7 @@ export type ReceiptUpdateWithoutAuditLogsInput = {
   actualPaymentMethod?: Prisma.PaymentMethodUpdateOneRequiredWithoutReceiptsNestedInput
   actor?: Prisma.PersonUpdateOneRequiredWithoutReceiptsNestedInput
   reversal?: Prisma.ReceiptReversalUpdateOneWithoutReceiptNestedInput
-  calculations?: Prisma.RemunerationCalculationUpdateManyWithoutReceiptNestedInput
+  remunerationPayables?: Prisma.RemunerationPayableUpdateManyWithoutReceiptNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutReceiptNestedInput
 }
 
@@ -1593,7 +1593,7 @@ export type ReceiptUncheckedUpdateWithoutAuditLogsInput = {
   actualPaymentMethodId?: Prisma.IntFieldUpdateOperationsInput | number
   actorId?: Prisma.IntFieldUpdateOperationsInput | number
   reversal?: Prisma.ReceiptReversalUncheckedUpdateOneWithoutReceiptNestedInput
-  calculations?: Prisma.RemunerationCalculationUncheckedUpdateManyWithoutReceiptNestedInput
+  remunerationPayables?: Prisma.RemunerationPayableUncheckedUpdateManyWithoutReceiptNestedInput
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutReceiptNestedInput
 }
 
@@ -1629,7 +1629,7 @@ export type ReceiptUpdateWithoutFirmInput = {
   actualPaymentMethod?: Prisma.PaymentMethodUpdateOneRequiredWithoutReceiptsNestedInput
   actor?: Prisma.PersonUpdateOneRequiredWithoutReceiptsNestedInput
   reversal?: Prisma.ReceiptReversalUpdateOneWithoutReceiptNestedInput
-  calculations?: Prisma.RemunerationCalculationUpdateManyWithoutReceiptNestedInput
+  remunerationPayables?: Prisma.RemunerationPayableUpdateManyWithoutReceiptNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutReceiptNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutReceiptNestedInput
 }
@@ -1650,7 +1650,7 @@ export type ReceiptUncheckedUpdateWithoutFirmInput = {
   actualPaymentMethodId?: Prisma.IntFieldUpdateOperationsInput | number
   actorId?: Prisma.IntFieldUpdateOperationsInput | number
   reversal?: Prisma.ReceiptReversalUncheckedUpdateOneWithoutReceiptNestedInput
-  calculations?: Prisma.RemunerationCalculationUncheckedUpdateManyWithoutReceiptNestedInput
+  remunerationPayables?: Prisma.RemunerationPayableUncheckedUpdateManyWithoutReceiptNestedInput
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutReceiptNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutReceiptNestedInput
 }
@@ -1704,7 +1704,7 @@ export type ReceiptUpdateWithoutActualPaymentMethodInput = {
   receivable?: Prisma.ReceivableUpdateOneRequiredWithoutReceiptsNestedInput
   actor?: Prisma.PersonUpdateOneRequiredWithoutReceiptsNestedInput
   reversal?: Prisma.ReceiptReversalUpdateOneWithoutReceiptNestedInput
-  calculations?: Prisma.RemunerationCalculationUpdateManyWithoutReceiptNestedInput
+  remunerationPayables?: Prisma.RemunerationPayableUpdateManyWithoutReceiptNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutReceiptNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutReceiptNestedInput
 }
@@ -1725,7 +1725,7 @@ export type ReceiptUncheckedUpdateWithoutActualPaymentMethodInput = {
   receivableId?: Prisma.IntFieldUpdateOperationsInput | number
   actorId?: Prisma.IntFieldUpdateOperationsInput | number
   reversal?: Prisma.ReceiptReversalUncheckedUpdateOneWithoutReceiptNestedInput
-  calculations?: Prisma.RemunerationCalculationUncheckedUpdateManyWithoutReceiptNestedInput
+  remunerationPayables?: Prisma.RemunerationPayableUncheckedUpdateManyWithoutReceiptNestedInput
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutReceiptNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutReceiptNestedInput
 }
@@ -1779,7 +1779,7 @@ export type ReceiptUpdateWithoutActorInput = {
   receivable?: Prisma.ReceivableUpdateOneRequiredWithoutReceiptsNestedInput
   actualPaymentMethod?: Prisma.PaymentMethodUpdateOneRequiredWithoutReceiptsNestedInput
   reversal?: Prisma.ReceiptReversalUpdateOneWithoutReceiptNestedInput
-  calculations?: Prisma.RemunerationCalculationUpdateManyWithoutReceiptNestedInput
+  remunerationPayables?: Prisma.RemunerationPayableUpdateManyWithoutReceiptNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutReceiptNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutReceiptNestedInput
 }
@@ -1800,7 +1800,7 @@ export type ReceiptUncheckedUpdateWithoutActorInput = {
   receivableId?: Prisma.IntFieldUpdateOperationsInput | number
   actualPaymentMethodId?: Prisma.IntFieldUpdateOperationsInput | number
   reversal?: Prisma.ReceiptReversalUncheckedUpdateOneWithoutReceiptNestedInput
-  calculations?: Prisma.RemunerationCalculationUncheckedUpdateManyWithoutReceiptNestedInput
+  remunerationPayables?: Prisma.RemunerationPayableUncheckedUpdateManyWithoutReceiptNestedInput
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutReceiptNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutReceiptNestedInput
 }
@@ -1853,7 +1853,7 @@ export type ReceiptUpdateWithoutReceivableInput = {
   actualPaymentMethod?: Prisma.PaymentMethodUpdateOneRequiredWithoutReceiptsNestedInput
   actor?: Prisma.PersonUpdateOneRequiredWithoutReceiptsNestedInput
   reversal?: Prisma.ReceiptReversalUpdateOneWithoutReceiptNestedInput
-  calculations?: Prisma.RemunerationCalculationUpdateManyWithoutReceiptNestedInput
+  remunerationPayables?: Prisma.RemunerationPayableUpdateManyWithoutReceiptNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutReceiptNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutReceiptNestedInput
 }
@@ -1873,7 +1873,7 @@ export type ReceiptUncheckedUpdateWithoutReceivableInput = {
   actualPaymentMethodId?: Prisma.IntFieldUpdateOperationsInput | number
   actorId?: Prisma.IntFieldUpdateOperationsInput | number
   reversal?: Prisma.ReceiptReversalUncheckedUpdateOneWithoutReceiptNestedInput
-  calculations?: Prisma.RemunerationCalculationUncheckedUpdateManyWithoutReceiptNestedInput
+  remunerationPayables?: Prisma.RemunerationPayableUncheckedUpdateManyWithoutReceiptNestedInput
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutReceiptNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutReceiptNestedInput
 }
@@ -1900,13 +1900,13 @@ export type ReceiptUncheckedUpdateManyWithoutReceivableInput = {
  */
 
 export type ReceiptCountOutputType = {
-  calculations: number
+  remunerationPayables: number
   attachments: number
   auditLogs: number
 }
 
 export type ReceiptCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  calculations?: boolean | ReceiptCountOutputTypeCountCalculationsArgs
+  remunerationPayables?: boolean | ReceiptCountOutputTypeCountRemunerationPayablesArgs
   attachments?: boolean | ReceiptCountOutputTypeCountAttachmentsArgs
   auditLogs?: boolean | ReceiptCountOutputTypeCountAuditLogsArgs
 }
@@ -1924,8 +1924,8 @@ export type ReceiptCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exte
 /**
  * ReceiptCountOutputType without action
  */
-export type ReceiptCountOutputTypeCountCalculationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.RemunerationCalculationWhereInput
+export type ReceiptCountOutputTypeCountRemunerationPayablesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RemunerationPayableWhereInput
 }
 
 /**
@@ -1964,7 +1964,7 @@ export type ReceiptSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   actualPaymentMethod?: boolean | Prisma.PaymentMethodDefaultArgs<ExtArgs>
   actor?: boolean | Prisma.PersonDefaultArgs<ExtArgs>
   reversal?: boolean | Prisma.Receipt$reversalArgs<ExtArgs>
-  calculations?: boolean | Prisma.Receipt$calculationsArgs<ExtArgs>
+  remunerationPayables?: boolean | Prisma.Receipt$remunerationPayablesArgs<ExtArgs>
   attachments?: boolean | Prisma.Receipt$attachmentsArgs<ExtArgs>
   auditLogs?: boolean | Prisma.Receipt$auditLogsArgs<ExtArgs>
   _count?: boolean | Prisma.ReceiptCountOutputTypeDefaultArgs<ExtArgs>
@@ -2039,7 +2039,7 @@ export type ReceiptInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   actualPaymentMethod?: boolean | Prisma.PaymentMethodDefaultArgs<ExtArgs>
   actor?: boolean | Prisma.PersonDefaultArgs<ExtArgs>
   reversal?: boolean | Prisma.Receipt$reversalArgs<ExtArgs>
-  calculations?: boolean | Prisma.Receipt$calculationsArgs<ExtArgs>
+  remunerationPayables?: boolean | Prisma.Receipt$remunerationPayablesArgs<ExtArgs>
   attachments?: boolean | Prisma.Receipt$attachmentsArgs<ExtArgs>
   auditLogs?: boolean | Prisma.Receipt$auditLogsArgs<ExtArgs>
   _count?: boolean | Prisma.ReceiptCountOutputTypeDefaultArgs<ExtArgs>
@@ -2065,7 +2065,7 @@ export type $ReceiptPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     actualPaymentMethod: Prisma.$PaymentMethodPayload<ExtArgs>
     actor: Prisma.$PersonPayload<ExtArgs>
     reversal: Prisma.$ReceiptReversalPayload<ExtArgs> | null
-    calculations: Prisma.$RemunerationCalculationPayload<ExtArgs>[]
+    remunerationPayables: Prisma.$RemunerationPayablePayload<ExtArgs>[]
     attachments: Prisma.$AttachmentPayload<ExtArgs>[]
     auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
   }
@@ -2484,7 +2484,7 @@ export interface Prisma__ReceiptClient<T, Null = never, ExtArgs extends runtime.
   actualPaymentMethod<T extends Prisma.PaymentMethodDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PaymentMethodDefaultArgs<ExtArgs>>): Prisma.Prisma__PaymentMethodClient<runtime.Types.Result.GetResult<Prisma.$PaymentMethodPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   actor<T extends Prisma.PersonDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PersonDefaultArgs<ExtArgs>>): Prisma.Prisma__PersonClient<runtime.Types.Result.GetResult<Prisma.$PersonPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   reversal<T extends Prisma.Receipt$reversalArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Receipt$reversalArgs<ExtArgs>>): Prisma.Prisma__ReceiptReversalClient<runtime.Types.Result.GetResult<Prisma.$ReceiptReversalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  calculations<T extends Prisma.Receipt$calculationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Receipt$calculationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RemunerationCalculationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  remunerationPayables<T extends Prisma.Receipt$remunerationPayablesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Receipt$remunerationPayablesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RemunerationPayablePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   attachments<T extends Prisma.Receipt$attachmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Receipt$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   auditLogs<T extends Prisma.Receipt$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Receipt$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -2951,27 +2951,27 @@ export type Receipt$reversalArgs<ExtArgs extends runtime.Types.Extensions.Intern
 }
 
 /**
- * Receipt.calculations
+ * Receipt.remunerationPayables
  */
-export type Receipt$calculationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Receipt$remunerationPayablesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the RemunerationCalculation
+   * Select specific fields to fetch from the RemunerationPayable
    */
-  select?: Prisma.RemunerationCalculationSelect<ExtArgs> | null
+  select?: Prisma.RemunerationPayableSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the RemunerationCalculation
+   * Omit specific fields from the RemunerationPayable
    */
-  omit?: Prisma.RemunerationCalculationOmit<ExtArgs> | null
+  omit?: Prisma.RemunerationPayableOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.RemunerationCalculationInclude<ExtArgs> | null
-  where?: Prisma.RemunerationCalculationWhereInput
-  orderBy?: Prisma.RemunerationCalculationOrderByWithRelationInput | Prisma.RemunerationCalculationOrderByWithRelationInput[]
-  cursor?: Prisma.RemunerationCalculationWhereUniqueInput
+  include?: Prisma.RemunerationPayableInclude<ExtArgs> | null
+  where?: Prisma.RemunerationPayableWhereInput
+  orderBy?: Prisma.RemunerationPayableOrderByWithRelationInput | Prisma.RemunerationPayableOrderByWithRelationInput[]
+  cursor?: Prisma.RemunerationPayableWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.RemunerationCalculationScalarFieldEnum | Prisma.RemunerationCalculationScalarFieldEnum[]
+  distinct?: Prisma.RemunerationPayableScalarFieldEnum | Prisma.RemunerationPayableScalarFieldEnum[]
 }
 
 /**

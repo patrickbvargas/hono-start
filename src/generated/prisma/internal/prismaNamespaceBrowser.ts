@@ -62,7 +62,6 @@ export const ModelName = {
   AttachmentType: 'AttachmentType',
   FinancialAnalytic: 'FinancialAnalytic',
   PaymentMethod: 'PaymentMethod',
-  TitleKind: 'TitleKind',
   Person: 'Person',
   ClientProfile: 'ClientProfile',
   SupplierProfile: 'SupplierProfile',
@@ -71,15 +70,15 @@ export const ModelName = {
   ContractAssignment: 'ContractAssignment',
   Revenue: 'Revenue',
   Expense: 'Expense',
-  FinancialGeneration: 'FinancialGeneration',
-  DirectFinancialEntry: 'DirectFinancialEntry',
+  ContractRevenueReceivable: 'ContractRevenueReceivable',
+  ExpensePayable: 'ExpensePayable',
+  RemunerationPayable: 'RemunerationPayable',
   Receivable: 'Receivable',
   Payable: 'Payable',
   Receipt: 'Receipt',
   ReceiptReversal: 'ReceiptReversal',
   Payment: 'Payment',
   PaymentReversal: 'PaymentReversal',
-  RemunerationCalculation: 'RemunerationCalculation',
   Attachment: 'Attachment',
   AuditLog: 'AuditLog'
 } as const
@@ -208,16 +207,6 @@ export const PaymentMethodScalarFieldEnum = {
 export type PaymentMethodScalarFieldEnum = (typeof PaymentMethodScalarFieldEnum)[keyof typeof PaymentMethodScalarFieldEnum]
 
 
-export const TitleKindScalarFieldEnum = {
-  id: 'id',
-  value: 'value',
-  label: 'label',
-  isActive: 'isActive'
-} as const
-
-export type TitleKindScalarFieldEnum = (typeof TitleKindScalarFieldEnum)[keyof typeof TitleKindScalarFieldEnum]
-
-
 export const PersonScalarFieldEnum = {
   id: 'id',
   fullName: 'fullName',
@@ -339,29 +328,44 @@ export const ExpenseScalarFieldEnum = {
 export type ExpenseScalarFieldEnum = (typeof ExpenseScalarFieldEnum)[keyof typeof ExpenseScalarFieldEnum]
 
 
-export const FinancialGenerationScalarFieldEnum = {
+export const ContractRevenueReceivableScalarFieldEnum = {
   id: 'id',
-  requestKey: 'requestKey',
-  agreedAmount: 'agreedAmount',
   createdAt: 'createdAt',
   firmId: 'firmId',
+  contractId: 'contractId',
   revenueId: 'revenueId',
-  expenseId: 'expenseId',
-  actorId: 'actorId'
+  receivableId: 'receivableId'
 } as const
 
-export type FinancialGenerationScalarFieldEnum = (typeof FinancialGenerationScalarFieldEnum)[keyof typeof FinancialGenerationScalarFieldEnum]
+export type ContractRevenueReceivableScalarFieldEnum = (typeof ContractRevenueReceivableScalarFieldEnum)[keyof typeof ContractRevenueReceivableScalarFieldEnum]
 
 
-export const DirectFinancialEntryScalarFieldEnum = {
+export const ExpensePayableScalarFieldEnum = {
   id: 'id',
-  reason: 'reason',
   createdAt: 'createdAt',
   firmId: 'firmId',
-  actorId: 'actorId'
+  expenseId: 'expenseId',
+  payableId: 'payableId'
 } as const
 
-export type DirectFinancialEntryScalarFieldEnum = (typeof DirectFinancialEntryScalarFieldEnum)[keyof typeof DirectFinancialEntryScalarFieldEnum]
+export type ExpensePayableScalarFieldEnum = (typeof ExpensePayableScalarFieldEnum)[keyof typeof ExpensePayableScalarFieldEnum]
+
+
+export const RemunerationPayableScalarFieldEnum = {
+  id: 'id',
+  calculationBase: 'calculationBase',
+  effectivePercentage: 'effectivePercentage',
+  calculatedAmount: 'calculatedAmount',
+  computedDueDate: 'computedDueDate',
+  ruleSnapshot: 'ruleSnapshot',
+  createdAt: 'createdAt',
+  firmId: 'firmId',
+  receiptId: 'receiptId',
+  contractAssignmentId: 'contractAssignmentId',
+  payableId: 'payableId'
+} as const
+
+export type RemunerationPayableScalarFieldEnum = (typeof RemunerationPayableScalarFieldEnum)[keyof typeof RemunerationPayableScalarFieldEnum]
 
 
 export const ReceivableScalarFieldEnum = {
@@ -371,16 +375,13 @@ export const ReceivableScalarFieldEnum = {
   notes: 'notes',
   cancelledAt: 'cancelledAt',
   cancellationReason: 'cancellationReason',
+  kind: 'kind',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   firmId: 'firmId',
   debtorId: 'debtorId',
   analyticId: 'analyticId',
-  expectedPaymentMethodId: 'expectedPaymentMethodId',
-  titleKindId: 'titleKindId',
-  generationId: 'generationId',
-  directEntryId: 'directEntryId',
-  revenueId: 'revenueId'
+  expectedPaymentMethodId: 'expectedPaymentMethodId'
 } as const
 
 export type ReceivableScalarFieldEnum = (typeof ReceivableScalarFieldEnum)[keyof typeof ReceivableScalarFieldEnum]
@@ -393,17 +394,13 @@ export const PayableScalarFieldEnum = {
   notes: 'notes',
   cancelledAt: 'cancelledAt',
   cancellationReason: 'cancellationReason',
+  kind: 'kind',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   firmId: 'firmId',
   beneficiaryId: 'beneficiaryId',
   analyticId: 'analyticId',
-  expectedPaymentMethodId: 'expectedPaymentMethodId',
-  titleKindId: 'titleKindId',
-  generationId: 'generationId',
-  directEntryId: 'directEntryId',
-  expenseId: 'expenseId',
-  remunerationCalculationId: 'remunerationCalculationId'
+  expectedPaymentMethodId: 'expectedPaymentMethodId'
 } as const
 
 export type PayableScalarFieldEnum = (typeof PayableScalarFieldEnum)[keyof typeof PayableScalarFieldEnum]
@@ -478,23 +475,6 @@ export const PaymentReversalScalarFieldEnum = {
 export type PaymentReversalScalarFieldEnum = (typeof PaymentReversalScalarFieldEnum)[keyof typeof PaymentReversalScalarFieldEnum]
 
 
-export const RemunerationCalculationScalarFieldEnum = {
-  id: 'id',
-  calculationBase: 'calculationBase',
-  effectivePercentage: 'effectivePercentage',
-  calculatedAmount: 'calculatedAmount',
-  computedDueDate: 'computedDueDate',
-  generationMode: 'generationMode',
-  ruleSnapshot: 'ruleSnapshot',
-  createdAt: 'createdAt',
-  firmId: 'firmId',
-  receiptId: 'receiptId',
-  contractAssignmentId: 'contractAssignmentId'
-} as const
-
-export type RemunerationCalculationScalarFieldEnum = (typeof RemunerationCalculationScalarFieldEnum)[keyof typeof RemunerationCalculationScalarFieldEnum]
-
-
 export const AttachmentScalarFieldEnum = {
   id: 'id',
   fileName: 'fileName',
@@ -514,7 +494,7 @@ export const AttachmentScalarFieldEnum = {
   payableId: 'payableId',
   receiptId: 'receiptId',
   paymentId: 'paymentId',
-  remunerationCalculationId: 'remunerationCalculationId'
+  remunerationPayableId: 'remunerationPayableId'
 } as const
 
 export type AttachmentScalarFieldEnum = (typeof AttachmentScalarFieldEnum)[keyof typeof AttachmentScalarFieldEnum]
@@ -542,8 +522,7 @@ export const AuditLogScalarFieldEnum = {
   payableId: 'payableId',
   receiptId: 'receiptId',
   paymentId: 'paymentId',
-  financialGenerationId: 'financialGenerationId',
-  remunerationCalculationId: 'remunerationCalculationId'
+  remunerationPayableId: 'remunerationPayableId'
 } as const
 
 export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]

@@ -33,11 +33,6 @@ export type PayableAvgAggregateOutputType = {
   beneficiaryId: number | null
   analyticId: number | null
   expectedPaymentMethodId: number | null
-  titleKindId: number | null
-  generationId: number | null
-  directEntryId: number | null
-  expenseId: number | null
-  remunerationCalculationId: number | null
 }
 
 export type PayableSumAggregateOutputType = {
@@ -47,11 +42,6 @@ export type PayableSumAggregateOutputType = {
   beneficiaryId: number | null
   analyticId: number | null
   expectedPaymentMethodId: number | null
-  titleKindId: number | null
-  generationId: number | null
-  directEntryId: number | null
-  expenseId: number | null
-  remunerationCalculationId: number | null
 }
 
 export type PayableMinAggregateOutputType = {
@@ -61,17 +51,13 @@ export type PayableMinAggregateOutputType = {
   notes: string | null
   cancelledAt: Date | null
   cancellationReason: string | null
+  kind: $Enums.TitleKind | null
   createdAt: Date | null
   updatedAt: Date | null
   firmId: number | null
   beneficiaryId: number | null
   analyticId: number | null
   expectedPaymentMethodId: number | null
-  titleKindId: number | null
-  generationId: number | null
-  directEntryId: number | null
-  expenseId: number | null
-  remunerationCalculationId: number | null
 }
 
 export type PayableMaxAggregateOutputType = {
@@ -81,17 +67,13 @@ export type PayableMaxAggregateOutputType = {
   notes: string | null
   cancelledAt: Date | null
   cancellationReason: string | null
+  kind: $Enums.TitleKind | null
   createdAt: Date | null
   updatedAt: Date | null
   firmId: number | null
   beneficiaryId: number | null
   analyticId: number | null
   expectedPaymentMethodId: number | null
-  titleKindId: number | null
-  generationId: number | null
-  directEntryId: number | null
-  expenseId: number | null
-  remunerationCalculationId: number | null
 }
 
 export type PayableCountAggregateOutputType = {
@@ -101,17 +83,13 @@ export type PayableCountAggregateOutputType = {
   notes: number
   cancelledAt: number
   cancellationReason: number
+  kind: number
   createdAt: number
   updatedAt: number
   firmId: number
   beneficiaryId: number
   analyticId: number
   expectedPaymentMethodId: number
-  titleKindId: number
-  generationId: number
-  directEntryId: number
-  expenseId: number
-  remunerationCalculationId: number
   _all: number
 }
 
@@ -123,11 +101,6 @@ export type PayableAvgAggregateInputType = {
   beneficiaryId?: true
   analyticId?: true
   expectedPaymentMethodId?: true
-  titleKindId?: true
-  generationId?: true
-  directEntryId?: true
-  expenseId?: true
-  remunerationCalculationId?: true
 }
 
 export type PayableSumAggregateInputType = {
@@ -137,11 +110,6 @@ export type PayableSumAggregateInputType = {
   beneficiaryId?: true
   analyticId?: true
   expectedPaymentMethodId?: true
-  titleKindId?: true
-  generationId?: true
-  directEntryId?: true
-  expenseId?: true
-  remunerationCalculationId?: true
 }
 
 export type PayableMinAggregateInputType = {
@@ -151,17 +119,13 @@ export type PayableMinAggregateInputType = {
   notes?: true
   cancelledAt?: true
   cancellationReason?: true
+  kind?: true
   createdAt?: true
   updatedAt?: true
   firmId?: true
   beneficiaryId?: true
   analyticId?: true
   expectedPaymentMethodId?: true
-  titleKindId?: true
-  generationId?: true
-  directEntryId?: true
-  expenseId?: true
-  remunerationCalculationId?: true
 }
 
 export type PayableMaxAggregateInputType = {
@@ -171,17 +135,13 @@ export type PayableMaxAggregateInputType = {
   notes?: true
   cancelledAt?: true
   cancellationReason?: true
+  kind?: true
   createdAt?: true
   updatedAt?: true
   firmId?: true
   beneficiaryId?: true
   analyticId?: true
   expectedPaymentMethodId?: true
-  titleKindId?: true
-  generationId?: true
-  directEntryId?: true
-  expenseId?: true
-  remunerationCalculationId?: true
 }
 
 export type PayableCountAggregateInputType = {
@@ -191,17 +151,13 @@ export type PayableCountAggregateInputType = {
   notes?: true
   cancelledAt?: true
   cancellationReason?: true
+  kind?: true
   createdAt?: true
   updatedAt?: true
   firmId?: true
   beneficiaryId?: true
   analyticId?: true
   expectedPaymentMethodId?: true
-  titleKindId?: true
-  generationId?: true
-  directEntryId?: true
-  expenseId?: true
-  remunerationCalculationId?: true
   _all?: true
 }
 
@@ -298,17 +254,13 @@ export type PayableGroupByOutputType = {
   notes: string | null
   cancelledAt: Date | null
   cancellationReason: string | null
+  kind: $Enums.TitleKind
   createdAt: Date
   updatedAt: Date
   firmId: number
   beneficiaryId: number
   analyticId: number
   expectedPaymentMethodId: number
-  titleKindId: number
-  generationId: number | null
-  directEntryId: number | null
-  expenseId: number | null
-  remunerationCalculationId: number | null
   _count: PayableCountAggregateOutputType | null
   _avg: PayableAvgAggregateOutputType | null
   _sum: PayableSumAggregateOutputType | null
@@ -341,27 +293,20 @@ export type PayableWhereInput = {
   notes?: Prisma.StringNullableFilter<"Payable"> | string | null
   cancelledAt?: Prisma.DateTimeNullableFilter<"Payable"> | Date | string | null
   cancellationReason?: Prisma.StringNullableFilter<"Payable"> | string | null
+  kind?: Prisma.EnumTitleKindFilter<"Payable"> | $Enums.TitleKind
   createdAt?: Prisma.DateTimeFilter<"Payable"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Payable"> | Date | string
   firmId?: Prisma.IntFilter<"Payable"> | number
   beneficiaryId?: Prisma.IntFilter<"Payable"> | number
   analyticId?: Prisma.IntFilter<"Payable"> | number
   expectedPaymentMethodId?: Prisma.IntFilter<"Payable"> | number
-  titleKindId?: Prisma.IntFilter<"Payable"> | number
-  generationId?: Prisma.IntNullableFilter<"Payable"> | number | null
-  directEntryId?: Prisma.IntNullableFilter<"Payable"> | number | null
-  expenseId?: Prisma.IntNullableFilter<"Payable"> | number | null
-  remunerationCalculationId?: Prisma.IntNullableFilter<"Payable"> | number | null
   firm?: Prisma.XOR<Prisma.FirmScalarRelationFilter, Prisma.FirmWhereInput>
   beneficiary?: Prisma.XOR<Prisma.SupplierProfileScalarRelationFilter, Prisma.SupplierProfileWhereInput>
   analytic?: Prisma.XOR<Prisma.FinancialAnalyticScalarRelationFilter, Prisma.FinancialAnalyticWhereInput>
   expectedPaymentMethod?: Prisma.XOR<Prisma.PaymentMethodScalarRelationFilter, Prisma.PaymentMethodWhereInput>
-  titleKind?: Prisma.XOR<Prisma.TitleKindScalarRelationFilter, Prisma.TitleKindWhereInput>
-  generation?: Prisma.XOR<Prisma.FinancialGenerationNullableScalarRelationFilter, Prisma.FinancialGenerationWhereInput> | null
-  directEntry?: Prisma.XOR<Prisma.DirectFinancialEntryNullableScalarRelationFilter, Prisma.DirectFinancialEntryWhereInput> | null
-  expense?: Prisma.XOR<Prisma.ExpenseNullableScalarRelationFilter, Prisma.ExpenseWhereInput> | null
   payments?: Prisma.PaymentListRelationFilter
-  remunerationCalculation?: Prisma.XOR<Prisma.RemunerationCalculationNullableScalarRelationFilter, Prisma.RemunerationCalculationWhereInput> | null
+  expensePayable?: Prisma.XOR<Prisma.ExpensePayableNullableScalarRelationFilter, Prisma.ExpensePayableWhereInput> | null
+  remunerationPayable?: Prisma.XOR<Prisma.RemunerationPayableNullableScalarRelationFilter, Prisma.RemunerationPayableWhereInput> | null
   attachments?: Prisma.AttachmentListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
 }
@@ -373,36 +318,27 @@ export type PayableOrderByWithRelationInput = {
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   cancelledAt?: Prisma.SortOrderInput | Prisma.SortOrder
   cancellationReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  kind?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   firmId?: Prisma.SortOrder
   beneficiaryId?: Prisma.SortOrder
   analyticId?: Prisma.SortOrder
   expectedPaymentMethodId?: Prisma.SortOrder
-  titleKindId?: Prisma.SortOrder
-  generationId?: Prisma.SortOrderInput | Prisma.SortOrder
-  directEntryId?: Prisma.SortOrderInput | Prisma.SortOrder
-  expenseId?: Prisma.SortOrderInput | Prisma.SortOrder
-  remunerationCalculationId?: Prisma.SortOrderInput | Prisma.SortOrder
   firm?: Prisma.FirmOrderByWithRelationInput
   beneficiary?: Prisma.SupplierProfileOrderByWithRelationInput
   analytic?: Prisma.FinancialAnalyticOrderByWithRelationInput
   expectedPaymentMethod?: Prisma.PaymentMethodOrderByWithRelationInput
-  titleKind?: Prisma.TitleKindOrderByWithRelationInput
-  generation?: Prisma.FinancialGenerationOrderByWithRelationInput
-  directEntry?: Prisma.DirectFinancialEntryOrderByWithRelationInput
-  expense?: Prisma.ExpenseOrderByWithRelationInput
   payments?: Prisma.PaymentOrderByRelationAggregateInput
-  remunerationCalculation?: Prisma.RemunerationCalculationOrderByWithRelationInput
+  expensePayable?: Prisma.ExpensePayableOrderByWithRelationInput
+  remunerationPayable?: Prisma.RemunerationPayableOrderByWithRelationInput
   attachments?: Prisma.AttachmentOrderByRelationAggregateInput
   auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
 }
 
 export type PayableWhereUniqueInput = Prisma.AtLeast<{
   id?: number
-  remunerationCalculationId?: number
   firmId_id?: Prisma.PayableFirmIdIdCompoundUniqueInput
-  firmId_remunerationCalculationId?: Prisma.PayableFirmIdRemunerationCalculationIdCompoundUniqueInput
   AND?: Prisma.PayableWhereInput | Prisma.PayableWhereInput[]
   OR?: Prisma.PayableWhereInput[]
   NOT?: Prisma.PayableWhereInput | Prisma.PayableWhereInput[]
@@ -411,29 +347,23 @@ export type PayableWhereUniqueInput = Prisma.AtLeast<{
   notes?: Prisma.StringNullableFilter<"Payable"> | string | null
   cancelledAt?: Prisma.DateTimeNullableFilter<"Payable"> | Date | string | null
   cancellationReason?: Prisma.StringNullableFilter<"Payable"> | string | null
+  kind?: Prisma.EnumTitleKindFilter<"Payable"> | $Enums.TitleKind
   createdAt?: Prisma.DateTimeFilter<"Payable"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Payable"> | Date | string
   firmId?: Prisma.IntFilter<"Payable"> | number
   beneficiaryId?: Prisma.IntFilter<"Payable"> | number
   analyticId?: Prisma.IntFilter<"Payable"> | number
   expectedPaymentMethodId?: Prisma.IntFilter<"Payable"> | number
-  titleKindId?: Prisma.IntFilter<"Payable"> | number
-  generationId?: Prisma.IntNullableFilter<"Payable"> | number | null
-  directEntryId?: Prisma.IntNullableFilter<"Payable"> | number | null
-  expenseId?: Prisma.IntNullableFilter<"Payable"> | number | null
   firm?: Prisma.XOR<Prisma.FirmScalarRelationFilter, Prisma.FirmWhereInput>
   beneficiary?: Prisma.XOR<Prisma.SupplierProfileScalarRelationFilter, Prisma.SupplierProfileWhereInput>
   analytic?: Prisma.XOR<Prisma.FinancialAnalyticScalarRelationFilter, Prisma.FinancialAnalyticWhereInput>
   expectedPaymentMethod?: Prisma.XOR<Prisma.PaymentMethodScalarRelationFilter, Prisma.PaymentMethodWhereInput>
-  titleKind?: Prisma.XOR<Prisma.TitleKindScalarRelationFilter, Prisma.TitleKindWhereInput>
-  generation?: Prisma.XOR<Prisma.FinancialGenerationNullableScalarRelationFilter, Prisma.FinancialGenerationWhereInput> | null
-  directEntry?: Prisma.XOR<Prisma.DirectFinancialEntryNullableScalarRelationFilter, Prisma.DirectFinancialEntryWhereInput> | null
-  expense?: Prisma.XOR<Prisma.ExpenseNullableScalarRelationFilter, Prisma.ExpenseWhereInput> | null
   payments?: Prisma.PaymentListRelationFilter
-  remunerationCalculation?: Prisma.XOR<Prisma.RemunerationCalculationNullableScalarRelationFilter, Prisma.RemunerationCalculationWhereInput> | null
+  expensePayable?: Prisma.XOR<Prisma.ExpensePayableNullableScalarRelationFilter, Prisma.ExpensePayableWhereInput> | null
+  remunerationPayable?: Prisma.XOR<Prisma.RemunerationPayableNullableScalarRelationFilter, Prisma.RemunerationPayableWhereInput> | null
   attachments?: Prisma.AttachmentListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
-}, "id" | "firmId_id" | "remunerationCalculationId" | "firmId_remunerationCalculationId">
+}, "id" | "firmId_id">
 
 export type PayableOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -442,17 +372,13 @@ export type PayableOrderByWithAggregationInput = {
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   cancelledAt?: Prisma.SortOrderInput | Prisma.SortOrder
   cancellationReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  kind?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   firmId?: Prisma.SortOrder
   beneficiaryId?: Prisma.SortOrder
   analyticId?: Prisma.SortOrder
   expectedPaymentMethodId?: Prisma.SortOrder
-  titleKindId?: Prisma.SortOrder
-  generationId?: Prisma.SortOrderInput | Prisma.SortOrder
-  directEntryId?: Prisma.SortOrderInput | Prisma.SortOrder
-  expenseId?: Prisma.SortOrderInput | Prisma.SortOrder
-  remunerationCalculationId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.PayableCountOrderByAggregateInput
   _avg?: Prisma.PayableAvgOrderByAggregateInput
   _max?: Prisma.PayableMaxOrderByAggregateInput
@@ -470,17 +396,13 @@ export type PayableScalarWhereWithAggregatesInput = {
   notes?: Prisma.StringNullableWithAggregatesFilter<"Payable"> | string | null
   cancelledAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Payable"> | Date | string | null
   cancellationReason?: Prisma.StringNullableWithAggregatesFilter<"Payable"> | string | null
+  kind?: Prisma.EnumTitleKindWithAggregatesFilter<"Payable"> | $Enums.TitleKind
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Payable"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Payable"> | Date | string
   firmId?: Prisma.IntWithAggregatesFilter<"Payable"> | number
   beneficiaryId?: Prisma.IntWithAggregatesFilter<"Payable"> | number
   analyticId?: Prisma.IntWithAggregatesFilter<"Payable"> | number
   expectedPaymentMethodId?: Prisma.IntWithAggregatesFilter<"Payable"> | number
-  titleKindId?: Prisma.IntWithAggregatesFilter<"Payable"> | number
-  generationId?: Prisma.IntNullableWithAggregatesFilter<"Payable"> | number | null
-  directEntryId?: Prisma.IntNullableWithAggregatesFilter<"Payable"> | number | null
-  expenseId?: Prisma.IntNullableWithAggregatesFilter<"Payable"> | number | null
-  remunerationCalculationId?: Prisma.IntNullableWithAggregatesFilter<"Payable"> | number | null
 }
 
 export type PayableCreateInput = {
@@ -489,18 +411,16 @@ export type PayableCreateInput = {
   notes?: string | null
   cancelledAt?: Date | string | null
   cancellationReason?: string | null
+  kind?: $Enums.TitleKind
   createdAt?: Date | string
   updatedAt?: Date | string
   firm: Prisma.FirmCreateNestedOneWithoutPayablesInput
   beneficiary: Prisma.SupplierProfileCreateNestedOneWithoutPayablesInput
   analytic: Prisma.FinancialAnalyticCreateNestedOneWithoutPayablesInput
   expectedPaymentMethod: Prisma.PaymentMethodCreateNestedOneWithoutPayablesInput
-  titleKind: Prisma.TitleKindCreateNestedOneWithoutPayablesInput
-  generation?: Prisma.FinancialGenerationCreateNestedOneWithoutPayablesInput
-  directEntry?: Prisma.DirectFinancialEntryCreateNestedOneWithoutPayablesInput
-  expense?: Prisma.ExpenseCreateNestedOneWithoutPayablesInput
   payments?: Prisma.PaymentCreateNestedManyWithoutPayableInput
-  remunerationCalculation?: Prisma.RemunerationCalculationCreateNestedOneWithoutPayableInput
+  expensePayable?: Prisma.ExpensePayableCreateNestedOneWithoutPayableInput
+  remunerationPayable?: Prisma.RemunerationPayableCreateNestedOneWithoutPayableInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutPayableInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPayableInput
 }
@@ -512,18 +432,16 @@ export type PayableUncheckedCreateInput = {
   notes?: string | null
   cancelledAt?: Date | string | null
   cancellationReason?: string | null
+  kind?: $Enums.TitleKind
   createdAt?: Date | string
   updatedAt?: Date | string
   firmId: number
   beneficiaryId: number
   analyticId: number
   expectedPaymentMethodId: number
-  titleKindId: number
-  generationId?: number | null
-  directEntryId?: number | null
-  expenseId?: number | null
-  remunerationCalculationId?: number | null
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayableInput
+  expensePayable?: Prisma.ExpensePayableUncheckedCreateNestedOneWithoutPayableInput
+  remunerationPayable?: Prisma.RemunerationPayableUncheckedCreateNestedOneWithoutPayableInput
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutPayableInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPayableInput
 }
@@ -534,18 +452,16 @@ export type PayableUpdateInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.EnumTitleKindFieldUpdateOperationsInput | $Enums.TitleKind
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   firm?: Prisma.FirmUpdateOneRequiredWithoutPayablesNestedInput
   beneficiary?: Prisma.SupplierProfileUpdateOneRequiredWithoutPayablesNestedInput
   analytic?: Prisma.FinancialAnalyticUpdateOneRequiredWithoutPayablesNestedInput
   expectedPaymentMethod?: Prisma.PaymentMethodUpdateOneRequiredWithoutPayablesNestedInput
-  titleKind?: Prisma.TitleKindUpdateOneRequiredWithoutPayablesNestedInput
-  generation?: Prisma.FinancialGenerationUpdateOneWithoutPayablesNestedInput
-  directEntry?: Prisma.DirectFinancialEntryUpdateOneWithoutPayablesNestedInput
-  expense?: Prisma.ExpenseUpdateOneWithoutPayablesNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutPayableNestedInput
-  remunerationCalculation?: Prisma.RemunerationCalculationUpdateOneWithoutPayableNestedInput
+  expensePayable?: Prisma.ExpensePayableUpdateOneWithoutPayableNestedInput
+  remunerationPayable?: Prisma.RemunerationPayableUpdateOneWithoutPayableNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutPayableNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPayableNestedInput
 }
@@ -557,18 +473,16 @@ export type PayableUncheckedUpdateInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.EnumTitleKindFieldUpdateOperationsInput | $Enums.TitleKind
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   firmId?: Prisma.IntFieldUpdateOperationsInput | number
   beneficiaryId?: Prisma.IntFieldUpdateOperationsInput | number
   analyticId?: Prisma.IntFieldUpdateOperationsInput | number
   expectedPaymentMethodId?: Prisma.IntFieldUpdateOperationsInput | number
-  titleKindId?: Prisma.IntFieldUpdateOperationsInput | number
-  generationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  directEntryId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayableNestedInput
+  expensePayable?: Prisma.ExpensePayableUncheckedUpdateOneWithoutPayableNestedInput
+  remunerationPayable?: Prisma.RemunerationPayableUncheckedUpdateOneWithoutPayableNestedInput
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutPayableNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPayableNestedInput
 }
@@ -580,17 +494,13 @@ export type PayableCreateManyInput = {
   notes?: string | null
   cancelledAt?: Date | string | null
   cancellationReason?: string | null
+  kind?: $Enums.TitleKind
   createdAt?: Date | string
   updatedAt?: Date | string
   firmId: number
   beneficiaryId: number
   analyticId: number
   expectedPaymentMethodId: number
-  titleKindId: number
-  generationId?: number | null
-  directEntryId?: number | null
-  expenseId?: number | null
-  remunerationCalculationId?: number | null
 }
 
 export type PayableUpdateManyMutationInput = {
@@ -599,6 +509,7 @@ export type PayableUpdateManyMutationInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.EnumTitleKindFieldUpdateOperationsInput | $Enums.TitleKind
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -610,17 +521,13 @@ export type PayableUncheckedUpdateManyInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.EnumTitleKindFieldUpdateOperationsInput | $Enums.TitleKind
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   firmId?: Prisma.IntFieldUpdateOperationsInput | number
   beneficiaryId?: Prisma.IntFieldUpdateOperationsInput | number
   analyticId?: Prisma.IntFieldUpdateOperationsInput | number
   expectedPaymentMethodId?: Prisma.IntFieldUpdateOperationsInput | number
-  titleKindId?: Prisma.IntFieldUpdateOperationsInput | number
-  generationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  directEntryId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type PayableListRelationFilter = {
@@ -633,14 +540,14 @@ export type PayableOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type PayableScalarRelationFilter = {
+  is?: Prisma.PayableWhereInput
+  isNot?: Prisma.PayableWhereInput
+}
+
 export type PayableFirmIdIdCompoundUniqueInput = {
   firmId: number
   id: number
-}
-
-export type PayableFirmIdRemunerationCalculationIdCompoundUniqueInput = {
-  firmId: number
-  remunerationCalculationId: number
 }
 
 export type PayableCountOrderByAggregateInput = {
@@ -650,17 +557,13 @@ export type PayableCountOrderByAggregateInput = {
   notes?: Prisma.SortOrder
   cancelledAt?: Prisma.SortOrder
   cancellationReason?: Prisma.SortOrder
+  kind?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   firmId?: Prisma.SortOrder
   beneficiaryId?: Prisma.SortOrder
   analyticId?: Prisma.SortOrder
   expectedPaymentMethodId?: Prisma.SortOrder
-  titleKindId?: Prisma.SortOrder
-  generationId?: Prisma.SortOrder
-  directEntryId?: Prisma.SortOrder
-  expenseId?: Prisma.SortOrder
-  remunerationCalculationId?: Prisma.SortOrder
 }
 
 export type PayableAvgOrderByAggregateInput = {
@@ -670,11 +573,6 @@ export type PayableAvgOrderByAggregateInput = {
   beneficiaryId?: Prisma.SortOrder
   analyticId?: Prisma.SortOrder
   expectedPaymentMethodId?: Prisma.SortOrder
-  titleKindId?: Prisma.SortOrder
-  generationId?: Prisma.SortOrder
-  directEntryId?: Prisma.SortOrder
-  expenseId?: Prisma.SortOrder
-  remunerationCalculationId?: Prisma.SortOrder
 }
 
 export type PayableMaxOrderByAggregateInput = {
@@ -684,17 +582,13 @@ export type PayableMaxOrderByAggregateInput = {
   notes?: Prisma.SortOrder
   cancelledAt?: Prisma.SortOrder
   cancellationReason?: Prisma.SortOrder
+  kind?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   firmId?: Prisma.SortOrder
   beneficiaryId?: Prisma.SortOrder
   analyticId?: Prisma.SortOrder
   expectedPaymentMethodId?: Prisma.SortOrder
-  titleKindId?: Prisma.SortOrder
-  generationId?: Prisma.SortOrder
-  directEntryId?: Prisma.SortOrder
-  expenseId?: Prisma.SortOrder
-  remunerationCalculationId?: Prisma.SortOrder
 }
 
 export type PayableMinOrderByAggregateInput = {
@@ -704,17 +598,13 @@ export type PayableMinOrderByAggregateInput = {
   notes?: Prisma.SortOrder
   cancelledAt?: Prisma.SortOrder
   cancellationReason?: Prisma.SortOrder
+  kind?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   firmId?: Prisma.SortOrder
   beneficiaryId?: Prisma.SortOrder
   analyticId?: Prisma.SortOrder
   expectedPaymentMethodId?: Prisma.SortOrder
-  titleKindId?: Prisma.SortOrder
-  generationId?: Prisma.SortOrder
-  directEntryId?: Prisma.SortOrder
-  expenseId?: Prisma.SortOrder
-  remunerationCalculationId?: Prisma.SortOrder
 }
 
 export type PayableSumOrderByAggregateInput = {
@@ -724,16 +614,6 @@ export type PayableSumOrderByAggregateInput = {
   beneficiaryId?: Prisma.SortOrder
   analyticId?: Prisma.SortOrder
   expectedPaymentMethodId?: Prisma.SortOrder
-  titleKindId?: Prisma.SortOrder
-  generationId?: Prisma.SortOrder
-  directEntryId?: Prisma.SortOrder
-  expenseId?: Prisma.SortOrder
-  remunerationCalculationId?: Prisma.SortOrder
-}
-
-export type PayableScalarRelationFilter = {
-  is?: Prisma.PayableWhereInput
-  isNot?: Prisma.PayableWhereInput
 }
 
 export type PayableNullableScalarRelationFilter = {
@@ -867,48 +747,6 @@ export type PayableUncheckedUpdateManyWithoutExpectedPaymentMethodNestedInput = 
   deleteMany?: Prisma.PayableScalarWhereInput | Prisma.PayableScalarWhereInput[]
 }
 
-export type PayableCreateNestedManyWithoutTitleKindInput = {
-  create?: Prisma.XOR<Prisma.PayableCreateWithoutTitleKindInput, Prisma.PayableUncheckedCreateWithoutTitleKindInput> | Prisma.PayableCreateWithoutTitleKindInput[] | Prisma.PayableUncheckedCreateWithoutTitleKindInput[]
-  connectOrCreate?: Prisma.PayableCreateOrConnectWithoutTitleKindInput | Prisma.PayableCreateOrConnectWithoutTitleKindInput[]
-  createMany?: Prisma.PayableCreateManyTitleKindInputEnvelope
-  connect?: Prisma.PayableWhereUniqueInput | Prisma.PayableWhereUniqueInput[]
-}
-
-export type PayableUncheckedCreateNestedManyWithoutTitleKindInput = {
-  create?: Prisma.XOR<Prisma.PayableCreateWithoutTitleKindInput, Prisma.PayableUncheckedCreateWithoutTitleKindInput> | Prisma.PayableCreateWithoutTitleKindInput[] | Prisma.PayableUncheckedCreateWithoutTitleKindInput[]
-  connectOrCreate?: Prisma.PayableCreateOrConnectWithoutTitleKindInput | Prisma.PayableCreateOrConnectWithoutTitleKindInput[]
-  createMany?: Prisma.PayableCreateManyTitleKindInputEnvelope
-  connect?: Prisma.PayableWhereUniqueInput | Prisma.PayableWhereUniqueInput[]
-}
-
-export type PayableUpdateManyWithoutTitleKindNestedInput = {
-  create?: Prisma.XOR<Prisma.PayableCreateWithoutTitleKindInput, Prisma.PayableUncheckedCreateWithoutTitleKindInput> | Prisma.PayableCreateWithoutTitleKindInput[] | Prisma.PayableUncheckedCreateWithoutTitleKindInput[]
-  connectOrCreate?: Prisma.PayableCreateOrConnectWithoutTitleKindInput | Prisma.PayableCreateOrConnectWithoutTitleKindInput[]
-  upsert?: Prisma.PayableUpsertWithWhereUniqueWithoutTitleKindInput | Prisma.PayableUpsertWithWhereUniqueWithoutTitleKindInput[]
-  createMany?: Prisma.PayableCreateManyTitleKindInputEnvelope
-  set?: Prisma.PayableWhereUniqueInput | Prisma.PayableWhereUniqueInput[]
-  disconnect?: Prisma.PayableWhereUniqueInput | Prisma.PayableWhereUniqueInput[]
-  delete?: Prisma.PayableWhereUniqueInput | Prisma.PayableWhereUniqueInput[]
-  connect?: Prisma.PayableWhereUniqueInput | Prisma.PayableWhereUniqueInput[]
-  update?: Prisma.PayableUpdateWithWhereUniqueWithoutTitleKindInput | Prisma.PayableUpdateWithWhereUniqueWithoutTitleKindInput[]
-  updateMany?: Prisma.PayableUpdateManyWithWhereWithoutTitleKindInput | Prisma.PayableUpdateManyWithWhereWithoutTitleKindInput[]
-  deleteMany?: Prisma.PayableScalarWhereInput | Prisma.PayableScalarWhereInput[]
-}
-
-export type PayableUncheckedUpdateManyWithoutTitleKindNestedInput = {
-  create?: Prisma.XOR<Prisma.PayableCreateWithoutTitleKindInput, Prisma.PayableUncheckedCreateWithoutTitleKindInput> | Prisma.PayableCreateWithoutTitleKindInput[] | Prisma.PayableUncheckedCreateWithoutTitleKindInput[]
-  connectOrCreate?: Prisma.PayableCreateOrConnectWithoutTitleKindInput | Prisma.PayableCreateOrConnectWithoutTitleKindInput[]
-  upsert?: Prisma.PayableUpsertWithWhereUniqueWithoutTitleKindInput | Prisma.PayableUpsertWithWhereUniqueWithoutTitleKindInput[]
-  createMany?: Prisma.PayableCreateManyTitleKindInputEnvelope
-  set?: Prisma.PayableWhereUniqueInput | Prisma.PayableWhereUniqueInput[]
-  disconnect?: Prisma.PayableWhereUniqueInput | Prisma.PayableWhereUniqueInput[]
-  delete?: Prisma.PayableWhereUniqueInput | Prisma.PayableWhereUniqueInput[]
-  connect?: Prisma.PayableWhereUniqueInput | Prisma.PayableWhereUniqueInput[]
-  update?: Prisma.PayableUpdateWithWhereUniqueWithoutTitleKindInput | Prisma.PayableUpdateWithWhereUniqueWithoutTitleKindInput[]
-  updateMany?: Prisma.PayableUpdateManyWithWhereWithoutTitleKindInput | Prisma.PayableUpdateManyWithWhereWithoutTitleKindInput[]
-  deleteMany?: Prisma.PayableScalarWhereInput | Prisma.PayableScalarWhereInput[]
-}
-
 export type PayableCreateNestedManyWithoutBeneficiaryInput = {
   create?: Prisma.XOR<Prisma.PayableCreateWithoutBeneficiaryInput, Prisma.PayableUncheckedCreateWithoutBeneficiaryInput> | Prisma.PayableCreateWithoutBeneficiaryInput[] | Prisma.PayableUncheckedCreateWithoutBeneficiaryInput[]
   connectOrCreate?: Prisma.PayableCreateOrConnectWithoutBeneficiaryInput | Prisma.PayableCreateOrConnectWithoutBeneficiaryInput[]
@@ -951,130 +789,32 @@ export type PayableUncheckedUpdateManyWithoutBeneficiaryNestedInput = {
   deleteMany?: Prisma.PayableScalarWhereInput | Prisma.PayableScalarWhereInput[]
 }
 
-export type PayableCreateNestedManyWithoutExpenseInput = {
-  create?: Prisma.XOR<Prisma.PayableCreateWithoutExpenseInput, Prisma.PayableUncheckedCreateWithoutExpenseInput> | Prisma.PayableCreateWithoutExpenseInput[] | Prisma.PayableUncheckedCreateWithoutExpenseInput[]
-  connectOrCreate?: Prisma.PayableCreateOrConnectWithoutExpenseInput | Prisma.PayableCreateOrConnectWithoutExpenseInput[]
-  createMany?: Prisma.PayableCreateManyExpenseInputEnvelope
-  connect?: Prisma.PayableWhereUniqueInput | Prisma.PayableWhereUniqueInput[]
+export type PayableCreateNestedOneWithoutExpensePayableInput = {
+  create?: Prisma.XOR<Prisma.PayableCreateWithoutExpensePayableInput, Prisma.PayableUncheckedCreateWithoutExpensePayableInput>
+  connectOrCreate?: Prisma.PayableCreateOrConnectWithoutExpensePayableInput
+  connect?: Prisma.PayableWhereUniqueInput
 }
 
-export type PayableUncheckedCreateNestedManyWithoutExpenseInput = {
-  create?: Prisma.XOR<Prisma.PayableCreateWithoutExpenseInput, Prisma.PayableUncheckedCreateWithoutExpenseInput> | Prisma.PayableCreateWithoutExpenseInput[] | Prisma.PayableUncheckedCreateWithoutExpenseInput[]
-  connectOrCreate?: Prisma.PayableCreateOrConnectWithoutExpenseInput | Prisma.PayableCreateOrConnectWithoutExpenseInput[]
-  createMany?: Prisma.PayableCreateManyExpenseInputEnvelope
-  connect?: Prisma.PayableWhereUniqueInput | Prisma.PayableWhereUniqueInput[]
+export type PayableUpdateOneRequiredWithoutExpensePayableNestedInput = {
+  create?: Prisma.XOR<Prisma.PayableCreateWithoutExpensePayableInput, Prisma.PayableUncheckedCreateWithoutExpensePayableInput>
+  connectOrCreate?: Prisma.PayableCreateOrConnectWithoutExpensePayableInput
+  upsert?: Prisma.PayableUpsertWithoutExpensePayableInput
+  connect?: Prisma.PayableWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PayableUpdateToOneWithWhereWithoutExpensePayableInput, Prisma.PayableUpdateWithoutExpensePayableInput>, Prisma.PayableUncheckedUpdateWithoutExpensePayableInput>
 }
 
-export type PayableUpdateManyWithoutExpenseNestedInput = {
-  create?: Prisma.XOR<Prisma.PayableCreateWithoutExpenseInput, Prisma.PayableUncheckedCreateWithoutExpenseInput> | Prisma.PayableCreateWithoutExpenseInput[] | Prisma.PayableUncheckedCreateWithoutExpenseInput[]
-  connectOrCreate?: Prisma.PayableCreateOrConnectWithoutExpenseInput | Prisma.PayableCreateOrConnectWithoutExpenseInput[]
-  upsert?: Prisma.PayableUpsertWithWhereUniqueWithoutExpenseInput | Prisma.PayableUpsertWithWhereUniqueWithoutExpenseInput[]
-  createMany?: Prisma.PayableCreateManyExpenseInputEnvelope
-  set?: Prisma.PayableWhereUniqueInput | Prisma.PayableWhereUniqueInput[]
-  disconnect?: Prisma.PayableWhereUniqueInput | Prisma.PayableWhereUniqueInput[]
-  delete?: Prisma.PayableWhereUniqueInput | Prisma.PayableWhereUniqueInput[]
-  connect?: Prisma.PayableWhereUniqueInput | Prisma.PayableWhereUniqueInput[]
-  update?: Prisma.PayableUpdateWithWhereUniqueWithoutExpenseInput | Prisma.PayableUpdateWithWhereUniqueWithoutExpenseInput[]
-  updateMany?: Prisma.PayableUpdateManyWithWhereWithoutExpenseInput | Prisma.PayableUpdateManyWithWhereWithoutExpenseInput[]
-  deleteMany?: Prisma.PayableScalarWhereInput | Prisma.PayableScalarWhereInput[]
+export type PayableCreateNestedOneWithoutRemunerationPayableInput = {
+  create?: Prisma.XOR<Prisma.PayableCreateWithoutRemunerationPayableInput, Prisma.PayableUncheckedCreateWithoutRemunerationPayableInput>
+  connectOrCreate?: Prisma.PayableCreateOrConnectWithoutRemunerationPayableInput
+  connect?: Prisma.PayableWhereUniqueInput
 }
 
-export type PayableUncheckedUpdateManyWithoutExpenseNestedInput = {
-  create?: Prisma.XOR<Prisma.PayableCreateWithoutExpenseInput, Prisma.PayableUncheckedCreateWithoutExpenseInput> | Prisma.PayableCreateWithoutExpenseInput[] | Prisma.PayableUncheckedCreateWithoutExpenseInput[]
-  connectOrCreate?: Prisma.PayableCreateOrConnectWithoutExpenseInput | Prisma.PayableCreateOrConnectWithoutExpenseInput[]
-  upsert?: Prisma.PayableUpsertWithWhereUniqueWithoutExpenseInput | Prisma.PayableUpsertWithWhereUniqueWithoutExpenseInput[]
-  createMany?: Prisma.PayableCreateManyExpenseInputEnvelope
-  set?: Prisma.PayableWhereUniqueInput | Prisma.PayableWhereUniqueInput[]
-  disconnect?: Prisma.PayableWhereUniqueInput | Prisma.PayableWhereUniqueInput[]
-  delete?: Prisma.PayableWhereUniqueInput | Prisma.PayableWhereUniqueInput[]
-  connect?: Prisma.PayableWhereUniqueInput | Prisma.PayableWhereUniqueInput[]
-  update?: Prisma.PayableUpdateWithWhereUniqueWithoutExpenseInput | Prisma.PayableUpdateWithWhereUniqueWithoutExpenseInput[]
-  updateMany?: Prisma.PayableUpdateManyWithWhereWithoutExpenseInput | Prisma.PayableUpdateManyWithWhereWithoutExpenseInput[]
-  deleteMany?: Prisma.PayableScalarWhereInput | Prisma.PayableScalarWhereInput[]
-}
-
-export type PayableCreateNestedManyWithoutGenerationInput = {
-  create?: Prisma.XOR<Prisma.PayableCreateWithoutGenerationInput, Prisma.PayableUncheckedCreateWithoutGenerationInput> | Prisma.PayableCreateWithoutGenerationInput[] | Prisma.PayableUncheckedCreateWithoutGenerationInput[]
-  connectOrCreate?: Prisma.PayableCreateOrConnectWithoutGenerationInput | Prisma.PayableCreateOrConnectWithoutGenerationInput[]
-  createMany?: Prisma.PayableCreateManyGenerationInputEnvelope
-  connect?: Prisma.PayableWhereUniqueInput | Prisma.PayableWhereUniqueInput[]
-}
-
-export type PayableUncheckedCreateNestedManyWithoutGenerationInput = {
-  create?: Prisma.XOR<Prisma.PayableCreateWithoutGenerationInput, Prisma.PayableUncheckedCreateWithoutGenerationInput> | Prisma.PayableCreateWithoutGenerationInput[] | Prisma.PayableUncheckedCreateWithoutGenerationInput[]
-  connectOrCreate?: Prisma.PayableCreateOrConnectWithoutGenerationInput | Prisma.PayableCreateOrConnectWithoutGenerationInput[]
-  createMany?: Prisma.PayableCreateManyGenerationInputEnvelope
-  connect?: Prisma.PayableWhereUniqueInput | Prisma.PayableWhereUniqueInput[]
-}
-
-export type PayableUpdateManyWithoutGenerationNestedInput = {
-  create?: Prisma.XOR<Prisma.PayableCreateWithoutGenerationInput, Prisma.PayableUncheckedCreateWithoutGenerationInput> | Prisma.PayableCreateWithoutGenerationInput[] | Prisma.PayableUncheckedCreateWithoutGenerationInput[]
-  connectOrCreate?: Prisma.PayableCreateOrConnectWithoutGenerationInput | Prisma.PayableCreateOrConnectWithoutGenerationInput[]
-  upsert?: Prisma.PayableUpsertWithWhereUniqueWithoutGenerationInput | Prisma.PayableUpsertWithWhereUniqueWithoutGenerationInput[]
-  createMany?: Prisma.PayableCreateManyGenerationInputEnvelope
-  set?: Prisma.PayableWhereUniqueInput | Prisma.PayableWhereUniqueInput[]
-  disconnect?: Prisma.PayableWhereUniqueInput | Prisma.PayableWhereUniqueInput[]
-  delete?: Prisma.PayableWhereUniqueInput | Prisma.PayableWhereUniqueInput[]
-  connect?: Prisma.PayableWhereUniqueInput | Prisma.PayableWhereUniqueInput[]
-  update?: Prisma.PayableUpdateWithWhereUniqueWithoutGenerationInput | Prisma.PayableUpdateWithWhereUniqueWithoutGenerationInput[]
-  updateMany?: Prisma.PayableUpdateManyWithWhereWithoutGenerationInput | Prisma.PayableUpdateManyWithWhereWithoutGenerationInput[]
-  deleteMany?: Prisma.PayableScalarWhereInput | Prisma.PayableScalarWhereInput[]
-}
-
-export type PayableUncheckedUpdateManyWithoutGenerationNestedInput = {
-  create?: Prisma.XOR<Prisma.PayableCreateWithoutGenerationInput, Prisma.PayableUncheckedCreateWithoutGenerationInput> | Prisma.PayableCreateWithoutGenerationInput[] | Prisma.PayableUncheckedCreateWithoutGenerationInput[]
-  connectOrCreate?: Prisma.PayableCreateOrConnectWithoutGenerationInput | Prisma.PayableCreateOrConnectWithoutGenerationInput[]
-  upsert?: Prisma.PayableUpsertWithWhereUniqueWithoutGenerationInput | Prisma.PayableUpsertWithWhereUniqueWithoutGenerationInput[]
-  createMany?: Prisma.PayableCreateManyGenerationInputEnvelope
-  set?: Prisma.PayableWhereUniqueInput | Prisma.PayableWhereUniqueInput[]
-  disconnect?: Prisma.PayableWhereUniqueInput | Prisma.PayableWhereUniqueInput[]
-  delete?: Prisma.PayableWhereUniqueInput | Prisma.PayableWhereUniqueInput[]
-  connect?: Prisma.PayableWhereUniqueInput | Prisma.PayableWhereUniqueInput[]
-  update?: Prisma.PayableUpdateWithWhereUniqueWithoutGenerationInput | Prisma.PayableUpdateWithWhereUniqueWithoutGenerationInput[]
-  updateMany?: Prisma.PayableUpdateManyWithWhereWithoutGenerationInput | Prisma.PayableUpdateManyWithWhereWithoutGenerationInput[]
-  deleteMany?: Prisma.PayableScalarWhereInput | Prisma.PayableScalarWhereInput[]
-}
-
-export type PayableCreateNestedManyWithoutDirectEntryInput = {
-  create?: Prisma.XOR<Prisma.PayableCreateWithoutDirectEntryInput, Prisma.PayableUncheckedCreateWithoutDirectEntryInput> | Prisma.PayableCreateWithoutDirectEntryInput[] | Prisma.PayableUncheckedCreateWithoutDirectEntryInput[]
-  connectOrCreate?: Prisma.PayableCreateOrConnectWithoutDirectEntryInput | Prisma.PayableCreateOrConnectWithoutDirectEntryInput[]
-  createMany?: Prisma.PayableCreateManyDirectEntryInputEnvelope
-  connect?: Prisma.PayableWhereUniqueInput | Prisma.PayableWhereUniqueInput[]
-}
-
-export type PayableUncheckedCreateNestedManyWithoutDirectEntryInput = {
-  create?: Prisma.XOR<Prisma.PayableCreateWithoutDirectEntryInput, Prisma.PayableUncheckedCreateWithoutDirectEntryInput> | Prisma.PayableCreateWithoutDirectEntryInput[] | Prisma.PayableUncheckedCreateWithoutDirectEntryInput[]
-  connectOrCreate?: Prisma.PayableCreateOrConnectWithoutDirectEntryInput | Prisma.PayableCreateOrConnectWithoutDirectEntryInput[]
-  createMany?: Prisma.PayableCreateManyDirectEntryInputEnvelope
-  connect?: Prisma.PayableWhereUniqueInput | Prisma.PayableWhereUniqueInput[]
-}
-
-export type PayableUpdateManyWithoutDirectEntryNestedInput = {
-  create?: Prisma.XOR<Prisma.PayableCreateWithoutDirectEntryInput, Prisma.PayableUncheckedCreateWithoutDirectEntryInput> | Prisma.PayableCreateWithoutDirectEntryInput[] | Prisma.PayableUncheckedCreateWithoutDirectEntryInput[]
-  connectOrCreate?: Prisma.PayableCreateOrConnectWithoutDirectEntryInput | Prisma.PayableCreateOrConnectWithoutDirectEntryInput[]
-  upsert?: Prisma.PayableUpsertWithWhereUniqueWithoutDirectEntryInput | Prisma.PayableUpsertWithWhereUniqueWithoutDirectEntryInput[]
-  createMany?: Prisma.PayableCreateManyDirectEntryInputEnvelope
-  set?: Prisma.PayableWhereUniqueInput | Prisma.PayableWhereUniqueInput[]
-  disconnect?: Prisma.PayableWhereUniqueInput | Prisma.PayableWhereUniqueInput[]
-  delete?: Prisma.PayableWhereUniqueInput | Prisma.PayableWhereUniqueInput[]
-  connect?: Prisma.PayableWhereUniqueInput | Prisma.PayableWhereUniqueInput[]
-  update?: Prisma.PayableUpdateWithWhereUniqueWithoutDirectEntryInput | Prisma.PayableUpdateWithWhereUniqueWithoutDirectEntryInput[]
-  updateMany?: Prisma.PayableUpdateManyWithWhereWithoutDirectEntryInput | Prisma.PayableUpdateManyWithWhereWithoutDirectEntryInput[]
-  deleteMany?: Prisma.PayableScalarWhereInput | Prisma.PayableScalarWhereInput[]
-}
-
-export type PayableUncheckedUpdateManyWithoutDirectEntryNestedInput = {
-  create?: Prisma.XOR<Prisma.PayableCreateWithoutDirectEntryInput, Prisma.PayableUncheckedCreateWithoutDirectEntryInput> | Prisma.PayableCreateWithoutDirectEntryInput[] | Prisma.PayableUncheckedCreateWithoutDirectEntryInput[]
-  connectOrCreate?: Prisma.PayableCreateOrConnectWithoutDirectEntryInput | Prisma.PayableCreateOrConnectWithoutDirectEntryInput[]
-  upsert?: Prisma.PayableUpsertWithWhereUniqueWithoutDirectEntryInput | Prisma.PayableUpsertWithWhereUniqueWithoutDirectEntryInput[]
-  createMany?: Prisma.PayableCreateManyDirectEntryInputEnvelope
-  set?: Prisma.PayableWhereUniqueInput | Prisma.PayableWhereUniqueInput[]
-  disconnect?: Prisma.PayableWhereUniqueInput | Prisma.PayableWhereUniqueInput[]
-  delete?: Prisma.PayableWhereUniqueInput | Prisma.PayableWhereUniqueInput[]
-  connect?: Prisma.PayableWhereUniqueInput | Prisma.PayableWhereUniqueInput[]
-  update?: Prisma.PayableUpdateWithWhereUniqueWithoutDirectEntryInput | Prisma.PayableUpdateWithWhereUniqueWithoutDirectEntryInput[]
-  updateMany?: Prisma.PayableUpdateManyWithWhereWithoutDirectEntryInput | Prisma.PayableUpdateManyWithWhereWithoutDirectEntryInput[]
-  deleteMany?: Prisma.PayableScalarWhereInput | Prisma.PayableScalarWhereInput[]
+export type PayableUpdateOneRequiredWithoutRemunerationPayableNestedInput = {
+  create?: Prisma.XOR<Prisma.PayableCreateWithoutRemunerationPayableInput, Prisma.PayableUncheckedCreateWithoutRemunerationPayableInput>
+  connectOrCreate?: Prisma.PayableCreateOrConnectWithoutRemunerationPayableInput
+  upsert?: Prisma.PayableUpsertWithoutRemunerationPayableInput
+  connect?: Prisma.PayableWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PayableUpdateToOneWithWhereWithoutRemunerationPayableInput, Prisma.PayableUpdateWithoutRemunerationPayableInput>, Prisma.PayableUncheckedUpdateWithoutRemunerationPayableInput>
 }
 
 export type PayableCreateNestedOneWithoutPaymentsInput = {
@@ -1089,38 +829,6 @@ export type PayableUpdateOneRequiredWithoutPaymentsNestedInput = {
   upsert?: Prisma.PayableUpsertWithoutPaymentsInput
   connect?: Prisma.PayableWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.PayableUpdateToOneWithWhereWithoutPaymentsInput, Prisma.PayableUpdateWithoutPaymentsInput>, Prisma.PayableUncheckedUpdateWithoutPaymentsInput>
-}
-
-export type PayableCreateNestedOneWithoutRemunerationCalculationInput = {
-  create?: Prisma.XOR<Prisma.PayableCreateWithoutRemunerationCalculationInput, Prisma.PayableUncheckedCreateWithoutRemunerationCalculationInput>
-  connectOrCreate?: Prisma.PayableCreateOrConnectWithoutRemunerationCalculationInput
-  connect?: Prisma.PayableWhereUniqueInput
-}
-
-export type PayableUncheckedCreateNestedOneWithoutRemunerationCalculationInput = {
-  create?: Prisma.XOR<Prisma.PayableCreateWithoutRemunerationCalculationInput, Prisma.PayableUncheckedCreateWithoutRemunerationCalculationInput>
-  connectOrCreate?: Prisma.PayableCreateOrConnectWithoutRemunerationCalculationInput
-  connect?: Prisma.PayableWhereUniqueInput
-}
-
-export type PayableUpdateOneWithoutRemunerationCalculationNestedInput = {
-  create?: Prisma.XOR<Prisma.PayableCreateWithoutRemunerationCalculationInput, Prisma.PayableUncheckedCreateWithoutRemunerationCalculationInput>
-  connectOrCreate?: Prisma.PayableCreateOrConnectWithoutRemunerationCalculationInput
-  upsert?: Prisma.PayableUpsertWithoutRemunerationCalculationInput
-  disconnect?: Prisma.PayableWhereInput | boolean
-  delete?: Prisma.PayableWhereInput | boolean
-  connect?: Prisma.PayableWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.PayableUpdateToOneWithWhereWithoutRemunerationCalculationInput, Prisma.PayableUpdateWithoutRemunerationCalculationInput>, Prisma.PayableUncheckedUpdateWithoutRemunerationCalculationInput>
-}
-
-export type PayableUncheckedUpdateOneWithoutRemunerationCalculationNestedInput = {
-  create?: Prisma.XOR<Prisma.PayableCreateWithoutRemunerationCalculationInput, Prisma.PayableUncheckedCreateWithoutRemunerationCalculationInput>
-  connectOrCreate?: Prisma.PayableCreateOrConnectWithoutRemunerationCalculationInput
-  upsert?: Prisma.PayableUpsertWithoutRemunerationCalculationInput
-  disconnect?: Prisma.PayableWhereInput | boolean
-  delete?: Prisma.PayableWhereInput | boolean
-  connect?: Prisma.PayableWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.PayableUpdateToOneWithWhereWithoutRemunerationCalculationInput, Prisma.PayableUpdateWithoutRemunerationCalculationInput>, Prisma.PayableUncheckedUpdateWithoutRemunerationCalculationInput>
 }
 
 export type PayableCreateNestedOneWithoutAttachmentsInput = {
@@ -1161,17 +869,15 @@ export type PayableCreateWithoutFirmInput = {
   notes?: string | null
   cancelledAt?: Date | string | null
   cancellationReason?: string | null
+  kind?: $Enums.TitleKind
   createdAt?: Date | string
   updatedAt?: Date | string
   beneficiary: Prisma.SupplierProfileCreateNestedOneWithoutPayablesInput
   analytic: Prisma.FinancialAnalyticCreateNestedOneWithoutPayablesInput
   expectedPaymentMethod: Prisma.PaymentMethodCreateNestedOneWithoutPayablesInput
-  titleKind: Prisma.TitleKindCreateNestedOneWithoutPayablesInput
-  generation?: Prisma.FinancialGenerationCreateNestedOneWithoutPayablesInput
-  directEntry?: Prisma.DirectFinancialEntryCreateNestedOneWithoutPayablesInput
-  expense?: Prisma.ExpenseCreateNestedOneWithoutPayablesInput
   payments?: Prisma.PaymentCreateNestedManyWithoutPayableInput
-  remunerationCalculation?: Prisma.RemunerationCalculationCreateNestedOneWithoutPayableInput
+  expensePayable?: Prisma.ExpensePayableCreateNestedOneWithoutPayableInput
+  remunerationPayable?: Prisma.RemunerationPayableCreateNestedOneWithoutPayableInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutPayableInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPayableInput
 }
@@ -1183,17 +889,15 @@ export type PayableUncheckedCreateWithoutFirmInput = {
   notes?: string | null
   cancelledAt?: Date | string | null
   cancellationReason?: string | null
+  kind?: $Enums.TitleKind
   createdAt?: Date | string
   updatedAt?: Date | string
   beneficiaryId: number
   analyticId: number
   expectedPaymentMethodId: number
-  titleKindId: number
-  generationId?: number | null
-  directEntryId?: number | null
-  expenseId?: number | null
-  remunerationCalculationId?: number | null
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayableInput
+  expensePayable?: Prisma.ExpensePayableUncheckedCreateNestedOneWithoutPayableInput
+  remunerationPayable?: Prisma.RemunerationPayableUncheckedCreateNestedOneWithoutPayableInput
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutPayableInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPayableInput
 }
@@ -1234,17 +938,13 @@ export type PayableScalarWhereInput = {
   notes?: Prisma.StringNullableFilter<"Payable"> | string | null
   cancelledAt?: Prisma.DateTimeNullableFilter<"Payable"> | Date | string | null
   cancellationReason?: Prisma.StringNullableFilter<"Payable"> | string | null
+  kind?: Prisma.EnumTitleKindFilter<"Payable"> | $Enums.TitleKind
   createdAt?: Prisma.DateTimeFilter<"Payable"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Payable"> | Date | string
   firmId?: Prisma.IntFilter<"Payable"> | number
   beneficiaryId?: Prisma.IntFilter<"Payable"> | number
   analyticId?: Prisma.IntFilter<"Payable"> | number
   expectedPaymentMethodId?: Prisma.IntFilter<"Payable"> | number
-  titleKindId?: Prisma.IntFilter<"Payable"> | number
-  generationId?: Prisma.IntNullableFilter<"Payable"> | number | null
-  directEntryId?: Prisma.IntNullableFilter<"Payable"> | number | null
-  expenseId?: Prisma.IntNullableFilter<"Payable"> | number | null
-  remunerationCalculationId?: Prisma.IntNullableFilter<"Payable"> | number | null
 }
 
 export type PayableCreateWithoutAnalyticInput = {
@@ -1253,17 +953,15 @@ export type PayableCreateWithoutAnalyticInput = {
   notes?: string | null
   cancelledAt?: Date | string | null
   cancellationReason?: string | null
+  kind?: $Enums.TitleKind
   createdAt?: Date | string
   updatedAt?: Date | string
   firm: Prisma.FirmCreateNestedOneWithoutPayablesInput
   beneficiary: Prisma.SupplierProfileCreateNestedOneWithoutPayablesInput
   expectedPaymentMethod: Prisma.PaymentMethodCreateNestedOneWithoutPayablesInput
-  titleKind: Prisma.TitleKindCreateNestedOneWithoutPayablesInput
-  generation?: Prisma.FinancialGenerationCreateNestedOneWithoutPayablesInput
-  directEntry?: Prisma.DirectFinancialEntryCreateNestedOneWithoutPayablesInput
-  expense?: Prisma.ExpenseCreateNestedOneWithoutPayablesInput
   payments?: Prisma.PaymentCreateNestedManyWithoutPayableInput
-  remunerationCalculation?: Prisma.RemunerationCalculationCreateNestedOneWithoutPayableInput
+  expensePayable?: Prisma.ExpensePayableCreateNestedOneWithoutPayableInput
+  remunerationPayable?: Prisma.RemunerationPayableCreateNestedOneWithoutPayableInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutPayableInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPayableInput
 }
@@ -1275,17 +973,15 @@ export type PayableUncheckedCreateWithoutAnalyticInput = {
   notes?: string | null
   cancelledAt?: Date | string | null
   cancellationReason?: string | null
+  kind?: $Enums.TitleKind
   createdAt?: Date | string
   updatedAt?: Date | string
   firmId: number
   beneficiaryId: number
   expectedPaymentMethodId: number
-  titleKindId: number
-  generationId?: number | null
-  directEntryId?: number | null
-  expenseId?: number | null
-  remunerationCalculationId?: number | null
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayableInput
+  expensePayable?: Prisma.ExpensePayableUncheckedCreateNestedOneWithoutPayableInput
+  remunerationPayable?: Prisma.RemunerationPayableUncheckedCreateNestedOneWithoutPayableInput
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutPayableInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPayableInput
 }
@@ -1322,17 +1018,15 @@ export type PayableCreateWithoutExpectedPaymentMethodInput = {
   notes?: string | null
   cancelledAt?: Date | string | null
   cancellationReason?: string | null
+  kind?: $Enums.TitleKind
   createdAt?: Date | string
   updatedAt?: Date | string
   firm: Prisma.FirmCreateNestedOneWithoutPayablesInput
   beneficiary: Prisma.SupplierProfileCreateNestedOneWithoutPayablesInput
   analytic: Prisma.FinancialAnalyticCreateNestedOneWithoutPayablesInput
-  titleKind: Prisma.TitleKindCreateNestedOneWithoutPayablesInput
-  generation?: Prisma.FinancialGenerationCreateNestedOneWithoutPayablesInput
-  directEntry?: Prisma.DirectFinancialEntryCreateNestedOneWithoutPayablesInput
-  expense?: Prisma.ExpenseCreateNestedOneWithoutPayablesInput
   payments?: Prisma.PaymentCreateNestedManyWithoutPayableInput
-  remunerationCalculation?: Prisma.RemunerationCalculationCreateNestedOneWithoutPayableInput
+  expensePayable?: Prisma.ExpensePayableCreateNestedOneWithoutPayableInput
+  remunerationPayable?: Prisma.RemunerationPayableCreateNestedOneWithoutPayableInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutPayableInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPayableInput
 }
@@ -1344,17 +1038,15 @@ export type PayableUncheckedCreateWithoutExpectedPaymentMethodInput = {
   notes?: string | null
   cancelledAt?: Date | string | null
   cancellationReason?: string | null
+  kind?: $Enums.TitleKind
   createdAt?: Date | string
   updatedAt?: Date | string
   firmId: number
   beneficiaryId: number
   analyticId: number
-  titleKindId: number
-  generationId?: number | null
-  directEntryId?: number | null
-  expenseId?: number | null
-  remunerationCalculationId?: number | null
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayableInput
+  expensePayable?: Prisma.ExpensePayableUncheckedCreateNestedOneWithoutPayableInput
+  remunerationPayable?: Prisma.RemunerationPayableUncheckedCreateNestedOneWithoutPayableInput
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutPayableInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPayableInput
 }
@@ -1385,92 +1077,21 @@ export type PayableUpdateManyWithWhereWithoutExpectedPaymentMethodInput = {
   data: Prisma.XOR<Prisma.PayableUpdateManyMutationInput, Prisma.PayableUncheckedUpdateManyWithoutExpectedPaymentMethodInput>
 }
 
-export type PayableCreateWithoutTitleKindInput = {
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  dueDate: Date | string
-  notes?: string | null
-  cancelledAt?: Date | string | null
-  cancellationReason?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  firm: Prisma.FirmCreateNestedOneWithoutPayablesInput
-  beneficiary: Prisma.SupplierProfileCreateNestedOneWithoutPayablesInput
-  analytic: Prisma.FinancialAnalyticCreateNestedOneWithoutPayablesInput
-  expectedPaymentMethod: Prisma.PaymentMethodCreateNestedOneWithoutPayablesInput
-  generation?: Prisma.FinancialGenerationCreateNestedOneWithoutPayablesInput
-  directEntry?: Prisma.DirectFinancialEntryCreateNestedOneWithoutPayablesInput
-  expense?: Prisma.ExpenseCreateNestedOneWithoutPayablesInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutPayableInput
-  remunerationCalculation?: Prisma.RemunerationCalculationCreateNestedOneWithoutPayableInput
-  attachments?: Prisma.AttachmentCreateNestedManyWithoutPayableInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPayableInput
-}
-
-export type PayableUncheckedCreateWithoutTitleKindInput = {
-  id?: number
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  dueDate: Date | string
-  notes?: string | null
-  cancelledAt?: Date | string | null
-  cancellationReason?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  firmId: number
-  beneficiaryId: number
-  analyticId: number
-  expectedPaymentMethodId: number
-  generationId?: number | null
-  directEntryId?: number | null
-  expenseId?: number | null
-  remunerationCalculationId?: number | null
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayableInput
-  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutPayableInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPayableInput
-}
-
-export type PayableCreateOrConnectWithoutTitleKindInput = {
-  where: Prisma.PayableWhereUniqueInput
-  create: Prisma.XOR<Prisma.PayableCreateWithoutTitleKindInput, Prisma.PayableUncheckedCreateWithoutTitleKindInput>
-}
-
-export type PayableCreateManyTitleKindInputEnvelope = {
-  data: Prisma.PayableCreateManyTitleKindInput | Prisma.PayableCreateManyTitleKindInput[]
-  skipDuplicates?: boolean
-}
-
-export type PayableUpsertWithWhereUniqueWithoutTitleKindInput = {
-  where: Prisma.PayableWhereUniqueInput
-  update: Prisma.XOR<Prisma.PayableUpdateWithoutTitleKindInput, Prisma.PayableUncheckedUpdateWithoutTitleKindInput>
-  create: Prisma.XOR<Prisma.PayableCreateWithoutTitleKindInput, Prisma.PayableUncheckedCreateWithoutTitleKindInput>
-}
-
-export type PayableUpdateWithWhereUniqueWithoutTitleKindInput = {
-  where: Prisma.PayableWhereUniqueInput
-  data: Prisma.XOR<Prisma.PayableUpdateWithoutTitleKindInput, Prisma.PayableUncheckedUpdateWithoutTitleKindInput>
-}
-
-export type PayableUpdateManyWithWhereWithoutTitleKindInput = {
-  where: Prisma.PayableScalarWhereInput
-  data: Prisma.XOR<Prisma.PayableUpdateManyMutationInput, Prisma.PayableUncheckedUpdateManyWithoutTitleKindInput>
-}
-
 export type PayableCreateWithoutBeneficiaryInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDate: Date | string
   notes?: string | null
   cancelledAt?: Date | string | null
   cancellationReason?: string | null
+  kind?: $Enums.TitleKind
   createdAt?: Date | string
   updatedAt?: Date | string
   firm: Prisma.FirmCreateNestedOneWithoutPayablesInput
   analytic: Prisma.FinancialAnalyticCreateNestedOneWithoutPayablesInput
   expectedPaymentMethod: Prisma.PaymentMethodCreateNestedOneWithoutPayablesInput
-  titleKind: Prisma.TitleKindCreateNestedOneWithoutPayablesInput
-  generation?: Prisma.FinancialGenerationCreateNestedOneWithoutPayablesInput
-  directEntry?: Prisma.DirectFinancialEntryCreateNestedOneWithoutPayablesInput
-  expense?: Prisma.ExpenseCreateNestedOneWithoutPayablesInput
   payments?: Prisma.PaymentCreateNestedManyWithoutPayableInput
-  remunerationCalculation?: Prisma.RemunerationCalculationCreateNestedOneWithoutPayableInput
+  expensePayable?: Prisma.ExpensePayableCreateNestedOneWithoutPayableInput
+  remunerationPayable?: Prisma.RemunerationPayableCreateNestedOneWithoutPayableInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutPayableInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPayableInput
 }
@@ -1482,17 +1103,15 @@ export type PayableUncheckedCreateWithoutBeneficiaryInput = {
   notes?: string | null
   cancelledAt?: Date | string | null
   cancellationReason?: string | null
+  kind?: $Enums.TitleKind
   createdAt?: Date | string
   updatedAt?: Date | string
   firmId: number
   analyticId: number
   expectedPaymentMethodId: number
-  titleKindId: number
-  generationId?: number | null
-  directEntryId?: number | null
-  expenseId?: number | null
-  remunerationCalculationId?: number | null
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayableInput
+  expensePayable?: Prisma.ExpensePayableUncheckedCreateNestedOneWithoutPayableInput
+  remunerationPayable?: Prisma.RemunerationPayableUncheckedCreateNestedOneWithoutPayableInput
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutPayableInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPayableInput
 }
@@ -1523,208 +1142,192 @@ export type PayableUpdateManyWithWhereWithoutBeneficiaryInput = {
   data: Prisma.XOR<Prisma.PayableUpdateManyMutationInput, Prisma.PayableUncheckedUpdateManyWithoutBeneficiaryInput>
 }
 
-export type PayableCreateWithoutExpenseInput = {
+export type PayableCreateWithoutExpensePayableInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDate: Date | string
   notes?: string | null
   cancelledAt?: Date | string | null
   cancellationReason?: string | null
+  kind?: $Enums.TitleKind
   createdAt?: Date | string
   updatedAt?: Date | string
   firm: Prisma.FirmCreateNestedOneWithoutPayablesInput
   beneficiary: Prisma.SupplierProfileCreateNestedOneWithoutPayablesInput
   analytic: Prisma.FinancialAnalyticCreateNestedOneWithoutPayablesInput
   expectedPaymentMethod: Prisma.PaymentMethodCreateNestedOneWithoutPayablesInput
-  titleKind: Prisma.TitleKindCreateNestedOneWithoutPayablesInput
-  generation?: Prisma.FinancialGenerationCreateNestedOneWithoutPayablesInput
-  directEntry?: Prisma.DirectFinancialEntryCreateNestedOneWithoutPayablesInput
   payments?: Prisma.PaymentCreateNestedManyWithoutPayableInput
-  remunerationCalculation?: Prisma.RemunerationCalculationCreateNestedOneWithoutPayableInput
+  remunerationPayable?: Prisma.RemunerationPayableCreateNestedOneWithoutPayableInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutPayableInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPayableInput
 }
 
-export type PayableUncheckedCreateWithoutExpenseInput = {
+export type PayableUncheckedCreateWithoutExpensePayableInput = {
   id?: number
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDate: Date | string
   notes?: string | null
   cancelledAt?: Date | string | null
   cancellationReason?: string | null
+  kind?: $Enums.TitleKind
   createdAt?: Date | string
   updatedAt?: Date | string
+  firmId: number
   beneficiaryId: number
   analyticId: number
   expectedPaymentMethodId: number
-  titleKindId: number
-  generationId?: number | null
-  directEntryId?: number | null
-  remunerationCalculationId?: number | null
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayableInput
+  remunerationPayable?: Prisma.RemunerationPayableUncheckedCreateNestedOneWithoutPayableInput
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutPayableInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPayableInput
 }
 
-export type PayableCreateOrConnectWithoutExpenseInput = {
+export type PayableCreateOrConnectWithoutExpensePayableInput = {
   where: Prisma.PayableWhereUniqueInput
-  create: Prisma.XOR<Prisma.PayableCreateWithoutExpenseInput, Prisma.PayableUncheckedCreateWithoutExpenseInput>
+  create: Prisma.XOR<Prisma.PayableCreateWithoutExpensePayableInput, Prisma.PayableUncheckedCreateWithoutExpensePayableInput>
 }
 
-export type PayableCreateManyExpenseInputEnvelope = {
-  data: Prisma.PayableCreateManyExpenseInput | Prisma.PayableCreateManyExpenseInput[]
-  skipDuplicates?: boolean
+export type PayableUpsertWithoutExpensePayableInput = {
+  update: Prisma.XOR<Prisma.PayableUpdateWithoutExpensePayableInput, Prisma.PayableUncheckedUpdateWithoutExpensePayableInput>
+  create: Prisma.XOR<Prisma.PayableCreateWithoutExpensePayableInput, Prisma.PayableUncheckedCreateWithoutExpensePayableInput>
+  where?: Prisma.PayableWhereInput
 }
 
-export type PayableUpsertWithWhereUniqueWithoutExpenseInput = {
-  where: Prisma.PayableWhereUniqueInput
-  update: Prisma.XOR<Prisma.PayableUpdateWithoutExpenseInput, Prisma.PayableUncheckedUpdateWithoutExpenseInput>
-  create: Prisma.XOR<Prisma.PayableCreateWithoutExpenseInput, Prisma.PayableUncheckedCreateWithoutExpenseInput>
+export type PayableUpdateToOneWithWhereWithoutExpensePayableInput = {
+  where?: Prisma.PayableWhereInput
+  data: Prisma.XOR<Prisma.PayableUpdateWithoutExpensePayableInput, Prisma.PayableUncheckedUpdateWithoutExpensePayableInput>
 }
 
-export type PayableUpdateWithWhereUniqueWithoutExpenseInput = {
-  where: Prisma.PayableWhereUniqueInput
-  data: Prisma.XOR<Prisma.PayableUpdateWithoutExpenseInput, Prisma.PayableUncheckedUpdateWithoutExpenseInput>
+export type PayableUpdateWithoutExpensePayableInput = {
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.EnumTitleKindFieldUpdateOperationsInput | $Enums.TitleKind
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  firm?: Prisma.FirmUpdateOneRequiredWithoutPayablesNestedInput
+  beneficiary?: Prisma.SupplierProfileUpdateOneRequiredWithoutPayablesNestedInput
+  analytic?: Prisma.FinancialAnalyticUpdateOneRequiredWithoutPayablesNestedInput
+  expectedPaymentMethod?: Prisma.PaymentMethodUpdateOneRequiredWithoutPayablesNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutPayableNestedInput
+  remunerationPayable?: Prisma.RemunerationPayableUpdateOneWithoutPayableNestedInput
+  attachments?: Prisma.AttachmentUpdateManyWithoutPayableNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutPayableNestedInput
 }
 
-export type PayableUpdateManyWithWhereWithoutExpenseInput = {
-  where: Prisma.PayableScalarWhereInput
-  data: Prisma.XOR<Prisma.PayableUpdateManyMutationInput, Prisma.PayableUncheckedUpdateManyWithoutExpenseInput>
+export type PayableUncheckedUpdateWithoutExpensePayableInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.EnumTitleKindFieldUpdateOperationsInput | $Enums.TitleKind
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  firmId?: Prisma.IntFieldUpdateOperationsInput | number
+  beneficiaryId?: Prisma.IntFieldUpdateOperationsInput | number
+  analyticId?: Prisma.IntFieldUpdateOperationsInput | number
+  expectedPaymentMethodId?: Prisma.IntFieldUpdateOperationsInput | number
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayableNestedInput
+  remunerationPayable?: Prisma.RemunerationPayableUncheckedUpdateOneWithoutPayableNestedInput
+  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutPayableNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPayableNestedInput
 }
 
-export type PayableCreateWithoutGenerationInput = {
+export type PayableCreateWithoutRemunerationPayableInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDate: Date | string
   notes?: string | null
   cancelledAt?: Date | string | null
   cancellationReason?: string | null
+  kind?: $Enums.TitleKind
   createdAt?: Date | string
   updatedAt?: Date | string
   firm: Prisma.FirmCreateNestedOneWithoutPayablesInput
   beneficiary: Prisma.SupplierProfileCreateNestedOneWithoutPayablesInput
   analytic: Prisma.FinancialAnalyticCreateNestedOneWithoutPayablesInput
   expectedPaymentMethod: Prisma.PaymentMethodCreateNestedOneWithoutPayablesInput
-  titleKind: Prisma.TitleKindCreateNestedOneWithoutPayablesInput
-  directEntry?: Prisma.DirectFinancialEntryCreateNestedOneWithoutPayablesInput
-  expense?: Prisma.ExpenseCreateNestedOneWithoutPayablesInput
   payments?: Prisma.PaymentCreateNestedManyWithoutPayableInput
-  remunerationCalculation?: Prisma.RemunerationCalculationCreateNestedOneWithoutPayableInput
+  expensePayable?: Prisma.ExpensePayableCreateNestedOneWithoutPayableInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutPayableInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPayableInput
 }
 
-export type PayableUncheckedCreateWithoutGenerationInput = {
+export type PayableUncheckedCreateWithoutRemunerationPayableInput = {
   id?: number
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDate: Date | string
   notes?: string | null
   cancelledAt?: Date | string | null
   cancellationReason?: string | null
+  kind?: $Enums.TitleKind
   createdAt?: Date | string
   updatedAt?: Date | string
+  firmId: number
   beneficiaryId: number
   analyticId: number
   expectedPaymentMethodId: number
-  titleKindId: number
-  directEntryId?: number | null
-  expenseId?: number | null
-  remunerationCalculationId?: number | null
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayableInput
+  expensePayable?: Prisma.ExpensePayableUncheckedCreateNestedOneWithoutPayableInput
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutPayableInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPayableInput
 }
 
-export type PayableCreateOrConnectWithoutGenerationInput = {
+export type PayableCreateOrConnectWithoutRemunerationPayableInput = {
   where: Prisma.PayableWhereUniqueInput
-  create: Prisma.XOR<Prisma.PayableCreateWithoutGenerationInput, Prisma.PayableUncheckedCreateWithoutGenerationInput>
+  create: Prisma.XOR<Prisma.PayableCreateWithoutRemunerationPayableInput, Prisma.PayableUncheckedCreateWithoutRemunerationPayableInput>
 }
 
-export type PayableCreateManyGenerationInputEnvelope = {
-  data: Prisma.PayableCreateManyGenerationInput | Prisma.PayableCreateManyGenerationInput[]
-  skipDuplicates?: boolean
+export type PayableUpsertWithoutRemunerationPayableInput = {
+  update: Prisma.XOR<Prisma.PayableUpdateWithoutRemunerationPayableInput, Prisma.PayableUncheckedUpdateWithoutRemunerationPayableInput>
+  create: Prisma.XOR<Prisma.PayableCreateWithoutRemunerationPayableInput, Prisma.PayableUncheckedCreateWithoutRemunerationPayableInput>
+  where?: Prisma.PayableWhereInput
 }
 
-export type PayableUpsertWithWhereUniqueWithoutGenerationInput = {
-  where: Prisma.PayableWhereUniqueInput
-  update: Prisma.XOR<Prisma.PayableUpdateWithoutGenerationInput, Prisma.PayableUncheckedUpdateWithoutGenerationInput>
-  create: Prisma.XOR<Prisma.PayableCreateWithoutGenerationInput, Prisma.PayableUncheckedCreateWithoutGenerationInput>
+export type PayableUpdateToOneWithWhereWithoutRemunerationPayableInput = {
+  where?: Prisma.PayableWhereInput
+  data: Prisma.XOR<Prisma.PayableUpdateWithoutRemunerationPayableInput, Prisma.PayableUncheckedUpdateWithoutRemunerationPayableInput>
 }
 
-export type PayableUpdateWithWhereUniqueWithoutGenerationInput = {
-  where: Prisma.PayableWhereUniqueInput
-  data: Prisma.XOR<Prisma.PayableUpdateWithoutGenerationInput, Prisma.PayableUncheckedUpdateWithoutGenerationInput>
+export type PayableUpdateWithoutRemunerationPayableInput = {
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.EnumTitleKindFieldUpdateOperationsInput | $Enums.TitleKind
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  firm?: Prisma.FirmUpdateOneRequiredWithoutPayablesNestedInput
+  beneficiary?: Prisma.SupplierProfileUpdateOneRequiredWithoutPayablesNestedInput
+  analytic?: Prisma.FinancialAnalyticUpdateOneRequiredWithoutPayablesNestedInput
+  expectedPaymentMethod?: Prisma.PaymentMethodUpdateOneRequiredWithoutPayablesNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutPayableNestedInput
+  expensePayable?: Prisma.ExpensePayableUpdateOneWithoutPayableNestedInput
+  attachments?: Prisma.AttachmentUpdateManyWithoutPayableNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutPayableNestedInput
 }
 
-export type PayableUpdateManyWithWhereWithoutGenerationInput = {
-  where: Prisma.PayableScalarWhereInput
-  data: Prisma.XOR<Prisma.PayableUpdateManyMutationInput, Prisma.PayableUncheckedUpdateManyWithoutGenerationInput>
-}
-
-export type PayableCreateWithoutDirectEntryInput = {
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  dueDate: Date | string
-  notes?: string | null
-  cancelledAt?: Date | string | null
-  cancellationReason?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  firm: Prisma.FirmCreateNestedOneWithoutPayablesInput
-  beneficiary: Prisma.SupplierProfileCreateNestedOneWithoutPayablesInput
-  analytic: Prisma.FinancialAnalyticCreateNestedOneWithoutPayablesInput
-  expectedPaymentMethod: Prisma.PaymentMethodCreateNestedOneWithoutPayablesInput
-  titleKind: Prisma.TitleKindCreateNestedOneWithoutPayablesInput
-  generation?: Prisma.FinancialGenerationCreateNestedOneWithoutPayablesInput
-  expense?: Prisma.ExpenseCreateNestedOneWithoutPayablesInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutPayableInput
-  remunerationCalculation?: Prisma.RemunerationCalculationCreateNestedOneWithoutPayableInput
-  attachments?: Prisma.AttachmentCreateNestedManyWithoutPayableInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPayableInput
-}
-
-export type PayableUncheckedCreateWithoutDirectEntryInput = {
-  id?: number
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  dueDate: Date | string
-  notes?: string | null
-  cancelledAt?: Date | string | null
-  cancellationReason?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  beneficiaryId: number
-  analyticId: number
-  expectedPaymentMethodId: number
-  titleKindId: number
-  generationId?: number | null
-  expenseId?: number | null
-  remunerationCalculationId?: number | null
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayableInput
-  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutPayableInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPayableInput
-}
-
-export type PayableCreateOrConnectWithoutDirectEntryInput = {
-  where: Prisma.PayableWhereUniqueInput
-  create: Prisma.XOR<Prisma.PayableCreateWithoutDirectEntryInput, Prisma.PayableUncheckedCreateWithoutDirectEntryInput>
-}
-
-export type PayableCreateManyDirectEntryInputEnvelope = {
-  data: Prisma.PayableCreateManyDirectEntryInput | Prisma.PayableCreateManyDirectEntryInput[]
-  skipDuplicates?: boolean
-}
-
-export type PayableUpsertWithWhereUniqueWithoutDirectEntryInput = {
-  where: Prisma.PayableWhereUniqueInput
-  update: Prisma.XOR<Prisma.PayableUpdateWithoutDirectEntryInput, Prisma.PayableUncheckedUpdateWithoutDirectEntryInput>
-  create: Prisma.XOR<Prisma.PayableCreateWithoutDirectEntryInput, Prisma.PayableUncheckedCreateWithoutDirectEntryInput>
-}
-
-export type PayableUpdateWithWhereUniqueWithoutDirectEntryInput = {
-  where: Prisma.PayableWhereUniqueInput
-  data: Prisma.XOR<Prisma.PayableUpdateWithoutDirectEntryInput, Prisma.PayableUncheckedUpdateWithoutDirectEntryInput>
-}
-
-export type PayableUpdateManyWithWhereWithoutDirectEntryInput = {
-  where: Prisma.PayableScalarWhereInput
-  data: Prisma.XOR<Prisma.PayableUpdateManyMutationInput, Prisma.PayableUncheckedUpdateManyWithoutDirectEntryInput>
+export type PayableUncheckedUpdateWithoutRemunerationPayableInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.EnumTitleKindFieldUpdateOperationsInput | $Enums.TitleKind
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  firmId?: Prisma.IntFieldUpdateOperationsInput | number
+  beneficiaryId?: Prisma.IntFieldUpdateOperationsInput | number
+  analyticId?: Prisma.IntFieldUpdateOperationsInput | number
+  expectedPaymentMethodId?: Prisma.IntFieldUpdateOperationsInput | number
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayableNestedInput
+  expensePayable?: Prisma.ExpensePayableUncheckedUpdateOneWithoutPayableNestedInput
+  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutPayableNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPayableNestedInput
 }
 
 export type PayableCreateWithoutPaymentsInput = {
@@ -1733,17 +1336,15 @@ export type PayableCreateWithoutPaymentsInput = {
   notes?: string | null
   cancelledAt?: Date | string | null
   cancellationReason?: string | null
+  kind?: $Enums.TitleKind
   createdAt?: Date | string
   updatedAt?: Date | string
   firm: Prisma.FirmCreateNestedOneWithoutPayablesInput
   beneficiary: Prisma.SupplierProfileCreateNestedOneWithoutPayablesInput
   analytic: Prisma.FinancialAnalyticCreateNestedOneWithoutPayablesInput
   expectedPaymentMethod: Prisma.PaymentMethodCreateNestedOneWithoutPayablesInput
-  titleKind: Prisma.TitleKindCreateNestedOneWithoutPayablesInput
-  generation?: Prisma.FinancialGenerationCreateNestedOneWithoutPayablesInput
-  directEntry?: Prisma.DirectFinancialEntryCreateNestedOneWithoutPayablesInput
-  expense?: Prisma.ExpenseCreateNestedOneWithoutPayablesInput
-  remunerationCalculation?: Prisma.RemunerationCalculationCreateNestedOneWithoutPayableInput
+  expensePayable?: Prisma.ExpensePayableCreateNestedOneWithoutPayableInput
+  remunerationPayable?: Prisma.RemunerationPayableCreateNestedOneWithoutPayableInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutPayableInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPayableInput
 }
@@ -1755,17 +1356,15 @@ export type PayableUncheckedCreateWithoutPaymentsInput = {
   notes?: string | null
   cancelledAt?: Date | string | null
   cancellationReason?: string | null
+  kind?: $Enums.TitleKind
   createdAt?: Date | string
   updatedAt?: Date | string
   firmId: number
   beneficiaryId: number
   analyticId: number
   expectedPaymentMethodId: number
-  titleKindId: number
-  generationId?: number | null
-  directEntryId?: number | null
-  expenseId?: number | null
-  remunerationCalculationId?: number | null
+  expensePayable?: Prisma.ExpensePayableUncheckedCreateNestedOneWithoutPayableInput
+  remunerationPayable?: Prisma.RemunerationPayableUncheckedCreateNestedOneWithoutPayableInput
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutPayableInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPayableInput
 }
@@ -1792,17 +1391,15 @@ export type PayableUpdateWithoutPaymentsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.EnumTitleKindFieldUpdateOperationsInput | $Enums.TitleKind
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   firm?: Prisma.FirmUpdateOneRequiredWithoutPayablesNestedInput
   beneficiary?: Prisma.SupplierProfileUpdateOneRequiredWithoutPayablesNestedInput
   analytic?: Prisma.FinancialAnalyticUpdateOneRequiredWithoutPayablesNestedInput
   expectedPaymentMethod?: Prisma.PaymentMethodUpdateOneRequiredWithoutPayablesNestedInput
-  titleKind?: Prisma.TitleKindUpdateOneRequiredWithoutPayablesNestedInput
-  generation?: Prisma.FinancialGenerationUpdateOneWithoutPayablesNestedInput
-  directEntry?: Prisma.DirectFinancialEntryUpdateOneWithoutPayablesNestedInput
-  expense?: Prisma.ExpenseUpdateOneWithoutPayablesNestedInput
-  remunerationCalculation?: Prisma.RemunerationCalculationUpdateOneWithoutPayableNestedInput
+  expensePayable?: Prisma.ExpensePayableUpdateOneWithoutPayableNestedInput
+  remunerationPayable?: Prisma.RemunerationPayableUpdateOneWithoutPayableNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutPayableNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPayableNestedInput
 }
@@ -1814,117 +1411,15 @@ export type PayableUncheckedUpdateWithoutPaymentsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.EnumTitleKindFieldUpdateOperationsInput | $Enums.TitleKind
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   firmId?: Prisma.IntFieldUpdateOperationsInput | number
   beneficiaryId?: Prisma.IntFieldUpdateOperationsInput | number
   analyticId?: Prisma.IntFieldUpdateOperationsInput | number
   expectedPaymentMethodId?: Prisma.IntFieldUpdateOperationsInput | number
-  titleKindId?: Prisma.IntFieldUpdateOperationsInput | number
-  generationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  directEntryId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutPayableNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPayableNestedInput
-}
-
-export type PayableCreateWithoutRemunerationCalculationInput = {
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  dueDate: Date | string
-  notes?: string | null
-  cancelledAt?: Date | string | null
-  cancellationReason?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  firm: Prisma.FirmCreateNestedOneWithoutPayablesInput
-  beneficiary: Prisma.SupplierProfileCreateNestedOneWithoutPayablesInput
-  analytic: Prisma.FinancialAnalyticCreateNestedOneWithoutPayablesInput
-  expectedPaymentMethod: Prisma.PaymentMethodCreateNestedOneWithoutPayablesInput
-  titleKind: Prisma.TitleKindCreateNestedOneWithoutPayablesInput
-  generation?: Prisma.FinancialGenerationCreateNestedOneWithoutPayablesInput
-  directEntry?: Prisma.DirectFinancialEntryCreateNestedOneWithoutPayablesInput
-  expense?: Prisma.ExpenseCreateNestedOneWithoutPayablesInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutPayableInput
-  attachments?: Prisma.AttachmentCreateNestedManyWithoutPayableInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPayableInput
-}
-
-export type PayableUncheckedCreateWithoutRemunerationCalculationInput = {
-  id?: number
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  dueDate: Date | string
-  notes?: string | null
-  cancelledAt?: Date | string | null
-  cancellationReason?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  beneficiaryId: number
-  analyticId: number
-  expectedPaymentMethodId: number
-  titleKindId: number
-  generationId?: number | null
-  directEntryId?: number | null
-  expenseId?: number | null
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayableInput
-  attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutPayableInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPayableInput
-}
-
-export type PayableCreateOrConnectWithoutRemunerationCalculationInput = {
-  where: Prisma.PayableWhereUniqueInput
-  create: Prisma.XOR<Prisma.PayableCreateWithoutRemunerationCalculationInput, Prisma.PayableUncheckedCreateWithoutRemunerationCalculationInput>
-}
-
-export type PayableUpsertWithoutRemunerationCalculationInput = {
-  update: Prisma.XOR<Prisma.PayableUpdateWithoutRemunerationCalculationInput, Prisma.PayableUncheckedUpdateWithoutRemunerationCalculationInput>
-  create: Prisma.XOR<Prisma.PayableCreateWithoutRemunerationCalculationInput, Prisma.PayableUncheckedCreateWithoutRemunerationCalculationInput>
-  where?: Prisma.PayableWhereInput
-}
-
-export type PayableUpdateToOneWithWhereWithoutRemunerationCalculationInput = {
-  where?: Prisma.PayableWhereInput
-  data: Prisma.XOR<Prisma.PayableUpdateWithoutRemunerationCalculationInput, Prisma.PayableUncheckedUpdateWithoutRemunerationCalculationInput>
-}
-
-export type PayableUpdateWithoutRemunerationCalculationInput = {
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  firm?: Prisma.FirmUpdateOneRequiredWithoutPayablesNestedInput
-  beneficiary?: Prisma.SupplierProfileUpdateOneRequiredWithoutPayablesNestedInput
-  analytic?: Prisma.FinancialAnalyticUpdateOneRequiredWithoutPayablesNestedInput
-  expectedPaymentMethod?: Prisma.PaymentMethodUpdateOneRequiredWithoutPayablesNestedInput
-  titleKind?: Prisma.TitleKindUpdateOneRequiredWithoutPayablesNestedInput
-  generation?: Prisma.FinancialGenerationUpdateOneWithoutPayablesNestedInput
-  directEntry?: Prisma.DirectFinancialEntryUpdateOneWithoutPayablesNestedInput
-  expense?: Prisma.ExpenseUpdateOneWithoutPayablesNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutPayableNestedInput
-  attachments?: Prisma.AttachmentUpdateManyWithoutPayableNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutPayableNestedInput
-}
-
-export type PayableUncheckedUpdateWithoutRemunerationCalculationInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  beneficiaryId?: Prisma.IntFieldUpdateOperationsInput | number
-  analyticId?: Prisma.IntFieldUpdateOperationsInput | number
-  expectedPaymentMethodId?: Prisma.IntFieldUpdateOperationsInput | number
-  titleKindId?: Prisma.IntFieldUpdateOperationsInput | number
-  generationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  directEntryId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayableNestedInput
+  expensePayable?: Prisma.ExpensePayableUncheckedUpdateOneWithoutPayableNestedInput
+  remunerationPayable?: Prisma.RemunerationPayableUncheckedUpdateOneWithoutPayableNestedInput
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutPayableNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPayableNestedInput
 }
@@ -1935,18 +1430,16 @@ export type PayableCreateWithoutAttachmentsInput = {
   notes?: string | null
   cancelledAt?: Date | string | null
   cancellationReason?: string | null
+  kind?: $Enums.TitleKind
   createdAt?: Date | string
   updatedAt?: Date | string
   firm: Prisma.FirmCreateNestedOneWithoutPayablesInput
   beneficiary: Prisma.SupplierProfileCreateNestedOneWithoutPayablesInput
   analytic: Prisma.FinancialAnalyticCreateNestedOneWithoutPayablesInput
   expectedPaymentMethod: Prisma.PaymentMethodCreateNestedOneWithoutPayablesInput
-  titleKind: Prisma.TitleKindCreateNestedOneWithoutPayablesInput
-  generation?: Prisma.FinancialGenerationCreateNestedOneWithoutPayablesInput
-  directEntry?: Prisma.DirectFinancialEntryCreateNestedOneWithoutPayablesInput
-  expense?: Prisma.ExpenseCreateNestedOneWithoutPayablesInput
   payments?: Prisma.PaymentCreateNestedManyWithoutPayableInput
-  remunerationCalculation?: Prisma.RemunerationCalculationCreateNestedOneWithoutPayableInput
+  expensePayable?: Prisma.ExpensePayableCreateNestedOneWithoutPayableInput
+  remunerationPayable?: Prisma.RemunerationPayableCreateNestedOneWithoutPayableInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPayableInput
 }
 
@@ -1957,18 +1450,16 @@ export type PayableUncheckedCreateWithoutAttachmentsInput = {
   notes?: string | null
   cancelledAt?: Date | string | null
   cancellationReason?: string | null
+  kind?: $Enums.TitleKind
   createdAt?: Date | string
   updatedAt?: Date | string
   firmId: number
   beneficiaryId: number
   analyticId: number
   expectedPaymentMethodId: number
-  titleKindId: number
-  generationId?: number | null
-  directEntryId?: number | null
-  expenseId?: number | null
-  remunerationCalculationId?: number | null
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayableInput
+  expensePayable?: Prisma.ExpensePayableUncheckedCreateNestedOneWithoutPayableInput
+  remunerationPayable?: Prisma.RemunerationPayableUncheckedCreateNestedOneWithoutPayableInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPayableInput
 }
 
@@ -1994,18 +1485,16 @@ export type PayableUpdateWithoutAttachmentsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.EnumTitleKindFieldUpdateOperationsInput | $Enums.TitleKind
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   firm?: Prisma.FirmUpdateOneRequiredWithoutPayablesNestedInput
   beneficiary?: Prisma.SupplierProfileUpdateOneRequiredWithoutPayablesNestedInput
   analytic?: Prisma.FinancialAnalyticUpdateOneRequiredWithoutPayablesNestedInput
   expectedPaymentMethod?: Prisma.PaymentMethodUpdateOneRequiredWithoutPayablesNestedInput
-  titleKind?: Prisma.TitleKindUpdateOneRequiredWithoutPayablesNestedInput
-  generation?: Prisma.FinancialGenerationUpdateOneWithoutPayablesNestedInput
-  directEntry?: Prisma.DirectFinancialEntryUpdateOneWithoutPayablesNestedInput
-  expense?: Prisma.ExpenseUpdateOneWithoutPayablesNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutPayableNestedInput
-  remunerationCalculation?: Prisma.RemunerationCalculationUpdateOneWithoutPayableNestedInput
+  expensePayable?: Prisma.ExpensePayableUpdateOneWithoutPayableNestedInput
+  remunerationPayable?: Prisma.RemunerationPayableUpdateOneWithoutPayableNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPayableNestedInput
 }
 
@@ -2016,18 +1505,16 @@ export type PayableUncheckedUpdateWithoutAttachmentsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.EnumTitleKindFieldUpdateOperationsInput | $Enums.TitleKind
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   firmId?: Prisma.IntFieldUpdateOperationsInput | number
   beneficiaryId?: Prisma.IntFieldUpdateOperationsInput | number
   analyticId?: Prisma.IntFieldUpdateOperationsInput | number
   expectedPaymentMethodId?: Prisma.IntFieldUpdateOperationsInput | number
-  titleKindId?: Prisma.IntFieldUpdateOperationsInput | number
-  generationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  directEntryId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayableNestedInput
+  expensePayable?: Prisma.ExpensePayableUncheckedUpdateOneWithoutPayableNestedInput
+  remunerationPayable?: Prisma.RemunerationPayableUncheckedUpdateOneWithoutPayableNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPayableNestedInput
 }
 
@@ -2037,18 +1524,16 @@ export type PayableCreateWithoutAuditLogsInput = {
   notes?: string | null
   cancelledAt?: Date | string | null
   cancellationReason?: string | null
+  kind?: $Enums.TitleKind
   createdAt?: Date | string
   updatedAt?: Date | string
   firm: Prisma.FirmCreateNestedOneWithoutPayablesInput
   beneficiary: Prisma.SupplierProfileCreateNestedOneWithoutPayablesInput
   analytic: Prisma.FinancialAnalyticCreateNestedOneWithoutPayablesInput
   expectedPaymentMethod: Prisma.PaymentMethodCreateNestedOneWithoutPayablesInput
-  titleKind: Prisma.TitleKindCreateNestedOneWithoutPayablesInput
-  generation?: Prisma.FinancialGenerationCreateNestedOneWithoutPayablesInput
-  directEntry?: Prisma.DirectFinancialEntryCreateNestedOneWithoutPayablesInput
-  expense?: Prisma.ExpenseCreateNestedOneWithoutPayablesInput
   payments?: Prisma.PaymentCreateNestedManyWithoutPayableInput
-  remunerationCalculation?: Prisma.RemunerationCalculationCreateNestedOneWithoutPayableInput
+  expensePayable?: Prisma.ExpensePayableCreateNestedOneWithoutPayableInput
+  remunerationPayable?: Prisma.RemunerationPayableCreateNestedOneWithoutPayableInput
   attachments?: Prisma.AttachmentCreateNestedManyWithoutPayableInput
 }
 
@@ -2059,18 +1544,16 @@ export type PayableUncheckedCreateWithoutAuditLogsInput = {
   notes?: string | null
   cancelledAt?: Date | string | null
   cancellationReason?: string | null
+  kind?: $Enums.TitleKind
   createdAt?: Date | string
   updatedAt?: Date | string
   firmId: number
   beneficiaryId: number
   analyticId: number
   expectedPaymentMethodId: number
-  titleKindId: number
-  generationId?: number | null
-  directEntryId?: number | null
-  expenseId?: number | null
-  remunerationCalculationId?: number | null
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayableInput
+  expensePayable?: Prisma.ExpensePayableUncheckedCreateNestedOneWithoutPayableInput
+  remunerationPayable?: Prisma.RemunerationPayableUncheckedCreateNestedOneWithoutPayableInput
   attachments?: Prisma.AttachmentUncheckedCreateNestedManyWithoutPayableInput
 }
 
@@ -2096,18 +1579,16 @@ export type PayableUpdateWithoutAuditLogsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.EnumTitleKindFieldUpdateOperationsInput | $Enums.TitleKind
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   firm?: Prisma.FirmUpdateOneRequiredWithoutPayablesNestedInput
   beneficiary?: Prisma.SupplierProfileUpdateOneRequiredWithoutPayablesNestedInput
   analytic?: Prisma.FinancialAnalyticUpdateOneRequiredWithoutPayablesNestedInput
   expectedPaymentMethod?: Prisma.PaymentMethodUpdateOneRequiredWithoutPayablesNestedInput
-  titleKind?: Prisma.TitleKindUpdateOneRequiredWithoutPayablesNestedInput
-  generation?: Prisma.FinancialGenerationUpdateOneWithoutPayablesNestedInput
-  directEntry?: Prisma.DirectFinancialEntryUpdateOneWithoutPayablesNestedInput
-  expense?: Prisma.ExpenseUpdateOneWithoutPayablesNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutPayableNestedInput
-  remunerationCalculation?: Prisma.RemunerationCalculationUpdateOneWithoutPayableNestedInput
+  expensePayable?: Prisma.ExpensePayableUpdateOneWithoutPayableNestedInput
+  remunerationPayable?: Prisma.RemunerationPayableUpdateOneWithoutPayableNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutPayableNestedInput
 }
 
@@ -2118,18 +1599,16 @@ export type PayableUncheckedUpdateWithoutAuditLogsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.EnumTitleKindFieldUpdateOperationsInput | $Enums.TitleKind
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   firmId?: Prisma.IntFieldUpdateOperationsInput | number
   beneficiaryId?: Prisma.IntFieldUpdateOperationsInput | number
   analyticId?: Prisma.IntFieldUpdateOperationsInput | number
   expectedPaymentMethodId?: Prisma.IntFieldUpdateOperationsInput | number
-  titleKindId?: Prisma.IntFieldUpdateOperationsInput | number
-  generationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  directEntryId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayableNestedInput
+  expensePayable?: Prisma.ExpensePayableUncheckedUpdateOneWithoutPayableNestedInput
+  remunerationPayable?: Prisma.RemunerationPayableUncheckedUpdateOneWithoutPayableNestedInput
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutPayableNestedInput
 }
 
@@ -2140,16 +1619,12 @@ export type PayableCreateManyFirmInput = {
   notes?: string | null
   cancelledAt?: Date | string | null
   cancellationReason?: string | null
+  kind?: $Enums.TitleKind
   createdAt?: Date | string
   updatedAt?: Date | string
   beneficiaryId: number
   analyticId: number
   expectedPaymentMethodId: number
-  titleKindId: number
-  generationId?: number | null
-  directEntryId?: number | null
-  expenseId?: number | null
-  remunerationCalculationId?: number | null
 }
 
 export type PayableUpdateWithoutFirmInput = {
@@ -2158,17 +1633,15 @@ export type PayableUpdateWithoutFirmInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.EnumTitleKindFieldUpdateOperationsInput | $Enums.TitleKind
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   beneficiary?: Prisma.SupplierProfileUpdateOneRequiredWithoutPayablesNestedInput
   analytic?: Prisma.FinancialAnalyticUpdateOneRequiredWithoutPayablesNestedInput
   expectedPaymentMethod?: Prisma.PaymentMethodUpdateOneRequiredWithoutPayablesNestedInput
-  titleKind?: Prisma.TitleKindUpdateOneRequiredWithoutPayablesNestedInput
-  generation?: Prisma.FinancialGenerationUpdateOneWithoutPayablesNestedInput
-  directEntry?: Prisma.DirectFinancialEntryUpdateOneWithoutPayablesNestedInput
-  expense?: Prisma.ExpenseUpdateOneWithoutPayablesNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutPayableNestedInput
-  remunerationCalculation?: Prisma.RemunerationCalculationUpdateOneWithoutPayableNestedInput
+  expensePayable?: Prisma.ExpensePayableUpdateOneWithoutPayableNestedInput
+  remunerationPayable?: Prisma.RemunerationPayableUpdateOneWithoutPayableNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutPayableNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPayableNestedInput
 }
@@ -2180,17 +1653,15 @@ export type PayableUncheckedUpdateWithoutFirmInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.EnumTitleKindFieldUpdateOperationsInput | $Enums.TitleKind
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   beneficiaryId?: Prisma.IntFieldUpdateOperationsInput | number
   analyticId?: Prisma.IntFieldUpdateOperationsInput | number
   expectedPaymentMethodId?: Prisma.IntFieldUpdateOperationsInput | number
-  titleKindId?: Prisma.IntFieldUpdateOperationsInput | number
-  generationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  directEntryId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayableNestedInput
+  expensePayable?: Prisma.ExpensePayableUncheckedUpdateOneWithoutPayableNestedInput
+  remunerationPayable?: Prisma.RemunerationPayableUncheckedUpdateOneWithoutPayableNestedInput
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutPayableNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPayableNestedInput
 }
@@ -2202,16 +1673,12 @@ export type PayableUncheckedUpdateManyWithoutFirmInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.EnumTitleKindFieldUpdateOperationsInput | $Enums.TitleKind
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   beneficiaryId?: Prisma.IntFieldUpdateOperationsInput | number
   analyticId?: Prisma.IntFieldUpdateOperationsInput | number
   expectedPaymentMethodId?: Prisma.IntFieldUpdateOperationsInput | number
-  titleKindId?: Prisma.IntFieldUpdateOperationsInput | number
-  generationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  directEntryId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type PayableCreateManyAnalyticInput = {
@@ -2221,16 +1688,12 @@ export type PayableCreateManyAnalyticInput = {
   notes?: string | null
   cancelledAt?: Date | string | null
   cancellationReason?: string | null
+  kind?: $Enums.TitleKind
   createdAt?: Date | string
   updatedAt?: Date | string
   firmId: number
   beneficiaryId: number
   expectedPaymentMethodId: number
-  titleKindId: number
-  generationId?: number | null
-  directEntryId?: number | null
-  expenseId?: number | null
-  remunerationCalculationId?: number | null
 }
 
 export type PayableUpdateWithoutAnalyticInput = {
@@ -2239,17 +1702,15 @@ export type PayableUpdateWithoutAnalyticInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.EnumTitleKindFieldUpdateOperationsInput | $Enums.TitleKind
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   firm?: Prisma.FirmUpdateOneRequiredWithoutPayablesNestedInput
   beneficiary?: Prisma.SupplierProfileUpdateOneRequiredWithoutPayablesNestedInput
   expectedPaymentMethod?: Prisma.PaymentMethodUpdateOneRequiredWithoutPayablesNestedInput
-  titleKind?: Prisma.TitleKindUpdateOneRequiredWithoutPayablesNestedInput
-  generation?: Prisma.FinancialGenerationUpdateOneWithoutPayablesNestedInput
-  directEntry?: Prisma.DirectFinancialEntryUpdateOneWithoutPayablesNestedInput
-  expense?: Prisma.ExpenseUpdateOneWithoutPayablesNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutPayableNestedInput
-  remunerationCalculation?: Prisma.RemunerationCalculationUpdateOneWithoutPayableNestedInput
+  expensePayable?: Prisma.ExpensePayableUpdateOneWithoutPayableNestedInput
+  remunerationPayable?: Prisma.RemunerationPayableUpdateOneWithoutPayableNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutPayableNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPayableNestedInput
 }
@@ -2261,17 +1722,15 @@ export type PayableUncheckedUpdateWithoutAnalyticInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.EnumTitleKindFieldUpdateOperationsInput | $Enums.TitleKind
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   firmId?: Prisma.IntFieldUpdateOperationsInput | number
   beneficiaryId?: Prisma.IntFieldUpdateOperationsInput | number
   expectedPaymentMethodId?: Prisma.IntFieldUpdateOperationsInput | number
-  titleKindId?: Prisma.IntFieldUpdateOperationsInput | number
-  generationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  directEntryId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayableNestedInput
+  expensePayable?: Prisma.ExpensePayableUncheckedUpdateOneWithoutPayableNestedInput
+  remunerationPayable?: Prisma.RemunerationPayableUncheckedUpdateOneWithoutPayableNestedInput
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutPayableNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPayableNestedInput
 }
@@ -2283,16 +1742,12 @@ export type PayableUncheckedUpdateManyWithoutAnalyticInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.EnumTitleKindFieldUpdateOperationsInput | $Enums.TitleKind
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   firmId?: Prisma.IntFieldUpdateOperationsInput | number
   beneficiaryId?: Prisma.IntFieldUpdateOperationsInput | number
   expectedPaymentMethodId?: Prisma.IntFieldUpdateOperationsInput | number
-  titleKindId?: Prisma.IntFieldUpdateOperationsInput | number
-  generationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  directEntryId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type PayableCreateManyExpectedPaymentMethodInput = {
@@ -2302,16 +1757,12 @@ export type PayableCreateManyExpectedPaymentMethodInput = {
   notes?: string | null
   cancelledAt?: Date | string | null
   cancellationReason?: string | null
+  kind?: $Enums.TitleKind
   createdAt?: Date | string
   updatedAt?: Date | string
   firmId: number
   beneficiaryId: number
   analyticId: number
-  titleKindId: number
-  generationId?: number | null
-  directEntryId?: number | null
-  expenseId?: number | null
-  remunerationCalculationId?: number | null
 }
 
 export type PayableUpdateWithoutExpectedPaymentMethodInput = {
@@ -2320,17 +1771,15 @@ export type PayableUpdateWithoutExpectedPaymentMethodInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.EnumTitleKindFieldUpdateOperationsInput | $Enums.TitleKind
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   firm?: Prisma.FirmUpdateOneRequiredWithoutPayablesNestedInput
   beneficiary?: Prisma.SupplierProfileUpdateOneRequiredWithoutPayablesNestedInput
   analytic?: Prisma.FinancialAnalyticUpdateOneRequiredWithoutPayablesNestedInput
-  titleKind?: Prisma.TitleKindUpdateOneRequiredWithoutPayablesNestedInput
-  generation?: Prisma.FinancialGenerationUpdateOneWithoutPayablesNestedInput
-  directEntry?: Prisma.DirectFinancialEntryUpdateOneWithoutPayablesNestedInput
-  expense?: Prisma.ExpenseUpdateOneWithoutPayablesNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutPayableNestedInput
-  remunerationCalculation?: Prisma.RemunerationCalculationUpdateOneWithoutPayableNestedInput
+  expensePayable?: Prisma.ExpensePayableUpdateOneWithoutPayableNestedInput
+  remunerationPayable?: Prisma.RemunerationPayableUpdateOneWithoutPayableNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutPayableNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPayableNestedInput
 }
@@ -2342,17 +1791,15 @@ export type PayableUncheckedUpdateWithoutExpectedPaymentMethodInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.EnumTitleKindFieldUpdateOperationsInput | $Enums.TitleKind
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   firmId?: Prisma.IntFieldUpdateOperationsInput | number
   beneficiaryId?: Prisma.IntFieldUpdateOperationsInput | number
   analyticId?: Prisma.IntFieldUpdateOperationsInput | number
-  titleKindId?: Prisma.IntFieldUpdateOperationsInput | number
-  generationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  directEntryId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayableNestedInput
+  expensePayable?: Prisma.ExpensePayableUncheckedUpdateOneWithoutPayableNestedInput
+  remunerationPayable?: Prisma.RemunerationPayableUncheckedUpdateOneWithoutPayableNestedInput
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutPayableNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPayableNestedInput
 }
@@ -2364,97 +1811,12 @@ export type PayableUncheckedUpdateManyWithoutExpectedPaymentMethodInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.EnumTitleKindFieldUpdateOperationsInput | $Enums.TitleKind
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   firmId?: Prisma.IntFieldUpdateOperationsInput | number
   beneficiaryId?: Prisma.IntFieldUpdateOperationsInput | number
   analyticId?: Prisma.IntFieldUpdateOperationsInput | number
-  titleKindId?: Prisma.IntFieldUpdateOperationsInput | number
-  generationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  directEntryId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-}
-
-export type PayableCreateManyTitleKindInput = {
-  id?: number
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  dueDate: Date | string
-  notes?: string | null
-  cancelledAt?: Date | string | null
-  cancellationReason?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  firmId: number
-  beneficiaryId: number
-  analyticId: number
-  expectedPaymentMethodId: number
-  generationId?: number | null
-  directEntryId?: number | null
-  expenseId?: number | null
-  remunerationCalculationId?: number | null
-}
-
-export type PayableUpdateWithoutTitleKindInput = {
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  firm?: Prisma.FirmUpdateOneRequiredWithoutPayablesNestedInput
-  beneficiary?: Prisma.SupplierProfileUpdateOneRequiredWithoutPayablesNestedInput
-  analytic?: Prisma.FinancialAnalyticUpdateOneRequiredWithoutPayablesNestedInput
-  expectedPaymentMethod?: Prisma.PaymentMethodUpdateOneRequiredWithoutPayablesNestedInput
-  generation?: Prisma.FinancialGenerationUpdateOneWithoutPayablesNestedInput
-  directEntry?: Prisma.DirectFinancialEntryUpdateOneWithoutPayablesNestedInput
-  expense?: Prisma.ExpenseUpdateOneWithoutPayablesNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutPayableNestedInput
-  remunerationCalculation?: Prisma.RemunerationCalculationUpdateOneWithoutPayableNestedInput
-  attachments?: Prisma.AttachmentUpdateManyWithoutPayableNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutPayableNestedInput
-}
-
-export type PayableUncheckedUpdateWithoutTitleKindInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  firmId?: Prisma.IntFieldUpdateOperationsInput | number
-  beneficiaryId?: Prisma.IntFieldUpdateOperationsInput | number
-  analyticId?: Prisma.IntFieldUpdateOperationsInput | number
-  expectedPaymentMethodId?: Prisma.IntFieldUpdateOperationsInput | number
-  generationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  directEntryId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayableNestedInput
-  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutPayableNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPayableNestedInput
-}
-
-export type PayableUncheckedUpdateManyWithoutTitleKindInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  firmId?: Prisma.IntFieldUpdateOperationsInput | number
-  beneficiaryId?: Prisma.IntFieldUpdateOperationsInput | number
-  analyticId?: Prisma.IntFieldUpdateOperationsInput | number
-  expectedPaymentMethodId?: Prisma.IntFieldUpdateOperationsInput | number
-  generationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  directEntryId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type PayableCreateManyBeneficiaryInput = {
@@ -2464,16 +1826,12 @@ export type PayableCreateManyBeneficiaryInput = {
   notes?: string | null
   cancelledAt?: Date | string | null
   cancellationReason?: string | null
+  kind?: $Enums.TitleKind
   createdAt?: Date | string
   updatedAt?: Date | string
   firmId: number
   analyticId: number
   expectedPaymentMethodId: number
-  titleKindId: number
-  generationId?: number | null
-  directEntryId?: number | null
-  expenseId?: number | null
-  remunerationCalculationId?: number | null
 }
 
 export type PayableUpdateWithoutBeneficiaryInput = {
@@ -2482,17 +1840,15 @@ export type PayableUpdateWithoutBeneficiaryInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.EnumTitleKindFieldUpdateOperationsInput | $Enums.TitleKind
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   firm?: Prisma.FirmUpdateOneRequiredWithoutPayablesNestedInput
   analytic?: Prisma.FinancialAnalyticUpdateOneRequiredWithoutPayablesNestedInput
   expectedPaymentMethod?: Prisma.PaymentMethodUpdateOneRequiredWithoutPayablesNestedInput
-  titleKind?: Prisma.TitleKindUpdateOneRequiredWithoutPayablesNestedInput
-  generation?: Prisma.FinancialGenerationUpdateOneWithoutPayablesNestedInput
-  directEntry?: Prisma.DirectFinancialEntryUpdateOneWithoutPayablesNestedInput
-  expense?: Prisma.ExpenseUpdateOneWithoutPayablesNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutPayableNestedInput
-  remunerationCalculation?: Prisma.RemunerationCalculationUpdateOneWithoutPayableNestedInput
+  expensePayable?: Prisma.ExpensePayableUpdateOneWithoutPayableNestedInput
+  remunerationPayable?: Prisma.RemunerationPayableUpdateOneWithoutPayableNestedInput
   attachments?: Prisma.AttachmentUpdateManyWithoutPayableNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPayableNestedInput
 }
@@ -2504,17 +1860,15 @@ export type PayableUncheckedUpdateWithoutBeneficiaryInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.EnumTitleKindFieldUpdateOperationsInput | $Enums.TitleKind
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   firmId?: Prisma.IntFieldUpdateOperationsInput | number
   analyticId?: Prisma.IntFieldUpdateOperationsInput | number
   expectedPaymentMethodId?: Prisma.IntFieldUpdateOperationsInput | number
-  titleKindId?: Prisma.IntFieldUpdateOperationsInput | number
-  generationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  directEntryId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayableNestedInput
+  expensePayable?: Prisma.ExpensePayableUncheckedUpdateOneWithoutPayableNestedInput
+  remunerationPayable?: Prisma.RemunerationPayableUncheckedUpdateOneWithoutPayableNestedInput
   attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutPayableNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPayableNestedInput
 }
@@ -2526,250 +1880,12 @@ export type PayableUncheckedUpdateManyWithoutBeneficiaryInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.EnumTitleKindFieldUpdateOperationsInput | $Enums.TitleKind
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   firmId?: Prisma.IntFieldUpdateOperationsInput | number
   analyticId?: Prisma.IntFieldUpdateOperationsInput | number
   expectedPaymentMethodId?: Prisma.IntFieldUpdateOperationsInput | number
-  titleKindId?: Prisma.IntFieldUpdateOperationsInput | number
-  generationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  directEntryId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-}
-
-export type PayableCreateManyExpenseInput = {
-  id?: number
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  dueDate: Date | string
-  notes?: string | null
-  cancelledAt?: Date | string | null
-  cancellationReason?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  beneficiaryId: number
-  analyticId: number
-  expectedPaymentMethodId: number
-  titleKindId: number
-  generationId?: number | null
-  directEntryId?: number | null
-  remunerationCalculationId?: number | null
-}
-
-export type PayableUpdateWithoutExpenseInput = {
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  firm?: Prisma.FirmUpdateOneRequiredWithoutPayablesNestedInput
-  beneficiary?: Prisma.SupplierProfileUpdateOneRequiredWithoutPayablesNestedInput
-  analytic?: Prisma.FinancialAnalyticUpdateOneRequiredWithoutPayablesNestedInput
-  expectedPaymentMethod?: Prisma.PaymentMethodUpdateOneRequiredWithoutPayablesNestedInput
-  titleKind?: Prisma.TitleKindUpdateOneRequiredWithoutPayablesNestedInput
-  generation?: Prisma.FinancialGenerationUpdateOneWithoutPayablesNestedInput
-  directEntry?: Prisma.DirectFinancialEntryUpdateOneWithoutPayablesNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutPayableNestedInput
-  remunerationCalculation?: Prisma.RemunerationCalculationUpdateOneWithoutPayableNestedInput
-  attachments?: Prisma.AttachmentUpdateManyWithoutPayableNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutPayableNestedInput
-}
-
-export type PayableUncheckedUpdateWithoutExpenseInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  beneficiaryId?: Prisma.IntFieldUpdateOperationsInput | number
-  analyticId?: Prisma.IntFieldUpdateOperationsInput | number
-  expectedPaymentMethodId?: Prisma.IntFieldUpdateOperationsInput | number
-  titleKindId?: Prisma.IntFieldUpdateOperationsInput | number
-  generationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  directEntryId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayableNestedInput
-  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutPayableNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPayableNestedInput
-}
-
-export type PayableUncheckedUpdateManyWithoutExpenseInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  beneficiaryId?: Prisma.IntFieldUpdateOperationsInput | number
-  analyticId?: Prisma.IntFieldUpdateOperationsInput | number
-  expectedPaymentMethodId?: Prisma.IntFieldUpdateOperationsInput | number
-  titleKindId?: Prisma.IntFieldUpdateOperationsInput | number
-  generationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  directEntryId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-}
-
-export type PayableCreateManyGenerationInput = {
-  id?: number
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  dueDate: Date | string
-  notes?: string | null
-  cancelledAt?: Date | string | null
-  cancellationReason?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  beneficiaryId: number
-  analyticId: number
-  expectedPaymentMethodId: number
-  titleKindId: number
-  directEntryId?: number | null
-  expenseId?: number | null
-  remunerationCalculationId?: number | null
-}
-
-export type PayableUpdateWithoutGenerationInput = {
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  firm?: Prisma.FirmUpdateOneRequiredWithoutPayablesNestedInput
-  beneficiary?: Prisma.SupplierProfileUpdateOneRequiredWithoutPayablesNestedInput
-  analytic?: Prisma.FinancialAnalyticUpdateOneRequiredWithoutPayablesNestedInput
-  expectedPaymentMethod?: Prisma.PaymentMethodUpdateOneRequiredWithoutPayablesNestedInput
-  titleKind?: Prisma.TitleKindUpdateOneRequiredWithoutPayablesNestedInput
-  directEntry?: Prisma.DirectFinancialEntryUpdateOneWithoutPayablesNestedInput
-  expense?: Prisma.ExpenseUpdateOneWithoutPayablesNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutPayableNestedInput
-  remunerationCalculation?: Prisma.RemunerationCalculationUpdateOneWithoutPayableNestedInput
-  attachments?: Prisma.AttachmentUpdateManyWithoutPayableNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutPayableNestedInput
-}
-
-export type PayableUncheckedUpdateWithoutGenerationInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  beneficiaryId?: Prisma.IntFieldUpdateOperationsInput | number
-  analyticId?: Prisma.IntFieldUpdateOperationsInput | number
-  expectedPaymentMethodId?: Prisma.IntFieldUpdateOperationsInput | number
-  titleKindId?: Prisma.IntFieldUpdateOperationsInput | number
-  directEntryId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayableNestedInput
-  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutPayableNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPayableNestedInput
-}
-
-export type PayableUncheckedUpdateManyWithoutGenerationInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  beneficiaryId?: Prisma.IntFieldUpdateOperationsInput | number
-  analyticId?: Prisma.IntFieldUpdateOperationsInput | number
-  expectedPaymentMethodId?: Prisma.IntFieldUpdateOperationsInput | number
-  titleKindId?: Prisma.IntFieldUpdateOperationsInput | number
-  directEntryId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-}
-
-export type PayableCreateManyDirectEntryInput = {
-  id?: number
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  dueDate: Date | string
-  notes?: string | null
-  cancelledAt?: Date | string | null
-  cancellationReason?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  beneficiaryId: number
-  analyticId: number
-  expectedPaymentMethodId: number
-  titleKindId: number
-  generationId?: number | null
-  expenseId?: number | null
-  remunerationCalculationId?: number | null
-}
-
-export type PayableUpdateWithoutDirectEntryInput = {
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  firm?: Prisma.FirmUpdateOneRequiredWithoutPayablesNestedInput
-  beneficiary?: Prisma.SupplierProfileUpdateOneRequiredWithoutPayablesNestedInput
-  analytic?: Prisma.FinancialAnalyticUpdateOneRequiredWithoutPayablesNestedInput
-  expectedPaymentMethod?: Prisma.PaymentMethodUpdateOneRequiredWithoutPayablesNestedInput
-  titleKind?: Prisma.TitleKindUpdateOneRequiredWithoutPayablesNestedInput
-  generation?: Prisma.FinancialGenerationUpdateOneWithoutPayablesNestedInput
-  expense?: Prisma.ExpenseUpdateOneWithoutPayablesNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutPayableNestedInput
-  remunerationCalculation?: Prisma.RemunerationCalculationUpdateOneWithoutPayableNestedInput
-  attachments?: Prisma.AttachmentUpdateManyWithoutPayableNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutPayableNestedInput
-}
-
-export type PayableUncheckedUpdateWithoutDirectEntryInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  beneficiaryId?: Prisma.IntFieldUpdateOperationsInput | number
-  analyticId?: Prisma.IntFieldUpdateOperationsInput | number
-  expectedPaymentMethodId?: Prisma.IntFieldUpdateOperationsInput | number
-  titleKindId?: Prisma.IntFieldUpdateOperationsInput | number
-  generationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayableNestedInput
-  attachments?: Prisma.AttachmentUncheckedUpdateManyWithoutPayableNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPayableNestedInput
-}
-
-export type PayableUncheckedUpdateManyWithoutDirectEntryInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  beneficiaryId?: Prisma.IntFieldUpdateOperationsInput | number
-  analyticId?: Prisma.IntFieldUpdateOperationsInput | number
-  expectedPaymentMethodId?: Prisma.IntFieldUpdateOperationsInput | number
-  titleKindId?: Prisma.IntFieldUpdateOperationsInput | number
-  generationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  expenseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  remunerationCalculationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 
@@ -2828,27 +1944,20 @@ export type PayableSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   notes?: boolean
   cancelledAt?: boolean
   cancellationReason?: boolean
+  kind?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   firmId?: boolean
   beneficiaryId?: boolean
   analyticId?: boolean
   expectedPaymentMethodId?: boolean
-  titleKindId?: boolean
-  generationId?: boolean
-  directEntryId?: boolean
-  expenseId?: boolean
-  remunerationCalculationId?: boolean
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
   beneficiary?: boolean | Prisma.SupplierProfileDefaultArgs<ExtArgs>
   analytic?: boolean | Prisma.FinancialAnalyticDefaultArgs<ExtArgs>
   expectedPaymentMethod?: boolean | Prisma.PaymentMethodDefaultArgs<ExtArgs>
-  titleKind?: boolean | Prisma.TitleKindDefaultArgs<ExtArgs>
-  generation?: boolean | Prisma.Payable$generationArgs<ExtArgs>
-  directEntry?: boolean | Prisma.Payable$directEntryArgs<ExtArgs>
-  expense?: boolean | Prisma.Payable$expenseArgs<ExtArgs>
   payments?: boolean | Prisma.Payable$paymentsArgs<ExtArgs>
-  remunerationCalculation?: boolean | Prisma.Payable$remunerationCalculationArgs<ExtArgs>
+  expensePayable?: boolean | Prisma.Payable$expensePayableArgs<ExtArgs>
+  remunerationPayable?: boolean | Prisma.Payable$remunerationPayableArgs<ExtArgs>
   attachments?: boolean | Prisma.Payable$attachmentsArgs<ExtArgs>
   auditLogs?: boolean | Prisma.Payable$auditLogsArgs<ExtArgs>
   _count?: boolean | Prisma.PayableCountOutputTypeDefaultArgs<ExtArgs>
@@ -2861,26 +1970,17 @@ export type PayableSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   notes?: boolean
   cancelledAt?: boolean
   cancellationReason?: boolean
+  kind?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   firmId?: boolean
   beneficiaryId?: boolean
   analyticId?: boolean
   expectedPaymentMethodId?: boolean
-  titleKindId?: boolean
-  generationId?: boolean
-  directEntryId?: boolean
-  expenseId?: boolean
-  remunerationCalculationId?: boolean
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
   beneficiary?: boolean | Prisma.SupplierProfileDefaultArgs<ExtArgs>
   analytic?: boolean | Prisma.FinancialAnalyticDefaultArgs<ExtArgs>
   expectedPaymentMethod?: boolean | Prisma.PaymentMethodDefaultArgs<ExtArgs>
-  titleKind?: boolean | Prisma.TitleKindDefaultArgs<ExtArgs>
-  generation?: boolean | Prisma.Payable$generationArgs<ExtArgs>
-  directEntry?: boolean | Prisma.Payable$directEntryArgs<ExtArgs>
-  expense?: boolean | Prisma.Payable$expenseArgs<ExtArgs>
-  remunerationCalculation?: boolean | Prisma.Payable$remunerationCalculationArgs<ExtArgs>
 }, ExtArgs["result"]["payable"]>
 
 export type PayableSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -2890,26 +1990,17 @@ export type PayableSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   notes?: boolean
   cancelledAt?: boolean
   cancellationReason?: boolean
+  kind?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   firmId?: boolean
   beneficiaryId?: boolean
   analyticId?: boolean
   expectedPaymentMethodId?: boolean
-  titleKindId?: boolean
-  generationId?: boolean
-  directEntryId?: boolean
-  expenseId?: boolean
-  remunerationCalculationId?: boolean
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
   beneficiary?: boolean | Prisma.SupplierProfileDefaultArgs<ExtArgs>
   analytic?: boolean | Prisma.FinancialAnalyticDefaultArgs<ExtArgs>
   expectedPaymentMethod?: boolean | Prisma.PaymentMethodDefaultArgs<ExtArgs>
-  titleKind?: boolean | Prisma.TitleKindDefaultArgs<ExtArgs>
-  generation?: boolean | Prisma.Payable$generationArgs<ExtArgs>
-  directEntry?: boolean | Prisma.Payable$directEntryArgs<ExtArgs>
-  expense?: boolean | Prisma.Payable$expenseArgs<ExtArgs>
-  remunerationCalculation?: boolean | Prisma.Payable$remunerationCalculationArgs<ExtArgs>
 }, ExtArgs["result"]["payable"]>
 
 export type PayableSelectScalar = {
@@ -2919,31 +2010,24 @@ export type PayableSelectScalar = {
   notes?: boolean
   cancelledAt?: boolean
   cancellationReason?: boolean
+  kind?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   firmId?: boolean
   beneficiaryId?: boolean
   analyticId?: boolean
   expectedPaymentMethodId?: boolean
-  titleKindId?: boolean
-  generationId?: boolean
-  directEntryId?: boolean
-  expenseId?: boolean
-  remunerationCalculationId?: boolean
 }
 
-export type PayableOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "amount" | "dueDate" | "notes" | "cancelledAt" | "cancellationReason" | "createdAt" | "updatedAt" | "firmId" | "beneficiaryId" | "analyticId" | "expectedPaymentMethodId" | "titleKindId" | "generationId" | "directEntryId" | "expenseId" | "remunerationCalculationId", ExtArgs["result"]["payable"]>
+export type PayableOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "amount" | "dueDate" | "notes" | "cancelledAt" | "cancellationReason" | "kind" | "createdAt" | "updatedAt" | "firmId" | "beneficiaryId" | "analyticId" | "expectedPaymentMethodId", ExtArgs["result"]["payable"]>
 export type PayableInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
   beneficiary?: boolean | Prisma.SupplierProfileDefaultArgs<ExtArgs>
   analytic?: boolean | Prisma.FinancialAnalyticDefaultArgs<ExtArgs>
   expectedPaymentMethod?: boolean | Prisma.PaymentMethodDefaultArgs<ExtArgs>
-  titleKind?: boolean | Prisma.TitleKindDefaultArgs<ExtArgs>
-  generation?: boolean | Prisma.Payable$generationArgs<ExtArgs>
-  directEntry?: boolean | Prisma.Payable$directEntryArgs<ExtArgs>
-  expense?: boolean | Prisma.Payable$expenseArgs<ExtArgs>
   payments?: boolean | Prisma.Payable$paymentsArgs<ExtArgs>
-  remunerationCalculation?: boolean | Prisma.Payable$remunerationCalculationArgs<ExtArgs>
+  expensePayable?: boolean | Prisma.Payable$expensePayableArgs<ExtArgs>
+  remunerationPayable?: boolean | Prisma.Payable$remunerationPayableArgs<ExtArgs>
   attachments?: boolean | Prisma.Payable$attachmentsArgs<ExtArgs>
   auditLogs?: boolean | Prisma.Payable$auditLogsArgs<ExtArgs>
   _count?: boolean | Prisma.PayableCountOutputTypeDefaultArgs<ExtArgs>
@@ -2953,22 +2037,12 @@ export type PayableIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   beneficiary?: boolean | Prisma.SupplierProfileDefaultArgs<ExtArgs>
   analytic?: boolean | Prisma.FinancialAnalyticDefaultArgs<ExtArgs>
   expectedPaymentMethod?: boolean | Prisma.PaymentMethodDefaultArgs<ExtArgs>
-  titleKind?: boolean | Prisma.TitleKindDefaultArgs<ExtArgs>
-  generation?: boolean | Prisma.Payable$generationArgs<ExtArgs>
-  directEntry?: boolean | Prisma.Payable$directEntryArgs<ExtArgs>
-  expense?: boolean | Prisma.Payable$expenseArgs<ExtArgs>
-  remunerationCalculation?: boolean | Prisma.Payable$remunerationCalculationArgs<ExtArgs>
 }
 export type PayableIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   firm?: boolean | Prisma.FirmDefaultArgs<ExtArgs>
   beneficiary?: boolean | Prisma.SupplierProfileDefaultArgs<ExtArgs>
   analytic?: boolean | Prisma.FinancialAnalyticDefaultArgs<ExtArgs>
   expectedPaymentMethod?: boolean | Prisma.PaymentMethodDefaultArgs<ExtArgs>
-  titleKind?: boolean | Prisma.TitleKindDefaultArgs<ExtArgs>
-  generation?: boolean | Prisma.Payable$generationArgs<ExtArgs>
-  directEntry?: boolean | Prisma.Payable$directEntryArgs<ExtArgs>
-  expense?: boolean | Prisma.Payable$expenseArgs<ExtArgs>
-  remunerationCalculation?: boolean | Prisma.Payable$remunerationCalculationArgs<ExtArgs>
 }
 
 export type $PayablePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2978,12 +2052,9 @@ export type $PayablePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     beneficiary: Prisma.$SupplierProfilePayload<ExtArgs>
     analytic: Prisma.$FinancialAnalyticPayload<ExtArgs>
     expectedPaymentMethod: Prisma.$PaymentMethodPayload<ExtArgs>
-    titleKind: Prisma.$TitleKindPayload<ExtArgs>
-    generation: Prisma.$FinancialGenerationPayload<ExtArgs> | null
-    directEntry: Prisma.$DirectFinancialEntryPayload<ExtArgs> | null
-    expense: Prisma.$ExpensePayload<ExtArgs> | null
     payments: Prisma.$PaymentPayload<ExtArgs>[]
-    remunerationCalculation: Prisma.$RemunerationCalculationPayload<ExtArgs> | null
+    expensePayable: Prisma.$ExpensePayablePayload<ExtArgs> | null
+    remunerationPayable: Prisma.$RemunerationPayablePayload<ExtArgs> | null
     attachments: Prisma.$AttachmentPayload<ExtArgs>[]
     auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
   }
@@ -2994,17 +2065,13 @@ export type $PayablePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     notes: string | null
     cancelledAt: Date | null
     cancellationReason: string | null
+    kind: $Enums.TitleKind
     createdAt: Date
     updatedAt: Date
     firmId: number
     beneficiaryId: number
     analyticId: number
     expectedPaymentMethodId: number
-    titleKindId: number
-    generationId: number | null
-    directEntryId: number | null
-    expenseId: number | null
-    remunerationCalculationId: number | null
   }, ExtArgs["result"]["payable"]>
   composites: {}
 }
@@ -3403,12 +2470,9 @@ export interface Prisma__PayableClient<T, Null = never, ExtArgs extends runtime.
   beneficiary<T extends Prisma.SupplierProfileDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SupplierProfileDefaultArgs<ExtArgs>>): Prisma.Prisma__SupplierProfileClient<runtime.Types.Result.GetResult<Prisma.$SupplierProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   analytic<T extends Prisma.FinancialAnalyticDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FinancialAnalyticDefaultArgs<ExtArgs>>): Prisma.Prisma__FinancialAnalyticClient<runtime.Types.Result.GetResult<Prisma.$FinancialAnalyticPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   expectedPaymentMethod<T extends Prisma.PaymentMethodDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PaymentMethodDefaultArgs<ExtArgs>>): Prisma.Prisma__PaymentMethodClient<runtime.Types.Result.GetResult<Prisma.$PaymentMethodPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  titleKind<T extends Prisma.TitleKindDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TitleKindDefaultArgs<ExtArgs>>): Prisma.Prisma__TitleKindClient<runtime.Types.Result.GetResult<Prisma.$TitleKindPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  generation<T extends Prisma.Payable$generationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Payable$generationArgs<ExtArgs>>): Prisma.Prisma__FinancialGenerationClient<runtime.Types.Result.GetResult<Prisma.$FinancialGenerationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  directEntry<T extends Prisma.Payable$directEntryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Payable$directEntryArgs<ExtArgs>>): Prisma.Prisma__DirectFinancialEntryClient<runtime.Types.Result.GetResult<Prisma.$DirectFinancialEntryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  expense<T extends Prisma.Payable$expenseArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Payable$expenseArgs<ExtArgs>>): Prisma.Prisma__ExpenseClient<runtime.Types.Result.GetResult<Prisma.$ExpensePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   payments<T extends Prisma.Payable$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Payable$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  remunerationCalculation<T extends Prisma.Payable$remunerationCalculationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Payable$remunerationCalculationArgs<ExtArgs>>): Prisma.Prisma__RemunerationCalculationClient<runtime.Types.Result.GetResult<Prisma.$RemunerationCalculationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  expensePayable<T extends Prisma.Payable$expensePayableArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Payable$expensePayableArgs<ExtArgs>>): Prisma.Prisma__ExpensePayableClient<runtime.Types.Result.GetResult<Prisma.$ExpensePayablePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  remunerationPayable<T extends Prisma.Payable$remunerationPayableArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Payable$remunerationPayableArgs<ExtArgs>>): Prisma.Prisma__RemunerationPayableClient<runtime.Types.Result.GetResult<Prisma.$RemunerationPayablePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   attachments<T extends Prisma.Payable$attachmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Payable$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   auditLogs<T extends Prisma.Payable$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Payable$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -3446,17 +2510,13 @@ export interface PayableFieldRefs {
   readonly notes: Prisma.FieldRef<"Payable", 'String'>
   readonly cancelledAt: Prisma.FieldRef<"Payable", 'DateTime'>
   readonly cancellationReason: Prisma.FieldRef<"Payable", 'String'>
+  readonly kind: Prisma.FieldRef<"Payable", 'TitleKind'>
   readonly createdAt: Prisma.FieldRef<"Payable", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Payable", 'DateTime'>
   readonly firmId: Prisma.FieldRef<"Payable", 'Int'>
   readonly beneficiaryId: Prisma.FieldRef<"Payable", 'Int'>
   readonly analyticId: Prisma.FieldRef<"Payable", 'Int'>
   readonly expectedPaymentMethodId: Prisma.FieldRef<"Payable", 'Int'>
-  readonly titleKindId: Prisma.FieldRef<"Payable", 'Int'>
-  readonly generationId: Prisma.FieldRef<"Payable", 'Int'>
-  readonly directEntryId: Prisma.FieldRef<"Payable", 'Int'>
-  readonly expenseId: Prisma.FieldRef<"Payable", 'Int'>
-  readonly remunerationCalculationId: Prisma.FieldRef<"Payable", 'Int'>
 }
     
 
@@ -3858,63 +2918,6 @@ export type PayableDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
 }
 
 /**
- * Payable.generation
- */
-export type Payable$generationArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the FinancialGeneration
-   */
-  select?: Prisma.FinancialGenerationSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the FinancialGeneration
-   */
-  omit?: Prisma.FinancialGenerationOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.FinancialGenerationInclude<ExtArgs> | null
-  where?: Prisma.FinancialGenerationWhereInput
-}
-
-/**
- * Payable.directEntry
- */
-export type Payable$directEntryArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the DirectFinancialEntry
-   */
-  select?: Prisma.DirectFinancialEntrySelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the DirectFinancialEntry
-   */
-  omit?: Prisma.DirectFinancialEntryOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.DirectFinancialEntryInclude<ExtArgs> | null
-  where?: Prisma.DirectFinancialEntryWhereInput
-}
-
-/**
- * Payable.expense
- */
-export type Payable$expenseArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Expense
-   */
-  select?: Prisma.ExpenseSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Expense
-   */
-  omit?: Prisma.ExpenseOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ExpenseInclude<ExtArgs> | null
-  where?: Prisma.ExpenseWhereInput
-}
-
-/**
  * Payable.payments
  */
 export type Payable$paymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3939,22 +2942,41 @@ export type Payable$paymentsArgs<ExtArgs extends runtime.Types.Extensions.Intern
 }
 
 /**
- * Payable.remunerationCalculation
+ * Payable.expensePayable
  */
-export type Payable$remunerationCalculationArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Payable$expensePayableArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the RemunerationCalculation
+   * Select specific fields to fetch from the ExpensePayable
    */
-  select?: Prisma.RemunerationCalculationSelect<ExtArgs> | null
+  select?: Prisma.ExpensePayableSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the RemunerationCalculation
+   * Omit specific fields from the ExpensePayable
    */
-  omit?: Prisma.RemunerationCalculationOmit<ExtArgs> | null
+  omit?: Prisma.ExpensePayableOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.RemunerationCalculationInclude<ExtArgs> | null
-  where?: Prisma.RemunerationCalculationWhereInput
+  include?: Prisma.ExpensePayableInclude<ExtArgs> | null
+  where?: Prisma.ExpensePayableWhereInput
+}
+
+/**
+ * Payable.remunerationPayable
+ */
+export type Payable$remunerationPayableArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the RemunerationPayable
+   */
+  select?: Prisma.RemunerationPayableSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the RemunerationPayable
+   */
+  omit?: Prisma.RemunerationPayableOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RemunerationPayableInclude<ExtArgs> | null
+  where?: Prisma.RemunerationPayableWhereInput
 }
 
 /**

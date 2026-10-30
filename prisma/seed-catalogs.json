@@ -199,25 +199,23 @@
       "label": "Cartão de débito"
     }
   ],
-  "titleKind": [
-    {
-      "value": "DOWN_PAYMENT",
-      "label": "Entrada"
-    },
-    {
-      "value": "INSTALLMENT",
-      "label": "Parcela"
-    },
-    {
-      "value": "EXTRA",
-      "label": "Extra"
-    }
-  ],
   "employeeType": [
-    { "value": "COORDINATOR", "label": "Coordenador" },
-    { "value": "MANAGER", "label": "Gerente" },
-    { "value": "ACCOUNTANT", "label": "Contador" },
-    { "value": "LEGAL_ASSISTANT", "label": "Assistente Jurídico" },
+    {
+      "value": "COORDINATOR",
+      "label": "Coordenador"
+    },
+    {
+      "value": "MANAGER",
+      "label": "Gerente"
+    },
+    {
+      "value": "ACCOUNTANT",
+      "label": "Contador"
+    },
+    {
+      "value": "LEGAL_ASSISTANT",
+      "label": "Assistente Jurídico"
+    },
     {
       "value": "INTERN",
       "label": "Estagiário"
