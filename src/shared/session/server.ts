@@ -4,6 +4,7 @@ import { getRequest } from "@tanstack/react-start/server";
 import * as z from "zod";
 import { prisma } from "@/shared/lib/prisma";
 import { getScope } from "./access";
+import { assertMemberGrantBoundaries } from "./member-policy";
 import type {
 	LoggedUserSession,
 	SessionAccess,
@@ -63,12 +64,12 @@ async function resolveDomainSession(): Promise<SessionAccess> {
 		organization.privateMetadata ?? {},
 	);
 	const metadata = z
-		.object({ employeeId: z.number().int().positive() })
+		.object({ personId: z.number().int().positive() })
 		.safeParse(user.privateMetadata ?? {});
 	const issues: SessionConfigurationIssue[] = [];
 	if (!metadata.success) {
 		issues.push(
-			user.privateMetadata?.employeeId === undefined
+			user.privateMetadata?.personId === undefined
 				? "employee_missing"
 				: "employee_invalid",
 		);
@@ -90,27 +91,35 @@ async function resolveDomainSession(): Promise<SessionAccess> {
 	if (!firm) {
 		issues.push("firm_unavailable");
 	}
-	const employee = await prisma.employee.findFirst({
+	const employee = await prisma.person.findFirst({
 		where: {
-			id: metadata.data.employeeId,
+			id: metadata.data.personId,
 			deletedAt: null,
 			isActive: true,
+			isEmployee: true,
+			employeeProfile: { is: { isActive: true, deletedAt: null } },
 		},
 		select: {
 			id: true,
-			type: { select: { id: true, value: true, label: true } },
+			employeeProfile: {
+				select: {
+					id: true,
+					employeeType: { select: { id: true, value: true, label: true } },
+				},
+			},
 		},
 	});
-	if (!employee) {
+	if (!employee?.employeeProfile) {
 		issues.push("employee_unavailable");
 	}
-	if (!firm || !employee) {
+	if (!firm || !employee?.employeeProfile) {
 		return { status: "configuration_required", issues };
 	}
 	const permissions = membership.permissions.flatMap((value) => {
 		const result = clerkPermissionSchema.safeParse(value);
 		return result.success ? [result.data] : [];
 	});
+	assertMemberGrantBoundaries(membership.role, permissions);
 	const session = loggedUserSessionSchema.parse({
 		user: {
 			fullName:
@@ -122,9 +131,11 @@ async function resolveDomainSession(): Promise<SessionAccess> {
 					(address) => address.id === user.primaryEmailAddressId,
 				)?.emailAddress ?? user.emailAddresses[0]?.emailAddress,
 		},
-		employee: { id: employee.id },
+		employee: { id: employee.employeeProfile.id },
+		person: { id: employee.id },
+		employeeProfile: { id: employee.employeeProfile.id },
 		firm,
-		employeeType: employee.type,
+		employeeType: employee.employeeProfile.employeeType,
 		permissions,
 		clerk: {
 			userId: identity.userId,

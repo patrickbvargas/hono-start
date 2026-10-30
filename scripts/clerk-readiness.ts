@@ -2,27 +2,68 @@ import "dotenv/config";
 import { createClerkClient } from "@clerk/backend";
 import { prisma } from "../src/shared/lib/prisma";
 
-try {
+async function main() {
 	const client = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
-const [roles, organizations, firms, employees, users, adminCandidates] = await Promise.all([
-		client.organizationRoles.getOrganizationRoleList({ limit: 100 }),
+	const [users, orgs, roles] = await Promise.all([
+		client.users.getUserList({ limit: 100 }),
 		client.organizations.getOrganizationList({ limit: 100 }),
-		prisma.firm.findMany({ select: { id: true, name: true } }),
-		prisma.employee.count(),
-client.users.getUserList({ limit: 100 }),
-prisma.employee.findMany({ select: { id: true, fullName: true } }),
+		client.organizationRoles.getOrganizationRoleList({ limit: 100 }),
 	]);
-	console.info(JSON.stringify({
-		roles: roles.data.map((role) => ({ key: role.key, permissions: role.permissions.map((permission) => permission.key) })),
-		organizations: organizations.data.map((organization) => ({ id: organization.id, name: organization.name })),
-		firms, employeeCount: employees,
-clerkUsers: users.data.map((user) => ({ id: user.id, name: user.firstName, matchingAdminIds: adminCandidates.filter((employee) => employee.id === user.privateMetadata.employeeId).map((employee) => employee.id) })),
-adminCandidates: adminCandidates.map(({ id, fullName }) => ({ id, fullName })),
-webhookConfigured: Boolean(process.env.CLERK_WEBHOOK_SIGNING_SECRET),
-	}, null, 2));
-} catch (error) {
-	console.error("Readiness check failed", error && typeof error === "object" && "status" in error ? { status: error.status } : "Check provider and database configuration.");
-	process.exitCode = 1;
-} finally {
-	await prisma.$disconnect();
+	const usersState = [];
+	for (const user of users.data) {
+		const personId = user.privateMetadata.personId;
+		const person =
+			typeof personId === "number" &&
+			Number.isSafeInteger(personId) &&
+			personId > 0
+				? await prisma.person.findFirst({
+						where: {
+							id: personId,
+							isActive: true,
+							deletedAt: null,
+							isEmployee: true,
+							employeeProfile: { is: { isActive: true, deletedAt: null } },
+						},
+						select: { id: true },
+					})
+				: null;
+		usersState.push({ userId: user.id, personId, valid: !!person });
+	}
+	const organizations = [];
+	for (const org of orgs.data) {
+		const firmId = org.privateMetadata.firmId;
+		const firm =
+			typeof firmId === "number" && Number.isSafeInteger(firmId) && firmId > 0
+				? await prisma.firm.findUnique({
+						where: { id: firmId },
+						select: { id: true },
+					})
+				: null;
+		organizations.push({ organizationId: org.id, firmId, valid: !!firm });
+	}
+	console.log(
+		JSON.stringify(
+			{
+				users: usersState,
+				organizations,
+				roles: roles.data.map((r) => ({
+					key: r.key,
+					permissions: r.permissions.map((p) => p.key),
+				})),
+			},
+			null,
+			2,
+		),
+	);
+	if (usersState.some((u) => !u.valid) || organizations.some((o) => !o.valid)) {
+		process.exitCode = 1;
+	}
 }
+main()
+	.catch(() => {
+		console.error(
+			"Clerk readiness failed: confira configuração e conectividade.",
+		);
+		process.exitCode = 1;
+	})
+	.finally(() => prisma.$disconnect());

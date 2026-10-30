@@ -122,7 +122,7 @@ describe("required access configuration", () => {
 			"Configuração de acesso incompleta",
 		);
 		expect(screen.getByRole("alert").textContent).toContain(
-			"employeeId é obrigatório",
+			"personId é obrigatório",
 		);
 		expect(screen.getByRole("alert").textContent).toContain(
 			"firmId é obrigatório",
@@ -178,8 +178,8 @@ describe("required access configuration", () => {
 		},
 	);
 	it.each([
-		["employee_invalid", "employeeId deve ser um número inteiro positivo"],
-		["employee_unavailable", "colaborador existente e ativo"],
+		["employee_invalid", "personId deve ser um número inteiro positivo"],
+		["employee_unavailable", "perfil de colaborador ativo"],
 		["firm_invalid", "firmId deve ser um número inteiro positivo"],
 		["firm_unavailable", "unidade existente"],
 	] as const)("explains %s", (issue, message) => {

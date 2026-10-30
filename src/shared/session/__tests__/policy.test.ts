@@ -161,4 +161,85 @@ describe("Clerk-granted authorization", () => {
 			}),
 		).toBe(false);
 	});
+	it.each([
+		"read_all",
+		"create",
+		"update",
+		"cancel",
+		"restore",
+		"generate",
+	] as const)(
+		"keeps receivables and payables %s grants independent",
+		(action) => {
+			const incoming = createSession({
+				permissions: [`org:receivables:${action}`],
+			});
+			const outgoing = createSession({
+				permissions: [`org:payables:${action}`],
+			});
+			expect(can(incoming, `org:receivables:${action}`)).toBe(true);
+			expect(can(incoming, `org:payables:${action}`)).toBe(false);
+			expect(can(outgoing, `org:payables:${action}`)).toBe(true);
+			expect(can(outgoing, `org:receivables:${action}`)).toBe(false);
+		},
+	);
+	it("separates title access from settlement operations", () => {
+		const session = createSession({
+			permissions: ["org:receivables:read_all", "org:payables:read_all"],
+		});
+		expect(can(session, "org:receipts:create")).toBe(false);
+		expect(can(session, "org:payments:create")).toBe(false);
+		expect(can(session, "org:receivables:update")).toBe(false);
+	});
+	it("restricts own payable access to beneficiary and assigned originating contract", () => {
+		const session = createSession({
+			person: { id: 900 },
+			permissions: ["org:payables:read_own"],
+		});
+		const resource = {
+			firmId: 100,
+			beneficiaryId: 900,
+			isRemuneration: true,
+			contract: { firmId: 100, isAssignedToActor: true },
+		};
+		expect(can(session, "org:payables:read_own", resource)).toBe(true);
+		expect(
+			can(session, "org:payables:read_own", { ...resource, beneficiaryId: 10 }),
+		).toBe(false);
+		expect(
+			can(session, "org:payables:read_own", {
+				...resource,
+				isRemuneration: false,
+			}),
+		).toBe(false);
+		expect(
+			can(session, "org:payables:read_own", {
+				...resource,
+				contract: { firmId: 100, isAssignedToActor: false },
+			}),
+		).toBe(false);
+		expect(
+			can(session, "org:payables:read_own", { ...resource, firmId: 200 }),
+		).toBe(false);
+	});
+	it("receipt creation requires its own grant and readable contract scope, independently of operational status", () => {
+		const resource = {
+			firmId: 100,
+			contract: {
+				firmId: 100,
+				isAssignedToActor: true,
+				statusValue: "CANCELLED",
+			},
+		};
+		const session = createSession({
+			permissions: ["org:receipts:create", "org:receipts:read_assigned"],
+		});
+		expect(can(session, "org:receipts:create", resource)).toBe(true);
+		expect(
+			can(session, "org:receipts:create", {
+				...resource,
+				contract: { firmId: 100, isAssignedToActor: false },
+			}),
+		).toBe(false);
+	});
 });

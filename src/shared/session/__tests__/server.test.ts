@@ -27,7 +27,7 @@ vi.mock("@clerk/tanstack-react-start/server", () => ({
 }));
 vi.mock("@/shared/lib/prisma", () => ({
 	prisma: {
-		employee: { findFirst: mocks.employee },
+		person: { findFirst: mocks.employee },
 		firm: { findUnique: mocks.firm },
 	},
 }));
@@ -50,7 +50,7 @@ describe("Clerk domain session", () => {
 			userId: "user_one",
 		});
 		mocks.user.mockResolvedValue({
-			privateMetadata: { employeeId: 7 },
+			privateMetadata: { personId: 7 },
 			banned: false,
 			locked: false,
 			primaryEmailAddressId: "email_one",
@@ -74,7 +74,10 @@ describe("Clerk domain session", () => {
 		mocks.employee.mockResolvedValue({
 			id: 7,
 			firmId: 42,
-			type: { id: 2, value: "LAWYER", label: "Advogado" },
+			employeeProfile: {
+				id: 7,
+				employeeType: { id: 2, value: "LAWYER", label: "Advogado" },
+			},
 		});
 	});
 	it("injects verified context into protected server functions", async () => {
@@ -113,6 +116,8 @@ describe("Clerk domain session", () => {
 					id: 7,
 					deletedAt: null,
 					isActive: true,
+					isEmployee: true,
+					employeeProfile: { is: { isActive: true, deletedAt: null } },
 				},
 			}),
 		);
@@ -203,12 +208,12 @@ describe("Clerk domain session", () => {
 		true,
 		{},
 		Number.MAX_SAFE_INTEGER + 1,
-	])("identifies malformed or missing employeeId %j", async (employeeId) => {
-		mocks.user.mockResolvedValue({ privateMetadata: { employeeId } });
+	])("identifies malformed or missing personId %j", async (personId) => {
+		mocks.user.mockResolvedValue({ privateMetadata: { personId } });
 		expect(await getServerSessionAccess()).toEqual({
 			status: "configuration_required",
 			issues: [
-				employeeId === undefined ? "employee_missing" : "employee_invalid",
+				personId === undefined ? "employee_missing" : "employee_invalid",
 			],
 		});
 	});
@@ -220,16 +225,22 @@ describe("Clerk domain session", () => {
 		});
 		expect(mocks.employee).toHaveBeenCalledWith(
 			expect.objectContaining({
-				where: { id: 7, deletedAt: null, isActive: true },
+				where: {
+					id: 7,
+					deletedAt: null,
+					isActive: true,
+					isEmployee: true,
+					employeeProfile: { is: { isActive: true, deletedAt: null } },
+				},
 			}),
 		);
 	});
 
 	it.each(["7", -1, 0, 1.5])(
-		"rejects invalid metadata employeeId %s",
-		async (employeeId) => {
+		"rejects invalid metadata personId %s",
+		async (personId) => {
 			mocks.user.mockResolvedValue({
-				privateMetadata: { employeeId },
+				privateMetadata: { personId },
 				emailAddresses: [],
 			});
 			expect(await getOptionalServerLoggedUserSession()).toBeNull();
@@ -383,5 +394,56 @@ describe("Clerk domain session", () => {
 		await expect(getRequiredServerLoggedUserSession()).rejects.toThrow();
 		expect(mocks.firm).not.toHaveBeenCalled();
 		expect(mocks.employee).not.toHaveBeenCalled();
+	});
+	it("keeps Person and EmployeeProfile IDs distinct", async () => {
+		mocks.employee.mockResolvedValue({
+			id: 7,
+			employeeProfile: {
+				id: 70,
+				employeeType: { id: 2, value: "LAWYER", label: "Advogado" },
+			},
+		});
+		const session = await getRequiredServerLoggedUserSession();
+		expect(session.person).toEqual({ id: 7 });
+		expect(session.employeeProfile).toEqual({ id: 70 });
+		expect(session.employee).toEqual({ id: 70 });
+	});
+	it("never falls back to legacy employeeId", async () => {
+		mocks.user.mockResolvedValue({ privateMetadata: { employeeId: 7 } });
+		expect(await getServerSessionAccess()).toEqual({
+			status: "configuration_required",
+			issues: ["employee_missing"],
+		});
+		expect(mocks.employee).not.toHaveBeenCalled();
+	});
+
+	it("denies misconfigured Member broad financial and directory grants", async () => {
+		mocks.memberships.mockResolvedValue({
+			data: [
+				{
+					publicUserData: { userId: "user_one" },
+					role: "org:member",
+					permissions: ["org:payables:read_all", "org:employees:read"],
+				},
+			],
+		});
+		await expect(getRequiredServerLoggedUserSession()).rejects.toThrow(
+			"Configuração de permissões incompatível",
+		);
+	});
+	it("preserves explicitly enabled Member receipt creation without granting it by role", async () => {
+		mocks.memberships.mockResolvedValue({
+			data: [
+				{
+					publicUserData: { userId: "user_one" },
+					role: "org:member",
+					permissions: ["org:receipts:read_assigned", "org:receipts:create"],
+				},
+			],
+		});
+		expect((await getRequiredServerLoggedUserSession()).permissions).toEqual([
+			"org:receipts:read_assigned",
+			"org:receipts:create",
+		]);
 	});
 });

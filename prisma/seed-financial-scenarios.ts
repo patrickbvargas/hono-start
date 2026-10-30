@@ -583,6 +583,42 @@ export async function seedFinancialScenarios(
 
 // Idempotent additive scenarios for an already seeded development database.
 export async function completeFinancialFixtures(tx: SeedTransaction) {
+	const personType = await tx.personType.findUniqueOrThrow({
+		where: { value: "INDIVIDUAL" },
+	});
+	const employeeType = await tx.employeeType.findUniqueOrThrow({
+		where: { value: "LAWYER" },
+	});
+	const patrick = await tx.person.upsert({
+		where: { document: seedCpf(1000) },
+		update: {},
+		create: {
+			id: 1000,
+			fullName: "Patrick Vargas",
+			document: seedCpf(1000),
+			personTypeId: personType.id,
+			isEmployee: true,
+		},
+	});
+	await tx.employeeProfile.upsert({
+		where: { personId: patrick.id },
+		update: {},
+		create: {
+			id: 1000,
+			personId: patrick.id,
+			employeeTypeId: employeeType.id,
+			oabNumber: "RS900001",
+			remunerationPercentage: "0.1000",
+			referralPercentage: "0.0200",
+		},
+	});
+	await tx.$executeRawUnsafe(
+		`SELECT setval(pg_get_serial_sequence('people','id'),(SELECT max(id) FROM people))`,
+	);
+	await tx.$executeRawUnsafe(
+		`SELECT setval(pg_get_serial_sequence('employee_profiles','id'),(SELECT max(id) FROM employee_profiles))`,
+	);
+
 	const today = businessDate();
 	const contract = await tx.contract.findUniqueOrThrow({
 		where: {

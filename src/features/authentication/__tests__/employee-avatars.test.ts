@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { Option } from "@/shared/schemas/option";
 
-const mocks = vi.hoisted(() => ({ users: vi.fn() }));
+const mocks = vi.hoisted(() => ({ users: vi.fn(), profiles: vi.fn() }));
 vi.mock("@clerk/tanstack-react-start/server", () => ({
 	clerkClient: () => ({ users: { getUserList: mocks.users } }),
 }));
@@ -9,21 +9,25 @@ vi.mock("@tanstack/react-start", () => ({
 	createServerOnlyFn: (fn: unknown) => fn,
 }));
 
+vi.mock("@/shared/lib/prisma", () => ({
+	prisma: { employeeProfile: { findMany: mocks.profiles } },
+}));
 const options: Option[] = [
 	{ id: 1, value: "1", label: "Ana Silva", isDisabled: false },
 	{ id: 2, value: "2", label: "Bruno", isDisabled: true },
 ];
-function user(
-	employeeId: unknown,
-	imageUrl = "https://img.clerk.com/photo.png",
-) {
-	return { privateMetadata: { employeeId }, imageUrl, hasImage: true };
+function user(personId: unknown, imageUrl = "https://img.clerk.com/photo.png") {
+	return { privateMetadata: { personId }, imageUrl, hasImage: true };
 }
 
 describe("optional Clerk employee avatars", () => {
 	beforeEach(() => {
 		vi.resetModules();
 		mocks.users.mockReset();
+		mocks.profiles.mockResolvedValue([
+			{ id: 1, personId: 1 },
+			{ id: 2, personId: 2 },
+		]);
 	});
 	afterEach(() => vi.restoreAllMocks());
 
@@ -96,5 +100,14 @@ describe("optional Clerk employee avatars", () => {
 		const { enrichEmployeeAvatars } = await import("../data/employee-avatars");
 		expect(await enrichEmployeeAvatars([])).toEqual([]);
 		expect(mocks.users).not.toHaveBeenCalled();
+	});
+	it("maps distinct Person IDs to authorized EmployeeProfile options", async () => {
+		mocks.users.mockResolvedValue({ data: [user(1000)], totalCount: 1 });
+		mocks.profiles.mockResolvedValue([{ id: 1, personId: 1000 }]);
+		const { enrichEmployeeAvatars } = await import("../data/employee-avatars");
+		expect((await enrichEmployeeAvatars(options))[0].imageUrl).toBe(
+			"https://img.clerk.com/photo.png",
+		);
+		expect((await enrichEmployeeAvatars(options))[1].imageUrl).toBeUndefined();
 	});
 });

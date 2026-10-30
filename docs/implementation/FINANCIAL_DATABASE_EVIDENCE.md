@@ -49,3 +49,7 @@ Whole-application TypeScript currently fails because legacy APIs/session/attachm
 ## Reference catalog prefix
 
 Migration `20261030060000_prefix_reference_catalogs` renames all ten physical catalog tables to `ref_*`, including TitleKind. Primary keys, value indexes and sequences follow the renamed tables. IDs, rows, foreign-key links, RLS and grants are preserved. Prisma model names remain unchanged; raw seed SQL uses the new physical names. Schema validation, scoped seed TypeScript and 11 real database checks passed after migration; schema diff reported no differences and repeated seed completed with unchanged counts and five verified private attachments.
+
+## Clerk-linked development fixture extension
+
+The user requested Patrick Vargas with fictitious professional/document data. Idempotent seed now maintains Person/Profile 1000 with explicit independent references; current totals are 16 Persons and 12 profiles. Financial fixture totals are unchanged. Clerk development private metadata now points explicitly to this Person, and Matriz to Firm 1; the old account employeeId was removed. The earlier no-provider-change note describes the database-only stage. See CLERK_MIGRATION.md for the subsequently authorized setup and verification.

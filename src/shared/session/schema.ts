@@ -3,6 +3,33 @@ import * as z from "zod";
 // This catalog names checks. Role grants are configured exclusively in Clerk.
 export const clerkPermissionCatalog = {
 	clients: ["read", "create", "update", "delete", "restore"],
+	people: ["read", "create", "update", "delete", "restore"],
+	suppliers: ["read", "create", "update", "delete", "restore"],
+	receivables: [
+		"read_all",
+		"read_assigned",
+		"generate",
+		"create",
+		"update",
+		"cancel",
+		"restore",
+	],
+	receipts: ["read_all", "read_assigned", "create", "reverse"],
+	payables: [
+		"read_all",
+		"read_own",
+		"generate",
+		"create",
+		"update",
+		"cancel",
+		"restore",
+	],
+	payments: ["read_all", "read_own", "create", "reverse"],
+	financial_adjustments: ["discount", "charges", "reclassify"],
+	cash_flow: ["read_all", "read_scoped"],
+	financial_settings: ["read", "update"],
+	financial_catalogs: ["read", "create", "update"],
+	financial_reports: ["export_all", "export_scoped"],
 	contracts: [
 		"read_all",
 		"read_assigned",
@@ -64,7 +91,10 @@ export const loggedUserSessionSchema = z.object({
 		fullName: z.string(),
 		email: z.email(),
 	}),
+	// Transitional employee field identifies EmployeeProfile, never a Person or old Employee.
 	employee: z.object({ id: z.number().int().nullable() }),
+	person: z.object({ id: z.number().int().positive() }).optional(),
+	employeeProfile: z.object({ id: z.number().int().positive() }).optional(),
 	firm: z.object({ id: z.number().int(), name: z.string() }),
 	employeeType: sessionOptionSchema.nullable(),
 	clerk: clerkIdentitySchema,
@@ -145,7 +175,14 @@ export interface RemunerationAccessResource extends SessionFirmResource {
 	employeeId: number;
 }
 
+export interface FinancialAccessResource extends SessionFirmResource {
+	contract?: ContractAccessResource;
+	beneficiaryId?: number;
+	isRemuneration?: boolean;
+}
+
 export type SessionResource =
+	| FinancialAccessResource
 	| SessionFirmResource
 	| ContractAccessResource
 	| RemunerationAccessResource

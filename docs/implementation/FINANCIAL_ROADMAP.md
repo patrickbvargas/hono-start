@@ -6,7 +6,7 @@ Status: database foundation implemented and seeded in development; application m
 
 The user changed delivery order: finish the entire target Prisma schema and development seed, apply migrations and persist verified fixtures before API/mutation/screens. Temporary application unavailability is accepted. Maintaining simultaneously usable legacy and target finance paths is not required. This supersedes phase-order/baseline-continuity constraints below for this database foundation; domain invariants and authorization still apply. The nine proposals remain requirement traceability, not evidence of completed application work. No production reset or provider grant mutation is implied.
 
-Database implementation and actual verification are recorded in [database evidence](FINANCIAL_DATABASE_EVIDENCE.md). APIs, session binding, UI, reports and final release gates remain pending. This is not a usable-app or phase09 completion claim.
+Database implementation and actual verification are recorded in [database evidence](FINANCIAL_DATABASE_EVIDENCE.md). Development Clerk Person/Firm binding and independent financial permission catalog are implemented; see [Clerk cutover evidence](CLERK_MIGRATION.md). Feature APIs, UI, reports and final release gates remain pending. This is not a usable-app or phase09 completion claim.
 
 ## Required reading
 

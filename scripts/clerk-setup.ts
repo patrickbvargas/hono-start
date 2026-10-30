@@ -1,47 +1,232 @@
 import "dotenv/config";
+import { access, mkdir, writeFile } from "node:fs/promises";
 import { createClerkClient } from "@clerk/backend";
-import { clerkPermissions, type ClerkPermission } from "../src/shared/session/schema";
+import { prisma } from "../src/shared/lib/prisma";
+import {
+	type ClerkPermission,
+	clerkPermissions,
+} from "../src/shared/session/schema";
 
-// Initial development bootstrap only. This is never imported by runtime policy.
+// Development bootstrap only; never a runtime grant matrix.
 const memberGrants: ClerkPermission[] = [
-	"org:clients:read", "org:clients:create", "org:clients:update",
-	"org:contracts:read_assigned", "org:contracts:create", "org:contracts:update_assigned",
-	"org:fees:read_assigned", "org:fees:create", "org:fees:update",
-	"org:remunerations:read_own", "org:remunerations:export_own",
-	"org:attachments:read", "org:attachments:upload", "org:dashboard:read_own",
+	"org:clients:read",
+	"org:contracts:read_assigned",
+	"org:receivables:read_assigned",
+	"org:receipts:read_assigned",
+	"org:payables:read_own",
+	"org:payments:read_own",
+	"org:attachments:read",
+	"org:dashboard:read_own",
 ];
-
-try {
-	const secretKey = process.env.CLERK_SECRET_KEY;
-	if (!secretKey) { throw new Error("Missing key"); }
-	const client = createClerkClient({ secretKey });
-	const roles = await client.organizationRoles.getOrganizationRoleList({ limit: 100 });
-	const permissions = await client.organizationPermissions.getOrganizationPermissionList({ limit: 100 });
-	const applying = process.argv.includes("--apply");
-	if (applying && !secretKey.startsWith("sk_test_")) { throw new Error("Automatic setup is restricted to development instances"); }
-	console.info(JSON.stringify({ applying, permissionCount: clerkPermissions.length, create: clerkPermissions.filter((key) => !permissions.data.some((item) => item.key === key)), initialRoles: { "org:admin": clerkPermissions, "org:member": memberGrants } }, null, 2));
-	if (applying) {
-		const ids = new Map(permissions.data.map((permission) => [permission.key, permission.id]));
-		for (const key of clerkPermissions) {
-			if (!ids.has(key)) {
-				const permission = await client.organizationPermissions.createOrganizationPermission({ key, name: key.split(":").at(-1) ?? key });
-				ids.set(key, permission.id);
-			}
-		}
-		for (const [key, grants] of [["org:admin", clerkPermissions], ["org:member", memberGrants]] as const) {
-			const role = roles.data.find((item) => item.key === key);
-			if (!role) { throw new Error("Required initial role missing"); }
-			// Preserve provider-native System Permissions. Set business grants explicitly.
-			const systemIds = role.permissions.filter((item) => item.key.startsWith("org:sys_")).map((item) => item.id);
-			await client.organizationRoles.updateOrganizationRole({ organizationRoleId: role.id, permissions: [...systemIds, ...grants.map((grant) => {
-				const id = ids.get(grant);
-				if (!id) { throw new Error("Permission provisioning incomplete"); }
-				return id;
-			})] });
-		}
-		console.info("Development permission catalog and initial roles configured. Future role edits belong in Clerk.");
+const targetPermissions = clerkPermissions.filter(
+	(key) =>
+		!key.startsWith("org:fees:") && !key.startsWith("org:remunerations:"),
+);
+const arg = (name: string) => {
+	const index = process.argv.indexOf(name);
+	return index < 0 ? undefined : process.argv[index + 1];
+};
+async function main() {
+	const key = process.env.CLERK_SECRET_KEY;
+	if (!key) {
+		throw new Error("CLERK_SECRET_KEY ausente");
 	}
-} catch (error) {
-	console.error("Clerk setup failed; inspect current provider state before retry.", error && typeof error === "object" && "status" in error ? { status: error.status } : "Check configuration.");
-	process.exitCode = 1;
+	const applying = process.argv.includes("--apply");
+	if (applying && !key.startsWith("sk_test_")) {
+		throw new Error("Setup restrito à instância de desenvolvimento");
+	}
+	const client = createClerkClient({ secretKey: key });
+	const userId = arg("--user"),
+		organizationId = arg("--organization"),
+		personId = Number(arg("--person")),
+		firmId = Number(arg("--firm"));
+	if (
+		!userId ||
+		!organizationId ||
+		!Number.isSafeInteger(personId) ||
+		personId <= 0 ||
+		!Number.isSafeInteger(firmId) ||
+		firmId <= 0
+	) {
+		throw new Error(
+			"Informe --user, --person, --organization e --firm explicitamente",
+		);
+	}
+	const [
+		roles,
+		permissions,
+		settings,
+		user,
+		organization,
+		person,
+		firm,
+		memberships,
+	] = await Promise.all([
+		client.organizationRoles.getOrganizationRoleList({ limit: 100 }),
+		client.organizationPermissions.getOrganizationPermissionList({
+			limit: 100,
+		}),
+		client.instance.getOrganizationSettings(),
+		client.users.getUser(userId),
+		client.organizations.getOrganization({ organizationId }),
+		prisma.person.findFirst({
+			where: {
+				id: personId,
+				isActive: true,
+				deletedAt: null,
+				isEmployee: true,
+				employeeProfile: { is: { isActive: true, deletedAt: null } },
+			},
+			select: { id: true },
+		}),
+		prisma.firm.findUnique({ where: { id: firmId }, select: { id: true } }),
+		client.organizations.getOrganizationMembershipList({
+			organizationId,
+			userId: [userId],
+			limit: 2,
+		}),
+	]);
+	if (
+		!person ||
+		!firm ||
+		!memberships.data.some((m) => m.publicUserData?.userId === userId)
+	) {
+		throw new Error(
+			"Person/perfil, Firm e membership precisam ser válidos antes do setup",
+		);
+	}
+	if (permissions.totalCount > permissions.data.length) {
+		throw new Error(
+			"Catálogo paginado: implemente paginação antes de alterar provedor",
+		);
+	}
+	if (
+		!roles.data.some((r) => r.key === "org:admin") ||
+		!roles.data.some((r) => r.key === "org:member")
+	) {
+		throw new Error("Papéis Admin/Member ausentes");
+	}
+	console.log(
+		JSON.stringify(
+			{
+				applying,
+				targetPermissionCount: targetPermissions.length,
+				create: targetPermissions.filter(
+					(k) => !permissions.data.some((p) => p.key === k),
+				),
+				binding: { userId, personId, organizationId, firmId },
+				memberReceiptCreation: false,
+				providerSettings: {
+					maxAllowedRoles: settings.maxAllowedRoles,
+					maxAllowedPermissions: settings.maxAllowedPermissions,
+				},
+			},
+			null,
+			2,
+		),
+	);
+	if (!applying) {
+		return;
+	}
+	await mkdir(".clerk-migration", { recursive: true });
+	const backup = ".clerk-migration/financial-before.json";
+	try {
+		await access(backup);
+	} catch {
+		await writeFile(
+			backup,
+			JSON.stringify(
+				{
+					roles: roles.data,
+					permissions: permissions.data,
+					user: { id: user.id, privateMetadata: user.privateMetadata },
+					organization: {
+						id: organization.id,
+						privateMetadata: organization.privateMetadata,
+					},
+				},
+				null,
+				2,
+			),
+		);
+	}
+	const ids = new Map(permissions.data.map((p) => [p.key, p.id]));
+	for (const permission of targetPermissions) {
+		if (!ids.has(permission)) {
+			const created =
+				await client.organizationPermissions.createOrganizationPermission({
+					key: permission,
+					name: permission.split(":").slice(1).join(" / "),
+				});
+			ids.set(permission, created.id);
+		}
+	}
+	for (const [roleKey, grants] of [
+		["org:admin", targetPermissions],
+		["org:member", memberGrants],
+	] as const) {
+		const role = roles.data.find((r) => r.key === roleKey);
+		if (!role) {
+			throw new Error("Required role missing");
+		}
+		const system = role.permissions
+			.filter((p) => p.key.startsWith("org:sys_"))
+			.map((p) => p.id);
+		await client.organizationRoles.updateOrganizationRole({
+			organizationRoleId: role.id,
+			permissions: [
+				...system,
+				...grants.map((k) => {
+					const id = ids.get(k);
+					if (!id) {
+						throw new Error("Missing grant");
+					}
+					return id;
+				}),
+			],
+		});
+	}
+	await client.users.updateUserMetadata(userId, {
+		privateMetadata: { personId, employeeId: null },
+	});
+	await client.organizations.updateOrganizationMetadata(organizationId, {
+		privateMetadata: { firmId },
+	});
+	const [confirmedUser, confirmedOrg, confirmedRoles] = await Promise.all([
+		client.users.getUser(userId),
+		client.organizations.getOrganization({ organizationId }),
+		client.organizationRoles.getOrganizationRoleList({ limit: 100 }),
+	]);
+	if (
+		confirmedUser.privateMetadata.personId !== personId ||
+		confirmedUser.privateMetadata.employeeId != null ||
+		confirmedOrg.privateMetadata.firmId !== firmId
+	) {
+		throw new Error("Provider bindings verification failed");
+	}
+	for (const [roleKey, grants] of [
+		["org:admin", targetPermissions],
+		["org:member", memberGrants],
+	] as const) {
+		const actual = confirmedRoles.data
+			.find((r) => r.key === roleKey)
+			?.permissions.filter((p) => !p.key.startsWith("org:sys_"))
+			.map((p) => p.key)
+			.sort();
+		if (JSON.stringify(actual) !== JSON.stringify([...grants].sort())) {
+			throw new Error(`Provider role verification failed: ${roleKey}`);
+		}
+	}
+	console.log(
+		"Clerk development: roles, permissions and explicit Person/Firm bindings verified.",
+	);
 }
+main()
+	.catch((error) => {
+		console.error(
+			"Clerk setup failed",
+			error instanceof Error ? error.message : "Provider error",
+		);
+		process.exitCode = 1;
+	})
+	.finally(() => prisma.$disconnect());

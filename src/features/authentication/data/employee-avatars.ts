@@ -1,9 +1,10 @@
 import { clerkClient } from "@clerk/tanstack-react-start/server";
 import { createServerOnlyFn } from "@tanstack/react-start";
 import * as z from "zod";
+import { prisma } from "@/shared/lib/prisma";
 import { type Option, optionSchema } from "@/shared/schemas/option";
 
-const bindingSchema = z.object({ employeeId: z.number().int().positive() });
+const bindingSchema = z.object({ personId: z.number().int().positive() });
 const photoSchema = z.url({ protocol: /^https$/ });
 const CACHE_TTL = 60_000;
 const FAILURE_TTL = 10_000;
@@ -29,15 +30,15 @@ async function loadPhotos() {
 			if (!binding.success) {
 				continue;
 			}
-			const { employeeId } = binding.data;
-			if (seen.has(employeeId)) {
-				photos.delete(employeeId);
+			const { personId } = binding.data;
+			if (seen.has(personId)) {
+				photos.delete(personId);
 				continue;
 			}
-			seen.add(employeeId);
+			seen.add(personId);
 			const photo = photoSchema.safeParse(user.imageUrl);
 			if (user.hasImage && photo.success) {
-				photos.set(employeeId, photo.data);
+				photos.set(personId, photo.data);
 			}
 		}
 		offset += data.length;
@@ -79,13 +80,25 @@ export const enrichEmployeeAvatars = createServerOnlyFn(
 			return [];
 		}
 		const photos = await getPhotos();
+		const profiles = await prisma.employeeProfile.findMany({
+			where: {
+				id: { in: options.map((option) => option.id) },
+				person: { isActive: true, deletedAt: null },
+				isActive: true,
+				deletedAt: null,
+			},
+			select: { id: true, personId: true },
+		});
+		const peopleByProfile = new Map(
+			profiles.map((profile) => [profile.id, profile.personId]),
+		);
 		return optionSchema.array().parse(
 			options.map((option) => ({
 				id: option.id,
 				value: option.value,
 				label: option.label,
 				isActive: !option.isDisabled,
-				imageUrl: photos.get(option.id),
+				imageUrl: photos.get(peopleByProfile.get(option.id) ?? -1),
 			})),
 		);
 	},

@@ -1,18 +1,20 @@
 # Financial authorization — approved target
 
-Read [financial rules](FINANCIAL_SYSTEM.md) first. This is a proposed exact-key catalog for implementation; it does not claim keys already exist in Clerk. Never treat a role name as a permission grant. Server enforcement combines current verified membership grants, Person/EmployeeProfile identity, active Firm, resource ownership and scope. Provider failures deny access.
+Read [financial rules](FINANCIAL_SYSTEM.md) first. Target keys are implemented in the development Clerk instance and session catalog. Production entitlements remain unverified; application APIs and per-query scope enforcement are still being migrated. Never treat a role name as a permission grant. Server enforcement combines current verified membership grants, Person/EmployeeProfile identity, active Firm, resource ownership and scope. Provider failures deny access.
 
 ## Roles and identity
 
-Plan production presets around Member and Admin only. Verify actual Clerk production limits before deployment; the reported free-plan limitation remains an open provider check. Do not build a third permanent finance role or per-user exceptions. An optional temporary dev role must not become required infrastructure. Coarse roles do not replace granular keys. Every account, including Admin, requires an active, non-deleted global Person with active EmployeeProfile. Proposed privateMetadata.personId replaces employeeId through an explicit coordinated switch, never a silent ID reinterpretation. Organization privateMetadata.firmId remains validated server-side.
+Plan production presets around Member and Admin only. Verify actual Clerk production limits before deployment; the reported free-plan limitation remains an open provider check. Do not build a third permanent finance role or per-user exceptions. An optional temporary dev role must not become required infrastructure. Coarse roles do not replace granular keys. Every account, including Admin, requires an active, non-deleted global Person with active EmployeeProfile. privateMetadata.personId now replaces employeeId through an explicit development switch, never a silent ID reinterpretation. Organization privateMetadata.firmId remains validated server-side.
 
 Admin preset receives approved current-Firm management keys; Member starts with assigned contract receipts visibility and own remuneration visibility only as explicitly granted. Member receipt registration is OPTIONAL and defaults OFF. Every mutation remains permission-checked, including administrators. Company-wide people and catalogs never authorize another branch's operations.
 
-## Proposed exact keys
+## Exact keys
 
 | Resource | Keys | Member default / boundary |
 |---|---|---|
 | People | org:people:read, create, update, delete, restore | Preserve approved client access; EmployeeProfile/private compensation fields need independent existing collaborator authority. Do not widen access by merging tables. |
+| Suppliers | org:suppliers:read, create, update, delete, restore | OFF; independent from customer/people access. |
+| Collaborators | Existing org:employees:read, create, update, delete, restore | OFF; independent professional/profile authority. |
 | Contracts | Existing org:contracts keys, including read_all/read_assigned | Preserve current assignment eligibility, not recommending-only access. |
 | Expenses | org:expenses:read, create, update, delete, restore | OFF; Member has no standalone expense workflow. |
 | Receivables | org:receivables:read_all, read_assigned, generate, create, update, cancel, restore | read_assigned within visible contracts; mutation keys OFF initially. create means direct entry and is unavailable in Member preset. |
@@ -42,4 +44,14 @@ Required negative tests: cross-Firm ID, unassigned contract, recommending-only a
 
 ## Registration navigation and field boundaries
 
-Render separate Clientes, Fornecedores and Colaboradores navigation/screens over shared Person. Member has no supplier/collaborator management access; customer reads remain assigned-contract scoped. Explicit subject/action permissions govern Admin management and collaborator profile/percentage/access fields. Enforce boundaries server-side before serialization, options, counts and exports, not only through hidden menu items. A readable customer identity must not expose EmployeeProfile, compensation percentages, other role flags or access bindings. Already-permitted assigned-contract team projections and own remuneration do not grant collaborator-directory access. No provider keys are created by this documentation update; resolve supplier keys within phase02's exact-key catalog before implementation.
+Render separate Clientes, Fornecedores and Colaboradores navigation/screens over shared Person. Member has no supplier/collaborator management access; customer reads remain assigned-contract scoped. Explicit subject/action permissions govern Admin management and collaborator profile/percentage/access fields. Enforce boundaries server-side before serialization, options, counts and exports, not only through hidden menu items. A readable customer identity must not expose EmployeeProfile, compensation percentages, other role flags or access bindings. Already-permitted assigned-contract team projections and own remuneration do not grant collaborator-directory access. Development supplier keys now use org:suppliers with independent action grants. Resource APIs and owner-scoped projections remain future implementation gates.
+
+## Independent financial directions — implemented development catalog
+
+Receivables and Payables have independent read/generate/create/update/cancel/restore keys. Receipts and Payments have independent read/create/reverse keys. A receiving grant never grants payable/payment access, and the reverse never applies. Reading a title does not imply settlement or modification. Every profile's explicit grants are configured in Clerk; Admin has no runtime bypass and can have individual grants removed. No mandatory third role or generic combined finance permission is introduced.
+
+Development presets currently assign Admin all 77 target keys and Member only customer read, assigned-contract/receivable/receipt read, own remuneration payable/payment read, attachment read and own dashboard read. Member receipt creation remains OFF; explicit activation may permit assigned receipts but never broad outgoing access. Server checks keep Person beneficiary and originating contract scope together. Resource projections passed to policy helpers must be built from server-authorized persisted data, never client assertions. Lists/options/counts/totals/exports must apply equivalent SQL filtering as each future API is implemented.
+
+The narrow Member confidentiality guard rejects misconfigured broad/directory/financial-management grants using current verified provider membership role; it never grants permission. Client UI hiding and role labels never replace individual keys. Other future roles or production settings require the existing contract review.
+
+Development user Patrick Vargas is explicitly bound to Person 1000 with fictitious CPF/OAB/percentages and active EmployeeProfile 1000; Matriz is bound to Firm 1. No credential, account email or provider role is copied into Person. Both fixtures survive seed repetition without recreating money. Legacy employeeId metadata was removed from this account and is not a fallback. Session exposes person.id and employeeProfile.id; transitional employee.id means EmployeeProfile ID only and must not be used as Person/audit actor ID. Legacy recovery issue-code names remain stable, while messages now explain personId and active profile requirements.

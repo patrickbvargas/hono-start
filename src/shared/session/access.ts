@@ -4,6 +4,7 @@ import {
 	CONTRACT_STATUS_COMPLETED_VALUE,
 	type ContractAccessResource,
 	type FeeAccessResource,
+	type FinancialAccessResource,
 	type LoggedUserSession,
 	type RemunerationAccessResource,
 	SESSION_ASSIGNMENT_TYPE_ADMIN_ASSISTANT_VALUE,
@@ -122,6 +123,42 @@ export function can(
 	}
 	if (!hasPermission(session, key) || !isSameFirm(session, resource))
 		return false;
+
+	if (
+		key === "org:receivables:read_assigned" ||
+		key === "org:receipts:read_assigned" ||
+		key === "org:receipts:create"
+	) {
+		if (!resource) {
+			return key !== "org:receipts:create";
+		}
+		const financial = resource as FinancialAccessResource;
+		if (
+			hasPermission(session, "org:receipts:read_all") &&
+			key === "org:receipts:create"
+		) {
+			return true;
+		}
+		return (
+			!!financial.contract &&
+			financial.contract.firmId === session.firm.id &&
+			isAssignedToActor(session, financial.contract)
+		);
+	}
+	if (key === "org:payables:read_own" || key === "org:payments:read_own") {
+		if (!resource) {
+			return !!session.person;
+		}
+		const financial = resource as FinancialAccessResource;
+		return (
+			!!session.person &&
+			financial.beneficiaryId === session.person.id &&
+			financial.isRemuneration === true &&
+			!!financial.contract &&
+			financial.contract.firmId === session.firm.id &&
+			isAssignedToActor(session, financial.contract)
+		);
+	}
 	if (
 		key === "org:contracts:read_assigned" ||
 		key === "org:fees:read_assigned"

@@ -2,10 +2,28 @@
 
 ## Approved financial redesign — target precedence
 
-Status: approved plan, not implemented. [Target financial contract](../domain/FINANCIAL_SYSTEM.md) and its linked roadmap/UML/authorization supersede conflicting financial and identity semantics below for the ordered redesign. Remaining text describes the preserved running baseline and unchanged house rules; do not infer target implementation from it.
+Status: development Person binding and granular provider catalog implemented; application resource migration remains pending. [Target financial contract](../domain/FINANCIAL_SYSTEM.md) and its linked roadmap/UML/authorization supersede conflicting financial and identity semantics below for the ordered redesign. Remaining text describes the preserved running baseline and unchanged house rules; do not infer target implementation from it.
 
-Target role and binding transition is planned in FINANCIAL_AUTHORIZATION.md and finance-02. Verify production limits, prepare Member/Admin grants and personId binding; legacy employeeId and fee/remuneration keys remain baseline only until coordinated switch. No automatic widening of Member receipt registration.
+Target development roles and personId binding are configured as documented below and in FINANCIAL_AUTHORIZATION.md. Production limits remain pending. Legacy employeeId metadata is no longer accepted; fee/remuneration keys are excluded from target provider presets. No automatic widening of Member receipt registration.
 
+
+## Development financial binding cutover — 2026-10-29
+
+Current development setup uses Person and active EmployeeProfile, with Organization membership and Firm revalidated on each request. Account privateMetadata.personId is mandatory; employeeId never falls back. Patrick Vargas has Person/Profile 1000 with explicitly fictitious business data, and Matriz maps to Firm 1. Account credentials and grants remain provider-owned. No production provider configuration was changed.
+
+Setup: run `pnpm run db:seed`, then `pnpm exec tsx scripts/clerk-setup.ts --user <Clerk user ID> --person <Person ID> --organization <Organization ID> --firm <Firm ID>` to inspect exact plan. Add `--apply` only for the intended development instance. The script rejects non-test keys, validates existing membership and active Person/Profile/Firm before writes, preserves system grants, snapshots prior state into ignored `.clerk-migration/financial-before.json`, sets explicit Admin/Member presets, and verifies provider readback. Provider errors can leave partial catalog writes; inspect state and repeat the idempotent setup after resolving the cause. No invitations or messages are sent.
+
+`pnpm exec tsx scripts/clerk-readiness.ts` checks actual provider metadata against current database records. Development provider settings reported maxAllowedRoles=10 and maxAllowedPermissions=0; no meaning of unlimited or production entitlement is inferred from zero. Creating the 77 target custom keys and configuring the two existing roles succeeded. Official [Clerk role documentation](https://clerk.com/docs/guides/organizations/control-access/roles-and-permissions) describes custom roles/permissions; production plan and instance limits must still be checked before production rollout.
+
+Session/avatar mapping now uses explicit Person-to-EmployeeProfile relations. Granular receivable/payable grants and Member confidentiality are documented in FINANCIAL_AUTHORIZATION.md. Server tests verify active identity/profile, missing/invalid metadata, revoked sessions/memberships, current Firm, provider errors, request-local cache and distinct Person/Profile IDs. Role grant readback and readiness passed; no interactive browser login claim is made. Legacy feature APIs still require database migration work.
+
+## Verification for this cutover
+
+- `pnpm exec vitest run src/shared/session/__tests__ src/features/authentication/__tests__`: 18 files, 146 tests passed. Includes independent receivable/payable actions, title-read versus settlement-write separation, own-beneficiary plus originating-contract scope, metadata cutover and Person/Profile ID separation.
+- `pnpm exec biome check` on the ten changed maintained authentication/session files: passed.
+- `pnpm exec tsc --noEmit -p prisma/tsconfig.json`: passed after the Patrick fixture extension.
+- Development setup applied and read back: 77 Admin business grants, eight Member business grants; receipt creation absent from Member; Person/Firm bindings valid. Readiness command passed.
+- Full application typecheck remains blocked by the previously documented legacy feature migration. This cutover does not claim working financial screens, production deployment, authenticated browser walkthrough or completion of all finance-02 policies.
 
 ## Authority and boundaries
 

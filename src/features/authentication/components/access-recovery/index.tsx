@@ -4,11 +4,11 @@ import { useAccessRecovery } from "../../hooks/use-access-recovery";
 import { useLogout } from "../../hooks/use-logout";
 
 const CONFIGURATION_MESSAGES: Record<SessionConfigurationIssue, string> = {
-	employee_missing: "Vínculo do usuário ausente: employeeId é obrigatório.",
+	employee_missing: "Vínculo do usuário ausente: personId é obrigatório.",
 	employee_invalid:
-		"Vínculo do usuário inválido: employeeId deve ser um número inteiro positivo.",
+		"Vínculo do usuário inválido: personId deve ser um número inteiro positivo.",
 	employee_unavailable:
-		"Vínculo do usuário indisponível: employeeId deve identificar um colaborador existente e ativo, que não tenha sido excluído.",
+		"Vínculo do usuário indisponível: personId deve identificar uma pessoa ativa, não excluída, com perfil de colaborador ativo.",
 	firm_missing: "Vínculo da organização ausente: firmId é obrigatório.",
 	firm_invalid:
 		"Vínculo da organização inválido: firmId deve ser um número inteiro positivo.",
