@@ -1,159 +1,105 @@
-# User Flows
+# User Flows — Canonical Workflows
 
-> Revisão vigente 30/10/2026: [Pessoas, papéis, extensões e genéricos](PERSON_REGISTRATION.md). Substitui telas separadas por rota Pessoas; exige Cliente no receber, Fornecedor no pagar e Colaborador implica Fornecedor. Ajustes novos ainda pendentes no código.
+Este documento descreve os fluxos de usuário canônicos do sistema.
 
-## Approved financial redesign — target precedence
+---
 
-Status: approved plan, not implemented. [Target financial contract](FINANCIAL_SYSTEM.md) and its linked roadmap/UML/authorization supersede conflicting financial and identity semantics below for the ordered redesign. Remaining text describes the preserved running baseline and unchanged house rules; do not infer target implementation from it.
+## 1. Cadastro e Gestão de Pessoas (`/pessoas`)
 
-Target flow: Person → Contract/Revenue or Expense → Acerto financeiro → N titles → grouped partial/full settlements. Direct titles are financial-only. Contract receipts may generate remuneration Payables; paying them is a separate workflow. Read complete walkthrough in FINANCIAL_ROADMAP.md.
+1. O usuário acessa a listagem unificada em **Cadastros → Pessoas**.
+2. Abre o formulário de nova pessoa ou edição.
+3. Informa nome, documento (CPF/CNPJ) e contatos.
+4. Seleciona os papéis aplicáveis através dos checkboxes:
+   - **Cliente**: Cria/ativa o `ClientProfile`. Habilita a pessoa para contratos e recebimentos.
+   - **Fornecedor**: Cria/ativa o `SupplierProfile`. Habilita a pessoa para despesas e pagamentos.
+   - **Colaborador**: Cria/ativa o `EmployeeProfile`. Exige função (`EmployeeType`), OAB (obrigatória para advogados) e percentuais de comissão.
+   - *Regra*: Marcar **Colaborador** marca automaticamente **Fornecedor** e impede sua remoção enquanto o colaborador estiver ativo.
+5. Salva o formulário. O sistema cria/atualiza a `Person` e os perfis numa única transação atômica.
+6. Acesso por perfil: Usuário `Member` só visualiza clientes com contratos atribuídos a ele. Não tem acesso a colaboradores nem fornecedores.
 
+---
 
-This file preserves the canonical user workflows of the product. These flows describe intended user behavior and expected system reactions, not implementation details.
+## 2. Contratos e Planos de Receita (`/contratos`)
 
-## Login and account management
+1. O usuário acessa a listagem de **Contratos** e clica em novo contrato.
+2. Seleciona o cliente (filtrado por pessoas com `ClientProfile` ativo).
+3. Informa número do processo, área jurídica, percentual de honorários contratuais e observações.
+4. Adiciona a equipe do contrato (`ContractAssignment`):
+   - Seleciona colaboradores com `EmployeeProfile` ativo.
+   - Define o tipo de atuação (ex: Responsável, Indicante, Indicado).
+5. Adiciona os planos de receita (`Revenue`):
+   - Informa tipo de receita (Administrativo, Judicial, Sucumbência) e valor negociado.
+6. Salva o contrato com sua equipe e receitas.
 
-1. Open `/login` and authenticate through Clerk email or username sign-in.
-2. Complete any provider verification or session tasks. If the user belongs to multiple Organizations, always show the Organization selector after login, even when a previous Organization is active. A single-Organization user with a ready session continues directly. Selection preserves the safe intended destination and resolves access again for the chosen unit.
-3. Enter product screens only with current membership and an active linked Employee.
-4. Recovery is available through Clerk from `/recuperar-senha`; OAB is not a credential.
-5. Open account management from the shell to manage credentials through Clerk.
-6. Signing out cancels requests and removes protected cached data.
+---
 
-## Manage accounts in Clerk
+## 3. Acerto Financeiro de Contrato (Geração de Títulos)
 
-1. Register business collaborators in the app independently of accounts.
-2. Create or invite users and assign Organization roles in Clerk Dashboard.
-3. Set User privateMetadata.employeeId to an active business Employee ID and Organization privateMetadata.firmId to an existing Firm ID. Both numeric fields are required for every role.
-4. Sign-in validates current provider membership, permissions and both required business links.
-5. Missing or invalid mappings block protected access. Login shows Configuração de acesso incompleta with each missing/malformed field or unavailable reference, administrator guidance, Tentar novamente and Sair, without Organization selection outside the explicit post-login choice. Retry revalidates current Clerk state and returns to the safe requested destination after correction.
-6. Revoking or deleting a Clerk account leaves Employee and financial/audit history unchanged.
+1. No detalhe do contrato ou da receita, o operador solicita o **Acerto Financeiro**.
+2. O sistema herda o valor acordado da `Revenue`.
+3. O operador informa:
+   - Valor de entrada (opcional) e seu vencimento.
+   - Quantidade de parcelas e primeiro vencimento das parcelas.
+   - Analítica contábil e forma esperada de pagamento.
+4. O sistema gera uma prévia editável na tela.
+5. O operador pode ajustar valores e vencimentos individuais na prévia.
+6. **Validação**: A soma exata de todos os títulos da prévia deve igualar o valor negociado em centavos.
+7. O operador confirma. O sistema grava atomicamente:
+   - Os títulos na tabela `receivables` (devedor = cliente do contrato).
+   - Os vínculos na tabela de ponte `contract_revenue_receivables`.
+   - O registro imutável no `audit_logs`.
 
-## Register A Client
+---
 
-1. The user opens the clients list.
-2. The user starts the new-client flow.
-3. The user selects whether the client is an individual or company.
-4. The form adapts labels and validation to the selected type.
-5. The user fills required fields and saves.
-6. On success, the system confirms via toast, closes the overlay, and refreshes the list.
-7. On validation failure, inline pt-BR errors are shown.
+## 4. Despesas Operacionais (`/despesas`)
 
-## Create A Contract
+1. O operador financeiro acessa **Despesas** e inicia o cadastro.
+2. Seleciona o fornecedor (`SupplierProfile` ativo), informa valor negociado, data prevista e observações.
+3. Ao confirmar o parcelamento da despesa:
+   - O sistema valida a soma dos títulos com o valor da despesa.
+   - Grava os títulos na tabela `payables` (beneficiário = fornecedor).
+   - Grava os vínculos na tabela de ponte `expense_payables`.
 
-1. The user opens the contracts list.
-2. The user starts the new-contract flow.
-3. The user selects a client, enters process number, chooses legal area, sets fee percentage, and fills optional notes.
-4. The user assigns at least one collaborator to the contract.
-5. The user defines at least one revenue plan.
-6. The user saves the contract.
-7. On success, the system confirms via toast, closes the overlay, and refreshes the list.
+---
 
-## Record A Fee And Generate Remunerations
+## 5. Lançamentos Manuais Diretos no Financeiro
 
-1. The user opens the fees flow.
-2. The user selects the contract and the target revenue.
-3. The user enters payment date, amount, and installment number.
-4. The user decides whether remuneration generation is enabled.
-5. The user saves the fee.
-6. The system creates the fee, updates payment progress, and generates remunerations when enabled.
-7. The system re-evaluates contract completion after the new payment state.
+1. O operador acessa a tela de **Contas a Receber** ou **Contas a Pagar**.
+2. Clica em **Novo Título Manual**:
+   - Informa contraparte (`ClientProfile` no receber ou `SupplierProfile` no pagar).
+   - Informa valor, vencimento, analítica, meio de pagamento previsto e justificativa (`notes`).
+3. Ao salvar, o sistema grava o título diretamente em `receivables` ou `payables` sem criar registros em nenhuma tabela de ponte.
 
-## Register An Expense
+---
 
-1. An administrator opens the expenses list.
-2. The administrator starts the new-expense flow.
-3. The administrator selects a category, enters date and amount, and optionally fills observation.
-4. The administrator saves the expense.
-5. On success, the system confirms via toast, closes the overlay, and refreshes the list.
-6. The administrator opens the expense page to inspect observation, attachments and authorized history; quick drawer inspection remains available through the menu.
+## 6. Baixa de Recebível e Motor de Remuneração
 
-## View And Export Remunerations
+1. O operador acessa **Contas a Receber** e seleciona 1 ou mais títulos da mesma filial.
+2. Clica em **Registrar Recebimento**:
+   - Informa data efetiva (hoje ou passada) e meio de pagamento real.
+   - Define principal abatido $P$, desconto $D$, juros $J$ e multa $M$.
+   - Marca se deseja **Gerar Remunerações** (habilitado por padrão em títulos contratuais).
+3. Ao confirmar:
+   - O sistema grava um `Receipt` para cada título selecionado.
+   - Abate o saldo devedor do `Receivable`.
+   - Se for título de contrato e remuneração ativa: avalia a equipe em `ContractAssignment`, calcula o percentual sobre o caixa efetivo $C = P - D + J + M$, calcula o vencimento pela régua da filial, grava a ponte `remuneration_payables` e gera a duplicata `Payable` para o colaborador.
 
-1. The user opens the remunerations surface.
-2. Scope is determined by role.
-3. Summary values are shown in the page context.
-4. The user may filter by supported criteria such as date range, contract, or employee.
-5. The user may export in PDF or spreadsheet format with the supported filters.
+---
 
-## Soft Delete And Restore
+## 7. Baixa de Pagável (Pagamento de Fornecedor / Colaborador)
 
-1. An administrator chooses a supported delete or restore action.
-2. The system requires explicit confirmation.
-3. The system blocks the action when active dependents forbid it.
-4. On success, the list and visibility state refresh consistently.
+1. O operador acessa **Contas a Pagar** e seleciona os títulos que deseja quitar (inclusive remunerações da equipe).
+2. Clica em **Registrar Pagamento**:
+   - Informa data efetiva e meio de pagamento real.
+   - Define principal abatido, descontos e encargos.
+3. Ao confirmar, o sistema grava um `Payment` para cada título selecionado e abate seus saldos.
 
-## Upload An Attachment
+---
 
-1. The user opens a client, employee, contract, expense, fee, or remuneration detail context.
-2. The user starts the upload flow.
-3. The user selects a supported file within the allowed size limit.
-4. On success, the file appears in the attachment list.
-5. On failure, the user sees a clear pt-BR error.
+## 8. Estorno de Liquidação (Reversão)
 
-## Delete An Attachment
-
-1. An administrator chooses the delete action for an attachment.
-2. The system removes the stored file from attachment storage.
-3. The system removes the attachment record.
-4. On success, the attachment no longer appears in the list.
-5. On failure, the system keeps the record unchanged and shows a clear pt-BR error.
-
-## Navigate Related Records
-
-- Singular entity triggers open the target record's details drawer by ID over the current screen, without route navigation, a name search or intermediate row selection. This applies to clients, employees, contracts and source fees.
-- Collection links (contracts for a client/employee, fees for a revenue) keep opening the filtered list.
-- Related drawers label their dismiss action Voltar; the main detail keeps Fechar. Related triggers have no navigation icon. Closing the related drawer reveals the origin details with the original list, filters and scroll context intact. Related details retain edit/delete/restore actions when authorized. Read permissions and server resource checks remain enforced.
-
-- Advanced filter panels start closed, including when navigation supplies active filters. Applied filters remain visible as chips; users expand Mais filtros manually.
-
-
-## Connected platform work
-
-Navigation groups Visão geral and Contratos under Trabalho; Recebimentos, Remunerações and Despesas under Financeiro; Clientes and Colaboradores under Cadastros; Configurações under Administração. Auditoria remains available by URL and contextual history links, without a sidebar item. Existing URLs remain unchanged.
-
-Contract drawers retain quick consultation and offer Abrir página do contrato. The protected /contratos/$contractId workspace contains Visão geral, Financeiro, Equipe, Anexos and Histórico tabs. Opening from a contract list preserves its validated search for the return link. Finance reuses the drawer's revenue summary, existing lifecycle checks and prefilled receipt form. Readable receipts and remunerations have contract-filtered collection links; audit readers see an embedded history table scoped to exact Contract type and ID, paginated in place with change details available in a drawer. Other-entity audit events remain in their own records.
-
-The overview retains an optional work preview component, hidden in the application by default at user request. When explicitly enabled by composition it shows up to three existing authorized overdue installments before its analytics. The preview follows the selected filters and reference date; it is not a global pending count. Each eligible link opens the contract financial tab. No additional aggregation or outflow calculation is implied.
-
-Financial lists offer Todo período and Este mês shortcuts that change only calendar dates and reset pagination, preserving other filters. Remuneration details expose Entender cálculo with stored receipt amount, effective percentage, amount and manual-adjustment copy. Generated remuneration does not confirm payout.
-
-Configurações offers readonly current office/account information, the existing account profile dialog, browser-wide theme preference and workflow guidance. Access administration remains outside this screen; no office setting is written by this change.
-
-Product review: the workspace link lives in contract drawer headers from sm and in the body on mobile. Workspace headers show the contract andamento once, adding lifecycle badges only for inactive/deleted records. Settings content reserves inset space for card outlines.
-
-Contract overview omits the Próximo passo guidance panel. Its header uses a shared andamento badge; inactive/deleted warnings remain separate. The history tab displays the changes table directly without requiring navigation to Auditoria.
-
-The page header offers Excluir to actors with contract delete permission for non-deleted contracts. It reuses the existing confirmation and protected soft-delete flow, including the active-revenue deletion block. Success returns to the originating validated contract list or pending queue with filters preserved; cancellation or failure keeps the current page.
-
-Contract list action menus start with Abrir página do contrato and preserve the list search as return context. The overview labels Observações across both columns. Workspace attachments fill available tab space with internal scrolling, while drawers retain compact scrolling and a compact single-text-line empty state and a loading skeleton matching the padded attachment row. Appearance buttons pair Sistema, Claro and Escuro with the same icons as the theme switcher.
-
-The contract overview displays alerts below its data and derives pending next due dates, remaining balances, missing active revenues and missing active responsible assignments from the authorized contract detail. Future balances are informational rather than overdue debt; the total remaining balance is not presented as the overdue amount. Optional notes and attachments are not required. Actions open the existing finance/team tabs.
-
-Alert severity uses labelled color chips: Alta/red for overdue next due dates, Média/amber for missing active revenue or responsible assignment, Baixa/blue for other remaining balances. History pagination uses the same 32px square buttons and chevron icons as other tables. Legacy tab=alerts search falls back to overview.
-
-Inline contract identifiers/process numbers and mobile contract card actions open the workspace by default, preserving contract-list return filters. Related contract links from other records open contextual drawers, retaining the originating page or drawer. The explicit Ver detalhes menu action remains available for quick drawer consultation.
-
-## Record management pages
-
-Client, employee, fee, expense, remuneration and audit identities in tables and mobile cards open dedicated pages, following the contract layout. Collection menus explicitly offer Abrir página and Ver detalhes. Return links preserve validated filters, sorting and pagination. Page tabs survive reloads. Edit and restore stay on the page; successful deletion returns to its collection. Cancellation or failure preserves the current page. Related records open existing drawers with permitted actions. Business pages expose authorized history and existing attachment owners expose expanded attachments; audit pages remain read-only.
-
-## Consistent record page presentation
-
-Every record page, including contracts, uses the same compact identity row and application-header Editar/Excluir/Restaurar action placement and labels. Identity, record ID and lifecycle chip appear above tabs; state is not repeated inside overview or registration fields. History contains creation/update dates followed by authorized audit events. Clients separate Contato, employees/receipts/remunerations separate Financeiro, and audits separate Alterações and Dados técnicos from overview. Expenses keep their short payment record in overview. Contract retains Financeiro and Equipe; tab counts follow actual content, not a fixed entity-independent count. Complete contextual drawers retain their existing fields and actions.
-
-Receipt and remuneration documentation: open the record page and its Anexos tab, or Ver detalhes in context, then Anexar. Select supported proof/calculation files, submit and open/download from the same section. Completed contracts permit financial evidence; excluded owners do not receive new files. Return/list context and existing financial values remain preserved.
-
-Dashboard drilldown rows open the corresponding contextual summary by click or Enter/Space. Receipts open their receipt summary, remunerations and expenses their own summary, and planned/outstanding installments and initial down payments their contract summary. Closing the summary returns to the same modal with filters, sorting, pagination and scroll preserved. Unavailable records show safe dismissible feedback; existing access permissions remain enforced.
-
-Each active contract revenue displays Valor entrada separately from Valor contratado and Recebido (inclui entrada), both in contextual summaries and the contract page Financeiro tab. It shows the persisted down payment amount in BRL; no down payment displays R$ 0,00.
-
-Singular related-record links also offer a right-click or keyboard context menu: Abrir página navigates directly to the related record, and Ver resumo retains contextual inspection. Primary click still opens the summary.
-
-Dashboard drilldown row menus offer Abrir página and Ver resumo through right click, keyboard or visible overflow. Page access targets the persisted entity directly, including contracts for planned installments and down payments. Summary access retains analysis context. Pendências table and card menus use the same labels; Abrir página opens the issue's contract finance/team tab with pending-list return context, while Ver resumo preserves the list. Attachment items offer Baixar arquivo and authorized Excluir through context/overflow menus and retain download shortcuts and delete confirmation.
-
-## Company-wide clients and employees
-
-See [Multitenancy](MULTITENANCY.md) for the authoritative entity-scope matrix, global lifecycle, evidence visibility and current-Firm enforcement.
-
-Outside the explicit post-login organization-choice step, Organization selection is hidden whenever any employeeId or firmId configuration issue exists, including combined issues, because required metadata must be corrected in Clerk. The post-login step allows members of multiple Organizations to choose a unit before configuration recovery; it never grants protected product access. Retry and sign-out remain available. Organization selection remains available before selection or for other access denials without configuration findings.
+1. O operador abre o detalhe da baixa que deseja cancelar e clica em **Estornar**.
+2. Informa o motivo obrigatório do estorno.
+3. O sistema valida dependências:
+   - Se for baixa a receber que gerou remunerações e alguma delas já foi paga: **bloqueia o estorno**.
+   - Se nenhuma remuneração foi paga: cancela os títulos de remuneração gerados, grava o `ReceiptReversal` ou `PaymentReversal` e reabre o saldo do título original.

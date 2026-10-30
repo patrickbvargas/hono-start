@@ -1,124 +1,46 @@
 # Hono Documentation Index
 
-> Revisão vigente 30/10/2026: [Pessoas, papéis, extensões e genéricos](domain/PERSON_REGISTRATION.md). Substitui telas separadas por rota Pessoas; exige Cliente no receber, Fornecedor no pagar e Colaborador implica Fornecedor. CRUD Pessoas e perfis implementados; ver [evidências e limites](implementation/PERSON_IMPLEMENTATION.md).
+Este diretório contém o contrato canônico do sistema Hono.
+Todo o design reflete a **arquitetura desacoplada final**, estruturada em Bounded Contexts com tabelas de ponte e total separação entre o motor financeiro e as operações de negócio.
 
-## Current financial implementation stage
+---
 
-The user approved schema-and-seed-first execution with temporary application unavailability. Target persistence and seeded development data are implemented; see [database evidence](implementation/FINANCIAL_DATABASE_EVIDENCE.md) and the roadmap execution revision. Clerk session binding now uses Person and active EmployeeProfile, with independent receivable/payable grants configured in development; see [Clerk cutover](implementation/CLERK_MIGRATION.md). Existing feature API/UI code still targets legacy models and is not yet adapted. Historical “not implemented” markers below mean application workflow readiness, not absence of the new database schema.
+## 1. Estrutura do Contrato
 
-## Approved financial redesign (2026-10-29)
+O contrato divide-se em duas camadas:
+1. `docs/domain/`: Regras de negócio, modelos conceituais, fluxos de telas e permissões.
+2. `docs/implementation/`: Arquitetura técnica, stack fixo, padrões de frontend e banco de dados.
 
-Before financial or identity work, read [approved target rules](domain/FINANCIAL_SYSTEM.md), [UML with lookups](domain/FINANCIAL_UML.md), [Clerk authorization](domain/FINANCIAL_AUTHORIZATION.md) and [ordered implementation roadmap](implementation/FINANCIAL_ROADMAP.md). These explicit user-approved target decisions supersede conflicting baseline finance/identity rules in existing docs and legacy OpenSpec specs during this branch. Target database structures and development seed are implemented; Feature API/UI workflows remain pending; development session identity is adapted. All unchanged stack, import, form, session verification and tenant rules remain binding. No restoration of old fee-slot/automatic-entry-cash semantics into target code.
+---
 
+## 2. Ordem Canônica de Leitura
 
-This directory is the canonical project contract for Hono.
+### Domínio do Sistema (`docs/domain/`)
+1. [DOMAIN_MODEL.md](domain/DOMAIN_MODEL.md): Modelo canônico com 4 Bounded Contexts (Identidade, Operações, Pontes e Financeiro Puro).
+2. [FINANCIAL_UML.md](domain/FINANCIAL_UML.md): Diagramas UML canônicos (Arquitetura de Contextos e Classes).
+3. [FINANCIAL_SYSTEM.md](domain/FINANCIAL_SYSTEM.md): Contrato e regras do motor financeiro (títulos, pontes, baixas, equação de caixa, remunerações e estornos).
+4. [USER_FLOWS.md](domain/USER_FLOWS.md): Fluxos de usuário ponta a ponta na interface.
+5. [BUSINESS_RULES.md](domain/BUSINESS_RULES.md): Invariantes essenciais de negócio.
+6. [ROLES_AND_PERMISSIONS.md](domain/ROLES_AND_PERMISSIONS.md): Matriz de controle de acesso baseada em Clerk (Admin vs Member).
+7. [MULTITENANCY.md](domain/MULTITENANCY.md): Fronteira multitenant de filiais (`Firm`) e matriz de escopo.
+8. [LOOKUP_VALUES.md](domain/LOOKUP_VALUES.md): Catálogos globais e tabelas físicas `ref_*`.
 
-For the final organization pass, the user's existing application code defines current behavior. Reconcile stale documentation with that code; do not restore older documented behavior automatically. Functional inconsistencies require an explicit behavior decision.
+### Implementação Técnica (`docs/implementation/`)
+9. [ARCHITECTURE.md](implementation/ARCHITECTURE.md): Stack fixo (TanStack Start/Router/Form/Query, Prisma, Tailwind) e Vertical Slices.
+10. [DATA_ACCESS.md](implementation/DATA_ACCESS.md): Padrões de acesso a dados com Prisma e transações.
+11. [FRONTEND.md](implementation/FRONTEND.md): Padrões de componentes e UI compartilhada.
+12. [SECURITY.md](implementation/SECURITY.md): Autenticação Clerk e segurança de dados.
+13. [ATTACHMENTS.md](implementation/ATTACHMENTS.md): Gestão de anexos e Supabase Storage privado.
+14. [CONVENTIONS.md](implementation/CONVENTIONS.md): Convenções de código, linting e Biome.
+15. [QUALITY_WORKFLOW.md](implementation/QUALITY_WORKFLOW.md): Gates de CI, testes e validação.
 
-## Who This Is For
+---
 
-This documentation set is written for:
+## 3. Resumo da Arquitetura Alvo
 
-- AI agents implementing or reviewing work
-- new developers onboarding to the project
-- maintainers validating whether code still matches intended product and repository rules
-
-## Multitenancy entrypoint
-
-Read [Multitenancy: one company, multiple branches](domain/MULTITENANCY.md) alongside DOMAIN_MODEL.md for the entity-scope matrix, shared registration versus local operations, attachment/audit ownership, Clerk Organization mapping and demo workflow. This is the authoritative scope contract; generic tenant wording elsewhere must be interpreted through this matrix.
-
-## Contract Structure
-
-The contract is split into two layers:
-
-- `docs/domain/` defines business truth, product behavior, permissions, workflows, and edge cases.
-- `docs/implementation/` defines how this repository must realize that truth.
-
-## How To Use This Contract
-
-Read in order.
-
-Do not infer project truth from incomplete code when the docs already define it.
-
-When a question is answered by a more specific file, prefer that file over a broader summary.
-
-## Reading Order
-
-1. `docs/domain/PRODUCT_SENSE.md`
-2. `docs/domain/DOMAIN_MODEL.md`
-3. `docs/domain/BUSINESS_RULES.md`
-4. `docs/domain/ROLES_AND_PERMISSIONS.md`
-5. `docs/domain/FEATURE_BEHAVIOR.md`
-6. `docs/domain/LOOKUP_VALUES.md`
-7. `docs/domain/QUERY_BEHAVIOR.md`
-8. `docs/domain/USER_FLOWS.md`
-9. `docs/domain/EDGE_CASES.md`
-10. `docs/domain/SUCCESS_CRITERIA.md`
-11. `docs/domain/GLOSSARY.md`
-12. `docs/implementation/ARCHITECTURE.md`
-13. `docs/implementation/DATA_ACCESS.md`
-14. `docs/implementation/CONVENTIONS.md`
-15. `docs/implementation/FRONTEND.md`
-16. `docs/implementation/SECURITY.md`
-17. `docs/implementation/QUALITY_WORKFLOW.md`
-
-## Conflict Resolution
-
-- Domain docs win on business meaning, product behavior, and permissions.
-- Implementation docs win on stack, structure, naming, code organization, and repository patterns.
-- If current user-adjusted code disagrees with older docs, preserve the code and update the owning documentation. Do not change established behavior solely to satisfy stale documentation or tests.
-- If two docs overlap, the more specific doc wins over the broader summary.
-
-Specificity guidance:
-
-- `BUSINESS_RULES.md` beats broad statements in `FEATURE_BEHAVIOR.md`
-- `ROLES_AND_PERMISSIONS.md` beats broad visibility statements in other domain files
-- `QUERY_BEHAVIOR.md` beats generic list-language elsewhere
-- `FRONTEND.md`, `CONVENTIONS.md`, and `ARCHITECTURE.md` beat broad implementation summaries elsewhere
-
-## Ownership Rules
-
-- Put reusable product and domain truth in `docs/domain/`.
-- Put repository-specific technical rules in `docs/implementation/`.
-- Avoid duplicating normative rules across multiple files.
-- Use summary files to point to canonical rule files instead of restating them.
-
-## Agent Guidance
-
-When implementing or reviewing work:
-
-1. Read this index first.
-2. Read the files in order.
-3. Treat undefined behavior as a documentation gap, not a license to invent a new pattern.
-4. Preserve existing contract language unless the project truth is intentionally changing.
-5. If a change alters project truth, update the docs in the same work.
-
-## Contributor Execution Checklist
-
-Before starting non-trivial work:
-
-1. Read `docs/index.md`.
-2. Read the canonical files in order.
-3. Identify which file owns each question you need answered.
-4. Treat missing behavior as a documentation gap, not as permission to invent a new pattern.
-
-While implementing:
-
-1. Keep domain behavior aligned with `docs/domain/`.
-2. Keep repository shape and coding patterns aligned with `docs/implementation/`.
-3. Avoid adding duplicate rule text to a second file when one file already owns that rule.
-4. Preserve canonical terminology from `docs/domain/GLOSSARY.md`.
-
-Before finishing:
-
-1. Check whether project truth changed.
-2. If truth changed, update the owning documentation file in the same work.
-3. Verify the implementation still matches the documented stack, architecture, permissions, and behavior.
-
-## Human Reading Aid
-
-For a human-oriented explanation of what each file is for, see:
-
-- `docs/HELP_READING_GUIDE.md`
-
-That guide is supportive commentary. This file remains the canonical entrypoint.
+- **Identidade Unificada**: Rota única `/pessoas` gerencia `Person` com perfis 1:1 (`ClientProfile`, `SupplierProfile`, `EmployeeProfile`).
+- **Operacional**: Contratos (`Contract`) com receitas (`Revenue`) e equipe (`ContractAssignment`); custos operacionais (`Expense`).
+- **Pontes de Integração**: `ContractRevenueReceivable`, `ExpensePayable` e `RemunerationPayable` conectam operações a títulos sem sujar o financeiro.
+- **Financeiro Puro**: `Receivable` e `Payable` são títulos monetários puros, sem nenhuma FK de origem operacional.
+- **Liquidações e Caixa**: Baixas pontuais ou em seleção múltipla atômica (`Receipt` e `Payment`). Estornos append-only imutáveis.
+- **Multitenancy**: `Firm` isola operações e finanças; Pessoas e catálogos são compartilhados na empresa.

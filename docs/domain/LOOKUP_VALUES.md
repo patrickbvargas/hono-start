@@ -1,71 +1,49 @@
 # Lookup Values
 
-## Approved financial redesign — target precedence
+Este documento define os catálogos canônicos globais do sistema.
+Todas as tabelas físicas utilizam o prefixo `ref_` e possuem as colunas `id`, `value`, `label` e `isActive`.
 
-Status: approved plan, not implemented. [Target financial contract](FINANCIAL_SYSTEM.md) and its linked roadmap/UML/authorization supersede conflicting financial and identity semantics below for the ordered redesign. Remaining text describes the preserved running baseline and unchanged house rules; do not infer target implementation from it.
+---
 
-Target PersonType evolves ClientType; FinancialAnalytic evolves global ExpenseCategory, preserving stable values. Add global PaymentMethod. All catalogs have no Firm FK. LAWYER uses PAYROLL_LAWYERS; ADMIN_ASSISTANT uses PAYROLL_STAFF. Status/quitada are derived. Local UserRole is not target account authority.
+## 1. Mapeamento Físico de Tabelas
 
+| Prisma Model | Tabela Física | Finalidade |
+|---|---|---|
+| `PersonType` | `ref_person_types` | Classificação fiscal da pessoa |
+| `EmployeeType` | `ref_employee_types` | Função profissional do colaborador |
+| `LegalArea` | `ref_legal_areas` | Área jurídica do contrato |
+| `ContractStatus` | `ref_contract_statuses` | Situação do contrato |
+| `AssignmentType` | `ref_assignment_types` | Papel do colaborador na equipe do contrato |
+| `RevenueType` | `ref_revenue_types` | Modalidade da receita do contrato |
+| `FinancialAnalytic` | `ref_financial_analytics` | Classificação contábil do título financeiro |
+| `PaymentMethod` | `ref_payment_methods` | Meio de pagamento previsto e efetivo |
+| `AttachmentType` | `ref_attachment_types` | Categoria do arquivo anexo |
 
-This file defines the canonical lookup catalogs used by the product domain.
+> **Nota sobre Classificação de Títulos**: A classificação de duplicatas é um enum nativo na coluna `kind` (`DOWN_PAYMENT`, `INSTALLMENT`, `EXTRA`), não utilizando tabela de lookup.
 
-Lookup values are domain truth:
+---
 
-- `value` is the stable application identity
-- `label` is the pt-BR display value
-- inactive lookup values may remain visible but disabled in selection UIs
-- lookup values are immutable through the product UI
-- lookup values are global rather than firm-scoped
+## 2. Valores Canônicos dos Catálogos
 
-## Physical database naming
-
-All global catalog tables use the `ref_` prefix, with `id`, `value`, `label` and `isActive`. Prisma model names remain unchanged through `@@map`. Title classification is a constrained kind field (DOWN_PAYMENT/INSTALLMENT/EXTRA), not a lookup.
-
-| Prisma model | Physical table |
-|---|---|
-| PersonType | ref_person_types |
-| EmployeeType | ref_employee_types |
-| LegalArea | ref_legal_areas |
-| ContractStatus | ref_contract_statuses |
-| AssignmentType | ref_assignment_types |
-| RevenueType | ref_revenue_types |
-| AttachmentType | ref_attachment_types |
-| FinancialAnalytic | ref_financial_analytics |
-| PaymentMethod | ref_payment_methods |
-
-Rename migrations preserve rows, IDs, FK relationships, RLS and grants. Raw SQL in seeds and verification scripts must use physical names. Historical migration files retain their original names and checksums; never edit applied migrations to retrofit the prefix.
-
-## Employee Types
-
-| Value | Label |
-|---|---|
-| `LAWYER` | Advogado |
-| `ADMIN_ASSISTANT` | Auxiliar Administrativo |
-| `INTERN` | Estagiário |
-| `COORDINATOR` | Coordenador |
-| `MANAGER` | Gerente |
-| `ACCOUNTANT` | Contador |
-| `LEGAL_ASSISTANT` | Assistente Jurídico |
-| `OTHER` | Outro |
-
-EmployeeType é a função do colaborador, distinta dos papéis cumulativos Cliente/Fornecedor/Colaborador. Novas funções não concedem acesso a contratos nem geram remuneração automaticamente. Somente Advogado exige OAB. O identificador ADMIN_ASSISTANT permanece estável para preservar os vínculos existentes; o rótulo de AssignmentType não é alterado.
-
-## User Roles
-
-| Value | Label |
-|---|---|
-| `ADMIN` | Administrador |
-| `USER` | Usuário |
-
-## Client Types
-
+### Tipos de Pessoa (`ref_person_types`)
 | Value | Label |
 |---|---|
 | `INDIVIDUAL` | Pessoa Física |
 | `COMPANY` | Pessoa Jurídica |
 
-## Legal Areas
+### Funções de Colaborador (`ref_employee_types`)
+| Value | Label | Observação |
+|---|---|---|
+| `LAWYER` | Advogado | Exige número de OAB |
+| `ADMIN_ASSISTANT` | Auxiliar Administrativo | Suporte administrativo |
+| `INTERN` | Estagiário | Apoio jurídico ou administrativo |
+| `COORDINATOR` | Coordenador | Coordenação de equipe |
+| `MANAGER` | Gerente | Gestão operacional |
+| `ACCOUNTANT` | Contador | Contabilidade |
+| `LEGAL_ASSISTANT` | Assistente Jurídico | Apoio jurídico |
+| `OTHER` | Outro | Outras funções corporativas |
 
+### Áreas Jurídicas (`ref_legal_areas`)
 | Value | Label |
 |---|---|
 | `SOCIAL_SECURITY` | Previdenciário |
@@ -74,24 +52,14 @@ EmployeeType é a função do colaborador, distinta dos papéis cumulativos Clie
 | `LABOR` | Trabalhista |
 | `OTHER` | Outros |
 
-## Contract Statuses
-
+### Situações de Contrato (`ref_contract_statuses`)
 | Value | Label |
 |---|---|
 | `ACTIVE` | Ativo |
 | `COMPLETED` | Concluído |
 | `CANCELLED` | Cancelado |
 
-## Revenue Types
-
-| Value | Label |
-|---|---|
-| `ADMINISTRATIVE` | Administrativo |
-| `JUDICIAL` | Judicial |
-| `SUCCUMBENCY` | Sucumbência |
-
-## Assignment Types
-
+### Tipos de Atuação na Equipe (`ref_assignment_types`)
 | Value | Label |
 |---|---|
 | `RESPONSIBLE` | Responsável |
@@ -99,43 +67,27 @@ EmployeeType é a função do colaborador, distinta dos papéis cumulativos Clie
 | `RECOMMENDED` | Indicado |
 | `ADMIN_ASSISTANT` | Assistente Administrativo |
 
-## Attachment Types
-
+### Tipos de Receita (`ref_revenue_types`)
 | Value | Label |
 |---|---|
-| `PDF` | PDF |
-| `JPG` | JPG |
-| `PNG` | PNG |
+| `ADMINISTRATIVE` | Administrativo |
+| `JUDICIAL` | Judicial |
+| `SUCCUMBENCY` | Sucumbência |
 
-## Expense Categories
-
+### Meios de Pagamento (`ref_payment_methods`)
 | Value | Label |
 |---|---|
-| `PAYROLL_LAWYERS` | Folha Advogados |
-| `PAYROLL_INTERNS` | Folha Estagiários |
-| `PAYROLL_STAFF` | Folha Funcionários |
-| `TAX_PIS` | PIS |
-| `TAX_IRPJ` | IRPJ |
-| `TAX_COFINS` | COFINS |
-| `TAX_ISSQN` | ISSQN |
-| `TAX_CSLL` | CSLL |
-| `TAX_OTHER` | Outros Impostos |
-| `PHONE` | Telefone |
-| `MEDIA` | Mídia |
-| `POSTAGE` | Correio |
-| `CONDOMINIUM` | Condomínio |
-| `ELECTRICITY` | RGE |
-| `MEALS` | Refeitório |
-| `ASSETS` | Patrimônio |
-| `SUPPLIES` | Insumos |
-| `NOTARY` | Tabelionato |
-| `COURT_COSTS` | Custos Judiciais |
-| `OTHER` | Outros |
+| `PIX` | Pix |
+| `BANK_TRANSFER` | Transferência Bancária |
+| `BOLETO` | Boleto |
+| `CREDIT_CARD` | Cartão de Crédito |
+| `CASH` | Dinheiro |
+| `CHECK` | Cheque |
 
-## Legacy user roles
-
-The local UserRole lookup remains for historical compatibility during migration. It is not selectable authority for accounts. Current roles and grants are configured in Clerk; employee business forms do not assign access.
-
-Outro inclui funcionários sem função específica neste catálogo. Função não define role Clerk nem autorização.
-
-Revision: the existing ref_title_kinds table is historical implemented state, pending removal in phase03. Preserve its values when converting titleKindId into kind; fresh reset seeds must no longer depend on that table after cutover.
+### Categorias de Anexo (`ref_attachment_types`)
+| Value | Label |
+|---|---|
+| `CONTRACT` | Contrato |
+| `DOCUMENT` | Documento de Identificação |
+| `RECEIPT` | Comprovante de Recebimento |
+| `OUTFLOW_PROOF` | Comprovante de Pagamento |

@@ -1,214 +1,131 @@
 # Domain Model
 
-> Revisão vigente 30/10/2026: [Pessoas, papéis, extensões e genéricos](PERSON_REGISTRATION.md). Substitui telas separadas por rota Pessoas; exige Cliente no receber, Fornecedor no pagar e Colaborador implica Fornecedor. Ajustes novos ainda pendentes no código.
+Este documento define o modelo de domínio canônico do sistema.
+Toda arquitetura é estruturada em 4 Bounded Contexts estritamente desacoplados, além da fronteira multitenant e entidades transversais.
 
-## Approved financial redesign — target precedence
+---
 
-Status: approved plan, not implemented. [Target financial contract](FINANCIAL_SYSTEM.md) and its linked roadmap/UML/authorization supersede conflicting financial and identity semantics below for the ordered redesign. Remaining text describes the preserved running baseline and unchanged house rules; do not infer target implementation from it.
+## 1. Contexto de Identidade e Perfis (Shared Kernel Global)
 
-Target Person replaces separate Client/Employee identities, with EmployeeProfile for professional fields. Fee becomes Receipt. Expense is an operational obligation origin, not cash paid. Payable is the sole remuneration obligation, with separate RemunerationCalculation evidence. Target entities, title origins, batches and reversals are detailed in FINANCIAL_SYSTEM.md and FINANCIAL_UML.md.
+Identidade única e global para toda a empresa. Não possui escopo de `Firm`.
 
+- `Person`: Entidade mestre de cadastro. Identifica qualquer indivíduo ou pessoa jurídica.
+  - Campos: `id`, `fullName`, `document` (CPF/CNPJ único, nulo apenas para genéricos), `email`, `phone`, `isGeneric`, `seedKey`, `isActive`, `personTypeId`.
+  - Pessoas genéricas (`isGeneric = true`) representam consolidações contábeis (ex: Pagamentos diversos, Recebimentos diversos) e dispensam documento fiscal.
+  - Papéis comerciais (Cliente, Fornecedor, Colaborador) são **projeções da existência e atividade de perfis 1:1**, nunca colunas booleanas duplicadas.
 
-## Core Entities
+- `ClientProfile`: Extensão 1:1 de `Person`.
+  - Habilita a pessoa a atuar como cliente em contratos (`Contract.customerId`) e devedor em duplicatas a receber (`Receivable.debtorId`).
 
-- `Firm`: ownership boundary for operational business data.
-- `Employee`: a company-wide lawyer or administrative assistant who may also be a system user.
-- `Client`: a company-wide individual or business party, independent of Firm.
-- `Contract`: a legal engagement linked to one client.
-- `ContractEmployee`: assignment of an employee to a contract with a specific role.
-- `Revenue`: a payment plan attached to a contract.
-- `Fee`: a concrete payment received against a revenue.
-- `Expense`: a concrete firm outflow recorded independently from contracts.
-- `Remuneration`: an amount owed to an employee as the result of a fee.
-- `Attachment`: a file associated with a client, employee, contract, expense, fee, or remuneration.
-- `AuditLog`: immutable record of business changes.
+- `SupplierProfile`: Extensão 1:1 de `Person`.
+  - Habilita a pessoa a atuar como fornecedora em despesas (`Expense.supplierId`) e beneficiária em duplicatas a pagar (`Payable.beneficiaryId`).
 
-## Entity Responsibilities
+- `EmployeeProfile`: Extensão 1:1 de `Person`.
+  - Concentra dados profissionais do colaborador: `employeeTypeId` (função no escritório), `oabNumber` (obrigatório apenas para Advogado), `remunerationPercentage`, `referralPercentage`.
+  - **Invariante estrutural**: Um `EmployeeProfile` ativo exige atomicamente um `SupplierProfile` ativo da mesma `Person`. Todo colaborador que recebe remuneração é um fornecedor no pagar.
 
-- `Firm` defines business-unit ownership and defaults. The active Clerk Organization privateMetadata.firmId selects that existing unit.
-- `Employee` represents both staff identity and operational participation in contracts.
-- `Client` is the business party attached to legal work.
-- `Contract` is the main business aggregate linking client, team, revenue plans, and lifecycle status.
-- `Revenue` defines expected incoming value and payment schedule.
-- `Fee` records actual incoming payments.
-- `Expense` records actual outgoing payments or operational costs.
-- `Remuneration` records outgoing employee compensation derived from fee events.
+---
 
-## Entity Contracts
+## 2. Contexto Operacional
 
-### Firm
+Entidades de negócio da operação jurídica. Isoladas por `Firm`.
 
-- Tenant root entity.
-- Does not carry `firmId`.
-- Does not use soft delete.
+- `Firm`: Fronteira de tenant (filial ou unidade de negócio).
+  - Configura parâmetros de régua: `remunerationCutoffDay` (padrão 25) e `remunerationDueDay` (padrão 5).
+  - Títulos, contratos, despesas e movimentações financeiras pertencem a uma única `Firm`.
 
-### Employee
+- `Contract`: Contrato de prestação de serviços jurídicos.
+  - Vinculado a uma `Firm` e a um cliente (`ClientProfile`).
+  - Possui `processNumber` único por filial, `legalAreaId`, `statusId`, `feePercentage` e notas.
+  - Agrega equipe (`ContractAssignment`) e planos de receita (`Revenue`).
 
-- Carries company-wide professional identity and business settings.
-- Has employee type, optional OAB number, remuneration percentage, referral percentage, active state, and soft-delete state.
-- OAB number is required for lawyers.
-- OAB number is unique company-wide.
-- Employee stores a professional name and business attributes only. Account email, photo and access role are read from Clerk, not copied into Employee. Account creation and invitations are managed in Clerk.
-- `referralPercentage` must not exceed `remunerationPercentage`.
+- `ContractAssignment`: Vínculo de membro da equipe a um contrato.
+  - Conecta `Contract` a `EmployeeProfile` com uma função de atuação (`assignmentTypeId`).
+  - Base para cálculo de comissões futuras.
 
-### Client
+- `Revenue`: Plano de receita acordado no contrato.
+  - Pertence a um `Contract`. Possui `revenueTypeId`, valor negociado (`negotiatedAmount`) e observações.
+  - Origem para geração de duplicatas a receber.
 
-- Is shared across the company, independent of Firm.
-- Carries a client type that may be changed later.
-- Carries a company-wide unique document.
-- Supports optional contact fields and active or deleted lifecycle state.
+- `Expense`: Obrigação de custo operacional do escritório.
+  - Pertence a uma `Firm` e a um fornecedor (`SupplierProfile`).
+  - Possui valor negociado (`negotiatedAmount`), data prevista e observações.
+  - Origem para geração de duplicatas a pagar.
 
-### Contract
+---
 
-- Belongs to one client and one firm.
-- Carries unique process number per firm.
-- Carries legal area, status, fee percentage, optional notes, and status-lock semantics.
-- Owns assignments, revenues, and attachments as part of its working aggregate.
+## 3. Contexto de Pontes (Bridge Context / Camada Anticorrupção)
 
-### ContractEmployee
+Tabelas de ligação dedicadas que conectam entidades operacionais a títulos financeiros.
+Garantem que o financeiro permaneça 100% agnóstico e sem FKs operacionais.
 
-- Connects an employee to a contract with one assignment type.
-- Exists inside the tenant boundary.
-- May accumulate remunerations through fee generation.
+- `ContractRevenueReceivable`: Ponte entre receita de contrato e duplicata a receber.
+  - Campos: `id`, `firmId`, `contractId`, `revenueId`, `receivableId` (UNIQUE).
+  - Garante que cada título a receber pertença a no máximo uma receita contratual.
 
-### Revenue
+- `ExpensePayable`: Ponte entre despesa operacional e duplicata a pagar.
+  - Campos: `id`, `firmId`, `expenseId`, `payableId` (UNIQUE).
+  - Garante que cada título a pagar pertença a no máximo uma despesa.
 
-- Belongs to one contract and one firm.
-- Carries type, total value, optional down payment, payment start date, installment count, and active or deleted lifecycle state.
-- Active uniqueness is constrained by contract and revenue type.
+- `RemunerationPayable`: Ponte entre liquidação de cliente, regra de equipe e obrigação a pagar ao colaborador.
+  - Campos: `id`, `firmId`, `receiptId`, `contractAssignmentId`, `payableId` (UNIQUE).
+  - Armazena a memória de cálculo imutável: `calculationBase` (caixa líquido recebido), `effectivePercentage`, `calculatedAmount`, `computedDueDate` e `ruleSnapshot`.
+  - O título a pagar gerado aponta para o `SupplierProfile` do colaborador.
 
-### Fee
+---
 
-- Belongs to one revenue and one firm.
-- Carries payment date, amount, installment number, remuneration-generation flag, and active or deleted lifecycle state.
-- Active uniqueness is constrained by revenue and installment number.
+## 4. Contexto Financeiro Puro (Agnóstico e Desacoplado)
 
-### Expense
+Motor de contas a receber e a pagar independente.
+Não possui colunas de contrato, despesa, geração ou código legado.
 
-- Belongs to one firm and one expense category.
-- Carries expense date, amount, optional notes, and active or deleted lifecycle state.
-- Is intentionally standalone in the first version and does not require links to client, contract, revenue, or collaborator.
+- `Receivable`: Duplicata a receber.
+  - Pertence a uma `Firm`.
+  - Devedor: `debtorId` referenciando `ClientProfile`.
+  - Atributos: `amount`, `dueDate`, `analyticId`, `expectedPaymentMethodId`, `kind` (`DOWN_PAYMENT`, `INSTALLMENT`, `EXTRA`), `notes`, `cancelledAt`.
+  - **Zero colunas de origem operacional**. Se vier de contrato, a ponte `ContractRevenueReceivable` existe. Se for lançamento manual avulso, não possui ponte.
 
-### Remuneration
+- `Payable`: Duplicata a pagar.
+  - Pertence a uma `Firm`.
+  - Beneficiário: `beneficiaryId` referenciando `SupplierProfile`.
+  - Atributos: `amount`, `dueDate`, `analyticId`, `expectedPaymentMethodId`, `kind` (`DOWN_PAYMENT`, `INSTALLMENT`, `EXTRA`), `notes`, `cancelledAt`.
+  - **Zero colunas de origem operacional**. Se vier de despesa ou remuneração, as pontes `ExpensePayable` ou `RemunerationPayable` existem. Se for manual avulso, não possui ponte.
 
-- Belongs to one fee, one contract assignment, and one firm.
-- Stores effective percentage, amount, payment date, and lifecycle state.
-- Is generated from fee behavior rather than manual user creation.
+- `Receipt`: Liquidação real (baixa) de uma duplicata a receber.
+  - Vinculado a exatamente um `Receivable`.
+  - Campos: `effectiveDate` (hoje ou passado, nunca futura), `actualPaymentMethodId`, `principalAbated`, `discount`, `interest`, `penalty`, `effectiveAmount`, `generatesRemuneration`, `requestKey`, `actorId`.
+  - Caixa efetivo: $C = P - D + J + M$.
 
-### Attachment
+- `Payment`: Liquidação real (baixa) de uma duplicata a pagar.
+  - Vinculado a exatamente um `Payable`.
+  - Campos: `effectiveDate`, `actualPaymentMethodId`, `principalAbated`, `discount`, `interest`, `penalty`, `effectiveAmount`, `requestKey`, `actorId`.
+  - Caixa efetivo: $C = P - D + J + M$.
 
-- Has exactly one owner context among client, employee, contract, expense, fee, or remuneration. firmId records upload origin; visibility follows the owner as defined in [Multitenancy](MULTITENANCY.md).
-- Carries file name, file URL or path, attachment type, and file size.
-- Attachment deletion permanently removes both the stored file and its database record.
+- `ReceiptReversal` / `PaymentReversal`: Estorno de liquidação.
+  - Eventos de baixa são imutáveis; correções são estornos append-only (1:1 com o evento).
+  - Campos: `receiptId` / `paymentId` (UNIQUE), `effectiveDate`, `reason`, `requestKey`, `actorId`.
+  - Reverte saldo principal e fluxos de caixa na data do estorno.
 
-### AuditLog
+---
 
-- Records its event-origin firm and actor snapshot; actorId optionally links the acting Employee. Shared owner references are separate from the actor.
-- Records entity type, entity id, action, change payload, and immutable creation timestamp.
-- Is append-only and never soft-deleted.
+## 5. Entidades Transversais
 
-## Lookup Concepts
+- `Attachment`: Arquivo ou comprovante vinculado a uma entidade do sistema.
+  - Possui exatamente um dono exclusivo: `personId`, `contractId`, `expenseId`, `receivableId`, `payableId`, `receiptId`, `paymentId` ou `remunerationPayableId`.
+  - Arquivos residem em storage privado.
 
-The system uses lookup tables for categorical values rather than hard-coded enums in product behavior:
+- `AuditLog`: Trilha de auditoria imutável e transacional.
+  - Registra: `firmId`, `actorId`, `entityType`, `entityId`, `action`, `changeData` (payload antes/depois), `createdAt`.
+  - Gravado na mesma transação atômica das mutações financeiras e operacionais.
 
-- employee type
-- user role
-- client type
-- legal area
-- contract status
-- revenue type
-- assignment type
-- attachment type
-- expense category
+---
 
-Lookup values are part of domain behavior and must remain stable by `value`.
+## 6. Regras de Saldos e Estados Derivados
 
-## Lookup Families
-
-- employee type
-- user role
-- client type
-- legal area
-- contract status
-- revenue type
-- assignment type
-- attachment type
-- expense category
-
-See `docs/domain/LOOKUP_VALUES.md` for the canonical allowed values and labels.
-
-## Relationship Summary
-
-- One `Firm` owns many contracts, revenues, fees, expenses and remunerations, and records attachment/audit origin; clients, employees and lookup options are shared.
-- One `Firm` owns many expenses.
-- One `Client` may own many contracts.
-- One `Contract` must belong to one client and may own many assignments, revenues, and attachments.
-- One `Revenue` belongs to one contract and may own many fees.
-- One `Fee` may generate many remunerations.
-- One `Employee` may participate in many contracts through `ContractEmployee`.
-
-## Lifecycle Concepts
-
-- Business entities support active and inactive status and soft delete as separate concerns.
-- Lookup values support active and inactive status but not soft delete.
-- Deleted records are not treated as permanently removed data.
-- Remunerations are derived from fee events but become persisted records after generation.
-- Completed and cancelled contracts are business read-only states.
-- Cascading behavior matters across contracts, revenues, fees, remunerations, and assignments.
-
-## Tenant Model
-
-- Firm is the operational isolation boundary within one company.
-- Client, Employee and lookup options are global; operations belong to exactly one Firm. Attachments and audit follow their owner while retaining origin firmId.
-- Other-Firm operations are never exposed through a shared master. See the complete [entity-scope matrix and examples](MULTITENANCY.md).
-
-## Conceptual Rules For Status And Visibility
-
-- `deleted` means removed from normal operation but still restorable.
-- `inactive` means present but not eligible for normal selection flows.
-- Business-entity option lists hide inactive and deleted items by default.
-- Lookup values may remain visible but disabled when inactive.
-
-## Financial Model
-
-- Monetary values are first-class domain values and require precise decimal handling.
-- Percentages drive remuneration logic and must preserve exact business semantics.
-- Derived status such as fully paid or remaining value comes from persisted fee and revenue data rather than ad hoc manual overrides.
-
-## Derived Domain State
-
-- Revenue payment progress is derived from down payment, active fee records, and total expected value.
-- `paidValue` for a revenue means `down payment + sum of active fee amounts for that revenue`.
-- `installmentsPaid` means the count of active fee records for that revenue.
-- `remainingValue` means `max(totalValue - paidValue, 0)`.
-- A revenue is considered fully paid when `remainingValue = 0`.
-- Fee creation must also respect the structural installment limit even if `remainingValue` is still greater than zero.
-- Contract completion is derived from the payment state of all active revenues.
-- A contract is considered fully paid only when every active revenue is fully paid.
-- Assignment validity depends on both employee type and contract context.
-
-## Authentication Entity Relationship
-
-- `Employee` is the application user entity referenced by authentication records.
-- Session and account state belong to Clerk; required privateMetadata.employeeId points to an active business collaborator for application access.
-
-## Conceptual Boundaries
-
-- Client management, contract management, fee management, and remuneration calculation are separate concerns, but they are tightly linked by the contract lifecycle.
-- The domain is driven by fee collection, expense capture, and downstream remuneration correctness.
-
-## Provider authority
-
-Clerk exclusively owns authentication and permission grants. Legacy UserRole remains historical business data only. Legacy auth UUID and forced-reset fields have been retired. They cannot grant runtime access. Integer Employee IDs remain audit actors.
-
-Employee profile photos are owned by Clerk; Employee does not persist an avatar URL.
-
-Firm is a business unit (unidade/filial). The active Clerk Organization privateMetadata.firmId must be a positive integer identifying an existing Firm. The operator manages this link only in Clerk; no organization name or fixed ID is special. Membership plus the valid mapping defines the current unit boundary. Missing, malformed or nonexistent mappings deny access with no default Firm. Multiple Organizations may intentionally share a Firm.
-
-## Business and authentication isolation
-
-Employee has no Clerk ID, account email, avatar or access role. Users and invitations are managed in Clerk. Server-validated Clerk privateMetadata.employeeId must resolve an active, non-deleted Employee for every role. Missing, invalid, inactive or deleted bindings deny all protected access, including general capabilities. The same valid global Employee remains bound when switching Firm; current Clerk membership grants and operational Firm scopes still apply. Audit actors without an Employee retain their Clerk account name and email with a null employee actor ID. Firm is selected exclusively by the active Organization privateMetadata.firmId fetched server-side for the current request. Switching Organization changes the unit context and clears previous frontend data; every protected operation still enforces its current Firm scope.
-
-## Company-wide clients and employees
-
-See [Multitenancy](MULTITENANCY.md) for the authoritative entity-scope matrix, global lifecycle, evidence visibility and current-Firm enforcement.
+- **Status do Título**:
+  - `Pendente`: Nenhum abatimento de principal ($P = 0$) e dentro do vencimento.
+  - `Em atraso`: Saldo em aberto e data de vencimento anterior à data atual.
+  - `Parcial`: Saldo principal parcialmente abatido ($0 < P < Amount$).
+  - `Quitado`: Saldo zerado (soma dos abatimentos de principal válida igual ao valor do título).
+  - `Cancelado`: Título cancelado explicitamente sem nenhuma baixa ativa.
+- **Títulos Manuais Diretos**: Identificados pela ausência de registros nas tabelas de ponte.

@@ -15,22 +15,21 @@ This repository uses `docs/` as the canonical project contract.
 Read in this order before making substantial changes:
 
 1. `docs/index.md`
-2. `docs/domain/PRODUCT_SENSE.md`
-3. `docs/domain/DOMAIN_MODEL.md`
-4. `docs/domain/BUSINESS_RULES.md`
-5. `docs/domain/ROLES_AND_PERMISSIONS.md`
-6. `docs/domain/FEATURE_BEHAVIOR.md`
-7. `docs/domain/LOOKUP_VALUES.md`
-8. `docs/domain/QUERY_BEHAVIOR.md`
-9. `docs/domain/USER_FLOWS.md`
-10. `docs/domain/EDGE_CASES.md`
-11. `docs/domain/SUCCESS_CRITERIA.md`
-12. `docs/implementation/ARCHITECTURE.md`
-13. `docs/implementation/DATA_ACCESS.md`
-14. `docs/implementation/CONVENTIONS.md`
-15. `docs/implementation/FRONTEND.md`
-16. `docs/implementation/SECURITY.md`
-17. `docs/implementation/QUALITY_WORKFLOW.md`
+2. `docs/domain/DOMAIN_MODEL.md`
+3. `docs/domain/FINANCIAL_UML.md`
+4. `docs/domain/FINANCIAL_SYSTEM.md`
+5. `docs/domain/USER_FLOWS.md`
+6. `docs/domain/BUSINESS_RULES.md`
+7. `docs/domain/ROLES_AND_PERMISSIONS.md`
+8. `docs/domain/MULTITENANCY.md`
+9. `docs/domain/LOOKUP_VALUES.md`
+10. `docs/implementation/ARCHITECTURE.md`
+11. `docs/implementation/DATA_ACCESS.md`
+12. `docs/implementation/FRONTEND.md`
+13. `docs/implementation/SECURITY.md`
+14. `docs/implementation/ATTACHMENTS.md`
+15. `docs/implementation/CONVENTIONS.md`
+16. `docs/implementation/QUALITY_WORKFLOW.md`
 
 ### Contract Rules
 
