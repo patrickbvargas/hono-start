@@ -1,3 +1,5 @@
+> Target revision: DirectFinancialEntry and TitleKind below describe historical implemented database state. Approved target removes the direct-entry entity and uses kind directly on titles. Phase03 must migrate schema/guards/seeds; this document does not claim that migration has run.
+
 # Financial database foundation — implementation evidence
 
 Date: 2026-10-29 (America/Sao_Paulo). Scope approved in chat: complete Prisma schema and seed first; application/API/UI may remain unavailable during transition.

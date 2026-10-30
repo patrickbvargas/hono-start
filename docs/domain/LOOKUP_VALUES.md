@@ -4,7 +4,7 @@
 
 Status: approved plan, not implemented. [Target financial contract](FINANCIAL_SYSTEM.md) and its linked roadmap/UML/authorization supersede conflicting financial and identity semantics below for the ordered redesign. Remaining text describes the preserved running baseline and unchanged house rules; do not infer target implementation from it.
 
-Target PersonType evolves ClientType; FinancialAnalytic evolves global ExpenseCategory, preserving stable values. Add global PaymentMethod and TitleKind. All catalogs have no Firm FK. LAWYER uses PAYROLL_LAWYERS; ADMIN_ASSISTANT uses PAYROLL_STAFF. Status/quitada are derived. Local UserRole is not target account authority.
+Target PersonType evolves ClientType; FinancialAnalytic evolves global ExpenseCategory, preserving stable values. Add global PaymentMethod. All catalogs have no Firm FK. LAWYER uses PAYROLL_LAWYERS; ADMIN_ASSISTANT uses PAYROLL_STAFF. Status/quitada are derived. Local UserRole is not target account authority.
 
 
 This file defines the canonical lookup catalogs used by the product domain.
@@ -19,7 +19,7 @@ Lookup values are domain truth:
 
 ## Physical database naming
 
-All global catalog tables use the `ref_` prefix, with `id`, `value`, `label` and `isActive`. Prisma model names remain unchanged through `@@map`. TitleKind follows the same table pattern; it is not an enum.
+All global catalog tables use the `ref_` prefix, with `id`, `value`, `label` and `isActive`. Prisma model names remain unchanged through `@@map`. Title classification is a constrained kind field (DOWN_PAYMENT/INSTALLMENT/EXTRA), not a lookup.
 
 | Prisma model | Physical table |
 |---|---|
@@ -32,7 +32,6 @@ All global catalog tables use the `ref_` prefix, with `id`, `value`, `label` and
 | AttachmentType | ref_attachment_types |
 | FinancialAnalytic | ref_financial_analytics |
 | PaymentMethod | ref_payment_methods |
-| TitleKind | ref_title_kinds |
 
 Rename migrations preserve rows, IDs, FK relationships, RLS and grants. Raw SQL in seeds and verification scripts must use physical names. Historical migration files retain their original names and checksums; never edit applied migrations to retrofit the prefix.
 
@@ -138,3 +137,5 @@ EmployeeType é a função do colaborador, distinta dos papéis cumulativos Clie
 The local UserRole lookup remains for historical compatibility during migration. It is not selectable authority for accounts. Current roles and grants are configured in Clerk; employee business forms do not assign access.
 
 Outro inclui funcionários sem função específica neste catálogo. Função não define role Clerk nem autorização.
+
+Revision: the existing ref_title_kinds table is historical implemented state, pending removal in phase03. Preserve its values when converting titleKindId into kind; fresh reset seeds must no longer depend on that table after cutover.

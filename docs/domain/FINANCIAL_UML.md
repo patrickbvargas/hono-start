@@ -69,7 +69,7 @@ class Receivable {
   dueDate
   analyticId
   expectedPaymentMethodId
-  titleKindId
+  kind
   notes
   balance_derived
   isSettled_derived
@@ -81,7 +81,7 @@ class Payable {
   dueDate
   analyticId
   expectedPaymentMethodId
-  titleKindId
+  kind
   notes
   balance_derived
   isSettled_derived
@@ -170,9 +170,6 @@ class AssignmentType {
 class RevenueType {
   <<lookup>>
 }
-class TitleKind {
-  <<lookup>>
-}
 class PaymentMethod {
   <<lookup>>
 }
@@ -191,9 +188,6 @@ class AuditLog {
 class FinancialGeneration {
   idempotent origin handoff
 }
-class DirectFinancialEntry {
-  explicit direct origin
-}
 class Firm {
   remunerationCutoffDay
   remunerationDueDay
@@ -207,8 +201,6 @@ LegalArea "1" <-- "0..*" Contract
 ContractStatus "1" <-- "0..*" Contract
 AssignmentType "1" <-- "0..*" ContractAssignment
 RevenueType "1" <-- "0..*" Revenue
-TitleKind "1" <-- "0..*" Receivable
-TitleKind "1" <-- "0..*" Payable
 FinancialAnalytic "1" <-- "0..*" Receivable
 FinancialAnalytic "1" <-- "0..*" Payable
 PaymentMethod "1" <-- "0..*" Receivable : expected
@@ -230,8 +222,6 @@ Revenue ..> FinancialGeneration
 Expense ..> FinancialGeneration
 FinancialGeneration ..> Receivable
 FinancialGeneration ..> Payable
-DirectFinancialEntry ..> Receivable
-DirectFinancialEntry ..> Payable
 Firm "1" --> "0..*" Contract
 Firm "1" --> "0..*" Expense
 Firm "1" --> "0..*" Receivable
@@ -244,7 +234,7 @@ CashFlow ..> ReceiptReversal : reverse cash
 CashFlow ..> PaymentReversal : reverse cash
 ```
 
-Lookups use id/value/label/isActive and physical ref_ table names; see [catalog naming](LOOKUP_VALUES.md#physical-database-naming). TitleKind remains a lookup table. Global analytics evolve ExpenseCategory. ADMIN_ASSISTANT and existing PAYROLL_LAWYERS/PAYROLL_STAFF values are preserved. Generated titles require exactly one validated origin; optional Revenue/Expense edges do NOT mean untracked origin is allowed. DirectFinancialEntry and FinancialGeneration are proposed integrity/grouping records, not additional user-facing operational modules. Concrete FK layout is resolved in phase 03 with database-enforced exclusivity. Title kind and origin kind are different concepts.
+Lookups use id/value/label/isActive and physical ref_ table names. Title classification is a constrained kind field on Receivable/Payable: DOWN_PAYMENT (Entrada), INSTALLMENT (Parcela), EXTRA (Extra), with no TitleKind table/FK. Manual titles have no operational source FK and no DirectFinancialEntry record; generated titles retain exactly one appropriate Revenue, Expense or RemunerationCalculation source. FinancialGeneration remains the idempotent acerto record. Creation and its AuditLog are atomic, including manual creation. Title classification and origin are distinct concepts. The current database still contains the previous structures pending phase03 migration.
 
 All operational/financial children retain Firm isolation and timestamps/audit; common fields omitted. Each Attachment has exactly one enforced owner, not multiple simultaneous owners. Each Receipt/Payment owns its proof; neither ReceiptBatch nor PaymentBatch or person grouping exists. Multi-selection creates independent settlements atomically across authorized Persons in one direction and Firm, copying the common effective date and actual PaymentMethod to each event. Receipt also records the remuneration-generation choice. Technical idempotency/audit correlation is not a business lot. Other existing owner attachments remain preserved during cutover. Settlement reversals are append-only, unique per settlement, with actor/reason and event date. Financial totals/status are derived, not independently editable flags.
 

@@ -22,7 +22,7 @@ Person is a company-wide master with cumulative customer/supplier/employee flags
 4. Confirmation requires the sum of all preview titles, INCLUDING the down payment, to equal the agreed total exactly in cents. Both a shortfall and an excess block generation, even with justification; validate again on the server against the current agreed amount inside the transaction. Correct the preview or explicitly correct the agreed amount with the existing permission/reason/audit rules before confirming. Confirm creates all titles and the generation record atomically. Retrying the same confirmation cannot duplicate titles. Existing generation is shown rather than silently regenerated. Later changes are explicit financial adjustments/extras, with justification and audit.
 5. Operational screens consume financial status. Operators need not administer settlement. Completing, cancelling or inactivating the origin never silently cancels debt or blocks authorized settlement of otherwise valid titles. Reopening financial balances never changes operational andamento automatically; retire the current automatic completion coupling.
 
-Finance can also create titles directly. Every title has exactly one identifiable origin: current Revenue, Expense, receipt-generated remuneration, or explicit direct financial entry. Future modules add enforced origin relationships. A generic originType/originId string pair without referential validation is insufficient. No mandatory Expense wrapper for remuneration or direct entries.
+Finance can also create titles manually through a form calling the same authorized API. Manual titles have no operational source FK and require counterparty, analytic, amount, due date and notes/history; do not create a DirectFinancialEntry entity or artificial Expense. Generated titles retain the appropriate concrete Revenue, Expense or RemunerationCalculation source, rejecting multiple simultaneous sources and cross-Firm links. FinancialGeneration remains for acerto idempotency. Every creation, manual or generated, persists AuditLog with actor, time and title data in the same transaction. Manual creation never generates remuneration. Future modules may add concrete source relationships.
 
 ## Amounts, dates and status
 
@@ -90,7 +90,7 @@ Authorized adjustments may change generated Payable amount/date/analytic with ju
 
 See [Clerk catalog and scope](FINANCIAL_AUTHORIZATION.md). Member NEVER sees another collaborator's remuneration, including amounts inferred by totals, generated-title counts, multi-selection correlation, reports, exports, errors, history or attachments. Contract access does not grant that visibility.
 
-Global catalogs: PersonType, EmployeeType, LegalArea, ContractStatus, AssignmentType, RevenueType, AttachmentType, FinancialAnalytic (evolution of ExpenseCategory), PaymentMethod and TitleKind (DOWN_PAYMENT/INSTALLMENT/EXTRA). Quitada/atraso are derived, not manually toggled lookup flags. PaymentMethod records expected versus actual selection. Catalogs have stable value, pt-BR label and active status; no Firm FK.
+Global catalogs: PersonType, EmployeeType, LegalArea, ContractStatus, AssignmentType, RevenueType, AttachmentType, FinancialAnalytic (evolution of ExpenseCategory), PaymentMethod (expected and actual methods). Quitada/atraso are derived, not manually toggled lookup flags. PaymentMethod records expected versus actual selection. Catalogs have stable value, pt-BR label and active status; no Firm FK.
 
 Contract and Expense retain attachments; Person evidence is shared; each Receipt and Payment owns its optional settlement proof. Titles and calculations may retain contextual evidence under owner-authorized access. Private storage remains private; no broadened URL access. Audit retains reasons, actor, before/after and reversal/generation identity, while enforcing owner scope.
 
@@ -125,3 +125,6 @@ Title lists and financial reports SHALL support filters and grouping by contract
 - Use the existing origin lookup relationships for dimension labels and classification; this is not a new immutable historical dimension snapshot. Remuneration monetary calculation snapshots remain immutable. A Member cannot use any dimension, options, counts, exports or drilldown to discover another collaborator's remuneration, profile settings or otherwise forbidden directory data.
 
 Example: remuneration Payable may be FinancialAnalytic “Folha Advogados”, LegalArea “Trabalhista”, RevenueType “Judicial” and its source AssignmentType “Responsável”. These filters do not alter balances or remuneration formulas.
+
+
+Title classification uses a constrained kind field directly on Receivable and Payable: DOWN_PAYMENT (Entrada), INSTALLMENT (Parcela), EXTRA (Extra). No TitleKind lookup table/FK. Preserve classification for entry totals and extra adjustments; it does not determine operational origin.

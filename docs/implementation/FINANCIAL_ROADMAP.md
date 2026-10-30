@@ -81,3 +81,6 @@ Seed must add deterministic global Pagamentos diversos supplier and Recebimentos
 ## Role-profile implementation delta
 
 Before returning to Clerk/UI: create ClientProfile/SupplierProfile, backfill/map current Person roles and remap Contract/Receivable and Expense/Payable FKs, update all seed assertions/constraints and calculation beneficiary validation. Derive role checkboxes from active profiles; avoid redundant independent flags. Verify FK restriction, lifecycle, employee→supplier atomicity, profile-ID versus Person-ID resolution and repeated seed/reset behavior. Then review session policies for Person resolution through SupplierProfile, preserving grants and Member confidentiality. Future banking/address/family extensions are explicitly excluded.
+# Revisão de simplificação dos títulos — 30/10/2026
+
+Na fase03, remover DirectFinancialEntry: título manual existe diretamente em Receivable/Payable, sem origem operacional, com auditoria transacional. Manter vínculos concretos para títulos gerados por receita, despesa e cálculo de remuneração; manter FinancialGeneration para o acerto. Substituir TitleKind/titleKindId por kind restrito a DOWN_PAYMENT/INSTALLMENT/EXTRA. Migrar dados/constraints/seed/testes em conjunto, preservando valores, baixas e histórico. Banco atual ainda usa as estruturas anteriores; alteração documental não equivale a migração aplicada.

@@ -1,7 +1,7 @@
 ## ADDED Requirements
 
 ### Requirement: Concise financial titles
-Receivable and Payable SHALL contain common financial data and enforce one counterparty and one validated origin.
+Receivable and Payable SHALL contain common financial data and enforce one counterparty and at most one validated operational/calculation source; manual titles have no source FK.
 
 #### Scenario: Direct obligation
 - **WHEN** finance creates a direct title with reason, Person and analytic
@@ -50,3 +50,17 @@ Contract customer and Receivable debtor SHALL reference ClientProfile; Expense s
 #### Scenario: Generic title counterparty
 - **WHEN** a direct title uses a seeded documentless generic Person
 - **THEN** it references that Person's corresponding ClientProfile or SupplierProfile, without requiring an EmployeeProfile
+
+### Requirement: Direct title audit without an origin entity
+Manual creation SHALL persist the title and AuditLog atomically, without DirectFinancialEntry or an artificial Expense. Require directional counterparty profile, analytic, amount, due date and notes/history under explicit create permission.
+
+#### Scenario: Audit failure
+- **WHEN** audit persistence fails during manual creation
+- **THEN** title creation rolls back without a partial obligation
+
+### Requirement: Inline title classification
+Receivable and Payable SHALL use constrained kind values DOWN_PAYMENT, INSTALLMENT or EXTRA, without TitleKind lookup/FK. Classification SHALL remain independent of source and retain entry-total semantics.
+
+#### Scenario: Existing data cutover
+- **WHEN** the former direct-entry and title-kind structures are removed
+- **THEN** title IDs, kinds, money, settlements, counterparties and audit remain preserved and seed/reset uses the new structure
