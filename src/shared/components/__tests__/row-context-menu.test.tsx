@@ -10,7 +10,7 @@ import {
 } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { AuditLogTable } from "@/features/audit-logs/components/table";
-import { ClientTable } from "@/features/clients/components/table";
+import { PersonTable } from "@/features/people/components/table";
 import type { dataTableFeatures } from "@/shared/lib/table";
 import { DataTable } from "../data-table";
 import { EntityActions } from "../entity-actions";
@@ -45,10 +45,15 @@ vi.mock("@/shared/hooks/use-pagination", () => ({
 afterEach(cleanup);
 beforeEach(() => {
 	access.grants = new Set([
+		"org:people:read",
+		"org:people:update",
+		"org:people:delete",
+		"org:people:restore",
 		"org:clients:read",
 		"org:clients:update",
 		"org:clients:delete",
 		"org:clients:restore",
+		"org:audit_logs:read",
 	]);
 });
 
@@ -68,7 +73,7 @@ function renderClient(isSoftDeleted = false) {
 	const onDelete = vi.fn();
 	const onRestore = vi.fn();
 	const result = render(
-		<ClientTable
+		<PersonTable
 			canManageLifecycle
 			data={{
 				data: [
@@ -78,6 +83,8 @@ function renderClient(isSoftDeleted = false) {
 						document: "12345678901",
 						type: "Pessoa física",
 						contractCount: 0,
+						roles: ["customer"],
+						isGeneric: false,
 						isActive: true,
 						isSoftDeleted,
 					},
@@ -136,6 +143,8 @@ describe("row context menus", () => {
 	);
 
 	it("applies permission filtering equally to context and overflow menus", async () => {
+		access.grants.delete("org:people:update");
+		access.grants.delete("org:people:delete");
 		access.grants.delete("org:clients:update");
 		access.grants.delete("org:clients:delete");
 		renderClient();

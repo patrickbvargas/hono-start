@@ -1,21 +1,9 @@
 import {
-	ClientDelete,
-	ClientDetails,
-	ClientForm,
-	ClientRestore,
-} from "@/features/clients";
-import {
 	ContractDelete,
 	ContractDetails,
 	ContractForm,
 	ContractRestore,
 } from "@/features/contracts";
-import {
-	EmployeeDelete,
-	EmployeeDetails,
-	EmployeeForm,
-	EmployeeRestore,
-} from "@/features/employees";
 import {
 	ExpenseDelete,
 	ExpenseDetails,
@@ -23,6 +11,12 @@ import {
 	ExpenseRestore,
 } from "@/features/expenses";
 import { FeeDelete, FeeDetails, FeeForm, FeeRestore } from "@/features/fees";
+import {
+	PersonDelete,
+	PersonDetails,
+	PersonForm,
+	PersonRestore,
+} from "@/features/people";
 import {
 	RemunerationDelete,
 	RemunerationDetails,
@@ -53,18 +47,18 @@ const components = {
 		restorePermission: "org:remunerations:restore",
 	},
 	client: {
-		Details: ClientDetails,
-		Form: ClientForm,
-		Delete: ClientDelete,
-		Restore: ClientRestore,
+		Details: PersonDetails,
+		Form: PersonForm,
+		Delete: PersonDelete,
+		Restore: PersonRestore,
 		deletePermission: "org:clients:delete",
 		restorePermission: "org:clients:restore",
 	},
 	employee: {
-		Details: EmployeeDetails,
-		Form: EmployeeForm,
-		Delete: EmployeeDelete,
-		Restore: EmployeeRestore,
+		Details: PersonDetails,
+		Form: PersonForm,
+		Delete: PersonDelete,
+		Restore: PersonRestore,
 		deletePermission: "org:employees:delete",
 		restorePermission: "org:employees:restore",
 	},

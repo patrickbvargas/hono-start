@@ -12,13 +12,9 @@ vi.mock("@tanstack/react-router", () => ({
 	useNavigate: () => mocks.navigate,
 	useSearch: () => mocks.search,
 }));
-vi.mock("@/features/clients", async () => ({
-	clientSearchSchema: (await import("@/features/clients/schemas/search"))
-		.clientSearchSchema,
-}));
-vi.mock("@/features/employees", async () => ({
-	employeeSearchSchema: (await import("@/features/employees/schemas/search"))
-		.employeeSearchSchema,
+vi.mock("@/features/people", async () => ({
+	personSearchSchema: (await import("@/features/people/schemas/search"))
+		.personSearchSchema,
 }));
 vi.mock("@/features/contracts", async () => ({
 	contractSearchSchema: (await import("@/features/contracts/schemas/search"))
@@ -39,8 +35,8 @@ vi.mock("@/features/remunerations", async () => ({
 }));
 
 it.each([
-	["client", "/clientes/$clientId", "clientId"],
-	["employee", "/colaboradores/$employeeId", "employeeId"],
+	["client", "/pessoas/$personId", "personId"],
+	["employee", "/pessoas/$personId", "personId"],
 	["contract", "/contratos/$contractId", "contractId"],
 	["fee", "/honorarios/$feeId", "feeId"],
 	["expense", "/despesas/$expenseId", "expenseId"],

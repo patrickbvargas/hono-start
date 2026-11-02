@@ -1,27 +1,21 @@
 import { describe, expect, it } from "vitest";
 import {
-	clientCreateInputSchema,
-	clientUpdateInputSchema,
-} from "../clients/schemas/form";
-import {
 	contractCreateInputSchema,
 	contractUpdateInputSchema,
 } from "../contracts/schemas/form";
 import {
-	employeeCreateInputSchema,
-	employeeUpdateInputSchema,
-} from "../employees/schemas/form";
-import {
 	expenseCreateInputSchema,
 	expenseUpdateInputSchema,
 } from "../expenses/schemas/form";
+import {
+	personCreateInputSchema,
+	personUpdateInputSchema,
+} from "../people/schemas/form";
 
 describe("write form text limits", () => {
 	it.each([
-		["client create name", clientCreateInputSchema.shape.fullName, 255],
-		["client update name", clientUpdateInputSchema.shape.fullName, 255],
-		["employee create name", employeeCreateInputSchema.shape.fullName, 255],
-		["employee update name", employeeUpdateInputSchema.shape.fullName, 255],
+		["person create name", personCreateInputSchema.shape.fullName, 255],
+		["person update name", personUpdateInputSchema.shape.fullName, 255],
 		[
 			"contract create process",
 			contractCreateInputSchema.shape.processNumber,
@@ -44,7 +38,7 @@ describe("write form text limits", () => {
 		},
 	);
 
-	it.each([clientCreateInputSchema, clientUpdateInputSchema])(
+	it.each([personCreateInputSchema, personUpdateInputSchema])(
 		"checks contacts before normalization",
 		(schema) => {
 			expect(schema.shape.document.parse("12.345.678/0001-90")).toBe(

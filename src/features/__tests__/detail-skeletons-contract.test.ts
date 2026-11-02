@@ -2,8 +2,6 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 const features = [
-	"clients",
-	"employees",
 	"contracts",
 	"expenses",
 	"fees",
@@ -41,13 +39,7 @@ describe("detail skeleton layout contracts", () => {
 		} else if (feature === "audit-logs") {
 			expect(actual[0]).toBe(expected[0]);
 		} else {
-			const fixedGroups =
-				feature === "clients"
-					? actual.filter((_, index) => index !== 2)
-					: feature === "employees"
-						? actual.filter((_, index) => index !== 2)
-						: actual;
-			expect(fixedGroups).toEqual(expected);
+			expect(actual).toEqual(expected);
 		}
 	});
 	it.each(features)(

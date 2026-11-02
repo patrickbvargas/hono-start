@@ -27,7 +27,7 @@ describe("NavigationLink", () => {
 			path: "/",
 			component: () => (
 				<NavigationLink
-					to="/clientes"
+					to="/pessoas"
 					state={{ resetFilterPanel: true }}
 					search={{
 						page: 1,
@@ -36,6 +36,8 @@ describe("NavigationLink", () => {
 						direction: "asc",
 						query: "Ana",
 						type: [],
+						roles: [],
+						employeeType: [],
 						active: "all",
 						status: "active",
 					}}
@@ -46,8 +48,8 @@ describe("NavigationLink", () => {
 		});
 		const target = createRoute({
 			getParentRoute: () => root,
-			path: "/clientes",
-			component: () => <p>Listagem de clientes</p>,
+			path: "/pessoas",
+			component: () => <p>Listagem de pessoas</p>,
 		});
 		const router = createRouter({
 			routeTree: root.addChildren([index, target]),

@@ -46,8 +46,8 @@ describe("frontend orchestration boundaries", () => {
 				hookName: "useAuditLogOptions",
 			},
 			{
-				hookFile: "src/features/clients/hooks/use-data.ts",
-				hookName: "useClientOptions",
+				hookFile: "src/features/people/hooks/use-data.ts",
+				hookName: "usePersonOptions",
 			},
 			{
 				hookFile: "src/features/contracts/hooks/use-data.ts",
@@ -240,18 +240,11 @@ describe("frontend orchestration boundaries", () => {
 				dataField: "summary",
 			},
 			{
-				route: "src/routes/_app/clientes.tsx",
-				hookFile: "src/features/clients/hooks/use-data.ts",
-				hookName: "useClients",
-				queryFactoryName: "getClientsQueryOptions",
-				dataField: "clients",
-			},
-			{
-				route: "src/routes/_app/colaboradores.tsx",
-				hookFile: "src/features/employees/hooks/use-data.ts",
-				hookName: "useEmployees",
-				queryFactoryName: "getEmployeesQueryOptions",
-				dataField: "employees",
+				route: "src/routes/_app/pessoas.tsx",
+				hookFile: "src/features/people/hooks/use-data.ts",
+				hookName: "usePeople",
+				queryFactoryName: "getPeopleQueryOptions",
+				dataField: "people",
 			},
 			{
 				route: "src/routes/_app/contratos.tsx",
@@ -326,10 +319,9 @@ describe("frontend orchestration boundaries", () => {
 
 	it("keeps feature-owned component query consumption behind feature data hooks", () => {
 		const componentFiles = [
-			"src/features/clients/components/details/index.tsx",
-			"src/features/employees/components/details/index.tsx",
-			"src/features/employees/components/delete/index.tsx",
-			"src/features/employees/components/restore/index.tsx",
+			"src/features/people/components/details/index.tsx",
+			"src/features/people/components/delete/index.tsx",
+			"src/features/people/components/restore/index.tsx",
 			"src/features/contracts/components/details/index.tsx",
 			"src/features/contracts/components/delete/index.tsx",
 			"src/features/contracts/components/restore/index.tsx",
@@ -357,14 +349,9 @@ describe("frontend orchestration boundaries", () => {
 	it("keeps collection and single-entity data hook naming aligned", () => {
 		const features = [
 			{
-				hookFile: "src/features/clients/hooks/use-data.ts",
-				collectionHook: "useClients",
-				entityHook: "useClient",
-			},
-			{
-				hookFile: "src/features/employees/hooks/use-data.ts",
-				collectionHook: "useEmployees",
-				entityHook: "useEmployee",
+				hookFile: "src/features/people/hooks/use-data.ts",
+				collectionHook: "usePeople",
+				entityHook: "usePerson",
 			},
 			{
 				hookFile: "src/features/contracts/hooks/use-data.ts",
@@ -405,8 +392,7 @@ describe("frontend orchestration boundaries", () => {
 
 	it("keeps form hooks responsible for parsed submit, cache refresh, and toast feedback", () => {
 		const formHooks = [
-			"src/features/clients/hooks/use-form.ts",
-			"src/features/employees/hooks/use-form.ts",
+			"src/features/people/hooks/use-form.ts",
 			"src/features/contracts/hooks/use-form.ts",
 			"src/features/fees/hooks/use-form.ts",
 			"src/features/remunerations/hooks/use-form.ts",
@@ -447,14 +433,9 @@ describe("frontend orchestration boundaries", () => {
 	it("keeps edit-form hydration behind suspense-first feature data hooks", () => {
 		const formHydrationContracts = [
 			{
-				formHook: "src/features/clients/hooks/use-form.ts",
-				formComponent: "src/features/clients/components/form/index.tsx",
-				entityHook: "useClient(",
-			},
-			{
-				formHook: "src/features/employees/hooks/use-form.ts",
-				formComponent: "src/features/employees/components/form/index.tsx",
-				entityHook: "useEmployee(",
+				formHook: "src/features/people/hooks/use-form.ts",
+				formComponent: "src/features/people/components/form/index.tsx",
+				entityHook: "usePerson(",
 			},
 			{
 				formHook: "src/features/contracts/hooks/use-form.ts",
@@ -565,8 +546,7 @@ describe("frontend orchestration boundaries", () => {
 
 	it("keeps entity routes declarative with validated search, loader prefetch, and overlays", () => {
 		const routeFiles = [
-			"src/routes/_app/clientes.tsx",
-			"src/routes/_app/colaboradores.tsx",
+			"src/routes/_app/pessoas.tsx",
 			"src/routes/_app/contratos.tsx",
 			"src/routes/_app/honorarios.tsx",
 			"src/routes/_app/remuneracoes.tsx",

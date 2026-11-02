@@ -1,25 +1,21 @@
 import { describe, expect, it } from "vitest";
 import { auditLogSchema } from "@/features/audit-logs/schemas/model";
 import {
-	clientDetailSchema,
-	clientSummarySchema,
-} from "@/features/clients/schemas/model";
-import {
 	contractDetailSchema,
 	contractSummarySchema,
 } from "@/features/contracts/schemas/model";
-import {
-	employeeDetailSchema,
-	employeeSummarySchema,
-} from "@/features/employees/schemas/model";
 import { feeDetailSchema } from "@/features/fees/schemas/model";
+import {
+	personDetailSchema,
+	personSummarySchema,
+} from "@/features/people/schemas/model";
 import { remunerationSchema } from "@/features/remunerations/schemas/model";
 
 const timestamp = "2026-01-01T00:00:00.000Z";
 
-const clientDetail = {
+const personDetail = {
 	id: 1,
-	fullName: "Maria Cliente",
+	fullName: "Maria Teste",
 	document: "52998224725",
 	email: "maria@example.com",
 	phone: "11999999999",
@@ -27,22 +23,11 @@ const clientDetail = {
 	typeValue: "INDIVIDUAL",
 	type: "Pessoa Física",
 	contractCount: 2,
-	isActive: true,
-	isSoftDeleted: false,
-	createdAt: timestamp,
-	updatedAt: timestamp,
-};
-
-const employeeDetail = {
-	id: 2,
-	fullName: "João Advogado",
-	oabNumber: "SP123456",
-	remunerationPercent: 0.3,
-	referrerPercent: 0.1,
-	typeId: 20,
-	type: "Advogado",
-	typeValue: "LAWYER",
-	contractCount: 4,
+	isGeneric: false,
+	roles: ["customer"],
+	isCustomer: true,
+	isSupplier: false,
+	isEmployee: false,
 	isActive: true,
 	isSoftDeleted: false,
 	createdAt: timestamp,
@@ -166,28 +151,18 @@ const auditLog = {
 
 describe("feature model contracts", () => {
 	it("accepts UI-ready list and detail models for principal entities", () => {
-		expect(clientSummarySchema.parse(clientDetail)).toEqual({
-			id: clientDetail.id,
-			fullName: clientDetail.fullName,
-			document: clientDetail.document,
-			type: clientDetail.type,
-			contractCount: clientDetail.contractCount,
-			isActive: clientDetail.isActive,
-			isSoftDeleted: clientDetail.isSoftDeleted,
+		expect(personSummarySchema.parse(personDetail)).toEqual({
+			id: personDetail.id,
+			fullName: personDetail.fullName,
+			document: personDetail.document,
+			type: personDetail.type,
+			roles: personDetail.roles,
+			isGeneric: personDetail.isGeneric,
+			contractCount: personDetail.contractCount,
+			isActive: personDetail.isActive,
+			isSoftDeleted: personDetail.isSoftDeleted,
 		});
-		expect(clientDetailSchema.parse(clientDetail)).toEqual(clientDetail);
-
-		expect(employeeSummarySchema.parse(employeeDetail)).toEqual({
-			id: employeeDetail.id,
-			fullName: employeeDetail.fullName,
-			oabNumber: employeeDetail.oabNumber,
-			remunerationPercent: employeeDetail.remunerationPercent,
-			type: employeeDetail.type,
-			contractCount: employeeDetail.contractCount,
-			isActive: employeeDetail.isActive,
-			isSoftDeleted: employeeDetail.isSoftDeleted,
-		});
-		expect(employeeDetailSchema.parse(employeeDetail)).toEqual(employeeDetail);
+		expect(personDetailSchema.parse(personDetail)).toEqual(personDetail);
 
 		expect(contractSummarySchema.parse(contractSummary)).toEqual(
 			contractSummary,
@@ -213,15 +188,8 @@ describe("feature model contracts", () => {
 
 	it("rejects missing fields required by edit defaults and details views", () => {
 		expect(() =>
-			clientDetailSchema.parse({
-				...clientDetail,
-				typeValue: undefined,
-			}),
-		).toThrow();
-
-		expect(() =>
-			employeeDetailSchema.parse({
-				...employeeDetail,
+			personDetailSchema.parse({
+				...personDetail,
 				typeValue: undefined,
 			}),
 		).toThrow();

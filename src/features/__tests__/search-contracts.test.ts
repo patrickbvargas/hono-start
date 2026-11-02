@@ -2,16 +2,14 @@ import { stripSearchParams } from "@tanstack/react-router";
 import { describe, expect, it } from "vitest";
 import { auditLogSearchSchema } from "@/features/audit-logs/schemas/search";
 import { auditLogSearchDefaults } from "@/features/audit-logs/utils/default";
-import { clientSearchSchema } from "@/features/clients/schemas/search";
-import { clientSearchDefaults } from "@/features/clients/utils/default";
 import { contractSearchSchema } from "@/features/contracts/schemas/search";
 import { contractSearchDefaults } from "@/features/contracts/utils/default";
 import { dashboardSearchSchema } from "@/features/dashboard/schemas/search";
 import { dashboardSearchDefaults } from "@/features/dashboard/utils/default";
-import { employeeSearchSchema } from "@/features/employees/schemas/search";
-import { employeeSearchDefaults } from "@/features/employees/utils/default";
 import { feeSearchSchema } from "@/features/fees/schemas/search";
 import { feeSearchDefaults } from "@/features/fees/utils/default";
+import { personSearchSchema } from "@/features/people/schemas/search";
+import { personSearchDefaults } from "@/features/people/utils/default";
 import { remunerationSearchSchema } from "@/features/remunerations/schemas/search";
 import { remunerationSearchDefaults } from "@/features/remunerations/utils/default";
 
@@ -27,9 +25,9 @@ function applyStripSearchParams<T extends Record<string, unknown>>(
 
 const entitySearchCases = [
 	{
-		name: "clients",
-		schema: clientSearchSchema,
-		defaults: clientSearchDefaults,
+		name: "people",
+		schema: personSearchSchema,
+		defaults: personSearchDefaults,
 		validColumn: "document",
 		validFilters: {
 			query: "  Maria  ",
@@ -39,7 +37,7 @@ const entitySearchCases = [
 		},
 		trimmedQuery: "Maria",
 		nonDefaultSearch: {
-			...clientSearchDefaults,
+			...personSearchDefaults,
 			page: 3,
 			column: "document",
 			direction: "desc",
@@ -54,34 +52,6 @@ const entitySearchCases = [
 			query: "Maria",
 			type: ["INDIVIDUAL"],
 			active: "true",
-		},
-	},
-	{
-		name: "employees",
-		schema: employeeSearchSchema,
-		defaults: employeeSearchDefaults,
-		validColumn: "oabNumber",
-		validFilters: {
-			query: "  OAB  ",
-			type: ["LAWYER"],
-			active: "false",
-			status: "all",
-		},
-		trimmedQuery: "OAB",
-		nonDefaultSearch: {
-			...employeeSearchDefaults,
-			page: 2,
-			column: "oabNumber",
-			direction: "desc",
-			query: "OAB",
-			type: ["LAWYER"],
-		},
-		expectedCanonicalSearch: {
-			page: 2,
-			column: "oabNumber",
-			direction: "desc",
-			query: "OAB",
-			type: ["LAWYER"],
 		},
 	},
 	{

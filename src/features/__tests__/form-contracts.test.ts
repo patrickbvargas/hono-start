@@ -1,46 +1,40 @@
 import { describe, expect, it } from "vitest";
 import {
-	clientCreateInputSchema,
-	clientIdInputSchema,
-	clientUpdateInputSchema,
-} from "@/features/clients/schemas/form";
-import {
 	contractCreateInputSchema,
 	contractIdInputSchema,
 	contractUpdateInputSchema,
 } from "@/features/contracts/schemas/form";
-import {
-	employeeCreateInputSchema,
-	employeeIdInputSchema,
-	employeeUpdateInputSchema,
-} from "@/features/employees/schemas/form";
 import {
 	feeCreateInputSchema,
 	feeIdInputSchema,
 	feeUpdateInputSchema,
 } from "@/features/fees/schemas/form";
 import {
+	personCreateInputSchema,
+	personIdInputSchema,
+	personUpdateInputSchema,
+} from "@/features/people/schemas/form";
+import {
 	remunerationExportInputSchema,
 	remunerationIdInputSchema,
 	remunerationUpdateInputSchema,
 } from "@/features/remunerations/schemas/form";
 
-const clientCreateInput = {
-	fullName: "Maria Cliente",
+const personCreateInput = {
+	fullName: "Maria Teste",
 	document: "529.982.247-25",
-	email: "maria@example.com",
+	email: "maria@example.com" as const,
 	phone: "11999999999",
 	type: "INDIVIDUAL",
 	isActive: true,
-};
-
-const employeeCreateInput = {
-	fullName: "João Advogado",
-	oabNumber: "SP123456",
-	remunerationPercent: 0.3,
-	referrerPercent: 0.1,
-	type: "LAWYER",
-	isActive: true,
+	isGeneric: false,
+	isCustomer: true,
+	isSupplier: false,
+	isEmployee: false,
+	employeeType: "",
+	oabNumber: "",
+	remunerationPercent: 0,
+	referrerPercent: 0,
 };
 
 const contractCreateInput = {
@@ -88,8 +82,7 @@ const remunerationUpdateInput = {
 };
 
 const idSchemaCases = [
-	{ name: "client", schema: clientIdInputSchema },
-	{ name: "employee", schema: employeeIdInputSchema },
+	{ name: "person", schema: personIdInputSchema },
 	{ name: "contract", schema: contractIdInputSchema },
 	{ name: "fee", schema: feeIdInputSchema },
 	{ name: "remuneration", schema: remunerationIdInputSchema },
@@ -97,20 +90,14 @@ const idSchemaCases = [
 
 const createSchemaCases = [
 	{
-		name: "client",
-		schema: clientCreateInputSchema,
-		input: clientCreateInput,
+		name: "person",
+		schema: personCreateInputSchema,
+		input: personCreateInput,
 		expected: {
-			...clientCreateInput,
+			...personCreateInput,
 			document: "52998224725",
 			phone: "11999999999",
 		},
-	},
-	{
-		name: "employee",
-		schema: employeeCreateInputSchema,
-		input: employeeCreateInput,
-		expected: employeeCreateInput,
 	},
 	{
 		name: "contract",
@@ -128,21 +115,15 @@ const createSchemaCases = [
 
 const updateSchemaCases = [
 	{
-		name: "client",
-		schema: clientUpdateInputSchema,
-		input: { id: 1, ...clientCreateInput },
+		name: "person",
+		schema: personUpdateInputSchema,
+		input: { id: 1, ...personCreateInput },
 		expected: {
 			id: 1,
-			...clientCreateInput,
+			...personCreateInput,
 			document: "52998224725",
 			phone: "11999999999",
 		},
-	},
-	{
-		name: "employee",
-		schema: employeeUpdateInputSchema,
-		input: { id: 2, ...employeeCreateInput },
-		expected: { id: 2, ...employeeCreateInput },
 	},
 	{
 		name: "contract",

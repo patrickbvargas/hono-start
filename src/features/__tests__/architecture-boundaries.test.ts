@@ -88,9 +88,13 @@ function isAllowedFeatureInternalImport(params: {
 	}
 
 	return (
-		params.targetImport === "@/features/audit-logs/data/mutations" &&
-		normalizedPath.startsWith("src/features/") &&
-		normalizedPath.endsWith("/data/mutations.ts")
+		(params.targetImport === "@/features/audit-logs/data/mutations" &&
+			normalizedPath.startsWith("src/features/") &&
+			normalizedPath.endsWith("/data/mutations.ts")) ||
+		(params.targetImport === "@/features/people/data/queries" &&
+			normalizedPath === "src/features/attachments/data/queries.ts") ||
+		(params.targetImport === "@/features/people/data/access" &&
+			normalizedPath === "src/features/audit-logs/data/person-access.ts")
 	);
 }
 

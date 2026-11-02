@@ -1,14 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { auditLogWorkspaceSearchSchema } from "../audit-logs/schemas/workspace";
-import { clientWorkspaceSearchSchema } from "../clients/schemas/workspace";
-import { employeeWorkspaceSearchSchema } from "../employees/schemas/workspace";
 import { expenseWorkspaceSearchSchema } from "../expenses/schemas/workspace";
 import { feeWorkspaceSearchSchema } from "../fees/schemas/workspace";
+import { personWorkspaceSearchSchema } from "../people/schemas/workspace";
 import { remunerationWorkspaceSearchSchema } from "../remunerations/schemas/workspace";
 
 const schemas = [
-	clientWorkspaceSearchSchema,
-	employeeWorkspaceSearchSchema,
+	personWorkspaceSearchSchema,
 	expenseWorkspaceSearchSchema,
 	feeWorkspaceSearchSchema,
 	remunerationWorkspaceSearchSchema,
@@ -17,11 +15,11 @@ const schemas = [
 
 describe("workspace navigation boundaries", () => {
 	it("accepts meaningful contact, financial and audit sections", () => {
-		expect(clientWorkspaceSearchSchema.parse({ tab: "contact" }).tab).toBe(
+		expect(personWorkspaceSearchSchema.parse({ tab: "contact" }).tab).toBe(
 			"contact",
 		);
 		for (const schema of [
-			employeeWorkspaceSearchSchema,
+			personWorkspaceSearchSchema,
 			feeWorkspaceSearchSchema,
 			remunerationWorkspaceSearchSchema,
 		]) {
@@ -74,8 +72,7 @@ describe("workspace navigation boundaries", () => {
 	);
 	it("accepts only existing attachment owner tabs", () => {
 		for (const schema of [
-			clientWorkspaceSearchSchema,
-			employeeWorkspaceSearchSchema,
+			personWorkspaceSearchSchema,
 			expenseWorkspaceSearchSchema,
 			feeWorkspaceSearchSchema,
 			remunerationWorkspaceSearchSchema,

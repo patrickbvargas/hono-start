@@ -4,8 +4,7 @@ import { describe, expect, it } from "vitest";
 
 const APP_ROUTE_FILES = [
 	"src/routes/_app/index.tsx",
-	"src/routes/_app/clientes.tsx",
-	"src/routes/_app/colaboradores.tsx",
+	"src/routes/_app/pessoas.tsx",
 	"src/routes/_app/contratos.tsx",
 	"src/routes/_app/honorarios.tsx",
 	"src/routes/_app/remuneracoes.tsx",

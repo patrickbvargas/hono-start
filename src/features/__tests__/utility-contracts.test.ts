@@ -1,20 +1,6 @@
 import pdfmake from "pdfmake";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
-	defaultClientCreateValues,
-	defaultClientUpdateValues,
-} from "@/features/clients/utils/default";
-import {
-	formatClientDocument,
-	getClientDocumentLabel,
-	getClientDocumentPlaceholder,
-	getClientNameLabel,
-} from "@/features/clients/utils/format";
-import {
-	normalizeClientDocument,
-	normalizeClientPhone,
-} from "@/features/clients/utils/normalization";
-import {
 	defaultContractCreateValues,
 	defaultContractUpdateValues,
 } from "@/features/contracts/utils/default";
@@ -27,6 +13,20 @@ import {
 	normalizeFeeDateFilter,
 	normalizeFeeReference,
 } from "@/features/fees/utils/normalization";
+import {
+	defaultPersonCreateValues,
+	defaultPersonUpdateValues,
+} from "@/features/people/utils/default";
+import {
+	formatPersonDocument,
+	getPersonDocumentLabel,
+	getPersonDocumentPlaceholder,
+	getPersonNameLabel,
+} from "@/features/people/utils/format";
+import {
+	normalizePersonDocument,
+	normalizePersonPhone,
+} from "@/features/people/utils/normalization";
 import { defaultRemunerationUpdateValues } from "@/features/remunerations/utils/default";
 import {
 	buildRemunerationPdf,
@@ -39,7 +39,7 @@ import { getBuiltInInputMaskDefinition } from "@/shared/lib/input-mask";
 
 const timestamp = "2026-01-15T12:00:00.000Z";
 
-const clientDetail = {
+const personDetail = {
 	id: 1,
 	fullName: "Maria Cliente",
 	document: "52998224725",
@@ -49,6 +49,11 @@ const clientDetail = {
 	typeValue: "COMPANY",
 	type: "Pessoa Jurídica",
 	contractCount: 2,
+	isGeneric: false,
+	roles: ["customer"],
+	isCustomer: true,
+	isSupplier: false,
+	isEmployee: false,
 	isActive: false,
 	isSoftDeleted: false,
 	createdAt: timestamp,
@@ -167,13 +172,21 @@ describe("feature utility contracts", () => {
 	});
 
 	it("keeps create defaults stable for entity forms", () => {
-		expect(defaultClientCreateValues()).toEqual({
+		expect(defaultPersonCreateValues()).toEqual({
 			fullName: "",
 			document: "",
 			email: "",
 			phone: "",
 			type: "",
 			isActive: true,
+			isGeneric: false,
+			isCustomer: true,
+			isSupplier: false,
+			isEmployee: false,
+			employeeType: "",
+			oabNumber: "",
+			remunerationPercent: 0,
+			referrerPercent: 0,
 		});
 		expect(defaultContractCreateValues()).toMatchObject({
 			clientId: "",
@@ -193,7 +206,7 @@ describe("feature utility contracts", () => {
 	});
 
 	it("hydrates update defaults from UI-ready detail models", () => {
-		expect(defaultClientUpdateValues(clientDetail)).toEqual({
+		expect(defaultPersonUpdateValues(personDetail)).toEqual({
 			id: 1,
 			fullName: "Maria Cliente",
 			document: "52998224725",
@@ -201,6 +214,14 @@ describe("feature utility contracts", () => {
 			phone: "",
 			type: "COMPANY",
 			isActive: false,
+			isGeneric: false,
+			isCustomer: true,
+			isSupplier: false,
+			isEmployee: false,
+			employeeType: "",
+			oabNumber: "",
+			remunerationPercent: 0,
+			referrerPercent: 0,
 		});
 		expect(defaultContractUpdateValues(contractDetail)).toMatchObject({
 			id: 3,
@@ -236,23 +257,23 @@ describe("feature utility contracts", () => {
 	});
 
 	it("formats client document labels and masks by client type", () => {
-		expect(formatClientDocument(null)).toBe("—");
-		expect(formatClientDocument("52998224725")).toBe("529.982.247-25");
-		expect(formatClientDocument("12345678000195")).toBe("12.345.678/0001-95");
-		expect(formatClientDocument("ABC")).toBe("ABC");
-		expect(getClientNameLabel("COMPANY")).toBe("Razão Social");
-		expect(getClientDocumentLabel("COMPANY")).toBe("CNPJ");
-		expect(getClientDocumentPlaceholder("COMPANY")).toBe("00.000.000/0000-00");
-		expect(getClientNameLabel("INDIVIDUAL")).toBe("Nome");
-		expect(getClientDocumentLabel("INDIVIDUAL")).toBe("CPF");
+		expect(formatPersonDocument(null)).toBe("—");
+		expect(formatPersonDocument("52998224725")).toBe("529.982.247-25");
+		expect(formatPersonDocument("12345678000195")).toBe("12.345.678/0001-95");
+		expect(formatPersonDocument("ABC")).toBe("ABC");
+		expect(getPersonNameLabel("COMPANY")).toBe("Razão Social");
+		expect(getPersonDocumentLabel("COMPANY")).toBe("CNPJ");
+		expect(getPersonDocumentPlaceholder("COMPANY")).toBe("00.000.000/0000-00");
+		expect(getPersonNameLabel("INDIVIDUAL")).toBe("Nome");
+		expect(getPersonDocumentLabel("INDIVIDUAL")).toBe("CPF");
 	});
 
 	it("normalizes optional text, client values, and fee references without business validation", () => {
 		expect(normalizeOptionalText("  observação  ")).toBe("observação");
 		expect(normalizeOptionalText("   ")).toBeNull();
 		expect(normalizeOptionalText(null)).toBeNull();
-		expect(normalizeClientDocument(" 529.982.247-25 ")).toBe("52998224725");
-		expect(normalizeClientPhone(" (11) 99999-9999 ")).toBe("11999999999");
+		expect(normalizePersonDocument(" 529.982.247-25 ")).toBe("52998224725");
+		expect(normalizePersonPhone(" (11) 99999-9999 ")).toBe("11999999999");
 		expect(normalizeFeeReference("  123  ")).toBe("123");
 		expect(normalizeFeeDateFilter("  2026-01-15  ")).toBe("2026-01-15");
 	});

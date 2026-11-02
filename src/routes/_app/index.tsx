@@ -4,10 +4,8 @@ import {
 	DollarSignIcon,
 	PlusIcon,
 	UserIcon,
-	UsersIcon,
 	WalletCardsIcon,
 } from "lucide-react";
-import { ClientForm, getClientTypesQueryOptions } from "@/features/clients";
 import {
 	ContractDetails,
 	ContractForm,
@@ -30,11 +28,6 @@ import {
 	useDashboardDetailsPreference,
 } from "@/features/dashboard";
 import {
-	EmployeeDetails,
-	EmployeeForm,
-	getEmployeeTypesQueryOptions,
-} from "@/features/employees";
-import {
 	ExpenseForm,
 	getExpenseCategoriesQueryOptions,
 } from "@/features/expenses";
@@ -43,6 +36,12 @@ import {
 	getSelectableFeeContractsQueryOptions,
 	getSelectableFeeRevenuesQueryOptions,
 } from "@/features/fees";
+import {
+	getEmployeeTypesQueryOptions,
+	getPersonTypesQueryOptions,
+	PersonDetails,
+	PersonForm,
+} from "@/features/people";
 import { RouteError } from "@/shared/components/route-error";
 import {
 	Button,
@@ -84,8 +83,15 @@ export const Route = createFileRoute("/_app/")({
 			queryClient.query(getDashboardEmployeeOptionsQueryOptions()),
 		];
 
-		if (hasPermission(session, "org:clients:create")) {
-			await queryClient.query(getClientTypesQueryOptions());
+		if (
+			hasPermission(session, "org:clients:create") ||
+			hasPermission(session, "org:employees:create") ||
+			hasPermission(session, "org:people:create")
+		) {
+			await Promise.all([
+				queryClient.query(getPersonTypesQueryOptions()),
+				queryClient.query(getEmployeeTypesQueryOptions()),
+			]);
 		}
 		if (
 			hasPermission(session, "org:contracts:create") ||
@@ -112,9 +118,6 @@ export const Route = createFileRoute("/_app/")({
 				queryClient.query(getSelectableFeeRevenuesQueryOptions()),
 			]);
 		}
-		if (hasPermission(session, "org:employees:create")) {
-			await Promise.all([queryClient.query(getEmployeeTypesQueryOptions())]);
-		}
 		if (hasPermission(session, "org:expenses:create")) {
 			await queryClient.query(getExpenseCategoriesQueryOptions());
 		}
@@ -134,16 +137,16 @@ function RouteComponent() {
 		useDashboardDetailsPreference();
 	const session = useLoggedUserSession();
 	const isAdmin = hasPermission(session, "org:dashboard:read_all");
-	const clientOverlay = useOverlay<EntityId>();
+	const personOverlay = useOverlay<EntityId>();
 	const contractOverlay = useOverlay<EntityId>();
 	const feeOverlay = useOverlay<EntityId>();
-	const employeeOverlay = useOverlay<EntityId>();
 	const expenseOverlay = useOverlay<EntityId>();
 	const canCreate = (
 		[
 			"org:clients:create",
 			"org:contracts:create",
 			"org:employees:create",
+			"org:people:create",
 			"org:fees:create",
 			"org:expenses:create",
 		] as const
@@ -179,20 +182,13 @@ function RouteComponent() {
 									Contrato
 								</DropdownMenuItem>
 							) : null}
-							{hasPermission(session, "org:clients:create") ? (
+							{hasPermission(session, "org:clients:create") ||
+							hasPermission(session, "org:people:create") ? (
 								<DropdownMenuItem
-									onClick={() => clientOverlay.overlay.create.open()}
+									onClick={() => personOverlay.overlay.create.open()}
 								>
 									<UserIcon size={16} />
-									Cliente
-								</DropdownMenuItem>
-							) : null}
-							{hasPermission(session, "org:employees:create") ? (
-								<DropdownMenuItem
-									onClick={() => employeeOverlay.overlay.create.open()}
-								>
-									<UsersIcon size={16} />
-									Colaborador
+									Pessoa
 								</DropdownMenuItem>
 							) : null}
 							{hasPermission(session, "org:fees:create") ? (
@@ -233,8 +229,9 @@ function RouteComponent() {
 					data={summary}
 					search={search}
 					onViewEmployee={
-						hasPermission(session, "org:employees:read")
-							? employeeOverlay.overlay.details.open
+						hasPermission(session, "org:employees:read") ||
+						hasPermission(session, "org:people:read")
+							? personOverlay.overlay.details.open
 							: undefined
 					}
 					showDetails={showDetails}
@@ -245,8 +242,11 @@ function RouteComponent() {
 							: undefined
 					}
 				/>
-				{clientOverlay.overlay.create.render((state) => (
-					<ClientForm state={state} onSuccess={state.close} />
+				{personOverlay.overlay.create.render((state) => (
+					<PersonForm state={state} onSuccess={state.close} />
+				))}
+				{personOverlay.overlay.details.render((id, state) => (
+					<PersonDetails id={id} state={state} />
 				))}
 				{contractOverlay.overlay.create.render((state) => (
 					<ContractForm state={state} onSuccess={state.close} />
@@ -257,14 +257,8 @@ function RouteComponent() {
 				{feeOverlay.overlay.create.render((state) => (
 					<FeeForm state={state} onSuccess={state.close} />
 				))}
-				{employeeOverlay.overlay.create.render((state) => (
-					<EmployeeForm state={state} onSuccess={state.close} />
-				))}
 				{expenseOverlay.overlay.create.render((state) => (
 					<ExpenseForm state={state} onSuccess={state.close} />
-				))}
-				{employeeOverlay.overlay.details.render((id, state) => (
-					<EmployeeDetails id={id} state={state} />
 				))}
 			</WrapperBody>
 		</Wrapper>

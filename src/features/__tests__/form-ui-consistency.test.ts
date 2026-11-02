@@ -2,8 +2,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 const features = [
-	"clients",
-	"employees",
+	"people",
 	"contracts",
 	"fees",
 	"expenses",
@@ -27,7 +26,7 @@ describe("business form UI contract", () => {
 		expect(source).not.toContain('label="Observação"');
 	});
 
-	it.each(["clients", "employees"])(
+	it.each(["people"])(
 		"keeps the %s lifecycle option in the form flow",
 		(feature) => {
 			const source = readFileSync(

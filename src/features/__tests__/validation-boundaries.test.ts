@@ -106,8 +106,7 @@ describe("feature validation boundaries", () => {
 
 		expect(dataModules).toEqual(
 			expect.arrayContaining([
-				"src/features/clients/data/mutations.ts",
-				"src/features/employees/data/mutations.ts",
+				"src/features/people/data/mutations.ts",
 				"src/features/contracts/data/mutations.ts",
 				"src/features/fees/data/mutations.ts",
 				"src/features/remunerations/data/mutations.ts",

@@ -11,9 +11,8 @@ function readWorkspaceFile(...segments: string[]) {
 describe("detail attachment composition contract", () => {
 	it("keeps attachment sections embedded in supported detail drawers and fallbacks", () => {
 		const detailFiles = [
-			["src", "features", "clients", "components", "details", "index.tsx"],
+			["src", "features", "people", "components", "details", "index.tsx"],
 			["src", "features", "contracts", "components", "details", "index.tsx"],
-			["src", "features", "employees", "components", "details", "index.tsx"],
 			["src", "features", "expenses", "components", "details", "index.tsx"],
 		];
 

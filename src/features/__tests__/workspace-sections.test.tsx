@@ -17,23 +17,15 @@ const fixtures = vi.hoisted(() => {
 		updatedAt: null,
 	};
 	return {
-		client: {
+		person: {
 			...common,
 			fullName: "Maria",
 			document: "52998224725",
 			type: "Pessoa física",
+			roles: ["customer"],
 			contractCount: 2,
 			email: "maria@example.com",
 			phone: "11999999999",
-		},
-		employee: {
-			...common,
-			fullName: "Ana",
-			type: "Advogado",
-			oabNumber: "SP123456",
-			contractCount: 3,
-			remunerationPercent: 0.35,
-			referrerPercent: 0.1,
 		},
 		fee: {
 			...common,
@@ -93,20 +85,8 @@ const fixtures = vi.hoisted(() => {
 		},
 	};
 });
-vi.mock("../clients/hooks/use-data", () => ({
-	useClient: () => ({ client: fixtures.client }),
-	useClientFinance: () => ({
-		finance: {
-			contractCount: 2,
-			totalValue: 1500,
-			paidValue: 500,
-			remainingValue: 1000,
-		},
-	}),
-}));
-vi.mock("../employees/hooks/use-data", () => ({
-	useEmployee: () => ({ employee: fixtures.employee }),
-	useEmployeeFinance: () => ({ finance: { totalAmount: 700 } }),
+vi.mock("../people/hooks/use-data", () => ({
+	usePerson: () => ({ person: fixtures.person }),
 }));
 vi.mock("../fees/hooks/use-data", () => ({
 	useFee: () => ({ fee: fixtures.fee }),
@@ -161,10 +141,9 @@ vi.mock("@/shared/session", () => ({
 }));
 
 import { AuditLogOverview } from "../audit-logs/components/details/overview";
-import { ClientOverview } from "../clients/components/details/overview";
-import { EmployeeOverview } from "../employees/components/details/overview";
 import { ExpenseOverview } from "../expenses/components/details/overview";
 import { FeeOverview } from "../fees/components/details/overview";
+import { PersonOverview } from "../people/components/details/overview";
 import { RemunerationOverview } from "../remunerations/components/details/overview";
 
 afterEach(cleanup);
@@ -183,19 +162,6 @@ describe("record page information hierarchy", () => {
 		).toBeTruthy();
 		expect(screen.getByText("Origem")).toBeTruthy();
 	});
-	it("does not label another collaborator's list as the viewer's own remuneration", () => {
-		access.permissions = ["org:remunerations:read_own"];
-		access.employeeId = 7;
-		const { rerender } = render(<EmployeeOverview id={42} section="finance" />);
-		expect(
-			screen.queryByRole("link", { name: "Ver remunerações de Ana" }),
-		).toBeNull();
-		access.employeeId = 42;
-		rerender(<EmployeeOverview id={42} section="finance" />);
-		expect(
-			screen.getByRole("link", { name: "Ver remunerações de Ana" }),
-		).toBeTruthy();
-	});
 	it("exposes own receipt remuneration without implying the full team count", () => {
 		access.permissions = ["org:remunerations:read_own"];
 		const { rerender } = render(<FeeOverview id={42} section="finance" />);
@@ -212,21 +178,7 @@ describe("record page information hierarchy", () => {
 				.getAttribute("href"),
 		).toBe("/remuneracoes?feeId=42");
 	});
-	it("links collaborator remunerations using the persisted employee ID", () => {
-		render(<EmployeeOverview id={42} section="finance" />);
-		expect(
-			screen
-				.getByRole("link", { name: "Ver remunerações de Ana" })
-				.getAttribute("href"),
-		).toBe("/remuneracoes?employeeId=42&active=true&status=active");
-	});
-	it.each([
-		ClientOverview,
-		EmployeeOverview,
-		ExpenseOverview,
-		FeeOverview,
-		RemunerationOverview,
-	])(
+	it.each([PersonOverview, ExpenseOverview, FeeOverview, RemunerationOverview])(
 		"keeps lifecycle state and registration out of page overview",
 		(Overview) => {
 			render(<Overview id={42} section="overview" />);
@@ -236,20 +188,18 @@ describe("record page information hierarchy", () => {
 			expect(screen.queryByText("Anexos completos")).toBeNull();
 		},
 	);
-	it("separates client contact while keeping the drawer complete", () => {
-		const { rerender } = render(<ClientOverview id={42} section="overview" />);
+	it("separates person contact while keeping the drawer complete", () => {
+		const { rerender } = render(<PersonOverview id={42} section="overview" />);
 		expect(screen.queryByText("maria@example.com")).toBeNull();
-		rerender(<ClientOverview id={42} section="contact" />);
+		rerender(<PersonOverview id={42} section="contact" />);
 		expect(screen.getByText("maria@example.com")).toBeTruthy();
 		expect(screen.queryByText("Documento")).toBeNull();
-		rerender(<ClientOverview id={42} />);
+		rerender(<PersonOverview id={42} />);
 		expect(screen.getByText("Documento")).toBeTruthy();
 		expect(screen.getByText("maria@example.com")).toBeTruthy();
 		expect(screen.getByText("Situação")).toBeTruthy();
-		expect(screen.getByText("Anexos completos")).toBeTruthy();
 	});
 	it.each([
-		{ Overview: EmployeeOverview, label: "Remuneração (%)" },
 		{ Overview: FeeOverview, label: "Remuneração automática" },
 		{ Overview: RemunerationOverview, label: "Percentual efetivo (%)" },
 	])("puts $label in finance instead of overview", ({ Overview, label }) => {
@@ -260,9 +210,6 @@ describe("record page information hierarchy", () => {
 		expect(screen.queryByText("Criado em")).toBeNull();
 		rerender(<Overview id={42} />);
 		expect(screen.getByText(label)).toBeTruthy();
-		expect(Boolean(screen.queryByText("Situação"))).toBe(
-			Overview === EmployeeOverview,
-		);
 	});
 	it("separates audit event, change and technical data while preserving the drawer", () => {
 		const { rerender } = render(<AuditLogOverview id={1} section="overview" />);
@@ -289,42 +236,14 @@ describe("record page information hierarchy", () => {
 	});
 });
 
-it("includes client finance in the drawer and uses an unfiltered contract destination", () => {
-	render(<ClientOverview id={42} />);
-	expect(screen.getByText("Financeiro")).toBeTruthy();
-	expect(
-		screen.getByRole("link", { name: "Ver recebimentos" }).getAttribute("href"),
-	).toContain("clientId=42");
-	const contracts = screen
-		.getByRole("link", { name: "Ver contratos de Maria" })
-		.getAttribute("href");
-	expect(contracts).toContain("status=all");
-	expect(contracts).toContain("active=all");
-});
-it("shows generated employee totals with the matching active list", () => {
-	render(<EmployeeOverview id={42} section="finance" />);
-	expect(screen.getByText("Total de remunerações geradas")).toBeTruthy();
-	expect(
-		screen.getByText(/Remuneração gerada não confirma pagamento/),
-	).toBeTruthy();
-	expect(
-		screen
-			.getByRole("link", { name: "Ver remunerações de Ana" })
-			.getAttribute("href"),
-	).toContain("active=true");
-});
-
-it.each([
-	ClientOverview,
-	EmployeeOverview,
-	ExpenseOverview,
-	FeeOverview,
-	RemunerationOverview,
-])("hides attachments without read permission", (Overview) => {
-	access.permissions = [];
-	render(<Overview id={42} />);
-	expect(screen.queryByText("Anexos completos")).toBeNull();
-});
+it.each([PersonOverview, ExpenseOverview, FeeOverview, RemunerationOverview])(
+	"hides attachments without read permission",
+	(Overview) => {
+		access.permissions = [];
+		render(<Overview id={42} />);
+		expect(screen.queryByText("Anexos completos")).toBeNull();
+	},
+);
 it("shows remuneration origin context in finance and drawer", () => {
 	const { rerender } = render(
 		<RemunerationOverview id={42} section="finance" />,
@@ -334,12 +253,4 @@ it("shows remuneration origin context in finance and drawer", () => {
 	rerender(<RemunerationOverview id={42} />);
 	expect(screen.getByText("Sucumbência")).toBeTruthy();
 	expect(screen.getByText("Responsável")).toBeTruthy();
-});
-
-it("keeps employee totals and warning out of the drawer", () => {
-	render(<EmployeeOverview id={42} />);
-	expect(screen.queryByText("Total de remunerações geradas")).toBeNull();
-	expect(
-		screen.queryByText(/Remuneração gerada não confirma pagamento/),
-	).toBeNull();
 });

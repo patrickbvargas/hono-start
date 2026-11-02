@@ -39,11 +39,10 @@ function readExports(path: string): Record<string, true> {
 const attachments = readExports("src/features/attachments/index.ts");
 const auditLogs = readExports("src/features/audit-logs/index.ts");
 const authentication = readExports("src/features/authentication/index.ts");
-const clients = readExports("src/features/clients/index.ts");
 const contracts = readExports("src/features/contracts/index.ts");
 const dashboard = readExports("src/features/dashboard/index.ts");
-const employees = readExports("src/features/employees/index.ts");
 const fees = readExports("src/features/fees/index.ts");
+const people = readExports("src/features/people/index.ts");
 const remunerations = readExports("src/features/remunerations/index.ts");
 
 describe("feature public barrels", () => {
@@ -58,14 +57,10 @@ describe("feature public barrels", () => {
 		expect(authentication).not.toHaveProperty("loginMutationOptions");
 	});
 
-	it("keeps client and employee barrels route-focused", () => {
-		expect(clients).toHaveProperty("getClientsQueryOptions");
-		expect(clients).toHaveProperty("ClientForm");
-		expect(clients).not.toHaveProperty("useClientForm");
-
-		expect(employees).toHaveProperty("getEmployeesQueryOptions");
-		expect(employees).toHaveProperty("EmployeeForm");
-		expect(employees).not.toHaveProperty("useEmployeeForm");
+	it("keeps people barrel route-focused", () => {
+		expect(people).toHaveProperty("getPeopleQueryOptions");
+		expect(people).toHaveProperty("PersonForm");
+		expect(people).not.toHaveProperty("usePersonForm");
 	});
 
 	it("keeps contract and fee barrels aligned with the same minimal surface", () => {

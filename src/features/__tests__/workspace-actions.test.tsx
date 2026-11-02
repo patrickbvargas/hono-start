@@ -13,11 +13,8 @@ vi.mock("@/shared/session", () => ({
 	CONTRACT_STATUS_CANCELLED_VALUE: "CANCELLED",
 	CONTRACT_STATUS_COMPLETED_VALUE: "COMPLETED",
 }));
-vi.mock("../clients/hooks/use-data", () => ({
-	useClient: () => ({ client: state.record }),
-}));
-vi.mock("../employees/hooks/use-data", () => ({
-	useEmployee: () => ({ employee: state.record }),
+vi.mock("../people/hooks/use-data", () => ({
+	usePerson: () => ({ person: state.record }),
 }));
 vi.mock("../expenses/hooks/use-data", () => ({
 	useExpense: () => ({ expense: state.record }),
@@ -29,15 +26,13 @@ vi.mock("../remunerations/hooks/use-data", () => ({
 	useRemuneration: () => ({ remuneration: state.record }),
 }));
 
-import { useClientWorkspace } from "../clients/hooks/use-workspace";
-import { useEmployeeWorkspace } from "../employees/hooks/use-workspace";
 import { useExpenseWorkspace } from "../expenses/hooks/use-workspace";
 import { useFeeWorkspace } from "../fees/hooks/use-workspace";
+import { usePersonWorkspace } from "../people/hooks/use-workspace";
 import { useRemunerationWorkspace } from "../remunerations/hooks/use-workspace";
 
 const workspaces = [
-	{ feature: "clients", hook: useClientWorkspace },
-	{ feature: "employees", hook: useEmployeeWorkspace },
+	{ feature: "people", hook: usePersonWorkspace },
 	{ feature: "expenses", hook: useExpenseWorkspace },
 	{ feature: "fees", hook: useFeeWorkspace },
 	{ feature: "remunerations", hook: useRemunerationWorkspace },

@@ -7,25 +7,15 @@ export function useRecordPage(kind: RelatedRecordKind, id: EntityId) {
 	const currentSearch = useSearch({ strict: false });
 	const openPage = async () => {
 		switch (kind) {
-			case "client": {
-				const { clientSearchSchema } = await import("@/features/clients");
-				return navigate({
-					to: "/clientes/$clientId",
-					params: { clientId: String(id) },
-					search: {
-						tab: "overview",
-						returnTo: clientSearchSchema.parse(currentSearch),
-					},
-				});
-			}
+			case "client":
 			case "employee": {
-				const { employeeSearchSchema } = await import("@/features/employees");
+				const { personSearchSchema } = await import("@/features/people");
 				return navigate({
-					to: "/colaboradores/$employeeId",
-					params: { employeeId: String(id) },
+					to: "/pessoas/$personId",
+					params: { personId: String(id) },
 					search: {
 						tab: "overview",
-						returnTo: employeeSearchSchema.parse(currentSearch),
+						returnTo: personSearchSchema.parse(currentSearch),
 					},
 				});
 			}

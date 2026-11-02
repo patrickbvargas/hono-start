@@ -12,30 +12,20 @@ describe("form option prefetch contract", () => {
 	it("keeps route loaders aligned with unconditional form option hooks", () => {
 		const contracts = [
 			{
-				routeFile: ["src", "routes", "_app", "clientes.tsx"],
+				routeFile: ["src", "routes", "_app", "pessoas.tsx"],
 				formFile: [
 					"src",
 					"features",
-					"clients",
+					"people",
 					"components",
 					"form",
 					"index.tsx",
 				],
-				requiredRouteSnippets: ["getClientTypesQueryOptions()"],
-				requiredFormSnippets: ["useClientOptions()", "types"],
-			},
-			{
-				routeFile: ["src", "routes", "_app", "colaboradores.tsx"],
-				formFile: [
-					"src",
-					"features",
-					"employees",
-					"components",
-					"form",
-					"index.tsx",
+				requiredRouteSnippets: [
+					"getPersonTypesQueryOptions()",
+					"getEmployeeTypesQueryOptions()",
 				],
-				requiredRouteSnippets: ["getEmployeeTypesQueryOptions()"],
-				requiredFormSnippets: ["useEmployeeOptions()", "types"],
+				requiredFormSnippets: ["usePersonOptions()", "types", "employeeTypes"],
 			},
 			{
 				routeFile: ["src", "routes", "_app", "contratos.tsx"],
@@ -82,7 +72,7 @@ describe("form option prefetch contract", () => {
 				routeFile: ["src", "routes", "_app", "index.tsx"],
 				formFile: ["src", "routes", "_app", "index.tsx"],
 				requiredRouteSnippets: [
-					"getClientTypesQueryOptions()",
+					"getPersonTypesQueryOptions()",
 					"getSelectableContractClientsQueryOptions()",
 					"getSelectableContractEmployeesQueryOptions()",
 					"getContractLegalAreasQueryOptions()",
@@ -94,10 +84,9 @@ describe("form option prefetch contract", () => {
 					"getEmployeeTypesQueryOptions()",
 				],
 				requiredFormSnippets: [
-					"<ClientForm state={state} onSuccess={state.close} />",
+					"<PersonForm state={state} onSuccess={state.close} />",
 					"<ContractForm state={state} onSuccess={state.close} />",
 					"<FeeForm state={state} onSuccess={state.close} />",
-					"<EmployeeForm state={state} onSuccess={state.close} />",
 				],
 			},
 		];
