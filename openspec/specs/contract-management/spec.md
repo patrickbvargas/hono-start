@@ -99,6 +99,11 @@ The system SHALL allow authenticated users with access to a contract to inspect 
 - **THEN** the drawer SHALL include the attachment section for that contract
 - **AND** the attachment section SHALL preserve the same detail-drawer section rhythm and skeleton treatment used by the rest of the drawer
 
+
+#### Scenario: Related record links route to Person records
+- **WHEN** a user clicks on the client link or collaborator link in contract details or workspace
+- **THEN** the link provides the underlying Person id to RelatedRecordLink
+- **AND** activating the link opens the Person details overlay or navigates to the person page (/pessoas/$personId)
 ### Requirement: Create contract as an aggregate
 The system SHALL allow authenticated users to create a contract in their own firm only when the submitted payload satisfies the required aggregate rules for client, assignments, and revenues.
 
@@ -245,16 +250,19 @@ The system SHALL allow administrators to soft-delete and restore contracts while
 - **THEN** the server rejects the action before contract state changes
 
 ### Requirement: Contract option and lookup queries support aggregate workflows
-The system SHALL expose option queries needed by the contract form while preserving the repository's business-entity and lookup-query rules.
+The system SHALL expose option queries needed by the contract form while preserving the repository's business-entity and lookup-query rules, integrating with the unified Person and profile architecture.
 
-#### Scenario: Client options include selectable business entities only
-- **WHEN** the contract form loads client options
-- **THEN** the option query returns only clients in the authenticated user's firm where `deletedAt = null` and `isActive = true`
+#### Scenario: Client options include selectable business entities
+- **WHEN** the contract form or filter loads client options
+- **THEN** the option query returns active ClientProfiles linked to active, non-deleted Person records in the authenticated user's firm
+- **AND** the option value is the ClientProfile id
+- **AND** the option label displays the person's full name
 
-#### Scenario: Employee options include selectable collaborators only
-- **WHEN** the contract form loads employee options for team assignment
-- **THEN** the option query returns only employees in the authenticated user's firm where `deletedAt = null` and `isActive = true`
-
+#### Scenario: Employee options include selectable collaborators
+- **WHEN** the contract form or filter loads employee options for team assignment
+- **THEN** the option query returns active EmployeeProfiles linked to active, non-deleted Person records in the authenticated user's firm
+- **AND** the option value is the EmployeeProfile id
+- **AND** the option label displays the person's full name
 #### Scenario: Edit form preserves current inactive business entity selections
 - **WHEN** a user opens the contract edit form for a record that already references an inactive or otherwise no-longer-selectable client or collaborator
 - **THEN** the edit form still shows each persisted current selection

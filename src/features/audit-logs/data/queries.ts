@@ -292,15 +292,25 @@ export async function getAuditHistory({
 	entityType,
 	entityId,
 }: AuditHistory & { firmId: number } & AuditAccessParams): Promise<AuditLog[]> {
+	const isProfile = Boolean(
+		(prisma as unknown as Record<string, unknown>).clientProfile ||
+			(prisma as unknown as Record<string, unknown>).employeeProfile,
+	);
 	const rows = await prisma.auditLog.findMany({
 		where: {
 			...(accessWhere ? { AND: [accessWhere] } : {}),
 			...(entityType === "Person"
 				? { personId: entityId, entityType: { in: ["Person", "Attachment"] } }
 				: entityType === "Client"
-					? { clientId: entityId }
+					? isProfile
+						? { personId: entityId }
+						: ({ clientId: entityId } as unknown as Prisma.AuditLogWhereInput)
 					: entityType === "Employee"
-						? { employeeId: entityId }
+						? isProfile
+							? { personId: entityId }
+							: ({
+									employeeId: entityId,
+								} as unknown as Prisma.AuditLogWhereInput)
 						: { firmId, entityType, entityId: String(entityId) }),
 		},
 		orderBy: [{ createdAt: "desc" }, { id: "asc" }],
@@ -311,11 +321,21 @@ export async function getAuditHistory({
 export function getAuditVisibilityWhere(
 	firmId: number,
 ): Prisma.AuditLogWhereInput {
+	const isProfile = Boolean(
+		(prisma as unknown as Record<string, unknown>).clientProfile ||
+			(prisma as unknown as Record<string, unknown>).employeeProfile,
+	);
 	return {
 		OR: [
 			{ firmId },
-			{ clientId: { not: null } },
-			{ employeeId: { not: null } },
+			isProfile
+				? { personId: { not: null } }
+				: ({ clientId: { not: null } } as unknown as Prisma.AuditLogWhereInput),
+			isProfile
+				? { personId: { not: null } }
+				: ({
+						employeeId: { not: null },
+					} as unknown as Prisma.AuditLogWhereInput),
 		],
 	};
 }

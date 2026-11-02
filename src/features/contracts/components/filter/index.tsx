@@ -1,7 +1,3 @@
-import {
-	renderEmployeeFilterAvatar,
-	renderEmployeeFilterOption,
-} from "@/shared/components/employee-filter-option";
 import { ListFilters } from "@/shared/components/list-filters";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
 import { ENTITY_DELETED_FILTER_OPTIONS } from "@/shared/lib/entity-management";
@@ -52,12 +48,7 @@ export const ContractFilter = ({ controller }: ContractFilterProps) => {
 			</form.AppField>
 			<form.AppField name="employeeId">
 				{(field) => (
-					<field.Autocomplete
-						label="Colaborador"
-						options={employees}
-						renderOption={renderEmployeeFilterOption}
-						renderSelectedAdornment={renderEmployeeFilterAvatar}
-					/>
+					<field.Autocomplete label="Colaborador" options={employees} />
 				)}
 			</form.AppField>
 			<form.AppField name="legalArea">
@@ -105,8 +96,6 @@ export const ContractFilter = ({ controller }: ContractFilterProps) => {
 							aria-label="Colaborador"
 							placeholder="Colaborador"
 							options={employees}
-							renderOption={renderEmployeeFilterOption}
-							renderSelectedAdornment={renderEmployeeFilterAvatar}
 						/>
 					)}
 				</form.AppField>

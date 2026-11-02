@@ -26,103 +26,111 @@ export function ContractRevenues({
 		<div className="space-y-4">
 			{contract.revenues
 				.filter((revenue) => revenue.isActive && !revenue.isSoftDeleted)
-				.map((revenue) => (
-					<FormSection
-						key={revenue.id}
-						title={revenue.type}
-						action={
-							<RevenuePaymentStatus
-								isFullyPaid={revenue.isFullyPaid}
-								paidValue={revenue.paidValue}
-								nextDueDate={revenue.nextDueDate}
+				.map((revenue) => {
+					const canRegisterReceipt =
+						hasPermission(session, "org:fees:create") &&
+						canReadFees &&
+						contract.isActive &&
+						!contract.isSoftDeleted &&
+						contract.statusValue === "ACTIVE" &&
+						!revenue.isFullyPaid &&
+						revenue.nextInstallmentNumber !== null;
+					const hasActions = canRegisterReceipt || canReadFees;
+
+					return (
+						<FormSection
+							key={revenue.id}
+							title={revenue.type}
+							action={
+								<RevenuePaymentStatus
+									isFullyPaid={revenue.isFullyPaid}
+									paidValue={revenue.paidValue}
+									nextDueDate={revenue.nextDueDate}
+								/>
+							}
+						>
+							<EntityDetail.Fields
+								columns={2}
+								items={[
+									{
+										term: "Valor contratado",
+										definition: (
+											<SensitiveValue>
+												{formatter.currency(revenue.totalValue)} (
+												{getPaymentSummary(revenue)})
+											</SensitiveValue>
+										),
+									},
+									{
+										term: "Valor entrada",
+										definition: (
+											<SensitiveValue>
+												{formatter.currency(revenue.downPaymentValue ?? 0)}
+											</SensitiveValue>
+										),
+									},
+									{
+										term: "Recebido",
+										definition: (
+											<SensitiveValue>
+												{formatter.currency(revenue.paidValue)}
+											</SensitiveValue>
+										),
+									},
+									{
+										term: "Saldo a receber",
+										definition: (
+											<SensitiveValue>
+												{formatter.currency(revenue.remainingValue)}
+											</SensitiveValue>
+										),
+									},
+									{
+										term: "Parcelas registradas",
+										definition: `${revenue.installmentsPaid} de ${revenue.totalInstallments}`,
+									},
+									{
+										term: "Próximo vencimento",
+										definition:
+											revenue.isFullyPaid || !revenue.nextDueDate
+												? "—"
+												: formatter.calendarDate(revenue.nextDueDate),
+									},
+								]}
 							/>
-						}
-					>
-						<EntityDetail.Fields
-							columns={2}
-							items={[
-								{
-									term: "Valor contratado",
-									definition: (
-										<SensitiveValue>
-											{formatter.currency(revenue.totalValue)} (
-											{getPaymentSummary(revenue)})
-										</SensitiveValue>
-									),
-								},
-								{
-									term: "Valor entrada",
-									definition: (
-										<SensitiveValue>
-											{formatter.currency(revenue.downPaymentValue ?? 0)}
-										</SensitiveValue>
-									),
-								},
-								{
-									term: "Recebido",
-									definition: (
-										<SensitiveValue>
-											{formatter.currency(revenue.paidValue)}
-										</SensitiveValue>
-									),
-								},
-								{
-									term: "Saldo a receber",
-									definition: (
-										<SensitiveValue>
-											{formatter.currency(revenue.remainingValue)}
-										</SensitiveValue>
-									),
-								},
-								{
-									term: "Parcelas registradas",
-									definition: `${revenue.installmentsPaid} de ${revenue.totalInstallments}`,
-								},
-								{
-									term: "Próximo vencimento",
-									definition:
-										revenue.isFullyPaid || !revenue.nextDueDate
-											? "—"
-											: formatter.calendarDate(revenue.nextDueDate),
-								},
-							]}
-						/>
-						{canReadFees ? <RevenueInstallments revenue={revenue} /> : null}
-						<div className="flex flex-wrap items-center gap-3">
-							{hasPermission(session, "org:fees:create") &&
-							canReadFees &&
-							contract.isActive &&
-							!contract.isSoftDeleted &&
-							contract.statusValue === "ACTIVE" &&
-							!revenue.isFullyPaid &&
-							revenue.nextInstallmentNumber !== null ? (
-								<Button
-									size="sm"
-									onClick={() => {
-										onRegister(revenue.id);
-									}}
-								>
-									Registrar recebimento
-								</Button>
+							{canReadFees ? <RevenueInstallments revenue={revenue} /> : null}
+							{hasActions ? (
+								<div className="flex flex-wrap items-center gap-3">
+									{canRegisterReceipt ? (
+										<Button
+											size="sm"
+											onClick={() => {
+												onRegister(revenue.id);
+											}}
+										>
+											Registrar recebimento
+										</Button>
+									) : null}
+									{canReadFees ? (
+										<NavigationLink
+											to="/honorarios"
+											state={{ resetFilterPanel: true }}
+											aria-label={`Ver recebimentos da receita ${revenue.type}`}
+											search={{
+												...feeSearchDefaults,
+												contractId: String(contract.id),
+												revenueId: String(revenue.id),
+											}}
+											className="text-sm"
+										>
+											Recebimentos
+										</NavigationLink>
+									) : null}
+								</div>
 							) : null}
-							{canReadFees ? (
-								<NavigationLink
-									to="/honorarios"
-									state={{ resetFilterPanel: true }}
-									aria-label={`Ver recebimentos da receita ${revenue.type}`}
-									search={{
-										...feeSearchDefaults,
-										contractId: String(contract.id),
-										revenueId: String(revenue.id),
-									}}
-									className="text-sm"
-								>
-									Recebimentos
-								</NavigationLink>
-							) : null}
-						</div>
-					</FormSection>
-				))}
+						</FormSection>
+					);
+				})}
 			{contract.revenues.filter((r) => r.isActive && !r.isSoftDeleted)
 				.length === 0 ? (
 				<p className="text-sm text-muted-foreground">

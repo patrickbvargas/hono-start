@@ -17,12 +17,24 @@ export async function getAuditAccessWhere(
 ): Promise<Prisma.AuditLogWhereInput> {
 	assertCan(session, "org:audit_logs:read");
 	const firmId = session.firm.id;
+	const isProfile = Boolean(prisma.clientProfile || prisma.employeeProfile);
+
 	const branches: Prisma.AuditLogWhereInput[] = [];
 	if (hasPermission(session, "org:clients:read")) {
-		branches.push({ clientId: { not: null } });
+		branches.push(
+			isProfile
+				? { personId: { not: null } }
+				: ({ clientId: { not: null } } as unknown as Prisma.AuditLogWhereInput),
+		);
 	}
 	if (hasPermission(session, "org:employees:read")) {
-		branches.push({ employeeId: { not: null } });
+		branches.push(
+			isProfile
+				? { personId: { not: null } }
+				: ({
+						employeeId: { not: null },
+					} as unknown as Prisma.AuditLogWhereInput),
+		);
 	}
 	const assignmentTypes =
 		session.employeeType?.value === SESSION_EMPLOYEE_TYPE_ADMIN_ASSISTANT_VALUE
@@ -38,7 +50,9 @@ export async function getAuditAccessWhere(
 		assignments: {
 			some: {
 				firmId,
-				employeeId: session.employee.id ?? -1,
+				...(isProfile
+					? { employeeProfileId: session.employee.id ?? -1 }
+					: { employeeId: session.employee.id ?? -1 }),
 				isActive: true,
 				deletedAt: null,
 				assignmentType: { value: { in: assignmentTypes } },
@@ -99,13 +113,17 @@ export async function getAuditAccessWhere(
 			contracts.map(({ id }) => id),
 		);
 	}
-	if (hasPermission(session, "org:fees:read_all")) {
+	const feeModel = (prisma as unknown as Record<string, unknown>).fee as
+		| { findMany: (args: unknown) => Promise<Array<{ id: number }>> }
+		| undefined;
+	if (feeModel && hasPermission(session, "org:fees:read_all")) {
 		addOwner("Fee", "fee", "feeId");
 	} else if (
+		feeModel &&
 		hasPermission(session, "org:fees:read_assigned") &&
 		session.employee.id !== null
 	) {
-		const fees = await prisma.fee.findMany({
+		const fees = await feeModel.findMany({
 			where: { firmId, revenue: { firmId, contract: assignedContract } },
 			select: { id: true },
 		});
@@ -116,13 +134,21 @@ export async function getAuditAccessWhere(
 			fees.map(({ id }) => id),
 		);
 	}
-	if (hasPermission(session, "org:remunerations:read_all")) {
+	const remunerationModel = (prisma as unknown as Record<string, unknown>)
+		.remuneration as
+		| { findMany: (args: unknown) => Promise<Array<{ id: number }>> }
+		| undefined;
+	if (
+		remunerationModel &&
+		hasPermission(session, "org:remunerations:read_all")
+	) {
 		addOwner("Remuneration", "remuneration", "remunerationId");
 	} else if (
+		remunerationModel &&
 		hasPermission(session, "org:remunerations:read_own") &&
 		session.employee.id !== null
 	) {
-		const remunerations = await prisma.remuneration.findMany({
+		const remunerations = await remunerationModel.findMany({
 			where: {
 				firmId,
 				contractEmployee: { firmId, employeeId: session.employee.id },
@@ -139,6 +165,15 @@ export async function getAuditAccessWhere(
 	if (hasPermission(session, "org:expenses:read")) {
 		addOwner("Expense", "expense", "expenseId");
 	}
-	branches.push({ firmId, clientId: null, employeeId: null, OR: operational });
+	branches.push({
+		firmId,
+		...(isProfile
+			? { personId: null }
+			: ({
+					clientId: null,
+					employeeId: null,
+				} as unknown as Prisma.AuditLogWhereInput)),
+		OR: operational,
+	});
 	return { OR: branches };
 }

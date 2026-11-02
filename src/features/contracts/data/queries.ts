@@ -69,6 +69,10 @@ function getVisibleAssignmentTypeValues(employeeTypeValue?: string) {
 	];
 }
 
+function isProfileModelActive() {
+	return Boolean(prisma.clientProfile || prisma.employeeProfile);
+}
+
 function buildVisibleAssignmentWhere(
 	employeeId?: number,
 	employeeTypeValue?: string,
@@ -77,8 +81,10 @@ function buildVisibleAssignmentWhere(
 		return undefined;
 	}
 
+	const isProfile = isProfileModelActive();
+
 	return {
-		employeeId,
+		...(isProfile ? { employeeProfileId: employeeId } : { employeeId }),
 		deletedAt: null,
 		isActive: true,
 		assignmentType: {
@@ -91,8 +97,14 @@ function buildVisibleAssignmentWhere(
 
 function mapAssignmentSummaries(
 	assignments: Array<{
-		employeeId: number;
-		employee: {
+		employeeProfileId?: number;
+		employeeId?: number;
+		employeeProfile?: {
+			employeeType: {
+				value: string;
+			};
+		};
+		employee?: {
 			type: {
 				value: string;
 			};
@@ -103,16 +115,25 @@ function mapAssignmentSummaries(
 	}>,
 ): SessionAssignmentSummary[] {
 	return assignments.map((assignment) => ({
-		employeeId: assignment.employeeId,
-		employeeTypeValue: assignment.employee.type.value,
+		employeeId: assignment.employeeProfileId ?? assignment.employeeId ?? 0,
+		employeeTypeValue:
+			assignment.employeeProfile?.employeeType.value ??
+			assignment.employee?.type.value ??
+			"",
 		assignmentTypeValue: assignment.assignmentType.value,
 	}));
 }
 
 function getHandlingLawyerName(
 	assignments: Array<{
-		employeeId: number;
-		employee: {
+		employeeProfileId?: number;
+		employeeId?: number;
+		employeeProfile?: {
+			person: {
+				fullName: string;
+			};
+		};
+		employee?: {
 			fullName: string;
 		};
 		assignmentType: {
@@ -126,7 +147,11 @@ function getHandlingLawyerName(
 	);
 
 	if (responsibleAssignment) {
-		return responsibleAssignment.employee.fullName;
+		return (
+			responsibleAssignment.employeeProfile?.person.fullName ??
+			responsibleAssignment.employee?.fullName ??
+			"—"
+		);
 	}
 
 	const recommendedAssignment = assignments.find(
@@ -135,7 +160,11 @@ function getHandlingLawyerName(
 	);
 
 	if (recommendedAssignment) {
-		return recommendedAssignment.employee.fullName;
+		return (
+			recommendedAssignment.employeeProfile?.person.fullName ??
+			recommendedAssignment.employee?.fullName ??
+			"—"
+		);
 	}
 
 	return "—";
@@ -151,6 +180,8 @@ function buildContractWhere({
 	statusIds,
 	isAdmin,
 }: BuildContractWhereParams) {
+	const isProfile = isProfileModelActive();
+
 	return {
 		firmId,
 		...getEntityDeletedWhere(filter.status),
@@ -164,25 +195,38 @@ function buildContractWhere({
 								mode: "insensitive" as const,
 							},
 						},
-						{
-							client: {
-								fullName: {
-									contains: filter.query,
-									mode: "insensitive" as const,
+						isProfile
+							? {
+									customer: {
+										person: {
+											fullName: {
+												contains: filter.query,
+												mode: "insensitive" as const,
+											},
+										},
+									},
+								}
+							: {
+									client: {
+										fullName: {
+											contains: filter.query,
+											mode: "insensitive" as const,
+										},
+									},
 								},
-							},
-						},
 					],
 				}
 			: {}),
-		...(clientId ? { clientId } : {}),
+		...(clientId ? (isProfile ? { customerId: clientId } : { clientId }) : {}),
 		...(filter.employeeId
 			? {
 					AND: [
 						{
 							assignments: {
 								some: {
-									employeeId: Number(filter.employeeId),
+									...(isProfile
+										? { employeeProfileId: Number(filter.employeeId) }
+										: { employeeId: Number(filter.employeeId) }),
 									isActive: true,
 									deletedAt: null,
 								},
@@ -230,7 +274,8 @@ function mapContractSummary(
 	contracts: Array<{
 		id: number;
 		processNumber: string;
-		clientId: number;
+		customerId?: number;
+		clientId?: number;
 		legalAreaId: number;
 		statusId: number;
 		feePercentage: { toString(): string };
@@ -238,12 +283,24 @@ function mapContractSummary(
 		deletedAt: Date | null;
 		createdAt: Date;
 		updatedAt: Date | null;
-		client: { fullName: string };
+		customer?: {
+			id: number;
+			personId: number;
+			person: { fullName: string; document: string | null };
+		};
+		client?: { fullName: string };
 		legalArea: { label: string; value: string };
 		status: { label: string; value: string };
 		assignments: Array<{
-			employeeId: number;
-			employee: {
+			employeeProfileId?: number;
+			employeeId?: number;
+			employeeProfile?: {
+				id: number;
+				personId: number;
+				person: { fullName: string };
+				employeeType: { value: string };
+			};
+			employee?: {
 				fullName: string;
 				type: { value: string };
 			};
@@ -256,14 +313,22 @@ function mapContractSummary(
 		contracts.map((contract) => {
 			const assignmentSummaries = mapAssignmentSummaries(contract.assignments);
 			const assignedEmployeeIds = contract.assignments.map(
-				(assignment) => assignment.employeeId,
+				(assignment) =>
+					assignment.employeeProfileId ?? assignment.employeeId ?? 0,
 			);
+			const clientId = contract.customerId ?? contract.clientId ?? 0;
+			const clientPersonId = contract.customer?.personId ?? clientId;
+			const clientName =
+				contract.customer?.person.fullName ?? contract.client?.fullName ?? "—";
+			const clientDoc = contract.customer?.person.document ?? null;
 
 			return {
 				id: contract.id,
 				processNumber: contract.processNumber,
-				clientId: contract.clientId,
-				client: contract.client.fullName,
+				clientId,
+				clientPersonId,
+				client: clientName,
+				clientDocument: clientDoc,
 				lawyer: getHandlingLawyerName(contract.assignments),
 				legalAreaId: contract.legalAreaId,
 				legalArea: contract.legalArea.label,
@@ -289,12 +354,196 @@ function mapContractSummary(
 	);
 }
 
+function mapRevenueDetail(revenue: {
+	id: number;
+	revenueTypeId?: number;
+	typeId?: number;
+	totalValue?: { toString(): string } | number;
+	negotiatedAmount?: { toString(): string } | number;
+	downPaymentValue?: { toString(): string } | number | null;
+	paymentStartDate?: Date;
+	totalInstallments?: number;
+	isActive: boolean;
+	deletedAt: Date | null;
+	createdAt?: Date;
+	revenueType?: { label: string; value: string };
+	type?: { label: string; value: string };
+	contractRevenueReceivables?: Array<{
+		receivable: {
+			id: number;
+			amount: { toString(): string } | number;
+			dueDate: Date;
+			kind: string;
+			cancelledAt: Date | null;
+			receipts: Array<{
+				id: number;
+				effectiveAmount: { toString(): string } | number;
+				effectiveDate: Date;
+				reversal?: unknown | null;
+			}>;
+		};
+	}>;
+	fees?: Array<{
+		amount: { toString(): string };
+		installmentNumber?: number;
+		paymentDate?: Date;
+	}>;
+}) {
+	if (revenue.fees && !revenue.contractRevenueReceivables) {
+		const legacyRevenue = {
+			...revenue,
+			totalValue: revenue.totalValue ?? revenue.negotiatedAmount ?? 0,
+			downPaymentValue: revenue.downPaymentValue ?? null,
+			paymentStartDate: revenue.paymentStartDate ?? new Date(),
+			totalInstallments: revenue.totalInstallments ?? 0,
+			type: revenue.type ?? revenue.revenueType ?? { label: "—", value: "—" },
+			fees: revenue.fees,
+		};
+
+		return {
+			...getRevenuePaymentState(legacyRevenue),
+			...getNextContractInstallment(legacyRevenue),
+			installments: getInstallmentDetails(legacyRevenue),
+			id: revenue.id,
+			typeId: revenue.typeId ?? revenue.revenueTypeId ?? 0,
+			type: legacyRevenue.type.label,
+			typeValue: legacyRevenue.type.value,
+			totalValue: Number(legacyRevenue.totalValue),
+			downPaymentValue:
+				legacyRevenue.downPaymentValue === null
+					? null
+					: Number(legacyRevenue.downPaymentValue),
+			paymentStartDate: legacyRevenue.paymentStartDate.toISOString(),
+			totalInstallments: legacyRevenue.totalInstallments,
+			isActive: revenue.isActive,
+			isSoftDeleted: Boolean(revenue.deletedAt),
+		};
+	}
+
+	const receivables = (revenue.contractRevenueReceivables ?? [])
+		.map((item) => item.receivable)
+		.filter((item) => item && !item.cancelledAt)
+		.sort(
+			(a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime(),
+		);
+
+	const entryReceivable = receivables.find((item) => item.kind === "ENTRY");
+	const installmentReceivables = receivables.filter(
+		(item) => item.kind !== "ENTRY",
+	);
+	const activeItems =
+		installmentReceivables.length > 0 ? installmentReceivables : receivables;
+
+	const totalValue = Number(
+		revenue.negotiatedAmount ?? revenue.totalValue ?? 0,
+	);
+	const downPaymentValue = entryReceivable
+		? Number(entryReceivable.amount)
+		: revenue.downPaymentValue !== undefined &&
+				revenue.downPaymentValue !== null
+			? Number(revenue.downPaymentValue)
+			: null;
+
+	const installments = activeItems.map((receivable, index) => {
+		const expectedAmount = Number(receivable.amount);
+		const validReceipts = (receivable.receipts ?? []).filter(
+			(receipt) => !receipt.reversal,
+		);
+		const receivedAmount = validReceipts.reduce(
+			(acc, receipt) => acc + Number(receipt.effectiveAmount),
+			0,
+		);
+		const remainingAmount = Math.max(0, expectedAmount - receivedAmount);
+		const latestReceiptDate =
+			validReceipts.length > 0
+				? new Date(
+						Math.max(
+							...validReceipts.map((receipt) =>
+								new Date(receipt.effectiveDate).getTime(),
+							),
+						),
+					).toISOString()
+				: null;
+
+		return {
+			number: index + 1,
+			dueDate: new Date(receivable.dueDate).toISOString().slice(0, 10),
+			expectedAmount,
+			receivedAmount,
+			remainingAmount,
+			paymentDate: latestReceiptDate,
+		};
+	});
+
+	const entryReceivedAmount = entryReceivable
+		? (entryReceivable.receipts ?? [])
+				.filter((receipt) => !receipt.reversal)
+				.reduce((acc, receipt) => acc + Number(receipt.effectiveAmount), 0)
+		: 0;
+
+	const installmentsReceivedAmount = installments.reduce(
+		(acc, item) => acc + item.receivedAmount,
+		0,
+	);
+	const totalPaidValue =
+		(entryReceivable ? entryReceivedAmount : 0) + installmentsReceivedAmount;
+	const remainingValue = Math.max(0, totalValue - totalPaidValue);
+	const installmentsPaid = installments.filter(
+		(item) => item.remainingAmount <= 0,
+	).length;
+	const isFullyPaid =
+		remainingValue <= 0 && (installments.length > 0 || totalValue > 0);
+
+	const nextUnpaidInstallment = installments.find(
+		(item) => item.remainingAmount > 0,
+	);
+	const nextInstallmentNumber = nextUnpaidInstallment
+		? nextUnpaidInstallment.number
+		: null;
+	const nextDueDate = nextUnpaidInstallment
+		? nextUnpaidInstallment.dueDate
+		: null;
+
+	const earliestDate =
+		receivables.length > 0
+			? new Date(receivables[0].dueDate).toISOString()
+			: revenue.createdAt
+				? new Date(revenue.createdAt).toISOString()
+				: new Date().toISOString();
+
+	return {
+		id: revenue.id,
+		typeId: revenue.revenueTypeId ?? revenue.typeId ?? 0,
+		type: revenue.revenueType?.label ?? revenue.type?.label ?? "—",
+		typeValue: revenue.revenueType?.value ?? revenue.type?.value ?? "—",
+		totalValue,
+		downPaymentValue,
+		paymentStartDate: revenue.paymentStartDate
+			? revenue.paymentStartDate.toISOString()
+			: earliestDate,
+		totalInstallments:
+			installments.length > 0
+				? installments.length
+				: (revenue.totalInstallments ?? 0),
+		paidValue: totalPaidValue,
+		installmentsPaid,
+		installments,
+		nextInstallmentNumber,
+		nextDueDate,
+		remainingValue,
+		isFullyPaid,
+		isActive: revenue.isActive,
+		isSoftDeleted: Boolean(revenue.deletedAt),
+	};
+}
+
 function mapContractDetail(
 	scope: ContractAccessParams,
 	contract: {
 		id: number;
 		processNumber: string;
-		clientId: number;
+		customerId?: number;
+		clientId?: number;
 		legalAreaId: number;
 		statusId: number;
 		feePercentage: { toString(): string };
@@ -304,15 +553,27 @@ function mapContractDetail(
 		deletedAt: Date | null;
 		createdAt: Date;
 		updatedAt: Date | null;
-		client: { fullName: string };
+		customer?: {
+			id: number;
+			personId: number;
+			person: { fullName: string; document: string | null };
+		};
+		client?: { fullName: string };
 		legalArea: { label: string; value: string };
 		status: { label: string; value: string };
 		assignments: Array<{
 			id: number;
-			employeeId: number;
+			employeeProfileId?: number;
+			employeeId?: number;
 			isActive: boolean;
 			deletedAt: Date | null;
-			employee: {
+			employeeProfile?: {
+				id: number;
+				personId: number;
+				person: { fullName: string };
+				employeeType: { label: string; value: string };
+			};
+			employee?: {
 				fullName: string;
 				type: { label: string; value: string };
 			};
@@ -340,23 +601,26 @@ function mapContractDetail(
 		(assignment) => assignment.isActive && !assignment.deletedAt,
 	);
 	const assignedEmployeeIds = activeAssignments.map(
-		(assignment) => assignment.employeeId,
+		(assignment) => assignment.employeeProfileId ?? assignment.employeeId ?? 0,
 	);
 	const assignmentSummaries = mapAssignmentSummaries(activeAssignments);
+	const clientId = contract.customerId ?? contract.clientId ?? 0;
+	const clientPersonId = contract.customer?.personId ?? clientId;
+	const clientName =
+		contract.customer?.person.fullName ?? contract.client?.fullName ?? "—";
+	const clientDoc = contract.customer?.person.document ?? null;
 
 	return contractDetailSchema.parse({
 		id: contract.id,
 		processNumber: contract.processNumber,
-		clientId: contract.clientId,
-		client: contract.client.fullName,
+		clientId,
+		clientPersonId,
+		client: clientName,
+		clientDocument: clientDoc,
 		lawyer: getHandlingLawyerName(
-			contract.assignments
-				.filter((assignment) => assignment.isActive && !assignment.deletedAt)
-				.map((assignment) => ({
-					employeeId: assignment.employeeId,
-					employee: { fullName: assignment.employee.fullName },
-					assignmentType: { value: assignment.assignmentType.value },
-				})),
+			contract.assignments.filter(
+				(assignment) => assignment.isActive && !assignment.deletedAt,
+			),
 		),
 		legalAreaId: contract.legalAreaId,
 		legalArea: contract.legalArea.label,
@@ -369,33 +633,34 @@ function mapContractDetail(
 		allowStatusChange: contract.allowStatusChange,
 		assignments: contract.assignments.map((assignment) => ({
 			id: assignment.id,
-			employeeId: assignment.employeeId,
-			employeeName: assignment.employee.fullName,
-			employeeType: assignment.employee.type.label,
-			employeeTypeValue: assignment.employee.type.value,
+			employeeId: assignment.employeeProfileId ?? assignment.employeeId ?? 0,
+			employeePersonId:
+				assignment.employeeProfile?.personId ??
+				assignment.employeeProfileId ??
+				assignment.employeeId ??
+				0,
+			employeeName:
+				assignment.employeeProfile?.person.fullName ??
+				assignment.employee?.fullName ??
+				"—",
+			employeeType:
+				assignment.employeeProfile?.employeeType.label ??
+				assignment.employee?.type.label ??
+				"—",
+			employeeTypeValue:
+				assignment.employeeProfile?.employeeType.value ??
+				assignment.employee?.type.value ??
+				"—",
 			assignmentType: assignment.assignmentType.label,
 			assignmentTypeValue: assignment.assignmentType.value,
 			isActive: assignment.isActive,
 			isSoftDeleted: Boolean(assignment.deletedAt),
 		})),
-		revenues: contract.revenues.map((revenue) => ({
-			...getRevenuePaymentState(revenue),
-			...getNextContractInstallment(revenue),
-			installments: getInstallmentDetails(revenue),
-			id: revenue.id,
-			typeId: revenue.typeId,
-			type: revenue.type.label,
-			typeValue: revenue.type.value,
-			totalValue: Number(revenue.totalValue),
-			downPaymentValue:
-				revenue.downPaymentValue === null
-					? null
-					: Number(revenue.downPaymentValue),
-			paymentStartDate: revenue.paymentStartDate.toISOString(),
-			totalInstallments: revenue.totalInstallments,
-			isActive: revenue.isActive,
-			isSoftDeleted: Boolean(revenue.deletedAt),
-		})),
+		revenues: contract.revenues.map((revenue) =>
+			mapRevenueDetail(
+				revenue as unknown as Parameters<typeof mapRevenueDetail>[0],
+			),
+		),
 		assignmentCount: contract.assignments.length,
 		revenueCount: contract.revenues.length,
 		assignedEmployeeIds,
@@ -411,75 +676,194 @@ function mapContractDetail(
 	});
 }
 
-const contractSummaryInclude = {
-	client: { select: { fullName: true } },
-	legalArea: { select: { label: true, value: true } },
-	status: { select: { label: true, value: true } },
-	assignments: {
-		where: {
-			deletedAt: null,
-			isActive: true,
-		},
-		select: {
-			employeeId: true,
-			employee: {
+function getContractSummaryInclude() {
+	if (isProfileModelActive()) {
+		return {
+			customer: {
 				select: {
-					fullName: true,
-					type: { select: { value: true } },
+					id: true,
+					personId: true,
+					person: {
+						select: {
+							fullName: true,
+							document: true,
+						},
+					},
 				},
 			},
-			assignmentType: { select: { value: true } },
-		},
-	},
-	revenues: {
-		where: {
-			deletedAt: null,
-			isActive: true,
-		},
-		select: {
-			id: true,
-		},
-	},
-} as const;
-
-const contractDetailInclude = {
-	client: { select: { fullName: true } },
-	legalArea: { select: { label: true, value: true } },
-	status: { select: { label: true, value: true } },
-	assignments: {
-		include: {
-			employee: {
-				select: {
-					fullName: true,
-					type: { select: { label: true, value: true } },
-				},
-			},
-			assignmentType: {
-				select: { label: true, value: true },
-			},
-		},
-	},
-	revenues: {
-		where: {
-			deletedAt: null,
-			isActive: true,
-		},
-		include: {
-			fees: {
+			legalArea: { select: { label: true, value: true } },
+			status: { select: { label: true, value: true } },
+			assignments: {
 				where: {
 					deletedAt: null,
 					isActive: true,
 				},
 				select: {
-					amount: true,
-					installmentNumber: true,
-					paymentDate: true,
+					employeeProfileId: true,
+					employeeProfile: {
+						select: {
+							id: true,
+							personId: true,
+							person: {
+								select: {
+									fullName: true,
+								},
+							},
+							employeeType: { select: { value: true } },
+						},
+					},
+					assignmentType: { select: { value: true } },
 				},
 			},
-			type: { select: { label: true, value: true } },
+			revenues: {
+				where: {
+					deletedAt: null,
+					isActive: true,
+				},
+				select: {
+					id: true,
+				},
+			},
+		};
+	}
+
+	return {
+		client: { select: { fullName: true } },
+		legalArea: { select: { label: true, value: true } },
+		status: { select: { label: true, value: true } },
+		assignments: {
+			where: {
+				deletedAt: null,
+				isActive: true,
+			},
+			select: {
+				employeeId: true,
+				employee: {
+					select: {
+						fullName: true,
+						type: { select: { value: true } },
+					},
+				},
+				assignmentType: { select: { value: true } },
+			},
 		},
-	},
-} as const;
+		revenues: {
+			where: {
+				deletedAt: null,
+				isActive: true,
+			},
+			select: {
+				id: true,
+			},
+		},
+	};
+}
+
+function getContractDetailInclude() {
+	if (isProfileModelActive()) {
+		return {
+			customer: {
+				select: {
+					id: true,
+					personId: true,
+					person: {
+						select: {
+							fullName: true,
+							document: true,
+						},
+					},
+				},
+			},
+			legalArea: { select: { label: true, value: true } },
+			status: { select: { label: true, value: true } },
+			assignments: {
+				include: {
+					employeeProfile: {
+						select: {
+							id: true,
+							personId: true,
+							person: {
+								select: {
+									fullName: true,
+								},
+							},
+							employeeType: { select: { label: true, value: true } },
+						},
+					},
+					assignmentType: {
+						select: { label: true, value: true },
+					},
+				},
+			},
+			revenues: {
+				where: {
+					deletedAt: null,
+					isActive: true,
+				},
+				include: {
+					revenueType: { select: { label: true, value: true } },
+					contractRevenueReceivables: {
+						include: {
+							receivable: {
+								include: {
+									receipts: {
+										where: {
+											reversal: null,
+										},
+										select: {
+											id: true,
+											effectiveAmount: true,
+											effectiveDate: true,
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		};
+	}
+
+	return {
+		client: { select: { fullName: true } },
+		legalArea: { select: { label: true, value: true } },
+		status: { select: { label: true, value: true } },
+		assignments: {
+			include: {
+				employee: {
+					select: {
+						fullName: true,
+						type: { select: { label: true, value: true } },
+					},
+				},
+				assignmentType: {
+					select: { label: true, value: true },
+				},
+			},
+		},
+		revenues: {
+			where: {
+				deletedAt: null,
+				isActive: true,
+			},
+			include: {
+				fees: {
+					where: {
+						deletedAt: null,
+						isActive: true,
+					},
+					select: {
+						amount: true,
+						installmentNumber: true,
+						paymentDate: true,
+					},
+				},
+				type: { select: { label: true, value: true } },
+			},
+		},
+	};
+}
 
 export async function getContracts({
 	scope,
@@ -512,10 +896,13 @@ export async function getContracts({
 		isAdmin: scope.isAdmin,
 	});
 
+	const isProfile = isProfileModelActive();
 	const sortMap: Record<string, object> = {
 		id: { id: search.direction },
 		processNumber: { processNumber: search.direction },
-		client: { client: { fullName: search.direction } },
+		client: isProfile
+			? { customer: { person: { fullName: search.direction } } }
+			: { client: { fullName: search.direction } },
 		legalArea: { legalArea: { label: search.direction } },
 		status: { status: { label: search.direction } },
 		feePercentage: { feePercentage: search.direction },
@@ -527,10 +914,12 @@ export async function getContracts({
 		{ id: "asc" },
 	);
 
+	const include = getContractSummaryInclude();
+
 	const [contracts, total] = await Promise.all([
 		prisma.contract.findMany({
 			where,
-			include: contractSummaryInclude,
+			include: include as unknown as typeof include,
 			orderBy,
 			skip: (search.page - 1) * search.limit,
 			take: search.limit,
@@ -539,7 +928,10 @@ export async function getContracts({
 	]);
 
 	return {
-		data: mapContractSummary(scope, contracts),
+		data: mapContractSummary(
+			scope,
+			contracts as unknown as Parameters<typeof mapContractSummary>[1],
+		),
 		total,
 		page: search.page,
 		pageSize: search.limit,
@@ -550,6 +942,8 @@ export async function getContractById({
 	scope,
 	id,
 }: GetContractByIdParams): Promise<QueryOneReturnType<ContractDetail>> {
+	const include = getContractDetailInclude();
+
 	const contract = await prisma.contract.findFirst({
 		where: {
 			...buildContractWhere({
@@ -571,17 +965,22 @@ export async function getContractById({
 			}),
 			id,
 		},
-		include: contractDetailInclude,
+		include: include as unknown as typeof include,
 	});
 
 	if (!contract) {
 		throw new Error(CONTRACT_ERRORS.CONTRACT_DETAIL_NOT_FOUND);
 	}
 
-	return mapContractDetail(scope, contract);
+	return mapContractDetail(
+		scope,
+		contract as unknown as Parameters<typeof mapContractDetail>[1],
+	);
 }
 
 export async function getContractAccessResourceById(id: number) {
+	const isProfile = isProfileModelActive();
+
 	const contract = await prisma.contract.findFirst({
 		where: { id },
 		include: {
@@ -589,8 +988,17 @@ export async function getContractAccessResourceById(id: number) {
 			assignments: {
 				where: { deletedAt: null, isActive: true },
 				select: {
-					employeeId: true,
-					employee: { select: { type: { select: { value: true } } } },
+					...(isProfile
+						? {
+								employeeProfileId: true,
+								employeeProfile: {
+									select: { employeeType: { select: { value: true } } },
+								},
+							}
+						: {
+								employeeId: true,
+								employee: { select: { type: { select: { value: true } } } },
+							}),
 					assignmentType: { select: { value: true } },
 				},
 			},
@@ -605,6 +1013,14 @@ export async function getContractAccessResourceById(id: number) {
 		return null;
 	}
 
+	const assignmentList = contract.assignments as unknown as Array<{
+		employeeProfileId?: number;
+		employeeId?: number;
+		employeeProfile?: { employeeType: { value: string } };
+		employee?: { type: { value: string } };
+		assignmentType: { value: string };
+	}>;
+
 	return {
 		id: contract.id,
 		deletedAt: contract.deletedAt,
@@ -612,9 +1028,10 @@ export async function getContractAccessResourceById(id: number) {
 			firmId: contract.firmId,
 			statusValue: contract.status.value,
 			allowStatusChange: contract.allowStatusChange,
-			assignments: mapAssignmentSummaries(contract.assignments),
-			assignedEmployeeIds: contract.assignments.map(
-				(assignment) => assignment.employeeId,
+			assignments: mapAssignmentSummaries(assignmentList),
+			assignedEmployeeIds: assignmentList.map(
+				(assignment) =>
+					assignment.employeeProfileId ?? assignment.employeeId ?? 0,
 			),
 		},
 		hasActiveRevenues: contract.revenues.length > 0,
@@ -664,7 +1081,37 @@ export async function getContractRevenueTypes(): Promise<
 export async function getSelectableContractClients(
 	_firmId: number,
 ): Promise<QueryManyReturnType<Option>> {
-	const clients = await prisma.client.findMany({
+	if (prisma.clientProfile) {
+		const clients = await prisma.clientProfile.findMany({
+			where: {
+				isActive: true,
+				person: { deletedAt: null, isActive: true },
+			},
+			orderBy: { person: { fullName: "asc" } },
+			select: {
+				id: true,
+				personId: true,
+				person: {
+					select: {
+						fullName: true,
+					},
+				},
+			},
+		});
+
+		return clients.map((client) => ({
+			id: client.id,
+			value: String(client.id),
+			label: client.person.fullName,
+			isDisabled: false,
+		}));
+	}
+
+	const legacyClients = await (
+		prisma as unknown as {
+			client: { findMany: (args: unknown) => Promise<unknown[]> };
+		}
+	).client.findMany({
 		where: { deletedAt: null, isActive: true },
 		orderBy: { fullName: "asc" },
 		select: {
@@ -673,18 +1120,51 @@ export async function getSelectableContractClients(
 		},
 	});
 
-	return clients.map((client) => ({
-		id: client.id,
-		value: String(client.id),
-		label: client.fullName,
-		isDisabled: false,
-	}));
+	return (legacyClients as Array<{ id: number; fullName: string }>).map(
+		(client) => ({
+			id: client.id,
+			value: String(client.id),
+			label: client.fullName,
+			isDisabled: false,
+		}),
+	);
 }
 
 export async function getSelectableContractEmployees(
 	_firmId: number,
 ): Promise<QueryManyReturnType<Option>> {
-	const employees = await prisma.employee.findMany({
+	if (prisma.employeeProfile) {
+		const employees = await prisma.employeeProfile.findMany({
+			where: {
+				deletedAt: null,
+				isActive: true,
+				person: { deletedAt: null, isActive: true },
+			},
+			orderBy: { person: { fullName: "asc" } },
+			select: {
+				id: true,
+				personId: true,
+				person: {
+					select: {
+						fullName: true,
+					},
+				},
+			},
+		});
+
+		return employees.map((employee) => ({
+			id: employee.id,
+			value: String(employee.id),
+			label: employee.person.fullName,
+			isDisabled: false,
+		}));
+	}
+
+	const legacyEmployees = await (
+		prisma as unknown as {
+			employee: { findMany: (args: unknown) => Promise<unknown[]> };
+		}
+	).employee.findMany({
 		where: { deletedAt: null, isActive: true },
 		orderBy: { fullName: "asc" },
 		select: {
@@ -694,12 +1174,14 @@ export async function getSelectableContractEmployees(
 		},
 	});
 
-	return employees.map((employee) => ({
-		id: employee.id,
-		value: String(employee.id),
-		label: employee.fullName,
-		isDisabled: false,
-	}));
+	return (legacyEmployees as Array<{ id: number; fullName: string }>).map(
+		(employee) => ({
+			id: employee.id,
+			value: String(employee.id),
+			label: employee.fullName,
+			isDisabled: false,
+		}),
+	);
 }
 
 export async function getLegalAreaByValue(value: string) {

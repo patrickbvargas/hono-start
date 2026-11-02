@@ -126,7 +126,7 @@ export function ContractWorkspace({
 												) ? (
 													<RelatedRecordLink
 														kind="client"
-														id={contract.clientId}
+														id={contract.clientPersonId ?? contract.clientId}
 													>
 														{contract.client}
 													</RelatedRecordLink>

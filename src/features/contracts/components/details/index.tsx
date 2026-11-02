@@ -90,7 +90,10 @@ const ContractDetailsContent = ({
 			{
 				term: "Cliente",
 				definition: hasPermission(session, "org:clients:read") ? (
-					<RelatedRecordLink kind="client" id={contract.clientId}>
+					<RelatedRecordLink
+						kind="client"
+						id={contract.clientPersonId ?? contract.clientId}
+					>
 						{contract.client}
 					</RelatedRecordLink>
 				) : (
@@ -120,7 +123,10 @@ const ContractDetailsContent = ({
 			contract.assignments.map((assignment) => ({
 				term: assignment.assignmentType,
 				definition: hasPermission(session, "org:employees:read") ? (
-					<RelatedRecordLink kind="employee" id={assignment.employeeId}>
+					<RelatedRecordLink
+						kind="employee"
+						id={assignment.employeePersonId ?? assignment.employeeId}
+					>
 						{assignment.employeeName}
 					</RelatedRecordLink>
 				) : (

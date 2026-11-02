@@ -25,3 +25,4 @@ The codebase SHALL NOT contain `src/features/clients` or `src/features/employees
 #### Scenario: Verify clean removal
 - **WHEN** full project type check and tests are run
 - **THEN** TypeScript compilation passes with zero references to `@/features/clients` or `@/features/employees`
+

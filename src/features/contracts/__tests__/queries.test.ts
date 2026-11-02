@@ -443,4 +443,56 @@ describe("contract data queries", () => {
 			},
 		});
 	});
+	it("loads selectable clients and employees when profile models exist", async () => {
+		(prismaMock as unknown as Record<string, unknown>).clientProfile = {
+			findMany: vi.fn().mockResolvedValue([
+				{
+					id: 1,
+					personId: 101,
+					person: {
+						fullName: "Cliente Silva",
+						document: "12345678901",
+					},
+				},
+			]),
+		};
+		(prismaMock as unknown as Record<string, unknown>).employeeProfile = {
+			findMany: vi.fn().mockResolvedValue([
+				{
+					id: 10,
+					personId: 201,
+					person: {
+						fullName: "Dra. Joana",
+					},
+					employeeType: {
+						label: "Advogada",
+						value: "LAWYER",
+					},
+				},
+			]),
+		};
+
+		const clients = await getSelectableContractClients(1);
+		expect(clients).toEqual([
+			{
+				id: 1,
+				value: "1",
+				label: "Cliente Silva",
+				isDisabled: false,
+			},
+		]);
+
+		const employees = await getSelectableContractEmployees(1);
+		expect(employees).toEqual([
+			{
+				id: 10,
+				value: "10",
+				label: "Dra. Joana",
+				isDisabled: false,
+			},
+		]);
+
+		delete (prismaMock as unknown as Record<string, unknown>).clientProfile;
+		delete (prismaMock as unknown as Record<string, unknown>).employeeProfile;
+	});
 });

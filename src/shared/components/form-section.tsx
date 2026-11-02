@@ -25,7 +25,7 @@ export const FormSection = ({
 			data-slot="form-section"
 			className={cn(
 				"flex flex-col gap-4",
-				(variant === "plain" || action) && "gap-2",
+				variant === "plain" && "gap-2",
 				variant === "card" &&
 					"rounded-xl border bg-card p-4 text-card-foreground",
 			)}

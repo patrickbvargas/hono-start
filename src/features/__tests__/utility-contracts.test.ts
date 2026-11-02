@@ -191,8 +191,8 @@ describe("feature utility contracts", () => {
 		expect(defaultContractCreateValues()).toMatchObject({
 			clientId: "",
 			status: "ACTIVE",
-			assignments: [{ employeeId: "", assignmentType: "", isActive: true }],
-			revenues: [{ type: "", totalInstallments: 1, isActive: true }],
+			assignments: [],
+			revenues: [],
 		});
 		expect(defaultFeeCreateValues()).toEqual({
 			contractId: "",

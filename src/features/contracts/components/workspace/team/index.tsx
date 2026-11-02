@@ -32,7 +32,10 @@ export function ContractTeam({
 						>
 							<span>
 								{canReadEmployees ? (
-									<RelatedRecordLink kind="employee" id={assignment.employeeId}>
+									<RelatedRecordLink
+										kind="employee"
+										id={assignment.employeePersonId ?? assignment.employeeId}
+									>
 										{assignment.employeeName}
 									</RelatedRecordLink>
 								) : (

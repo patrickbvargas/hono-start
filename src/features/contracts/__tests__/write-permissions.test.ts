@@ -2,7 +2,21 @@ import { describe, expect, it } from "vitest";
 import { assertContractSectionChanges } from "../rules/permissions";
 import { defaultContractCreateValues } from "../utils/default";
 
-const existing = { ...defaultContractCreateValues(), id: 1 };
+const existing = {
+	...defaultContractCreateValues(),
+	id: 1,
+	assignments: [{ employeeId: "1", assignmentType: "LAWYER", isActive: true }],
+	revenues: [
+		{
+			type: "MONTHLY",
+			totalValue: 1000,
+			downPaymentValue: 0,
+			paymentStartDate: "2026-01-01",
+			totalInstallments: 1,
+			isActive: true,
+		},
+	],
+};
 const assert = (
 	input = existing,
 	canManageAssignments = false,

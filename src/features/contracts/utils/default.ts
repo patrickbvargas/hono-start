@@ -31,8 +31,8 @@ export const defaultContractCreateValues = (): ContractCreateInput => ({
 	notes: "",
 	allowStatusChange: true,
 	isActive: true,
-	assignments: [defaultContractAssignmentValues()],
-	revenues: [defaultContractRevenueValues()],
+	assignments: [],
+	revenues: [],
 });
 
 export const defaultContractUpdateValues = (

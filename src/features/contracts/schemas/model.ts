@@ -12,6 +12,7 @@ export const revenueInstallmentSchema = z.object({
 
 export const contractAssignmentSchema = entityIdSchema.safeExtend({
 	employeeId: z.number(),
+	employeePersonId: z.number().optional(),
 	employeeName: z.string(),
 	employeeType: z.string(),
 	employeeTypeValue: z.string(),
@@ -43,7 +44,9 @@ export const contractRevenueSchema = entityIdSchema.safeExtend({
 export const contractSummarySchema = entityIdSchema.safeExtend({
 	processNumber: z.string(),
 	clientId: z.number(),
+	clientPersonId: z.number().optional(),
 	client: z.string(),
+	clientDocument: z.string().nullable().optional(),
 	lawyer: z.string(),
 	legalAreaId: z.number(),
 	legalArea: z.string(),

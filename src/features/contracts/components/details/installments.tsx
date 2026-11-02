@@ -19,7 +19,7 @@ import { getInstallmentStatus } from "../../utils/installment-status";
 export function RevenueInstallments({ revenue }: { revenue: ContractRevenue }) {
 	const today = new Date().toISOString().slice(0, 10);
 	return (
-		<Accordion defaultValue={[]} className="-mb-3 border-t">
+		<Accordion defaultValue={[]} className="border-t">
 			<AccordionItem value="installments">
 				<AccordionTrigger className="group">
 					<span>

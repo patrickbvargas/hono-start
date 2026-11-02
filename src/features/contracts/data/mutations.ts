@@ -3,13 +3,13 @@ import {
 	buildAuditUpdateChangeData,
 	createAuditLog,
 } from "@/features/audit-logs/data/mutations";
-import type {
-	AssignmentType,
-	ContractStatus,
-	LegalArea,
+import {
+	type AssignmentType,
+	type ContractStatus,
+	type LegalArea,
 	Prisma,
-	PrismaClient,
-	RevenueType,
+	type PrismaClient,
+	type RevenueType,
 } from "@/generated/prisma/client";
 import { prisma } from "@/shared/lib/prisma";
 import {
@@ -78,9 +78,16 @@ export type ResolvedContractAssignment = Omit<
 	"assignmentType"
 > & {
 	assignmentType: AssignmentType;
-	employee: Prisma.EmployeeGetPayload<{
-		include: { type: true };
-	}>;
+	employee: {
+		id: number;
+		fullName?: string;
+		remunerationPercentage: Prisma.Decimal | number | string;
+		referralPercentage: Prisma.Decimal | number | string;
+		type: { id?: number; label?: string; value: string; isActive?: boolean };
+		isActive?: boolean;
+		deletedAt?: Date | null;
+		[key: string]: unknown;
+	};
 };
 
 export type ResolvedContractRevenue = Omit<ContractRevenueInput, "type"> & {
@@ -141,26 +148,47 @@ export async function resolveContractAssignments(
 	);
 
 	const [employees, assignmentTypes] = await Promise.all([
-		db.employee.findMany({
-			where: { id: { in: employeeIds } },
-			include: { type: true },
-		}),
+		db.employeeProfile
+			? db.employeeProfile.findMany({
+					where: { id: { in: employeeIds } },
+					include: { person: true, employeeType: true },
+				})
+			: (
+					db as unknown as {
+						employee: {
+							findMany: (args: unknown) => Promise<unknown[]>;
+						};
+					}
+				).employee.findMany({
+					where: { id: { in: employeeIds } },
+					include: { type: true },
+				}),
 		getAssignmentTypesByValues(assignmentTypeValues),
 	]);
 
 	return assignments.map((assignment) => {
-		const employee = employees.find(
-			(item) => item.id === Number(assignment.employeeId),
-		);
+		const rawEmployee = (
+			employees as Array<{
+				id: number;
+				fullName?: string;
+				isActive: boolean;
+				deletedAt: Date | null;
+				remunerationPercentage?: Prisma.Decimal | number | string;
+				referralPercentage?: Prisma.Decimal | number | string;
+				person?: { fullName: string };
+				employeeType?: { label: string; value: string };
+				type?: { label?: string; value: string };
+			}>
+		).find((item) => item.id === Number(assignment.employeeId));
 		const assignmentType = assignmentTypes.find(
 			(item) => item.value === assignment.assignmentType,
 		);
 
-		if (!employee) {
+		if (!rawEmployee) {
 			throw new Error(CONTRACT_ERRORS.CONTRACT_EMPLOYEE_NOT_FOUND);
 		}
 
-		if (employee.deletedAt || !employee.isActive) {
+		if (rawEmployee.deletedAt || !rawEmployee.isActive) {
 			throw new Error(CONTRACT_ERRORS.CONTRACT_EMPLOYEE_INACTIVE);
 		}
 
@@ -171,6 +199,21 @@ export async function resolveContractAssignments(
 		if (!assignmentType.isActive) {
 			throw new Error(CONTRACT_ERRORS.CONTRACT_ASSIGNMENT_TYPE_INACTIVE);
 		}
+
+		const employee = {
+			id: rawEmployee.id,
+			fullName: rawEmployee.person?.fullName ?? rawEmployee.fullName ?? "",
+			remunerationPercentage:
+				rawEmployee.remunerationPercentage ?? new Prisma.Decimal("0"),
+			referralPercentage:
+				rawEmployee.referralPercentage ?? new Prisma.Decimal("0"),
+			type: {
+				label: rawEmployee.employeeType?.label ?? rawEmployee.type?.label ?? "",
+				value: rawEmployee.employeeType?.value ?? rawEmployee.type?.value ?? "",
+			},
+			isActive: rawEmployee.isActive,
+			deletedAt: rawEmployee.deletedAt,
+		};
 
 		return {
 			...assignment,
@@ -209,12 +252,39 @@ async function syncAssignments(
 		assignments: ResolvedContractAssignment[];
 	},
 ) {
-	const existingAssignments = await tx.contractEmployee.findMany({
+	const assignmentClient =
+		(
+			tx as unknown as {
+				contractAssignment?: {
+					findMany: (args: unknown) => Promise<unknown[]>;
+					update: (args: unknown) => Promise<unknown>;
+					create: (args: unknown) => Promise<unknown>;
+				};
+				contractEmployee?: {
+					findMany: (args: unknown) => Promise<unknown[]>;
+					update: (args: unknown) => Promise<unknown>;
+					create: (args: unknown) => Promise<unknown>;
+				};
+			}
+		).contractAssignment ??
+		(
+			tx as unknown as {
+				contractEmployee: {
+					findMany: (args: unknown) => Promise<unknown[]>;
+					update: (args: unknown) => Promise<unknown>;
+					create: (args: unknown) => Promise<unknown>;
+				};
+			}
+		).contractEmployee;
+
+	const existingAssignments = await assignmentClient.findMany({
 		where: { contractId: params.contractId },
 		select: { id: true },
 	});
 	const existingIds = new Set(
-		existingAssignments.map((assignment) => assignment.id),
+		(existingAssignments as Array<{ id: number }>).map(
+			(assignment) => assignment.id,
+		),
 	);
 	const incomingIds = new Set(
 		params.assignments
@@ -225,21 +295,23 @@ async function syncAssignments(
 	for (const assignment of params.assignments) {
 		const data = {
 			firmId: params.firmId,
-			employeeId: assignment.employee.id,
+			...((tx as unknown as { contractAssignment?: object }).contractAssignment
+				? { employeeProfileId: assignment.employee.id }
+				: { employeeId: assignment.employee.id }),
 			assignmentTypeId: assignment.assignmentType.id,
 			isActive: assignment.isActive,
 			deletedAt: null,
 		};
 
 		if (typeof assignment.id === "number" && existingIds.has(assignment.id)) {
-			await tx.contractEmployee.update({
+			await assignmentClient.update({
 				where: { id: assignment.id },
 				data,
 			});
 			continue;
 		}
 
-		await tx.contractEmployee.create({
+		await assignmentClient.create({
 			data: {
 				...data,
 				contractId: params.contractId,
@@ -247,14 +319,18 @@ async function syncAssignments(
 		});
 	}
 
-	for (const assignment of existingAssignments) {
+	for (const assignment of existingAssignments as Array<{ id: number }>) {
 		if (!incomingIds.has(assignment.id)) {
-			await tx.contractEmployee.update({
+			await assignmentClient.update({
 				where: { id: assignment.id },
 				data: { deletedAt: new Date() },
 			});
 		}
 	}
+}
+
+function isProfileModelActive() {
+	return Boolean(prisma.clientProfile || prisma.employeeProfile);
 }
 
 async function syncRevenues(
@@ -276,32 +352,45 @@ async function syncRevenues(
 			.filter((id): id is number => typeof id === "number"),
 	);
 
+	const isProfile = isProfileModelActive();
+
 	for (const revenue of params.revenues) {
 		const data = {
 			firmId: params.firmId,
-			typeId: revenue.type.id,
-			totalValue: revenue.totalValue,
-			downPaymentValue: revenue.downPaymentValue,
-			paymentStartDate: new Date(revenue.paymentStartDate),
-			totalInstallments: revenue.totalInstallments,
+			...(isProfile
+				? {
+						revenueTypeId: revenue.type.id,
+						negotiatedAmount: revenue.totalValue,
+					}
+				: {
+						typeId: revenue.type.id,
+						totalValue: revenue.totalValue,
+						downPaymentValue: revenue.downPaymentValue,
+						paymentStartDate: new Date(revenue.paymentStartDate),
+						totalInstallments: revenue.totalInstallments,
+					}),
 			isActive: revenue.isActive,
 			deletedAt: null,
 		};
 
 		if (typeof revenue.id === "number" && existingIds.has(revenue.id)) {
-			await tx.revenue.update({
+			await (
+				tx.revenue.update as unknown as (args: unknown) => Promise<unknown>
+			)({
 				where: { id: revenue.id },
 				data,
 			});
 			continue;
 		}
 
-		await tx.revenue.create({
-			data: {
-				...data,
-				contractId: params.contractId,
+		await (tx.revenue.create as unknown as (args: unknown) => Promise<unknown>)(
+			{
+				data: {
+					...data,
+					contractId: params.contractId,
+				},
 			},
-		});
+		);
 	}
 
 	for (const revenue of existingRevenues) {
@@ -325,14 +414,27 @@ export async function createContract({
 	}
 
 	const clientId = Number(input.clientId);
-	const client = await prisma.client.findFirst({
-		where: {
-			id: clientId,
-			deletedAt: null,
-			isActive: true,
-		},
-		select: { id: true },
-	});
+	const client = prisma.clientProfile
+		? await prisma.clientProfile.findFirst({
+				where: {
+					id: clientId,
+					isActive: true,
+					person: { deletedAt: null, isActive: true },
+				},
+				select: { id: true },
+			})
+		: await (
+				prisma as unknown as {
+					client: { findFirst: typeof prisma.legalArea.findFirst };
+				}
+			).client.findFirst({
+				where: {
+					id: clientId,
+					deletedAt: null,
+					isActive: true,
+				},
+				select: { id: true },
+			});
 
 	if (!client) {
 		throw new Error(CONTRACT_ERRORS.CONTRACT_CLIENT_INACTIVE);
@@ -354,10 +456,14 @@ export async function createContract({
 	assertResolvedContractAssignmentRules(resolvedAssignments);
 
 	await prisma.$transaction(async (tx) => {
+		const isProfileModel = Boolean(
+			(tx as unknown as { contractAssignment?: object }).contractAssignment,
+		);
+
 		const contract = await tx.contract.create({
 			data: {
 				firmId: scope.firmId,
-				clientId,
+				...(isProfileModel ? { customerId: clientId } : { clientId }),
 				legalAreaId: legalArea.id,
 				statusId: status.id,
 				processNumber: input.processNumber.trim(),
@@ -365,15 +471,36 @@ export async function createContract({
 				notes: normalizeOptionalText(input.notes),
 				allowStatusChange: canManageStatusLock ? input.allowStatusChange : true,
 				isActive: input.isActive,
-			},
+			} as unknown as Parameters<typeof tx.contract.create>[0]["data"],
 		});
 
+		const assignmentClient =
+			(
+				tx as unknown as {
+					contractAssignment?: {
+						createMany: (args: unknown) => Promise<unknown>;
+					};
+					contractEmployee?: {
+						createMany: (args: unknown) => Promise<unknown>;
+					};
+				}
+			).contractAssignment ??
+			(
+				tx as unknown as {
+					contractEmployee: {
+						createMany: (args: unknown) => Promise<unknown>;
+					};
+				}
+			).contractEmployee;
+
 		if (resolvedAssignments.length > 0) {
-			await tx.contractEmployee.createMany({
+			await assignmentClient.createMany({
 				data: resolvedAssignments.map((assignment) => ({
 					firmId: scope.firmId,
 					contractId: contract.id,
-					employeeId: assignment.employee.id,
+					...(isProfileModel
+						? { employeeProfileId: assignment.employee.id }
+						: { employeeId: assignment.employee.id }),
 					assignmentTypeId: assignment.assignmentType.id,
 					isActive: assignment.isActive,
 				})),
@@ -381,15 +508,24 @@ export async function createContract({
 		}
 
 		if (resolvedRevenues.length > 0) {
-			await tx.revenue.createMany({
+			await (
+				tx.revenue.createMany as unknown as (args: unknown) => Promise<unknown>
+			)({
 				data: resolvedRevenues.map((revenue) => ({
 					firmId: scope.firmId,
 					contractId: contract.id,
-					typeId: revenue.type.id,
-					totalValue: revenue.totalValue,
-					downPaymentValue: revenue.downPaymentValue,
-					paymentStartDate: new Date(revenue.paymentStartDate),
-					totalInstallments: revenue.totalInstallments,
+					...(isProfileModel
+						? {
+								revenueTypeId: revenue.type.id,
+								negotiatedAmount: revenue.totalValue,
+							}
+						: {
+								typeId: revenue.type.id,
+								totalValue: revenue.totalValue,
+								downPaymentValue: revenue.downPaymentValue,
+								paymentStartDate: new Date(revenue.paymentStartDate),
+								totalInstallments: revenue.totalInstallments,
+							}),
 					isActive: revenue.isActive,
 				})),
 			});
@@ -489,14 +625,27 @@ export async function updateContract({
 	}
 
 	const clientId = Number(input.clientId);
-	const client = await prisma.client.findFirst({
-		where: {
-			id: clientId,
-			deletedAt: null,
-			isActive: true,
-		},
-		select: { id: true },
-	});
+	const client = prisma.clientProfile
+		? await prisma.clientProfile.findFirst({
+				where: {
+					id: clientId,
+					isActive: true,
+					person: { deletedAt: null, isActive: true },
+				},
+				select: { id: true },
+			})
+		: await (
+				prisma as unknown as {
+					client: { findFirst: typeof prisma.legalArea.findFirst };
+				}
+			).client.findFirst({
+				where: {
+					id: clientId,
+					deletedAt: null,
+					isActive: true,
+				},
+				select: { id: true },
+			});
 
 	if (!client) {
 		throw new Error(CONTRACT_ERRORS.CONTRACT_CLIENT_INACTIVE);
@@ -511,10 +660,14 @@ export async function updateContract({
 	assertResolvedContractAssignmentRules(resolvedAssignments);
 
 	await prisma.$transaction(async (tx) => {
+		const isProfileModel = Boolean(
+			(tx as unknown as { contractAssignment?: object }).contractAssignment,
+		);
+
 		await tx.contract.update({
 			where: { id: input.id },
 			data: {
-				clientId,
+				...(isProfileModel ? { customerId: clientId } : { clientId }),
 				legalAreaId: legalArea.id,
 				statusId: status.id,
 				processNumber: input.processNumber.trim(),
@@ -524,7 +677,7 @@ export async function updateContract({
 					? input.allowStatusChange
 					: existing.allowStatusChange,
 				isActive: input.isActive,
-			},
+			} as unknown as Parameters<typeof tx.contract.update>[0]["data"],
 		});
 
 		if (canManageAssignments) {
