@@ -1,11 +1,6 @@
 # Security
 
-## Approved financial redesign — target precedence
-
-Status: approved plan, not implemented. [Target financial contract](../domain/FINANCIAL_SYSTEM.md) and its linked roadmap/UML/authorization supersede conflicting financial and identity semantics below for the ordered redesign. Remaining text describes the preserved running baseline and unchanged house rules; do not infer target implementation from it.
-
-Target financial scope and exact-key catalog are in FINANCIAL_AUTHORIZATION.md. Member confidentiality covers every response/aggregate/evidence path. Verify Person/profile and current Organization; never trust client authority or polymorphic IDs. Denied batch lines roll back all effects. No provider mutations in planning.
-
+> **Scope**: Trust boundaries, authorization rules, tenant isolation, session policy, sensitive data rules, Clerk enforcement. Does not define role/permission matrix (see domain/ROLES_AND_PERMISSIONS.md).
 
 Permission membership checks use `hasPermission(session, "org:clients:read")`.
 This function returns the result of an exact `session.permissions.includes(key)`
@@ -83,7 +78,6 @@ This document defines reusable trust-boundary and authorization rules for the re
 - Clerk owns credential policy, email verification, session duration and attack protection.
 - Webhooks verify the raw request signature and deduplicate delivery IDs. They never synchronize authentication data into Employee.
 - Public keys use the Vite public boundary. Secret/webhook keys use validated server env only.
-- See CLERK_MIGRATION.md for deployment, rate-limit and cutover prerequisites.
 
 ## Business and authentication isolation
 

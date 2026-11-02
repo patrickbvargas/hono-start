@@ -1,11 +1,6 @@
 # Architecture
 
-## Approved financial redesign — target precedence
-
-Status: approved plan, not implemented. [Target financial contract](../domain/FINANCIAL_SYSTEM.md) and its linked roadmap/UML/authorization supersede conflicting financial and identity semantics below for the ordered redesign. Remaining text describes the preserved running baseline and unchanged house rules; do not infer target implementation from it.
-
-Target feature ownership follows existing slices: people and collaborator profile, contracts with revenues/team, expenses, receivables, receipts, payables, payments, financial catalogs/settings and reporting. Separate calculation evidence belongs to contract-receipt remuneration integration. No new generic architecture or vendor UI boundary exception. Read FINANCIAL_ROADMAP.md.
-
+> **Scope**: Fixed stack, canonical repo shape, feature slice pattern, architectural rules. Does not define domain business rules or UI patterns (see FRONTEND_LAYOUT.md, FRONTEND_FORMS.md, FRONTEND_TABLES.md).
 
 This document defines the reusable house architecture of the repository.
 
@@ -81,7 +76,7 @@ Each feature slice is validated by responsibility. A feature should include the
 directories whose responsibilities it owns, and any structural deviation from
 the `clients` reference slice must be justified by feature-specific behavior.
 
-`drilldown` is an isolated presentation/orchestration feature. It deliberately owns no entity API, Prisma data access or permission registry: source features provide typed query options and validated results through props. Its public modal is usable by other features and routes. See FRONTEND.md for the consumer and reusable-column contract.
+`drilldown` is an isolated presentation/orchestration feature. It deliberately owns no entity API, Prisma data access or permission registry: source features provide typed query options and validated results through props. Its public modal is usable by other features and routes. See FRONTEND_TABLES.md for the consumer and reusable-column contract.
 
 ```text
 src/features/<feature>/
@@ -184,7 +179,7 @@ unless a route-facing consumer requires the difference.
 
 ## Clerk provider UI exception
 
-Clerk-owned SignIn, account widgets and control components may be imported by authentication feature components. Surrounding product UI continues using shared UI exports. ClerkProvider and request/CSRF middleware are thin framework integration. See CLERK_MIGRATION.md for migration state and deployment prerequisites.
+Clerk-owned SignIn, account widgets and control components may be imported by authentication feature components. Surrounding product UI continues using shared UI exports. ClerkProvider and request/CSRF middleware are thin framework integration.
 
 ## HTTP endpoint exception
 

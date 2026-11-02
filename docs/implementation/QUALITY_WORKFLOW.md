@@ -1,11 +1,6 @@
 # Quality Workflow
 
-## Approved financial redesign — target precedence
-
-Status: approved plan, not implemented. [Target financial contract](../domain/FINANCIAL_SYSTEM.md) and its linked roadmap/UML/authorization supersede conflicting financial and identity semantics below for the ordered redesign. Remaining text describes the preserved running baseline and unchanged house rules; do not infer target implementation from it.
-
-Financial redesign follows the sequential gates in FINANCIAL_ROADMAP.md. Each behavioral phase needs focused regression tests, pnpm check and TypeScript; release requires pnpm verify, real PostgreSQL concurrency/idempotency/reversal checks and evidence-owner walkthroughs. Preserve baseline and matching schema/config rollback.
-
+> **Scope**: Feature implementation sequence, testing rules, commit conventions, quality gates, definition of done. Does not define architecture shape (see ARCHITECTURE.md) or coding conventions (see CONVENTIONS.md).
 
 This document defines the repository's reusable implementation sequence,
 reliability expectations, testing rules, and quality rubric.
@@ -70,6 +65,8 @@ repository keeps the same implementation pattern.
 - Feature, refactor, and new-code changes that alter runtime behavior, shared contracts, route orchestration, validation, data access, or reusable abstractions must include focused Vitest coverage for the changed contract.
 - Documentation-only, generated-only, formatting, or mechanical metadata changes may omit new Vitest coverage when they do not change runtime behavior or shared contracts.
 - If Vitest coverage is impractical for a behavior-changing change, document the reason and run the closest feasible verification before completion.
+
+> **Note**: `vitest.config.ts` isolates unit tests from Start, Nitro and development plugins. It discovers `src/**/*.test.{ts,tsx}` and supplies dummy local database URLs for schema initialization. Database clients remain mocked in unit tests; these values never configure production. Prisma CLI, client and adapter stay on the same stable release line.
 
 ## Contribution Rule
 
@@ -208,10 +205,6 @@ Near-perfect contract alignment means:
 - overlapping summary docs defer to clearly owned canonical rules
 - a new contributor can execute the work without having to reverse-engineer expectations from code
 
-## Test configuration
-
-`vitest.config.ts` isolates unit tests from Start, Nitro and development plugins. It discovers `src/**/*.test.{ts,tsx}` and supplies dummy local database URLs for schema initialization. Database clients remain mocked in unit tests; these values never configure production. Prisma CLI, client and adapter stay on the same stable release line.
-
 ## Release verification
 
 `pnpm verify` runs read-only Biome checks (`pnpm check:ci`), TypeScript (`pnpm typecheck`), the complete Vitest suite and production build in sequence, stopping on failure. `pnpm check` remains the explicit formatting/fix command. Biome covers maintained root configuration as well as application source; generated Prisma and router files remain excluded.
@@ -220,7 +213,7 @@ Attachment transport tests mock Supabase Storage; deployment readiness additiona
 
 Before production release, the operator must verify:
 
-- Production Clerk keys, sign-in settings, Organization permissions, membership revocation and required Employee bindings, following `CLERK_MIGRATION.md`.
+- Production Clerk configuration, Organization permissions, membership revocation and required Employee bindings.
 - Reviewed migrations and required lookup/firm bootstrap on the intended database; no demo seed or reset.
 - Private Supabase Storage attachment storage with bucket-scoped read/write/delete access and joint database/object backup and restore, following `ATTACHMENTS.md`.
 - Authenticated upload/open/delete, denied cross-scope access, and core financial workflows against the deployment environment.

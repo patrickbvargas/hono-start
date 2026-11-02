@@ -1,11 +1,6 @@
 # Data Access
 
-## Approved financial redesign — target precedence
-
-Status: approved plan, not implemented. [Target financial contract](../domain/FINANCIAL_SYSTEM.md) and its linked roadmap/UML/authorization supersede conflicting financial and identity semantics below for the ordered redesign. Remaining text describes the preserved running baseline and unchanged house rules; do not infer target implementation from it.
-
-Target monetary state uses exact decimal principal/discount/charges, constrained origins and same-Firm links. Settlement and generation idempotency, locked balance checks and complete transaction rollback include commissions/audit. Confirmed events and reversals are immutable. Reset only verified disposable dev data; no production migration is authorized. Follow FINANCIAL_ROADMAP.md.
-
+> **Scope**: Persistence patterns, Prisma usage, query rules, seeding, and data integrity. Does not define business entity semantics (see domain/) or UI patterns.
 
 ## Purpose
 
@@ -114,7 +109,6 @@ Prisma schema cannot represent PostgreSQL filtered unique indexes directly. When
 
 - Clerk owns identity, sessions, Organization membership, roles and permission grants remotely.
 - Firm and Employee contain only business data, with no provider identity columns. Organization privateMetadata.firmId resolves the active existing business unit; User privateMetadata.employeeId must resolve a global active, non-deleted business actor for all protected access. Both links are managed only in Clerk and verified server-side.
-- Legacy UUID, local role and forced-change fields are retained only during migration/rollback and never grant runtime authority after cutover.
 - Current membership and permission state must be verified with Clerk; domain lifecycle and assignment data remain in Prisma.
 - Generate schema changes on a disposable local DB using the documented workflow; never reset a production or unidentified existing DB.
 
@@ -130,7 +124,6 @@ Prisma schema cannot represent PostgreSQL filtered unique indexes directly. When
 - `pnpm run db:reset` applies migrations, generates Prisma Client and explicitly seeds once (Prisma 7 does not auto-seed).
 - Demo persistence uses DIRECT_URL, including its schema, matching migration/reset targeting. Configure runtime DATABASE_URL against the same business database/schema.
 - Pure fixture builders live in `prisma/seed-fixtures.ts` and `prisma/seed-scenarios.ts`; persistence remains seed-owned. Same-reference reruns preserve financial row IDs, attachment references and audit identities.
-- The rolling dataset, reference-date setting and preview prerequisites are documented in [Demo data](DEMO_DATA.md).
 
 ## Audit Persistence Contract
 
@@ -146,15 +139,6 @@ Prisma schema cannot represent PostgreSQL filtered unique indexes directly. When
 - Shared data-access helpers may support features, but feature ownership remains local.
 - Product-rule enforcement stays in the service or API layer; database constraints are a safety net rather than the primary contract.
 - If a future project replaces the business domain but keeps this repository pattern, this document should remain mostly unchanged.
-
-## Offline reviewed migration exception
-
-When the configured database must not be reset, external identity changes and the reviewed global-client/employee normalization may be generated offline with `prisma migrate diff --from-schema <committed-schema>
---to-schema prisma/schema.prisma --script --output <migration-file>`.
-This compares datamodels without connecting to or resetting the configured DB.
-The generated migration must be reviewed and rehearsed before deployment.
-The reset-first workflow remains required for local development migrations on
-a confirmed disposable database. Never run it against the current Supabase DB.
 
 Attachment batch creation stages validated binaries before a single metadata-and-audit transaction, and serializes its count-and-create transaction with a PostgreSQL transaction-scoped advisory lock derived from global owner kind/ID for Client/Employee, or Firm plus owner kind/ID for operational owners. Count all non-deleted attachments within that same owner scope and reject if the existing count plus the batch exceeds 10. Clean up all staged binaries if any upload or transaction operation fails. The lock releases at transaction end; no external network or file encoding occurs while holding it.
 
