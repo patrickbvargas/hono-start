@@ -45,47 +45,55 @@ function buildExpenseWhere({
 		firmId,
 		...getEntityDeletedWhere(filter.status),
 		...getEntityActiveWhere(filter.active),
+		...(filter.supplierId ? { supplierId: filter.supplierId } : {}),
 		...(filter.query
 			? {
-					notes: {
-						contains: filter.query,
-						mode: "insensitive" as const,
-					},
+					OR: [
+						{
+							notes: {
+								contains: filter.query,
+								mode: "insensitive" as const,
+							},
+						},
+						{
+							supplier: {
+								person: {
+									fullName: {
+										contains: filter.query,
+										mode: "insensitive" as const,
+									},
+								},
+							},
+						},
+					],
 				}
 			: {}),
-		...(filter.category
-			? {
-					category: {
-						value: filter.category,
-					},
-				}
-			: {}),
-		...(filter.dateFrom || filter.dateTo ? { expenseDate: dateFilter } : {}),
+		...(filter.dateFrom || filter.dateTo ? { createdAt: dateFilter } : {}),
 	};
 }
 
 function mapExpenseSummary(row: {
-	notes?: string | null;
 	id: number;
-	amount: Prisma.Decimal;
-	expenseDate: Date;
+	negotiatedAmount: Prisma.Decimal;
+	notes: string | null;
 	isActive: boolean;
 	deletedAt: Date | null;
 	createdAt: Date;
-	category: {
+	supplier: {
 		id: number;
-		label: string;
-		value: string;
+		person: {
+			fullName: string;
+			document: string | null;
+		};
 	};
 }) {
 	return expenseSummarySchema.parse({
-		notes: row.notes ?? null,
 		id: row.id,
-		category: row.category.label,
-		categoryId: row.category.id,
-		categoryValue: row.category.value,
-		expenseDate: row.expenseDate.toISOString(),
-		amount: Number(row.amount),
+		supplierId: row.supplier.id,
+		supplierName: row.supplier.person.fullName,
+		supplierDocument: row.supplier.person.document,
+		negotiatedAmount: Number(row.negotiatedAmount),
+		notes: row.notes,
 		isActive: row.isActive,
 		isSoftDeleted: Boolean(row.deletedAt),
 		createdAt: row.createdAt.toISOString(),
@@ -101,14 +109,13 @@ export async function getExpenses({
 	const where = buildExpenseWhere({ firmId, filter: search });
 
 	const sortMap: Record<string, Prisma.ExpenseOrderByWithRelationInput> = {
-		amount: { amount: search.direction },
-		category: { category: { label: search.direction } },
-		createdAt: { createdAt: search.direction },
-		expenseDate: { expenseDate: search.direction },
 		id: { id: search.direction },
+		supplierName: { supplier: { person: { fullName: search.direction } } },
+		negotiatedAmount: { negotiatedAmount: search.direction },
+		createdAt: { createdAt: search.direction },
 	};
 	const orderBy = withDeterministicTieBreaker(
-		sortMap[search.column] ?? { expenseDate: "desc" },
+		sortMap[search.column] ?? { createdAt: "desc" },
 		{ id: "asc" },
 	);
 
@@ -116,11 +123,15 @@ export async function getExpenses({
 		prisma.expense.findMany({
 			where,
 			include: {
-				category: {
+				supplier: {
 					select: {
 						id: true,
-						label: true,
-						value: true,
+						person: {
+							select: {
+								fullName: true,
+								document: true,
+							},
+						},
 					},
 				},
 			},
@@ -129,14 +140,14 @@ export async function getExpenses({
 			take: search.limit,
 		}),
 		prisma.expense.count({ where }),
-		prisma.expense.aggregate({ where, _sum: { amount: true } }),
+		prisma.expense.aggregate({ where, _sum: { negotiatedAmount: true } }),
 	]);
 
 	return {
 		data: rows.map(mapExpenseSummary),
 		total,
 		...financialTotalsSchema.parse({
-			totalAmount: Number(aggregate._sum.amount ?? 0),
+			totalAmount: Number(aggregate._sum.negotiatedAmount ?? 0),
 		}),
 		page: search.page,
 		pageSize: search.limit,
@@ -150,11 +161,15 @@ export async function getExpenseById({
 	const row = await prisma.expense.findFirst({
 		where: { id, firmId },
 		include: {
-			category: {
+			supplier: {
 				select: {
 					id: true,
-					label: true,
-					value: true,
+					person: {
+						select: {
+							fullName: true,
+							document: true,
+						},
+					},
 				},
 			},
 		},
@@ -166,11 +181,10 @@ export async function getExpenseById({
 
 	return expenseDetailSchema.parse({
 		id: row.id,
-		categoryId: row.category.id,
-		category: row.category.label,
-		categoryValue: row.category.value,
-		expenseDate: row.expenseDate.toISOString(),
-		amount: Number(row.amount),
+		supplierId: row.supplier.id,
+		supplierName: row.supplier.person.fullName,
+		supplierDocument: row.supplier.person.document,
+		negotiatedAmount: Number(row.negotiatedAmount),
 		notes: row.notes,
 		isActive: row.isActive,
 		isSoftDeleted: Boolean(row.deletedAt),
@@ -179,19 +193,43 @@ export async function getExpenseById({
 	});
 }
 
-export async function getExpenseCategories(): Promise<
+export async function getExpenseSuppliers(): Promise<
 	QueryManyReturnType<Option>
 > {
-	const rows = await prisma.expenseCategory.findMany({
-		orderBy: [{ isActive: "desc" }, { label: "asc" }],
+	const rows = await prisma.supplierProfile.findMany({
+		where: {
+			person: {
+				deletedAt: null,
+			},
+		},
+		include: {
+			person: {
+				select: {
+					fullName: true,
+					document: true,
+					isActive: true,
+				},
+			},
+		},
+		orderBy: [{ isActive: "desc" }, { person: { fullName: "asc" } }],
 	});
 
-	return optionSchema.array().parse(rows);
+	return optionSchema.array().parse(
+		rows.map((row) => ({
+			id: row.id,
+			value: String(row.id),
+			label: row.person.fullName,
+			isActive: row.isActive && row.person.isActive,
+		})),
+	);
 }
 
-export async function getExpenseCategoryByValue(value: string) {
-	return prisma.expenseCategory.findUnique({
-		where: { value },
+export async function getSupplierProfileById(id: number) {
+	return prisma.supplierProfile.findUnique({
+		where: { id },
+		include: {
+			person: true,
+		},
 	});
 }
 

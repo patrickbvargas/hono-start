@@ -10,30 +10,30 @@ import { EXPENSE_ALLOWED_SORT_COLUMNS } from "../../constants/sorting";
 import type { ExpenseSummary } from "../../schemas/model";
 
 interface ExpenseReadColumnOptions<T> {
-	category: (row: T) => string;
+	supplier: (row: T) => string;
 	date: (row: T) => string;
 	amount: (row: T) => number;
 	enableSorting?: boolean;
-	onCategoryClick?: (row: T) => void;
+	onSupplierClick?: (row: T) => void;
 }
 
 export function getExpenseReadColumns<T extends RowData>({
-	category,
+	supplier,
 	date,
 	amount,
 	enableSorting = false,
-	onCategoryClick,
+	onSupplierClick,
 }: ExpenseReadColumnOptions<T>) {
 	const c = createColumnHelper<typeof dataTableFeatures, T>();
 	return [
-		c.accessor(category, {
-			id: "category",
-			header: "Categoria",
+		c.accessor(supplier, {
+			id: "supplierName",
+			header: "Fornecedor",
 			cell: (context) =>
-				onCategoryClick ? (
+				onSupplierClick ? (
 					<TableButton
 						title={`Abrir página de ${context.getValue()}`}
-						onClick={() => onCategoryClick(context.row.original)}
+						onClick={() => onSupplierClick(context.row.original)}
 					>
 						{context.getValue()}
 					</TableButton>
@@ -44,14 +44,14 @@ export function getExpenseReadColumns<T extends RowData>({
 			meta: { minColumnWidth: 220 },
 		}),
 		c.accessor(date, {
-			id: "expenseDate",
-			header: "Data",
+			id: "createdAt",
+			header: "Data de Registro",
 			cell: ({ getValue }) => formatter.calendarDate(getValue()),
 			enableSorting,
 		}),
 		c.accessor(amount, {
-			id: "amount",
-			header: "Valor",
+			id: "negotiatedAmount",
+			header: "Valor Negociado",
 			cell: ({ getValue }) => (
 				<SensitiveValue>{formatter.currency(getValue())}</SensitiveValue>
 			),
@@ -67,9 +67,9 @@ export function getExpenseTableColumns(
 	const c = createColumnHelper<typeof dataTableFeatures, ExpenseSummary>();
 
 	const readColumns = getExpenseReadColumns<ExpenseSummary>({
-		category: (row) => row.category,
-		date: (row) => row.expenseDate,
-		amount: (row) => row.amount,
+		supplier: (row) => row.supplierName,
+		date: (row) => row.createdAt,
+		amount: (row) => row.negotiatedAmount,
 		enableSorting: true,
 	});
 
@@ -80,9 +80,10 @@ export function getExpenseTableColumns(
 			enableSorting: EXPENSE_ALLOWED_SORT_COLUMNS.includes("id"),
 			meta: { headerClassName: "w-18", cellClassName: "whitespace-nowrap" },
 		}),
-		...readColumns.slice(0, -1),
+		readColumns[0],
+		readColumns[1],
 		c.accessor("notes", {
-			header: "Descrição",
+			header: "Observações",
 			enableSorting: false,
 			cell: (context) => (
 				<div>
@@ -95,11 +96,16 @@ export function getExpenseTableColumns(
 				</div>
 			),
 		}),
-		...readColumns.slice(-1),
+		readColumns[2],
 		c.display({
 			id: "actions",
+			header: "",
 			cell: ({ row }) => renderActions(row.original),
-			meta: { cellClassName: "w-11" },
+			enableSorting: false,
+			meta: {
+				headerClassName: "w-12",
+				cellClassName: "text-right whitespace-nowrap",
+			},
 		}),
 	];
 }

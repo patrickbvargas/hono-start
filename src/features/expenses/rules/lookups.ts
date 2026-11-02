@@ -1,19 +1,19 @@
-import type { ExpenseCategory } from "@/generated/prisma/client";
+import type { SupplierProfile } from "@/generated/prisma/client";
 import { EXPENSE_ERRORS } from "../constants/errors";
 
-export function assertExpenseCategoryExists(
-	category: ExpenseCategory | null,
-): asserts category is ExpenseCategory {
-	if (!category) {
-		throw new Error(EXPENSE_ERRORS.CATEGORY_NOT_FOUND);
+export function assertSupplierExists(
+	supplier: SupplierProfile | null,
+): asserts supplier is SupplierProfile {
+	if (!supplier) {
+		throw new Error(EXPENSE_ERRORS.SUPPLIER_NOT_FOUND);
 	}
 }
 
-export function assertExpenseCategoryCanBeSelected(
-	category: ExpenseCategory,
-	currentCategoryId?: number,
+export function assertSupplierCanBeSelected(
+	supplier: SupplierProfile,
+	currentSupplierId?: number,
 ) {
-	if (!category.isActive && category.id !== currentCategoryId) {
-		throw new Error(EXPENSE_ERRORS.CATEGORY_INACTIVE);
+	if (!supplier.isActive && supplier.id !== currentSupplierId) {
+		throw new Error(EXPENSE_ERRORS.SUPPLIER_INACTIVE);
 	}
 }

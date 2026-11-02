@@ -35,15 +35,19 @@ export const ExpenseList = ({
 
 	const renderCardFields = React.useCallback(
 		(expense: ExpenseSummary): DetailFieldItem[] => [
-			{ term: "Data", definition: formatter.calendarDate(expense.expenseDate) },
 			{
-				term: "Valor",
+				term: "Valor Negociado",
 				definition: (
-					<SensitiveValue>{formatter.currency(expense.amount)}</SensitiveValue>
+					<SensitiveValue>
+						{formatter.currency(expense.negotiatedAmount)}
+					</SensitiveValue>
 				),
 			},
-			{ term: "Descrição", definition: expense.notes || "—" },
-			{ term: "Criado em", definition: formatter.date(expense.createdAt) },
+			{ term: "Observações", definition: expense.notes || "—" },
+			{
+				term: "Data de Registro",
+				definition: formatter.date(expense.createdAt),
+			},
 		],
 		[],
 	);
@@ -80,7 +84,7 @@ export const ExpenseList = ({
 			emptyState={emptyState}
 			data={items}
 			getRowKey={(expense) => expense.id}
-			renderTitle={(expense) => expense.category}
+			renderTitle={(expense) => expense.supplierName}
 			renderFields={renderCardFields}
 			renderActions={renderCardActions}
 			onCardAction={(expense) => (onOpenPage ?? onView)?.(expense.id)}

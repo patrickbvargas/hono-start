@@ -1,16 +1,16 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { ExpenseCategory } from "@/generated/prisma/client";
+import type { SupplierProfile } from "@/generated/prisma/client";
 import type { ExpenseDetail } from "../schemas/model";
 
 const {
 	createAuditLogMock,
 	getExpenseByIdMock,
-	getExpenseCategoryByValueMock,
+	getSupplierProfileByIdMock,
 	prismaMock,
 } = vi.hoisted(() => ({
 	createAuditLogMock: vi.fn(),
 	getExpenseByIdMock: vi.fn(),
-	getExpenseCategoryByValueMock: vi.fn(),
+	getSupplierProfileByIdMock: vi.fn(),
 	prismaMock: {
 		expense: {
 			create: vi.fn(),
@@ -44,7 +44,7 @@ vi.mock("../data/queries", async () => {
 	return {
 		...actual,
 		getExpenseById: getExpenseByIdMock,
-		getExpenseCategoryByValue: getExpenseCategoryByValueMock,
+		getSupplierProfileById: getSupplierProfileByIdMock,
 	};
 });
 
@@ -56,13 +56,22 @@ import {
 	updateExpense,
 } from "../data/mutations";
 
-const baseCategory = (
-	overrides: Partial<ExpenseCategory> = {},
-): ExpenseCategory => ({
+const baseSupplier = (
+	overrides: Partial<
+		SupplierProfile & {
+			person: { fullName: string; document: string | null };
+		}
+	> = {},
+) => ({
 	id: 30,
-	value: "PHONE",
-	label: "Telefone",
+	personId: 100,
 	isActive: true,
+	createdAt: new Date(),
+	updatedAt: new Date(),
+	person: {
+		fullName: "Fornecedor Teste",
+		document: "12345678901",
+	},
 	...overrides,
 });
 
@@ -70,11 +79,10 @@ const baseExpense = (
 	overrides: Partial<ExpenseDetail> = {},
 ): ExpenseDetail => ({
 	id: 1,
-	categoryId: 30,
-	category: "Telefone",
-	categoryValue: "PHONE",
-	expenseDate: "2026-06-09T12:00:00.000Z",
-	amount: 100,
+	supplierId: 30,
+	supplierName: "Fornecedor Teste",
+	supplierDocument: "12345678901",
+	negotiatedAmount: 100,
 	notes: "Conta fixa",
 	isActive: true,
 	isSoftDeleted: false,
@@ -88,30 +96,30 @@ describe("expense mutations", () => {
 		vi.clearAllMocks();
 		prismaMock.expense.create.mockResolvedValue({ id: 9 });
 		prismaMock.expense.update.mockResolvedValue({});
-		prismaMock.$transaction.mockImplementation(async (callback) =>
-			callback(prismaMock),
+		prismaMock.$transaction.mockImplementation(
+			async (callback: (tx: typeof prismaMock) => Promise<unknown>) =>
+				callback(prismaMock),
 		);
 	});
 
-	it("rejects unknown categories on create", async () => {
-		getExpenseCategoryByValueMock.mockResolvedValue(null);
+	it("rejects unknown suppliers on create", async () => {
+		getSupplierProfileByIdMock.mockResolvedValue(null);
 
 		await expect(
 			createExpense({
 				firmId: 1,
 				input: {
-					category: "UNKNOWN",
-					expenseDate: "2026-06-09",
-					amount: 100,
+					supplierId: "999",
+					negotiatedAmount: 100,
 					notes: "",
 					isActive: true,
 				},
 			}),
-		).rejects.toThrow(EXPENSE_ERRORS.CATEGORY_NOT_FOUND);
+		).rejects.toThrow(EXPENSE_ERRORS.SUPPLIER_NOT_FOUND);
 	});
 
 	it("creates expenses inside a transaction and writes an audit log", async () => {
-		getExpenseCategoryByValueMock.mockResolvedValue(baseCategory());
+		getSupplierProfileByIdMock.mockResolvedValue(baseSupplier());
 
 		await expect(
 			createExpense({
@@ -122,9 +130,8 @@ describe("expense mutations", () => {
 				},
 				firmId: 1,
 				input: {
-					category: "PHONE",
-					expenseDate: "2026-06-09",
-					amount: 150.5,
+					supplierId: "30",
+					negotiatedAmount: 150.5,
 					notes: "  Conta principal  ",
 					isActive: true,
 				},
@@ -134,9 +141,8 @@ describe("expense mutations", () => {
 		expect(prismaMock.expense.create).toHaveBeenCalledWith({
 			data: {
 				firmId: 1,
-				categoryId: 30,
-				expenseDate: new Date("2026-06-09T12:00:00.000Z"),
-				amount: 150.5,
+				supplierId: 30,
+				negotiatedAmount: 150.5,
 				notes: "Conta principal",
 				isActive: true,
 			},
@@ -151,10 +157,10 @@ describe("expense mutations", () => {
 		);
 	});
 
-	it("allows unchanged inactive persisted categories on update", async () => {
+	it("allows unchanged inactive persisted suppliers on update", async () => {
 		getExpenseByIdMock.mockResolvedValue(baseExpense());
-		getExpenseCategoryByValueMock.mockResolvedValue(
-			baseCategory({ isActive: false }),
+		getSupplierProfileByIdMock.mockResolvedValue(
+			baseSupplier({ isActive: false }),
 		);
 
 		await expect(
@@ -162,9 +168,8 @@ describe("expense mutations", () => {
 				firmId: 1,
 				input: {
 					id: 1,
-					category: "PHONE",
-					expenseDate: "2026-06-10",
-					amount: 200,
+					supplierId: "30",
+					negotiatedAmount: 200,
 					notes: "",
 					isActive: true,
 				},

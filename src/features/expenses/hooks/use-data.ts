@@ -2,7 +2,7 @@ import { useSuspenseQueries, useSuspenseQuery } from "@tanstack/react-query";
 import type { EntityId } from "@/shared/schemas/entity";
 import {
 	getExpenseByIdQueryOptions,
-	getExpenseCategoriesQueryOptions,
+	getExpenseSuppliersQueryOptions,
 	getExpensesQueryOptions,
 } from "../api/queries";
 import type { ExpenseSearch } from "../schemas/search";
@@ -20,9 +20,9 @@ export function useExpense(id: EntityId) {
 }
 
 export function useExpenseOptions() {
-	const [{ data: categories }] = useSuspenseQueries({
-		queries: [getExpenseCategoriesQueryOptions()],
+	const [{ data: suppliers }] = useSuspenseQueries({
+		queries: [getExpenseSuppliersQueryOptions()],
 	});
 
-	return { categories };
+	return { suppliers, categories: suppliers };
 }

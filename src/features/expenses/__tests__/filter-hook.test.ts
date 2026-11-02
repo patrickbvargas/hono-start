@@ -24,7 +24,7 @@ vi.mock("@/shared/hooks/use-filter", () => ({
 	useFilter: () => ({
 		filter: {
 			query: "fixa",
-			category: "PHONE",
+			supplierId: 42,
 			dateFrom: "2026-06-01",
 			dateTo: "2026-06-30",
 			active: "false",
@@ -32,7 +32,7 @@ vi.mock("@/shared/hooks/use-filter", () => ({
 		},
 		defaultFilter: {
 			query: "",
-			category: "",
+			supplierId: undefined,
 			dateFrom: "",
 			dateTo: "",
 			active: "all",
@@ -66,7 +66,7 @@ describe("useExpenseFilter", () => {
 
 		result.current.handleApplyFilter({
 			query: "",
-			category: "",
+			supplierId: undefined,
 			dateFrom: "",
 			dateTo: "",
 			active: "all",
@@ -76,7 +76,7 @@ describe("useExpenseFilter", () => {
 		expect(cancelMock).toHaveBeenCalledTimes(1);
 		expect(resetMock).toHaveBeenCalledWith({
 			query: "",
-			category: "",
+			supplierId: undefined,
 			dateFrom: "",
 			dateTo: "",
 			active: "all",
@@ -84,7 +84,7 @@ describe("useExpenseFilter", () => {
 		});
 		expect(handleFilterMock).toHaveBeenCalledWith({
 			query: "",
-			category: "",
+			supplierId: undefined,
 			dateFrom: "",
 			dateTo: "",
 			active: "all",

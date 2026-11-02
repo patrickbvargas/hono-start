@@ -4,13 +4,14 @@ import { entityIdSchema } from "@/shared/schemas/entity";
 import { assertExpenseAmountPositive } from "../rules/write";
 
 const expenseBaseInputSchema = z.object({
-	category: z.string().trim().min(1, "Categoria é obrigatória"),
-	expenseDate: z.iso.date("Data é obrigatória"),
-	amount: z.number().positive("Valor deve ser maior que zero"),
+	supplierId: z.string().trim().min(1, "Fornecedor é obrigatório"),
+	negotiatedAmount: z.number().positive("Valor deve ser maior que zero"),
 	notes: z
 		.string()
 		.trim()
-		.max(TEXT_LIMITS.notes, "Observações devem ter no máximo 5.000 caracteres"),
+		.max(TEXT_LIMITS.notes, "Observações devem ter no máximo 5.000 caracteres")
+		.optional()
+		.or(z.literal("")),
 	isActive: z.boolean(),
 });
 
@@ -19,11 +20,11 @@ const expenseBusinessRulesRefinement = (
 	ctx: z.RefinementCtx,
 ) => {
 	try {
-		assertExpenseAmountPositive(data.amount);
+		assertExpenseAmountPositive(data.negotiatedAmount);
 	} catch (error) {
 		ctx.addIssue({
 			code: "custom",
-			path: ["amount"],
+			path: ["negotiatedAmount"],
 			message: error instanceof Error ? error.message : "Valor inválido",
 		});
 	}
@@ -39,7 +40,7 @@ export const expenseUpdateInputSchema = entityIdSchema
 
 export const expenseIdInputSchema = entityIdSchema;
 
-export type ExpenseBaseInput = z.output<typeof expenseBaseInputSchema>;
-export type ExpenseCreateInput = z.output<typeof expenseCreateInputSchema>;
-export type ExpenseUpdateInput = z.output<typeof expenseUpdateInputSchema>;
+export type ExpenseBaseInput = z.infer<typeof expenseBaseInputSchema>;
+export type ExpenseCreateInput = z.infer<typeof expenseCreateInputSchema>;
+export type ExpenseUpdateInput = z.infer<typeof expenseUpdateInputSchema>;
 export type ExpenseIdInput = z.infer<typeof expenseIdInputSchema>;

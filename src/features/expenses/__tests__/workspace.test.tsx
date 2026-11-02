@@ -46,8 +46,9 @@ vi.mock("../hooks/use-workspace", async () => {
 			...useOverlay<number>(),
 			expense: {
 				id: 42,
-				category: "Aluguel",
-				amount: 1500,
+				supplierId: 10,
+				supplierName: "Aluguel Imobiliária",
+				negotiatedAmount: 1500,
 				isActive: true,
 				isSoftDeleted: state.deleted,
 			},

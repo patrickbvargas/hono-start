@@ -24,6 +24,7 @@ interface ExpenseWorkspaceProps {
 	onTabChange: (tab: ExpenseWorkspaceSearch["tab"]) => void;
 	onDeleted: () => void;
 }
+
 export function ExpenseWorkspace({
 	id,
 	search,
@@ -37,10 +38,11 @@ export function ExpenseWorkspace({
 	);
 	const { expense, overlay, canEdit, canDelete, canRestore } =
 		useExpenseWorkspace(id);
+
 	return (
 		<EntityWorkspace
 			title="Despesa"
-			identity={expense.category}
+			identity={expense.supplierName}
 			subtitle={`#${id}`}
 			status={
 				expense.isSoftDeleted ? (
@@ -71,6 +73,21 @@ export function ExpenseWorkspace({
 					value: "overview",
 					label: "Visão geral",
 					content: <ExpenseOverview id={id} section="overview" />,
+				},
+				{
+					value: "financial",
+					label: "Financeiro",
+					content: (
+						<div className="rounded-lg border border-dashed p-6 text-center text-sm text-muted-foreground">
+							<p className="font-medium">
+								Nenhum título financeiro gerado para esta despesa.
+							</p>
+							<p className="mt-1 text-xs">
+								O faturamento e acerto financeiro estarão disponíveis na próxima
+								etapa.
+							</p>
+						</div>
+					),
 				},
 				...(canReadAttachments
 					? [

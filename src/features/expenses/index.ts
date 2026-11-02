@@ -1,6 +1,7 @@
 export {
 	getExpenseByIdQueryOptions,
 	getExpenseCategoriesQueryOptions,
+	getExpenseSuppliersQueryOptions,
 	getExpensesQueryOptions,
 } from "./api/queries";
 export * from "./components/delete";

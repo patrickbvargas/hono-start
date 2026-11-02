@@ -21,20 +21,20 @@ it("reuses expense column formatting for a different read model without actions 
 	const data = [
 		{
 			id: "detail:1",
-			categoryName: "Telefone",
+			supplier: "Papelaria Silva",
 			occurredAt: "2026-02-03T12:00:00.000Z",
 			value: 1234.56,
 		},
 	];
 	const columns = getExpenseReadColumns<(typeof data)[number]>({
-		category: (row) => row.categoryName,
+		supplier: (row) => row.supplier,
 		date: (row) => row.occurredAt,
 		amount: (row) => row.value,
 	});
 	const { container } = render(
 		<DataTable data={data} columns={columns} getRowId={(row) => row.id} />,
 	);
-	expect(screen.getByText("Telefone")).toBeTruthy();
+	expect(screen.getByText("Papelaria Silva")).toBeTruthy();
 	expect(screen.getByText("03/02/2026")).toBeTruthy();
 	expect(screen.getByText(/1\.234,56/)).toBeTruthy();
 	expect(screen.queryByRole("button")).toBeNull();

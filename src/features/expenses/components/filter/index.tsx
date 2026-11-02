@@ -11,6 +11,7 @@ interface ExpenseFilterProps {
 	controller: ReturnType<typeof useExpenseFilter>;
 	summary?: React.ReactNode;
 }
+
 export const ExpenseFilter = ({ controller, summary }: ExpenseFilterProps) => {
 	const {
 		filter,
@@ -20,18 +21,18 @@ export const ExpenseFilter = ({ controller, summary }: ExpenseFilterProps) => {
 		handleApplyFilter,
 		handleClearFilters,
 	} = controller;
-	const { categories } = useExpenseOptions();
+	const { suppliers } = useExpenseOptions();
 	const isMobile = useIsMobile();
 
-	const categoryLabels = new Map(
-		categories.map((option) => [option.value, option.label]),
+	const supplierLabels = new Map(
+		suppliers.map((option) => [option.value, option.label]),
 	);
 	const statusLabels = new Map(
 		ENTITY_DELETED_FILTER_OPTIONS.map((option) => [option.value, option.label]),
 	);
 
 	const hasAdvancedFilters =
-		filter.category !== defaultFilter.category ||
+		filter.supplierId !== defaultFilter.supplierId ||
 		filter.dateFrom !== defaultFilter.dateFrom ||
 		filter.dateTo !== defaultFilter.dateTo ||
 		filter.status !== defaultFilter.status;
@@ -42,9 +43,9 @@ export const ExpenseFilter = ({ controller, summary }: ExpenseFilterProps) => {
 	const sharedFields = (
 		<>
 			{isMobile ? (
-				<form.AppField name="category">
+				<form.AppField name="supplierId">
 					{(field) => (
-						<field.Autocomplete label="Categoria" options={categories} />
+						<field.Autocomplete label="Fornecedor" options={suppliers} />
 					)}
 				</form.AppField>
 			) : null}
@@ -67,7 +68,7 @@ export const ExpenseFilter = ({ controller, summary }: ExpenseFilterProps) => {
 						{(field) => (
 							<field.Search
 								aria-label="Observação"
-								placeholder="Buscar por observação..."
+								placeholder="Buscar por fornecedor ou observação..."
 								classNames={{
 									wrapper:
 										"min-w-0 flex-1 md:flex-none md:w-52 md:shrink-0 xl:w-60",
@@ -82,12 +83,12 @@ export const ExpenseFilter = ({ controller, summary }: ExpenseFilterProps) => {
 					) : (
 						<ListFilters.Actions className="contents">
 							<div className="w-full min-w-0 md:w-52 md:shrink-0 xl:w-60">
-								<form.AppField name="category">
+								<form.AppField name="supplierId">
 									{(field) => (
 										<field.Autocomplete
-											aria-label="Categoria"
-											placeholder="Categoria"
-											options={categories}
+											aria-label="Fornecedor"
+											placeholder="Fornecedor"
+											options={suppliers}
 										/>
 									)}
 								</form.AppField>
@@ -122,17 +123,18 @@ export const ExpenseFilter = ({ controller, summary }: ExpenseFilterProps) => {
 								{filter.query}
 							</ListFilters.Chip>
 						) : null}
-						{filter.category ? (
+						{filter.supplierId ? (
 							<ListFilters.Chip
 								onRemove={() =>
 									handleApplyFilter({
 										...filter,
-										category: defaultFilter.category,
+										supplierId: defaultFilter.supplierId,
 									})
 								}
-								removeLabel={`Remover filtro de categoria: ${categoryLabels.get(filter.category) ?? filter.category}`}
+								removeLabel={`Remover filtro de fornecedor: ${supplierLabels.get(String(filter.supplierId)) ?? filter.supplierId}`}
 							>
-								{categoryLabels.get(filter.category) ?? filter.category}
+								{supplierLabels.get(String(filter.supplierId)) ??
+									filter.supplierId}
 							</ListFilters.Chip>
 						) : null}
 						{filter.dateFrom ? (

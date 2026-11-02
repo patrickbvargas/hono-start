@@ -16,6 +16,7 @@ interface ExpenseOverviewProps {
 	id: EntityId;
 	includeAttachments?: boolean;
 }
+
 export function ExpenseOverview({
 	id,
 	includeAttachments = true,
@@ -26,13 +27,21 @@ export function ExpenseOverview({
 
 	const generalInfo = React.useMemo<DetailFieldItem[]>(
 		() => [
-			{ term: "Categoria", definition: expense.category },
-			{ term: "Data", definition: formatter.calendarDate(expense.expenseDate) },
 			{
-				term: "Valor",
+				term: "Fornecedor",
+				definition: expense.supplierName,
+			},
+			{
+				term: "Valor Negociado",
 				definition: (
-					<SensitiveValue>{formatter.currency(expense.amount)}</SensitiveValue>
+					<SensitiveValue>
+						{formatter.currency(expense.negotiatedAmount)}
+					</SensitiveValue>
 				),
+			},
+			{
+				term: "Status",
+				definition: expense.isActive ? "Ativo" : "Inativo",
 			},
 		],
 		[expense],

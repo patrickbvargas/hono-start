@@ -71,33 +71,32 @@ interface ExpenseFormFieldsProps {
 }
 
 function ExpenseFormFields({ form, state, title }: ExpenseFormFieldsProps) {
-	const { categories } = useExpenseOptions();
+	const { suppliers } = useExpenseOptions();
 
 	return (
 		<EntityForm state={state} title={title} footer={<form.Submit />}>
 			<FormSection variant="plain">
 				<FieldGroup className="grid gap-4 sm:grid-cols-2">
-					<form.AppField name="category">
+					<form.AppField name="supplierId">
 						{(field) => (
 							<field.Autocomplete
-								label="Categoria"
-								options={categories}
+								label="Fornecedor"
+								options={suppliers}
 								isRequired
+								placeholder="Selecionar fornecedor..."
 								classNames={{ wrapper: "sm:col-span-2" }}
 							/>
 						)}
 					</form.AppField>
-					<form.AppField name="expenseDate">
-						{(field) => <field.DatePicker label="Data da despesa" isRequired />}
-					</form.AppField>
-					<form.AppField name="amount">
+					<form.AppField name="negotiatedAmount">
 						{(field) => (
 							<field.Number
-								label="Valor"
+								label="Valor negociado"
 								minValue={0}
 								step={0.01}
 								isRequired
 								formatOptions={{ style: "currency", currency: "BRL" }}
+								classNames={{ wrapper: "sm:col-span-2" }}
 							/>
 						)}
 					</form.AppField>
@@ -130,8 +129,7 @@ function ExpenseFormSkeleton({
 			<FormSection variant="plain">
 				<FieldGroup className="grid gap-4 sm:grid-cols-2">
 					<FormFieldSkeleton labelWidth="w-18" className="sm:col-span-2" />
-					<FormFieldSkeleton labelWidth="w-12" />
-					<FormFieldSkeleton labelWidth="w-10" />
+					<FormFieldSkeleton labelWidth="w-20" className="sm:col-span-2" />
 					<FormTextAreaSkeleton labelWidth="w-22" className="sm:col-span-2" />
 				</FieldGroup>
 			</FormSection>

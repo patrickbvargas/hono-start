@@ -2,11 +2,10 @@ import * as z from "zod";
 import { entityIdSchema } from "@/shared/schemas/entity";
 
 export const expenseDetailSchema = entityIdSchema.safeExtend({
-	categoryId: z.number(),
-	category: z.string(),
-	categoryValue: z.string(),
-	expenseDate: z.iso.datetime(),
-	amount: z.number(),
+	supplierId: z.number(),
+	supplierName: z.string(),
+	supplierDocument: z.string().nullable().default(null),
+	negotiatedAmount: z.number(),
 	notes: z.string().nullable(),
 	isActive: z.boolean(),
 	isSoftDeleted: z.boolean(),
@@ -17,10 +16,10 @@ export const expenseDetailSchema = entityIdSchema.safeExtend({
 export const expenseSummarySchema = expenseDetailSchema
 	.pick({
 		id: true,
-		category: true,
-		categoryValue: true,
-		expenseDate: true,
-		amount: true,
+		supplierId: true,
+		supplierName: true,
+		supplierDocument: true,
+		negotiatedAmount: true,
 		isActive: true,
 		isSoftDeleted: true,
 		createdAt: true,

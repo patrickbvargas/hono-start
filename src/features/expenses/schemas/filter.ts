@@ -6,7 +6,7 @@ import {
 
 export const expenseFilterSchema = z.object({
 	query: z.string().trim().catch(""),
-	category: z.string().catch("").default(""),
+	supplierId: z.coerce.number().optional().catch(undefined),
 	dateFrom: z.string().catch("").default(""),
 	dateTo: z.string().catch("").default(""),
 	active: activeFilterSchema,

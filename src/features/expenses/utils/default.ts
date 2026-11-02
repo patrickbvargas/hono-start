@@ -3,9 +3,8 @@ import type { ExpenseDetail } from "../schemas/model";
 import type { ExpenseSearch } from "../schemas/search";
 
 export const defaultExpenseCreateValues = (): ExpenseCreateInput => ({
-	category: "",
-	expenseDate: "",
-	amount: 0,
+	supplierId: "",
+	negotiatedAmount: 0,
 	notes: "",
 	isActive: true,
 });
@@ -14,9 +13,8 @@ export const defaultExpenseUpdateValues = (
 	initialValue: ExpenseDetail,
 ): ExpenseUpdateInput => ({
 	id: initialValue.id,
-	category: initialValue.categoryValue,
-	expenseDate: initialValue.expenseDate.slice(0, 10),
-	amount: initialValue.amount,
+	supplierId: String(initialValue.supplierId),
+	negotiatedAmount: initialValue.negotiatedAmount,
 	notes: initialValue.notes ?? "",
 	isActive: initialValue.isActive,
 });
@@ -24,10 +22,10 @@ export const defaultExpenseUpdateValues = (
 export const expenseSearchDefaults: ExpenseSearch = {
 	page: 1,
 	limit: 25,
-	column: "expenseDate",
+	column: "createdAt",
 	direction: "desc",
 	query: "",
-	category: "",
+	supplierId: undefined,
 	dateFrom: "",
 	dateTo: "",
 	active: "all",

@@ -87,8 +87,10 @@ function ExpenseDetailsContent({
 		<EntityDetail.Content>
 			<EntityDetail.Header className="flex-row items-center justify-between gap-3">
 				<EntityDetail.Title className="min-w-0 flex-1 truncate">
-					{expense.category} •{" "}
-					<SensitiveValue>{formatter.currency(expense.amount)}</SensitiveValue>
+					{expense.supplierName} •{" "}
+					<SensitiveValue>
+						{formatter.currency(expense.negotiatedAmount)}
+					</SensitiveValue>
 				</EntityDetail.Title>
 				<div className="hidden shrink-0 sm:block">{workspaceLink}</div>
 				<EntityActions
@@ -114,35 +116,43 @@ function ExpenseDetailsContent({
 	);
 }
 
-const ExpenseDetailsFallback = () => {
+function ExpenseDetailsFallback() {
 	const session = useLoggedUserSession();
+
 	return (
 		<EntityDetail.Content>
-			<EntityDetail.SkeletonHeader withActions withPageLink />
+			<EntityDetail.Header className="flex-row items-center justify-between gap-3">
+				<EntityDetail.Title className="min-w-0 flex-1 truncate">
+					<Skeleton className="h-6 w-48" />
+				</EntityDetail.Title>
+				<Skeleton className="h-8 w-20 shrink-0" />
+			</EntityDetail.Header>
 			<EntityDetail.Body>
-				<EntityDetail.SkeletonPageLink />
-				<EntityDetail.SkeletonFields columns={2} rows={3} />
-				<EntityDetail.Separator />
-				<EntityDetail.Section title="Observações">
-					<Skeleton className="h-5 w-full max-w-56" />
-				</EntityDetail.Section>
-				{hasPermission(session, "org:attachments:read") && (
-					<>
-						<EntityDetail.Separator />
-						<AttachmentSectionFallback
-							canUpload={
-								hasPermission(session, "org:expenses:update") &&
-								hasPermission(session, "org:attachments:upload")
-							}
-						/>
-					</>
-				)}
-				<EntityDetail.Separator />
-				<EntityDetail.Section title="Registro">
-					<EntityDetail.SkeletonFields columns={2} rows={2} />
-				</EntityDetail.Section>
+				<div className="flex flex-col gap-3">
+					<div className="grid grid-cols-2 gap-4">
+						<Skeleton className="h-10 w-full" />
+						<Skeleton className="h-10 w-full" />
+					</div>
+					<EntityDetail.Separator />
+					<EntityDetail.Section title="Observações">
+						<Skeleton className="h-16 w-full" />
+					</EntityDetail.Section>
+					{hasPermission(session, "org:attachments:read") ? (
+						<>
+							<EntityDetail.Separator />
+							<AttachmentSectionFallback />
+						</>
+					) : null}
+					<EntityDetail.Separator />
+					<EntityDetail.Section title="Registro">
+						<div className="grid grid-cols-2 gap-4">
+							<Skeleton className="h-10 w-full" />
+							<Skeleton className="h-10 w-full" />
+						</div>
+					</EntityDetail.Section>
+				</div>
 			</EntityDetail.Body>
 			<EntityDetail.Footer />
 		</EntityDetail.Content>
 	);
-};
+}

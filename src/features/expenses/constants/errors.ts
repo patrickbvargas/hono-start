@@ -10,8 +10,8 @@ export const EXPENSE_ERRORS = {
 	RESTORE_FAILED: "Erro ao restaurar despesa",
 	UPDATE_FORBIDDEN: "Apenas administradores podem editar despesas",
 	UPDATE_FAILED: "Erro ao atualizar despesa",
-	CATEGORY_NOT_FOUND: "Categoria de despesa não encontrada",
-	CATEGORY_INACTIVE: "Categoria de despesa inativa",
-	CATEGORY_OPTIONS_FAILED: "Erro ao buscar categorias disponíveis",
+	SUPPLIER_NOT_FOUND: "Fornecedor não encontrado",
+	SUPPLIER_INACTIVE: "Fornecedor inativo",
+	SUPPLIER_OPTIONS_FAILED: "Erro ao buscar fornecedores disponíveis",
 	AMOUNT_TOO_LOW: "Valor deve ser maior que zero",
 } as const;

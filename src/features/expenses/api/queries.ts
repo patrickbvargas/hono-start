@@ -16,7 +16,7 @@ import type {
 import { EXPENSE_ERRORS } from "../constants/errors";
 import {
 	getExpenseById,
-	getExpenseCategories,
+	getExpenseSuppliers,
 	getExpenses,
 } from "../data/queries";
 import { expenseIdInputSchema } from "../schemas/form";
@@ -27,7 +27,8 @@ export const expenseKeys = {
 	all: ["expense"] as const,
 	list: (search: ExpenseSearch) => [...expenseKeys.all, search] as const,
 	detail: (id: number) => [...expenseKeys.all, "detail", id] as const,
-	categoryOptions: () => [...expenseKeys.all, "category-options"] as const,
+	supplierOptions: () => [...expenseKeys.all, "supplier-options"] as const,
+	categoryOptions: () => [...expenseKeys.all, "supplier-options"] as const,
 };
 
 const getExpensesFn = createServerFn({ method: "GET" })
@@ -72,7 +73,7 @@ const getExpenseByIdFn = createServerFn({ method: "GET" })
 		}
 	});
 
-const getExpenseCategoriesFn = createServerFn({ method: "GET" })
+const getExpenseSuppliersFn = createServerFn({ method: "GET" })
 	.middleware([authMiddleware])
 	.handler(async (): Promise<QueryManyReturnType<Option>> => {
 		try {
@@ -81,10 +82,10 @@ const getExpenseCategoriesFn = createServerFn({ method: "GET" })
 
 			assertCan(session, "org:expenses:read", { firmId });
 
-			return await getExpenseCategories();
+			return await getExpenseSuppliers();
 		} catch (error) {
-			console.error("[getExpenseCategories]", error);
-			throw new Error(EXPENSE_ERRORS.CATEGORY_OPTIONS_FAILED);
+			console.error("[getExpenseSuppliers]", error);
+			throw new Error(EXPENSE_ERRORS.SUPPLIER_OPTIONS_FAILED);
 		}
 	});
 
@@ -100,10 +101,12 @@ export const getExpenseByIdQueryOptions = (id: number) =>
 		queryFn: () => getExpenseByIdFn({ data: { id } }),
 	});
 
-export const getExpenseCategoriesQueryOptions = () =>
+export const getExpenseSuppliersQueryOptions = () =>
 	queryOptions({
 		staleTime: Infinity,
 		meta: { refreshOnMutation: true },
-		queryKey: expenseKeys.categoryOptions(),
-		queryFn: getExpenseCategoriesFn,
+		queryKey: expenseKeys.supplierOptions(),
+		queryFn: getExpenseSuppliersFn,
 	});
+
+export const getExpenseCategoriesQueryOptions = getExpenseSuppliersQueryOptions;

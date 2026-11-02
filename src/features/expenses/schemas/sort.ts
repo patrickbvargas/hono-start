@@ -5,7 +5,7 @@ import type { ExpenseSummary } from "./model";
 
 export const expenseSortSchema = createSortSchema<ExpenseSummary>({
 	columns: EXPENSE_ALLOWED_SORT_COLUMNS,
-	defaultColumn: "expenseDate",
+	defaultColumn: "createdAt",
 	defaultDirection: "desc",
 });
 

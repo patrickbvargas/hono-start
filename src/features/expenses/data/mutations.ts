@@ -10,15 +10,13 @@ import type {
 	EntityUniqueParams,
 } from "@/shared/types/entity";
 import {
-	assertExpenseCategoryCanBeSelected,
-	assertExpenseCategoryExists,
+	assertSupplierCanBeSelected,
+	assertSupplierExists,
 } from "../rules/lookups";
+import { assertExpenseAmountPositive } from "../rules/write";
 import type { ExpenseCreateInput, ExpenseUpdateInput } from "../schemas/form";
-import {
-	normalizeExpenseCategoryValue,
-	normalizeExpenseNotes,
-} from "../utils/normalization";
-import { getExpenseById, getExpenseCategoryByValue } from "./queries";
+import { normalizeExpenseNotes } from "../utils/normalization";
+import { getExpenseById, getSupplierProfileById } from "./queries";
 
 export async function createExpense({
 	actor,
@@ -27,21 +25,20 @@ export async function createExpense({
 }: EntityInputParams<ExpenseCreateInput> & {
 	actor?: AuditLogActor;
 }): Promise<MutationReturnType> {
-	const category = await getExpenseCategoryByValue(
-		normalizeExpenseCategoryValue(input.category),
-	);
+	const supplierId = Number(input.supplierId);
+	const supplier = await getSupplierProfileById(supplierId);
 
-	assertExpenseCategoryExists(category);
-	assertExpenseCategoryCanBeSelected(category);
+	assertSupplierExists(supplier);
+	assertSupplierCanBeSelected(supplier);
+	assertExpenseAmountPositive(input.negotiatedAmount);
 
 	await prisma.$transaction(async (tx) => {
 		const expense = await tx.expense.create({
 			data: {
 				firmId,
-				categoryId: category.id,
-				expenseDate: new Date(`${input.expenseDate}T12:00:00.000Z`),
-				amount: input.amount,
-				notes: normalizeExpenseNotes(input.notes) || null,
+				supplierId: supplier.id,
+				negotiatedAmount: input.negotiatedAmount,
+				notes: normalizeExpenseNotes(input.notes),
 				isActive: input.isActive,
 			},
 		});
@@ -52,7 +49,7 @@ export async function createExpense({
 			action: "CREATE",
 			entityType: "Expense",
 			entityId: expense.id,
-			entityName: `${category.label} #${expense.id}`,
+			entityName: `${supplier.person.fullName} #${expense.id}`,
 			changeData: input,
 			description: `Criou despesa ${expense.id}.`,
 		});
@@ -69,21 +66,20 @@ export async function updateExpense({
 	actor?: AuditLogActor;
 }): Promise<MutationReturnType> {
 	const before = await getExpenseById({ firmId, id: input.id });
-	const category = await getExpenseCategoryByValue(
-		normalizeExpenseCategoryValue(input.category),
-	);
+	const supplierId = Number(input.supplierId);
+	const supplier = await getSupplierProfileById(supplierId);
 
-	assertExpenseCategoryExists(category);
-	assertExpenseCategoryCanBeSelected(category, before.categoryId);
+	assertSupplierExists(supplier);
+	assertSupplierCanBeSelected(supplier, before.supplierId);
+	assertExpenseAmountPositive(input.negotiatedAmount);
 
 	await prisma.$transaction(async (tx) => {
 		await tx.expense.update({
 			where: { id: input.id },
 			data: {
-				categoryId: category.id,
-				expenseDate: new Date(`${input.expenseDate}T12:00:00.000Z`),
-				amount: input.amount,
-				notes: normalizeExpenseNotes(input.notes) || null,
+				supplierId: supplier.id,
+				negotiatedAmount: input.negotiatedAmount,
+				notes: normalizeExpenseNotes(input.notes),
 				isActive: input.isActive,
 				deletedAt: null,
 			},
@@ -95,7 +91,7 @@ export async function updateExpense({
 			action: "UPDATE",
 			entityType: "Expense",
 			entityId: input.id,
-			entityName: `${category.label} #${input.id}`,
+			entityName: `${supplier.person.fullName} #${input.id}`,
 			changeData: buildAuditUpdateChangeData({
 				before,
 				after: input,
@@ -128,7 +124,7 @@ export async function deleteExpense({
 			action: "DELETE",
 			entityType: "Expense",
 			entityId: id,
-			entityName: `${before.category} #${id}`,
+			entityName: `${before.supplierName} #${id}`,
 			changeData: { before },
 			description: `Excluiu despesa ${id}.`,
 		});
@@ -158,7 +154,7 @@ export async function restoreExpense({
 			action: "RESTORE",
 			entityType: "Expense",
 			entityId: id,
-			entityName: `${before.category} #${id}`,
+			entityName: `${before.supplierName} #${id}`,
 			changeData: { before },
 			description: `Restaurou despesa ${id}.`,
 		});
