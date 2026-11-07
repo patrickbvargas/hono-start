@@ -181,6 +181,31 @@ export async function getAuditAccessWhere(
 			entityId: { in: titles.map(({ id }) => String(id)) },
 		});
 	}
+	if (
+		hasPermission(session, "org:payables:read_all") ||
+		hasPermission(session, "org:payables:read_own")
+	) {
+		const titles = await prisma.payable.findMany({
+			where: {
+				firmId,
+				...(hasPermission(session, "org:payables:read_all")
+					? {}
+					: {
+							beneficiary: { personId: session.person?.id ?? -1 },
+							remunerationPayable: {
+								firmId,
+								contractAssignment: { firmId, contract: assignedContract },
+							},
+						}),
+			},
+			select: { id: true },
+		});
+		branches.push({
+			firmId,
+			entityType: "Payable",
+			entityId: { in: titles.map(({ id }) => String(id)) },
+		});
+	}
 	if (hasPermission(session, "org:expenses:read")) {
 		addOwner("Expense", "expense", "expenseId");
 	}

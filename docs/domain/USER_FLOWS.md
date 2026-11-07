@@ -119,3 +119,11 @@ O operador acessa Contas a receber e filtra títulos por devedor, contrato, orig
 A ação principal abre a página dedicada; menus de ações e contexto oferecem Abrir página e Ver resumo. O resumo abre em drawer sem perder a lista. A página mantém abas Visão geral, Recebimentos, Anexos e Histórico conforme permissões, e retorna aos filtros anteriores. Nesta etapa, a coleção é somente consulta, sem criação, edição, cancelamento, baixa ou estorno. Anexos do título são consultáveis sem upload ou exclusão.
 
 Em atraso prevalece visualmente sobre Parcial, mas títulos parcialmente recebidos e vencidos atendem ambos os filtros. Principal abatido e caixa recebido são campos distintos. Estornos preservam o evento original e recompõem o saldo. Encerramento ou exclusão operacional do contrato não remove a obrigação financeira.
+
+## 10. Consulta de Contas a Pagar
+
+Contas a pagar segue a coleção de Contas a receber: tabela/cards, busca, filtros e chips na URL, atalhos de vencimento, ordenação, paginação e totais filtrados. Filtra por beneficiário, contrato da remuneração, origem (Despesa, Remuneração ou Direto), classificação, situação, analítica e meio previsto.
+
+A ação principal abre a página dedicada; menus oferecem Abrir página e Ver resumo. Resumo usa drawer compacto; página mantém Visão geral, Pagamentos, Anexos e Histórico conforme permissões, preservando contexto no retorno. Nesta etapa a coleção é somente consulta, sem criação, edição, cancelamento, baixa ou estorno; anexos também são somente leitura.
+
+Admin consulta a filial ativa. Member com grant explícito consulta apenas remuneração cujo beneficiário é sua própria Person e cujo contrato está atribuído a ele. Essa seleção precede opções, contagens e totais; pagamentos exigem grant próprio e o mesmo escopo. Exclusão operacional não apaga títulos. Principal abatido e caixa pago permanecem distintos e desconsideram pagamentos estornados.

@@ -4,6 +4,7 @@ import { useRecordPage } from "../../hooks/use-record-page";
 import type { RelatedRecordKind } from "../../schemas/record";
 
 const readPermissions = {
+	payable: ["org:payables:read_all", "org:payables:read_own"],
 	receivable: ["org:receivables:read_all", "org:receivables:read_assigned"],
 	client: "org:clients:read",
 	employee: "org:employees:read",

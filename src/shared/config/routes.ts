@@ -46,6 +46,7 @@ type RouteName =
 	| "contract"
 	| "fee"
 	| "receivable"
+	| "payable"
 	| "expense"
 	| "remuneration"
 	| "employee"
@@ -54,6 +55,12 @@ type RouteName =
 	| "settings";
 
 export const ROUTES: Record<RouteName, RouteItem> = {
+	payable: {
+		title: "Contas a pagar",
+		url: "/contas-a-pagar",
+		icon: WalletIcon,
+		permission: ["org:payables:read_all", "org:payables:read_own"],
+	},
 	receivable: {
 		title: "Contas a receber",
 		url: "/contas-a-receber",

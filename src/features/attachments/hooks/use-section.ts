@@ -20,6 +20,7 @@ export function useAttachmentSection({
 	const session = useLoggedUserSession();
 	const canDelete =
 		ownerKind !== "receivable" &&
+		ownerKind !== "payable" &&
 		hasPermission(session, "org:attachments:delete");
 	const { overlay } = useOverlay<EntityId>();
 	const previewTriggerRef = useRef<HTMLElement | null>(null);

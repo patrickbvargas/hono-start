@@ -7,6 +7,9 @@ export function getAttachmentOwnerContext(input: AttachmentOwnerInput): {
 	ownerId: number;
 	ownerKind: AttachmentOwnerKind;
 } {
+	if (input.payableId) {
+		return { ownerKind: "payable", ownerId: input.payableId };
+	}
 	if (input.receivableId) {
 		return { ownerKind: "receivable", ownerId: input.receivableId };
 	}
@@ -39,6 +42,8 @@ export function getAttachmentOwnerInput(params: {
 	ownerKind: AttachmentOwnerKind;
 }): AttachmentOwnerInput {
 	switch (params.ownerKind) {
+		case "payable":
+			return { payableId: params.ownerId };
 		case "receivable":
 			return { receivableId: params.ownerId };
 		case "person":

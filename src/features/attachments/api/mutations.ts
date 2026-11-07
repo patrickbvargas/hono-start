@@ -76,7 +76,10 @@ const deleteAttachmentFn = createServerFn({ method: "POST" })
 				input: access.ownerInput,
 				session,
 			});
-			if (owner.owner.ownerKind === "receivable") {
+			if (
+				owner.owner.ownerKind === "receivable" ||
+				owner.owner.ownerKind === "payable"
+			) {
 				throw new Error(ATTACHMENT_ERRORS.DELETE_FAILED);
 			}
 			assertAttachmentOwnerSubjectReadAccess(session, owner);

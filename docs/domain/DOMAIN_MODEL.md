@@ -135,3 +135,7 @@ Não possui colunas de contrato, despesa, geração ou código legado.
 Na coleção financeira, a situação principal segue a precedência: Cancelado, Quitado, Em atraso, Parcial, Pendente. Um título parcialmente abatido e vencido aparece Em atraso e mantém indicador Parcial; o filtro Parcial inclui ambos os casos. Hoje é a data civil de America/Sao_Paulo, e vencimento hoje não é atraso.
 
 Saldo principal considera somente principalAbated de recebimentos sem estorno. Caixa recebido considera effectiveAmount desses eventos e permanece separado do principal. Títulos cancelados preservam o valor nominal para consulta, mas não compõem nominal ativo, saldo aberto ou vencido. Totais filtrados abrangem toda a seleção autorizada antes da paginação.
+
+### Consulta de títulos a pagar
+
+A mesma precedência de situações e data civil aplica-se a Payable. Saldo considera principalAbated de pagamentos sem estorno; caixa pago considera effectiveAmount desses eventos. Cancelados ficam separados dos totais ativos. Origens são Despesa, Remuneração e Direto conforme as pontes; o vínculo contratual de remuneração vem de ContractAssignment. A seleção autorizada antecede opções, totais e paginação, preservando o sigilo das remunerações de terceiros.

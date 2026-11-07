@@ -11,6 +11,7 @@ import {
 	ExpenseRestore,
 } from "@/features/expenses";
 import { FeeDelete, FeeDetails, FeeForm, FeeRestore } from "@/features/fees";
+import { PayableDetails } from "@/features/payables";
 import {
 	PersonDelete,
 	PersonDetails,
@@ -94,6 +95,9 @@ export function RelatedRecordDetails({
 }: RelatedRecordDetailsProps) {
 	const { overlay } = useOverlay<EntityId>();
 	const session = useLoggedUserSession();
+	if (kind === "payable") {
+		return <PayableDetails id={id} state={state} />;
+	}
 	if (kind === "receivable") {
 		return <ReceivableDetails id={id} state={state} />;
 	}

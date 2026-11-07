@@ -4,6 +4,7 @@ export const ATTACHMENT_MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024;
 export const ATTACHMENT_ACCEPT_ATTRIBUTE = ".pdf,.jpg,.jpeg,.png";
 export const ATTACHMENT_OWNER_KINDS = [
 	"receivable",
+	"payable",
 	"person",
 	"client",
 	"employee",

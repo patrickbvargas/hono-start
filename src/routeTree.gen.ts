@@ -15,6 +15,7 @@ import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as AppAlterarSenhaObrigatoriaRouteImport } from './routes/_app/alterar-senha-obrigatoria'
 import { Route as AppAuditoriaRouteImport } from './routes/_app/auditoria'
 import { Route as AppConfiguracoesRouteImport } from './routes/_app/configuracoes'
+import { Route as AppContasAPagarRouteImport } from './routes/_app/contas-a-pagar'
 import { Route as AppContasAReceberRouteImport } from './routes/_app/contas-a-receber'
 import { Route as AppContratosRouteImport } from './routes/_app/contratos'
 import { Route as AppDespesasRouteImport } from './routes/_app/despesas'
@@ -26,6 +27,7 @@ import { Route as AuthConviteRouteImport } from './routes/_auth/convite'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
 import { Route as AuthRecuperarSenhaRouteImport } from './routes/_auth/recuperar-senha'
 import { Route as AppAuditoriaAuditLogIdRouteImport } from './routes/_app/auditoria_.$auditLogId'
+import { Route as AppContasAPagarPayableIdRouteImport } from './routes/_app/contas-a-pagar_.$payableId'
 import { Route as AppContasAReceberReceivableIdRouteImport } from './routes/_app/contas-a-receber_.$receivableId'
 import { Route as AppContratosContractIdRouteImport } from './routes/_app/contratos_.$contractId'
 import { Route as AppDespesasExpenseIdRouteImport } from './routes/_app/despesas_.$expenseId'
@@ -62,6 +64,11 @@ const AppAuditoriaRoute = AppAuditoriaRouteImport.update({
 const AppConfiguracoesRoute = AppConfiguracoesRouteImport.update({
   id: '/configuracoes',
   path: '/configuracoes',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppContasAPagarRoute = AppContasAPagarRouteImport.update({
+  id: '/contas-a-pagar',
+  path: '/contas-a-pagar',
   getParentRoute: () => AppRouteRoute,
 } as any)
 const AppContasAReceberRoute = AppContasAReceberRouteImport.update({
@@ -119,6 +126,12 @@ const AppAuditoriaAuditLogIdRoute = AppAuditoriaAuditLogIdRouteImport.update({
   path: '/auditoria/$auditLogId',
   getParentRoute: () => AppRouteRoute,
 } as any)
+const AppContasAPagarPayableIdRoute =
+  AppContasAPagarPayableIdRouteImport.update({
+    id: '/contas-a-pagar_/$payableId',
+    path: '/contas-a-pagar/$payableId',
+    getParentRoute: () => AppRouteRoute,
+  } as any)
 const AppContasAReceberReceivableIdRoute =
   AppContasAReceberReceivableIdRouteImport.update({
     id: '/contas-a-receber_/$receivableId',
@@ -167,6 +180,7 @@ export interface FileRoutesByFullPath {
   '/alterar-senha-obrigatoria': typeof AppAlterarSenhaObrigatoriaRoute
   '/auditoria': typeof AppAuditoriaRoute
   '/configuracoes': typeof AppConfiguracoesRoute
+  '/contas-a-pagar': typeof AppContasAPagarRoute
   '/contas-a-receber': typeof AppContasAReceberRoute
   '/contratos': typeof AppContratosRoute
   '/despesas': typeof AppDespesasRoute
@@ -178,6 +192,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof AuthLoginRoute
   '/recuperar-senha': typeof AuthRecuperarSenhaRoute
   '/auditoria/$auditLogId': typeof AppAuditoriaAuditLogIdRoute
+  '/contas-a-pagar/$payableId': typeof AppContasAPagarPayableIdRoute
   '/contas-a-receber/$receivableId': typeof AppContasAReceberReceivableIdRoute
   '/contratos/$contractId': typeof AppContratosContractIdRoute
   '/despesas/$expenseId': typeof AppDespesasExpenseIdRoute
@@ -192,6 +207,7 @@ export interface FileRoutesByTo {
   '/alterar-senha-obrigatoria': typeof AppAlterarSenhaObrigatoriaRoute
   '/auditoria': typeof AppAuditoriaRoute
   '/configuracoes': typeof AppConfiguracoesRoute
+  '/contas-a-pagar': typeof AppContasAPagarRoute
   '/contas-a-receber': typeof AppContasAReceberRoute
   '/contratos': typeof AppContratosRoute
   '/despesas': typeof AppDespesasRoute
@@ -203,6 +219,7 @@ export interface FileRoutesByTo {
   '/login': typeof AuthLoginRoute
   '/recuperar-senha': typeof AuthRecuperarSenhaRoute
   '/auditoria/$auditLogId': typeof AppAuditoriaAuditLogIdRoute
+  '/contas-a-pagar/$payableId': typeof AppContasAPagarPayableIdRoute
   '/contas-a-receber/$receivableId': typeof AppContasAReceberReceivableIdRoute
   '/contratos/$contractId': typeof AppContratosContractIdRoute
   '/despesas/$expenseId': typeof AppDespesasExpenseIdRoute
@@ -219,6 +236,7 @@ export interface FileRoutesById {
   '/_app/alterar-senha-obrigatoria': typeof AppAlterarSenhaObrigatoriaRoute
   '/_app/auditoria': typeof AppAuditoriaRoute
   '/_app/configuracoes': typeof AppConfiguracoesRoute
+  '/_app/contas-a-pagar': typeof AppContasAPagarRoute
   '/_app/contas-a-receber': typeof AppContasAReceberRoute
   '/_app/contratos': typeof AppContratosRoute
   '/_app/despesas': typeof AppDespesasRoute
@@ -231,6 +249,7 @@ export interface FileRoutesById {
   '/_auth/recuperar-senha': typeof AuthRecuperarSenhaRoute
   '/_app/': typeof AppIndexRoute
   '/_app/auditoria_/$auditLogId': typeof AppAuditoriaAuditLogIdRoute
+  '/_app/contas-a-pagar_/$payableId': typeof AppContasAPagarPayableIdRoute
   '/_app/contas-a-receber_/$receivableId': typeof AppContasAReceberReceivableIdRoute
   '/_app/contratos_/$contractId': typeof AppContratosContractIdRoute
   '/_app/despesas_/$expenseId': typeof AppDespesasExpenseIdRoute
@@ -247,6 +266,7 @@ export interface FileRouteTypes {
     | '/alterar-senha-obrigatoria'
     | '/auditoria'
     | '/configuracoes'
+    | '/contas-a-pagar'
     | '/contas-a-receber'
     | '/contratos'
     | '/despesas'
@@ -258,6 +278,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/recuperar-senha'
     | '/auditoria/$auditLogId'
+    | '/contas-a-pagar/$payableId'
     | '/contas-a-receber/$receivableId'
     | '/contratos/$contractId'
     | '/despesas/$expenseId'
@@ -272,6 +293,7 @@ export interface FileRouteTypes {
     | '/alterar-senha-obrigatoria'
     | '/auditoria'
     | '/configuracoes'
+    | '/contas-a-pagar'
     | '/contas-a-receber'
     | '/contratos'
     | '/despesas'
@@ -283,6 +305,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/recuperar-senha'
     | '/auditoria/$auditLogId'
+    | '/contas-a-pagar/$payableId'
     | '/contas-a-receber/$receivableId'
     | '/contratos/$contractId'
     | '/despesas/$expenseId'
@@ -298,6 +321,7 @@ export interface FileRouteTypes {
     | '/_app/alterar-senha-obrigatoria'
     | '/_app/auditoria'
     | '/_app/configuracoes'
+    | '/_app/contas-a-pagar'
     | '/_app/contas-a-receber'
     | '/_app/contratos'
     | '/_app/despesas'
@@ -310,6 +334,7 @@ export interface FileRouteTypes {
     | '/_auth/recuperar-senha'
     | '/_app/'
     | '/_app/auditoria_/$auditLogId'
+    | '/_app/contas-a-pagar_/$payableId'
     | '/_app/contas-a-receber_/$receivableId'
     | '/_app/contratos_/$contractId'
     | '/_app/despesas_/$expenseId'
@@ -369,6 +394,13 @@ declare module '@tanstack/react-router' {
       path: '/configuracoes'
       fullPath: '/configuracoes'
       preLoaderRoute: typeof AppConfiguracoesRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/contas-a-pagar': {
+      id: '/_app/contas-a-pagar'
+      path: '/contas-a-pagar'
+      fullPath: '/contas-a-pagar'
+      preLoaderRoute: typeof AppContasAPagarRouteImport
       parentRoute: typeof AppRouteRoute
     }
     '/_app/contas-a-receber': {
@@ -448,6 +480,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAuditoriaAuditLogIdRouteImport
       parentRoute: typeof AppRouteRoute
     }
+    '/_app/contas-a-pagar_/$payableId': {
+      id: '/_app/contas-a-pagar_/$payableId'
+      path: '/contas-a-pagar/$payableId'
+      fullPath: '/contas-a-pagar/$payableId'
+      preLoaderRoute: typeof AppContasAPagarPayableIdRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
     '/_app/contas-a-receber_/$receivableId': {
       id: '/_app/contas-a-receber_/$receivableId'
       path: '/contas-a-receber/$receivableId'
@@ -511,6 +550,7 @@ interface AppRouteRouteChildren {
   AppAlterarSenhaObrigatoriaRoute: typeof AppAlterarSenhaObrigatoriaRoute
   AppAuditoriaRoute: typeof AppAuditoriaRoute
   AppConfiguracoesRoute: typeof AppConfiguracoesRoute
+  AppContasAPagarRoute: typeof AppContasAPagarRoute
   AppContasAReceberRoute: typeof AppContasAReceberRoute
   AppContratosRoute: typeof AppContratosRoute
   AppDespesasRoute: typeof AppDespesasRoute
@@ -520,6 +560,7 @@ interface AppRouteRouteChildren {
   AppRemuneracoesRoute: typeof AppRemuneracoesRoute
   AppIndexRoute: typeof AppIndexRoute
   AppAuditoriaAuditLogIdRoute: typeof AppAuditoriaAuditLogIdRoute
+  AppContasAPagarPayableIdRoute: typeof AppContasAPagarPayableIdRoute
   AppContasAReceberReceivableIdRoute: typeof AppContasAReceberReceivableIdRoute
   AppContratosContractIdRoute: typeof AppContratosContractIdRoute
   AppDespesasExpenseIdRoute: typeof AppDespesasExpenseIdRoute
@@ -532,6 +573,7 @@ const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppAlterarSenhaObrigatoriaRoute: AppAlterarSenhaObrigatoriaRoute,
   AppAuditoriaRoute: AppAuditoriaRoute,
   AppConfiguracoesRoute: AppConfiguracoesRoute,
+  AppContasAPagarRoute: AppContasAPagarRoute,
   AppContasAReceberRoute: AppContasAReceberRoute,
   AppContratosRoute: AppContratosRoute,
   AppDespesasRoute: AppDespesasRoute,
@@ -541,6 +583,7 @@ const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppRemuneracoesRoute: AppRemuneracoesRoute,
   AppIndexRoute: AppIndexRoute,
   AppAuditoriaAuditLogIdRoute: AppAuditoriaAuditLogIdRoute,
+  AppContasAPagarPayableIdRoute: AppContasAPagarPayableIdRoute,
   AppContasAReceberReceivableIdRoute: AppContasAReceberReceivableIdRoute,
   AppContratosContractIdRoute: AppContratosContractIdRoute,
   AppDespesasExpenseIdRoute: AppDespesasExpenseIdRoute,

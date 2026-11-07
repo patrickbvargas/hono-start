@@ -500,7 +500,10 @@ describe("frontend orchestration boundaries", () => {
 			// Read-only audit and derived operational queues have no entity lifecycle actions.
 			.filter(
 				(path) =>
-					!path.includes("/audit-logs/") && !path.includes("/pending-work/"),
+					!path.includes("/audit-logs/") &&
+					!path.includes("/pending-work/") &&
+					!path.includes("/receivables/") &&
+					!path.includes("/payables/"),
 			);
 		const violations = tableFiles.flatMap((path) => {
 			const content = readFileSync(path, "utf8");

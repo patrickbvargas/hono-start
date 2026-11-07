@@ -7,6 +7,17 @@ export function useRecordPage(kind: RelatedRecordKind, id: EntityId) {
 	const currentSearch = useSearch({ strict: false });
 	const openPage = async () => {
 		switch (kind) {
+			case "payable": {
+				const { payableSearchSchema } = await import("@/features/payables");
+				return navigate({
+					to: "/contas-a-pagar/$payableId",
+					params: { payableId: String(id) },
+					search: {
+						tab: "overview",
+						returnTo: payableSearchSchema.parse(currentSearch),
+					},
+				});
+			}
 			case "receivable": {
 				const { receivableSearchSchema } = await import(
 					"@/features/receivables"

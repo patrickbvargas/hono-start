@@ -15,6 +15,13 @@ export function assertAttachmentOwnerSubjectReadAccess(
 	session: Awaited<ReturnType<typeof getRequiredServerLoggedUserSession>>,
 	owner: Awaited<ReturnType<typeof assertAttachmentOwnerExists>>,
 ) {
+	if (owner.owner.ownerKind === "payable") {
+		assertCan(
+			session,
+			["org:payables:read_all", "org:payables:read_own"],
+			owner.access.resource,
+		);
+	}
 	if (owner.owner.ownerKind === "receivable") {
 		assertCan(
 			session,
@@ -69,7 +76,10 @@ export function assertAttachmentOwnerUploadAccess(
 	session: Awaited<ReturnType<typeof getRequiredServerLoggedUserSession>>,
 	owner: Awaited<ReturnType<typeof assertAttachmentOwnerExists>>,
 ) {
-	if (owner.owner.ownerKind === "receivable") {
+	if (
+		owner.owner.ownerKind === "receivable" ||
+		owner.owner.ownerKind === "payable"
+	) {
 		throw new Error("A consulta de anexos do título é somente leitura.");
 	}
 	assertAttachmentOwnerCanReceiveUpload({

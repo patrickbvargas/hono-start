@@ -7,6 +7,7 @@ import type {
 function getAttachmentOwnerCount(data: AttachmentOwnerInput) {
 	return [
 		data.receivableId,
+		data.payableId,
 		data.personId,
 		data.clientId,
 		data.employeeId,

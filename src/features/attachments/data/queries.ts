@@ -358,6 +358,7 @@ export async function getAttachmentsByOwner(params: {
 					: { personId: owner.ownerId }
 				: {}),
 			...(owner.ownerKind === "contract" ? { contractId: owner.ownerId } : {}),
+			...(owner.ownerKind === "payable" ? { payableId: owner.ownerId } : {}),
 			...(owner.ownerKind === "receivable"
 				? { receivableId: owner.ownerId }
 				: {}),
@@ -490,14 +491,14 @@ export async function getAttachmentAccessById(
 		},
 		ownerInput: {
 			receivableId: attachment.receivableId ?? undefined,
+			payableId: attachment.payableId ?? undefined,
 			personId: attachment.personId ?? undefined,
 			clientId: (raw.clientId as number) ?? undefined,
 			employeeId: (raw.employeeId as number) ?? undefined,
 			contractId: attachment.contractId ?? undefined,
 			expenseId: attachment.expenseId ?? undefined,
 			feeId: attachment.receiptId ?? (raw.feeId as number) ?? undefined,
-			remunerationId:
-				attachment.payableId ?? (raw.remunerationId as number) ?? undefined,
+			remunerationId: (raw.remunerationId as number) ?? undefined,
 		},
 	};
 }
@@ -510,6 +511,42 @@ export async function assertAttachmentOwnerExists(params: {
 	const owner = getAttachmentOwnerContext(params.input);
 
 	switch (owner.ownerKind) {
+		case "payable": {
+			const title = await prisma.payable.findFirst({
+				where: { id: owner.ownerId, firmId: params.firmId },
+				select: {
+					id: true,
+					firmId: true,
+					beneficiary: { select: { personId: true } },
+					remunerationPayable: {
+						select: { contractAssignment: { select: { contractId: true } } },
+					},
+				},
+			});
+			if (!title) {
+				throw new Error(ATTACHMENT_ERRORS.OWNER_NOT_FOUND);
+			}
+			const contract = title.remunerationPayable
+				? await getAttachmentContractOwnerResource(
+						params.firmId,
+						title.remunerationPayable.contractAssignment.contractId,
+					)
+				: null;
+			return {
+				owner,
+				access: {
+					id: title.id,
+					firmId: title.firmId,
+					deletedAt: null,
+					resource: {
+						firmId: title.firmId,
+						beneficiaryPersonId: title.beneficiary.personId,
+						isRemuneration: !!title.remunerationPayable,
+						contract: contract?.resource,
+					},
+				},
+			};
+		}
 		case "receivable": {
 			const title = await prisma.receivable.findFirst({
 				where: { id: owner.ownerId, firmId: params.firmId },

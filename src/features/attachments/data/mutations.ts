@@ -48,7 +48,7 @@ export async function createAttachments(params: {
 }): Promise<MutationReturnType> {
 	const input = attachmentBatchUploadInputSchema.parse(params.input);
 	const owner = getAttachmentOwnerContext(input);
-	if (owner.ownerKind === "receivable") {
+	if (owner.ownerKind === "receivable" || owner.ownerKind === "payable") {
 		throw new Error(ATTACHMENT_ERRORS.UPLOAD_FAILED);
 	}
 	const prepared: Array<{

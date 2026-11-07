@@ -13,6 +13,7 @@ import { assertSingleAttachmentOwnerContext } from "../rules/owner";
 
 const attachmentOwnerBaseInputSchema = z.object({
 	receivableId: z.number().int().positive().optional(),
+	payableId: z.number().int().positive().optional(),
 	personId: entityIdSchema.shape.id.optional(),
 	clientId: entityIdSchema.shape.id.optional(),
 	employeeId: entityIdSchema.shape.id.optional(),

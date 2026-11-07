@@ -194,3 +194,7 @@ Pendências is a read-only operational collection below Contratos, owned by `fea
 The Prisma data boundary uses a parameterized SQL CTE union because derived schedule and missing-relation issues require joint server-side filtering, pagination and summary counts. Rows and counts share one statement snapshot; no client aggregation or per-contract detail fan-out. No migration or new dependency.
 
 Related-records also exposes RelatedRecordActions, a presentation composition over EntityActions, existing read grants and lazy public-feature page navigation. The caller owns summary overlay state, allowing dashboard and pending-work context/overflow menus to share actions without mounting transient overlays inside menus. Generic Drilldown accepts an optional row-context renderer without depending on any specific domain actions.
+
+## Financial title consultation
+
+`receivables` and `payables` own read-only financial collections, summaries and dedicated workspaces following the same slice and shared layout patterns. They expose consultation actions through EntityActions without lifecycle props or mutation hooks. Their parametrized SQL bases apply financial owner visibility before filters, derived state, options, totals and pagination. Payables resolves expense/remuneration origins through bridges and enforces own-beneficiary remuneration visibility. Neither collection introduces financial writes or attachment writes; payment/receipt reads retain independent grants.
