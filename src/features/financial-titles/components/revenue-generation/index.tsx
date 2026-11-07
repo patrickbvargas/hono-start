@@ -20,7 +20,7 @@ import { formatter } from "@/shared/lib/formatter";
 import type { OverlayState } from "@/shared/types/overlay";
 import { TITLE_MAX_AMOUNT } from "../../constants/values";
 import { useTitleGenerationOptions } from "../../hooks/use-data";
-import { useRevenueTitleForm } from "../../hooks/use-form";
+import { useTitleGenerationForm } from "../../hooks/use-form";
 import { PreviewBalance } from "./preview-balance";
 
 interface RevenueGenerationFormProps {
@@ -37,21 +37,55 @@ const kindOptions = [
 
 export function RevenueGenerationForm(props: RevenueGenerationFormProps) {
 	return (
-		<Suspense fallback={<RevenueGenerationSkeleton state={props.state} />}>
-			<RevenueGenerationContent {...props} />
+		<TitleGenerationForm
+			{...props}
+			source={{ kind: "revenue", id: props.revenueId }}
+		/>
+	);
+}
+
+interface ExpenseGenerationFormProps {
+	expenseId: number;
+	negotiatedAmount: number;
+	state: OverlayState;
+	onSuccess?: () => void | Promise<void>;
+}
+
+export function ExpenseGenerationForm(props: ExpenseGenerationFormProps) {
+	return (
+		<TitleGenerationForm
+			{...props}
+			source={{ kind: "expense", id: props.expenseId }}
+		/>
+	);
+}
+
+interface TitleGenerationFormProps {
+	source: { kind: "revenue" | "expense"; id: number };
+	negotiatedAmount: number;
+	state: OverlayState;
+	onSuccess?: () => void | Promise<void>;
+}
+
+function TitleGenerationForm(props: TitleGenerationFormProps) {
+	return (
+		<Suspense fallback={<TitleGenerationSkeleton state={props.state} />}>
+			<TitleGenerationContent {...props} />
 		</Suspense>
 	);
 }
 
-function RevenueGenerationContent({
-	revenueId,
+function TitleGenerationContent({
+	source,
 	negotiatedAmount,
 	state,
 	onSuccess,
-}: RevenueGenerationFormProps) {
-	const { analytics, paymentMethods } = useTitleGenerationOptions();
-	const { form, getRowKey, addTitle, removeTitle } = useRevenueTitleForm({
-		revenueId,
+}: TitleGenerationFormProps) {
+	const { analytics, paymentMethods } = useTitleGenerationOptions(
+		source.kind === "expense" ? "payable" : "receivable",
+	);
+	const { form, getRowKey, addTitle, removeTitle } = useTitleGenerationForm({
+		source,
 		negotiatedAmount,
 		onSuccess,
 	});
@@ -270,7 +304,7 @@ function RevenueGenerationContent({
 	);
 }
 
-function RevenueGenerationSkeleton({ state }: { state: OverlayState }) {
+function TitleGenerationSkeleton({ state }: { state: OverlayState }) {
 	return (
 		<EntityForm
 			state={state}

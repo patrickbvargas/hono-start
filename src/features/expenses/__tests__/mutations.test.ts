@@ -78,6 +78,7 @@ const baseSupplier = (
 const baseExpense = (
 	overrides: Partial<ExpenseDetail> = {},
 ): ExpenseDetail => ({
+	hasGeneratedTitles: false,
 	id: 1,
 	supplierId: 30,
 	supplierName: "Fornecedor Teste",

@@ -4,6 +4,7 @@ export const EXPENSE_ERRORS = {
 	DELETE_FORBIDDEN: "Apenas administradores podem excluir despesas",
 	DELETE_FAILED: "Erro ao excluir despesa",
 	DETAIL_FAILED: "Erro ao buscar despesa",
+	FINANCIAL_FAILED: "Erro ao buscar títulos da despesa",
 	DETAIL_NOT_FOUND: "Despesa não encontrada",
 	GET_FAILED: "Erro ao buscar despesas",
 	RESTORE_FORBIDDEN: "Apenas administradores podem restaurar despesas",

@@ -39,6 +39,11 @@ vi.mock("@/features/audit-logs", () => ({
 vi.mock("../components/details/overview", () => ({
 	ExpenseOverview: () => <p>Dados da despesa</p>,
 }));
+vi.mock("../components/details/financial", () => ({
+	ExpenseFinancial: ({ expense }: { expense: { id: number } }) => (
+		<p>Financeiro da despesa {expense.id}</p>
+	),
+}));
 vi.mock("../hooks/use-workspace", async () => {
 	const { useOverlay } = await import("@/shared/hooks/use-overlay");
 	return {
@@ -102,6 +107,18 @@ beforeEach(() => {
 });
 afterEach(cleanup);
 describe("expense page lifecycle composition", () => {
+	it("renders the expense financial flow in the Financeiro tab", () => {
+		render(
+			<ExpenseWorkspace
+				id={42}
+				search={{ tab: "financial" }}
+				onDeleted={vi.fn()}
+				onTabChange={vi.fn()}
+			/>,
+		);
+		expect(screen.getByText("Financeiro da despesa 42")).toBeTruthy();
+		expect(screen.queryByText(/próxima etapa/)).toBeNull();
+	});
 	it("keeps the page on cancel and returns only after confirmed successful deletion", () => {
 		const onDeleted = vi.fn();
 		render(

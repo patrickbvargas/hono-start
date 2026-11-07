@@ -117,9 +117,8 @@ export const revenueTitleScheduleInputSchema = z
 		}
 	});
 
-export const revenueTitlePlanInputSchema = revenueTitleScheduleInputSchema
+export const titlePlanInputSchema = revenueTitleScheduleInputSchema
 	.safeExtend({
-		revenueId: profileIdInputSchema,
 		titles: revenueReceivableGenerationInputSchema.shape.titles,
 	})
 	.superRefine((data, ctx) => {
@@ -133,3 +132,11 @@ export const revenueTitlePlanInputSchema = revenueTitleScheduleInputSchema
 			});
 		}
 	});
+
+export const revenueTitlePlanInputSchema = titlePlanInputSchema.safeExtend({
+	revenueId: profileIdInputSchema,
+});
+
+export const titleGenerationOptionsInputSchema = z.object({
+	direction: z.enum(["receivable", "payable"]),
+});

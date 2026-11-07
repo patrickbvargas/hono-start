@@ -12,9 +12,16 @@ afterEach(() => {
 	vi.useRealTimers();
 });
 describe("revenue payment status", () => {
+	it("keeps titles due today pending in the business timezone", () => {
+		vi.setSystemTime(new Date("2026-10-25T01:00:00Z"));
+		render(
+			<RevenuePaymentStatus isFullyPaid={false} nextDueDate="2026-10-24" />,
+		);
+		expect(screen.getByText("Pendente")).toBeTruthy();
+	});
 	it.each([
 		{ isFullyPaid: true, paidValue: 6000, label: "Quitado" },
-		{ isFullyPaid: false, paidValue: 100, label: "Parcial" },
+		{ isFullyPaid: false, paidValue: 100, label: "Pendente" },
 		{ isFullyPaid: false, paidValue: 0, label: "Pendente" },
 		{
 			isFullyPaid: false,
@@ -32,7 +39,7 @@ describe("revenue payment status", () => {
 			isFullyPaid: false,
 			paidValue: 100,
 			nextDueDate: "2026-10-24",
-			label: "Parcial",
+			label: "Pendente",
 		},
 		{
 			isFullyPaid: false,

@@ -7,6 +7,7 @@ import { formatter } from "@/shared/lib/formatter";
 import { useRevenueGeneration } from "../../hooks/use-revenue-generation";
 import type { ContractDetail } from "../../schemas/model";
 import { RevenueInstallments } from "./installments";
+import { RevenuePaymentStatus } from "./payment-status";
 
 interface ContractRevenuesProps {
 	contract: ContractDetail;
@@ -25,7 +26,20 @@ export function ContractRevenues({
 	return (
 		<div className="space-y-4">
 			{revenues.map((revenue) => (
-				<FormSection key={revenue.id} title={revenue.type}>
+				<FormSection
+					key={revenue.id}
+					title={revenue.type}
+					action={
+						canReadTitles ? (
+							<RevenuePaymentStatus
+								isFullyPaid={revenue.hasGeneratedTitles && revenue.isFullyPaid}
+								nextDueDate={
+									revenue.hasGeneratedTitles ? revenue.nextDueDate : null
+								}
+							/>
+						) : undefined
+					}
+				>
 					<EntityDetail.Fields
 						columns={2}
 						items={[
@@ -55,6 +69,8 @@ export function ContractRevenues({
 										},
 										{
 											term: "Saldo a receber",
+											tooltip:
+												"Valor dos títulos menos principal já abatido. Sem títulos gerados, saldo zero.",
 											definition: (
 												<SensitiveValue>
 													{formatter.currency(revenue.remainingValue)}

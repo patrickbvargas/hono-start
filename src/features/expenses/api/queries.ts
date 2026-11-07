@@ -16,17 +16,23 @@ import type {
 import { EXPENSE_ERRORS } from "../constants/errors";
 import {
 	getExpenseById,
+	getExpenseFinancial,
 	getExpenseSuppliers,
 	getExpenses,
 } from "../data/queries";
 import { expenseIdInputSchema } from "../schemas/form";
-import type { ExpenseDetail, ExpenseSummary } from "../schemas/model";
+import type {
+	ExpenseDetail,
+	ExpenseFinancial,
+	ExpenseSummary,
+} from "../schemas/model";
 import { type ExpenseSearch, expenseSearchSchema } from "../schemas/search";
 
 export const expenseKeys = {
 	all: ["expense"] as const,
 	list: (search: ExpenseSearch) => [...expenseKeys.all, search] as const,
 	detail: (id: number) => [...expenseKeys.all, "detail", id] as const,
+	financial: (id: number) => [...expenseKeys.all, "financial", id] as const,
 	supplierOptions: () => [...expenseKeys.all, "supplier-options"] as const,
 	categoryOptions: () => [...expenseKeys.all, "supplier-options"] as const,
 };
@@ -87,6 +93,31 @@ const getExpenseSuppliersFn = createServerFn({ method: "GET" })
 			console.error("[getExpenseSuppliers]", error);
 			throw new Error(EXPENSE_ERRORS.SUPPLIER_OPTIONS_FAILED);
 		}
+	});
+
+const getExpenseFinancialFn = createServerFn({ method: "GET" })
+	.middleware([authMiddleware])
+	.validator(expenseIdInputSchema)
+	.handler(async ({ data, context }): Promise<ExpenseFinancial> => {
+		const session = context.session;
+		const firmId = session.firm.id;
+		assertCan(session, "org:expenses:read", { firmId });
+		assertCan(session, "org:payables:read_all", { firmId });
+		try {
+			return await getExpenseFinancial({ firmId, id: data.id });
+		} catch (error) {
+			console.error("[getExpenseFinancial]", error);
+			if (hasExactErrorMessage(error, EXPENSE_ERRORS)) {
+				throw error;
+			}
+			throw new Error(EXPENSE_ERRORS.FINANCIAL_FAILED);
+		}
+	});
+
+export const getExpenseFinancialQueryOptions = (id: number) =>
+	queryOptions({
+		queryKey: expenseKeys.financial(id),
+		queryFn: () => getExpenseFinancialFn({ data: { id } }),
 	});
 
 export const getExpensesQueryOptions = (search: ExpenseSearch) =>

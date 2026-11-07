@@ -3,16 +3,24 @@ import { createServerFn } from "@tanstack/react-start";
 import { assertCan } from "@/shared/session";
 import { authMiddleware } from "@/shared/session/server";
 import { getTitleGenerationOptions } from "../data/queries";
+import { titleGenerationOptionsInputSchema } from "../schemas/form";
 
 export const financialTitleKeys = {
 	all: ["financial-title"] as const,
-	options: () => [...financialTitleKeys.all, "generation-options"] as const,
+	options: (direction: "receivable" | "payable" = "receivable") =>
+		[...financialTitleKeys.all, "generation-options", direction] as const,
 };
 
 const getTitleGenerationOptionsFn = createServerFn({ method: "GET" })
 	.middleware([authMiddleware])
-	.handler(async ({ context }) => {
-		assertCan(context.session, "org:receivables:generate");
+	.validator(titleGenerationOptionsInputSchema)
+	.handler(async ({ context, data }) => {
+		assertCan(
+			context.session,
+			data.direction === "payable"
+				? "org:payables:generate"
+				: "org:receivables:generate",
+		);
 		try {
 			return await getTitleGenerationOptions();
 		} catch (error) {
@@ -21,10 +29,12 @@ const getTitleGenerationOptionsFn = createServerFn({ method: "GET" })
 		}
 	});
 
-export const getTitleGenerationOptionsQueryOptions = () =>
+export const getTitleGenerationOptionsQueryOptions = (
+	direction: "receivable" | "payable" = "receivable",
+) =>
 	queryOptions({
-		queryKey: financialTitleKeys.options(),
-		queryFn: getTitleGenerationOptionsFn,
+		queryKey: financialTitleKeys.options(direction),
+		queryFn: () => getTitleGenerationOptionsFn({ data: { direction } }),
 		staleTime: Infinity,
 		meta: { refreshOnMutation: true },
 	});

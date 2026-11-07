@@ -4,13 +4,17 @@ import { refreshAuditedEntityQueries } from "@/features/audit-logs";
 import { useAppForm } from "@/shared/hooks/use-app-form";
 import { getMutationErrorMessage } from "@/shared/lib/entity-management";
 import { toast } from "@/shared/lib/toast";
-import { generateReceivablesFromRevenueMutationOptions } from "../api/mutations";
+import {
+	generatePayablesFromExpenseMutationOptions,
+	generateReceivablesFromRevenueMutationOptions,
+} from "../api/mutations";
 import { financialTitleKeys } from "../api/queries";
 import {
+	expensePayableGenerationInputSchema,
 	revenueReceivableGenerationInputSchema,
-	revenueTitlePlanInputSchema,
 	revenueTitleScheduleInputSchema,
 	type TitleInput,
+	titlePlanInputSchema,
 } from "../schemas/form";
 import { buildRevenueTitlePlan } from "../utils/payment-plan";
 
@@ -25,14 +29,36 @@ export function useRevenueTitleForm({
 	negotiatedAmount,
 	onSuccess,
 }: UseRevenueTitleFormOptions) {
+	return useTitleGenerationForm({
+		source: { kind: "revenue", id: revenueId },
+		negotiatedAmount,
+		onSuccess,
+	});
+}
+
+interface UseTitleGenerationFormOptions {
+	source: { kind: "revenue" | "expense"; id: number };
+	negotiatedAmount: number;
+	onSuccess?: () => void | Promise<void>;
+}
+
+export function useTitleGenerationForm({
+	source,
+	negotiatedAmount,
+	onSuccess,
+}: UseTitleGenerationFormOptions) {
 	const client = useQueryClient();
 	const namespace = useId();
 	const rowKeys = useRef<string[]>([]);
 	const nextKey = useRef(0);
-	const mutation = useMutation(generateReceivablesFromRevenueMutationOptions());
+	const revenueMutation = useMutation(
+		generateReceivablesFromRevenueMutationOptions(),
+	);
+	const expenseMutation = useMutation(
+		generatePayablesFromExpenseMutationOptions(),
+	);
 	const form = useAppForm({
 		defaultValues: {
-			revenueId,
 			negotiatedAmount,
 			downPaymentAmount: 0,
 			downPaymentDueDate: "",
@@ -42,7 +68,7 @@ export function useRevenueTitleForm({
 			expectedPaymentMethod: "",
 			titles: [] as TitleInput[],
 		},
-		validators: { onSubmit: revenueTitlePlanInputSchema },
+		validators: { onSubmit: titlePlanInputSchema },
 		listeners: {
 			onChange: ({ formApi, fieldApi }) => {
 				if (fieldApi.name === "titles" || fieldApi.name.startsWith("titles[")) {
@@ -63,8 +89,19 @@ export function useRevenueTitleForm({
 		},
 		onSubmit: async ({ value }) => {
 			try {
-				const parsed = revenueReceivableGenerationInputSchema.parse(value);
-				await mutation.mutateAsync({ data: parsed });
+				if (source.kind === "expense") {
+					const parsed = expensePayableGenerationInputSchema.parse({
+						expenseId: source.id,
+						titles: value.titles,
+					});
+					await expenseMutation.mutateAsync({ data: parsed });
+				} else {
+					const parsed = revenueReceivableGenerationInputSchema.parse({
+						revenueId: source.id,
+						titles: value.titles,
+					});
+					await revenueMutation.mutateAsync({ data: parsed });
+				}
 				await refreshAuditedEntityQueries(client, financialTitleKeys.all);
 				await onSuccess?.();
 				toast.success("Parcelas geradas com sucesso.");

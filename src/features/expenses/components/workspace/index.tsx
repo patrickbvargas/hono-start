@@ -14,6 +14,7 @@ import {
 } from "../../schemas/workspace";
 import { expenseSearchDefaults } from "../../utils/default";
 import { ExpenseDelete } from "../delete";
+import { ExpenseFinancial } from "../details/financial";
 import { ExpenseOverview } from "../details/overview";
 import { ExpenseForm } from "../form";
 import { ExpenseRestore } from "../restore";
@@ -77,17 +78,7 @@ export function ExpenseWorkspace({
 				{
 					value: "financial",
 					label: "Financeiro",
-					content: (
-						<div className="rounded-lg border border-dashed p-6 text-center text-sm text-muted-foreground">
-							<p className="font-medium">
-								Nenhum título financeiro gerado para esta despesa.
-							</p>
-							<p className="mt-1 text-xs">
-								O faturamento e acerto financeiro estarão disponíveis na próxima
-								etapa.
-							</p>
-						</div>
-					),
+					content: <ExpenseFinancial expense={expense} />,
 				},
 				...(canReadAttachments
 					? [

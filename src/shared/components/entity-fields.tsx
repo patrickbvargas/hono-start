@@ -1,5 +1,11 @@
+import { InfoIcon } from "lucide-react";
 import type * as React from "react";
-import { Skeleton } from "@/shared/components/ui";
+import {
+	Skeleton,
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from "@/shared/components/ui";
 import { cn } from "@/shared/lib/utils";
 
 interface FieldClassNames {
@@ -14,6 +20,7 @@ export interface FieldsClassNames extends FieldClassNames {
 
 export interface DetailFieldItem {
 	term: string;
+	tooltip?: string;
 	definition: string | number | React.ReactNode;
 	classNames?: FieldClassNames;
 }
@@ -34,7 +41,20 @@ function FieldTerm({ item, layout, classNames }: FieldTermProps) {
 				item.classNames?.term,
 			)}
 		>
-			{item.term}
+			{item.tooltip ? (
+				<Tooltip>
+					<TooltipTrigger
+						type="button"
+						className="inline-flex cursor-help items-center gap-1 rounded-sm text-left focus-visible:outline-2 focus-visible:outline-ring"
+					>
+						{item.term}
+						<InfoIcon className="size-3.5" aria-hidden="true" />
+					</TooltipTrigger>
+					<TooltipContent role="tooltip">{item.tooltip}</TooltipContent>
+				</Tooltip>
+			) : (
+				item.term
+			)}
 		</dt>
 	);
 }

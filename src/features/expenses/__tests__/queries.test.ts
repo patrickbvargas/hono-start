@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { Prisma } from "@/generated/prisma/client";
 
 const prismaMock = vi.hoisted(() => ({
 	expense: {
@@ -19,11 +20,102 @@ vi.mock("@/shared/lib/prisma", () => ({
 
 import {
 	getExpenseById,
+	getExpenseFinancial,
 	getExpenseSuppliers,
 	getExpenses,
 } from "../data/queries";
 
 describe("expense queries", () => {
+	it("maps actual linked titles with exact principal balances and scoped unreversed payments", async () => {
+		const title = (
+			id: number,
+			amount: string,
+			kind = "INSTALLMENT",
+			cancelledAt: Date | null = null,
+		) => ({
+			id,
+			amount: new Prisma.Decimal(amount),
+			dueDate: new Date("2026-12-01"),
+			kind,
+			cancelledAt,
+			payments: [],
+		});
+		prismaMock.expense.findFirst.mockResolvedValue({
+			expensePayables: [
+				{ payable: title(3, "0.20", "EXTRA") },
+				{
+					payable: {
+						...title(1, "100.10", "DOWN_PAYMENT"),
+						payments: [
+							{
+								principalAbated: new Prisma.Decimal("100.10"),
+								effectiveAmount: new Prisma.Decimal("90.10"),
+								effectiveDate: new Date("2026-11-02"),
+							},
+						],
+					},
+				},
+				{
+					payable: {
+						...title(2, "100.20"),
+						payments: [
+							{
+								principalAbated: new Prisma.Decimal("20.10"),
+								effectiveAmount: new Prisma.Decimal("25.10"),
+								effectiveDate: new Date("2026-11-03"),
+							},
+							{
+								principalAbated: new Prisma.Decimal("10.10"),
+								effectiveAmount: new Prisma.Decimal("10.10"),
+								effectiveDate: new Date("2026-11-01"),
+							},
+						],
+					},
+				},
+				{ payable: title(4, "500", "INSTALLMENT", new Date()) },
+			],
+		});
+		const result = await getExpenseFinancial({ firmId: 7, id: 9 });
+		expect(result.paidAmount).toBe(125.3);
+		expect(result.remainingAmount).toBe(70.2);
+		expect(result.installments.map((row) => row.id)).toEqual([1, 2, 3, 4]);
+		expect(result.installments[0]).toMatchObject({
+			remainingAmount: 0,
+			paidAmount: 90.1,
+			kind: "DOWN_PAYMENT",
+		});
+		expect(result.installments[1]).toMatchObject({
+			remainingAmount: 70,
+			principalAbated: 30.2,
+			paymentDate: "2026-11-03",
+		});
+		expect(result.installments[3]).toMatchObject({
+			remainingAmount: 0,
+			isCancelled: true,
+		});
+		expect(prismaMock.expense.findFirst).toHaveBeenCalledWith(
+			expect.objectContaining({ where: { id: 9, firmId: 7 } }),
+		);
+		const query = prismaMock.expense.findFirst.mock.calls.at(-1)?.[0];
+		expect(query.select.expensePayables.where).toEqual({ firmId: 7 });
+		expect(
+			query.select.expensePayables.select.payable.select.payments.where,
+		).toEqual({ firmId: 7, reversal: null });
+	});
+	it("rejects a missing or other-firm financial source", async () => {
+		prismaMock.expense.findFirst.mockResolvedValue(null);
+		await expect(getExpenseFinancial({ firmId: 7, id: 9 })).rejects.toThrow(
+			"Despesa não encontrada",
+		);
+	});
+	it("shows zero debt before any titles are generated", async () => {
+		prismaMock.expense.findFirst.mockResolvedValue({ expensePayables: [] });
+		await expect(getExpenseFinancial({ firmId: 7, id: 9 })).resolves.toEqual({
+			paidAmount: 0,
+			remainingAmount: 0,
+			installments: [],
+		});
+	});
 	beforeEach(() => {
 		vi.clearAllMocks();
 		prismaMock.expense.aggregate.mockResolvedValue({
@@ -85,6 +177,7 @@ describe("expense queries", () => {
 
 	it("loads expense details", async () => {
 		prismaMock.expense.findFirst.mockResolvedValue({
+			_count: { expensePayables: 2 },
 			id: 7,
 			negotiatedAmount: { toString: () => "990.5", valueOf: () => 990.5 },
 			notes: "Conta fixa",
@@ -109,6 +202,7 @@ describe("expense queries", () => {
 			supplierName: "Serviços Contábeis",
 			notes: "Conta fixa",
 			negotiatedAmount: 990.5,
+			hasGeneratedTitles: true,
 		});
 	});
 

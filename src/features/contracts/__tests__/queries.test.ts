@@ -34,6 +34,134 @@ import {
 } from "../data/queries";
 
 describe("contract data queries", () => {
+	it.each([
+		{ principal: "1000", cash: "800", remaining: 0, settled: true },
+		{ principal: "900", cash: "1100", remaining: 100, settled: false },
+	])(
+		"derives financial state from principal instead of cash: $principal / $cash",
+		async ({ principal, cash, remaining, settled }) => {
+			const stored = await prismaMock.contract.findFirst();
+			prismaMock.contract.findFirst.mockResolvedValue({
+				...stored,
+				revenues: [
+					{
+						id: 20,
+						revenueTypeId: 3,
+						negotiatedAmount: "1000",
+						isActive: true,
+						deletedAt: null,
+						revenueType: { label: "Administrativo", value: "ADMINISTRATIVE" },
+						contractRevenueReceivables: [
+							{
+								receivable: {
+									id: 1,
+									amount: "1000",
+									dueDate: new Date("2026-01-01"),
+									kind: "INSTALLMENT",
+									cancelledAt: null,
+									receipts: [
+										{
+											id: 1,
+											principalAbated: principal,
+											effectiveAmount: cash,
+											effectiveDate: new Date("2026-01-01"),
+											reversal: null,
+										},
+									],
+								},
+							},
+						],
+					},
+				],
+			});
+			const result = await getContractById({
+				scope: {
+					firmId: 1,
+					employeeId: 10,
+					employeeTypeValue: "LAWYER",
+					isAdmin: true,
+				},
+				id: 5,
+			});
+			expect(result.revenues[0]).toMatchObject({
+				remainingValue: remaining,
+				isFullyPaid: settled,
+				paidValue: Number(cash),
+			});
+			expect(result.revenues[0].installments[0].remainingAmount).toBe(
+				remaining,
+			);
+		},
+	);
+	it("uses overdue unpaid entry for the card status and ignores reversed receipts", async () => {
+		const stored = await prismaMock.contract.findFirst();
+		prismaMock.contract.findFirst.mockResolvedValue({
+			...stored,
+			revenues: [
+				{
+					id: 20,
+					revenueTypeId: 3,
+					negotiatedAmount: "1000",
+					isActive: true,
+					deletedAt: null,
+					revenueType: { label: "Administrativo", value: "ADMINISTRATIVE" },
+					contractRevenueReceivables: [
+						{
+							receivable: {
+								id: 1,
+								amount: "100",
+								dueDate: new Date("2026-01-01"),
+								kind: "DOWN_PAYMENT",
+								cancelledAt: null,
+								receipts: [
+									{
+										id: 1,
+										principalAbated: "100",
+										effectiveAmount: "100",
+										effectiveDate: new Date("2026-01-01"),
+										reversal: { id: 1 },
+									},
+								],
+							},
+						},
+						{
+							receivable: {
+								id: 2,
+								amount: "900",
+								dueDate: new Date("2026-02-01"),
+								kind: "INSTALLMENT",
+								cancelledAt: null,
+								receipts: [
+									{
+										id: 2,
+										principalAbated: "900",
+										effectiveAmount: "900",
+										effectiveDate: new Date("2026-02-01"),
+										reversal: null,
+									},
+								],
+							},
+						},
+					],
+				},
+			],
+		});
+		const result = await getContractById({
+			scope: {
+				firmId: 1,
+				employeeId: 10,
+				employeeTypeValue: "LAWYER",
+				isAdmin: true,
+			},
+			id: 5,
+		});
+		expect(result.revenues[0]).toMatchObject({
+			remainingValue: 100,
+			isFullyPaid: false,
+			nextDueDate: "2026-01-01",
+			paidValue: 900,
+		});
+	});
 	beforeEach(() => {
 		vi.clearAllMocks();
 		prismaMock.legalArea.findMany.mockResolvedValue([{ id: 7 }]);

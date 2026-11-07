@@ -1,4 +1,4 @@
-import type { Prisma } from "@/generated/prisma/client";
+import { Prisma } from "@/generated/prisma/client";
 import {
 	getEntityActiveWhere,
 	getEntityDeletedWhere,
@@ -21,8 +21,10 @@ import { EXPENSE_ERRORS } from "../constants/errors";
 import type { ExpenseFilter } from "../schemas/filter";
 import {
 	type ExpenseDetail,
+	type ExpenseFinancial,
 	type ExpenseSummary,
 	expenseDetailSchema,
+	expenseFinancialSchema,
 	expenseSummarySchema,
 } from "../schemas/model";
 import type { ExpenseSearch } from "../schemas/search";
@@ -161,6 +163,7 @@ export async function getExpenseById({
 	const row = await prisma.expense.findFirst({
 		where: { id, firmId },
 		include: {
+			_count: { select: { expensePayables: true } },
 			supplier: {
 				select: {
 					id: true,
@@ -190,6 +193,81 @@ export async function getExpenseById({
 		isSoftDeleted: Boolean(row.deletedAt),
 		createdAt: row.createdAt.toISOString(),
 		updatedAt: row.updatedAt?.toISOString() ?? null,
+		hasGeneratedTitles: row._count.expensePayables > 0,
+	});
+}
+
+export async function getExpenseFinancial({
+	firmId,
+	id,
+}: EntityUniqueParams): Promise<ExpenseFinancial> {
+	const expense = await prisma.expense.findFirst({
+		where: { id, firmId },
+		select: {
+			expensePayables: {
+				where: { firmId },
+				select: {
+					payable: {
+						select: {
+							id: true,
+							kind: true,
+							amount: true,
+							dueDate: true,
+							cancelledAt: true,
+							payments: {
+								where: { firmId, reversal: null },
+								select: {
+									principalAbated: true,
+									effectiveAmount: true,
+									effectiveDate: true,
+								},
+								orderBy: [{ effectiveDate: "desc" }, { id: "desc" }],
+							},
+						},
+					},
+				},
+			},
+		},
+	});
+	if (!expense) {
+		throw new Error(EXPENSE_ERRORS.DETAIL_NOT_FOUND);
+	}
+	const titles = expense.expensePayables
+		.map(({ payable }) => payable)
+		.sort((a, b) => a.dueDate.getTime() - b.dueDate.getTime() || a.id - b.id);
+	let paidAmount = new Prisma.Decimal(0);
+	let remainingAmount = new Prisma.Decimal(0);
+	const installments = titles.map((title) => {
+		const principal = title.payments.reduce(
+			(sum, payment) => sum.plus(payment.principalAbated),
+			new Prisma.Decimal(0),
+		);
+		const paid = title.payments.reduce(
+			(sum, payment) => sum.plus(payment.effectiveAmount),
+			new Prisma.Decimal(0),
+		);
+		const remaining = title.cancelledAt
+			? new Prisma.Decimal(0)
+			: Prisma.Decimal.max(title.amount.minus(principal), 0);
+		paidAmount = paidAmount.plus(paid);
+		remainingAmount = remainingAmount.plus(remaining);
+		return {
+			id: title.id,
+			kind: title.kind,
+			dueDate: title.dueDate.toISOString().slice(0, 10),
+			expectedAmount: Number(title.amount),
+			paidAmount: Number(paid),
+			principalAbated: Number(principal),
+			remainingAmount: Number(remaining),
+			paymentDate:
+				title.payments[0]?.effectiveDate.toISOString().slice(0, 10) ?? null,
+			isCancelled: Boolean(title.cancelledAt),
+		};
+	});
+	return expenseFinancialSchema.parse({
+		paidAmount: Number(paidAmount),
+		remainingAmount: Number(remainingAmount),
+		installments,
 	});
 }
 

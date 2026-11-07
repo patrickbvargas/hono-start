@@ -119,6 +119,8 @@ Prisma schema cannot represent PostgreSQL filtered unique indexes directly. When
 
 ## Seed Contract
 
+- `pnpm db:seed:expense` prepares an active R$ 1.000,00 expense without titles in each existing demo Firm (1 and 2), using an active supplier. It requires the demo seed marker and preserves all existing financial history. Reruns reuse unused fixtures; after generation, a new fixture is created. Output includes the Financeiro link. It does not reset or reseed the database.
+
 - Lookup catalogs must be seeded before the application is operational.
 - Seeded lookup identities remain stable by `value`, not by numeric `id`.
 - `pnpm run db:reset` applies migrations, generates Prisma Client and explicitly seeds once (Prisma 7 does not auto-seed).

@@ -35,6 +35,8 @@ Este documento descreve os fluxos de usuário canônicos do sistema.
 
 ## 3. Acerto Financeiro de Contrato (Geração de Títulos)
 
+Os cards financeiros de receitas e despesas exibem um chip no cabeçalho para usuários autorizados a ler os respectivos títulos: **Quitado** quando há títulos ativos e nenhum saldo de principal; **Em atraso** quando existe título com saldo e vencimento anterior à data atual em São Paulo; **Pendente** nos demais casos, inclusive antes da geração e em pagamentos parciais sem atraso. Entrada participa da situação agregada. Pagamentos estornados e títulos cancelados não compõem a quitação; juros e descontos não substituem o principal abatido no cálculo do saldo.
+
 1. No detalhe do contrato ou da receita, o operador solicita o **Acerto Financeiro**.
 2. O sistema herda o valor acordado da `Revenue`.
 3. O operador informa:
@@ -55,10 +57,16 @@ Este documento descreve os fluxos de usuário canônicos do sistema.
 
 1. O operador financeiro acessa **Despesas** e inicia o cadastro.
 2. Seleciona o fornecedor (`SupplierProfile` ativo), informa valor negociado, data prevista e observações.
-3. Ao confirmar o parcelamento da despesa:
+3. Na aba **Financeiro** da despesa, clica em **Gerar parcelas**. O fluxo segue o mesmo padrão visual e formulário do acerto de receitas de contratos:
+   - Informa entrada opcional, quantidade de parcelas, vencimentos, categoria financeira e forma de pagamento prevista.
+   - A prévia atualiza automaticamente e permite ajustar os títulos individualmente.
+4. Ao confirmar o parcelamento da despesa:
    - O sistema valida a soma dos títulos com o valor da despesa.
    - Grava os títulos na tabela `payables` (beneficiário = fornecedor).
    - Grava os vínculos na tabela de ponte `expense_payables`.
+5. Após gerar, a aba exibe o acerto como **Títulos gerados**, sem permitir nova geração. Usuários autorizados a ler títulos a pagar visualizam pago, saldo a pagar e **Ver parcelas**, incluindo entrada e títulos extras.
+   - O saldo considera o principal abatido por pagamentos não estornados; o valor pago representa o caixa efetivo.
+   - Títulos cancelados permanecem visíveis, sem compor o saldo a pagar. Alterar ou excluir a despesa não reescreve as dívidas geradas.
 
 ---
 

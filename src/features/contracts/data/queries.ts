@@ -377,6 +377,7 @@ function mapRevenueDetail(revenue: {
 			cancelledAt: Date | null;
 			receipts: Array<{
 				id: number;
+				principalAbated: { toString(): string } | number;
 				effectiveAmount: { toString(): string } | number;
 				effectiveDate: Date;
 				reversal?: unknown | null;
@@ -446,6 +447,19 @@ function mapRevenueDetail(revenue: {
 			? Number(revenue.downPaymentValue)
 			: null;
 
+	const getRemainingPrincipal = (receivable: (typeof receivables)[number]) =>
+		Prisma.Decimal.max(
+			new Prisma.Decimal(receivable.amount.toString()).minus(
+				receivable.receipts
+					.filter((receipt) => !receipt.reversal)
+					.reduce(
+						(sum, receipt) => sum.plus(receipt.principalAbated.toString()),
+						new Prisma.Decimal(0),
+					),
+			),
+			0,
+		);
+
 	const installments = activeItems.map((receivable, index) => {
 		const expectedAmount = Number(receivable.amount);
 		const validReceipts = (receivable.receipts ?? []).filter(
@@ -455,7 +469,7 @@ function mapRevenueDetail(revenue: {
 			(acc, receipt) => acc + Number(receipt.effectiveAmount),
 			0,
 		);
-		const remainingAmount = Math.max(0, expectedAmount - receivedAmount);
+		const remainingAmount = Number(getRemainingPrincipal(receivable));
 		const latestReceiptDate =
 			validReceipts.length > 0
 				? new Date(
@@ -477,24 +491,28 @@ function mapRevenueDetail(revenue: {
 		};
 	});
 
-	const entryReceivedAmount = entryReceivable
-		? (entryReceivable.receipts ?? [])
-				.filter((receipt) => !receipt.reversal)
-				.reduce((acc, receipt) => acc + Number(receipt.effectiveAmount), 0)
-		: 0;
-
-	const installmentsReceivedAmount = installments.reduce(
-		(acc, item) => acc + item.receivedAmount,
-		0,
-	);
-	const totalPaidValue =
-		(entryReceivable ? entryReceivedAmount : 0) + installmentsReceivedAmount;
-	const remainingValue = Math.max(0, totalValue - totalPaidValue);
+	const totalPaidValue = receivables
+		.reduce(
+			(sum, title) =>
+				title.receipts
+					.filter((receipt) => !receipt.reversal)
+					.reduce(
+						(paid, receipt) => paid.plus(receipt.effectiveAmount.toString()),
+						sum,
+					),
+			new Prisma.Decimal(0),
+		)
+		.toNumber();
+	const remainingValue = receivables
+		.reduce(
+			(sum, title) => sum.plus(getRemainingPrincipal(title)),
+			new Prisma.Decimal(0),
+		)
+		.toNumber();
 	const installmentsPaid = installments.filter(
 		(item) => item.remainingAmount <= 0,
 	).length;
-	const isFullyPaid =
-		remainingValue <= 0 && (installments.length > 0 || totalValue > 0);
+	const isFullyPaid = receivables.length > 0 && remainingValue <= 0;
 
 	const nextUnpaidInstallment = installments.find(
 		(item) => item.remainingAmount > 0,
@@ -502,9 +520,11 @@ function mapRevenueDetail(revenue: {
 	const nextInstallmentNumber = nextUnpaidInstallment
 		? nextUnpaidInstallment.number
 		: null;
-	const nextDueDate = nextUnpaidInstallment
-		? nextUnpaidInstallment.dueDate
-		: null;
+	const nextDueDate =
+		receivables
+			.find((title) => getRemainingPrincipal(title).greaterThan(0))
+			?.dueDate.toISOString()
+			.slice(0, 10) ?? null;
 
 	const earliestDate =
 		receivables.length > 0
@@ -815,6 +835,7 @@ function getContractDetailInclude() {
 										},
 										select: {
 											id: true,
+											principalAbated: true,
 											effectiveAmount: true,
 											effectiveDate: true,
 										},
