@@ -162,6 +162,25 @@ export async function getAuditAccessWhere(
 			remunerations.map(({ id }) => id),
 		);
 	}
+	if (
+		hasPermission(session, "org:receivables:read_all") ||
+		hasPermission(session, "org:receivables:read_assigned")
+	) {
+		const titles = await prisma.receivable.findMany({
+			where: {
+				firmId,
+				...(hasPermission(session, "org:receivables:read_all")
+					? {}
+					: { contractRevenueReceivable: { contract: assignedContract } }),
+			},
+			select: { id: true },
+		});
+		branches.push({
+			firmId,
+			entityType: "Receivable",
+			entityId: { in: titles.map(({ id }) => String(id)) },
+		});
+	}
 	if (hasPermission(session, "org:expenses:read")) {
 		addOwner("Expense", "expense", "expenseId");
 	}

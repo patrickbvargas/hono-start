@@ -228,6 +228,13 @@ export function getScope(
 	subject: SessionScopeSubject,
 ): SessionScope {
 	switch (subject) {
+		case "receivable":
+			return hasPermission(session, "org:receivables:read_all")
+				? { firmId: session.firm.id }
+				: {
+						firmId: session.firm.id,
+						employeeId: getCurrentEmployeeId(session),
+					};
 		case "attachment":
 		case "audit-log":
 		case "client":

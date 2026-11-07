@@ -111,3 +111,11 @@ Os cards financeiros de receitas e despesas exibem um chip no cabeçalho para us
 3. O sistema valida dependências:
    - Se for baixa a receber que gerou remunerações e alguma delas já foi paga: **bloqueia o estorno**.
    - Se nenhuma remuneração foi paga: cancela os títulos de remuneração gerados, grava o `ReceiptReversal` ou `PaymentReversal` e reabre o saldo do título original.
+
+## 9. Consulta de Contas a Receber
+
+O operador acessa Contas a receber e filtra títulos por devedor, contrato, origem, classificação, situação, vencimento, analítica e meio previsto. Busca, ordenação e paginação permanecem na URL. Desktop oferece tabela ou cards; mobile utiliza cards e menus de ações. Totais representam todo o resultado filtrado autorizado.
+
+A ação principal abre a página dedicada; menus de ações e contexto oferecem Abrir página e Ver resumo. O resumo abre em drawer sem perder a lista. A página mantém abas Visão geral, Recebimentos, Anexos e Histórico conforme permissões, e retorna aos filtros anteriores. Nesta etapa, a coleção é somente consulta, sem criação, edição, cancelamento, baixa ou estorno. Anexos do título são consultáveis sem upload ou exclusão.
+
+Em atraso prevalece visualmente sobre Parcial, mas títulos parcialmente recebidos e vencidos atendem ambos os filtros. Principal abatido e caixa recebido são campos distintos. Estornos preservam o evento original e recompõem o saldo. Encerramento ou exclusão operacional do contrato não remove a obrigação financeira.

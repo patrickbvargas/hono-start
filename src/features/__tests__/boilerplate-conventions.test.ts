@@ -19,6 +19,7 @@ const allowedFeatureIndexes = new Set([
 	"pending-work/index.ts",
 	"people/index.ts",
 	"related-records/index.ts",
+	"receivables/index.ts",
 	"remunerations/index.ts",
 ]);
 

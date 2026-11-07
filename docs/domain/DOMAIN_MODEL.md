@@ -129,3 +129,9 @@ Não possui colunas de contrato, despesa, geração ou código legado.
   - `Quitado`: Saldo zerado (soma dos abatimentos de principal válida igual ao valor do título).
   - `Cancelado`: Título cancelado explicitamente sem nenhuma baixa ativa.
 - **Títulos Manuais Diretos**: Identificados pela ausência de registros nas tabelas de ponte.
+
+### Consulta de títulos a receber
+
+Na coleção financeira, a situação principal segue a precedência: Cancelado, Quitado, Em atraso, Parcial, Pendente. Um título parcialmente abatido e vencido aparece Em atraso e mantém indicador Parcial; o filtro Parcial inclui ambos os casos. Hoje é a data civil de America/Sao_Paulo, e vencimento hoje não é atraso.
+
+Saldo principal considera somente principalAbated de recebimentos sem estorno. Caixa recebido considera effectiveAmount desses eventos e permanece separado do principal. Títulos cancelados preservam o valor nominal para consulta, mas não compõem nominal ativo, saldo aberto ou vencido. Totais filtrados abrangem toda a seleção autorizada antes da paginação.

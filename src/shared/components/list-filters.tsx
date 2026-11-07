@@ -150,15 +150,15 @@ function ListFiltersDrawer({
 			</DrawerTrigger>
 			<DrawerContent
 				direction="bottom"
-				className={cn("max-h-[85vh]", className)}
+				className={cn("max-h-[85vh] overflow-hidden", className)}
 			>
-				<DrawerHeader>
+				<DrawerHeader className="shrink-0">
 					<DrawerTitle>{title ?? label}</DrawerTitle>
 				</DrawerHeader>
-				<ScrollArea className="min-h-0 flex-1">
+				<ScrollArea className="min-h-0 max-h-[calc(80dvh-10rem)] flex-auto [&>[data-slot=scroll-area-viewport]]:max-h-[calc(80dvh-10rem)]">
 					<div className="flex flex-col gap-4 px-4 pb-4">{children}</div>
 				</ScrollArea>
-				<DrawerFooter>
+				<DrawerFooter className="shrink-0">
 					{footer}
 					<DrawerClose render={<Button variant="outline" className="w-full" />}>
 						Fechar

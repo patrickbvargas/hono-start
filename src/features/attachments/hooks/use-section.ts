@@ -18,7 +18,9 @@ export function useAttachmentSection({
 	const owner = getAttachmentOwnerInput({ ownerId, ownerKind });
 	const { attachments, error, isPending, retry } = useAttachments(owner);
 	const session = useLoggedUserSession();
-	const canDelete = hasPermission(session, "org:attachments:delete");
+	const canDelete =
+		ownerKind !== "receivable" &&
+		hasPermission(session, "org:attachments:delete");
 	const { overlay } = useOverlay<EntityId>();
 	const previewTriggerRef = useRef<HTMLElement | null>(null);
 	const openPreview = (id: EntityId, trigger: HTMLElement) => {

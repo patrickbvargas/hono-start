@@ -1,4 +1,5 @@
 import { getPersonById } from "@/features/people/data/queries";
+import type { Prisma } from "@/generated/prisma/client";
 import { env } from "@/shared/config/env";
 import { prisma } from "@/shared/lib/prisma";
 import type {
@@ -357,6 +358,9 @@ export async function getAttachmentsByOwner(params: {
 					: { personId: owner.ownerId }
 				: {}),
 			...(owner.ownerKind === "contract" ? { contractId: owner.ownerId } : {}),
+			...(owner.ownerKind === "receivable"
+				? { receivableId: owner.ownerId }
+				: {}),
 			...(owner.ownerKind === "expense" ? { expenseId: owner.ownerId } : {}),
 			...(owner.ownerKind === "fee"
 				? isLegacy
@@ -452,6 +456,7 @@ export async function getAttachmentAccessById(
 			personId: true,
 			contractId: true,
 			expenseId: true,
+			receivableId: true,
 			receiptId: true,
 			payableId: true,
 			...(isLegacy
@@ -484,6 +489,7 @@ export async function getAttachmentAccessById(
 					: attachment.firmId,
 		},
 		ownerInput: {
+			receivableId: attachment.receivableId ?? undefined,
 			personId: attachment.personId ?? undefined,
 			clientId: (raw.clientId as number) ?? undefined,
 			employeeId: (raw.employeeId as number) ?? undefined,
@@ -504,6 +510,34 @@ export async function assertAttachmentOwnerExists(params: {
 	const owner = getAttachmentOwnerContext(params.input);
 
 	switch (owner.ownerKind) {
+		case "receivable": {
+			const title = await prisma.receivable.findFirst({
+				where: { id: owner.ownerId, firmId: params.firmId },
+				select: {
+					id: true,
+					firmId: true,
+					contractRevenueReceivable: { select: { contractId: true } },
+				},
+			});
+			if (!title) {
+				throw new Error(ATTACHMENT_ERRORS.OWNER_NOT_FOUND);
+			}
+			const contract = title.contractRevenueReceivable
+				? await getAttachmentContractOwnerResource(
+						params.firmId,
+						title.contractRevenueReceivable.contractId,
+					)
+				: null;
+			return {
+				owner,
+				access: {
+					id: title.id,
+					firmId: title.firmId,
+					deletedAt: null,
+					resource: { firmId: title.firmId, contract: contract?.resource },
+				},
+			};
+		}
 		case "person": {
 			if (!params.session) {
 				throw new Error(ATTACHMENT_ERRORS.OWNER_NOT_FOUND);

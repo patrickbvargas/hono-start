@@ -141,6 +141,7 @@ export const sessionAccessSchema = z.discriminatedUnion("status", [
 export type SessionAccess = z.infer<typeof sessionAccessSchema>;
 
 export type SessionScopeSubject =
+	| "receivable"
 	| "employee"
 	| "client"
 	| "contract"

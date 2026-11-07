@@ -17,6 +17,7 @@ import {
 	PersonForm,
 	PersonRestore,
 } from "@/features/people";
+import { ReceivableDetails } from "@/features/receivables";
 import {
 	RemunerationDelete,
 	RemunerationDetails,
@@ -93,6 +94,9 @@ export function RelatedRecordDetails({
 }: RelatedRecordDetailsProps) {
 	const { overlay } = useOverlay<EntityId>();
 	const session = useLoggedUserSession();
+	if (kind === "receivable") {
+		return <ReceivableDetails id={id} state={state} />;
+	}
 	const {
 		Details,
 		Form,

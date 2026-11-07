@@ -48,6 +48,9 @@ export async function createAttachments(params: {
 }): Promise<MutationReturnType> {
 	const input = attachmentBatchUploadInputSchema.parse(params.input);
 	const owner = getAttachmentOwnerContext(input);
+	if (owner.ownerKind === "receivable") {
+		throw new Error(ATTACHMENT_ERRORS.UPLOAD_FAILED);
+	}
 	const prepared: Array<{
 		file: AttachmentBatchUploadInput["files"][number];
 		typeId: number;

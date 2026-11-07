@@ -76,6 +76,9 @@ const deleteAttachmentFn = createServerFn({ method: "POST" })
 				input: access.ownerInput,
 				session,
 			});
+			if (owner.owner.ownerKind === "receivable") {
+				throw new Error(ATTACHMENT_ERRORS.DELETE_FAILED);
+			}
 			assertAttachmentOwnerSubjectReadAccess(session, owner);
 
 			return await deleteAttachment({
