@@ -64,6 +64,7 @@ Este documento reúne as invariantes e regras de negócio canônicas do sistema.
 3. **Imutabilidade e Estorno**:
    - Liquidações confirmadas não podem ser editadas ou excluídas.
    - Toda correção exige estorno append-only (`ReceiptReversal` ou `PaymentReversal`) com justificativa obrigatória.
+   - A data do estorno não pode anteceder a data efetiva da baixa original.
 
 ---
 
@@ -78,7 +79,7 @@ Este documento reúne as invariantes e regras de negócio canônicas do sistema.
    - Baixa com data efetiva até o dia configurado em `Firm.remunerationCutoffDay` (padrão 25): vence no dia `Firm.remunerationDueDay` (padrão 5) do mês seguinte.
    - Baixa após o dia de corte: vence no segundo mês subsequente.
 4. **Trava de Estorno em Cascata**:
-   - É proibido estornar um `Receipt` se qualquer um dos títulos `Payable` de remuneração gerados por ele já tiver sido pago.
+   - É proibido estornar um `Receipt` se qualquer um dos títulos `Payable` de remuneração gerados por ele possuir pagamento não estornado, inclusive pagamento parcial.
    - É obrigatório estornar primeiro os pagamentos da equipe antes de reverter o recebimento do cliente.
 
 ---

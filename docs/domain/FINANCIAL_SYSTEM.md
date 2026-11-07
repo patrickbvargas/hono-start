@@ -72,6 +72,12 @@ Apenas recebimentos confirmados de contratos com flag `generatesRemuneration = t
    - Baixa após o dia 25: vence no dia 5 do segundo mês subsequente.
    - Dias inexistentes no mês ajustam para o último dia do mês.
 
+4. **Percentual e Classificação**:
+   - Responsável e assistente administrativo usam `remunerationPercentage`; indicante usa `referralPercentage`; indicado usa sua remuneração menos o percentual de indicação do indicante (maior percentual, se houver múltiplos).
+   - Percentual efetivo deve estar entre zero e um. Valor calculado é arredondado em centavos, com meio centavo para cima; valores arredondados em zero não geram título.
+   - O colaborador e sua pessoa precisam estar ativos e não excluídos, com fornecedor ativo. Configuração inválida bloqueia toda a baixa, sem geração parcial.
+   - A analítica do pagável usa `PAYROLL_LAWYERS`, `PAYROLL_INTERNS` ou `PAYROLL_STAFF` conforme função; o meio previsto recebe o meio real do recebimento. O snapshot preserva percentuais, atuação e régua usados.
+
 ---
 
 ## 5. Estornos e Reversões Imutáveis
@@ -83,7 +89,7 @@ Liquidações confirmadas nunca são editadas ou deletadas. Correções usam est
    - Reverte o fluxo de caixa na data do estorno (preserva a data histórica da baixa original).
 2. **Trava de Dependência de Remuneração**:
    - Ao estornar um `Receipt`:
-   - Se **qualquer** `Payable` de remuneração gerado já foi pago (possui `Payment`), o estorno do recebimento é **bloqueado**. Exige estornar os pagamentos dos colaboradores primeiro.
+   - Se **qualquer** `Payable` de remuneração gerado possui `Payment` não estornado, o estorno do recebimento é **bloqueado**. Exige estornar os pagamentos dos colaboradores primeiro, inclusive os parciais.
    - Se nenhum foi pago: cancela atomicamente os `Payables` de remuneração e registra o estorno do recebimento.
 
 ---

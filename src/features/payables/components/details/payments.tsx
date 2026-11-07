@@ -1,6 +1,7 @@
 import { CatchBoundary } from "@tanstack/react-router";
 import { createColumnHelper } from "@tanstack/react-table";
 import { Suspense } from "react";
+import { SettlementReversalAction } from "@/features/title-settlements";
 import { DataTable } from "@/shared/components/data-table";
 import { Button, Skeleton } from "@/shared/components/ui";
 import { SensitiveValue } from "@/shared/components/value-visibility";
@@ -13,7 +14,7 @@ interface PayablePaymentsProps {
 	id: number;
 }
 const c = createColumnHelper<typeof dataTableFeatures, PayablePayment>();
-const columns = [
+const getColumns = (titleId: number) => [
 	c.accessor("effectiveDate", {
 		header: "Data efetiva",
 		cell: (context) => formatter.calendarDate(context.getValue()),
@@ -50,7 +51,14 @@ const columns = [
 					{row.original.reversal.reason}
 				</span>
 			) : (
-				"Confirmado"
+				<div className="flex items-center gap-2">
+					<span>Confirmado</span>
+					<SettlementReversalAction
+						direction="payable"
+						titleId={titleId}
+						movementId={row.original.id}
+					/>
+				</div>
 			),
 	}),
 ];
@@ -78,7 +86,7 @@ function PayablePaymentsContent({ id }: PayablePaymentsProps) {
 	return (
 		<DataTable
 			data={payments}
-			columns={columns}
+			columns={getColumns(id)}
 			emptyMessage="Nenhum pagamento registrado."
 		/>
 	);

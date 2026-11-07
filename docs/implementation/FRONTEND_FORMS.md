@@ -14,6 +14,7 @@
 - Labels use sentence case. `Observações` for notes, trailing `(%)` for percentage fields. Contextual date labels identify the event. Preserve domain-specific labels and conditional fields.
 - Section additions use a right-aligned ghost/sm action with the plus icon. Row removal uses an outline/icon button matching the `h-8` input height.
 - The primary footer uses the shared Submit (`Salvar`); attachment upload keeps its explicit `Enviar anexos` action and progress copy.
+- Financial settlement and reversal forms use the same shared Submit with `Confirmar baixa` and `Confirmar estorno` to identify the immutable operation; reversal uses destructive styling and explicit consequence text.
 - Loading placeholders mirror the actual field order, groups and button dimensions, including checkbox-before-label order.
 - Production form composition must not enable debug output.
 - Create and edit flows must share the same feature form component unless a documented exception exists.

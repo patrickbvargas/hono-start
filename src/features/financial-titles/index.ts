@@ -4,6 +4,7 @@ export {
 	generatePayablesFromExpenseMutationOptions,
 	generateReceivablesFromRevenueMutationOptions,
 } from "./api/mutations";
+export { financialTitleKeys } from "./api/queries";
 export { FinancialPaymentStatus } from "./components/payment-status";
 export {
 	ExpenseGenerationForm,

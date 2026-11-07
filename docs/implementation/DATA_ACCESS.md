@@ -129,6 +129,8 @@ Prisma schema cannot represent PostgreSQL filtered unique indexes directly. When
 
 ## Audit Persistence Contract
 
+- Financial settlements lock the current-Firm title row before checking request identity or summing active principal. Reversal uses the same lock, then locks generated remuneration payables in ascending ID order before checking their active payments and cancelling them. Payment writes acquire these same payable locks. Financial events and audit are committed together. Stable request keys accept identical retries and reject changed payloads; original events are never rewritten.
+
 - Audit records are append-only when the product includes an audit trail.
 - Audit records carry a structured change payload suitable for historical inspection.
 - Audit persistence must support the product-defined audit contract.

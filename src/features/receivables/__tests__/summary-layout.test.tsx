@@ -3,6 +3,12 @@ import { cleanup, render, screen } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
+vi.mock("@/features/title-settlements", () => ({
+	TitleSettlementAction: () => (
+		<button type="button">Registrar recebimento</button>
+	),
+}));
+
 vi.mock("@/features/related-records", () => ({
 	RelatedRecordLink: ({ children }: { children: ReactNode }) => (
 		<span>{children}</span>

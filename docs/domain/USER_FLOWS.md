@@ -82,7 +82,7 @@ Os cards financeiros de receitas e despesas exibem um chip no cabeçalho para us
 
 ## 6. Baixa de Recebível e Motor de Remuneração
 
-1. O operador acessa **Contas a Receber** e seleciona 1 ou mais títulos da mesma filial.
+1. O operador acessa **Contas a Receber** e abre a página ou resumo de um título com saldo. A interface atual oferece baixa individual; seleção múltipla permanece prevista para etapa posterior.
 2. Clica em **Registrar Recebimento**:
    - Informa data efetiva (hoje ou passada) e meio de pagamento real.
    - Define principal abatido $P$, desconto $D$, juros $J$ e multa $M$.
@@ -96,7 +96,7 @@ Os cards financeiros de receitas e despesas exibem um chip no cabeçalho para us
 
 ## 7. Baixa de Pagável (Pagamento de Fornecedor / Colaborador)
 
-1. O operador acessa **Contas a Pagar** e seleciona os títulos que deseja quitar (inclusive remunerações da equipe).
+1. O operador acessa **Contas a Pagar** e abre a página ou resumo de um título com saldo (inclusive remunerações da equipe). A interface atual oferece baixa individual.
 2. Clica em **Registrar Pagamento**:
    - Informa data efetiva e meio de pagamento real.
    - Define principal abatido, descontos e encargos.
@@ -106,8 +106,8 @@ Os cards financeiros de receitas e despesas exibem um chip no cabeçalho para us
 
 ## 8. Estorno de Liquidação (Reversão)
 
-1. O operador abre o detalhe da baixa que deseja cancelar e clica em **Estornar**.
-2. Informa o motivo obrigatório do estorno.
+1. Na aba Recebimentos/Pagamentos ou no resumo do título, o operador encontra a baixa confirmada e clica em **Estornar**. A ação atua sobre uma movimentação, inclusive quando o título ainda está parcial.
+2. Informa o motivo obrigatório e a data do estorno, nunca futura nem anterior à baixa original. Confirma a recomposição do saldo; o registro original permanece visível como estornado.
 3. O sistema valida dependências:
    - Se for baixa a receber que gerou remunerações e alguma delas já foi paga: **bloqueia o estorno**.
    - Se nenhuma remuneração foi paga: cancela os títulos de remuneração gerados, grava o `ReceiptReversal` ou `PaymentReversal` e reabre o saldo do título original.
@@ -116,7 +116,7 @@ Os cards financeiros de receitas e despesas exibem um chip no cabeçalho para us
 
 O operador acessa Contas a receber e filtra títulos por devedor, contrato, origem, classificação, situação, vencimento, analítica e meio previsto. Busca, ordenação e paginação permanecem na URL. Desktop oferece tabela ou cards; mobile utiliza cards e menus de ações. Totais representam todo o resultado filtrado autorizado.
 
-A ação principal abre a página dedicada; menus de ações e contexto oferecem Abrir página e Ver resumo. O resumo abre em drawer sem perder a lista. A página mantém abas Visão geral, Recebimentos, Anexos e Histórico conforme permissões, e retorna aos filtros anteriores. Nesta etapa, a coleção é somente consulta, sem criação, edição, cancelamento, baixa ou estorno. Anexos do título são consultáveis sem upload ou exclusão.
+A ação principal abre a página dedicada; menus de ações e contexto oferecem Abrir página e Ver resumo. O resumo abre em drawer sem perder a lista. A página mantém abas Visão geral, Recebimentos, Anexos e Histórico conforme permissões, e retorna aos filtros anteriores. Página e resumo oferecem Registrar recebimento para títulos com saldo e grant próprio; cada recebimento confirmado oferece Estornar com grant independente. As ações usam modais, sem rotas próprias. Criação, edição e cancelamento manual de títulos permanecem fora desta interface. Anexos do título são consultáveis sem upload ou exclusão.
 
 Em atraso prevalece visualmente sobre Parcial, mas títulos parcialmente recebidos e vencidos atendem ambos os filtros. Principal abatido e caixa recebido são campos distintos. Estornos preservam o evento original e recompõem o saldo. Encerramento ou exclusão operacional do contrato não remove a obrigação financeira.
 
@@ -124,6 +124,6 @@ Em atraso prevalece visualmente sobre Parcial, mas títulos parcialmente recebid
 
 Contas a pagar segue a coleção de Contas a receber: tabela/cards, busca, filtros e chips na URL, atalhos de vencimento, ordenação, paginação e totais filtrados. Filtra por beneficiário, contrato da remuneração, origem (Despesa, Remuneração ou Direto), classificação, situação, analítica e meio previsto.
 
-A ação principal abre a página dedicada; menus oferecem Abrir página e Ver resumo. Resumo usa drawer compacto; página mantém Visão geral, Pagamentos, Anexos e Histórico conforme permissões, preservando contexto no retorno. Nesta etapa a coleção é somente consulta, sem criação, edição, cancelamento, baixa ou estorno; anexos também são somente leitura.
+A ação principal abre a página dedicada; menus oferecem Abrir página e Ver resumo. Resumo usa drawer compacto; página mantém Visão geral, Pagamentos, Anexos e Histórico conforme permissões, preservando contexto no retorno. Página e resumo oferecem Registrar pagamento para títulos com saldo e grant próprio; cada pagamento confirmado oferece Estornar com grant independente. As ações usam modais, sem rotas próprias. Criação, edição e cancelamento manual de títulos permanecem fora desta interface; anexos também são somente leitura.
 
 Admin consulta a filial ativa. Member com grant explícito consulta apenas remuneração cujo beneficiário é sua própria Person e cujo contrato está atribuído a ele. Essa seleção precede opções, contagens e totais; pagamentos exigem grant próprio e o mesmo escopo. Exclusão operacional não apaga títulos. Principal abatido e caixa pago permanecem distintos e desconsideram pagamentos estornados.

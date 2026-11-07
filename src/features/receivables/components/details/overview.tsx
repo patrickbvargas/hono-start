@@ -1,6 +1,7 @@
 import { AttachmentSection } from "@/features/attachments";
 import { EntityAuditHistory } from "@/features/audit-logs";
 import { RelatedRecordLink } from "@/features/related-records";
+import { TitleSettlementAction } from "@/features/title-settlements";
 import {
 	type DetailFieldItem,
 	EntityDetail,
@@ -32,6 +33,17 @@ export function ReceivableOverview({
 	const origin = title.contractId
 		? title.processNumber || `Contrato #${title.contractId}`
 		: "Sem vínculo com contrato";
+	const settlementAction = (
+		<TitleSettlementAction
+			direction="receivable"
+			titleId={id}
+			balance={title.balance}
+			cancelledAt={title.cancelledAt}
+			method={title.expectedMethodValue}
+			contractId={title.contractId}
+			isAssignedToActor={title.isAssignedToActor}
+		/>
+	);
 	const fields: DetailFieldItem[] = [
 		{ term: "Título", definition: `#${id}` },
 		{
@@ -102,7 +114,7 @@ export function ReceivableOverview({
 	];
 	if (section === "overview") {
 		return (
-			<FormSection title="Dados do título">
+			<FormSection title="Dados do título" action={settlementAction}>
 				<EntityDetail.Fields
 					columns={2}
 					items={[
@@ -122,6 +134,7 @@ export function ReceivableOverview({
 	}
 	return (
 		<div className="flex min-w-0 flex-col gap-3">
+			<div>{settlementAction}</div>
 			<EntityDetail.Fields columns={2} items={fields} />
 			<EntityDetail.Separator />
 			<EntityDetail.Section title="Observações">
