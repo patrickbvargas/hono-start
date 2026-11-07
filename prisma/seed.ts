@@ -2,6 +2,7 @@ import "dotenv/config";
 import { readFile } from "node:fs/promises";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../src/generated/prisma/client.js";
+import { seedContractGeneration } from "./seed-contract-generation.js";
 import {
 	seedFinancialAttachments,
 	verifyFinancialSeed,
@@ -63,6 +64,7 @@ async function main() {
 					},
 				});
 				await completeFinancialFixtures(tx);
+                await seedContractGeneration(tx);
  await seedGenericPeople(tx);
 				console.log(
 					"Seed existente: validando sem duplicar eventos financeiros.",
@@ -103,6 +105,7 @@ async function main() {
 				}
 			}
 			await seedFinancialScenarios(tx, lookups);
+			await seedContractGeneration(tx);
 			await completeFinancialFixtures(tx);
  await seedGenericPeople(tx);
 		},

@@ -63,7 +63,7 @@ export const FormAutocomplete = ({
 	const handleValueChange = React.useCallback(
 		(option: FieldOption | null) => {
 			if (!option) {
-				field.clearValues();
+				field.handleChange("");
 				return;
 			}
 

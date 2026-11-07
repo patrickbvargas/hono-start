@@ -10,6 +10,13 @@ When either scoped grant qualifies, list the keys explicitly at the call site.
 Resource enforcement (`can` / `assertCan`) additionally preserves same-firm,
 assignment, ownership and lifecycle rules. Those rules never grant missing keys.
 
+Financial title generation checks the existing `org:receivables:generate` or
+`org:payables:generate` key together with source operational write authority.
+Direct manual titles require the corresponding `create` key. The Member grant
+boundary allows explicitly granted receivable generation; resource checks still
+require an authorized writable contract. Manual title creation and payable
+generation remain forbidden for Members.
+
 This document defines reusable trust-boundary and authorization rules for the repository pattern.
 
 ## Trust Boundaries

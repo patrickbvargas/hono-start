@@ -4,7 +4,6 @@ import {
 	AttachmentSection,
 	AttachmentSectionFallback,
 } from "@/features/attachments";
-import { FeeForm } from "@/features/fees";
 import { RelatedRecordLink } from "@/features/related-records";
 import { EntityActions } from "@/shared/components/entity-actions";
 import {
@@ -13,7 +12,6 @@ import {
 } from "@/shared/components/entity-detail";
 import { NavigationLink } from "@/shared/components/navigation-link";
 import { CopyValue } from "@/shared/components/ui";
-import { useOverlay } from "@/shared/hooks/use-overlay";
 import { formatter } from "@/shared/lib/formatter";
 import type { EntityId } from "@/shared/schemas/entity";
 import { hasPermission, useLoggedUserSession } from "@/shared/session";
@@ -21,7 +19,7 @@ import type { OverlayState } from "@/shared/types/overlay";
 import { useContract } from "../../hooks/use-data";
 import { contractSearchSchema } from "../../schemas/search";
 import { getContractLifecycleActions } from "../../utils/lifecycle-actions";
-import { canReadContractReceipts } from "../../utils/workflow-access";
+import { canReadContractReceivables } from "../../utils/workflow-access";
 import { ContractRevenues } from "./revenues";
 
 interface ContractDetailsProps {
@@ -74,11 +72,7 @@ const ContractDetailsContent = ({
 	const { contract } = useContract(id);
 	const currentSearch = useSearch({ strict: false });
 	const session = useLoggedUserSession();
-	const canReadFees = canReadContractReceipts(session, contract);
-	const feeOverlay = useOverlay<EntityId>();
-	const [selectedRevenue, setSelectedRevenue] = React.useState<number | null>(
-		null,
-	);
+	const canReadTitles = canReadContractReceivables(session, contract);
 	const actions = getContractLifecycleActions({
 		canManageLifecycle,
 		isSoftDeleted: contract.isSoftDeleted,
@@ -201,14 +195,7 @@ const ContractDetailsContent = ({
 				</EntityDetail.Section>
 				<EntityDetail.Separator />
 				<EntityDetail.Section title="Receitas">
-					<ContractRevenues
-						contract={contract}
-						canReadFees={canReadFees}
-						onRegister={(revenueId) => {
-							setSelectedRevenue(revenueId);
-							feeOverlay.overlay.create.open();
-						}}
-					/>
+					<ContractRevenues contract={contract} canReadTitles={canReadTitles} />
 				</EntityDetail.Section>
 				<EntityDetail.Separator />
 				{hasPermission(session, "org:attachments:read") && (
@@ -230,20 +217,6 @@ const ContractDetailsContent = ({
 				</EntityDetail.Section>
 			</EntityDetail.Body>
 			<EntityDetail.Footer />
-			{feeOverlay.overlay.create.render((state) => (
-				<FeeForm
-					state={state}
-					initialSelection={{
-						contractId: String(id),
-						revenueId: String(selectedRevenue),
-						installmentNumber:
-							contract.revenues.find(
-								(revenue) => revenue.id === selectedRevenue,
-							)?.nextInstallmentNumber ?? 1,
-					}}
-					onSuccess={state.close}
-				/>
-			))}
 		</EntityDetail.Content>
 	);
 };

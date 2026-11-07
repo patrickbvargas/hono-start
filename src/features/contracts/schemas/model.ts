@@ -27,6 +27,7 @@ export const contractRevenueSchema = entityIdSchema.safeExtend({
 	type: z.string(),
 	typeValue: z.string(),
 	totalValue: z.number(),
+	hasGeneratedTitles: z.boolean().default(false),
 	downPaymentValue: z.number().nullable(),
 	paymentStartDate: z.iso.datetime(),
 	totalInstallments: z.number(),

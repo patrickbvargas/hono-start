@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { LoggedUserSession } from "@/shared/session";
 import type { ContractDetail } from "../schemas/model";
 import { contractWorkspaceSearchSchema } from "../schemas/workspace";
-import { canReadContractReceipts } from "../utils/workflow-access";
+import { canReadContractReceivables } from "../utils/workflow-access";
 
 describe("contract workspace boundaries", () => {
 	it("validates pending queue return filters and rejects external return addresses", () => {
@@ -41,7 +41,7 @@ describe("contract workspace boundaries", () => {
 		"allows eligible active %s receipt readers",
 		(assignmentTypeValue) => {
 			const session = {
-				permissions: ["org:fees:read_assigned"],
+				permissions: ["org:receivables:read_assigned"],
 				employee: { id: 7 },
 			} as LoggedUserSession;
 			const contract = {
@@ -54,9 +54,9 @@ describe("contract workspace boundaries", () => {
 					},
 				],
 			} as ContractDetail;
-			expect(canReadContractReceipts(session, contract)).toBe(true);
+			expect(canReadContractReceivables(session, contract)).toBe(true);
 			contract.assignments[0].isActive = false;
-			expect(canReadContractReceipts(session, contract)).toBe(false);
+			expect(canReadContractReceivables(session, contract)).toBe(false);
 		},
 	);
 	it("does not grant receipt access for referral-only participation or missing grants", () => {
@@ -71,11 +71,11 @@ describe("contract workspace boundaries", () => {
 			],
 		} as ContractDetail;
 		const session = {
-			permissions: ["org:fees:read_assigned"],
+			permissions: ["org:receivables:read_assigned"],
 			employee: { id: 7 },
 		} as LoggedUserSession;
-		expect(canReadContractReceipts(session, contract)).toBe(false);
+		expect(canReadContractReceivables(session, contract)).toBe(false);
 		session.permissions = [];
-		expect(canReadContractReceipts(session, contract)).toBe(false);
+		expect(canReadContractReceivables(session, contract)).toBe(false);
 	});
 });

@@ -1,142 +1,100 @@
-import { feeSearchDefaults } from "@/features/fees";
+import { RevenueGenerationForm } from "@/features/financial-titles";
 import { EntityDetail } from "@/shared/components/entity-detail";
 import { FormSection } from "@/shared/components/form-section";
-import { NavigationLink } from "@/shared/components/navigation-link";
 import { Button } from "@/shared/components/ui";
 import { SensitiveValue } from "@/shared/components/value-visibility";
 import { formatter } from "@/shared/lib/formatter";
-import { hasPermission, useLoggedUserSession } from "@/shared/session";
+import { useRevenueGeneration } from "../../hooks/use-revenue-generation";
 import type { ContractDetail } from "../../schemas/model";
-import { getPaymentSummary } from "../../utils/payment-summary";
 import { RevenueInstallments } from "./installments";
-import { RevenuePaymentStatus } from "./payment-status";
 
 interface ContractRevenuesProps {
 	contract: ContractDetail;
-	canReadFees: boolean;
-	onRegister: (id: number) => void;
+	canReadTitles: boolean;
 }
+
 export function ContractRevenues({
 	contract,
-	canReadFees,
-	onRegister,
+	canReadTitles,
 }: ContractRevenuesProps) {
-	const session = useLoggedUserSession();
+	const { overlay, canGenerate, refreshContract } =
+		useRevenueGeneration(contract);
+	const revenues = contract.revenues.filter(
+		(revenue) => revenue.isActive && !revenue.isSoftDeleted,
+	);
 	return (
 		<div className="space-y-4">
-			{contract.revenues
-				.filter((revenue) => revenue.isActive && !revenue.isSoftDeleted)
-				.map((revenue) => {
-					const canRegisterReceipt =
-						hasPermission(session, "org:fees:create") &&
-						canReadFees &&
-						contract.isActive &&
-						!contract.isSoftDeleted &&
-						contract.statusValue === "ACTIVE" &&
-						!revenue.isFullyPaid &&
-						revenue.nextInstallmentNumber !== null;
-					const hasActions = canRegisterReceipt || canReadFees;
-
-					return (
-						<FormSection
-							key={revenue.id}
-							title={revenue.type}
-							action={
-								<RevenuePaymentStatus
-									isFullyPaid={revenue.isFullyPaid}
-									paidValue={revenue.paidValue}
-									nextDueDate={revenue.nextDueDate}
-								/>
-							}
-						>
-							<EntityDetail.Fields
-								columns={2}
-								items={[
-									{
-										term: "Valor contratado",
-										definition: (
-											<SensitiveValue>
-												{formatter.currency(revenue.totalValue)} (
-												{getPaymentSummary(revenue)})
-											</SensitiveValue>
-										),
-									},
-									{
-										term: "Valor entrada",
-										definition: (
-											<SensitiveValue>
-												{formatter.currency(revenue.downPaymentValue ?? 0)}
-											</SensitiveValue>
-										),
-									},
-									{
-										term: "Recebido",
-										definition: (
-											<SensitiveValue>
-												{formatter.currency(revenue.paidValue)}
-											</SensitiveValue>
-										),
-									},
-									{
-										term: "Saldo a receber",
-										definition: (
-											<SensitiveValue>
-												{formatter.currency(revenue.remainingValue)}
-											</SensitiveValue>
-										),
-									},
-									{
-										term: "Parcelas registradas",
-										definition: `${revenue.installmentsPaid} de ${revenue.totalInstallments}`,
-									},
-									{
-										term: "Próximo vencimento",
-										definition:
-											revenue.isFullyPaid || !revenue.nextDueDate
-												? "—"
-												: formatter.calendarDate(revenue.nextDueDate),
-									},
-								]}
-							/>
-							{canReadFees ? <RevenueInstallments revenue={revenue} /> : null}
-							{hasActions ? (
-								<div className="flex flex-wrap items-center gap-3">
-									{canRegisterReceipt ? (
-										<Button
-											size="sm"
-											onClick={() => {
-												onRegister(revenue.id);
-											}}
-										>
-											Registrar recebimento
-										</Button>
-									) : null}
-									{canReadFees ? (
-										<NavigationLink
-											to="/honorarios"
-											state={{ resetFilterPanel: true }}
-											aria-label={`Ver recebimentos da receita ${revenue.type}`}
-											search={{
-												...feeSearchDefaults,
-												contractId: String(contract.id),
-												revenueId: String(revenue.id),
-											}}
-											className="text-sm"
-										>
-											Recebimentos
-										</NavigationLink>
-									) : null}
-								</div>
-							) : null}
-						</FormSection>
-					);
-				})}
-			{contract.revenues.filter((r) => r.isActive && !r.isSoftDeleted)
-				.length === 0 ? (
+			{revenues.map((revenue) => (
+				<FormSection key={revenue.id} title={revenue.type}>
+					<EntityDetail.Fields
+						columns={2}
+						items={[
+							{
+								term: "Valor negociado",
+								definition: (
+									<SensitiveValue>
+										{formatter.currency(revenue.totalValue)}
+									</SensitiveValue>
+								),
+							},
+							{
+								term: "Acerto financeiro",
+								definition: revenue.hasGeneratedTitles
+									? "Títulos gerados"
+									: "Aguardando geração de títulos",
+							},
+							...(canReadTitles
+								? [
+										{
+											term: "Recebido",
+											definition: (
+												<SensitiveValue>
+													{formatter.currency(revenue.paidValue)}
+												</SensitiveValue>
+											),
+										},
+										{
+											term: "Saldo a receber",
+											definition: (
+												<SensitiveValue>
+													{formatter.currency(revenue.remainingValue)}
+												</SensitiveValue>
+											),
+										},
+									]
+								: []),
+						]}
+					/>
+					{canReadTitles && revenue.hasGeneratedTitles && (
+						<RevenueInstallments revenue={revenue} />
+					)}
+					{canGenerate && !revenue.hasGeneratedTitles && (
+						<Button size="sm" onClick={() => overlay.details.open(revenue.id)}>
+							Gerar parcelas
+						</Button>
+					)}
+				</FormSection>
+			))}
+			{revenues.length === 0 && (
 				<p className="text-sm text-muted-foreground">
 					Nenhuma receita ativa neste contrato.
 				</p>
-			) : null}
+			)}
+			{overlay.details.render((id, state) => {
+				const revenue = revenues.find((item) => item.id === id);
+				return revenue ? (
+					<RevenueGenerationForm
+						key={id}
+						revenueId={id}
+						negotiatedAmount={revenue.totalValue}
+						state={state}
+						onSuccess={async () => {
+							await refreshContract();
+							state.close();
+						}}
+					/>
+				) : null;
+			})}
 		</div>
 	);
 }

@@ -1,7 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { AttachmentSection } from "@/features/attachments";
 import { EntityAuditHistory } from "@/features/audit-logs";
-import { FeeForm, feeSearchDefaults } from "@/features/fees";
 import { RelatedRecordLink } from "@/features/related-records";
 import { remunerationSearchDefaults } from "@/features/remunerations";
 import { EntityDetail } from "@/shared/components/entity-detail";
@@ -46,18 +45,15 @@ export function ContractWorkspace({
 		alerts,
 		session,
 		overlay,
-		selectedRevenue,
-		canReadFees,
+		canReadTitles,
 		canEdit,
 		canDelete,
 		canRestore,
-		registerReceipt,
 	} = useContractWorkspace(id);
 	const activeRevenues = contract.revenues.filter(
 		(r) => r.isActive && !r.isSoftDeleted,
 	);
 	const canReadAttachments = hasPermission(session, "org:attachments:read");
-	const selected = activeRevenues.find((r) => r.id === selectedRevenue);
 	return (
 		<EntityWorkspace
 			title="Contrato"
@@ -176,24 +172,12 @@ export function ContractWorkspace({
 							<div className="space-y-5">
 								<div className="flex flex-wrap items-center justify-between gap-3">
 									<div>
-										<h3 className="font-medium">Receitas e recebimentos</h3>
+										<h3 className="font-medium">Receitas e títulos</h3>
 										<p className="text-sm text-muted-foreground">
 											Valores previstos, recebidos e em aberto deste contrato.
 										</p>
 									</div>
 									<div className="flex flex-wrap gap-3">
-										{canReadFees && (
-											<NavigationLink
-												to="/honorarios"
-												search={{
-													...feeSearchDefaults,
-													contractId: String(id),
-												}}
-												className="text-sm underline underline-offset-4"
-											>
-												Ver recebimentos
-											</NavigationLink>
-										)}
 										{(hasPermission(session, "org:remunerations:read_all") ||
 											hasPermission(session, "org:remunerations:read_own")) && (
 											<NavigationLink
@@ -257,8 +241,7 @@ export function ContractWorkspace({
 								</FormSection>
 								<ContractRevenues
 									contract={contract}
-									canReadFees={canReadFees}
-									onRegister={registerReceipt}
+									canReadTitles={canReadTitles}
 								/>
 							</div>
 						</>
@@ -330,17 +313,6 @@ export function ContractWorkspace({
 						state.close();
 						onDeleted();
 					}}
-				/>
-			))}
-			{overlay.create.render((state) => (
-				<FeeForm
-					state={state}
-					initialSelection={{
-						contractId: String(id),
-						revenueId: String(selectedRevenue),
-						installmentNumber: selected?.nextInstallmentNumber ?? 1,
-					}}
-					onSuccess={state.close}
 				/>
 			))}
 		</EntityWorkspace>

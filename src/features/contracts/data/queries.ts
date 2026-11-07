@@ -427,9 +427,11 @@ function mapRevenueDetail(revenue: {
 			(a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime(),
 		);
 
-	const entryReceivable = receivables.find((item) => item.kind === "ENTRY");
+	const entryReceivable = receivables.find(
+		(item) => item.kind === "DOWN_PAYMENT",
+	);
 	const installmentReceivables = receivables.filter(
-		(item) => item.kind !== "ENTRY",
+		(item) => item.kind !== "DOWN_PAYMENT",
 	);
 	const activeItems =
 		installmentReceivables.length > 0 ? installmentReceivables : receivables;
@@ -526,6 +528,7 @@ function mapRevenueDetail(revenue: {
 				? installments.length
 				: (revenue.totalInstallments ?? 0),
 		paidValue: totalPaidValue,
+		hasGeneratedTitles: (revenue.contractRevenueReceivables?.length ?? 0) > 0,
 		installmentsPaid,
 		installments,
 		nextInstallmentNumber,

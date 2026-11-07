@@ -96,7 +96,7 @@ vi.mock("../hooks/use-workspace", async () => {
 			alerts: [],
 			selectedRevenue: null,
 			canEdit: false,
-			canReadFees: false,
+			canReadTitles: false,
 			registerReceipt: vi.fn(),
 			contract: {
 				id: 1,

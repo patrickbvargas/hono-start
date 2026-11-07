@@ -15,6 +15,7 @@ const allowedFeatureIndexes = new Set([
 	"drilldown/index.ts",
 	"expenses/index.ts",
 	"fees/index.ts",
+	"financial-titles/index.ts",
 	"pending-work/index.ts",
 	"people/index.ts",
 	"related-records/index.ts",

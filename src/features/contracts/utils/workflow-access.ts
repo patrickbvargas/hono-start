@@ -1,12 +1,12 @@
 import { hasPermission, type LoggedUserSession } from "@/shared/session";
 import type { ContractDetail } from "../schemas/model";
-export function canReadContractReceipts(
+export function canReadContractReceivables(
 	session: LoggedUserSession,
 	contract: ContractDetail,
 ) {
 	return (
-		hasPermission(session, "org:fees:read_all") ||
-		(hasPermission(session, "org:fees:read_assigned") &&
+		hasPermission(session, "org:receivables:read_all") ||
+		(hasPermission(session, "org:receivables:read_assigned") &&
 			contract.assignments.some(
 				(assignment) =>
 					assignment.isActive &&

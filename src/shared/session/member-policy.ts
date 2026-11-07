@@ -23,6 +23,7 @@ export function assertMemberGrantBoundaries(
 			(["org:receivables:", "org:payables:", "org:payments:"].some((prefix) =>
 				key.startsWith(prefix),
 			) &&
+				key !== "org:receivables:generate" &&
 				!key.endsWith(":read_assigned") &&
 				!key.endsWith(":read_own")) ||
 			key === "org:receipts:reverse",
