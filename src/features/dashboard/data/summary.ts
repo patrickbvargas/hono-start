@@ -209,8 +209,7 @@ export function buildDashboardSummary(
 		});
 	};
 	const aging = bucketGroups("aging");
-	const totalReceived = sum(receipts(selected)),
-		totalPaid = sum(payments(selected));
+	const totalReceived = sum(receipts(selected));
 	return dashboardSummarySchema.parse({
 		isAdmin: scope.isAdmin,
 		scopeLabel: scope.isAdmin ? "Visão geral" : "Minha visão",
@@ -271,7 +270,7 @@ export function buildDashboardSummary(
 						metric(
 							"Pagamentos",
 							"expense",
-							totalPaid,
+							sum(payments(selected)),
 							sum(payments(old)),
 							"Caixa efetivo pago, incluindo remunerações e estornos.",
 						),
@@ -325,7 +324,7 @@ export function buildDashboardSummary(
 					remunerationShare: totalReceived.eq(0)
 						? null
 						: Number(sum(commissions(selected)).div(totalReceived).mul(100)),
-					expenses: formatter.currency(Number(totalPaid)),
+					expenses: formatter.currency(Number(sum(payments(selected)))),
 				}
 			: null,
 		analysis: scope.access?.revenue
@@ -386,7 +385,6 @@ export function buildDashboardSummary(
 					),
 				),
 			),
-			...(showResult ? { expense: row.output, result: row.balance } : {}),
 		})),
 		cashFlow: showResult
 			? {

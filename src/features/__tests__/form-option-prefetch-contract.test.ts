@@ -57,8 +57,8 @@ describe("form option prefetch contract", () => {
 			},
 
 			{
-				routeFile: ["src", "routes", "_app", "index.tsx"],
-				formFile: ["src", "routes", "_app", "index.tsx"],
+				routeFile: ["src", "routes", "_app", "visao-operacional.tsx"],
+				formFile: ["src", "routes", "_app", "visao-operacional.tsx"],
 				requiredRouteSnippets: [
 					"getPersonTypesQueryOptions()",
 					"getSelectableContractClientsQueryOptions()",

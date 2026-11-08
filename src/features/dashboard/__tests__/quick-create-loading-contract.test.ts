@@ -14,7 +14,7 @@ describe("dashboard quick-create loading contract", () => {
 			"src",
 			"routes",
 			"_app",
-			"index.tsx",
+			"visao-operacional.tsx",
 		);
 
 		expect(routeContent).toContain("getDashboardSummaryQueryOptions(search)");

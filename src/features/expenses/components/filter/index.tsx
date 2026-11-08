@@ -1,7 +1,7 @@
 import type * as React from "react";
 import { EntityView } from "@/shared/components/entity-view";
-import { FinancialPeriodShortcuts } from "@/shared/components/financial-period-shortcuts";
 import { ListFilters } from "@/shared/components/list-filters";
+import { PeriodShortcuts } from "@/shared/components/period-shortcuts";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
 import { ENTITY_DELETED_FILTER_OPTIONS } from "@/shared/lib/entity-management";
 import { formatter } from "@/shared/lib/formatter";
@@ -161,7 +161,7 @@ export const ExpenseFilter = ({ controller, summary }: ExpenseFilterProps) => {
 					</ListFilters.Active>
 				)}
 				<div className="flex flex-wrap items-center justify-between gap-2 pt-2">
-					<FinancialPeriodShortcuts
+					<PeriodShortcuts
 						dateFrom={filter.dateFrom}
 						dateTo={filter.dateTo}
 						onChange={(range) => handleApplyFilter({ ...filter, ...range })}

@@ -216,10 +216,17 @@ describe("frontend orchestration boundaries", () => {
 	it("keeps route page data behind feature data hooks", () => {
 		const routeDataHooks = [
 			{
-				route: "src/routes/_app/index.tsx",
+				route: "src/routes/_app/visao-operacional.tsx",
 				hookFile: "src/features/dashboard/hooks/use-data.ts",
 				hookName: "useDashboardData",
 				queryFactoryName: "getDashboardSummaryQueryOptions",
+				dataField: "summary",
+			},
+			{
+				route: "src/routes/_app/visao-financeira.tsx",
+				hookFile: "src/features/financial-overview/hooks/use-data.ts",
+				hookName: "useFinancialOverviewData",
+				queryFactoryName: "getFinancialOverviewSummaryQueryOptions",
 				dataField: "summary",
 			},
 			{

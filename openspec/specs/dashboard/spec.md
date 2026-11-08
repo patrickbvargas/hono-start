@@ -5,11 +5,15 @@ Dashboard defines the authenticated landing experience and summary data shown to
 
 ## Requirements
 ### Requirement: Authenticated Dashboard Landing
-The system SHALL render the dashboard on the authenticated home route instead of demo-only content.
+The system SHALL route operational contract overview to `/visao-operacional` and redirect the root route `/` to `/visao-operacional`.
 
 #### Scenario: User opens home route
 - **WHEN** an authenticated user opens `/`
-- **THEN** the system displays dashboard content and does not display the demo form or fake demo pagination
+- **THEN** the system redirects the user to `/visao-operacional`
+
+#### Scenario: User opens operational overview route
+- **WHEN** an authenticated user opens `/visao-operacional`
+- **THEN** the system displays operational overview focused strictly on contracts, fee receipts, lawyer remunerations, and overdue contract installments
 
 ### Requirement: Dashboard quick create menu
 The system SHALL provide a quick-create action in the dashboard header so authenticated users can start supported creation overlays without navigating to the corresponding list routes first.
@@ -347,3 +351,4 @@ The system SHALL use the shared list-filters active-filters pattern for dashboar
 - **WHEN** a user removes advanced dashboard filter chips or clears the advanced filter surface
 - **THEN** only manual advanced-filter values return to their validated default state
 - **AND** the inline shortcut controls remain available in their current position and behavior model
+

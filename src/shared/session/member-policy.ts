@@ -19,7 +19,8 @@ export function assertMemberGrantBoundaries(
 			key.startsWith("org:people:") ||
 			key.startsWith("org:financial_settings:") ||
 			key.startsWith("org:financial_adjustments:") ||
-			key === "org:dashboard:read_cash_flow" ||
+			key.startsWith("org:financial_overview:") ||
+			key.startsWith("org:cash_flow:") ||
 			(["org:receivables:", "org:payables:", "org:payments:"].some((prefix) =>
 				key.startsWith(prefix),
 			) &&

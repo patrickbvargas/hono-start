@@ -42,9 +42,10 @@ const getDashboardDrilldownFn = createServerFn({ method: "GET" })
 		try {
 			const session = await getRequiredServerLoggedUserSession();
 			assertCan(session, [
+				"org:operational_overview:read_all",
+				"org:operational_overview:read_own",
 				"org:dashboard:read_all",
 				"org:dashboard:read_own",
-				"org:expenses:read",
 			]);
 			return dashboardDrilldownResultSchema.parse(
 				await getDashboardDrilldown(
@@ -53,11 +54,10 @@ const getDashboardDrilldownFn = createServerFn({ method: "GET" })
 						personId: session.person?.id,
 						employeeId: session.employee.id ?? undefined,
 						employeeTypeValue: session.employeeType?.value,
-						isAdmin: hasPermission(session, "org:dashboard:read_all"),
-						canReadCashFlow: hasPermission(
-							session,
-							"org:dashboard:read_cash_flow",
-						),
+						isAdmin:
+							hasPermission(session, "org:operational_overview:read_all") ||
+							hasPermission(session, "org:dashboard:read_all"),
+						canReadCashFlow: false,
 						access: {
 							receipts:
 								hasPermission(session, "org:receipts:read_all") ||
@@ -101,11 +101,14 @@ const getDashboardSummaryFn = createServerFn({ method: "GET" })
 		try {
 			const session = await getRequiredServerLoggedUserSession();
 			assertCan(session, [
+				"org:operational_overview:read_all",
+				"org:operational_overview:read_own",
 				"org:dashboard:read_all",
 				"org:dashboard:read_own",
-				"org:expenses:read",
 			]);
-			const isAdmin = hasPermission(session, "org:dashboard:read_all");
+			const isAdmin =
+				hasPermission(session, "org:operational_overview:read_all") ||
+				hasPermission(session, "org:dashboard:read_all");
 
 			return await getDashboardSummary({
 				firmId: session.firm.id,
@@ -125,12 +128,12 @@ const getDashboardSummaryFn = createServerFn({ method: "GET" })
 					remuneration:
 						hasPermission(session, "org:payables:read_all") ||
 						hasPermission(session, "org:payables:read_own"),
-					expense: hasPermission(session, "org:payables:read_all"),
+					expense: false,
 					revenueAll: hasPermission(session, "org:receivables:read_all"),
 					remunerationAll: hasPermission(session, "org:payables:read_all"),
 				},
 				isAdmin,
-				canReadCashFlow: hasPermission(session, "org:dashboard:read_cash_flow"),
+				canReadCashFlow: false,
 				search: data,
 			});
 		} catch (error) {
@@ -147,13 +150,15 @@ const getDashboardEmployeeOptionsFn = createServerFn({
 		try {
 			const session = await getRequiredServerLoggedUserSession();
 			assertCan(session, [
+				"org:operational_overview:read_all",
+				"org:operational_overview:read_own",
 				"org:dashboard:read_all",
 				"org:dashboard:read_own",
-				"org:expenses:read",
 			]);
 
 			if (
-				!hasPermission(session, "org:dashboard:read_all") ||
+				(!hasPermission(session, "org:operational_overview:read_all") &&
+					!hasPermission(session, "org:dashboard:read_all")) ||
 				!hasPermission(session, "org:employees:read")
 			) {
 				return [];

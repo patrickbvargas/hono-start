@@ -10,7 +10,7 @@ import {
 } from "@testing-library/react";
 import { useState } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { FinancialPeriodShortcuts } from "../financial-period-shortcuts";
+import { PeriodShortcuts } from "../period-shortcuts";
 import { DatePicker } from "../ui/date-picker";
 import { DateRangePicker } from "../ui/date-range-picker";
 import { InputNumber } from "../ui/input-number";
@@ -43,7 +43,7 @@ describe("financial inputs", () => {
 		);
 		const onChange = vi.fn();
 		render(
-			<FinancialPeriodShortcuts
+			<PeriodShortcuts
 				dateFrom="2026-10-01"
 				dateTo="2026-10-31"
 				onChange={onChange}

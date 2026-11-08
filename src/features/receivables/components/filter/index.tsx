@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { EntityView } from "@/shared/components/entity-view";
-import { FinancialPeriodShortcuts } from "@/shared/components/financial-period-shortcuts";
 import { ListFilters } from "@/shared/components/list-filters";
+import { PeriodShortcuts } from "@/shared/components/period-shortcuts";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
 import {
 	RECEIVABLE_KINDS,
@@ -184,7 +184,7 @@ export function ReceivableFilter({
 					</ListFilters.Active>
 				) : null}
 				<div className="flex flex-wrap items-center justify-between gap-2 pt-2">
-					<FinancialPeriodShortcuts
+					<PeriodShortcuts
 						dateFrom={filter.dateFrom}
 						dateTo={filter.dateTo}
 						onChange={(range) => handleApplyFilter({ ...filter, ...range })}

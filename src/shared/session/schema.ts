@@ -30,6 +30,8 @@ export const clerkPermissionCatalog = {
 	financial_settings: ["read", "update"],
 	financial_catalogs: ["read", "create", "update"],
 	financial_reports: ["export_all", "export_scoped"],
+	financial_overview: ["read_all", "read_scoped"],
+	operational_overview: ["read_all", "read_own"],
 	contracts: [
 		"read_all",
 		"read_assigned",
@@ -47,7 +49,7 @@ export const clerkPermissionCatalog = {
 	attachments: ["read", "upload", "delete"],
 	employees: ["read", "create", "update", "delete", "restore"],
 	audit_logs: ["read"],
-	dashboard: ["read_all", "read_own", "read_cash_flow"],
+	dashboard: ["read_all", "read_own"],
 } as const;
 
 export type ClerkPermission = {

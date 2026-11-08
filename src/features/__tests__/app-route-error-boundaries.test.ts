@@ -3,7 +3,8 @@ import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
 const APP_ROUTE_FILES = [
-	"src/routes/_app/index.tsx",
+	"src/routes/_app/visao-operacional.tsx",
+	"src/routes/_app/visao-financeira.tsx",
 	"src/routes/_app/pessoas.tsx",
 	"src/routes/_app/contratos.tsx",
 	"src/routes/_app/auditoria.tsx",

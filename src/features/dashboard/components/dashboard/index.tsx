@@ -11,7 +11,6 @@ import { DashboardBreakdownChart } from "../breakdown-chart";
 import { DashboardCashFlowTable } from "../cash-flow-table";
 import { cashFlowDrilldownSeries, labels } from "../cash-flow-table/columns";
 import { DashboardDrilldownModal } from "../drilldown/modal";
-import { FinancialEvolutionChart } from "../financial-evolution-chart";
 import { DashboardMetricCards } from "../metric-cards";
 import { MonthlyRevenueRemunerationChart } from "../monthly-revenue-remuneration-chart";
 import { DashboardOverdueInstallmentsTable } from "../overdue-table";
@@ -59,21 +58,6 @@ export function Dashboard({
 	const charts = useMemo(
 		() => (
 			<div className="grid gap-3 xl:grid-cols-2">
-				{data.isAdmin && data.cashFlow && data.visibility?.evolution ? (
-					<FinancialEvolutionChart
-						items={data.financialEvolution}
-						onSelect={(item, series, trigger) =>
-							drilldown.open(
-								{
-									selection: { kind: "monthly", month: item.month, series },
-									title: `${{ revenue: "Entradas", remuneration: "Remunerações geradas", expense: "Saídas", result: "Resultado" }[series]} · ${formatMonthLabel(item.month)}`,
-									expectedAmount: item[series] ?? 0,
-								},
-								trigger,
-							)
-						}
-					/>
-				) : null}
 				{data.visibility?.evolution ? (
 					<MonthlyRevenueRemunerationChart
 						items={data.financialEvolution}

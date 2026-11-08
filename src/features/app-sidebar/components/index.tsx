@@ -21,7 +21,7 @@ const items: RouteSection[] = [
 		icon: LayoutDashboardIcon,
 		isActive: true,
 		items: [
-			ROUTES.dashboard,
+			ROUTES.operationalOverview,
 			ROUTES.contract,
 			ROUTES.expense,
 			ROUTES.pendingWork,
@@ -32,7 +32,7 @@ const items: RouteSection[] = [
 		url: "#",
 		isActive: true,
 		icon: DollarSignIcon,
-		items: [ROUTES.receivable, ROUTES.payable],
+		items: [ROUTES.financialOverview, ROUTES.receivable, ROUTES.payable],
 	},
 	{ title: "Cadastros", url: "#", items: [ROUTES.person] },
 	{

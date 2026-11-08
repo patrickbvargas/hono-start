@@ -4,17 +4,12 @@ import {
 	renderEmployeeFilterOption,
 } from "@/shared/components/employee-filter-option";
 import { ListFilters } from "@/shared/components/list-filters";
-import {
-	Button,
-	Checkbox,
-	DateRangePicker,
-	Label,
-} from "@/shared/components/ui";
+import { PeriodShortcuts } from "@/shared/components/period-shortcuts";
+import { Checkbox, Label } from "@/shared/components/ui";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
 import { formatter } from "@/shared/lib/formatter";
 import { useDashboardOptions } from "../../hooks/use-data";
 import { useDashboardFilter } from "../../hooks/use-filter";
-import { getDashboardActivePeriodShortcut } from "../../utils/period-shortcuts";
 
 interface DashboardFilterProps {
 	isAdmin?: boolean;
@@ -38,8 +33,6 @@ export function DashboardFilter({
 		hasManualPeriod,
 		handleApplyFilter,
 		handleClearAdvancedFilters,
-		handlePeriodShortcut,
-		periodShortcuts,
 	} = useDashboardFilter();
 	const { employees, legalAreas, revenueTypes, clients, contracts } =
 		useDashboardOptions();
@@ -233,54 +226,12 @@ export function DashboardFilter({
 					</ListFilters.Active>
 				) : null}
 				<div className="flex flex-wrap items-center justify-between gap-2 pt-2">
-					<form.Subscribe
-						selector={(state) =>
-							getDashboardActivePeriodShortcut({
-								dateFrom: state.values.dateFrom,
-								dateTo: state.values.dateTo,
-							})
-						}
-					>
-						{(activeShortcut) => (
-							<div
-								className="flex flex-wrap items-center gap-2"
-								role="group"
-								aria-label="Atalhos de período"
-							>
-								<span className="text-xs text-muted-foreground">Período</span>
-								{periodShortcuts.map((shortcut) => (
-									<Button
-										size="sm"
-										key={shortcut.id}
-										type="button"
-										variant={
-											activeShortcut === shortcut.id ? "secondary" : "ghost"
-										}
-										aria-pressed={activeShortcut === shortcut.id}
-										onClick={() => handlePeriodShortcut(shortcut.id)}
-									>
-										{shortcut.id === "last6Months"
-											? "6 meses"
-											: shortcut.id === "last12Months"
-												? "12 meses"
-												: shortcut.id === "currentMonth"
-													? "Este mês"
-													: "Este ano"}
-									</Button>
-								))}
-								<DateRangePicker
-									label="Período personalizado"
-									triggerLabel="Personalizado"
-									isActive={activeShortcut === null}
-									dateFrom={filter.dateFrom}
-									dateTo={filter.dateTo}
-									onChange={(range) =>
-										handleApplyFilter({ ...filter, ...range })
-									}
-								/>
-							</div>
-						)}
-					</form.Subscribe>
+					<PeriodShortcuts
+						presets={["last6Months", "last12Months", "currentYear"]}
+						dateFrom={filter.dateFrom}
+						dateTo={filter.dateTo}
+						onChange={(range) => handleApplyFilter({ ...filter, ...range })}
+					/>
 					{showDetailsToggle && (
 						<Label className="shrink-0 md:ml-auto">
 							<Checkbox

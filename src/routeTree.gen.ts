@@ -23,6 +23,8 @@ import { Route as AppHonorariosRouteImport } from './routes/_app/honorarios'
 import { Route as AppPendenciasRouteImport } from './routes/_app/pendencias'
 import { Route as AppPessoasRouteImport } from './routes/_app/pessoas'
 import { Route as AppRemuneracoesRouteImport } from './routes/_app/remuneracoes'
+import { Route as AppVisaoFinanceiraRouteImport } from './routes/_app/visao-financeira'
+import { Route as AppVisaoOperacionalRouteImport } from './routes/_app/visao-operacional'
 import { Route as AuthConviteRouteImport } from './routes/_auth/convite'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
 import { Route as AuthRecuperarSenhaRouteImport } from './routes/_auth/recuperar-senha'
@@ -104,6 +106,16 @@ const AppPessoasRoute = AppPessoasRouteImport.update({
 const AppRemuneracoesRoute = AppRemuneracoesRouteImport.update({
   id: '/remuneracoes',
   path: '/remuneracoes',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppVisaoFinanceiraRoute = AppVisaoFinanceiraRouteImport.update({
+  id: '/visao-financeira',
+  path: '/visao-financeira',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppVisaoOperacionalRoute = AppVisaoOperacionalRouteImport.update({
+  id: '/visao-operacional',
+  path: '/visao-operacional',
   getParentRoute: () => AppRouteRoute,
 } as any)
 const AuthConviteRoute = AuthConviteRouteImport.update({
@@ -188,6 +200,8 @@ export interface FileRoutesByFullPath {
   '/pendencias': typeof AppPendenciasRoute
   '/pessoas': typeof AppPessoasRoute
   '/remuneracoes': typeof AppRemuneracoesRoute
+  '/visao-financeira': typeof AppVisaoFinanceiraRoute
+  '/visao-operacional': typeof AppVisaoOperacionalRoute
   '/convite': typeof AuthConviteRoute
   '/login': typeof AuthLoginRoute
   '/recuperar-senha': typeof AuthRecuperarSenhaRoute
@@ -215,6 +229,8 @@ export interface FileRoutesByTo {
   '/pendencias': typeof AppPendenciasRoute
   '/pessoas': typeof AppPessoasRoute
   '/remuneracoes': typeof AppRemuneracoesRoute
+  '/visao-financeira': typeof AppVisaoFinanceiraRoute
+  '/visao-operacional': typeof AppVisaoOperacionalRoute
   '/convite': typeof AuthConviteRoute
   '/login': typeof AuthLoginRoute
   '/recuperar-senha': typeof AuthRecuperarSenhaRoute
@@ -244,6 +260,8 @@ export interface FileRoutesById {
   '/_app/pendencias': typeof AppPendenciasRoute
   '/_app/pessoas': typeof AppPessoasRoute
   '/_app/remuneracoes': typeof AppRemuneracoesRoute
+  '/_app/visao-financeira': typeof AppVisaoFinanceiraRoute
+  '/_app/visao-operacional': typeof AppVisaoOperacionalRoute
   '/_auth/convite': typeof AuthConviteRoute
   '/_auth/login': typeof AuthLoginRoute
   '/_auth/recuperar-senha': typeof AuthRecuperarSenhaRoute
@@ -274,6 +292,8 @@ export interface FileRouteTypes {
     | '/pendencias'
     | '/pessoas'
     | '/remuneracoes'
+    | '/visao-financeira'
+    | '/visao-operacional'
     | '/convite'
     | '/login'
     | '/recuperar-senha'
@@ -301,6 +321,8 @@ export interface FileRouteTypes {
     | '/pendencias'
     | '/pessoas'
     | '/remuneracoes'
+    | '/visao-financeira'
+    | '/visao-operacional'
     | '/convite'
     | '/login'
     | '/recuperar-senha'
@@ -329,6 +351,8 @@ export interface FileRouteTypes {
     | '/_app/pendencias'
     | '/_app/pessoas'
     | '/_app/remuneracoes'
+    | '/_app/visao-financeira'
+    | '/_app/visao-operacional'
     | '/_auth/convite'
     | '/_auth/login'
     | '/_auth/recuperar-senha'
@@ -452,6 +476,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppRemuneracoesRouteImport
       parentRoute: typeof AppRouteRoute
     }
+    '/_app/visao-financeira': {
+      id: '/_app/visao-financeira'
+      path: '/visao-financeira'
+      fullPath: '/visao-financeira'
+      preLoaderRoute: typeof AppVisaoFinanceiraRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/visao-operacional': {
+      id: '/_app/visao-operacional'
+      path: '/visao-operacional'
+      fullPath: '/visao-operacional'
+      preLoaderRoute: typeof AppVisaoOperacionalRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
     '/_auth/convite': {
       id: '/_auth/convite'
       path: '/convite'
@@ -558,6 +596,8 @@ interface AppRouteRouteChildren {
   AppPendenciasRoute: typeof AppPendenciasRoute
   AppPessoasRoute: typeof AppPessoasRoute
   AppRemuneracoesRoute: typeof AppRemuneracoesRoute
+  AppVisaoFinanceiraRoute: typeof AppVisaoFinanceiraRoute
+  AppVisaoOperacionalRoute: typeof AppVisaoOperacionalRoute
   AppIndexRoute: typeof AppIndexRoute
   AppAuditoriaAuditLogIdRoute: typeof AppAuditoriaAuditLogIdRoute
   AppContasAPagarPayableIdRoute: typeof AppContasAPagarPayableIdRoute
@@ -581,6 +621,8 @@ const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppPendenciasRoute: AppPendenciasRoute,
   AppPessoasRoute: AppPessoasRoute,
   AppRemuneracoesRoute: AppRemuneracoesRoute,
+  AppVisaoFinanceiraRoute: AppVisaoFinanceiraRoute,
+  AppVisaoOperacionalRoute: AppVisaoOperacionalRoute,
   AppIndexRoute: AppIndexRoute,
   AppAuditoriaAuditLogIdRoute: AppAuditoriaAuditLogIdRoute,
   AppContasAPagarPayableIdRoute: AppContasAPagarPayableIdRoute,

@@ -58,7 +58,7 @@ export function buildDrilldownOverview({
 		add("type", "Tipo");
 		add("employee", "Colaborador");
 		add("assignment", "Função");
-		add("category", "Categoria");
+		add("category", "Analítica");
 	}
 	return drilldownOverviewSchema.parse(
 		dimensions.map((dimension) => {

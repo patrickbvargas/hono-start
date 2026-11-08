@@ -10,7 +10,7 @@ export const FINANCIAL_TITLE_ERRORS = {
 	EXPENSE_UNAVAILABLE: "Despesa não encontrada, inativa ou excluída.",
 	ALREADY_GENERATED:
 		"Esta origem já possui títulos financeiros. Cancele e reconcilie os títulos antes de gerar novamente.",
-	ANALYTIC_UNAVAILABLE: "Categoria financeira não encontrada ou inativa.",
+	ANALYTIC_UNAVAILABLE: "Analítica não encontrada ou inativa.",
 	PAYMENT_METHOD_UNAVAILABLE: "Forma de pagamento não encontrada ou inativa.",
 	NOTES_REQUIRED: "Justificativa é obrigatória para lançamento direto.",
 	GENERATE_FAILED: "Não foi possível gerar os títulos financeiros.",

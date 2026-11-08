@@ -7,6 +7,7 @@ import {
 	type LucideIcon,
 	ScrollTextIcon,
 	SettingsIcon,
+	TrendingUpIcon,
 	UserIcon,
 	UsersIcon,
 	WalletCardsIcon,
@@ -41,6 +42,8 @@ export function getPageTitle(
 
 type RouteName =
 	| "dashboard"
+	| "operationalOverview"
+	| "financialOverview"
 	| "person"
 	| "client"
 	| "contract"
@@ -65,6 +68,27 @@ export const ROUTES: Record<RouteName, RouteItem> = {
 		icon: DollarSignIcon,
 		permission: ["org:receivables:read_all", "org:receivables:read_assigned"],
 	},
+	operationalOverview: {
+		title: "Visão operacional",
+		url: "/visao-operacional",
+		icon: LayoutDashboardIcon,
+		permission: [
+			"org:operational_overview:read_all",
+			"org:operational_overview:read_own",
+			"org:dashboard:read_all",
+			"org:dashboard:read_own",
+		],
+	},
+	financialOverview: {
+		title: "Visão financeira",
+		url: "/visao-financeira",
+		icon: TrendingUpIcon,
+		permission: [
+			"org:financial_overview:read_all",
+			"org:cash_flow:read_all",
+			"org:payables:read_all",
+		],
+	},
 	pendingWork: {
 		title: "Pendências",
 		url: "/pendencias",
@@ -80,11 +104,7 @@ export const ROUTES: Record<RouteName, RouteItem> = {
 		title: "Visão geral",
 		url: "/",
 		icon: LayoutDashboardIcon,
-		permission: [
-			"org:dashboard:read_all",
-			"org:dashboard:read_own",
-			"org:expenses:read",
-		],
+		permission: ["org:dashboard:read_all", "org:dashboard:read_own"],
 	},
 	person: {
 		title: "Pessoas",
