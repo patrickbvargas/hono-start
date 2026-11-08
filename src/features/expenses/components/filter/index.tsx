@@ -1,4 +1,5 @@
 import type * as React from "react";
+import { EntityView } from "@/shared/components/entity-view";
 import { FinancialPeriodShortcuts } from "@/shared/components/financial-period-shortcuts";
 import { ListFilters } from "@/shared/components/list-filters";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
@@ -31,24 +32,25 @@ export const ExpenseFilter = ({ controller, summary }: ExpenseFilterProps) => {
 		ENTITY_DELETED_FILTER_OPTIONS.map((option) => [option.value, option.label]),
 	);
 
+	const activeFilterCount =
+		(filter.supplierId !== defaultFilter.supplierId ? 1 : 0) +
+		(filter.status !== defaultFilter.status ? 1 : 0);
+
 	const hasAdvancedFilters =
-		filter.supplierId !== defaultFilter.supplierId ||
+		activeFilterCount > 0 ||
 		filter.dateFrom !== defaultFilter.dateFrom ||
-		filter.dateTo !== defaultFilter.dateTo ||
-		filter.status !== defaultFilter.status;
+		filter.dateTo !== defaultFilter.dateTo;
 
 	const formatDateChip = (value: string) =>
 		formatter.date(`${value}T12:00:00.000Z`);
 
-	const sharedFields = (
+	const filterFields = (
 		<>
-			{isMobile ? (
-				<form.AppField name="supplierId">
-					{(field) => (
-						<field.Autocomplete label="Fornecedor" options={suppliers} />
-					)}
-				</form.AppField>
-			) : null}
+			<form.AppField name="supplierId">
+				{(field) => (
+					<field.Autocomplete label="Fornecedor" options={suppliers} />
+				)}
+			</form.AppField>
 			<form.AppField name="status">
 				{(field) => (
 					<field.RadioGroup
@@ -63,54 +65,37 @@ export const ExpenseFilter = ({ controller, summary }: ExpenseFilterProps) => {
 	return (
 		<form.Form form={form} className="w-full">
 			<ListFilters>
-				<ListFilters.Bar className="flex-nowrap md:flex-wrap gap-2">
+				<ListFilters.Bar>
 					<form.AppField name="query">
 						{(field) => (
 							<field.Search
 								aria-label="Observação"
 								placeholder="Buscar por fornecedor ou observação..."
 								classNames={{
-									wrapper:
-										"min-w-0 flex-1 md:flex-none md:w-52 md:shrink-0 xl:w-60",
+									wrapper: "min-w-0 flex-1 md:max-w-md",
 								}}
 							/>
 						)}
 					</form.AppField>
 					{isMobile ? (
-						<ListFilters.Popover title="Filtros" label="Mais filtros" iconOnly>
-							{sharedFields}
-						</ListFilters.Popover>
+						<ListFilters.Drawer
+							title="Filtros"
+							label="Filtros"
+							activeCount={activeFilterCount}
+						>
+							{filterFields}
+						</ListFilters.Drawer>
 					) : (
-						<ListFilters.Actions className="contents">
-							<div className="w-full min-w-0 md:w-52 md:shrink-0 xl:w-60">
-								<form.AppField name="supplierId">
-									{(field) => (
-										<field.Autocomplete
-											aria-label="Fornecedor"
-											placeholder="Fornecedor"
-											options={suppliers}
-										/>
-									)}
-								</form.AppField>
-							</div>
-							<ListFilters.Popover label="Registro">
-								<form.AppField name="status">
-									{(field) => (
-										<field.RadioGroup options={ENTITY_DELETED_FILTER_OPTIONS} />
-									)}
-								</form.AppField>
-							</ListFilters.Popover>
-						</ListFilters.Actions>
+						<ListFilters.Popover
+							title="Filtros"
+							label="Filtros"
+							activeCount={activeFilterCount}
+						>
+							{filterFields}
+						</ListFilters.Popover>
 					)}
+					<EntityView.Toggle />
 				</ListFilters.Bar>
-				<div className="flex flex-wrap items-center justify-between gap-2 pt-2">
-					<FinancialPeriodShortcuts
-						dateFrom={filter.dateFrom}
-						dateTo={filter.dateTo}
-						onChange={(range) => handleApplyFilter({ ...filter, ...range })}
-					/>
-					<div className="ml-auto shrink-0">{summary}</div>
-				</div>
 				{(filter.query || hasAdvancedFilters) && (
 					<ListFilters.Active>
 						{filter.query ? (
@@ -175,6 +160,14 @@ export const ExpenseFilter = ({ controller, summary }: ExpenseFilterProps) => {
 						) : null}
 					</ListFilters.Active>
 				)}
+				<div className="flex flex-wrap items-center justify-between gap-2 pt-2">
+					<FinancialPeriodShortcuts
+						dateFrom={filter.dateFrom}
+						dateTo={filter.dateTo}
+						onChange={(range) => handleApplyFilter({ ...filter, ...range })}
+					/>
+					<div className="ml-auto shrink-0">{summary}</div>
+				</div>
 			</ListFilters>
 		</form.Form>
 	);

@@ -1,3 +1,4 @@
+import { EntityView } from "@/shared/components/entity-view";
 import { ListFilters } from "@/shared/components/list-filters";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
 import { ENTITY_DELETED_FILTER_OPTIONS } from "@/shared/lib/entity-management";
@@ -34,14 +35,16 @@ export const ContractFilter = ({ controller }: ContractFilterProps) => {
 		ENTITY_DELETED_FILTER_OPTIONS.map((option) => [option.value, option.label]),
 	);
 
-	const hasAdvancedFilters =
-		Boolean(filter.employeeId) ||
-		filter.clientId !== defaultFilter.clientId ||
-		filter.legalArea.length > 0 ||
-		filter.contractStatus.length > 0 ||
-		filter.status !== defaultFilter.status;
+	const activeFilterCount =
+		(filter.clientId !== defaultFilter.clientId ? 1 : 0) +
+		(filter.employeeId ? 1 : 0) +
+		filter.legalArea.length +
+		filter.contractStatus.length +
+		(filter.status !== defaultFilter.status ? 1 : 0);
 
-	const sharedFields = (
+	const hasAdvancedFilters = activeFilterCount > 0;
+
+	const filterFields = (
 		<>
 			<form.AppField name="clientId">
 				{(field) => <field.Autocomplete label="Cliente" options={clients} />}
@@ -70,73 +73,39 @@ export const ContractFilter = ({ controller }: ContractFilterProps) => {
 		</>
 	);
 
-	const mobileFilters = (
-		<ListFilters.Popover title="Filtros" label="Mais filtros" iconOnly>
-			{sharedFields}
-		</ListFilters.Popover>
-	);
-
-	const desktopFilterActions = (
-		<ListFilters.Actions className="contents">
-			<div className="w-full min-w-0 md:w-52 md:shrink-0 xl:w-60">
-				<form.AppField name="clientId">
-					{(field) => (
-						<field.Autocomplete
-							aria-label="Cliente"
-							placeholder="Cliente"
-							options={clients}
-						/>
-					)}
-				</form.AppField>
-			</div>
-			<div className="w-full min-w-0 md:w-52 md:shrink-0 xl:w-60">
-				<form.AppField name="employeeId">
-					{(field) => (
-						<field.Autocomplete
-							aria-label="Colaborador"
-							placeholder="Colaborador"
-							options={employees}
-						/>
-					)}
-				</form.AppField>
-			</div>
-			<ListFilters.Popover label="Área">
-				<form.AppField name="legalArea">
-					{(field) => <field.CheckboxGroup options={legalAreas} />}
-				</form.AppField>
-			</ListFilters.Popover>
-			<ListFilters.Popover label="Andamento">
-				<form.AppField name="contractStatus">
-					{(field) => <field.CheckboxGroup options={statuses} />}
-				</form.AppField>
-			</ListFilters.Popover>
-			<ListFilters.Popover label="Registro">
-				<form.AppField name="status">
-					{(field) => (
-						<field.RadioGroup options={ENTITY_DELETED_FILTER_OPTIONS} />
-					)}
-				</form.AppField>
-			</ListFilters.Popover>
-		</ListFilters.Actions>
-	);
-
 	return (
 		<form.Form form={form} className="w-full">
 			<ListFilters>
-				<ListFilters.Bar className="flex-nowrap md:flex-wrap gap-2">
+				<ListFilters.Bar>
 					<form.AppField name="query">
 						{(field) => (
 							<field.Search
 								aria-label="Número do processo ou cliente"
 								placeholder="Buscar por processo ou cliente..."
 								classNames={{
-									wrapper:
-										"min-w-0 flex-1 md:flex-none md:w-52 md:shrink-0 xl:w-60",
+									wrapper: "min-w-0 flex-1 md:max-w-md",
 								}}
 							/>
 						)}
 					</form.AppField>
-					{isMobile ? mobileFilters : desktopFilterActions}
+					{isMobile ? (
+						<ListFilters.Drawer
+							title="Filtros"
+							label="Filtros"
+							activeCount={activeFilterCount}
+						>
+							{filterFields}
+						</ListFilters.Drawer>
+					) : (
+						<ListFilters.Popover
+							title="Filtros"
+							label="Filtros"
+							activeCount={activeFilterCount}
+						>
+							{filterFields}
+						</ListFilters.Popover>
+					)}
+					<EntityView.Toggle />
 				</ListFilters.Bar>
 				{(filter.query || hasAdvancedFilters) && (
 					<ListFilters.Active>

@@ -103,7 +103,7 @@ export const WrapperBody = ({
 		<div
 			data-slot="wrapper-content"
 			className={cn(
-				"flex flex-1 min-h-0 w-full flex-col px-4 pb-4 overflow-hidden [&>[data-slot=data-table]]:flex-1",
+				"flex flex-1 min-h-0 w-full flex-col px-4 pb-4 overflow-hidden [&>[data-slot=data-table]]:flex-1 [&>[data-slot=data-card-list]]:flex-1",
 				className,
 			)}
 			{...props}

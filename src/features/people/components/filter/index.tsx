@@ -1,3 +1,4 @@
+import { EntityView } from "@/shared/components/entity-view";
 import { ListFilters } from "@/shared/components/list-filters";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
 import {
@@ -44,14 +45,16 @@ export const PersonFilter = ({ controller }: PersonFilterProps) => {
 		ENTITY_DELETED_FILTER_OPTIONS.map((option) => [option.value, option.label]),
 	);
 
-	const hasAdvancedFilters =
-		filter.type.length > 0 ||
-		filter.roles.length > 0 ||
-		filter.employeeType.length > 0 ||
-		filter.active !== defaultFilter.active ||
-		filter.status !== defaultFilter.status;
+	const activeFilterCount =
+		filter.roles.length +
+		filter.employeeType.length +
+		filter.type.length +
+		(filter.active !== defaultFilter.active ? 1 : 0) +
+		(filter.status !== defaultFilter.status ? 1 : 0);
 
-	const sharedFields = (
+	const hasAdvancedFilters = activeFilterCount > 0;
+
+	const filterFields = (
 		<>
 			<form.AppField name="roles">
 				{(field) => <field.CheckboxGroup label="Papéis" options={roles} />}
@@ -85,52 +88,10 @@ export const PersonFilter = ({ controller }: PersonFilterProps) => {
 		</>
 	);
 
-	const mobileFilters = (
-		<ListFilters.Popover title="Filtros" label="Mais filtros" iconOnly>
-			{sharedFields}
-		</ListFilters.Popover>
-	);
-
-	const desktopFilterActions = (
-		<ListFilters.Actions className="contents">
-			<ListFilters.Popover label="Papéis">
-				<form.AppField name="roles">
-					{(field) => <field.CheckboxGroup options={roles} />}
-				</form.AppField>
-			</ListFilters.Popover>
-			{hasPermission(session, "org:employees:read") && (
-				<ListFilters.Popover label="Função">
-					<form.AppField name="employeeType">
-						{(field) => <field.CheckboxGroup options={employeeTypes} />}
-					</form.AppField>
-				</ListFilters.Popover>
-			)}
-			<ListFilters.Popover label="Tipo">
-				<form.AppField name="type">
-					{(field) => <field.CheckboxGroup options={types} />}
-				</form.AppField>
-			</ListFilters.Popover>
-			<ListFilters.Popover label="Situação">
-				<form.AppField name="active">
-					{(field) => (
-						<field.RadioGroup options={ENTITY_ACTIVE_FILTER_OPTIONS} />
-					)}
-				</form.AppField>
-			</ListFilters.Popover>
-			<ListFilters.Popover label="Registro">
-				<form.AppField name="status">
-					{(field) => (
-						<field.RadioGroup options={ENTITY_DELETED_FILTER_OPTIONS} />
-					)}
-				</form.AppField>
-			</ListFilters.Popover>
-		</ListFilters.Actions>
-	);
-
 	return (
 		<form.Form form={form} className="w-full">
 			<ListFilters>
-				<ListFilters.Bar className="flex-nowrap md:flex-wrap gap-2">
+				<ListFilters.Bar>
 					<form.AppField name="query">
 						{(field) => (
 							<field.Search
@@ -145,13 +106,29 @@ export const PersonFilter = ({ controller }: PersonFilterProps) => {
 										: "Buscar por nome ou documento..."
 								}
 								classNames={{
-									wrapper:
-										"min-w-0 flex-1 md:flex-none md:w-52 md:shrink-0 xl:w-60",
+									wrapper: "min-w-0 flex-1 md:max-w-md",
 								}}
 							/>
 						)}
 					</form.AppField>
-					{isMobile ? mobileFilters : desktopFilterActions}
+					{isMobile ? (
+						<ListFilters.Drawer
+							title="Filtros"
+							label="Filtros"
+							activeCount={activeFilterCount}
+						>
+							{filterFields}
+						</ListFilters.Drawer>
+					) : (
+						<ListFilters.Popover
+							title="Filtros"
+							label="Filtros"
+							activeCount={activeFilterCount}
+						>
+							{filterFields}
+						</ListFilters.Popover>
+					)}
+					<EntityView.Toggle />
 				</ListFilters.Bar>
 				{(filter.query || hasAdvancedFilters) && (
 					<ListFilters.Active>

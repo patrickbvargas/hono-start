@@ -97,7 +97,7 @@ export const DataTable = <TData extends RowData>({
 		<div
 			data-slot="data-table"
 			className={cn(
-				"border flex min-h-0 max-h-full flex-col overflow-hidden rounded-lg",
+				"flex min-h-0 max-h-full flex-col overflow-hidden rounded-lg",
 				className,
 			)}
 		>
@@ -262,7 +262,7 @@ export const DataTable = <TData extends RowData>({
 				</div>
 			) : null}
 			{footerContent && table.getRowModel().rows?.length > 0 ? (
-				<div className="flex justify-end border-t bg-background px-3 py-2">
+				<div className="flex justify-end bg-background px-3 py-2">
 					{footerContent}
 				</div>
 			) : null}

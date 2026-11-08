@@ -43,8 +43,9 @@ export const DataCardList = <TData,>({
 }: DataCardListProps<TData>) => {
 	return (
 		<div
+			data-slot="data-card-list"
 			className={cn(
-				"flex min-h-0 max-h-full flex-col overflow-hidden rounded-lg",
+				"flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg",
 				className,
 			)}
 		>

@@ -15,6 +15,7 @@ interface PayableFilterProps {
 	controller: ReturnType<typeof usePayableFilter>;
 	summary: ReactNode;
 }
+
 export function PayableFilter({ controller, summary }: PayableFilterProps) {
 	const {
 		form,
@@ -26,6 +27,7 @@ export function PayableFilter({ controller, summary }: PayableFilterProps) {
 	} = controller;
 	const options = usePayableOptions();
 	const isMobile = useIsMobile();
+
 	const fields = (
 		<>
 			<form.AppField name="beneficiaryId">
@@ -81,14 +83,9 @@ export function PayableFilter({ controller, summary }: PayableFilterProps) {
 					/>
 				)}
 			</form.AppField>
-			<form.AppField name="dateFrom">
-				{(field) => <field.DatePicker label="Vencimento inicial" />}
-			</form.AppField>
-			<form.AppField name="dateTo">
-				{(field) => <field.DatePicker label="Vencimento final" />}
-			</form.AppField>
 		</>
 	);
+
 	const labels: Record<string, string> = {
 		query: "Busca",
 		beneficiaryId: "Beneficiário",
@@ -101,6 +98,7 @@ export function PayableFilter({ controller, summary }: PayableFilterProps) {
 		dateFrom: "Vencimento inicial",
 		dateTo: "Vencimento final",
 	};
+
 	const optionSets = {
 		beneficiaryId: options.beneficiaries,
 		contractId: options.contracts,
@@ -110,44 +108,52 @@ export function PayableFilter({ controller, summary }: PayableFilterProps) {
 		analytic: options.analytics,
 		expectedMethod: options.methods,
 	};
+
+	const popoverActiveKeys = (
+		Object.keys(filter) as Array<keyof typeof filter>
+	).filter(
+		(key) =>
+			key !== "query" &&
+			key !== "dateFrom" &&
+			key !== "dateTo" &&
+			filter[key] !== defaultFilter[key],
+	);
+	const activeFilterCount = popoverActiveKeys.length;
+
 	return (
 		<form.Form form={form} className="w-full">
 			<ListFilters>
 				<ListFilters.Bar>
-					<div className="min-w-0 flex-1 md:max-w-80">
-						<form.AppField name="query">
-							{(field) => (
-								<field.Search
-									aria-label="Buscar títulos"
-									placeholder="Buscar por beneficiário, observação ou processo..."
-								/>
-							)}
-						</form.AppField>
-					</div>
+					<form.AppField name="query">
+						{(field) => (
+							<field.Search
+								aria-label="Buscar títulos"
+								placeholder="Buscar por beneficiário, observação ou processo..."
+								classNames={{
+									wrapper: "min-w-0 flex-1 md:max-w-md",
+								}}
+							/>
+						)}
+					</form.AppField>
 					{isMobile ? (
-						<ListFilters.Drawer title="Filtros" label="Filtros">
+						<ListFilters.Drawer
+							title="Filtros"
+							label="Filtros"
+							activeCount={activeFilterCount}
+						>
 							{fields}
 						</ListFilters.Drawer>
 					) : (
-						<ListFilters.Popover label="Filtros" title="Filtros">
+						<ListFilters.Popover
+							title="Filtros"
+							label="Filtros"
+							activeCount={activeFilterCount}
+						>
 							{fields}
 						</ListFilters.Popover>
 					)}
 					<EntityView.Toggle />
-					{canClearFilters ? (
-						<ListFilters.Button type="button" onClick={handleClearFilters}>
-							Limpar filtros
-						</ListFilters.Button>
-					) : null}
 				</ListFilters.Bar>
-				<div className="flex flex-wrap items-center justify-between gap-2 pt-2">
-					<FinancialPeriodShortcuts
-						dateFrom={filter.dateFrom}
-						dateTo={filter.dateTo}
-						onChange={(range) => handleApplyFilter({ ...filter, ...range })}
-					/>
-					{summary}
-				</div>
 				{canClearFilters ? (
 					<ListFilters.Active>
 						{(Object.keys(filter) as Array<keyof typeof filter>)
@@ -174,8 +180,17 @@ export function PayableFilter({ controller, summary }: PayableFilterProps) {
 									</ListFilters.Chip>
 								);
 							})}
+						<ListFilters.Clear onClick={handleClearFilters} />
 					</ListFilters.Active>
 				) : null}
+				<div className="flex flex-wrap items-center justify-between gap-2 pt-2">
+					<FinancialPeriodShortcuts
+						dateFrom={filter.dateFrom}
+						dateTo={filter.dateTo}
+						onChange={(range) => handleApplyFilter({ ...filter, ...range })}
+					/>
+					{summary}
+				</div>
 			</ListFilters>
 		</form.Form>
 	);

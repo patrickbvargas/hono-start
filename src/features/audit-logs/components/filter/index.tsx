@@ -1,3 +1,4 @@
+import { EntityView } from "@/shared/components/entity-view";
 import { ListFilters } from "@/shared/components/list-filters";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
 import { useAuditLogOptions } from "../../hooks/use-data";
@@ -29,13 +30,15 @@ export const AuditLogFilter = ({ controller }: AuditLogFilterProps) => {
 		actors.map((option) => [option.value, option.label]),
 	);
 
-	const hasAdvancedFilters =
-		!!filter.entityId ||
-		filter.action.length > 0 ||
-		filter.entityType.length > 0 ||
-		filter.actorName.length > 0;
+	const activeFilterCount =
+		(filter.entityId ? 1 : 0) +
+		filter.action.length +
+		filter.entityType.length +
+		filter.actorName.length;
 
-	const sharedFields = (
+	const hasAdvancedFilters = activeFilterCount > 0;
+
+	const filterFields = (
 		<>
 			<form.AppField name="action">
 				{(field) => <field.CheckboxGroup label="Ação" options={actions} />}
@@ -49,49 +52,39 @@ export const AuditLogFilter = ({ controller }: AuditLogFilterProps) => {
 		</>
 	);
 
-	const mobileFilters = (
-		<ListFilters.Popover title="Filtros" label="Mais filtros" iconOnly>
-			{sharedFields}
-		</ListFilters.Popover>
-	);
-
-	const desktopFilterActions = (
-		<ListFilters.Actions className="contents">
-			<ListFilters.Popover label="Tipo">
-				<form.AppField name="entityType">
-					{(field) => <field.CheckboxGroup options={entityTypes} />}
-				</form.AppField>
-			</ListFilters.Popover>
-			<ListFilters.Popover label="Ação">
-				<form.AppField name="action">
-					{(field) => <field.CheckboxGroup options={actions} />}
-				</form.AppField>
-			</ListFilters.Popover>
-			<ListFilters.Popover label="Usuário">
-				<form.AppField name="actorName">
-					{(field) => <field.CheckboxGroup options={actors} />}
-				</form.AppField>
-			</ListFilters.Popover>
-		</ListFilters.Actions>
-	);
-
 	return (
 		<form.Form form={form} className="w-full">
 			<ListFilters>
-				<ListFilters.Bar className="flex-nowrap md:flex-wrap gap-2">
+				<ListFilters.Bar>
 					<form.AppField name="query">
 						{(field) => (
 							<field.Search
 								aria-label="Usuário ou entidade"
 								placeholder="Buscar por usuário ou entidade..."
 								classNames={{
-									wrapper:
-										"min-w-0 flex-1 md:flex-none md:w-52 md:shrink-0 xl:w-60",
+									wrapper: "min-w-0 flex-1 md:max-w-md",
 								}}
 							/>
 						)}
 					</form.AppField>
-					{isMobile ? mobileFilters : desktopFilterActions}
+					{isMobile ? (
+						<ListFilters.Drawer
+							title="Filtros"
+							label="Filtros"
+							activeCount={activeFilterCount}
+						>
+							{filterFields}
+						</ListFilters.Drawer>
+					) : (
+						<ListFilters.Popover
+							title="Filtros"
+							label="Filtros"
+							activeCount={activeFilterCount}
+						>
+							{filterFields}
+						</ListFilters.Popover>
+					)}
+					<EntityView.Toggle />
 				</ListFilters.Bar>
 				{(filter.query || hasAdvancedFilters) && (
 					<ListFilters.Active>

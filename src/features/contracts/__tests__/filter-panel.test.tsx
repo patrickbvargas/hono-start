@@ -55,30 +55,21 @@ function FilterHarness() {
 }
 
 afterEach(cleanup);
-describe("contract filter popovers", () => {
-	it("keeps linked filters applied while popovers start closed and open manually", () => {
+describe("contract filter popover", () => {
+	it("keeps linked filters applied while popover starts closed and opens manually", () => {
 		state.status = "all";
 		const { rerender } = render(<FilterHarness />);
 
-		expect(
-			screen
-				.getByRole("button", { name: "Área" })
-				.getAttribute("aria-expanded"),
-		).toBe("false");
+		const filterBtn = screen.getByRole("button", { name: "Filtros" });
+		expect(filterBtn.getAttribute("aria-expanded")).toBe("false");
 		expect(screen.getByText("Bruna Farias")).toBeTruthy();
-		fireEvent.click(screen.getByRole("button", { name: "Área" }));
-		expect(
-			screen
-				.getByRole("button", { name: "Área" })
-				.getAttribute("aria-expanded"),
-		).toBe("true");
-		fireEvent.click(screen.getByRole("button", { name: "Área" }));
+
+		fireEvent.click(filterBtn);
+		expect(filterBtn.getAttribute("aria-expanded")).toBe("true");
+
+		fireEvent.click(filterBtn);
 		state.status = "deleted";
 		rerender(<FilterHarness />);
-		expect(
-			screen
-				.getByRole("button", { name: "Área" })
-				.getAttribute("aria-expanded"),
-		).toBe("false");
+		expect(filterBtn.getAttribute("aria-expanded")).toBe("false");
 	});
 });

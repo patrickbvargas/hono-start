@@ -45,4 +45,13 @@ describe("ListFilters", () => {
 		expect(trigger.textContent).toBe("");
 		expect(trigger.querySelector("svg")).not.toBeNull();
 	});
+	it("renders active filter count badge on popover trigger when activeCount > 0", () => {
+		render(
+			<ListFilters.Popover label="Filtros" title="Filtros" activeCount={3}>
+				<div>Campos</div>
+			</ListFilters.Popover>,
+		);
+		const trigger = screen.getByRole("button", { name: "Filtros" });
+		expect(trigger.textContent).toContain("3");
+	});
 });

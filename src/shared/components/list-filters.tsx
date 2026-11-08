@@ -26,9 +26,10 @@ interface ListFiltersActionsProps
 	extends React.ComponentPropsWithoutRef<"div"> {}
 
 interface ListFiltersPopoverProps {
-	iconOnly?: boolean;
+	activeCount?: number;
 	children: React.ReactNode;
 	className?: string;
+	iconOnly?: boolean;
 	label: string;
 	title?: string;
 }
@@ -39,6 +40,7 @@ interface ListFiltersButtonProps
 interface ListFiltersPanelProps extends React.ComponentPropsWithoutRef<"div"> {}
 
 interface ListFiltersDrawerProps {
+	activeCount?: number;
 	ariaLabel?: string;
 	children: React.ReactNode;
 	className?: string;
@@ -125,6 +127,7 @@ function ListFiltersPanel({ className, ...props }: ListFiltersPanelProps) {
 }
 
 function ListFiltersDrawer({
+	activeCount,
 	ariaLabel,
 	children,
 	className,
@@ -145,8 +148,19 @@ function ListFiltersDrawer({
 					/>
 				}
 			>
-				<Settings2Icon size={16} />
-				{iconOnly ? <span className="sr-only">{label}</span> : label}
+				{iconOnly ? (
+					<Settings2Icon size={16} />
+				) : (
+					<span className="inline-flex items-center gap-1.5">
+						<Settings2Icon size={16} className="text-muted-foreground" />
+						<span>{label}</span>
+						{Boolean(activeCount && activeCount > 0) && (
+							<span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-primary/10 px-1.5 text-xs font-semibold tabular-nums text-primary">
+								{activeCount}
+							</span>
+						)}
+					</span>
+				)}
 			</DrawerTrigger>
 			<DrawerContent
 				direction="bottom"
@@ -170,6 +184,7 @@ function ListFiltersDrawer({
 }
 
 function ListFiltersPopover({
+	activeCount,
 	children,
 	className,
 	label,
@@ -190,10 +205,16 @@ function ListFiltersPopover({
 				{iconOnly ? (
 					<Settings2Icon size={16} />
 				) : (
-					<>
-						{label}
-						<ChevronDownIcon size={16} />
-					</>
+					<span className="inline-flex items-center gap-1.5">
+						<Settings2Icon size={16} className="text-muted-foreground" />
+						<span>{label}</span>
+						{Boolean(activeCount && activeCount > 0) && (
+							<span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-primary/10 px-1.5 text-xs font-semibold tabular-nums text-primary">
+								{activeCount}
+							</span>
+						)}
+						<ChevronDownIcon size={14} className="text-muted-foreground" />
+					</span>
 				)}
 			</PopoverTrigger>
 			<PopoverContent
