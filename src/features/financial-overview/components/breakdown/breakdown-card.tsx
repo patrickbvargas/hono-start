@@ -14,6 +14,7 @@ import { BREAKDOWN_CHART_CONFIG } from "../../constants/charts";
 import type { BreakdownItem } from "../../schemas/model";
 import { formatCompactCurrency } from "../../utils/format";
 import { ChartHelp } from "../chart-help";
+import { DrilldownBarShape } from "../drilldown/bar-shape";
 
 interface BreakdownCardProps {
 	title: string;
@@ -21,6 +22,7 @@ interface BreakdownCardProps {
 	items: BreakdownItem[];
 	emptyLabel?: string;
 	color?: string;
+	onSelect?: (item: BreakdownItem, trigger?: SVGElement) => void;
 }
 
 export function BreakdownCard({
@@ -29,6 +31,7 @@ export function BreakdownCard({
 	items,
 	emptyLabel = "Sem registros no período.",
 	color = "var(--chart-1)",
+	onSelect,
 }: BreakdownCardProps) {
 	const hasValues = items.some((item) => item.total > 0);
 
@@ -82,7 +85,22 @@ export function BreakdownCard({
 										/>
 									}
 								/>
-								<Bar dataKey="total" fill={color} radius={6}>
+								<Bar
+									dataKey="total"
+									fill={color}
+									radius={6}
+									shape={(props) => (
+										<DrilldownBarShape
+											{...props}
+											label={`${title} · ${items[props.index]?.label ?? ""}`}
+											onActivate={
+												onSelect && items[props.index]
+													? (trigger) => onSelect(items[props.index], trigger)
+													: undefined
+											}
+										/>
+									)}
+								>
 									<LabelList
 										dataKey="total"
 										formatter={(value) => formatCompactCurrency(Number(value))}

@@ -26,4 +26,16 @@ describe("getPayloadColor", () => {
 
 		expect(color).toBe("rgb(255, 0, 0)");
 	});
+
+	it("supports line indicator in chart config", () => {
+		const config = {
+			balanceTotal: {
+				label: "Saldo líquido",
+				color: "var(--chart-3)",
+				indicator: "line",
+			},
+		} satisfies ChartConfig;
+
+		expect(config.balanceTotal.indicator).toBe("line");
+	});
 });

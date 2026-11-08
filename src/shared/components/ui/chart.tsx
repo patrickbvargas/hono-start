@@ -27,6 +27,7 @@ type ChartConfigItem = {
 	icon?: React.ComponentType<{ className?: string }>;
 	color?: string;
 	theme?: ChartTheme;
+	indicator?: "dot" | "line" | "dashed";
 };
 
 export type ChartConfig = Record<string, ChartConfigItem>;
@@ -205,7 +206,7 @@ function TooltipIndicator({
 	if (type === "line") {
 		return (
 			<span
-				className="h-2.5 w-3 rounded-sm"
+				className="h-0.5 w-3.5 rounded-full"
 				style={{ backgroundColor: color }}
 			/>
 		);
@@ -214,7 +215,7 @@ function TooltipIndicator({
 	if (type === "dashed") {
 		return (
 			<span
-				className="h-0 w-3 border-t-2 border-dashed"
+				className="h-0 w-3.5 border-t-2 border-dashed"
 				style={{ borderColor: color }}
 			/>
 		);
@@ -286,6 +287,8 @@ export function ChartTooltipContent({
 							nameNode = formattedValue[1];
 						}
 
+						const itemIndicator = config[key]?.indicator ?? indicator;
+
 						return (
 							<div
 								className="flex items-center justify-between gap-3"
@@ -295,7 +298,7 @@ export function ChartTooltipContent({
 									{hideIndicator ? null : Icon ? (
 										<Icon className="size-3.5" />
 									) : (
-										<TooltipIndicator color={color} type={indicator} />
+										<TooltipIndicator color={color} type={itemIndicator} />
 									)}
 									<span>{nameNode}</span>
 								</div>
@@ -341,11 +344,23 @@ export function ChartLegendContent({
 				const key = getPayloadKey(item, nameKey);
 				const color = getPayloadColor(config, item, key);
 				const Icon = config[key]?.icon;
+				const itemIndicator =
+					config[key]?.indicator ?? (item.type === "line" ? "line" : "dot");
 
 				return (
 					<div className="flex items-center gap-2" key={key}>
 						{hideIcon ? null : Icon ? (
 							<Icon className="size-3.5" />
+						) : itemIndicator === "line" ? (
+							<span
+								className="h-0.5 w-3.5 rounded-full"
+								style={{ backgroundColor: color }}
+							/>
+						) : itemIndicator === "dashed" ? (
+							<span
+								className="h-0 w-3.5 border-t-2 border-dashed"
+								style={{ borderColor: color }}
+							/>
 						) : (
 							<span
 								className="size-2.5 rounded-full"

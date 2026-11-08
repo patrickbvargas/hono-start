@@ -1,12 +1,4 @@
-import {
-	Bar,
-	type BarShapeProps,
-	ComposedChart,
-	Line,
-	Rectangle,
-	XAxis,
-	YAxis,
-} from "recharts";
+import { Bar, ComposedChart, Line, XAxis, YAxis } from "recharts";
 import {
 	Card,
 	CardContent,
@@ -23,24 +15,23 @@ import { formatter } from "@/shared/lib/formatter";
 import { FINANCIAL_OVERVIEW_CHART_CONFIG } from "../../constants/charts";
 import type { MonthlyCashFlowItem } from "../../schemas/model";
 import { ChartHelp } from "../chart-help";
+import { DrilldownBarShape } from "../drilldown/bar-shape";
 
 interface CashFlowChartProps {
 	items: MonthlyCashFlowItem[];
+	onSelect?: (
+		item: MonthlyCashFlowItem,
+		series:
+			| "entryRealized"
+			| "entryProjected"
+			| "outputRealized"
+			| "outputProjected"
+			| "balanceTotal",
+		trigger?: SVGElement,
+	) => void;
 }
 
-function renderProjectedBar(props: BarShapeProps) {
-	const numericValue = Array.isArray(props.value)
-		? props.value[1] - props.value[0]
-		: (props.value ?? 0);
-
-	if (!props.height || props.height <= 0 || numericValue <= 0) {
-		return null;
-	}
-
-	return <Rectangle {...props} />;
-}
-
-export function CashFlowChart({ items }: CashFlowChartProps) {
+export function CashFlowChart({ items, onSelect }: CashFlowChartProps) {
 	return (
 		<Card className="min-w-0 h-80 min-h-80 col-span-full">
 			<CardHeader>
@@ -104,6 +95,22 @@ export function CashFlowChart({ items }: CashFlowChartProps) {
 									stackId="entry"
 									fill="var(--chart-1)"
 									radius={[4, 4, 0, 0]}
+									shape={(props) => (
+										<DrilldownBarShape
+											{...props}
+											label={`Entradas Realizadas · ${items[props.index]?.monthLabel ?? ""}`}
+											onActivate={
+												onSelect && items[props.index]
+													? (trigger) =>
+															onSelect(
+																items[props.index],
+																"entryRealized",
+																trigger,
+															)
+													: undefined
+											}
+										/>
+									)}
 								/>
 								<Bar
 									dataKey="entryProjected"
@@ -114,7 +121,22 @@ export function CashFlowChart({ items }: CashFlowChartProps) {
 									stroke="var(--chart-1)"
 									strokeDasharray="3 3"
 									radius={[4, 4, 0, 0]}
-									shape={renderProjectedBar}
+									shape={(props) => (
+										<DrilldownBarShape
+											{...props}
+											label={`Entradas Previstas · ${items[props.index]?.monthLabel ?? ""}`}
+											onActivate={
+												onSelect && items[props.index]
+													? (trigger) =>
+															onSelect(
+																items[props.index],
+																"entryProjected",
+																trigger,
+															)
+													: undefined
+											}
+										/>
+									)}
 								/>
 								<Bar
 									dataKey="outputRealized"
@@ -122,6 +144,22 @@ export function CashFlowChart({ items }: CashFlowChartProps) {
 									stackId="output"
 									fill="var(--chart-2)"
 									radius={[4, 4, 0, 0]}
+									shape={(props) => (
+										<DrilldownBarShape
+											{...props}
+											label={`Saídas Realizadas · ${items[props.index]?.monthLabel ?? ""}`}
+											onActivate={
+												onSelect && items[props.index]
+													? (trigger) =>
+															onSelect(
+																items[props.index],
+																"outputRealized",
+																trigger,
+															)
+													: undefined
+											}
+										/>
+									)}
 								/>
 								<Bar
 									dataKey="outputProjected"
@@ -132,7 +170,22 @@ export function CashFlowChart({ items }: CashFlowChartProps) {
 									stroke="var(--chart-2)"
 									strokeDasharray="3 3"
 									radius={[4, 4, 0, 0]}
-									shape={renderProjectedBar}
+									shape={(props) => (
+										<DrilldownBarShape
+											{...props}
+											label={`Saídas Previstas · ${items[props.index]?.monthLabel ?? ""}`}
+											onActivate={
+												onSelect && items[props.index]
+													? (trigger) =>
+															onSelect(
+																items[props.index],
+																"outputProjected",
+																trigger,
+															)
+													: undefined
+											}
+										/>
+									)}
 								/>
 								<Line
 									type="monotone"

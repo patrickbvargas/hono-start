@@ -20,6 +20,7 @@ export const FINANCIAL_OVERVIEW_CHART_CONFIG = {
 	balanceTotal: {
 		label: "Saldo líquido",
 		color: "var(--chart-3)",
+		indicator: "line",
 	},
 } satisfies ChartConfig;
 

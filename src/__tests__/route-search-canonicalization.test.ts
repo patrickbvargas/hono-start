@@ -16,8 +16,12 @@ const routeCases = [
 		middleware: "stripSearchParams(auditLogSearchDefaults)",
 	},
 	{
-		file: resolve(import.meta.dirname, "../routes/_app/index.tsx"),
+		file: resolve(import.meta.dirname, "../routes/_app/visao-operacional.tsx"),
 		middleware: "stripSearchParams(dashboardSearchDefaults)",
+	},
+	{
+		file: resolve(import.meta.dirname, "../routes/_app/visao-financeira.tsx"),
+		middleware: "stripSearchParams(financialOverviewSearchDefaults)",
 	},
 ];
 

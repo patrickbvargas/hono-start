@@ -72,7 +72,11 @@ function RouteComponent() {
 				/>
 			</WrapperHeader>
 			<WrapperBody>
-				<FinancialOverview data={summary} showDetails={showDetails} />
+				<FinancialOverview
+					data={summary}
+					showDetails={showDetails}
+					search={search}
+				/>
 			</WrapperBody>
 		</Wrapper>
 	);

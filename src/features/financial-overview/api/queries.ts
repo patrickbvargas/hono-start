@@ -9,8 +9,15 @@ import {
 } from "@/shared/session/server";
 import { FINANCIAL_OVERVIEW_ERRORS } from "../constants/errors";
 import { FINANCIAL_TITLE_KINDS } from "../constants/values";
+import { getFinancialOverviewDrilldown } from "../data/drilldown";
 import { getFinancialOverviewRecords } from "../data/records";
 import { buildFinancialOverviewSummary } from "../data/summary";
+import {
+	type FinancialDrilldownInput,
+	type FinancialDrilldownResult,
+	financialDrilldownInputSchema,
+	financialDrilldownResultSchema,
+} from "../schemas/drilldown";
 import {
 	type FinancialOverviewSummary,
 	financialOverviewSummarySchema,
@@ -32,9 +39,46 @@ export const financialOverviewKeys = {
 	all: ["financial-overview"] as const,
 	summary: (search: FinancialOverviewSearch) =>
 		[...financialOverviewKeys.all, "summary", search] as const,
+	drilldown: (input: FinancialDrilldownInput) =>
+		[...financialOverviewKeys.all, "drilldown", input] as const,
 	options: () => [...financialOverviewKeys.all, "options"] as const,
 	analytics: () => [...financialOverviewKeys.all, "analytics"] as const,
 };
+
+const getFinancialOverviewDrilldownFn = createServerFn({ method: "GET" })
+	.middleware([authMiddleware])
+	.validator(financialDrilldownInputSchema)
+	.handler(async ({ data }): Promise<FinancialDrilldownResult> => {
+		try {
+			const session = await getRequiredServerLoggedUserSession();
+			assertCan(session, [
+				"org:financial_overview:read_all",
+				"org:cash_flow:read_all",
+				"org:payables:read_all",
+			]);
+
+			return financialDrilldownResultSchema.parse(
+				await getFinancialOverviewDrilldown(
+					{
+						firmId: session.firm.id,
+						search: data.search,
+					},
+					data,
+				),
+			);
+		} catch (error) {
+			console.error("[getFinancialOverviewDrilldown]", error);
+			throw new Error(FINANCIAL_OVERVIEW_ERRORS.DRILLDOWN_GET_FAILED);
+		}
+	});
+
+export const getFinancialOverviewDrilldownQueryOptions = (
+	input: FinancialDrilldownInput,
+) =>
+	queryOptions<FinancialDrilldownResult>({
+		queryKey: financialOverviewKeys.drilldown(input),
+		queryFn: () => getFinancialOverviewDrilldownFn({ data: input }),
+	});
 
 const getFinancialOverviewSummaryFn = createServerFn({ method: "GET" })
 	.middleware([authMiddleware])
