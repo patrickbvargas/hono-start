@@ -16,18 +16,23 @@ import { NavUser } from "./nav-user";
 
 const items: RouteSection[] = [
 	{
-		title: "Trabalho",
+		title: "Operacional",
 		url: "#",
 		icon: LayoutDashboardIcon,
 		isActive: true,
-		items: [ROUTES.dashboard, ROUTES.contract, ROUTES.pendingWork],
+		items: [
+			ROUTES.dashboard,
+			ROUTES.contract,
+			ROUTES.expense,
+			ROUTES.pendingWork,
+		],
 	},
 	{
 		title: "Financeiro",
 		url: "#",
 		isActive: true,
 		icon: DollarSignIcon,
-		items: [ROUTES.receivable, ROUTES.payable, ROUTES.expense],
+		items: [ROUTES.receivable, ROUTES.payable],
 	},
 	{ title: "Cadastros", url: "#", items: [ROUTES.person] },
 	{

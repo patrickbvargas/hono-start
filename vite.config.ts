@@ -4,8 +4,8 @@ import { devtools } from "@tanstack/devtools-vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
 import { nitro } from "nitro/vite";
-
 import { defineConfig } from "vite";
+import mkcert from "vite-plugin-mkcert";
 
 const config = defineConfig({
 	optimizeDeps: {
@@ -20,6 +20,7 @@ const config = defineConfig({
 		},
 	},
 	plugins: [
+		mkcert(),
 		devtools(),
 
 		tailwindcss(),
