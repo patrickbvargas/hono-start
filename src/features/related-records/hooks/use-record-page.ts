@@ -54,17 +54,6 @@ export function useRecordPage(kind: RelatedRecordKind, id: EntityId) {
 					},
 				});
 			}
-			case "fee": {
-				const { feeSearchSchema } = await import("@/features/fees");
-				return navigate({
-					to: "/honorarios/$feeId",
-					params: { feeId: String(id) },
-					search: {
-						tab: "overview",
-						returnTo: feeSearchSchema.parse(currentSearch),
-					},
-				});
-			}
 			case "expense": {
 				const { expenseSearchSchema } = await import("@/features/expenses");
 				return navigate({
@@ -73,19 +62,6 @@ export function useRecordPage(kind: RelatedRecordKind, id: EntityId) {
 					search: {
 						tab: "overview",
 						returnTo: expenseSearchSchema.parse(currentSearch),
-					},
-				});
-			}
-			case "remuneration": {
-				const { remunerationSearchSchema } = await import(
-					"@/features/remunerations"
-				);
-				return navigate({
-					to: "/remuneracoes/$remunerationId",
-					params: { remunerationId: String(id) },
-					search: {
-						tab: "overview",
-						returnTo: remunerationSearchSchema.parse(currentSearch),
 					},
 				});
 			}

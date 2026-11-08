@@ -36,7 +36,7 @@ describe("pending work server authorization", () => {
 	it("denies requests before the database when contract permission is absent", async () => {
 		mocks.session.mockResolvedValue({
 			employee: { id: 9 },
-			permissions: ["org:fees:read_all"],
+			permissions: ["org:receivables:read_all"],
 		});
 		const options = getPendingWorkQueryOptions(pendingWorkSearchDefaults);
 		await expect(
@@ -47,7 +47,7 @@ describe("pending work server authorization", () => {
 	it("uses authenticated firm/binding and independent subject grants", async () => {
 		mocks.session.mockResolvedValue({
 			employee: { id: 9 },
-			permissions: ["org:contracts:read_all", "org:fees:read_assigned"],
+			permissions: ["org:contracts:read_all", "org:receivables:read_assigned"],
 			employeeType: { value: "LAWYER" },
 		});
 		const options = getPendingWorkQueryOptions(pendingWorkSearchDefaults);
@@ -59,8 +59,8 @@ describe("pending work server authorization", () => {
 				employeeId: 9,
 				employeeTypeValue: "LAWYER",
 				allContracts: true,
-				allFees: false,
-				assignedFees: true,
+				allTitles: false,
+				assignedTitles: true,
 			},
 		});
 		expect(options.meta).toEqual({ refreshOnMutation: true });

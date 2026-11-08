@@ -1,0 +1,55 @@
+
+> hono-start@ test C:\Dev\hono-start
+> vitest run
+
+
+ RUN  v5.0.5 C:/Dev/hono-start
+
+ ❯ src/features/dashboard/__tests__/quick-create-route-contract.test.ts (5 tests | 5 failed) 27ms
+   ❯ dashboard quick-create route contract (5)
+     × orders creation actions like the sidebar and checks each creation grant 5ms
+     × wires a Novo dropdown action in the dashboard header 7ms
+     × keeps quick-create overlays route-local and reuses existing forms 7ms
+     × prefetches unconditional option queries for quick-create forms 3ms
+     × gates collaborator quick-create with its independent permission 4ms
+ ❯ src/features/__tests__/detail-skeletons-contract.test.ts (10 tests | 2 failed) 21ms
+   ❯ detail skeleton layout contracts (10)
+     × matches fixed field groups in expenses 9ms
+     × preserves fixed section order and matching header in expenses 2ms
+ ❯ src/__tests__/route-search-canonicalization.test.ts (7 tests | 2 failed) 11ms
+   ❯ route search canonicalization (7)
+     × wires { …(2) } middleware at route level 5ms
+     × wires { …(2) } middleware at route level 1ms
+ ❯ src/features/__tests__/detail-attachments-contract.test.ts (1 test | 1 failed) 10ms
+   ❯ detail attachment composition contract (1)
+     × keeps attachment sections embedded in supported detail drawers and fallbacks 9ms
+ ❯ src/features/dashboard/__tests__/quick-create-loading-contract.test.ts (2 tests | 1 failed) 7ms
+   ❯ dashboard quick-create loading contract (2)
+     × gives each quick-create form its own suspense fallback 3ms
+ ❯ src/features/remunerations/__tests__/route-contract.test.ts (1 test | 1 failed) 11ms
+   ❯ route prefetch and loading checklist (1)
+     × keeps list routes aligned with RouteLoading and first-render suspense hooks 9ms
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+ ❯ src/shared/components/__tests__/navigation-link.test.tsx (1 test | 1 failed) 1253ms
+   ❯ NavigationLink (1)
+     × keeps internal navigation and exposes a decorative navigation icon 1251ms
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method

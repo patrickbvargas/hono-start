@@ -121,17 +121,17 @@ export function Dashboard({
 				{expenseOnly ||
 				(hasDetails && showDetails && Boolean(data.expenseRevenue?.length)) ? (
 					<DashboardBreakdownChart
-						title="Despesas por categoria"
+						title="Pagamentos por analítica"
 						onSelect={(item, trigger) =>
 							drilldown.openBreakdown(
 								"expense",
 								item,
-								"Despesas por categoria",
+								"Pagamentos por analítica",
 								trigger,
 							)
 						}
 						items={data.expenseRevenue ?? []}
-						emptyLabel="Sem despesas."
+						emptyLabel="Sem pagamentos."
 						variant="bar"
 					/>
 				) : null}
@@ -177,12 +177,12 @@ export function Dashboard({
 						{data.analysis ? (
 							<>
 								<DashboardBreakdownChart
-									title="Honorários em atraso"
+									title="Títulos em atraso"
 									onSelect={(item, trigger) =>
 										drilldown.openBreakdown(
 											"aging",
 											item,
-											"Honorários em atraso",
+											"Títulos em atraso",
 											trigger,
 										)
 									}
@@ -191,12 +191,12 @@ export function Dashboard({
 									variant="column"
 								/>
 								<DashboardBreakdownChart
-									title="Honorários a receber"
+									title="Títulos a vencer"
 									onSelect={(item, trigger) =>
 										drilldown.openBreakdown(
 											"forecast",
 											item,
-											"Honorários a receber",
+											"Títulos a vencer",
 											trigger,
 										)
 									}

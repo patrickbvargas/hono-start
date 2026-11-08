@@ -43,17 +43,7 @@ export const clerkPermissionCatalog = {
 		"delete",
 		"restore",
 	],
-	fees: ["read_all", "read_assigned", "create", "update", "delete", "restore"],
 	expenses: ["read", "create", "update", "delete", "restore"],
-	remunerations: [
-		"read_all",
-		"read_own",
-		"update",
-		"delete",
-		"restore",
-		"export_all",
-		"export_own",
-	],
 	attachments: ["read", "upload", "delete"],
 	employees: ["read", "create", "update", "delete", "restore"],
 	audit_logs: ["read"],
@@ -145,9 +135,7 @@ export type SessionScopeSubject =
 	| "employee"
 	| "client"
 	| "contract"
-	| "fee"
 	| "expense"
-	| "remuneration"
 	| "attachment"
 	| "dashboard"
 	| "audit-log";
@@ -170,12 +158,6 @@ export interface ContractAccessResource extends SessionFirmResource {
 	allowStatusChange?: boolean;
 }
 
-export type FeeAccessResource = ContractAccessResource;
-
-export interface RemunerationAccessResource extends SessionFirmResource {
-	employeeId: number;
-}
-
 export interface FinancialAccessResource extends SessionFirmResource {
 	contract?: ContractAccessResource;
 	beneficiaryPersonId?: number;
@@ -186,7 +168,6 @@ export type SessionResource =
 	| FinancialAccessResource
 	| SessionFirmResource
 	| ContractAccessResource
-	| RemunerationAccessResource
 	| null
 	| undefined;
 

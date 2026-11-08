@@ -48,6 +48,7 @@ export function getContractTableColumns(
 		}),
 		c.accessor("lawyer", {
 			header: "Advogado",
+			enableSorting: false,
 			meta: {
 				minColumnWidth: 240,
 			},

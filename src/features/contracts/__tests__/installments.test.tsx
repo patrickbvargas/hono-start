@@ -12,6 +12,7 @@ it("keeps schedule collapsed until requested and allows collapsing again", async
 		type: "Mensal",
 		typeValue: "MONTHLY",
 		totalValue: 100,
+		hasGeneratedTitles: true,
 		downPaymentValue: null,
 		paymentStartDate: "2026-01-01T00:00:00.000Z",
 		totalInstallments: 1,
@@ -38,7 +39,7 @@ it("keeps schedule collapsed until requested and allows collapsing again", async
 	expect(screen.queryByRole("table")).toBeNull();
 	fireEvent.click(trigger);
 	expect(await screen.findByRole("table")).toBeTruthy();
-	expect(screen.getByText("Recebida")).toBeTruthy();
+	expect(screen.getByText("Quitado")).toBeTruthy();
 	expect(trigger.getAttribute("aria-expanded")).toBe("true");
 	fireEvent.click(trigger);
 	expect(trigger.getAttribute("aria-expanded")).toBe("false");

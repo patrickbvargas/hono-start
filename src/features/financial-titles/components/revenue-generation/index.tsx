@@ -21,6 +21,8 @@ import type { OverlayState } from "@/shared/types/overlay";
 import { TITLE_MAX_AMOUNT } from "../../constants/values";
 import { useTitleGenerationOptions } from "../../hooks/use-data";
 import { useTitleGenerationForm } from "../../hooks/use-form";
+import { titleInputSchema } from "../../schemas/form";
+import { getAmountCents, getTitlePlanCents } from "../../utils/payment-plan";
 import { PreviewBalance } from "./preview-balance";
 
 interface RevenueGenerationFormProps {
@@ -95,7 +97,23 @@ function TitleGenerationContent({
 				state={state}
 				title="Gerar parcelas"
 				contentClassName="sm:max-w-5xl"
-				footer={<form.Submit />}
+				footer={
+					<form.Subscribe selector={(value) => value.values.titles}>
+						{(titles) => (
+							<form.Submit
+								disabled={
+									titles.length === 0 ||
+									!titles.every(
+										(title) =>
+											titleInputSchema.shape.amount.safeParse(title.amount)
+												.success,
+									) ||
+									getTitlePlanCents(titles) !== getAmountCents(negotiatedAmount)
+								}
+							/>
+						)}
+					</form.Subscribe>
+				}
 			>
 				<FormSection title="Parcelamento" variant="plain">
 					<p className="text-sm">
@@ -135,7 +153,7 @@ function TitleGenerationContent({
 						<form.AppField name="analytic">
 							{(field) => (
 								<field.Autocomplete
-									label="Categoria financeira"
+									label="Analítica"
 									classNames={{ wrapper: "lg:col-span-2" }}
 									options={analytics}
 									isRequired
@@ -145,7 +163,7 @@ function TitleGenerationContent({
 						<form.AppField name="expectedPaymentMethod">
 							{(field) => (
 								<field.Autocomplete
-									label="Forma de pagamento prevista"
+									label="Meio previsto"
 									classNames={{ wrapper: "lg:col-span-2" }}
 									options={paymentMethods}
 									isRequired
@@ -184,8 +202,8 @@ function TitleGenerationContent({
 											<TableHead scope="col">Título</TableHead>
 											<TableHead scope="col">Tipo</TableHead>
 											<TableHead scope="col">Vencimento</TableHead>
-											<TableHead scope="col">Categoria financeira</TableHead>
-											<TableHead scope="col">Forma de pagamento</TableHead>
+											<TableHead scope="col">Analítica</TableHead>
+											<TableHead scope="col">Meio previsto</TableHead>
 											<TableHead scope="col">Valor</TableHead>
 											<TableHead scope="col">
 												<span className="sr-only">Ações</span>
@@ -235,7 +253,7 @@ function TitleGenerationContent({
 													<form.AppField name={`titles[${index}].analytic`}>
 														{(field) => (
 															<field.Autocomplete
-																label={`Categoria financeira do título ${index + 1}`}
+																label={`Analítica do título ${index + 1}`}
 																options={analytics}
 																isRequired
 															/>
@@ -248,7 +266,7 @@ function TitleGenerationContent({
 													>
 														{(field) => (
 															<field.Autocomplete
-																label={`Forma de pagamento do título ${index + 1}`}
+																label={`Meio previsto do título ${index + 1}`}
 																options={paymentMethods}
 																isRequired
 															/>

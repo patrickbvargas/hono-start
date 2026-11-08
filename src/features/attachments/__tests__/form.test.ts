@@ -9,7 +9,7 @@ import {
 import { inferAttachmentTypeFromFile } from "../utils/file";
 
 const baseInput = {
-	clientId: 1,
+	personId: 1,
 	type: "PDF",
 	fileName: "contrato.pdf",
 	mimeType: "application/pdf",
@@ -18,13 +18,13 @@ const baseInput = {
 };
 
 describe("attachment form schema", () => {
-	it.each([{ feeId: 9 }, { remunerationId: 12 }])(
+	it.each([{ receivableId: 9 }, { payableId: 12 }])(
 		"accepts a single financial owner %o",
 		(owner) => {
 			expect(
 				attachmentUploadInputSchema.safeParse({
 					...baseInput,
-					clientId: undefined,
+					personId: undefined,
 					...owner,
 				}).success,
 			).toBe(true);
@@ -32,14 +32,14 @@ describe("attachment form schema", () => {
 	);
 	it("rejects financial owners combined with any other context", () => {
 		for (const owner of [
-			{ feeId: 1, remunerationId: 2 },
-			{ feeId: 1, expenseId: 2 },
-			{ remunerationId: 1, clientId: 2 },
+			{ receivableId: 1, payableId: 2 },
+			{ receivableId: 1, expenseId: 2 },
+			{ payableId: 1, personId: 2 },
 		]) {
 			expect(
 				attachmentUploadInputSchema.safeParse({
 					...baseInput,
-					clientId: undefined,
+					personId: undefined,
 					...owner,
 				}).success,
 			).toBe(false);
@@ -52,7 +52,7 @@ describe("attachment form schema", () => {
 		).toBe(true);
 		expect(
 			attachmentFormInputSchema.safeParse({
-				clientId: 1,
+				personId: 1,
 				file: new File(["test"], fileName, { type: "application/pdf" }),
 			}).success,
 		).toBe(true);
@@ -64,7 +64,7 @@ describe("attachment form schema", () => {
 		).toBe(false);
 		expect(
 			attachmentFormInputSchema.safeParse({
-				clientId: 1,
+				personId: 1,
 				file: new File(["test"], `a${fileName}`, { type: "application/pdf" }),
 			}).success,
 		).toBe(false);
@@ -97,13 +97,13 @@ describe("attachment form schema", () => {
 	it("rejects missing or multiple owner contexts", () => {
 		const noOwner = attachmentUploadInputSchema.safeParse({
 			...baseInput,
-			clientId: undefined,
+			personId: undefined,
 		});
 		expect(noOwner.success).toBe(false);
 
 		const multipleOwners = attachmentUploadInputSchema.safeParse({
 			...baseInput,
-			employeeId: 2,
+			contractId: 2,
 		});
 		expect(multipleOwners.success).toBe(false);
 	});
@@ -112,7 +112,7 @@ describe("attachment form schema", () => {
 		expect(
 			attachmentUploadInputSchema.parse({
 				...baseInput,
-				clientId: undefined,
+				personId: undefined,
 				expenseId: 9,
 			}),
 		).toMatchObject({
@@ -155,22 +155,22 @@ describe("attachment form schema", () => {
 
 		expect(
 			attachmentFormInputSchema.parse({
-				clientId: 1,
+				personId: 1,
 				file: validFile,
 			}),
 		).toEqual({
-			clientId: 1,
+			personId: 1,
 			file: validFile,
 		});
 
 		const missingFile = attachmentFormInputSchema.safeParse({
-			clientId: 1,
+			personId: 1,
 			file: null,
 		});
 		expect(missingFile.success).toBe(false);
 
 		const invalidType = attachmentFormInputSchema.safeParse({
-			clientId: 1,
+			personId: 1,
 			file: new File(["test"], "contrato.exe", {
 				type: "application/octet-stream",
 			}),

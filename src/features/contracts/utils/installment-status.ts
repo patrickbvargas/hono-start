@@ -3,7 +3,7 @@ export function getInstallmentStatus(
 	today: string,
 ) {
 	if (row.remainingAmount <= 0) {
-		return "Recebida";
+		return "Quitado";
 	}
 	if (row.dueDate < today) {
 		return "Em atraso";

@@ -108,8 +108,6 @@ describe("feature validation boundaries", () => {
 			expect.arrayContaining([
 				"src/features/people/data/mutations.ts",
 				"src/features/contracts/data/mutations.ts",
-				"src/features/fees/data/mutations.ts",
-				"src/features/remunerations/data/mutations.ts",
 			]),
 		);
 	});

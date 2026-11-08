@@ -4,7 +4,7 @@ import {
 	getContractRevenueTypesQueryOptions,
 	getSelectableContractClientsQueryOptions,
 } from "@/features/contracts";
-import { getSelectableFeeContractsQueryOptions } from "@/features/fees";
+import { getReceivableOptionsQueryOptions } from "@/features/receivables";
 import { hasPermission, useLoggedUserSession } from "@/shared/session";
 import {
 	getDashboardEmployeeOptionsQueryOptions,
@@ -26,12 +26,12 @@ export function useDashboardOptions() {
 		hasPermission(session, "org:contracts:read_all") ||
 		hasPermission(session, "org:contracts:read_assigned");
 
-	const canReadFeeOptions =
-		hasPermission(session, "org:fees:read_all") ||
-		hasPermission(session, "org:fees:read_assigned");
+	const canReadTitleOptions =
+		hasPermission(session, "org:receivables:read_all") ||
+		hasPermission(session, "org:receivables:read_assigned");
 	const [
 		{ data: clients },
-		{ data: contracts },
+		{ data: titleOptions },
 		{ data: employees },
 		{ data: legalAreas },
 		{ data: revenueTypes },
@@ -44,10 +44,15 @@ export function useDashboardOptions() {
 					: async () => [],
 			},
 			{
-				...getSelectableFeeContractsQueryOptions(),
-				queryFn: canReadFeeOptions
-					? getSelectableFeeContractsQueryOptions().queryFn
-					: async () => [],
+				...getReceivableOptionsQueryOptions(),
+				queryFn: canReadTitleOptions
+					? getReceivableOptionsQueryOptions().queryFn
+					: async () => ({
+							debtors: [],
+							contracts: [],
+							analytics: [],
+							methods: [],
+						}),
 			},
 			getDashboardEmployeeOptionsQueryOptions(),
 			{
@@ -67,7 +72,7 @@ export function useDashboardOptions() {
 
 	return {
 		clients,
-		contracts,
+		contracts: titleOptions.contracts,
 		employees,
 		legalAreas,
 		revenueTypes,

@@ -1,7 +1,6 @@
 import { createFileRoute, stripSearchParams } from "@tanstack/react-router";
 import {
 	BriefcaseIcon,
-	DollarSignIcon,
 	PlusIcon,
 	UserIcon,
 	WalletCardsIcon,
@@ -31,11 +30,6 @@ import {
 	ExpenseForm,
 	getExpenseCategoriesQueryOptions,
 } from "@/features/expenses";
-import {
-	FeeForm,
-	getSelectableFeeContractsQueryOptions,
-	getSelectableFeeRevenuesQueryOptions,
-} from "@/features/fees";
 import {
 	getEmployeeTypesQueryOptions,
 	getPersonTypesQueryOptions,
@@ -86,6 +80,7 @@ export const Route = createFileRoute("/_app/")({
 		if (
 			hasPermission(session, "org:clients:create") ||
 			hasPermission(session, "org:employees:create") ||
+			hasPermission(session, "org:suppliers:create") ||
 			hasPermission(session, "org:people:create")
 		) {
 			await Promise.all([
@@ -106,16 +101,6 @@ export const Route = createFileRoute("/_app/")({
 				queryClient.query(getContractStatusesQueryOptions()),
 				queryClient.query(getContractAssignmentTypesQueryOptions()),
 				queryClient.query(getContractRevenueTypesQueryOptions()),
-			]);
-		}
-		if (
-			(["org:fees:read_all", "org:fees:read_assigned"] as const).some(
-				(permission) => hasPermission(session, permission),
-			)
-		) {
-			await Promise.all([
-				queryClient.query(getSelectableFeeContractsQueryOptions()),
-				queryClient.query(getSelectableFeeRevenuesQueryOptions()),
 			]);
 		}
 		if (hasPermission(session, "org:expenses:create")) {
@@ -139,15 +124,14 @@ function RouteComponent() {
 	const isAdmin = hasPermission(session, "org:dashboard:read_all");
 	const personOverlay = useOverlay<EntityId>();
 	const contractOverlay = useOverlay<EntityId>();
-	const feeOverlay = useOverlay<EntityId>();
 	const expenseOverlay = useOverlay<EntityId>();
 	const canCreate = (
 		[
 			"org:clients:create",
 			"org:contracts:create",
 			"org:employees:create",
+			"org:suppliers:create",
 			"org:people:create",
-			"org:fees:create",
 			"org:expenses:create",
 		] as const
 	).some((permission) => hasPermission(session, permission));
@@ -183,20 +167,14 @@ function RouteComponent() {
 								</DropdownMenuItem>
 							) : null}
 							{hasPermission(session, "org:clients:create") ||
+							hasPermission(session, "org:employees:create") ||
+							hasPermission(session, "org:suppliers:create") ||
 							hasPermission(session, "org:people:create") ? (
 								<DropdownMenuItem
 									onClick={() => personOverlay.overlay.create.open()}
 								>
 									<UserIcon size={16} />
 									Pessoa
-								</DropdownMenuItem>
-							) : null}
-							{hasPermission(session, "org:fees:create") ? (
-								<DropdownMenuItem
-									onClick={() => feeOverlay.overlay.create.open()}
-								>
-									<DollarSignIcon size={16} />
-									Recebimento
 								</DropdownMenuItem>
 							) : null}
 							{hasPermission(session, "org:expenses:create") ? (
@@ -253,9 +231,6 @@ function RouteComponent() {
 				))}
 				{contractOverlay.overlay.details.render((id, state) => (
 					<ContractDetails id={id} state={state} />
-				))}
-				{feeOverlay.overlay.create.render((state) => (
-					<FeeForm state={state} onSuccess={state.close} />
 				))}
 				{expenseOverlay.overlay.create.render((state) => (
 					<ExpenseForm state={state} onSuccess={state.close} />

@@ -1,0 +1,5 @@
+
+> hono-start@ check C:\Dev\hono-start
+> biome check --write
+
+Checked 826 files in 607ms. Fixed 1 file.

@@ -4,9 +4,9 @@ import { describe, expect, it } from "vitest";
 const features = [
 	"people",
 	"contracts",
-	"fees",
+
 	"expenses",
-	"remunerations",
+
 	"attachments",
 ];
 
@@ -41,7 +41,7 @@ describe("business form UI contract", () => {
 			expect(source).toContain('label="Ativo"');
 		},
 	);
-	it.each(["contracts", "fees", "expenses", "remunerations"])(
+	it.each(["contracts", "expenses"])(
 		"omits activation management from %s forms, filters, tables and cards",
 		(feature) => {
 			for (const component of ["form", "filter", "table", "list"]) {

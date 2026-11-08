@@ -27,7 +27,7 @@ describe("Clerk business permission catalog", () => {
 		expect(
 			clerkPermissionSchema.safeParse("org:employees:manage").success,
 		).toBe(false);
-		expect(clerkPermissions).toContain("org:remunerations:export_own");
+		expect(clerkPermissions).toContain("org:financial_reports:export_scoped");
 		expect(clerkPermissions).toContain("org:contracts:update_assigned");
 	});
 });

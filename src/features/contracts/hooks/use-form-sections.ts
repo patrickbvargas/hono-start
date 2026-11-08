@@ -41,10 +41,7 @@ export function useContractFormSections({ form }: UseFormSectionsOptions) {
 		keys.current[section].splice(index, 1);
 	}
 	function isRevenueRequiredOpen(revenue: ContractRevenueInput, index: number) {
-		if (
-			!contractRevenueInputSchema.safeParse(revenue).success ||
-			(revenue.downPaymentValue ?? 0) > revenue.totalValue
-		) {
+		if (!contractRevenueInputSchema.safeParse(revenue).success) {
 			return true;
 		}
 		return (

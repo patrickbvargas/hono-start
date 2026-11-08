@@ -1,0 +1,12 @@
+
+ RUN  v5.0.5 C:/Dev/hono-start
+
+··············
+
+ Test Files  3 passed (3)
+      Tests  14 passed (14)
+   Start at  20:37:18
+   Duration  11.40s (import 67%, environment 28%, transform 4%, tests 1%)
+
+    Isolate  3 workers spawned · ~1.33s startup each (spawn + environment, per file)
+             at least ~663ms faster with isolate: false — reuses workers across files instead of one per file

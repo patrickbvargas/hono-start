@@ -1,35 +1,38 @@
 import { beforeEach, expect, it, vi } from "vitest";
 import type { LoggedUserSession } from "@/shared/session";
-import { getAuditAccessWhere } from "../data/access";
 
 const db = vi.hoisted(() => ({
 	contract: { findMany: vi.fn() },
-	fee: { findMany: vi.fn() },
-	remuneration: { findMany: vi.fn() },
+	receivable: { findMany: vi.fn() },
+	payable: { findMany: vi.fn() },
 }));
 vi.mock("@/shared/lib/prisma", () => ({ prisma: db }));
+vi.mock("@/features/people", () => ({
+	getPersonReadWhere: () => ({ id: -1 }),
+}));
+
+import { getAuditAccessWhere } from "../data/access";
 
 function member(
 	permissions: LoggedUserSession["permissions"] = [],
 ): LoggedUserSession {
 	return {
 		permissions: ["org:audit_logs:read", ...permissions],
-		clerk: { userId: "member", organizationId: "org", sessionId: "session" },
-		user: { fullName: "Member", email: "member@example.com" },
+		clerk: { userId: "m", organizationId: "o", sessionId: "s" },
+		user: { fullName: "Member", email: "m@example.com" },
+		person: { id: 12 },
 		employee: { id: 10 },
 		firm: { id: 2, name: "Filial" },
 		employeeType: { id: 1, value: "LAWYER", label: "Advogado" },
 	};
 }
-
 beforeEach(() => {
 	vi.clearAllMocks();
 	db.contract.findMany.mockResolvedValue([{ id: 7 }]);
-	db.fee.findMany.mockResolvedValue([{ id: 8 }]);
-	db.remuneration.findMany.mockResolvedValue([{ id: 9 }]);
+	db.receivable.findMany.mockResolvedValue([{ id: 8 }]);
+	db.payable.findMany.mockResolvedValue([{ id: 9 }]);
 });
-
-it("denies audit access without its explicit grant", async () => {
+it("requires the audit grant independently", async () => {
 	await expect(
 		getAuditAccessWhere({
 			...member(),
@@ -38,67 +41,76 @@ it("denies audit access without its explicit grant", async () => {
 	).rejects.toThrow("Você não tem permissão");
 	expect(db.contract.findMany).not.toHaveBeenCalled();
 });
-
-it("audit permission alone exposes no subject, even to an event author", async () => {
-	expect(await getAuditAccessWhere(member())).toEqual({
-		OR: [{ firmId: 2, clientId: null, employeeId: null, OR: [] }],
-	});
-});
-
-it("limits a member to active permitted assignments, assigned fees and own remuneration", async () => {
-	const where = await getAuditAccessWhere(
-		member([
-			"org:clients:read",
-			"org:contracts:read_assigned",
-			"org:fees:read_assigned",
-			"org:remunerations:read_own",
-		]),
-	);
-	const contractScope = {
-		firmId: 2,
-		assignments: {
-			some: {
-				firmId: 2,
-				employeeId: 10,
-				isActive: true,
-				deletedAt: null,
-				assignmentType: { value: { in: ["RESPONSIBLE", "RECOMMENDED"] } },
-			},
-		},
-	};
-	expect(db.contract.findMany).toHaveBeenCalledWith({
-		where: contractScope,
-		select: { id: true },
-	});
-	expect(db.fee.findMany).toHaveBeenCalledWith({
-		where: { firmId: 2, revenue: { firmId: 2, contract: contractScope } },
-		select: { id: true },
-	});
-	expect(db.remuneration.findMany).toHaveBeenCalledWith({
-		where: { firmId: 2, contractEmployee: { firmId: 2, employeeId: 10 } },
-		select: { id: true },
-	});
-	expect(where.OR).toEqual([
-		{ clientId: { not: null } },
-		{
-			firmId: 2,
-			clientId: null,
-			employeeId: null,
-			OR: expect.arrayContaining([
-				{ entityType: "Contract", entityId: { in: ["7"] } },
-				{ entityType: "Fee", entityId: { in: ["8"] } },
-				{ entityType: "Remuneration", entityId: { in: ["9"] } },
-			]),
-		},
-	]);
-	const branches = where.OR?.[1].OR ?? [];
-	expect(branches).not.toContainEqual({ entityType: "Expense" });
-	expect(branches).not.toContainEqual({ entityType: "Employee" });
+it("audit alone grants no operational or financial subject", async () => {
+	const where = await getAuditAccessWhere(member());
+	expect(where.OR).toContainEqual({ firmId: 2, personId: null, OR: [] });
+	expect(db.receivable.findMany).not.toHaveBeenCalled();
+	expect(db.payable.findMany).not.toHaveBeenCalled();
 	expect(JSON.stringify(where)).not.toContain("actorId");
 });
-
-it("retains administrative-assistant assignment rules and follows assignment revocation", async () => {
-	db.contract.findMany.mockResolvedValue([]);
+it("scopes assigned titles and strictly own remuneration before selecting events", async () => {
+	const where = await getAuditAccessWhere(
+		member([
+			"org:contracts:read_assigned",
+			"org:receivables:read_assigned",
+			"org:payables:read_own",
+		]),
+	);
+	expect(db.contract.findMany).toHaveBeenCalledWith(
+		expect.objectContaining({
+			where: expect.objectContaining({
+				firmId: 2,
+				assignments: {
+					some: expect.objectContaining({
+						employeeProfileId: 10,
+						isActive: true,
+						deletedAt: null,
+					}),
+				},
+			}),
+		}),
+	);
+	expect(db.receivable.findMany).toHaveBeenCalledWith(
+		expect.objectContaining({
+			where: expect.objectContaining({
+				firmId: 2,
+				contractRevenueReceivable: expect.any(Object),
+			}),
+		}),
+	);
+	expect(db.payable.findMany).toHaveBeenCalledWith(
+		expect.objectContaining({
+			where: expect.objectContaining({
+				firmId: 2,
+				beneficiary: { personId: 12 },
+				remunerationPayable: expect.any(Object),
+			}),
+		}),
+	);
+	expect(where.OR).toContainEqual({
+		firmId: 2,
+		entityType: "Receivable",
+		entityId: { in: ["8"] },
+	});
+	expect(where.OR).toContainEqual({
+		firmId: 2,
+		entityType: "Payable",
+		entityId: { in: ["9"] },
+	});
+});
+it("denies assigned reads after employee binding is lost", async () => {
+	const session = member([
+		"org:contracts:read_assigned",
+		"org:receivables:read_assigned",
+		"org:payables:read_own",
+	]);
+	session.employee.id = null;
+	await getAuditAccessWhere(session);
+	expect(db.contract.findMany).not.toHaveBeenCalled();
+	expect(db.receivable.findMany).not.toHaveBeenCalled();
+	expect(db.payable.findMany).not.toHaveBeenCalled();
+});
+it("retains assistant assignment restrictions and attachment deletion snapshots", async () => {
 	const session = member(["org:contracts:read_assigned"]);
 	session.employeeType = {
 		id: 2,
@@ -117,68 +129,24 @@ it("retains administrative-assistant assignment rules and follows assignment rev
 			}),
 		}),
 	);
-	expect(where.OR?.[0].OR).toContainEqual({
-		entityType: "Contract",
-		entityId: { in: [] },
-	});
+	expect(JSON.stringify(where)).toContain('"before","contractId"');
 });
-
-it("does not grant assigned or own history without an employee binding", async () => {
-	const session = member([
-		"org:contracts:read_assigned",
-		"org:fees:read_assigned",
-		"org:remunerations:read_own",
-	]);
-	session.employee.id = null;
-	expect(await getAuditAccessWhere(session)).toEqual({
-		OR: [{ firmId: 2, clientId: null, employeeId: null, OR: [] }],
-	});
-	expect(db.contract.findMany).not.toHaveBeenCalled();
-	expect(db.fee.findMany).not.toHaveBeenCalled();
-	expect(db.remuneration.findMany).not.toHaveBeenCalled();
-});
-
-it("keeps broad subject grants independent and operational events within current firm", async () => {
+it("keeps broad financial grants branch scoped and protects mixed profile history", async () => {
 	const where = await getAuditAccessWhere(
 		member([
-			"org:employees:read",
 			"org:contracts:read_all",
-			"org:fees:read_all",
-			"org:remunerations:read_all",
+			"org:receivables:read_all",
+			"org:payables:read_all",
 			"org:expenses:read",
 		]),
 	);
-	expect(where.OR?.[0]).toEqual({ employeeId: { not: null } });
-	expect(where.OR?.[1]).toEqual(
-		expect.objectContaining({
-			firmId: 2,
-			clientId: null,
-			employeeId: null,
-			OR: expect.arrayContaining([
-				{ entityType: "Contract" },
-				{ entityType: "Fee" },
-				{ entityType: "Remuneration" },
-				{ entityType: "Expense" },
-			]),
-		}),
-	);
-	expect(db.contract.findMany).not.toHaveBeenCalled();
-});
-
-it("authorizes both uploaded and deleted attachment events through the readable owner", async () => {
-	const where = await getAuditAccessWhere(
-		member(["org:contracts:read_assigned"]),
-	);
-	expect(where.OR?.[0].OR).toContainEqual({
-		entityType: "Attachment",
-		OR: [
-			{
-				AND: [
-					{ changeData: { path: ["ownerKind"], equals: "contract" } },
-					{ changeData: { path: ["ownerId"], equals: 7 } },
-				],
-			},
-			{ changeData: { path: ["before", "contractId"], equals: 7 } },
-		],
+	expect(db.receivable.findMany).toHaveBeenCalledWith({
+		where: { firmId: 2 },
+		select: { id: true },
 	});
+	expect(db.payable.findMany).toHaveBeenCalledWith({
+		where: { firmId: 2 },
+		select: { id: true },
+	});
+	expect(JSON.stringify(where)).toContain('"employeeProfile":{"is":null}');
 });

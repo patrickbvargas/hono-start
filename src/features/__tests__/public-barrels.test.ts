@@ -41,9 +41,7 @@ const auditLogs = readExports("src/features/audit-logs/index.ts");
 const authentication = readExports("src/features/authentication/index.ts");
 const contracts = readExports("src/features/contracts/index.ts");
 const dashboard = readExports("src/features/dashboard/index.ts");
-const fees = readExports("src/features/fees/index.ts");
 const people = readExports("src/features/people/index.ts");
-const remunerations = readExports("src/features/remunerations/index.ts");
 
 describe("feature public barrels", () => {
 	it("keeps the authentication barrel limited to top-level auth surfaces and route hooks", () => {
@@ -63,26 +61,11 @@ describe("feature public barrels", () => {
 		expect(people).not.toHaveProperty("usePersonForm");
 	});
 
-	it("keeps contract and fee barrels aligned with the same minimal surface", () => {
+	it("keeps the contract barrel limited to its public surface", () => {
 		expect(contracts).toHaveProperty("getContractsQueryOptions");
 		expect(contracts).toHaveProperty("ContractForm");
 		expect(contracts).not.toHaveProperty("createContractMutationOptions");
 		expect(contracts).not.toHaveProperty("useContractOptions");
-
-		expect(fees).toHaveProperty("getFeesQueryOptions");
-		expect(fees).toHaveProperty("FeeForm");
-		expect(fees).not.toHaveProperty("createFeeMutationOptions");
-		expect(fees).not.toHaveProperty("useFeeForm");
-	});
-
-	it("keeps remuneration barrel minimal while preserving the route-level export hook", () => {
-		expect(remunerations).toHaveProperty("getRemunerationsQueryOptions");
-		expect(remunerations).toHaveProperty("RemunerationForm");
-		expect(remunerations).toHaveProperty("useRemunerationExport");
-		expect(remunerations).not.toHaveProperty(
-			"updateRemunerationMutationOptions",
-		);
-		expect(remunerations).not.toHaveProperty("useRemunerationForm");
 	});
 
 	it("keeps supporting and reporting barrels free of incidental exports", () => {

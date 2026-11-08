@@ -6,12 +6,11 @@ export const ATTACHMENT_OWNER_KINDS = [
 	"receivable",
 	"payable",
 	"person",
-	"client",
-	"employee",
 	"contract",
 	"expense",
-	"fee",
-	"remuneration",
+	"receipt",
+	"payment",
+	"remuneration-payable",
 ] as const;
 export const ATTACHMENT_ALLOWED_MIME_TYPE_BY_VALUE = {
 	PDF: ["application/pdf"],

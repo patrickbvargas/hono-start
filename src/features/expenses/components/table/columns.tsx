@@ -45,13 +45,13 @@ export function getExpenseReadColumns<T extends RowData>({
 		}),
 		c.accessor(date, {
 			id: "createdAt",
-			header: "Data de Registro",
+			header: "Data de registro",
 			cell: ({ getValue }) => formatter.calendarDate(getValue()),
 			enableSorting,
 		}),
 		c.accessor(amount, {
 			id: "negotiatedAmount",
-			header: "Valor Negociado",
+			header: "Valor negociado",
 			cell: ({ getValue }) => (
 				<SensitiveValue>{formatter.currency(getValue())}</SensitiveValue>
 			),

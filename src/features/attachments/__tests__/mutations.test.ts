@@ -39,7 +39,7 @@ vi.mock("@/shared/lib/prisma", () => ({
 	prisma: prismaMock,
 }));
 
-vi.mock("@/features/audit-logs/data/mutations", () => ({
+vi.mock("@/features/audit-logs", () => ({
 	createAuditLog: createAuditLogMock,
 }));
 
@@ -75,7 +75,7 @@ describe("attachment data mutations", () => {
 		await expect(
 			createAttachments({
 				firmId: 1,
-				input: { clientId: 9, files: [batchFile, batchFile] },
+				input: { personId: 9, files: [batchFile, batchFile] },
 			}),
 		).resolves.toEqual({ success: true });
 		expect(prismaMock.$transaction).toHaveBeenCalledOnce();
@@ -99,7 +99,7 @@ describe("attachment data mutations", () => {
 		await expect(
 			createAttachments({
 				firmId: 1,
-				input: { clientId: 9, files: [batchFile, batchFile] },
+				input: { personId: 9, files: [batchFile, batchFile] },
 			}),
 		).rejects.toThrow(ATTACHMENT_ERRORS.OWNER_LIMIT_REACHED);
 		expect(prismaMock.attachment.create).not.toHaveBeenCalled();
@@ -112,7 +112,7 @@ describe("attachment data mutations", () => {
 		await expect(
 			createAttachments({
 				firmId: 1,
-				input: { clientId: 9, files: [batchFile, batchFile] },
+				input: { personId: 9, files: [batchFile, batchFile] },
 			}),
 		).rejects.toThrow(ATTACHMENT_ERRORS.PERSISTENCE_FAILED);
 		expect(prismaMock.$transaction).toHaveBeenCalledOnce();
@@ -125,7 +125,7 @@ describe("attachment data mutations", () => {
 		await expect(
 			createAttachments({
 				firmId: 1,
-				input: { clientId: 9, files: [batchFile, batchFile] },
+				input: { personId: 9, files: [batchFile, batchFile] },
 			}),
 		).rejects.toThrow(ATTACHMENT_ERRORS.STORAGE_UPLOAD_FAILED);
 		expect(removeAttachmentFileMock).toHaveBeenCalledTimes(1);
@@ -135,19 +135,19 @@ describe("attachment data mutations", () => {
 		await expect(
 			createAttachments({
 				firmId: 1,
-				input: { clientId: 9, files: Array(11).fill(batchFile) },
+				input: { personId: 9, files: Array(11).fill(batchFile) },
 			}),
 		).rejects.toThrow();
 		expect(uploadAttachmentFileMock).not.toHaveBeenCalled();
 		expect(prismaMock.$transaction).not.toHaveBeenCalled();
 	});
 	it.each([
-		{ clientId: 9 },
-		{ employeeId: 9 },
+		{ personId: 9 },
+		{ personId: 9 },
 		{ contractId: 9 },
 		{ expenseId: 9 },
-		{ feeId: 9 },
-		{ remunerationId: 9 },
+		{ contractId: 9 },
+		{ expenseId: 9 },
 	])(
 		"rejects the 11th attachment and cleans uploaded storage for %o",
 		async (owner) => {
@@ -167,9 +167,7 @@ describe("attachment data mutations", () => {
 			).rejects.toThrow(ATTACHMENT_ERRORS.OWNER_LIMIT_REACHED);
 			expect(prismaMock.attachment.count).toHaveBeenCalledWith({
 				where: {
-					...("clientId" in owner || "employeeId" in owner
-						? {}
-						: { firmId: 1 }),
+					...("personId" in owner || "personId" in owner ? {} : { firmId: 1 }),
 					deletedAt: null,
 					...owner,
 				},
@@ -189,7 +187,7 @@ describe("attachment data mutations", () => {
 			createAttachment({
 				firmId: 1,
 				input: {
-					clientId: 9,
+					personId: 9,
 					type: "PDF",
 					fileName: "contrato.pdf",
 					mimeType: "application/pdf",
@@ -246,7 +244,7 @@ describe("attachment data mutations", () => {
 				},
 				firmId: 1,
 				input: {
-					clientId: 9,
+					personId: 9,
 					type: "PDF",
 					fileName: "contrato.pdf",
 					mimeType: "application/pdf",
@@ -260,7 +258,7 @@ describe("attachment data mutations", () => {
 		expect(prismaMock.attachment.create).toHaveBeenCalledWith({
 			data: expect.objectContaining({
 				firmId: 1,
-				clientId: 9,
+				personId: 9,
 				typeId: 30,
 				fileName: "contrato.pdf",
 				mimeType: "application/pdf",
@@ -284,7 +282,7 @@ describe("attachment data mutations", () => {
 			createAttachment({
 				firmId: 1,
 				input: {
-					clientId: 9,
+					personId: 9,
 					type: "PDF",
 					fileName: "contrato.pdf",
 					mimeType: "application/pdf",
@@ -305,7 +303,7 @@ describe("attachment data mutations", () => {
 			createAttachment({
 				firmId: 1,
 				input: {
-					clientId: 9,
+					personId: 9,
 					type: "PDF",
 					fileName: "contrato.pdf",
 					mimeType: "application/pdf",
@@ -325,7 +323,7 @@ describe("attachment data mutations", () => {
 			createAttachment({
 				firmId: 1,
 				input: {
-					clientId: 9,
+					personId: 9,
 					type: "PDF",
 					fileName: "contrato.pdf",
 					mimeType: "application/pdf",
@@ -348,7 +346,7 @@ describe("attachment data mutations", () => {
 			createAttachment({
 				firmId: 1,
 				input: {
-					clientId: 9,
+					personId: 9,
 					type: "PDF",
 					fileName: "contrato.pdf",
 					mimeType: "application/pdf",
@@ -369,7 +367,7 @@ describe("attachment data mutations", () => {
 			createAttachment({
 				firmId: 1,
 				input: {
-					clientId: 9,
+					personId: 9,
 					type: "PDF",
 					fileName: "contrato.pdf",
 					mimeType: "application/pdf",

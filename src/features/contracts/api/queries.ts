@@ -1,6 +1,7 @@
 import { queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import { enrichEmployeeAvatars } from "@/features/authentication";
+import { getPersonContractScope } from "@/features/people";
 import { hasExactErrorMessage } from "@/shared/lib/error-mapping";
 import type { EntityId } from "@/shared/schemas/entity";
 import type { Option } from "@/shared/schemas/option";
@@ -61,6 +62,9 @@ const getContractsFn = createServerFn({ method: "GET" })
 						employeeId: scope.employeeId,
 						employeeTypeValue: session.employeeType?.value,
 						isAdmin: hasPermission(session, "org:contracts:read_all"),
+						canReadTitles:
+							hasPermission(session, "org:receivables:read_all") ||
+							hasPermission(session, "org:receivables:read_assigned"),
 					},
 					search: data,
 				});
@@ -168,9 +172,19 @@ const getSelectableContractClientsFn = createServerFn({
 	.middleware([authMiddleware])
 	.handler(async (): Promise<QueryManyReturnType<Option>> => {
 		try {
-			await getRequiredServerLoggedUserSession();
+			const session = await getRequiredServerLoggedUserSession();
+			assertCan(session, [
+				"org:contracts:read_all",
+				"org:contracts:read_assigned",
+				"org:contracts:create",
+			]);
 			const { firmId } = await getServerScope("contract");
-			return await getSelectableContractClients(firmId);
+			const contractWhere =
+				hasPermission(session, "org:contracts:create") ||
+				hasPermission(session, "org:contracts:read_all")
+					? undefined
+					: getPersonContractScope(session);
+			return await getSelectableContractClients(firmId, contractWhere);
 		} catch (error) {
 			console.error("[getSelectableContractClients]", error);
 			throw new Error(CONTRACT_ERRORS.CONTRACT_SELECTABLE_CLIENTS_FAILED);
@@ -183,10 +197,20 @@ const getSelectableContractEmployeesFn = createServerFn({
 	.middleware([authMiddleware])
 	.handler(async (): Promise<QueryManyReturnType<Option>> => {
 		try {
-			await getRequiredServerLoggedUserSession();
+			const session = await getRequiredServerLoggedUserSession();
+			assertCan(session, [
+				"org:contracts:read_all",
+				"org:contracts:read_assigned",
+				"org:contracts:create",
+			]);
 			const { firmId } = await getServerScope("contract");
+			const contractWhere =
+				hasPermission(session, "org:contracts:create") ||
+				hasPermission(session, "org:contracts:read_all")
+					? undefined
+					: getPersonContractScope(session);
 			return await enrichEmployeeAvatars(
-				await getSelectableContractEmployees(firmId),
+				await getSelectableContractEmployees(firmId, contractWhere),
 			);
 		} catch (error) {
 			console.error("[getSelectableContractEmployees]", error);

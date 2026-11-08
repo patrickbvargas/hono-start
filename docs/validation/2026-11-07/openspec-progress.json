@@ -1,0 +1,76 @@
+- Generating apply instructions...
+{
+  "changeName": "complete-app-workflow-validation",
+  "changeDir": "C:\\Dev\\hono-start\\openspec\\changes\\complete-app-workflow-validation",
+  "schemaName": "spec-driven",
+  "contextFiles": {
+    "proposal": "C:\\Dev\\hono-start\\openspec\\changes\\complete-app-workflow-validation\\proposal.md",
+    "specs": "C:\\Dev\\hono-start\\openspec\\changes\\complete-app-workflow-validation\\specs\\**\\*.md",
+    "design": "C:\\Dev\\hono-start\\openspec\\changes\\complete-app-workflow-validation\\design.md",
+    "tasks": "C:\\Dev\\hono-start\\openspec\\changes\\complete-app-workflow-validation\\tasks.md"
+  },
+  "progress": {
+    "total": 11,
+    "complete": 8,
+    "remaining": 3
+  },
+  "tasks": [
+    {
+      "id": "1",
+      "description": "1.1 Align canonical workflow/permission documentation and remove stale references.",
+      "done": true
+    },
+    {
+      "id": "2",
+      "description": "1.2 Remove obsolete fee/remuneration implementations and consumers; redirect legacy URLs safely.",
+      "done": true
+    },
+    {
+      "id": "3",
+      "description": "2.1 Replace dashboard data, aggregates and drilldowns with scoped title/movement projections and regression tests.",
+      "done": true
+    },
+    {
+      "id": "4",
+      "description": "2.2 Replace pending-work queries with current tables and actual balances, with authorization tests.",
+      "done": true
+    },
+    {
+      "id": "5",
+      "description": "3.1 Remove legacy operational revenue planning/fallbacks and include every generated title in summaries.",
+      "done": true
+    },
+    {
+      "id": "6",
+      "description": "3.2 Preserve invalid monetary inputs and synchronize mutation results without reload, with regressions.",
+      "done": true
+    },
+    {
+      "id": "7",
+      "description": "4.1 Restore authorized audit navigation, translate financial audit labels and update settings guidance.",
+      "done": true
+    },
+    {
+      "id": "8",
+      "description": "4.2 Standardize financial terms, generation difference feedback, organization locale and actionable error recovery.",
+      "done": true
+    },
+    {
+      "id": "9",
+      "description": "5.1 Align meaningful current contract tests, resolve full-suite hangs, run pnpm check and typecheck, and fix errors.",
+      "done": false
+    },
+    {
+      "id": "10",
+      "description": "5.2 Run full tests/build and available non-destructive database checks; reconcile existing seed checklist only with evidence.",
+      "done": false
+    },
+    {
+      "id": "11",
+      "description": "5.3 Recheck available browser workflows, update TODO.md/evidence and record live-environment limitations.",
+      "done": false
+    }
+  ],
+  "state": "ready",
+  "instruction": "Read context files, work through pending tasks, mark complete as you go.\nPause if you hit blockers or need clarification."
+}

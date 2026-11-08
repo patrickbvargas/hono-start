@@ -2,6 +2,9 @@ import * as z from "zod";
 import { entityIdSchema } from "@/shared/schemas/entity";
 
 export const revenueInstallmentSchema = z.object({
+	id: z.number().int().positive().optional(),
+	kind: z.enum(["DOWN_PAYMENT", "INSTALLMENT", "EXTRA"]).optional(),
+	cancelledAt: z.string().nullable().optional(),
 	number: z.number().int().positive(),
 	dueDate: z.iso.date(),
 	expectedAmount: z.number(),
@@ -27,6 +30,7 @@ export const contractRevenueSchema = entityIdSchema.safeExtend({
 	type: z.string(),
 	typeValue: z.string(),
 	totalValue: z.number(),
+	notes: z.string().nullable().optional(),
 	hasGeneratedTitles: z.boolean().default(false),
 	downPaymentValue: z.number().nullable(),
 	paymentStartDate: z.iso.datetime(),

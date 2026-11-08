@@ -72,7 +72,7 @@ export const dashboardOverdueInstallmentRowSchema = z.object({
 	lawyerName: z.string(),
 	legalArea: z.string(),
 	revenueType: z.string(),
-	installmentNumber: z.number().int().positive(),
+	titleId: z.number().int().positive(),
 	dueDate: z.iso.datetime(),
 	installmentAmount: z.number(),
 	formattedInstallmentAmount: z.string(),

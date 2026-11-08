@@ -57,14 +57,6 @@ describe("frontend orchestration boundaries", () => {
 				hookFile: "src/features/dashboard/hooks/use-data.ts",
 				hookName: "useDashboardOptions",
 			},
-			{
-				hookFile: "src/features/fees/hooks/use-data.ts",
-				hookName: "useFeeOptions",
-			},
-			{
-				hookFile: "src/features/remunerations/hooks/use-data.ts",
-				hookName: "useRemunerationOptions",
-			},
 		];
 		const staleUseOptionsFiles = listFiles("src/features")
 			.map(normalizePath)
@@ -96,10 +88,6 @@ describe("frontend orchestration boundaries", () => {
 			{
 				hookFile: "src/features/contracts/hooks/use-data.ts",
 				hookName: "useContractOptions",
-			},
-			{
-				hookFile: "src/features/fees/hooks/use-data.ts",
-				hookName: "useFeeOptions",
 			},
 		];
 		const violations = multiOptionHooks.flatMap(({ hookFile, hookName }) => {
@@ -135,11 +123,6 @@ describe("frontend orchestration boundaries", () => {
 			{
 				hookFile: "src/features/dashboard/hooks/use-data.ts",
 				hookName: "useDashboardOptions",
-				expectedQueryHook: "useSuspenseQueries({",
-			},
-			{
-				hookFile: "src/features/remunerations/hooks/use-data.ts",
-				hookName: "useRemunerationOptions",
 				expectedQueryHook: "useSuspenseQueries({",
 			},
 		];
@@ -253,20 +236,7 @@ describe("frontend orchestration boundaries", () => {
 				queryFactoryName: "getContractsQueryOptions",
 				dataField: "contracts",
 			},
-			{
-				route: "src/routes/_app/honorarios.tsx",
-				hookFile: "src/features/fees/hooks/use-data.ts",
-				hookName: "useFees",
-				queryFactoryName: "getFeesQueryOptions",
-				dataField: "fees",
-			},
-			{
-				route: "src/routes/_app/remuneracoes.tsx",
-				hookFile: "src/features/remunerations/hooks/use-data.ts",
-				hookName: "useRemunerations",
-				queryFactoryName: "getRemunerationsQueryOptions",
-				dataField: "remunerations",
-			},
+
 			{
 				route: "src/routes/_app/auditoria.tsx",
 				hookFile: "src/features/audit-logs/hooks/use-data.ts",
@@ -325,8 +295,7 @@ describe("frontend orchestration boundaries", () => {
 			"src/features/contracts/components/details/index.tsx",
 			"src/features/contracts/components/delete/index.tsx",
 			"src/features/contracts/components/restore/index.tsx",
-			"src/features/fees/components/details/index.tsx",
-			"src/features/remunerations/components/details/index.tsx",
+
 			"src/features/attachments/components/section/index.tsx",
 		];
 		const violations = componentFiles.flatMap((path) => {
@@ -358,16 +327,6 @@ describe("frontend orchestration boundaries", () => {
 				collectionHook: "useContracts",
 				entityHook: "useContract",
 			},
-			{
-				hookFile: "src/features/fees/hooks/use-data.ts",
-				collectionHook: "useFees",
-				entityHook: "useFee",
-			},
-			{
-				hookFile: "src/features/remunerations/hooks/use-data.ts",
-				collectionHook: "useRemunerations",
-				entityHook: "useRemuneration",
-			},
 		];
 		const violations = features.flatMap(
 			({ hookFile, collectionHook, entityHook }) => {
@@ -394,8 +353,6 @@ describe("frontend orchestration boundaries", () => {
 		const formHooks = [
 			"src/features/people/hooks/use-form.ts",
 			"src/features/contracts/hooks/use-form.ts",
-			"src/features/fees/hooks/use-form.ts",
-			"src/features/remunerations/hooks/use-form.ts",
 		];
 		const violations = formHooks.flatMap((path) => {
 			const content = readFileSync(path, "utf8");
@@ -441,11 +398,6 @@ describe("frontend orchestration boundaries", () => {
 				formHook: "src/features/contracts/hooks/use-form.ts",
 				formComponent: "src/features/contracts/components/form/index.tsx",
 				entityHook: "useContract(",
-			},
-			{
-				formHook: "src/features/fees/hooks/use-form.ts",
-				formComponent: "src/features/fees/components/form/index.tsx",
-				entityHook: "useFee(",
 			},
 		];
 		const violations = formHydrationContracts.flatMap(
@@ -551,8 +503,6 @@ describe("frontend orchestration boundaries", () => {
 		const routeFiles = [
 			"src/routes/_app/pessoas.tsx",
 			"src/routes/_app/contratos.tsx",
-			"src/routes/_app/honorarios.tsx",
-			"src/routes/_app/remuneracoes.tsx",
 			"src/routes/_app/despesas.tsx",
 		];
 		const violations = routeFiles.flatMap((path) => {

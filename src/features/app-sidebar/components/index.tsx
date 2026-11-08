@@ -27,13 +27,7 @@ const items: RouteSection[] = [
 		url: "#",
 		isActive: true,
 		icon: DollarSignIcon,
-		items: [
-			ROUTES.receivable,
-			ROUTES.payable,
-			ROUTES.fee,
-			ROUTES.remuneration,
-			ROUTES.expense,
-		],
+		items: [ROUTES.receivable, ROUTES.payable, ROUTES.expense],
 	},
 	{ title: "Cadastros", url: "#", items: [ROUTES.person] },
 	{
@@ -41,7 +35,7 @@ const items: RouteSection[] = [
 		url: "#",
 		isActive: true,
 		icon: ScrollTextIcon,
-		items: [ROUTES.settings],
+		items: [ROUTES.auditLog, ROUTES.settings],
 	},
 ] as const;
 

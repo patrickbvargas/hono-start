@@ -125,7 +125,7 @@ function SettlementFormContent({
 								{(field) => (
 									<field.Number
 										label={label}
-										minValue={name === "principalAbated" ? 0.01 : 0}
+										commitBehavior="validate"
 										maxValue={
 											name === "principalAbated" ? balance : 999_999_999_999.99
 										}

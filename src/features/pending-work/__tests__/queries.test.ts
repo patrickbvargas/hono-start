@@ -10,9 +10,10 @@ import { pendingWorkSearchSchema } from "../schemas/search";
 const search = pendingWorkSearchSchema.parse({});
 const scope = {
 	firmId: 7,
+	employeeTypeValue: "LAWYER",
 	allContracts: true,
-	allFees: true,
-	assignedFees: false,
+	allTitles: true,
+	assignedTitles: false,
 };
 const result = {
 	data: [],
@@ -29,9 +30,11 @@ describe("pending work data boundary", () => {
 	it("joins global clients without a removed firm column and retains operational scope", async () => {
 		await getPendingWork({ scope, search });
 		const sql: Prisma.Sql = queryRaw.mock.calls[0][0];
-		expect(sql.text).toContain('JOIN clients cl ON cl.id = c."clientId"');
+		expect(sql.text).toContain(
+			'JOIN client_profiles cp ON cp.id=c."customerId"',
+		);
 		expect(sql.text).not.toContain('cl."firmId"');
-		expect(sql.text).toContain('WHERE c."firmId" =');
+		expect(sql.text).toContain('WHERE c."firmId"=');
 		expect(sql.values).toContain(scope.firmId);
 	});
 	it("intersects related client and employee IDs with the viewer's assignment visibility", async () => {
@@ -39,16 +42,16 @@ describe("pending work data boundary", () => {
 			scope: {
 				...scope,
 				allContracts: false,
-				allFees: false,
-				assignedFees: true,
+				allTitles: false,
+				assignedTitles: true,
 				employeeId: 9,
 			},
 			search: { ...search, clientId: "42", employeeId: "23", limit: 5 },
 		});
 		const sql: Prisma.Sql = queryRaw.mock.calls[0][0];
 		expect(sql.values).toEqual(expect.arrayContaining([9, "42", "23", 5]));
-		expect(sql.text).toContain('c."clientId"::text');
-		expect(sql.text).toContain('a."employeeId"::text');
+		expect(sql.text).toContain('c."customerId"::text');
+		expect(sql.text).toContain('a."employeeProfileId"::text');
 		expect(sql.text).toContain("c.financial");
 	});
 	it("orders the complete query and JSON page consistently with a stable tiebreaker", async () => {
@@ -86,7 +89,12 @@ describe("pending work data boundary", () => {
 	});
 	it("keeps contract visibility and financial assignment scopes independent", async () => {
 		await getPendingWork({
-			scope: { ...scope, employeeId: 9, allFees: false, assignedFees: true },
+			scope: {
+				...scope,
+				employeeId: 9,
+				allTitles: false,
+				assignedTitles: true,
+			},
 			search,
 		});
 		const sql: Prisma.Sql = queryRaw.mock.calls[0][0];
@@ -101,8 +109,8 @@ describe("pending work data boundary", () => {
 			scope: {
 				...scope,
 				allContracts: false,
-				allFees: false,
-				assignedFees: true,
+				allTitles: false,
+				assignedTitles: true,
 				employeeTypeValue: "ADMIN_ASSISTANT",
 			},
 			search,

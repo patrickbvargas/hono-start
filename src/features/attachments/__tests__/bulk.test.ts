@@ -11,7 +11,7 @@ function file(name = "documento.pdf") {
 }
 
 describe("atomic attachment bulk upload", () => {
-	it.each([{ feeId: 9 }, { remunerationId: 12 }])(
+	it.each([{ receivableId: 9 }, { payableId: 12 }])(
 		"prepares one batch for the financial owner %o",
 		async (owner) => {
 			const upload = vi.fn().mockResolvedValue(undefined);
@@ -31,7 +31,7 @@ describe("atomic attachment bulk upload", () => {
 		for (const count of [1, 10]) {
 			expect(
 				attachmentBatchFormInputSchema.safeParse({
-					clientId: 1,
+					personId: 1,
 					files: Array.from({ length: count }, () => file()),
 				}).success,
 			).toBe(true);
@@ -39,7 +39,7 @@ describe("atomic attachment bulk upload", () => {
 		for (const count of [0, 11]) {
 			expect(
 				attachmentBatchFormInputSchema.safeParse({
-					clientId: 1,
+					personId: 1,
 					files: Array.from({ length: count }, () => file()),
 				}).success,
 			).toBe(false);
@@ -55,26 +55,26 @@ describe("atomic attachment bulk upload", () => {
 		};
 		expect(
 			attachmentBatchUploadInputSchema.safeParse({
-				clientId: 1,
+				personId: 1,
 				files: Array(10).fill(valid),
 			}).success,
 		).toBe(true);
 		expect(
 			attachmentBatchUploadInputSchema.safeParse({
-				clientId: 1,
+				personId: 1,
 				files: Array(11).fill(valid),
 			}).success,
 		).toBe(false);
 		expect(
 			attachmentBatchUploadInputSchema.safeParse({
-				clientId: 1,
+				personId: 1,
 				files: [valid, { ...valid, fileSize: 11 * 1024 * 1024 }],
 			}).success,
 		).toBe(false);
 		expect(
 			attachmentBatchUploadInputSchema.safeParse({
-				clientId: 1,
-				employeeId: 2,
+				personId: 1,
+				contractId: 2,
 				files: [valid],
 			}).success,
 		).toBe(false);
@@ -92,7 +92,7 @@ describe("atomic attachment bulk upload", () => {
 		]) {
 			await expect(
 				uploadAttachmentBatch({
-					input: { clientId: 1, files: [file(), invalid] },
+					input: { personId: 1, files: [file(), invalid] },
 					upload,
 					onProgress: vi.fn(),
 				}),
@@ -128,7 +128,7 @@ describe("atomic attachment bulk upload", () => {
 		const upload = vi.fn().mockRejectedValue(error);
 		await expect(
 			uploadAttachmentBatch({
-				input: { clientId: 1, files },
+				input: { personId: 1, files },
 				upload,
 				onProgress: vi.fn(),
 			}),

@@ -17,22 +17,22 @@ export async function getDashboardEmployeeOptions({
 }: {
 	firmId: number;
 }): Promise<QueryManyReturnType<Option>> {
-	const employees = await prisma.employee.findMany({
+	const employees = await prisma.employeeProfile.findMany({
 		where: {
-			deletedAt: null,
+			person: { deletedAt: null, isActive: true },
 			isActive: true,
 		},
-		orderBy: [{ fullName: "asc" }, { id: "asc" }],
+		orderBy: [{ person: { fullName: "asc" } }, { id: "asc" }],
 		select: {
 			id: true,
-			fullName: true,
+			person: { select: { fullName: true } },
 		},
 	});
 
 	return employees.map((employee) => ({
 		id: employee.id,
 		value: String(employee.id),
-		label: employee.fullName,
+		label: employee.person.fullName,
 		isDisabled: false,
 	}));
 }

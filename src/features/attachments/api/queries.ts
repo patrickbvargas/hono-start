@@ -25,12 +25,13 @@ export const attachmentKeys = {
 	list: (input: AttachmentListInput) => {
 		const owner =
 			input.personId ??
-			input.clientId ??
-			input.employeeId ??
 			input.contractId ??
 			input.expenseId ??
-			input.feeId ??
-			input.remunerationId ??
+			input.receivableId ??
+			input.payableId ??
+			input.receiptId ??
+			input.paymentId ??
+			input.remunerationPayableId ??
 			attachmentKeys.all[0];
 
 		return [...attachmentKeys.all, "list", owner, input] as const;

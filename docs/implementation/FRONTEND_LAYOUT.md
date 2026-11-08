@@ -10,7 +10,7 @@
 - Route files use `createFileRoute` with validated search state and loader prefetching for list screens.
 - Route loaders must ensure query data ahead of render rather than letting the page fetch ad hoc.
 - Filter-heavy routes prefetch both the primary list query and every unconditional header/filter option query required at first render.
-- The canonical list route shape is the `src/routes/_app/clientes.tsx` flow backed by `src/features/clients`.
+- The canonical list route shape is the `src/routes/_app/pessoas.tsx` flow backed by `src/features/people`.
 
 ## Layout Rules
 
@@ -123,3 +123,11 @@ A full list route composes:
 - TanStack Start server functions validate inputs with `.validator(schema)`.
 - Zod 4 search schemas are passed directly to route `validateSearch`; no Zod 3 adapter is used.
 - Vite resolves TypeScript paths natively with `resolve.tsconfigPaths`.
+
+## Current financial navigation and dashboard
+
+Operational revenue editing captures type, negotiated amount and notes. Planning belongs to title generation. Financial navigation uses Contas a receber and Contas a pagar; obsolete honorarios/remuneracoes URLs redirect to collections without translating old record IDs.
+
+Dashboard projections read actual titles and bridges. Planned value follows active title due dates; cash follows signed receipt/payment events, with reversals on their effective dates. Generated remuneration is separate from payments. Authorization precedes projections, counts and options. Result metrics require all financial read grants and no attribution filters. Operational deletion does not remove financial obligations.
+
+Settlement inputs preserve invalid amounts for explicit validation. Successful settlements/reversals refresh titles, movements, contracts, expenses, dashboard, pending work and audit, including inactive cached reads.

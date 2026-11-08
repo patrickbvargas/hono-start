@@ -10,7 +10,6 @@ import {
 	ExpenseForm,
 	ExpenseRestore,
 } from "@/features/expenses";
-import { FeeDelete, FeeDetails, FeeForm, FeeRestore } from "@/features/fees";
 import { PayableDetails } from "@/features/payables";
 import {
 	PersonDelete,
@@ -19,12 +18,6 @@ import {
 	PersonRestore,
 } from "@/features/people";
 import { ReceivableDetails } from "@/features/receivables";
-import {
-	RemunerationDelete,
-	RemunerationDetails,
-	RemunerationForm,
-	RemunerationRestore,
-} from "@/features/remunerations";
 import { useOverlay } from "@/shared/hooks/use-overlay";
 import type { EntityId } from "@/shared/schemas/entity";
 import { hasPermission, useLoggedUserSession } from "@/shared/session";
@@ -39,14 +32,6 @@ const components = {
 		Restore: ExpenseRestore,
 		deletePermission: "org:expenses:delete",
 		restorePermission: "org:expenses:restore",
-	},
-	remuneration: {
-		Details: RemunerationDetails,
-		Form: RemunerationForm,
-		Delete: RemunerationDelete,
-		Restore: RemunerationRestore,
-		deletePermission: "org:remunerations:delete",
-		restorePermission: "org:remunerations:restore",
 	},
 	client: {
 		Details: PersonDetails,
@@ -71,14 +56,6 @@ const components = {
 		Restore: ContractRestore,
 		deletePermission: "org:contracts:delete",
 		restorePermission: "org:contracts:restore",
-	},
-	fee: {
-		Details: FeeDetails,
-		Form: FeeForm,
-		Delete: FeeDelete,
-		Restore: FeeRestore,
-		deletePermission: "org:fees:delete",
-		restorePermission: "org:fees:restore",
 	},
 } as const;
 

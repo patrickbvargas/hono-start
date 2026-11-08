@@ -144,7 +144,7 @@ Prisma schema cannot represent PostgreSQL filtered unique indexes directly. When
 - Product-rule enforcement stays in the service or API layer; database constraints are a safety net rather than the primary contract.
 - If a future project replaces the business domain but keeps this repository pattern, this document should remain mostly unchanged.
 
-Attachment batch creation stages validated binaries before a single metadata-and-audit transaction, and serializes its count-and-create transaction with a PostgreSQL transaction-scoped advisory lock derived from global owner kind/ID for Client/Employee, or Firm plus owner kind/ID for operational owners. Count all non-deleted attachments within that same owner scope and reject if the existing count plus the batch exceeds 10. Clean up all staged binaries if any upload or transaction operation fails. The lock releases at transaction end; no external network or file encoding occurs while holding it.
+Attachment batch creation stages validated binaries before a single metadata-and-audit transaction, and serializes its count-and-create transaction with a PostgreSQL transaction-scoped advisory lock derived from global owner kind/ID for Person, or Firm plus owner kind/ID for operational owners. Count all non-deleted attachments within that same owner scope and reject if the existing count plus the batch exceeds 10. Clean up all staged binaries if any upload or transaction operation fails. The lock releases at transaction end; no external network or file encoding occurs while holding it.
 
 ## Company-wide clients and employees
 

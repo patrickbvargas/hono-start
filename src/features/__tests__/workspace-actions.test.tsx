@@ -19,23 +19,14 @@ vi.mock("../people/hooks/use-data", () => ({
 vi.mock("../expenses/hooks/use-data", () => ({
 	useExpense: () => ({ expense: state.record }),
 }));
-vi.mock("../fees/hooks/use-data", () => ({
-	useFee: () => ({ fee: state.record }),
-}));
-vi.mock("../remunerations/hooks/use-data", () => ({
-	useRemuneration: () => ({ remuneration: state.record }),
-}));
 
 import { useExpenseWorkspace } from "../expenses/hooks/use-workspace";
-import { useFeeWorkspace } from "../fees/hooks/use-workspace";
+
 import { usePersonWorkspace } from "../people/hooks/use-workspace";
-import { useRemunerationWorkspace } from "../remunerations/hooks/use-workspace";
 
 const workspaces = [
 	{ feature: "people", hook: usePersonWorkspace },
 	{ feature: "expenses", hook: useExpenseWorkspace },
-	{ feature: "fees", hook: useFeeWorkspace },
-	{ feature: "remunerations", hook: useRemunerationWorkspace },
 ];
 beforeEach(() => {
 	state.permissions = [];
@@ -79,15 +70,6 @@ describe("workspace action authorization", () => {
 				canDelete: false,
 				canRestore: true,
 			});
-		},
-	);
-	it.each(["COMPLETED", "CANCELLED"])(
-		"keeps fees on %s contracts read-only for edits",
-		(status) => {
-			state.permissions = ["org:fees:update", "org:fees:delete"];
-			state.record.contractStatusValue = status;
-			const { result } = renderHook(() => useFeeWorkspace(42));
-			expect(result.current.canEdit).toBe(false);
 		},
 	);
 });

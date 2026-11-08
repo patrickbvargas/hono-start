@@ -17,7 +17,7 @@ const {
 	getLegalAreaByValueMock: vi.fn(),
 	getRevenueTypesByValuesMock: vi.fn(),
 	prismaMock: {
-		client: {
+		clientProfile: {
 			findFirst: vi.fn(),
 		},
 		contract: {
@@ -25,7 +25,7 @@ const {
 			findFirst: vi.fn(),
 			update: vi.fn(),
 		},
-		contractEmployee: {
+		contractAssignment: {
 			createMany: vi.fn(),
 			findMany: vi.fn(),
 			update: vi.fn(),
@@ -45,7 +45,7 @@ vi.mock("@/shared/lib/prisma", () => ({
 	prisma: prismaMock,
 }));
 
-vi.mock("@/features/audit-logs/data/mutations", () => ({
+vi.mock("@/features/audit-logs", () => ({
 	createAuditLog: vi.fn(),
 }));
 
@@ -149,9 +149,7 @@ describe("contract lookup-backed writes", () => {
 				{
 					type: "CONTRACTUAL",
 					totalValue: 10000,
-					downPaymentValue: null,
-					paymentStartDate: "2026-01-15",
-					totalInstallments: 10,
+
 					isActive: true,
 				},
 			]),
@@ -171,9 +169,7 @@ describe("contract lookup-backed writes", () => {
 				{
 					type: "UNKNOWN",
 					totalValue: 10000,
-					downPaymentValue: null,
-					paymentStartDate: "2026-01-15",
-					totalInstallments: 10,
+
 					isActive: true,
 				},
 			]),
@@ -193,9 +189,7 @@ describe("contract lookup-backed writes", () => {
 				{
 					type: "CONTRACTUAL",
 					totalValue: 10000,
-					downPaymentValue: null,
-					paymentStartDate: "2026-01-15",
-					totalInstallments: 10,
+
 					isActive: true,
 				},
 			]),

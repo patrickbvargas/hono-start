@@ -1,44 +1,5 @@
 import { Prisma } from "@/generated/prisma/client";
 import { formatter } from "@/shared/lib/formatter";
-import type { DashboardPeriod } from "../utils/period";
-import { isDateInsidePeriod } from "../utils/period";
-
-export interface RevenueRow {
-	id: number;
-	totalValue: Prisma.Decimal;
-	downPaymentValue: Prisma.Decimal | null;
-	paymentStartDate: Date;
-	totalInstallments: number;
-	type: {
-		label: string;
-		value: string;
-	};
-	contract: {
-		id: number;
-		processNumber: string;
-		client: {
-			id: number;
-			fullName: string;
-		};
-		legalArea: {
-			label: string;
-			value: string;
-		};
-		assignments: Array<{
-			employee: {
-				fullName: string;
-			};
-			assignmentType: {
-				value: string;
-			};
-		}>;
-	};
-	fees: Array<{
-		amount: Prisma.Decimal;
-		paymentDate: Date;
-		installmentNumber: number;
-	}>;
-}
 
 export interface GroupTotal {
 	label: string;
@@ -97,21 +58,4 @@ export function mapBreakdown(
 			formattedTotal: formatter.currency(Number(item.total)),
 			percentage: total.equals(0) ? 0 : Number(item.total.div(total).mul(100)),
 		}));
-}
-
-export function getRevenueReceived(
-	revenue: RevenueRow,
-	period: DashboardPeriod,
-): Prisma.Decimal {
-	const downPayment = isDateInsidePeriod(revenue.paymentStartDate, period)
-		? new Prisma.Decimal(revenue.downPaymentValue?.toString() ?? 0)
-		: new Prisma.Decimal(0);
-
-	return revenue.fees.reduce(
-		(total, fee) =>
-			isDateInsidePeriod(fee.paymentDate, period)
-				? total.add(fee.amount)
-				: total,
-		downPayment,
-	);
 }

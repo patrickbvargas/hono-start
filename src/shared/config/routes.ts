@@ -44,11 +44,9 @@ type RouteName =
 	| "person"
 	| "client"
 	| "contract"
-	| "fee"
 	| "receivable"
 	| "payable"
 	| "expense"
-	| "remuneration"
 	| "employee"
 	| "auditLog"
 	| "pendingWork"
@@ -111,23 +109,11 @@ export const ROUTES: Record<RouteName, RouteItem> = {
 		icon: BriefcaseIcon,
 		permission: ["org:contracts:read_all", "org:contracts:read_assigned"],
 	},
-	fee: {
-		title: "Recebimentos",
-		url: "/honorarios",
-		icon: DollarSignIcon,
-		permission: ["org:fees:read_all", "org:fees:read_assigned"],
-	},
 	expense: {
 		title: "Despesas",
 		url: "/despesas",
 		icon: WalletCardsIcon,
 		permission: "org:expenses:read",
-	},
-	remuneration: {
-		title: "Remunerações",
-		url: "/remuneracoes",
-		icon: WalletIcon,
-		permission: ["org:remunerations:read_all", "org:remunerations:read_own"],
 	},
 	employee: {
 		title: "Colaboradores",

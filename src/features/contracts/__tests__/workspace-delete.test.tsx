@@ -42,11 +42,7 @@ vi.mock("@/features/related-records", () => ({
 		<span>{children}</span>
 	),
 }));
-vi.mock("@/features/fees", () => ({
-	FeeForm: () => null,
-	feeSearchDefaults: {},
-}));
-vi.mock("@/features/remunerations", () => ({ remunerationSearchDefaults: {} }));
+
 vi.mock("../components/form", () => ({ ContractForm: () => null }));
 vi.mock("../components/restore", () => ({
 	ContractRestore: ({

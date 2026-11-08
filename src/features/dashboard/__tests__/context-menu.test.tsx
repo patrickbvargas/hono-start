@@ -16,7 +16,7 @@ const mocks = vi.hoisted(() => ({
 	rows: [
 		{
 			id: "fee:99",
-			record: { kind: "fee", id: 99 },
+			record: { kind: "receivable", id: 99 },
 			date: "2026-10-26T12:00:00.000Z",
 			kind: "Recebimento",
 			description: "Recebimento teste",
@@ -32,7 +32,7 @@ const mocks = vi.hoisted(() => ({
 		},
 		{
 			id: "remuneration:12",
-			record: { kind: "remuneration", id: 12 },
+			record: { kind: "payable", id: 12 },
 			date: "2026-10-24T12:00:00.000Z",
 			kind: "Remuneração",
 			description: "Remuneração teste",
@@ -157,9 +157,9 @@ it("overflow opens summary and retains analysis on dismissal", async () => {
 	mount();
 	fireEvent.click(screen.getAllByRole("button", { name: "Ações" })[0]);
 	fireEvent.click(await screen.findByRole("menuitem", { name: "Ver resumo" }));
-	expect(await screen.findByLabelText("Resumo fee 99")).toBeTruthy();
+	expect(await screen.findByLabelText("Resumo receivable 99")).toBeTruthy();
 	fireEvent.click(screen.getByRole("button", { name: "Voltar" }));
-	expect(screen.queryByLabelText("Resumo fee 99")).toBeNull();
+	expect(screen.queryByLabelText("Resumo receivable 99")).toBeNull();
 	expect(screen.getByText("Recebimento teste")).toBeTruthy();
 	expect(mocks.openPage).not.toHaveBeenCalled();
 });
@@ -189,7 +189,7 @@ it("retains local pagination when a menu summary is opened and closed", async ()
 			...Array.from({ length: 24 }, (_, index) => ({
 				...mocks.rows[0],
 				id: `extra:${index}`,
-				record: { kind: "fee", id: 200 + index },
+				record: { kind: "receivable", id: 200 + index },
 				date: "2026-10-01T12:00:00.000Z",
 				description: `Extra ${index}`,
 			})),
@@ -207,7 +207,7 @@ it("retains local pagination when a menu summary is opened and closed", async ()
 		fireEvent.click(
 			await screen.findByRole("menuitem", { name: "Ver resumo" }),
 		);
-		expect(await screen.findByLabelText("Resumo fee 221")).toBeTruthy();
+		expect(await screen.findByLabelText("Resumo receivable 221")).toBeTruthy();
 		fireEvent.click(screen.getByRole("button", { name: "Voltar" }));
 		expect(screen.getByText("Extra 21")).toBeTruthy();
 		expect(screen.queryByText("Recebimento teste")).toBeNull();
@@ -219,6 +219,6 @@ it("retains local pagination when a menu summary is opened and closed", async ()
 it("retains primary row activation for summaries", async () => {
 	mount();
 	fireEvent.click(screen.getByText("Recebimento teste"));
-	expect(await screen.findByLabelText("Resumo fee 99")).toBeTruthy();
+	expect(await screen.findByLabelText("Resumo receivable 99")).toBeTruthy();
 	expect(mocks.openPage).not.toHaveBeenCalled();
 });

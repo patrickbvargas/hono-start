@@ -5,17 +5,21 @@ import { dashboardKeys } from "@/features/dashboard";
 import { expenseKeys } from "@/features/expenses";
 import { financialTitleKeys } from "@/features/financial-titles";
 import { payableKeys } from "@/features/payables";
+import { pendingWorkKeys } from "@/features/pending-work";
 import { receivableKeys } from "@/features/receivables";
 
 export async function refreshSettlementQueries(client: QueryClient) {
 	await Promise.all([
 		refreshAuditedEntityQueries(client, financialTitleKeys.all),
 		...[
+			pendingWorkKeys.all,
 			receivableKeys.all,
 			payableKeys.all,
 			contractKeys.all,
 			expenseKeys.all,
 			dashboardKeys.all,
-		].map((queryKey) => client.invalidateQueries({ queryKey })),
+		].map((queryKey) =>
+			client.invalidateQueries({ queryKey, refetchType: "all" }),
+		),
 	]);
 }

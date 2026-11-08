@@ -62,12 +62,13 @@ export function createAttachmentStoragePath(params: {
 	ownerId: number;
 	ownerKind:
 		| "person"
-		| "client"
 		| "contract"
-		| "employee"
 		| "expense"
-		| "fee"
-		| "remuneration";
+		| "receivable"
+		| "payable"
+		| "receipt"
+		| "payment"
+		| "remuneration-payable";
 	fileName: string;
 }) {
 	const sanitizedName = params.fileName

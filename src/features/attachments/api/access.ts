@@ -3,84 +3,76 @@ import type { getRequiredServerLoggedUserSession } from "@/shared/session/server
 import type { assertAttachmentOwnerExists } from "../data/queries";
 import { assertAttachmentOwnerCanReceiveUpload } from "../rules/owner";
 
+type Session = Awaited<ReturnType<typeof getRequiredServerLoggedUserSession>>;
+type Owner = Awaited<ReturnType<typeof assertAttachmentOwnerExists>>;
+export function assertAttachmentOwnerSubjectReadAccess(
+	session: Session,
+	owner: Owner,
+) {
+	const resource = owner.access.resource;
+	switch (owner.owner.ownerKind) {
+		case "person":
+			assertCan(session, [
+				"org:people:read",
+				"org:clients:read",
+				"org:suppliers:read",
+				"org:employees:read",
+			]);
+			break;
+		case "contract":
+			assertCan(
+				session,
+				["org:contracts:read_all", "org:contracts:read_assigned"],
+				resource,
+			);
+			break;
+		case "expense":
+			assertCan(session, "org:expenses:read", resource);
+			break;
+		case "receivable":
+			assertCan(
+				session,
+				["org:receivables:read_all", "org:receivables:read_assigned"],
+				resource,
+			);
+			break;
+		case "receipt":
+			assertCan(
+				session,
+				["org:receipts:read_all", "org:receipts:read_assigned"],
+				resource,
+			);
+			break;
+		case "payment":
+			assertCan(
+				session,
+				["org:payments:read_all", "org:payments:read_own"],
+				resource,
+			);
+			break;
+		case "payable":
+		case "remuneration-payable":
+			assertCan(
+				session,
+				["org:payables:read_all", "org:payables:read_own"],
+				resource,
+			);
+			break;
+	}
+}
 export function assertAttachmentOwnerReadAccess(
-	session: Awaited<ReturnType<typeof getRequiredServerLoggedUserSession>>,
-	owner: Awaited<ReturnType<typeof assertAttachmentOwnerExists>>,
+	session: Session,
+	owner: Owner,
 ) {
 	assertCan(session, "org:attachments:read", owner.access.resource);
 	assertAttachmentOwnerSubjectReadAccess(session, owner);
 }
-
-export function assertAttachmentOwnerSubjectReadAccess(
-	session: Awaited<ReturnType<typeof getRequiredServerLoggedUserSession>>,
-	owner: Awaited<ReturnType<typeof assertAttachmentOwnerExists>>,
-) {
-	if (owner.owner.ownerKind === "payable") {
-		assertCan(
-			session,
-			["org:payables:read_all", "org:payables:read_own"],
-			owner.access.resource,
-		);
-	}
-	if (owner.owner.ownerKind === "receivable") {
-		assertCan(
-			session,
-			["org:receivables:read_all", "org:receivables:read_assigned"],
-			owner.access.resource,
-		);
-	}
-	if (owner.owner.ownerKind === "person") {
-		assertCan(session, [
-			"org:people:read",
-			"org:clients:read",
-			"org:suppliers:read",
-			"org:employees:read",
-		]);
-	}
-	if (owner.owner.ownerKind === "fee") {
-		assertCan(
-			session,
-			["org:fees:read_all", "org:fees:read_assigned"],
-			owner.access.resource,
-		);
-	}
-	if (owner.owner.ownerKind === "remuneration") {
-		assertCan(
-			session,
-			["org:remunerations:read_all", "org:remunerations:read_own"],
-			owner.access.resource,
-		);
-	}
-	if (owner.owner.ownerKind === "client") {
-		assertCan(session, "org:clients:read", owner.access.resource);
-	}
-
-	if (owner.owner.ownerKind === "employee") {
-		assertCan(session, "org:employees:read", owner.access.resource);
-	}
-
-	if (owner.owner.ownerKind === "contract") {
-		assertCan(
-			session,
-			["org:contracts:read_all", "org:contracts:read_assigned"],
-			owner.access.resource,
-		);
-	}
-
-	if (owner.owner.ownerKind === "expense") {
-		assertCan(session, "org:expenses:read", owner.access.resource);
-	}
-}
-
 export function assertAttachmentOwnerUploadAccess(
-	session: Awaited<ReturnType<typeof getRequiredServerLoggedUserSession>>,
-	owner: Awaited<ReturnType<typeof assertAttachmentOwnerExists>>,
+	session: Session,
+	owner: Owner,
 ) {
-	if (
-		owner.owner.ownerKind === "receivable" ||
-		owner.owner.ownerKind === "payable"
-	) {
-		throw new Error("A consulta de anexos do título é somente leitura.");
+	if (!["person", "contract", "expense"].includes(owner.owner.ownerKind)) {
+		throw new Error("A consulta de anexos financeiros é somente leitura.");
 	}
 	assertAttachmentOwnerCanReceiveUpload({
 		deletedAt: owner.access.deletedAt,
@@ -90,25 +82,10 @@ export function assertAttachmentOwnerUploadAccess(
 				? isContractWritable(owner.access.resource)
 				: undefined,
 	});
-
 	assertCan(session, "org:attachments:upload", owner.access.resource);
 	if (owner.owner.ownerKind === "person") {
 		assertCan(session, "org:people:update");
 	}
-	if (
-		owner.owner.ownerKind === "fee" ||
-		owner.owner.ownerKind === "remuneration"
-	) {
-		assertAttachmentOwnerSubjectReadAccess(session, owner);
-	}
-	if (owner.owner.ownerKind === "client") {
-		assertCan(session, "org:clients:update", owner.access.resource);
-	}
-
-	if (owner.owner.ownerKind === "employee") {
-		assertCan(session, "org:employees:update", owner.access.resource);
-	}
-
 	if (owner.owner.ownerKind === "contract") {
 		assertCan(
 			session,
@@ -116,7 +93,6 @@ export function assertAttachmentOwnerUploadAccess(
 			owner.access.resource,
 		);
 	}
-
 	if (owner.owner.ownerKind === "expense") {
 		assertCan(session, "org:expenses:update", owner.access.resource);
 	}

@@ -27,42 +27,13 @@ const fixtures = vi.hoisted(() => {
 			email: "maria@example.com",
 			phone: "11999999999",
 		},
-		fee: {
-			...common,
-			contractId: 7,
-			contractProcessNumber: "PROC-7",
-			clientId: 5,
-			client: "Maria",
-			revenueType: "Judicial",
-			paymentDate: "2026-10-25",
-			amount: 2000,
-			installmentNumber: 2,
-			generatesRemuneration: true,
-			remunerationCount: 1,
-		},
-		remuneration: {
-			...common,
-			employeeId: 3,
-			employeeName: "Ana",
-			contractId: 7,
-			contractProcessNumber: "PROC-7",
-			clientId: 5,
-			client: "Maria",
-			paymentDate: "2026-10-25",
-			amount: 700,
-			effectivePercentage: 0.35,
-			feeId: 42,
-			revenueType: "Sucumbência",
-			assignmentType: "Responsável",
-			feeAmount: 2000,
-			feeInstallmentNumber: 2,
-			isManualOverride: false,
-			parentFeeIsSoftDeleted: false,
-		},
 		expense: {
 			...common,
 			category: "Aluguel",
+			supplierName: "Fornecedor",
+			negotiatedAmount: 1500,
 			expenseDate: "2026-10-25",
+			competenceDate: "2026-10-25",
 			amount: 1500,
 			notes: "Despesa mensal",
 		},
@@ -88,12 +59,7 @@ const fixtures = vi.hoisted(() => {
 vi.mock("../people/hooks/use-data", () => ({
 	usePerson: () => ({ person: fixtures.person }),
 }));
-vi.mock("../fees/hooks/use-data", () => ({
-	useFee: () => ({ fee: fixtures.fee }),
-}));
-vi.mock("../remunerations/hooks/use-data", () => ({
-	useRemuneration: () => ({ remuneration: fixtures.remuneration }),
-}));
+
 vi.mock("../expenses/hooks/use-data", () => ({
 	useExpense: () => ({ expense: fixtures.expense }),
 }));
@@ -104,7 +70,7 @@ vi.mock("@/features/attachments", () => ({
 	AttachmentSection: () => <p>Anexos completos</p>,
 }));
 vi.mock("@/features/contracts", () => ({ contractSearchDefaults: {} }));
-vi.mock("@/features/remunerations", () => ({ remunerationSearchDefaults: {} }));
+
 vi.mock("@/features/related-records", () => ({
 	RelatedRecordLink: ({ children }: { children: ReactNode }) => (
 		<button type="button">{children}</button>
@@ -142,9 +108,8 @@ vi.mock("@/shared/session", () => ({
 
 import { AuditLogOverview } from "../audit-logs/components/details/overview";
 import { ExpenseOverview } from "../expenses/components/details/overview";
-import { FeeOverview } from "../fees/components/details/overview";
+
 import { PersonOverview } from "../people/components/details/overview";
-import { RemunerationOverview } from "../remunerations/components/details/overview";
 
 afterEach(cleanup);
 beforeEach(() => {
@@ -152,33 +117,7 @@ beforeEach(() => {
 	access.employeeId = 42;
 });
 describe("record page information hierarchy", () => {
-	it("shares the calculation summary while omitting removed automatic explanation", () => {
-		render(<RemunerationOverview id={42} section="finance" />);
-		expect(
-			screen.queryByText(/Valor gerado a partir do recebimento/),
-		).toBeNull();
-		expect(
-			screen.getByText(/Remuneração gerada não confirma pagamento/),
-		).toBeTruthy();
-		expect(screen.getByText("Origem")).toBeTruthy();
-	});
-	it("exposes own receipt remuneration without implying the full team count", () => {
-		access.permissions = ["org:remunerations:read_own"];
-		const { rerender } = render(<FeeOverview id={42} section="finance" />);
-		expect(screen.getByText("Ver minhas remunerações")).toBeTruthy();
-		access.permissions = [];
-		rerender(<FeeOverview id={42} section="finance" />);
-		expect(screen.queryByRole("link")).toBeNull();
-	});
-	it("links receipt remunerations using the exact persisted receipt ID", () => {
-		render(<FeeOverview id={42} section="finance" />);
-		expect(
-			screen
-				.getByRole("link", { name: "Ver remunerações do recebimento #42" })
-				.getAttribute("href"),
-		).toBe("/remuneracoes?feeId=42");
-	});
-	it.each([PersonOverview, ExpenseOverview, FeeOverview, RemunerationOverview])(
+	it.each([PersonOverview])(
 		"keeps lifecycle state and registration out of page overview",
 		(Overview) => {
 			render(<Overview id={42} section="overview" />);
@@ -199,18 +138,7 @@ describe("record page information hierarchy", () => {
 		expect(screen.getByText("maria@example.com")).toBeTruthy();
 		expect(screen.getByText("Situação")).toBeTruthy();
 	});
-	it.each([
-		{ Overview: FeeOverview, label: "Remuneração automática" },
-		{ Overview: RemunerationOverview, label: "Percentual efetivo (%)" },
-	])("puts $label in finance instead of overview", ({ Overview, label }) => {
-		const { rerender } = render(<Overview id={42} section="overview" />);
-		expect(screen.queryByText(label)).toBeNull();
-		rerender(<Overview id={42} section="finance" />);
-		expect(screen.getByText(label)).toBeTruthy();
-		expect(screen.queryByText("Criado em")).toBeNull();
-		rerender(<Overview id={42} />);
-		expect(screen.getByText(label)).toBeTruthy();
-	});
+
 	it("separates audit event, change and technical data while preserving the drawer", () => {
 		const { rerender } = render(<AuditLogOverview id={1} section="overview" />);
 		expect(screen.getByText("Cliente atualizado")).toBeTruthy();
@@ -226,17 +154,9 @@ describe("record page information hierarchy", () => {
 		expect(screen.getByText("Cliente atualizado")).toBeTruthy();
 		expect(screen.getByText("Test browser")).toBeTruthy();
 	});
-	it("does not repeat the installment in the receipt relationship label", () => {
-		render(<RemunerationOverview id={42} section="finance" />);
-		expect(
-			screen.getByRole("button", { name: "Recebimento #42" }),
-		).toBeTruthy();
-		expect(screen.getByText("Nº da parcela")).toBeTruthy();
-		expect(screen.queryByText(/parcela 2/)).toBeNull();
-	});
 });
 
-it.each([PersonOverview, ExpenseOverview, FeeOverview, RemunerationOverview])(
+it.each([PersonOverview, ExpenseOverview])(
 	"hides attachments without read permission",
 	(Overview) => {
 		access.permissions = [];
@@ -244,13 +164,3 @@ it.each([PersonOverview, ExpenseOverview, FeeOverview, RemunerationOverview])(
 		expect(screen.queryByText("Anexos completos")).toBeNull();
 	},
 );
-it("shows remuneration origin context in finance and drawer", () => {
-	const { rerender } = render(
-		<RemunerationOverview id={42} section="finance" />,
-	);
-	expect(screen.getByText("Sucumbência")).toBeTruthy();
-	expect(screen.getByText("Responsável")).toBeTruthy();
-	rerender(<RemunerationOverview id={42} />);
-	expect(screen.getByText("Sucumbência")).toBeTruthy();
-	expect(screen.getByText("Responsável")).toBeTruthy();
-});

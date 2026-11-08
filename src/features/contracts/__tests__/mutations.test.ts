@@ -19,10 +19,10 @@ const {
 	getLegalAreaByValueMock: vi.fn(),
 	getRevenueTypesByValuesMock: vi.fn(),
 	prismaMock: {
-		client: {
+		clientProfile: {
 			findFirst: vi.fn(),
 		},
-		employee: {
+		employeeProfile: {
 			findMany: vi.fn(),
 		},
 		contract: {
@@ -30,7 +30,7 @@ const {
 			findFirst: vi.fn(),
 			update: vi.fn(),
 		},
-		contractEmployee: {
+		contractAssignment: {
 			create: vi.fn(),
 			createMany: vi.fn(),
 			findMany: vi.fn(),
@@ -50,7 +50,7 @@ vi.mock("@/shared/lib/prisma", () => ({
 	prisma: prismaMock,
 }));
 
-vi.mock("@/features/audit-logs/data/mutations", () => ({
+vi.mock("@/features/audit-logs", () => ({
 	createAuditLog: createAuditLogMock,
 	buildAuditUpdateChangeData: ({
 		before,
@@ -94,7 +94,12 @@ function createLookup(overrides: Record<string, unknown> = {}) {
 function createEmployee(overrides: Record<string, unknown> = {}) {
 	return {
 		id: 10,
-		fullName: "Maria Silva",
+		person: {
+			fullName: "Maria Silva",
+			isActive: true,
+			deletedAt: null,
+			supplierProfile: { isActive: true },
+		},
 		email: "maria@example.com",
 		oabNumber: "RS123456",
 		firmId: 1,
@@ -106,7 +111,7 @@ function createEmployee(overrides: Record<string, unknown> = {}) {
 		updatedAt: new Date("2026-01-01T00:00:00.000Z"),
 		referralPercentage: 0.1,
 		remunerationPercentage: 0.3,
-		type: createLookup({
+		employeeType: createLookup({
 			id: 2,
 			value: "LAWYER",
 			label: "Advogado",
@@ -136,9 +141,7 @@ function createBaseInput() {
 			{
 				type: "MONTHLY",
 				totalValue: 1000,
-				downPaymentValue: 100,
-				paymentStartDate: "2026-01-15",
-				totalInstallments: 3,
+
 				isActive: true,
 			},
 		],
@@ -151,7 +154,7 @@ describe("contract data mutations", () => {
 		prismaMock.$transaction.mockImplementation(async (callback) =>
 			callback(prismaMock),
 		);
-		prismaMock.client.findFirst.mockResolvedValue({ id: 5 });
+		prismaMock.clientProfile.findFirst.mockResolvedValue({ id: 5 });
 		prismaMock.contract.create.mockResolvedValue({
 			id: 99,
 			processNumber: "PROC-001",
@@ -165,7 +168,7 @@ describe("contract data mutations", () => {
 			status: { value: "ACTIVE" },
 		});
 		prismaMock.contract.update.mockResolvedValue({});
-		prismaMock.contractEmployee.findMany.mockResolvedValue([
+		prismaMock.contractAssignment.findMany.mockResolvedValue([
 			{ id: 1 },
 			{ id: 2 },
 		]);
@@ -182,7 +185,7 @@ describe("contract data mutations", () => {
 		getRevenueTypesByValuesMock.mockResolvedValue([
 			createLookup({ id: 11, value: "MONTHLY", label: "Mensal" }),
 		]);
-		prismaMock.employee.findMany.mockResolvedValue([]);
+		prismaMock.employeeProfile.findMany.mockResolvedValue([]);
 		getContractAccessResourceByIdMock.mockResolvedValue({
 			id: 99,
 			deletedAt: null,
@@ -202,7 +205,7 @@ describe("contract data mutations", () => {
 	});
 
 	it("creates contracts transactionally, normalizes text fields, and writes an audit log", async () => {
-		prismaMock.employee = {
+		prismaMock.employeeProfile = {
 			findMany: vi.fn().mockResolvedValue([createEmployee()]),
 		};
 
@@ -219,7 +222,7 @@ describe("contract data mutations", () => {
 		expect(prismaMock.contract.create).toHaveBeenCalledWith({
 			data: expect.objectContaining({
 				firmId: 1,
-				clientId: 5,
+				customerId: 5,
 				legalAreaId: 7,
 				statusId: 8,
 				processNumber: "PROC-001",
@@ -227,7 +230,7 @@ describe("contract data mutations", () => {
 				allowStatusChange: true,
 			}),
 		});
-		expect(prismaMock.contractEmployee.createMany).toHaveBeenCalledOnce();
+		expect(prismaMock.contractAssignment.createMany).toHaveBeenCalledOnce();
 		expect(prismaMock.revenue.createMany).toHaveBeenCalledOnce();
 		expect(createAuditLogMock).toHaveBeenCalledWith(
 			prismaMock,
@@ -250,11 +253,11 @@ describe("contract data mutations", () => {
 			}),
 		).rejects.toThrow(CONTRACT_ERRORS.CONTRACT_STATUS_LOCK_FORBIDDEN);
 
-		expect(prismaMock.client.findFirst).not.toHaveBeenCalled();
+		expect(prismaMock.clientProfile.findFirst).not.toHaveBeenCalled();
 	});
 
 	it("rejects non-active initial statuses on create", async () => {
-		prismaMock.employee = {
+		prismaMock.employeeProfile = {
 			findMany: vi.fn().mockResolvedValue([createEmployee()]),
 		};
 		getContractStatusByValueMock.mockResolvedValue(
@@ -273,7 +276,7 @@ describe("contract data mutations", () => {
 	});
 
 	it("rejects inactive clients on create before transaction", async () => {
-		prismaMock.client.findFirst.mockResolvedValue(null);
+		prismaMock.clientProfile.findFirst.mockResolvedValue(null);
 
 		await expect(
 			createContract({
@@ -297,7 +300,7 @@ describe("contract data mutations", () => {
 			]),
 		).rejects.toThrow(CONTRACT_ERRORS.CONTRACT_EMPLOYEE_NOT_FOUND);
 
-		prismaMock.employee = {
+		prismaMock.employeeProfile = {
 			findMany: vi
 				.fn()
 				.mockResolvedValue([createEmployee({ isActive: false })]),
@@ -434,7 +437,7 @@ describe("contract data mutations", () => {
 				typeValue: item.type,
 			})),
 		});
-		prismaMock.employee.findMany.mockResolvedValue([createEmployee()]);
+		prismaMock.employeeProfile.findMany.mockResolvedValue([createEmployee()]);
 		await expect(
 			updateContract({
 				scope: { firmId: 1 },
@@ -446,14 +449,14 @@ describe("contract data mutations", () => {
 			}),
 		).resolves.toEqual({ success: true });
 		expect(prismaMock.contract.update).toHaveBeenCalledOnce();
-		expect(prismaMock.contractEmployee.update).not.toHaveBeenCalled();
-		expect(prismaMock.contractEmployee.create).not.toHaveBeenCalled();
+		expect(prismaMock.contractAssignment.update).not.toHaveBeenCalled();
+		expect(prismaMock.contractAssignment.create).not.toHaveBeenCalled();
 		expect(prismaMock.revenue.update).not.toHaveBeenCalled();
 		expect(prismaMock.revenue.create).not.toHaveBeenCalled();
 	});
 
 	it("syncs removed assignments and revenues during successful update", async () => {
-		prismaMock.employee = {
+		prismaMock.employeeProfile = {
 			findMany: vi.fn().mockResolvedValue([createEmployee()]),
 		};
 
@@ -481,9 +484,7 @@ describe("contract data mutations", () => {
 							id: 20,
 							type: "MONTHLY",
 							totalValue: 1000,
-							downPaymentValue: 100,
-							paymentStartDate: "2026-01-15",
-							totalInstallments: 3,
+
 							isActive: true,
 						},
 					],
@@ -491,28 +492,28 @@ describe("contract data mutations", () => {
 			}),
 		).resolves.toEqual({ success: true });
 
-		expect(prismaMock.contractEmployee.update).toHaveBeenCalledWith({
-			where: { id: 1 },
+		expect(prismaMock.contractAssignment.update).toHaveBeenCalledWith({
+			where: { id: 1, firmId: 1 },
 			data: expect.objectContaining({
 				firmId: 1,
-				employeeId: 10,
+				employeeProfileId: 10,
 				deletedAt: null,
 			}),
 		});
-		expect(prismaMock.contractEmployee.update).toHaveBeenCalledWith({
-			where: { id: 2 },
+		expect(prismaMock.contractAssignment.update).toHaveBeenCalledWith({
+			where: { id: 2, firmId: 1 },
 			data: { deletedAt: expect.any(Date) },
 		});
 		expect(prismaMock.revenue.update).toHaveBeenCalledWith({
-			where: { id: 20 },
+			where: { id: 20, firmId: 1 },
 			data: expect.objectContaining({
 				firmId: 1,
-				typeId: 11,
+				revenueTypeId: 11,
 				deletedAt: null,
 			}),
 		});
 		expect(prismaMock.revenue.update).toHaveBeenCalledWith({
-			where: { id: 21 },
+			where: { id: 21, firmId: 1 },
 			data: { deletedAt: expect.any(Date) },
 		});
 		expect(createAuditLogMock).toHaveBeenCalledWith(

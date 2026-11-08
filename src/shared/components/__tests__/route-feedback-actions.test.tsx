@@ -48,21 +48,36 @@ it.each([...Object.keys(errors), "not-found"])(
 					<RouteNotFound />
 				),
 		});
+		const settings = createRoute({
+			getParentRoute: () => root,
+			path: "/configuracoes",
+			component: () => <p>Configurações</p>,
+		});
 		const router = createRouter({
-			routeTree: root.addChildren([home, feedback]),
+			routeTree: root.addChildren([home, feedback, settings]),
 			history: createMemoryHistory({ initialEntries: ["/feedback"] }),
 		});
 		await act(async () => {
 			await router.load();
 			render(<RouterProvider router={router} />);
 		});
-		const link = screen.getByRole("link", { name: "Voltar ao início" });
+		const link = screen.getByRole("link", {
+			name: kind === "not-found" ? "Voltar ao início" : "Abrir configurações",
+		});
 		expect(link.className).toBe(buttonVariants({ size: "sm" }));
+		if (kind !== "not-found")
+			expect(
+				screen.getByRole("button", { name: "Tentar novamente" }),
+			).toBeTruthy();
 		expect(link.classList.contains("underline")).toBe(false);
 		expect(link.querySelector("svg")).toBeNull();
 		await act(async () => {
 			fireEvent.click(link);
 		});
-		expect(await screen.findByText("Início")).toBeTruthy();
+		expect(
+			await screen.findByText(
+				kind === "not-found" ? "Início" : "Configurações",
+			),
+		).toBeTruthy();
 	},
 );

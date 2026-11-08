@@ -37,6 +37,15 @@ export function PreviewBalance({
 					? "Revise os valores"
 					: formatter.currency(Number(total) / 100)}{" "}
 				· Valor negociado: {formatter.currency(negotiatedAmount)}
+				{total !== null && !balanced ? (
+					<>
+						{" "}
+						· Diferença:{" "}
+						{formatter.currency(
+							Number(getAmountCents(negotiatedAmount) - total) / 100,
+						)}
+					</>
+				) : null}
 			</span>
 		</Badge>
 	);

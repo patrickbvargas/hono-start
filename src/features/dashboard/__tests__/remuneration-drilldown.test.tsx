@@ -129,7 +129,7 @@ it("links an overdue installment to its stable contract ID only when the action 
 		lawyerName: "Advogado",
 		legalArea: "Cível",
 		revenueType: "Judicial",
-		installmentNumber: 1,
+		titleId: 1,
 		dueDate: "2026-01-01T00:00:00.000Z",
 		installmentAmount: 50,
 		formattedInstallmentAmount: "R$ 50,00",

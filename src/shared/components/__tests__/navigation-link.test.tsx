@@ -64,7 +64,7 @@ describe("NavigationLink", () => {
 		await act(async () => {
 			fireEvent.click(link);
 		});
-		expect(await screen.findByText("Listagem de clientes")).toBeTruthy();
+		expect(await screen.findByText("Listagem de pessoas")).toBeTruthy();
 		expect(router.state.location.search).toHaveProperty("query", "Ana");
 		expect(router.state.location.state.resetFilterPanel).toBe(true);
 	});

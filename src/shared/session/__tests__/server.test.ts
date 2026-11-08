@@ -364,7 +364,7 @@ describe("Clerk domain session", () => {
 					permissions: [
 						"org:clients:read",
 						"org:contracts:read_assigned",
-						"org:remunerations:read_own",
+						"org:payables:read_own",
 						"org:dashboard:read_own",
 					],
 				},
@@ -387,7 +387,7 @@ describe("Clerk domain session", () => {
 		expect(session.permissions).toEqual([
 			"org:clients:read",
 			"org:contracts:read_assigned",
-			"org:remunerations:read_own",
+			"org:payables:read_own",
 			"org:dashboard:read_own",
 		]);
 	});

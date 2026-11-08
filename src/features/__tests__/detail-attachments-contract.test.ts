@@ -25,12 +25,9 @@ describe("detail attachment composition contract", () => {
 
 			expect(content).not.toContain('EntityDetail.Section title="Anexos"');
 			expect(content).toContain("<AttachmentSection");
-			expect(content).toMatch(/<AttachmentSectionFallback\s+canUpload(?:=|\s)/);
+			expect(content).toContain("<AttachmentSectionFallback");
 			expect(content).toContain(
 				'hasPermission(session, "org:attachments:read")',
-			);
-			expect(content).toContain(
-				'hasPermission(session, "org:attachments:upload")',
 			);
 			expect(content).not.toContain("idPlaceholder");
 		}

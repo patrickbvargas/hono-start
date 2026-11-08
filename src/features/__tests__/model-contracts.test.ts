@@ -4,12 +4,11 @@ import {
 	contractDetailSchema,
 	contractSummarySchema,
 } from "@/features/contracts/schemas/model";
-import { feeDetailSchema } from "@/features/fees/schemas/model";
+
 import {
 	personDetailSchema,
 	personSummarySchema,
 } from "@/features/people/schemas/model";
-import { remunerationSchema } from "@/features/remunerations/schemas/model";
 
 const timestamp = "2026-01-01T00:00:00.000Z";
 
@@ -86,53 +85,6 @@ const contractRevenue = {
 	isSoftDeleted: false,
 };
 
-const feeDetail = {
-	clientId: 1,
-	id: 6,
-	contractId: 3,
-	contractProcessNumber: "0001234-56.2026.8.26.0001",
-	client: "Maria Cliente",
-	contractStatusValue: "ACTIVE",
-	revenueId: 5,
-	revenueType: "Honorários contratuais",
-	revenueTypeValue: "CONTRACTUAL",
-	paymentDate: timestamp,
-	amount: 1000,
-	installmentNumber: 1,
-	generatesRemuneration: true,
-	remunerationCount: 1,
-	isActive: true,
-	isSoftDeleted: false,
-	createdAt: timestamp,
-	updatedAt: timestamp,
-};
-
-const remuneration = {
-	clientId: 1,
-	id: 7,
-	contractEmployeeId: 4,
-	employeeId: 2,
-	employeeName: "João Advogado",
-	client: "Maria Cliente",
-	contractId: 3,
-	contractProcessNumber: "0001234-56.2026.8.26.0001",
-	feeId: 6,
-	revenueType: "Contratuais",
-	assignmentType: "Responsável",
-	feeAmount: 1000,
-	feeInstallmentNumber: 1,
-	paymentDate: timestamp,
-	amount: 300,
-	effectivePercentage: 0.3,
-	isManualOverride: false,
-	isSystemGenerated: true,
-	isActive: true,
-	isSoftDeleted: false,
-	parentFeeIsSoftDeleted: false,
-	createdAt: timestamp,
-	updatedAt: timestamp,
-};
-
 const auditLog = {
 	id: 8,
 	occurredAt: timestamp,
@@ -181,8 +133,6 @@ describe("feature model contracts", () => {
 			revenues: [contractRevenue],
 		});
 
-		expect(feeDetailSchema.parse(feeDetail)).toEqual(feeDetail);
-		expect(remunerationSchema.parse(remuneration)).toEqual(remuneration);
 		expect(auditLogSchema.parse(auditLog)).toEqual(auditLog);
 	});
 
@@ -201,20 +151,6 @@ describe("feature model contracts", () => {
 				allowStatusChange: true,
 				assignments: undefined,
 				revenues: [contractRevenue],
-			}),
-		).toThrow();
-
-		expect(() =>
-			feeDetailSchema.parse({
-				...feeDetail,
-				revenueTypeValue: undefined,
-			}),
-		).toThrow();
-
-		expect(() =>
-			remunerationSchema.parse({
-				...remuneration,
-				parentFeeIsSoftDeleted: undefined,
 			}),
 		).toThrow();
 	});

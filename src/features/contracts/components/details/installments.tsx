@@ -17,7 +17,12 @@ import type { ContractRevenue } from "../../schemas/model";
 import { getInstallmentStatus } from "../../utils/installment-status";
 
 export function RevenueInstallments({ revenue }: { revenue: ContractRevenue }) {
-	const today = new Date().toISOString().slice(0, 10);
+	const today = new Intl.DateTimeFormat("en-CA", {
+		timeZone: "America/Sao_Paulo",
+		year: "numeric",
+		month: "2-digit",
+		day: "2-digit",
+	}).format(new Date());
 	return (
 		<Accordion defaultValue={[]} className="border-t">
 			<AccordionItem value="installments">
@@ -34,13 +39,13 @@ export function RevenueInstallments({ revenue }: { revenue: ContractRevenue }) {
 						<TableHeader>
 							<TableRow>
 								{[
-									"Parcela",
+									"Título",
 									"Vencimento",
 									"Previsto",
 									"Data de recebimento",
 									"Recebido",
 									"Saldo",
-									"Status",
+									"Situação",
 								].map((label) => (
 									<TableHead key={label} className="whitespace-nowrap">
 										{label}
@@ -50,11 +55,18 @@ export function RevenueInstallments({ revenue }: { revenue: ContractRevenue }) {
 						</TableHeader>
 						<TableBody>
 							{revenue.installments.map((row) => {
-								const status = getInstallmentStatus(row, today);
+								const status = row.cancelledAt
+									? "Cancelado"
+									: getInstallmentStatus(row, today);
 								return (
 									<TableRow key={row.number}>
 										<TableCell>
-											{row.number}/{revenue.totalInstallments}
+											{row.kind === "DOWN_PAYMENT"
+												? "Entrada"
+												: row.kind === "EXTRA"
+													? "Extra"
+													: "Parcela"}{" "}
+											#{row.id ?? row.number}
 										</TableCell>
 										<TableCell className="whitespace-nowrap">
 											{formatter.calendarDate(row.dueDate)}
@@ -85,7 +97,7 @@ export function RevenueInstallments({ revenue }: { revenue: ContractRevenue }) {
 												className={
 													status === "Em atraso"
 														? "border-transparent bg-red-600/10 text-red-700 dark:text-red-400"
-														: status === "Recebida"
+														: status === "Quitado"
 															? "border-transparent bg-green-600/10 text-green-700 dark:text-green-400"
 															: undefined
 												}

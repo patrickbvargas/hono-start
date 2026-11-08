@@ -57,7 +57,7 @@ try {
 	// 1. Cross-Firm revenue bridge must fail foreign key
 	await denied(
 		"cross-Firm bridge",
-		`INSERT INTO contract_revenue_receivables ("firmId","contractId","revenueId","receivableId") VALUES(2,$1,$2,$3)`,
+		`UPDATE contract_revenue_receivables SET "firmId"=2 WHERE "contractId"=$1 AND "revenueId"=$2 AND "receivableId"=$3`,
 		"23503",
 		[fixture.contractId, fixture.revenueId, fixture.id],
 	);
@@ -184,8 +184,6 @@ try {
 	} = await c.query(
 		`SELECT count(*) FILTER(WHERE NOT c.relrowsecurity)::int AS unprotected, count(*) FILTER(WHERE has_table_privilege('anon',c.oid,'SELECT') OR has_table_privilege('authenticated',c.oid,'SELECT'))::int AS exposed FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname='public' AND c.relkind='r' AND c.relname<>'_prisma_migrations'`,
 	);
-	assert.equal(security.unprotected, 0);
-	assert.equal(security.exposed, 0);
 
 	// 13. Legacy tables check
 	const {
@@ -193,7 +191,6 @@ try {
 	} = await c.query(
 		`SELECT count(*)::int count FROM information_schema.tables WHERE table_schema='public' AND table_name IN('clients','employees','fees','remunerations','expense_categories','client_types','user_roles','financial_generations','direct_financial_entries','ref_title_kinds','remuneration_calculations')`,
 	);
-	assert.equal(old.count, 0);
 
 	console.log(
 		JSON.stringify({
@@ -202,6 +199,9 @@ try {
 			legacyTables: old.count,
 		}),
 	);
+	assert.equal(security.unprotected, 0, "All business tables must enable RLS");
+	assert.equal(security.exposed, 0, "Browser database roles must not read business tables directly");
+	assert.equal(old.count, 0, "Legacy tables must be removed");
 } finally {
 	await c.end();
 }

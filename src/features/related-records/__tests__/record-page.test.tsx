@@ -20,27 +20,18 @@ vi.mock("@/features/contracts", async () => ({
 	contractSearchSchema: (await import("@/features/contracts/schemas/search"))
 		.contractSearchSchema,
 }));
-vi.mock("@/features/fees", async () => ({
-	feeSearchSchema: (await import("@/features/fees/schemas/search"))
-		.feeSearchSchema,
-}));
+
 vi.mock("@/features/expenses", async () => ({
 	expenseSearchSchema: (await import("@/features/expenses/schemas/search"))
 		.expenseSearchSchema,
-}));
-vi.mock("@/features/remunerations", async () => ({
-	remunerationSearchSchema: (
-		await import("@/features/remunerations/schemas/search")
-	).remunerationSearchSchema,
 }));
 
 it.each([
 	["client", "/pessoas/$personId", "personId"],
 	["employee", "/pessoas/$personId", "personId"],
 	["contract", "/contratos/$contractId", "contractId"],
-	["fee", "/honorarios/$feeId", "feeId"],
+
 	["expense", "/despesas/$expenseId", "expenseId"],
-	["remuneration", "/remuneracoes/$remunerationId", "remunerationId"],
 ] as const)(
 	"navigates %s directly with validated return context",
 	async (kind, to, param) => {

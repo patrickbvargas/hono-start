@@ -1,6 +1,6 @@
 import { MonitorCogIcon, MoonIcon, SunIcon } from "lucide-react";
 import { contractSearchDefaults } from "@/features/contracts";
-import { remunerationSearchDefaults } from "@/features/remunerations";
+import { payableSearchDefaults } from "@/features/payables";
 import { NavigationLink } from "@/shared/components/navigation-link";
 import {
 	Button,
@@ -23,7 +23,7 @@ export function Settings() {
 				<CardContent className="space-y-3">
 					<p className="font-medium">{session.user.fullName}</p>
 					<p className="text-sm text-muted-foreground">{session.user.email}</p>
-					<p className="text-sm">Escritório: {session.firm.name}</p>
+					<p className="text-sm">Organização: {session.firm.name}</p>
 					<Button variant="outline" onClick={handleOpenUserProfile}>
 						Gerenciar minha conta
 					</Button>
@@ -70,17 +70,19 @@ export function Settings() {
 							</li>
 							<li>Crie o contrato, defina a equipe e as receitas previstas.</li>
 							<li>
-								Abra o contrato e use a aba Financeiro para registrar os
-								recebimentos.
+								Abra o contrato ou a despesa e use Financeiro para gerar os
+								títulos.
 							</li>
 							<li>
-								Confira as remunerações geradas e os indicadores da visão geral.
+								Registre recebimentos em Contas a receber e pagamentos em Contas
+								a pagar. Confira os indicadores e use estorno para corrigir uma
+								baixa.
 							</li>
 						</ol>
-						<p className="text-amber-700 dark:text-amber-400">
-							Receitas são valores previstos. Recebimentos registram entradas
-							realizadas. Remunerações geradas não confirmam pagamento ao
-							colaborador; saídas são registradas em Despesas.
+						<p className="text-muted-foreground">
+							Receitas e despesas representam valores negociados. Gerar títulos
+							não movimenta caixa. Recebimentos e pagamentos registram o caixa
+							efetivo; remunerações geradas são obrigações a pagar.
 						</p>
 						<div className="flex flex-wrap gap-3">
 							{(hasPermission(session, "org:contracts:read_all") ||
@@ -93,14 +95,14 @@ export function Settings() {
 									Ir para contratos
 								</NavigationLink>
 							)}
-							{(hasPermission(session, "org:remunerations:read_all") ||
-								hasPermission(session, "org:remunerations:read_own")) && (
+							{(hasPermission(session, "org:payables:read_all") ||
+								hasPermission(session, "org:payables:read_own")) && (
 								<NavigationLink
-									to="/remuneracoes"
-									search={remunerationSearchDefaults}
+									to="/contas-a-pagar"
+									search={{ ...payableSearchDefaults, origin: "remuneration" }}
 									className="underline underline-offset-4"
 								>
-									Conferir e exportar remunerações
+									Conferir remunerações
 								</NavigationLink>
 							)}
 						</div>

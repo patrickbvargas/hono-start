@@ -1,8 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { AttachmentSection } from "@/features/attachments";
 import { EntityAuditHistory } from "@/features/audit-logs";
+import { payableSearchDefaults } from "@/features/payables";
 import { RelatedRecordLink } from "@/features/related-records";
-import { remunerationSearchDefaults } from "@/features/remunerations";
 import { EntityDetail } from "@/shared/components/entity-detail";
 import { EntityStatus } from "@/shared/components/entity-status";
 import {
@@ -178,12 +178,13 @@ export function ContractWorkspace({
 										</p>
 									</div>
 									<div className="flex flex-wrap gap-3">
-										{(hasPermission(session, "org:remunerations:read_all") ||
-											hasPermission(session, "org:remunerations:read_own")) && (
+										{(hasPermission(session, "org:payables:read_all") ||
+											hasPermission(session, "org:payables:read_own")) && (
 											<NavigationLink
-												to="/remuneracoes"
+												to="/contas-a-pagar"
 												search={{
-													...remunerationSearchDefaults,
+													...payableSearchDefaults,
+													origin: "remuneration",
 													contractId: String(id),
 												}}
 												className="text-sm underline underline-offset-4"

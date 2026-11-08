@@ -1,394 +1,406 @@
 import { Prisma } from "@/generated/prisma/client";
 import { formatter } from "@/shared/lib/formatter";
-import type { DashboardSummary } from "../schemas/model";
-import { dashboardSummarySchema } from "../schemas/model";
-import { buildFinancialAnalysis } from "./analysis";
-import { buildMonthlyCashFlow } from "./cash-flow";
-import { buildMonthlyFinancialEvolution } from "./financial-evolution";
-import { buildOverdueInstallmentRows } from "./overdue-installments";
-import type { getDashboardRecords } from "./records";
-import { buildMonthlyRemunerationTable } from "./remuneration";
-import type { GroupTotal } from "./revenue";
+import {
+	type DashboardSummary,
+	dashboardSummarySchema,
+} from "../schemas/model";
+import {
+	addMonths,
+	formatMonthShortYearLabel,
+	getComparisonBoundaries,
+	getDashboardPeriod,
+	getFinancialEvolutionMonthRange,
+	getMonthKey,
+	isDateInsidePeriod,
+} from "../utils/period";
+import { getFinancialReferenceDate, getInstallmentBucket } from "./analysis";
+import { buildDashboardProjection, type FinancialRow } from "./projection";
+import type { DashboardRecords } from "./records";
 import {
 	calculateChangePercent,
-	getRevenueReceived,
+	type GroupTotal,
 	mapBreakdown,
 	pushGroupTotal,
-	sumDecimal,
 } from "./revenue";
-import { getScheduledRevenue } from "./schedule";
 import { canReadDashboardFirmResult } from "./scope";
-
-export function buildDashboardSummary({
-	scope,
-	previousFees,
-	previousStart,
-	previousEndExclusive,
-	previousLabel,
-	previousPeriodLabel,
-	period,
-	chartMonthRange,
-	revenues,
-	allRemunerations,
-	previousRemunerations,
-	chartDownPayments,
-	chartFees,
-	chartRemunerations,
-	tableRemunerations,
-	allExpenses,
-	previousExpenses,
-	chartCashFlowDownPayments,
-	chartCashFlowFees,
-	chartCashFlowExpenses,
-}: Awaited<ReturnType<typeof getDashboardRecords>>): DashboardSummary {
-	const comparisonPeriod = {
+export function buildDashboardSummary(
+	records: DashboardRecords,
+): DashboardSummary {
+	const { scope } = records;
+	const titlesById = new Map(
+		records.receivables.map((title) => [title.id, title]),
+	);
+	const period = getDashboardPeriod(scope.search);
+	const reference = getFinancialReferenceDate(period);
+	const { rows, open } = buildDashboardProjection(records, reference);
+	const selected = rows.filter((row) =>
+		isDateInsidePeriod(new Date(row.date), period),
+	);
+	const range = getFinancialEvolutionMonthRange(scope.search);
+	const previous = getComparisonBoundaries(scope.search);
+	const previousPeriod = {
 		hasPeriod: true,
-		dateFrom: previousStart,
-		dateTo: new Date(previousEndExclusive.getTime() - 1),
+		dateFrom: previous.previousStart,
+		dateTo: new Date(previous.previousEndExclusive.getTime() - 1),
 	};
-	const revenueTotal = getScheduledRevenue(revenues, period);
-	const revenueReceived = sumDecimal(
-		revenues.map((revenue) => getRevenueReceived(revenue, period)),
+	const old = rows.filter((row) =>
+		isDateInsidePeriod(new Date(row.date), previousPeriod),
 	);
-	const currentPlannedRevenue = revenueTotal;
-	const previousPlannedRevenue = getScheduledRevenue(
-		revenues,
-		comparisonPeriod,
-	);
-	const currentRevenue = revenueReceived;
-	const previousRevenue = sumDecimal(previousFees.map((fee) => fee.amount)).add(
-		sumDecimal(
-			revenues
-				.filter(
-					(revenue) =>
-						revenue.paymentStartDate >= previousStart &&
-						revenue.paymentStartDate < previousEndExclusive,
-				)
-				.map((revenue) => new Prisma.Decimal(revenue.downPaymentValue ?? 0)),
-		),
-	);
-	const showFirmResult = canReadDashboardFirmResult(scope);
-	const currentRemuneration = sumDecimal(
-		allRemunerations.map((remuneration) => remuneration.amount),
-	);
-	const previousRemuneration = sumDecimal(
-		previousRemunerations.map((remuneration) => remuneration.amount),
-	);
-	const remunerationTotal = sumDecimal(
-		allRemunerations.map((remuneration) => remuneration.amount),
-	);
-	const expenseTotal = sumDecimal(
-		allExpenses.map((expense) => new Prisma.Decimal(expense.amount)),
-	);
-	const currentExpense = expenseTotal;
-	const previousExpense = sumDecimal(
-		previousExpenses.map((expense) => new Prisma.Decimal(expense.amount)),
-	);
-	const totalBalance = revenueReceived.minus(expenseTotal);
-	const currentBalance = currentRevenue.minus(currentExpense);
-	const previousBalance = previousRevenue.minus(previousExpense);
-	const financialEvolution = buildMonthlyFinancialEvolution({
-		chartDownPayments,
-		chartFees,
-		chartRemunerations,
-		range: chartMonthRange,
-	});
-	const remunerationByCollaborator = buildMonthlyRemunerationTable({
-		range: chartMonthRange,
-		rows: tableRemunerations,
-	});
-	const overdueInstallments = buildOverdueInstallmentRows({
-		period,
-		revenues,
-	});
-	const cashFlow = showFirmResult
-		? buildMonthlyCashFlow({
-				chartDownPayments: chartCashFlowDownPayments,
-				chartFees: chartCashFlowFees,
-				chartRemunerations,
-				chartExpenses: chartCashFlowExpenses,
-				range: chartMonthRange,
-			})
-		: null;
-	const legalAreaGroups = new Map<string, GroupTotal>();
-	const revenueTypeGroups = new Map<string, GroupTotal>();
-
-	for (const revenue of revenues) {
-		const received = getRevenueReceived(revenue, period);
-		pushGroupTotal(legalAreaGroups, {
-			label: revenue.contract.legalArea.label,
-			value: revenue.contract.legalArea.value,
-			total: received,
-		});
-		pushGroupTotal(revenueTypeGroups, {
-			label: revenue.type.label,
-			value: revenue.type.value,
-			total: received,
-		});
-	}
-
-	const expenseGroups = new Map<string, GroupTotal>();
-	for (const expense of allExpenses) {
-		const label = expense.category?.label ?? "Outros";
-		pushGroupTotal(expenseGroups, {
-			label,
-			value: expense.category?.value ?? label,
-			total: new Prisma.Decimal(expense.amount),
-		});
-	}
-
-	const assignmentGroups = new Map<string, GroupTotal>();
-	const areaRemunerations = new Map<string, GroupTotal>();
-	const typeRemunerations = new Map<string, GroupTotal>();
-	for (const row of tableRemunerations) {
-		const area = row.contractEmployee.contract?.legalArea;
-		const type = row.fee?.revenue.type;
-		if (area) {
-			pushGroupTotal(areaRemunerations, {
-				...area,
-				total: new Prisma.Decimal(row.amount),
-			});
-		}
-		if (type) {
-			pushGroupTotal(typeRemunerations, {
-				...type,
-				total: new Prisma.Decimal(row.amount),
-			});
-		}
-		const label = row.contractEmployee.assignmentType?.label ?? "Outros";
-		pushGroupTotal(assignmentGroups, {
-			label,
-			value: row.contractEmployee.assignmentType?.value ?? label,
-			total: new Prisma.Decimal(row.amount),
-		});
-	}
-	const withRemunerations = (
-		receipts: Map<string, GroupTotal>,
-		remunerations: Map<string, GroupTotal>,
+	const sum = (items: FinancialRow[]) =>
+		items.reduce((total, row) => total.add(row.amount), new Prisma.Decimal(0));
+	const planned = (items: FinancialRow[]) =>
+		items.filter((row) => row.source === "planned");
+	const receipts = (items: FinancialRow[]) =>
+		items.filter((row) => row.source === "cash" && row.direction === "entry");
+	const payments = (items: FinancialRow[]) =>
+		items.filter((row) => row.source === "cash" && row.direction === "output");
+	const commissions = (items: FinancialRow[]) =>
+		items.filter((row) => row.source === "commission");
+	const breakdown = (
+		items: FinancialRow[],
+		dimension: (row: FinancialRow) => { value: string; label: string },
 	) => {
-		const groups = new Map(receipts);
-		for (const [value, item] of remunerations) {
-			if (!groups.has(value)) {
-				groups.set(value, { ...item, total: new Prisma.Decimal(0) });
-			}
+		const groups = new Map<string, GroupTotal>();
+		for (const row of items) {
+			pushGroupTotal(groups, { ...dimension(row), total: row.amount });
 		}
-		return mapBreakdown(groups, revenueReceived).map((item) => ({
-			...item,
-			remuneration: Number(remunerations.get(item.value)?.total ?? 0),
-		}));
+		return mapBreakdown(groups, sum(items));
 	};
-
-	const result = dashboardSummarySchema.parse({
-		remunerationByCollaborator:
-			scope.isAdmin &&
-			scope.access?.remunerationAll === true &&
-			scope.access?.remuneration === true
-				? mapBreakdown(
-						new Map(
-							remunerationByCollaborator.table.map((row) => [
-								String(row.employeeId),
-								{
-									value: String(row.employeeId),
-									label: row.employeeName,
-									total: new Prisma.Decimal(row.total),
-								},
-							]),
-						),
-						sumDecimal(
-							remunerationByCollaborator.table.map(
-								(row) => new Prisma.Decimal(row.total),
+	const legalAreas = breakdown(receipts(selected), (row) => ({
+		value: row.areaValue ?? "DIRECT",
+		label: row.area ?? "Sem vínculo com contrato",
+	}));
+	const types = breakdown(receipts(selected), (row) => ({
+		value: row.typeValue ?? "DIRECT",
+		label: row.type ?? "Direto",
+	}));
+	const withCommission = (
+		items: typeof legalAreas,
+		dimension: "areaValue" | "typeValue",
+	) =>
+		items.map((item) => ({
+			...item,
+			remuneration: Number(
+				sum(
+					commissions(selected).filter(
+						(row) => (row[dimension] ?? "DIRECT") === item.value,
+					),
+				),
+			),
+		}));
+	const showResult = canReadDashboardFirmResult(scope);
+	const net = (items: FinancialRow[]) =>
+		sum(receipts(items)).minus(sum(payments(items)));
+	const metric = (
+		label: string,
+		drilldown: "planned" | "revenue" | "remuneration" | "expense" | "result",
+		current: Prisma.Decimal,
+		before: Prisma.Decimal,
+		description: string,
+	) => ({
+		label,
+		drilldown,
+		value: Number(current),
+		formattedValue: formatter.currency(Number(current)),
+		description,
+		tone: "default" as const,
+		currentValue: Number(current),
+		previousValue: Number(before),
+		formattedCurrentValue: formatter.currency(Number(current)),
+		formattedPreviousValue: formatter.currency(Number(before)),
+		previousLabel: previous.previousLabel,
+		previousPeriodLabel: previous.previousPeriodLabel,
+		changePercent: calculateChangePercent(current, before),
+	});
+	const months: Array<{ key: string; label: string }> = [];
+	for (
+		let date = range.startMonth;
+		date <= range.endMonth;
+		date = addMonths(date, 1)
+	) {
+		months.push({
+			key: getMonthKey(date),
+			label: formatMonthShortYearLabel(date),
+		});
+	}
+	const chartRows = rows.filter((row) =>
+		isDateInsidePeriod(new Date(row.date), period),
+	);
+	const cashTable = months.map((month) => {
+		const current = chartRows.filter(
+			(row) => getMonthKey(new Date(row.date)) === month.key,
+		);
+		const incoming = receipts(current);
+		const outgoing = payments(current);
+		const entry = sum(incoming),
+			output = sum(outgoing);
+		return {
+			month: month.key,
+			monthLabel: month.label,
+			administrative: Number(
+				sum(incoming.filter((row) => row.typeValue === "ADMINISTRATIVE")),
+			),
+			judicial: Number(
+				sum(incoming.filter((row) => row.typeValue === "JUDICIAL")),
+			),
+			succumbency: Number(
+				sum(incoming.filter((row) => row.typeValue === "SUCCUMBENCY")),
+			),
+			entry: Number(entry),
+			remuneration: Number(sum(outgoing.filter((row) => row.isRemuneration))),
+			expense: Number(sum(outgoing.filter((row) => !row.isRemuneration))),
+			output: Number(output),
+			balance: Number(entry.minus(output)),
+		};
+	});
+	const employeeGroups = new Map<
+		number,
+		{ name: string; rows: FinancialRow[] }
+	>();
+	for (const row of commissions(chartRows)) {
+		if (row.employeeId) {
+			const group = employeeGroups.get(row.employeeId) ?? {
+				name: row.employee ?? "",
+				rows: [],
+			};
+			group.rows.push(row);
+			employeeGroups.set(row.employeeId, group);
+		}
+	}
+	const remunerationTable = [...employeeGroups]
+		.sort((a, b) => a[1].name.localeCompare(b[1].name, "pt-BR") || a[0] - b[0])
+		.map(([employeeId, group]) => ({
+			employeeId,
+			employeeName: group.name,
+			months: Object.fromEntries(
+				months.map((month) => [
+					month.key,
+					Number(
+						sum(
+							group.rows.filter(
+								(row) => getMonthKey(new Date(row.date)) === month.key,
 							),
 						),
-					)
-				: undefined,
+					),
+				]),
+			),
+			total: Number(sum(group.rows)),
+			formattedTotal: formatter.currency(Number(sum(group.rows))),
+		}));
+	const bucketGroups = (kind: "aging" | "forecast") => {
+		const labels =
+			kind === "aging"
+				? ["Até 30 dias", "31–60 dias", "61–90 dias", "Acima de 90 dias"]
+				: ["Próximos 30 dias", "31–60 dias", "61–90 dias"];
+		return labels.map((label) => {
+			const amount = sum(
+				open.filter((row) => {
+					const bucket = getInstallmentBucket(new Date(row.date), reference);
+					return bucket?.kind === kind && bucket.value === label;
+				}),
+			);
+			return {
+				label,
+				value: label,
+				total: Number(amount),
+				formattedTotal: formatter.currency(Number(amount)),
+				percentage: 0,
+			};
+		});
+	};
+	const aging = bucketGroups("aging");
+	const totalReceived = sum(receipts(selected)),
+		totalPaid = sum(payments(selected));
+	return dashboardSummarySchema.parse({
 		isAdmin: scope.isAdmin,
-		remunerationByAssignment: mapBreakdown(assignmentGroups, remunerationTotal),
-		analysis: buildFinancialAnalysis(revenues, period),
-		expenseRevenue: showFirmResult
-			? mapBreakdown(expenseGroups, expenseTotal)
-			: [],
-		operatingRatios: showFirmResult
-			? {
-					margin: revenueReceived.equals(0)
-						? null
-						: Number(totalBalance.div(revenueReceived).mul(100)),
-					remunerationShare: revenueReceived.equals(0)
-						? null
-						: Number(remunerationTotal.div(revenueReceived).mul(100)),
-					expenses: formatter.currency(Number(expenseTotal)),
-				}
-			: null,
 		scopeLabel: scope.isAdmin ? "Visão geral" : "Minha visão",
+		visibility: {
+			revenue: scope.access?.revenue === true,
+			remuneration: scope.access?.remuneration === true,
+			expense: scope.access?.expense === true,
+			evolution:
+				scope.access?.revenue === true && scope.access?.remuneration === true,
+		},
 		metrics: [
-			...(showFirmResult
+			...(showResult
 				? [
-						{
-							label: "Resultado do período",
-							drilldown: "result" as const,
-							value: Number(totalBalance),
-							formattedValue: formatter.currency(Number(totalBalance)),
-							description:
-								"Honorários recebidos − despesas. Não representa saldo bancário.",
-							tone: Number(totalBalance) < 0 ? "danger" : "default",
-							previousLabel,
-							currentValue: Number(currentBalance),
-							previousValue: Number(previousBalance),
-							formattedCurrentValue: formatter.currency(Number(currentBalance)),
-							formattedPreviousValue: formatter.currency(
-								Number(previousBalance),
-							),
-							previousPeriodLabel,
-							changePercent: calculateChangePercent(
-								currentBalance,
-								previousBalance,
-							),
-						},
+						metric(
+							"Resultado do período",
+							"result",
+							net(selected),
+							net(old),
+							"Caixa recebido menos caixa pago, incluindo estornos. Não representa saldo bancário.",
+						),
 					]
 				: []),
-			{
-				label: "Honorários previstos",
-				drilldown: "planned" as const,
-				value: Number(revenueTotal),
-				formattedValue: formatter.currency(Number(revenueTotal)),
-				description:
-					"Entradas + parcelas previstas. Inclui valores já recebidos.",
-				tone: "default",
-				previousLabel,
-				currentValue: Number(currentPlannedRevenue),
-				previousValue: Number(previousPlannedRevenue),
-				formattedCurrentValue: formatter.currency(
-					Number(currentPlannedRevenue),
-				),
-				formattedPreviousValue: formatter.currency(
-					Number(previousPlannedRevenue),
-				),
-				previousPeriodLabel,
-				changePercent: calculateChangePercent(
-					currentPlannedRevenue,
-					previousPlannedRevenue,
-				),
-			},
-			{
-				label: "Honorários recebidos",
-				drilldown: "revenue" as const,
-				value: Number(revenueReceived),
-				formattedValue: formatter.currency(Number(revenueReceived)),
-				description: "Entradas + pagamentos de honorários recebidos.",
-				tone: "success",
-				previousLabel,
-				currentValue: Number(currentRevenue),
-				previousValue: Number(previousRevenue),
-				formattedCurrentValue: formatter.currency(Number(currentRevenue)),
-				formattedPreviousValue: formatter.currency(Number(previousRevenue)),
-				previousPeriodLabel,
-				changePercent: calculateChangePercent(currentRevenue, previousRevenue),
-			},
-			{
-				label: "Remunerações geradas",
-				drilldown: "remuneration" as const,
-				value: Number(remunerationTotal),
-				formattedValue: formatter.currency(Number(remunerationTotal)),
-				description:
-					"Remunerações geradas. Indicador de conferência; não compõe as saídas.",
-				tone: "warning",
-				previousLabel,
-				currentValue: Number(currentRemuneration),
-				previousValue: Number(previousRemuneration),
-				formattedCurrentValue: formatter.currency(Number(currentRemuneration)),
-				formattedPreviousValue: formatter.currency(
-					Number(previousRemuneration),
-				),
-				previousPeriodLabel,
-				changePercent: calculateChangePercent(
-					currentRemuneration,
-					previousRemuneration,
-				),
-			},
+			...(scope.access?.revenue
+				? [
+						metric(
+							"Títulos previstos",
+							"planned",
+							sum(planned(selected)),
+							sum(planned(old)),
+							"Títulos ativos por vencimento, incluindo entrada e extras.",
+						),
+					]
+				: []),
+			...(scope.access?.receipts
+				? [
+						metric(
+							"Recebimentos",
+							"revenue",
+							totalReceived,
+							sum(receipts(old)),
+							"Caixa efetivo recebido, descontando estornos na data da reversão.",
+						),
+					]
+				: []),
+			...(scope.access?.remuneration
+				? [
+						metric(
+							"Remunerações geradas",
+							"remuneration",
+							sum(commissions(selected)),
+							sum(commissions(old)),
+							"Obrigações geradas menos cancelamentos. Pagamentos compõem as saídas.",
+						),
+					]
+				: []),
+			...(scope.access?.expense && scope.access.payments
+				? [
+						metric(
+							"Pagamentos",
+							"expense",
+							totalPaid,
+							sum(payments(old)),
+							"Caixa efetivo pago, incluindo remunerações e estornos.",
+						),
+					]
+				: []),
 		],
-		legalAreaRevenue: withRemunerations(legalAreaGroups, areaRemunerations),
-		revenueTypeRevenue: withRemunerations(revenueTypeGroups, typeRemunerations),
-		remunerationMonths: remunerationByCollaborator.months,
-		remunerationTable: remunerationByCollaborator.table,
-		remunerationSubtotal: remunerationByCollaborator.subtotal,
-		overdueInstallments,
-		financialEvolutionLabel: chartMonthRange.label,
-		financialEvolution: cashFlow
-			? cashFlow.table.map((row) => ({
-					month: row.month,
-					revenue: row.entry,
-					remuneration: row.remuneration,
-					expense: row.expense,
-					result: row.balance,
-				}))
-			: financialEvolution,
-		cashFlow: cashFlow
+		legalAreaRevenue: withCommission(legalAreas, "areaValue"),
+		revenueTypeRevenue: withCommission(types, "typeValue"),
+		remunerationMonths: months,
+		remunerationTable,
+		remunerationSubtotal: remunerationTable.length
 			? {
-					totalBalance: Number(totalBalance),
-					formattedTotalBalance: formatter.currency(Number(totalBalance)),
-					chartLabel: chartMonthRange.label,
-					chart: cashFlow.chart,
-					table: cashFlow.table,
+					label: "Subtotal",
+					months: Object.fromEntries(
+						months.map((month) => [
+							month.key,
+							Number(
+								sum(
+									commissions(chartRows).filter(
+										(row) => getMonthKey(new Date(row.date)) === month.key,
+									),
+								),
+							),
+						]),
+					),
+					total: Number(sum(commissions(chartRows))),
+					formattedTotal: formatter.currency(
+						Number(sum(commissions(chartRows))),
+					),
 				}
 			: null,
-	});
-	const revenue = scope.access?.revenue === true;
-	const remuneration = scope.access?.remuneration === true;
-	const expense = scope.access?.expense === true;
-	return dashboardSummarySchema.parse({
-		...result,
-		visibility: {
-			revenue,
-			remuneration,
-			expense,
-			evolution: revenue && remuneration,
-		},
-		metrics: result.metrics
-			.filter((metric) =>
-				metric.label === "Resultado do período"
-					? showFirmResult
-					: metric.label === "Remunerações geradas"
-						? remuneration
-						: revenue,
-			)
-			.concat(
-				expense
-					? [
-							{
-								label: "Despesas",
-								drilldown: "expense" as const,
-								value: Number(expenseTotal),
-								formattedValue: formatter.currency(Number(expenseTotal)),
-								description:
-									"Despesas. Ignora filtros de colaborador, área e tipo de honorário.",
-								tone: "default" as const,
-								previousLabel,
-								currentValue: Number(expenseTotal),
-								previousValue: Number(previousExpense),
-								formattedCurrentValue: formatter.currency(Number(expenseTotal)),
-								formattedPreviousValue: formatter.currency(
-									Number(previousExpense),
-								),
-								previousPeriodLabel,
-								changePercent: calculateChangePercent(
-									expenseTotal,
-									previousExpense,
-								),
-							},
-						]
-					: [],
-			),
-		analysis: revenue ? result.analysis : undefined,
-		legalAreaRevenue: revenue ? result.legalAreaRevenue : [],
-		revenueTypeRevenue: revenue ? result.revenueTypeRevenue : [],
-		overdueInstallments: revenue ? result.overdueInstallments : [],
-		remunerationByAssignment: remuneration
-			? result.remunerationByAssignment
+		remunerationByCollaborator: scope.access?.remunerationAll
+			? breakdown(commissions(selected), (row) => ({
+					label: row.employee ?? "",
+					value: String(row.employeeId),
+				}))
 			: undefined,
-		remunerationMonths: remuneration ? result.remunerationMonths : [],
-		remunerationTable: remuneration ? result.remunerationTable : [],
-		remunerationSubtotal: remuneration ? result.remunerationSubtotal : null,
-		financialEvolution:
-			revenue && remuneration ? result.financialEvolution : [],
-		expenseRevenue: expense ? mapBreakdown(expenseGroups, expenseTotal) : [],
+		remunerationByAssignment: breakdown(commissions(selected), (row) => ({
+			label: row.assignment ?? "Outros",
+			value: row.assignmentValue ?? "OTHER",
+		})),
+		expenseRevenue: breakdown(payments(selected), (row) => ({
+			label: row.category ?? "Outros",
+			value: row.categoryValue ?? "OTHER",
+		})),
+		operatingRatios: showResult
+			? {
+					margin: totalReceived.eq(0)
+						? null
+						: Number(net(selected).div(totalReceived).mul(100)),
+					remunerationShare: totalReceived.eq(0)
+						? null
+						: Number(sum(commissions(selected)).div(totalReceived).mul(100)),
+					expenses: formatter.currency(Number(totalPaid)),
+				}
+			: null,
+		analysis: scope.access?.revenue
+			? {
+					referenceAt: reference.toISOString(),
+					referenceLabel: formatter.calendarDate(reference.toISOString()),
+					overdueTotal: formatter.currency(
+						aging
+							.reduce(
+								(total, row) => total.add(row.total),
+								new Prisma.Decimal(0),
+							)
+							.toNumber(),
+					),
+					aging,
+					forecast: bucketGroups("forecast"),
+					clients: breakdown(receipts(selected), (row) => ({
+						label: row.client ?? "Direto",
+						value: String(row.clientId ?? 0),
+					})),
+				}
+			: undefined,
+		overdueInstallments: open
+			.filter(
+				(row) =>
+					row.process &&
+					getInstallmentBucket(new Date(row.date), reference)?.kind === "aging",
+			)
+			.map((row) => {
+				const contract = titlesById.get(row.record.id)
+					?.contractRevenueReceivable?.contract;
+				return {
+					contractId: contract?.id ?? 0,
+					contractProcessNumber: row.process,
+					clientName: row.client,
+					lawyerName:
+						contract?.assignments.find(
+							(assignment) => assignment.assignmentType.value === "RESPONSIBLE",
+						)?.employeeProfile.person.fullName ?? "—",
+					legalArea: row.area ?? "—",
+					revenueType: row.type ?? "—",
+					titleId: row.record.id,
+					dueDate: row.date,
+					installmentAmount: Number(row.amount),
+					formattedInstallmentAmount: formatter.currency(Number(row.amount)),
+					totalValue: row.faceAmount ?? 0,
+					formattedTotalValue: formatter.currency(row.faceAmount ?? 0),
+				};
+			}),
+		financialEvolutionLabel: range.label,
+		financialEvolution: cashTable.map((row) => ({
+			month: row.month,
+			revenue: row.entry,
+			remuneration: Number(
+				sum(
+					commissions(chartRows).filter(
+						(item) => getMonthKey(new Date(item.date)) === row.month,
+					),
+				),
+			),
+			...(showResult ? { expense: row.output, result: row.balance } : {}),
+		})),
+		cashFlow: showResult
+			? {
+					totalBalance: Number(net(selected)),
+					formattedTotalBalance: formatter.currency(Number(net(selected))),
+					chartLabel: range.label,
+					chart: cashTable.map((row) => ({
+						month: row.month,
+						entry: row.entry,
+						output: row.output,
+						balance: row.balance,
+					})),
+					table: cashTable,
+				}
+			: null,
 	});
 }

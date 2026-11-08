@@ -24,13 +24,13 @@ export const titleInputSchema = z.object({
 		),
 	dueDate: z.iso.date("Data de vencimento inválida"),
 	analytic: z
-		.string({ error: "Categoria financeira é obrigatória" })
+		.string({ error: "Analítica é obrigatória" })
 		.trim()
-		.min(1, "Categoria financeira é obrigatória"),
+		.min(1, "Analítica é obrigatória"),
 	expectedPaymentMethod: z
-		.string({ error: "Forma de pagamento é obrigatória" })
+		.string({ error: "Meio previsto é obrigatória" })
 		.trim()
-		.min(1, "Forma de pagamento é obrigatória"),
+		.min(1, "Meio previsto é obrigatória"),
 	kind: z.enum(TITLE_KINDS, { error: "Selecione o tipo do título" }),
 	notes: notesInputSchema.optional(),
 });

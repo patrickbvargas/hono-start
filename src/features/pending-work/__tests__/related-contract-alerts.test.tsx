@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
-	permissions: ["org:contracts:read_all", "org:fees:read_all"],
+	permissions: ["org:contracts:read_all", "org:receivables:read_all"],
 	useAlerts: vi.fn(),
 	retry: vi.fn(),
 }));
@@ -52,7 +52,7 @@ vi.mock("@/shared/components/navigation-link", () => ({
 import { RelatedContractAlerts } from "../components/related-contract-alerts";
 
 beforeEach(() => {
-	mocks.permissions = ["org:contracts:read_all", "org:fees:read_all"];
+	mocks.permissions = ["org:contracts:read_all", "org:receivables:read_all"];
 	mocks.useAlerts.mockReset();
 	mocks.retry.mockReset();
 	mocks.useAlerts.mockReturnValue({
@@ -104,7 +104,7 @@ describe("related contract alert previews", () => {
 	it.each([
 		{ permissions: [] },
 		{ permissions: ["org:contracts:read_all"] },
-		{ permissions: ["org:fees:read_all"] },
+		{ permissions: ["org:receivables:read_all"] },
 	])(
 		"does not mount queries without both subject grants: %j",
 		({ permissions }) => {
@@ -119,7 +119,7 @@ describe("related contract alert previews", () => {
 	it("supports assigned contract and fee readers without promoting their scope", () => {
 		mocks.permissions = [
 			"org:contracts:read_assigned",
-			"org:fees:read_assigned",
+			"org:receivables:read_assigned",
 		];
 		render(<RelatedContractAlerts kind="employee" id={9} />);
 		expect(mocks.useAlerts).toHaveBeenCalledWith({ kind: "employee", id: 9 });

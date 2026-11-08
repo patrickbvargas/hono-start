@@ -1,5 +1,5 @@
-import type { AuditLogActor } from "@/features/audit-logs/data/mutations";
-import { createAuditLog } from "@/features/audit-logs/data/mutations";
+import type { AuditLogActor } from "@/features/audit-logs";
+import { createAuditLog } from "@/features/audit-logs";
 import {
 	createAttachmentStoragePath,
 	isAttachmentStorageCapacityError,
@@ -48,7 +48,7 @@ export async function createAttachments(params: {
 }): Promise<MutationReturnType> {
 	const input = attachmentBatchUploadInputSchema.parse(params.input);
 	const owner = getAttachmentOwnerContext(input);
-	if (owner.ownerKind === "receivable" || owner.ownerKind === "payable") {
+	if (!["person", "contract", "expense"].includes(owner.ownerKind)) {
 		throw new Error(ATTACHMENT_ERRORS.UPLOAD_FAILED);
 	}
 	const prepared: Array<{
@@ -108,15 +108,11 @@ export async function createAttachments(params: {
 	try {
 		await prisma.$transaction(
 			async (tx) => {
-				const lockKey = `attachments:${owner.ownerKind === "person" || owner.ownerKind === "client" || owner.ownerKind === "employee" ? "company" : params.firmId}:${owner.ownerKind}:${owner.ownerId}`;
+				const lockKey = `attachments:${owner.ownerKind === "person" ? "company" : params.firmId}:${owner.ownerKind}:${owner.ownerId}`;
 				await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtextextended(${lockKey}, 0))`;
 				const count = await tx.attachment.count({
 					where: {
-						...(owner.ownerKind === "person" ||
-						owner.ownerKind === "client" ||
-						owner.ownerKind === "employee"
-							? {}
-							: { firmId: params.firmId }),
+						...(owner.ownerKind === "person" ? {} : { firmId: params.firmId }),
 						deletedAt: null,
 						...getAttachmentOwnerInput(owner),
 					},
@@ -143,9 +139,6 @@ export async function createAttachments(params: {
 						action: "CREATE",
 						entityType: "Attachment",
 						personId: owner.ownerKind === "person" ? owner.ownerId : undefined,
-						clientId: owner.ownerKind === "client" ? owner.ownerId : undefined,
-						employeeId:
-							owner.ownerKind === "employee" ? owner.ownerId : undefined,
 						entityId: attachment.id,
 						entityName: attachment.fileName,
 						changeData: {

@@ -34,14 +34,7 @@ import { RelatedRecordLink } from "../components/link";
 
 afterEach(cleanup);
 describe("contextual related details", () => {
-	it.each([
-		"client",
-		"employee",
-		"fee",
-		"contract",
-		"expense",
-		"remuneration",
-	] as const)(
+	it.each(["client", "employee", "contract", "expense"] as const)(
 		"opens and closes %s without replacing source screen or URL",
 		async (kind) => {
 			const url = window.location.href;

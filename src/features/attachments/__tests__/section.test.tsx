@@ -112,7 +112,7 @@ describe("AttachmentSection", () => {
 	});
 
 	it("renders one heading and opens upload from the compact header", () => {
-		render(<AttachmentSection ownerId={1} ownerKind="client" />);
+		render(<AttachmentSection ownerId={1} ownerKind="person" />);
 
 		expect(screen.getAllByRole("heading", { name: "Anexos" })).toHaveLength(1);
 		fireEvent.click(screen.getByRole("button", { name: "Anexar" }));
@@ -121,7 +121,7 @@ describe("AttachmentSection", () => {
 
 	it("keeps empty copy compact and matches loading to the padded attachment row", () => {
 		const { rerender, container } = render(
-			<AttachmentSection ownerId={1} ownerKind="client" />,
+			<AttachmentSection ownerId={1} ownerKind="person" />,
 		);
 		expect(screen.getByText("Nenhum anexo cadastrado.").className).toContain(
 			"leading-5",
@@ -132,7 +132,7 @@ describe("AttachmentSection", () => {
 			isPending: true,
 			retry: retryMock,
 		});
-		rerender(<AttachmentSection ownerId={1} ownerKind="client" />);
+		rerender(<AttachmentSection ownerId={1} ownerKind="person" />);
 		expect(
 			container.querySelector('div.min-h-16[aria-hidden="true"]')?.className,
 		).toContain("py-3");
@@ -214,7 +214,7 @@ describe("AttachmentSection", () => {
 			retry: retryMock,
 		});
 
-		render(<AttachmentSection ownerId={1} ownerKind="client" />);
+		render(<AttachmentSection ownerId={1} ownerKind="person" />);
 
 		expect(screen.getByText("contrato.pdf")).toBeTruthy();
 		expect(screen.getByText("Enviado por Maria")).toBeTruthy();
@@ -265,7 +265,7 @@ describe("AttachmentSection", () => {
 				isPending: false,
 				retry: retryMock,
 			});
-			render(<AttachmentSection ownerId={1} ownerKind="client" />);
+			render(<AttachmentSection ownerId={1} ownerKind="person" />);
 			expect(
 				(screen.getByRole("button", { name: "Anexar" }) as HTMLButtonElement)
 					.disabled,
@@ -277,12 +277,12 @@ describe("AttachmentSection", () => {
 	it("hides upload without permission or when unavailable", () => {
 		permissionMock.mockReturnValue(false);
 		const { rerender } = render(
-			<AttachmentSection ownerId={1} ownerKind="client" />,
+			<AttachmentSection ownerId={1} ownerKind="person" />,
 		);
 		expect(screen.queryByRole("button", { name: "Anexar" })).toBeNull();
 		permissionMock.mockReturnValue(true);
 		rerender(
-			<AttachmentSection ownerId={1} ownerKind="client" canUpload={false} />,
+			<AttachmentSection ownerId={1} ownerKind="person" canUpload={false} />,
 		);
 		expect(screen.queryByRole("button", { name: "Anexar" })).toBeNull();
 	});
@@ -294,7 +294,7 @@ describe("AttachmentSection", () => {
 			isPending: false,
 			retry: retryMock,
 		});
-		render(<AttachmentSection ownerId={1} ownerKind="client" />);
+		render(<AttachmentSection ownerId={1} ownerKind="person" />);
 		expect(screen.getByRole("alert").textContent).toContain(
 			"Não foi possível carregar anexos.",
 		);

@@ -31,7 +31,6 @@ import {
 } from "../../utils/default";
 import { getContractEditOptionDefaults } from "../../utils/edit-options";
 import { getRevenueSummary } from "../../utils/form-summary";
-import { getPaymentSummary } from "../../utils/payment-summary";
 
 interface ContractFormProps {
 	id?: EntityId;
@@ -320,7 +319,7 @@ function ContractFormContent({
 								getSummary={(revenue, index) =>
 									getRevenueSummary(revenue, index, revenueTypes)
 								}
-								renderContent={(revenue, index) => (
+								renderContent={(_, index) => (
 									<div
 										data-contract-row={getRowKey("revenues", index)}
 										className="space-y-4"
@@ -340,7 +339,7 @@ function ContractFormContent({
 												{(field) => (
 													<field.Number
 														isDisabled={!canManageRevenues}
-														label="Valor total"
+														label="Valor negociado"
 														minValue={0}
 														step={0.01}
 														isRequired
@@ -352,76 +351,28 @@ function ContractFormContent({
 												)}
 											</form.AppField>
 										</FieldGroup>
-										<FieldGroup className="grid gap-4 sm:grid-cols-2">
-											<form.AppField
-												name={`revenues[${index}].paymentStartDate`}
-											>
-												{(field) => (
-													<field.DatePicker
-														isDisabled={!canManageRevenues}
-														label="Início do pagamento"
-														isRequired
-													/>
-												)}
-											</form.AppField>
-											<form.AppField
-												name={`revenues[${index}].downPaymentValue`}
-											>
-												{(field) => (
-													<field.Number
-														isDisabled={!canManageRevenues}
-														label="Entrada"
-														minValue={0}
-														step={0.01}
-														formatOptions={{
-															style: "currency",
-															currency: "BRL",
-														}}
-													/>
-												)}
-											</form.AppField>
-										</FieldGroup>
-										<FieldGroup className="grid grid-cols-2 grid-rows-[auto_auto] gap-x-4 gap-y-2">
-											<form.AppField
-												name={`revenues[${index}].totalInstallments`}
-											>
-												{(field) => (
-													<field.Number
-														isDisabled={!canManageRevenues}
-														classNames={{
-															wrapper:
-																"col-start-1 row-span-2 row-start-1 grid grid-rows-subgrid gap-2 has-[[data-slot=field-error]]:row-span-3",
-														}}
-														label="Parcelas"
-														minValue={1}
-														step={1}
-														isRequired
-													/>
-												)}
-											</form.AppField>
-											<div className="col-start-2 row-start-2 flex min-h-8 items-center gap-4">
-												<div
-													className="m-0 flex min-h-8 min-w-0 flex-1 items-center justify-start self-center text-left text-sm text-muted-foreground"
-													aria-live="polite"
-												>
-													{getPaymentSummary(revenue, { includeEntry: false })}
-												</div>
-												<Button
-													disabled={!canManageRevenues}
-													type="button"
-													size="icon"
-													variant="outline"
-													className="shrink-0"
-													aria-label={`Remover receita ${index + 1}`}
-													onClick={() => {
-														removeRowKey("revenues", index);
-														subField.removeValue(index);
-													}}
-												>
-													<TrashIcon size={16} />
-												</Button>
-											</div>
-										</FieldGroup>
+										<form.AppField name={`revenues[${index}].notes`}>
+											{(field) => (
+												<field.Input
+													label="Observações"
+													isDisabled={!canManageRevenues}
+												/>
+											)}
+										</form.AppField>
+										<Button
+											disabled={!canManageRevenues}
+											type="button"
+											size="sm"
+											variant="outline"
+											aria-label={`Remover receita ${index + 1}`}
+											onClick={() => {
+												removeRowKey("revenues", index);
+												subField.removeValue(index);
+											}}
+										>
+											<TrashIcon size={16} />
+											Remover receita
+										</Button>
 									</div>
 								)}
 							/>

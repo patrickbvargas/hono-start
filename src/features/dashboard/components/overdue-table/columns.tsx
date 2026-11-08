@@ -60,8 +60,8 @@ export function getColumns(onViewContract?: (id: number) => void) {
 				cellClassName: "whitespace-nowrap",
 			},
 		}),
-		columnHelper.accessor("installmentNumber", {
-			header: "Parcela",
+		columnHelper.accessor("titleId", {
+			header: "Título",
 			meta: {
 				headerClassName: "min-w-24 text-right",
 				cellClassName: "whitespace-nowrap text-right",
@@ -87,7 +87,7 @@ export function getColumns(onViewContract?: (id: number) => void) {
 		columnHelper.accessor("formattedTotalValue", {
 			id: "formattedTotalValue",
 			cell: (context) => <SensitiveValue>{context.getValue()}</SensitiveValue>,
-			header: "Total do honorário",
+			header: "Valor nominal",
 			meta: {
 				headerClassName: "min-w-32 text-right",
 				cellClassName: "whitespace-nowrap text-right font-semibold",

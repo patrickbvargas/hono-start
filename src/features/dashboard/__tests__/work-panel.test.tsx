@@ -30,7 +30,7 @@ const rows: DashboardOverdueInstallmentRow[] = Array.from(
 		lawyerName: "Advogado",
 		legalArea: "Cível",
 		revenueType: "Contratual",
-		installmentNumber: 1,
+		titleId: 1,
 		dueDate: "2026-01-01T00:00:00.000Z",
 		installmentAmount: 100,
 		formattedInstallmentAmount: "R$ 100,00",
@@ -72,7 +72,7 @@ describe("dashboard work preview", () => {
 			<DashboardWorkPanel rows={[]} scopeLabel="Seu acesso" canOpenContracts />,
 		);
 		expect(
-			screen.getByText("Nenhuma parcela em atraso nos filtros selecionados."),
+			screen.getByText("Nenhum título em atraso nos filtros selecionados."),
 		).not.toBeNull();
 	});
 });

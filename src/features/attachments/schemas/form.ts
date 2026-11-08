@@ -15,19 +15,18 @@ const attachmentOwnerBaseInputSchema = z.object({
 	receivableId: z.number().int().positive().optional(),
 	payableId: z.number().int().positive().optional(),
 	personId: entityIdSchema.shape.id.optional(),
-	clientId: entityIdSchema.shape.id.optional(),
-	employeeId: entityIdSchema.shape.id.optional(),
 	contractId: entityIdSchema.shape.id.optional(),
 	expenseId: entityIdSchema.shape.id.optional(),
-	feeId: entityIdSchema.shape.id.optional(),
-	remunerationId: entityIdSchema.shape.id.optional(),
+	receiptId: entityIdSchema.shape.id.optional(),
+	paymentId: entityIdSchema.shape.id.optional(),
+	remunerationPayableId: entityIdSchema.shape.id.optional(),
 });
 
 function addOwnerContextError(ctx: z.RefinementCtx) {
 	ctx.addIssue({
 		code: "custom",
 		message: "Selecione exatamente um contexto para o anexo.",
-		path: ["clientId"],
+		path: ["personId"],
 	});
 }
 

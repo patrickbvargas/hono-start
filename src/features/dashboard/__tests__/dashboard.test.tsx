@@ -65,7 +65,7 @@ vi.mock("../components/overdue-table", () => ({
 	DashboardOverdueInstallmentsTable: ({
 		rows,
 	}: {
-		rows: Array<{ installmentNumber: number }>;
+		rows: Array<{ titleId: number }>;
 	}) => (
 		<div data-testid="dashboard-overdue-installments-table">
 			{rows.length} linhas atraso
@@ -185,7 +185,7 @@ describe("Dashboard", () => {
 								lawyerName: "Maria Silva",
 								legalArea: "Previdenciário",
 								revenueType: "Administrativo",
-								installmentNumber: 3,
+								titleId: 3,
 								dueDate: "2026-04-10T00:00:00.000Z",
 								installmentAmount: 2000,
 								formattedInstallmentAmount: "R$ 2.000,00",
@@ -237,10 +237,10 @@ describe("Dashboard", () => {
 			);
 			if (!showDetails) {
 				expect(screen.queryByText("Remuneração por função")).toBeNull();
-				expect(screen.queryByText("Honorários a receber")).toBeNull();
-				expect(screen.queryByText("Honorários em atraso")).toBeNull();
+				expect(screen.queryByText("Títulos a vencer")).toBeNull();
+				expect(screen.queryByText("Títulos em atraso")).toBeNull();
 				expect(screen.queryByText("Honorários por cliente")).toBeNull();
-				expect(screen.queryByText("Despesas por categoria")).toBeNull();
+				expect(screen.queryByText("Pagamentos por analítica")).toBeNull();
 				expect(screen.queryByTestId("dashboard-cash-flow-table")).toBeNull();
 				expect(screen.queryByTestId("dashboard-remuneration-table")).toBeNull();
 				expect(
@@ -251,8 +251,8 @@ describe("Dashboard", () => {
 			const detailTitles = [
 				"Remunerações por colaborador",
 				"Remuneração por função",
-				"Honorários em atraso",
-				"Honorários a receber",
+				"Títulos em atraso",
+				"Títulos a vencer",
 				"Honorários por cliente",
 			];
 			const positions = detailTitles.map(
@@ -319,7 +319,7 @@ describe("Dashboard", () => {
 				}}
 			/>,
 		);
-		expect(screen.getByText("Despesas por categoria")).toBeTruthy();
+		expect(screen.getByText("Pagamentos por analítica")).toBeTruthy();
 		expect(screen.queryByText("Resumo mensal")).toBeNull();
 		expect(screen.queryByText("Resultado mensal")).toBeNull();
 	});
@@ -388,6 +388,6 @@ it.each([true, false])(
 				}}
 			/>,
 		);
-		expect(screen.getAllByText("Despesas por categoria")).toHaveLength(1);
+		expect(screen.getAllByText("Pagamentos por analítica")).toHaveLength(1);
 	},
 );

@@ -1,0 +1,37 @@
+
+ RUN  v5.0.5 C:/Dev/hono-start
+
+stderr | src/shared/components/__tests__/data-table-refresh.test.tsx > refreshes movement status when an existing row changes after reversal
+Warning: useRouter must be used inside a <RouterProvider> component!
+Warning: useRouter must be used inside a <RouterProvider> component!
+
+x
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/shared/components/__tests__/data-table-refresh.test.tsx > refreshes movement status when an existing row changes after reversal
+TypeError: Cannot read properties of null (reading 'stores')
+ ❯ useMatch node_modules/.pnpm/@tanstack+react-router@1.17_15c233643e193b62fe33c38239db983a/node_modules/@tanstack/react-router/src/useMatch.tsx:151:29
+ ❯ useSearch node_modules/.pnpm/@tanstack+react-router@1.17_15c233643e193b62fe33c38239db983a/node_modules/@tanstack/react-router/src/useSearch.tsx:97:10
+ ❯ useSort src/shared/hooks/use-sort.ts:5:17
+      3|
+      4| export function useSort() {
+      5|  const search = useSearch({ strict: false });
+       |                 ^
+      6|  const navigate = useNavigate();
+      7|
+ ❯ DataTableSortHeader src/shared/components/data-table.tsx:368:47
+ ❯ Object.react_stack_bottom_frame node_modules/.pnpm/react-dom@19.3.1_react@19.3.1/node_modules/react-dom/cjs/react-dom-client.development.js:28571:20
+ ❯ renderWithHooks node_modules/.pnpm/react-dom@19.3.1_react@19.3.1/node_modules/react-dom/cjs/react-dom-client.development.js:8030:22
+ ❯ updateFunctionComponent node_modules/.pnpm/react-dom@19.3.1_react@19.3.1/node_modules/react-dom/cjs/react-dom-client.development.js:10569:19
+ ❯ beginWork node_modules/.pnpm/react-dom@19.3.1_react@19.3.1/node_modules/react-dom/cjs/react-dom-client.development.js:12205:18
+ ❯ runWithFiberInDEV node_modules/.pnpm/react-dom@19.3.1_react@19.3.1/node_modules/react-dom/cjs/react-dom-client.development.js:1048:13
+ ❯ performUnitOfWork node_modules/.pnpm/react-dom@19.3.1_react@19.3.1/node_modules/react-dom/cjs/react-dom-client.development.js:19176:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  20:30:33
+   Duration  15.15s (import 70%, environment 27%, transform 3%)

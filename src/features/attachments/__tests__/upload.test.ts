@@ -13,11 +13,13 @@ describe("attachment upload preparation", () => {
 			await buildAttachmentUploadInput({ contractId: 7, file }, null),
 		).toEqual({
 			contractId: 7,
-			clientId: undefined,
-			employeeId: undefined,
+			personId: undefined,
 			expenseId: undefined,
-			feeId: undefined,
-			remunerationId: undefined,
+			receivableId: undefined,
+			payableId: undefined,
+			receiptId: undefined,
+			paymentId: undefined,
+			remunerationPayableId: undefined,
 			type: "PDF",
 			fileName: "contrato.pdf",
 			mimeType: "application/pdf",
@@ -34,13 +36,13 @@ describe("attachment upload preparation", () => {
 		});
 		const prepared = { file: first, fileBase64: "cached", type: "PDF" };
 		expect(
-			(await buildAttachmentUploadInput({ clientId: 1, file: first }, prepared))
+			(await buildAttachmentUploadInput({ personId: 1, file: first }, prepared))
 				.fileBase64,
 		).toBe("cached");
 		expect(
 			(
 				await buildAttachmentUploadInput(
-					{ clientId: 1, file: second },
+					{ personId: 1, file: second },
 					prepared,
 				)
 			).fileBase64,
@@ -48,9 +50,9 @@ describe("attachment upload preparation", () => {
 	});
 	it("keeps missing-file payload available for schema validation", async () => {
 		expect(
-			await buildAttachmentUploadInput({ employeeId: 2, file: null }, null),
+			await buildAttachmentUploadInput({ personId: 2, file: null }, null),
 		).toEqual({
-			employeeId: 2,
+			personId: 2,
 			file: null,
 			type: "",
 			fileName: "",

@@ -58,23 +58,10 @@ export function assertContractUniqueActiveAssignments(
 	}
 }
 
-export function assertContractRevenueDownPayment(
-	revenues: ContractRevenueInput[],
-) {
-	for (const revenue of revenues) {
-		const downPaymentValue = revenue.downPaymentValue ?? 0;
-
-		if (downPaymentValue > revenue.totalValue) {
-			throw new Error(CONTRACT_ERRORS.CONTRACT_DOWN_PAYMENT_TOO_HIGH);
-		}
-	}
-}
-
 export function assertContractWriteRules(input: ContractWriteInput) {
 	assertContractHasActiveAssignment(input.assignments);
 	assertContractHasActiveRevenue(input.revenues);
 	assertContractRevenueLimit(input.revenues);
 	assertContractUniqueActiveRevenueTypes(input.revenues);
 	assertContractUniqueActiveAssignments(input.assignments);
-	assertContractRevenueDownPayment(input.revenues);
 }

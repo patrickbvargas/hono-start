@@ -62,7 +62,7 @@ export function getDashboardDrilldownColumns(
 	if (expense) {
 		const [category, date, amount] =
 			getExpenseReadColumns<DashboardDrilldownRow>({
-				category: (row) => row.category ?? "",
+				supplier: (row) => row.category ?? "",
 				date: (row) => row.date,
 				amount: (row) => row.amount,
 				enableSorting: true,

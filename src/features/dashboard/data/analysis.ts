@@ -1,76 +1,15 @@
-import { Prisma } from "@/generated/prisma/client";
-import { formatter } from "@/shared/lib/formatter";
 import type { DashboardPeriod } from "../utils/period";
-import {
-	type GroupTotal,
-	getRevenueReceived,
-	mapBreakdown,
-	pushGroupTotal,
-	type RevenueRow,
-} from "./revenue";
-import { buildRevenueSchedule } from "./schedule";
-
-export function buildFinancialAnalysis(
-	revenues: RevenueRow[],
-	period: DashboardPeriod,
-	reference = getFinancialReferenceDate(period),
-) {
-	const aging = new Map<string, GroupTotal>();
-	const forecast = new Map<string, GroupTotal>();
-	const clients = new Map<string, GroupTotal>();
-	for (const label of [
-		"Até 30 dias",
-		"31–60 dias",
-		"61–90 dias",
-		"Acima de 90 dias",
-	])
-		aging.set(label, { label, value: label, total: new Prisma.Decimal(0) });
-	for (const label of ["Próximos 30 dias", "31–60 dias", "61–90 dias"])
-		forecast.set(label, { label, value: label, total: new Prisma.Decimal(0) });
-	for (const revenue of revenues) {
-		const client = revenue.contract.client.fullName;
-		pushGroupTotal(clients, {
-			label: client,
-			value: String(revenue.contract.client.id),
-			total: getRevenueReceived(revenue, period),
-		});
-		for (const item of buildRevenueSchedule(revenue, reference)) {
-			const bucket = getInstallmentBucket(item.dueDate, reference);
-			if (item.outstanding.lte(0) || !bucket) {
-				continue;
-			}
-			pushGroupTotal(bucket.kind === "aging" ? aging : forecast, {
-				label: bucket.value,
-				value: bucket.value,
-				total: item.outstanding,
-			});
-		}
-	}
-	const total = (groups: Map<string, GroupTotal>) =>
-		Array.from(groups.values()).reduce(
-			(sum, item) => sum.add(item.total),
-			new Prisma.Decimal(0),
-		);
-	return {
-		referenceAt: reference.toISOString(),
-		referenceLabel: formatter.date(reference.toISOString()),
-		overdueTotal: formatter.currency(Number(total(aging))),
-		aging: mapBreakdown(aging, total(aging)).sort(
-			(a, b) =>
-				[...aging.keys()].indexOf(a.value) - [...aging.keys()].indexOf(b.value),
-		),
-		forecast: mapBreakdown(forecast, total(forecast)).sort(
-			(a, b) =>
-				[...forecast.keys()].indexOf(a.value) -
-				[...forecast.keys()].indexOf(b.value),
-		),
-		clients: mapBreakdown(clients, total(clients)),
-	};
-}
 
 export function getFinancialReferenceDate(period: DashboardPeriod): Date {
+	const today = new Intl.DateTimeFormat("en-CA", {
+		timeZone: "America/Sao_Paulo",
+		year: "numeric",
+		month: "2-digit",
+		day: "2-digit",
+	}).format(new Date());
+	const lastDay = period.dateTo?.toISOString().slice(0, 10);
 	return new Date(
-		Math.min((period.dateTo ?? new Date()).getTime(), Date.now()),
+		`${lastDay && lastDay < today ? lastDay : today}T23:59:59.999Z`,
 	);
 }
 
@@ -78,7 +17,11 @@ export function getInstallmentBucket(
 	dueDate: Date,
 	reference: Date,
 ): { kind: "aging" | "forecast"; value: string } | null {
-	const days = Math.ceil((dueDate.getTime() - reference.getTime()) / 86400000);
+	const days = Math.round(
+		(Date.parse(dueDate.toISOString().slice(0, 10)) -
+			Date.parse(reference.toISOString().slice(0, 10))) /
+			86400000,
+	);
 	if (days < 0) {
 		const age = -days;
 		return {

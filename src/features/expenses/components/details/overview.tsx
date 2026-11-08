@@ -32,7 +32,7 @@ export function ExpenseOverview({
 				definition: expense.supplierName,
 			},
 			{
-				term: "Valor Negociado",
+				term: "Valor negociado",
 				definition: (
 					<SensitiveValue>
 						{formatter.currency(expense.negotiatedAmount)}
@@ -40,7 +40,7 @@ export function ExpenseOverview({
 				),
 			},
 			{
-				term: "Status",
+				term: "Situação",
 				definition: expense.isActive ? "Ativo" : "Inativo",
 			},
 		],

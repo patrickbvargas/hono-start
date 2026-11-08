@@ -59,7 +59,7 @@ describe("DashboardOverdueInstallmentsTable", () => {
 						lawyerName: "Maria Silva",
 						legalArea: "Previdenciário",
 						revenueType: "Administrativo",
-						installmentNumber: 3,
+						titleId: 3,
 						dueDate: "2026-04-10T00:00:00.000Z",
 						installmentAmount: 2000,
 						formattedInstallmentAmount: "R$ 2.000,00",
@@ -70,12 +70,12 @@ describe("DashboardOverdueInstallmentsTable", () => {
 			/>,
 		);
 
-		expect(screen.getByText("Parcelas em atraso")).toBeTruthy();
+		expect(screen.getByText("Títulos em atraso")).toBeTruthy();
 		expect(
-			screen.getByText("Parcelas em atraso").closest('[data-slot="card"]'),
+			screen.getByText("Títulos em atraso").closest('[data-slot="card"]'),
 		).toBeTruthy();
 		expect(screen.getByTestId("data-table").textContent).toContain(
-			"Processo | Cliente | Advogado | Área | Tipo de honorário | Parcela | Vencimento | Saldo em aberto | Total do honorário",
+			"Processo | Cliente | Advogado | Área | Tipo de honorário | Título | Vencimento | Saldo em aberto | Valor nominal",
 		);
 	});
 
@@ -84,7 +84,7 @@ describe("DashboardOverdueInstallmentsTable", () => {
 
 		expect(
 			screen.getByText(
-				"Nenhuma parcela em atraso encontrada para os filtros selecionados.",
+				"Nenhum título em atraso encontrado para os filtros selecionados.",
 			),
 		).toBeTruthy();
 		expect(screen.queryByTestId("data-table")).toBeNull();

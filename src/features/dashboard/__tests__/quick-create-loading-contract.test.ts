@@ -25,10 +25,9 @@ describe("dashboard quick-create loading contract", () => {
 
 	it("gives each quick-create form its own suspense fallback", () => {
 		const formFiles = [
-			["src", "features", "clients", "components", "form", "index.tsx"],
-			["src", "features", "employees", "components", "form", "index.tsx"],
+			["src", "features", "people", "components", "form", "index.tsx"],
 			["src", "features", "contracts", "components", "form", "index.tsx"],
-			["src", "features", "fees", "components", "form", "index.tsx"],
+
 			["src", "features", "expenses", "components", "form", "index.tsx"],
 		];
 

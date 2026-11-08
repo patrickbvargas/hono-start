@@ -21,8 +21,8 @@ export function RelatedContractAlerts(props: RelatedContractAlertsProps) {
 		hasPermission(session, "org:contracts:read_all") ||
 		hasPermission(session, "org:contracts:read_assigned");
 	const canReadFees =
-		hasPermission(session, "org:fees:read_all") ||
-		hasPermission(session, "org:fees:read_assigned");
+		hasPermission(session, "org:receivables:read_all") ||
+		hasPermission(session, "org:receivables:read_assigned");
 	if (!canReadContracts || !canReadFees) {
 		return null;
 	}

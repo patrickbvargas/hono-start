@@ -11,7 +11,11 @@ export { AuditLogFilter } from "./components/filter";
 export { AuditLogList } from "./components/list";
 export { AuditLogTable } from "./components/table";
 export { AuditLogWorkspace } from "./components/workspace";
-export { createAuditLog } from "./data/mutations";
+export {
+	type AuditLogActor,
+	buildAuditUpdateChangeData,
+	createAuditLog,
+} from "./data/mutations";
 export { useAuditLog, useAuditLogs } from "./hooks/use-data";
 export { useAuditLogFilter } from "./hooks/use-filter";
 export { auditLogSearchSchema } from "./schemas/search";

@@ -24,8 +24,8 @@ describe("financial title input", () => {
 		"shows understandable Portuguese for invalid single selections: %s",
 		(value) => {
 			for (const [field, message] of [
-				["expectedPaymentMethod", "Forma de pagamento é obrigatória"],
-				["analytic", "Categoria financeira é obrigatória"],
+				["expectedPaymentMethod", "Meio previsto é obrigatória"],
+				["analytic", "Analítica é obrigatória"],
 			]) {
 				const result = titleInputSchema.safeParse({ ...title, [field]: value });
 				expect(result.success).toBe(false);

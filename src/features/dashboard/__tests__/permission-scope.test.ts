@@ -1,111 +1,89 @@
 import { describe, expect, it } from "vitest";
 import {
 	canReadDashboardFirmResult,
-	type DashboardScope,
-	getDashboardFeeRevenueWhere,
-	getDashboardRemunerationWhere,
-	getDashboardRevenueWhere,
+	getDashboardPayableWhere,
+	getDashboardReceivableWhere,
 } from "../data/scope";
+import { scope } from "./financial-fixtures";
 
-const scope: DashboardScope = {
-	firmId: 1,
-	employeeId: 10,
-	isAdmin: true,
-	access: {
-		revenue: true,
-		remuneration: true,
-		expense: false,
-		revenueAll: false,
-		remunerationAll: false,
-	},
-	search: {
-		dateFrom: "2026-01-01",
-		dateTo: "2026-03-31",
-		employeeId: "999",
-		legalArea: [],
-		revenueType: [],
-	},
-};
-
-describe("dashboard subject permission scopes", () => {
-	it("does not let dashboard-wide access override own remuneration", () => {
-		expect(getDashboardRemunerationWhere(scope)).toMatchObject({
-			firmId: 1,
-			contractEmployee: { employeeId: 10 },
-		});
-	});
-	it("does not let dashboard-wide access override assigned receipts", () => {
-		expect(getDashboardRevenueWhere(scope)).toMatchObject({
-			firmId: 1,
-			contract: { assignments: { some: { employeeId: 10 } } },
-		});
-	});
-	it("fails closed without an employee binding", () => {
-		expect(
-			getDashboardRemunerationWhere({ ...scope, employeeId: undefined }),
-		).toMatchObject({ firmId: 1, id: -1 });
-		expect(
-			getDashboardRevenueWhere({ ...scope, employeeId: undefined }),
-		).toMatchObject({ firmId: 1, contract: { id: -1 } });
-	});
-});
-
-describe("dashboard client and contract filters", () => {
-	const selected: DashboardScope = {
-		...scope,
-		search: { ...scope.search, clientId: "7", contractId: "42" },
-	};
-	it("intersects both selections with assigned receipt visibility", () => {
-		const expected = {
-			firmId: 1,
-			contract: {
-				clientId: 7,
-				AND: [{ id: 42 }],
-				assignments: { some: { employeeId: 10 } },
-			},
+describe("dashboard scoped financial reads", () => {
+	it("ignores forged employee filters for own remuneration", () => {
+		const s = scope();
+		s.isAdmin = false;
+		s.access = {
+			...s.access,
+			remunerationAll: false,
+			revenueAll: false,
+			expense: false,
 		};
-		expect(getDashboardRevenueWhere(selected)).toMatchObject(expected);
-		expect(getDashboardFeeRevenueWhere(selected)).toMatchObject(expected);
-	});
-	it("preserves denied visibility when selecting a contract without an employee binding", () => {
-		expect(
-			getDashboardRevenueWhere({ ...selected, employeeId: undefined }),
-		).toMatchObject({ contract: { id: -1, AND: [{ id: 42 }] } });
-	});
-	it("filters own remuneration by both client and contract", () => {
-		expect(getDashboardRemunerationWhere(selected)).toMatchObject({
+		s.search.employeeId = "999";
+		const where = getDashboardPayableWhere(s);
+		expect(where).toMatchObject({
 			firmId: 1,
-			contractEmployee: {
-				employeeId: 10,
-				contract: { clientId: 7, AND: [{ id: 42 }] },
+			OR: [
+				{
+					beneficiary: { personId: 12 },
+					remunerationPayable: {
+						contractAssignment: {
+							employeeProfileId: 2,
+							contract: {
+								assignments: {
+									some: {
+										employeeProfileId: 2,
+										assignmentType: {
+											value: { in: ["RESPONSIBLE", "RECOMMENDED"] },
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			],
+		});
+	});
+	it("requires an assigned contract for limited receivable reads", () => {
+		const s = scope();
+		s.access = { ...s.access, revenueAll: false };
+		expect(getDashboardReceivableWhere(s)).toMatchObject({
+			firmId: 1,
+			contractRevenueReceivable: {
+				firmId: 1,
+				contract: { assignments: { some: { employeeProfileId: 2 } } },
 			},
 		});
 	});
-	it("hides the firm result for either selection", () => {
-		const all: DashboardScope = {
-			...scope,
-			canReadCashFlow: true,
-			access: {
-				revenue: true,
-				remuneration: true,
-				expense: true,
-				revenueAll: true,
-				remunerationAll: true,
-			},
-			search: { ...scope.search, employeeId: "" },
-		};
-		expect(canReadDashboardFirmResult(all)).toBe(true);
-		expect(
-			canReadDashboardFirmResult({
-				...all,
-				search: { ...all.search, clientId: "7" },
-			}),
-		).toBe(false);
-		expect(
-			canReadDashboardFirmResult({
-				...all,
-				search: { ...all.search, contractId: "42" },
-			}),
-		).toBe(false);
+	it("denies own remuneration without a linked person and employee", () => {
+		const s = scope();
+		s.personId = undefined;
+		s.employeeId = undefined;
+		s.access = { ...s.access, remunerationAll: false, expense: false };
+		expect(getDashboardPayableWhere(s)).toMatchObject({
+			OR: [
+				{
+					beneficiary: { personId: -1 },
+					remunerationPayable: {
+						contractAssignment: { employeeProfileId: -1 },
+					},
+				},
+			],
+		});
+	});
+	it("does not filter out deleted or completed operational origins from financial obligations", () => {
+		const s = scope();
+		s.search.contractId = "3";
+		const text = JSON.stringify(getDashboardReceivableWhere(s));
+		expect(text).toContain('"firmId":1');
+		expect(text).not.toContain("deletedAt");
+		expect(text).not.toContain("isActive");
+	});
+	it("shows consolidated cash only with all required grants and no attribution filters", () => {
+		const s = scope();
+		expect(canReadDashboardFirmResult(s)).toBe(true);
+		s.access.payments = false;
+		expect(canReadDashboardFirmResult(s)).toBe(false);
+		s.access.payments = true;
+		s.search.employeeId = "2";
+		expect(canReadDashboardFirmResult(s)).toBe(false);
 	});
 });

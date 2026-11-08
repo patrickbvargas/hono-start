@@ -20,7 +20,6 @@ import {
 import {
 	assertContractHasActiveAssignment,
 	assertContractHasActiveRevenue,
-	assertContractRevenueDownPayment,
 	assertContractUniqueActiveAssignments,
 	assertContractUniqueActiveRevenueTypes,
 	assertContractWriteRules,
@@ -48,9 +47,7 @@ function createRevenue(
 	return {
 		type: "MONTHLY",
 		totalValue: 1000,
-		downPaymentValue: 100,
-		paymentStartDate: "2026-01-01",
-		totalInstallments: 3,
+
 		isActive: true,
 		...overrides,
 	};
@@ -146,14 +143,6 @@ describe("contract write rules", () => {
 				createRevenue(),
 			]),
 		).toThrowError(CONTRACT_ERRORS.CONTRACT_REVENUE_TYPE_DUPLICATE);
-	});
-
-	it("rejects down payment above total value", () => {
-		expect(() =>
-			assertContractRevenueDownPayment([
-				createRevenue({ totalValue: 500, downPaymentValue: 600 }),
-			]),
-		).toThrowError(CONTRACT_ERRORS.CONTRACT_DOWN_PAYMENT_TOO_HIGH);
 	});
 
 	it("aggregates checks through assertContractWriteRules", () => {

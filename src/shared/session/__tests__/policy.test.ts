@@ -122,39 +122,13 @@ describe("Clerk-granted authorization", () => {
 			),
 		).toBe(false);
 	});
-	it("limits own remuneration export independently of firm-wide read", () => {
+
+	it("fee reads never imply writing, even with an assignment", () => {
 		const session = createSession({
-			permissions: [
-				"org:remunerations:read_all",
-				"org:remunerations:export_own",
-			],
+			permissions: ["org:receivables:read_all"],
 		});
 		expect(
-			can(
-				session,
-				["org:remunerations:read_all", "org:remunerations:read_own"],
-				{ firmId: 100, employeeId: 20 },
-			),
-		).toBe(true);
-		expect(
-			can(
-				session,
-				["org:remunerations:export_all", "org:remunerations:export_own"],
-				{ firmId: 100, employeeId: 20 },
-			),
-		).toBe(false);
-		expect(
-			can(
-				session,
-				["org:remunerations:export_all", "org:remunerations:export_own"],
-				{ firmId: 100, employeeId: 10 },
-			),
-		).toBe(true);
-	});
-	it("fee reads never imply writing, even with an assignment", () => {
-		const session = createSession({ permissions: ["org:fees:read_all"] });
-		expect(
-			can(session, "org:fees:create", {
+			can(session, "org:receipts:create", {
 				firmId: 100,
 				statusValue: "ACTIVE",
 				isAssignedToActor: true,

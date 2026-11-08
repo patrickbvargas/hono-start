@@ -41,10 +41,6 @@ describe("session scope", () => {
 		expect(() => getScope(session, "contract")).toThrow(
 			"Conta sem colaborador",
 		);
-		expect(() => getScope(session, "fee")).toThrow("Conta sem colaborador");
-		expect(() => getScope(session, "remuneration")).toThrow(
-			"Conta sem colaborador",
-		);
 	});
 	it("allows a general grant without an employee binding", () => {
 		const session = createSession({
@@ -67,28 +63,18 @@ describe("session scope", () => {
 		const session = createSession({
 			permissions: [
 				"org:contracts:read_all",
-				"org:fees:read_all",
-				"org:remunerations:read_all",
+				"org:receivables:read_all",
+				"org:payables:read_all",
 			],
 		});
 
 		expect(getScope(session, "contract")).toEqual({ firmId: 100 });
-		expect(getScope(session, "fee")).toEqual({ firmId: 100 });
-		expect(getScope(session, "remuneration")).toEqual({ firmId: 100 });
 	});
 
 	it("adds authenticated employee scope for regular users on assigned-resource subjects", () => {
 		const session = createSession({});
 
 		expect(getScope(session, "contract")).toEqual({
-			firmId: 100,
-			employeeId: 10,
-		});
-		expect(getScope(session, "fee")).toEqual({
-			firmId: 100,
-			employeeId: 10,
-		});
-		expect(getScope(session, "remuneration")).toEqual({
 			firmId: 100,
 			employeeId: 10,
 		});

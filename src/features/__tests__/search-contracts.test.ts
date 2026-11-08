@@ -6,12 +6,9 @@ import { contractSearchSchema } from "@/features/contracts/schemas/search";
 import { contractSearchDefaults } from "@/features/contracts/utils/default";
 import { dashboardSearchSchema } from "@/features/dashboard/schemas/search";
 import { dashboardSearchDefaults } from "@/features/dashboard/utils/default";
-import { feeSearchSchema } from "@/features/fees/schemas/search";
-import { feeSearchDefaults } from "@/features/fees/utils/default";
+
 import { personSearchSchema } from "@/features/people/schemas/search";
 import { personSearchDefaults } from "@/features/people/utils/default";
-import { remunerationSearchSchema } from "@/features/remunerations/schemas/search";
-import { remunerationSearchDefaults } from "@/features/remunerations/utils/default";
 
 function applyStripSearchParams<T extends Record<string, unknown>>(
 	defaults: T,
@@ -86,72 +83,7 @@ const entitySearchCases = [
 			contractStatus: ["ACTIVE"],
 		},
 	},
-	{
-		name: "fees",
-		schema: feeSearchSchema,
-		defaults: feeSearchDefaults,
-		validColumn: "amount",
-		validFilters: {
-			query: "  PROC-100  ",
-			contractId: "10",
-			revenueId: "20",
-			dateFrom: "2026-01-01",
-			dateTo: "2026-01-31",
-			active: "false",
-			status: "all",
-		},
-		trimmedQuery: "PROC-100",
-		nonDefaultSearch: {
-			...feeSearchDefaults,
-			page: 4,
-			column: "amount",
-			direction: "asc",
-			query: "PROC-100",
-			contractId: "10",
-			dateFrom: "2026-01-01",
-		},
-		expectedCanonicalSearch: {
-			page: 4,
-			column: "amount",
-			direction: "asc",
-			query: "PROC-100",
-			contractId: "10",
-			dateFrom: "2026-01-01",
-		},
-	},
-	{
-		name: "remunerations",
-		schema: remunerationSearchSchema,
-		defaults: remunerationSearchDefaults,
-		validColumn: "employeeName",
-		validFilters: {
-			query: "  Maria  ",
-			employeeId: "11",
-			contractId: "22",
-			dateFrom: "2026-02-01",
-			dateTo: "2026-02-28",
-			active: "true",
-			status: "deleted",
-		},
-		trimmedQuery: "Maria",
-		nonDefaultSearch: {
-			...remunerationSearchDefaults,
-			page: 5,
-			column: "employeeName",
-			direction: "asc",
-			query: "Maria",
-			employeeId: "11",
-			dateTo: "2026-02-28",
-		},
-		expectedCanonicalSearch: {
-			page: 5,
-			column: "employeeName",
-			direction: "asc",
-			query: "Maria",
-			employeeId: "11",
-			dateTo: "2026-02-28",
-		},
-	},
+
 	{
 		name: "audit logs",
 		schema: auditLogSearchSchema,

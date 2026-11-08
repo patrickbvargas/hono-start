@@ -38,8 +38,11 @@ const getPendingWorkFn = createServerFn({ method: "GET" })
 					employeeId: session.employee.id ?? undefined,
 					employeeTypeValue: session.employeeType?.value,
 					allContracts: hasPermission(session, "org:contracts:read_all"),
-					allFees: hasPermission(session, "org:fees:read_all"),
-					assignedFees: hasPermission(session, "org:fees:read_assigned"),
+					allTitles: hasPermission(session, "org:receivables:read_all"),
+					assignedTitles: hasPermission(
+						session,
+						"org:receivables:read_assigned",
+					),
 				},
 			});
 		} catch (error) {

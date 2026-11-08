@@ -13,7 +13,7 @@ function row(
 		date: "2026-10-01T00:00:00.000Z",
 		kind: "Recebimento",
 		description: "Teste",
-		record: { kind: "fee", id: 1 },
+		record: { kind: "receivable", id: 1 },
 		...extra,
 	};
 }

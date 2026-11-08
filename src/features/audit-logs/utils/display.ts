@@ -2,6 +2,13 @@ import { AUDIT_ACTION_LABELS } from "../constants/display";
 
 const ENTITY_TYPE_LABELS: Record<string, string> = {
 	Attachment: "Anexo",
+	Receivable: "Título a receber",
+	Payable: "Título a pagar",
+	Receipt: "Recebimento",
+	Payment: "Pagamento",
+	ReceiptReversal: "Estorno de recebimento",
+	PaymentReversal: "Estorno de pagamento",
+	RemunerationPayable: "Remuneração",
 	Person: "Pessoa",
 	Client: "Cliente",
 	Contract: "Contrato",
@@ -14,6 +21,10 @@ const ENTITY_TYPE_LABELS: Record<string, string> = {
 
 const ACTION_LABELS: Record<string, string> = {
 	CREATE: "criou",
+	SETTLE: "registrou baixa de",
+	REVERSE: "estornou baixa de",
+	CANCEL: "cancelou",
+	GENERATE: "gerou títulos de",
 	UPDATE: "atualizou",
 	DELETE: "removeu",
 	RESTORE: "restaurou",

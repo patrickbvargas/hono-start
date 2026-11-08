@@ -113,17 +113,13 @@ describe("contract form sections", () => {
 			...defaultContractRevenueValues(),
 			type: "JUDICIAL",
 			totalValue: 1200,
-			paymentStartDate: "2026-10-24",
 		};
 		expect(
 			result.current.isRevenueRequiredOpen(defaultContractRevenueValues(), 0),
 		).toBe(true);
 		expect(result.current.isRevenueRequiredOpen(valid, 0)).toBe(false);
 		expect(
-			result.current.isRevenueRequiredOpen(
-				{ ...valid, downPaymentValue: 1300 },
-				0,
-			),
+			result.current.isRevenueRequiredOpen({ ...valid, totalValue: 0 }, 0),
 		).toBe(true);
 	});
 	it("focuses the first field of the requested added row", async () => {

@@ -50,6 +50,7 @@ const getDashboardDrilldownFn = createServerFn({ method: "GET" })
 				await getDashboardDrilldown(
 					{
 						firmId: session.firm.id,
+						personId: session.person?.id,
 						employeeId: session.employee.id ?? undefined,
 						employeeTypeValue: session.employeeType?.value,
 						isAdmin: hasPermission(session, "org:dashboard:read_all"),
@@ -58,18 +59,21 @@ const getDashboardDrilldownFn = createServerFn({ method: "GET" })
 							"org:dashboard:read_cash_flow",
 						),
 						access: {
+							receipts:
+								hasPermission(session, "org:receipts:read_all") ||
+								hasPermission(session, "org:receipts:read_assigned"),
+							payments:
+								hasPermission(session, "org:payments:read_all") ||
+								hasPermission(session, "org:payments:read_own"),
 							revenue:
-								hasPermission(session, "org:fees:read_all") ||
-								hasPermission(session, "org:fees:read_assigned"),
+								hasPermission(session, "org:receivables:read_all") ||
+								hasPermission(session, "org:receivables:read_assigned"),
 							remuneration:
-								hasPermission(session, "org:remunerations:read_all") ||
-								hasPermission(session, "org:remunerations:read_own"),
-							expense: hasPermission(session, "org:expenses:read"),
-							revenueAll: hasPermission(session, "org:fees:read_all"),
-							remunerationAll: hasPermission(
-								session,
-								"org:remunerations:read_all",
-							),
+								hasPermission(session, "org:payables:read_all") ||
+								hasPermission(session, "org:payables:read_own"),
+							expense: hasPermission(session, "org:payables:read_all"),
+							revenueAll: hasPermission(session, "org:receivables:read_all"),
+							remunerationAll: hasPermission(session, "org:payables:read_all"),
 						},
 						search: data.search,
 					},
@@ -105,18 +109,25 @@ const getDashboardSummaryFn = createServerFn({ method: "GET" })
 
 			return await getDashboardSummary({
 				firmId: session.firm.id,
+				personId: session.person?.id,
 				employeeId: session.employee.id ?? undefined,
 				employeeTypeValue: session.employeeType?.value,
 				access: {
+					receipts:
+						hasPermission(session, "org:receipts:read_all") ||
+						hasPermission(session, "org:receipts:read_assigned"),
+					payments:
+						hasPermission(session, "org:payments:read_all") ||
+						hasPermission(session, "org:payments:read_own"),
 					revenue:
-						hasPermission(session, "org:fees:read_all") ||
-						hasPermission(session, "org:fees:read_assigned"),
+						hasPermission(session, "org:receivables:read_all") ||
+						hasPermission(session, "org:receivables:read_assigned"),
 					remuneration:
-						hasPermission(session, "org:remunerations:read_all") ||
-						hasPermission(session, "org:remunerations:read_own"),
-					expense: hasPermission(session, "org:expenses:read"),
-					revenueAll: hasPermission(session, "org:fees:read_all"),
-					remunerationAll: hasPermission(session, "org:remunerations:read_all"),
+						hasPermission(session, "org:payables:read_all") ||
+						hasPermission(session, "org:payables:read_own"),
+					expense: hasPermission(session, "org:payables:read_all"),
+					revenueAll: hasPermission(session, "org:receivables:read_all"),
+					remunerationAll: hasPermission(session, "org:payables:read_all"),
 				},
 				isAdmin,
 				canReadCashFlow: hasPermission(session, "org:dashboard:read_cash_flow"),

@@ -1,138 +1,26 @@
 import { readFileSync } from "node:fs";
-import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
-const workspaceRoot = process.cwd();
-
-function readWorkspaceFile(...segments: string[]) {
-	return readFileSync(join(workspaceRoot, ...segments), "utf8");
-}
-
-describe("dashboard quick-create route contract", () => {
-	it("orders creation actions like the sidebar and checks each creation grant", () => {
-		const routeContent = readWorkspaceFile(
-			"src",
-			"routes",
-			"_app",
-			"index.tsx",
-		);
-		const menu = routeContent.slice(
-			routeContent.indexOf('<DropdownMenuContent align="end">'),
-			routeContent.indexOf("</DropdownMenuContent>"),
-		);
-		const permissions = [
-			"contracts",
-			"clients",
-			"employees",
-			"fees",
-			"expenses",
-		];
-		let previousIndex = -1;
-		for (const entity of permissions) {
-			const index = menu.indexOf(
-				`{hasPermission(session, "org:${entity}:create") ? (`,
+const route = readFileSync("src/routes/_app/index.tsx", "utf8");
+describe("dashboard current quick creation", () => {
+	it("offers the operational forms and no obsolete settlement form", () => {
+		for (const name of ["PersonForm", "ContractForm", "ExpenseForm"])
+			expect(route).toContain(
+				`<${name} state={state} onSuccess={state.close} />`,
 			);
-			expect(index).toBeGreaterThan(previousIndex);
-			previousIndex = index;
-		}
-		expect(routeContent).toContain("canCreate ? (");
-		expect(menu).toContain("expenseOverlay.overlay.create.open()");
-		expect(routeContent).toContain("expenseOverlay.overlay.create.render");
-		expect(routeContent).toContain(
-			"<ExpenseForm state={state} onSuccess={state.close} />",
-		);
-		expect(routeContent).toContain(
-			'if (hasPermission(session, "org:expenses:create"))',
-		);
-		expect(routeContent).toContain(
-			"queryClient.query(getExpenseCategoriesQueryOptions())",
-		);
+		expect(route).not.toMatch(/FeeForm|feeOverlay|EmployeeForm|ClientForm/);
+		expect(route).toContain('DropdownMenuContent align="end"');
 	});
-	it("wires a Novo dropdown action in the dashboard header", () => {
-		const routeContent = readWorkspaceFile(
-			"src",
-			"routes",
-			"_app",
-			"index.tsx",
-		);
-
-		expect(routeContent).toContain("DropdownMenu");
-		expect(routeContent).toContain("DropdownMenuTrigger");
-		expect(routeContent).toContain('DropdownMenuContent align="end"');
-		expect(routeContent).toContain("Novo");
-		expect(routeContent).toContain("Cliente");
-		expect(routeContent).toContain("Contrato");
-		expect(routeContent).toContain("Recebimento");
-		expect(routeContent).toContain("Colaborador");
-	});
-
-	it("keeps quick-create overlays route-local and reuses existing forms", () => {
-		const routeContent = readWorkspaceFile(
-			"src",
-			"routes",
-			"_app",
-			"index.tsx",
-		);
-
-		expect(routeContent).toContain(
-			"const clientOverlay = useOverlay<EntityId>()",
-		);
-		expect(routeContent).toContain(
-			"const contractOverlay = useOverlay<EntityId>()",
-		);
-		expect(routeContent).toContain("const feeOverlay = useOverlay<EntityId>()");
-		expect(routeContent).toContain(
-			"const employeeOverlay = useOverlay<EntityId>()",
-		);
-		expect(routeContent).toContain(
-			"<ClientForm state={state} onSuccess={state.close} />",
-		);
-		expect(routeContent).toContain(
-			"<ContractForm state={state} onSuccess={state.close} />",
-		);
-		expect(routeContent).toContain(
-			"<FeeForm state={state} onSuccess={state.close} />",
-		);
-		expect(routeContent).toContain(
-			"<EmployeeForm state={state} onSuccess={state.close} />",
-		);
-	});
-
-	it("prefetches unconditional option queries for quick-create forms", () => {
-		const routeContent = readWorkspaceFile(
-			"src",
-			"routes",
-			"_app",
-			"index.tsx",
-		);
-
-		expect(routeContent).toContain("getClientTypesQueryOptions()");
-		expect(routeContent).toContain(
-			"getSelectableContractClientsQueryOptions()",
-		);
-		expect(routeContent).toContain(
-			"getSelectableContractEmployeesQueryOptions()",
-		);
-		expect(routeContent).toContain("getContractLegalAreasQueryOptions()");
-		expect(routeContent).toContain("getContractStatusesQueryOptions()");
-		expect(routeContent).toContain("getContractAssignmentTypesQueryOptions()");
-		expect(routeContent).toContain("getContractRevenueTypesQueryOptions()");
-		expect(routeContent).toContain("getSelectableFeeContractsQueryOptions()");
-		expect(routeContent).toContain("getSelectableFeeRevenuesQueryOptions()");
-		expect(routeContent).toContain("getEmployeeTypesQueryOptions()");
-	});
-
-	it("gates collaborator quick-create with its independent permission", () => {
-		const routeContent = readWorkspaceFile(
-			"src",
-			"routes",
-			"_app",
-			"index.tsx",
-		);
-
-		expect(routeContent).toContain(
-			'{hasPermission(session, "org:employees:create") ? (',
-		);
-		expect(routeContent).toContain("employeeOverlay.overlay.create.open()");
+	it("gates creation and preloads the owning option queries", () => {
+		for (const entity of ["contracts", "clients", "people", "expenses"])
+			expect(route).toContain(`hasPermission(session, "org:${entity}:create")`);
+		for (const query of [
+			"getPersonTypesQueryOptions",
+			"getEmployeeTypesQueryOptions",
+			"getContractLegalAreasQueryOptions",
+			"getContractRevenueTypesQueryOptions",
+			"getExpenseCategoriesQueryOptions",
+		])
+			expect(route).toContain(`${query}()`);
 	});
 });

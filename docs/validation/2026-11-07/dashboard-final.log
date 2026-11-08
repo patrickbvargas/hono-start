@@ -1,0 +1,5 @@
+
+> hono-start@ test C:\Dev\hono-start
+> vitest run "src/features/dashboard" "src/features/__tests__/boilerplate-conventions.test.ts" "src/features/audit-logs/__tests__/mutations.test.ts" "--reporter=json" "--outputFile=docs/validation/2026-11-07/dashboard-final.json"
+
+JSON report written to C:/Dev/hono-start/docs/validation/2026-11-07/dashboard-final.json

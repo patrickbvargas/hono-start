@@ -1,245 +1,33 @@
-import { getPersonById } from "@/features/people/data/queries";
+import { getPersonAccessResource } from "@/features/people";
 import type { Prisma } from "@/generated/prisma/client";
 import { env } from "@/shared/config/env";
 import { prisma } from "@/shared/lib/prisma";
 import type {
 	ContractAccessResource,
+	FinancialAccessResource,
 	LoggedUserSession,
-	RemunerationAccessResource,
 } from "@/shared/session";
-import type {
-	QueryManyReturnType,
-	QueryOneReturnType,
-} from "@/shared/types/api";
 import { ATTACHMENT_ERRORS } from "../constants/errors";
 import type { AttachmentOwnerInput } from "../schemas/form";
+import { attachmentSummarySchema } from "../schemas/model";
 import {
-	type AttachmentSummary,
-	attachmentSummarySchema,
-} from "../schemas/model";
-import { getAttachmentOwnerContext } from "../utils/owner";
+	getAttachmentOwnerContext,
+	getAttachmentOwnerInput,
+} from "../utils/owner";
 
-interface AttachmentOwnerResource {
-	deletedAt: Date | null;
-	firmId: number;
+interface OwnerAccess {
 	id: number;
-	resource: { firmId: number };
+	firmId: number;
+	deletedAt: Date | null;
+	resource: FinancialAccessResource & ContractAccessResource;
 }
-
-interface AttachmentEmployeeOwnerResource extends AttachmentOwnerResource {
-	resource: { employeeId: number; firmId: number };
-}
-
-interface AttachmentContractOwnerResource extends AttachmentOwnerResource {
-	resource: ContractAccessResource;
-}
-
-interface AttachmentExpenseOwnerResource extends AttachmentOwnerResource {
-	resource: { firmId: number };
-}
-
-interface AttachmentRemunerationOwnerResource extends AttachmentOwnerResource {
-	resource: RemunerationAccessResource;
-}
-
-export async function getAttachmentFeeOwnerResource(
-	firmId: number,
-	id: number,
-): Promise<AttachmentContractOwnerResource | null> {
-	const feeModel = (prisma as unknown as Record<string, unknown>).fee as
-		| {
-				findFirst: (args: unknown) => Promise<{
-					id: number;
-					firmId: number;
-					deletedAt: Date | null;
-					revenue: {
-						firmId: number;
-						deletedAt: Date | null;
-						contractId: number;
-					};
-				} | null>;
-		  }
-		| undefined;
-	if (!feeModel) {
-		return null;
-	}
-	const fee = await feeModel.findFirst({
-		where: { id, firmId },
-		select: {
-			id: true,
-			firmId: true,
-			deletedAt: true,
-			revenue: { select: { firmId: true, deletedAt: true, contractId: true } },
-		},
-	});
-	if (!fee || fee.revenue.firmId !== firmId) {
-		return null;
-	}
-	const contract = await getAttachmentContractOwnerResource(
-		firmId,
-		fee.revenue.contractId,
-	);
-	if (!contract) {
-		return null;
-	}
-	return {
-		id: fee.id,
-		firmId,
-		deletedAt: fee.deletedAt ?? fee.revenue.deletedAt ?? contract.deletedAt,
-		resource: contract.resource,
-	};
-}
-
-export async function getAttachmentRemunerationOwnerResource(
-	firmId: number,
-	id: number,
-): Promise<AttachmentRemunerationOwnerResource | null> {
-	const remunerationModel = (prisma as unknown as Record<string, unknown>)
-		.remuneration as
-		| {
-				findFirst: (args: unknown) => Promise<{
-					id: number;
-					firmId: number;
-					deletedAt: Date | null;
-					feeId: number;
-					contractEmployee: {
-						firmId: number;
-						deletedAt: Date | null;
-						employeeId: number;
-						employee: { deletedAt: Date | null };
-						contract: { firmId: number; deletedAt: Date | null };
-					};
-				} | null>;
-		  }
-		| undefined;
-	if (!remunerationModel) {
-		return null;
-	}
-	const remuneration = await remunerationModel.findFirst({
-		where: { id, firmId },
-		select: {
-			id: true,
-			firmId: true,
-			deletedAt: true,
-			feeId: true,
-			contractEmployee: {
-				select: {
-					firmId: true,
-					deletedAt: true,
-					employeeId: true,
-					employee: { select: { deletedAt: true } },
-					contract: { select: { firmId: true, deletedAt: true } },
-				},
-			},
-		},
-	});
-	if (!remuneration) {
-		return null;
-	}
-	const assignment = remuneration.contractEmployee;
-	if (
-		[assignment.firmId, assignment.contract.firmId].some((id) => id !== firmId)
-	) {
-		return null;
-	}
-	const fee = await getAttachmentFeeOwnerResource(firmId, remuneration.feeId);
-	if (!fee) {
-		return null;
-	}
-	return {
-		id: remuneration.id,
-		firmId,
-		deletedAt:
-			remuneration.deletedAt ??
-			fee.deletedAt ??
-			assignment.deletedAt ??
-			assignment.employee.deletedAt ??
-			assignment.contract.deletedAt,
-		resource: { firmId, employeeId: assignment.employeeId },
-	};
-}
-
 export async function getAttachmentTypeByValue(value: string) {
-	return prisma.attachmentType.findUnique({
-		where: { value },
-	});
+	return prisma.attachmentType.findUnique({ where: { value } });
 }
-
-export async function getAttachmentClientOwnerResource(
-	firmId: number,
-	id: number,
-): Promise<AttachmentOwnerResource | null> {
-	const clientModel = (prisma as unknown as Record<string, unknown>).client as
-		| {
-				findFirst: (args: unknown) => Promise<{
-					id: number;
-					deletedAt: Date | null;
-				} | null>;
-		  }
-		| undefined;
-	const client = clientModel
-		? await clientModel.findFirst({
-				where: { id },
-				select: { id: true, deletedAt: true },
-			})
-		: await prisma.clientProfile.findFirst({
-				where: { id },
-				select: { id: true, deletedAt: true },
-			});
-
-	if (!client) {
-		return null;
-	}
-
-	return {
-		id: client.id,
-		deletedAt: client.deletedAt,
-		firmId,
-		resource: { firmId },
-	};
-}
-
-export async function getAttachmentEmployeeOwnerResource(
-	firmId: number,
-	id: number,
-): Promise<AttachmentEmployeeOwnerResource | null> {
-	const employeeModel = (prisma as unknown as Record<string, unknown>)
-		.employee as
-		| {
-				findFirst: (args: unknown) => Promise<{
-					id: number;
-					deletedAt: Date | null;
-				} | null>;
-		  }
-		| undefined;
-	const employee = employeeModel
-		? await employeeModel.findFirst({
-				where: { id },
-				select: { id: true, deletedAt: true },
-			})
-		: await prisma.employeeProfile.findFirst({
-				where: { id },
-				select: { id: true, deletedAt: true },
-			});
-
-	if (!employee) {
-		return null;
-	}
-
-	return {
-		id: employee.id,
-		deletedAt: employee.deletedAt,
-		firmId,
-		resource: { employeeId: employee.id, firmId },
-	};
-}
-
 export async function getAttachmentContractOwnerResource(
 	firmId: number,
 	id: number,
-): Promise<AttachmentContractOwnerResource | null> {
-	const isProfile = Boolean(prisma.clientProfile || prisma.employeeProfile);
-
+): Promise<OwnerAccess | null> {
 	const contract = await prisma.contract.findFirst({
 		where: { id, firmId },
 		select: {
@@ -247,205 +35,109 @@ export async function getAttachmentContractOwnerResource(
 			firmId: true,
 			deletedAt: true,
 			allowStatusChange: true,
-			status: {
-				select: {
-					value: true,
-				},
-			},
+			status: { select: { value: true } },
 			assignments: {
 				where: { deletedAt: null, isActive: true },
 				select: {
-					...(isProfile
-						? {
-								employeeProfileId: true,
-								employeeProfile: {
-									select: { employeeType: { select: { value: true } } },
-								},
-							}
-						: {
-								employeeId: true,
-								employee: { select: { type: { select: { value: true } } } },
-							}),
+					employeeProfileId: true,
+					employeeProfile: {
+						select: { employeeType: { select: { value: true } } },
+					},
 					assignmentType: { select: { value: true } },
 				},
 			},
 		},
 	});
-
 	if (!contract) {
 		return null;
 	}
-
-	const assignmentList = contract.assignments as unknown as Array<{
-		employeeProfileId?: number;
-		employeeId?: number;
-		employeeProfile?: { employeeType: { value: string } };
-		employee?: { type: { value: string } };
-		assignmentType: { value: string };
-	}>;
-
 	return {
 		id: contract.id,
+		firmId,
 		deletedAt: contract.deletedAt,
-		firmId: contract.firmId,
 		resource: {
-			firmId: contract.firmId,
+			firmId,
 			statusValue: contract.status.value,
 			allowStatusChange: contract.allowStatusChange,
-			assignments: assignmentList.map((assignment) => ({
-				employeeId: assignment.employeeProfileId ?? assignment.employeeId ?? 0,
-				employeeTypeValue:
-					assignment.employeeProfile?.employeeType.value ??
-					assignment.employee?.type.value ??
-					"",
-				assignmentTypeValue: assignment.assignmentType.value,
+			assignments: contract.assignments.map((a) => ({
+				employeeId: a.employeeProfileId,
+				employeeTypeValue: a.employeeProfile.employeeType.value,
+				assignmentTypeValue: a.assignmentType.value,
 			})),
-			assignedEmployeeIds: assignmentList.map(
-				(assignment) =>
-					assignment.employeeProfileId ?? assignment.employeeId ?? 0,
-			),
+			assignedEmployeeIds: contract.assignments.map((a) => a.employeeProfileId),
 		},
 	};
 }
-
 export async function getAttachmentExpenseOwnerResource(
 	firmId: number,
 	id: number,
-): Promise<AttachmentExpenseOwnerResource | null> {
+): Promise<OwnerAccess | null> {
 	const expense = await prisma.expense.findFirst({
 		where: { id, firmId },
 		select: { id: true, firmId: true, deletedAt: true },
 	});
-
-	if (!expense) {
-		return null;
-	}
-
-	return {
-		id: expense.id,
-		deletedAt: expense.deletedAt,
-		firmId: expense.firmId,
-		resource: { firmId: expense.firmId },
-	};
+	return expense ? { ...expense, resource: { firmId } } : null;
 }
-
-export async function getAttachmentsByOwner(params: {
+export async function getAttachmentsByOwner({
+	firmId,
+	input,
+}: {
 	firmId: number;
 	input: AttachmentOwnerInput;
-}): Promise<QueryManyReturnType<AttachmentSummary>> {
-	const owner = getAttachmentOwnerContext(params.input);
-	const isLegacy = Boolean(
-		(prisma as unknown as Record<string, unknown>).client ||
-			(prisma as unknown as Record<string, unknown>).employee,
-	);
+}) {
+	const owner = getAttachmentOwnerContext(input);
 	const rows = await prisma.attachment.findMany({
 		where: {
-			...(owner.ownerKind === "person" ||
-			owner.ownerKind === "client" ||
-			owner.ownerKind === "employee"
-				? {}
-				: { firmId: params.firmId }),
+			...(owner.ownerKind === "person" ? {} : { firmId }),
+			...getAttachmentOwnerInput(owner),
 			deletedAt: null,
-			...(owner.ownerKind === "person" ? { personId: owner.ownerId } : {}),
-			...(owner.ownerKind === "client"
-				? isLegacy
-					? ({ clientId: owner.ownerId } as unknown as { personId: number })
-					: { personId: owner.ownerId }
-				: {}),
-			...(owner.ownerKind === "employee"
-				? isLegacy
-					? ({ employeeId: owner.ownerId } as unknown as { personId: number })
-					: { personId: owner.ownerId }
-				: {}),
-			...(owner.ownerKind === "contract" ? { contractId: owner.ownerId } : {}),
-			...(owner.ownerKind === "payable" ? { payableId: owner.ownerId } : {}),
-			...(owner.ownerKind === "receivable"
-				? { receivableId: owner.ownerId }
-				: {}),
-			...(owner.ownerKind === "expense" ? { expenseId: owner.ownerId } : {}),
-			...(owner.ownerKind === "fee"
-				? isLegacy
-					? ({ feeId: owner.ownerId } as unknown as { receiptId: number })
-					: { receiptId: owner.ownerId }
-				: {}),
-			...(owner.ownerKind === "remuneration"
-				? isLegacy
-					? ({ remunerationId: owner.ownerId } as unknown as {
-							payableId: number;
-						})
-					: { payableId: owner.ownerId }
-				: {}),
 		},
-		include: {
-			type: {
-				select: {
-					id: true,
-					label: true,
-					value: true,
-				},
-			},
-		},
-		orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+		include: { type: { select: { id: true, label: true, value: true } } },
+		orderBy: [{ createdAt: "desc" }, { id: "asc" }],
 	});
-
-	const uploadEvents = rows.length
+	const events = rows.length
 		? await prisma.auditLog.findMany({
 				where: {
 					entityType: "Attachment",
 					action: "CREATE",
-					entityId: { in: rows.map((row) => String(row.id)) },
+					entityId: { in: rows.map((r) => String(r.id)) },
 				},
 				select: { entityId: true, actorName: true },
 				orderBy: [{ createdAt: "asc" }, { id: "asc" }],
 			})
 		: [];
 	const senders = new Map<string, string | null>();
-	for (const event of uploadEvents) {
+	for (const event of events) {
 		if (event.entityId && !senders.has(event.entityId)) {
 			const name = event.actorName.trim();
 			senders.set(event.entityId, name && name !== "Sistema" ? name : null);
 		}
 	}
-
-	const attachments = await Promise.all(
-		rows.map(async (attachment) => ({
-			id: attachment.id,
-			fileName: attachment.fileName,
-			uploadedByName: senders.get(String(attachment.id)) ?? null,
-			fileSize: attachment.fileSize,
-			mimeType: attachment.mimeType,
-			typeId: attachment.type.id,
-			type: attachment.type.label,
-			typeValue: attachment.type.value,
-			downloadUrl: new URL(`/api/attachments/${attachment.id}`, env.APP_URL)
-				.href,
-			isActive: attachment.isActive,
-			isSoftDeleted: Boolean(attachment.deletedAt),
-			createdAt: attachment.createdAt.toISOString(),
-			updatedAt: attachment.updatedAt?.toISOString() ?? null,
+	return attachmentSummarySchema.array().parse(
+		rows.map((a) => ({
+			id: a.id,
+			fileName: a.fileName,
+			uploadedByName: senders.get(String(a.id)) ?? null,
+			fileSize: a.fileSize,
+			mimeType: a.mimeType,
+			typeId: a.type.id,
+			type: a.type.label,
+			typeValue: a.type.value,
+			downloadUrl: new URL(`/api/attachments/${a.id}`, env.APP_URL).href,
+			isActive: a.isActive,
+			isSoftDeleted: Boolean(a.deletedAt),
+			createdAt: a.createdAt.toISOString(),
+			updatedAt: a.updatedAt?.toISOString() ?? null,
 		})),
 	);
-
-	return attachmentSummarySchema.array().parse(attachments);
 }
-
-export async function getAttachmentAccessById(
+export function getAttachmentVisibilityWhere(
 	firmId: number,
-	id: number,
-): Promise<QueryOneReturnType<{
-	deletedAt: Date | null;
-	fileName: string;
-	id: number;
-	resource: { firmId: number };
-	storagePath: string;
-	mimeType: string;
-	ownerInput: AttachmentOwnerInput;
-}> | null> {
-	const isLegacy = Boolean(
-		(prisma as unknown as Record<string, unknown>).client ||
-			(prisma as unknown as Record<string, unknown>).employee,
-	);
-	const attachment = await prisma.attachment.findFirst({
+): Prisma.AttachmentWhereInput {
+	return { OR: [{ firmId }, { personId: { not: null } }] };
+}
+export async function getAttachmentAccessById(firmId: number, id: number) {
+	const a = await prisma.attachment.findFirst({
 		where: { id, ...getAttachmentVisibilityWhere(firmId) },
 		select: {
 			id: true,
@@ -458,228 +150,171 @@ export async function getAttachmentAccessById(
 			contractId: true,
 			expenseId: true,
 			receivableId: true,
-			receiptId: true,
 			payableId: true,
-			...(isLegacy
-				? {
-						clientId: true,
-						employeeId: true,
-						feeId: true,
-						remunerationId: true,
-					}
-				: {}),
-		} as unknown as Prisma.AttachmentSelect,
+			receiptId: true,
+			paymentId: true,
+			remunerationPayableId: true,
+		},
 	});
-
-	if (!attachment) {
+	if (!a) {
 		return null;
 	}
-
-	const raw = attachment as unknown as Record<string, unknown>;
-
 	return {
-		id: attachment.id,
-		fileName: attachment.fileName,
-		storagePath: attachment.storagePath,
-		mimeType: attachment.mimeType,
-		deletedAt: attachment.deletedAt,
-		resource: {
-			firmId:
-				attachment.personId || raw.clientId || raw.employeeId
-					? firmId
-					: attachment.firmId,
-		},
+		...a,
+		resource: { firmId: a.personId ? firmId : a.firmId },
 		ownerInput: {
-			receivableId: attachment.receivableId ?? undefined,
-			payableId: attachment.payableId ?? undefined,
-			personId: attachment.personId ?? undefined,
-			clientId: (raw.clientId as number) ?? undefined,
-			employeeId: (raw.employeeId as number) ?? undefined,
-			contractId: attachment.contractId ?? undefined,
-			expenseId: attachment.expenseId ?? undefined,
-			feeId: attachment.receiptId ?? (raw.feeId as number) ?? undefined,
-			remunerationId: (raw.remunerationId as number) ?? undefined,
+			personId: a.personId ?? undefined,
+			contractId: a.contractId ?? undefined,
+			expenseId: a.expenseId ?? undefined,
+			receivableId: a.receivableId ?? undefined,
+			payableId: a.payableId ?? undefined,
+			receiptId: a.receiptId ?? undefined,
+			paymentId: a.paymentId ?? undefined,
+			remunerationPayableId: a.remunerationPayableId ?? undefined,
 		},
 	};
 }
-
 export async function assertAttachmentOwnerExists(params: {
 	firmId: number;
 	input: AttachmentOwnerInput;
 	session?: LoggedUserSession;
-}) {
+}): Promise<{
+	owner: ReturnType<typeof getAttachmentOwnerContext>;
+	access: OwnerAccess;
+}> {
 	const owner = getAttachmentOwnerContext(params.input);
-
+	const { firmId } = params;
+	let access: OwnerAccess | null = null;
 	switch (owner.ownerKind) {
-		case "payable": {
-			const title = await prisma.payable.findFirst({
-				where: { id: owner.ownerId, firmId: params.firmId },
+		case "person": {
+			if (!params.session) {
+				throw new Error(ATTACHMENT_ERRORS.OWNER_NOT_FOUND);
+			}
+			const person = await getPersonAccessResource({
+				session: params.session,
+				id: owner.ownerId,
+			});
+			access = {
+				id: person.id,
+				firmId,
+				deletedAt: person.deletedAt,
+				resource: { firmId },
+			};
+			break;
+		}
+		case "contract":
+			access = await getAttachmentContractOwnerResource(firmId, owner.ownerId);
+			break;
+		case "expense":
+			access = await getAttachmentExpenseOwnerResource(firmId, owner.ownerId);
+			break;
+		case "receipt": {
+			const receipt = await prisma.receipt.findFirst({
+				where: { id: owner.ownerId, firmId },
+				select: { receivableId: true },
+			});
+			if (receipt) {
+				const source = (
+					await assertAttachmentOwnerExists({
+						...params,
+						input: { receivableId: receipt.receivableId },
+					})
+				).access;
+				access = { ...source, id: owner.ownerId };
+			}
+			break;
+		}
+		case "payment": {
+			const payment = await prisma.payment.findFirst({
+				where: { id: owner.ownerId, firmId },
+				select: { payableId: true },
+			});
+			if (payment) {
+				const source = (
+					await assertAttachmentOwnerExists({
+						...params,
+						input: { payableId: payment.payableId },
+					})
+				).access;
+				access = { ...source, id: owner.ownerId };
+			}
+			break;
+		}
+		case "remuneration-payable": {
+			const remuneration = await prisma.remunerationPayable.findFirst({
+				where: { id: owner.ownerId, firmId },
+				select: { payableId: true },
+			});
+			if (remuneration) {
+				const source = (
+					await assertAttachmentOwnerExists({
+						...params,
+						input: { payableId: remuneration.payableId },
+					})
+				).access;
+				access = { ...source, id: owner.ownerId };
+			}
+			break;
+		}
+		case "receivable": {
+			const title = await prisma.receivable.findFirst({
+				where: { id: owner.ownerId, firmId },
 				select: {
 					id: true,
-					firmId: true,
+					contractRevenueReceivable: { select: { contractId: true } },
+				},
+			});
+			if (title) {
+				const contract = title.contractRevenueReceivable
+					? await getAttachmentContractOwnerResource(
+							firmId,
+							title.contractRevenueReceivable.contractId,
+						)
+					: null;
+				access = {
+					id: title.id,
+					firmId,
+					deletedAt: null,
+					resource: { firmId, contract: contract?.resource },
+				};
+			}
+			break;
+		}
+		case "payable": {
+			const title = await prisma.payable.findFirst({
+				where: { id: owner.ownerId, firmId },
+				select: {
+					id: true,
 					beneficiary: { select: { personId: true } },
 					remunerationPayable: {
 						select: { contractAssignment: { select: { contractId: true } } },
 					},
 				},
 			});
-			if (!title) {
-				throw new Error(ATTACHMENT_ERRORS.OWNER_NOT_FOUND);
-			}
-			const contract = title.remunerationPayable
-				? await getAttachmentContractOwnerResource(
-						params.firmId,
-						title.remunerationPayable.contractAssignment.contractId,
-					)
-				: null;
-			return {
-				owner,
-				access: {
+			if (title) {
+				const contract = title.remunerationPayable
+					? await getAttachmentContractOwnerResource(
+							firmId,
+							title.remunerationPayable.contractAssignment.contractId,
+						)
+					: null;
+				access = {
 					id: title.id,
-					firmId: title.firmId,
+					firmId,
 					deletedAt: null,
 					resource: {
-						firmId: title.firmId,
+						firmId,
 						beneficiaryPersonId: title.beneficiary.personId,
 						isRemuneration: !!title.remunerationPayable,
 						contract: contract?.resource,
 					},
-				},
-			};
-		}
-		case "receivable": {
-			const title = await prisma.receivable.findFirst({
-				where: { id: owner.ownerId, firmId: params.firmId },
-				select: {
-					id: true,
-					firmId: true,
-					contractRevenueReceivable: { select: { contractId: true } },
-				},
-			});
-			if (!title) {
-				throw new Error(ATTACHMENT_ERRORS.OWNER_NOT_FOUND);
+				};
 			}
-			const contract = title.contractRevenueReceivable
-				? await getAttachmentContractOwnerResource(
-						params.firmId,
-						title.contractRevenueReceivable.contractId,
-					)
-				: null;
-			return {
-				owner,
-				access: {
-					id: title.id,
-					firmId: title.firmId,
-					deletedAt: null,
-					resource: { firmId: title.firmId, contract: contract?.resource },
-				},
-			};
-		}
-		case "person": {
-			if (!params.session) {
-				throw new Error(ATTACHMENT_ERRORS.OWNER_NOT_FOUND);
-			}
-			const person = await getPersonById({
-				session: params.session,
-				id: owner.ownerId,
-			});
-			return {
-				owner,
-				access: {
-					id: person.id,
-					deletedAt: person.isSoftDeleted
-						? new Date(person.updatedAt ?? person.createdAt)
-						: null,
-					firmId: params.firmId,
-					resource: { firmId: params.firmId },
-				},
-			};
-		}
-		case "fee": {
-			const fee = await getAttachmentFeeOwnerResource(
-				params.firmId,
-				owner.ownerId,
-			);
-			if (!fee) {
-				throw new Error(ATTACHMENT_ERRORS.OWNER_NOT_FOUND);
-			}
-			return { owner, access: fee };
-		}
-		case "remuneration": {
-			const remuneration = await getAttachmentRemunerationOwnerResource(
-				params.firmId,
-				owner.ownerId,
-			);
-			if (!remuneration) {
-				throw new Error(ATTACHMENT_ERRORS.OWNER_NOT_FOUND);
-			}
-			return { owner, access: remuneration };
-		}
-		case "client": {
-			const client = await getAttachmentClientOwnerResource(
-				params.firmId,
-				owner.ownerId,
-			);
-
-			if (!client) {
-				throw new Error(ATTACHMENT_ERRORS.OWNER_NOT_FOUND);
-			}
-
-			return { owner, access: client };
-		}
-		case "employee": {
-			const employee = await getAttachmentEmployeeOwnerResource(
-				params.firmId,
-				owner.ownerId,
-			);
-
-			if (!employee) {
-				throw new Error(ATTACHMENT_ERRORS.OWNER_NOT_FOUND);
-			}
-
-			return { owner, access: employee };
-		}
-		case "contract": {
-			const contract = await getAttachmentContractOwnerResource(
-				params.firmId,
-				owner.ownerId,
-			);
-
-			if (!contract) {
-				throw new Error(ATTACHMENT_ERRORS.OWNER_NOT_FOUND);
-			}
-
-			return { owner, access: contract };
-		}
-		case "expense": {
-			const expense = await getAttachmentExpenseOwnerResource(
-				params.firmId,
-				owner.ownerId,
-			);
-
-			if (!expense) {
-				throw new Error(ATTACHMENT_ERRORS.OWNER_NOT_FOUND);
-			}
-
-			return { owner, access: expense };
+			break;
 		}
 	}
-}
-
-export function getAttachmentVisibilityWhere(firmId: number) {
-	const isLegacy = Boolean(
-		(prisma as unknown as Record<string, unknown>).client ||
-			(prisma as unknown as Record<string, unknown>).employee,
-	);
-	return {
-		OR: [
-			{ firmId },
-			isLegacy
-				? ({ clientId: { not: null } } as unknown as { personId: object })
-				: { personId: { not: null } },
-			isLegacy
-				? ({ employeeId: { not: null } } as unknown as { personId: object })
-				: { personId: { not: null } },
-		],
-	};
+	if (!access) {
+		throw new Error(ATTACHMENT_ERRORS.OWNER_NOT_FOUND);
+	}
+	return { owner, access };
 }

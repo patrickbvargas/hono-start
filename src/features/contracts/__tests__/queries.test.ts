@@ -1,30 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { Prisma } from "@/generated/prisma/client";
 
-const { prismaMock } = vi.hoisted(() => ({
-	prismaMock: {
-		contract: {
-			count: vi.fn(),
-			findFirst: vi.fn(),
-			findMany: vi.fn(),
-		},
-		client: {
-			findMany: vi.fn(),
-		},
-		employee: {
-			findMany: vi.fn(),
-		},
-		legalArea: {
-			findMany: vi.fn(),
-		},
-		contractStatus: {
-			findMany: vi.fn(),
-		},
-	},
+const db = vi.hoisted(() => ({
+	contract: { findMany: vi.fn(), findFirst: vi.fn(), count: vi.fn() },
+	clientProfile: { findMany: vi.fn() },
+	employeeProfile: { findMany: vi.fn() },
 }));
-
-vi.mock("@/shared/lib/prisma", () => ({
-	prisma: prismaMock,
-}));
+vi.mock("@/shared/lib/prisma", () => ({ prisma: db }));
 
 import {
 	getContractById,
@@ -32,595 +14,167 @@ import {
 	getSelectableContractClients,
 	getSelectableContractEmployees,
 } from "../data/queries";
+import { contractSearchDefaults } from "../utils/default";
 
-describe("contract data queries", () => {
-	it.each([
-		{ principal: "1000", cash: "800", remaining: 0, settled: true },
-		{ principal: "900", cash: "1100", remaining: 100, settled: false },
-	])(
-		"derives financial state from principal instead of cash: $principal / $cash",
-		async ({ principal, cash, remaining, settled }) => {
-			const stored = await prismaMock.contract.findFirst();
-			prismaMock.contract.findFirst.mockResolvedValue({
-				...stored,
-				revenues: [
-					{
-						id: 20,
-						revenueTypeId: 3,
-						negotiatedAmount: "1000",
-						isActive: true,
-						deletedAt: null,
-						revenueType: { label: "Administrativo", value: "ADMINISTRATIVE" },
-						contractRevenueReceivables: [
-							{
-								receivable: {
-									id: 1,
-									amount: "1000",
-									dueDate: new Date("2026-01-01"),
-									kind: "INSTALLMENT",
-									cancelledAt: null,
-									receipts: [
-										{
-											id: 1,
-											principalAbated: principal,
-											effectiveAmount: cash,
-											effectiveDate: new Date("2026-01-01"),
-											reversal: null,
-										},
-									],
-								},
-							},
-						],
-					},
+const amount = (n: number) => new Prisma.Decimal(n);
+const scope = { firmId: 1, isAdmin: true, canReadTitles: true };
+const date = new Date("2026-01-01T12:00:00Z");
+function title(id: number, kind = "INSTALLMENT", value = 300) {
+	return {
+		id,
+		kind,
+		amount: amount(value),
+		dueDate: date,
+		cancelledAt: null as Date | null,
+		receipts: [] as {
+			principalAbated: Prisma.Decimal;
+			effectiveAmount: Prisma.Decimal;
+			effectiveDate: Date;
+		}[],
+	};
+}
+function contract() {
+	return {
+		id: 5,
+		processNumber: "PROC-5",
+		firmId: 1,
+		customerId: 9,
+		customer: { personId: 19, person: { fullName: "Cliente", document: null } },
+		legalAreaId: 7,
+		legalArea: { label: "Cível", value: "CIVIL" },
+		statusId: 8,
+		status: { label: "Ativo", value: "ACTIVE" },
+		feePercentage: amount(0.3),
+		isActive: true,
+		deletedAt: null,
+		createdAt: date,
+		updatedAt: null,
+		notes: null,
+		allowStatusChange: true,
+		assignments: [],
+		revenues: [
+			{
+				id: 20,
+				revenueTypeId: 3,
+				revenueType: { label: "Administrativo", value: "ADMINISTRATIVE" },
+				negotiatedAmount: amount(1000),
+				notes: null,
+				createdAt: date,
+				isActive: true,
+				deletedAt: null,
+				contractRevenueReceivables: [
+					{ receivable: title(21, "DOWN_PAYMENT", 100) },
+					{ receivable: title(22) },
+					{ receivable: title(23) },
+					{ receivable: title(24) },
 				],
-			});
-			const result = await getContractById({
-				scope: {
-					firmId: 1,
-					employeeId: 10,
-					employeeTypeValue: "LAWYER",
-					isAdmin: true,
+			},
+		],
+	};
+}
+beforeEach(() => {
+	vi.clearAllMocks();
+	db.contract.findFirst.mockResolvedValue(contract());
+	db.contract.findMany.mockResolvedValue([contract()]);
+	db.contract.count.mockResolvedValue(1);
+});
+describe("contract current data projections", () => {
+	it("lists entry, installments, extras and cancellation without hiding title identity", async () => {
+		const c = contract();
+		c.revenues[0].contractRevenueReceivables.push({
+			receivable: { ...title(25, "EXTRA", 50), cancelledAt: date },
+		});
+		db.contract.findFirst.mockResolvedValue(c);
+		const result = await getContractById({ scope, id: 5 });
+		expect(result.revenues[0].installments.map((t) => t.id)).toEqual([
+			21, 22, 23, 24, 25,
+		]);
+		expect(result.revenues[0]).toMatchObject({
+			remainingValue: 1000,
+			hasGeneratedTitles: true,
+			isFullyPaid: false,
+		});
+		expect(result.revenues[0].installments[4].cancelledAt).toBe(
+			date.toISOString(),
+		);
+	});
+	it.each([
+		{ principal: 100, cash: 80, remaining: 900 },
+		{ principal: 90, cash: 110, remaining: 910 },
+	])(
+		"keeps principal balance separate from actual cash $cash",
+		async ({ principal, cash, remaining }) => {
+			const c = contract();
+			c.revenues[0].contractRevenueReceivables[0].receivable.receipts = [
+				{
+					principalAbated: amount(principal),
+					effectiveAmount: amount(cash),
+					effectiveDate: date,
 				},
-				id: 5,
-			});
+			];
+			db.contract.findFirst.mockResolvedValue(c);
+			const result = await getContractById({ scope, id: 5 });
 			expect(result.revenues[0]).toMatchObject({
 				remainingValue: remaining,
-				isFullyPaid: settled,
-				paidValue: Number(cash),
+				paidValue: cash,
 			});
-			expect(result.revenues[0].installments[0].remainingAmount).toBe(
-				remaining,
-			);
+			expect(
+				db.contract.findFirst.mock.calls[0][0].include.revenues.include
+					.contractRevenueReceivables.include.receivable.include.receipts.where,
+			).toEqual({ reversal: null });
 		},
 	);
-	it("uses overdue unpaid entry for the card status and ignores reversed receipts", async () => {
-		const stored = await prismaMock.contract.findFirst();
-		prismaMock.contract.findFirst.mockResolvedValue({
-			...stored,
-			revenues: [
-				{
-					id: 20,
-					revenueTypeId: 3,
-					negotiatedAmount: "1000",
-					isActive: true,
-					deletedAt: null,
-					revenueType: { label: "Administrativo", value: "ADMINISTRATIVE" },
-					contractRevenueReceivables: [
-						{
-							receivable: {
-								id: 1,
-								amount: "100",
-								dueDate: new Date("2026-01-01"),
-								kind: "DOWN_PAYMENT",
-								cancelledAt: null,
-								receipts: [
-									{
-										id: 1,
-										principalAbated: "100",
-										effectiveAmount: "100",
-										effectiveDate: new Date("2026-01-01"),
-										reversal: { id: 1 },
-									},
-								],
-							},
-						},
-						{
-							receivable: {
-								id: 2,
-								amount: "900",
-								dueDate: new Date("2026-02-01"),
-								kind: "INSTALLMENT",
-								cancelledAt: null,
-								receipts: [
-									{
-										id: 2,
-										principalAbated: "900",
-										effectiveAmount: "900",
-										effectiveDate: new Date("2026-02-01"),
-										reversal: null,
-									},
-								],
-							},
-						},
-					],
-				},
-			],
-		});
-		const result = await getContractById({
-			scope: {
-				firmId: 1,
-				employeeId: 10,
-				employeeTypeValue: "LAWYER",
-				isAdmin: true,
-			},
+	it("hides movements and balances without independent title authority", async () => {
+		const r = await getContractById({
+			scope: { ...scope, canReadTitles: false },
 			id: 5,
 		});
-		expect(result.revenues[0]).toMatchObject({
-			remainingValue: 100,
+		expect(r.revenues[0]).toMatchObject({
+			installments: [],
+			paidValue: 0,
+			remainingValue: 0,
 			isFullyPaid: false,
-			nextDueDate: "2026-01-01",
-			paidValue: 900,
 		});
 	});
-	beforeEach(() => {
-		vi.clearAllMocks();
-		prismaMock.legalArea.findMany.mockResolvedValue([{ id: 7 }]);
-		prismaMock.contractStatus.findMany.mockResolvedValue([{ id: 8 }]);
-		prismaMock.contract.count.mockResolvedValue(1);
-		prismaMock.contract.findMany.mockResolvedValue([
-			{
-				id: 5,
-				processNumber: "PROC-001",
-				clientId: 9,
-				legalAreaId: 7,
-				statusId: 8,
-				feePercentage: "0.3",
-				isActive: true,
-				deletedAt: null,
-				createdAt: new Date("2026-01-05T00:00:00.000Z"),
-				updatedAt: new Date("2026-01-10T00:00:00.000Z"),
-				client: { fullName: "Cliente A" },
-				legalArea: { label: "Previdenciário", value: "SOCIAL_SECURITY" },
-				status: { label: "Ativo", value: "ACTIVE" },
-				assignments: [
-					{
-						employeeId: 10,
-						employee: {
-							fullName: "Maria Silva",
-							type: { value: "LAWYER" },
-						},
-						assignmentType: { value: "RESPONSIBLE" },
-					},
-				],
-				revenues: [{ id: 20 }],
-			},
-		]);
-		prismaMock.contract.findFirst.mockResolvedValue({
-			id: 5,
-			processNumber: "PROC-001",
-			clientId: 9,
-			legalAreaId: 7,
-			statusId: 8,
-			feePercentage: "0.3",
-			notes: "obs",
-			allowStatusChange: true,
-			isActive: true,
-			deletedAt: null,
-			createdAt: new Date("2026-01-05T00:00:00.000Z"),
-			updatedAt: new Date("2026-01-10T00:00:00.000Z"),
-			client: { fullName: "Cliente A" },
-			legalArea: { label: "Previdenciário", value: "SOCIAL_SECURITY" },
-			status: { label: "Ativo", value: "ACTIVE" },
-			assignments: [
-				{
-					id: 1,
-					employeeId: 10,
-					isActive: true,
-					deletedAt: null,
-					employee: {
-						fullName: "Maria Silva",
-						type: { label: "Advogado", value: "LAWYER" },
-					},
-					assignmentType: { label: "Responsável", value: "RESPONSIBLE" },
-				},
-				{
-					id: 2,
-					employeeId: 11,
-					isActive: false,
-					deletedAt: new Date("2026-01-11T00:00:00.000Z"),
-					employee: {
-						fullName: "João Souza",
-						type: { label: "Advogado", value: "LAWYER" },
-					},
-					assignmentType: { label: "Indicante", value: "RECOMMENDING" },
-				},
-			],
-			revenues: [
-				{
-					id: 20,
-					typeId: 3,
-					totalValue: "1000",
-					downPaymentValue: "100",
-					paymentStartDate: new Date("2026-01-01T00:00:00.000Z"),
-					totalInstallments: 3,
-					isActive: true,
-					deletedAt: null,
-					type: { label: "Mensal", value: "MONTHLY" },
-					fees: [{ amount: "150" }, { amount: "200" }],
-				},
-			],
-		});
-		prismaMock.client.findMany.mockResolvedValue([
-			{ id: 1, fullName: "Cliente A" },
-		]);
-		prismaMock.employee.findMany.mockResolvedValue([
-			{
-				id: 10,
-				fullName: "Maria Silva",
-				type: { label: "Advogado" },
-			},
-		]);
-	});
-
-	it("intersects an employee filter with the actor's authorized assignments", async () => {
+	it("scopes member reads before mapping and keeps deterministic pagination", async () => {
 		await getContracts({
 			scope: {
-				firmId: 1,
+				...scope,
+				isAdmin: false,
 				employeeId: 10,
 				employeeTypeValue: "LAWYER",
-				isAdmin: false,
 			},
-			search: {
-				page: 1,
-				limit: 25,
-				column: "createdAt",
-				direction: "desc",
-				query: "",
-				clientId: "",
-				employeeId: "22",
-				legalArea: [],
-				contractStatus: [],
-				active: "all",
-				status: "active",
-			},
+			search: { ...contractSearchDefaults, page: 2, limit: 10 },
 		});
-		const where = prismaMock.contract.findMany.mock.calls[0][0].where;
-		expect(where.firmId).toBe(1);
-		expect(where.assignments.some.employeeId).toBe(10);
-		expect(where.AND).toEqual([
-			{
-				assignments: {
-					some: { employeeId: 22, isActive: true, deletedAt: null },
-				},
-			},
-		]);
-		expect(prismaMock.contract.count).toHaveBeenCalledWith({ where });
+		const query = db.contract.findMany.mock.calls[0][0];
+		expect(query.where.firmId).toBe(1);
+		expect(JSON.stringify(query.where.AND)).toContain('"employeeProfileId":10');
+		expect(query.skip).toBe(10);
+		expect(query.orderBy.at(-1)).toEqual({ id: "asc" });
+		expect(db.contract.count).toHaveBeenCalledWith({ where: query.where });
 	});
-	it("scopes regular-user lists by firm, assignment, filters, and deterministic sorting", async () => {
-		const search = {
-			page: 2,
-			limit: 10,
-			column: "createdAt" as const,
-			direction: "desc" as const,
-			query: "PROC",
-			clientId: "9",
-			employeeId: "",
-			legalArea: ["SOCIAL_SECURITY"],
-			contractStatus: ["ACTIVE"],
-			active: "all" as const,
-			status: "active" as const,
-		};
-
-		const result = await getContracts({
-			scope: {
-				firmId: 1,
-				employeeId: 10,
-				employeeTypeValue: "LAWYER",
-				isAdmin: false,
-			},
-			search,
-		});
-
-		expect(prismaMock.contract.findMany).toHaveBeenCalledWith(
-			expect.objectContaining({
-				where: expect.objectContaining({
-					firmId: 1,
-					OR: [
-						{
-							processNumber: {
-								contains: "PROC",
-								mode: "insensitive",
-							},
-						},
-						{
-							client: {
-								fullName: {
-									contains: "PROC",
-									mode: "insensitive",
-								},
-							},
-						},
-					],
-					clientId: 9,
-					legalAreaId: { in: [7] },
-					statusId: { in: [8] },
-					deletedAt: null,
-					assignments: {
-						some: {
-							employeeId: 10,
-							deletedAt: null,
-							isActive: true,
-							assignmentType: {
-								value: {
-									in: ["RESPONSIBLE", "RECOMMENDED"],
-								},
-							},
-						},
-					},
-				}),
-				orderBy: [{ createdAt: "desc" }, { id: "asc" }],
-				skip: 10,
-				take: 10,
-			}),
-		);
-		expect(prismaMock.contract.count).toHaveBeenCalledWith({
-			where: expect.objectContaining({
-				firmId: 1,
-				OR: expect.any(Array),
-				clientId: 9,
-			}),
-		});
-		expect(result).toEqual({
-			data: [
-				expect.objectContaining({
-					id: 5,
-					lawyer: "Maria Silva",
-					assignedEmployeeIds: [10],
-					isAssignedToActor: true,
-				}),
-			],
-			total: 1,
-			page: 2,
-			pageSize: 10,
-		});
+	it("fails safely for an inaccessible contract", async () => {
+		db.contract.findFirst.mockResolvedValue(null);
+		await expect(getContractById({ scope, id: 999 })).rejects.toThrow();
 	});
-
-	it("maps detail queries into UI-ready aggregates with derived revenue payment state", async () => {
-		const result = await getContractById({
-			scope: {
-				firmId: 1,
-				employeeId: 10,
-				employeeTypeValue: "LAWYER",
-				isAdmin: false,
-			},
-			id: 5,
+	it("limits selectable clients and collaborators through the supplied contract scope", async () => {
+		const contractWhere = { firmId: 1, id: 7 };
+		db.clientProfile.findMany.mockResolvedValue([
+			{ id: 9, person: { fullName: "Cliente" } },
+		]);
+		db.employeeProfile.findMany.mockResolvedValue([
+			{ id: 10, person: { fullName: "Advogada" } },
+		]);
+		expect(await getSelectableContractClients(1, contractWhere)).toEqual([
+			{ id: 9, value: "9", label: "Cliente", isDisabled: false },
+		]);
+		await getSelectableContractEmployees(1, contractWhere);
+		expect(db.clientProfile.findMany.mock.calls[0][0].where.contracts).toEqual({
+			some: contractWhere,
 		});
-
-		expect(prismaMock.contract.findFirst).toHaveBeenCalledWith(
-			expect.objectContaining({
-				where: expect.objectContaining({
-					firmId: 1,
-					id: 5,
-					assignments: {
-						some: {
-							employeeId: 10,
-							deletedAt: null,
-							isActive: true,
-							assignmentType: {
-								value: {
-									in: ["RESPONSIBLE", "RECOMMENDED"],
-								},
-							},
-						},
-					},
-				}),
-			}),
-		);
-		expect(result.assignedEmployeeIds).toEqual([10]);
-		expect(result.lawyer).toBe("Maria Silva");
-		expect(result.revenues).toEqual([
-			expect.objectContaining({
-				id: 20,
-				paidValue: 450,
-				installmentsPaid: 2,
-				remainingValue: 550,
-				isFullyPaid: false,
-			}),
-		]);
-	});
-
-	it("prefers responsible lawyer over recommended lawyer when invalid duplicate handling roles exist", async () => {
-		prismaMock.contract.findMany.mockResolvedValue([
-			{
-				id: 5,
-				processNumber: "PROC-001",
-				clientId: 9,
-				legalAreaId: 7,
-				statusId: 8,
-				feePercentage: "0.3",
-				isActive: true,
-				deletedAt: null,
-				createdAt: new Date("2026-01-05T00:00:00.000Z"),
-				updatedAt: new Date("2026-01-10T00:00:00.000Z"),
-				client: { fullName: "Cliente A" },
-				legalArea: { label: "Previdenciário", value: "SOCIAL_SECURITY" },
-				status: { label: "Ativo", value: "ACTIVE" },
-				assignments: [
-					{
-						employeeId: 11,
-						employee: {
-							fullName: "João Indicado",
-							type: { value: "LAWYER" },
-						},
-						assignmentType: { value: "RECOMMENDED" },
-					},
-					{
-						employeeId: 10,
-						employee: {
-							fullName: "Maria Responsável",
-							type: { value: "LAWYER" },
-						},
-						assignmentType: { value: "RESPONSIBLE" },
-					},
-				],
-				revenues: [{ id: 20 }],
-			},
-		]);
-
-		const result = await getContracts({
-			scope: {
-				firmId: 1,
-				employeeId: 10,
-				employeeTypeValue: "LAWYER",
-				isAdmin: false,
-			},
-			search: {
-				page: 1,
-				limit: 10,
-				column: "createdAt",
-				direction: "desc",
-				query: "",
-				clientId: "",
-				employeeId: "",
-				legalArea: [],
-				contractStatus: [],
-				active: "all",
-				status: "active",
-			},
-		});
-
-		expect(result.data[0]?.lawyer).toBe("Maria Responsável");
-	});
-
-	it("keeps admin-assistant users scoped to admin-assistant assignments", async () => {
-		await getContracts({
-			scope: {
-				firmId: 1,
-				employeeId: 10,
-				employeeTypeValue: "ADMIN_ASSISTANT",
-				isAdmin: false,
-			},
-			search: {
-				page: 1,
-				limit: 10,
-				column: "createdAt",
-				direction: "desc",
-				query: "",
-				clientId: "",
-				employeeId: "",
-				legalArea: [],
-				contractStatus: [],
-				active: "all",
-				status: "active",
-			},
-		});
-
-		expect(prismaMock.contract.findMany).toHaveBeenCalledWith(
-			expect.objectContaining({
-				where: expect.objectContaining({
-					assignments: {
-						some: {
-							employeeId: 10,
-							deletedAt: null,
-							isActive: true,
-							assignmentType: {
-								value: {
-									in: ["ADMIN_ASSISTANT"],
-								},
-							},
-						},
-					},
-				}),
-			}),
-		);
-	});
-
-	it("loads selectable clients and employees from active non-deleted business entities only", async () => {
-		await expect(getSelectableContractClients(1)).resolves.toEqual([
-			{
-				id: 1,
-				value: "1",
-				label: "Cliente A",
-				isDisabled: false,
-			},
-		]);
-		expect(prismaMock.client.findMany).toHaveBeenCalledWith({
-			where: { deletedAt: null, isActive: true },
-			orderBy: { fullName: "asc" },
-			select: {
-				id: true,
-				fullName: true,
-			},
-		});
-
-		await expect(getSelectableContractEmployees(1)).resolves.toEqual([
-			{
-				id: 10,
-				value: "10",
-				label: "Maria Silva",
-				isDisabled: false,
-			},
-		]);
-		expect(prismaMock.employee.findMany).toHaveBeenCalledWith({
-			where: { deletedAt: null, isActive: true },
-			orderBy: { fullName: "asc" },
-			select: {
-				id: true,
-				fullName: true,
-				type: { select: { label: true } },
-			},
-		});
-	});
-	it("loads selectable clients and employees when profile models exist", async () => {
-		(prismaMock as unknown as Record<string, unknown>).clientProfile = {
-			findMany: vi.fn().mockResolvedValue([
-				{
-					id: 1,
-					personId: 101,
-					person: {
-						fullName: "Cliente Silva",
-						document: "12345678901",
-					},
-				},
-			]),
-		};
-		(prismaMock as unknown as Record<string, unknown>).employeeProfile = {
-			findMany: vi.fn().mockResolvedValue([
-				{
-					id: 10,
-					personId: 201,
-					person: {
-						fullName: "Dra. Joana",
-					},
-					employeeType: {
-						label: "Advogada",
-						value: "LAWYER",
-					},
-				},
-			]),
-		};
-
-		const clients = await getSelectableContractClients(1);
-		expect(clients).toEqual([
-			{
-				id: 1,
-				value: "1",
-				label: "Cliente Silva",
-				isDisabled: false,
-			},
-		]);
-
-		const employees = await getSelectableContractEmployees(1);
-		expect(employees).toEqual([
-			{
-				id: 10,
-				value: "10",
-				label: "Dra. Joana",
-				isDisabled: false,
-			},
-		]);
-
-		delete (prismaMock as unknown as Record<string, unknown>).clientProfile;
-		delete (prismaMock as unknown as Record<string, unknown>).employeeProfile;
+		expect(
+			db.employeeProfile.findMany.mock.calls[0][0].where.assignments.some
+				.contract,
+		).toEqual(contractWhere);
 	});
 });

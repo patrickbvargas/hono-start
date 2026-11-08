@@ -4,6 +4,4 @@ export type RelatedRecordKind =
 	| "contract"
 	| "receivable"
 	| "payable"
-	| "fee"
-	| "expense"
-	| "remuneration";
+	| "expense";

@@ -4,24 +4,12 @@ import { describe, expect, it } from "vitest";
 
 const routeCases = [
 	{
-		file: resolve(import.meta.dirname, "../routes/_app/clientes.tsx"),
-		middleware: "stripSearchParams(clientSearchDefaults)",
-	},
-	{
-		file: resolve(import.meta.dirname, "../routes/_app/colaboradores.tsx"),
-		middleware: "stripSearchParams(employeeSearchDefaults)",
+		file: resolve(import.meta.dirname, "../routes/_app/pessoas.tsx"),
+		middleware: "stripSearchParams(personSearchDefaults)",
 	},
 	{
 		file: resolve(import.meta.dirname, "../routes/_app/contratos.tsx"),
 		middleware: "stripSearchParams(contractSearchDefaults)",
-	},
-	{
-		file: resolve(import.meta.dirname, "../routes/_app/honorarios.tsx"),
-		middleware: "stripSearchParams(feeSearchDefaults)",
-	},
-	{
-		file: resolve(import.meta.dirname, "../routes/_app/remuneracoes.tsx"),
-		middleware: "stripSearchParams(remunerationSearchDefaults)",
 	},
 	{
 		file: resolve(import.meta.dirname, "../routes/_app/auditoria.tsx"),

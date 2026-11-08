@@ -3,9 +3,7 @@ import { describe, expect, it } from "vitest";
 
 const features = [
 	"contracts",
-	"expenses",
-	"fees",
-	"remunerations",
+
 	"audit-logs",
 ];
 

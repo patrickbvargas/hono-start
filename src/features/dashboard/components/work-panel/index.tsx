@@ -24,20 +24,20 @@ export function DashboardWorkPanel({
 			<CardHeader>
 				<CardTitle>Precisa de atenção</CardTitle>
 				<p className="text-sm text-muted-foreground">
-					Parcelas em atraso · {scopeLabel}. Prévia de até 3 itens nos filtros
+					Títulos em atraso · {scopeLabel}. Prévia de até 3 itens nos filtros
 					selecionados. Inclui vencimentos anteriores ao início do período.
 				</p>
 			</CardHeader>
 			<CardContent>
 				{rows.length === 0 ? (
 					<p className="text-sm text-muted-foreground">
-						Nenhuma parcela em atraso nos filtros selecionados.
+						Nenhum título em atraso nos filtros selecionados.
 					</p>
 				) : (
 					<ul className="divide-y">
 						{rows.slice(0, 3).map((row) => (
 							<li
-								key={`${row.contractId}-${row.revenueType}-${row.installmentNumber}`}
+								key={`${row.contractId}-${row.revenueType}-${row.titleId}`}
 								className="flex flex-wrap items-center justify-between gap-3 py-3 first:pt-0"
 							>
 								<div className="min-w-0">
@@ -45,8 +45,8 @@ export function DashboardWorkPanel({
 										{row.clientName} · {row.contractProcessNumber}
 									</p>
 									<p className="text-sm text-muted-foreground">
-										{row.revenueType} · Parcela {row.installmentNumber} ·
-										Vencimento {formatter.calendarDate(row.dueDate)}
+										{row.revenueType} · Título #{row.titleId} · Vencimento{" "}
+										{formatter.calendarDate(row.dueDate)}
 									</p>
 								</div>
 								<div className="flex items-center gap-3">

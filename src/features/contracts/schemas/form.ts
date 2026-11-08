@@ -4,32 +4,23 @@ import { entityIdSchema } from "@/shared/schemas/entity";
 import {
 	assertContractHasActiveAssignment,
 	assertContractHasActiveRevenue,
-	assertContractRevenueDownPayment,
 	assertContractRevenueLimit,
 	assertContractUniqueActiveAssignments,
 	assertContractUniqueActiveRevenueTypes,
 } from "../rules/write";
 
 export const contractAssignmentInputSchema = z.object({
-	id: z.number().optional(),
+	id: z.number().int().positive().optional(),
 	employeeId: z.string().trim().min(1, "Colaborador é obrigatório"),
 	assignmentType: z.string().trim().min(1, "Atribuição é obrigatório"),
 	isActive: z.boolean(),
 });
 
 export const contractRevenueInputSchema = z.object({
-	id: z.number().optional(),
+	id: z.number().int().positive().optional(),
 	type: z.string().trim().min(1, "Tipo de receita é obrigatório"),
 	totalValue: z.number().positive("Valor total deve ser maior que zero"),
-	downPaymentValue: z
-		.number()
-		.min(0, "Entrada não pode ser negativa")
-		.nullable(),
-	paymentStartDate: z.iso.date("Data inicial é obrigatória"),
-	totalInstallments: z
-		.number()
-		.int("Quantidade de parcelas inválida")
-		.min(1, "Quantidade de parcelas deve ser maior que zero"),
+	notes: z.string().trim().max(TEXT_LIMITS.notes).optional(),
 	isActive: z.boolean(),
 });
 
@@ -109,22 +100,6 @@ const contractBusinessRulesRefinement = (
 			});
 		}
 	}
-
-	data.revenues.forEach((revenue, index) => {
-		try {
-			assertContractRevenueDownPayment([revenue]);
-		} catch (error) {
-			if (!(error instanceof Error)) {
-				throw error;
-			}
-
-			ctx.addIssue({
-				code: "custom",
-				path: ["revenues", index, "downPaymentValue"],
-				message: error.message,
-			});
-		}
-	});
 };
 
 export const contractCreateInputSchema = contractBaseInputSchema.superRefine(

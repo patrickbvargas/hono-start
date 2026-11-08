@@ -22,7 +22,7 @@ describe("breakdown empty state", () => {
 		(variant) => {
 			render(
 				<DashboardBreakdownChart
-					title="Honorários a receber"
+					title="Títulos a vencer"
 					variant={variant}
 					emptyLabel="Sem parcelas futuras nos próximos 90 dias."
 					items={[

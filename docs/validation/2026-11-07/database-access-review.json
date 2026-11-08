@@ -1,0 +1,20 @@
+[
+  {
+    "table_name": "contract_revenue_receivables",
+    "rls": false,
+    "anon_select": false,
+    "authenticated_select": false
+  },
+  {
+    "table_name": "expense_payables",
+    "rls": false,
+    "anon_select": false,
+    "authenticated_select": false
+  },
+  {
+    "table_name": "remuneration_payables",
+    "rls": false,
+    "anon_select": false,
+    "authenticated_select": false
+  }
+]

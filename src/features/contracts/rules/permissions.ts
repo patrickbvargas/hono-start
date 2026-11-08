@@ -30,9 +30,7 @@ export function assertContractSectionChanges({
 					item.id,
 					item.type,
 					item.totalValue,
-					item.downPaymentValue ?? 0,
-					item.paymentStartDate,
-					item.totalInstallments,
+					item.notes ?? "",
 					item.isActive,
 				]),
 			)

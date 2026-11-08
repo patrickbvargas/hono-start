@@ -1,0 +1,140 @@
+
+> hono-start@ typecheck C:\Dev\hono-start
+> tsc --noEmit
+
+src/features/__tests__/utility-contracts.test.ts(226,38): error TS2345: Argument of type '{ id: number; processNumber: string; clientId: number; client: string; lawyer: string; legalAreaId: number; legalArea: string; legalAreaValue: string; statusId: number; status: string; statusValue: string; feePercentage: number; assignmentCount: number; revenueCount: number; assignedEmployeeIds: number[]; ... 8 more...' is not assignable to parameter of type '{ id: number; processNumber: string; clientId: number; clientPersonId?: number | undefined; client: string; clientDocument?: string | null | undefined; lawyer: string; legalAreaId: number; ... 17 more ...; revenues: { ...; }[]; }'.
+  Types of property 'revenues' are incompatible.
+    Type '{ id: number; typeId: number; type: string; typeValue: string; totalValue: number; downPaymentValue: null; paymentStartDate: string; totalInstallments: number; paidValue: number; installments: never[]; ... 6 more ...; isSoftDeleted: boolean; }[]' is not assignable to type '{ id: number; typeId: number; type: string; typeValue: string; totalValue: number; hasGeneratedTitles: boolean; downPaymentValue: number | null; paymentStartDate: string; totalInstallments: number; ... 8 more ...; isSoftDeleted: boolean; }[]'.
+      Property 'hasGeneratedTitles' is missing in type '{ id: number; typeId: number; type: string; typeValue: string; totalValue: number; downPaymentValue: null; paymentStartDate: string; totalInstallments: number; paidValue: number; installments: never[]; installmentsPaid: number; nextInstallmentNumber: number; ... 4 more ...; isSoftDeleted: boolean; }' but required in type '{ id: number; typeId: number; type: string; typeValue: string; totalValue: number; hasGeneratedTitles: boolean; downPaymentValue: number | null; paymentStartDate: string; totalInstallments: number; ... 8 more ...; isSoftDeleted: boolean; }'.
+src/features/dashboard/components/drilldown/columns.tsx(65,5): error TS2353: Object literal may only specify known properties, and 'category' does not exist in type 'ExpenseReadColumnOptions<{ id: string; record: { kind: "contract" | "expense" | "fee" | "remuneration"; id: number; }; date: string; kind: string; description: string; client?: string | undefined; clientId?: number | undefined; ... 12 more ...; amount: number; }>'.
+src/features/dashboard/components/drilldown/columns.tsx(65,16): error TS7006: Parameter 'row' implicitly has an 'any' type.
+src/features/dashboard/data/drilldown.ts(107,21): error TS2339: Property 'value' does not exist on type 'never'.
+src/features/dashboard/data/drilldown.ts(109,39): error TS2339: Property 'id' does not exist on type 'never'.
+src/features/dashboard/data/drilldown.ts(112,21): error TS2339: Property 'value' does not exist on type 'never'.
+src/features/dashboard/data/drilldown.ts(117,39): error TS2339: Property 'fullName' does not exist on type 'never'.
+src/features/dashboard/data/drilldown.ts(118,41): error TS2339: Property 'id' does not exist on type 'never'.
+src/features/dashboard/data/drilldown.ts(120,26): error TS2339: Property 'label' does not exist on type 'never'.
+src/features/dashboard/data/drilldown.ts(121,31): error TS2339: Property 'value' does not exist on type 'never'.
+src/features/dashboard/data/drilldown.ts(122,33): error TS2339: Property 'label' does not exist on type 'never'.
+src/features/dashboard/data/drilldown.ts(156,34): error TS2339: Property 'equals' does not exist on type 'never'.
+src/features/dashboard/data/drilldown.ts(162,40): error TS2339: Property 'toISOString' does not exist on type 'never'.
+src/features/dashboard/data/drilldown.ts(184,26): error TS2488: Type 'never' must have a '[Symbol.iterator]()' method that returns an iterator.
+src/features/dashboard/data/drilldown.ts(207,36): error TS2339: Property 'remuneration' does not exist on type 'Omit<PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>, "$connect" | "$disconnect" | "$extends" | "$on" | "$use">'.
+src/features/dashboard/data/drilldown.ts(292,20): error TS2339: Property 'value' does not exist on type 'never'.
+src/features/dashboard/data/drilldown.ts(298,29): error TS2339: Property 'toISOString' does not exist on type 'never'.
+src/features/dashboard/data/drilldown.ts(301,46): error TS2339: Property 'label' does not exist on type 'never'.
+src/features/dashboard/data/drilldown.ts(302,30): error TS2339: Property 'label' does not exist on type 'never'.
+src/features/dashboard/data/drilldown.ts(303,35): error TS2339: Property 'value' does not exist on type 'never'.
+src/features/dashboard/data/queries.ts(20,33): error TS2339: Property 'employee' does not exist on type 'PrismaClient'.
+src/features/dashboard/data/queries.ts(32,24): error TS7006: Parameter 'employee' implicitly has an 'any' type.
+src/features/dashboard/data/records.ts(87,11): error TS2339: Property 'fee' does not exist on type 'PrismaClient'.
+src/features/dashboard/data/records.ts(102,11): error TS2339: Property 'fee' does not exist on type 'PrismaClient'.
+src/features/dashboard/data/records.ts(117,11): error TS2339: Property 'remuneration' does not exist on type 'PrismaClient'.
+src/features/dashboard/data/records.ts(128,11): error TS2339: Property 'remuneration' does not exist on type 'PrismaClient'.
+src/features/dashboard/data/records.ts(142,11): error TS2339: Property 'remuneration' does not exist on type 'PrismaClient'.
+src/features/dashboard/data/records.ts(159,6): error TS2353: Object literal may only specify known properties, and 'paymentStartDate' does not exist in type 'RevenueWhereInput'.
+src/features/dashboard/data/records.ts(165,6): error TS2353: Object literal may only specify known properties, and 'downPaymentValue' does not exist in type 'RevenueSelect<DefaultArgs>'.
+src/features/dashboard/data/records.ts(171,11): error TS2339: Property 'fee' does not exist on type 'PrismaClient'.
+src/features/dashboard/data/records.ts(187,11): error TS2339: Property 'remuneration' does not exist on type 'PrismaClient'.
+src/features/dashboard/data/records.ts(202,11): error TS2339: Property 'remuneration' does not exist on type 'PrismaClient'.
+src/features/dashboard/data/records.ts(242,8): error TS2353: Object literal may only specify known properties, and 'amount' does not exist in type 'ExpenseSelect<DefaultArgs>'.
+src/features/dashboard/data/records.ts(253,8): error TS2353: Object literal may only specify known properties, and 'expenseDate' does not exist in type 'ExpenseWhereInput'.
+src/features/dashboard/data/records.ts(259,8): error TS2353: Object literal may only specify known properties, and 'amount' does not exist in type 'ExpenseSelect<DefaultArgs>'.
+src/features/dashboard/data/records.ts(269,8): error TS2353: Object literal may only specify known properties, and 'expenseDate' does not exist in type 'ExpenseWhereInput'.
+src/features/dashboard/data/records.ts(275,8): error TS2353: Object literal may only specify known properties, and 'amount' does not exist in type 'ExpenseSelect<DefaultArgs>'.
+src/features/dashboard/data/records.ts(285,8): error TS2353: Object literal may only specify known properties, and 'paymentStartDate' does not exist in type 'RevenueWhereInput'.
+src/features/dashboard/data/records.ts(291,8): error TS2353: Object literal may only specify known properties, and 'downPaymentValue' does not exist in type 'RevenueSelect<DefaultArgs>'.
+src/features/dashboard/data/records.ts(304,13): error TS2339: Property 'fee' does not exist on type 'PrismaClient'.
+src/features/dashboard/data/records.ts(334,8): error TS2353: Object literal may only specify known properties, and 'expenseDate' does not exist in type 'ExpenseWhereInput'.
+src/features/dashboard/data/records.ts(340,8): error TS2353: Object literal may only specify known properties, and 'amount' does not exist in type 'ExpenseSelect<DefaultArgs>'.
+src/features/dashboard/data/revenue-select.ts(19,6): error TS2353: Object literal may only specify known properties, and 'employee' does not exist in type 'ContractAssignmentSelect<DefaultArgs>'.
+src/features/dashboard/data/scope.ts(117,8): error TS2353: Object literal may only specify known properties, and 'type' does not exist in type 'RevenueWhereInput'.
+src/features/dashboard/data/scope.ts(149,11): error TS2724: '"C:/Dev/hono-start/src/generated/prisma/internal/prismaNamespace"' has no exported member named 'FeeWhereInput'. Did you mean 'FirmWhereInput'?
+src/features/dashboard/data/scope.ts(173,11): error TS2724: '"C:/Dev/hono-start/src/generated/prisma/internal/prismaNamespace"' has no exported member named 'RemunerationWhereInput'. Did you mean 'RemunerationPayableWhereInput'?
+src/features/dashboard/data/summary.ts(59,63): error TS18046: 'fee' is of type 'unknown'.
+src/features/dashboard/data/summary.ts(64,7): error TS2365: Operator '>=' cannot be applied to types 'never' and 'Date'.
+src/features/dashboard/data/summary.ts(65,7): error TS2365: Operator '<' cannot be applied to types 'never' and 'Date'.
+src/features/dashboard/data/summary.ts(72,42): error TS18046: 'remuneration' is of type 'unknown'.
+src/features/dashboard/data/summary.ts(75,47): error TS18046: 'remuneration' is of type 'unknown'.
+src/features/dashboard/data/summary.ts(78,42): error TS18046: 'remuneration' is of type 'unknown'.
+src/features/dashboard/data/summary.ts(81,59): error TS2339: Property 'amount' does not exist on type '{ id: number; negotiatedAmount: Decimal; notes: string | null; isActive: boolean; createdAt: Date; updatedAt: Date; deletedAt: Date | null; firmId: number; supplierId: number; }'.
+src/features/dashboard/data/summary.ts(85,64): error TS2339: Property 'amount' does not exist on type '{ id: number; negotiatedAmount: Decimal; notes: string | null; isActive: boolean; createdAt: Date; updatedAt: Date; deletedAt: Date | null; firmId: number; supplierId: number; }'.
+src/features/dashboard/data/summary.ts(91,3): error TS2322: Type '{ id: number; negotiatedAmount: Decimal; notes: string | null; isActive: boolean; createdAt: Date; updatedAt: Date; deletedAt: Date | null; firmId: number; contractId: number; revenueTypeId: number; }[]' is not assignable to type '{ downPaymentValue: Decimal | null; paymentStartDate: Date; }[]'.
+  Type '{ id: number; negotiatedAmount: Decimal; notes: string | null; isActive: boolean; createdAt: Date; updatedAt: Date; deletedAt: Date | null; firmId: number; contractId: number; revenueTypeId: number; }' is missing the following properties from type '{ downPaymentValue: Decimal | null; paymentStartDate: Date; }': downPaymentValue, paymentStartDate
+src/features/dashboard/data/summary.ts(92,3): error TS2322: Type 'unknown[]' is not assignable to type '{ amount: Decimal; paymentDate: Date; }[]'.
+  Type 'unknown' is not assignable to type '{ amount: Decimal; paymentDate: Date; }'.
+src/features/dashboard/data/summary.ts(93,3): error TS2322: Type 'unknown[]' is not assignable to type '{ amount: Decimal; paymentDate: Date; }[]'.
+  Type 'unknown' is not assignable to type '{ amount: Decimal; paymentDate: Date; }'.
+src/features/dashboard/data/summary.ts(98,3): error TS2322: Type 'unknown[]' is not assignable to type '{ amount: Decimal; paymentDate: Date; contractEmployee: { employee: { id: number; fullName: string; }; }; }[]'.
+  Type 'unknown' is not assignable to type '{ amount: Decimal; paymentDate: Date; contractEmployee: { employee: { id: number; fullName: string; }; }; }'.
+src/features/dashboard/data/summary.ts(106,5): error TS2322: Type '{ id: number; negotiatedAmount: Decimal; notes: string | null; isActive: boolean; createdAt: Date; updatedAt: Date; deletedAt: Date | null; firmId: number; contractId: number; revenueTypeId: number; }[]' is not assignable to type '{ downPaymentValue: Decimal | null; paymentStartDate: Date; type: { value: string; }; }[]'.
+  Type '{ id: number; negotiatedAmount: Decimal; notes: string | null; isActive: boolean; createdAt: Date; updatedAt: Date; deletedAt: Date | null; firmId: number; contractId: number; revenueTypeId: number; }' is missing the following properties from type '{ downPaymentValue: Decimal | null; paymentStartDate: Date; type: { value: string; }; }': downPaymentValue, paymentStartDate, type
+src/features/dashboard/data/summary.ts(107,5): error TS2322: Type 'unknown[]' is not assignable to type '{ amount: Decimal; paymentDate: Date; revenue: { type: { value: string; }; }; }[]'.
+  Type 'unknown' is not assignable to type '{ amount: Decimal; paymentDate: Date; revenue: { type: { value: string; }; }; }'.
+src/features/dashboard/data/summary.ts(108,5): error TS2322: Type 'unknown[]' is not assignable to type '{ amount: Decimal; paymentDate: Date; }[]'.
+  Type 'unknown' is not assignable to type '{ amount: Decimal; paymentDate: Date; }'.
+src/features/dashboard/data/summary.ts(109,5): error TS2322: Type '{ id: number; negotiatedAmount: Decimal; notes: string | null; isActive: boolean; createdAt: Date; updatedAt: Date; deletedAt: Date | null; firmId: number; supplierId: number; }[]' is not assignable to type '{ amount: Decimal; expenseDate: Date; }[]'.
+  Type '{ id: number; negotiatedAmount: Decimal; notes: string | null; isActive: boolean; createdAt: Date; updatedAt: Date; deletedAt: Date | null; firmId: number; supplierId: number; }' is missing the following properties from type '{ amount: Decimal; expenseDate: Date; }': amount, expenseDate
+src/features/dashboard/data/summary.ts(124,24): error TS2339: Property 'label' does not exist on type 'never'.
+src/features/dashboard/data/summary.ts(125,24): error TS2339: Property 'value' does not exist on type 'never'.
+src/features/dashboard/data/summary.ts(132,25): error TS2339: Property 'category' does not exist on type '{ id: number; negotiatedAmount: Decimal; notes: string | null; isActive: boolean; createdAt: Date; updatedAt: Date; deletedAt: Date | null; firmId: number; supplierId: number; }'.
+src/features/dashboard/data/summary.ts(135,19): error TS2339: Property 'category' does not exist on type '{ id: number; negotiatedAmount: Decimal; notes: string | null; isActive: boolean; createdAt: Date; updatedAt: Date; deletedAt: Date | null; firmId: number; supplierId: number; }'.
+src/features/dashboard/data/summary.ts(136,38): error TS2339: Property 'amount' does not exist on type '{ id: number; negotiatedAmount: Decimal; notes: string | null; isActive: boolean; createdAt: Date; updatedAt: Date; deletedAt: Date | null; firmId: number; supplierId: number; }'.
+src/features/dashboard/data/summary.ts(144,16): error TS18046: 'row' is of type 'unknown'.
+src/features/dashboard/data/summary.ts(145,16): error TS18046: 'row' is of type 'unknown'.
+src/features/dashboard/data/summary.ts(149,31): error TS18046: 'row' is of type 'unknown'.
+src/features/dashboard/data/summary.ts(155,31): error TS18046: 'row' is of type 'unknown'.
+src/features/dashboard/data/summary.ts(158,17): error TS18046: 'row' is of type 'unknown'.
+src/features/dashboard/data/summary.ts(161,11): error TS18046: 'row' is of type 'unknown'.
+src/features/dashboard/data/summary.ts(162,30): error TS18046: 'row' is of type 'unknown'.
+src/features/fees/data/mutations.ts(162,39): error TS2339: Property 'remuneration' does not exist on type 'TransactionClient'.
+src/features/fees/data/mutations.ts(173,13): error TS7006: Parameter 'remuneration' implicitly has an 'any' type.
+src/features/fees/data/mutations.ts(174,10): error TS7006: Parameter 'remuneration' implicitly has an 'any' type.
+src/features/fees/data/mutations.ts(177,11): error TS2339: Property 'remuneration' does not exist on type 'TransactionClient'.
+src/features/fees/data/mutations.ts(212,12): error TS2339: Property 'remuneration' does not exist on type 'TransactionClient'.
+src/features/fees/data/mutations.ts(223,11): error TS2339: Property 'remuneration' does not exist on type 'TransactionClient'.
+src/features/fees/data/mutations.ts(249,6): error TS2353: Object literal may only specify known properties, and 'totalValue' does not exist in type 'RevenueSelect<DefaultArgs>'.
+src/features/fees/data/mutations.ts(269,15): error TS2551: Property 'status' does not exist on type '{ id: number; processNumber: string; feePercentage: Decimal; notes: string | null; allowStatusChange: boolean; isActive: boolean; createdAt: Date; updatedAt: Date; deletedAt: Date | null; firmId: number; customerId: number; legalAreaId: number; statusId: number; }'. Did you mean 'statusId'?
+src/features/fees/data/mutations.ts(274,12): error TS2339: Property 'revenues' does not exist on type '{ id: number; processNumber: string; feePercentage: Decimal; notes: string | null; allowStatusChange: boolean; isActive: boolean; createdAt: Date; updatedAt: Date; deletedAt: Date | null; firmId: number; customerId: number; legalAreaId: number; statusId: number; }'.
+src/features/fees/data/mutations.ts(275,12): error TS2339: Property 'revenues' does not exist on type '{ id: number; processNumber: string; feePercentage: Decimal; notes: string | null; allowStatusChange: boolean; isActive: boolean; createdAt: Date; updatedAt: Date; deletedAt: Date | null; firmId: number; customerId: number; legalAreaId: number; statusId: number; }'.
+src/features/fees/data/mutations.ts(275,28): error TS7006: Parameter 'revenue' implicitly has an 'any' type.
+src/features/fees/data/mutations.ts(277,6): error TS7006: Parameter 'total' implicitly has an 'any' type.
+src/features/fees/data/mutations.ts(277,13): error TS7006: Parameter 'fee' implicitly has an 'any' type.
+src/features/fees/data/mutations.ts(288,15): error TS2551: Property 'status' does not exist on type '{ id: number; processNumber: string; feePercentage: Decimal; notes: string | null; allowStatusChange: boolean; isActive: boolean; createdAt: Date; updatedAt: Date; deletedAt: Date | null; firmId: number; customerId: number; legalAreaId: number; statusId: number; }'. Did you mean 'statusId'?
+src/features/fees/data/mutations.ts(330,19): error TS2339: Property 'length' does not exist on type 'never'.
+src/features/fees/data/mutations.ts(344,24): error TS2339: Property 'fee' does not exist on type 'Omit<PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>, "$connect" | "$disconnect" | "$extends" | "$on" | "$use">'.
+src/features/fees/data/mutations.ts(410,20): error TS2339: Property 'filter' does not exist on type 'never'.
+src/features/fees/data/mutations.ts(410,28): error TS7006: Parameter 'fee' implicitly has an 'any' type.
+src/features/fees/data/mutations.ts(451,12): error TS2339: Property 'fee' does not exist on type 'Omit<PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>, "$connect" | "$disconnect" | "$extends" | "$on" | "$use">'.
+src/features/fees/data/mutations.ts(520,12): error TS2339: Property 'fee' does not exist on type 'Omit<PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>, "$connect" | "$disconnect" | "$extends" | "$on" | "$use">'.
+src/features/fees/data/mutations.ts(563,12): error TS2339: Property 'fee' does not exist on type 'Omit<PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>, "$connect" | "$disconnect" | "$extends" | "$on" | "$use">'.
+src/features/fees/data/queries.ts(119,33): error TS2724: '"C:/Dev/hono-start/src/generated/prisma/internal/prismaNamespace"' has no exported member named 'FeeWhereInput'. Did you mean 'FirmWhereInput'?
+src/features/fees/data/queries.ts(299,39): error TS2724: '"C:/Dev/hono-start/src/generated/prisma/internal/prismaNamespace"' has no exported member named 'FeeOrderByWithRelationInput'. Did you mean 'FirmOrderByWithRelationInput'?
+src/features/fees/data/queries.ts(312,10): error TS2339: Property 'fee' does not exist on type 'PrismaClient'.
+src/features/fees/data/queries.ts(319,10): error TS2339: Property 'fee' does not exist on type 'PrismaClient'.
+src/features/fees/data/queries.ts(320,10): error TS2339: Property 'fee' does not exist on type 'PrismaClient'.
+src/features/fees/data/queries.ts(338,27): error TS2339: Property 'fee' does not exist on type 'PrismaClient'.
+src/features/fees/data/queries.ts(404,57): error TS2339: Property 'fullName' does not exist on type 'never'.
+src/features/fees/data/queries.ts(468,24): error TS2339: Property 'label' does not exist on type 'never'.
+src/features/fees/data/queries.ts(474,21): error TS2339: Property 'some' does not exist on type 'never'.
+src/features/fees/data/queries.ts(474,27): error TS7006: Parameter 'fee' implicitly has an 'any' type.
+src/features/fees/data/queries.ts(538,27): error TS2339: Property 'fee' does not exist on type 'PrismaClient'.
+src/features/fees/data/queries.ts(605,5): error TS7006: Parameter 'remuneration' implicitly has an 'any' type.
+src/features/fees/data/queries.ts(614,6): error TS7006: Parameter 'assignment' implicitly has an 'any' type.
+src/features/remunerations/data/mutations.ts(45,12): error TS2339: Property 'remuneration' does not exist on type 'Omit<PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>, "$connect" | "$disconnect" | "$extends" | "$on" | "$use">'.
+src/features/remunerations/data/mutations.ts(90,12): error TS2339: Property 'remuneration' does not exist on type 'Omit<PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>, "$connect" | "$disconnect" | "$extends" | "$on" | "$use">'.
+src/features/remunerations/data/mutations.ts(134,12): error TS2339: Property 'remuneration' does not exist on type 'Omit<PrismaClient<never, GlobalOmitConfig | undefined, DefaultArgs>, "$connect" | "$disconnect" | "$extends" | "$on" | "$use">'.
+src/features/remunerations/data/queries.ts(46,42): error TS2724: '"C:/Dev/hono-start/src/generated/prisma/internal/prismaNamespace"' has no exported member named 'RemunerationWhereInput'. Did you mean 'RemunerationPayableWhereInput'?
+src/features/remunerations/data/queries.ts(109,39): error TS2724: '"C:/Dev/hono-start/src/generated/prisma/internal/prismaNamespace"' has no exported member named 'RemunerationOrderByWithRelationInput'. Did you mean 'RemunerationPayableOrderByWithRelationInput'?
+src/features/remunerations/data/queries.ts(245,10): error TS2339: Property 'remuneration' does not exist on type 'PrismaClient'.
+src/features/remunerations/data/queries.ts(252,10): error TS2339: Property 'remuneration' does not exist on type 'PrismaClient'.
+src/features/remunerations/data/queries.ts(253,10): error TS2339: Property 'remuneration' does not exist on type 'PrismaClient'.
+src/features/remunerations/data/queries.ts(271,36): error TS2339: Property 'remuneration' does not exist on type 'PrismaClient'.
+src/features/remunerations/data/queries.ts(314,8): error TS2353: Object literal may only specify known properties, and 'remunerations' does not exist in type 'ContractAssignmentWhereInput'.
+src/features/remunerations/data/queries.ts(334,4): error TS2353: Object literal may only specify known properties, and 'client' does not exist in type 'ContractSelect<DefaultArgs>'.
+src/features/remunerations/data/queries.ts(345,50): error TS2339: Property 'client' does not exist on type '{ id: number; processNumber: string; feePercentage: Decimal; notes: string | null; allowStatusChange: boolean; isActive: boolean; createdAt: Date; updatedAt: Date; deletedAt: Date | null; firmId: number; customerId: number; legalAreaId: number; statusId: number; }'.
+src/features/remunerations/data/queries.ts(358,33): error TS2339: Property 'employee' does not exist on type 'PrismaClient'.
+src/features/remunerations/data/queries.ts(377,24): error TS7006: Parameter 'employee' implicitly has an 'any' type.
+src/features/remunerations/data/queries.ts(394,37): error TS2339: Property 'remuneration' does not exist on type 'PrismaClient'.
+src/features/remunerations/data/queries.ts(407,36): error TS2339: Property 'remuneration' does not exist on type 'PrismaClient'.
+ ELIFECYCLE  Command failed with exit code 1.

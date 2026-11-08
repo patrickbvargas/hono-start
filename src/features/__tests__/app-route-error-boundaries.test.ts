@@ -6,8 +6,6 @@ const APP_ROUTE_FILES = [
 	"src/routes/_app/index.tsx",
 	"src/routes/_app/pessoas.tsx",
 	"src/routes/_app/contratos.tsx",
-	"src/routes/_app/honorarios.tsx",
-	"src/routes/_app/remuneracoes.tsx",
 	"src/routes/_app/auditoria.tsx",
 ];
 

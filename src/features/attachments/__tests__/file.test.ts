@@ -34,7 +34,7 @@ beforeEach(() => {
 		fileName: "test.pdf",
 		mimeType: "application/pdf",
 		storagePath: "private",
-		ownerInput: { clientId: 3 },
+		ownerInput: { personId: 3 },
 	});
 	mocks.owner.mockResolvedValue({});
 	mocks.read.mockResolvedValue(Buffer.from("pdf"));

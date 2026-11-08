@@ -1,15 +1,13 @@
 import { describe, expect, it } from "vitest";
 import { auditLogWorkspaceSearchSchema } from "../audit-logs/schemas/workspace";
 import { expenseWorkspaceSearchSchema } from "../expenses/schemas/workspace";
-import { feeWorkspaceSearchSchema } from "../fees/schemas/workspace";
+
 import { personWorkspaceSearchSchema } from "../people/schemas/workspace";
-import { remunerationWorkspaceSearchSchema } from "../remunerations/schemas/workspace";
 
 const schemas = [
 	personWorkspaceSearchSchema,
 	expenseWorkspaceSearchSchema,
-	feeWorkspaceSearchSchema,
-	remunerationWorkspaceSearchSchema,
+
 	auditLogWorkspaceSearchSchema,
 ];
 
@@ -18,11 +16,7 @@ describe("workspace navigation boundaries", () => {
 		expect(personWorkspaceSearchSchema.parse({ tab: "contact" }).tab).toBe(
 			"contact",
 		);
-		for (const schema of [
-			personWorkspaceSearchSchema,
-			feeWorkspaceSearchSchema,
-			remunerationWorkspaceSearchSchema,
-		]) {
+		for (const schema of [personWorkspaceSearchSchema]) {
 			expect(schema.parse({ tab: "finance" }).tab).toBe("finance");
 		}
 		expect(auditLogWorkspaceSearchSchema.parse({ tab: "changes" }).tab).toBe(
@@ -74,33 +68,11 @@ describe("workspace navigation boundaries", () => {
 		for (const schema of [
 			personWorkspaceSearchSchema,
 			expenseWorkspaceSearchSchema,
-			feeWorkspaceSearchSchema,
-			remunerationWorkspaceSearchSchema,
 		]) {
 			expect(schema.parse({ tab: "attachments" }).tab).toBe("attachments");
 		}
 		expect(
 			auditLogWorkspaceSearchSchema.parse({ tab: "attachments" }).tab,
 		).toBe("overview");
-	});
-	it("preserves financial filters without introducing a new return contract", () => {
-		const result = remunerationWorkspaceSearchSchema.parse({
-			tab: "history",
-			returnTo: {
-				employeeId: "7",
-				contractId: "42",
-				dateFrom: "2026-10-01",
-				dateTo: "2026-10-25",
-				active: "all",
-				status: "deleted",
-			},
-		});
-		expect(result.tab).toBe("history");
-		expect(result.returnTo).toMatchObject({
-			employeeId: "7",
-			contractId: "42",
-			dateFrom: "2026-10-01",
-			dateTo: "2026-10-25",
-		});
 	});
 });

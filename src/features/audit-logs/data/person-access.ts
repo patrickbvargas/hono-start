@@ -1,4 +1,4 @@
-import { getPersonReadScope } from "@/features/people/data/access";
+import { getPersonReadWhere } from "@/features/people";
 import type { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/shared/lib/prisma";
 import { assertCan, type LoggedUserSession } from "@/shared/session";
@@ -8,7 +8,7 @@ export async function getPersonAuditAccessWhere(
 ): Promise<Prisma.AuditLogWhereInput> {
 	assertCan(session, "org:audit_logs:read");
 	const person = await prisma.person.findFirst({
-		where: { AND: [{ id }, getPersonReadScope(session)] },
+		where: { AND: [{ id }, getPersonReadWhere(session)] },
 		select: {
 			id: true,
 			clientProfile: { select: { id: true } },

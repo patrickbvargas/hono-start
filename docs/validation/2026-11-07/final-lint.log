@@ -1,0 +1,5 @@
+
+> hono-start@ check:ci C:\Dev\hono-start
+> biome check .
+
+Checked 826 files in 1180ms. No fixes applied.

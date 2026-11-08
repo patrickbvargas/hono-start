@@ -55,19 +55,7 @@ describe("form option prefetch contract", () => {
 					"revenueTypes",
 				],
 			},
-			{
-				routeFile: ["src", "routes", "_app", "honorarios.tsx"],
-				formFile: [
-					"src",
-					"features",
-					"fees",
-					"components",
-					"form",
-					"index.tsx",
-				],
-				requiredRouteSnippets: ["getSelectableFeeContractsQueryOptions()"],
-				requiredFormSnippets: ["useFeeFormOptions(", "contracts", "revenues"],
-			},
+
 			{
 				routeFile: ["src", "routes", "_app", "index.tsx"],
 				formFile: ["src", "routes", "_app", "index.tsx"],
@@ -79,14 +67,11 @@ describe("form option prefetch contract", () => {
 					"getContractStatusesQueryOptions()",
 					"getContractAssignmentTypesQueryOptions()",
 					"getContractRevenueTypesQueryOptions()",
-					"getSelectableFeeContractsQueryOptions()",
-					"getSelectableFeeRevenuesQueryOptions()",
 					"getEmployeeTypesQueryOptions()",
 				],
 				requiredFormSnippets: [
 					"<PersonForm state={state} onSuccess={state.close} />",
 					"<ContractForm state={state} onSuccess={state.close} />",
-					"<FeeForm state={state} onSuccess={state.close} />",
 				],
 			},
 		];

@@ -1,8 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { AlertCircleIcon } from "lucide-react";
 import { RouteFeedback } from "@/shared/components/route-feedback";
-import { buttonVariants } from "@/shared/components/ui";
-import { ROUTES } from "@/shared/config/routes";
+import { Button, buttonVariants } from "@/shared/components/ui";
+import { useRouteRecovery } from "@/shared/hooks/use-route-recovery";
 
 interface RouteErrorProps {
 	error: unknown;
@@ -11,6 +11,7 @@ interface RouteErrorProps {
 
 export const RouteError = ({ error, title }: RouteErrorProps) => {
 	const content = getRouteErrorContent(error);
+	const { retry, isRetrying } = useRouteRecovery();
 
 	return (
 		<RouteFeedback
@@ -21,12 +22,14 @@ export const RouteError = ({ error, title }: RouteErrorProps) => {
 			watermark="OPS"
 			icon={<AlertCircleIcon className="size-12" />}
 			actions={
-				<Link
-					to={ROUTES.dashboard.url}
-					className={buttonVariants({ size: "sm" })}
-				>
-					Voltar ao início
-				</Link>
+				<>
+					<Button size="sm" onClick={() => void retry()} disabled={isRetrying}>
+						{isRetrying ? "Tentando novamente…" : "Tentar novamente"}
+					</Button>
+					<Link to="/configuracoes" className={buttonVariants({ size: "sm" })}>
+						Abrir configurações
+					</Link>
+				</>
 			}
 		/>
 	);
@@ -38,7 +41,7 @@ function getRouteErrorContent(error: unknown) {
 			eyebrow: "Falha temporária",
 			heading: "Não foi possível abrir esta tela.",
 			description:
-				"Houve um problema ao carregar este conteúdo. Volte ao início para continuar usando o sistema.",
+				"Tente carregar novamente ou abra Configurações para verificar seu acesso.",
 		};
 	}
 
@@ -53,7 +56,7 @@ function getRouteErrorContent(error: unknown) {
 			eyebrow: "Sessão interrompida",
 			heading: "Sua sessão precisa ser renovada.",
 			description:
-				"Volte ao início para entrar novamente e continuar de onde parou.",
+				"Tente carregar novamente. Se necessário, renove seu acesso em Configurações.",
 		};
 	}
 
@@ -65,7 +68,8 @@ function getRouteErrorContent(error: unknown) {
 		return {
 			eyebrow: "Acesso restrito",
 			heading: "Esta área não está disponível para o seu perfil.",
-			description: "Volte ao início para seguir por outra parte do sistema.",
+			description:
+				"Abra Configurações para verificar o perfil e a organização selecionados.",
 		};
 	}
 
@@ -79,7 +83,7 @@ function getRouteErrorContent(error: unknown) {
 			eyebrow: "Falha temporária",
 			heading: "Não conseguimos carregar esta tela agora.",
 			description:
-				"Isso costuma se resolver em instantes. Você pode voltar ao início e tentar novamente depois.",
+				"Tente carregar novamente. Se o problema continuar, abra Configurações para verificar seu acesso.",
 		};
 	}
 
@@ -87,6 +91,6 @@ function getRouteErrorContent(error: unknown) {
 		eyebrow: "Falha temporária",
 		heading: "Não foi possível abrir esta tela.",
 		description:
-			"Houve um problema ao carregar este conteúdo. Volte ao início para continuar usando o sistema.",
+			"Tente carregar novamente ou abra Configurações para verificar seu acesso.",
 	};
 }

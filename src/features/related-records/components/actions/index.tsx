@@ -9,9 +9,7 @@ const readPermissions = {
 	client: "org:clients:read",
 	employee: "org:employees:read",
 	contract: ["org:contracts:read_all", "org:contracts:read_assigned"],
-	fee: ["org:fees:read_all", "org:fees:read_assigned"],
 	expense: "org:expenses:read",
-	remuneration: ["org:remunerations:read_all", "org:remunerations:read_own"],
 } as const;
 
 interface RelatedRecordActionsProps {

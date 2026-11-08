@@ -1,6 +1,5 @@
 import type { Prisma } from "@/generated/prisma/client";
 import type { DashboardSearch } from "../schemas/search";
-
 export interface DashboardScope {
 	canReadCashFlow?: boolean;
 	access?: {
@@ -9,255 +8,160 @@ export interface DashboardScope {
 		expense: boolean;
 		revenueAll: boolean;
 		remunerationAll: boolean;
+		receipts?: boolean;
+		payments?: boolean;
 	};
 	firmId: number;
+	personId?: number;
 	employeeId?: number;
 	employeeTypeValue?: string;
 	isAdmin: boolean;
 	search: DashboardSearch;
 }
-
-export function canReadDashboardFirmResult(scope: DashboardScope): boolean {
-	return (
-		scope.isAdmin &&
-		scope.canReadCashFlow === true &&
-		scope.access?.revenueAll === true &&
-		scope.access?.remunerationAll === true &&
-		scope.access?.revenue === true &&
-		scope.access?.remuneration === true &&
-		scope.access?.expense === true &&
-		!scope.search.employeeId &&
-		!scope.search.clientId &&
-		!scope.search.contractId &&
-		!scope.search.legalArea.length &&
-		!scope.search.revenueType.length
-	);
-}
-
-interface EffectiveEmployeeParams {
-	isAdmin: boolean;
-	requestedEmployeeId?: number;
-	sessionEmployeeId?: number;
-}
-
-interface DashboardDimensionFilters {
-	legalArea: string[];
-	revenueType: string[];
-}
-
-function parseOptionalEntityId(value: string | undefined): number | undefined {
-	if (!value) {
-		return undefined;
-	}
-
-	const parsed = Number(value);
-
-	if (!Number.isInteger(parsed) || parsed <= 0) {
-		return undefined;
-	}
-
-	return parsed;
-}
-
-function parseLookupValues(values: string[]): string[] {
-	return values.filter((value) => value.length > 0);
-}
-
-function getDashboardDimensionFilters(
-	search: DashboardSearch,
-): DashboardDimensionFilters {
-	return {
-		legalArea: parseLookupValues(search.legalArea),
-		revenueType: parseLookupValues(search.revenueType),
-	};
-}
-
 export function getEffectiveDashboardEmployeeId({
 	isAdmin,
 	requestedEmployeeId,
 	sessionEmployeeId,
-}: EffectiveEmployeeParams): number | undefined {
-	if (isAdmin) {
-		return requestedEmployeeId;
-	}
-
-	return sessionEmployeeId;
+}: {
+	isAdmin: boolean;
+	requestedEmployeeId?: number;
+	sessionEmployeeId?: number;
+}) {
+	return isAdmin ? requestedEmployeeId : sessionEmployeeId;
 }
-
-function getSelectedEmployeeId(scope: DashboardScope): number | undefined {
-	return getEffectiveDashboardEmployeeId({
-		isAdmin: scope.isAdmin && scope.access?.remunerationAll === true,
-		requestedEmployeeId: parseOptionalEntityId(scope.search.employeeId),
-		sessionEmployeeId: scope.employeeId,
-	});
+export function canReadDashboardFirmResult(s: DashboardScope): boolean {
+	return (
+		s.isAdmin &&
+		s.canReadCashFlow === true &&
+		s.access?.revenueAll === true &&
+		s.access.remunerationAll &&
+		s.access.revenue &&
+		s.access.remuneration &&
+		s.access.expense &&
+		s.access.receipts === true &&
+		s.access.payments === true &&
+		!s.search.employeeId &&
+		!s.search.clientId &&
+		!s.search.contractId &&
+		!s.search.legalArea.length &&
+		!s.search.revenueType.length
+	);
 }
-
-function getDashboardContractDimensionWhere(
-	scope: DashboardScope,
+export function getDashboardContractWhere(
+	s: DashboardScope,
+	all: boolean,
 ): Prisma.ContractWhereInput {
-	const { legalArea, revenueType } = getDashboardDimensionFilters(scope.search);
-
+	const employeeId = all
+		? Number(s.search.employeeId) || undefined
+		: s.employeeId;
+	const types =
+		s.employeeTypeValue === "LAWYER"
+			? ["RESPONSIBLE", "RECOMMENDED"]
+			: s.employeeTypeValue === "ADMIN_ASSISTANT"
+				? ["ADMIN_ASSISTANT"]
+				: [];
 	return {
-		...(scope.search.clientId
-			? { clientId: Number(scope.search.clientId) }
+		firmId: s.firmId,
+		...(s.search.clientId ? { customerId: Number(s.search.clientId) } : {}),
+		...(s.search.contractId ? { id: Number(s.search.contractId) } : {}),
+		...(s.search.legalArea.length
+			? { legalArea: { value: { in: s.search.legalArea } } }
 			: {}),
-		...(scope.search.contractId
-			? { AND: [{ id: Number(scope.search.contractId) }] }
-			: {}),
-		...(legalArea.length > 0
-			? { legalArea: { value: { in: legalArea } } }
-			: {}),
-		...(revenueType.length > 0
+		...(!all || employeeId
 			? {
-					revenues: {
+					assignments: {
 						some: {
-							firmId: scope.firmId,
-							deletedAt: null,
+							firmId: s.firmId,
+							employeeProfileId: employeeId ?? -1,
 							isActive: true,
-							type: {
-								value: { in: revenueType },
-							},
+							deletedAt: null,
+							...(!all
+								? {
+										assignmentType: { value: { in: types } },
+										employeeProfile: {
+											employeeType: { value: s.employeeTypeValue ?? "" },
+										},
+									}
+								: {}),
 						},
 					},
 				}
 			: {}),
 	};
 }
-
-export function getDashboardRevenueWhere(
-	scope: DashboardScope,
-): Prisma.RevenueWhereInput {
-	const { revenueType } = getDashboardDimensionFilters(scope.search);
-
+export function getDashboardReceivableWhere(
+	s: DashboardScope,
+): Prisma.ReceivableWhereInput {
+	const needsContract =
+		!s.access?.revenueAll ||
+		Boolean(
+			s.search.employeeId ||
+				s.search.clientId ||
+				s.search.contractId ||
+				s.search.legalArea.length ||
+				s.search.revenueType.length,
+		);
 	return {
-		firmId: scope.firmId,
-		deletedAt: null,
-		isActive: true,
-		...(revenueType.length > 0 ? { type: { value: { in: revenueType } } } : {}),
-		contract: {
-			firmId: scope.firmId,
-			deletedAt: null,
-			isActive: true,
-			...getAssignedContractWhere(scope),
-			...getDashboardContractDimensionWhere(scope),
-		},
-	};
-}
-
-export function getDashboardFeeRevenueWhere(
-	scope: DashboardScope,
-): Prisma.FeeWhereInput["revenue"] {
-	return {
-		firmId: scope.firmId,
-		deletedAt: null,
-		isActive: true,
-		...(() => {
-			const { revenueType } = getDashboardDimensionFilters(scope.search);
-
-			return revenueType.length > 0
-				? { type: { value: { in: revenueType } } }
-				: {};
-		})(),
-		contract: {
-			firmId: scope.firmId,
-			deletedAt: null,
-			isActive: true,
-			...getAssignedContractWhere(scope),
-			...getDashboardContractDimensionWhere(scope),
-		},
-	};
-}
-
-export function getDashboardRemunerationWhere(
-	scope: DashboardScope,
-): Prisma.RemunerationWhereInput {
-	const employeeId = getSelectedEmployeeId(scope);
-	if (
-		!(scope.isAdmin && scope.access?.remunerationAll === true) &&
-		!employeeId
-	) {
-		return { firmId: scope.firmId, id: -1 };
-	}
-	const { legalArea, revenueType } = getDashboardDimensionFilters(scope.search);
-
-	return {
-		firmId: scope.firmId,
-		deletedAt: null,
-		isActive: true,
-		...(revenueType.length > 0
+		firmId: s.firmId,
+		...(needsContract
 			? {
-					fee: {
-						revenue: {
-							type: {
-								value: { in: revenueType },
-							},
-						},
+					contractRevenueReceivable: {
+						firmId: s.firmId,
+						contract: getDashboardContractWhere(
+							s,
+							s.access?.revenueAll === true,
+						),
+						...(s.search.revenueType.length
+							? {
+									revenue: {
+										revenueType: { value: { in: s.search.revenueType } },
+									},
+								}
+							: {}),
 					},
 				}
 			: {}),
-		contractEmployee: {
-			...(employeeId ? { employeeId } : {}),
-			...(legalArea.length > 0 ||
-			scope.search.clientId ||
-			scope.search.contractId
+	};
+}
+export function getDashboardPayableWhere(
+	s: DashboardScope,
+): Prisma.PayableWhereInput {
+	const all = s.access?.remunerationAll === true;
+	const remuneration: Prisma.PayableWhereInput = {
+		...(!all ? { beneficiary: { personId: s.personId ?? -1 } } : {}),
+		remunerationPayable: {
+			firmId: s.firmId,
+			contractAssignment: {
+				firmId: s.firmId,
+				...(!all || s.search.employeeId
+					? {
+							employeeProfileId: all
+								? Number(s.search.employeeId)
+								: (s.employeeId ?? -1),
+						}
+					: {}),
+				contract: getDashboardContractWhere(s, all),
+			},
+			...(s.search.revenueType.length
 				? {
-						contract: {
-							...(legalArea.length > 0
-								? { legalArea: { value: { in: legalArea } } }
-								: {}),
-							...(scope.search.clientId
-								? { clientId: Number(scope.search.clientId) }
-								: {}),
-							...(scope.search.contractId
-								? { AND: [{ id: Number(scope.search.contractId) }] }
-								: {}),
+						receipt: {
+							receivable: {
+								contractRevenueReceivable: {
+									revenue: {
+										revenueType: { value: { in: s.search.revenueType } },
+									},
+								},
+							},
 						},
 					}
 				: {}),
 		},
 	};
-}
-
-export function getDashboardExpenseWhere(
-	scope: DashboardScope,
-): Prisma.ExpenseWhereInput {
 	return {
-		firmId: scope.firmId,
-		deletedAt: null,
-		isActive: true,
-	};
-}
-
-function getAssignedContractWhere(scope: DashboardScope) {
-	const all = scope.isAdmin && scope.access?.revenueAll === true;
-	const employeeId = all
-		? parseOptionalEntityId(scope.search.employeeId)
-		: scope.employeeId;
-
-	if (all && !employeeId) {
-		return {};
-	}
-
-	if (!employeeId) {
-		return { id: -1 };
-	}
-
-	return {
-		assignments: {
-			some: {
-				firmId: scope.firmId,
-				employeeId,
-				deletedAt: null,
-				isActive: true,
-				assignmentType: {
-					value: {
-						in:
-							scope.employeeTypeValue === "ADMIN_ASSISTANT"
-								? ["ADMIN_ASSISTANT"]
-								: ["RESPONSIBLE", "RECOMMENDED"],
-					},
-				},
-			},
-		},
+		firmId: s.firmId,
+		OR: [
+			...(s.access?.remuneration ? [remuneration] : []),
+			...(s.access?.expense && all ? [{ remunerationPayable: null }] : []),
+		],
 	};
 }

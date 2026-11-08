@@ -3,10 +3,8 @@ import {
 	CONTRACT_STATUS_CANCELLED_VALUE,
 	CONTRACT_STATUS_COMPLETED_VALUE,
 	type ContractAccessResource,
-	type FeeAccessResource,
 	type FinancialAccessResource,
 	type LoggedUserSession,
-	type RemunerationAccessResource,
 	SESSION_ASSIGNMENT_TYPE_ADMIN_ASSISTANT_VALUE,
 	SESSION_ASSIGNMENT_TYPE_RECOMMENDED_VALUE,
 	SESSION_ASSIGNMENT_TYPE_RESPONSIBLE_VALUE,
@@ -30,7 +28,7 @@ function isSameFirm(
 
 function isAssignedToActor(
 	session: LoggedUserSession,
-	resource?: ContractAccessResource | FeeAccessResource | null,
+	resource?: ContractAccessResource | null,
 ) {
 	if (!resource) {
 		return false;
@@ -80,9 +78,7 @@ function isAssignedToActor(
 	);
 }
 
-export function isContractReadOnly(
-	resource?: ContractAccessResource | FeeAccessResource | null,
-) {
+export function isContractReadOnly(resource?: ContractAccessResource | null) {
 	if (!resource?.statusValue) {
 		return false;
 	}
@@ -95,9 +91,7 @@ export function isContractReadOnly(
 	).includes(resource.statusValue);
 }
 
-export function isContractWritable(
-	resource?: ContractAccessResource | FeeAccessResource | null,
-) {
+export function isContractWritable(resource?: ContractAccessResource | null) {
 	if (!resource) {
 		return false;
 	}
@@ -159,10 +153,7 @@ export function can(
 			isAssignedToActor(session, financial.contract)
 		);
 	}
-	if (
-		key === "org:contracts:read_assigned" ||
-		key === "org:fees:read_assigned"
-	) {
+	if (key === "org:contracts:read_assigned") {
 		return (
 			!resource ||
 			isAssignedToActor(session, resource as ContractAccessResource)
@@ -176,24 +167,6 @@ export function can(
 			isContractWritable(resource as ContractAccessResource) &&
 			(key === "org:contracts:update_all" ||
 				isAssignedToActor(session, resource as ContractAccessResource))
-		);
-	}
-	if (key === "org:fees:create" || key === "org:fees:update") {
-		return (
-			isContractWritable(resource as FeeAccessResource) &&
-			(hasPermission(session, "org:fees:read_all") ||
-				(hasPermission(session, "org:fees:read_assigned") &&
-					isAssignedToActor(session, resource as FeeAccessResource)))
-		);
-	}
-	if (
-		key === "org:remunerations:read_own" ||
-		key === "org:remunerations:export_own"
-	) {
-		return (
-			!resource ||
-			(resource as RemunerationAccessResource).employeeId ===
-				session.employee.id
 		);
 	}
 	return true;
@@ -243,18 +216,7 @@ export function getScope(
 		case "employee":
 			return { firmId: session.firm.id };
 		case "contract":
-		case "fee":
-		case "remuneration":
-			if (
-				hasPermission(
-					session,
-					subject === "contract"
-						? "org:contracts:read_all"
-						: subject === "fee"
-							? "org:fees:read_all"
-							: "org:remunerations:read_all",
-				)
-			) {
+			if (hasPermission(session, "org:contracts:read_all")) {
 				return { firmId: session.firm.id };
 			}
 

@@ -29,6 +29,22 @@ export function getContractWorkspaceAlerts(
 	horizon.setUTCDate(horizon.getUTCDate() + 7);
 	const upcomingUntil = horizon.toISOString().slice(0, 10);
 	for (const revenue of revenues) {
+		if (revenue.hasGeneratedTitles === false) {
+			if (operational) {
+				alerts.push({
+					id: `ungenerated-${revenue.id}`,
+					title: `${revenue.type}: gerar títulos`,
+					description:
+						"Defina o parcelamento para acompanhar os vencimentos e recebimentos.",
+					dueDate: null,
+					overdueDays: null,
+					remainingAmount: revenue.totalValue,
+					severity: "medium",
+					tab: "finance",
+				});
+			}
+			continue;
+		}
 		if (revenue.isFullyPaid || revenue.remainingValue <= 0) {
 			continue;
 		}
@@ -82,7 +98,11 @@ export function getContractWorkspaceAlerts(
 	if (
 		operational &&
 		revenues.length > 0 &&
-		revenues.every((r) => r.isFullyPaid || r.remainingValue <= 0)
+		revenues.every(
+			(r) =>
+				r.hasGeneratedTitles !== false &&
+				(r.isFullyPaid || r.remainingValue <= 0),
+		)
 	) {
 		alerts.push({
 			id: "settled-active",

@@ -70,7 +70,7 @@ afterEach(cleanup);
 
 it("closes preview and returns focus without changing its owner context", async () => {
 	render(
-		<AttachmentSection ownerId={1} ownerKind="client" canUpload={false} />,
+		<AttachmentSection ownerId={1} ownerKind="person" canUpload={false} />,
 	);
 	const trigger = screen.getByRole("button", { name: "Visualizar prova.pdf" });
 	trigger.focus();
@@ -84,7 +84,7 @@ it("closes preview and returns focus without changing its owner context", async 
 
 it("preserves preview after deletion cancellation and closes it on confirmed success", async () => {
 	render(
-		<AttachmentSection ownerId={1} ownerKind="client" canUpload={false} />,
+		<AttachmentSection ownerId={1} ownerKind="person" canUpload={false} />,
 	);
 	fireEvent.click(screen.getByRole("button", { name: "Visualizar prova.pdf" }));
 	await screen.findByRole("dialog", { name: "prova.pdf" });

@@ -1,4 +1,9 @@
 export {
+	getPersonAccessResource,
+	getPersonContractScope,
+	getPersonReadWhere,
+} from "./api/access";
+export {
 	getEmployeeTypesQueryOptions,
 	getPeopleQueryOptions,
 	getPersonByIdQueryOptions,

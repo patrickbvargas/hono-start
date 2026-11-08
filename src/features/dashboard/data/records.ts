@@ -1,375 +1,152 @@
+import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/shared/lib/prisma";
 import {
-	buildDashboardPaymentDateWhere,
-	createMonthEnd,
-	getComparisonBoundaries,
-	getDashboardPeriod,
-	getFinancialEvolutionMonthRange,
-} from "../utils/period";
-import { dashboardRevenueSelect } from "./revenue-select";
-import type { DashboardScope } from "./scope";
-import {
-	getDashboardExpenseWhere,
-	getDashboardFeeRevenueWhere,
-	getDashboardRemunerationWhere,
-	getDashboardRevenueWhere,
+	type DashboardScope,
+	getDashboardPayableWhere,
+	getDashboardReceivableWhere,
 } from "./scope";
 
-async function readAuthorized<T>(
-	allowed: boolean,
-	read: () => Promise<T[]>,
-): Promise<T[]> {
-	return allowed ? read() : [];
-}
-
-export async function getDashboardRecords(scope: DashboardScope) {
-	const {
-		currentStart,
-		nextStart,
-		previousStart,
-		previousEndExclusive,
-		previousLabel,
-		previousPeriodLabel,
-	} = getComparisonBoundaries(scope.search);
-	const period = getDashboardPeriod(scope.search);
-	const paymentDateWhere = buildDashboardPaymentDateWhere(period);
-	const revenueWhere = getDashboardRevenueWhere(scope);
-	const remunerationWhere = getDashboardRemunerationWhere(scope);
-	const expenseWhere = getDashboardExpenseWhere(scope);
-	const firmWhere = {
-		firmId: scope.firmId,
-		deletedAt: null,
-		isActive: true,
-	};
-	const chartMonthRange = getFinancialEvolutionMonthRange(scope.search);
-	const chartWindowStart = period.dateFrom
-		? new Date(
-				Math.max(
-					period.dateFrom.getTime(),
-					chartMonthRange.startMonth.getTime(),
-				),
-			)
-		: chartMonthRange.startMonth;
-	const chartWindowEnd = period.dateTo
-		? new Date(
-				Math.min(
-					period.dateTo.getTime(),
-					createMonthEnd(chartMonthRange.endMonth).getTime(),
-				),
-			)
-		: createMonthEnd(chartMonthRange.endMonth);
-
-	const [
-		revenues,
-		currentFees,
-		previousFees,
-		allRemunerations,
-		currentRemunerations,
-		previousRemunerations,
-		chartDownPayments,
-		chartFees,
-		chartRemunerations,
-		tableRemunerations,
-		allExpenses,
-		currentExpenses,
-		previousExpenses,
-		chartCashFlowDownPayments,
-		chartCashFlowFees,
-		chartCashFlowExpenses,
-	] = await Promise.all([
-		readAuthorized(scope.access?.revenue === true, () =>
-			prisma.revenue.findMany({
-				where: revenueWhere,
-				select: dashboardRevenueSelect,
-			}),
-		),
-		readAuthorized(scope.access?.revenue === true, () =>
-			prisma.fee.findMany({
-				where: {
-					...firmWhere,
-					paymentDate: {
-						gte: currentStart,
-						lt: nextStart,
+const contractSelect = {
+	id: true,
+	processNumber: true,
+	customer: { select: { id: true, person: { select: { fullName: true } } } },
+	legalArea: { select: { label: true, value: true } },
+	assignments: {
+		where: { isActive: true, deletedAt: null },
+		orderBy: { id: "asc" },
+		select: {
+			employeeProfile: { select: { person: { select: { fullName: true } } } },
+			assignmentType: { select: { value: true } },
+		},
+	},
+} satisfies Prisma.ContractSelect;
+const movementSelect = {
+	id: true,
+	principalAbated: true,
+	effectiveAmount: true,
+	effectiveDate: true,
+	reversal: { select: { effectiveDate: true } },
+};
+const receivableSelect = {
+	id: true,
+	amount: true,
+	dueDate: true,
+	cancelledAt: true,
+	kind: true,
+	debtor: { select: { person: { select: { fullName: true } } } },
+	analytic: { select: { label: true, value: true } },
+	receipts: { select: movementSelect },
+	contractRevenueReceivable: {
+		select: {
+			contract: { select: contractSelect },
+			revenue: {
+				select: { revenueType: { select: { label: true, value: true } } },
+			},
+		},
+	},
+} satisfies Prisma.ReceivableSelect;
+const payableSelect = {
+	id: true,
+	amount: true,
+	dueDate: true,
+	cancelledAt: true,
+	kind: true,
+	beneficiary: { select: { person: { select: { fullName: true } } } },
+	analytic: { select: { label: true, value: true } },
+	payments: { select: movementSelect },
+	remunerationPayable: {
+		select: {
+			createdAt: true,
+			contractAssignment: {
+				select: {
+					employeeProfileId: true,
+					employeeProfile: {
+						select: { person: { select: { fullName: true } } },
 					},
-					revenue: getDashboardFeeRevenueWhere(scope),
+					assignmentType: { select: { label: true, value: true } },
+					contract: { select: contractSelect },
 				},
+			},
+			receipt: {
 				select: {
-					amount: true,
-				},
-			}),
-		),
-		readAuthorized(scope.access?.revenue === true, () =>
-			prisma.fee.findMany({
-				where: {
-					...firmWhere,
-					paymentDate: {
-						gte: previousStart,
-						lt: previousEndExclusive,
-					},
-					revenue: getDashboardFeeRevenueWhere(scope),
-				},
-				select: {
-					amount: true,
-				},
-			}),
-		),
-		readAuthorized(scope.access?.remuneration === true, () =>
-			prisma.remuneration.findMany({
-				where: {
-					...remunerationWhere,
-					...(paymentDateWhere ? { paymentDate: paymentDateWhere } : {}),
-				},
-				select: {
-					amount: true,
-				},
-			}),
-		),
-		readAuthorized(scope.access?.remuneration === true, () =>
-			prisma.remuneration.findMany({
-				where: {
-					...remunerationWhere,
-					paymentDate: {
-						gte: currentStart,
-						lt: nextStart,
-					},
-				},
-				select: {
-					amount: true,
-				},
-			}),
-		),
-		readAuthorized(scope.access?.remuneration === true, () =>
-			prisma.remuneration.findMany({
-				where: {
-					...remunerationWhere,
-					paymentDate: {
-						gte: previousStart,
-						lt: previousEndExclusive,
-					},
-				},
-				select: {
-					amount: true,
-				},
-			}),
-		),
-		readAuthorized(scope.access?.revenue === true, () =>
-			prisma.revenue.findMany({
-				where: {
-					...revenueWhere,
-					paymentStartDate: {
-						gte: chartWindowStart,
-						lte: chartWindowEnd,
-					},
-				},
-				select: {
-					downPaymentValue: true,
-					paymentStartDate: true,
-				},
-			}),
-		),
-		readAuthorized(scope.access?.revenue === true, () =>
-			prisma.fee.findMany({
-				where: {
-					...firmWhere,
-					paymentDate: {
-						gte: chartWindowStart,
-						lte: chartWindowEnd,
-					},
-					revenue: getDashboardFeeRevenueWhere(scope),
-				},
-				select: {
-					amount: true,
-					paymentDate: true,
-				},
-			}),
-		),
-		readAuthorized(scope.access?.remuneration === true, () =>
-			prisma.remuneration.findMany({
-				where: {
-					...remunerationWhere,
-					paymentDate: {
-						gte: chartWindowStart,
-						lte: chartWindowEnd,
-					},
-				},
-				select: {
-					amount: true,
-					paymentDate: true,
-				},
-			}),
-		),
-		readAuthorized(scope.access?.remuneration === true, () =>
-			prisma.remuneration.findMany({
-				where: {
-					...remunerationWhere,
-					...(paymentDateWhere ? { paymentDate: paymentDateWhere } : {}),
-				},
-				select: {
-					amount: true,
-					paymentDate: true,
-					contractEmployee: {
+					receivable: {
 						select: {
-							contract: {
-								select: { legalArea: { select: { label: true, value: true } } },
-							},
-							assignmentType: { select: { label: true, value: true } },
-							employee: {
+							contractRevenueReceivable: {
 								select: {
-									id: true,
-									fullName: true,
-								},
-							},
-						},
-					},
-					fee: {
-						select: {
-							revenue: {
-								select: { type: { select: { label: true, value: true } } },
-							},
-						},
-					},
-				},
-			}),
-		),
-		scope.access?.expense === true
-			? readAuthorized(scope.access?.expense === true, () =>
-					prisma.expense.findMany({
-						where: {
-							...expenseWhere,
-							...(paymentDateWhere ? { expenseDate: paymentDateWhere } : {}),
-						},
-						select: {
-							amount: true,
-							category: { select: { label: true, value: true } },
-						},
-					}),
-				)
-			: Promise.resolve([]),
-		scope.access?.expense === true
-			? readAuthorized(scope.access?.expense === true, () =>
-					prisma.expense.findMany({
-						where: {
-							...expenseWhere,
-							expenseDate: {
-								gte: currentStart,
-								lt: nextStart,
-							},
-						},
-						select: {
-							amount: true,
-						},
-					}),
-				)
-			: Promise.resolve([]),
-		scope.access?.expense === true
-			? readAuthorized(scope.access?.expense === true, () =>
-					prisma.expense.findMany({
-						where: {
-							...expenseWhere,
-							expenseDate: {
-								gte: previousStart,
-								lt: previousEndExclusive,
-							},
-						},
-						select: {
-							amount: true,
-						},
-					}),
-				)
-			: Promise.resolve([]),
-		scope.access?.expense === true
-			? readAuthorized(scope.access?.revenue === true, () =>
-					prisma.revenue.findMany({
-						where: {
-							...revenueWhere,
-							paymentStartDate: {
-								gte: chartWindowStart,
-								lte: chartWindowEnd,
-							},
-						},
-						select: {
-							downPaymentValue: true,
-							paymentStartDate: true,
-							type: {
-								select: {
-									value: true,
-								},
-							},
-						},
-					}),
-				)
-			: Promise.resolve([]),
-		scope.access?.expense === true
-			? readAuthorized(scope.access?.revenue === true, () =>
-					prisma.fee.findMany({
-						where: {
-							...firmWhere,
-							paymentDate: {
-								gte: chartWindowStart,
-								lte: chartWindowEnd,
-							},
-							revenue: getDashboardFeeRevenueWhere(scope),
-						},
-						select: {
-							amount: true,
-							paymentDate: true,
-							revenue: {
-								select: {
-									type: {
+									revenue: {
 										select: {
-											value: true,
+											revenueType: { select: { label: true, value: true } },
 										},
 									},
 								},
 							},
 						},
-					}),
-				)
-			: Promise.resolve([]),
-		scope.access?.expense === true
-			? readAuthorized(scope.access?.expense === true, () =>
-					prisma.expense.findMany({
-						where: {
-							...expenseWhere,
-							expenseDate: {
-								gte: chartWindowStart,
-								lte: chartWindowEnd,
-							},
-						},
-						select: {
-							amount: true,
-							expenseDate: true,
-						},
-					}),
-				)
-			: Promise.resolve([]),
+					},
+				},
+			},
+		},
+	},
+} satisfies Prisma.PayableSelect;
+export async function getDashboardRecords(scope: DashboardScope) {
+	return prisma.$transaction(
+		async (tx) => {
+			const receivables = scope.access?.revenue
+				? await tx.receivable.findMany({
+						where: getDashboardReceivableWhere(scope),
+						select: receivableSelect,
+						orderBy: { id: "asc" },
+					})
+				: [];
+			const payables =
+				scope.access?.remuneration || scope.access?.expense
+					? await tx.payable.findMany({
+							where: getDashboardPayableWhere(scope),
+							select: payableSelect,
+							orderBy: { id: "asc" },
+						})
+					: [];
+			return { scope, receivables, payables };
+		},
+		{ isolationLevel: "RepeatableRead", timeout: 15_000 },
+	);
+}
+export type DashboardRecords = Awaited<ReturnType<typeof getDashboardRecords>>;
+export type DashboardReceivable = DashboardRecords["receivables"][number];
+export type DashboardPayable = DashboardRecords["payables"][number];
+type Movement = {
+	principalAbated: Prisma.Decimal;
+	effectiveAmount: Prisma.Decimal;
+	effectiveDate: Date;
+	reversal: { effectiveDate: Date } | null;
+};
+export function getOutstanding(
+	title: { amount: Prisma.Decimal; cancelledAt: Date | null },
+	movements: Movement[],
+	reference: Date,
+): Prisma.Decimal {
+	if (title.cancelledAt && title.cancelledAt <= reference) {
+		return new Prisma.Decimal(0);
+	}
+	const principal = movements
+		.filter(
+			(row) =>
+				row.effectiveDate <= reference &&
+				(!row.reversal || row.reversal.effectiveDate > reference),
+		)
+		.reduce((sum, row) => sum.add(row.principalAbated), new Prisma.Decimal(0));
+	return Prisma.Decimal.max(0, title.amount.minus(principal));
+}
+export function getCashEvents<T extends Movement>(movements: T[]) {
+	return movements.flatMap((row) => [
+		{ date: row.effectiveDate, amount: row.effectiveAmount, reversed: false },
+		...(row.reversal
+			? [
+					{
+						date: row.reversal.effectiveDate,
+						amount: row.effectiveAmount.negated(),
+						reversed: true,
+					},
+				]
+			: []),
 	]);
-
-	return {
-		scope,
-		currentStart,
-		nextStart,
-		previousStart,
-		previousEndExclusive,
-		previousLabel,
-		previousPeriodLabel,
-		period,
-		chartMonthRange,
-		revenues,
-		currentFees,
-		previousFees,
-		allRemunerations,
-		currentRemunerations,
-		previousRemunerations,
-		chartDownPayments,
-		chartFees,
-		chartRemunerations,
-		tableRemunerations,
-		allExpenses,
-		currentExpenses,
-		previousExpenses,
-		chartCashFlowDownPayments,
-		chartCashFlowFees,
-		chartCashFlowExpenses,
-	};
 }

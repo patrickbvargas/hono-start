@@ -9,12 +9,11 @@ function getAttachmentOwnerCount(data: AttachmentOwnerInput) {
 		data.receivableId,
 		data.payableId,
 		data.personId,
-		data.clientId,
-		data.employeeId,
 		data.contractId,
 		data.expenseId,
-		data.feeId,
-		data.remunerationId,
+		data.receiptId,
+		data.paymentId,
+		data.remunerationPayableId,
 	].filter((value) => value !== undefined).length;
 }
 

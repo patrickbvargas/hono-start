@@ -68,13 +68,13 @@ src/
 
 The canonical slice shape for feature work is defined by this document. New feature slices must follow it unless a documented exception exists.
 
-`src/features/clients` is the named reference slice for this repository. Contributors should compare new slices and refactors against that slice before introducing structural deviations.
+`src/features/people` is the named reference slice for this repository. Contributors should compare new slices and refactors against that slice before introducing structural deviations.
 
 ## Canonical Feature Slice Contract
 
 Each feature slice is validated by responsibility. A feature should include the
 directories whose responsibilities it owns, and any structural deviation from
-the `clients` reference slice must be justified by feature-specific behavior.
+the `people` reference slice must be justified by feature-specific behavior.
 
 `drilldown` is an isolated presentation/orchestration feature. It deliberately owns no entity API, Prisma data access or permission registry: source features provide typed query options and validated results through props. Its public modal is usable by other features and routes. See FRONTEND_TABLES.md for the consumer and reusable-column contract.
 
@@ -123,8 +123,8 @@ re-export barrel. The only feature barrel is the top-level
 `src/features/<feature>/index.ts`.
 
 Feature-specific extensions are allowed when they represent real product
-responsibility. For example, `remunerations` owns export orchestration because
-the remuneration route exposes remuneration export behavior; that does not
+responsibility. For example, `audit-logs` owns export orchestration because
+the audit route exposes event export behavior; that does not
 require unrelated slices to add export files.
 
 ## Architectural Rules
@@ -173,7 +173,7 @@ unless a route-facing consumer requires the difference.
 ## Architectural Intent
 
 - The system is organized around feature-local ownership, not horizontal file-type sprawl.
-- Each feature should converge on the `clients` slice anatomy unless a documented exception exists.
+- Each feature should converge on the `people` slice anatomy unless a documented exception exists.
 - Route files must read like orchestration code, not like a second implementation layer.
 - Business domains may change between repositories; this slice pattern should not.
 

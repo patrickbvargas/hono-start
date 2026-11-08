@@ -61,7 +61,7 @@ describe("attachment rule assertions", () => {
 
 	it("requires exactly one owner context", () => {
 		expect(() =>
-			assertSingleAttachmentOwnerContext({ clientId: 1 }),
+			assertSingleAttachmentOwnerContext({ personId: 1 }),
 		).not.toThrow();
 		expect(() =>
 			assertSingleAttachmentOwnerContext({ expenseId: 3 }),
@@ -70,7 +70,7 @@ describe("attachment rule assertions", () => {
 			"Selecione exatamente um contexto para o anexo.",
 		);
 		expect(() =>
-			assertSingleAttachmentOwnerContext({ clientId: 1, employeeId: 2 }),
+			assertSingleAttachmentOwnerContext({ personId: 1, contractId: 2 }),
 		).toThrow("Selecione exatamente um contexto para o anexo.");
 	});
 
@@ -78,7 +78,7 @@ describe("attachment rule assertions", () => {
 		expect(() =>
 			assertAttachmentOwnerCanReceiveUpload({
 				deletedAt: new Date(),
-				ownerKind: "client",
+				ownerKind: "person",
 			}),
 		).toThrow(ATTACHMENT_ERRORS.OWNER_NOT_FOUND);
 

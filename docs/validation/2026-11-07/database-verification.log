@@ -1,0 +1,21 @@
+(node:28912) ExperimentalWarning: Type Stripping is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"databaseConstraintTests":11,"rls":{"unprotected":3,"exposed":0},"legacyTables":0}
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: All business tables must enable RLS
+
+3 !== 0
+
+    at file:///C:/Dev/hono-start/prisma/verify-financial-db.ts:202:9
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 3,
+  expected: 0,
+  operator: 'strictEqual'
+}
+
+Node.js v22.16.0

@@ -2,63 +2,44 @@ import type {
 	AttachmentOwnerInput,
 	AttachmentOwnerKind,
 } from "../schemas/form";
-
 export function getAttachmentOwnerContext(input: AttachmentOwnerInput): {
 	ownerId: number;
 	ownerKind: AttachmentOwnerKind;
 } {
-	if (input.payableId) {
-		return { ownerKind: "payable", ownerId: input.payableId };
+	const entries: Array<[AttachmentOwnerKind, number | undefined]> = [
+		["person", input.personId],
+		["contract", input.contractId],
+		["expense", input.expenseId],
+		["receivable", input.receivableId],
+		["payable", input.payableId],
+		["receipt", input.receiptId],
+		["payment", input.paymentId],
+		["remuneration-payable", input.remunerationPayableId],
+	];
+	const owners = entries.filter(
+		(entry): entry is [AttachmentOwnerKind, number] => entry[1] !== undefined,
+	);
+	if (owners.length !== 1) {
+		throw new Error("Selecione exatamente um contexto para o anexo.");
 	}
-	if (input.receivableId) {
-		return { ownerKind: "receivable", ownerId: input.receivableId };
-	}
-	if (input.personId) {
-		return { ownerKind: "person", ownerId: input.personId };
-	}
-	if (input.clientId) {
-		return { ownerKind: "client", ownerId: input.clientId };
-	}
-
-	if (input.employeeId) {
-		return { ownerKind: "employee", ownerId: input.employeeId };
-	}
-
-	if (input.contractId) {
-		return { ownerKind: "contract", ownerId: input.contractId };
-	}
-
-	if (input.expenseId) {
-		return { ownerKind: "expense", ownerId: input.expenseId };
-	}
-	if (input.feeId) {
-		return { ownerKind: "fee", ownerId: input.feeId };
-	}
-	return { ownerKind: "remuneration", ownerId: input.remunerationId as number };
+	return { ownerKind: owners[0][0], ownerId: owners[0][1] };
 }
-
-export function getAttachmentOwnerInput(params: {
+export function getAttachmentOwnerInput({
+	ownerKind,
+	ownerId,
+}: {
 	ownerId: number;
 	ownerKind: AttachmentOwnerKind;
 }): AttachmentOwnerInput {
-	switch (params.ownerKind) {
-		case "payable":
-			return { payableId: params.ownerId };
-		case "receivable":
-			return { receivableId: params.ownerId };
-		case "person":
-			return { personId: params.ownerId };
-		case "client":
-			return { clientId: params.ownerId };
-		case "employee":
-			return { employeeId: params.ownerId };
-		case "contract":
-			return { contractId: params.ownerId };
-		case "expense":
-			return { expenseId: params.ownerId };
-		case "fee":
-			return { feeId: params.ownerId };
-		case "remuneration":
-			return { remunerationId: params.ownerId };
-	}
+	const fields = {
+		person: "personId",
+		contract: "contractId",
+		expense: "expenseId",
+		receivable: "receivableId",
+		payable: "payableId",
+		receipt: "receiptId",
+		payment: "paymentId",
+		"remuneration-payable": "remunerationPayableId",
+	} as const;
+	return { [fields[ownerKind]]: ownerId };
 }

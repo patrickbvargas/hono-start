@@ -21,11 +21,13 @@ function createUtcDate(year: number, month: number, day: number): Date {
 }
 
 function getUtcDateOnly(referenceDate: Date): Date {
-	return createUtcDate(
-		referenceDate.getUTCFullYear(),
-		referenceDate.getUTCMonth(),
-		referenceDate.getUTCDate(),
-	);
+	const day = new Intl.DateTimeFormat("en-CA", {
+		timeZone: "America/Sao_Paulo",
+		year: "numeric",
+		month: "2-digit",
+		day: "2-digit",
+	}).format(referenceDate);
+	return new Date(`${day}T00:00:00Z`);
 }
 
 function addUtcMonths(referenceDate: Date, months: number): Date {
@@ -43,8 +45,8 @@ function formatUtcDate(referenceDate: Date): string {
 export function getCurrentYearDateRange(
 	referenceDate = new Date(),
 ): Pick<DashboardPeriodShortcut, "dateFrom" | "dateTo"> {
-	const currentYear = referenceDate.getUTCFullYear();
 	const today = getUtcDateOnly(referenceDate);
+	const currentYear = today.getUTCFullYear();
 
 	return {
 		dateFrom: `${currentYear}-01-01`,
@@ -56,7 +58,7 @@ export function getDashboardPeriodShortcuts(
 	referenceDate = new Date(),
 ): DashboardPeriodShortcut[] {
 	const today = getUtcDateOnly(referenceDate);
-	const currentYear = referenceDate.getUTCFullYear();
+	const currentYear = today.getUTCFullYear();
 	const currentYearRange = getCurrentYearDateRange(referenceDate);
 
 	return [

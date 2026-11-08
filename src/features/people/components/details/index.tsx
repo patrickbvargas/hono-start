@@ -128,7 +128,7 @@ const PersonDetailsFallback = () => {
 					<EntityDetail.SkeletonFields columns={2} rows={2} />
 				</EntityDetail.Section>
 				{hasPermission(session, "org:contracts:read_all") &&
-					hasPermission(session, "org:fees:read_all") && (
+					hasPermission(session, "org:receivables:read_all") && (
 						<>
 							<EntityDetail.Separator />
 							<EntityDetail.Section title="Financeiro">
